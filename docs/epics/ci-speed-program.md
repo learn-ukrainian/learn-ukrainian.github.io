@@ -3,11 +3,19 @@
 > Epic **#8875** (parent: infra stream epic #6943). This document (#8885) is the
 > versioned plan; the measurement history lives in issue **#8750** (comments) and
 > the area-lanes design in **#8872**. Written by the infra driver (Claude), 2026-09-27.
-> Status: program in progress — Team plan and pre-commit guards already landed;
-> #8876, #8877, and #8887 are dispatched and in progress; #8872 and #8874 have
-> passed DoR and are open for dispatch; #8878–#8881 and #8886 are open, ready
-> (not yet dispatched); #8882 and #8883 are blocked on prerequisites; #8884
-> needs the operator's repo-admin action; this document (#8885) is in review.
+> Status snapshot (as of 2026-09-27, `gh issue view`/`gh api`/`git ls-remote`; the
+> live status is epic **#8875**'s issue list, and this snapshot goes stale the
+> moment that list changes): Team plan and pre-commit guards already landed;
+> #8876 (branch `codex/impl-8876-ci-shards`), #8877 (branch
+> `cursor/impl-8877-slow-b1`), #8881 (dispatch comment, task
+> `impl-8881-slow-b5`), and #8887 (branch `codex/impl-8887-hooks-fp`) are in
+> progress; #8872, #8874, #8878, #8879, #8880, #8882, #8883, and #8886 are open
+> with no dispatch comment or pushed branch found; #8882 is additionally
+> blocked by #8809 P3 and #8883 by #8873's merge (both stated on the child
+> issue bodies); #8884's AC-01 (ruleset timeout 30→60 min) is done, AC-02
+> (7-day drop observation, window ends 2026-10-04) and AC-03
+> (`max_entries_to_build` decision) remain open, owned by claude-infra, not
+> the operator; this document (#8885) is in review.
 
 ## 1. Purpose and user-visible outcome
 
@@ -125,9 +133,10 @@ then completed `success` seconds later. Ruleset `main-merge-queue` (id
 ALLGREEN`, `check_response_timeout_minutes: 30`. Four concurrent
 `merge_group` builds × ~10 jobs ≈ 40 runner requests against the (then) 20
 concurrent-job cap — the queue was starving itself. PR #8858 was dropped
-the same way shortly after (22:03Z, per the epic issue text). Two green PRs
-lost to this cause is the AC-02 denominator this program tracks going
-forward (zero drops over 7 days after the fix).
+the same way shortly after (22:03Z, per
+[#8884's issue body](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8884)).
+Two green PRs lost to this cause is the AC-02 denominator this program
+tracks going forward (zero drops over 7 days after the fix).
 
 ### 2f. Coupling map (test-file dependency graph)
 
@@ -138,11 +147,21 @@ gathered by parallel read-only research agents and summarized by the driver).
 - Total test files: 1,572.
 - Central-loader coupling (`scripts/agent_runtime/runner.py`,
   `scripts/delegate.py`) at module level reaches **90 of 1,572 files
-  (~6%)** today. A much larger figure (~1,075 files, ~70% of the suite) was
-  real for about 22.5 hours between commit `bf18b39e` (PR #8654/#8747,
-  merged 2026-09-25T00:57) and its revert, commit `2f7f1894` (PR
-  #8794/#8830, merged 2026-09-25T23:33) — a same-day regression, not the
-  steady state on `main` today (2026-09-27).
+  (~6%)** today. The coupling-map comment notes this "was never systemic
+  except for one reverted day." That day: PR #8747 (merge commit
+  `bf18b39e2524`, merged 2026-09-25T01:15:07Z) added an autouse
+  `tests/conftest.py` fixture that imported `scripts.delegate` and its
+  task-store siblings; per PR #8830's own problem statement, that made
+  "~760 `scripts/` files conftest-reachable." PR #8830 (merge commit
+  `2f7f1894493b`, merged 2026-09-25T23:49:54Z — about 22.6 hours later,
+  `merged_at` from `gh api .../pulls/8747` and `.../pulls/8830`) replaced it
+  with a call-time resolver; PR #8830's own measured evidence: "conftest
+  forward closure 777 → 15 files (`scripts/` 762 → 12)." (A separate,
+  unrelated #8750 measurement — the "B0a fail-closed result" comment,
+  2026-09-26, on a different import-graph selection policy — reports
+  ~1,075 of 1,571 files and a median selection of 1,095 files (~70% of the
+  suite); that number describes a different analysis, not this revert
+  window, and is used on its own terms in §3 below.)
 - `tests/test_mcp_sources_v4_invocation_recording.py` borrows
   `open_model_data`'s test fixtures via `sys.path.insert` +
   `pytest_plugins` — the one hard, collection-blocking cross-area edge
@@ -159,8 +178,9 @@ gathered by parallel read-only research agents and summarized by the driver).
 ### 2g. Slow-test root-cause analysis (30 slowest files)
 
 Source: [#8750 comment, "Slow-test root-cause analysis"](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8750#issuecomment-5854239345)
-(11 read-only investigation passes over the worktree, 2026-09-27; every claim
-in the underlying report cites file:line; the comment posts the six
+(read-only analysis, input: the 30 slowest files of merge-queue run
+36262523098, 2026-09-27; every claim in the underlying report cites
+file:line; the comment posts the six
 implementation briefs verbatim). Total addressable savings identified
 across the 30 files: **roughly 730–865s (~12–14 min) of the ~2,569s these
 files currently cost**, split into six ordered "briefs" (see §5, Briefs 1–6,
@@ -210,11 +230,11 @@ check pending, and cross-area breakage escapes if the filters are wrong.
 | **More, better-balanced shards on the Team plan** | Shard imbalance data, §2c (34.4/23.6/40.4/20.7 min in one run; stale duration file); now safe to add shard count with 60 runners available | Tracked as **#8876**, open |
 | **Pre-commit guards for the two most frequent late-catch failures** (`subprocess_timeout_guard`, stale-epic `lint_test_assertions`) | Red-run causes, §2d (16 and 25 of 150 failed runs respectively); repo tests kept as the CI backstop | **Landed**, PR #8864 (merged) |
 | **Slow-test batches 1–6** (reclassify genuinely full-scope tests to nightly; remove incidental fsync/subprocess overhead; cache deterministic recomputation; stub non-under-test boundaries; shrink oversized fixtures; `open_model_data` fixture work) | Slow-test analysis, §2g | Tracked as **#8877–#8882**; #8882 blocked on #8809 P3 |
-| **Merge-queue `check_response_timeout_minutes` 30 → 60** | Starvation incident, §2e (two green PRs dropped: #8852, #8858) | Proposed on #8750; needs a human with repo-admin rights (agent's own attempt was refused by the permission layer); tracked as **#8884**, waiting on the operator |
-| **Area lanes for exactly two areas — atlas/lexicon/practice and open_model_data — after two prerequisite refactors, not four** | Coupling map, §2f/§6; design panel ADOPT WITH CHANGES | Tracked as **#8872**, DoR-complete (passes `check_issue_task_quality.py --strict`), open for dispatch; refactors (fix the `pytest_plugins` borrowing, `git mv` the 17 misrouted files) are its own prerequisite scope |
+| **Merge-queue `check_response_timeout_minutes` 30 → 60** | Starvation incident, §2e (two green PRs dropped: #8852, #8858) | **Done** (ruleset `updated_at` 2026-09-27T08:44:36Z, set by claude-infra under the operator's GitHub-configuration delegation; [evidence comment](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8884#issuecomment-5854310061)); tracked as **#8884**; AC-02 (7-day drop observation, ends 2026-10-04) and AC-03 (`max_entries_to_build` decision) remain open, owned by claude-infra |
+| **Area lanes for exactly two areas — atlas/lexicon/practice and open_model_data — after two prerequisite refactors, not four** | Coupling map, §2f/§6; design panel ADOPT WITH CHANGES | Tracked as **#8872**; passes the task-card checker (`check_issue_task_quality.py --strict`), open, no dispatch comment or branch found yet (dispatch preflight not recorded); refactors (fix the `pytest_plugins` borrowing, `git mv` the 17 misrouted files) are its own prerequisite scope |
 | **Merge queue must run every lane for code changes before any PR-side lane selection ships** | Panel finding on #8872: `classify_changes.classify_tier` today applies the same path classes to `merge_group` as to `pull_request` (operator decision #8437, 2026-09-21) — lane selection on PRs is only safe if the queue is a full backstop | Operator decision needed; recorded as a dependency of #8872, not yet made |
 | **DoR/DoD enforcement for every agent-filed issue** | Motivated by this program's own experience rewriting #8872/#8874 to meet the task-quality bar mid-flight | Tracked as **#8886**, open |
-| **Root-cause the stale `.git/index.lock`** | Blocked the primary checkout's fast-forward for ~10h (issue title, #8874) | Tracked as **#8874**, DoR-complete (passes `check_issue_task_quality.py --strict`), open for dispatch |
+| **Root-cause the stale `.git/index.lock`** | Blocked the primary checkout's fast-forward for ~10h (issue title, #8874) | Tracked as **#8874**; passes the task-card checker (`check_issue_task_quality.py --strict`), open, no dispatch comment or branch found yet (dispatch preflight not recorded) |
 
 ## 5. What was considered and rejected, and why
 
@@ -292,22 +312,32 @@ the design panel (Codex + Grok) reviewed the resulting plan twice
 
 ## 7. Child tickets
 
-| # | Child | Author → reviewer | Status (as of 2026-09-27) |
+The table below is a dated snapshot, not the live status — the live status is
+epic **#8875**'s issue list at any given moment. Each status here is limited
+to what a command could prove on 2026-09-27 (`gh issue view <n> --json
+state,comments`, `git ls-remote --heads origin`): `open` (no dispatch comment
+or pushed branch found), `in progress` (a dispatch comment naming a task, or
+a pushed branch, exists), `PR #N open`, or `closed`. A `ready`/`task` GitHub
+label or a passing task-card checker (`check_issue_task_quality.py
+--strict`) is not treated as equivalent to dispatched — dispatch preflight is
+a separate, unchecked step on #8872 and #8874 as of this snapshot.
+
+| # | Child | Author → reviewer | Status (as of 2026-09-27, snapshot) |
 | --- | --- | --- | --- |
-| #8872 | Area lanes: atlas/lexicon/practice + `open_model_data` only, after two refactors; other four areas stay on shards | Codex → Claude | open, ready (DoR-complete) |
-| #8874 | Stale `.git/index.lock` root cause | Codex → Claude | open, ready (DoR-complete) |
-| #8876 | More balanced shards on the Team plan | Codex → Claude | in progress |
-| #8877 | Slow tests batch 1: nightly tier for four full-scope tests | Cursor → Claude | in progress |
-| #8878 | Slow tests batch 2: fsync / git bootstrap / guard memoization | Codex → Claude | open, ready |
-| #8879 | Slow tests batch 3: cache deterministic recomputation | Cursor → Claude | open, ready |
-| #8880 | Slow tests batch 4: stub non-under-test boundaries; batch slot lookups | Codex → Claude | open, ready |
-| #8881 | Slow tests batch 5: smaller fixtures, one shared browser | Codex → Claude | open, ready |
-| #8882 | Slow tests batch 6: `open_model_data` fixtures | Codex → Claude | open, **blocked by #8809 P3** |
-| #8883 | Wiki prompts describe paging | Cursor → Claude | open, **blocked by #8873 merge** |
-| #8884 | Merge queue must not drop green PRs (timeout 30→60 min) | operator setting; driver verifies | open, **waiting on operator** |
-| #8885 | This plan document | Claude → Codex | in review |
-| #8886 | DoR/DoD enforcement for every agent-filed issue | Codex → Claude | open, ready |
-| #8887 | Remove false alarms from the agent guard hooks; safe stale-lock tool | Codex → Claude | in progress |
+| #8872 | Area lanes: atlas/lexicon/practice + `open_model_data` only, after two refactors; other four areas stay on shards | Codex → Claude | open (no dispatch comment or branch found) |
+| #8874 | Stale `.git/index.lock` root cause | Codex → Claude | open (no dispatch comment or branch found) |
+| #8876 | More balanced shards on the Team plan | Codex → Claude | in progress (branch `codex/impl-8876-ci-shards`) |
+| #8877 | Slow tests batch 1: nightly tier for four full-scope tests | Cursor → Claude | in progress (branch `cursor/impl-8877-slow-b1`) |
+| #8878 | Slow tests batch 2: fsync / git bootstrap / guard memoization | Codex → Claude | open (no dispatch comment or branch found) |
+| #8879 | Slow tests batch 3: cache deterministic recomputation | Cursor → Claude | open (no dispatch comment or branch found) |
+| #8880 | Slow tests batch 4: stub non-under-test boundaries; batch slot lookups | Codex → Claude | open (no dispatch comment or branch found) |
+| #8881 | Slow tests batch 5: smaller fixtures, one shared browser | Cursor → Claude or Codex | in progress (dispatch comment, task `impl-8881-slow-b5`; no branch found) |
+| #8882 | Slow tests batch 6: `open_model_data` fixtures | Codex → Claude | open, **blocked by #8809 P3** (per issue body) |
+| #8883 | Wiki prompts describe paging | Cursor → Claude | open, **blocked by #8873 merge** (per issue body; #8873 itself is open, unmerged) |
+| #8884 | Merge queue must not drop green PRs (timeout 30→60 min) | claude-infra (operator-delegated setting) → self-verified | open — AC-01 done (ruleset reads 60); AC-02 (7-day observation, ends 2026-10-04) and AC-03 (`max_entries_to_build` decision) open, owned by claude-infra |
+| #8885 | This plan document | Claude → Codex | in progress (branch `claude/impl-8885-ci-plan-doc`, no PR yet) |
+| #8886 | DoR/DoD enforcement for every agent-filed issue | Codex → Claude | open (no dispatch comment or branch found) |
+| #8887 | Remove false alarms from the agent guard hooks; safe stale-lock tool | Codex → Claude | in progress (branch `codex/impl-8887-hooks-fp`) |
 
 Already landed, not tracked as an open child: pre-commit guards for the
 timeout and stale-epic checks (PR #8864, merged) and the Team-plan capacity
@@ -329,17 +359,21 @@ move (2026-09-27, per epic #8875 text).
   keep `max_entries_to_build: 4` and measure drop rate, time-to-land, and
   runner occupancy for a week after the timeout change, rather than
   assuming the Team plan alone fixes it.
-- **Coupling drift.** The 90-file (~6%) coupling figure in §2f was ~1,075
-  files 22.5 hours earlier this same week, from one PR. Any area-lane
-  design that assumes today's coupling is permanent needs the
-  re-measure-before-2a-style discipline already used once on #8750 (re-
-  check the actual reachable fraction before changing anything that
-  depends on it).
-- **Operator-gated items don't silently stall.** #8884 (timeout) and the
-  merge-queue-full-backstop decision that #8872 depends on both require an
-  operator or repo-admin action the agent fleet cannot take itself
-  (permission layer refusal, confirmed on #8750). These are called out
-  explicitly here so they are visibly "waiting", not silently dropped.
+- **Coupling drift.** The 90-file (~6%) coupling figure in §2f briefly grew
+  to a 777-file conftest closure for about 22.6 hours earlier this same
+  week, from one PR (§2f). Any area-lane design that assumes today's
+  coupling is permanent needs the re-measure-before-2a-style discipline
+  already used once on #8750 (re-check the actual reachable fraction before
+  changing anything that depends on it).
+- **Operator-gated items don't silently stall.** #8884's AC-01 (the timeout
+  setting itself) no longer needs the operator directly — claude-infra made
+  the change 2026-09-27 under the operator's GitHub-configuration delegation
+  rule — but its AC-02/AC-03 observation and capacity decision are still
+  open and owned by claude-infra. The merge-queue-full-backstop decision
+  that #8872 depends on (`merge_group` running every lane for code changes,
+  reversing part of operator decision #8437) is recorded on #8872 as
+  "operator decision needed" and not yet made. This is called out explicitly
+  here so it is visibly "waiting," not silently dropped.
 - **Residual policy** (epic #8875): each child owns its own residual; the
   epic closes only when every child is closed or re-homed with the
   operator's agreement.
