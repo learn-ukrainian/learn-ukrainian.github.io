@@ -79,11 +79,19 @@ def test_unquoted_midword_hash_keeps_secret_checks_active(monkeypatch, capsys, c
     assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize("blank", ["\r", "\v", "\f", "\u00a0"])
+def test_non_bash_blank_before_hash_keeps_secret_checks_active(monkeypatch, capsys, blank):
+    assert _run(monkeypatch, f"echo hi{blank}#$GH_TOKEN") == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize(
     "command",
     [
         "git status # echo x > AGENTS.md",
         "echo hi # $GH_TOKEN",
+        "echo hi\t# $GH_TOKEN",
+        "echo hi # $GH_TOKEN\r\necho safe",
         "# tee AGENTS.md",
         "echo hi # cat .env",
         "echo '#' ; echo safe",

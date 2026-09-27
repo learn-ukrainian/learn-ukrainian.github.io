@@ -542,7 +542,8 @@ def _strip_shell_comments(command: str) -> str:
                     break
                 i = end
                 continue
-            word_start = char.isspace() or char in ";&|()"
+            # Bash blanks are ASCII; keep # after redirects as a filename for the guard.
+            word_start = char in " \t\n;&|()"
         out.append(char)
         i += 1
     return "".join(out)

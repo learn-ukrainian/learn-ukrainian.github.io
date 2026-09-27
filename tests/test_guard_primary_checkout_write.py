@@ -894,6 +894,8 @@ def test_quoted_redirect_spelling_is_still_a_primary_write(repo: Path, command: 
     [
         "git status # echo x > AGENTS.md",
         "echo hi # $GH_TOKEN",
+        "echo hi\t# $GH_TOKEN",
+        "echo x # c\r\necho safe",
         "# tee AGENTS.md",
         "echo hi # cat .env",
         "echo $(printf '# hidden') # tee AGENTS.md",
@@ -913,6 +915,11 @@ def test_bash_comments_do_not_write_primary_checkout(repo: Path, command: str):
         "echo '#' ; tee AGENTS.md",
         "echo x;# c\ntee AGENTS.md",
         "echo hi # <<EOF\ntee AGENTS.md # still a command",
+        "echo hi\r#; tee AGENTS.md",
+        "echo hi\r#$(tee AGENTS.md)",
+        "echo hi\u00a0#; tee AGENTS.md",
+        "echo x # c\r\ntee AGENTS.md",
+        "echo x >#AGENTS.md",
     ],
 )
 def test_bash_comments_preserve_real_primary_writes(repo: Path, command: str):
