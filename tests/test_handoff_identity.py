@@ -14,6 +14,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -32,9 +33,7 @@ _LAUNCH_PATH_MINTS = (
 
 def _infra_harness_stream_id() -> str:
     """Anchor on the live infra-harness epic so succession cannot stale this suite."""
-    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"][
-        "epics"
-    ]
+    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"]["epics"]
     assert epics, "infra-harness must list at least one epic in issue_streams.yaml"
     return f"epic:{int(epics[0])}"
 
@@ -188,7 +187,15 @@ def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: 
         ("monitor", "monitor", "epic:7919", "claude-monitor", "gemini-monitor", "grok-monitor", "codex-monitor"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
-        ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka", "codex-hramatka"),
+        (
+            "hramatka.lessons",
+            "hramatka",
+            "epic:4542",
+            "claude-hramatka",
+            "gemini-hramatka",
+            "grok-hramatka",
+            "codex-hramatka",
+        ),
         ("corpus", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus", "codex-corpus"),
         ("corpus-channels", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus", "codex-corpus"),
     ],
@@ -441,6 +448,36 @@ def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None
     assert f"{fresh_key} | infra.{fresh_key}" not in help_result.stdout
 
 
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_selector_help_checks_all_registry_keys_in_one_interpreter_call(tmp_path: Path) -> None:
+    calls = tmp_path / "registry-arguments.txt"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; calls="$2"; py="$3"; '
+            '_handoff_slot_registry() { printf "%s\\n" "$@" > "$calls"; '
+            '"$py" -m scripts.orchestration.handoff_slot_registry "$@"; }; '
+            "launcher_selector_help",
+            "bash",
+            str(_HANDOFF_IDENTITY),
+            str(calls),
+            sys.executable,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == [
+        "--registered",
+        *(f"claude-{key}" for key in yaml.safe_load(_ISSUE_STREAMS.read_text())["streams"]),
+    ]
+    assert "    devops | infra.devops\n" in result.stdout
+    assert "    atlas-practice | infra.atlas-practice\n" not in result.stdout
+
+
 def test_launch_path_does_not_literal_mint_infra_epic() -> None:
     """Reintroducing a literal epic:4707 mint on the launch path must fail."""
     for path in _LAUNCH_PATH_MINTS:
@@ -495,9 +532,7 @@ def test_fresh_infra_stream_capsule_is_registered(tmp_path: Path) -> None:
         lineage_id="lineage-fresh-infra",
         ttl_seconds=60,
     )
-    capsule = supervisor.build_capsule(
-        role=LaunchRole.DRIVER, stream_id=stream_id, lease=lease
-    ).as_dict()
+    capsule = supervisor.build_capsule(role=LaunchRole.DRIVER, stream_id=stream_id, lease=lease).as_dict()
     assert capsule["identity"]["stream_id"] == stream_id
     assert capsule["dual_write"]["mode"] == "inventory"
     assert capsule["dual_write"]["handoff_paths"]
