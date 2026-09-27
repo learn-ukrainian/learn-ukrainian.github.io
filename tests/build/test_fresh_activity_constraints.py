@@ -9,6 +9,7 @@ from jsonschema import Draft7Validator
 
 from scripts.build.fresh.draft_schema import (
     FRESH_CONSTRAINTS_META,
+    _alias_conflicts,
     activity_payload_schema,
     load_fresh_constraints,
     validate_draft,
@@ -29,6 +30,23 @@ def _reasons(draft: dict, level: str, types: dict[str, str]) -> list[str]:
         for error in validate_draft(draft, level, activity_types=types)
         if error.check == "activity_fresh_constraints"
     ]
+
+
+@pytest.mark.parametrize(
+    ("item", "conflicts"),
+    [
+        ({"options": ["first", "second"], "correct": 0, "answer": "first"}, False),
+        ({"options": ["first", "second"], "correct": 0, "answer": "second"}, True),
+        ({"correction": "first", "answer": "first"}, False),
+        ({"correction": "first", "answer": "second"}, True),
+    ],
+)
+def test_conflicting_answer_aliases(item: dict, conflicts: bool) -> None:
+    errors = []
+    _alias_conflicts(errors, "quiz-a1", item, "/activities/0/items/0")
+    assert bool(errors) is conflicts
+    if conflicts:
+        assert "conflicting_answer_aliases" in errors[0].reason
 
 
 def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:

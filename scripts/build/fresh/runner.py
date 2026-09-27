@@ -248,6 +248,27 @@ def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
     return any(required <= analysis for analysis in analyses)
 
 
+def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: int) -> bool:
+    """A question receipt counts only when its language seat differs from the writer's family."""
+    from scripts.review.second_seat import IdentityError, concrete_family, writer_family
+
+    if not isinstance(provenance, str):
+        return False
+    match = re.fullmatch(r"question:([^:]+):Q-[0-9]{3,}", provenance)
+    if match is None:
+        return False
+    agent, separator, model = match.group(1).partition("@")
+    if separator != "@" or agent.casefold() not in {"agy", "claude", "codex", "grok"} or not model:
+        return False
+    try:
+        seat_family = concrete_family(model, what="question seat model")
+        return seat_family == concrete_family(agent, what="question seat lane") and seat_family != writer_family(
+            state_dir, lesson_n
+        )
+    except IdentityError:
+        return False
+
+
 def _host_eligible(host: Any, draft: dict[str, Any], lesson: dict[str, Any], activity_id: str) -> bool:
     if not isinstance(host, dict) or host.get("kind") not in {"dialogue", "quote"}:
         return False
@@ -304,12 +325,11 @@ def check_7_a1_choices(
                         return bad("group_entry_not_admitted", aid, index)
                     other_values = {g.get("value") for g in activity["groups"] if g is not group}
                     if any(_admitted(analyses, {feature: other}) for other in other_values):
-                        # A question-selected resolution, unlike deterministic narrowing,
-                        # records the independent language judgement for this entry.
+                        # An ambiguous form needs an independent language judgement.
                         confirmed = any(
                             token.get("unit", {}).get("activity") == aid
                             and token.get("unit", {}).get("block") == f"group_{group_idx}_{entry_idx}"
-                            and str(token.get("provenance") or "").startswith("question:")
+                            and _independent_language_question(token.get("provenance"), state_dir, lesson_n)
                             for token in stream.tokens
                         )
                         if not confirmed:
@@ -498,6 +518,11 @@ def check_4_activities(
     *,
     level: str | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[str, int], list[dict[str, Any]]]]:
+    mod_level = (
+        (level or "").lower()
+        or draft.get("lesson", {}).get("module", "").split("/")[0].lower()
+        or lesson.get("level", "").lower()
+    )
     records = {w["id"]: w for w in words.get("words") or []}
     errors = {e["id"]: e for e in pack.get("errors") or []}
     planned = {a["id"]: a for a in lesson.get("activities") or []}
@@ -691,18 +716,14 @@ def check_4_activities(
                 correct_count = sum(option.get("correct") is True for option in opts)
                 if correct_count == 0:
                     return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
-                mod_level = (
-                    (level or "").lower()
-                    or draft.get("lesson", {}).get("module", "").split("/")[0].lower()
-                    or lesson.get("level", "").lower()
-                )
                 min_allowed = 1 if mod_level in {"a2", "b1"} else 2
                 min_req = item.get("min_correct", min_allowed)
                 if correct_count < max(min_allowed, min_req):
                     return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
-        structural_reason = _structural_activity_error(activity, typ, records)
-        if structural_reason is not None:
-            return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
+        if mod_level == "a1":
+            structural_reason = _structural_activity_error(activity, typ, records)
+            if structural_reason is not None:
+                return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
     return _pass(4), form_options
 
 

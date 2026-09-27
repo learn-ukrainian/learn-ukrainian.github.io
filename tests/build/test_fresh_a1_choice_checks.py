@@ -1,7 +1,8 @@
 """A1 post-resolution choice checks using independently inspected VESUM forms.
 
 VESUM source locations: брат 487702-487719, книга 2614480-2614493,
-бути 542216-542245, читати 6561736-6561760, м'яч 3260520-3260537.
+бути 542216-542245, читати 6561736-6561760, великий 611137-611177,
+м'яч 3260520-3260537.
 """
 
 from __future__ import annotations
@@ -59,7 +60,16 @@ READ = _record(
     [
         ("читати", "verb:imperf:inf"),
         ("читаю", "verb:imperf:pres:s:1"),
+        ("читаєш", "verb:imperf:pres:s:2"),
         ("читав", "verb:imperf:past:m"),
+    ],
+)
+BIG = _record(
+    6,
+    "великий",
+    [
+        ("велике", "adj:n:v_naz:compb"),
+        ("великому", "adj:n:v_dav:compb"),
     ],
 )
 
@@ -117,6 +127,73 @@ def test_book_plural_accusative_needs_singular_demand(tmp_path: Path) -> None:
     item["requires"] = {"Case": "Acc"}
     item["tests_feature"] = "Case"
     assert _check(tmp_path, item, BOOK)["code"] == "form_not_unique_for_requires"
+
+
+@pytest.mark.parametrize(
+    ("sentence", "record", "options", "requires", "feature"),
+    [
+        ("Я ___ книгу", READ, ["читаю", "читаєш"], {"Person": "1", "Number": "Sing"}, "Person"),
+        (
+            "Вікно ___ і чисте",
+            BIG,
+            ["велике", "великому"],
+            {"Gender": "Neut", "Number": "Sing", "Case": "Nom"},
+            "Gender",
+        ),
+    ],
+)
+def test_header_agreement_examples_reject_swapped_key(
+    tmp_path: Path, sentence: str, record: dict, options: list[str], requires: dict[str, str], feature: str
+) -> None:
+    item = _form(options, record, requires, taught=feature)
+    item["sentence"] = sentence
+    assert _check(tmp_path, item, record)["status"] == "passed"
+    item["correct"] = 1
+    assert _check(tmp_path, item, record)["code"] == "form_not_unique_for_requires"
+
+
+@pytest.mark.parametrize(
+    ("seat", "accepted"),
+    [
+        ("codex@gpt-6-sol", False),
+        ("grok@grok-4.7", True),
+        ("cursor@grok-4.7", False),
+        ("codex@grok-4.7", False),
+        ("grok@unknown", False),
+    ],
+)
+def test_ambiguous_group_entry_needs_other_family_language_seat(tmp_path: Path, seat: str, accepted: bool) -> None:
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    activity = {
+        "id": "a1",
+        "grouping_feature": "Case",
+        "groups": [
+            {"value": "Gen", "items": [{"text": "книги", "record": "W-2", "why": "Selected by context."}]},
+            {"value": "Nom", "items": []},
+        ],
+    }
+    stream = SimpleNamespace(
+        lesson={"level": "a1", "slug": "sample", "n": 1},
+        inputs={},
+        tokens=[
+            {
+                "unit": {"activity": "a1", "block": "group_0_0"},
+                "provenance": f"question:{seat}:Q-001",
+            }
+        ],
+    )
+    row = check_7_a1_choices(
+        {"activities": [activity], "steps": []},
+        {"activities": [{"id": "a1", "type": "group-sort"}]},
+        {"words": [BOOK]},
+        stream,
+        state_dir=tmp_path,
+        lesson_n=1,
+        vesum_lookup=lambda words: {word: [] for word in words},
+    )
+    assert row["status"] == ("passed" if accepted else "failed")
+    if not accepted:
+        assert row["code"] == "group_entry_ambiguous_without_receipt"
 
 
 def test_analytic_future_uses_single_store_forms(tmp_path: Path) -> None:

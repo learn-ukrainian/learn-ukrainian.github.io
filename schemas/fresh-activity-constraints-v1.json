@@ -312,10 +312,10 @@
     },
     "divide-words-a1": {
       "answer_delimiter": "-",
-      "one_vowel_parts": "аеіоуяюєї"
+      "one_vowel_parts": "аеіиоуяюєї"
     },
     "count-syllables-a1": {
-      "correct_equals_vowel_count": "аеіоуяюєї"
+      "correct_equals_vowel_count": "аеіиоуяюєї"
     },
     "anagram-a1": {
       "answer_multiset_matches_letters": true,
