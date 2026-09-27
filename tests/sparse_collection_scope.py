@@ -9,10 +9,15 @@ that contains a named module is entered once; every other test file is
 ignored. Unset, this plugin leaves collection unchanged.
 
 When ``SPARSE_COLLECTION_OUTCOMES_FILE`` is set, the child writes one JSON
-object: each scope path mapped to ``collected`` (at least one item),
-``skipped`` (a module-level ``pytest_collectreport`` with ``report.skipped``),
-or ``failed``. ``--collect-only -q`` prints no node id for a module-level
-skip, so the parent cannot see that outcome in the text.
+object: each scope path mapped to ``{"status": ..., "reason": ...}``, where
+``status`` is ``collected`` (at least one item), ``skipped`` (a module-level
+``pytest_collectreport`` with ``report.skipped``), or ``failed``. ``reason``
+is the skip message (``report.longrepr``'s third element for a
+``pytest.skip(..., allow_module_level=True)``, else its ``str()``) when
+``status`` is ``skipped``, and ``None`` otherwise. ``--collect-only -q``
+prints no node id for a module-level skip, so the parent cannot see that
+outcome in the text and relies on this reason to decide whether the skip is
+expected.
 """
 
 from __future__ import annotations
@@ -29,7 +34,7 @@ OUTCOMES_FILE_ENV = "SPARSE_COLLECTION_OUTCOMES_FILE"
 
 _ROOT: Path | None = None
 _FAILED: set[str] = set()
-_SKIPPED: set[str] = set()
+_SKIPPED: dict[str, str] = {}
 _ITEM_COUNTS: dict[str, int] = {}
 _WROTE = False
 
@@ -117,8 +122,8 @@ def _record_items(session: pytest.Session) -> None:
         _ITEM_COUNTS[target] = _ITEM_COUNTS.get(target, 0) + 1
 
 
-def _outcomes() -> dict[str, str]:
-    """One status per scope file.
+def _outcomes() -> dict[str, dict[str, str | None]]:
+    """One ``{"status": ..., "reason": ...}`` entry per scope file.
 
     A collection error wins, including a file that produced no report at
     all. Items win over a skip so a module that collected tests is not
@@ -127,16 +132,16 @@ def _outcomes() -> dict[str, str]:
     files = _scope_files()
     if not files:
         return {}
-    result: dict[str, str] = {}
+    result: dict[str, dict[str, str | None]] = {}
     for target in sorted(files):
         if target in _FAILED:
-            result[target] = "failed"
+            result[target] = {"status": "failed", "reason": None}
         elif _ITEM_COUNTS.get(target, 0) >= 1:
-            result[target] = "collected"
+            result[target] = {"status": "collected", "reason": None}
         elif target in _SKIPPED:
-            result[target] = "skipped"
+            result[target] = {"status": "skipped", "reason": _SKIPPED[target]}
         else:
-            result[target] = "failed"
+            result[target] = {"status": "failed", "reason": None}
     return result
 
 
@@ -156,6 +161,19 @@ def pytest_configure(config: pytest.Config) -> None:
     _ROOT = Path(config.rootpath)
 
 
+def _skip_reason(report: pytest.CollectReport) -> str:
+    """Extract the skip message pytest attaches to a module-level skip.
+
+    ``pytest.skip(..., allow_module_level=True)`` sets ``longrepr`` to
+    ``(path, lineno, "Skipped: <reason>")``; fall back to ``str()`` for any
+    other shape so a reason is always recorded.
+    """
+    longrepr = report.longrepr
+    if isinstance(longrepr, tuple) and len(longrepr) == 3:
+        return str(longrepr[2])
+    return str(longrepr)
+
+
 def pytest_collectreport(report: pytest.CollectReport) -> None:
     raw = getattr(report, "fspath", None)
     if raw is None or not str(raw):
@@ -166,7 +184,7 @@ def pytest_collectreport(report: pytest.CollectReport) -> None:
     if report.failed:
         _FAILED.add(target)
     elif report.skipped:
-        _SKIPPED.add(target)
+        _SKIPPED[target] = _skip_reason(report)
 
 
 def pytest_collection_finish(session: pytest.Session) -> None:
