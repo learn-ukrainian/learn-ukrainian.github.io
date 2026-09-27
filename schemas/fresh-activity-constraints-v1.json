@@ -6,28 +6,43 @@
   "orthography_lists": [
     {
       "id": "apostrophe-or-empty",
-      "options": ["'", ""],
+      "options": [
+        "'",
+        ""
+      ],
       "record_id": "pravopys-2019-paragraph-7",
       "also_record_id": "2-klas-ukrmova-vashulenko-2019-1_s0011"
     },
     {
       "id": "soft-sign-or-empty",
-      "options": ["ь", ""],
+      "options": [
+        "ь",
+        ""
+      ],
       "record_id": "pravopys-2019-paragraph-26"
     },
     {
       "id": "a-or-ya",
-      "options": ["а", "я"],
+      "options": [
+        "а",
+        "я"
+      ],
       "record_id": "pravopys-2019-paragraph-4"
     },
     {
       "id": "u-or-yu",
-      "options": ["у", "ю"],
+      "options": [
+        "у",
+        "ю"
+      ],
       "record_id": "pravopys-2019-paragraph-4"
     },
     {
       "id": "e-or-ye",
-      "options": ["е", "є"],
+      "options": [
+        "е",
+        "є"
+      ],
       "record_id": "pravopys-2019-paragraph-4"
     }
   ],
@@ -47,6 +62,36 @@
         "orthography": {
           "options_from": "orthography_lists"
         }
+      },
+      "required_item_fields_by_mode": {
+        "form-choice": [
+          "kind",
+          "option_why",
+          "tests_feature",
+          "requires",
+          "record"
+        ],
+        "orthography": [
+          "kind",
+          "option_why",
+          "target_record"
+        ]
+      },
+      "mode_kind": {
+        "form-choice": [
+          "form"
+        ],
+        "orthography": [
+          "orthography"
+        ]
+      },
+      "allowed_kinds_by_mode": {
+        "form-choice": [
+          "form"
+        ],
+        "orthography": [
+          "orthography"
+        ]
       }
     },
     "fill-in-a2": {
@@ -77,7 +122,14 @@
       }
     },
     "true-false-a1": {
-      "items_max": 4
+      "items_max": 4,
+      "required_item_fields": [
+        "kind",
+        "option_why",
+        "host"
+      ],
+      "kind_is": "comprehension",
+      "option_why_length": 2
     },
     "true-false-a2": {
       "items_max": 4
@@ -88,6 +140,197 @@
     "true-false-b2": {
       "items_max": null,
       "see": "b2_true_false_cap"
+    },
+    "quiz-a1": {
+      "required_item_fields": [
+        "kind",
+        "option_why"
+      ],
+      "allowed_kinds": [
+        "form",
+        "vocabulary",
+        "comprehension"
+      ],
+      "required_item_fields_by_kind": {
+        "form": [
+          "tests_feature",
+          "requires",
+          "option_records"
+        ],
+        "vocabulary": [
+          "option_records",
+          "target_record"
+        ],
+        "comprehension": [
+          "host"
+        ]
+      }
+    },
+    "odd-one-out-a1": {
+      "required_item_fields": [
+        "kind",
+        "option_why"
+      ],
+      "allowed_kinds": [
+        "form",
+        "vocabulary",
+        "comprehension"
+      ],
+      "required_item_fields_by_kind": {
+        "form": [
+          "tests_feature",
+          "requires",
+          "option_records"
+        ],
+        "vocabulary": [
+          "option_records",
+          "target_record"
+        ],
+        "comprehension": [
+          "host"
+        ]
+      }
+    },
+    "error-correction-a1": {
+      "required_item_fields_if_options": [
+        "kind",
+        "option_why"
+      ],
+      "allowed_kinds_if_options": [
+        "form",
+        "vocabulary",
+        "comprehension"
+      ],
+      "required_item_fields_by_kind_if_options": {
+        "form": [
+          "tests_feature",
+          "requires",
+          "option_records"
+        ],
+        "vocabulary": [
+          "option_records",
+          "target_record"
+        ],
+        "comprehension": [
+          "host"
+        ]
+      }
+    },
+    "translate-a1": {
+      "required_item_fields_if_options": [
+        "kind",
+        "option_why"
+      ],
+      "allowed_kinds_if_options": [
+        "form",
+        "vocabulary",
+        "comprehension"
+      ],
+      "required_item_fields_by_kind_if_options": {
+        "form": [
+          "tests_feature",
+          "requires",
+          "option_records"
+        ],
+        "vocabulary": [
+          "option_records",
+          "target_record"
+        ],
+        "comprehension": [
+          "host"
+        ]
+      },
+      "options_mode_forbids": [
+        "alternatives"
+      ],
+      "options_mode_exactly_one_correct": true
+    },
+    "image-to-letter-a1": {
+      "required_item_fields": [
+        "kind",
+        "option_why"
+      ],
+      "allowed_kinds": [
+        "form",
+        "vocabulary",
+        "comprehension"
+      ],
+      "required_item_fields_by_kind": {
+        "form": [
+          "tests_feature",
+          "requires",
+          "option_records"
+        ],
+        "vocabulary": [
+          "option_records",
+          "target_record"
+        ],
+        "comprehension": [
+          "host"
+        ]
+      }
+    },
+    "group-sort-a1": {
+      "required_activity_fields": [
+        "grouping_feature"
+      ],
+      "required_group_fields": [
+        "value"
+      ],
+      "group_entry_shape": "object",
+      "required_group_entry_fields": [
+        "text",
+        "record",
+        "why"
+      ]
+    },
+    "match-up-a1": {
+      "required_activity_fields": [
+        "left_role",
+        "right_role"
+      ],
+      "allowed_roles": [
+        "form",
+        "gloss",
+        "question",
+        "answer"
+      ],
+      "required_pair_fields": [
+        "why"
+      ],
+      "record_field_by_side_role": {
+        "left_role": "left_record",
+        "right_role": "right_record",
+        "when": "form"
+      }
+    },
+    "order-a1": {
+      "required_activity_fields": [
+        "explanation"
+      ],
+      "correct_order_is_full_index_permutation": true
+    },
+    "divide-words-a1": {
+      "answer_delimiter": "-",
+      "one_vowel_parts": "аеіиоуяюєї"
+    },
+    "count-syllables-a1": {
+      "correct_equals_vowel_count": "аеіиоуяюєї"
+    },
+    "anagram-a1": {
+      "answer_multiset_matches_letters": true,
+      "answer_is_store_form": true
+    },
+    "unjumble-a1": {
+      "answer_multiset_matches_input": true
+    },
+    "pick-syllables-a1": {
+      "required_activity_fields": [
+        "explanation"
+      ]
+    },
+    "classify-a1": {
+      "forbidden": true
     }
   }
 }

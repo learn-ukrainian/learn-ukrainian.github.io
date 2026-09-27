@@ -41,10 +41,13 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
+import unicodedata
 import uuid
+from collections import Counter
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -64,13 +67,16 @@ from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence.tags import to_oracle
 from scripts.curriculum.learner_state import codes as learner_codes
 from scripts.curriculum.learner_state.inventory_gate import check_lesson
 from scripts.curriculum.learner_state.observed import ObservedError, write_observed
 from scripts.curriculum.resolver import codes, questions, receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
+from scripts.curriculum.resolver.narrow import learner_usable
 from scripts.curriculum.resolver.stream import resolve
-from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.validate.activity_report import draft_report
 from scripts.review.digest.error import DigestError
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-lesson-gates-v1.schema.json"
@@ -189,6 +195,322 @@ def _forms(record: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {f["form"]: f for f in record.get("forms") or [] if f.get("learner") is True}
 
 
+_VOWELS = frozenset(chr(code) for code in (0x430, 0x435, 0x438, 0x456, 0x457, 0x43E, 0x443, 0x44F, 0x44E, 0x454))
+_A1_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
+_CHOICE_TYPES = frozenset(
+    {"quiz", "multiple-choice", "fill-in", "odd-one-out", "error-correction", "translate", "image-to-letter"}
+)
+
+
+def _normal_letters(value: str) -> str:
+    """Use the build's apostrophe folding, then ignore case, stress and punctuation."""
+    from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
+
+    folded = unicodedata.normalize("NFD", value.translate(_VESUM_APOSTROPHE_TRANSLATION).casefold())
+    return "".join(char for char in folded if unicodedata.category(char)[0] in {"L", "N"})
+
+
+def _choice_text(option: Any) -> str | None:
+    value = option.get("text") if isinstance(option, dict) else option
+    return value if isinstance(value, str) else None
+
+
+def _choice_key(item: dict[str, Any], typ: str, options: list[Any]) -> int | None:
+    if typ in {"quiz", "multiple-choice"} and isinstance(item.get("_resolved_key_index"), int):
+        return item["_resolved_key_index"]
+    if typ in {"quiz", "multiple-choice"} and type(item.get("correct")) is int:
+        return item["correct"]
+    if typ == "true-false":
+        answer = next((item[k] for k in ("correct", "is_true", "isTrue", "answer") if k in item), None)
+        return (0 if answer else 1) if isinstance(answer, bool) else None
+    marked = [i for i, option in enumerate(options) if isinstance(option, dict) and option.get("correct") is True]
+    if len(marked) == 1:
+        return marked[0]
+    if typ == "odd-one-out" and isinstance(item.get("correct"), int):
+        return item["correct"]
+    answer = next((item[k] for k in ("answer", "correction", "letter") if isinstance(item.get(k), str)), None)
+    matches = [i for i, option in enumerate(options) if _choice_text(option) == answer]
+    return matches[0] if len(matches) == 1 else None
+
+
+def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
+    """Keep all learner analyses of one bound record and surface."""
+    if record is None:
+        return []
+    return [
+        set(to_oracle(form["tags"]))
+        for form in record.get("forms") or []
+        if learner_usable(form) and lookup_form(form["form"]) == lookup_form(surface)
+    ]
+
+
+def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
+    required = {f"{group}={value}" for group, value in demand.items()}
+    return any(required <= analysis for analysis in analyses)
+
+
+def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: int) -> bool:
+    """A question receipt counts only when its language seat differs from the writer's family."""
+    from scripts.review.second_seat import IdentityError, concrete_family, writer_family
+
+    if not isinstance(provenance, str):
+        return False
+    match = re.fullmatch(r"question:([^:]+):Q-[0-9]{3,}", provenance)
+    if match is None:
+        return False
+    agent, separator, model = match.group(1).partition("@")
+    if separator != "@" or agent.casefold() not in {"agy", "claude", "codex", "grok"} or not model:
+        return False
+    try:
+        seat_family = concrete_family(model, what="question seat model")
+        return seat_family == concrete_family(agent, what="question seat lane") and seat_family != writer_family(
+            state_dir, lesson_n
+        )
+    except IdentityError:
+        return False
+
+
+def _host_eligible(host: Any, draft: dict[str, Any], lesson: dict[str, Any], activity_id: str) -> bool:
+    if not isinstance(host, dict) or host.get("kind") not in {"dialogue", "quote"}:
+        return False
+    if host["kind"] == "dialogue" and not lesson.get("dialogue"):
+        return False
+    for step in draft.get("steps") or []:
+        for block in step.get("blocks") or []:
+            if block.get("kind") == "activity" and block.get("ref") == activity_id:
+                return False
+            if block.get("kind") != host["kind"]:
+                continue
+            if host["kind"] == "dialogue" or block.get("ref") == host.get("ref"):
+                return True
+    return False
+
+
+def check_7_a1_choices(
+    draft: dict[str, Any],
+    lesson: dict[str, Any],
+    words: dict[str, Any],
+    stream: Any,
+    *,
+    state_dir: Path,
+    lesson_n: int,
+    requirement_inputs: dict[str, Any] | None = None,
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+) -> dict[str, Any]:
+    """Check A1 choice uniqueness after resolution; never infer a slot's demand."""
+    by_id = {record["id"]: record for record in words.get("words") or []}
+    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n))
+    completeness: list[dict[str, Any]] = []
+    if vesum_lookup is None:
+        from scripts.verification.vesum import verify_words
+
+        def vesum_lookup(words: list[str]) -> dict[str, list[dict[str, Any]]]:
+            return verify_words(words, db_path=os.environ.get("VESUM_DB_PATH"))
+
+    def bad(reason: str, aid: str, index: int) -> dict[str, Any]:
+        return failure(7, reason, "writer", code=reason, activity=aid, token=str(index))
+
+    for activity in draft.get("activities") or []:
+        aid = activity["id"]
+        if activity.get("grouping_feature"):
+            feature = activity["grouping_feature"]
+            for group_idx, group in enumerate(activity.get("groups") or []):
+                value = group.get("value")
+                for entry_idx, entry in enumerate(group.get("items") or []):
+                    index = sum(len(g.get("items") or []) for g in activity["groups"][:group_idx]) + entry_idx
+                    if not isinstance(entry, dict):
+                        return bad("group_entry_record_missing", aid, index)
+                    record = by_id.get(entry.get("record"))
+                    analyses = _analyses(record, entry.get("text", ""))
+                    if not analyses or not _admitted(analyses, {feature: value}):
+                        return bad("group_entry_not_admitted", aid, index)
+                    other_values = {g.get("value") for g in activity["groups"] if g is not group}
+                    if any(_admitted(analyses, {feature: other}) for other in other_values):
+                        # An ambiguous form needs an independent language judgement.
+                        confirmed = any(
+                            token.get("unit", {}).get("activity") == aid
+                            and token.get("unit", {}).get("block") == f"group_{group_idx}_{entry_idx}"
+                            and _independent_language_question(token.get("provenance"), state_dir, lesson_n)
+                            for token in stream.tokens
+                        )
+                        if not confirmed:
+                            return bad("group_entry_ambiguous_without_receipt", aid, index)
+        for index, item in enumerate(activity.get("items") or []):
+            kind = item.get("kind")
+            if kind is None:
+                continue
+            typ = activity.get("type") or next(
+                (act["type"] for act in lesson.get("activities") or [] if act["id"] == aid), None
+            )
+            options = [True, False] if typ == "true-false" else item.get("words" if typ == "odd-one-out" else "options")
+            if kind == "comprehension" and not _host_eligible(item.get("host"), draft, lesson, aid):
+                return bad("comprehension_host_ineligible", aid, index)
+            if not isinstance(options, list) or not options:
+                continue
+            key = _choice_key(item, typ, options)
+            if key is None or key >= len(options):
+                return bad("answer_key_missing", aid, index)
+            texts = [_choice_text(option) for option in options]
+            if kind in {"form", "vocabulary"}:
+                ids = [item.get("record")] * len(options) if typ == "fill-in" else item.get("option_records")
+                if not isinstance(ids, list) or len(ids) != len(options) or any(rid not in by_id for rid in ids):
+                    return bad("option_record_missing", aid, index)
+                bound = [by_id[rid] for rid in ids]
+            else:
+                bound = []
+            if kind != "form" and all(isinstance(text, str) for text in texts):
+                common = None
+                spellings = [lookup_form(text).casefold() for text in texts]
+                verified = vesum_lookup(spellings)
+                for spelling in spellings:
+                    lemmas = {analysis.get("lemma") for analysis in verified.get(spelling, [])}
+                    common = lemmas if common is None else common & lemmas
+                if common:
+                    return bad("same_lemma_requires_form_kind", aid, index)
+            if kind == "form":
+                demand = item.get("requires") or {}
+                if item.get("tests_feature") not in demand or not set(demand) <= _A1_GROUPS:
+                    return bad("form_requires_invalid", aid, index)
+                if any(
+                    not isinstance(text, str) or not _analyses(rec, text)
+                    for rec, text in zip(bound, texts, strict=True)
+                ):
+                    return bad("form_option_without_analysis", aid, index)
+                for rec, text in zip(bound, texts, strict=True):
+                    analyses = _analyses(rec, text)
+                    if any(
+                        not any(any(atom.startswith(f"{group}=") for atom in analysis) for analysis in analyses)
+                        for group in demand
+                    ):
+                        return bad("form_option_missing_required_group", aid, index)
+                admitted = [_admitted(_analyses(rec, text), demand) for rec, text in zip(bound, texts, strict=True)]
+                if admitted != [i == key for i in range(len(options))]:
+                    return bad("form_not_unique_for_requires", aid, index)
+                status = receipts.requirement_status(
+                    receipt_doc,
+                    lesson=stream.lesson,
+                    inputs=requirement_inputs if requirement_inputs is not None else stream.inputs,
+                    activity=aid,
+                    item=index,
+                    requires=demand,
+                )
+                completeness.append({"activity": aid, "item": index, "requirement": status})
+            elif kind == "vocabulary":
+                target = item.get("target_record")
+                lemmas = [record.get("lemma") for record in bound]
+                if (
+                    ids[key] != target
+                    or len(set(lemmas)) != len(lemmas)
+                    or any(
+                        not isinstance(text, str) or not _analyses(record, text)
+                        for record, text in zip(bound, texts, strict=True)
+                    )
+                ):
+                    return bad("vocabulary_target_not_unique", aid, index)
+            elif kind == "orthography":
+                if typ != "fill-in" or item.get("mode") != "orthography":
+                    return bad("orthography_mode_invalid", aid, index)
+                sentence = item.get("sentence", "")
+                target = by_id.get(item.get("target_record"))
+                # The target is the completed word, not the whole sentence.
+                slot = re.search(r"_{3,}|\[blank\]", sentence)
+                if slot is None:
+                    return bad("orthography_slot_missing", aid, index)
+                start, end = slot.span()
+                while start and (sentence[start - 1].isalpha() or sentence[start - 1] in "'’ʼ`‘"):
+                    start -= 1
+                while end < len(sentence) and (sentence[end].isalpha() or sentence[end] in "'’ʼ`‘"):
+                    end += 1
+                left, right = sentence[start : slot.start()], sentence[slot.end() : end]
+                completed = [lookup_form(left + text + right) for text in texts]
+                if not _analyses(target, completed[key]):
+                    return bad("orthography_target_invalid", aid, index)
+                found = vesum_lookup(completed)
+                if any(found.get(word) for i, word in enumerate(completed) if i != key):
+                    return bad("orthography_distractor_is_word", aid, index)
+            elif kind != "comprehension":
+                return bad("choice_kind_invalid", aid, index)
+    return _pass(7, {"requirement_receipts": completeness})
+
+
+def _structural_activity_error(activity: dict[str, Any], typ: str, records: dict[str, dict[str, Any]]) -> str | None:
+    """Checks that do not depend on resolution or a contextual language judgement."""
+    if typ == "classify":
+        return "classify_forbidden"
+    if typ == "order":
+        order = activity.get("correct_order")
+        items = activity.get("items")
+        if not isinstance(items, list) or not isinstance(order, list) or sorted(order) != list(range(len(items))):
+            return "order_index_coverage"
+    if typ == "pick-syllables" and not activity.get("explanation"):
+        return "pick_syllables_explanation_missing"
+    if typ == "match-up":
+        if activity.get("left_role") not in {"form", "gloss", "question", "answer"} or activity.get(
+            "right_role"
+        ) not in {"form", "gloss", "question", "answer"}:
+            return "match_up_role_invalid"
+        for pair in activity.get("pairs") or []:
+            if not isinstance(pair, dict) or not pair.get("why"):
+                return "match_up_why_missing"
+            for side in ("left", "right"):
+                if activity[f"{side}_role"] == "form":
+                    record = records.get(pair.get(f"{side}_record"))
+                    if record is None or not any(
+                        form.get("learner") is True and form.get("form") == pair.get(side)
+                        for form in record.get("forms") or []
+                    ):
+                        return "match_up_form_record_invalid"
+    for item in activity.get("items") or []:
+        if not isinstance(item, dict):
+            continue
+        if typ == "divide-words":
+            parts = item.get("answer", "").split("-")
+            if (
+                len(parts) < 2
+                or any(not part or sum(char.casefold() in _VOWELS for char in part) != 1 for part in parts)
+                or "".join(parts).casefold() != str(item.get("word", "")).casefold()
+            ):
+                return "divide_words_parts_invalid"
+        if typ == "count-syllables":
+            count = sum(char.casefold() in _VOWELS for char in str(item.get("word", "")))
+            if type(item.get("correct")) is not int or item["correct"] != count:
+                return "count_syllables_key_invalid"
+        if typ in {"anagram", "unjumble"}:
+            from scripts.build.activity_renderer import unjumble_tokens
+
+            pieces = item.get("letters") if typ == "anagram" else unjumble_tokens(item)
+            answer = item.get("answer")
+            if (
+                not isinstance(pieces, list)
+                or not isinstance(answer, str)
+                or Counter(_normal_letters("".join(map(str, pieces)))) != Counter(_normal_letters(answer))
+            ):
+                return f"{typ.replace('-', '_')}_multiset_mismatch"
+            if typ == "anagram" and not any(
+                form.get("learner") is True and _normal_letters(form.get("form", "")) == _normal_letters(answer)
+                for record in records.values()
+                for form in record.get("forms") or []
+            ):
+                return "anagram_key_not_store_form"
+        if typ == "translate" and item.get("options") and item.get("alternatives"):
+            return "translate_alternatives_forbidden"
+        if typ in _CHOICE_TYPES or typ == "true-false":
+            options = item.get("words") if typ == "odd-one-out" else item.get("options")
+            options = [True, False] if typ == "true-false" else options
+            if not isinstance(options, list) or not options:
+                continue  # The fresh constraint and per-type key checks own missing options.
+            why = item.get("option_why")
+            if (
+                not isinstance(why, list)
+                or len(why) != len(options)
+                or any(not isinstance(entry, str) or not entry.strip() for entry in why)
+            ):
+                return "option_why_alignment"
+            if _choice_key(item, typ, options) is None:
+                return "answer_key_missing"
+    return None
+
+
 def check_4_activities(
     draft: dict[str, Any],
     lesson: dict[str, Any],
@@ -197,6 +519,11 @@ def check_4_activities(
     *,
     level: str | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[str, int], list[dict[str, Any]]]]:
+    mod_level = (
+        (level or "").lower()
+        or draft.get("lesson", {}).get("module", "").split("/")[0].lower()
+        or lesson.get("level", "").lower()
+    )
     records = {w["id"]: w for w in words.get("words") or []}
     errors = {e["id"]: e for e in pack.get("errors") or []}
     planned = {a["id"]: a for a in lesson.get("activities") or []}
@@ -390,15 +717,14 @@ def check_4_activities(
                 correct_count = sum(option.get("correct") is True for option in opts)
                 if correct_count == 0:
                     return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
-                mod_level = (
-                    (level or "").lower()
-                    or draft.get("lesson", {}).get("module", "").split("/")[0].lower()
-                    or lesson.get("level", "").lower()
-                )
                 min_allowed = 1 if mod_level in {"a2", "b1"} else 2
                 min_req = item.get("min_correct", min_allowed)
                 if correct_count < max(min_allowed, min_req):
                     return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
+        if mod_level == "a1":
+            structural_reason = _structural_activity_error(activity, typ, records)
+            if structural_reason is not None:
+                return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
     return _pass(4), form_options
 
 
@@ -678,6 +1004,8 @@ def run_lesson(
     row, form_options = check_4_activities(draft, lesson, words, pack, level=level)
     if row["status"] == "failed":
         return finish(row)
+    if level == "a1":
+        row["details"] = {"draft_report": draft_report(plan, [draft])}
     rows.append(row)
     assembled = check_5_assembly(draft, plan, pack, words, level, slug, n, output_dir=state_dir)
     if not assembled.passed:
@@ -761,6 +1089,27 @@ def run_lesson(
             )
         )
     rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
+    if level == "a1":
+        try:
+            choice_row = check_7_a1_choices(
+                draft, lesson, words, stream, state_dir=state_dir, lesson_n=n, requirement_inputs=receipt_doc["inputs"]
+            )
+        except OSError as err:
+            return finish(
+                failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")
+            )
+        except (ResolverError, ValueError) as err:
+            return finish(
+                failure(
+                    7,
+                    f"a1_choice_check_invalid: {err}",
+                    "engine",
+                    code=getattr(err, "code", None) or "a1_choice_check_invalid",
+                )
+            )
+        if choice_row["status"] == "failed":
+            return finish(choice_row)
+        row["details"].update(choice_row.get("details", {}))
     try:
         gate = inventory_gate(
             level,

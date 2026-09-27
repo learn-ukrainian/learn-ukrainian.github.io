@@ -17,6 +17,7 @@ import yaml
 from scripts.build.fresh.cli import _build_parser, main
 from scripts.build.fresh.path_guard import checked_path
 from scripts.curriculum.evidence import lesson_lock, lock
+from tests.build.test_fresh_draft_schema import load_fixture
 
 pytestmark = pytest.mark.reads_content
 
@@ -420,9 +421,7 @@ def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
 def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys):
     """MAJOR C: CLI write reaches the fake seat on a synthetic tree where preflight passes."""
     paths = _build_synthetic_tree(tmp_path)
-    valid_draft_template = yaml.safe_load(
-        (Path(__file__).parent / "fixtures" / "fresh" / "lesson-draft-a1-valid.yaml").read_text(encoding="utf-8")
-    )
+    valid_draft_template, _ = load_fixture("a1")
     my_draft = copy.deepcopy(valid_draft_template)
     my_draft["lesson"]["module"] = "a1/synthetic-mod"
     my_draft["lesson"]["n"] = 1
@@ -489,8 +488,10 @@ def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
     page.write_text("# Built lesson 1\n\nReal recap source.\n", encoding="utf-8")
     (state_dir / "lesson-1.gates.yaml").write_text("passed: true\n", encoding="utf-8")
     manifest = state_dir / "lesson-1.manifest.yaml"
-    manifest.write_text(yaml.safe_dump({"inputs": {"lesson": {"sha256": hashlib.sha256(page.read_bytes()).hexdigest()}}}),
-                        encoding="utf-8")
+    manifest.write_text(
+        yaml.safe_dump({"inputs": {"lesson": {"sha256": hashlib.sha256(page.read_bytes()).hexdigest()}}}),
+        encoding="utf-8",
+    )
     (state_dir / "lesson-1.manifest.sha256").write_text(
         hashlib.sha256(manifest.read_bytes()).hexdigest() + "\n", encoding="ascii"
     )
@@ -516,9 +517,7 @@ def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
     assert "Built lesson 1" in prompt_text
 
     # 2. write on lesson 2 (kind: recap) reaches fake seat with recap prompt rendered
-    valid_draft_template = yaml.safe_load(
-        (Path(__file__).parent / "fixtures" / "fresh" / "lesson-draft-a1-valid.yaml").read_text(encoding="utf-8")
-    )
+    valid_draft_template, _ = load_fixture("a1")
     recap_draft = copy.deepcopy(valid_draft_template)
     recap_draft["lesson"]["module"] = "a1/synthetic-mod"
     recap_draft["lesson"]["n"] = 2
@@ -648,8 +647,7 @@ def test_path_guard_rejects_symlinked_sidecar_and_schema(tmp_path):
     evidence.mkdir(parents=True)
     (evidence / "safe-slug.yaml.lock").symlink_to(target)
     with pytest.raises(ValueError, match="path_outside_allowed_root"):
-        checked_path(tmp_path, "curriculum/l2-uk-en/evidence/a1/safe-slug.yaml.lock",
-                     "curriculum/l2-uk-en/evidence")
+        checked_path(tmp_path, "curriculum/l2-uk-en/evidence/a1/safe-slug.yaml.lock", "curriculum/l2-uk-en/evidence")
     schemas = tmp_path / "schemas"
     schemas.mkdir()
     (schemas / "fresh-lesson-gates-v1.schema.json").symlink_to(target)
@@ -669,8 +667,7 @@ def test_cli_rejects_symlinked_sidecar_before_read(tmp_path, capsys, sidecar_nam
     sidecar.unlink()
     sidecar.symlink_to(secret)
     with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
-        assert main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1",
-                     "--repo-root", str(tmp_path)]) == 1
+        assert main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
     assert "path_outside_allowed_root" in capsys.readouterr().err
 
 
