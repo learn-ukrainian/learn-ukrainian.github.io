@@ -243,7 +243,7 @@
       },
       {
         "path": "scripts/lexicon/lesson_atlas_link_census.py",
-        "sha256": "b0e76d19d4de2475b79274f9990c9a9889ebbd5216098f1332006720b8b11df4"
+        "sha256": "b2fdc119c76050a6badfb09b187a708109430438633859b0979eda6774ff3cb5"
       },
       {
         "path": "scripts/lexicon/load_relation_candidates.py",

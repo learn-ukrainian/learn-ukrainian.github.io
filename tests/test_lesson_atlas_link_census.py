@@ -1,7 +1,8 @@
-"""Gate: committed lesson atlas_href values must not be dead or ambiguous.
+"""Gate: committed lesson atlas_href values must be exact published entries.
 
 Classification uses the census oracle (published search index + alias file),
-not ``atlas_href_for``.
+not ``atlas_href_for``. Alias, ambiguous, and dead hrefs all fail the gate:
+the client shell accepts only an exact search-index slug.
 """
 
 from __future__ import annotations
@@ -92,7 +93,27 @@ def test_gate_fails_on_a_planted_dead_link(tmp_path: Path):
     assert hits[0].word == "привид"
 
 
-def test_committed_lesson_atlas_hrefs_are_not_dead_or_ambiguous():
+def test_gate_fails_on_a_planted_alias_link(tmp_path: Path):
+    docs = tmp_path / "site" / "src" / "content" / "docs" / "a2"
+    docs.mkdir(parents=True)
+    (docs / "planted.mdx").write_text(
+        '<VocabCard client:only="react" words={JSON.parse(`'
+        '[{"word":"студент","translation":"student","atlas_href":"/lexicon/студентові/"}]'
+        '`)} />\n',
+        encoding="utf-8",
+    )
+    catalog = PublishedCatalog(
+        entries=frozenset({"студент"}),
+        aliases={"студентові": frozenset({"студент"})},
+    )
+    hits = blocking_atlas_hrefs(docs.parent, catalog)
+    assert len(hits) == 1
+    assert hits[0].classification == ALIAS
+    assert hits[0].slug == "студентові"
+    assert hits[0].word == "студент"
+
+
+def test_committed_lesson_atlas_hrefs_are_published_entries():
     catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
     hits = blocking_atlas_hrefs(DEFAULT_DOCS, catalog)
     preview = [
@@ -100,7 +121,8 @@ def test_committed_lesson_atlas_hrefs_are_not_dead_or_ambiguous():
         for hit in hits[:12]
     ]
     assert hits == [], (
-        f"{len(hits)} dead or ambiguous lesson atlas_href values:\n" + "\n".join(preview)
+        f"{len(hits)} alias, ambiguous, or dead lesson atlas_href values:\n"
+        + "\n".join(preview)
     )
 
 

@@ -5,9 +5,13 @@ The word-page client shell (``WordAtlasClientShell`` + ``preflightAtlasSlugInSea
 shows "Word not found" when the percent-decoded NFC slug is absent from
 ``lexicon-search-index.json`` field ``s``. Alias rows live in
 ``lexicon-search-aliases.json`` (``a`` → ``s``) and are not pages themselves.
+An alias URL is the same learner-facing failure: preflight accepts only an
+exact ``s`` slug.
 
 This census is the independent oracle for those two files. It does not import
-``scripts.generate_mdx`` and it does not call ``atlas_href_for``.
+``scripts.generate_mdx`` and it does not call ``atlas_href_for``. The report
+still counts each class on its own. The pytest gate rejects ``atlas_href``
+values classified alias, ambiguous, or dead.
 """
 
 from __future__ import annotations
@@ -32,7 +36,7 @@ ALIAS = "alias"
 AMBIGUOUS = "ambiguous"
 DEAD = "dead"
 CLASSES = (ENTRY, ALIAS, AMBIGUOUS, DEAD)
-BLOCKING = frozenset({AMBIGUOUS, DEAD})
+BLOCKING = frozenset({ALIAS, AMBIGUOUS, DEAD})
 
 _BAD_PERCENT_ESCAPE = re.compile(r"%(?![0-9A-Fa-f]{2})")
 _LEXICON_TARGET_RE = re.compile(r"/lexicon/([^/\"'`\\\s<>]+)/")
@@ -182,7 +186,7 @@ def iter_lesson_hits(docs_root: Path, catalog: PublishedCatalog) -> list[LinkHit
 
 
 def blocking_atlas_hrefs(docs_root: Path, catalog: PublishedCatalog) -> list[LinkHit]:
-    """Lesson ``atlas_href`` values the gate rejects: dead or ambiguous."""
+    """Lesson ``atlas_href`` values the gate rejects: alias, ambiguous, or dead."""
     return [
         hit
         for hit in iter_lesson_hits(docs_root, catalog)
