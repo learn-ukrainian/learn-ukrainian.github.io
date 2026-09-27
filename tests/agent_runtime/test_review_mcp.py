@@ -308,16 +308,18 @@ def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, 
     )
 
     idx = plan.cmd.index("--strict-mcp-config")
-    assert plan.cmd[idx : idx + 5] == [
-        "--strict-mcp-config",
-        "--mcp-config",
-        str(review_plan.config_path),
-        "--allowedTools",
-        ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
-    ]
+    assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
+    assert plan.cmd.count("--allowedTools") == 1
+    allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
+    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS}
+    assert "--permission-mode" not in plan.cmd
 
 
-def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) -> None:
+def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        lambda _cmd_prefix: (2, 1, 116),
+    )
     plan = ClaudeAdapter().build_invocation(
         prompt="ordinary task",
         mode="read-only",
@@ -331,6 +333,8 @@ def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) ->
     assert "--strict-mcp-config" not in plan.cmd
     assert "--mcp-config" not in plan.cmd
     assert "--allowedTools" not in plan.cmd
+    assert "--permission-mode" not in plan.cmd
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:

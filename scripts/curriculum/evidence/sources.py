@@ -12,6 +12,7 @@ VESUM is a static file and keeps its metadata/file identity.
 
 import hashlib
 import json
+import re
 import shutil
 import sqlite3
 import time
@@ -36,18 +37,46 @@ SOURCES_DB_META_SCHEME = "file-meta-v1"
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
-# Exact POS equivalences only, never text/translation matching.
+# VESUM uses noun/adj for pronouns; dmklinger uses pronoun (and particle for
+# determiners). Preserve the requested VESUM POS as the result key.
 GLOSS_POS = {
-    "noun": ("noun",),
+    "noun": ("noun", "pronoun"),
     "verb": ("verb",),
-    "adj": ("adjective", "adj"),
+    "adj": ("adjective", "adj", "pronoun", "particle"),
     "adv": ("adverb",),
     "numr": ("numeral",),
     "part": ("particle",),
-    "prep": ("preposition",),
-    "conj": ("conjunction",),
+    "prep": ("preposition", "particle"),
+    "conj": ("conjunction", "particle"),
     "intj": ("interjection",),
 }
+
+
+def is_alphabet_letter_gloss(row: dict) -> bool:
+    """Reject source rows mislabeled as a particle or pronoun but defining a letter."""
+    raw = row.get("translations") or "[]"
+    try:
+        translations = json.loads(raw) if isinstance(raw, str) else raw
+    except (TypeError, ValueError):
+        translations = [raw]
+    first = str(translations[0]) if isinstance(translations, list) and translations else ""
+    return bool(re.search(r"\bletter\b.*\balphabet\b|\balphabet\b.*\bletter\b", first, re.IGNORECASE))
+
+
+def has_incompatible_function_label(row: dict, pos: str) -> bool:
+    """Reject a source gloss that explicitly labels a different function POS."""
+    if pos not in {"prep", "conj", "part"}:
+        return False
+    raw = row.get("translations") or "[]"
+    try:
+        translations = json.loads(raw) if isinstance(raw, str) else raw
+    except (TypeError, ValueError):
+        translations = [raw]
+    first = str(translations[0]) if isinstance(translations, list) and translations else ""
+    label = re.search(r"\((preposition|conjunction|particle)\)\s*$", first, re.IGNORECASE)
+    return bool(
+        label and label.group(1).lower() != {"prep": "preposition", "conj": "conjunction", "part": "particle"}[pos]
+    )
 
 
 @dataclass(frozen=True)
@@ -380,7 +409,10 @@ class Sources:
 
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
-        raw = stress.verify_stress(normalize_spelling(form), tags=self.mapper(vesum_tags))
+        mapped_tags = self.mapper(vesum_tags)
+        if "pron" in vesum_tags.split(":") and "upos=ADJ" in mapped_tags:
+            mapped_tags = sorted((set(mapped_tags) - {"upos=ADJ"}) | {"upos=PRON"})
+        raw = stress.verify_stress(normalize_spelling(form), tags=mapped_tags)
         # The trie alone does not identify exact-form override changes.
         override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
         return SourceResult(raw, raw["source"]["digest"], {"overrides_sha256": override_digest})
@@ -443,7 +475,10 @@ class Sources:
                 result[key] = [
                     dict(row)
                     for row in rows
-                    if row["word"] == key[0] and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
+                    if row["word"] == key[0]
+                    and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
+                    and not is_alphabet_letter_gloss(dict(row))
+                    and not has_incompatible_function_label(dict(row), key[1])
                 ]
             self._progress("glosses", min(start + BATCH_SIZE, len(requested)), len(requested))
         return self._db_result(result)

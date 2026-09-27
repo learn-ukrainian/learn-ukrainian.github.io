@@ -11,11 +11,36 @@ from tests import sparse_trees
 
 
 def _conftest() -> ModuleType:
-    for module in sys.modules.values():
+    for module in list(sys.modules.values()):
         file = getattr(module, "__file__", None)
         if isinstance(file, str) and file.endswith("tests/conftest.py"):
             return module
     raise AssertionError("tests/conftest.py was not loaded")
+
+
+def test_conftest_lookup_survives_sys_modules_mutation_during_iteration(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A sys.modules entry whose __file__ lookup inserts a new module must not
+    crash the conftest lookup; regression for #8919."""
+
+    class _MutatingEntry:
+        fired = False
+
+        def __getattr__(self, name: str) -> object:
+            if name == "__file__" and not _MutatingEntry.fired:
+                _MutatingEntry.fired = True
+                sys.modules["_regression_probe_8919_conftest"] = object()
+            raise AttributeError(name)
+
+    target = ModuleType("target_conftest_8919")
+    target.__file__ = "/scratch/tests/conftest.py"
+
+    fake_modules: dict[str, object] = {"decoy_8919_conftest": _MutatingEntry()}
+    fake_modules["target_conftest_8919"] = target
+    monkeypatch.setattr(sys, "modules", fake_modules)
+
+    assert _conftest() is target
 
 
 def test_sparse_off_never_skips_even_when_tree_is_absent() -> None:

@@ -284,10 +284,16 @@ def stream_map(
     *,
     streams_yaml: Path | None = None,
 ) -> dict[str, list[int]]:
-    """Map stream name → sorted unique epic numbers from issue_streams.yaml.
+    """Map stream name → unique epic numbers in listed order.
 
-    Unlike :func:`load_stream_epic_inventory`, this does not collapse an epic
-    that appears under multiple stream names — each stream lists its own epics.
+    The first entry is the live anchor shared with the launcher
+    (:func:`stream_anchor_id`). Sorting would make that anchor the smallest
+    epic and disagree with ``_launcher_stream_anchor_epic`` on any stream
+    whose first listed epic is not the smallest.
+
+    Unlike :func:`load_stream_epic_inventory`, an epic listed under more than
+    one stream name stays on each stream. Repeated numbers keep the first
+    occurrence.
     """
     path = resolve_streams_yaml(repo_root, streams_yaml)
     streams = _load_streams_doc(path)
@@ -298,13 +304,18 @@ def stream_map(
         epics = body.get("epics") or []
         if not isinstance(epics, list):
             continue
-        numbers: set[int] = set()
+        numbers: list[int] = []
+        seen: set[int] = set()
         for raw in epics:
             try:
-                numbers.add(int(raw))
+                number = int(raw)
             except (TypeError, ValueError):
                 continue
-        result[str(stream_name)] = sorted(numbers)
+            if number in seen:
+                continue
+            seen.add(number)
+            numbers.append(number)
+        result[str(stream_name)] = numbers
     return result
 
 

@@ -165,3 +165,123 @@ def check_receipts(path: Path) -> dict[str, Any]:
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     validate_receipts(doc)
     return doc
+
+
+# A requirement is a language judgement, not a form inferred by the resolver. Keep it
+# beside the resolution receipts with the same YAML + lock publication rule. Missing
+# receipts are an explicit completeness status; a present but broken receipt is invalid.
+_A1_REQUIREMENT_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
+_REQUIREMENT_FIELDS = frozenset({"activity", "item", "requires", "writer", "reviewer", "confirmed"})
+
+
+def requirement_receipt_path(state_dir: Path, lesson_n: int) -> Path:
+    """Return the sidecar path for one lesson's requirement judgements."""
+    return Path(state_dir) / f"lesson-{lesson_n}.requirements.yaml"
+
+
+def _requirement_error(message: str) -> ResolverError:
+    return ResolverError(codes.RECEIPT_INVALID, f"requirement receipt: {message}")
+
+
+def validate_requirement_receipts(doc: Any) -> None:
+    """Validate item identity, complete-demand snapshot and independent provenance."""
+    if not isinstance(doc, dict) or set(doc) != {"requirements_schema", "lesson", "inputs", "items"}:
+        raise _requirement_error("expected requirements_schema, lesson, inputs and items")
+    if type(doc["requirements_schema"]) is not int or doc["requirements_schema"] != 1:
+        raise _requirement_error("requirements_schema must be 1")
+    lesson = doc["lesson"]
+    if (
+        not isinstance(lesson, dict)
+        or set(lesson) != {"level", "slug", "n"}
+        or not all(isinstance(lesson[k], str) and lesson[k] for k in ("level", "slug"))
+        or type(lesson["n"]) is not int
+        or lesson["n"] < 1
+    ):
+        raise _requirement_error("lesson identity is malformed")
+    inputs = doc["inputs"]
+    if (
+        not isinstance(inputs, dict)
+        or not inputs
+        or not all(isinstance(k, str) and k and isinstance(v, str) and v for k, v in inputs.items())
+    ):
+        raise _requirement_error("inputs must contain the draft input hashes")
+    if not isinstance(doc["items"], list):
+        raise _requirement_error("items must be a list")
+    seen: set[tuple[str, int]] = set()
+    for index, row in enumerate(doc["items"]):
+        if not isinstance(row, dict) or set(row) != _REQUIREMENT_FIELDS:
+            raise _requirement_error(f"item {index} has malformed fields")
+        activity, item = row["activity"], row["item"]
+        if not isinstance(activity, str) or not activity or type(item) is not int or item < 0:
+            raise _requirement_error(f"item {index} has malformed activity or item locator")
+        locator = (activity, item)
+        if locator in seen:
+            raise _requirement_error(f"duplicate item locator {locator!r}")
+        seen.add(locator)
+        demand = row["requires"]
+        if (
+            not isinstance(demand, dict)
+            or not demand
+            or set(demand) - _A1_REQUIREMENT_GROUPS
+            or not all(isinstance(value, str) and value for value in demand.values())
+        ):
+            raise _requirement_error(f"item {index} has malformed A1 requires")
+        if row["confirmed"] is not True:
+            raise _requirement_error(f"item {index} is not confirmed")
+        writer, reviewer = row["writer"], row["reviewer"]
+        if not isinstance(writer, dict) or set(writer) != {"seat", "family"}:
+            raise _requirement_error(f"item {index} has malformed writer provenance")
+        if not isinstance(reviewer, dict) or set(reviewer) != {"seat", "family", "lane"}:
+            raise _requirement_error(f"item {index} has malformed reviewer provenance")
+        for provenance in (writer, reviewer):
+            _check_seat(provenance["seat"])
+            _check_seat(provenance["family"])
+        if reviewer["lane"] != "language":
+            raise _requirement_error(f"item {index} was not confirmed by a language lane")
+        if writer["family"].casefold() == reviewer["family"].casefold():
+            raise _requirement_error(f"item {index} writer and reviewer share a model family")
+
+
+def write_requirement_receipts(path: Path, doc: dict[str, Any]) -> str:
+    """Publish validated requirement judgements atomically with a lock sidecar."""
+    validate_requirement_receipts(doc)
+    return lock.write(Path(path), lock.yaml_bytes(doc))
+
+
+def read_requirement_receipts(path: Path) -> dict[str, Any] | None:
+    """Return None for absent input; fail closed on a present unlocked or invalid file."""
+    path = Path(path)
+    if not path.exists() and not path.with_name(path.name + ".lock").exists():
+        return None
+    if not lock.check(path):
+        raise ResolverError(codes.LOCK_MISMATCH, f"requirements {str(path)!r} disagree with their lock")
+    try:
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        raise _requirement_error(f"cannot parse YAML: {exc}") from exc
+    validate_requirement_receipts(doc)
+    return doc
+
+
+def requirement_status(
+    doc: dict[str, Any] | None,
+    *,
+    lesson: dict[str, Any],
+    inputs: dict[str, Any],
+    activity: str,
+    item: int,
+    requires: dict[str, str],
+) -> str:
+    """Return `confirmed` only for an exact current item and demand; else `not_checked`.
+
+    An old judgement cannot certify a revised draft or changed source inputs.
+    """
+    if doc is None:
+        return "not_checked"
+    validate_requirement_receipts(doc)
+    if doc["lesson"] != lesson or doc["inputs"] != inputs:
+        return "not_checked"
+    for row in doc["items"]:
+        if row["activity"] == activity and row["item"] == item:
+            return "confirmed" if row["requires"] == requires else "not_checked"
+    return "not_checked"

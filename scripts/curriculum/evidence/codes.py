@@ -61,6 +61,10 @@ DESCRIPTIONS = {
 }
 
 EXCLUDING_MARKERS = frozenset({"alt", "arch", "bad", "dialect", "obsc", "slang", "subst", "vulg"})
+# VESUM encodes uncontracted poetic forms in the tag string, not form_markers.
+# Karaman 2018, Ukrainian language grade 10, §62 (sources MCP textbook chunk
+# 10-klas-ukrmova-karaman-2018_s0283): these forms are stylistically limited.
+EXCLUDING_TAGS = frozenset({"long"})
 
 
 def help_text() -> str:

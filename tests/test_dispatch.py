@@ -580,6 +580,7 @@ class TestDispatchAgent:
             orch_dir=tmp_path, model="test",
         )
         assert ok is False
+        assert mock_invoke.call_args.kwargs["tool_config"] is None
         # stderr should be saved
         stderr_files = list((tmp_path / "dispatch").glob("*.stderr.log"))
         assert len(stderr_files) == 1

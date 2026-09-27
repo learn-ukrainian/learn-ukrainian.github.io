@@ -448,8 +448,13 @@ _PAGE_ITEM_FIELDS: dict[str, dict[str, Any]] = {
 # Activity-level blocks (item is None): the prop of the same name; pick-syllables choices.
 _PAGE_ACTIVITY_FIELDS: dict[str, dict[str, Any]] = {
     "pick-syllables": {"instruction": "instruction", "explanation": "explanation", "opt": ("syllables", None)},
+    "order": {"instruction": "instruction", "explanation": "explanation"},
 }
 _OPT_BLOCK_RE = re.compile(r"^opt_([0-9]+)$")
+_OPTION_WHY_BLOCK_RE = re.compile(r"^option_why_([0-9]+)$")
+_PAIR_WHY_BLOCK_RE = re.compile(r"^pair_why_([0-9]+)$")
+_ENTRY_WHY_BLOCK_RE = re.compile(r"^entry_why_([0-9]+)_([0-9]+)$")
+_GROUP_ENTRY_BLOCK_RE = re.compile(r"^group_([0-9]+)_([0-9]+)$")
 
 
 def _prop_text(value: Any) -> str | None:
@@ -512,9 +517,27 @@ def page_field_text(
     """
     block_key = str(block)
     opt_match = _OPT_BLOCK_RE.match(block_key)
+    option_why_match = _OPTION_WHY_BLOCK_RE.match(block_key)
     if item_idx is None:
         if block_key == "instruction":
             return _prop_text(props.get("instruction"))
+        pair_why_match = _PAIR_WHY_BLOCK_RE.match(block_key)
+        if pair_why_match and act_type == "match-up":
+            pairs = props.get("pairs")
+            pair_idx = int(pair_why_match.group(1))
+            if isinstance(pairs, list) and pair_idx < len(pairs) and isinstance(pairs[pair_idx], dict):
+                return _prop_text(pairs[pair_idx].get("why"))
+            return None
+        entry_why_match = _ENTRY_WHY_BLOCK_RE.match(block_key)
+        group_entry_match = _GROUP_ENTRY_BLOCK_RE.match(block_key)
+        if (entry_why_match or group_entry_match) and act_type == "group-sort":
+            groups = props.get("groups")
+            group_idx, entry_idx = map(int, (entry_why_match or group_entry_match).groups())
+            if isinstance(groups, dict) and group_idx < len(groups):
+                entries = list(groups.values())[group_idx]
+                if isinstance(entries, list) and entry_idx < len(entries) and isinstance(entries[entry_idx], dict):
+                    return _prop_text(entries[entry_idx].get("why" if entry_why_match else "text"))
+            return None
         fields = _PAGE_ACTIVITY_FIELDS.get(act_type, {})
         if opt_match and "opt" in fields:
             list_name, text_key = fields["opt"]
@@ -530,6 +553,14 @@ def page_field_text(
     if not isinstance(items, list) or not 0 <= item_idx < len(items) or not isinstance(items[item_idx], dict):
         return None
     item = items[item_idx]
+    if option_why_match:
+        feedback = item.get("option_why")
+        why_idx = int(option_why_match.group(1))
+        if act_type == "image-to-letter" and key_index is not None:
+            # The span locator uses the authored index; the page payload puts
+            # the answer before all distractors.
+            why_idx = 0 if why_idx == key_index else why_idx + (why_idx < key_index)
+        return _prop_text(feedback[why_idx]) if isinstance(feedback, list) and why_idx < len(feedback) else None
     if opt_match:
         if "opt" not in fields:
             return None
@@ -1093,10 +1124,55 @@ def assemble_expanded_document(
                         option_origin="writer_typed",
                         is_key=is_key,
                     )
-            expl = act.get("explanation")
-            if expl and isinstance(expl, str):
-                for role, span_text in _split_inline_spans(expl, "instruction"):
-                    add_unit("vpravy", act_step, act_id, None, "explanation", role, span_text, source="writer_prose")
+
+        if act_type in {"pick-syllables", "order"} and isinstance(act.get("explanation"), str):
+            for role, span_text in _split_inline_spans(act["explanation"], "instruction"):
+                add_unit("vpravy", act_step, act_id, None, "explanation", role, span_text, source="writer_prose")
+
+        if act_type == "match-up":
+            for pair_idx, pair in enumerate(act.get("pairs", [])):
+                if isinstance(pair, dict) and isinstance(pair.get("why"), str):
+                    for role, span_text in _split_inline_spans(pair["why"], "instruction"):
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            None,
+                            f"pair_why_{pair_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                        )
+
+        if act_type == "group-sort":
+            for group_idx, group in enumerate(act.get("groups", [])):
+                if not isinstance(group, dict):
+                    continue
+                for entry_idx, entry in enumerate(group.get("items", [])):
+                    if isinstance(entry, dict) and isinstance(entry.get("text"), str):
+                        for role, span_text in _split_inline_spans(entry["text"], "item_prompt"):
+                            add_unit(
+                                "vpravy",
+                                act_step,
+                                act_id,
+                                None,
+                                f"group_{group_idx}_{entry_idx}",
+                                role,
+                                span_text,
+                                source="writer_prose",
+                            )
+                    if isinstance(entry, dict) and isinstance(entry.get("why"), str):
+                        for role, span_text in _split_inline_spans(entry["why"], "instruction"):
+                            add_unit(
+                                "vpravy",
+                                act_step,
+                                act_id,
+                                None,
+                                f"entry_why_{group_idx}_{entry_idx}",
+                                role,
+                                span_text,
+                                source="writer_prose",
+                            )
 
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
@@ -1109,7 +1185,30 @@ def assemble_expanded_document(
                     prompt = val
                     break
             if prompt:
-                if act_type == "error-correction":
+                if act_type == "fill-in" and item.get("mode") == "orthography":
+                    marker = re.search(r"_{3,}|\[blank\]", prompt)
+                    if marker is None:
+                        raise AssemblerError("orthography_slot_missing", f"{act_id} item {item_idx} has no blank")
+                    start, end = marker.span()
+                    while start and (prompt[start - 1].isalpha() or prompt[start - 1] in "'’ʼ`‘"):
+                        start -= 1
+                    while end < len(prompt) and (prompt[end].isalpha() or prompt[end] in "'’ʼ`‘"):
+                        end += 1
+                    for role, span_text in _split_inline_spans(prompt[:start], "item_prompt"):
+                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                    add_unit(
+                        "vpravy",
+                        act_step,
+                        act_id,
+                        item_idx,
+                        "prompt",
+                        "vesum_exempt",
+                        prompt[start:end],
+                        source="writer_prose",
+                    )
+                    for role, span_text in _split_inline_spans(prompt[end:], "item_prompt"):
+                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                elif act_type == "error-correction":
                     error_ref = item.get("error_ref")
                     err_rec = errors_by_id.get(error_ref) if error_ref else None
                     error_text = err_rec.get("incorrect") if err_rec else item.get("error")
@@ -1338,6 +1437,21 @@ def assemble_expanded_document(
                     add_unit(
                         "vpravy", act_step, act_id, item_idx, "explanation", role, span_text, source="writer_prose"
                     )
+
+            feedback = item.get("option_why")
+            for why_idx, why in enumerate(feedback if isinstance(feedback, list) else []):
+                if isinstance(why, str):
+                    for role, span_text in _split_inline_spans(why, "instruction"):
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            f"option_why_{why_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                        )
 
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
@@ -2233,6 +2347,19 @@ def apply_stress_to_activities(
             act["syllables"] = format_options(act_id, None, act["syllables"])
         if isinstance(act.get("explanation"), str):
             act["explanation"] = format_act_text(act_id, None, "explanation", act["explanation"])
+        if isinstance(act.get("pairs"), list):
+            for pair_idx, pair in enumerate(act["pairs"]):
+                if isinstance(pair, dict) and isinstance(pair.get("why"), str):
+                    pair["why"] = format_act_text(act_id, None, f"pair_why_{pair_idx}", pair["why"])
+        if isinstance(act.get("groups"), list):
+            for group_idx, group in enumerate(act["groups"]):
+                if not isinstance(group, dict) or not isinstance(group.get("items"), list):
+                    continue
+                for entry_idx, entry in enumerate(group["items"]):
+                    if isinstance(entry, dict) and isinstance(entry.get("text"), str):
+                        entry["text"] = format_act_text(act_id, None, f"group_{group_idx}_{entry_idx}", entry["text"])
+                    if isinstance(entry, dict) and isinstance(entry.get("why"), str):
+                        entry["why"] = format_act_text(act_id, None, f"entry_why_{group_idx}_{entry_idx}", entry["why"])
         draft_items = draft_act.get("items", []) if isinstance(draft_act, dict) else []
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
@@ -2257,6 +2384,11 @@ def apply_stress_to_activities(
                     item[err_key] = format_act_text(act_id, item_idx, "error", item[err_key])
             if "explanation" in item and isinstance(item["explanation"], str):
                 item["explanation"] = format_act_text(act_id, item_idx, "explanation", item["explanation"])
+            if isinstance(item.get("option_why"), list):
+                item["option_why"] = [
+                    format_act_text(act_id, item_idx, f"option_why_{why_idx}", why) if isinstance(why, str) else why
+                    for why_idx, why in enumerate(item["option_why"])
+                ]
             for opt_key in ("options", "choices", "distractors", "words", "syllables"):
                 if opt_key in item and isinstance(item[opt_key], list):
                     item[opt_key] = format_options(act_id, item_idx, item[opt_key])

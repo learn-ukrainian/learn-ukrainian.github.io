@@ -180,15 +180,20 @@ def test_ulp_lesson_10_replay(real, store):
     assert by_class[codes.LEMMA_OUTSIDE_STATE] == ["Огойко"]
     outside = next(t for t in cyrillic if t["class"] == codes.LEMMA_OUTSIDE_STATE)
     assert outside["surface"] == codes.PROPER_NOUN
-    # The word store stores zero-vowel prepositions as pending (its monosyllable gate counts
-    # exactly one vowel); the resolver reports that, it does not repair it.
-    assert sorted(by_class[codes.PENDING_STRESS]) == ["в", "в", "в", "в", "з"]
+    # Zero-vowel prepositions are now resolved as stress-free by the word builder.
+    assert codes.PENDING_STRESS not in by_class
+    assert sorted(t["token"] for t in cyrillic if t["token"] in {"в", "з"} and t["class"] == codes.RESOLVED) == [
+        "в",
+        "в",
+        "в",
+        "в",
+        "з",
+    ]
     assert set(by_class) == {
         codes.RESOLVED,
         codes.STRESS_OPEN,
         codes.STRESS_CERTAIN_IDENTITY_OPEN,
         codes.LEMMA_OUTSIDE_STATE,
-        codes.PENDING_STRESS,
     }
     zaraz = next(t for t in cyrillic if t["token"] == "зараз")
     noun_group = src.ulif_entries(["зараза"]).raw["зараза"]

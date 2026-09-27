@@ -13,6 +13,9 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.assemble import PROVENANCE_SCHEMA_PATH, get_provenance_validator
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.resolver import receipts
+from scripts.curriculum.resolver.inputs import ResolverError
+from scripts.verification import vesum
 from tests.build.test_fresh_assemble import (
     make_word_record,
     validate_fixture_draft,
@@ -23,6 +26,62 @@ from tests.build.test_fresh_assemble import (
 from tests.build.test_fresh_runner import _fixture, _run_contract
 
 pytestmark = pytest.mark.reads_content
+
+
+def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path) -> None:
+    lesson = {"level": "a1", "slug": "sample", "n": 1}
+    inputs = {"plan_sha256": "a" * 64, "words_lock": "b" * 64}
+    demand = {"Case": "Acc", "Number": "Sing"}
+    row = {
+        "activity": "quiz1",
+        "item": 0,
+        "requires": demand,
+        "writer": {"seat": "writer@model", "family": "openai"},
+        "reviewer": {"seat": "reviewer@model", "family": "anthropic", "lane": "language"},
+        "confirmed": True,
+    }
+    doc = {"requirements_schema": 1, "lesson": lesson, "inputs": inputs, "items": [row]}
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    assert receipts.read_requirement_receipts(path) is None
+    assert (
+        receipts.requirement_status(None, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
+        == "not_checked"
+    )
+    receipts.write_requirement_receipts(path, doc)
+    checked = receipts.read_requirement_receipts(path)
+    assert checked == doc
+    assert (
+        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
+        == "confirmed"
+    )
+    assert (
+        receipts.requirement_status(
+            checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires={"Case": "Nom"}
+        )
+        == "not_checked"
+    )
+    assert (
+        receipts.requirement_status(
+            checked, lesson=lesson, inputs={"plan_sha256": "c" * 64}, activity="quiz1", item=0, requires=demand
+        )
+        == "not_checked"
+    )
+    assert (
+        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=1, requires=demand)
+        == "not_checked"
+    )
+
+    same_family = copy.deepcopy(doc)
+    same_family["items"][0]["reviewer"]["family"] = "OpenAI"
+    with pytest.raises(ResolverError, match="receipt_invalid"):
+        receipts.write_requirement_receipts(path, same_family)
+    wrong_lane = copy.deepcopy(doc)
+    wrong_lane["items"][0]["reviewer"]["lane"] = "general"
+    with pytest.raises(ResolverError, match="receipt_invalid"):
+        receipts.write_requirement_receipts(path, wrong_lane)
+    path.write_text("{}", encoding="utf-8")
+    with pytest.raises(ResolverError, match="lock_mismatch"):
+        receipts.read_requirement_receipts(path)
 
 
 def test_live_runner_error_correction_item_provenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -376,17 +435,11 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         "stressed": "слова\u0301",
         "tags": "noun:inanim:n:v_rod",
     }
-    form_e = {
-        **words["words"][0]["forms"][0],
-        "form": "слове",
-        "stressed": "сло́ве",
-        "tags": "noun:inanim:n:v_kly",
-    }
-    words["words"][0]["forms"].extend([form_a, form_e])
-    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].extend([form_a["tags"], form_e["tags"]])
+    words["words"][0]["forms"].append(form_a)
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].append(form_a["tags"])
     # Every taught form has a teaching position in the urok text: a string `answer` key is no
     # longer a resolved unit (it is a key like the integer `correct`), so `слова` is taught here.
-    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 9) + "слова слове "
+    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 9) + "слова а я "
 
     w_a = make_word_record(2, "а", pos="conj", gloss_en="and")
     w_ya = make_word_record(3, "я", pos="pron", gloss_en="I")
@@ -408,15 +461,24 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "explanation": "E",
         },
     ]
+    for index, item in enumerate(quiz_items):
+        item.update(
+            kind="form",
+            tests_feature="Case",
+            requires={"Case": "Gen", "Number": "Sing"} if index == 1 else {"Case": "Nom", "Number": "Sing"},
+            option_records=["W-1", "W-1"],
+        )
 
     # 2. fill-in - orthography
     fill_orth = [
         {
-            "sentence": "я слово ___",
+            "sentence": "слов___",
             "answer": "а",
             "options": ["а", "я"],
             "explanation": "E",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
         }
     ]
 
@@ -441,6 +503,12 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "error_ref": "E-001",
         }
     ]
+    err_items[0].update(
+        kind="form",
+        tests_feature="Case",
+        requires={"Case": "Nom", "Number": "Sing"},
+        option_records=["W-1", "W-1"],
+    )
 
     # 4. image-to-letter: covered by test_live_runner_image_to_letter_locates_spans_on_the_page.
 
@@ -452,6 +520,12 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "explanation": "E",
         }
     ]
+    trans_items[0].update(
+        kind="form",
+        tests_feature="Case",
+        requires={"Case": "Nom", "Number": "Sing"},
+        option_records=["W-1", "W-1"],
+    )
 
     # 6. odd-one-out
     odd_items = [{"words": ["слово", "слова", "слове"], "correct": 1, "explanation": "E"}]
@@ -493,6 +567,20 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     validate_fixture_pack(pack)
     validate_fixture_plan(plan)
     validate_fixture_draft(draft)
+
+    analyses: dict[str, list[dict[str, str]]] = {}
+    for record in words["words"]:
+        for form in record["forms"]:
+            analyses.setdefault(form["form"], []).append(
+                {"lemma": record["lemma"], "pos": record["pos"], "tags": form["tags"]}
+            )
+
+    def fixture_verify_words(spellings: list[str], **_kwargs: object) -> dict[str, list[dict[str, str]]]:
+        return {spelling: analyses.get(spelling, []) for spelling in spellings}
+
+    monkeypatch.setattr(runner, "verify_words", fixture_verify_words, raising=False)
+    # The runner's default lookup imports verify_words locally from this module.
+    monkeypatch.setattr(vesum, "verify_words", runner.verify_words)
 
     report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
@@ -577,6 +665,8 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         "opt_0",
         "opt_1",
         "explanation",
+        "option_why_0",
+        "option_why_1",
     ]
     assert not any(s.get("activity") == "a6" and s.get("block") == "answer" for s in spans)
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")

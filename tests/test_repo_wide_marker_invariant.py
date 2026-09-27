@@ -88,6 +88,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
@@ -223,11 +224,6 @@ NOT_REPO_WIDE = {
     "tests/build/test_fresh_writer.py::test_r11_forbidden_paths_grep": (
         "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
         "shared-root denylist, so any change already forces the full tier."
-    ),
-    "tests/test_ci_attribution.py::test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr": (
-        "Uses a repository-rooted scratch path only to create and then delete a "
-        "self-created temp dir (the `rglob` is cleanup); it scans no repository "
-        "invariant tree, so no marker is needed."
     ),
     "tests/test_dispatch_xdist_cap.py::test_ci_workflows_do_not_set_the_dispatch_marker": (
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "

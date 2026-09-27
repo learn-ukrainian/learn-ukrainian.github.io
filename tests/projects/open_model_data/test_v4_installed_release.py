@@ -51,7 +51,7 @@ for name in identity["installed_files"]:
     if name.endswith(".py") and name not in {"__init__.py", "_build_identity.py"}:
         importlib.import_module(resources.NAMESPACE + "." + name[:-3])
 assert len(blob_reads) == 17
-assert not any(name == "scripts" or name.startswith("scripts.") for name in sys.modules)
+assert not any(name == "scripts" or name.startswith("scripts.") for name in list(sys.modules))
 output = io.StringIO()
 sys.argv = [str(module)]
 started = time.monotonic()
@@ -66,7 +66,7 @@ elif str(module) == "v4_per_slot_private_factory":
 else:
     gate = next(value for key, value in payload.items() if key.endswith("_gate"))
     assert (gate["slots_stage_complete"], gate["slots_residual"]) == (0, 100)
-assert not any(name == "scripts" or name.startswith("scripts.") for name in sys.modules)
+assert not any(name == "scripts" or name.startswith("scripts.") for name in list(sys.modules))
 print(json.dumps({"cli": str(module), "elapsed": round(time.monotonic() - started, 3), "public_commit": identity["public_commit"], "historical_blobs_hashed_without_execution": len(blob_reads), "output": payload}))
 '''
 

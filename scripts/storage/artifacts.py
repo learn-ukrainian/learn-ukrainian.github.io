@@ -1,4 +1,11 @@
-"""Manage migration manifests and the host-local content-addressed artifact store."""
+"""Manage migration manifests and the host-local content-addressed artifact store.
+
+Path components are checked with ``lstat`` before publication, but a second
+process can replace a component with a symlink after the check while the
+publisher holds its lock. Cooperating writers honor the lock; hostile path
+replacement is outside this threat model. If that changes, open each component
+with ``os.open(..., dir_fd=)`` and ``O_NOFOLLOW`` instead of using path names.
+"""
 
 from __future__ import annotations
 
@@ -12,19 +19,23 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 import time
+import uuid
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.storage import paths
 
 ROOT = paths.ROOT
 TABLE = "registry/artifacts/classification-v1.tsv"
+_JOURNAL_SCRATCH = re.compile(r"\.lu-journal-[0-9a-f]{32}-[A-Za-z0-9_]{8}\.tmp\Z")
 
 
 def _now() -> str:
@@ -38,8 +49,17 @@ def _git(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
 
 
 def _json_write(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
+    _mkdir_durable(path.parent)
+    journal = path.parent.name == ".transactions"
+    prefix = f".lu-journal-{uuid.uuid4().hex}-" if journal else "tmp"
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=prefix,
+        suffix=".tmp" if journal else "",
+        delete=False,
+    ) as stream:
         temp = Path(stream.name)
         try:
             json.dump(value, stream, indent=2, sort_keys=True)
@@ -51,8 +71,28 @@ def _json_write(path: Path, value: object) -> None:
             raise
     try:
         os.replace(temp, path)
+        _fsync_dir(path.parent)
     finally:
         temp.unlink(missing_ok=True)
+
+
+def _fsync_dir(directory: Path) -> None:
+    fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _mkdir_durable(directory: Path) -> None:
+    missing = []
+    cursor = directory
+    while not cursor.exists():
+        missing.append(cursor)
+        cursor = cursor.parent
+    for path in reversed(missing):
+        path.mkdir()
+        _fsync_dir(path.parent)
 
 
 def _manifest_digest(value: object) -> str:
@@ -122,11 +162,14 @@ def _load_manifest(repo: Path, group: str, commit: str | None = None) -> dict:
 def _phase_entries(repo: Path, phase: str, *, manifests_commit: str | None = None) -> list[tuple[str, dict]]:
     selected = {row["path"] for row in _rows(repo) if row["class"] == "A" and _phase(row) == phase}
     result = []
+    covered = set()
     for group in phase_groups(repo, phase):
         manifest = _load_manifest(repo, group, manifests_commit)
-        result.extend((group, entry) for entry in manifest["entries"] if entry["path"] in selected)
-    if len(result) != len(selected):
-        raise ValueError(f"phase {phase}: manifest coverage {len(result)} != {len(selected)}")
+        result.extend((group, entry) for entry in manifest["entries"])
+        covered.update(entry["path"] for entry in manifest["entries"] if entry["path"] in selected)
+        covered.update(item["path"] for item in manifest.get("retired", []) if item["path"] in selected)
+    if covered != selected:
+        raise ValueError(f"phase {phase}: manifest coverage {len(covered)} != {len(selected)}")
     return result
 
 
@@ -212,7 +255,7 @@ def manifest_build(repo: Path, group: str, pre: str) -> int:
         if row["class"] != "A" or row["group"] != group:
             continue
         rel = row["path"]
-        disk = repo / rel
+        disk = _safe_destination(repo, rel, "data")
         if not disk.is_file() or disk.is_symlink():
             raise ValueError(f"missing regular A file {rel}")
         blob = _git(repo, "rev-parse", f"{pre}:{rel}").decode().strip()
@@ -248,7 +291,7 @@ def manifest_build(repo: Path, group: str, pre: str) -> int:
 
 
 def _store_copy(source: Path, sha: str, store: Path) -> None:
-    store.mkdir(parents=True, exist_ok=True)
+    _mkdir_durable(store)
     target = store / sha
     if target.exists():
         if target.is_symlink() or paths.hash_file(target) != sha:
@@ -268,18 +311,20 @@ def _store_copy(source: Path, sha: str, store: Path) -> None:
         if paths.hash_file(temp) != sha:
             raise ValueError(f"source changed during store copy: {source}")
         os.replace(temp, target)
+        _fsync_dir(store)
     finally:
         temp.unlink(missing_ok=True)
 
 
 def snapshot(repo: Path, phase: str, *, manifests_ref: str | None = None) -> int:
-    """Copy a phase's A files into the host store after disk and pre-untrack blob proof.
+    """Copy current active A versions into the host store after disk and lineage proof.
 
     ``manifests_ref`` reads the phase manifests from a Git ref (the unmerged phase branch), so a checkout
     still at the pre-phase commit can snapshot before the phase merges; the working tree is not changed.
     """
     commit = _resolve_manifests_ref(repo, manifests_ref) if manifests_ref is not None else None
     with _lock(repo):
+        _recover_locked(repo)
         return _snapshot_locked(repo, phase, manifests_commit=commit)
 
 
@@ -288,13 +333,11 @@ def _snapshot_locked(repo: Path, phase: str, *, manifests_commit: str | None = N
     store = paths.artifact_store_root(repo)
     for group, entry in entries:
         rel = _entry_rel(entry)
-        source = repo / entry["path"]
+        source = _safe_destination(repo, entry["path"], "data")
         paths.verify_file(source, entry, group=group, rel=rel)
         blob = entry.get("git_blob")
-        if not blob or not _blob_present(repo, blob) or _sha_blob(repo, blob) != entry.get("pre_untrack_sha256"):
+        if blob and (not _blob_present(repo, blob) or _sha_blob(repo, blob) != entry.get("pre_untrack_sha256")):
             raise ValueError(f"pre-untrack blob proof failed: {entry['path']}")
-        if entry["sha256"] != entry["pre_untrack_sha256"]:
-            raise ValueError(f"snapshot requires migration version: {entry['path']}")
         _store_copy(source, entry["sha256"], store)
     return len(entries)
 
@@ -302,7 +345,7 @@ def _snapshot_locked(repo: Path, phase: str, *, manifests_commit: str | None = N
 def _restore_from_blob(repo: Path, blob: str, target: Path, sha: str) -> None:
     if not _blob_present(repo, blob):
         raise FileNotFoundError(f"git blob unavailable: {blob}")
-    target.parent.mkdir(parents=True, exist_ok=True)
+    _mkdir_durable(target.parent)
     with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
         temp = Path(stream.name)
         try:
@@ -316,16 +359,24 @@ def _restore_from_blob(repo: Path, blob: str, target: Path, sha: str) -> None:
         if paths.hash_file(temp) != sha:
             raise ValueError(f"git blob hash differs from manifest: {blob}")
         os.replace(temp, target)
+        _fsync_dir(target.parent)
     finally:
         temp.unlink(missing_ok=True)
 
 
-def hydrate(repo: Path, entries: list[tuple[str, dict]], *, force_preserve: bool = False) -> int:
+def hydrate(
+    repo: Path,
+    entries: list[tuple[str, dict]],
+    *,
+    force_preserve: bool = False,
+    groups: set[str] | None = None,
+) -> int:
     with _lock(repo):
-        return _hydrate_locked(repo, entries, force_preserve=force_preserve)
+        _recover_locked(repo)
+        return _hydrate_locked(repo, entries, force_preserve=force_preserve, groups=groups or set())
 
 
-def _hydrate_locked(repo: Path, entries: list[tuple[str, dict]], *, force_preserve: bool) -> int:
+def _hydrate_locked(repo: Path, entries: list[tuple[str, dict]], *, force_preserve: bool, groups: set[str]) -> int:
     store = paths.artifact_store_root(repo)
     count = 0
     failures = []
@@ -337,12 +388,27 @@ def _hydrate_locked(repo: Path, entries: list[tuple[str, dict]], *, force_preser
             failures.append(f"{entry['path']}: {exc}")
     if failures:
         raise ValueError(f"hydrate: {len(failures)} artifact(s) failed:\n" + "\n".join(failures))
+    for group in {group for group, _ in entries} | groups:
+        manifest = paths.load_manifest(group, repo)
+        active = {entry["path"] for entry in manifest["entries"]}
+        retired: dict[str, set[str]] = {}
+        for item in manifest.get("retired", []):
+            retired.setdefault(item["path"], set()).add(item["sha256"])
+        for path, known_hashes in retired.items():
+            if path in active:
+                continue
+            target = _safe_destination(repo, path, "data")
+            actual = _actual_sha(target)
+            if actual is not None:
+                if actual not in known_hashes:
+                    raise ValueError(f"hydrate REFUSED divergent retired target: {path}")
+                _install(None, target)
     return count
 
 
 def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_preserve: bool) -> None:
     rel = _entry_rel(entry)
-    target = repo / entry["path"]
+    target = _safe_destination(repo, entry["path"], "data")
     sha = entry["sha256"]
     obj = store / sha
     valid_obj = (
@@ -370,7 +436,7 @@ def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_pres
         raise ValueError("REFUSED non-regular target")
     if valid_obj:
         target.parent.mkdir(parents=True, exist_ok=True)
-        _restore_from_store(obj, target)
+        _restore_from_store(obj, target, mode=entry.get("mode"))
     elif blob and _blob_present(repo, blob) and _sha_blob(repo, blob) == sha:
         if obj.exists() or obj.is_symlink():
             print(f"warning: corrupt store object {sha}; using git blob", file=sys.stderr)
@@ -391,17 +457,33 @@ def _quarantine_corrupt_object(obj: Path, store: Path) -> None:
     os.replace(obj, quarantine / f"{obj.name}-{time.time_ns()}")
 
 
-def verify(repo: Path, entries: list[tuple[str, dict]]) -> int:
+def verify(repo: Path, entries: list[tuple[str, dict]], *, groups: set[str] | None = None) -> int:
     store = paths.artifact_store_root(repo)
     failures = []
     for group, entry in entries:
         try:
-            paths.verify_file(repo / entry["path"], entry, group=group, rel=_entry_rel(entry))
+            paths.verify_file(_safe_destination(repo, entry["path"], "data"), entry, group=group, rel=_entry_rel(entry))
             obj = store / entry["sha256"]
             if not obj.is_file() or obj.stat().st_size != entry["size"] or paths.hash_file(obj) != entry["sha256"]:
                 raise ValueError(f"missing or corrupt store object: {entry['sha256']}")
         except (OSError, ValueError) as exc:
             failures.append(f"{entry['path']}: {exc}")
+    for group in {group for group, _ in entries} | (groups or set()):
+        manifest = paths.load_manifest(group, repo)
+        for item in manifest.get("retired", []):
+            try:
+                _checked_store_object(store, item["sha256"], item["size"])
+            except (OSError, ValueError) as exc:
+                failures.append(f"{group} retired {item['path']}: {exc}")
+        if "set_descriptor" in manifest:
+            try:
+                paths.artifact_set(group, repo=repo)
+                active = {entry["path"] for entry in manifest["entries"]}
+                for item in manifest.get("retired", []):
+                    if item["path"] not in active and _safe_destination(repo, item["path"], "data").exists():
+                        raise ValueError(f"retired path remains: {item['path']}")
+            except (OSError, ValueError) as exc:
+                failures.append(f"{group} set: {exc}")
     if failures:
         raise ValueError(f"verify: {len(failures)} artifact(s) failed:\n" + "\n".join(failures))
     return len(entries)
@@ -410,7 +492,9 @@ def verify(repo: Path, entries: list[tuple[str, dict]]) -> int:
 @contextlib.contextmanager
 def _lock(repo: Path):
     store = paths.artifact_store_root(repo)
-    store.mkdir(parents=True, exist_ok=True)
+    for path in (store, store / ".publish.lock", store / ".transactions"):
+        _checked_store_path(path)
+    _mkdir_durable(store)
     with (store / ".publish.lock").open("a+b") as stream:
         fcntl.flock(stream, fcntl.LOCK_EX)
         try:
@@ -420,6 +504,12 @@ def _lock(repo: Path):
             yield
         finally:
             fcntl.flock(stream, fcntl.LOCK_UN)
+
+
+def _checked_store_path(path: Path) -> Path:
+    """Apply the artifact path component walk to an absolute host-store path."""
+    relative = path.relative_to(path.anchor)
+    return paths.checked_destination(Path(path.anchor), str(relative), relative.parts[0])
 
 
 def _journal_path(repo: Path, group: str, rel: str) -> Path:
@@ -436,9 +526,9 @@ def _recovery_remediation(journal: Path) -> str:
     return (
         f"remediation: every `{command}` command (status and verify included) runs recovery first and stops "
         "on this journal, so start with plain shell tools:\n"
-        f"  1. inspect the journal: `cat {journal}` (fields repo, group, rel, old_sha256, new_sha256, "
-        "new_manifest_digest, manifest).\n"
-        "  2. in that repo compare by hash: `sha256sum data/<rel>` and "
+        f"  1. inspect the journal: `cat {journal}` (single-file fields repo, group, rel, old_sha256, "
+        "new_sha256, new_manifest_digest, manifest; set journals have rows and companions).\n"
+        "  2. in that repo compare every A and K row by hash: `sha256sum data/<rel>` and "
         "`sha256sum registry/artifacts/<group>.manifest.json` against old_sha256 / new_sha256 and "
         "new_manifest_digest, and against the sha256 the manifest lists for data/<rel>.\n"
         "  3a. interrupted publish (target is old_sha256 or new_sha256, manifest is the journal's 'manifest' "
@@ -453,6 +543,15 @@ def _recovery_remediation(journal: Path) -> str:
 def _recover_locked(repo: Path) -> int:
     store = paths.artifact_store_root(repo)
     journal_dir = store / ".transactions"
+    _checked_store_path(journal_dir)
+    if journal_dir.is_dir():
+        removed_scratch = False
+        for scratch in journal_dir.iterdir():
+            if _JOURNAL_SCRATCH.fullmatch(scratch.name) and scratch.is_file() and not scratch.is_symlink():
+                scratch.unlink()
+                removed_scratch = True
+        if removed_scratch:
+            _fsync_dir(journal_dir)
     count = 0
     for journal in sorted(journal_dir.glob("*.json")):
         try:
@@ -512,6 +611,8 @@ def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
         elif reason:
             print(f"artifacts: kept publish journal {journal} of checkout {owner}: {reason}", file=sys.stderr)
         return 0
+    if record.get("schema") == 2:
+        return _recover_set_journal(repo, store, journal, record)
     group = paths.checked_group(record["group"])
     rel = str(paths.checked_rel(record["rel"]))
     manifest = record["manifest"]
@@ -526,7 +627,7 @@ def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
     new_digest = record.get("new_manifest_digest")
     if current_digest not in {old_digest, new_digest} or not isinstance(new_digest, str):
         raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
-    target = repo / "data" / rel
+    target = _safe_destination(repo, f"data/{rel}", "data")
     target_sha = paths.hash_file(target) if target.is_file() and not target.is_symlink() else None
     if current_digest == new_digest and target_sha == record.get("new_sha256"):
         journal.unlink()
@@ -552,79 +653,596 @@ def recover_incomplete(repo: Path) -> int:
         return _recover_locked(repo)
 
 
+@dataclass(frozen=True)
+class ArtifactChange:
+    """An explicit group member mutation; paths are relative to ``data/``."""
+
+    operation: str  # add, replace, remove
+    rel: str
+    source: Path | None
+    expected_sha256: str | None
+
+
+@dataclass(frozen=True)
+class CompanionChange:
+    """A tracked companion mutation; path is relative to the repository root."""
+
+    path: str
+    source: Path
+    expected_sha256: str | None
+
+
+def _safe_destination(repo: Path, relative: str, root: str) -> Path:
+    return paths.checked_destination(repo, relative, root)
+
+
+def _source_info(source: Path, destinations: set[Path], repo: Path) -> tuple[str, int, str]:
+    if not source.is_file() or source.is_symlink():
+        raise ValueError(f"missing regular staging file: {source}")
+    resolved = source.resolve()
+    if (
+        resolved in destinations
+        or resolved.is_relative_to((repo / "data").resolve())
+        or resolved.is_relative_to((repo / "registry").resolve())
+    ):
+        raise ValueError("publish source must be a separate staging file")
+    stat = source.stat()
+    return paths.hash_file(source), stat.st_size, f"100{stat.st_mode & 0o777:03o}"
+
+
+def _registration_allowed(manifest: dict, path: str) -> bool:
+    for pattern in manifest.get("registration_patterns", []):
+        if not isinstance(pattern, str) or not pattern.startswith("data/"):
+            raise ValueError("invalid group registration pattern")
+        parent, _, name = pattern.rpartition("/")
+        if (
+            not 1 <= pattern.count("*") <= 2
+            or any(char in parent for char in "*?[]")
+            or any(char in name for char in "?[]")
+            or len(name.replace("*", "")) < 5
+        ):
+            raise ValueError(f"registration pattern is not narrow: {pattern}")
+        if path.rpartition("/")[0] == parent and fnmatch.fnmatchcase(path, pattern):
+            return True
+    return False
+
+
+def _actual_sha(target: Path) -> str | None:
+    if target.is_symlink() or (target.exists() and not target.is_file()):
+        raise ValueError(f"REFUSED non-regular target: {target}")
+    return paths.hash_file(target) if target.is_file() else None
+
+
+def _actual_mode(target: Path) -> str | None:
+    return f"100{target.stat().st_mode & 0o777:03o}" if target.is_file() and not target.is_symlink() else None
+
+
+def _git_mode(mode: str) -> str:
+    return "100755" if int(mode, 8) & 0o111 else "100644"
+
+
+def _make_temp(target: Path, source: Path, sha: str, mode: str, temp: Path, mtime_ns: int) -> Path:
+    _mkdir_durable(target.parent)
+    with os.fdopen(os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600), "wb") as stream:
+        try:
+            with source.open("rb") as reader:
+                shutil.copyfileobj(reader, stream)
+            os.fchmod(stream.fileno(), int(mode, 8) & 0o777)
+            stream.flush()
+            os.utime(stream.fileno(), ns=(mtime_ns, mtime_ns))
+            os.fsync(stream.fileno())
+        except BaseException:
+            temp.unlink(missing_ok=True)
+            raise
+    if paths.hash_file(temp) != sha:
+        temp.unlink(missing_ok=True)
+        raise ValueError(f"staging file changed during publish: {source}")
+    return temp
+
+
+_SET_TEMP_NAME = re.compile(r"\.lu-artifact-[0-9a-f]{32}-[0-9]+\.tmp\Z")
+
+
+def _set_temp_paths(repo: Path, record: dict) -> list[Path]:
+    """Validate journal-owned temp names before removing any of them."""
+    rows = record["rows"] + record["companions"]
+    temps = []
+    for row in rows:
+        name = row.get("temp")
+        if name is None:
+            continue  # Journals written before named temps remain recoverable.
+        if not isinstance(name, str) or not _SET_TEMP_NAME.fullmatch(name) or row.get("new_sha256") is None:
+            raise ValueError(f"invalid publish recovery temp: {row['path']}")
+        target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+        temp = target.with_name(name)
+        if temp.is_symlink() or (temp.exists() and not temp.is_file()):
+            raise ValueError(f"publish recovery REFUSED non-regular temp: {temp}")
+        temps.append(temp)
+    if len(set(temps)) != len(temps):
+        raise ValueError("duplicate publish recovery temps")
+    return temps
+
+
+def _cleanup_set_temps(repo: Path, record: dict) -> None:
+    for temp in _set_temp_paths(repo, record):
+        if not temp.exists():
+            continue
+        temp.unlink(missing_ok=True)
+        _fsync_dir(temp.parent)
+
+
+def _install(temp: Path | None, target: Path) -> None:
+    if temp is None:
+        target.unlink(missing_ok=True)
+    else:
+        os.replace(temp, target)
+    _fsync_dir(target.parent)
+
+
+def _checked_store_object(store: Path, sha: str, size: int) -> Path:
+    obj = store / sha
+    if not obj.is_file() or obj.is_symlink() or obj.stat().st_size != size or paths.hash_file(obj) != sha:
+        raise ValueError(f"missing or corrupt store object: {sha}")
+    return obj
+
+
+def _finish_journal(journal: Path, record: dict) -> None:
+    journal.unlink()
+    try:
+        _fsync_dir(journal.parent)
+    except OSError:
+        # Keep recovery visible when a one-shot directory sync failure follows
+        # the unlink. A persistent storage failure still propagates.
+        _json_write(journal, record)
+        raise
+
+
+def _verify_set_state(repo: Path, group: str, manifest: dict) -> None:
+    active = {entry["path"] for entry in manifest["entries"]}
+    for entry in manifest["entries"]:
+        target = _safe_destination(repo, entry["path"], "data")
+        paths.verify_file(target, entry, group=group, rel=entry["path"][5:])
+        if entry.get("mode") and _git_mode(_actual_mode(target)) != entry["mode"]:
+            raise ValueError(f"set member mode differs: {entry['path']}")
+    for relative, sha in manifest.get("set_descriptor", {}).get("companions", {}).items():
+        if _actual_sha(_safe_destination(repo, relative, "registry")) != sha:
+            raise ValueError(f"set companion differs: {relative}")
+    for entry in manifest.get("retired", []):
+        if entry["path"] not in active and _actual_sha(_safe_destination(repo, entry["path"], "data")) is not None:
+            raise ValueError(f"retired path remains: {entry['path']}")
+
+
+def _recover_set_journal(repo: Path, store: Path, journal: Path, record: dict) -> int:
+    group = paths.checked_group(record["group"])
+    old_manifest = paths.validate_manifest(record["manifest"], group, str(journal))
+    new_manifest = paths.validate_manifest(record["new_manifest"], group, str(journal))
+    manifest_path = paths.manifest_path(group, repo)
+    current_digest = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+    old_digest = record["old_manifest_digest"]
+    new_digest = record["new_manifest_digest"]
+    if (
+        current_digest not in {old_digest, new_digest}
+        or new_digest != _manifest_digest(new_manifest)
+        or old_digest != _manifest_digest(old_manifest)
+    ):
+        raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
+    rows = record["rows"] + record["companions"]
+    if len({row["path"] for row in rows}) != len(rows):
+        raise ValueError(f"duplicate publish recovery rows: {journal}")
+    _set_temp_paths(repo, record)
+    old_entries = {entry["path"]: entry for entry in old_manifest["entries"]}
+    new_entries = {entry["path"]: entry for entry in new_manifest["entries"]}
+    for row in record["rows"]:
+        old = old_entries.get(row["path"])
+        new = new_entries.get(row["path"])
+        if (old["sha256"] if old else None) != row["old_sha256"] or (new["sha256"] if new else None) != row[
+            "new_sha256"
+        ]:
+            raise ValueError(f"inconsistent publish recovery row: {row['path']}")
+    checked = []
+    for row in rows:
+        target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+        actual = _actual_sha(target)
+        state = (actual, _actual_mode(target))
+        if state not in {
+            (row["old_sha256"], row["old_mode"]),
+            (row["new_sha256"], row["new_mode"]),
+        }:
+            raise ValueError(f"publish recovery REFUSED: target changed after journal {target}")
+        checked.append((row, target, actual))
+    if current_digest == new_digest:
+        if any(actual != row["new_sha256"] for row, _, actual in checked):
+            raise ValueError(f"publish recovery REFUSED: committed set incomplete {journal}")
+        for row, _, _ in checked:
+            if row["new_sha256"] is not None:
+                _checked_store_object(store, row["new_sha256"], row["new_size"])
+        if record.get("strict_set", True):
+            _verify_set_state(repo, group, new_manifest)
+    else:
+        # Validate every rollback source before changing any live pathname.
+        for row, _, _ in checked:
+            if row["old_sha256"] is not None:
+                _checked_store_object(store, row["old_sha256"], row["old_size"])
+        for row, target, actual in checked:
+            if actual == row["old_sha256"]:
+                continue
+            if row["old_sha256"] is None:
+                _install(None, target)
+            else:
+                _restore_from_store(store / row["old_sha256"], target, mode=row["old_mode"])
+        _json_write(manifest_path, old_manifest)
+        if record.get("strict_set", True):
+            _verify_set_state(repo, group, old_manifest)
+    _cleanup_set_temps(repo, record)
+    _finish_journal(journal, record)
+    return 1
+
+
+def publish_set(
+    repo: Path,
+    group: str,
+    artifacts: list[ArtifactChange],
+    producer: str,
+    *,
+    companions: list[CompanionChange] | None = None,
+    expected_members: set[str],
+) -> dict[str, str | None]:
+    """Publish one group's complete intended change set under one durable descriptor."""
+    _preflight_publish_paths(repo, group, artifacts, companions or [])
+    with _lock(repo):
+        _recover_locked(repo)
+        return _publish_set_locked(repo, group, artifacts, producer, companions or [], expected_members)
+
+
+def _preflight_publish_paths(
+    repo: Path, group: str, artifacts: list[ArtifactChange], companions: list[CompanionChange]
+) -> None:
+    """Refuse static symlink paths before acquiring a lock or creating store state."""
+    manifest = paths.load_manifest(group, repo)
+    for entry in manifest["entries"] + manifest.get("retired", []):
+        _safe_destination(repo, entry["path"], "data")
+    for relative in manifest.get("set_descriptor", {}).get("companions", {}):
+        _safe_destination(repo, relative, "registry")
+    for change in artifacts:
+        _safe_destination(repo, f"data/{change.rel}", "data")
+    for change in companions:
+        _safe_destination(repo, change.path, "registry")
+
+
+def _publish_set_locked(
+    repo: Path,
+    group: str,
+    artifacts: list[ArtifactChange],
+    producer: str,
+    companions: list[CompanionChange],
+    expected_members: set[str],
+    *,
+    strict_set: bool = True,
+) -> dict[str, str | None]:
+    manifest = paths.load_manifest(group, repo)
+    before = {item["path"][5:]: item for item in manifest["entries"]}
+    if set(before) != expected_members:
+        raise ValueError("stale expected membership")
+    if not artifacts or not producer:
+        raise ValueError("publish set requires artifacts and producer")
+    if strict_set:
+        _verify_set_state(repo, group, manifest)
+    if len({change.rel for change in artifacts}) != len(artifacts):
+        raise ValueError("duplicate artifact rows")
+    if len({change.path for change in companions}) != len(companions):
+        raise ValueError("duplicate companion rows")
+    destinations: set[Path] = set()
+    for change in artifacts:
+        destinations.add(_safe_destination(repo, f"data/{change.rel}", "data").absolute())
+    for change in companions:
+        if not change.path.startswith("registry/"):
+            raise ValueError("companion must be under registry/")
+        destinations.add(_safe_destination(repo, change.path, "registry").absolute())
+    if len(destinations) != len(artifacts) + len(companions):
+        raise ValueError("duplicate destinations")
+    other_owners = {item["path"]: owner for owner, item in _all_manifests(repo) if owner != group}
+    other_patterns = []
+    for other_manifest in sorted((repo / "registry/artifacts").glob("*.manifest.json")):
+        owner = other_manifest.name.removesuffix(".manifest.json")
+        if owner != group:
+            other = paths.load_manifest(owner, repo)
+            other_patterns.append((owner, other))
+            for item in other.get("retired", []):
+                other_owners[item["path"]] = owner
+    classified = {row["path"]: row for row in _rows(repo)}
+    new_entries = dict(before)
+    retired = list(manifest.get("retired", []))
+    store = paths.artifact_store_root(repo)
+    row_records: list[dict] = []
+    companion_records: list[dict] = []
+    prepared: list[tuple[Path | None, Path]] = []
+    journal = _journal_path(repo, group, "@set")
+    try:
+        for change in artifacts:
+            rel = str(paths.checked_rel(change.rel))
+            path = f"data/{rel}"
+            target = _safe_destination(repo, path, "data")
+            old = before.get(rel)
+            if path in other_owners:
+                raise ValueError(f"ownership conflict: {path} belongs to {other_owners[path]}")
+            if change.operation not in {"add", "replace", "remove"}:
+                raise ValueError(f"invalid artifact operation: {change.operation}")
+            if change.operation == "add":
+                if old is not None or change.expected_sha256 is not None or _actual_sha(target) is not None:
+                    raise ValueError(f"add requires prior absence: {path}")
+                prior = next((entry for entry in reversed(retired) if entry["path"] == path), None)
+                classification = classified.get(path)
+                if classification is not None and (
+                    classification["class"] != "A" or classification["group"] != group or prior is None
+                ):
+                    raise ValueError(f"classified path has no active manifest owner: {path}")
+                if any(_registration_allowed(other, path) for _, other in other_patterns):
+                    raise ValueError(f"registration ownership conflict: {path}")
+                if not _registration_allowed(manifest, path):
+                    raise ValueError(f"unregistered addition: {path}")
+                if prior is not None:
+                    # Historical versions are lineage, never the old live state of an add.
+                    # Check every retained version before changing any managed pathname.
+                    for entry in retired:
+                        _checked_store_object(store, entry["sha256"], entry["size"])
+            else:
+                prior = None
+                if old is None or change.expected_sha256 != old["sha256"]:
+                    raise ValueError(f"stale expected hash: {path}")
+                paths.verify_file(target, old, group=group, rel=rel)
+            if change.operation == "remove":
+                if change.source is not None:
+                    raise ValueError(f"remove must not have a source: {path}")
+                new_entries.pop(rel)
+                retired.append({**old, "retired_at": _now()})
+                sha, size, mode = None, None, None
+            else:
+                if change.source is None:
+                    raise ValueError(f"missing source: {path}")
+                sha, size, source_mode = _source_info(change.source, destinations, repo)
+                mode = old["mode"] if old else prior["mode"] if prior else _git_mode(source_mode)
+                inherited = old or prior or {}
+                metadata = (
+                    {
+                        key: value
+                        for key, value in prior.items()
+                        if key not in {"retired_at", "migrated_at", "pre_untrack_sha256", "git_blob"}
+                    }
+                    if prior
+                    else inherited
+                )
+                new_entries[rel] = {
+                    **metadata,
+                    "path": path,
+                    "mode": mode,
+                    "size": size,
+                    "sha256": sha,
+                    "store": sha,
+                    "producer": producer,
+                    "published_at": _now(),
+                    "mtime_ns": None,
+                    **({"supersedes": inherited["sha256"]} if inherited else {"rights": "uncleared", "git_blob": None}),
+                }
+            installed_mode = None if sha is None else _actual_mode(target) if old else mode if prior else source_mode
+            row_records.append(
+                {
+                    "kind": "artifact",
+                    "path": path,
+                    "old_sha256": old["sha256"] if old else None,
+                    "old_size": old["size"] if old else None,
+                    "old_mode": _actual_mode(target) if old else None,
+                    "new_sha256": sha,
+                    "new_size": size,
+                    "new_mode": installed_mode,
+                }
+            )
+        for change in companions:
+            if change.path.startswith("registry/artifacts/"):
+                raise ValueError(f"companion conflicts with artifact metadata: {change.path}")
+            target = _safe_destination(repo, change.path, "registry")
+            actual = _actual_sha(target)
+            if actual != change.expected_sha256:
+                raise ValueError(f"dirty K companion or stale expected hash: {change.path}")
+            tracked = subprocess.run(["git", "show", f"HEAD:{change.path}"], cwd=repo, capture_output=True, timeout=30)
+            if (tracked.returncode == 0) != (actual is not None) or (
+                actual is not None and hashlib.sha256(tracked.stdout).hexdigest() != actual
+            ):
+                raise ValueError(f"dirty K companion: {change.path}")
+            if actual is not None:
+                tree_line = _git(repo, "ls-tree", "HEAD", "--", change.path).decode().split()
+                if not tree_line or tree_line[0] != _git_mode(_actual_mode(target)):
+                    raise ValueError(f"dirty K companion mode: {change.path}")
+            sha, size, source_mode = _source_info(change.source, destinations, repo)
+            mode = f"100{target.stat().st_mode & 0o777:03o}" if actual is not None else source_mode
+            companion_records.append(
+                {
+                    "kind": "companion",
+                    "path": change.path,
+                    "old_sha256": actual,
+                    "old_size": target.stat().st_size if actual is not None else None,
+                    "old_mode": mode if actual is not None else None,
+                    "new_sha256": sha,
+                    "new_size": size,
+                    "new_mode": mode,
+                }
+            )
+        # All live versions and staged inputs have been checked. The store copies are
+        # durable before any published pathname changes.
+        if strict_set:
+            changed = {change.rel for change in artifacts}
+            for rel, entry in before.items():
+                if rel not in changed:
+                    _store_copy(_safe_destination(repo, entry["path"], "data"), entry["sha256"], store)
+        for row, change in zip(row_records, artifacts, strict=True):
+            target = _safe_destination(repo, row["path"], "data")
+            if row["old_sha256"] is not None:
+                _store_copy(target, row["old_sha256"], store)
+            if row["new_sha256"] is not None:
+                assert change.source is not None
+                _store_copy(change.source, row["new_sha256"], store)
+        for row, change in zip(companion_records, companions, strict=True):
+            target = _safe_destination(repo, row["path"], "registry")
+            if row["old_sha256"] is not None:
+                _store_copy(target, row["old_sha256"], store)
+            _store_copy(change.source, row["new_sha256"], store)
+        for row in row_records + companion_records:
+            if row["old_sha256"] is not None:
+                _checked_store_object(store, row["old_sha256"], row["old_size"])
+            if row["new_sha256"] is not None:
+                _checked_store_object(store, row["new_sha256"], row["new_size"])
+        transaction = uuid.uuid4().hex
+        for index, row in enumerate(row_records + companion_records):
+            if row["new_sha256"] is None:
+                row["temp"] = None
+                continue
+            row["temp"] = f".lu-artifact-{transaction}-{index}.tmp"
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            planned_temp = target.with_name(row["temp"])
+            try:
+                planned_temp.lstat()
+            except FileNotFoundError:
+                pass
+            else:
+                raise ValueError(f"engine temp name collision: {planned_temp}")
+            row["temp_mtime_ns"] = time.time_ns()
+            if row["kind"] == "artifact":
+                new_entries[row["path"][5:]]["mtime_ns"] = row["temp_mtime_ns"]
+        previous_companions = manifest.get("set_descriptor", {}).get("companions", {})
+        for relative, sha in previous_companions.items():
+            if relative not in {row["path"] for row in companion_records}:
+                target = _safe_destination(repo, relative, "registry")
+                if _actual_sha(target) != sha:
+                    raise ValueError(f"dirty K companion: {relative}")
+                if strict_set:
+                    _store_copy(target, sha, store)
+        new_manifest = {
+            **manifest,
+            "entries": [
+                new_entries[item["path"][5:]] for item in manifest["entries"] if item["path"][5:] in new_entries
+            ]
+            + [new_entries[rel] for rel in sorted(set(new_entries) - set(before))],
+            "retired": retired,
+            "set_descriptor": {
+                "members": sorted(new_entries),
+                "companions": {
+                    **previous_companions,
+                    **{row["path"]: row["new_sha256"] for row in companion_records},
+                },
+            },
+        }
+        paths.validate_manifest(new_manifest, group, "planned publication")
+        if strict_set:
+            for entry in new_manifest["entries"] + new_manifest["retired"]:
+                _checked_store_object(store, entry["sha256"], entry["size"])
+            for sha in new_manifest["set_descriptor"]["companions"].values():
+                obj = store / sha
+                _checked_store_object(store, sha, obj.stat().st_size)
+        record = {
+            "schema": 2,
+            "repo": str(repo.resolve()),
+            "group": group,
+            "strict_set": strict_set,
+            "rows": row_records,
+            "companions": companion_records,
+            "manifest": manifest,
+            "old_manifest_digest": hashlib.sha256(paths.manifest_path(group, repo).read_bytes()).hexdigest(),
+            "new_manifest": new_manifest,
+            "new_manifest_digest": _manifest_digest(new_manifest),
+        }
+        _json_write(journal, record)
+        for row in row_records + companion_records:
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            if row["new_sha256"] is None:
+                prepared.append((None, target))
+                continue
+            temp = _make_temp(
+                target,
+                store / row["new_sha256"],
+                row["new_sha256"],
+                row["new_mode"],
+                target.with_name(row["temp"]),
+                row["temp_mtime_ns"],
+            )
+            prepared.append((temp, target))
+        for temp, target in prepared:
+            _install(temp, target)
+        for row in row_records + companion_records:
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            if _actual_sha(target) != row["new_sha256"]:
+                raise ValueError(f"installed set differs: {row['path']}")
+        if strict_set:
+            _verify_set_state(repo, group, new_manifest)
+        _json_write(paths.manifest_path(group, repo), new_manifest)
+        _finish_journal(journal, record)
+        return {row["path"][5:]: row["new_sha256"] for row in row_records}
+    except BaseException:
+        if journal.exists():
+            current_digest = hashlib.sha256(paths.manifest_path(group, repo).read_bytes()).hexdigest()
+            if current_digest != _manifest_digest(new_manifest):
+                _recover_locked(repo)
+        raise
+    finally:
+        for temp, _ in prepared:
+            if temp is not None:
+                temp.unlink(missing_ok=True)
+
+
 def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> str:
+    """Publish one existing member through the set engine (legacy caller contract)."""
     paths.checked_rel(rel)
+    _preflight_publish_paths(repo, group, [ArtifactChange("replace", rel, source, None)], [])
     with _lock(repo):
         _recover_locked(repo)
         manifest = paths.load_manifest(group, repo)
-        entry = paths.find_entry(group, rel, repo)
-        target = repo / "data" / rel
-        if source.resolve() == target.resolve():
-            raise ValueError("publish source must be a separate staging file")
-        if not source.is_file() or source.is_symlink():
-            raise ValueError(f"missing staging file: {source}")
-        paths.verify_file(target, entry, group=group, rel=rel)
-        sha = paths.hash_file(source)
-        size = source.stat().st_size
-        store = paths.artifact_store_root(repo)
-        _store_copy(target, entry["sha256"], store)
-        _store_copy(source, sha, store)
-        replacement = {
-            **entry,
-            "size": size,
-            "sha256": sha,
-            "store": sha,
-            "producer": producer,
-            "published_at": _now(),
-            "supersedes": entry["sha256"],
-            "mtime_ns": None,
-        }
-        new_manifest = {
-            **manifest,
-            "entries": [replacement if item["path"] == entry["path"] else item for item in manifest["entries"]],
-        }
-        # The lock excludes writers. The old object is kept for rollback if a rename fails.
-        target.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
-            temp = Path(stream.name)
-            try:
-                with source.open("rb") as reader:
-                    shutil.copyfileobj(reader, stream)
-                stream.flush()
-                os.fsync(stream.fileno())
-            except BaseException:
-                temp.unlink(missing_ok=True)
-                raise
-        journal = _journal_path(repo, group, rel)
-        try:
-            if paths.hash_file(temp) != sha:
-                raise ValueError("staging file changed during publish")
-            # The rename preserves the temporary file's timestamp.
-            replacement["mtime_ns"] = temp.stat().st_mtime_ns
-            _json_write(
-                journal,
-                {
-                    "repo": str(repo.resolve()),
-                    "group": group,
-                    "rel": rel,
-                    "old_sha256": entry["sha256"],
-                    "new_sha256": sha,
-                    "new_manifest_digest": _manifest_digest(new_manifest),
-                    "manifest": manifest,
-                },
-            )
-            os.replace(temp, target)
-            replacement["mtime_ns"] = target.stat().st_mtime_ns
-            _json_write(paths.manifest_path(group, repo), new_manifest)
-        except BaseException:
-            if journal.exists():
-                _recover_locked(repo)
-            raise
-        finally:
-            temp.unlink(missing_ok=True)
-        paths.verify_file(target, replacement, group=group, rel=rel)
-        journal.unlink()
-        return sha
+        old = next((item for item in manifest["entries"] if item["path"] == f"data/{rel}"), None)
+        if old is None:
+            paths.find_entry(group, rel, repo)  # Preserve the legacy missing-entry error.
+        result = _publish_set_locked(
+            repo,
+            group,
+            [ArtifactChange("replace", rel, source, old["sha256"])],
+            producer,
+            [],
+            {item["path"][5:] for item in manifest["entries"]},
+            strict_set=False,
+        )
+        return result[rel]
+
+
+def write_artifact_set(
+    repo: Path,
+    group: str,
+    producer: str,
+    writes: dict[str, Callable[[Path], object]],
+    *,
+    expected_hashes: dict[str, str | None],
+    expected_members: set[str],
+    removals: dict[str, str] | None = None,
+    companions: dict[str, tuple[str | None, Callable[[Path], object]]] | None = None,
+) -> dict[str, str | None]:
+    """Stage all writer outputs, then publish their explicit membership change."""
+    removals = removals or {}
+    companions = companions or {}
+    if set(writes) != set(expected_hashes) or set(writes) & set(removals):
+        raise ValueError("write set needs one expected hash per write and no duplicate removals")
+    with tempfile.TemporaryDirectory(prefix="artifact-set-stage-") as staging:
+        stage = Path(staging)
+        changes = []
+        companion_changes = []
+        for index, (rel, write) in enumerate(writes.items()):
+            source = stage / f"artifact-{index}"
+            write(source)
+            expected = expected_hashes[rel]
+            changes.append(ArtifactChange("add" if expected is None else "replace", rel, source, expected))
+        for rel, expected in removals.items():
+            changes.append(ArtifactChange("remove", rel, None, expected))
+        for index, (relative, (expected, write)) in enumerate(companions.items()):
+            source = stage / f"companion-{index}"
+            write(source)
+            companion_changes.append(CompanionChange(relative, source, expected))
+        return publish_set(
+            repo, group, changes, producer, companions=companion_changes, expected_members=expected_members
+        )
 
 
 def write_artifact(
@@ -663,10 +1281,30 @@ def write_artifact(
             and any(path.is_relative_to(tree) for tree in trees)
             and not _lexicon_host_state(repo, path)
         ):
-            raise ValueError(
-                f"data/{rel} is under a migrated artifact tree but has no manifest entry; "
-                "register the output in its artifact group before writing"
-            )
+            if (
+                path != resolved
+                or rel != resolved_rel
+                or not paths.manifest_path(group, repo).is_file()
+                or not (_registration_allowed(paths.load_manifest(group, repo), f"data/{rel}"))
+            ):
+                raise ValueError(
+                    f"data/{rel} is under a migrated artifact tree but has no manifest entry; "
+                    "register the output in its artifact group before writing"
+                )
+            if any(row["path"] == f"data/{rel}" and row["group"] != group for row in _rows(repo)):
+                raise ValueError(f"data/{rel} is classified in another artifact group")
+            with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
+                staged = Path(staging) / resolved.name
+                write(staged)
+                manifest = paths.load_manifest(group, repo)
+                publish_set(
+                    repo,
+                    group,
+                    [ArtifactChange("add", rel, staged, None)],
+                    producer,
+                    expected_members={item["path"][5:] for item in manifest["entries"]},
+                )
+            return resolved
     rel = lexical_rel if lexical_owners else resolved_rel if resolved_owners else None
     if rel is not None and (lexical_owners or resolved_owners):
         with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
@@ -678,17 +1316,23 @@ def write_artifact(
     return Path(target)
 
 
-def _restore_from_store(object_path: Path, target: Path) -> None:
+def _restore_from_store(object_path: Path, target: Path, *, mode: str | None = None) -> None:
+    _mkdir_durable(target.parent)
     with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
         temp = Path(stream.name)
         try:
             with object_path.open("rb") as reader:
                 shutil.copyfileobj(reader, stream)
+            if mode is not None:
+                os.fchmod(stream.fileno(), int(mode, 8) & 0o777)
+            stream.flush()
+            os.fsync(stream.fileno())
         except BaseException:
             temp.unlink(missing_ok=True)
             raise
     try:
         os.replace(temp, target)
+        _fsync_dir(target.parent)
     finally:
         temp.unlink(missing_ok=True)
 
@@ -697,7 +1341,7 @@ def export_group(repo: Path, group: str, output: Path) -> int:
     manifest = paths.load_manifest(group, repo)
     store = paths.artifact_store_root(repo)
     objects = {}
-    for entry in manifest["entries"]:
+    for entry in manifest["entries"] + manifest.get("retired", []):
         sha = entry["sha256"]
         obj = store / sha
         if not obj.is_file() or obj.stat().st_size != entry["size"] or paths.hash_file(obj) != sha:
@@ -715,6 +1359,7 @@ def export_group(repo: Path, group: str, output: Path) -> int:
 
 def import_tarball(repo: Path, tarball: Path) -> int:
     with _lock(repo):
+        _recover_locked(repo)
         return _import_tarball_locked(repo, tarball)
 
 
@@ -732,7 +1377,11 @@ def _import_tarball_locked(repo: Path, tarball: Path) -> int:
         imported_entries = {entry["path"]: (entry["sha256"], entry["size"]) for entry in manifest["entries"]}
         if imported_entries != local_entries:
             raise ValueError("import manifest differs from checkout manifest")
-        expected = {entry["sha256"]: entry["size"] for entry in manifest["entries"]}
+        imported_retired = {(entry["path"], entry["sha256"], entry["size"]) for entry in manifest.get("retired", [])}
+        local_retired = {(entry["path"], entry["sha256"], entry["size"]) for entry in local.get("retired", [])}
+        if imported_retired != local_retired:
+            raise ValueError("import retirement metadata differs from checkout manifest")
+        expected = {entry["sha256"]: entry["size"] for entry in manifest["entries"] + manifest.get("retired", [])}
         members = {member.name: member for member in archive.getmembers() if member.name != "manifest.json"}
         if set(members) != {f"objects/{sha}" for sha in expected}:
             raise ValueError("archive object set differs from manifest")
@@ -791,9 +1440,9 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--pre", required=True, help="Pre-untrack commit containing A files, for example origin/main.")
     snap = sub.add_parser(
         "snapshot",
-        help="Copy and hash a phase's migration A files into the host store.",
+        help="Copy and hash a phase's current active A files into the host store.",
         description=(
-            "Copy a phase's A files into the host store after proving disk bytes equal the pre-untrack Git blob.\n"
+            "Copy a phase's active A files into the host store after verifying their manifest hashes.\n"
             "Run in every long-lived checkout before the phase PR merges; use --manifests-ref while the\n"
             "phase manifests exist only on the unmerged phase branch."
         ),
@@ -834,6 +1483,31 @@ def _parser() -> argparse.ArgumentParser:
     pub.add_argument(
         "--producer", required=True, help="Producer name or command to record, for example scripts/build_raw.py."
     )
+    pub_set = sub.add_parser(
+        "publish-set",
+        help="Publish explicit add/replace/remove rows and tracked companions as one group set.",
+        description=(
+            "Publish a staged A and K change set with one crash-recoverable group descriptor.\n"
+            "Use after all outputs are staged and validated; do not point sources at live data or registry paths."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts "
+            "publish-set --plan /tmp/group-plan.json\n"
+            "Plan JSON: group, producer, expected_members (data-relative strings), artifacts "
+            "(operation, rel, source, expected_sha256), companions (path, source, expected_sha256).\n"
+            "Outputs: published A paths, tracked K companions, group manifest, and host store objects; "
+            "prints the new A hashes.\n"
+            "Exit codes: 0 = durable commit; 1 = refused or failed publication; 2 = invalid CLI arguments.\n"
+            "Related: issue #8907 and docs/runbooks/storage-topology.md."
+        ),
+    )
+    pub_set.add_argument(
+        "--plan",
+        required=True,
+        type=Path,
+        help="JSON plan with group, producer, expected_members, artifacts and companions; sources are staged paths.",
+    )
     exp = sub.add_parser("export", help="Verify and write a group tarball for another required host.")
     exp.add_argument("--group", required=True, help="Classification group, for example raw_source.")
     exp.add_argument(
@@ -865,16 +1539,55 @@ def main(argv: list[str] | None = None, *, repo: Path = ROOT) -> int:
                 if args.phase
                 else [(args.group, entry) for entry in paths.load_manifest(args.group, repo)["entries"]]
             )
-            count = hydrate(repo, entries, force_preserve=args.force_preserve)
+            count = hydrate(
+                repo,
+                entries,
+                force_preserve=args.force_preserve,
+                groups=phase_groups(repo, args.phase) if args.phase else {args.group},
+            )
         elif args.command == "verify":
             entries = (
                 [(args.group, entry) for entry in paths.load_manifest(args.group, repo)["entries"]]
                 if args.group
                 else _all_manifests(repo)
             )
-            count = verify(repo, entries)
+            count = verify(
+                repo,
+                entries,
+                groups={args.group}
+                if args.group
+                else {
+                    path.name.removesuffix(".manifest.json")
+                    for path in (repo / "registry/artifacts").glob("*.manifest.json")
+                },
+            )
         elif args.command == "publish":
             print(publish(repo, args.group, args.path, args.source, args.producer))
+            return 0
+        elif args.command == "publish-set":
+            plan = json.loads(args.plan.read_text(encoding="utf-8"))
+            changes = [
+                ArtifactChange(
+                    row["operation"],
+                    row["rel"],
+                    Path(row["source"]) if row.get("source") else None,
+                    row.get("expected_sha256"),
+                )
+                for row in plan["artifacts"]
+            ]
+            companion_changes = [
+                CompanionChange(row["path"], Path(row["source"]), row.get("expected_sha256"))
+                for row in plan.get("companions", [])
+            ]
+            result = publish_set(
+                repo,
+                plan["group"],
+                changes,
+                plan["producer"],
+                companions=companion_changes,
+                expected_members=set(plan["expected_members"]),
+            )
+            print(json.dumps(result, sort_keys=True))
             return 0
         elif args.command == "export":
             count = export_group(repo, args.group, args.output)

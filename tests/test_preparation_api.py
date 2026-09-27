@@ -274,7 +274,22 @@ def test_one_module_parses_the_active_manifest_once(monkeypatch) -> None:
     assert calls == 1
 
 
-def test_strong_etag_returns_bodyless_304_for_unchanged_sources() -> None:
+def test_strong_etag_returns_bodyless_304_for_unchanged_sources(tmp_path: Path, monkeypatch) -> None:
+    # The payload hashes ``authority.primary_checkout.dirty_count``, a live
+    # ``git status`` read of the serving checkout (scripts/api/repository_authority.py
+    # ``_dirty_count``). Serving straight off ``app.state.ctx``'s real checkout races any
+    # co-scheduled test that leaves a stray file there — e.g. test_ci_attribution.py's
+    # subprocess-breadcrumb tests, which write and then unlink ``tests/_temp_breadcrumb_test.py``
+    # and ``.tmp_stall_watch_test/`` at the real repo root — flipping the dirty count between
+    # this test's two requests (#8914). A fixture checkout nothing else touches keeps the
+    # two requests reading identical sources without changing the ETag contract.
+    repo = _repo(
+        tmp_path / "repo",
+        remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+    )
+    _write_manifest(repo, track="a1", slug="demo")
+    monkeypatch.setattr(app.state, "ctx", app.state.ctx.with_roots(project_root=repo, live_repo_root=repo))
+
     first = CLIENT.get("/api/state/preparation?track=a1")
     second = CLIENT.get(
         "/api/state/preparation?track=a1",

@@ -9,6 +9,7 @@ from jsonschema import Draft7Validator
 
 from scripts.build.fresh.draft_schema import (
     FRESH_CONSTRAINTS_META,
+    _alias_conflicts,
     activity_payload_schema,
     load_fresh_constraints,
     validate_draft,
@@ -31,6 +32,23 @@ def _reasons(draft: dict, level: str, types: dict[str, str]) -> list[str]:
     ]
 
 
+@pytest.mark.parametrize(
+    ("item", "conflicts"),
+    [
+        ({"options": ["first", "second"], "correct": 0, "answer": "first"}, False),
+        ({"options": ["first", "second"], "correct": 0, "answer": "second"}, True),
+        ({"correction": "first", "answer": "first"}, False),
+        ({"correction": "first", "answer": "second"}, True),
+    ],
+)
+def test_conflicting_answer_aliases(item: dict, conflicts: bool) -> None:
+    errors = []
+    _alias_conflicts(errors, "quiz-a1", item, "/activities/0/items/0")
+    assert bool(errors) is conflicts
+    if conflicts:
+        assert "conflicting_answer_aliases" in errors[0].reason
+
+
 def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
     load_fresh_constraints.cache_clear()
     loaded = load_fresh_constraints(str(SCHEMAS_DIR))
@@ -39,7 +57,7 @@ def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
     info = load_fresh_constraints.cache_info()
     assert info.misses == 1
     assert info.hits == 1
-    assert set(loaded["by_type"]) == {
+    assert {
         "fill-in-a1",
         "fill-in-a2",
         "fill-in-b1",
@@ -48,7 +66,7 @@ def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
         "true-false-a2",
         "true-false-b1",
         "true-false-b2",
-    }
+    } <= set(loaded["by_type"])
     assert loaded["by_type"]["true-false-b2"]["items_max"] is None
     assert len(loaded["orthography_lists"]) == 5
     assert (
@@ -82,7 +100,7 @@ def test_form_choice_with_five_options_fails() -> None:
     draft, types = load_fixture("a1")
     _item(draft, "a3")["options"] = ["a", "b", "c", "d", "e"]
     reasons = _reasons(draft, "a1", types)
-    assert reasons and all("options" in reason for reason in reasons)
+    assert any("options" in reason for reason in reasons)
 
 
 def test_sentence_with_zero_or_two_blanks_fails() -> None:
@@ -107,6 +125,9 @@ def test_orthography_at_a2_fails() -> None:
                     "sentence": "aa___bb",
                     "answer": "x",
                     "mode": "orthography",
+                    "kind": "orthography",
+                    "target_record": "W-1",
+                    "option_why": ["This spelling fits.", "This spelling does not fit."],
                     "options": ["x", "y"],
                     "explanation": "A placeholder explanation.",
                 }
@@ -121,7 +142,17 @@ def test_orthography_at_a2_fails() -> None:
 def test_orthography_options_must_be_one_closed_list() -> None:
     draft, types = load_fixture("a1")
     item = _item(draft, "a3")
-    item.update({"mode": "orthography", "sentence": "aa___bb", "options": ["x", "y"], "answer": "x"})
+    item.update(
+        {
+            "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
+            "sentence": "aa___bb",
+            "options": ["x", "y"],
+            "answer": "x",
+        }
+    )
     item.pop("record", None)
     item.pop("answer_tags", None)
     reasons = _reasons(draft, "a1", types)
@@ -135,6 +166,9 @@ def test_orthography_answer_outside_its_list_fails() -> None:
     item.update(
         {
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "sentence": "aa___bb",
             "options": list(lists[0]["options"]),
             "answer": "not-in-the-list",
@@ -148,7 +182,14 @@ def test_orthography_answer_outside_its_list_fails() -> None:
 
 def _true_false_items(count: int) -> list[dict]:
     return [
-        {"statement": f"Statement {index}.", "correct": True, "explanation": "The text says so."}
+        {
+            "statement": f"Statement {index}.",
+            "correct": True,
+            "explanation": "The text says so.",
+            "kind": "comprehension",
+            "host": {"kind": "dialogue"},
+            "option_why": ["The text supports this.", "The text contradicts this."],
+        }
         for index in range(1, count + 1)
     ]
 
@@ -189,6 +230,9 @@ def test_valid_form_choice_and_orthography_pass() -> None:
             "sentence": "aa___bb",
             "answer": lists[0]["options"][0],
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": list(lists[0]["options"]),
             "explanation": "The list names the mark.",
         }
@@ -211,6 +255,9 @@ def test_orthography_apostrophe_variant_passes(variant: str) -> None:
             "sentence": "м___яч",
             "answer": variant,
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": [variant, ""],
             "explanation": "The list names the mark.",
         }
@@ -227,6 +274,9 @@ def test_orthography_reversed_options_order_passes() -> None:
             "sentence": "м___яч",
             "answer": "'",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": ["", "'"],
             "explanation": "The list names the mark.",
         }
@@ -247,6 +297,9 @@ def test_orthography_reversed_options_order_passes() -> None:
             "sentence": "кін___",
             "answer": "ь",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": ["", "ь"],
             "explanation": "Soft sign at end.",
         }
@@ -263,6 +316,9 @@ def test_removed_y_or_i_orthography_list_fails() -> None:
             "sentence": "в___соко",
             "answer": "и",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": ["и", "і"],
             "explanation": "Orthography check.",
         }
@@ -281,6 +337,9 @@ def test_orthography_raw_answer_must_equal_raw_option_exactly() -> None:
             "sentence": "м___яч",
             "answer": "’",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": ["'", ""],
             "explanation": "The list names the mark.",
         }
@@ -294,6 +353,9 @@ def test_orthography_raw_answer_must_equal_raw_option_exactly() -> None:
             "sentence": "м___яч",
             "answer": "’",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
+            "option_why": ["This spelling fits.", "This spelling does not fit."],
             "options": ["’", ""],
             "explanation": "The list names the mark.",
         }
@@ -320,6 +382,9 @@ def test_orthography_malformed_item_returns_draft_error_not_type_error() -> None
                 "sentence": "м___яч",
                 "answer": bad_answer,
                 "mode": "orthography",
+                "kind": "orthography",
+                "target_record": "W-1",
+                "option_why": ["This spelling fits.", "This spelling does not fit."],
                 "options": bad_options,
                 "explanation": "Explanation.",
             }

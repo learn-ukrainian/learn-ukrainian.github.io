@@ -14,6 +14,7 @@ import argparse
 import contextlib
 import errno
 import fcntl
+import hashlib
 import json
 import os
 import signal
@@ -5095,7 +5096,9 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
         )
 
     assert rc == 0
-    assert mock_invoke.call_args.kwargs["tool_config"] == {"max_budget_usd": 0.5}
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "max_budget_usd": 0.5, "reviewer_tools": True,
+    }
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["max_budget_usd"] == 0.5
@@ -6688,6 +6691,95 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     cmd = recorded["cmd"]
     assert isinstance(cmd, list)
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
+
+
+def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A caller that rendered its prompt to a file can prove the task ran exactly that file (R3 adjudication)."""
+
+    class _FakeProc:
+        pid = 24682
+
+        class stdin:
+            write = staticmethod(lambda _data: None)
+            close = staticmethod(lambda: None)
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("адуджикація\nline two\n", encoding="utf-8")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", "prompt-sha", "--prompt-file", str(prompt_file)]
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("prompt-sha"))
+    assert state is not None
+    assert state["prompt_sha256"] == hashlib.sha256(prompt_file.read_bytes()).hexdigest()
+
+
+def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_args):
+    """Dispatch with a fake worker; return (the state record, the prompt written to the worker's stdin)."""
+    written: list[str] = []
+
+    class _FakeProc:
+        pid = 24683
+
+        class stdin:
+            write = staticmethod(lambda data: written.append(data.decode() if isinstance(data, bytes) else data))
+            close = staticmethod(lambda: None)
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra_args]
+    )
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None
+    return state, "".join(written)
+
+
+def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The source hash covers only the caller's prompt; the effective hash covers what the worker was handed."""
+    source = hashlib.sha256(b"the source prompt").hexdigest()
+
+    # nothing appended: the effective prompt is the source prompt
+    state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
+    assert state["prompt_sha256"] == source
+    assert state["prompt_blocks"] == []
+    assert state["effective_prompt_sha256"] == source
+
+    # a read-only dispatch without --worktree (the adjudication contract) appends nothing
+    state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
+    assert state["mode"] == "read-only"
+    assert state["prompt_blocks"] == []
+    assert state["effective_prompt_sha256"] == state["prompt_sha256"] == source
+
+    # a lifecycle carrier, a worktree block and a research block, in the order they appear in the prompt
+    monkeypatch.setattr(
+        delegate, "_load_task_lifecycle_carrier", lambda raw: ({"lifecycle_id": "L"}, "\n[lifecycle carrier]\n")
+    )
+    monkeypatch.setattr(delegate, "_build_research_context", lambda args: object())
+    monkeypatch.setattr(delegate, "_resolve_research_injection", lambda ctx, task_id: ("\n[research]\n", None))
+    worktree = tmp_path / "wt"
+    worktree.mkdir()
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **kwargs: "0" * 40)
+    monkeypatch.setattr(
+        delegate,
+        "_ensure_worktree",
+        lambda **kwargs: (worktree, "codex/eff-all", {"sparse": {"full_checkout": True}, "base_sha": "0" * 40}),
+    )
+    state, worker_prompt = _dispatch_recording_the_worker_prompt(
+        tmp_path, monkeypatch, "eff-all", ["--worktree", str(worktree)]
+    )
+    assert state["prompt_sha256"] == source
+    assert state["prompt_blocks"] == ["worktree", "lifecycle", "research"]
+    assert state["effective_prompt_sha256"] == hashlib.sha256(worker_prompt.encode("utf-8")).hexdigest()
+    assert state["effective_prompt_sha256"] != source
+    assert worker_prompt.startswith("[delegate worktree]\n")
+    assert "the source prompt\n[lifecycle carrier]\n" in worker_prompt
+    assert worker_prompt.endswith("\n[research]\n")
 
 
 def test_dispatch_persists_and_forwards_output_schema(

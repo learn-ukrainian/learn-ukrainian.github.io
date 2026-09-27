@@ -341,7 +341,7 @@ Three modes, same meaning across all adapters:
 
 | Mode | Meaning | Typical use |
 | --- | --- | --- |
-| `read-only` | CLI runs with read-only filesystem sandbox | Consultation, questions, reviews |
+| `read-only` | Adapter-specific read and execution permissions | Consultation, questions, reviews |
 | `workspace-write` | CLI can write files in cwd | Coding tasks, refactors, batch fixes |
 | `danger` | Sandbox bypassed entirely | Only when explicitly needed (e.g., setup scripts) |
 
@@ -353,23 +353,71 @@ level. Runner rejects invocations requesting an unsupported mode with
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
 
+### Claude headless permissions
+
+Ordinary Claude `read-only` dispatches and bridge asks opt in with
+`tool_config={"reviewer_tools": True}`. When no explicit `allowed_tools` is
+supplied, this enables `dontAsk` with read/search tools, Bash, and web lookup.
+An MCP config also grants sources tools. These reviewers can run Python,
+pytest, and read-only `git`/`gh` commands without interactive approval.
+Edit/Write/NotebookEdit and common
+Git/GitHub mutation commands are denied. `discussion_readonly` and
+`review_isolation` retain their separate tool profiles. `workspace-write`
+keeps the existing default permission behavior; `danger` uses
+`--dangerously-skip-permissions`.
+
+Without the opt-in, read-only calls retain the prior Claude CLI permissions.
+This covers content quality reviews and tool-less bakeoff calls. Outside sealed
+`review_isolation`, an explicit `allowed_tools` value is passed
+unchanged as the sole `--allowedTools` argument, including an empty string. The
+adapter does not add reviewer tools or `dontAsk`, the reviewer deny list,
+publish hook, or push rewrite in that case. Shared worker guards still load.
+This keeps the V7 curriculum writer's `mcp__sources__*` allowlist restricted
+to sources tools.
+
+Every headless Claude invocation receives `--settings` with PreToolUse guards
+generated from `agents_extensions/shared/settings.json`. Hook commands resolve
+to tracked `agents_extensions/shared/hooks` files in the checkout containing
+the adapter. Sealed `review_isolation` keeps its existing `--safe-mode` and
+sandbox. Safe mode suppresses hooks and shell/write tools there; a live CLI
+probe with a missing hook path and a Bash
+call completed without trying to load the hook. The guards stop recognized
+direct primary-checkout writes while allowing
+worktree writes; arbitrary interpreter writes remain a known parser limit.
+Code the reviewer runs (Python, scripts, HTTP) can publish using the host's
+credentials: it can override its git config to push or write through the GitHub
+API. The deny list, publish hook, and push rewrite stop ordinary command forms
+only. Prefix Bash deny rules do not cover wrappers such as `git -C`.
+Claude `--bare` is disabled because it skips hooks. A live bubblewrap probe
+also allowed a primary-checkout write, so the bubblewrap sandbox is not relied
+on as the guard.
+
 ### Native Grok headless permission mapping (#7583)
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
 blocks all tool calls outright. The adapter maps `workspace-write` to
 `auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
-ordinary `read-only` to `auto` with fail-closed `--deny` on the native write
-permission prefixes (`Write`, `Edit`) and `Bash`. The built-in ID
+ordinary `read-only` to `auto` with `--deny` on the native write
+permission prefixes (`Write`, `Edit`) and `Bash` unless reviewer tools are
+opted in. The built-in ID
 `search_replace` belongs to `--disallowed-tools`, not `--deny`; `MultiEdit` and
 `NotebookEdit` are not documented Grok permission prefixes.
 The adapter therefore also removes `search_replace` explicitly from every
 ordinary read-only invocation.
 Prefix Bash denies are not fail-closed under `auto` (unnamed commands may still
-be approved). Ordinary read-only therefore does **not** claim live shell success
-for `gh` / `pytest` / `ruff` / `git`; those need `workspace-write`/`danger` or a
-sealed `review_isolation` / MCP path. Argv coverage is asserted in unit tests;
-do not treat argv assertions as live CLI proof.
+be approved). Ordinary read-only dispatches and bridge asks opt in with
+`tool_config={"reviewer_tools": True}`. The opt-in removes the Bash deny and
+loads the same tracked fleet PreToolUse guards and reviewer publish guard as
+Claude through a per-invocation Grok agent definition. The hook bridge maps
+Grok's camelCase event and native tool names to the existing guard input.
+`Write`, `Edit`, and `search_replace` stay denied. Trail isolation, sealed
+review isolation, strict MCP reviews, explicit tool allowlists, and callers
+without the opt-in retain their prior argv. The opt-in also installs the same
+ordinary Git push rewrite used by Claude. Code the reviewer runs (Python,
+scripts, HTTP) can still publish using host credentials: it can override its
+Git config to push or call GitHub APIs directly. The deny rules, publish hook,
+and push rewrite stop ordinary command forms only.
 
 ## Weak-driver trail isolation (P5)
 

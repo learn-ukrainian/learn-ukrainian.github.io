@@ -34,6 +34,19 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "ulif_dictua"
 
 
+@pytest.fixture(autouse=True)
+def _without_ledger_disk_sync(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Exercise real SQLite ledgers without paying for physical commit syncs."""
+    original_connect = sqlite3.connect
+
+    def connect(*args, **kwargs):
+        connection = original_connect(*args, **kwargs)
+        connection.execute("PRAGMA synchronous=OFF")
+        return connection
+
+    monkeypatch.setattr(sqlite3, "connect", connect)
+
+
 def _html(name: str) -> str:
     return (FIXTURES / name).read_text(encoding="utf-8")
 

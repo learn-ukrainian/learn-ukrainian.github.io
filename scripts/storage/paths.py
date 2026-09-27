@@ -6,8 +6,11 @@ import hashlib
 import json
 import os
 import re
+import stat
 import subprocess
 import tempfile
+import time
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
@@ -42,6 +45,23 @@ def checked_rel(rel: str) -> Path:
     return path
 
 
+def checked_destination(repo: Path, relative: str, root: str) -> Path:
+    """Reject symlinks in every existing component beneath the checkout root."""
+    path = checked_rel(relative)
+    if path.parts[0] != root:
+        raise ValueError(f"destination must be under {root}/: {relative}")
+    current = repo
+    for part in path.parts:
+        current = current / part
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"symlink component in artifact path: {relative} ({current})")
+    return current
+
+
 def artifact_store_root(repo: Path = ROOT) -> Path:
     """Return the host store, shared by all worktrees of this checkout."""
     return _cached_store_root(repo.resolve(), os.environ.get("LU_ARTIFACT_STORE"))
@@ -53,18 +73,21 @@ def _cached_store_root(repo: Path, override: str | None) -> Path:
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=repo, text=True, timeout=30
     ).strip()
     primary = Path(common).resolve().parent
-    store = Path(override).expanduser().resolve() if override else primary / "data/.artifact-store"
+    # Keep the spelling of an override so the publisher can reject symlinked
+    # components before writing; resolving here would hide them from lstat.
+    store = Path(os.path.abspath(Path(override).expanduser())) if override else primary / "data/.artifact-store"
+    resolved_store = store.resolve()
     # A dispatch checkout can be short-lived. Never make it the only owner of bytes.
     resolved_repo = repo.resolve()
-    if store.is_relative_to(primary / ".worktrees/dispatch") or (
-        resolved_repo != primary and store.is_relative_to(resolved_repo)
+    if resolved_store.is_relative_to(primary / ".worktrees/dispatch") or (
+        resolved_repo != primary and resolved_store.is_relative_to(resolved_repo)
     ):
         raise ValueError("artifact store must not live under a dispatch worktree")
     return store
 
 
 def manifest_path(group: str, repo: Path = ROOT) -> Path:
-    return repo / "registry" / "artifacts" / f"{checked_group(group)}.manifest.json"
+    return checked_destination(repo, f"registry/artifacts/{checked_group(group)}.manifest.json", "registry")
 
 
 def load_manifest(group: str, repo: Path = ROOT) -> dict:
@@ -107,7 +130,104 @@ def validate_manifest(manifest: object, group: str, path: str) -> dict:
         ):
             raise ValueError(f"invalid manifest artifact entry: {entry_path}")
         seen.add(entry_path)
+    retired = manifest.get("retired", [])
+    if not isinstance(retired, list):
+        raise ValueError(f"invalid retired artifacts in {path}")
+    for entry in retired:
+        if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+            raise ValueError(f"invalid retired artifact in {path}")
+        if not entry["path"].startswith("data/") or not _SHA256.fullmatch(str(entry.get("sha256", ""))):
+            raise ValueError(f"invalid retired artifact in {path}")
+        checked_rel(entry["path"][5:])
+    descriptor = manifest.get("set_descriptor")
+    if descriptor is not None:
+        if not isinstance(descriptor, dict) or descriptor.get("members") != sorted(item[5:] for item in seen):
+            raise ValueError(f"invalid set membership in {path}")
+        companions = descriptor.get("companions")
+        if not isinstance(companions, dict):
+            raise ValueError(f"invalid set companions in {path}")
+        for relative, sha in companions.items():
+            if not isinstance(relative, str) or not relative.startswith("registry/") or not _SHA256.fullmatch(str(sha)):
+                raise ValueError(f"invalid set companion in {path}")
+            checked_rel(relative)
     return manifest
+
+
+@dataclass(frozen=True)
+class ArtifactSet:
+    """A verified, immutable snapshot of one committed group generation."""
+
+    manifest: dict
+    artifacts: dict[str, bytes]
+    companions: dict[str, bytes]
+
+
+def _read_regular(path: Path, base: Path) -> bytes:
+    path = checked_destination(base.parent, path.relative_to(base.parent).as_posix(), base.name)
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as source:
+        if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+            raise ValueError(f"non-regular artifact: {path}")
+        return source.read()
+
+
+def _pending_publication(repo: Path) -> bool:
+    directory = artifact_store_root(repo) / ".transactions"
+    if not directory.is_dir():
+        return False
+    for journal in directory.glob("*.json"):
+        try:
+            record = json.loads(journal.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return True
+        if record.get("repo") == str(repo.resolve()):
+            return True
+    return False
+
+
+def artifact_set(group: str, *, repo: Path = ROOT, members: set[str] | None = None, retries: int = 50) -> ArtifactSet:
+    """Read all A and K bytes against one descriptor without creating local state."""
+    manifest_file = manifest_path(group, repo)
+    for _ in range(retries):
+        if _pending_publication(repo):
+            time.sleep(0.02)
+            continue
+        raw = None
+        try:
+            raw = _read_regular(manifest_file, repo / "registry")
+            manifest = validate_manifest(json.loads(raw), group, str(manifest_file))
+            descriptor = manifest.get("set_descriptor") or {
+                "members": sorted(entry["path"][5:] for entry in manifest["entries"]),
+                "companions": {},
+            }
+            expected = set(descriptor["members"])
+            if members is not None and members != expected:
+                raise ValueError("artifact set membership differs from expected membership")
+            artifacts = {}
+            for entry in manifest["entries"]:
+                rel = entry["path"][5:]
+                content = _read_regular(repo / "data" / checked_rel(rel), repo / "data")
+                if len(content) != entry["size"] or hashlib.sha256(content).hexdigest() != entry["sha256"]:
+                    raise ValueError(f"artifact set member changed: {rel}")
+                artifacts[rel] = content
+            companions = {}
+            for relative, sha in descriptor["companions"].items():
+                content = _read_regular(repo / checked_rel(relative), repo / "registry")
+                if hashlib.sha256(content).hexdigest() != sha:
+                    raise ValueError(f"artifact set companion changed: {relative}")
+                companions[relative] = content
+            if _pending_publication(repo) or _read_regular(manifest_file, repo / "registry") != raw:
+                time.sleep(0.02)
+                continue
+            return ArtifactSet(manifest, artifacts, companions)
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            if _pending_publication(repo):
+                time.sleep(0.02)
+                continue
+            if raw is not None and _read_regular(manifest_file, repo / "registry") != raw:
+                time.sleep(0.02)
+                continue
+            raise
+    raise ValueError("artifact set publication or recovery did not settle")
 
 
 def find_entry(group: str, rel: str, repo: Path = ROOT) -> dict:
@@ -139,6 +259,9 @@ def hash_file(path: Path) -> str:
 
 def verify_file(path: Path, entry: dict, *, group: str, rel: str) -> None:
     command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    expected = checked_destination(path.parents[len(checked_rel(rel).parts)], f"data/{rel}", "data")
+    if path != expected:
+        raise ValueError(f"artifact path differs from {expected}: {path}")
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)
     size = path.stat().st_size
@@ -159,7 +282,7 @@ def artifact_path(group: str, rel: str, *, repo: Path = ROOT) -> Path:
     if len(matches) != 1:
         raise MissingArtifactError(group, rel, "hydrate the artifact group", "no unique manifest entry")
     entry = matches[0]
-    path = repo / "data" / checked_rel(rel)
+    path = checked_destination(repo, f"data/{rel}", "data")
     command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)

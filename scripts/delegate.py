@@ -51,6 +51,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "finished_at": iso-8601 UTC | null,
         "duration_s": float | null,
         "prompt_chars": int,
+        "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
+        "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
@@ -246,6 +250,40 @@ _EFFORT_VALIDATOR_BY_DISPATCH_AGENT = {
 }
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
+
+# Fields of the parsed `dispatch` Namespace that legitimately differ between
+# otherwise-identical runs and carry no content of the request itself — the
+# only fields ``dispatch_args_sha256`` excludes. Every other parsed `dispatch`
+# argument (including --output-schema, --cwd, --worktree, --mode, --model,
+# --effort, and every research/lifecycle flag) is bound into the hash, so a
+# caller cannot smuggle an extra flag past a check that only names a subset
+# of fields (#8430 R3-A r8).
+DISPATCH_ARGS_HASH_EXCLUDED_FIELDS = {
+    "run_nonce": "unique per attempt; only used for stale cross-host split-brain detection (#7168)",
+    "force_new": "a retry/idempotency knob for reusing an existing --task-id, not part of what the seat is asked",
+    "initiator": "orchestrator attribution metadata, auto-detected when omitted",
+}
+# argparse plumbing present on every subcommand's Namespace, not a CLI-supplied
+# dispatch argument.
+_DISPATCH_ARGS_HASH_ARGPARSE_KEYS = frozenset({"command", "func"})
+
+
+def dispatch_args_sha256(args: argparse.Namespace) -> str:
+    """sha256 of the canonical JSON of every parsed ``dispatch`` argument that binds the record.
+
+    Additive to ``prompt_sha256``/``effective_prompt_sha256`` (which prove the prompt): this proves the
+    *arguments* that produced the dispatch, so a record cannot pass a check that compares only a named
+    subset of fields while carrying an unchecked extra flag (e.g. a caller-supplied --output-schema).
+    Canonical means ``sort_keys=True`` and no separator whitespace, so the same arguments always hash the
+    same regardless of argv order.
+    """
+    payload = {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -7149,6 +7187,8 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            elif agent in {"claude", "grok", "grok-build"} and mode == "read-only":
+                tool_config["reviewer_tools"] = True
             # ask-kimi --review is dispatch --agent kimi --harness kimicc
             # --mode read-only --require-review-verdict, not --review-attempt.
             # A sealed review attempt already set strict_mcp_config and its
@@ -8236,6 +8276,11 @@ def _dispatch(
         notebook_fallback_after_forward,
     )
 
+    # Captured before any later mutation of ``args`` (e.g. --pr resolving into
+    # args.branch, a rejected --model cleared to None): the hash binds what was
+    # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
+    dispatch_args_hash = dispatch_args_sha256(args)
+
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
 
@@ -8618,6 +8663,9 @@ def _dispatch(
     else:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
+    # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
+    # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
+    source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
@@ -8636,7 +8684,13 @@ def _dispatch(
     except (OSError, ValueError) as exc:
         print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
         return 2
-    prompt += lifecycle_prompt
+    # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
+    # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
+    # instructions the worker saw beyond the source prompt.
+    prompt_blocks: list[str] = []
+    if lifecycle_prompt:
+        prompt += lifecycle_prompt
+        prompt_blocks.append("lifecycle")
 
     # ADR-011 P3 research context — explicit --research-* flags only. Validate the
     # request-side caps up front (fail fast, before any worktree side effect) so a
@@ -8686,9 +8740,19 @@ def _dispatch(
         )
         requested_agent = retired_target
 
+    language_lane = _dispatch_is_language_lane(args)
+    if language_lane and requested_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
+            "Ukrainian language, culture, or heritage content; "
+            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
+
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
-            language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
                 _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
                 if getattr(args, "provider", None) == "openrouter"
@@ -8699,6 +8763,14 @@ def _dispatch(
             return 2
     else:
         dispatch_agent = requested_agent
+
+    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
         from agent_runtime.adapters.agy import AgyAdapter
@@ -9389,6 +9461,8 @@ def _dispatch(
             if isinstance(worktree_telemetry.get("sparse"), dict)
             else None,
         )
+        if worktree_path is not None:
+            prompt_blocks.insert(0, "worktree")
 
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
@@ -9397,7 +9471,10 @@ def _dispatch(
         research_state: dict[str, Any] | None = None
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
+            if research_block:
+                prompt_blocks.append("research")
             prompt = prompt + research_block
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=dispatch_agent,
@@ -9446,6 +9523,10 @@ def _dispatch(
             "max_budget_usd": max_budget_usd,
             "output_schema_path": output_schema_path,
             "output_schema_sha256": output_schema_sha256,
+            "prompt_sha256": source_prompt_sha256,
+            "effective_prompt_sha256": effective_prompt_sha256,
+            "prompt_blocks": prompt_blocks,
+            "dispatch_args_sha256": dispatch_args_hash,
             "pid": None,  # worker fills this
             "status": "spawning",
             "started_at": datetime.now(UTC).isoformat(),
@@ -9894,17 +9975,19 @@ def _budget_needs_hard_capacity_action(
     return False, ""
 
 
-_LANGUAGE_LANES = frozenset({"claude", "codex", "agy", "grok"})
+_LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     """True when the dispatch is Ukrainian language work.
 
-    Signals: ``--language-lane``, a ``l2-uk*`` research track, or an owned
-    path under ``curriculum/``. Cursor and other non-language lanes must not
-    receive that work through budget substitution (#8449).
+    Signals: ``--language-lane``, ``--review-profile ukrainian``, a ``l2-uk*``
+    research track, or an owned path under ``curriculum/``. Other lanes must
+    not receive that work directly or through budget substitution (#8449).
     """
     if bool(getattr(args, "language_lane", False)):
+        return True
+    if getattr(args, "review_profile", None) == "ukrainian":
         return True
     track = str(getattr(args, "research_track", "") or "").strip().lower()
     if track.startswith("l2-uk"):
@@ -9993,6 +10076,11 @@ def _resolve_agent_with_budget_guard(
     funding independently of the subscription ledger and never auto-substitutes.
     """
     requested = (agent or "").strip().lower()
+    if language_lane and requested not in _LANGUAGE_LANES:
+        raise BudgetGuardRefuseError(
+            "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {requested} is outside claude, codex (GPT), and agy (Gemini)."
+        )
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
@@ -10162,7 +10250,7 @@ def _language_lane_substitute(
     records_loaded: int,
     reset_reserve: dict[str, Any] | None = None,
 ) -> str:
-    """Walk fallbacks, staying inside claude/codex/agy/grok (#8449)."""
+    """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
     seen = {seat}
     while True:
@@ -10190,18 +10278,18 @@ def _language_lane_substitute(
         nxt = fallbacks.get(seat)
         if not nxt or nxt in seen or nxt not in _LANGUAGE_LANES:
             raise BudgetGuardRefuseError(
-                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-07-17). "
+                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27). "
                 f"Language work on --agent {requested} cannot move to "
-                f"{nxt or 'no fallback'}; allowed lanes are claude, codex, agy, and grok."
+                f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
-            f"({why}; language-lane fallback stays inside claude, codex, agy, grok).",
+            f"({why}; language-lane fallback stays inside claude, codex, agy).",
             file=sys.stderr,
         )
         seen.add(nxt)
         seat = nxt
-        if len(seen) > 4:
+        if len(seen) > len(_LANGUAGE_LANES):
             raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
 
 
@@ -11189,8 +11277,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--language-lane",
         action="store_true",
         help=(
-            "This dispatch judges or produces Ukrainian. Budget substitution may "
-            "stay only on claude, codex, agy, or grok; otherwise the dispatch is refused."
+            "This dispatch authors, reviews, critiques, settles, or judges Ukrainian language, "
+            "culture, or heritage content. Only claude, codex (GPT), and agy (Gemini) are admitted."
         ),
     )
     d.add_argument(

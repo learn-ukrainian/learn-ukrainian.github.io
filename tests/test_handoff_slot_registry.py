@@ -314,23 +314,58 @@ def test_gate_fails_closed_when_the_registry_cannot_be_read(tmp_path: Path) -> N
 
 @pytest.fixture
 def curriculum_upgrade_stream() -> str:
-    """The live anchor stream for curriculum-upgrade, read from the Python inventory.
+    """Live curriculum-upgrade anchor from ``stream_anchor_id``.
 
-    The value comes from the Python inventory reader of the same
-    ``scripts/config/issue_streams.yaml`` (``inventory.stream_anchor_id``), not the
-    launcher's own awk parser.  The two readers can disagree: the Python reader
-    returns the *smallest* epic (``sorted(set(ints))``) while the launcher's
-    ``_launcher_stream_anchor_epic`` returns the *first listed*.  They agree only
-    while the stream lists a single epic, which this fixture pins.
+    The single-epic pin from PR #8863 is relaxed (#8866). Python and the
+    launcher both use the first listed epic, so a longer list cannot make
+    this fixture disagree with ``launcher_selector_stream``.
     """
-    epics = stream_map(REPO)["curriculum-upgrade"]
-    assert len(epics) == 1, (
-        "curriculum-upgrade now lists multiple epics "
-        f"({epics}), so the Python-vs-launcher anchor ordering "
-        "(smallest/sorted vs first-listed) can disagree; "
-        "see issue for stream_anchor_id ordering"
-    )
     return stream_anchor_id("curriculum-upgrade", REPO)
+
+
+def _first_listed_epic(stream_name: str) -> int:
+    body = yaml.safe_load(ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"][stream_name]
+    epics = body["epics"]
+    assert isinstance(epics, list) and epics, stream_name
+    first = epics[0]
+    assert isinstance(first, int) and not isinstance(first, bool) and first > 0, stream_name
+    return first
+
+
+@pytest.mark.parametrize("stream_name", _registry_stream_keys())
+def test_stream_anchor_matches_launcher_selector_stream(stream_name: str) -> None:
+    """Every registry stream: Python anchor, listed order, and the launcher agree."""
+    first = _first_listed_epic(stream_name)
+    expected = f"epic:{first}"
+    assert stream_map(REPO)[stream_name][0] == first
+    assert stream_anchor_id(stream_name, REPO) == expected
+    result = _bash(
+        'source "$1"; launcher_selector_stream "$2"',
+        str(HANDOFF_IDENTITY),
+        stream_name,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == expected
+
+
+@pytest.mark.parametrize(
+    ("stream_name", "anchor"),
+    (
+        ("seminars-bio", "epic:4431"),
+        ("seminars-cross", "epic:3120"),
+    ),
+)
+def test_stream_anchor_is_the_first_listed_seminar_epic(stream_name: str, anchor: str) -> None:
+    """The two streams whose first epic is not the smallest stay on that first epic."""
+    assert stream_anchor_id(stream_name, REPO) == anchor
+    assert stream_map(REPO)[stream_name][0] == int(anchor.removeprefix("epic:"))
+    result = _bash(
+        'source "$1"; launcher_selector_stream "$2"',
+        str(HANDOFF_IDENTITY),
+        stream_name,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == anchor
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)

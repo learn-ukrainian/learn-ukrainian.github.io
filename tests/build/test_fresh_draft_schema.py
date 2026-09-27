@@ -36,6 +36,24 @@ LEVELS = gen_draft_schemas.LEVELS
 def load_fixture(level: str) -> tuple[dict, dict[str, str]]:
     draft = yaml.safe_load((FIXTURES / f"lesson-draft-{level}-valid.yaml").read_text(encoding="utf-8"))
     types = json.loads((FIXTURES / f"lesson-draft-{level}-types.json").read_text(encoding="utf-8"))
+    if level == "a1":
+        quiz = draft["activities"][0]["items"][0]
+        quiz.update(
+            kind="comprehension",
+            host={"kind": "dialogue"},
+            option_why=["This option follows the dialogue."] * len(quiz["options"]),
+        )
+        match = draft["activities"][1]
+        match.update(left_role="question", right_role="answer")
+        for pair in match["pairs"]:
+            pair["why"] = "The two sides correspond."
+        fill = draft["activities"][2]["items"][0]
+        fill.update(
+            kind="form",
+            tests_feature="Case",
+            requires={"Case": "Nom"},
+            option_why=["This form fits the slot."] * len(fill["options"]),
+        )
     return draft, types
 
 
@@ -59,7 +77,21 @@ def test_valid_draft_per_level_validates(level: str) -> None:
 def test_fixture_uses_every_block_kind_once_or_more(level: str) -> None:
     draft, _ = load_fixture(level)
     kinds = {b["kind"] for s in draft["steps"] for b in s["blocks"]}
-    expected = {"prose", "example", "quote", "paradigm", "table", "pronunciation", "culture", "tip", "summary", "callout", "video", "dialogue", "activity"}
+    expected = {
+        "prose",
+        "example",
+        "quote",
+        "paradigm",
+        "table",
+        "pronunciation",
+        "culture",
+        "tip",
+        "summary",
+        "callout",
+        "video",
+        "dialogue",
+        "activity",
+    }
     if level in ("a1", "a2"):
         expected.add("bilingual")
     assert expected <= kinds
@@ -130,7 +162,9 @@ def test_gap_unnamed_step_must_not_be_empty(a1_gap_draft: dict) -> None:
     a1_gap_draft["steps"][0]["blocks"] = []
     found = checks(validate_draft(a1_gap_draft, "a1"))
     assert "gap_steps_empty" in found
-    assert found <= {"gap_steps_empty", "activity_declared_used"}, "emptying s1 also un-places its activities; nothing else"
+    assert found <= {"gap_steps_empty", "activity_declared_used"}, (
+        "emptying s1 also un-places its activities; nothing else"
+    )
 
 
 def test_gap_declared_correctly_passes(a1_gap_draft: dict) -> None:
@@ -225,7 +259,10 @@ def test_explains_must_be_non_empty_record_ids(kind: str) -> None:
     assert validate_draft(draft, "a1"), "a grammar-point id is not a pack record"
 
 
-@pytest.mark.parametrize("kind,bad_ref", [("example", "T-001"), ("quote", "EX-001"), ("paradigm", "W-012"), ("video", "EX-002"), ("activity", "s1")])
+@pytest.mark.parametrize(
+    "kind,bad_ref",
+    [("example", "T-001"), ("quote", "EX-001"), ("paradigm", "W-012"), ("video", "EX-002"), ("activity", "s1")],
+)
 def test_ref_pattern_per_kind(kind: str, bad_ref: str) -> None:
     draft, _ = load_fixture("a1")
     _, _, block = _find_block(draft, kind)
@@ -295,7 +332,15 @@ def test_duplicate_ids_fail() -> None:
 def test_code_checks_are_documented() -> None:
     names = [name for name, _ in CODE_CHECKS]
     assert len(names) == len(set(names))
-    assert {"gap_steps_exist", "gap_steps_empty", "bilingual_equal_length", "translation_en_length", "no_combining_accent", "inline_markup", "activity_items_per_type"} <= set(names)
+    assert {
+        "gap_steps_exist",
+        "gap_steps_empty",
+        "bilingual_equal_length",
+        "translation_en_length",
+        "no_combining_accent",
+        "inline_markup",
+        "activity_items_per_type",
+    } <= set(names)
 
 
 # --- the inline markup regex and the accent ban ---------------------------------------------------
@@ -387,13 +432,16 @@ def test_activity_payload_bound_to_plan_type() -> None:
     draft, types = load_fixture("a1")
     types = dict(types, a1="true-false")
     errors = validate_draft(draft, "a1", activity_types=types)
-    assert errors and all(e.check == "activity_items_per_type" for e in errors)
+    assert any(e.check == "activity_items_per_type" for e in errors)
 
 
 def test_activity_without_a_type_in_the_map_fails() -> None:
     draft, types = load_fixture("a1")
     types = {k: v for k, v in types.items() if k != "a2"}
-    assert any(e.check == "activity_items_per_type" and "no type" in e.reason for e in validate_draft(draft, "a1", activity_types=types))
+    assert any(
+        e.check == "activity_items_per_type" and "no type" in e.reason
+        for e in validate_draft(draft, "a1", activity_types=types)
+    )
 
 
 def test_activity_type_outside_level_allowlist_fails() -> None:

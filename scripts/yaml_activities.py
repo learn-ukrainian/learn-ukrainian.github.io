@@ -40,6 +40,59 @@ except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator
 # DATA CLASSES
 # =============================================================================
 
+
+def _present_fields(data: dict, *names: str) -> dict[str, Any]:
+    """Return optional draft fields that were explicitly supplied."""
+    return {name: data[name] for name in names if name in data}
+
+
+_CHOICE_PAYLOAD_FIELDS = (
+    "kind",
+    "option_why",
+    "tests_feature",
+    "requires",
+    "option_records",
+    "record",
+    "target_record",
+    "host",
+)
+
+
+def _choice_payload(item: Any) -> dict[str, Any]:
+    """Retain authored choice metadata in the component's original option order."""
+    return {name: value for name in _CHOICE_PAYLOAD_FIELDS if (value := getattr(item, name, None)) is not None}
+
+
+def _indexed_fields(data: dict, prefix: str) -> tuple[list[Any] | None, dict[str, Any]]:
+    """Read an indexed feedback array, accepting the assembler's flat form too."""
+    if "option_why" in data:
+        return data["option_why"], {}
+    indexed = {}
+    for key, value in data.items():
+        suffix = key.removeprefix(prefix)
+        if key.startswith(prefix) and suffix.isdigit():
+            indexed[int(suffix)] = value
+    if not indexed:
+        return None, {}
+    return [indexed[index] for index in sorted(indexed)], {
+        f"{prefix}{index}": indexed[index] for index in sorted(indexed)
+    }
+
+
+def _indexed_extra_fields(data: dict, prefix: str) -> dict[str, Any]:
+    return {key: value for key, value in data.items() if key.startswith(prefix) and key.removeprefix(prefix).isdigit()}
+
+
+def _feedback_fields(data: dict) -> dict[str, Any]:
+    feedback, flattened = _indexed_fields(data, "option_why_")
+    fields = {}
+    if feedback is not None:
+        fields["option_why"] = feedback
+    if flattened:
+        fields["extra_fields"] = flattened
+    return fields
+
+
 @dataclass
 class QuizOption:
     text: str
@@ -52,6 +105,14 @@ class QuizItem:
     question: str
     options: list[QuizOption]
     explanation: str | None = None
+    kind: str | None = None
+    option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
+    option_records: list[str] | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -69,6 +130,8 @@ class SelectItem:
     options: list[QuizOption]
     min_correct: int | None = None
     explanation: str | None = None
+    kind: str | None = None
+    option_why: list[str] | None = None
 
 
 @dataclass
@@ -84,6 +147,10 @@ class TrueFalseItem:
     statement: str
     correct: bool
     explanation: str | None = None
+    kind: str | None = None
+    option_why: list[str] | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -101,6 +168,15 @@ class FillInItem:
     options: list[str]
     explanation: str | None = None
     mode: str | None = None
+    kind: str | None = None
+    option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
+    option_records: list[str] | None = None
+    record: str | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -130,6 +206,10 @@ class ClozeActivity:
 class MatchPair:
     left: str
     right: str
+    left_record: str | None = None
+    right_record: str | None = None
+    why: str | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -138,12 +218,17 @@ class MatchUpActivity:
     title: str = ""
     instruction: str = ""
     pairs: list[MatchPair] = field(default_factory=list)
+    left_role: str | None = None
+    right_role: str | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class GroupSortGroup:
     name: str
-    items: list[str]
+    items: list[Any]
+    value: str | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -152,6 +237,8 @@ class GroupSortActivity:
     title: str = ""
     instruction: str = ""
     groups: list[GroupSortGroup] = field(default_factory=list)
+    grouping_feature: str | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -177,6 +264,14 @@ class ErrorCorrectionItem:
     answer: str
     options: list[str]
     explanation: str
+    kind: str | None = None
+    option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
+    option_records: list[str] | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -208,6 +303,12 @@ class TranslateItem:
     source: str
     options: list[TranslateOption]
     explanation: str | None = None
+    kind: str | None = None
+    option_why: list[str] | None = None
+    option_records: list[str] | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -267,11 +368,12 @@ class GrammarIdentifyActivity:
 @dataclass
 class TranscriptionActivity:
     """OES/RUTH: Transcribe archaic script into modern Cyrillic."""
+
     type: str = "transcription"
     title: str = ""
     instruction: str = ""  # Context about the script (e.g., Glagolitic, Ustav)
-    original: str = ""     # Archaic text (or image URL)
-    answer: str = ""       # Modern Cyrillic equivalent
+    original: str = ""  # Archaic text (or image URL)
+    answer: str = ""  # Modern Cyrillic equivalent
     hints: list[str] = field(default_factory=list)  # Optional hints
 
 
@@ -286,6 +388,7 @@ class PaleographyHotspot:
 @dataclass
 class PaleographyAnalysisActivity:
     """OES/RUTH: Identify visual features of manuscripts via hotspots."""
+
     type: str = "paleography-analysis"
     title: str = ""
     instruction: str = ""
@@ -305,6 +408,7 @@ class DialectFeature:
 @dataclass
 class DialectComparisonActivity:
     """OES/RUTH: Side-by-side comparison of regional dialect features."""
+
     type: str = "dialect-comparison"
     title: str = ""
     instruction: str = ""
@@ -326,6 +430,7 @@ class TranslationItem:
 @dataclass
 class TranslationCritiqueActivity:
     """OES/RUTH: Evaluate and critique modern translations of archaic texts."""
+
     type: str = "translation-critique"
     title: str = ""
     instruction: str = ""
@@ -459,6 +564,7 @@ class AuthorialIntentActivity:
 @dataclass
 class SourceMetadata:
     """Metadata for a historical source."""
+
     author: str = ""
     date: str = ""
     type: str = ""  # chronicle, memoir, official, propaganda, academic
@@ -468,6 +574,7 @@ class SourceMetadata:
 @dataclass
 class SourceEvaluationActivity:
     """ISTORIO: Structured source criticism using the 5-question method."""
+
     type: str = "source-evaluation"
     title: str = ""
     instruction: str = ""
@@ -481,6 +588,7 @@ class SourceEvaluationActivity:
 @dataclass
 class DebatePosition:
     """A single position in a historiographical debate."""
+
     name: str = ""
     proponents: str = ""
     argument: str = ""
@@ -491,6 +599,7 @@ class DebatePosition:
 @dataclass
 class DebateActivity:
     """ISTORIO: Contested historiographical interpretations."""
+
     type: str = "debate"
     title: str = ""
     instruction: str = ""
@@ -504,6 +613,7 @@ class DebateActivity:
 # ---------------------------------------------------------------------------
 # Pre-literacy activity types (A1 Cyrillic modules)
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class ClassifyCategory:
@@ -526,6 +636,14 @@ class ImageToLetterItem:
     distractors: list[str] = field(default_factory=list)
     note: str = ""
     explanation: str = ""
+    kind: str | None = None
+    option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
+    option_records: list[str] | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -571,6 +689,7 @@ class OrderActivity:
     items: list[str] = field(default_factory=list)
     correct_order: list[int] = field(default_factory=list)
     is_ukrainian: bool = False
+    explanation: str | None = None
 
 
 @dataclass
@@ -657,6 +776,14 @@ class OddOneOutItem:
     correct: int
     explanation: str
     prompt: str = ""
+    kind: str | None = None
+    option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
+    option_records: list[str] | None = None
+    target_record: str | None = None
+    host: dict[str, Any] | None = None
+    extra_fields: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -680,20 +807,42 @@ class PickSyllablesActivity:
 
 # Type alias
 Activity = Union[  # noqa: UP007
-    QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
-    ClozeActivity, MatchUpActivity, GroupSortActivity, UnjumbleActivity,
-    ErrorCorrectionActivity, MarkTheWordsActivity,
-    TranslateActivity, AnagramActivity, ReadingActivity,
-    EssayResponseActivity, CriticalAnalysisActivity,
-    ComparativeStudyActivity, AuthorialIntentActivity,
-    RitualSequencingActivity, VariantComparisonActivity, MotifFormulaActivity,
+    QuizActivity,
+    SelectActivity,
+    TrueFalseActivity,
+    FillInActivity,
+    ClozeActivity,
+    MatchUpActivity,
+    GroupSortActivity,
+    UnjumbleActivity,
+    ErrorCorrectionActivity,
+    MarkTheWordsActivity,
+    TranslateActivity,
+    AnagramActivity,
+    ReadingActivity,
+    EssayResponseActivity,
+    CriticalAnalysisActivity,
+    ComparativeStudyActivity,
+    AuthorialIntentActivity,
+    RitualSequencingActivity,
+    VariantComparisonActivity,
+    MotifFormulaActivity,
     PerformanceActivity,
-    SourceEvaluationActivity, DebateActivity,
-    EtymologyTraceActivity, GrammarIdentifyActivity,
-    ClassifyActivity, ImageToLetterActivity, WatchAndRepeatActivity,
-    ObserveActivity, OrderActivity, CountSyllablesActivity,
-    DivideWordsActivity, HighlightMorphemesActivity, LetterGridActivity,
-    OddOneOutActivity, PickSyllablesActivity,
+    SourceEvaluationActivity,
+    DebateActivity,
+    EtymologyTraceActivity,
+    GrammarIdentifyActivity,
+    ClassifyActivity,
+    ImageToLetterActivity,
+    WatchAndRepeatActivity,
+    ObserveActivity,
+    OrderActivity,
+    CountSyllablesActivity,
+    DivideWordsActivity,
+    HighlightMorphemesActivity,
+    LetterGridActivity,
+    OddOneOutActivity,
+    PickSyllablesActivity,
 ]
 
 
@@ -729,20 +878,20 @@ class ActivityParser:
 
     def parse(self, yaml_path: str | Path) -> list[Activity]:
         yaml_path = Path(yaml_path)
-        with open(yaml_path, encoding='utf-8') as f:
+        with open(yaml_path, encoding="utf-8") as f:
             raw_data = yaml.safe_load(f)
         if raw_data is None:
             return []
         # V2 format: dict with inline/workbook lists
-        if isinstance(raw_data, dict) and ('inline' in raw_data or 'workbook' in raw_data):
+        if isinstance(raw_data, dict) and ("inline" in raw_data or "workbook" in raw_data):
             merged = []
-            for section in ('inline', 'workbook'):
+            for section in ("inline", "workbook"):
                 section_data = raw_data.get(section, [])
                 if isinstance(section_data, list):
                     merged.extend(section_data)
             raw_data = merged
-        elif isinstance(raw_data, dict) and 'activities' in raw_data:
-            raw_data = raw_data['activities']
+        elif isinstance(raw_data, dict) and "activities" in raw_data:
+            raw_data = raw_data["activities"]
         if not isinstance(raw_data, list):
             raise ValueError(f"Expected list of activities, got {type(raw_data)}")
         activities = []
@@ -758,7 +907,7 @@ class ActivityParser:
         if not isinstance(data, dict):
             return f"activity {index} (non-dict {type(data).__name__})"
         parts = [f"activity {index}"]
-        if data.get('id'):
+        if data.get("id"):
             parts.append(f"id={data['id']!r}")
         parts.append(f"type={data.get('type', 'unknown')!r}")
         return " ".join(parts)
@@ -766,7 +915,9 @@ class ActivityParser:
     def _parse_activity(self, data: dict) -> Activity:
         if not isinstance(data, dict):
             raise TypeError(f"activity must be a dict, got {type(data).__name__}")
-        activity_type = data.get('type')
+        activity_type = data.get("type")
+        # Keep literal keys visible to the authoring-field drift guard.
+        # fmt: off
         parsers = {
             'quiz': self._parse_quiz,
             'select': self._parse_select,
@@ -810,11 +961,12 @@ class ActivityParser:
             'odd-one-out': self._parse_odd_one_out,
             'pick-syllables': self._parse_pick_syllables,
         }
+        # fmt: on
         parser = parsers.get(activity_type)
         if not parser:
             raise ValueError(f"unknown activity type {activity_type!r}")
         activity = parser(data)
-        activity.id = data.get('id', '')
+        activity.id = data.get("id", "")
         return activity
 
     def _item_rows(self, data: dict) -> list:
@@ -828,74 +980,130 @@ class ActivityParser:
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
         for item_index, item_data in enumerate(self._item_rows(data)):
-            raw_options = item_data.get('options', [])
+            raw_options = item_data.get("options", [])
             correct = set(quiz_correct_indices(item_data, item_index))
             options = []
             for i, opt in enumerate(raw_options):
                 if isinstance(opt, str):
                     options.append(QuizOption(text=opt, correct=i in correct))
                 else:
-                    options.append(QuizOption(
-                        text=opt['text'],
-                        correct=i in correct,
-                        intentional_error=opt.get('intentional_error', False)
-                    ))
-            question = item_data.get('question') or item_data.get('prompt', '')
-            items.append(QuizItem(question=question, options=options, explanation=item_data.get('explanation')))
+                    options.append(
+                        QuizOption(
+                            text=opt["text"],
+                            correct=i in correct,
+                            intentional_error=opt.get("intentional_error", False),
+                        )
+                    )
+            question = item_data.get("question") or item_data.get("prompt", "")
+            items.append(
+                QuizItem(
+                    question=question,
+                    options=options,
+                    explanation=item_data.get("explanation"),
+                    **_present_fields(
+                        item_data,
+                        "kind",
+                        "tests_feature",
+                        "requires",
+                        "option_records",
+                        "target_record",
+                        "host",
+                    ),
+                    **_feedback_fields(item_data),
+                )
+            )
         return QuizActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            anchor_id=data.get('anchor_id', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            anchor_id=data.get("anchor_id", ""),
             items=items,
         )
 
     def _parse_select(self, data: dict) -> SelectActivity:
         items = []
         for item_data in self._item_rows(data):
-            raw_options = item_data.get('options', [])
-            correct_answer = item_data.get('answer')
+            raw_options = item_data.get("options", [])
+            correct_answer = item_data.get("answer")
             options = []
             for opt in raw_options:
                 if isinstance(opt, str):
-                    is_correct = (opt in correct_answer) if isinstance(correct_answer, list) else (opt == correct_answer)
+                    is_correct = (
+                        (opt in correct_answer) if isinstance(correct_answer, list) else (opt == correct_answer)
+                    )
                     options.append(QuizOption(text=opt, correct=is_correct))
                 else:
-                    options.append(QuizOption(
-                        text=opt['text'],
-                        correct=opt.get('correct', False),
-                        intentional_error=opt.get('intentional_error', False)
-                    ))
-            question = item_data.get('question') or item_data.get('prompt', '')
-            items.append(SelectItem(question=question, options=options, min_correct=item_data.get('min_correct'), explanation=item_data.get('explanation')))
-        return SelectActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+                    options.append(
+                        QuizOption(
+                            text=opt["text"],
+                            correct=opt.get("correct", False),
+                            intentional_error=opt.get("intentional_error", False),
+                        )
+                    )
+            question = item_data.get("question") or item_data.get("prompt", "")
+            items.append(
+                SelectItem(
+                    question=question,
+                    options=options,
+                    min_correct=item_data.get("min_correct"),
+                    explanation=item_data.get("explanation"),
+                )
+            )
+        return SelectActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_true_false(self, data: dict) -> TrueFalseActivity:
         items = []
         for item_data in self._item_rows(data):
-            statement = item_data.get('statement') or item_data.get('question', '')
-            correct = item_data.get('correct')
+            statement = item_data.get("statement") or item_data.get("question", "")
+            correct = item_data.get("correct")
             if correct is None:
-                correct = item_data.get('is_true')
+                correct = item_data.get("is_true")
             if correct is None:
-                correct = item_data.get('isTrue')
+                correct = item_data.get("isTrue")
             if correct is None:
-                correct = item_data.get('answer', False)
-            items.append(TrueFalseItem(statement=statement, correct=correct, explanation=item_data.get('explanation')))
-        return TrueFalseActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+                correct = item_data.get("answer", False)
+            items.append(
+                TrueFalseItem(
+                    statement=statement,
+                    correct=correct,
+                    explanation=item_data.get("explanation"),
+                    **_present_fields(item_data, "kind", "host"),
+                    **_feedback_fields(item_data),
+                )
+            )
+        return TrueFalseActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_fill_in(self, data: dict) -> FillInActivity:
         items = []
         for item_data in self._item_rows(data):
-            sentence = item_data.get('sentence') or item_data.get('prompt', '')
-            answer = item_data.get('answer') or item_data.get('correct')
-            mode = item_data.get('mode')
+            sentence = item_data.get("sentence") or item_data.get("prompt", "")
+            answer = item_data.get("answer") or item_data.get("correct")
+            mode = item_data.get("mode")
             # A present "" is the contracted "no sign" choice (see lesson_gates
             # fill_in_item_defects), not a missing answer.
-            if not answer and "" in (item_data.get('answer'), item_data.get('correct')):
-                items.append(FillInItem(sentence=sentence, answer="", options=item_data.get('options', []), explanation=item_data.get('explanation'), mode=mode))
+            if not answer and "" in (item_data.get("answer"), item_data.get("correct")):
+                items.append(
+                    FillInItem(
+                        sentence=sentence,
+                        answer="",
+                        options=item_data.get("options", []),
+                        explanation=item_data.get("explanation"),
+                        mode=mode,
+                        **_present_fields(
+                            item_data,
+                            "kind",
+                            "tests_feature",
+                            "requires",
+                            "option_records",
+                            "record",
+                            "target_record",
+                            "host",
+                        ),
+                        **_feedback_fields(item_data),
+                    )
+                )
                 continue
             if not answer:
-                blanks = item_data.get('blanks')
+                blanks = item_data.get("blanks")
                 if isinstance(blanks, list) and blanks:
                     answer = str(blanks[0]).strip()
                 elif isinstance(blanks, str) and blanks.strip():
@@ -904,106 +1112,156 @@ class ActivityParser:
                 braced = re.search(r"\{([^{}]+)\}", sentence)
                 if braced:
                     answer = braced.group(1).strip()
-                    sentence = sentence[:braced.start()] + "___" + sentence[braced.end():]
+                    sentence = sentence[: braced.start()] + "___" + sentence[braced.end() :]
             if answer:
                 bracket = re.search(r"\[" + re.escape(answer) + r"\]", sentence)
                 if bracket:
-                    sentence = sentence[:bracket.start()] + "___" + sentence[bracket.end():]
+                    sentence = sentence[: bracket.start()] + "___" + sentence[bracket.end() :]
             if not answer:
                 raise KeyError("fill-in item needs answer, correct, blanks, or {answer} in the sentence")
-            items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation'), mode=mode))
-        return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+            items.append(
+                FillInItem(
+                    sentence=sentence,
+                    answer=answer,
+                    options=item_data.get("options", []),
+                    explanation=item_data.get("explanation"),
+                    mode=mode,
+                    **_present_fields(
+                        item_data,
+                        "kind",
+                        "tests_feature",
+                        "requires",
+                        "option_records",
+                        "record",
+                        "target_record",
+                        "host",
+                    ),
+                    **_feedback_fields(item_data),
+                )
+            )
+        return FillInActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
-        passage = data.get('passage') or data.get('text', '')
-        explicit_blanks = data.get('blanks', [])
+        passage = data.get("passage") or data.get("text", "")
+        explicit_blanks = data.get("blanks", [])
 
         # If explicit blanks are provided, use them
         if explicit_blanks:
             blanks = []
-            used_blank_ids = {str(b['id']) for b in explicit_blanks if isinstance(b, dict) and b.get('id') is not None}
+            used_blank_ids = {str(b["id"]) for b in explicit_blanks if isinstance(b, dict) and b.get("id") is not None}
             next_blank_id = 0
             for b in explicit_blanks:
-                blank_id = b.get('id')
+                blank_id = b.get("id")
                 if blank_id is None:
                     while str(next_blank_id) in used_blank_ids:
                         next_blank_id += 1
                     blank_id = next_blank_id
                 used_blank_ids.add(str(blank_id))
-                blanks.append(ClozeBlank(id=blank_id, answer=b['answer'], options=b.get('options', [])))
+                blanks.append(ClozeBlank(id=blank_id, answer=b["answer"], options=b.get("options", [])))
         else:
             # Parse inline format: {option1|option2|option3} where first option is correct
             blanks = []
             blank_id = 0
-            for match in re.finditer(r'\{([^}]+)\}', passage):
+            for match in re.finditer(r"\{([^}]+)\}", passage):
                 options_str = match.group(1)
-                options = [opt.strip() for opt in options_str.split('|')]
+                options = [opt.strip() for opt in options_str.split("|")]
                 if options:
                     # First option is the correct answer
                     answer = options[0]
                     blanks.append(ClozeBlank(id=blank_id, answer=answer, options=options))
                     blank_id += 1
 
-        return ClozeActivity(title=data.get('title', ''), passage=passage, blanks=blanks)
+        return ClozeActivity(title=data.get("title", ""), passage=passage, blanks=blanks)
 
     def _parse_match_up(self, data: dict) -> MatchUpActivity:
-        pairs = [MatchPair(left=p['left'], right=p['right']) for p in data.get('pairs', [])]
-        return MatchUpActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), pairs=pairs)
+        pairs = [
+            MatchPair(left=p["left"], right=p["right"], **_present_fields(p, "left_record", "right_record", "why"))
+            for p in data.get("pairs", [])
+        ]
+        return MatchUpActivity(
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            pairs=pairs,
+            **_present_fields(data, "left_role", "right_role"),
+        )
 
     def _parse_group_sort(self, data: dict) -> GroupSortActivity:
-        groups = [GroupSortGroup(name=group_sort_group_name(g, i), items=g.get('items', [])) for i, g in enumerate(data.get('groups', []))]
-        return GroupSortActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), groups=groups)
+        groups = [
+            GroupSortGroup(
+                name=group_sort_group_name(g, i),
+                items=g.get("items", []),
+                **_present_fields(g, "value"),
+            )
+            for i, g in enumerate(data.get("groups", []))
+        ]
+        return GroupSortActivity(
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            groups=groups,
+            **_present_fields(data, "grouping_feature"),
+        )
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []
         for item_index, item_data in enumerate(self._item_rows(data)):
             words = unjumble_tokens(item_data, item_index)
             answer = (
-                item_data.get('answer') or item_data.get('word')
-                or item_data.get('sentence') or item_data.get('correct')
-                or item_data.get('target')
+                item_data.get("answer")
+                or item_data.get("word")
+                or item_data.get("sentence")
+                or item_data.get("correct")
+                or item_data.get("target")
             )
-            if answer is None and 'correct_order' in item_data:
-                correct_order = item_data['correct_order']
+            if answer is None and "correct_order" in item_data:
+                correct_order = item_data["correct_order"]
                 if isinstance(correct_order, list):
-                    answer = ' '.join(str(token) for token in correct_order)
+                    answer = " ".join(str(token) for token in correct_order)
                 else:
                     answer = str(correct_order)
             if answer is None:
                 raise KeyError(f"unjumble item {item_index} missing one of: answer, correct_order")
-            hint = item_data.get('hint')
-            explanation = str(item_data.get('explanation') or '')
+            hint = item_data.get("hint")
+            explanation = str(item_data.get("explanation") or "")
             items.append(UnjumbleItem(words=words, answer=answer, hint=hint, explanation=explanation))
-        return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+        return UnjumbleActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
         items = []
-        for i in data.get('items', []):
-            error = i['error']
+        for i in data.get("items", []):
+            error = i["error"]
             if error == "":
                 error = None
-            items.append(ErrorCorrectionItem(
-                sentence=i['sentence'],
-                error=error,
-                answer=i.get('answer') or i.get('correction', ''),
-                options=i.get('options', []),
-                explanation=i.get('explanation', ''),
-            ))
+            items.append(
+                ErrorCorrectionItem(
+                    sentence=i["sentence"],
+                    error=error,
+                    answer=i.get("answer") or i.get("correction", ""),
+                    options=i.get("options", []),
+                    explanation=i.get("explanation", ""),
+                    **_present_fields(
+                        i,
+                        "kind",
+                        "tests_feature",
+                        "requires",
+                        "option_records",
+                        "target_record",
+                        "host",
+                    ),
+                    **_feedback_fields(i),
+                )
+            )
         return ErrorCorrectionActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            anchor_id=data.get('anchor_id', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            anchor_id=data.get("anchor_id", ""),
             items=items,
         )
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
-        raw_text = data.get('passage') or data.get('text', '')
+        raw_text = data.get("passage") or data.get("text", "")
         correct_words = (
-            data.get('correct_words')
-            or data.get('target_words')
-            or data.get('targets')
-            or data.get('answers', [])
+            data.get("correct_words") or data.get("target_words") or data.get("targets") or data.get("answers", [])
         )
 
         # Robust extraction from various markdown formats
@@ -1016,17 +1274,17 @@ class ActivityParser:
             return word
 
         # 1. Handle [word](correct) or [word](wrong)
-        clean_text = re.sub(r'\[([^\]]+)\]\(correct\)', replace_match, raw_text)
-        clean_text = re.sub(r'\[([^\]]+)\]\(wrong\)', r'\1', clean_text)
+        clean_text = re.sub(r"\[([^\]]+)\]\(correct\)", replace_match, raw_text)
+        clean_text = re.sub(r"\[([^\]]+)\]\(wrong\)", r"\1", clean_text)
 
         # 2. Handle **word** (bold) - treat as correct
-        clean_text = re.sub(r'\*\*([^*]+)\*\*', replace_match, clean_text)
+        clean_text = re.sub(r"\*\*([^*]+)\*\*", replace_match, clean_text)
 
         # 3. Handle *word* (italics) - treat as correct
-        clean_text = re.sub(r'\*([^*]+)\*', replace_match, clean_text)
+        clean_text = re.sub(r"\*([^*]+)\*", replace_match, clean_text)
 
         # 4. Handle [word] (legacy brackets) - treat as correct
-        clean_text = re.sub(r'\[([^\]]+)\]', replace_match, clean_text)
+        clean_text = re.sub(r"\[([^\]]+)\]", replace_match, clean_text)
 
         # If explicit answers provided, we prefer them (legacy), otherwise use extracted
         if not correct_words:
@@ -1035,40 +1293,48 @@ class ActivityParser:
             correct_words = [x for x in extracted_answers if not (x in seen or seen.add(x))]
 
         return MarkTheWordsActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            text=clean_text,
-            answers=correct_words
+            title=data.get("title", ""), instruction=data.get("instruction", ""), text=clean_text, answers=correct_words
         )
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
         items = []
         for i in self._item_rows(data):
             source = (
-                i.get('source') or i.get('prompt') or i.get('uk')
-                or i.get('ukrainian') or i.get('english') or i.get('en') or ''
+                i.get("source")
+                or i.get("prompt")
+                or i.get("uk")
+                or i.get("ukrainian")
+                or i.get("english")
+                or i.get("en")
+                or ""
             )
             target = (
-                i.get('target') or i.get('answer') or i.get('correct')
-                or i.get('en') or i.get('english') or i.get('ukrainian')
+                i.get("target")
+                or i.get("answer")
+                or i.get("correct")
+                or i.get("en")
+                or i.get("english")
+                or i.get("ukrainian")
             )
-            if i.get('uk') and i.get('en') and not i.get('source'):
-                source = i.get('uk')
-                target = i.get('en')
-            if i.get('english') and i.get('ukrainian'):
-                source = i.get('english')
-                target = i.get('ukrainian')
+            if i.get("uk") and i.get("en") and not i.get("source"):
+                source = i.get("uk")
+                target = i.get("en")
+            if i.get("english") and i.get("ukrainian"):
+                source = i.get("english")
+                target = i.get("ukrainian")
             options = []
-            for o in i.get('options', []) or []:
+            for o in i.get("options", []) or []:
                 if isinstance(o, str):
                     text = o.strip()
-                    options.append(TranslateOption(
-                        text=text,
-                        correct=bool(target) and text.casefold() == str(target).strip().casefold(),
-                    ))
+                    options.append(
+                        TranslateOption(
+                            text=text,
+                            correct=bool(target) and text.casefold() == str(target).strip().casefold(),
+                        )
+                    )
                 elif isinstance(o, dict):
-                    text = str(o.get('text') or o.get('en') or '').strip()
-                    options.append(TranslateOption(text=text, correct=bool(o.get('correct'))))
+                    text = str(o.get("text") or o.get("en") or "").strip()
+                    options.append(TranslateOption(text=text, correct=bool(o.get("correct"))))
             if target and not any(opt.correct for opt in options):
                 for opt in options:
                     if opt.text.casefold() == str(target).strip().casefold():
@@ -1076,33 +1342,48 @@ class ActivityParser:
                         break
                 else:
                     options.append(TranslateOption(text=str(target).strip(), correct=True))
-            items.append(TranslateItem(source=source, options=options, explanation=i.get('explanation')))
-        return TranslateActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+            items.append(
+                TranslateItem(
+                    source=source,
+                    options=options,
+                    explanation=i.get("explanation"),
+                    **_present_fields(i, "kind", "option_records", "target_record", "host"),
+                    **_feedback_fields(i),
+                )
+            )
+        return TranslateActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_anagram(self, data: dict) -> AnagramActivity:
         items = []
-        for i in data.get('items', []):
+        for i in data.get("items", []):
             # Support V2 schema ('letters' array) and legacy ('scrambled' string).
             # If neither key is present, KeyError propagates with activity context.
-            if 'letters' in i:
-                scrambled = ' '.join(str(ch) for ch in i['letters'])
-            elif 'scrambled' in i:
-                scrambled = i['scrambled']
+            if "letters" in i:
+                scrambled = " ".join(str(ch) for ch in i["letters"])
+            elif "scrambled" in i:
+                scrambled = i["scrambled"]
             else:
                 raise KeyError(f"Anagram item missing both 'letters' and 'scrambled': {list(i.keys())}")
-            items.append(AnagramItem(scrambled=scrambled, answer=i['answer'], hint=i.get('hint'), explanation=str(i.get('explanation') or '')))
-        return AnagramActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
+            items.append(
+                AnagramItem(
+                    scrambled=scrambled,
+                    answer=i["answer"],
+                    hint=i.get("hint"),
+                    explanation=str(i.get("explanation") or ""),
+                )
+            )
+        return AnagramActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_reading(self, data: dict) -> ReadingActivity:
         # LIT reading activities use inline text; others use external resources
         return ReadingActivity(
-            title=data.get('title', ''),
-            id=data.get('id', ''),  # Issue #425: Required for linking
-            text=data.get('text') or data.get('passage', ''),  # LIT/v2: inline primary source
-            source=data.get('source', ''),  # Attribution
-            context=data.get('context', ''),
-            resource=data.get('resource', {}),
-            tasks=data.get('tasks') or data.get('questions', [])
+            title=data.get("title", ""),
+            id=data.get("id", ""),  # Issue #425: Required for linking
+            text=data.get("text") or data.get("passage", ""),  # LIT/v2: inline primary source
+            source=data.get("source", ""),  # Attribution
+            context=data.get("context", ""),
+            resource=data.get("resource", {}),
+            tasks=data.get("tasks") or data.get("questions", []),
         )
 
     @staticmethod
@@ -1127,59 +1408,58 @@ class ActivityParser:
 
     def _parse_essay_response(self, data: dict) -> EssayResponseActivity:
         return EssayResponseActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            notes=data.get('notes', ''),
-            source_reading=data.get('source_reading', ''),  # Issue #425: Link to reading
-            prompt=data.get('prompt', ''),
-            min_words=data.get('min_words', 0),
-            model_answer=data.get('model_answer', ''),
-            peer_review_guidelines=self._as_str_list(data.get('peer_review_guidelines', [])),
-            rubric=data.get('rubric', [])
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            notes=data.get("notes", ""),
+            source_reading=data.get("source_reading", ""),  # Issue #425: Link to reading
+            prompt=data.get("prompt", ""),
+            min_words=data.get("min_words", 0),
+            model_answer=data.get("model_answer", ""),
+            peer_review_guidelines=self._as_str_list(data.get("peer_review_guidelines", [])),
+            rubric=data.get("rubric", []),
         )
 
     def _parse_critical_analysis(self, data: dict) -> CriticalAnalysisActivity:
         return CriticalAnalysisActivity(
-            title=data.get('title', ''),
-            source_reading=data.get('source_reading', ''),  # Issue #425: Link to reading
-            target_text=data.get('target_text', ''),
-            context=data.get('context', ''),
-            question=data.get('question', ''),
-            questions=data.get('questions', []),
-            model_answer=data.get('model_answer', ''),
-            model_answers=data.get('model_answers', [])
+            title=data.get("title", ""),
+            source_reading=data.get("source_reading", ""),  # Issue #425: Link to reading
+            target_text=data.get("target_text", ""),
+            context=data.get("context", ""),
+            question=data.get("question", ""),
+            questions=data.get("questions", []),
+            model_answer=data.get("model_answer", ""),
+            model_answers=data.get("model_answers", []),
         )
 
     def _parse_comparative_study(self, data: dict) -> ComparativeStudyActivity:
         return ComparativeStudyActivity(
-            title=data.get('title', ''),
-            source_reading=data.get('source_reading', ''),  # Issue #425
-            items_to_compare=data.get('items_to_compare', []),
-            criteria=data.get('criteria', []),
-            source_a=data.get('source_a', ''),
-            source_b=data.get('source_b', ''),
-            task=data.get('task', ''),
-            prompt=data.get('prompt', ''),
-            model_answer=data.get('model_answer', '')
+            title=data.get("title", ""),
+            source_reading=data.get("source_reading", ""),  # Issue #425
+            items_to_compare=data.get("items_to_compare", []),
+            criteria=data.get("criteria", []),
+            source_a=data.get("source_a", ""),
+            source_b=data.get("source_b", ""),
+            task=data.get("task", ""),
+            prompt=data.get("prompt", ""),
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_ritual_sequencing(self, data: dict) -> RitualSequencingActivity:
-        raw_steps = data.get('steps') or data.get('items')
+        raw_steps = data.get("steps") or data.get("items")
         if not isinstance(raw_steps, list) or not raw_steps:
             raise ValueError("ritual-sequencing requires non-empty steps list")
-        steps = [
-            str(item.get('text', '') if isinstance(item, dict) else item).strip()
-            for item in raw_steps
-        ]
+        steps = [str(item.get("text", "") if isinstance(item, dict) else item).strip() for item in raw_steps]
         if not all(steps):
             raise ValueError("ritual-sequencing steps must be non-empty strings")
-        correct_order = data.get('correct_order') or list(range(len(steps)))
+        correct_order = data.get("correct_order") or list(range(len(steps)))
         if not isinstance(correct_order, list) or not correct_order:
             raise ValueError("ritual-sequencing requires non-empty correct_order list")
-        if (all(isinstance(entry, str) for entry in correct_order)
-                and len(steps) == len(set(steps))
-                and len(correct_order) == len(steps)
-                and set(correct_order) == set(steps)):
+        if (
+            all(isinstance(entry, str) for entry in correct_order)
+            and len(steps) == len(set(steps))
+            and len(correct_order) == len(steps)
+            and set(correct_order) == set(steps)
+        ):
             correct_order = [steps.index(entry) for entry in correct_order]
         if not all(isinstance(index, int) for index in correct_order):
             raise TypeError("ritual-sequencing correct_order must contain integers")
@@ -1188,24 +1468,24 @@ class ActivityParser:
         if any(index < 0 or index >= len(steps) for index in correct_order):
             raise ValueError("ritual-sequencing correct_order index out of range")
         return RitualSequencingActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             steps=steps,
             correct_order=correct_order,
-            model_answer=data.get('model_answer', ''),
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_variant_comparison(self, data: dict) -> VariantComparisonActivity:
-        raw_variants = data.get('variants')
+        raw_variants = data.get("variants")
         if not isinstance(raw_variants, list) or len(raw_variants) < 2:
             raise ValueError("variant-comparison requires at least two variants")
         variants = []
         for raw in raw_variants:
             if isinstance(raw, dict):
-                label = str(raw.get('label') or raw.get('region') or '').strip()
-                text = str(raw.get('text', '')).strip()
-                region = str(raw.get('region', '')).strip()
-                source = str(raw.get('source', '')).strip()
+                label = str(raw.get("label") or raw.get("region") or "").strip()
+                text = str(raw.get("text", "")).strip()
+                region = str(raw.get("region", "")).strip()
+                source = str(raw.get("source", "")).strip()
             else:
                 label = str(raw).strip()
                 text = ""
@@ -1214,31 +1494,31 @@ class ActivityParser:
             if not label:
                 raise ValueError("variant-comparison variant requires label")
             variants.append(VariantComparisonVariant(label=label, text=text, region=region, source=source))
-        features = [str(item).strip() for item in data.get('features', [])]
+        features = [str(item).strip() for item in data.get("features", [])]
         if not features or not all(features):
             raise ValueError("variant-comparison requires non-empty features list")
         return VariantComparisonActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             variants=variants,
             features=features,
-            prompt=data.get('prompt', ''),
-            model_answer=data.get('model_answer', ''),
+            prompt=data.get("prompt", ""),
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_motif_formula(self, data: dict) -> MotifFormulaActivity:
-        passage = str(data.get('passage') or data.get('text') or '').strip()
+        passage = str(data.get("passage") or data.get("text") or "").strip()
         if not passage:
             raise ValueError("motif-formula requires passage")
-        raw_formulas = data.get('formulas') or data.get('answers')
+        raw_formulas = data.get("formulas") or data.get("answers")
         if not isinstance(raw_formulas, list) or not raw_formulas:
             raise ValueError("motif-formula requires non-empty formulas list")
         formulas = []
         for raw in raw_formulas:
             if isinstance(raw, dict):
-                text = str(raw.get('text') or raw.get('formula') or '').strip()
-                label = str(raw.get('label', '')).strip()
-                explanation = str(raw.get('explanation', '')).strip()
+                text = str(raw.get("text") or raw.get("formula") or "").strip()
+                label = str(raw.get("label", "")).strip()
+                explanation = str(raw.get("explanation", "")).strip()
             else:
                 text = str(raw).strip()
                 label = ""
@@ -1247,180 +1527,173 @@ class ActivityParser:
                 raise ValueError("motif-formula formula text must be non-empty")
             formulas.append(MotifFormulaItem(text=text, label=label, explanation=explanation))
         return MotifFormulaActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             passage=passage,
             formulas=formulas,
-            prompt=data.get('prompt', ''),
-            model_answer=data.get('model_answer', ''),
+            prompt=data.get("prompt", ""),
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_performance(self, data: dict) -> PerformanceActivity:
-        prompt = str(data.get('prompt') or data.get('instruction') or '').strip()
+        prompt = str(data.get("prompt") or data.get("instruction") or "").strip()
         if not prompt:
             raise ValueError("performance requires prompt")
-        raw_self_check = data.get('self_check', data.get('self_checklist', []))
+        raw_self_check = data.get("self_check", data.get("self_checklist", []))
         if raw_self_check is None:
             raw_self_check = []
         if not isinstance(raw_self_check, list):
             raise TypeError("performance self_check must be a list")
         return PerformanceActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             prompt=prompt,
-            fragment=str(data.get('fragment', '')).strip(),
+            fragment=str(data.get("fragment", "")).strip(),
             self_check=[str(item).strip() for item in raw_self_check if str(item).strip()],
-            show_record_button=bool(data.get('show_record_button', True)),
-            model_answer=data.get('model_answer', ''),
+            show_record_button=bool(data.get("show_record_button", True)),
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_authorial_intent(self, data: dict) -> AuthorialIntentActivity:
         return AuthorialIntentActivity(
-            title=data.get('title', ''),
-            source_reading=data.get('source_reading', ''),  # Issue #425
-            excerpt=data.get('text_excerpt', ''),
-            questions=[data.get('prompt', '')] if data.get('prompt') else [],
-            model_answer=data.get('model_answer', '')
+            title=data.get("title", ""),
+            source_reading=data.get("source_reading", ""),  # Issue #425
+            excerpt=data.get("text_excerpt", ""),
+            questions=[data.get("prompt", "")] if data.get("prompt") else [],
+            model_answer=data.get("model_answer", ""),
         )
 
     def _parse_source_evaluation(self, data: dict) -> SourceEvaluationActivity:
         """Parse source-evaluation activity (ISTORIO)."""
-        metadata_raw = data.get('source_metadata', {})
+        metadata_raw = data.get("source_metadata", {})
         metadata = None
         if metadata_raw:
             metadata = SourceMetadata(
-                author=metadata_raw.get('author', ''),
-                date=metadata_raw.get('date', ''),
-                type=metadata_raw.get('type', ''),
-                context=metadata_raw.get('context', '')
+                author=metadata_raw.get("author", ""),
+                date=metadata_raw.get("date", ""),
+                type=metadata_raw.get("type", ""),
+                context=metadata_raw.get("context", ""),
             )
         return SourceEvaluationActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            source_text=data.get('source_text', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            source_text=data.get("source_text", ""),
             source_metadata=metadata,
-            evaluation_criteria=data.get('evaluation_criteria', []),
-            guiding_questions=data.get('guiding_questions', []),
-            model_evaluation=data.get('model_evaluation', '')
+            evaluation_criteria=data.get("evaluation_criteria", []),
+            guiding_questions=data.get("guiding_questions", []),
+            model_evaluation=data.get("model_evaluation", ""),
         )
 
     def _parse_debate(self, data: dict) -> DebateActivity:
         """Parse debate activity (ISTORIO)."""
         positions = []
-        for pos_data in data.get('positions', []):
-            positions.append(DebatePosition(
-                name=pos_data.get('name', ''),
-                proponents=pos_data.get('proponents', ''),
-                argument=pos_data.get('argument', ''),
-                evidence=pos_data.get('evidence', []),
-                weaknesses=pos_data.get('weaknesses', [])
-            ))
+        for pos_data in data.get("positions", []):
+            positions.append(
+                DebatePosition(
+                    name=pos_data.get("name", ""),
+                    proponents=pos_data.get("proponents", ""),
+                    argument=pos_data.get("argument", ""),
+                    evidence=pos_data.get("evidence", []),
+                    weaknesses=pos_data.get("weaknesses", []),
+                )
+            )
         return DebateActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            debate_question=data.get('debate_question', ''),
-            historical_context=data.get('historical_context', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            debate_question=data.get("debate_question", ""),
+            historical_context=data.get("historical_context", ""),
             positions=positions,
-            analysis_tasks=data.get('analysis_tasks', []),
-            model_analysis=data.get('model_analysis', '')
+            analysis_tasks=data.get("analysis_tasks", []),
+            model_analysis=data.get("model_analysis", ""),
         )
 
     def _parse_etymology_trace(self, data: dict) -> EtymologyTraceActivity:
         items = []
-        for item_data in data.get('items', []):
-            items.append(EtymologyItem(
-                word=item_data['word'],
-                modern=item_data['modern'],
-                evolution=item_data['evolution']
-            ))
-        return EtymologyTraceActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            items=items
-        )
+        for item_data in data.get("items", []):
+            items.append(
+                EtymologyItem(word=item_data["word"], modern=item_data["modern"], evolution=item_data["evolution"])
+            )
+        return EtymologyTraceActivity(title=data.get("title", ""), instruction=data.get("instruction", ""), items=items)
 
     def _parse_grammar_identify(self, data: dict) -> GrammarIdentifyActivity:
         items = []
-        for item_data in data.get('items', []):
-            form = item_data.get('form') or item_data.get('task') or data.get('instruction', '')
-            text = item_data.get('text') or item_data.get('sentence') or item_data.get('word')
+        for item_data in data.get("items", []):
+            form = item_data.get("form") or item_data.get("task") or data.get("instruction", "")
+            text = item_data.get("text") or item_data.get("sentence") or item_data.get("word")
             if text is None:
                 raise ValueError("grammar-identify item requires text, sentence, or word")
-            items.append(GrammarIdentifyItem(
-                text=text,
-                form=form,
-                answer=item_data['answer']
-            ))
+            items.append(GrammarIdentifyItem(text=text, form=form, answer=item_data["answer"]))
         return GrammarIdentifyActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            items=items
+            title=data.get("title", ""), instruction=data.get("instruction", ""), items=items
         )
 
     def _parse_transcription(self, data: dict) -> TranscriptionActivity:
         return TranscriptionActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            original=data.get('original', ''),
-            answer=data.get('answer', ''),
-            hints=data.get('hints', [])
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            original=data.get("original", ""),
+            answer=data.get("answer", ""),
+            hints=data.get("hints", []),
         )
 
     def _parse_paleography_analysis(self, data: dict) -> PaleographyAnalysisActivity:
         hotspots = []
-        for h in data.get('hotspots', []):
-            hotspots.append(PaleographyHotspot(
-                x=h.get('x', 0),
-                y=h.get('y', 0),
-                label=h.get('label', ''),
-                explanation=h.get('explanation', '')
-            ))
+        for h in data.get("hotspots", []):
+            hotspots.append(
+                PaleographyHotspot(
+                    x=h.get("x", 0), y=h.get("y", 0), label=h.get("label", ""), explanation=h.get("explanation", "")
+                )
+            )
         return PaleographyAnalysisActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            image_url=data.get('image_url', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            image_url=data.get("image_url", ""),
             hotspots=hotspots,
-            options=data.get('options', [])
+            options=data.get("options", []),
         )
 
     def _parse_dialect_comparison(self, data: dict) -> DialectComparisonActivity:
         features = []
-        for f in data.get('features', []):
-            features.append(DialectFeature(
-                feature_name=f.get('feature_name', ''),
-                value_a=f.get('value_a', ''),
-                value_b=f.get('value_b', ''),
-                explanation=f.get('explanation', '')
-            ))
+        for f in data.get("features", []):
+            features.append(
+                DialectFeature(
+                    feature_name=f.get("feature_name", ""),
+                    value_a=f.get("value_a", ""),
+                    value_b=f.get("value_b", ""),
+                    explanation=f.get("explanation", ""),
+                )
+            )
         return DialectComparisonActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            text_a=data.get('text_a', ''),
-            text_b=data.get('text_b', ''),
-            label_a=data.get('label_a', ''),
-            label_b=data.get('label_b', ''),
-            features=features
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            text_a=data.get("text_a", ""),
+            text_b=data.get("text_b", ""),
+            label_a=data.get("label_a", ""),
+            label_b=data.get("label_b", ""),
+            features=features,
         )
 
     def _parse_translation_critique(self, data: dict) -> TranslationCritiqueActivity:
         translations = []
-        for index, t in enumerate(data.get('translations', []), start=1):
+        for index, t in enumerate(data.get("translations", []), start=1):
             if isinstance(t, str):
-                t = {'translator': f'Option {index}', 'text': t}
+                t = {"translator": f"Option {index}", "text": t}
             elif not isinstance(t, dict):
-                t = {'translator': f'Option {index}', 'text': str(t)}
-            translations.append(TranslationItem(
-                translator=t.get('translator', ''),
-                text=t.get('text', ''),
-                accuracy_score=t.get('accuracy_score', 0),
-                notes=t.get('notes', '')
-            ))
+                t = {"translator": f"Option {index}", "text": str(t)}
+            translations.append(
+                TranslationItem(
+                    translator=t.get("translator", ""),
+                    text=t.get("text", ""),
+                    accuracy_score=t.get("accuracy_score", 0),
+                    notes=t.get("notes", ""),
+                )
+            )
         return TranslationCritiqueActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
-            original=data.get('original', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
+            original=data.get("original", ""),
             translations=translations,
-            focus_points=data.get('focus_points', [])
+            focus_points=data.get("focus_points", []),
         )
 
     # ------------------------------------------------------------------
@@ -1429,75 +1702,92 @@ class ActivityParser:
 
     def _parse_classify(self, data: dict) -> ClassifyActivity:
         cats = []
-        for c in data.get('categories', []):
-            cats.append(ClassifyCategory(
-                label=c.get('label', ''),
-                items=c.get('items', []),
-            ))
+        for c in data.get("categories", []):
+            cats.append(
+                ClassifyCategory(
+                    label=c.get("label", ""),
+                    items=c.get("items", []),
+                )
+            )
         return ClassifyActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             categories=cats,
         )
 
     def _parse_image_to_letter(self, data: dict) -> ImageToLetterActivity:
         items = []
-        for index, raw in enumerate(data.get('items', [])):
+        for index, raw in enumerate(data.get("items", [])):
             values = image_to_letter_render_values(raw, index)
-            items.append(ImageToLetterItem(
-                emoji=values['emoji'],
-                answer=values['answer'],
-                distractors=values['distractors'],
-                note=values.get('note', ''),
-                explanation=values.get('explanation', ''),
-            ))
+            choice_fields = {
+                **_present_fields(raw, "kind", "tests_feature", "requires", "option_records", "target_record", "host"),
+                **_feedback_fields(raw),
+            }
+            # The page offers [answer, *distractors], while schema items author
+            # feedback and record bindings in their original options order.
+            options = raw.get("options")
+            if isinstance(options, list):
+                page_indices = [options.index(option) for option in (values["answer"], *values["distractors"])]
+                for field_name in ("option_why", "option_records"):
+                    aligned = choice_fields.get(field_name)
+                    if isinstance(aligned, list) and len(aligned) == len(options):
+                        choice_fields[field_name] = [aligned[position] for position in page_indices]
+            items.append(
+                ImageToLetterItem(
+                    emoji=values["emoji"],
+                    answer=values["answer"],
+                    distractors=values["distractors"],
+                    note=values.get("note", ""),
+                    explanation=values.get("explanation", ""),
+                    **choice_fields,
+                )
+            )
         return ImageToLetterActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=items,
         )
 
     def _parse_watch_and_repeat(self, data: dict) -> WatchAndRepeatActivity:
         items = []
-        for i in data.get('items', []):
-            items.append(WatchAndRepeatItem(
-                video=i.get('video', ''),
-                letter=i.get('letter', ''),
-                word=i.get('word', ''),
-                sound=i.get('sound', ''),
-                note=i.get('note', ''),
-                explanation=str(i.get('explanation') or ''),
-            ))
+        for i in data.get("items", []):
+            items.append(
+                WatchAndRepeatItem(
+                    video=i.get("video", ""),
+                    letter=i.get("letter", ""),
+                    word=i.get("word", ""),
+                    sound=i.get("sound", ""),
+                    note=i.get("note", ""),
+                    explanation=str(i.get("explanation") or ""),
+                )
+            )
         return WatchAndRepeatActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=items,
         )
 
     def _parse_observe(self, data: dict) -> ObserveActivity:
-        raw_examples = data.get('examples')
+        raw_examples = data.get("examples")
         if not isinstance(raw_examples, list) or not raw_examples:
             raise ValueError("observe requires non-empty examples list")
-        examples = [
-            str(item.get('text', '')) if isinstance(item, dict) else str(item)
-            for item in raw_examples
-        ]
+        examples = [str(item.get("text", "")) if isinstance(item, dict) else str(item) for item in raw_examples]
         if not all(example.strip() for example in examples):
             raise ValueError("observe examples must be non-empty strings")
-        prompt = data.get('prompt')
+        prompt = data.get("prompt")
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError("observe requires non-empty prompt")
         return ObserveActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             examples=examples,
             prompt=prompt,
         )
 
     def _parse_order(self, data: dict) -> OrderActivity:
-        items = data.get('items')
-        correct_order = data.get('correct_order')
-        is_ukrainian = data.get('is_ukrainian', False)
+        items = data.get("items")
+        correct_order = data.get("correct_order")
+        is_ukrainian = data.get("is_ukrainian", False)
         if not isinstance(items, list) or not items:
             raise ValueError("order requires non-empty items list")
         if not isinstance(correct_order, list) or not correct_order:
@@ -1506,34 +1796,37 @@ class ActivityParser:
             raise TypeError("order is_ukrainian must be a boolean")
         correct_order = order_correct_indices(items, correct_order)
         return OrderActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=[str(item) for item in items],
             correct_order=correct_order,
             is_ukrainian=is_ukrainian,
+            **_present_fields(data, "explanation"),
         )
 
     def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
         items = []
-        for item in data.get('items', []):
-            word = item.get('word') or item.get('lemma') or item.get('text')
-            correct = item.get('correct')
+        for item in data.get("items", []):
+            word = item.get("word") or item.get("lemma") or item.get("text")
+            correct = item.get("correct")
             if correct is None:
-                correct = item.get('syllables') or item.get('count') or item.get('answer')
+                correct = item.get("syllables") or item.get("count") or item.get("answer")
             if isinstance(correct, str) and correct.strip().isdigit():
                 correct = int(correct.strip())
             if not word or not isinstance(correct, int):
                 raise KeyError("count-syllables item requires word and correct")
-            items.append(CountSyllablesItem(
-                word=str(word),
-                correct=correct,
-                translation=str(item['translation']) if item.get('translation') else None,
-                explanation=str(item.get('explanation') or ''),
-            ))
+            items.append(
+                CountSyllablesItem(
+                    word=str(word),
+                    correct=correct,
+                    translation=str(item["translation"]) if item.get("translation") else None,
+                    explanation=str(item.get("explanation") or ""),
+                )
+            )
         if not items:
             raise ValueError("count-syllables requires non-empty items list")
-        max_count = data.get('maxCount')
-        snake_max_count = data.get('max_count')
+        max_count = data.get("maxCount")
+        snake_max_count = data.get("max_count")
         if max_count is not None and snake_max_count is not None and max_count != snake_max_count:
             raise ValueError("count-syllables maxCount and max_count must match when both are present")
         if max_count is None:
@@ -1541,63 +1834,69 @@ class ActivityParser:
         if max_count is not None and not isinstance(max_count, int):
             raise TypeError("count-syllables maxCount must be an integer")
         return CountSyllablesActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=items,
             max_count=max_count,
         )
 
     def _parse_divide_words(self, data: dict) -> DivideWordsActivity:
         items = []
-        for item in data.get('items', []):
-            if 'word' not in item or 'answer' not in item:
+        for item in data.get("items", []):
+            if "word" not in item or "answer" not in item:
                 raise KeyError("divide-words item requires word and answer")
-            items.append(DivideWordsItem(
-                word=str(item['word']),
-                answer=str(item['answer']),
-                hint=str(item['hint']) if item.get('hint') else None,
-                explanation=str(item.get('explanation') or ''),
-            ))
+            items.append(
+                DivideWordsItem(
+                    word=str(item["word"]),
+                    answer=str(item["answer"]),
+                    hint=str(item["hint"]) if item.get("hint") else None,
+                    explanation=str(item.get("explanation") or ""),
+                )
+            )
         if not items:
             raise ValueError("divide-words requires non-empty items list")
         return DivideWordsActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=items,
         )
 
     def _parse_highlight_morphemes(self, data: dict) -> HighlightMorphemesActivity:
-        items = data.get('items', [])
-        text = data.get('text', '')
+        items = data.get("items", [])
+        text = data.get("text", "")
         morphemes = []
         for item in items:
-            word = str(item.get('word', '')).strip()
+            word = str(item.get("word", "")).strip()
             if not word:
                 raise ValueError("highlight-morphemes item requires word")
-            raw_morphemes = item.get('morphemes', [])
+            raw_morphemes = item.get("morphemes", [])
             if isinstance(raw_morphemes, list) and raw_morphemes:
                 for raw in raw_morphemes:
                     if isinstance(raw, dict):
-                        morpheme = str(raw.get('morpheme') or raw.get('text') or '').strip()
-                        mtype = str(raw.get('type', 'unknown'))
+                        morpheme = str(raw.get("morpheme") or raw.get("text") or "").strip()
+                        mtype = str(raw.get("type", "unknown"))
                     else:
                         morpheme = str(raw).strip()
-                        mtype = 'unknown'
+                        mtype = "unknown"
                     if not morpheme:
                         raise ValueError("highlight-morphemes morpheme must be non-empty")
                     morphemes.append(HighlightMorphemeItem(word=word, morpheme=morpheme, type=mtype))
-            elif item.get('morpheme'):
-                morphemes.append(HighlightMorphemeItem(
-                    word=word,
-                    morpheme=str(item['morpheme']),
-                    type=str(item.get('type', 'unknown')),
-                ))
-            elif item.get('answer'):
-                morphemes.append(HighlightMorphemeItem(
-                    word=word,
-                    morpheme=str(item['answer']),
-                    type=str(item.get('type', 'suffix')),
-                ))
+            elif item.get("morpheme"):
+                morphemes.append(
+                    HighlightMorphemeItem(
+                        word=word,
+                        morpheme=str(item["morpheme"]),
+                        type=str(item.get("type", "unknown")),
+                    )
+                )
+            elif item.get("answer"):
+                morphemes.append(
+                    HighlightMorphemeItem(
+                        word=word,
+                        morpheme=str(item["answer"]),
+                        type=str(item.get("type", "suffix")),
+                    )
+                )
             else:
                 raise ValueError("highlight-morphemes item requires morphemes")
         if not morphemes:
@@ -1605,95 +1904,115 @@ class ActivityParser:
         if not text:
             text = " ".join(item.word for item in morphemes)
         return HighlightMorphemesActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             text=str(text),
             morphemes=morphemes,
         )
 
     def _parse_letter_grid(self, data: dict) -> LetterGridActivity:
-        letters = data.get('letters')
+        letters = data.get("letters")
         if not isinstance(letters, list) or not letters:
             raise ValueError("letter-grid requires non-empty letters list")
         normalized = []
         for letter in letters:
             if not isinstance(letter, dict):
                 raise TypeError("letter-grid letters must be dictionaries")
-            required = ('upper', 'lower')
+            required = ("upper", "lower")
             missing = [key for key in required if not letter.get(key)]
             if missing:
                 raise KeyError(f"letter-grid letter missing required fields: {missing}")
-            normalized.append({key: letter[key] for key in letter if key in {'upper', 'lower', 'name', 'emoji', 'key_word', 'note', 'sound_type'}})
+            normalized.append(
+                {
+                    key: letter[key]
+                    for key in letter
+                    if key in {"upper", "lower", "name", "emoji", "key_word", "note", "sound_type"}
+                }
+            )
         return LetterGridActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             letters=normalized,
         )
 
     def _parse_phrase_table(self, data: dict) -> PhraseTableActivity:
-        raw_groups = data.get('groups')
+        raw_groups = data.get("groups")
         if not isinstance(raw_groups, list) or not raw_groups:
             raise ValueError("phrase-table requires non-empty groups list")
         groups = []
         for g_idx, g in enumerate(raw_groups):
-            if not isinstance(g, dict) or 'label' not in g or 'phrases' not in g:
+            if not isinstance(g, dict) or "label" not in g or "phrases" not in g:
                 raise KeyError(f"phrase-table group {g_idx} requires label and phrases")
-            raw_phrases = g['phrases']
+            raw_phrases = g["phrases"]
             if not isinstance(raw_phrases, list) or not raw_phrases:
                 raise ValueError(f"phrase-table group {g_idx} requires non-empty phrases list")
             phrases = []
             for p in raw_phrases:
                 if isinstance(p, str):
                     phrases.append(PhraseItem(phrase=p))
-                elif isinstance(p, dict) and 'phrase' in p:
-                    phrases.append(PhraseItem(
-                        phrase=str(p['phrase']),
-                        context=str(p['context']) if p.get('context') else None,
-                        emoji=str(p['emoji']) if p.get('emoji') else None,
-                    ))
+                elif isinstance(p, dict) and "phrase" in p:
+                    phrases.append(
+                        PhraseItem(
+                            phrase=str(p["phrase"]),
+                            context=str(p["context"]) if p.get("context") else None,
+                            emoji=str(p["emoji"]) if p.get("emoji") else None,
+                        )
+                    )
                 else:
                     raise TypeError(f"phrase-table phrase must be string or dict with 'phrase', got {type(p).__name__}")
-            groups.append(PhraseGroup(label=str(g['label']), phrases=phrases))
+            groups.append(PhraseGroup(label=str(g["label"]), phrases=phrases))
         return PhraseTableActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             groups=groups,
         )
 
     def _parse_odd_one_out(self, data: dict) -> OddOneOutActivity:
         items = []
-        for item in data.get('items', []):
-            words = item.get('words') or item.get('options')
+        for item in data.get("items", []):
+            words = item.get("words") or item.get("options")
             if not isinstance(words, list) or not words:
                 raise ValueError("odd-one-out item requires non-empty words list")
-            correct = item.get('correct')
-            if correct is None and item.get('answer') in words:
-                correct = words.index(item['answer'])
+            correct = item.get("correct")
+            if correct is None and item.get("answer") in words:
+                correct = words.index(item["answer"])
             if not isinstance(correct, int):
                 raise TypeError("odd-one-out item correct must be an integer")
             if correct < 0 or correct >= len(words):
                 raise ValueError("odd-one-out item correct index out of range")
-            explanation = item.get('explanation')
+            explanation = item.get("explanation")
             if not isinstance(explanation, str) or not explanation.strip():
                 raise ValueError("odd-one-out item requires explanation")
-            items.append(OddOneOutItem(
-                words=[str(word) for word in words],
-                correct=correct,
-                explanation=explanation,
-                prompt=str(item.get('prompt', '')) if item.get('prompt') is not None else '',
-            ))
+            items.append(
+                OddOneOutItem(
+                    words=[str(word) for word in words],
+                    correct=correct,
+                    explanation=explanation,
+                    prompt=str(item.get("prompt", "")) if item.get("prompt") is not None else "",
+                    **_present_fields(
+                        item,
+                        "kind",
+                        "tests_feature",
+                        "requires",
+                        "option_records",
+                        "target_record",
+                        "host",
+                    ),
+                    **_feedback_fields(item),
+                )
+            )
         if not items:
             raise ValueError("odd-one-out requires non-empty items list")
         return OddOneOutActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             items=items,
         )
 
     def _parse_pick_syllables(self, data: dict) -> PickSyllablesActivity:
-        syllables = data.get('syllables')
-        correct_indices = data.get('correctIndices')
-        category = data.get('category')
+        syllables = data.get("syllables")
+        correct_indices = data.get("correctIndices")
+        category = data.get("category")
         if not isinstance(syllables, list) or not syllables:
             raise ValueError("pick-syllables requires non-empty syllables list")
         if not isinstance(correct_indices, list) or not correct_indices:
@@ -1705,12 +2024,12 @@ class ActivityParser:
         if not isinstance(category, str) or not category.strip():
             raise ValueError("pick-syllables requires non-empty category")
         return PickSyllablesActivity(
-            title=data.get('title', ''),
-            instruction=data.get('instruction', ''),
+            title=data.get("title", ""),
+            instruction=data.get("instruction", ""),
             syllables=[str(syllable) for syllable in syllables],
             correct_indices=correct_indices,
             category=category,
-            explanation=str(data.get('explanation', '')),
+            explanation=str(data.get("explanation", "")),
         )
 
     def _escape_jsx(self, text: str) -> str:
@@ -1721,33 +2040,34 @@ class ActivityParser:
             return str(text)
         # Escape characters that break JSX string attributes (", \, and backticks)
         # Also escape newlines to keep the attribute on a single line in generated code
-        res = text.replace('\\', '\\\\').replace('"', '&quot;').replace('\n', '\\n').replace('\r', '')
+        res = text.replace("\\", "\\\\").replace('"', "&quot;").replace("\n", "\\n").replace("\r", "")
         return res
 
     def _instruction_prop(self, instruction: str) -> str:
-        return f' instruction={{{json.dumps(instruction, ensure_ascii=False)}}}' if instruction else ''
+        return f" instruction={{{json.dumps(instruction, ensure_ascii=False)}}}" if instruction else ""
 
     def _anchor_prefix(self, anchor_id: str) -> str:
         if not anchor_id:
-            return ''
+            return ""
         safe_anchor = re.sub(r"[^A-Za-z0-9_-]+", "-", str(anchor_id)).strip("-")
-        return f'<span id="{safe_anchor}"></span>\n\n' if safe_anchor else ''
+        return f'<span id="{safe_anchor}"></span>\n\n' if safe_anchor else ""
 
     def _dump_safe_json(self, data: Any) -> str:
         """Dumps JSON safely for inclusion in a JSX template literal (backticks)."""
         import datetime
+
         def json_serial(obj):
             if isinstance(obj, (datetime.datetime, datetime.date)):
                 return obj.isoformat()
-            raise TypeError (f"Type {type(obj)} not serializable")
+            raise TypeError(f"Type {type(obj)} not serializable")
 
         s = json.dumps(data, ensure_ascii=False, default=json_serial)
         # Escape backslashes first to avoid double escaping other chars
-        s = s.replace('\\', '\\\\')
+        s = s.replace("\\", "\\\\")
         # Escape backticks for template literals
-        s = s.replace('`', '\\`')
+        s = s.replace("`", "\\`")
         # Escape $ to avoid template interpolation
-        s = s.replace('${', '\\${')
+        s = s.replace("${", "\\${")
         return s
 
     def to_mdx(self, activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
@@ -1756,7 +2076,7 @@ class ActivityParser:
             mdx = self._activity_to_mdx(activity, is_ukrainian_forced)
             if mdx:
                 mdx_parts.append(mdx)
-        return '\n\n'.join(mdx_parts)
+        return "\n\n".join(mdx_parts)
 
     def _activity_to_mdx(self, activity: Activity, is_ukrainian_forced: bool = False) -> str:
         if isinstance(activity, QuizActivity):
@@ -1841,113 +2161,140 @@ class ActivityParser:
             return self._odd_one_out_to_mdx(activity)
         if isinstance(activity, PickSyllablesActivity):
             return self._pick_syllables_to_mdx(activity)
-        activity_type = getattr(activity, 'type', '')
-        if activity_type == 'quiz':
+        activity_type = getattr(activity, "type", "")
+        if activity_type == "quiz":
             return self._quiz_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'select':
+        if activity_type == "select":
             return self._select_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'true-false':
+        if activity_type == "true-false":
             return self._true_false_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'fill-in':
+        if activity_type == "fill-in":
             return self._fill_in_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'cloze':
+        if activity_type == "cloze":
             return self._cloze_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'match-up':
+        if activity_type == "match-up":
             return self._match_up_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'group-sort':
+        if activity_type == "group-sort":
             return self._group_sort_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'unjumble':
+        if activity_type == "unjumble":
             return self._unjumble_to_mdx(activity)
-        if activity_type == 'error-correction':
+        if activity_type == "error-correction":
             return self._error_correction_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'mark-the-words':
+        if activity_type == "mark-the-words":
             return self._mark_the_words_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'translate':
+        if activity_type == "translate":
             return self._translate_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'anagram':
+        if activity_type == "anagram":
             return self._anagram_to_mdx(activity)
-        if activity_type == 'reading':
+        if activity_type == "reading":
             return self._reading_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'essay-response':
+        if activity_type == "essay-response":
             return self._essay_response_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'critical-analysis':
+        if activity_type == "critical-analysis":
             return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'comparative-study':
+        if activity_type == "comparative-study":
             return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'ritual-sequencing':
+        if activity_type == "ritual-sequencing":
             return self._ritual_sequencing_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'variant-comparison':
+        if activity_type == "variant-comparison":
             return self._variant_comparison_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'motif-formula':
+        if activity_type == "motif-formula":
             return self._motif_formula_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'performance':
+        if activity_type == "performance":
             return self._performance_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'authorial-intent':
+        if activity_type == "authorial-intent":
             return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'source-evaluation':
+        if activity_type == "source-evaluation":
             return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'debate':
+        if activity_type == "debate":
             return self._debate_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'etymology-trace':
+        if activity_type == "etymology-trace":
             return self._etymology_trace_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'grammar-identify':
+        if activity_type == "grammar-identify":
             return self._grammar_identify_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'transcription':
+        if activity_type == "transcription":
             return self._transcription_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'paleography-analysis':
+        if activity_type == "paleography-analysis":
             return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'dialect-comparison':
+        if activity_type == "dialect-comparison":
             return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'translation-critique':
+        if activity_type == "translation-critique":
             return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'classify':
+        if activity_type == "classify":
             return self._classify_to_mdx(activity)
-        if activity_type == 'image-to-letter':
+        if activity_type == "image-to-letter":
             return self._image_to_letter_to_mdx(activity)
-        if activity_type == 'watch-and-repeat':
+        if activity_type == "watch-and-repeat":
             return self._watch_and_repeat_to_mdx(activity)
-        if activity_type == 'observe':
+        if activity_type == "observe":
             return self._observe_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'order':
+        if activity_type == "order":
             return self._order_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'count-syllables':
+        if activity_type == "count-syllables":
             return self._count_syllables_to_mdx(activity)
-        if activity_type == 'divide-words':
+        if activity_type == "divide-words":
             return self._divide_words_to_mdx(activity)
-        if activity_type == 'highlight-morphemes':
+        if activity_type == "highlight-morphemes":
             return self._highlight_morphemes_to_mdx(activity, is_ukrainian_forced)
-        if activity_type == 'letter-grid':
+        if activity_type == "letter-grid":
             return self._letter_grid_to_mdx(activity)
-        if activity_type == 'phrase-table':
+        if activity_type == "phrase-table":
             return self._phrase_table_to_mdx(activity)
-        if activity_type == 'odd-one-out':
+        if activity_type == "odd-one-out":
             return self._odd_one_out_to_mdx(activity)
-        if activity_type == 'pick-syllables':
+        if activity_type == "pick-syllables":
             return self._pick_syllables_to_mdx(activity)
-        return ''
+        return ""
 
     def _quiz_to_mdx(self, activity: QuizActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Quiz'
-        items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
+        heading = activity.title or "Quiz"
+        items = [
+            {
+                "question": str(i.question),
+                "options": [{"text": str(o.text), "correct": o.correct} for o in i.options],
+                "explanation": str(i.explanation) if i.explanation else "",
+                **_choice_payload(i),
+            }
+            for i in activity.items
+        ]
         return f"{self._anchor_prefix(activity.anchor_id)}### {self._escape_jsx(heading)}\n\n<Quiz client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _select_to_mdx(self, activity: SelectActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Select'
-        items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
+        heading = activity.title or "Select"
+        items = [
+            {
+                "question": str(i.question),
+                "options": [{"text": str(o.text), "correct": o.correct} for o in i.options],
+                "explanation": str(i.explanation) if i.explanation else "",
+            }
+            for i in activity.items
+        ]
         return f"### {self._escape_jsx(heading)}\n\n<Select client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _true_false_to_mdx(self, activity: TrueFalseActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'True or False'
-        items = [{'statement': str(i.statement), 'isTrue': i.correct, 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
+        heading = activity.title or "True or False"
+        items = [
+            {
+                "statement": str(i.statement),
+                "isTrue": i.correct,
+                "explanation": str(i.explanation) if i.explanation else "",
+                **_choice_payload(i),
+            }
+            for i in activity.items
+        ]
         return f"### {self._escape_jsx(heading)}\n\n<TrueFalse client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _fill_in_to_mdx(self, activity: FillInActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Fill In'
+        heading = activity.title or "Fill In"
         items = [
-            {"sentence": str(i.sentence), "answer": str(i.answer),
-             "options": [str(opt) for opt in i.options],
-             **({"explanation": str(i.explanation)} if i.explanation else {}),
-             **({"mode": str(i.mode)} if getattr(i, "mode", None) else {})}
+            {
+                "sentence": str(i.sentence),
+                "answer": str(i.answer),
+                "options": [str(opt) for opt in i.options],
+                **({"explanation": str(i.explanation)} if i.explanation else {}),
+                **({"mode": str(i.mode)} if getattr(i, "mode", None) else {}),
+                **_choice_payload(i),
+            }
             for i in activity.items
         ]
         return f"### {self._escape_jsx(heading)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
@@ -1960,8 +2307,8 @@ class ActivityParser:
             last_pos = 0
             blank_idx = 0
             # Find all { ... } blocks
-            for match in re.finditer(r'\{[^}]+\}', passage):
-                new_passage += passage[last_pos:match.start()]
+            for match in re.finditer(r"\{[^}]+\}", passage):
+                new_passage += passage[last_pos : match.start()]
                 new_passage += f"[___:{blank_idx}]"
                 last_pos = match.end()
                 blank_idx += 1
@@ -1971,28 +2318,50 @@ class ActivityParser:
             if blank_idx > 0:
                 passage = new_passage
 
-        blanks = [{'index': i, 'answer': str(b.answer), 'options': [str(opt) for opt in b.options]} for i, b in enumerate(activity.blanks)]
+        blanks = [
+            {"index": i, "answer": str(b.answer), "options": [str(opt) for opt in b.options]}
+            for i, b in enumerate(activity.blanks)
+        ]
         return f"### {self._escape_jsx(activity.title)}\n\n<Cloze client:only='react' passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _match_up_to_mdx(self, activity: MatchUpActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Match Up'
-        pairs = [{'left': str(p.left), 'right': str(p.right)} for p in activity.pairs]
-        return f"### {self._escape_jsx(heading)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        heading = activity.title or "Match Up"
+        pairs = [
+            {
+                "left": str(p.left),
+                "right": str(p.right),
+                **{
+                    name: value
+                    for name in ("left_record", "right_record", "why")
+                    if (value := getattr(p, name, None)) is not None
+                },
+            }
+            for p in activity.pairs
+        ]
+        roles = "".join(
+            f" {name}={{{json.dumps(value)}}}"
+            for name in ("left_role", "right_role")
+            if (value := getattr(activity, name)) is not None
+        )
+        return f"### {self._escape_jsx(heading)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}}{roles}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _group_sort_to_mdx(self, activity: GroupSortActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Group Sort'
+        heading = activity.title or "Group Sort"
         groups = {g.name: g.items for g in activity.groups}
-        return f"### {self._escape_jsx(heading)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        values = {g.name: g.value for g in activity.groups if g.value is not None}
+        grouping = f" grouping_feature={{{json.dumps(activity.grouping_feature)}}}" if activity.grouping_feature else ""
+        value_prop = f" group_values={{JSON.parse(`{self._dump_safe_json(values)}`)}}" if values else ""
+        return f"### {self._escape_jsx(heading)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}{grouping}{value_prop}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
-        heading = activity.title or 'Unjumble'
+        heading = activity.title or "Unjumble"
         items = []
         for i in activity.items:
-            item = {'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)}
+            item = {"jumbled": " / ".join(str(w) for w in i.words), "answer": str(i.answer)}
             if i.hint:
-                item['hint'] = str(i.hint)
+                item["hint"] = str(i.hint)
             if i.explanation:
-                item['explanation'] = str(i.explanation)
+                item["explanation"] = str(i.explanation)
             items.append(item)
         return f"### {self._escape_jsx(heading)}\n\n<Unjumble client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} />"
 
@@ -2010,17 +2379,18 @@ class ActivityParser:
             if i.error == i.sentence:
                 correct_form = str(i.answer)
                 options = [str(option) for option in i.options]
-            items.append({
-                "sentence": str(i.sentence),
-                "errorWord": str(i.error) if i.error is not None else None,
-                "correctForm": correct_form,
-                "options": unique_error_correction_options(options),
-                "explanation": str(i.explanation),
-            })
+            items.append(
+                {
+                    "sentence": str(i.sentence),
+                    "errorWord": str(i.error) if i.error is not None else None,
+                    "correctForm": correct_form,
+                    "options": unique_error_correction_options(options),
+                    "explanation": str(i.explanation),
+                    **_choice_payload(i),
+                }
+            )
         instruction_prop = (
-            f' instruction="{self._escape_jsx(str(activity.instruction))}"'
-            if activity.instruction
-            else ""
+            f' instruction="{self._escape_jsx(str(activity.instruction))}"' if activity.instruction else ""
         )
         anchor = ""
         if activity.anchor_id:
@@ -2031,30 +2401,33 @@ class ActivityParser:
         return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop} items={{JSON.parse(`{items_json}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity, is_ukrainian_forced: bool = False) -> str:
-        ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
-        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react' isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
+        ans = self._dump_safe_json(
+            [w for word in activity.answers for w in (str(word).split() if " " in str(word) else [str(word)])]
+        )
+        return f'### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only=\'react\' isUkrainian={{{"true" if is_ukrainian_forced else "false"}}}>\n  <MarkTheWordsActivity instruction="{self._escape_jsx(str(activity.instruction))}" text="{self._escape_jsx(str(activity.text))}" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>'
 
     def _translate_to_mdx(self, activity: TranslateActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Translate'
+        heading = activity.title or "Translate"
         items = []
         for item in activity.items:
             rendered_item = {
-                'source': str(item.source),
-                'options': [{'text': str(o.text), 'correct': o.correct} for o in item.options],
+                "source": str(item.source),
+                "options": [{"text": str(o.text), "correct": o.correct} for o in item.options],
             }
             if item.explanation:
-                rendered_item['explanation'] = str(item.explanation)
+                rendered_item["explanation"] = str(item.explanation)
+            rendered_item.update(_choice_payload(item))
             items.append(rendered_item)
         return f"### {self._escape_jsx(heading)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
-        heading = activity.title or 'Anagram'
+        heading = activity.title or "Anagram"
         items = [
             {
-                'scrambled': str(i.scrambled),
-                'answer': str(i.answer),
-                'hint': str(i.hint) if i.hint else '',
-                **({'explanation': str(i.explanation)} if i.explanation else {}),
+                "scrambled": str(i.scrambled),
+                "answer": str(i.answer),
+                "hint": str(i.hint) if i.hint else "",
+                **({"explanation": str(i.explanation)} if i.explanation else {}),
             }
             for i in activity.items
         ]
@@ -2065,10 +2438,7 @@ class ActivityParser:
         rows = []
         if activity.rubric:
             rubric_items = (
-                [
-                    {"criteria": key, "description": value}
-                    for key, value in activity.rubric.items()
-                ]
+                [{"criteria": key, "description": value} for key, value in activity.rubric.items()]
                 if isinstance(activity.rubric, dict)
                 else activity.rubric
             )
@@ -2083,7 +2453,9 @@ class ActivityParser:
                     rows.append(f"| {r} | | |")
         if is_ukrainian_forced:
             if rows:
-                rubric_md = "\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(rows)
+                rubric_md = "\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(
+                    rows
+                )
             if activity.peer_review_guidelines:
                 peer_items = "\n".join(f"- {item}" for item in activity.peer_review_guidelines)
                 rubric_md += f"\n\n#### Взаємоперевірка\n\n{peer_items}"
@@ -2114,30 +2486,48 @@ class ActivityParser:
 
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
         tasks = self._dump_safe_json(activity.tasks)
-        resource = self._dump_safe_json(activity.resource) if activity.resource else '{}'
+        resource = self._dump_safe_json(activity.resource) if activity.resource else "{}"
         # Seminar mode uses text/source; legacy uses context/resource
-        text_prop = f' text={{{json.dumps(activity.text, ensure_ascii=False)}}}' if activity.text else ''
-        source_prop = f' source={{{json.dumps(activity.source, ensure_ascii=False)}}}' if activity.source else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity client:only='react' title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\"{text_prop}{source_prop} resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        text_prop = f" text={{{json.dumps(activity.text, ensure_ascii=False)}}}" if activity.text else ""
+        source_prop = f" source={{{json.dumps(activity.source, ensure_ascii=False)}}}" if activity.source else ""
+        return f'### {self._escape_jsx(activity.title)}\n\n<ReadingActivity client:only=\'react\' title="{self._escape_jsx(activity.title)}" context="{self._escape_jsx(activity.context)}"{text_prop}{source_prop} resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} isUkrainian={{{"true" if is_ukrainian_forced else "false"}}} />'
 
     def _critical_analysis_to_mdx(self, activity: CriticalAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
         # Seminar mode uses targetText/questions/modelAnswers; legacy uses context/question/modelAnswer
-        target_text_prop = f' targetText={{{json.dumps(activity.target_text, ensure_ascii=False)}}}' if activity.target_text else ''
-        questions_prop = f' questions={{JSON.parse(`{self._dump_safe_json(activity.questions)}`)}}' if activity.questions else ''
-        model_answers_prop = f' modelAnswers={{JSON.parse(`{self._dump_safe_json(activity.model_answers)}`)}}' if activity.model_answers else ''
+        target_text_prop = (
+            f" targetText={{{json.dumps(activity.target_text, ensure_ascii=False)}}}" if activity.target_text else ""
+        )
+        questions_prop = (
+            f" questions={{JSON.parse(`{self._dump_safe_json(activity.questions)}`)}}" if activity.questions else ""
+        )
+        model_answers_prop = (
+            f" modelAnswers={{JSON.parse(`{self._dump_safe_json(activity.model_answers)}`)}}"
+            if activity.model_answers
+            else ""
+        )
         return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis client:only='react' title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{target_text_prop}{questions_prop}{model_answers_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _comparative_study_to_mdx(self, activity: ComparativeStudyActivity, is_ukrainian_forced: bool = False) -> str:
         # Seminar mode uses itemsToCompare/criteria/prompt; legacy uses sourceA/sourceB/task
-        items_prop = f' itemsToCompare={{JSON.parse(`{self._dump_safe_json(activity.items_to_compare)}`)}}' if activity.items_to_compare else ''
-        criteria_prop = f' criteria={{JSON.parse(`{self._dump_safe_json(activity.criteria)}`)}}' if activity.criteria else ''
-        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
+        items_prop = (
+            f" itemsToCompare={{JSON.parse(`{self._dump_safe_json(activity.items_to_compare)}`)}}"
+            if activity.items_to_compare
+            else ""
+        )
+        criteria_prop = (
+            f" criteria={{JSON.parse(`{self._dump_safe_json(activity.criteria)}`)}}" if activity.criteria else ""
+        )
+        prompt_prop = f" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}" if activity.prompt else ""
         return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy client:only='react' title=\"{self._escape_jsx(activity.title)}\" content={{{json.dumps(activity.source_a, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{items_prop}{criteria_prop}{prompt_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _ritual_sequencing_to_mdx(self, activity: RitualSequencingActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Ritual Sequencing'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        heading = activity.title or "Ritual Sequencing"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        model_prop = (
+            f" modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}" if activity.model_answer else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<RitualSequencing client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
@@ -2147,14 +2537,18 @@ class ActivityParser:
         )
 
     def _variant_comparison_to_mdx(self, activity: VariantComparisonActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Variant Comparison'
+        heading = activity.title or "Variant Comparison"
         variants = [
-            {'label': item.label, 'text': item.text, 'region': item.region, 'source': item.source}
+            {"label": item.label, "text": item.text, "region": item.region, "source": item.source}
             for item in activity.variants
         ]
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
-        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        prompt_prop = f" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}" if activity.prompt else ""
+        model_prop = (
+            f" modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}" if activity.model_answer else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<VariantComparison client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
@@ -2164,14 +2558,17 @@ class ActivityParser:
         )
 
     def _motif_formula_to_mdx(self, activity: MotifFormulaActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Motif / Formula'
+        heading = activity.title or "Motif / Formula"
         formulas = [
-            {'text': item.text, 'label': item.label, 'explanation': item.explanation}
-            for item in activity.formulas
+            {"text": item.text, "label": item.label, "explanation": item.explanation} for item in activity.formulas
         ]
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
-        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        prompt_prop = f" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}" if activity.prompt else ""
+        model_prop = (
+            f" modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}" if activity.model_answer else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<MotifFormula client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
@@ -2181,12 +2578,20 @@ class ActivityParser:
         )
 
     def _performance_to_mdx(self, activity: PerformanceActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or 'Performance'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        fragment_prop = f' fragment={{{json.dumps(activity.fragment, ensure_ascii=False)}}}' if activity.fragment else ''
-        self_check_prop = f' selfCheck={{JSON.parse(`{self._dump_safe_json(activity.self_check)}`)}}' if activity.self_check else ''
-        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
-        record_prop = f' showRecordButton={{{"true" if activity.show_record_button else "false"}}}'
+        heading = activity.title or "Performance"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        fragment_prop = (
+            f" fragment={{{json.dumps(activity.fragment, ensure_ascii=False)}}}" if activity.fragment else ""
+        )
+        self_check_prop = (
+            f" selfCheck={{JSON.parse(`{self._dump_safe_json(activity.self_check)}`)}}" if activity.self_check else ""
+        )
+        model_prop = (
+            f" modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}" if activity.model_answer else ""
+        )
+        record_prop = f" showRecordButton={{{'true' if activity.show_record_button else 'false'}}}"
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<PerformanceActivity client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
@@ -2204,18 +2609,30 @@ class ActivityParser:
         metadata_dict = {}
         if activity.source_metadata:
             if activity.source_metadata.author:
-                metadata_dict['author'] = activity.source_metadata.author
+                metadata_dict["author"] = activity.source_metadata.author
             if activity.source_metadata.date:
-                metadata_dict['date'] = activity.source_metadata.date
+                metadata_dict["date"] = activity.source_metadata.date
             if activity.source_metadata.type:
-                metadata_dict['type'] = activity.source_metadata.type
+                metadata_dict["type"] = activity.source_metadata.type
             if activity.source_metadata.context:
-                metadata_dict['context'] = activity.source_metadata.context
+                metadata_dict["context"] = activity.source_metadata.context
 
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        metadata_prop = f' sourceMetadata={{JSON.parse(`{self._dump_safe_json(metadata_dict)}`)}}' if metadata_dict else ''
-        criteria_prop = f' evaluationCriteria={{JSON.parse(`{self._dump_safe_json(activity.evaluation_criteria)}`)}}' if activity.evaluation_criteria else ''
-        questions_prop = f' guidingQuestions={{JSON.parse(`{self._dump_safe_json(activity.guiding_questions)}`)}}' if activity.guiding_questions else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        metadata_prop = (
+            f" sourceMetadata={{JSON.parse(`{self._dump_safe_json(metadata_dict)}`)}}" if metadata_dict else ""
+        )
+        criteria_prop = (
+            f" evaluationCriteria={{JSON.parse(`{self._dump_safe_json(activity.evaluation_criteria)}`)}}"
+            if activity.evaluation_criteria
+            else ""
+        )
+        questions_prop = (
+            f" guidingQuestions={{JSON.parse(`{self._dump_safe_json(activity.guiding_questions)}`)}}"
+            if activity.guiding_questions
+            else ""
+        )
 
         return f"### {self._escape_jsx(activity.title)}\n\n<SourceEvaluation client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} sourceText={{{json.dumps(activity.source_text, ensure_ascii=False)}}}{metadata_prop}{criteria_prop}{questions_prop} modelEvaluation={{{json.dumps(activity.model_evaluation, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
@@ -2224,53 +2641,77 @@ class ActivityParser:
         # Build positions array
         positions_data = []
         for pos in activity.positions:
-            pos_dict = {
-                'name': pos.name,
-                'proponents': pos.proponents,
-                'argument': pos.argument
-            }
+            pos_dict = {"name": pos.name, "proponents": pos.proponents, "argument": pos.argument}
             if pos.evidence:
-                pos_dict['evidence'] = pos.evidence
+                pos_dict["evidence"] = pos.evidence
             if pos.weaknesses:
-                pos_dict['weaknesses'] = pos.weaknesses
+                pos_dict["weaknesses"] = pos.weaknesses
             positions_data.append(pos_dict)
 
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        context_prop = f' historicalContext={{{json.dumps(activity.historical_context, ensure_ascii=False)}}}' if activity.historical_context else ''
-        tasks_prop = f' analysisTasks={{JSON.parse(`{self._dump_safe_json(activity.analysis_tasks)}`)}}' if activity.analysis_tasks else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        context_prop = (
+            f" historicalContext={{{json.dumps(activity.historical_context, ensure_ascii=False)}}}"
+            if activity.historical_context
+            else ""
+        )
+        tasks_prop = (
+            f" analysisTasks={{JSON.parse(`{self._dump_safe_json(activity.analysis_tasks)}`)}}"
+            if activity.analysis_tasks
+            else ""
+        )
 
         return f"### {self._escape_jsx(activity.title)}\n\n<Debate client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} debateQuestion={{{json.dumps(activity.debate_question, ensure_ascii=False)}}}{context_prop} positions={{JSON.parse(`{self._dump_safe_json(positions_data)}`)}}{tasks_prop} modelAnalysis={{{json.dumps(activity.model_analysis, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _etymology_trace_to_mdx(self, activity: EtymologyTraceActivity, is_ukrainian_forced: bool = False) -> str:
-        items = [{'word': str(i.word), 'modern': str(i.modern), 'evolution': str(i.evolution)} for i in activity.items]
+        items = [{"word": str(i.word), "modern": str(i.modern), "evolution": str(i.evolution)} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<EtymologyTrace client:only='react' title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _grammar_identify_to_mdx(self, activity: GrammarIdentifyActivity, is_ukrainian_forced: bool = False) -> str:
-        items = [{'text': str(i.text), 'form': str(i.form), 'answer': str(i.answer)} for i in activity.items]
+        items = [{"text": str(i.text), "form": str(i.form), "answer": str(i.answer)} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<GrammarIdentify client:only='react' title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _transcription_to_mdx(self, activity: TranscriptionActivity, is_ukrainian_forced: bool = False) -> str:
-        hints = self._dump_safe_json(activity.hints) if activity.hints else '[]'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        hints = self._dump_safe_json(activity.hints) if activity.hints else "[]"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return f"### {self._escape_jsx(activity.title)}\n\n<Transcription client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} answer={{{json.dumps(activity.answer, ensure_ascii=False)}}} hints={{JSON.parse(`{hints}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _paleography_analysis_to_mdx(self, activity: PaleographyAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
-        hotspots = [{'x': h.x, 'y': h.y, 'label': h.label, 'explanation': h.explanation} for h in activity.hotspots]
-        options = self._dump_safe_json(activity.options) if activity.options else '[]'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+    def _paleography_analysis_to_mdx(
+        self, activity: PaleographyAnalysisActivity, is_ukrainian_forced: bool = False
+    ) -> str:
+        hotspots = [{"x": h.x, "y": h.y, "label": h.label, "explanation": h.explanation} for h in activity.hotspots]
+        options = self._dump_safe_json(activity.options) if activity.options else "[]"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return f"### {self._escape_jsx(activity.title)}\n\n<PaleographyAnalysis client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} imageUrl={{{json.dumps(activity.image_url, ensure_ascii=False)}}} hotspots={{JSON.parse(`{self._dump_safe_json(hotspots)}`)}} options={{JSON.parse(`{options}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _dialect_comparison_to_mdx(self, activity: DialectComparisonActivity, is_ukrainian_forced: bool = False) -> str:
-        features = [{'featureName': f.feature_name, 'valueA': f.value_a, 'valueB': f.value_b, 'explanation': f.explanation} for f in activity.features]
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        label_a_prop = f' labelA={{{json.dumps(activity.label_a, ensure_ascii=False)}}}' if activity.label_a else ''
-        label_b_prop = f' labelB={{{json.dumps(activity.label_b, ensure_ascii=False)}}}' if activity.label_b else ''
+        features = [
+            {"featureName": f.feature_name, "valueA": f.value_a, "valueB": f.value_b, "explanation": f.explanation}
+            for f in activity.features
+        ]
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        label_a_prop = f" labelA={{{json.dumps(activity.label_a, ensure_ascii=False)}}}" if activity.label_a else ""
+        label_b_prop = f" labelB={{{json.dumps(activity.label_b, ensure_ascii=False)}}}" if activity.label_b else ""
         return f"### {self._escape_jsx(activity.title)}\n\n<DialectComparison client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} textA={{{json.dumps(activity.text_a, ensure_ascii=False)}}} textB={{{json.dumps(activity.text_b, ensure_ascii=False)}}}{label_a_prop}{label_b_prop} features={{JSON.parse(`{self._dump_safe_json(features)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _translation_critique_to_mdx(self, activity: TranslationCritiqueActivity, is_ukrainian_forced: bool = False) -> str:
-        translations = [{'translator': t.translator, 'text': t.text, 'accuracyScore': t.accuracy_score, 'notes': t.notes} for t in activity.translations]
-        focus_points = self._dump_safe_json(activity.focus_points) if activity.focus_points else '[]'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+    def _translation_critique_to_mdx(
+        self, activity: TranslationCritiqueActivity, is_ukrainian_forced: bool = False
+    ) -> str:
+        translations = [
+            {"translator": t.translator, "text": t.text, "accuracyScore": t.accuracy_score, "notes": t.notes}
+            for t in activity.translations
+        ]
+        focus_points = self._dump_safe_json(activity.focus_points) if activity.focus_points else "[]"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return f"### {self._escape_jsx(activity.title)}\n\n<TranslationCritique client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} translations={{JSON.parse(`{self._dump_safe_json(translations)}`)}} focusPoints={{JSON.parse(`{focus_points}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     # ------------------------------------------------------------------
@@ -2278,56 +2719,57 @@ class ActivityParser:
     # ------------------------------------------------------------------
 
     def _classify_to_mdx(self, activity: ClassifyActivity) -> str:
-        cats = [{'label': c.label, 'items': c.items} for c in activity.categories]
-        props = f'categories={{JSON.parse(`{self._dump_safe_json(cats)}`)}}'
+        cats = [{"label": c.label, "items": c.items} for c in activity.categories]
+        props = f"categories={{JSON.parse(`{self._dump_safe_json(cats)}`)}}"
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         if activity.instruction:
             props += f' instruction="{self._escape_jsx(activity.instruction)}"'
-        heading = activity.title or 'Classify'
+        heading = activity.title or "Classify"
         return f"### {self._escape_jsx(heading)}\n\n<Classify client:only='react' {props} />"
 
     def _image_to_letter_to_mdx(self, activity: ImageToLetterActivity) -> str:
         items = []
         for i in activity.items:
-            entry: dict[str, Any] = {'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors}
+            entry: dict[str, Any] = {"emoji": i.emoji, "answer": i.answer, "distractors": i.distractors}
             if i.note:
-                entry['note'] = i.note
+                entry["note"] = i.note
             if i.explanation:
-                entry['explanation'] = i.explanation
+                entry["explanation"] = i.explanation
+            entry.update(_choice_payload(i))
             items.append(entry)
-        props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
+        props = f"items={{JSON.parse(`{self._dump_safe_json(items)}`)}}"
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         props += self._instruction_prop(activity.instruction)
-        heading = activity.title or 'Image to Letter'
+        heading = activity.title or "Image to Letter"
         return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:only='react' {props} />"
 
     def _watch_and_repeat_to_mdx(self, activity: WatchAndRepeatActivity) -> str:
         items = []
         for i in activity.items:
-            entry: dict[str, str] = {'video': i.video}
+            entry: dict[str, str] = {"video": i.video}
             if i.letter:
-                entry['letter'] = i.letter
+                entry["letter"] = i.letter
             if i.word:
-                entry['word'] = i.word
+                entry["word"] = i.word
             if i.sound:
-                entry['sound'] = i.sound
+                entry["sound"] = i.sound
             if i.note:
-                entry['note'] = i.note
+                entry["note"] = i.note
             if i.explanation:
-                entry['explanation'] = i.explanation
+                entry["explanation"] = i.explanation
             items.append(entry)
-        props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
+        props = f"items={{JSON.parse(`{self._dump_safe_json(items)}`)}}"
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         if activity.instruction:
             props += self._instruction_prop(activity.instruction)
-        heading = activity.title or 'Watch and Repeat'
+        heading = activity.title or "Watch and Repeat"
         return f"### {self._escape_jsx(heading)}\n\n<WatchAndRepeat client:only='react' {props} />"
 
     def _observe_to_mdx(self, activity: ObserveActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or activity.instruction or 'Observe'
+        heading = activity.title or activity.instruction or "Observe"
         props = (
             f"examples={{JSON.parse(`{self._dump_safe_json(activity.examples)}`)}} "
             f"prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} "
@@ -2336,50 +2778,60 @@ class ActivityParser:
         return f"### {self._escape_jsx(heading)}\n\n<Observe client:only='react' {props} />"
 
     def _order_to_mdx(self, activity: OrderActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or activity.instruction or 'Order'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        heading = activity.title or activity.instruction or "Order"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         is_ukrainian = is_ukrainian_forced or activity.is_ukrainian
+        explanation_prop = (
+            f" explanation={{{json.dumps(activity.explanation, ensure_ascii=False)}}}" if activity.explanation else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<Order client:only='react' items={{JSON.parse(`{self._dump_safe_json(activity.items)}`)}} "
             f"correct_order={{JSON.parse(`{self._dump_safe_json(activity.correct_order)}`)}}"
-            f"{instruction_prop} isUkrainian={{{'true' if is_ukrainian else 'false'}}} />"
+            f"{instruction_prop}{explanation_prop} isUkrainian={{{'true' if is_ukrainian else 'false'}}} />"
         )
 
     def _count_syllables_to_mdx(self, activity: CountSyllablesActivity) -> str:
-        heading = activity.title or activity.instruction or 'Count Syllables'
+        heading = activity.title or activity.instruction or "Count Syllables"
         items = []
         for item in activity.items:
-            payload: dict[str, Any] = {'word': item.word, 'correct': item.correct}
+            payload: dict[str, Any] = {"word": item.word, "correct": item.correct}
             if item.translation:
-                payload['translation'] = item.translation
+                payload["translation"] = item.translation
             if item.explanation:
-                payload['explanation'] = item.explanation
+                payload["explanation"] = item.explanation
             items.append(payload)
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        max_prop = f' maxCount={{{activity.max_count}}}' if activity.max_count is not None else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        max_prop = f" maxCount={{{activity.max_count}}}" if activity.max_count is not None else ""
         return f"### {self._escape_jsx(heading)}\n\n<CountSyllables client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{max_prop} />"
 
     def _divide_words_to_mdx(self, activity: DivideWordsActivity) -> str:
-        heading = activity.title or activity.instruction or 'Divide Words'
+        heading = activity.title or activity.instruction or "Divide Words"
         items = []
         for item in activity.items:
-            payload = {'word': item.word, 'answer': item.answer}
+            payload = {"word": item.word, "answer": item.answer}
             if item.hint:
-                payload['hint'] = item.hint
+                payload["hint"] = item.hint
             if item.explanation:
-                payload['explanation'] = item.explanation
+                payload["explanation"] = item.explanation
             items.append(payload)
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return f"### {self._escape_jsx(heading)}\n\n<DivideWords client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
-    def _highlight_morphemes_to_mdx(self, activity: HighlightMorphemesActivity, is_ukrainian_forced: bool = False) -> str:
-        heading = activity.title or activity.instruction or 'Highlight Morphemes'
-        morphemes = [
-            {'word': item.word, 'morpheme': item.morpheme, 'type': item.type}
-            for item in activity.morphemes
-        ]
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+    def _highlight_morphemes_to_mdx(
+        self, activity: HighlightMorphemesActivity, is_ukrainian_forced: bool = False
+    ) -> str:
+        heading = activity.title or activity.instruction or "Highlight Morphemes"
+        morphemes = [{"word": item.word, "morpheme": item.morpheme, "type": item.type} for item in activity.morphemes]
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<HighlightMorphemes client:only='react' isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>\n"
@@ -2390,52 +2842,61 @@ class ActivityParser:
         )
 
     def _letter_grid_to_mdx(self, activity: LetterGridActivity) -> str:
-        heading = activity.title or 'Letter Grid'
-        props = f'letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}'
+        heading = activity.title or "Letter Grid"
+        props = f"letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}"
         props += self._instruction_prop(activity.instruction)
         return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' {props} />"
 
     def _phrase_table_to_mdx(self, activity: PhraseTableActivity) -> str:
-        heading = activity.title or 'Phrases'
+        heading = activity.title or "Phrases"
         groups = []
         for g in activity.groups:
             phrases = []
             for p in g.phrases:
-                entry: dict[str, str] = {'phrase': p.phrase}
+                entry: dict[str, str] = {"phrase": p.phrase}
                 if p.context:
-                    entry['context'] = p.context
+                    entry["context"] = p.context
                 if p.emoji:
-                    entry['emoji'] = p.emoji
+                    entry["emoji"] = p.emoji
                 phrases.append(entry)
-            groups.append({
-                'label': g.label,
-                'function': g.label,
-                'phrases': phrases,
-            })
-        props = f'groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}'
+            groups.append(
+                {
+                    "label": g.label,
+                    "function": g.label,
+                    "phrases": phrases,
+                }
+            )
+        props = f"groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}"
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         props += self._instruction_prop(activity.instruction)
         return f"### {self._escape_jsx(heading)}\n\n<PhraseTable client:only='react' {props} />"
 
     def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
-        heading = activity.title or activity.instruction or 'Odd One Out'
+        heading = activity.title or activity.instruction or "Odd One Out"
         items = [
             {
-                'words': item.words,
-                'correct': item.correct,
-                'explanation': item.explanation,
-                **({'prompt': item.prompt} if item.prompt else {}),
+                "words": item.words,
+                "correct": item.correct,
+                "explanation": item.explanation,
+                **({"prompt": item.prompt} if item.prompt else {}),
+                **_choice_payload(item),
             }
             for item in activity.items
         ]
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
         return f"### {self._escape_jsx(heading)}\n\n<OddOneOut client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _pick_syllables_to_mdx(self, activity: PickSyllablesActivity) -> str:
-        heading = activity.title or activity.instruction or 'Pick Syllables'
-        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        explanation_prop = f' explanation={{{json.dumps(activity.explanation, ensure_ascii=False)}}}' if activity.explanation else ''
+        heading = activity.title or activity.instruction or "Pick Syllables"
+        instruction_prop = (
+            f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
+        )
+        explanation_prop = (
+            f" explanation={{{json.dumps(activity.explanation, ensure_ascii=False)}}}" if activity.explanation else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<PickSyllables client:only='react'{instruction_prop} "
