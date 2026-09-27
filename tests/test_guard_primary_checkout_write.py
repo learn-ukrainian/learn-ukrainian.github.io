@@ -83,7 +83,7 @@ hook = _load_hook()
         ("printf x >> a.log", ["a.log"]),
         ("echo x &> both.txt", ["both.txt"]),
         ("echo x 2>err.txt", ["err.txt"]),
-        ("build > /dev/null", ["/dev/null"]),
+        ("build > /dev/null", []),
         # tee (with wrapper + append flag).
         ("cat a | tee out.txt", ["out.txt"]),
         ("cat a | tee -a log.txt", ["log.txt"]),
@@ -110,6 +110,8 @@ def test_bash_write_targets(command, expected):
         "echo 'a > b'",
         # fd duplication is not a file write.
         "echo x 2>&1",
+        "echo x >&2",
+        "echo x 2>/dev/null",
         # sed without an in-place flag does not write a file.
         'sed "s/x/y/" real.py',
     ],
@@ -231,9 +233,7 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
         redirect_stderr(stderr),
     ):
         returncode = hook.main()
-    return subprocess.CompletedProcess(
-        [_python(), str(HOOK_PATH)], returncode, stdout.getvalue(), stderr.getvalue()
-    )
+    return subprocess.CompletedProcess([_python(), str(HOOK_PATH)], returncode, stdout.getvalue(), stderr.getvalue())
 
 
 def _write_payload(repo: Path, tool: str, rel: str) -> dict:
@@ -868,6 +868,86 @@ def test_bash_expanded_variable_write_outside_primary_allowed(repo: Path, comman
     assert result.returncode == 0, result.stderr
 
 
+def test_external_tee_with_null_redirect_allowed(repo: Path):
+    result = _bash(repo, "S=/tmp/claude-1000; tee $S/orig-1.md >/dev/null")
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'tee ">"',
+        'cp /tmp/x ">"',
+        'mv /tmp/x ">>"',
+        'tee ">" /tmp/also-written',
+        "git commit -m fix#123 && tee AGENTS.md",
+    ],
+)
+def test_quoted_redirect_spelling_is_still_a_primary_write(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status # echo x > AGENTS.md",
+        "echo hi # $GH_TOKEN",
+        "echo hi\t# $GH_TOKEN",
+        "echo x # c\r\necho safe",
+        "# tee AGENTS.md",
+        "echo hi # cat .env",
+        "echo $(printf '# hidden') # tee AGENTS.md",
+        "echo `printf '# hidden'` # tee AGENTS.md",
+    ],
+)
+def test_bash_comments_do_not_write_primary_checkout(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git commit -m fix#123 && tee AGENTS.md",
+        "echo x # c\ntee AGENTS.md",
+        "echo '#' ; tee AGENTS.md",
+        "echo x;# c\ntee AGENTS.md",
+        "echo hi # <<EOF\ntee AGENTS.md # still a command",
+        "echo hi\r#; tee AGENTS.md",
+        "echo hi\r#$(tee AGENTS.md)",
+        "echo hi\u00a0#; tee AGENTS.md",
+        "echo x # c\r\ntee AGENTS.md",
+        "echo x >#AGENTS.md",
+    ],
+)
+def test_bash_comments_preserve_real_primary_writes(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+@pytest.mark.parametrize("blank", ["\r", "\v", "\f", "\u00a0", "\u2003", "\u2028"])
+def test_leading_non_bash_blank_does_not_hide_primary_write(repo: Path, blank: str):
+    result = _bash(repo, f"{blank}#; tee AGENTS.md")
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+@pytest.mark.parametrize("blank", [" ", "\t"])
+def test_leading_bash_blank_keeps_primary_comment_inert(repo: Path, blank: str):
+    result = _bash(repo, f"{blank}#; tee AGENTS.md")
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
+def test_bash_comment_starts_after_control_operator_in_primary_hook(operator):
+    assert hook._strip_shell_comments(f"echo hi{operator}# hidden\ntee AGENTS.md") == (
+        f"echo hi{operator}\ntee AGENTS.md"
+    )
+
+
 def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"W={worktree}; git -C $W add f")
@@ -1067,7 +1147,9 @@ def test_issue_8785_final_component_can_match_primary(repo: Path, template: str)
     assert "undecidable_glob_write_target" in result.stderr
 
 
-@pytest.mark.parametrize("pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"])
+@pytest.mark.parametrize(
+    "pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"]
+)
 def test_issue_8785_parent_pattern_matching_primary_blocks(repo: Path, pattern: str):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)

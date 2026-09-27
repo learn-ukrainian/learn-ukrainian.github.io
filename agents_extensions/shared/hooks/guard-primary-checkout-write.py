@@ -292,6 +292,7 @@ _CONTROL_OPS = frozenset({"&&", "||", ";", ";;", "|", "|&", "&", "(", ")", "\n"}
 # ``>&`` duplicates a descriptor only for a numeric operand (or closes it for
 # ``-``); otherwise it opens a file. ``<>`` opens read-write and can create.
 _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
+_REDIRECT_OPS = _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}
 
 
 def _strip_quotes_for_heredoc(token: str) -> str:
@@ -304,6 +305,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
         lexer.commenters = ""
         tokens = list(lexer)
     except ValueError:
@@ -354,14 +356,14 @@ def _strip_heredoc_bodies(command: str) -> str:
     if "<<" not in command:
         return command
 
-    lines = command.splitlines()
+    lines = command.split("\n")
     kept: list[str] = []
     i = 0
     n = len(lines)
     while i < n:
         kept.append(lines[i])
         i += 1
-        pending = _heredoc_delimiters(lines[i - 1])
+        pending = _heredoc_delimiters(_strip_shell_comments(lines[i - 1]))
         if not pending:
             continue
         body_start = i
@@ -453,11 +455,10 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
-# Characters the shell keeps literal inside quotes (or after a backslash) but
-# that the expansion pass below would act on. They are swapped for private-use
-# sentinels before shlex strips the quotes, so ``'$HOME/x'``, ``"~/x"`` and
-# ``"A=b"`` stay literal, and are restored in every emitted word (#8500).
-_LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": ""}
+# Preserve literal expansion characters and redirect punctuation through shlex,
+# which otherwise strips quotes before redirect tokens can be distinguished from
+# argv words. Restore each sentinel in the expanded word (#8500, #8887).
+_LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": "", "<": "", ">": "", "&": ""}
 _UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
 
 # Shell operators a punctuation run is split into, longest first. shlex returns
@@ -489,12 +490,72 @@ _SHELL_OPERATORS = (
 _PUNCTUATION = frozenset("();<>|&\n")
 
 
-def _mask_quoted_literals(command: str) -> str:
-    """Replace quote- or backslash-protected ``$ ` ~ =`` with sentinels.
+def _strip_shell_comments(command: str) -> str:
+    """Remove Bash comments at word boundaries, retaining each newline.
 
-    Inside single quotes all four are literal; inside double quotes ``~`` and
-    ``=`` are (``$`` and backtick still expand); a backslash protects ``$`` and
-    backtick anywhere outside single quotes and ``~`` / ``=`` outside quotes.
+    Keep hashes inside words, quotes, command substitutions, and backticks for
+    the existing tokenizer. Heredoc bodies are removed before this is called
+    on the complete command.
+    """
+    out: list[str] = []
+    quote = ""
+    in_backticks = False
+    substitution_depth = 0
+    substitution_outer_quote = ""
+    word_start = True
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            if command[i + 1] != "\n":
+                word_start = False
+            i += 2
+            continue
+        if char == "'" and quote != '"' and not in_backticks:
+            quote = "" if quote == "'" else "'"
+            word_start = False
+        elif char == '"' and quote != "'" and not in_backticks:
+            quote = "" if quote == '"' else '"'
+            word_start = False
+        elif char == "`" and quote != "'":
+            in_backticks = not in_backticks
+            word_start = False
+        elif quote != "'" and not in_backticks and command.startswith("$(", i):
+            if not substitution_depth:
+                substitution_outer_quote = quote
+                quote = ""
+            substitution_depth += 1
+            out.append("$(")
+            word_start = False
+            i += 2
+            continue
+        elif substitution_depth and not quote and not in_backticks and char == "(":
+            substitution_depth += 1
+        elif substitution_depth and not quote and not in_backticks and char == ")":
+            substitution_depth -= 1
+            if not substitution_depth:
+                quote = substitution_outer_quote
+        elif not quote and not in_backticks and not substitution_depth:
+            if char == "#" and word_start:
+                end = command.find("\n", i)
+                if end < 0:
+                    break
+                i = end
+                continue
+            # Bash blanks are ASCII; keep # after redirects as a filename for the guard.
+            word_start = char in " \t\n;&|()"
+        out.append(char)
+        i += 1
+    return "".join(out)
+
+
+def _mask_quoted_literals(command: str) -> str:
+    """Preserve quote- or backslash-protected expansion and redirect characters.
+
+    Inside single quotes expansion characters are literal; inside double quotes
+    ``~`` and ``=`` are literal (``$`` and backtick still expand). Redirect
+    characters are literal inside either quote style or after a backslash.
     """
     out: list[str] = []
     in_single = False
@@ -504,7 +565,7 @@ def _mask_quoted_literals(command: str) -> str:
         char = command[i]
         if char == "\\" and not in_single and i + 1 < len(command):
             following = command[i + 1]
-            if following in "$`" or (not in_double and following in "~="):
+            if following in "$`<>&" or (not in_double and following in "~="):
                 out.append(_LITERAL_SENTINELS[following])
             else:
                 out.extend((char, following))
@@ -514,7 +575,7 @@ def _mask_quoted_literals(command: str) -> str:
             in_single = not in_single
         elif char == '"' and not in_single:
             in_double = not in_double
-        elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=")):
+        elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=<>&")):
             char = _LITERAL_SENTINELS[char]
         out.append(char)
         i += 1
@@ -547,7 +608,9 @@ def _tokenize(command: str) -> list[str]:
     """
     try:
         lexer = shlex.shlex(
-            _mask_quoted_literals(_collapse_shell_line_continuations(_strip_heredoc_bodies(command))),
+            _mask_quoted_literals(
+                _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+            ),
             posix=True,
             punctuation_chars="();<>|&\n",
         )
@@ -556,7 +619,8 @@ def _tokenize(command: str) -> list[str]:
         # operator. Otherwise adjacent lines collapse into one segment: a later
         # command's option (for example `find -print`) can be mistaken for an
         # earlier `sed` invocation's `-i` flag and produce bogus write targets.
-        lexer.whitespace = " \t\r"
+        lexer.whitespace = " \t"
+        lexer.commenters = ""
         return [part for token in lexer for part in _split_operator_run(token)]
     except ValueError:
         # Unbalanced quotes / un-tokenizable — fail open (the shell will reject
@@ -572,10 +636,10 @@ _VAR_REF_RE = re.compile(r"\$(?:([A-Za-z_][A-Za-z0-9_]*)|\{([A-Za-z_][A-Za-z0-9_
 # ``NAME=``, ``NAME+=`` and ``NAME[i]=`` (group 2 subscript, group 3 ``+``).
 _ASSIGN_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(\[[^\]]*\])?(\+?)=", re.DOTALL)
 # The identifier a token starts with when an operator or the end follows it.
-_LEADING_NAME_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?=$|[\s=+\[\-*/%<>^|&!,:])")
+_LEADING_NAME_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?=$|[ \t\n=+\[\-*/%<>^|&!,:])")
 # ``${NAME=x}`` / ``${NAME:=x}`` assign as a side effect of expanding.
 _ASSIGNING_EXPANSION_RE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*):?=")
-_WHITESPACE_RE = re.compile(r"\s")
+_WHITESPACE_RE = re.compile(r"[ \t\n]")
 
 # Builtins whose ``NAME=value`` operands assign in the current shell.
 _DECLARATION_BUILTINS = frozenset({"export", "declare", "typeset", "local", "readonly"})
@@ -606,25 +670,29 @@ class ShellWord(str):
     the offset of the first expansion whose value the guard cannot know
     (``None`` when the word resolved completely); from that offset on the text
     is the raw, unexpanded remainder, kept for messages. ``raw`` is the word as
-    written.
+    written. ``shell_redirect`` records an unquoted redirect operator before
+    expansion restores any quote-protected punctuation.
     """
 
     unresolved_at: Optional[int]  # noqa: UP045 - Python 3.9 parser
     raw: str
     base: str | None
     decision_reason: str | None
+    shell_redirect: bool
 
     def __new__(
         cls,
         text: str,
         unresolved_at: Optional[int] = None,  # noqa: UP045 - Python 3.9 parser
         raw: Optional[str] = None,  # noqa: UP045 - Python 3.9 parser
+        shell_redirect: bool = False,
     ) -> ShellWord:
         word = super().__new__(cls, text)
         word.unresolved_at = unresolved_at
         word.raw = text if raw is None else raw
         word.base = None
         word.decision_reason = None
+        word.shell_redirect = shell_redirect
         return word
 
     def tail(self, start: int) -> ShellWord:
@@ -656,6 +724,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
     marks the word unresolved at that offset.
     """
     raw = token.translate(_UNMASK)
+    shell_redirect = token in _REDIRECT_OPS
     out: list[str] = []
     i = 0
     if token.startswith("~"):
@@ -665,7 +734,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
         if not user:
             home = lookup("HOME")
             if home is None:
-                return ShellWord(raw, 0, raw)
+                return ShellWord(raw, 0, raw, shell_redirect=shell_redirect)
             out.append(home)
             i = end
         elif re.fullmatch(r"[A-Za-z0-9._-]+", user):
@@ -680,13 +749,13 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
             value = lookup(match.group(1) or match.group(2)) if match else None
             if match is None or value is None:
                 prefix = "".join(out).translate(_UNMASK)
-                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw)
+                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw, shell_redirect=shell_redirect)
             out.append(value)
             i = match.end()
             continue
         out.append(char)
         i += 1
-    return ShellWord("".join(out).translate(_UNMASK), None, raw)
+    return ShellWord("".join(out).translate(_UNMASK), None, raw, shell_redirect=shell_redirect)
 
 
 class _Expander:
@@ -902,13 +971,16 @@ def _redirect_targets(tokens: list[str]) -> list[str]:
     """Files opened for writing by shell redirections."""
     targets: list[str] = []
     for i, tok in enumerate(tokens):
-        if tok in _FILE_REDIRECTS and i + 1 < len(tokens):
+        if isinstance(tok, ShellWord) and tok.shell_redirect and tok in _FILE_REDIRECTS and i + 1 < len(tokens):
             dest = tokens[i + 1]
             # ``>&1`` duplicates a descriptor; ``>&-`` closes it. Ordinary
             # ``> 123`` writes a file named 123, so only ``>&`` gets this rule.
             if tok == ">&" and (dest.isdigit() or dest == "-"):
                 continue
             if tok != ">&" and dest.startswith("&"):
+                continue
+            # The null device discards output; it cannot dirty a checkout.
+            if dest == "/dev/null":
                 continue
             targets.append(dest)
     return targets
@@ -1174,12 +1246,16 @@ def _long_tail_targets(args: list[str], command: str) -> list[str]:
             words.append(arg)
         # Absolute embedded values and SQLite dot commands.
         for word in tuple(words):
-            for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", word):
+            for match in re.finditer(r"(?:^|[ \t\n]|=|-[A-Za-z]+)(/[^ \t\n]+)", word):
                 words.append(
                     ShellWord(match.group(1), getattr(word, "unresolved_at", None), getattr(word, "raw", word))
                 )
-            if any(char.isspace() for char in word):
-                words.extend(ShellWord(part, getattr(word, "unresolved_at", None)) for part in str(word).split())
+            if any(char in " \t\n" for char in word):
+                words.extend(
+                    ShellWord(part, getattr(word, "unresolved_at", None))
+                    for part in re.split(r"[ \t\n]+", str(word))
+                    if part
+                )
         targets.extend(word for word in words if word and not str(word).startswith("-") and "://" not in word)
     return list(dict.fromkeys(targets))
 
@@ -1490,6 +1566,23 @@ def _writer_targets(
             target.base = redirect_cwd
             if redirect_cwd is None and not Path(target).is_absolute():
                 target.decision_reason = "undecidable_write_target_after_cd"
+    # A shell redirect is not an argv operand of tee/cp/etc. The redirected
+    # file was already classified above; leaving `>` in argv makes a harmless
+    # `tee /tmp/file >/dev/null` look like a write to a file named `>`.
+    without_redirects: list[str] = []
+    index = 0
+    while index < len(segment):
+        if (
+            isinstance(segment[index], ShellWord)
+            and segment[index].shell_redirect
+            and segment[index] in _REDIRECT_OPS
+            and index + 1 < len(segment)
+        ):
+            index += 2
+        else:
+            without_redirects.append(segment[index])
+            index += 1
+    segment = without_redirects
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
@@ -2261,7 +2354,9 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
         directory_glob = first < len(parts) - 1 or "**" in word
         may_reach_primary = prefix == main_root
         if prefix in main_root.parents:
-            may_reach_primary = directory_glob or _final_component_matches(parts[-1], main_root.relative_to(prefix).parts[0])
+            may_reach_primary = directory_glob or _final_component_matches(
+                parts[-1], main_root.relative_to(prefix).parts[0]
+            )
         if main_root in prefix.parents:
             may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
         if may_reach_primary:
@@ -2290,7 +2385,7 @@ def main() -> int:
 
     if tool_name == "Bash":
         command = str(tool_input.get("command") or "")
-        if not command.strip():
+        if not command.strip(" \t\n"):
             return 0
         raw_targets = []
     else:

@@ -70,6 +70,87 @@ def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
 @pytest.mark.parametrize(
     "cmd",
     [
+        "git commit -m fix#123 && cat .env",
+        "echo hi#$GH_TOKEN",
+    ],
+)
+def test_unquoted_midword_hash_keeps_secret_checks_active(monkeypatch, capsys, cmd):
+    assert _run(monkeypatch, cmd) == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("blank", ["\r", "\v", "\f", "\u00a0"])
+def test_non_bash_blank_before_hash_keeps_secret_checks_active(monkeypatch, capsys, blank):
+    assert _run(monkeypatch, f"echo hi{blank}#$GH_TOKEN") == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "\r#; echo $GH_TOKEN",
+        "\v#; cat .env",
+        "\u00a0#; cat .env",
+        "\u2003#; echo $GH_TOKEN",
+        "\f#; cat .env",
+        "\u2028#; echo $GH_TOKEN",
+    ],
+)
+def test_leading_non_bash_blank_does_not_hide_secret_command(monkeypatch, capsys, command):
+    assert _run(monkeypatch, command) == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("blank", [" ", "\t"])
+def test_leading_bash_blank_keeps_comment_inert(monkeypatch, blank):
+    assert _run(monkeypatch, f"{blank}#; echo $GH_TOKEN") == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status # echo x > AGENTS.md",
+        "echo hi # $GH_TOKEN",
+        "echo hi\t# $GH_TOKEN",
+        "echo hi # $GH_TOKEN\r\necho safe",
+        "# tee AGENTS.md",
+        "echo hi # cat .env",
+        "echo '#' ; echo safe",
+        "echo $(printf '# hidden') # $GH_TOKEN",
+        "echo `printf '# hidden'` # cat .env",
+        "echo hi # <<EOF\ncat .env",
+    ],
+)
+def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git commit -m fix#123 && cat .env",
+        "echo hi#$GH_TOKEN",
+        "echo '#' ; cat .env",
+    ],
+)
+def test_bash_comments_keep_executable_secret_words(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_bash_comment_stripping_keeps_next_line_for_secret_parser():
+    # Parsing newline separators in this hook is tracked separately.
+    assert guard._strip_shell_comments("echo hi # c; cat .env\ncat .env") == "echo hi \ncat .env"
+    assert guard._strip_heredoc_bodies("echo hi # <<EOF\ncat .env") == "echo hi # <<EOF\ncat .env"
+
+
+@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
+def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
+    assert guard._strip_shell_comments(f"echo hi{operator}# hidden\ncat .env") == (f"echo hi{operator}\ncat .env")
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
         "env | cut -d= -f1",
         '[ -n "${X:-}" ] && echo SET',
         "cat README.md",
@@ -99,6 +180,15 @@ def test_environment_override_allowed(monkeypatch):
 
 def test_single_quoted_secret_var_literal_allowed(monkeypatch):
     assert _run(monkeypatch, "echo '$GH_TOKEN'") == 0
+
+
+def test_unrelated_echo_after_secret_export_allowed(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "server=$s"') == 0
+    assert _run(monkeypatch, 'HCLOUD_TOKEN=placeholder echo "server=$s"') == 0
+
+
+def test_echo_of_exported_secret_still_blocked(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "$HCLOUD_TOKEN"') == 2
 
 
 @pytest.mark.parametrize(

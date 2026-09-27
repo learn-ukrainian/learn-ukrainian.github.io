@@ -59,12 +59,80 @@ def _read_payload() -> dict:
 
 
 def _command(payload: dict) -> str:
-    return ((payload.get("tool_input") or {}).get("command") or "").strip()
+    return (payload.get("tool_input") or {}).get("command") or ""
+
+
+def _strip_shell_comments(command: str) -> str:
+    """Remove Bash comments at word boundaries, retaining each newline.
+
+    Keep hashes inside words, quotes, command substitutions, and backticks for
+    the existing tokenizer. Heredoc bodies are removed before this is called
+    on the complete command.
+    """
+    out: list[str] = []
+    quote = ""
+    in_backticks = False
+    substitution_depth = 0
+    substitution_outer_quote = ""
+    word_start = True
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            if command[i + 1] != "\n":
+                word_start = False
+            i += 2
+            continue
+        if char == "'" and quote != '"' and not in_backticks:
+            quote = "" if quote == "'" else "'"
+            word_start = False
+        elif char == '"' and quote != "'" and not in_backticks:
+            quote = "" if quote == '"' else '"'
+            word_start = False
+        elif char == "`" and quote != "'":
+            in_backticks = not in_backticks
+            word_start = False
+        elif quote != "'" and not in_backticks and command.startswith("$(", i):
+            if not substitution_depth:
+                substitution_outer_quote = quote
+                quote = ""
+            substitution_depth += 1
+            out.append("$(")
+            word_start = False
+            i += 2
+            continue
+        elif substitution_depth and not quote and not in_backticks and char == "(":
+            substitution_depth += 1
+        elif substitution_depth and not quote and not in_backticks and char == ")":
+            substitution_depth -= 1
+            if not substitution_depth:
+                quote = substitution_outer_quote
+        elif not quote and not in_backticks and not substitution_depth:
+            if char == "#" and word_start:
+                end = command.find("\n", i)
+                if end < 0:
+                    break
+                i = end
+                continue
+            # Bash blanks are ASCII; keep # after redirects as a filename for the guard.
+            word_start = char in " \t\n;&|()"
+        out.append(char)
+        i += 1
+    return "".join(out)
 
 
 def _tokenize(command: str) -> list[str]:
     try:
-        return shlex.split(_strip_heredoc_bodies(command), posix=False)
+        lexer = shlex.shlex(
+            _strip_shell_comments(_strip_heredoc_bodies(command)),
+            posix=False,
+            punctuation_chars=";&|",
+        )
+        lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
+        lexer.commenters = ""
+        return list(lexer)
     except ValueError:
         return []
 
@@ -87,6 +155,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
         lexer.commenters = ""
         tokens = list(lexer)
     except ValueError:
@@ -117,7 +186,7 @@ def _strip_heredoc_bodies(command: str) -> str:
 
     kept: list[str] = []
     pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
+    for line in command.split("\n"):
         if pending:
             delimiter, strip_tabs = pending[0]
             candidate = line.lstrip("\t") if strip_tabs else line
@@ -125,7 +194,7 @@ def _strip_heredoc_bodies(command: str) -> str:
                 pending.pop(0)
             continue
         kept.append(line)
-        pending.extend(_heredoc_delimiters(line))
+        pending.extend(_heredoc_delimiters(_strip_shell_comments(line)))
     return "\n".join(kept)
 
 
