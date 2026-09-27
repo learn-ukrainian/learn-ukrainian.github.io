@@ -80,7 +80,7 @@ vocabulary_hints:
   - оцей, оця, оце (this — emphatic "саме цей"; passive recognition at A1, VESUM-verified)
   - отой, ота, ото (that — emphatic "отой, далі"; passive recognition at A1, VESUM-verified)
 # NOTE: `даний` is intentionally NOT in vocabulary_hints. Wiki Декол. #5
-# frames `даний` as kancelyarism (СУМ-11 primary sense: "given, provided")
+# frames `даний` as kancelyarism
 # overused as "this" under рос. `данный` influence. A1 normative = `цей`.
 activity_hints:
 - type: quiz

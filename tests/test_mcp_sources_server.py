@@ -232,6 +232,29 @@ class TestUlifHandlers:
         assert tool.input_schema["required"] == ["words"]
         assert tool.input_schema["properties"]["words"]["type"] == "array"
         assert tool.input_schema["properties"]["include_definitions"]["default"] is False
+        assert "contrast only" in tool.description
+
+    def test_sum11_tool_description_bans_verification(self, server_module):
+        tools = _run(server_module.list_tools())
+        definition = next(tool for tool in tools if tool.name == "search_definitions")
+        attribution = next(tool for tool in tools if tool.name == "verify_source_attribution")
+        synonyms = next(tool for tool in tools if tool.name == "search_synonyms")
+        assert definition.description.startswith("Soviet-occupation СУМ-11")
+        assert "NEVER a source for meaning, stress, part of speech or word validity" in definition.description
+        assert "query_sum20 / ВТС / query_ulif / VESUM / Грінченко" in definition.description
+        assert "verification_authority=false" in attribution.description
+        assert "search_definitions" not in synonyms.description
+
+    def test_live_sum11_entry_is_labelled_contrast_only(self, server_module):
+        hit = {
+            "dict_label": "СУМ-11",
+            "url": "https://slovnyk.me/dict/sum/тест",
+            "text": "historical dictionary text",
+        }
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=hit):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "тест", "dict": "sum"}))
+        assert "verification_authority: false" in result[0].text
+        assert "contrast only" in result[0].text
 
     def test_verify_quote_schema(self, server_module):
         tools = _run(server_module.list_tools())
@@ -650,15 +673,16 @@ class TestVetVocabularyHandler:
             )
 
         text = result[0].text
-        assert text.splitlines()[0] == (
+        assert text.splitlines()[0].startswith("verification_authority: false (СУМ-11 excerpts only).")
+        assert text.splitlines()[1] == (
             "- **кіт** | VESUM: valid (lemma=кіт, pos=noun, tags=noun:anim:m:v_naz) "
             "| CEFR: A1 | Russian-shadow: not flagged (suspicion only, not a verdict) "
-            "| Gloss: КІТ, кота, ч. Свійська тварина родини котячих."
+            "| СУМ-11 contrast excerpt (verification_authority: false): КІТ, кота, ч. Свійська тварина родини котячих."
         )
         assert "**вигадане** | VESUM: not found" in text
         assert "Russian-shadow: suspected (suspicion only, not a verdict; russian_lemma=выдуманный" in text
-        assert "Gloss: КІТ, кота, ч. Свійська тварина родини котячих." in text
-        assert "Gloss: not found" in text
+        assert "СУМ-11 contrast excerpt (verification_authority: false): КІТ, кота, ч. Свійська тварина родини котячих." in text
+        assert "СУМ-11 contrast excerpt (verification_authority: false): not found" in text
         verify_words.assert_called_once_with(["кіт", "вигадане"])
         query_cefr.assert_called_once_with(["кіт", "вигадане"])
         search_definitions.assert_called_once_with(["кіт", "вигадане"])
@@ -816,7 +840,11 @@ class TestVerifySourceAttributionHandler:
 
         mock.assert_called_once_with("ленінізм", 5)
         data = json.loads(result[0].text)
-        assert data["discusses"] is True
+        assert data["discusses"] is False
+        assert data["contrast_match"] is True
+        assert data["verification_authority"] is False
+        assert data["evidence"][0]["verification_authority"] is False
+        assert "contrast only" in data["notice"]
         assert "sovietization_risk" in data["completeness_note"]
 
     def test_invalid_source_returns_clean_error(self, server_module):
@@ -1043,10 +1071,15 @@ class TestDictSearchQuoteBalance:
             text = content[0].text
             assert "Found 1 results" in text
             assert "…" in text
-            assert len(text) < 700
+            excerpt = next(line for line in text.splitlines() if line.startswith("- **Contrast excerpt**:"))
+            assert len(excerpt) < 530
             assert envelope["schema"] == "sources.tool-result.v1"
             assert envelope["match_count"] == 1
             assert envelope["tool"] == "search_definitions"
+            assert envelope["hits"][0]["verification_authority"] is False
+            assert "contrast only" in envelope["hits"][0]["notice"]
+            assert "verification_authority: false" in text
+            assert "**Contrast excerpt**" in text
 
     def test_handle_dict_search_labels_each_homonym_sense(self, server_module):
         hits = [

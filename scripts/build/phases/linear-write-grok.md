@@ -29,7 +29,7 @@ One compact line per MCP tool call you intend to make for the module.
 **Prefer single-primitive calls over compose-patterns.** The pipeline ships four single-call verifiers that collapse multi-step compositions:
 
 - For Ukrainian quotes: `mcp__sources__verify_quote(author="...", text="...")` — ONE call returns `matched: bool, best_confidence: float`. Do not compose `search_literary + grep + reason`.
-- For source attribution: `mcp__sources__verify_source_attribution(source="grinchenko_1907"|"esum"|"sum11"|"antonenko_davydovych"|"literary"|"heritage"|"wikipedia"|"style_guide", claim="...")` — ONE call returns `discusses: bool, evidence: [...]`. Do not compose multiple per-source `search_*` calls.
+- For source attribution: `mcp__sources__verify_source_attribution(source="grinchenko_1907"|"esum"|"antonenko_davydovych"|"literary"|"heritage"|"wikipedia"|"style_guide", claim="...")` — ONE call returns `discusses: bool, evidence: [...]`. Use `query_sum20` or ВТС directly for modern meanings. Do not compose multiple per-source `search_*` calls.
 - For modernity / archaism: `mcp__sources__check_modern_form(word="...")` — ONE call returns modernity flags. Do not infer from raw VESUM tags.
 - For Russian-shadow detection: `mcp__sources__check_russian_shadow(word="...")` — ONE call returns Russian-morphology confidence.
 
@@ -101,9 +101,9 @@ that failure class. Run each check while drafting, not as a separate pass.
    The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
 
 3. **Source-citation discipline.** Every dictionary / style-guide / author
-   citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed `source` enum values: `grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`. If `discusses=false`, do NOT cite that source for that claim.
+   citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed verification sources: `grinchenko_1907`, `esum`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`; use `query_sum20` or ВТС directly for modern semantics. If `discusses=false`, do NOT cite that source for that claim.
 
-   The compose-pattern (calling `search_definitions` for СУМ-11, `search_style_guide` for Антоненко-Давидович, `search_grinchenko_1907` for Грінченко, `query_pravopys` for Правопис, `search_esum` for ЕСУМ separately) is still allowed when you need the actual evidence chunks to QUOTE in the artifact, but for the boolean "does X discuss Y?" verification step, `verify_source_attribution` is the single-call mandate.
+   The compose-pattern (calling `query_sum20` for СУМ-20, `search_style_guide` for Антоненко-Давидович, `search_grinchenko_1907` for Грінченко, `query_pravopys` for Правопис, `search_esum` for ЕСУМ separately) is still allowed when you need the actual evidence chunks to QUOTE in the artifact, but for the boolean "does X discuss Y?" verification step where supported, `verify_source_attribution` is the single-call mandate.
 
    Cannot ground via `verify_source_attribution` → do NOT cite. Say "modern Ukrainian standardized form" or rephrase without attribution. Inventing a citation to look authoritative is a hard fail.
 

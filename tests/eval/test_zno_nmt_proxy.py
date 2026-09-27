@@ -46,6 +46,9 @@ def test_unavailable_tool_refuses_instead_of_weakening(monkeypatch):
 def test_cannot_allow_arbitrary_tools():
     with pytest.raises(ValueError, match="allowlist"):
         Bridge("http://example.invalid/mcp", ["search_external"])
+    with pytest.raises(ValueError, match="allowlist"):
+        Bridge("http://example.invalid/mcp", ["search_definitions"])
+    assert Bridge("http://example.invalid/mcp", ["query_sum20"]).allowed == ["query_sum20"]
 
 
 def test_mcp_json_and_sse():

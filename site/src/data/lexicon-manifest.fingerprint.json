@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "c6f2540fed6f552cddcafa86a281dc1f60af53578bb4327f2d20d8f4d48a4c49"
+        "sha256": "7545017afe532efaee4f64ea13385ea113188969920129ab03214502880de514"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",

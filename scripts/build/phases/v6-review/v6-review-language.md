@@ -47,7 +47,7 @@ LLM reviewers have a documented stable hallucination class for Russianism flags:
 
 **Before emitting a Russianism finding with attributed-source citation, you MUST:**
 
-1. Query the source corpus with the exact lemma you want to cite. Tools: `mcp__sources__search_style_guide` (Антоненко-Давидович), `mcp__sources__search_grinchenko_1907` (Грінченко 1907), `mcp__sources__query_pravopys` (Правопис 2019), `mcp__sources__verify_lemma` (VESUM), `mcp__sources__search_definitions` (СУМ-11). If the source has no entry for the lemma, **drop the citation entirely**. Do not invent a quote consistent with your prior — that is the hallucination.
+1. Query the source corpus with the exact lemma you want to cite. Tools: `mcp__sources__search_style_guide` (Антоненко-Давидович), `mcp__sources__search_grinchenko_1907` (Грінченко 1907), `mcp__sources__query_pravopys` (Правопис 2019), `mcp__sources__verify_lemma` (VESUM), `mcp__sources__query_sum20` (СУМ-20), or ВТС for modern meaning. If the source has no entry for the lemma, **drop the citation entirely**. Do not invent a quote consistent with your prior — that is the hallucination.
 2. If you can verify the substantive concern (e.g. via VESUM morphology) but cannot find a verbatim Антоненко-Давидович entry, **paraphrase the concern from VESUM evidence and explicitly state "no АД entry found for this lemma."** Never fabricate a verbatim quote.
 3. If the lemma is on the **known false-positive list below**, do not flag it as a Russianism regardless of how strong your prior is. The prior IS the bug.
 
@@ -57,11 +57,11 @@ These are legitimate Ukrainian forms that LLM reviewers may incorrectly flag as 
 
 | Lemma | Why this is NOT a Russianism |
 |---|---|
-| **`собака`** (both genders м. і ж.) | Двородовий іменник codified by VESUM (`noun:anim:m` + `noun:anim:f` paradigms in parallel), Грінченко 1907 (`м. и ж.`), СУМ-11 (`ч. і рідше ж.`), Орфографічний, Орфоепічний. Грінченко's 1907 attestation predates Soviet Russification. Feminine examples in canonical Ukrainian literature (Панас Мирний 1949). Not a Russianism in either gender. |
+| **`собака`** (both genders м. і ж.) | Двородовий іменник codified by VESUM (`noun:anim:m` + `noun:anim:f` paradigms in parallel) and attested by Грінченко 1907. Грінченко's attestation predates Soviet Russification. Not a Russianism in either gender. |
 | **`степ`** | Native Ukrainian word for steppe/prairie. Codified across all modern Ukrainian lexica. Do NOT flag as a Russian borrowing. |
 | **`Сибір`** (place name) | Standard Ukrainian rendering of the place name (per VESUM). Do NOT flag as a Russification. |
-| **`біль`** | Standard Ukrainian noun for pain (масc.). Codified by VESUM, СУМ-11, Грінченко 1907. Do NOT flag as a Russianism. |
-| **`посуд`** | Standard Ukrainian noun for tableware/dishes (масc.). Codified by VESUM, СУМ-11. Do NOT flag as a Russianism. |
+| **`біль`** | Standard Ukrainian masculine noun for pain, codified by VESUM (`noun:inanim:m`; source comment `страждання`). Do NOT flag as a Russianism. |
+| **`посуд`** | Standard Ukrainian masculine noun for tableware/dishes, codified by VESUM and attested in Грінченко 1907. Do NOT flag as a Russianism. |
 
 **If you encounter a different lemma where you have a strong "this is a Russianism" prior but cannot verify it via `mcp__sources__search_style_guide`:** flag the *substantive concern* (if defensible from other evidence), explicitly state "verification check returned no match in АД corpus," and **do not add a fabricated direct quote**. The reviewer aggregator will route these to the human escalation queue rather than discarding them.
 

@@ -837,7 +837,7 @@ def _standard_dictionary_attestations(
     term: str,
 ) -> list[dict[str, Any]]:
     hits: list[dict[str, Any]] = []
-    for hit in [*_sum11_exact_hits(conn, term), *_wiktionary_exact_hits(conn, term)]:
+    for hit in _wiktionary_exact_hits(conn, term):
         if hit["classification"] == "standard":
             hits.append(hit)
     return hits
@@ -1101,35 +1101,6 @@ def _grinchenko_surface_usage_hits(conn: sqlite3.Connection, term: str) -> list[
     return hits
 
 
-def _sum11_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
-    hits = []
-    has_flag_columns = _sum11_has_flag_columns(conn)
-    fields = "id, word, definition, text, source"
-    if has_flag_columns:
-        fields += ", sovietization_risk, sovietization_keywords"
-    for variant in _apostrophe_variants(term):
-        rows = conn.execute(
-            f"SELECT {fields} FROM sum11 WHERE lower(word) = ? LIMIT 3",
-            (variant,),
-        ).fetchall()
-        for row in rows:
-            text = _clean_text(row["definition"])
-            risk = _sum11_row_sovietization_risk(row, has_flag_columns=has_flag_columns)
-            hits.append(
-                {
-                    "classification": _classification_from_definition(text, default="standard"),
-                    "attestation": {
-                        "source": "sum11",
-                        "ref": str(row["id"]),
-                        "word": row["word"],
-                        "detail": text,
-                    },
-                    "sovietization_risk": risk,
-                }
-            )
-    return hits
-
-
 def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:
     cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}
     return {"sovietization_risk", "sovietization_keywords"}.issubset(cols)
@@ -1160,19 +1131,6 @@ def _source_sum11_has_flag_columns(db_path: str | Path | None = None) -> bool:
         )
     except (OSError, sqlite3.Error):
         return False
-
-
-def _sum11_row_sovietization_risk(
-    row: sqlite3.Row,
-    *,
-    has_flag_columns: bool,
-) -> int:
-    if has_flag_columns:
-        try:
-            return int(row["sovietization_risk"] or 0)
-        except (IndexError, KeyError, TypeError, ValueError):
-            return 0
-    return _sum11_sovietization_risk(str(row["definition"] or ""), str(row["text"] or ""))
 
 
 def _sum11_sovietization_risk_for_term(

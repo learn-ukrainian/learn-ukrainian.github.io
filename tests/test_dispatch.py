@@ -49,7 +49,7 @@ class TestToolConstants:
 
     def test_writer_tools_has_new_dictionary_tools(self):
         for tool in ("search_style_guide", "query_cefr_level",
-                      "search_definitions", "search_grinchenko_1907",
+                      "query_sum20", "query_slovnyk_me", "search_grinchenko_1907",
                       "search_idioms", "search_synonyms", "translate_en_uk",
                       "query_grac", "query_ulif", "query_r2u"):
             assert f"mcp__sources__{tool}" in CLAUDE_WRITER_TOOLS
@@ -60,7 +60,7 @@ class TestToolConstants:
             assert f"mcp__sources__{tool}" in CLAUDE_REVIEWER_TOOLS
 
     def test_reviewer_tools_has_quality_tools(self):
-        for tool in ("query_cefr_level", "search_definitions",
+        for tool in ("query_cefr_level", "query_sum20", "query_slovnyk_me",
                       "search_grinchenko_1907", "search_idioms",
                       "search_synonyms", "query_grac"):
             assert f"mcp__sources__{tool}" in CLAUDE_REVIEWER_TOOLS
@@ -73,6 +73,10 @@ class TestToolConstants:
         """Both allow-lists should end with Read (file system access)."""
         assert CLAUDE_WRITER_TOOLS.endswith("Read")
         assert CLAUDE_REVIEWER_TOOLS.endswith("Read")
+
+    def test_sum11_is_not_granted_to_writers_or_reviewers(self):
+        assert "mcp__sources__search_definitions" not in CLAUDE_WRITER_TOOLS
+        assert "mcp__sources__search_definitions" not in CLAUDE_REVIEWER_TOOLS
 
     def test_no_edit_write_bash_in_tools(self):
         """Writers/reviewers should NOT have Edit, Write, or Bash."""

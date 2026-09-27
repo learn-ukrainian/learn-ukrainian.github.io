@@ -48,7 +48,9 @@ def test_build_knowledge_packet_reads_wiki_and_sources(monkeypatch) -> None:
     assert "[S1" in packet
     assert "mcp__sources__verify_lemma" in packet
     assert "mcp__sources__search_style_guide" in packet
-    assert "mcp__sources__search_definitions" in packet
+    assert "mcp__sources__query_sum20" in packet
+    assert 'mcp__sources__query_slovnyk_me(dict="vts")' in packet
+    assert "mcp__sources__search_definitions" not in packet
     assert "scripts.rag" in packet
 
 
