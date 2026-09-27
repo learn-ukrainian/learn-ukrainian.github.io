@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
+import shutil
 import stat
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +22,61 @@ from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
+
+_NO_OVERRIDE = object()
+
+
+def _dispatch_args_hash(
+    task_file: Path,
+    task_id: str,
+    agent: str,
+    model: str | None,
+    *,
+    mode: str = "read-only",
+    cwd: str | None = None,
+    worktree_path: str | None = None,
+    output_schema: str | None = None,
+) -> str:
+    """The ``dispatch_args_sha256`` a real dispatch with exactly these raw CLI args would have recorded.
+
+    Mirrors ``adj.dispatch_argv``'s fixed shape (agent/task-id/prompt-file/mode[/model]) plus whichever of
+    ``--cwd``, ``--worktree``, ``--output-schema`` this scenario simulates having been given, so the canonical
+    combination (mode read-only, no cwd/worktree/output-schema) reduces to exactly what ``dispatch_argv`` builds.
+    """
+    argv = ["--agent", agent, "--task-id", task_id, "--prompt-file", str(task_file), "--mode", mode]
+    if model:
+        argv += ["--model", model]
+    if cwd:
+        argv += ["--cwd", cwd]
+    if worktree_path:
+        argv += ["--worktree", worktree_path]
+    if output_schema:
+        argv += ["--output-schema", output_schema]
+    parsed = delegate.build_parser().parse_args(["dispatch", *argv])
+    return delegate.dispatch_args_sha256(parsed)
+
+
+def _dispatch_subparser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """The ``dispatch`` subparser of delegate's top-level parser."""
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            return action.choices["dispatch"]
+    raise AssertionError("delegate.build_parser() has no subparsers action")
+
+
+def _different_value(old: Any) -> Any:
+    """Some value of a plausible type that is never equal to ``old``."""
+    if isinstance(old, bool):
+        return not old
+    if isinstance(old, int):
+        return old + 1
+    if isinstance(old, float):
+        return old + 1.0
+    if isinstance(old, list):
+        return [*old, "different"]
+    if old is None:
+        return "different-value"
+    return f"{old}-different"
 
 
 @pytest.fixture
@@ -54,12 +113,33 @@ class Case:
         mode: str = "read-only",
         cwd: str | None = None,
         worktree_path: str | None = None,
+        output_schema: str | None = None,
+        dispatch_args_sha256: Any = _NO_OVERRIDE,
     ) -> str:
         """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
-        dispatched plain: read-only, at the primary checkout, no worktree, so no appended blocks)."""
+        dispatched plain: read-only, at the primary checkout, no worktree, so no appended blocks).
+
+        ``dispatch_args_sha256`` defaults to the hash a real dispatch of these same (agent, model, mode, cwd,
+        worktree_path, output_schema) would have recorded (see :func:`_dispatch_args_hash`); pass it explicitly
+        to simulate a record whose hash was computed for some other Namespace entirely.
+        """
         task_id = task_id or self.task_id
         sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
         blocks = [] if prompt_blocks is None else prompt_blocks
+        args_hash = (
+            _dispatch_args_hash(
+                self.task_file,
+                task_id,
+                agent,
+                model,
+                mode=mode,
+                cwd=cwd,
+                worktree_path=worktree_path,
+                output_schema=output_schema,
+            )
+            if dispatch_args_sha256 is _NO_OVERRIDE
+            else dispatch_args_sha256
+        )
         record = {
             "task_id": task_id,
             "agent": agent,
@@ -71,6 +151,7 @@ class Case:
             "prompt_sha256": sha,
             "effective_prompt_sha256": effective_prompt_sha256 or sha,
             "prompt_blocks": blocks,
+            "dispatch_args_sha256": args_hash,
         }
         (self.env.tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
         return task_id
@@ -516,6 +597,84 @@ def test_the_canonical_dispatch_argv_builds_is_accepted(seeded: Case) -> None:
     # records no worktree_path — build the record delegate would write for it and confirm it is accepted.
     seeded.dispatch(parsed.agent, parsed.model, task_id=parsed.task_id, mode=parsed.mode)
     assert seeded.record(good)["new"] is True
+
+
+def test_a_dispatch_with_an_output_schema_is_refused(seeded: Case) -> None:
+    """Round 6's reproduction: canonical hashes, mode, cwd and blocks, plus a caller --output-schema, refused.
+
+    Before r8, ``check_dispatch_binding`` compared a named subset of fields and never looked at
+    ``--output-schema``, so this record passed and the seat saw a caller-chosen schema (#8430 R3-A r7 BLOCKER 1).
+    """
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", output_schema="/tmp/caller-schema.json")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # the same record without --output-schema (otherwise identical) is accepted
+    seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    assert seeded.record(good)["new"] is True
+
+
+def test_every_non_excluded_dispatch_argument_binds_the_hash(seeded: Case) -> None:
+    """Every parsed ``dispatch`` field outside ``DISPATCH_ARGS_HASH_EXCLUDED_FIELDS`` must bind
+    ``dispatch_args_sha256``: changing it away from its canonical value must refuse the adjudication — so a flag
+    added to ``dispatch`` later is covered automatically without editing this test (#8430 R3-A r8)."""
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
+    canonical = delegate.build_parser().parse_args(argv[2:])
+    dispatch_parser = _dispatch_subparser(delegate.build_parser())
+    tested: list[str] = []
+    for action in dispatch_parser._actions:
+        dest = action.dest
+        if dest == "help" or dest in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS:
+            continue
+        assert hasattr(canonical, dest), f"canonical Namespace has no field {dest!r}"
+        mutated = argparse.Namespace(**vars(canonical))
+        setattr(mutated, dest, _different_value(getattr(canonical, dest)))
+        seeded.dispatch("agy", "gemini-3.1-pro-preview", dispatch_args_sha256=delegate.dispatch_args_sha256(mutated))
+        assert code_of(seeded, good) == [adj.TASK_MISMATCH], f"--{dest} did not bind dispatch_args_sha256"
+        tested.append(dest)
+    assert len(tested) >= 40, f"expected ~45 dispatch fields to be covered, only tested {tested}"
+    # sanity: the canonical record itself (none of the fields mutated) is still accepted
+    seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    assert seeded.record(good)["new"] is True
+
+
+def test_the_canonical_record_is_accepted(seeded: Case) -> None:
+    """A record whose ``dispatch_args_sha256`` matches every parsed dispatch argument is accepted outright."""
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    assert seeded.record(good)["new"] is True
+
+
+def test_the_adjudicate_module_help_runs_under_dash_m(tmp_path: Path) -> None:
+    """``python -m scripts.review.seeds.adjudicate --help`` must not import-error (#8430 R3-A r8 BLOCKER 2).
+
+    Reproduces from the repo root (sys.path[0] is the repo root, not scripts/) and from an unrelated worktree
+    copy of the repo (a fresh checkout with its own scripts/ dir, so nothing from the real repo's sys.path
+    bleeds in).
+    """
+    repo_root = adj.REPO_ROOT
+    for cwd in (repo_root, _worktree_copy_of(repo_root, tmp_path)):
+        result = subprocess.run(
+            [sys.executable, "-m", "scripts.review.seeds.adjudicate", "--help"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"cwd={cwd}: stdout={result.stdout!r} stderr={result.stderr!r}"
+        assert "adjudication" in result.stdout.lower()
+
+
+def _worktree_copy_of(repo_root: Path, tmp_path: Path) -> Path:
+    """A plain (non-git) copy of just the ``scripts/`` tree, standing in for a worktree checkout.
+
+    Sufficient here: the regression under test (``ModuleNotFoundError: agent_runtime`` under
+    ``python -m``) is entirely about ``sys.path`` resolution within ``scripts/``, never about repo
+    content outside it — ``--help`` never reads ``SCHEMAS`` or anything else under the repo root.
+    """
+    dest = tmp_path / "worktree-copy"
+    shutil.copytree(repo_root / "scripts", dest / "scripts")
+    return dest
 
 
 def test_replacing_the_record_between_the_check_and_the_identity_read_does_not_change_the_identity(

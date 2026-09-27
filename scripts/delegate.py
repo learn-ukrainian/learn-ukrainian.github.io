@@ -54,6 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
@@ -249,6 +250,40 @@ _EFFORT_VALIDATOR_BY_DISPATCH_AGENT = {
 }
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
+
+# Fields of the parsed `dispatch` Namespace that legitimately differ between
+# otherwise-identical runs and carry no content of the request itself — the
+# only fields ``dispatch_args_sha256`` excludes. Every other parsed `dispatch`
+# argument (including --output-schema, --cwd, --worktree, --mode, --model,
+# --effort, and every research/lifecycle flag) is bound into the hash, so a
+# caller cannot smuggle an extra flag past a check that only names a subset
+# of fields (#8430 R3-A r8).
+DISPATCH_ARGS_HASH_EXCLUDED_FIELDS = {
+    "run_nonce": "unique per attempt; only used for stale cross-host split-brain detection (#7168)",
+    "force_new": "a retry/idempotency knob for reusing an existing --task-id, not part of what the seat is asked",
+    "initiator": "orchestrator attribution metadata, auto-detected when omitted",
+}
+# argparse plumbing present on every subcommand's Namespace, not a CLI-supplied
+# dispatch argument.
+_DISPATCH_ARGS_HASH_ARGPARSE_KEYS = frozenset({"command", "func"})
+
+
+def dispatch_args_sha256(args: argparse.Namespace) -> str:
+    """sha256 of the canonical JSON of every parsed ``dispatch`` argument that binds the record.
+
+    Additive to ``prompt_sha256``/``effective_prompt_sha256`` (which prove the prompt): this proves the
+    *arguments* that produced the dispatch, so a record cannot pass a check that compares only a named
+    subset of fields while carrying an unchecked extra flag (e.g. a caller-supplied --output-schema).
+    Canonical means ``sort_keys=True`` and no separator whitespace, so the same arguments always hash the
+    same regardless of argv order.
+    """
+    payload = {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -8182,6 +8217,11 @@ def _dispatch(
         notebook_fallback_after_forward,
     )
 
+    # Captured before any later mutation of ``args`` (e.g. --pr resolving into
+    # args.branch, a rejected --model cleared to None): the hash binds what was
+    # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
+    dispatch_args_hash = dispatch_args_sha256(args)
+
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
 
@@ -9390,6 +9430,7 @@ def _dispatch(
             "prompt_sha256": source_prompt_sha256,
             "effective_prompt_sha256": effective_prompt_sha256,
             "prompt_blocks": prompt_blocks,
+            "dispatch_args_sha256": dispatch_args_hash,
             "pid": None,  # worker fills this
             "status": "spawning",
             "started_at": datetime.now(UTC).isoformat(),

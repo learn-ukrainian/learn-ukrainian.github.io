@@ -63,7 +63,6 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts import delegate
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -75,6 +74,28 @@ SCHEMAS = {
 TASKS_SUBDIR = "adjudication"
 DELEGATE = REPO_ROOT / "scripts" / "delegate.py"
 READ_ONLY_MODE = "read-only"
+
+
+def _delegate_module():
+    """Import ``scripts.delegate`` lazily, on the same ``sys.path`` delegate.py itself needs.
+
+    ``delegate.py`` imports ``agent_runtime.routes`` (``scripts/agent_runtime/``) as a bare top-level
+    package before it does any ``sys.path`` setup of its own; that only resolves today because delegate.py
+    is always *executed* as a script file, so Python auto-adds its own directory (``scripts/``) to
+    ``sys.path[0]``. Importing ``scripts.delegate`` eagerly at this module's import time broke
+    ``python -m scripts.review.seeds.adjudicate`` (whose own ``sys.path[0]`` is the repo root, not
+    ``scripts/``) with ``ModuleNotFoundError: agent_runtime``. Importing it lazily here, with ``scripts/``
+    added to ``sys.path`` first, fixes every caller — script or ``-m`` — the same way, and means a plain
+    ``--help`` (which never checks a dispatch binding) never even needs it.
+    """
+    scripts_dir = str(DELEGATE.parent)
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    from scripts import delegate
+
+    return delegate
+
+
 FINDING_ID_RE = re.compile(r"F-[0-9]+\Z")
 _FENCE_RE = re.compile(r"```(?:ya?ml|json)?[ \t]*\n(.*?)```", re.DOTALL)
 
@@ -306,7 +327,7 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str | Non
         "--prompt-file",
         str(task_file),
         "--mode",
-        "read-only",
+        READ_ONLY_MODE,
     ]
     if model:
         argv += ["--model", model]
@@ -434,24 +455,54 @@ def adjudicator_identity(dispatched: dict[str, Any], task_id: str) -> dict[str, 
         raise AdjudicationError(str(error), ADJUDICATOR_UNKNOWN) from error
 
 
+def _expected_dispatch_args_sha256(delegate: Any, dispatched: dict[str, Any], task_file: Path, task_id: str) -> str:
+    """The ``dispatch_args_sha256`` a canonical dispatch of this record's own ``agent``/``model`` would carry.
+
+    ``dispatch_argv`` takes exactly four free inputs: the task file and task id (both already pinned above by
+    the task-id and prompt-hash checks) and the agent and optional model — every other flag it builds is fixed.
+    Reconstructing with the record's own ``agent``/``model`` and parsing the result through
+    ``delegate.build_parser()`` yields the one ``dispatch`` Namespace a canonical dispatch of *this* record could
+    have parsed to; hashing it the same way delegate does and comparing against the recorded
+    ``dispatch_args_sha256`` catches any additional or altered flag (e.g. a caller-supplied ``--output-schema``)
+    without naming each field one at a time — and automatically covers a flag added to ``dispatch`` later.
+
+    Residual: when ``--model`` is omitted at task-creation, delegate resolves it to a provider default before
+    recording ``model``, so a dispatch that legitimately omitted ``--model`` cannot be reconstructed byte-for-byte
+    from the recorded (resolved) ``model`` alone and is refused here rather than guessed at. Always pass
+    ``--model`` explicitly to ``adjudicate.py task`` — the established convention; every call site in this
+    codebase already does.
+    """
+    agent = dispatched.get("agent")
+    if not isinstance(agent, str) or not agent:
+        raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)
+    argv = dispatch_argv(task_file, task_id, agent, model=dispatched.get("model"))
+    try:
+        parsed = delegate.build_parser().parse_args(argv[2:])
+    except SystemExit as error:
+        raise AdjudicationError(
+            f"the dispatch record of {task_id} (agent={agent!r}, model={dispatched.get('model')!r}) cannot be "
+            "reconstructed by delegate's own dispatch parser",
+            TASK_MISMATCH,
+        ) from error
+    return delegate.dispatch_args_sha256(parsed)
+
+
 def check_dispatch_binding(
     unit_id: str, review_id: str, attempt_id: str, task_id: str, tasks_dir: Path, root: Path | None = None
 ) -> dict[str, str]:
     """The dispatch record is this adjudication's own task, dispatched exactly as ``dispatch_argv`` builds it.
 
-    ``dispatch_argv`` is the only way an adjudication task is dispatched, and what it builds is fully determined:
-    ``--mode read-only``, the task file, the task id, and never a ``--cwd`` or ``--worktree`` flag — so the seat runs
-    at ``delegate``'s own default working directory, the primary checkout (``delegate._REPO_ROOT``). This function
-    compares every context-bearing field of the dispatch record against that canonical dispatch: an independent
-    dispatch of some other task, a caller-chosen ``--cwd`` (which can carry its own ``AGENTS.md``/``CLAUDE.md``
-    outside the hashed prompt), a ``--worktree``, a non-read-only mode, or any appended prompt block, must not be
-    able to stand in for the adjudicator. Any difference is ``adjudication_task_mismatch``.
+    ``dispatch_argv`` is the only way an adjudication task is dispatched. The task id and the prompt hashes pin
+    the task file; ``dispatch_args_sha256`` (R3-A r8) pins every parsed ``dispatch`` argument at once — mode,
+    cwd, worktree, output-schema, lifecycle and research flags, and anything added to ``dispatch`` later — against
+    the one Namespace a canonical dispatch of this record's own agent/model could have parsed to (see
+    :func:`_expected_dispatch_args_sha256`); any difference, present or future, is ``adjudication_task_mismatch``.
+    ``prompt_blocks`` is checked directly because it covers the *prompt* delegate built, not an argument.
 
-    Concretely: the task id must be the one derived for this unit and attempt; ``mode`` is ``read-only``; ``cwd``
-    equals ``str(delegate._REPO_ROOT)``; ``worktree_path`` is absent (falsy); ``prompt_blocks`` is ``[]`` (every
-    block delegate can append — worktree note, lifecycle, research — is caller-influenced, so none is allowed); and
-    ``prompt_sha256`` and ``effective_prompt_sha256`` both equal the sha256 of the task file this module rendered. A
-    record with no prompt hash cannot prove which prompt ran and is refused.
+    The one exception is ``cwd``: a plain dispatch (no ``--cwd``) resolves to ``delegate._REPO_ROOT``, a
+    runtime-derived path, not a literal parsed argument value (``args.cwd`` stays ``None`` either way), so it is
+    still compared directly against the primary checkout — a caller-chosen ``--cwd`` can carry its own
+    ``AGENTS.md``/``CLAUDE.md`` outside the hashed prompt.
 
     Residual (not fixed here): instructions the runtime reads from its own home directory (not the dispatch cwd) are
     outside this binding; the scoped review homes (#8618, #8623) bound them. The instruction files at the canonical
@@ -467,12 +518,13 @@ def check_dispatch_binding(
             f"task {task_id!r} is not the adjudication task of {unit_id} / {attempt_id} ({expected!r})",
             TASK_MISMATCH,
         )
+    record_path = Path(tasks_dir) / f"{task_id}.json"
     try:
-        dispatched = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
+        dispatched = json.loads(record_path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise AdjudicationError(f"the dispatch record of {task_id} is unreadable ({error})", TASK_MISMATCH) from error
     if not isinstance(dispatched, dict) or dispatched.get("task_id") != expected:
-        raise AdjudicationError(f"the dispatch record does not name task {expected!r}", TASK_MISMATCH)
+        raise AdjudicationError(f"the dispatch record at {record_path} does not name task {expected!r}", TASK_MISMATCH)
     task_file = seed_manifest.measurement_dir(root) / TASKS_SUBDIR / f"{expected}.task.md"
     try:
         rendered = hashlib.sha256(task_file.read_bytes()).hexdigest()
@@ -486,24 +538,13 @@ def check_dispatch_binding(
             f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
-    if dispatched.get("mode") != READ_ONLY_MODE:
-        raise AdjudicationError(
-            f"the dispatch of {task_id} ran in mode {dispatched.get('mode')!r}, not {READ_ONLY_MODE!r}: a write-capable "
-            "dispatch adds instructions to the adjudication prompt (dispatch it with --mode read-only)",
-            TASK_MISMATCH,
-        )
+    delegate = _delegate_module()
     canonical_cwd = str(delegate._REPO_ROOT)
     if dispatched.get("cwd") != canonical_cwd:
         raise AdjudicationError(
             f"the dispatch of {task_id} ran with cwd {dispatched.get('cwd')!r}, not the primary checkout "
             f"{canonical_cwd!r} a plain dispatch (no --cwd) resolves to: a caller-chosen --cwd can carry its own "
             "AGENTS.md/CLAUDE.md instructions the adjudicator would read outside the hashed prompt",
-            TASK_MISMATCH,
-        )
-    if dispatched.get("worktree_path"):
-        raise AdjudicationError(
-            f"the dispatch of {task_id} ran in worktree {dispatched.get('worktree_path')!r}: dispatch it without "
-            "--worktree so it runs at the primary checkout root",
             TASK_MISMATCH,
         )
     if dispatched.get("prompt_blocks") != []:
@@ -516,6 +557,16 @@ def check_dispatch_binding(
         raise AdjudicationError(
             f"the seat of {task_id} received a prompt other than the one rendered for {unit_id} / {attempt_id} "
             f"(effective sha256 {dispatched.get('effective_prompt_sha256')!r}, rendered {rendered})",
+            TASK_MISMATCH,
+        )
+    expected_args_hash = _expected_dispatch_args_sha256(delegate, dispatched, task_file, task_id)
+    actual_args_hash = dispatched.get("dispatch_args_sha256")
+    if not isinstance(actual_args_hash, str) or actual_args_hash != expected_args_hash:
+        raise AdjudicationError(
+            f"the dispatch of {task_id} does not match the arguments dispatch_argv builds for {unit_id} / "
+            f"{attempt_id} (recorded dispatch_args_sha256 {actual_args_hash!r}, expected {expected_args_hash!r}): an "
+            "extra or altered dispatch flag (e.g. --output-schema, --worktree, or a non-read-only --mode) would "
+            "show up here",
             TASK_MISMATCH,
         )
     return adjudicator_identity(dispatched, task_id)
