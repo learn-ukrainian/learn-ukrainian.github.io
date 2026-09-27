@@ -3400,17 +3400,34 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
 
     from wiki import sources_db as sdb
 
-    hits = await asyncio.to_thread(
-        sdb.search_slovnyk_me,
+    hits, outages = await asyncio.to_thread(
+        sdb.search_slovnyk_me_with_status,
         query,
         limit,
         dictionaries,
         live=live,
     )
+    outage_note = ""
+    if outages:
+        failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
+        outage_note = (
+            f"slovnyk.me unavailable for {len(failed)} live lookup(s): {', '.join(failed)}. "
+            "An unavailable source is not a negative result (#9005)."
+        )
     if not hits:
+        if outages:
+            return [
+                TextContent(
+                    type="text",
+                    text=f"slovnyk.me UNAVAILABLE for: \"{query}\" — no result could be confirmed "
+                    f"or ruled out.\n{outage_note}",
+                )
+            ]
         return [TextContent(type="text", text=f"No slovnyk.me results for: \"{query}\"")]
 
     lines = [f"Found {len(hits)} slovnyk.me result(s) for: \"{query}\"\n"]
+    if outage_note:
+        lines.append(f"Partial results: {outage_note}\n")
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Headword**: {hit.get('word', '')}")

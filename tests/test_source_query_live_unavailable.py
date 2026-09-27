@@ -203,3 +203,50 @@ class TestGracConcordanceCollocationsUnavailable:
 
         _patch_get(monkeypatch, raise_conn_error)
         assert grac_collocations("книга") is None
+
+
+# --- slovnyk.me search path: scripts/wiki/slovnyk_me.fetch_entries (#9005 residual) ---------------
+
+
+@pytest.mark.parametrize("status", [403, 429, 503])
+def test_fetch_entries_records_an_http_outage_instead_of_dropping_it(monkeypatch, status):
+    from wiki import slovnyk_me
+
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(status, "Just a moment..."))
+    outages: list[dict] = []
+    rows = slovnyk_me.fetch_entries("тест", dictionaries=["vts"], outages=outages)
+    assert rows == []
+    assert outages and outages[0]["dictionary_slug"] == "vts"
+    assert outages[0]["error"] == f"HTTP {status}"
+
+
+def test_fetch_entries_records_a_network_error(monkeypatch):
+    from wiki import slovnyk_me
+
+    def boom(*_a, **_k):
+        raise requests.ConnectionError("down")
+
+    monkeypatch.setattr(slovnyk_me.requests, "get", boom)
+    outages: list[dict] = []
+    assert slovnyk_me.fetch_entries("тест", dictionaries=["vts"], outages=outages) == []
+    assert outages[0]["error"] == "ConnectionError"
+
+
+def test_fetch_entries_404_is_a_real_miss_not_an_outage(monkeypatch):
+    from wiki import slovnyk_me
+
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(404))
+    outages: list[dict] = []
+    assert slovnyk_me.fetch_entries("тест", dictionaries=["vts"], outages=outages) == []
+    assert outages == []
+
+
+def test_search_slovnyk_me_with_status_carries_live_outages(monkeypatch, tmp_path):
+    from wiki import slovnyk_me, sources_db
+
+    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(403))
+    rows, outages = sources_db.search_slovnyk_me_with_status("тест", 5, ["vts"], live=True)
+    assert rows == [] and outages
+    # the list-returning name keeps its contract
+    assert sources_db.search_slovnyk_me("тест", 5, ["vts"], live=True) == []

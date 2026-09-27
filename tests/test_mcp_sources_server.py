@@ -19,6 +19,7 @@ import json
 import sys
 import threading
 from pathlib import Path
+from typing import ClassVar
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import mcp  # noqa: F401  # Declares the Sources wire dependency to the CI fastlane.
@@ -1696,3 +1697,28 @@ class TestFileHashCaching:
         # Assert subsequent call hits cache without disk I/O
         with patch("builtins.open", side_effect=AssertionError("Should hit cache")):
             assert server_module._sha256_of_file(test_file) == mutated_hash
+
+
+class TestSlovnykMeSearchOutage:
+    """#9005: a live slovnyk.me outage in search_slovnyk_me is never rendered as 'No results'."""
+
+    OUTAGE: ClassVar[list[dict]] = [{"dictionary_slug": "vts", "word": "тест", "error": "HTTP 403"}]
+
+    def test_outage_with_no_hits_renders_unavailable(self, server_module):
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([], self.OUTAGE)):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert "UNAVAILABLE" in result[0].text
+        assert "vts (HTTP 403)" in result[0].text
+        assert "No slovnyk.me results" not in result[0].text
+
+    def test_no_hits_and_no_outage_is_a_real_miss(self, server_module):
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([], [])):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert result[0].text.startswith("No slovnyk.me results")
+
+    def test_hits_with_an_outage_are_marked_partial(self, server_module):
+        hit = {"word": "тест", "dictionary_slug": "sum20", "source_url": "https://example.invalid", "text": "x"}
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([hit], self.OUTAGE)):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert "Partial results" in result[0].text
+        assert "### Result 1" in result[0].text
