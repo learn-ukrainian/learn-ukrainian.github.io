@@ -66,6 +66,10 @@ RESPONSE_UNIT_TABLE: dict[str, str] = {
     "count-syllables": "items",  # words
     "divide-words": "items",  # words
     "image-to-letter": "items",
+    # A1's pick-syllables activity is one puzzle ("syllables"/"correctIndices",
+    # never an "items" list — see SINGLE_UNIT_ACTIVITY_TYPES above), so the
+    # item and the activity coincide: one response unit per activity (driver
+    # resolution on #8889, r5 §A2).
     "pick-syllables": "single",
     "match-up": "pairs",
     "group-sort": "entries",
@@ -137,10 +141,35 @@ def _response_units(activity_type: str, payload: dict) -> int | None:
     return len(unit_list) if unit_list is not None else None
 
 
+def _option_list(unit: dict) -> list | None:
+    """A choice item's option list: ``options``, or ``words`` for odd-one-out
+    (header §3: "option_why: [string] aligned by index to the option list
+    (options, or words for odd-one-out)")."""
+    options = unit.get("options")
+    if isinstance(options, list):
+        return options
+    words = unit.get("words")
+    return words if isinstance(words, list) else None
+
+
+def _has_complete_option_why(unit: dict) -> bool:
+    """A choice item is explained by a per-option ``option_why`` only when it
+    is complete: one non-empty entry for every option (issue #8889 r5 header
+    §3). A shorter or sparser array is not aligned to the option list and does
+    not count."""
+    option_why = unit.get("option_why")
+    options = _option_list(unit)
+    if not isinstance(option_why, list) or not options or len(option_why) != len(options):
+        return False
+    return all(bool(entry) for entry in option_why)
+
+
 def _has_explanation(unit: object) -> bool:
     if not isinstance(unit, dict):
         return False
-    return bool(unit.get("explanation")) or bool(unit.get("why"))
+    if bool(unit.get("explanation")) or bool(unit.get("why")):
+        return True
+    return _has_complete_option_why(unit)
 
 
 def _explained_units(activity_type: str, payload: dict, units: int) -> int:
@@ -285,19 +314,26 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
     drafts_by_lesson = {draft["lesson"]["n"]: draft for draft in drafts}
     lessons: list[dict] = []
     module_units = 0
+    module_workbook_units = 0
+    module_inline_units = 0
     module_explained = 0
     module_by_type: Counter[str] = Counter()
+    module_complete = True
 
     for lesson in plan["lessons"]:
         n = lesson["n"]
         draft = drafts_by_lesson.get(n)
         if draft is None:
             lessons.append({"n": n, "response_opportunities": NOT_AVAILABLE, "explanation_coverage": NOT_AVAILABLE})
+            module_complete = False
             continue
         plan_activities = {activity["id"]: activity for activity in _lesson_activities(lesson)}
         lesson_units = 0
+        lesson_workbook_units = 0
+        lesson_inline_units = 0
         lesson_explained = 0
         by_type: Counter[str] = Counter()
+        lesson_complete = True
         for activity in draft.get("activities") or []:
             plan_activity = plan_activities.get(activity.get("id"))
             if plan_activity is None:
@@ -305,29 +341,54 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
             activity_type = plan_activity["type"]
             units = _response_units(activity_type, activity)
             if units is None:
+                lesson_complete = False  # this activity's units are unknown; the lesson total can't be a number
                 continue
             lesson_units += units
             by_type[activity_type] += units
             lesson_explained += _explained_units(activity_type, activity, units)
-        module_units += lesson_units
-        module_explained += lesson_explained
-        module_by_type.update(by_type)
-        lessons.append(
-            {
-                "n": n,
-                "response_opportunities": {"total": lesson_units, "by_type": dict(sorted(by_type.items()))},
-                "explanation_coverage": {"explained": lesson_explained, "total": lesson_units},
-            }
-        )
+            if plan_activity["placement"] == "workbook":
+                lesson_workbook_units += units
+            else:
+                lesson_inline_units += units
+
+        if lesson_complete:
+            module_units += lesson_units
+            module_workbook_units += lesson_workbook_units
+            module_inline_units += lesson_inline_units
+            module_explained += lesson_explained
+            module_by_type.update(by_type)
+            lessons.append(
+                {
+                    "n": n,
+                    "response_opportunities": {"total": lesson_units, "by_type": dict(sorted(by_type.items()))},
+                    "explanation_coverage": {"explained": lesson_explained, "total": lesson_units},
+                }
+            )
+        else:
+            module_complete = False
+            lessons.append({"n": n, "response_opportunities": NOT_AVAILABLE, "explanation_coverage": NOT_AVAILABLE})
 
     module = _module_workbook_stats(plan)
-    module.update(
-        {
-            "response_opportunities_total": module_units,
-            "response_opportunities_by_type": dict(sorted(module_by_type.items())),
-            "explanation_coverage": {"explained": module_explained, "total": module_units},
-        }
-    )
+    if module_complete:
+        module.update(
+            {
+                "response_opportunities_total": module_units,
+                "response_opportunities_by_type": dict(sorted(module_by_type.items())),
+                "workbook_response_opportunities_total": module_workbook_units,
+                "inline_response_opportunities_total": module_inline_units,
+                "explanation_coverage": {"explained": module_explained, "total": module_units},
+            }
+        )
+    else:
+        module.update(
+            {
+                "response_opportunities_total": NOT_AVAILABLE,
+                "response_opportunities_by_type": NOT_AVAILABLE,
+                "workbook_response_opportunities_total": NOT_AVAILABLE,
+                "inline_response_opportunities_total": NOT_AVAILABLE,
+                "explanation_coverage": NOT_AVAILABLE,
+            }
+        )
     return {
         "stage": "draft",
         "module_slug": plan.get("slug"),
@@ -350,6 +411,7 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
     lessons: list[dict] = []
     module_planned = 0
     module_rendered = 0
+    module_complete = True
 
     for lesson in plan["lessons"]:
         n = lesson["n"]
@@ -358,6 +420,7 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
         page = pages_by_lesson.get(n)
         if page is None:
             lessons.append({"n": n, "planned_workbook": len(planned_ids), "rendered_and_playable": NOT_AVAILABLE})
+            module_complete = False
             continue
         tasks = {task["id"]: task for task in page.get("workbook_tasks") or []}
         rendered = sum(
@@ -369,7 +432,12 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
         lessons.append({"n": n, "planned_workbook": len(planned_ids), "rendered_and_playable": rendered})
 
     module = _module_workbook_stats(plan)
-    module.update({"planned_workbook_total": module_planned, "rendered_and_playable_total": module_rendered})
+    module.update(
+        {
+            "planned_workbook_total": module_planned,
+            "rendered_and_playable_total": module_rendered if module_complete else NOT_AVAILABLE,
+        }
+    )
     return {"stage": "rendered", "module_slug": plan.get("slug"), "lessons": lessons, "module": module}
 
 
@@ -389,6 +457,16 @@ def load_v1_activities(path: Path) -> dict[str, list[dict]]:
     raise ValueError(f"{path} holds neither a list nor a mapping at the top level")
 
 
+def _v1_activities_file(v1_module_path: Path) -> Path:
+    """The v1 module's activities file. ``v1_module_path`` is normally the
+    module directory (e.g. ``curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/``);
+    a direct path to the activities file itself is also accepted for
+    compatibility."""
+    if v1_module_path.is_dir():
+        return v1_module_path / "activities.yaml"
+    return v1_module_path
+
+
 def compare_v1(fresh_module_report: dict, v1_module_path: Path) -> dict:
     """The v1 comparison (issue #8889 r5 §A3): v1's workbook activities and
     response opportunities beside a fresh module's report of any stage.
@@ -396,9 +474,12 @@ def compare_v1(fresh_module_report: dict, v1_module_path: Path) -> dict:
     ``fresh_module_report`` is the return value of :func:`plan_report`,
     :func:`draft_report` or :func:`rendered_report`; response-opportunity
     figures are ``not_available_at_this_stage`` when the fresh report's stage
-    does not carry them (only :func:`draft_report` does).
+    does not carry them (only :func:`draft_report` does). Both sides of the
+    comparison are workbook-only — v1's ``inline`` activities never entered
+    the count, and the fresh side reads the module's
+    ``workbook_response_opportunities_total``, not its all-activities total.
     """
-    v1 = load_v1_activities(v1_module_path)
+    v1 = load_v1_activities(_v1_activities_file(v1_module_path))
     v1_by_type: Counter[str] = Counter()
     v1_units = 0
     for activity in v1["workbook"]:
@@ -409,7 +490,7 @@ def compare_v1(fresh_module_report: dict, v1_module_path: Path) -> dict:
 
     fresh_module = fresh_module_report.get("module", {})
     fresh_workbook_activities = fresh_module.get("workbook_activities")
-    fresh_units = fresh_module.get("response_opportunities_total", NOT_AVAILABLE)
+    fresh_units = fresh_module.get("workbook_response_opportunities_total", NOT_AVAILABLE)
 
     workbook_delta: int | str = NOT_AVAILABLE
     units_delta: int | str = NOT_AVAILABLE

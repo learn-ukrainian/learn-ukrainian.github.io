@@ -99,13 +99,41 @@ class Report:
         lines += [f"NOT_CHECKED {o.render()}" for o in self.not_checked]
         lines += [f"waived: {o.code} ({o.message})" for o in self.waivers]
         if self.activity_report:
+            stage = self.activity_report.get("stage", "plan")
             module = self.activity_report.get("module", {})
             lines.append(
-                "activity_report (plan stage): "
+                f"activity_report ({stage} stage) module: "
                 f"workbook_activities={module.get('workbook_activities')} "
                 f"inline_activities={module.get('inline_activities')} "
                 f"workbook_presence_complete={module.get('workbook_presence_complete')} "
                 f"largest_workbook_type_share={module.get('largest_workbook_type_share')} "
                 f"longest_same_type_workbook_run={module.get('longest_same_type_workbook_run')}"
             )
+            for lesson in self.activity_report.get("lessons", []):
+                lines.append(f"activity_report ({stage} stage) lesson {lesson.get('n')}: {_render_lesson(lesson)}")
         return "\n".join(lines)
+
+
+def _render_lesson(lesson: dict) -> str:
+    """One lesson's activity-report fields, whichever stage produced them
+    (plan_report, draft_report or rendered_report — issue #8889 r5 §A2)."""
+    parts = []
+    if "kind" in lesson:
+        parts.append(f"kind={lesson['kind']}")
+    activities = lesson.get("activities")
+    if isinstance(activities, dict):
+        parts.append(f"inline={activities.get('inline', {}).get('total')}")
+        parts.append(f"workbook={activities.get('workbook', {}).get('total')}")
+    if "distinct_types" in lesson:
+        parts.append(f"distinct_types={','.join(lesson['distinct_types'])}")
+    if "has_workbook" in lesson:
+        parts.append(f"has_workbook={lesson['has_workbook']}")
+    if "response_opportunities" in lesson:
+        parts.append(f"response_opportunities={lesson['response_opportunities']}")
+    if "explanation_coverage" in lesson:
+        parts.append(f"explanation_coverage={lesson['explanation_coverage']}")
+    if "planned_workbook" in lesson:
+        parts.append(f"planned_workbook={lesson['planned_workbook']}")
+    if "rendered_and_playable" in lesson:
+        parts.append(f"rendered_and_playable={lesson['rendered_and_playable']}")
+    return " ".join(parts)

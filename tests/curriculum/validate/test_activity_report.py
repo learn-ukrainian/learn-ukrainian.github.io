@@ -187,6 +187,88 @@ def test_draft_report_sequence_types_count_one_with_whole_activity_explanation()
     assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 2}
 
 
+def test_draft_report_pick_syllables_counts_one_response_unit_per_activity() -> None:
+    # Driver resolution on #8889: pick-syllables is one puzzle (no "items"
+    # list), so the item and the activity coincide at A1 — one unit, not a
+    # count of syllables or of correctIndices.
+    plan = _plan_with_one_lesson([_activity("a1", "pick-syllables", "workbook")])
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {
+                    "id": "a1",
+                    "syllables": ["мо", "ло", "ко"],
+                    "correctIndices": [0, 2],
+                    "explanation": "why these syllables",
+                }
+            ],
+        }
+    ]
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["response_opportunities"] == {"total": 1, "by_type": {"pick-syllables": 1}}
+    assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 1}
+
+
+def test_draft_report_complete_option_why_counts_as_explained() -> None:
+    # Regression for finding 5: a per-option option_why array with one entry
+    # per option is a valid explanation, not only the single "explanation" or
+    # "why" string.
+    plan = _plan_with_one_lesson([_activity("a1", "quiz", "workbook")])
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {
+                    "id": "a1",
+                    "items": [
+                        {
+                            "prompt": "?",
+                            "options": ["x", "y", "z"],
+                            "option_why": ["x is right", "y is wrong", "z is wrong"],
+                        },
+                        {
+                            "prompt": "?",
+                            "options": ["a", "b"],
+                            "option_why": ["a is right", ""],  # partial: one entry is empty
+                        },
+                        {
+                            "prompt": "?",
+                            "options": ["p", "q"],
+                            "option_why": ["p is right"],  # partial: shorter than options
+                        },
+                    ],
+                }
+            ],
+        }
+    ]
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 3}
+
+
+def test_draft_report_odd_one_out_option_why_aligns_to_words() -> None:
+    plan = _plan_with_one_lesson([_activity("a1", "odd-one-out", "workbook")])
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {
+                    "id": "a1",
+                    "items": [
+                        {
+                            "prompt": "?",
+                            "words": ["кіт", "собака", "стіл"],
+                            "option_why": ["animal", "animal", "not an animal"],
+                        }
+                    ],
+                }
+            ],
+        }
+    ]
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 1}
+
+
 def test_draft_report_missing_lesson_draft_is_not_available() -> None:
     plan = _plan_with_one_lesson([_activity("a1", "quiz", "inline")])
     report = draft_report(plan, drafts=[])
@@ -195,11 +277,58 @@ def test_draft_report_missing_lesson_draft_is_not_available() -> None:
     assert report["rendered"] == NOT_AVAILABLE
 
 
-def test_draft_report_activity_missing_the_expected_key_is_not_counted() -> None:
+def test_draft_report_activity_missing_the_expected_key_is_not_available() -> None:
+    # An uncomputable activity must not silently drop to 0 (issue #8889 r5 §A2
+    # r1 finding 1): the lesson and module totals that depend on it become
+    # not_available_at_this_stage instead.
     plan = _plan_with_one_lesson([_activity("a1", "quiz", "inline")])
     drafts = [{"lesson": {"n": 1}, "activities": [{"id": "a1"}]}]  # no "items"
     report = draft_report(plan, drafts)
-    assert report["lessons"][0]["response_opportunities"] == {"total": 0, "by_type": {}}
+    assert report["lessons"][0]["response_opportunities"] == NOT_AVAILABLE
+    assert report["lessons"][0]["explanation_coverage"] == NOT_AVAILABLE
+    assert report["module"]["response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["inline_response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["explanation_coverage"] == NOT_AVAILABLE
+
+
+def test_draft_report_module_total_is_not_available_when_any_lesson_draft_is_missing() -> None:
+    # Regression for finding 1: a missing lesson draft must not let the module
+    # total silently equal the sum of the *other* lessons.
+    plan = {
+        "slug": "mod-one",
+        "lessons": [
+            _lesson(1, "teach", [_activity("a1", "quiz", "workbook")]),
+            _lesson(2, "teach", [_activity("a2", "quiz", "workbook")]),
+        ],
+    }
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [{"id": "a1", "items": [{"prompt": "?", "options": ["x"], "explanation": "why"}]}],
+        }
+    ]  # lesson 2 has no draft yet
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["response_opportunities"] == {"total": 1, "by_type": {"quiz": 1}}
+    assert report["lessons"][1]["response_opportunities"] == NOT_AVAILABLE
+    assert report["module"]["response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["explanation_coverage"] == NOT_AVAILABLE
+
+
+def test_rendered_report_module_total_is_not_available_when_any_page_is_missing() -> None:
+    # Regression for finding 1, rendered stage.
+    plan = {
+        "slug": "mod-one",
+        "lessons": [
+            _lesson(1, "teach", [_activity("a1", "quiz", "workbook")]),
+            _lesson(2, "teach", [_activity("a2", "quiz", "workbook")]),
+        ],
+    }
+    built_pages = [{"n": 1, "workbook_tasks": [{"id": "a1", "rendered": True, "playable": True}]}]  # no page for 2
+    report = rendered_report(plan, built_pages)
+    assert report["module"]["planned_workbook_total"] == 2
+    assert report["module"]["rendered_and_playable_total"] == NOT_AVAILABLE
 
 
 def test_rendered_report_counts_rendered_and_playable_only() -> None:
@@ -293,6 +422,71 @@ def test_compare_v1_with_a_plan_stage_report_marks_units_not_available(tmp_path:
     assert comparison["fresh"]["workbook_response_opportunities"] == NOT_AVAILABLE
     assert comparison["workbook_response_opportunities_delta"] == NOT_AVAILABLE
     assert comparison["workbook_activities_delta"] == 0
+
+
+def test_compare_v1_counts_workbook_only_not_inline_plus_workbook(tmp_path: Path) -> None:
+    # Regression for finding 2: a fresh module with large inline activity
+    # (which contributes nothing to v1's workbook baseline) must not inflate
+    # the "fresh" workbook response-opportunities figure.
+    path = tmp_path / "activities.yaml"
+    path.write_text(
+        yaml.safe_dump({"inline": [], "workbook": [{"id": "act-1", "type": "quiz", "items": [1]}]}), encoding="utf-8"
+    )
+    plan = _plan_with_one_lesson(
+        [
+            _activity("a1", "quiz", "workbook"),
+            _activity("a2", "quiz", "inline"),
+        ]
+    )
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {"id": "a1", "items": [{"prompt": "p", "options": ["x"], "explanation": "e"}]},
+                {
+                    "id": "a2",
+                    "items": [{"prompt": "p", "options": ["x"], "explanation": "e"}] * 5,
+                },
+            ],
+        }
+    ]
+    fresh = draft_report(plan, drafts)
+    assert fresh["module"]["response_opportunities_total"] == 6  # 1 workbook + 5 inline
+    comparison = compare_v1(fresh, path)
+    assert comparison["fresh"]["workbook_response_opportunities"] == 1
+    assert comparison["workbook_response_opportunities_delta"] == 0
+
+
+def test_compare_v1_reads_activities_yaml_from_the_module_directory(tmp_path: Path) -> None:
+    # Regression for finding 6: v1_module_path is normally a module directory,
+    # not the activities.yaml file directly.
+    module_dir = tmp_path / "sounds-letters-and-hello"
+    module_dir.mkdir()
+    (module_dir / "activities.yaml").write_text(
+        yaml.safe_dump({"inline": [], "workbook": [{"id": "act-1", "type": "quiz", "items": [1, 2]}]}),
+        encoding="utf-8",
+    )
+    plan = _plan_with_one_lesson([_activity("a1", "quiz", "workbook")])
+    drafts = [{"lesson": {"n": 1}, "activities": [{"id": "a1", "items": [{"prompt": "p", "options": ["x"]}]}]}]
+    fresh = draft_report(plan, drafts)
+    comparison = compare_v1(fresh, module_dir)
+    assert comparison["v1"]["workbook_activities"] == 1
+    assert comparison["v1"]["workbook_response_opportunities"] == 2
+
+
+def test_compare_v1_reads_flat_list_v1_module_from_the_module_directory(tmp_path: Path) -> None:
+    # The flat-list v1 shape (no inline/workbook split, e.g. sounds-letters-and-hello)
+    # also resolves through the directory form.
+    module_dir = tmp_path / "sounds-letters-and-hello"
+    module_dir.mkdir()
+    (module_dir / "activities.yaml").write_text(
+        yaml.safe_dump([{"id": "act-1", "type": "quiz", "items": [1, 2, 3]}]), encoding="utf-8"
+    )
+    plan = _plan_with_one_lesson([])
+    fresh = plan_report(plan)
+    comparison = compare_v1(fresh, module_dir)
+    assert comparison["v1"]["workbook_activities"] == 0
+    assert comparison["v1"]["inline_activities"] == 1
 
 
 def test_response_unit_table_covers_every_a1_choice_type() -> None:

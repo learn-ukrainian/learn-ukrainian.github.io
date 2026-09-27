@@ -1051,6 +1051,22 @@ def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> Non
     assert payload["waivers"] == []
 
 
+def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path: Path) -> None:
+    # Regression for review finding 4: the printed report must show
+    # plan_report per lesson, not only the module-level summary line.
+    report = run_case(tmp_path, VALID_CASES[0])
+    text = report.render_text()
+    assert "activity_report (plan stage) module:" in text
+    for lesson in report.activity_report["lessons"]:
+        assert f"activity_report (plan stage) lesson {lesson['n']}:" in text
+    lesson_1_line = next(
+        line for line in text.splitlines() if line.startswith("activity_report (plan stage) lesson 1:")
+    )
+    assert "workbook=1" in lesson_1_line
+    assert "inline=2" in lesson_1_line
+    assert "has_workbook=True" in lesson_1_line
+
+
 def test_failure_names_code_lesson_step_and_value(tmp_path: Path) -> None:
     report = run_case(tmp_path, case_by_name("introduced_twice"))
     outcome = report.failures[0]
