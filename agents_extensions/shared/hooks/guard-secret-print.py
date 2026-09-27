@@ -66,6 +66,7 @@ def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(_strip_heredoc_bodies(command), posix=False, punctuation_chars=";&|")
         lexer.whitespace_split = True
+        lexer.commenters = ""
         return list(lexer)
     except ValueError:
         return []

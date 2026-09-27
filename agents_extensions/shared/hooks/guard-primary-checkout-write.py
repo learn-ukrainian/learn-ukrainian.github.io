@@ -292,6 +292,7 @@ _CONTROL_OPS = frozenset({"&&", "||", ";", ";;", "|", "|&", "&", "(", ")", "\n"}
 # ``>&`` duplicates a descriptor only for a numeric operand (or closes it for
 # ``-``); otherwise it opens a file. ``<>`` opens read-write and can create.
 _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
+_REDIRECT_OPS = _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}
 
 
 def _strip_quotes_for_heredoc(token: str) -> str:
@@ -453,11 +454,10 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
-# Characters the shell keeps literal inside quotes (or after a backslash) but
-# that the expansion pass below would act on. They are swapped for private-use
-# sentinels before shlex strips the quotes, so ``'$HOME/x'``, ``"~/x"`` and
-# ``"A=b"`` stay literal, and are restored in every emitted word (#8500).
-_LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": ""}
+# Preserve literal expansion characters and redirect punctuation through shlex,
+# which otherwise strips quotes before redirect tokens can be distinguished from
+# argv words. Restore each sentinel in the expanded word (#8500, #8887).
+_LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": "", "<": "", ">": "", "&": ""}
 _UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
 
 # Shell operators a punctuation run is split into, longest first. shlex returns
@@ -490,11 +490,11 @@ _PUNCTUATION = frozenset("();<>|&\n")
 
 
 def _mask_quoted_literals(command: str) -> str:
-    """Replace quote- or backslash-protected ``$ ` ~ =`` with sentinels.
+    """Preserve quote- or backslash-protected expansion and redirect characters.
 
-    Inside single quotes all four are literal; inside double quotes ``~`` and
-    ``=`` are (``$`` and backtick still expand); a backslash protects ``$`` and
-    backtick anywhere outside single quotes and ``~`` / ``=`` outside quotes.
+    Inside single quotes expansion characters are literal; inside double quotes
+    ``~`` and ``=`` are literal (``$`` and backtick still expand). Redirect
+    characters are literal inside either quote style or after a backslash.
     """
     out: list[str] = []
     in_single = False
@@ -504,7 +504,7 @@ def _mask_quoted_literals(command: str) -> str:
         char = command[i]
         if char == "\\" and not in_single and i + 1 < len(command):
             following = command[i + 1]
-            if following in "$`" or (not in_double and following in "~="):
+            if following in "$`<>&" or (not in_double and following in "~="):
                 out.append(_LITERAL_SENTINELS[following])
             else:
                 out.extend((char, following))
@@ -514,7 +514,7 @@ def _mask_quoted_literals(command: str) -> str:
             in_single = not in_single
         elif char == '"' and not in_single:
             in_double = not in_double
-        elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=")):
+        elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=<>&")):
             char = _LITERAL_SENTINELS[char]
         out.append(char)
         i += 1
@@ -557,6 +557,7 @@ def _tokenize(command: str) -> list[str]:
         # command's option (for example `find -print`) can be mistaken for an
         # earlier `sed` invocation's `-i` flag and produce bogus write targets.
         lexer.whitespace = " \t\r"
+        lexer.commenters = ""
         return [part for token in lexer for part in _split_operator_run(token)]
     except ValueError:
         # Unbalanced quotes / un-tokenizable — fail open (the shell will reject
@@ -606,25 +607,29 @@ class ShellWord(str):
     the offset of the first expansion whose value the guard cannot know
     (``None`` when the word resolved completely); from that offset on the text
     is the raw, unexpanded remainder, kept for messages. ``raw`` is the word as
-    written.
+    written. ``shell_redirect`` records an unquoted redirect operator before
+    expansion restores any quote-protected punctuation.
     """
 
     unresolved_at: Optional[int]  # noqa: UP045 - Python 3.9 parser
     raw: str
     base: str | None
     decision_reason: str | None
+    shell_redirect: bool
 
     def __new__(
         cls,
         text: str,
         unresolved_at: Optional[int] = None,  # noqa: UP045 - Python 3.9 parser
         raw: Optional[str] = None,  # noqa: UP045 - Python 3.9 parser
+        shell_redirect: bool = False,
     ) -> ShellWord:
         word = super().__new__(cls, text)
         word.unresolved_at = unresolved_at
         word.raw = text if raw is None else raw
         word.base = None
         word.decision_reason = None
+        word.shell_redirect = shell_redirect
         return word
 
     def tail(self, start: int) -> ShellWord:
@@ -656,6 +661,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
     marks the word unresolved at that offset.
     """
     raw = token.translate(_UNMASK)
+    shell_redirect = token in _REDIRECT_OPS
     out: list[str] = []
     i = 0
     if token.startswith("~"):
@@ -665,7 +671,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
         if not user:
             home = lookup("HOME")
             if home is None:
-                return ShellWord(raw, 0, raw)
+                return ShellWord(raw, 0, raw, shell_redirect=shell_redirect)
             out.append(home)
             i = end
         elif re.fullmatch(r"[A-Za-z0-9._-]+", user):
@@ -680,13 +686,13 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
             value = lookup(match.group(1) or match.group(2)) if match else None
             if match is None or value is None:
                 prefix = "".join(out).translate(_UNMASK)
-                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw)
+                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw, shell_redirect=shell_redirect)
             out.append(value)
             i = match.end()
             continue
         out.append(char)
         i += 1
-    return ShellWord("".join(out).translate(_UNMASK), None, raw)
+    return ShellWord("".join(out).translate(_UNMASK), None, raw, shell_redirect=shell_redirect)
 
 
 class _Expander:
@@ -902,7 +908,7 @@ def _redirect_targets(tokens: list[str]) -> list[str]:
     """Files opened for writing by shell redirections."""
     targets: list[str] = []
     for i, tok in enumerate(tokens):
-        if tok in _FILE_REDIRECTS and i + 1 < len(tokens):
+        if isinstance(tok, ShellWord) and tok.shell_redirect and tok in _FILE_REDIRECTS and i + 1 < len(tokens):
             dest = tokens[i + 1]
             # ``>&1`` duplicates a descriptor; ``>&-`` closes it. Ordinary
             # ``> 123`` writes a file named 123, so only ``>&`` gets this rule.
@@ -1499,7 +1505,12 @@ def _writer_targets(
     without_redirects: list[str] = []
     index = 0
     while index < len(segment):
-        if segment[index] in _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}:
+        if (
+            isinstance(segment[index], ShellWord)
+            and segment[index].shell_redirect
+            and segment[index] in _REDIRECT_OPS
+            and index + 1 < len(segment)
+        ):
             index += 2
         else:
             without_redirects.append(segment[index])

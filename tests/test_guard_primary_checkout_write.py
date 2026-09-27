@@ -873,6 +873,22 @@ def test_external_tee_with_null_redirect_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        'tee ">"',
+        'cp /tmp/x ">"',
+        'mv /tmp/x ">>"',
+        'tee ">" /tmp/also-written',
+        "git commit -m fix#123 && tee AGENTS.md",
+    ],
+)
+def test_quoted_redirect_spelling_is_still_a_primary_write(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
 def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"W={worktree}; git -C $W add f")

@@ -70,6 +70,18 @@ def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
 @pytest.mark.parametrize(
     "cmd",
     [
+        "git commit -m fix#123 && cat .env",
+        "echo hi#$GH_TOKEN",
+    ],
+)
+def test_unquoted_midword_hash_keeps_secret_checks_active(monkeypatch, capsys, cmd):
+    assert _run(monkeypatch, cmd) == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
         "env | cut -d= -f1",
         '[ -n "${X:-}" ] && echo SET',
         "cat README.md",
