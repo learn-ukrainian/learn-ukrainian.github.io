@@ -35,6 +35,7 @@ from jsonschema import Draft202012Validator
 from ..arc.loader import SCHEMA_PATH as ARC_SCHEMA_PATH
 from ..evidence import lock as evidence_lock
 from . import codes
+from .activity_report import plan_report as build_plan_report
 from .cross import check_arc, check_rule4, load_level_plans
 from .loader import (
     PLAN_SCHEMA_PATH,
@@ -48,6 +49,7 @@ from .loader import (
     sha256_of,
 )
 from .pack import load_pack, load_words, lock_digest
+from .placement_table import PLACEMENT_TABLE_REL, PlacementTableError, load_placement_table
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
 from .report import Outcome, Report
 from .scope import check_scope_sidecar, check_title, scope_sidecar_path, title_quantities_outcome
@@ -478,6 +480,84 @@ def _check_activities(report: Report, plan: dict, allowlist: set[str] | None) ->
                 )
 
 
+def _check_workbook_presence(report: Report, plan: dict) -> None:
+    """Every lesson that is not the recap has a workbook activity (issue #8889 r5 §A1).
+
+    The recap lesson (``kind: recap``) is identified structurally, not by
+    position: it keeps its accepted shape (R-03, arc D4) and is not given a
+    second exercise set. A "closing shape (b)" teach lesson that ends with a
+    recap *step* (``closes_with_recap``) is not itself a recap lesson — its
+    ``kind`` stays ``teach`` — so it still needs a workbook activity like any
+    other teach lesson.
+    """
+    for lesson in plan["lessons"]:
+        if lesson["kind"] == "recap":
+            continue
+        activities = lesson.get("activities") or []
+        if not any(activity["placement"] == "workbook" for activity in activities):
+            _fail(
+                report,
+                codes.WORKBOOK_ACTIVITY_MISSING,
+                f"lesson {lesson['n']} (kind {lesson['kind']!r}) has no placement: workbook activity; "
+                "every lesson that is not the recap has one (issue #8889 r5 §A1)",
+                lesson=lesson["n"],
+            )
+
+
+def _check_activity_placement(
+    report: Report,
+    plan: dict,
+    level: str,
+    allowlist: set[str] | None,
+    placement_table_path: Path | None,
+) -> None:
+    """A type's placement must be allowed by the generated placement table (issue #8889 r5 §B2).
+
+    Skips a type the schema allowlist already rejected (UNKNOWN_ACTIVITY_TYPE
+    reports that), so one bad type is never double-reported. A level the
+    table does not cover (outside the CORE fresh-build levels) is
+    not_checked, not failed.
+    """
+    try:
+        table = load_placement_table(placement_table_path)
+    except (OSError, PlacementTableError) as error:
+        _fail(report, codes.PLACEMENT_TABLE_UNAVAILABLE, f"cannot load the placement table: {error}")
+        return
+    level_table = table.get("levels", {}).get(level)
+    if level_table is None:
+        report.not_checked.append(
+            Outcome(
+                codes.PLACEMENT_LEVEL_NOT_COVERED,
+                f"level {level!r} is not covered by the generated placement table "
+                f"(covers {sorted(table.get('levels', {}))}); the placement rule is not checked here",
+            )
+        )
+        return
+    for lesson in plan["lessons"]:
+        n = lesson["n"]
+        for activity in lesson.get("activities") or []:
+            activity_type = activity["type"]
+            if allowlist is not None and activity_type not in allowlist:
+                continue
+            allowed = level_table.get(activity_type, "forbidden")
+            if allowed == "forbidden":
+                _fail(
+                    report,
+                    codes.ACTIVITY_PLACEMENT_FORBIDDEN,
+                    f"activity {activity['id']} has type {activity_type!r}, which the placement table "
+                    f"forbids at level {level!r} (issue #8889 r5 §B2)",
+                    lesson=n,
+                )
+            elif allowed != "both" and allowed != activity["placement"]:
+                _fail(
+                    report,
+                    codes.ACTIVITY_PLACEMENT_NOT_ALLOWED,
+                    f"activity {activity['id']} has type {activity_type!r} placed {activity['placement']!r}, "
+                    f"but the placement table allows only {allowed!r} for it at level {level!r} (issue #8889 r5 §B2)",
+                    lesson=n,
+                )
+
+
 def _check_dialogue_and_needs(report: Report, plan: dict) -> None:
     """The r9 dialogue.step, speaker evidence, needs and paradigm id checks."""
     for lesson in plan["lessons"]:
@@ -805,6 +885,7 @@ def validate_plan(
     pack_path: Path | None = None,
     words_path: Path | None = None,
     activity_schema_path: Path | None = None,
+    placement_table_path: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
     write_scope: bool = False,
@@ -816,8 +897,10 @@ def validate_plan(
     path overrides exist for tests; the lesson-plans/ root rule applies to
     plan_path regardless, and a pack_path override must match the plan's
     evidence_ref.path (rule 3). activity_schema_path overrides the activity allowlist
-    schema (tests only; never a fallback level). allow_missing_prior turns exactly
-    the missing-prior-plans failure into a printed waiver; strict refuses waiver
+    schema (tests only; never a fallback level). placement_table_path overrides
+    scripts/curriculum/validate/placement_table.yaml (tests only; issue #8889 r5 §B2).
+    allow_missing_prior turns exactly the missing-prior-plans failure into a
+    printed waiver; strict refuses waiver
     flags (the CLI enforces that) and verifies the grammar registry is append-only
     over git history; write_scope regenerates the scope sidecar instead of checking
     it. provisional_pack (plan review, before the pack hash is promoted into the
@@ -841,6 +924,7 @@ def validate_plan(
             pack_path=pack_path,
             words_path=words_path,
             activity_schema_path=activity_schema_path,
+            placement_table_path=placement_table_path,
             allow_missing_prior=allow_missing_prior,
             strict=strict,
             write_scope=write_scope,
@@ -893,6 +977,7 @@ def _collect_inputs(context: dict) -> dict[str, str]:
         add(Path(f"{context['words_path']}.lock"))
     add(REPO_ROOT / PLAN_SCHEMA_PATH)
     add(context.get("activity_schema_path"))
+    add(context.get("placement_table_path") or REPO_ROOT / PLACEMENT_TABLE_REL)
     add(REPO_ROOT / ARC_SCHEMA_PATH)
     arc_path = plan_path.parent / "_arc.yaml"
     add(arc_path)
@@ -920,6 +1005,7 @@ def _validate_plan_run(
     pack_path: Path | None,
     words_path: Path | None,
     activity_schema_path: Path | None,
+    placement_table_path: Path | None,
     allow_missing_prior: bool,
     strict: bool,
     write_scope: bool,
@@ -1023,8 +1109,12 @@ def _validate_plan_run(
     context["activity_schema_path"] = activity_schema_path or REPO_ROOT / f"schemas/activities-{level}.schema.json"
     allowlist = _activity_allowlist(report, level, activity_schema_path)
     _check_activities(report, plan, allowlist)
+    context["placement_table_path"] = placement_table_path
+    _check_workbook_presence(report, plan)
+    _check_activity_placement(report, plan, level, allowlist, placement_table_path)
     _check_dialogue_and_needs(report, plan)
     _check_true_false_placement(report, plan)
+    report.activity_report = build_plan_report(plan)
 
     if pack is not None and store is not None:
         pack_ids = pack.ids
@@ -1250,6 +1340,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--words", type=Path, default=None, help="word store path override (tests)")
     parser.add_argument(
+        "--placement-table",
+        type=Path,
+        default=None,
+        help="placement_table.yaml path override (tests); default "
+        "scripts/curriculum/validate/placement_table.yaml (issue #8889 r5 §B2)",
+    )
+    parser.add_argument(
         "--level-dir",
         type=Path,
         default=None,
@@ -1320,6 +1417,7 @@ def main(argv: list[str] | None = None) -> int:
         plan_path=args.plan,
         pack_path=args.pack,
         words_path=args.words,
+        placement_table_path=args.placement_table,
         allow_missing_prior=args.allow_missing_prior,
         strict=args.strict,
         write_scope=args.write_scope,

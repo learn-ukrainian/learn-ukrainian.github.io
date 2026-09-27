@@ -5,10 +5,11 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import time
 from pathlib import Path
 
 import pytest
+
+from tests.wait_helpers import wait_for_pid_line
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -192,11 +193,7 @@ def test_astro_child_listener_in_unit_cgroup_is_preserved(harness) -> None:
         ]
     )
     try:
-        for _ in range(100):
-            if child_file.exists():
-                break
-            time.sleep(0.01)
-        child_pid = int(child_file.read_text())
+        child_pid = wait_for_pid_line(child_file)
         for pid in (parent.pid, child_pid):
             pid_dir = Path(env["SVC_PROC_ROOT"]) / str(pid)
             pid_dir.mkdir()

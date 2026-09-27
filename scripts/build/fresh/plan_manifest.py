@@ -133,16 +133,23 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+#: Top-level directories whose entries are code, resolved against this
+#: repository (the same root outside tests) rather than the curriculum tree's
+#: root — e.g. schemas/module-plan-v2.schema.json, or
+#: scripts/curriculum/validate/placement_table.yaml (issue #8889 r5 §B2).
+_CODE_ROOTS = ("schemas", "scripts")
+
+
 def current_sha(root: Path, relative: str) -> str | None:
     """sha256 of a recorded repo-relative path now; None when it is not a file.
 
-    ``schemas/…`` entries are code, resolved against this repository (the same
-    root outside tests); everything else against the tree's repository root.
+    Entries under a _CODE_ROOTS directory are code, resolved against this
+    repository; everything else against the tree's repository root.
     """
     rel = Path(relative)
     if rel.is_absolute() or ".." in rel.parts:
         return None
-    base = REPO_ROOT if rel.parts[:1] == ("schemas",) else root
+    base = REPO_ROOT if rel.parts and rel.parts[0] in _CODE_ROOTS else root
     path = base / rel
     return file_sha256(path) if path.is_file() else None
 

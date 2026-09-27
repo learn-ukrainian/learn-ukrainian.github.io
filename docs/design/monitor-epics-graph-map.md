@@ -124,6 +124,18 @@ including `last_state`, not just `last_decision`/`last_next_action` — correcte
 driver) gets `registry_status: "unregistered"` (the existing value `remote_epic_list()` already
 produces for that case) rather than a new field.
 
+**Null means unknown, never zero, when membership isn't verified (#8870).** Membership is a
+trust decision even on a display graph: an incomplete traversal (`audit.read_cache()`'s
+`effective_membership` doesn't cover every node) or an unflagged legacy cache (pre-P4, no
+`membership_complete: true`) must not be read as "this epic owns zero issues" — that's
+indistinguishable from a genuinely empty epic. When `audit.membership_report_is_complete()`
+returns `false`, the response adds top-level `"membership_complete": false` and
+`"incomplete_nodes": [...]`, and every membership-derived field goes to JSON `null` instead of
+`0`/`[]`/`false`: each epic node's `open_issue_count` / `closed_issue_count`, and each
+`issues_by_epic[epic]`'s `items` / `total_open` / `truncated`. Areas, edges, and non-membership
+epic fields (`registry_status`, `lease`, `session_state`, `last_*`) are unaffected — only the
+membership index is dropped. A complete/flagged cache's response is unchanged.
+
 ### 4.2 Issue-level relations — scoped down for v1, not the full cross-reference graph
 
 The issue's "relations" language could be read as "full issue↔issue cross-reference graph"

@@ -42,6 +42,21 @@ def a1_packet() -> dict:
     return pbr.prepare_review(f"a1/{pick_archive_only_slug()}", _reviewer())
 
 
+def _runner_from_packet(packet: dict):
+    """Reuse the real fixture's audit results for tests about later review stages."""
+
+    def run(argv, **_kwargs):
+        script = Path(argv[1]).name
+        assert script in {"track_deterministic_audit.py", "module_size_policy_audit.py"}, script
+        stage = "track_audit" if script == "track_deterministic_audit.py" else "size_policy"
+        result = packet["deterministic"][stage]["result"]
+        if stage == "size_policy":
+            result = [result]
+        return subprocess.CompletedProcess(argv, 0, json.dumps(result), "")
+
+    return run
+
+
 def test_core_packet_inventories_claimable_learner_statements(a1_packet: dict) -> None:
     packet = a1_packet
     units = packet["deterministic"]["statement_inventory"]["units"]
@@ -188,6 +203,7 @@ def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines(malys
 
 
 def test_packet_bound_contract_finalizes_short_supplied_finding(
+    malyshko_packet: dict,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     original = pbr.evaluate_mechanical_track_policy
@@ -213,7 +229,7 @@ def test_packet_bound_contract_finalizes_short_supplied_finding(
         return findings
 
     monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_short_finding)
-    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer(), runner=_runner_from_packet(malyshko_packet))
     content_path = packet["target"]["files"]["content"]
     supplied_finding = next(
         finding for finding in packet["deterministic"]["policy_findings"] if finding["id"] == "short-learner-level-meta"
@@ -323,14 +339,14 @@ def test_bilash_size_policy_is_exemplar_only(bilash_packet: dict) -> None:
     assert "4000" not in policy_text
 
 
-def test_semantic_pass_cannot_override_mechanical_high(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_semantic_pass_cannot_override_mechanical_high(bilash_packet: dict, monkeypatch: pytest.MonkeyPatch) -> None:
     policy_findings = _mechanical_high_deterministic()["policy_findings"]
     monkeypatch.setattr(
         pbr,
         "evaluate_mechanical_track_policy",
         lambda *args, **kwargs: copy.deepcopy(policy_findings),
     )
-    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer(), runner=_runner_from_packet(bilash_packet))
     result = pbr.finalize_review(packet, _raw(_passing_semantic(packet)))
 
     assert result["combined_disposition"]["status"] == "BLOCK"
@@ -458,6 +474,7 @@ def test_live_source_drift_returns_structured_incomplete(bilash_packet: dict, mo
 
 
 def test_quality_dimension_reuses_supplied_deterministic_finding_id(
+    malyshko_packet: dict,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     original = pbr.evaluate_mechanical_track_policy
@@ -483,7 +500,7 @@ def test_quality_dimension_reuses_supplied_deterministic_finding_id(
         return findings
 
     monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_supplied_finding)
-    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer(), runner=_runner_from_packet(malyshko_packet))
     external = next(
         finding for finding in pbr._deterministic_findings(packet) if finding["id"] == "supplied-deterministic-finding"
     )

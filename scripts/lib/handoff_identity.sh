@@ -267,18 +267,31 @@ launcher_require_registered_slot() {
 # A key aliased onto another lane (minted slot is not claude-<key>) is listed
 # with the compatibility aliases instead of as infra.<key>.
 launcher_selector_help() {
-  local key=""
+  local key="" registered="" rc=0
+  local -a keys=() slots=()
+  while IFS= read -r key; do
+    [ -n "$key" ] || continue
+    keys+=("$key")
+    slots+=("claude-$key")
+  done < <(_launcher_registry_stream_keys 2>/dev/null || true)
+  if [ "${#slots[@]}" -gt 0 ]; then
+    registered="$(_handoff_slot_registry --registered "${slots[@]}" 2>/dev/null)" && rc=0 || rc=$?
+  fi
   cat <<'EOF'
 Valid lane selectors:
   Registry stream keys (and infra.<key>):
 EOF
-  while IFS= read -r key; do
-    [ -n "$key" ] || continue
-    # rc 3 = minted slot unregistered (launcher would refuse it); anything else =
-    # cannot tell, so keep the key listed rather than hide a selector on a broken host.
-    _handoff_slot_registry --slot "claude-$key" >/dev/null 2>&1 || [ "$?" -ne 3 ] || continue
+  for key in "${keys[@]}"; do
+    # The batch returns only registered slots. If it cannot run, keep every
+    # key listed rather than hide selectors on a broken host.
+    if [ "$rc" -eq 0 ]; then
+      case $'\n'"$registered"$'\n' in
+        *$'\n'"claude-$key"$'\n'*) ;;
+        *) continue ;;
+      esac
+    fi
     printf '    %s | infra.%s\n' "$key" "$key"
-  done < <(_launcher_registry_stream_keys 2>/dev/null || true)
+  done
   cat <<'EOF'
   Compatibility aliases:
     infra | harness | infra.fleet-comms

@@ -110,7 +110,7 @@ Gone forever from A2 onward. Principle 2.
 | `odd-one-out` | Pick the item that doesn't belong with the rest | A1–B1 |
 | `observe` | Study a picture/diagram and answer | A1–A2 |
 | `phrase-table` | Fill cells in a substitution table | A1–A2 |
-| `classify` | Assign items to categories (listed in comment, not currently in any allowlist; deprecated in favor of `group-sort`) | — |
+| `classify` | Legacy category assignment; deprecated in favor of `group-sort` and forbidden in new plans even where a legacy level schema defines it | — |
 
 ### Sort / Match (not gamification, runs through C2)
 
@@ -192,6 +192,7 @@ A true-false statement is not checked against a bilingual passage or against a v
 | Type | Status |
 |---|---|
 | `select` | Legacy, subsumed by `mark-the-words`. Listed in every level's `FORBIDDEN_ACTIVITY_TYPES`. New content must not produce it. |
+| `classify` | Legacy category assignment; use `group-sort` in new plans. The A1 legacy schema still defines it, but fresh-plan placement is `forbidden`. |
 
 ---
 
@@ -280,6 +281,16 @@ Reading the matrix:
 ---
 
 ## 4. Special Rules (Semantic Placement)
+
+For fresh A1 plans (#8889 §B2), generate the placement table from the pedagogical rows
+above intersected with the definitions in `schemas/activities-a1.schema.json`. Values are
+`inline`, `workbook`, `both`, and `forbidden`; the generated table lists every schema-versus-
+pedagogy discrepancy and its resolution. `classify` is explicitly `forbidden` despite its
+legacy A1 schema definition. `translate`, `anagram`, and `error-correction` are workbook only;
+`image-to-letter`, `letter-grid`, and `watch-and-repeat` are inline only; all other permitted
+A1 types in the §3 matrix are `both`. The plan validator enforces that generated table for
+fresh plans. The §3 matrix and the legacy repair behavior below remain references for existing
+modules and do not override the fresh table.
 
 Two sets in `config_tables.py` override the per-level allowlist for **placement only**. A type in these sets is restricted regardless of level config.
 

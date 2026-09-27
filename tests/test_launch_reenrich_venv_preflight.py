@@ -173,7 +173,7 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
 
     stub_keys = ("bs4", "wiki", "wiki.slovnyk_me")
     saved = {key: sys.modules.get(key) for key in stub_keys}
-    saved_source_query = {k: v for k, v in sys.modules.items() if "source_query" in k}
+    saved_source_query = {k: v for k, v in list(sys.modules.items()) if "source_query" in k}
     try:
         sys.modules["bs4"] = None  # type: ignore[assignment]
 
