@@ -53,6 +53,69 @@ from tests.helpers.plan_review_world import LEVEL, SLUG, build_env, validate_pro
 
 pytestmark = pytest.mark.reads_content
 
+_SHIPPED_PROMPTS = (Path(__file__).resolve().parents[2] / "scripts" / "review" / "prompts").resolve()
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _cache_immutable_shipped_templates():
+    """Cache reads of the shipped ``*.md.j2`` templates.
+
+    Those files are not rewritten during the module. Copies under ``tmp_path``
+    stay uncached, so a test that edits a fixture template still sees the edit.
+    """
+    from scripts.review.prompts import render as prompt_render
+
+    text_cache: dict[Path, str] = {}
+    byte_cache: dict[Path, bytes] = {}
+    original_text = Path.read_text
+    original_bytes = Path.read_bytes
+    original_sources = prompt_render.template_sources
+    shipped_sources: dict[str, tuple[str, str]] | None = None
+
+    def cached_text(self: Path, encoding: str | None = None, errors: str | None = None) -> str:
+        try:
+            resolved = self.resolve()
+        except OSError:
+            return original_text(self, encoding=encoding, errors=errors)
+        if resolved.parent == _SHIPPED_PROMPTS and resolved.name.endswith(".md.j2"):
+            cached = text_cache.get(resolved)
+            if cached is None:
+                cached = original_text(self, encoding=encoding, errors=errors)
+                text_cache[resolved] = cached
+            return cached
+        return original_text(self, encoding=encoding, errors=errors)
+
+    def cached_bytes(self: Path) -> bytes:
+        try:
+            resolved = self.resolve()
+        except OSError:
+            return original_bytes(self)
+        if resolved.parent == _SHIPPED_PROMPTS and resolved.name.endswith(".md.j2"):
+            cached = byte_cache.get(resolved)
+            if cached is None:
+                cached = original_bytes(self)
+                byte_cache[resolved] = cached
+            return cached
+        return original_bytes(self)
+
+    def cached_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
+        nonlocal shipped_sources
+        if Path(prompts_dir).resolve() == _SHIPPED_PROMPTS:
+            if shipped_sources is None:
+                shipped_sources = original_sources(prompts_dir)
+            return shipped_sources
+        return original_sources(prompts_dir)
+
+    Path.read_text = cached_text  # type: ignore[method-assign]
+    Path.read_bytes = cached_bytes  # type: ignore[method-assign]
+    prompt_render.template_sources = cached_sources
+    try:
+        yield
+    finally:
+        Path.read_text = original_text  # type: ignore[method-assign]
+        Path.read_bytes = original_bytes  # type: ignore[method-assign]
+        prompt_render.template_sources = original_sources
+
 EXPECTED_RULE_SNIPPET = (
     "when expected is present it is one contiguous substring copied character for character "
     "from the stored result of one named receipt the finding cites — the tool output the seat received, "
@@ -995,7 +1058,8 @@ def test_any_appended_text_fails_the_exact_render(tmp_path, monkeypatch):
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
 
     for appended, payload in _LESSON_APPENDS.items():
-        assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+        clean = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+        assert clean.passed, (appended, clean.errors)
         res = check_prompt(rendered + payload, manifest_path, repo_root=tmp_path, files_read=files_read)
         assert not res.passed and any(err.startswith("prompt_not_exact_render") for err in res.errors), (
             appended,
@@ -1345,12 +1409,20 @@ def test_any_activity_data_pin_is_refused_as_unsupported(tmp_path, monkeypatch):
         target.write_text("{}\n", encoding="utf-8")
         (page_dir / "2.mdx").write_text(f'import a from "@site/{rel.removeprefix("site/")}";\n', encoding="utf-8")
         doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
-        assert [item["path"] for item in doc["inputs"]["activity_data"]] == [rel]
-        assert _refusal_codes(doc, tmp_path) == ["pin_activity_data_unsupported"]
-        with pytest.raises(PinIneligibleError, match="pin_activity_data_unsupported"):
+        assert [item["path"] for item in doc["inputs"]["activity_data"]] == [rel], rel
+        codes = _refusal_codes(doc, tmp_path)
+        assert codes == ["pin_activity_data_unsupported"], (rel, codes)
+        try:
             render_prompt(doc, repo_root=tmp_path)
+        except PinIneligibleError as exc:
+            assert "pin_activity_data_unsupported" in str(exc), (rel, exc)
+        else:
+            pytest.fail(f"activity data pin was accepted: {rel}")
         result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
-        assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors)
+        assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors), (
+            rel,
+            result.errors,
+        )
 
 
 def test_a_lesson_that_imports_data_fails_even_with_the_pin_removed(tmp_path, monkeypatch):

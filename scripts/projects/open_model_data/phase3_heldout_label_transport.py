@@ -39,7 +39,6 @@ DEFAULT_CYCLE002_ROLE_CONTRACT = DATA / "evidence/correction_protection_function
 DEFAULT_CYCLE002_EVALUATION_CONTRACT = DATA / "evidence/correction_protection_evaluation_contract_v2_2.json"
 ROW_COUNT = 2000
 MATERIALIZATION_COUNT = 67041
-FROZEN_PARTITION_COUNT = 9392
 LABEL_PROMPT_SHA256 = "d607e77fd20ef037385bce365f8854fe51e308ce3b05cafc71ea795e32e37195"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
@@ -381,10 +380,7 @@ def _partition(
             "partition row shape drift",
         )
         rows.append(row)
-    require(
-        len(rows) == FROZEN_PARTITION_COUNT and len({row["unit_id"] for row in rows}) == FROZEN_PARTITION_COUNT,
-        "frozen partition denominator drift",
-    )
+    require(len(rows) == 9392 and len({row["unit_id"] for row in rows}) == 9392, "frozen partition denominator drift")
     selected = [row for row in rows if row["candidate_lane"] == "clean_modern"]
     require(len(selected) == ROW_COUNT, "clean_modern selection must be exactly 2,000")
     require(all(row["reason"] == "evaluation_only" for row in selected), "non-selected row entered heldout label lane")

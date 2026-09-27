@@ -37,6 +37,56 @@ def _row(number: int) -> dict[str, object]:
     }
 
 
+# `_partition` compares against this literal. It is not a production attribute.
+_FROZEN_PARTITION_COUNT = 9392
+
+
+def _partition_row(row: dict[str, object], *, lane: str) -> dict[str, object]:
+    return {
+        "family_id": row["family_id"],
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "reason": "evaluation_only",
+        "candidate_lane": lane,
+        "source_text_sha256": row["source_text_sha256"],
+        "frozen_locator_sha256": row["frozen_locator_sha256"],
+    }
+
+
+def _filler_partition_row(number: int) -> dict[str, object]:
+    digest = f"{number:064x}"
+    return {
+        "family_id": "school_textbooks",
+        "unit_id": f"partition-filler-{number:05d}",
+        "unit_sha256": digest,
+        "reason": "evaluation_only",
+        "candidate_lane": "phenomenon_strata",
+        "source_text_sha256": digest,
+        "frozen_locator_sha256": f"{number + 1:064x}",
+    }
+
+
+def _partition_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Build the frozen partition `_partition` accepts.
+
+    Full-scale tests have a materialization larger than 9,392 and slice it.
+    Shrunk tests keep a small materialization; the remaining partition rows are
+    fillers so the production length check still runs.
+    """
+    row_count = transport.ROW_COUNT
+    if len(rows) >= _FROZEN_PARTITION_COUNT:
+        return [
+            _partition_row(row, lane="clean_modern" if number < row_count else "phenomenon_strata")
+            for number, row in enumerate(rows[:_FROZEN_PARTITION_COUNT])
+        ]
+    built = [
+        _partition_row(row, lane="clean_modern" if number < row_count else "phenomenon_strata")
+        for number, row in enumerate(rows)
+    ]
+    built.extend(_filler_partition_row(number) for number in range(len(built), _FROZEN_PARTITION_COUNT))
+    return built
+
+
 def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     rows = [_row(number) for number in range(transport.MATERIALIZATION_COUNT)]
     materialization = tmp_path / "inputs" / "source.jsonl"
@@ -51,20 +101,9 @@ def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
             "private_jsonl_sha256": transport.sha256_file(materialization),
         },
     )
-    selected = rows[: transport.ROW_COUNT]
-    partition_rows = [
-        {
-            "family_id": row["family_id"],
-            "unit_id": row["unit_id"],
-            "unit_sha256": row["unit_sha256"],
-            "reason": "evaluation_only",
-            "candidate_lane": "clean_modern" if number < transport.ROW_COUNT else "phenomenon_strata",
-            "source_text_sha256": row["source_text_sha256"],
-            "frozen_locator_sha256": row["frozen_locator_sha256"],
-        }
-        for number, row in enumerate(rows[: transport.FROZEN_PARTITION_COUNT])
-    ]
-    assert len(selected) == transport.ROW_COUNT and len(partition_rows) == transport.FROZEN_PARTITION_COUNT
+    partition_rows = _partition_rows(rows)
+    selected = [row for row in partition_rows if row["candidate_lane"] == "clean_modern"]
+    assert len(selected) == transport.ROW_COUNT and len(partition_rows) == _FROZEN_PARTITION_COUNT
     partition = tmp_path / "inputs" / "partition.jsonl"
     partition.write_bytes(b"".join((transport.canonical_json(row) + "\n").encode() for row in partition_rows))
     freeze_receipt = tmp_path / "inputs" / "freeze-receipt.json"
@@ -84,7 +123,6 @@ def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
 
 _SMALL_MATERIALIZATION_COUNT = 10
 _SMALL_ROW_COUNT = 5
-_SMALL_PARTITION_COUNT = 10
 
 
 def _shrink_heldout_scale(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -92,11 +130,11 @@ def _shrink_heldout_scale(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> No
 
     The two full-scale tests keep MATERIALIZATION_COUNT, ROW_COUNT, and the
     schema's row_count const of 2,000. These tests retarget that const so the
-    rest of the schema still applies at the smaller scale.
+    rest of the schema still applies at the smaller scale. The frozen partition
+    stays 9,392 rows because that length is a literal in `_partition`.
     """
     monkeypatch.setattr(transport, "MATERIALIZATION_COUNT", _SMALL_MATERIALIZATION_COUNT)
     monkeypatch.setattr(transport, "ROW_COUNT", _SMALL_ROW_COUNT)
-    monkeypatch.setattr(transport, "FROZEN_PARTITION_COUNT", _SMALL_PARTITION_COUNT)
     schema = json.loads(transport.DEFAULT_SCHEMA.read_text(encoding="utf-8"))
     schema["properties"]["row_count"] = {"const": _SMALL_ROW_COUNT}
     schema["$defs"]["publicReceipt"]["properties"]["row_count"] = {"const": _SMALL_ROW_COUNT}

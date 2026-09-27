@@ -322,10 +322,11 @@ def test_launcher_static_selector_wiring(launcher: str) -> None:
 @pytest.mark.parametrize(
     ("launcher", "unknown_arg", "expected_rc"),
     [
-        # Provider-specific preflight is sourced only after launcher_validate_mode,
-        # so these two drivers stand in for the five that share that fail-closed path.
-        # test_launcher_static_selector_wiring still checks every wrapper sources the core.
+        # Drivers validate selectors before provider preflight or CLI invocation.
         ("start-claude-driver.sh", "invalid_selector_xyz", 2),
+        ("start-codex-driver.sh", "invalid_selector_xyz", 2),
+        ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
+        ("start-grok-driver.sh", "invalid_selector_xyz", 2),
         ("start-cursor-driver.sh", "invalid_selector_xyz", 2),
     ],
 )

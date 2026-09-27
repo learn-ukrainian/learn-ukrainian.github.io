@@ -284,22 +284,6 @@ def _template_paths(prompts_dir: Path) -> list[Path]:
     return sorted(prompts_dir.glob("*.md.j2"))
 
 
-_PARSED_TEMPLATES: dict[Path, tuple[str, Any]] = {}
-
-
-def _parsed_template(parser: jinja2.Environment, path: Path) -> tuple[str, Any]:
-    """Read and parse a template once per resolved path. Shipped templates do not change mid-process."""
-    resolved = path.resolve()
-    cached = _PARSED_TEMPLATES.get(resolved)
-    if cached is not None:
-        return cached
-    source = resolved.read_text(encoding="utf-8")
-    parsed = parser.parse(source)
-    cached = (source, parsed)
-    _PARSED_TEMPLATES[resolved] = cached
-    return cached
-
-
 def _lint_templates(
     manifest_doc: dict[str, Any],
     used_text: str | None,
@@ -318,8 +302,9 @@ def _lint_templates(
     )
     for path in _template_paths(prompts_dir):
         verifier_reads.append(path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix())
+        source = path.read_text(encoding="utf-8")
         try:
-            source, parsed = _parsed_template(parser, path)
+            parsed = parser.parse(source)
         except jinja2.TemplateSyntaxError as err:
             errors.append(f"template_invalid: {path.name} does not parse ({err})")
             continue
