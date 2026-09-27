@@ -341,7 +341,7 @@ Three modes, same meaning across all adapters:
 
 | Mode | Meaning | Typical use |
 | --- | --- | --- |
-| `read-only` | CLI runs with read-only filesystem sandbox | Consultation, questions, reviews |
+| `read-only` | Adapter-specific read and execution permissions | Consultation, questions, reviews |
 | `workspace-write` | CLI can write files in cwd | Coding tasks, refactors, batch fixes |
 | `danger` | Sandbox bypassed entirely | Only when explicitly needed (e.g., setup scripts) |
 
@@ -352,6 +352,31 @@ level. Runner rejects invocations requesting an unsupported mode with
 `cwd` is **mandatory** for `workspace-write` and `danger`. Runner raises
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
+
+### Claude headless permissions
+
+Ordinary Claude `read-only` dispatches use `dontAsk` with read/search tools,
+Bash, and web lookup allowed. When an MCP config is supplied, sources tools
+are allowed too. This includes strict MCP reviewers. Reviewers can run Python,
+pytest, and read-only `git`/`gh` commands without an interactive approval.
+Edit/Write/NotebookEdit and common
+Git/GitHub mutation commands are denied. `discussion_readonly` and
+`review_isolation` retain their separate tool profiles. `workspace-write`
+keeps the existing default permission behavior; `danger` uses
+`--dangerously-skip-permissions`.
+
+Headless Claude workers in the ordinary three modes and `discussion_readonly`
+receive PreToolUse guards generated from
+`agents_extensions/shared/settings.json`, with hook commands resolved to the
+primary checkout's deployed `.claude/hooks` files. Sealed `review_isolation`
+keeps its existing `--safe-mode` and sandbox, which exclude hooks and shell/write
+tools. The guards stop recognized direct primary-checkout writes while allowing
+worktree writes; arbitrary interpreter writes remain a known parser limit.
+Prefix Bash deny rules
+do not cover wrappers such as `git -C`, so they are not a security boundary.
+Claude `--bare` is disabled because it skips hooks. A live bubblewrap probe
+also allowed a primary-checkout write, so the bubblewrap sandbox is not relied
+on as the guard.
 
 ### Native Grok headless permission mapping (#7583)
 

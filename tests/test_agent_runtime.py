@@ -3963,7 +3963,8 @@ def test_claude_adapter_mcp_tool_config(tmp_path):
     assert "--mcp-config" in plan.cmd
     assert "/path/.mcp.json" in plan.cmd
     assert "--allowedTools" in plan.cmd
-    assert "Read,Grep,mcp__rag__verify_word" in plan.cmd
+    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    assert {"Read", "Grep", "mcp__rag__verify_word", "mcp__sources__*", "Bash"} <= set(allowed)
 
 
 def test_claude_adapter_danger_mode(tmp_path):
@@ -3995,7 +3996,7 @@ def test_claude_adapter_model_override(tmp_path):
     assert "claude-sonnet-4-5" in plan.cmd
 
 
-def test_claude_adapter_bare_when_api_key_set(tmp_path, monkeypatch):
+def test_claude_adapter_keeps_hooks_when_api_key_set(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
     adapter = ClaudeAdapter()
     plan = adapter.build_invocation(
@@ -4007,7 +4008,8 @@ def test_claude_adapter_bare_when_api_key_set(tmp_path, monkeypatch):
         session_id=None,
         tool_config=None,
     )
-    assert "--bare" in plan.cmd
+    assert "--bare" not in plan.cmd
+    assert "--settings" in plan.cmd
 
 
 def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):

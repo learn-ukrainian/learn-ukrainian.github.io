@@ -308,13 +308,10 @@ def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, 
     )
 
     idx = plan.cmd.index("--strict-mcp-config")
-    assert plan.cmd[idx : idx + 5] == [
-        "--strict-mcp-config",
-        "--mcp-config",
-        str(review_plan.config_path),
-        "--allowedTools",
-        ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
-    ]
+    assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
+    allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
+    assert {f"mcp__sources__{name}" for name in REVIEW_TOOLS} <= allowed
+    assert "Bash" in allowed
 
 
 def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) -> None:
@@ -330,7 +327,8 @@ def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) ->
 
     assert "--strict-mcp-config" not in plan.cmd
     assert "--mcp-config" not in plan.cmd
-    assert "--allowedTools" not in plan.cmd
+    assert "--allowedTools" in plan.cmd
+    assert "mcp__sources__*" not in plan.cmd[plan.cmd.index("--allowedTools") + 1]
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:
