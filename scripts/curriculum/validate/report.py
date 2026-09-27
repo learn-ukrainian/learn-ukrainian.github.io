@@ -55,6 +55,9 @@ class Report:
     #: Every file the run read, as {repo-relative path: sha256}; the plan-review
     #: manifest refuses a report whose recorded hashes differ from the files.
     inputs: dict[str, str] = field(default_factory=dict)
+    #: The plan-stage activity report (issue #8889 r5 §A2; activity_report.plan_report),
+    #: empty when the plan could not be loaded far enough to build one.
+    activity_report: dict = field(default_factory=dict)
 
     @property
     def ok(self) -> bool:
@@ -84,6 +87,7 @@ class Report:
             "notes": entries(self.notes),
             "not_checked": entries(self.not_checked),
             "waivers": entries(self.waivers),
+            "activity_report": self.activity_report,
         }
 
     def render_text(self) -> str:
@@ -94,4 +98,14 @@ class Report:
         lines += [f"NOTE {o.render()}" for o in self.notes]
         lines += [f"NOT_CHECKED {o.render()}" for o in self.not_checked]
         lines += [f"waived: {o.code} ({o.message})" for o in self.waivers]
+        if self.activity_report:
+            module = self.activity_report.get("module", {})
+            lines.append(
+                "activity_report (plan stage): "
+                f"workbook_activities={module.get('workbook_activities')} "
+                f"inline_activities={module.get('inline_activities')} "
+                f"workbook_presence_complete={module.get('workbook_presence_complete')} "
+                f"largest_workbook_type_share={module.get('largest_workbook_type_share')} "
+                f"longest_same_type_workbook_run={module.get('longest_same_type_workbook_run')}"
+            )
         return "\n".join(lines)

@@ -42,10 +42,7 @@ def _skip_if_arc_absent() -> None:
     # Keyed on the whole sparse-excluded tree: when curriculum/ is present but
     # the arc file is missing, the test must fail, as it did before (#8581).
     if tree_absent("curriculum"):
-        pytest.skip(
-            "curriculum is absent from this sparse worktree; "
-            "re-include it with --sparse-include curriculum"
-        )
+        pytest.skip("curriculum is absent from this sparse worktree; re-include it with --sparse-include curriculum")
 
 
 SLUG = "mod-one"
@@ -125,7 +122,10 @@ def teach_lesson(
             "practice": ["a1"],
         }
     ]
-    activities = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checks the step."}]
+    activities = [
+        {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checks the step."},
+        {"id": "aw", "type": "quiz", "placement": "workbook", "focus": "Workbook check."},
+    ]
     if uses_grammar or uses_vocab:
         steps.append(
             {
@@ -508,6 +508,7 @@ def arc_cases() -> list[CrossCase]:
         ),
     ]
 
+
 REGISTRY_CASES = [
     CrossCase(
         "registry_duplicate_id",
@@ -667,7 +668,9 @@ def title_cases() -> list[CrossCase]:
                     SLUG,
                     1,
                     [
-                        teach_lesson(1, "lesson-one", letters=_letters(0, 3), title="Літери " + " ".join(_letters(0, 2))),
+                        teach_lesson(
+                            1, "lesson-one", letters=_letters(0, 3), title="Літери " + " ".join(_letters(0, 2))
+                        ),
                         recap_lesson(2),
                     ],
                 )
@@ -695,8 +698,7 @@ def _cross_case_parameters() -> list[object]:
                 id="curriculum-absent",
                 marks=pytest.mark.skip(
                     reason=(
-                        "curriculum is absent from this sparse worktree; "
-                        "re-include it with --sparse-include curriculum"
+                        "curriculum is absent from this sparse worktree; re-include it with --sparse-include curriculum"
                     )
                 ),
             )
