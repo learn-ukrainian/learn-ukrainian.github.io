@@ -12,6 +12,9 @@ the ``--for`` choices.  A slot is registered when the bridge accepts it as a
 recipient, either as a roster slot or as the ``<provider>-<empty-roster-area>``
 alias of a bare provider (``claude-monitor`` -> ``claude``, #7597).
 
+``--registered SLOT...`` prints only accepted names, in input order, so
+launcher help can check every stream key with one interpreter process.
+
 Exit codes for ``--slot``: 0 registered, 3 not registered, 2 the registry
 could not be read (fail closed: an unreadable roster is not a registered one).
 Any other code (for example 1 from an interpreter that cannot import this
@@ -42,11 +45,7 @@ def is_registered_slot(slot: str, *, assignments_path: Path | None = None) -> bo
 def registered_slots(provider: str, *, assignments_path: Path | None = None) -> list[str]:
     """Roster slots for one provider, plus its empty-roster area aliases."""
     prefix = f"{provider}-"
-    slots = [
-        slot
-        for slot in _channels._load_registry_slots(assignments_path)
-        if slot.startswith(prefix)
-    ]
+    slots = [slot for slot in _channels._load_registry_slots(assignments_path) if slot.startswith(prefix)]
     slots += [
         f"{prefix}{area}"
         for area in _channels._load_empty_slot_areas(assignments_path)
@@ -56,17 +55,48 @@ def registered_slots(provider: str, *, assignments_path: Path | None = None) -> 
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(
+        description=(
+            "Check launcher handoff slots against the fleet roster.\n"
+            "Use from launcher validation or help; do not infer registration from a selector name."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --slot claude-infra\n"
+            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --list claude\n"
+            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --registered claude-infra claude-devops\n"
+            "Outputs: registered slot names on stdout for --list/--registered; writes no files.\n"
+            "Exit codes: 0 accepted/listed; 2 unreadable roster or invalid arguments; 3 unregistered --slot.\n"
+            "Related: scripts/config/area_assignments.yaml and scripts/lib/handoff_identity.sh."
+        ),
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--slot", help="slot to check, e.g. claude-infra")
-    group.add_argument("--list", metavar="PROVIDER", help="print the registered slots for a provider")
-    parser.add_argument("--assignments", type=Path, default=None, help="area_assignments.yaml path")
+    group.add_argument("--slot", help="check one slot, e.g. claude-infra")
+    group.add_argument("--list", metavar="PROVIDER", help="print the registered slots for one provider, e.g. claude")
+    group.add_argument(
+        "--registered",
+        nargs="+",
+        metavar="SLOT",
+        help="print accepted slots from a batch in input order, e.g. claude-infra claude-devops",
+    )
+    parser.add_argument(
+        "--assignments",
+        type=Path,
+        default=None,
+        help="roster YAML path; default: scripts/config/area_assignments.yaml",
+    )
     args = parser.parse_args(argv)
     if not registry_readable(args.assignments):
         print("handoff slot registry unreadable: scripts/config/area_assignments.yaml", file=sys.stderr)
         return 2
     if args.list:
         print("\n".join(registered_slots(args.list, assignments_path=args.assignments)))
+        return 0
+    if args.registered:
+        for slot in args.registered:
+            if is_registered_slot(slot, assignments_path=args.assignments):
+                print(slot)
         return 0
     return 0 if is_registered_slot(args.slot, assignments_path=args.assignments) else 3
 

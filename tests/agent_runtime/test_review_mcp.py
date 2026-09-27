@@ -317,7 +317,11 @@ def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, 
     ]
 
 
-def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) -> None:
+def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        lambda _cmd_prefix: (2, 1, 116),
+    )
     plan = ClaudeAdapter().build_invocation(
         prompt="ordinary task",
         mode="read-only",

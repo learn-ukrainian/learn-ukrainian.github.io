@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.wait_helpers import wait_for_line
+
 _ROOT = Path(__file__).resolve().parents[2]
 _SERVER = _ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
 _READY_LINE = "acp-text-agent ready"
@@ -335,13 +337,15 @@ def test_cancel_force_kills_provider_process_group_before_cleanup(tmp_path):
                 },
             },
         )
-        deadline = time.monotonic() + _RPC_TIMEOUT_S
-        while not capture.is_file() and time.monotonic() < deadline:
-            if server.process.poll() is not None:
-                break
-            time.sleep(0.02)
-        assert capture.is_file(), f"provider never started; stderr={server.stderr_text()!r}"
-        child_pid_text, child_cwd = capture.read_text(encoding="utf-8").strip().split("|", 1)
+        try:
+            content = wait_for_line(
+                capture,
+                timeout=_RPC_TIMEOUT_S,
+                stop_if=lambda: server.process.poll() is not None,
+            )
+        except AssertionError as exc:
+            raise AssertionError(f"provider never started; stderr={server.stderr_text()!r}") from exc
+        child_pid_text, child_cwd = content.split("|", 1)
         child_pid = int(child_pid_text)
         started = time.monotonic()
         _request(
