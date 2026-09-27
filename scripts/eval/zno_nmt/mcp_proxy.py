@@ -14,7 +14,7 @@ import urllib.request
 
 REFERENCE_TOOLS = frozenset({
     "verify_word", "verify_words", "verify_lemma", "verify_stress", "search_text",
-    "get_chunk_context", "query_pravopys", "search_style_guide", "search_definitions",
+    "get_chunk_context", "query_pravopys", "search_style_guide", "query_sum20",
     "search_idioms", "search_synonyms", "check_modern_form", "search_literary",
 })
 MAX_BYTES = 2_000_000

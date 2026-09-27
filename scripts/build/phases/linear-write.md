@@ -100,7 +100,7 @@ Learner-facing bad-form contrast is optional, level-sensitive, and must be wiki/
 
 **2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first. If authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
-Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
+Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `query_sum20`, `query_ulif`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`. Use ВТС for modern meanings when СУМ-20 has no entry.
 
 <!-- rule_id: #R-CITE-HONEST -->
 **3. Source-citation discipline.** Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.

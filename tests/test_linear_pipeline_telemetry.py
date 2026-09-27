@@ -133,7 +133,7 @@ def _writer_tool_calls() -> list[dict[str, Any]]:
             "duration_ms": 421,
         },
         {
-            "tool": "mcp__sources__search_definitions",
+            "tool": "mcp__sources__query_sum20",
             "section": "vocabulary",
             "args": {"query": "кава", "limit": 1},
             "result": [{"definition": "Fixture definition"}],
@@ -186,7 +186,7 @@ def _reviewer_audit_calls(dim: str) -> list[dict[str, Any]]:
     calls_by_dim = {
         "pedagogical": [
             ("search_text", "quote_verification", 1),
-            ("search_definitions", "source_attribution", 1),
+            ("query_sum20", "source_attribution", 1),
         ],
         "naturalness": [("verify_lemma", "modern_form_check", 1)],
         "decolonization": [

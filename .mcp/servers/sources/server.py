@@ -74,6 +74,11 @@ server: Server
 # Under approval_policy=never that call is cancelled instead of run.
 # Every sources tool is a lookup: it does not mutate the checkout.
 _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
+SUM11_AUTHORITY_NOTICE = (
+    "Soviet-occupation СУМ-11 (1970–1980) is for Sovietization contrast only; "
+    "NEVER use it for meaning, stress, part of speech, or word validity. "
+    "Use query_sum20 / ВТС / query_ulif / VESUM / Грінченко."
+)
 
 
 def _tool(**kwargs: Any) -> Tool:
@@ -97,8 +102,8 @@ COMPLETENESS_NOTES = {
         "if discusses=false here, Tier 2 escalation may still find it."
     ),
     "sum11": (
-        "СУМ-11: 127K entries; Soviet-era political/ideological coverage "
-        "flagged via sovietization_risk metadata."
+        "СУМ-11: contrast only, verification_authority=false; "
+        "Soviet-era political/ideological coverage flagged via sovietization_risk metadata."
     ),
     "grinchenko_1907": "Грінченко 1907: 67K entries; lexicographic snapshot circa 1907, NOT etymology.",
     "esum": "ЕСУМ: etymological dictionary; coverage skewed toward inherited vocabulary.",
@@ -377,8 +382,10 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="verify_source_attribution",
             description=(
-                "Verify whether a named authoritative source discusses a given claim/topic/headword. "
-                "Returns boolean verdict + supporting evidence chunks with provenance. "
+                "Check whether a named source discusses a given claim/topic/headword. "
+                "The `sum11` option is Sovietization contrast only and always returns "
+                "verification_authority=false and discusses=false; contrast_match reports a historical match. "
+                "Other sources return boolean verdict + supporting evidence chunks with provenance. "
                 "Use INSTEAD of dispatching sub-agents or composing multiple search tools manually."
             ),
             inputSchema={
@@ -433,7 +440,8 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Vet up to 500 Ukrainian vocabulary items in one compact report. "
                 "Batches VESUM validity, PULS CEFR lookup, and Russian-shadow "
-                "suspicion checks; optionally includes the best СУМ-11 gloss. "
+                "suspicion checks; optional СУМ-11 text is contrast only, "
+                "verification_authority=false, never a verified gloss. "
                 "A Russian-shadow result is a suspicion signal, not a verdict."
             ),
             inputSchema={
@@ -447,7 +455,7 @@ async def list_tools() -> list[Tool]:
                     "include_definitions": {
                         "type": "boolean",
                         "default": False,
-                        "description": "Include the best available one-line СУМ-11 gloss for each word.",
+                        "description": "Include a СУМ-11 contrast-only excerpt, never a verified gloss.",
                     },
                 },
                 "required": ["words"],
@@ -917,7 +925,10 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="search_definitions",
             description=(
-                "Search СУМ-11 — Ukrainian explanatory dictionary from 1970–1980. "
+                "Soviet-occupation СУМ-11 (1970–1980) — for Sovietization contrast only; "
+                "NEVER a source for meaning, stress, part of speech or word validity; "
+                "use query_sum20 / ВТС / query_ulif / VESUM / Грінченко. "
+                "Search its historical entries with verification_authority=false. "
                 "Coverage: 127,069 of canonical 127K entries (~100% indexed). "
                 "**Systematic exclusion: proper nouns** — toponyms (Київ, Львів, "
                 "Дніпро, Сибір) and personal names (Шевченко) are NOT covered; "
@@ -1012,8 +1023,8 @@ async def list_tools() -> list[Tool]:
                 "Ukrainian lexicography. Quality audit pending under EPIC #1657 "
                 "Tier 3. Use for vocabulary variety and rough synonym/antonym "
                 "discovery, but **DO NOT cite as authoritative**: cross-validate "
-                "against `search_definitions` (СУМ-11) or `search_grinchenko_1907` "
-                "(Грінченко) before treating a synonym as established Ukrainian. "
+                "against `query_sum20` (СУМ-20), ВТС, or `search_grinchenko_1907` "
+                "(Грінченко for historical usage) before treating a synonym as established Ukrainian. "
                 "The 3,360-synset version cited in older docs is the 2023 paper's "
                 "initial release; current production is the auto-MT-expanded set."
             ),
@@ -1087,7 +1098,7 @@ async def list_tools() -> list[Tool]:
                 "СУМ-20. Per-query live fetch with citation, no bulk crawl, "
                 "no DB caching.\n\n"
                 "Available `dict` values:\n"
-                "- `sum` — СУМ-11 (Sovietized, 1970–80) — fallback only\n"
+                "- `sum` — СУМ-11 (Sovietized, 1970–80) — contrast only; never verification\n"
                 "- `davydov` (`antonenko` alias) — Antonenko-Davydovych «Як ми говоримо»\n"
                 "- `synonyms_karavansky` (`karavansky` alias) — Karavansky synonyms\n"
                 "- `franko` — dictionary from Ivan Franko's works\n"
@@ -1129,7 +1140,8 @@ async def list_tools() -> list[Tool]:
                 "when a prompt needs a supported regional dictionary specifically. "
                 "Dictionaries already indexed locally "
                 "(СУМ-11, Грінченко, Антоненко-Давидович, phraseology, EN→UK) "
-                "are blocked here; use their canonical tools. For heritage-defense "
+                "are blocked here; use their canonical tools for their permitted roles. "
+                "СУМ-11 is contrast only. For heritage-defense "
                 "decisions, prefer `search_heritage`."
             ),
             inputSchema={
@@ -1466,12 +1478,21 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
         _attribution_evidence(hit, confidence)
         for hit, confidence in scored[:limit]
     ]
+    if source == "sum11":
+        evidence = [
+            {**item, "verification_authority": False, "notice": SUM11_AUTHORITY_NOTICE}
+            for item in evidence
+        ]
     payload: dict[str, Any] = {
-        "discusses": any(confidence >= 0.85 for _, confidence in scored),
+        "discusses": source != "sum11" and any(confidence >= 0.85 for _, confidence in scored),
         "source": source,
         "evidence_count": len(evidence),
         "evidence": evidence,
     }
+    if source == "sum11":
+        payload["verification_authority"] = False
+        payload["notice"] = SUM11_AUTHORITY_NOTICE
+        payload["contrast_match"] = any(confidence >= 0.85 for _, confidence in scored)
     if completeness_note:
         payload["completeness_note"] = completeness_note
     elif source in COMPLETENESS_NOTES:
@@ -2297,6 +2318,8 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     )
 
     lines = []
+    if include_definitions:
+        lines.append(f"verification_authority: false (СУМ-11 excerpts only). {SUM11_AUTHORITY_NOTICE}")
     if len(submitted_words) > len(words):
         lines.append(
             f"Note: received {len(submitted_words)} words; processed the first 500 (hard cap)."
@@ -2315,7 +2338,10 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
         if include_definitions:
             definition_hit = (definition_results.get(lookup_term) or [{}])[0]
             gloss = definition_hit.get("definition") or "not found"
-            fields.append(f"Gloss: {_compact_vocabulary_value(gloss, max_chars=240)}")
+            fields.append(
+                "СУМ-11 contrast excerpt (verification_authority: false): "
+                f"{_compact_vocabulary_value(gloss, max_chars=240)}"
+            )
         lines.append("- " + " | ".join(fields))
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -3116,10 +3142,15 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
             ),
         )]
 
+    notice = (
+        f"verification_authority: false. {SUM11_AUTHORITY_NOTICE}\n"
+        if canonical_slug == "sum" else ""
+    )
     return [TextContent(
         type="text",
         text=(
             f"**{result['dict_label']} — entry for '{word}'**\n"
+            f"{notice}"
             f"**URL**: {result['url']}\n"
             f"**Source**: slovnyk.me (per-query live fetch, © Slovnyk.me)\n\n"
             f"{result['text'][:3000]}"
@@ -3239,14 +3270,24 @@ async def handle_dict_search(args: dict, collection: str, label: str):
 
     if not hits:
         prose = f"No results in {label} for: \"{query}\""
+        if collection == "sum11":
+            prose = f"{SUM11_AUTHORITY_NOTICE}\n{prose}"
         envelope = build_search_envelope(
             tool=tool_name, query=query_obj, hits=[], summary_prose=prose
         )
         return [TextContent(type="text", text=prose)], envelope
 
     lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
+    if collection == "sum11":
+        lines.append(f"verification_authority: false. {SUM11_AUTHORITY_NOTICE}\n")
+        hits = [
+            {**hit, "verification_authority": False, "notice": SUM11_AUTHORITY_NOTICE}
+            for hit in hits
+        ]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
+        if collection == "sum11":
+            lines.append(f"- verification_authority: false. {SUM11_AUTHORITY_NOTICE}")
         word = hit.get("word", hit.get("words", ""))
         if word:
             lines.append(f"- **Headword**: {word}")
@@ -3268,7 +3309,8 @@ async def handle_dict_search(args: dict, collection: str, label: str):
             )
         definition = hit.get("definition", hit.get("definitions", ""))
         if definition:
-            lines.append(f"- **Definition**: {_quote_balanced_clip(str(definition), 500)}")
+            field = "Contrast excerpt" if collection == "sum11" else "Definition"
+            lines.append(f"- **{field}**: {_quote_balanced_clip(str(definition), 500)}")
         text = hit.get("text", "")
         if text and text != definition:
             lines.append(f"- **Text**: {_quote_balanced_clip(text, 500)}")

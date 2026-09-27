@@ -336,8 +336,8 @@ WRITER_TOOL_NAMES = frozenset(
         # always-on -tools gate misread a real lookup as zero calls (#7994).
         "verify_word",
         "verify_lemma",
-        "search_definitions",
-        "search_definitions_slovnyk",
+        "query_sum20",
+        "query_slovnyk_me",
         "search_esum",
         "search_grinchenko_1907",
         "search_heritage",
@@ -1829,7 +1829,7 @@ def _build_dictionary_context(
     for lemma in lemmas:
         word_matches = batch_matches.get(lemma, [])
         forms = _safe_lookup(vesum_lookup.verify_lemma, [], lemma)
-        definitions = _safe_lookup(sources_db.search_definitions, [], lemma, limit=1)
+        definitions = _safe_lookup(sources_db.query_sum20, [], lemma)
         style_notes = _safe_lookup(sources_db.search_style_guide, [], lemma, limit=1)
 
         pos = _dictionary_pos_label(word_matches, forms)
@@ -1837,11 +1837,9 @@ def _build_dictionary_context(
             f"- **{lemma}** [{pos}]",
             f"  - VESUM: {_vesum_form_summary(lemma, word_matches, forms)}",
         ]
-        definition = _dictionary_hit_text(definitions)
+        definition = _sum20_definition_text(definitions)
         if definition:
-            entry.append(f"  - Definition: {_truncate_prompt_text(definition, definition_chars)}")
-        else:
-            entry.append("  - Definition: Not found in SUM-11.")
+            entry.append(f"  - СУМ-20 definition: {_truncate_prompt_text(definition, definition_chars)}")
 
         style_note = _dictionary_hit_text(style_notes)
         if style_note:
@@ -1902,6 +1900,19 @@ def _dictionary_hit_text(hits: Any) -> str:
         value = first.get(key)
         if value:
             return str(value)
+    return ""
+
+
+def _sum20_definition_text(records: Any) -> str:
+    """Use an actual official sense, never an unrelated dictionary field."""
+    if not isinstance(records, list):
+        return ""
+    for record in records:
+        if not isinstance(record, Mapping) or record.get("source_id") != "sum20_official":
+            continue
+        for sense in record.get("senses") or []:
+            if isinstance(sense, Mapping) and isinstance(sense.get("definition"), str):
+                return sense["definition"]
     return ""
 
 
@@ -2481,7 +2492,8 @@ def _render_wiki_knowledge_packet(
             "Use the canonical `sources` MCP tools for live dictionary checks:",
             "- `mcp__sources__verify_lemma` for VESUM morphology and inflections.",
             "- `mcp__sources__search_style_guide` for russianisms, surzhyk, calques, and paronym-risk phrases.",
-            "- `mcp__sources__search_definitions` for СУМ-11 definitions and usage disambiguation.",
+            "- `mcp__sources__query_sum20` for official СУМ-20 definitions when an entry is available.",
+            "- `mcp__sources__query_slovnyk_me(dict=\"vts\")` for ВТС modern meanings when СУМ-20 has no entry.",
             "",
             "Verify suspicious forms before using them in prose, vocabulary, "
             "activities, or resources. Do not call legacy `scripts.rag` or "
@@ -5276,7 +5288,7 @@ def _audit_type_for_tool(tool: str, explicit: Any = None) -> str:
     audit_type = str(explicit or "").strip()
     if audit_type in REVIEW_AUDIT_TYPES:
         return audit_type
-    if tool in {"search_grinchenko_1907", "search_literary", "search_definitions", "search_definitions_slovnyk"}:
+    if tool in {"search_grinchenko_1907", "search_literary", "query_sum20"}:
         return "source_attribution"
     if tool in {"search_text", "query_wikipedia"}:
         return "quote_verification"
