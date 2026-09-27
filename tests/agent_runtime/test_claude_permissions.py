@@ -94,6 +94,7 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
     assert plan.cmd[plan.cmd.index("--tools") + 1] == ""
 
 
+@pytest.mark.repo_wide
 def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Path, monkeypatch) -> None:
     from scripts.agent_runtime.adapters import claude
 
