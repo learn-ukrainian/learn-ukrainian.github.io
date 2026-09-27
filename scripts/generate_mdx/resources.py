@@ -11,7 +11,7 @@ from pathlib import Path
 
 import yaml
 
-from .atlas_links import atlas_href_for
+from .atlas_links import atlas_href_for, slug_from_atlas_href
 from .unit_map import EditLog
 from .utils import dump_json_for_jsx, escape_jsx
 
@@ -531,6 +531,16 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
             "back": translation,
         })
 
+        # A pre-set atlas_href is resolved like a surface form (unique alias →
+        # canonical entry; dead or ambiguous → no link). Absent key falls
+        # through to the lemma. None is dropped by the empty-value filter.
+        if "atlas_href" in item:
+            raw_href = item.get("atlas_href")
+            preset_slug = slug_from_atlas_href(raw_href) if isinstance(raw_href, str) else None
+            atlas_href = atlas_href_for(preset_slug) if preset_slug else None
+        else:
+            atlas_href = atlas_href_for(lemma)
+
         entry = {
             "word": lemma,
             "translation": translation,
@@ -539,9 +549,7 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
             "forms": item.get('forms'),
             "example": example,
             "examples": [example] if example else [],
-            # Render-time, integrity-gated link to the Word Atlas page (None when
-            # the lemma has no Atlas page → dropped by the empty-value filter below).
-            "atlas_href": item.get('atlas_href') if 'atlas_href' in item else atlas_href_for(lemma),
+            "atlas_href": atlas_href,
         }
         words.append({key: value for key, value in entry.items() if value not in (None, "", [])})
 

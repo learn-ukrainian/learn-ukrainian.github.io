@@ -12,7 +12,12 @@ import json
 import pytest
 
 from scripts.generate_mdx import resources
-from scripts.generate_mdx.atlas_links import atlas_href_for, normalize_lemma
+from scripts.generate_mdx.atlas_links import (
+    atlas_href_for,
+    normalize_lemma,
+    slug_from_atlas_href,
+    validated_atlas_href,
+)
 
 # ── normalize_lemma ──────────────────────────────────────────────────────────
 
@@ -120,6 +125,152 @@ def test_href_missing_manifest_warns_stderr(tmp_path, capsys):
 
 
 # ── integrity-gating inside the generator ────────────────────────────────────
+
+def _write_json(path, payload) -> str:
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    return str(path)
+
+
+def test_href_unique_alias_rewrites_to_canonical_lemma(tmp_path):
+    """An inflected form that is not a published entry links to its one lemma."""
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {
+            "entries": [
+                {"lemma": "студент", "url_slug": "студент"},
+                # Present in the manifest, absent from the published page set.
+                {"lemma": "студентові", "url_slug": "студентові"},
+            ]
+        },
+    )
+    aliases = _write_json(
+        tmp_path / "aliases.json",
+        [{"a": "студентові", "k": "inflected_form", "s": "студент", "h": "студент"}],
+    )
+    published = {"студент"}
+    assert atlas_href_for(
+        "студентові",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=published,
+    ) == "/lexicon/студент/"
+    assert atlas_href_for(
+        "студе́нтові",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=published,
+    ) == "/lexicon/студент/"
+    assert atlas_href_for(
+        "студент",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=published,
+    ) == "/lexicon/студент/"
+
+
+def test_href_alias_preserves_yi(tmp_path):
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {"entries": [{"lemma": "їжак", "url_slug": "їжак"}]},
+    )
+    aliases = _write_json(
+        tmp_path / "aliases.json",
+        [{"a": "їжака", "s": "їжак"}],
+    )
+    assert atlas_href_for(
+        "їжака",
+        manifest,
+        aliases_path=aliases,
+        published_slugs={"їжак"},
+    ) == "/lexicon/їжак/"
+
+
+def test_href_ambiguous_alias_returns_none(tmp_path):
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {
+            "entries": [
+                {"lemma": "бал", "url_slug": "бал"},
+                {"lemma": "баль", "url_slug": "баль"},
+            ]
+        },
+    )
+    aliases = _write_json(
+        tmp_path / "aliases.json",
+        [{"a": "bal", "s": "бал"}, {"a": "bal", "s": "баль"}],
+    )
+    assert atlas_href_for(
+        "bal",
+        manifest,
+        aliases_path=aliases,
+        published_slugs={"бал", "баль"},
+    ) is None
+
+
+def test_href_unpublished_without_alias_returns_none(tmp_path):
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {"entries": [{"lemma": "привид", "url_slug": "привид"}]},
+    )
+    aliases = _write_json(tmp_path / "aliases.json", [])
+    assert atlas_href_for(
+        "привид",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=set(),
+    ) is None
+
+
+def test_preset_href_is_rewritten_or_dropped(tmp_path):
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {"entries": [{"lemma": "студент", "url_slug": "студент"}]},
+    )
+    aliases = _write_json(
+        tmp_path / "aliases.json",
+        [{"a": "студентові", "s": "студент"}],
+    )
+    published = {"студент"}
+    assert validated_atlas_href(
+        "/lexicon/студентові/",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=published,
+    ) == "/lexicon/студент/"
+    assert validated_atlas_href(
+        "/lexicon/немає-такого/",
+        manifest,
+        aliases_path=aliases,
+        published_slugs=published,
+    ) is None
+    assert validated_atlas_href(None, manifest) is None
+    assert slug_from_atlas_href("/lexicon/%") is None
+
+
+def test_vocab_component_resolves_preset_href_instead_of_copying_it(monkeypatch):
+    def fake_href(word, manifest_path=None, **kwargs):
+        del manifest_path, kwargs
+        return "/lexicon/студент/" if word == "студентові" else None
+
+    monkeypatch.setattr(resources, "atlas_href_for", fake_href)
+    out = resources.vocab_items_to_components(
+        [
+            {
+                "lemma": "студентові",
+                "translation": "to the student",
+                "atlas_href": "/lexicon/студентові/",
+            },
+            {
+                "lemma": "привид",
+                "translation": "ghost",
+                "atlas_href": "/lexicon/привид/",
+            },
+        ]
+    )
+    assert "/lexicon/студент/" in out
+    assert "/lexicon/студентові/" not in out
+    assert "/lexicon/привид/" not in out
+
 
 def test_vocab_component_links_only_lemmas_with_atlas_pages(monkeypatch):
     """The generator emits atlas_href for lemmas that have a page, and omits it
