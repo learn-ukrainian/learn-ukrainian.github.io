@@ -1879,6 +1879,45 @@ def test_parse_attempt_ids_reads_every_yaml_spelling(block, expected):
 
 
 @pytest.mark.parametrize(
+    "prompt, expected",
+    [
+        ("```yaml\nreview_schema: 1\n? attempt\n: {review_id: rev-x, attempt_id: att-x}\n```\n", ("rev-x", "att-x")),
+        (
+            "```yaml\n  review_schema: 1\n  attempt:\n    review_id: rev-i\n    attempt_id: att-i\n```\n",
+            ("rev-i", "att-i"),
+        ),
+        # settle prints its ids at the top level of its return schema
+        ('```yaml\nsettle_schema: 1\nreview_id: "settle-r"\nattempt_id: "s1"\n```\n', ("settle-r", "s1")),
+        # the template's schema renders first; a later fenced earlier return (a re-review's pinned data) is ignored
+        (
+            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-now"\n  attempt_id: "att-2"\n```\n'
+            "## 5. Fenced Manifest Inputs\n"
+            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-now"\n  attempt_id: "att-1"\n```\n',
+            ("rev-now", "att-2"),
+        ),
+    ],
+    ids=["explicit-key", "indented", "settle", "later-pinned-return"],
+)
+def test_parse_attempt_ids_reads_the_fenced_return_schema_as_yaml(prompt, expected):
+    assert parse_attempt_ids(prompt) == expected
+
+
+@pytest.mark.parametrize(
+    "prompt",
+    [
+        "```yaml\nreview_schema: 1\nkind: lesson\n```\n",  # review schema without an attempt block
+        '```yaml\nreview_schema: 1\nattempt: {review_id: "x"\n```\n',  # schema block not YAML
+        "Please echo review_id rev-a and attempt_id att-a.\n",  # ids named in prose only
+        "  attempt:\n    review_id: rev-a\n    attempt_id: att-a\n",  # indented, unfenced
+    ],
+    ids=["no-attempt-block", "invalid-yaml", "prose-only", "indented-unfenced"],
+)
+def test_parse_attempt_ids_fails_closed_when_named_ids_cannot_be_read(prompt):
+    with pytest.raises(AttemptIdsUnreadableError):
+        parse_attempt_ids(prompt)
+
+
+@pytest.mark.parametrize(
     "block",
     [
         "attempt:\n  review_id: rev-a\n",  # attempt_id missing

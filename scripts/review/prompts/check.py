@@ -133,45 +133,82 @@ MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
 FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
-#: A plan/lesson/re-review return template's ``attempt`` entry (#8996): the top-level ``attempt`` key line
-#: and its indented continuation, read only up to the next unindented line, so a pinned datum that later
-#: happens to contain its own "attempt:" prose (a quoted lesson, a previous review's findings) can never be
-#: mistaken for it — the schema template's own block always renders first, in "## 4. Return Schema
-#: Instructions", well before any fenced pinned data. Any YAML spelling of the entry is accepted (block or
-#: flow style, double-, single- or un-quoted scalars): the entry is parsed with a YAML parser, not a regex.
+#: A fenced YAML block (```yaml … ```), where every return template prints its schema (#8996).
+YAML_FENCE = re.compile(r"(?ms)^ {0,3}```ya?ml[ \t]*\n(.*?)^ {0,3}```[ \t]*$")
+#: Top-level keys that mark a fenced block as a return schema: a review (plan, lesson, re-review) names its
+#: ids under ``attempt``; a settle names them at the top level.
+RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema")
+#: A plain (unfenced) ``attempt`` key line and its indented continuation — the fallback for a prompt that has
+#: no fenced return schema (a hand-written or custom prompt).
 ATTEMPT_ENTRY = re.compile(r"""(?m)^["']?attempt["']?[ \t]*:[^\n]*\n?(?:^[ \t]+\S[^\n]*\n?)*""")
+#: Any mention of an id key. ``previous_attempt_id`` names an earlier attempt and is not one of this
+#: attempt's ids.
+ID_KEY_MENTION = re.compile(r"(?<![A-Za-z0-9_])(?:review_id|attempt_id)(?![A-Za-z0-9_])")
 
 
 class AttemptIdsUnreadableError(ValueError):
-    """A prompt has an ``attempt`` entry whose ``review_id``/``attempt_id`` cannot be read (#8996)."""
+    """A prompt names ``review_id``/``attempt_id`` but they cannot be read unambiguously (#8996)."""
+
+
+def _ids_from(mapping: object, where: str) -> tuple[str, str]:
+    if not isinstance(mapping, dict):
+        raise AttemptIdsUnreadableError(f"{where} is not a mapping")
+    ids: list[str] = []
+    for key in ("review_id", "attempt_id"):
+        value = mapping.get(key)
+        if value is None or isinstance(value, (dict, list)) or not str(value).strip():
+            raise AttemptIdsUnreadableError(f"{where} has no readable {key}")
+        ids.append(str(value))
+    return ids[0], ids[1]
+
+
+def _return_schema(prompt_text: str) -> dict[str, Any] | None:
+    """The first fenced YAML block that is a return schema, parsed as a whole YAML document.
+
+    The template's own schema always renders before any fenced pinned data (a re-review's earlier return,
+    a quoted lesson), so the first match is the template's. Parsing the whole block — not a line pattern —
+    reads every YAML spelling (explicit ``? key`` entries, flow or block style, any quoting, uniform
+    indentation). A block that names a schema key but is not valid YAML is refused, never skipped.
+    """
+    for fence in YAML_FENCE.finditer(prompt_text):
+        body = fence.group(1)
+        try:
+            loaded = yaml.safe_load(body)
+        except yaml.YAMLError as err:
+            if any(key in body for key in RETURN_SCHEMA_KEYS):
+                raise AttemptIdsUnreadableError(f"the fenced return schema is not valid YAML: {err}") from err
+            continue
+        if isinstance(loaded, dict) and any(key in loaded for key in RETURN_SCHEMA_KEYS):
+            return loaded
+    return None
 
 
 def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
-    """The ``review_id``/``attempt_id`` a rendered prompt's own ``attempt`` entry names, or ``(None, None)``.
+    """The ``review_id``/``attempt_id`` a rendered prompt tells its seat to echo, or ``(None, None)``.
 
-    Only a template with the return schema's ``attempt`` block carries these (plan review, lesson review,
-    lesson re-review); a prompt without an ``attempt`` entry (settle, a custom template) parses to
-    ``(None, None)`` and dispatching it does not require them. A prompt that has the entry but whose ids
-    cannot be read — not YAML, not a mapping, an id missing, empty or not a scalar — raises
-    ``AttemptIdsUnreadableError``: an unreadable id must never be treated as "no id to compare".
+    The ids come from the prompt's fenced return schema: under ``attempt`` for a review return (plan, lesson,
+    re-review), at the top level for a settle return. A prompt with no fenced return schema falls back to a
+    plain ``attempt`` entry. ``(None, None)`` means the prompt mentions neither id key anywhere. In every
+    other case the ids must be read, or ``AttemptIdsUnreadableError`` is raised: an id the guard cannot read
+    must never count as "no id to compare".
     """
+    schema = _return_schema(prompt_text)
+    if schema is not None:
+        if "review_schema" in schema:
+            return _ids_from(schema.get("attempt"), "the return schema's attempt block")
+        return _ids_from(schema, "the settle return schema")
     entry = ATTEMPT_ENTRY.search(prompt_text)
-    if entry is None:
-        return None, None
-    try:
-        loaded = yaml.safe_load(entry.group(0))
-    except yaml.YAMLError as err:
-        raise AttemptIdsUnreadableError(f"the prompt's attempt entry is not valid YAML: {err}") from err
-    attempt = loaded.get("attempt") if isinstance(loaded, dict) else None
-    if not isinstance(attempt, dict):
-        raise AttemptIdsUnreadableError("the prompt's attempt entry is not a mapping")
-    ids: list[str] = []
-    for key in ("review_id", "attempt_id"):
-        value = attempt.get(key)
-        if value is None or isinstance(value, (dict, list)) or not str(value).strip():
-            raise AttemptIdsUnreadableError(f"the prompt's attempt entry has no readable {key}")
-        ids.append(str(value))
-    return ids[0], ids[1]
+    if entry is not None:
+        try:
+            loaded = yaml.safe_load(entry.group(0))
+        except yaml.YAMLError as err:
+            raise AttemptIdsUnreadableError(f"the prompt's attempt entry is not valid YAML: {err}") from err
+        return _ids_from(loaded.get("attempt") if isinstance(loaded, dict) else None, "the prompt's attempt entry")
+    if ID_KEY_MENTION.search(prompt_text):
+        raise AttemptIdsUnreadableError(
+            "the prompt mentions review_id/attempt_id outside any readable return schema or attempt entry"
+        )
+    return None, None
 
 
 @dataclass(frozen=True)

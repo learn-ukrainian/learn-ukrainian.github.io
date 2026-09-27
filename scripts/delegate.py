@@ -8677,13 +8677,22 @@ def _dispatch(
         except AttemptIdsUnreadableError as err:
             print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
             return 2
+        if prompt_review_id is None or prompt_attempt_id is None:
+            # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
+            # ledger this dispatch prepares — the failure #8996 was filed for.
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
+                "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
         id_mismatches = [
             f"{name} prompt={found!r} dispatch={expected!r}"
             for name, found, expected in (
                 ("review_id", prompt_review_id, review_id),
                 ("attempt_id", prompt_attempt_id, attempt_id),
             )
-            if found is not None and found != expected
+            if found != expected
         ]
         if id_mismatches:
             print(
