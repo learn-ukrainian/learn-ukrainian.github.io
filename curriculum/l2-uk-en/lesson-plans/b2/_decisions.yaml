@@ -199,11 +199,11 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '## 6. The operator''s decisions (2026-09-22, his words)'
-  doc_sha256: c6da514d3f14d6bd1f19db3397f90978a256786db099cbca9fb8d619dc8da699
-  section_sha256: c05d262d386151e122faeae9afdfd2c14836306e52c0fd13a00e03c7a15cbdb7
+  doc_sha256: ba7beff48f8ce7e74d3daf43a762c17d54ea70670503374df135931d6fca3b60
+  section_sha256: 39008f5f0ec488a77da91d6b5eb5dfcaac2444564632dba42c761b9f49aa68fa
   text: |+
     ## 6. The operator's decisions (2026-09-22, his words)
-    1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
+    1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
     2. **Replacing the `content-review` skill** for fresh-build lessons (#8430 deliverable (h)) — **"go"**; it is WP 24 (an agent-system change, done with his go on record).
     3. **The two contracts** (#8430 r4, #8431 r3) — **"i accept and we will improve it if needed"**; their status lines record it. A later improvement is a design revision with two independent seats, as before.
 

@@ -6,6 +6,11 @@ argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name] [--severity CRITIC
 
 # Apply Plan Fixes: $ARGUMENTS
 
+This skill covers plans under `curriculum/l2-uk-en/plans/{track}/` and V7-built modules.
+Fresh-build v2 plans (`curriculum/l2-uk-en/lesson-plans/<level>/`) are reviewed under
+Contract 1 with the plan-review manifest (`scripts.build.fresh.cli plan-manifest`); apply
+their findings through that contract, not this skill.
+
 **Prerequisite:** Plan review reports must exist at `curriculum/l2-uk-en/{track}/audit/{slug}-plan-review.md`. Run `/plan-review` or `/plan-review-seminar` first.
 
 ## Parse Arguments

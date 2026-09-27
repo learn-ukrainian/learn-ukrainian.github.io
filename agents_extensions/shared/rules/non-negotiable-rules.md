@@ -74,16 +74,21 @@ section quota with repeated prose.
 
 ## 4. Build Corrections and Module Completion
 
-Current builds use V7 (`scripts/build/v7_build.py` and `scripts/build/linear_pipeline.py`).
-The linear pipeline owns its bounded deterministic correction proposals; it does not
-expose a general LLM rewrite or regeneration loop. Follow the
-[`build-monitoring` skill](../skills/build-monitoring/SKILL.md) when launching or watching builds.
+V7 (`scripts/build/v7_build.py` and `scripts/build/linear_pipeline.py`) is the live
+pipeline for tracks still on it. The core A1–B2 rebuild (#8397) runs on the fresh-build
+engine (`scripts/build/fresh/`, `scripts/curriculum/`, `scripts/review/`) under its own
+contracts (`docs/epics/fresh-build-build-program.md`). The linear pipeline owns its
+bounded deterministic correction proposals; it does not expose a general LLM rewrite or
+regeneration loop. Follow the [`build-monitoring` skill](../skills/build-monitoring/SKILL.md)
+when launching or watching V7 builds. Old v5/v6 files remain forbidden as before.
 
-Module completion follows [`track-completion`](../skills/track-completion/SKILL.md),
+V7 module completion follows [`track-completion`](../skills/track-completion/SKILL.md),
 which owns the durable lifecycle ledger and repair budgets. Its canonical
 [`post-build-review`](../skills/post-build-review/SKILL.md) remains read-only.
 Repair the owning source and obtain fresh review evidence through that workflow;
 do not substitute a historical build-loop budget for the current completion contract.
+Core fresh-build modules complete through the fresh-build runbook
+(`docs/epics/fresh-build-build-program.md` §5), not `track-completion`.
 
 **Reviewer fixes are bounded patches, not rewrites.** Per-dimension reviewers
 return structured JSON findings and never rewrite content. When a Python QG gate
