@@ -53,6 +53,16 @@ elif args[:2] == ['session', 'delete']:
 elif args[:2] == ['db', 'PRAGMA wal_checkpoint(TRUNCATE)']:
     Path(str(database) + '-wal').write_bytes(b'')
     print('[{"busy":0,"log":0,"checkpointed":0}]')
+elif args[:1] == ['db'] and args[1] in (
+    'PRAGMA freelist_count', 'PRAGMA page_count', 'PRAGMA page_size'
+):
+    name = args[1].split()[1]
+    value = {
+        'freelist_count': int(os.environ['FAKE_INITIAL_COUNT']) - len(json.loads(state.read_text(encoding='utf-8'))),
+        'page_count': 8,
+        'page_size': 4096,
+    }[name]
+    print(json.dumps([{name: value}]))
 else:
     sys.exit(3)
 """,
@@ -74,6 +84,7 @@ else:
         FAKE_LOG=str(log),
         FAKE_RUNNING="0",
         FAKE_RECLAIM="1",
+        FAKE_INITIAL_COUNT=str(len(sessions)),
     )
     return env, log
 
@@ -105,7 +116,9 @@ def test_opencode_retention_dry_run_and_apply_select_only_old_sessions(tmp_path:
     assert applied.returncode == 0, applied.stderr
     assert "deleted=ses_old" in applied.stdout
     assert "before_total_bytes=3072" in applied.stdout
-    assert "after_total_bytes=512 reclaimed_bytes=2560" in applied.stdout
+    assert "before_freelist_pages=0" in applied.stdout
+    assert "after_total_bytes=512 after_freelist_pages=1" in applied.stdout
+    assert "reclaimed_bytes=2560" in applied.stdout
     assert [row["id"] for row in json.loads((tmp_path / "sessions.json").read_text())] == [
         "ses_recent",
         "ses_created_old_but_active",
@@ -137,24 +150,26 @@ def test_opencode_retention_fails_closed_on_invalid_list(tmp_path: Path, rows: l
     assert "session delete" not in log.read_text()
 
 
-def test_opencode_retention_reports_no_reclaimed_space(tmp_path: Path) -> None:
+def test_opencode_retention_succeeds_without_file_shrinkage(tmp_path: Path) -> None:
     env, log = _environment(tmp_path, [{"id": "ses_old", "updated": 1}])
     env["FAKE_RECLAIM"] = "0"
     Path(f"{tmp_path / 'opencode.db'}-wal").write_bytes(b"")
     result = _invoke(env)
-    assert result.returncode == 1
+    assert result.returncode == 0, result.stderr
     assert "reclaimed_bytes=0" in result.stdout
-    assert "main DB did not shrink" in result.stderr
+    assert "after_db_bytes=2048 after_wal_bytes=0" in result.stdout
+    assert "after_freelist_pages=1" in result.stdout
     assert "session delete ses_old" in log.read_text()
 
 
-def test_opencode_retention_wal_only_reclaim_triggers_stop(tmp_path: Path) -> None:
+def test_opencode_retention_wal_only_reclaim_succeeds(tmp_path: Path) -> None:
     env, _ = _environment(tmp_path, [{"id": "ses_old", "updated": 1}])
     env["FAKE_RECLAIM"] = "0"
     result = _invoke(env)
-    assert result.returncode == 1
+    assert result.returncode == 0, result.stderr
     assert "reclaimed_bytes=1024" in result.stdout
-    assert "main DB did not shrink" in result.stderr
+    assert "after_db_bytes=2048 after_wal_bytes=0" in result.stdout
+    assert "after_freelist_pages=1" in result.stdout
 
 
 def test_opencode_retention_never_deletes_recent_descendant(tmp_path: Path) -> None:

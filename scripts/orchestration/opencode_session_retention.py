@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Remove old OpenCode sessions using its CLI, only while OpenCode is idle."""
+"""Remove old OpenCode sessions while idle so SQLite can reuse freed pages.
+
+Deletion and WAL checkpointing need not shrink the main database: SQLite keeps
+freed pages on its freelist for later inserts. VACUUM is intentionally not run.
+"""
 
 from __future__ import annotations
 
@@ -64,6 +68,29 @@ def _database_bytes(path: Path) -> tuple[int, int]:
         return size(path), size(Path(f"{path}-wal"))
     except OSError as exc:
         raise RetentionError(f"could not measure OpenCode database: {exc}") from exc
+
+
+def _database_pages(opencode: str) -> tuple[int, int, int]:
+    """Read SQLite page statistics through the same read-only CLI DB path as sessions."""
+    values: list[int] = []
+    for name in ("freelist_count", "page_count", "page_size"):
+        raw = _run([opencode, "db", f"PRAGMA {name}", "--format", "json", "--pure"])
+        try:
+            rows = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise RetentionError(f"invalid {name} response: {exc}") from exc
+        if (
+            not isinstance(rows, list)
+            or len(rows) != 1
+            or not isinstance(rows[0], dict)
+            or type(rows[0].get(name)) is not int
+            or rows[0][name] < 0
+        ):
+            raise RetentionError(f"invalid {name} response")
+        values.append(rows[0][name])
+    if values[2] == 0 or values[0] > values[1]:
+        raise RetentionError("invalid SQLite page statistics")
+    return values[0], values[1], values[2]
 
 
 def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[str], set[str]]:
@@ -131,12 +158,18 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
     db_path = _database_path(opencode)
     before = _database_bytes(db_path)
     _require_idle()
+    before_pages = _database_pages(opencode)
+    _require_idle()
     # `session list` is scoped to the current project and defaults to 100 roots.
     # A read-only CLI query is needed for the issue's all-sessions denominator.
     raw = _run([opencode, "db", SESSION_QUERY, "--format", "json", "--pure"])
     selected, blocked, all_ids = _old_session_ids(raw, cutoff_ms)
     print(f"mode={'dry-run' if dry_run else 'apply'} days={days} cutoff_ms={cutoff_ms} selected={len(selected)}")
-    print(f"before_db_bytes={before[0]} before_wal_bytes={before[1]} before_total_bytes={sum(before)}")
+    print(
+        f"before_db_bytes={before[0]} before_wal_bytes={before[1]} before_total_bytes={sum(before)} "
+        f"before_freelist_pages={before_pages[0]} before_page_count={before_pages[1]} "
+        f"before_page_size={before_pages[2]}"
+    )
     for session_id in blocked:
         print(f"blocked_old_parent={session_id}")
     if blocked and not dry_run:
@@ -165,8 +198,7 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
         print("dry-run: no deletion or WAL checkpoint")
         if blocked:
             raise RetentionError("old parent has a recent descendant; apply would be unsafe")
-        return 0
-    if selected:
+    if selected and not dry_run:
         idle_or_fail()
         after_raw = _run([opencode, "db", SESSION_QUERY, "--format", "json", "--pure"])
         _, _, remaining_ids = _old_session_ids(after_raw, cutoff_ms)
@@ -185,17 +217,15 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
         if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict) or rows[0].get("busy") != 0:
             raise RetentionError(f"WAL checkpoint did not complete: {checkpoint}")
         print(f"wal_checkpoint={checkpoint}")
+    idle_or_fail()
     after = _database_bytes(db_path)
+    after_pages = _database_pages(opencode)
     reclaimed = sum(before) - sum(after)
     print(
-        f"after_db_bytes={after[0]} after_wal_bytes={after[1]} after_total_bytes={sum(after)} reclaimed_bytes={reclaimed}"
+        f"after_db_bytes={after[0]} after_wal_bytes={after[1]} after_total_bytes={sum(after)} "
+        f"after_freelist_pages={after_pages[0]} after_page_count={after_pages[1]} "
+        f"after_page_size={after_pages[2]} reclaimed_bytes={reclaimed}"
     )
-    if selected and after[0] >= before[0]:
-        raise RetentionError(
-            "main DB did not shrink after deletion; VACUUM needs operator approval (issue #8920 stop policy)"
-        )
-    if selected and reclaimed <= 0:
-        raise RetentionError("total DB and WAL size did not fall after deletion; issue #8920 stop policy")
     return 0
 
 
@@ -203,7 +233,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Delete OpenCode sessions last updated more than N days ago using the OpenCode CLI.\nUse on an idle host to limit session database growth; use --dry-run to inspect first.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --dry-run\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI query for all sessions; stdout/journal IDs and DB/WAL sizes. Apply deletes via CLI and checkpoints the WAL.\nExit codes: 0 success or idle skip; 1 CLI, process-check, checkpoint, or main DB shrink failure.\nRelated: packaging/systemd/README.md; issue #8920.",
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --dry-run\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI queries for sessions and SQLite page statistics; stdout/journal IDs, DB/WAL bytes and freelist pages before/after. Apply deletes via CLI and checkpoints the WAL. Freed pages are reused by later inserts; the main DB need not shrink. VACUUM is intentionally not run.\nExit codes: 0 successful deletion/checkpoint, dry run, or idle skip; 1 CLI, process-check, verification, or checkpoint failure.\nRelated: packaging/systemd/README.md; issue #8920.",
     )
     parser.add_argument("--days", type=int, default=7, help="retention age in whole days (default: 7; example: 14)")
     parser.add_argument(
