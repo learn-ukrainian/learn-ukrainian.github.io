@@ -469,4 +469,17 @@ def build_agent_env(
         )
     )
 
+    # Git reads this process-scoped config for every child invocation, including
+    # shell and Python subprocess wrappers. pushInsteadOf affects only push;
+    # reviewers still need local clone/fetch for tests. Append after identity
+    # isolation so its GIT_CONFIG_COUNT entries cannot replace this policy.
+    if _normalized_provider(provider) == "claude" and overrides and overrides.get("LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK") == "1":
+        count = int(env.get("GIT_CONFIG_COUNT", "0"))
+        for prefix in ("https://", "http://", "ssh://", "git://", "git@", "file://", "/", "./", "../", "~"):
+            env[f"GIT_CONFIG_KEY_{count}"] = "url.file:///dev/null/claude-read-only/.pushInsteadOf"
+            env[f"GIT_CONFIG_VALUE_{count}"] = prefix
+            count += 1
+        env["GIT_CONFIG_COUNT"] = str(count)
+        env["GIT_TERMINAL_PROMPT"] = "0"
+
     return env

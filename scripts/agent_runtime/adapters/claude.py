@@ -35,7 +35,7 @@ Mode handling:
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
 Every headless invocation receives shared PreToolUse guard settings from the
-primary checkout. Sealed ``review_isolation`` retains ``--safe-mode`` and its
+tracked checkout. Sealed ``review_isolation`` retains ``--safe-mode`` and its
 OS sandbox; safe mode suppresses hooks and shell/write tools there.
 
 Liveness paths:
@@ -104,21 +104,23 @@ REVIEWER_PERMISSION_PROFILE = {
         "Bash(git branch -D *)", "Bash(gh pr merge *)",
         "Bash(gh pr create *)", "Bash(gh pr comment *)",
         "Bash(gh pr review *)", "Bash(gh pr edit *)",
-        "Bash(gh pr close *)", "Bash(gh issue create *)",
+        "Bash(gh pr close *)", "Bash(gh pr reopen *)",
+        "Bash(gh issue create *)",
         "Bash(gh issue comment *)", "Bash(gh issue edit *)",
-        "Bash(gh issue close *)", "Bash(gh api -X *)",
+        "Bash(gh issue close *)", "Bash(gh issue reopen *)",
+        "Bash(gh api -X *)",
         "Bash(gh api --method *)", "Bash(gh release *)",
+        "Bash(gh api -f *)", "Bash(gh api -F *)",
+        "Bash(gh api --field *)", "Bash(gh api --raw-field *)",
+        "Bash(gh api --input *)",
         "Bash(gh workflow run *)",
     ),
 }
 
 
-def _worker_guard_settings() -> str:
-    """Build hook settings from tracked sources with deployed primary paths."""
-    from scripts.guardrails.worktree_containment import resolve_main_root
-
+def _worker_guard_settings(*, publish_guard: bool = False) -> str:
+    """Build hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
-    primary_root = resolve_main_root(source_root)
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
     prefix = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
@@ -128,12 +130,17 @@ def _worker_guard_settings() -> str:
             command = hook.get("command", "")
             if not command.startswith(prefix):
                 continue
-            deployed = primary_root / ".claude/hooks" / command.removeprefix(prefix)
-            if not deployed.is_file():
-                raise RuntimeError(f"Claude worker guard unavailable: {deployed}")
-            hooks.append({**hook, "command": str(deployed)})
+            tracked = source_root / "agents_extensions/shared/hooks" / command.removeprefix(prefix)
+            if not tracked.is_file():
+                raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+            hooks.append({**hook, "command": str(tracked)})
         if hooks:
             groups.append({"matcher": group["matcher"], "hooks": hooks})
+    if publish_guard:
+        guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
+        if not guard.is_file():
+            raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
+        groups.append({"matcher": "Bash", "hooks": [{"type": "command", "command": str(guard), "timeout": 5}]})
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
@@ -334,8 +341,8 @@ class ClaudeAdapter:
         # it for a headless worker, even when an API key is available. Sealed
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
-        # sandbox does not mount the primary checkout's deployed hook paths.
-        cmd.extend(["--settings", _worker_guard_settings()])
+        # sandbox does not mount the checkout's tracked hook paths.
+        cmd.extend(["--settings", _worker_guard_settings(publish_guard=mode == "read-only" and not review_isolation)])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
@@ -485,7 +492,10 @@ class ClaudeAdapter:
             cwd=cwd,
             stdin_payload=prompt if use_stdin else "",
             output_file=None,
-            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
+            env_overrides={
+                **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
+                **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if mode == "read-only" else {}),
+            },
             liveness_paths=self._resolve_liveness_paths(cwd),
             metadata={
                 **schema_metadata(output_schema),
