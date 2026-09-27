@@ -6,6 +6,7 @@ import LexiconPractice, {
   addDailyExamples,
   isEnglishLearnerGloss,
   isMeaningMcEligible,
+  paronymOptions,
   PracticeItem,
 } from '@site/src/components/LexiconPractice';
 import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
@@ -23,6 +24,7 @@ import {
   PRACTICE_SESSION_STORAGE_KEY,
   writePracticeSessionSnapshot,
   DAILY_PRACTICE_DECK_SIZE,
+  DEFAULT_NEW_PER_SESSION,
   cardKey,
   clearLoadedSrsState,
   loadState,
@@ -2699,6 +2701,138 @@ describe('LexiconPractice', () => {
     });
   });
 
+  /**
+   * #8733: the published Atlas Paronym deck had every card authored with
+   * `answer === options[0]` and the renderer showed `item.options` in that authored
+   * order verbatim — the correct answer was always the first button, so the exercise
+   * tested nothing. `paronymOptions` now shuffles per presentation (see the function's
+   * own #8733 comment in LexiconPractice.tsx for why a plain `shuffle(item.options)`
+   * isn't enough on its own).
+   */
+  test('#8733: paronym options are shuffled per presentation — the answer is not fixed at options[0]', () => {
+    const item = paronymPracticeItem(); // authored with answer === options[0] ('бігає')
+    const positionsSeen = new Set<number>();
+    for (let presentation = 0; presentation < 40; presentation += 1) {
+      const options = paronymOptions(item, `presentation-${presentation}`);
+      expect(options.map((option) => option.label).sort()).toEqual(
+        item.options.map((option) => option.label).sort(),
+      );
+      const correctIndex = options.findIndex((option) => option.correct);
+      expect(options[correctIndex].label).toBe(item.answer);
+      // Only one option is ever flagged correct, and it's always the authored answer.
+      expect(options.filter((option) => option.correct)).toHaveLength(1);
+      positionsSeen.add(correctIndex);
+    }
+    expect(positionsSeen.size).toBeGreaterThan(1);
+  });
+
+  test('#8733: the same presentation renders a stable order across re-renders', () => {
+    const item = paronymPracticeItem();
+    const first = paronymOptions(item, 'same-presentation-key');
+    const second = paronymOptions(item, 'same-presentation-key');
+    expect(second.map((option) => option.label)).toEqual(first.map((option) => option.label));
+  });
+
+  test('#8733: an SRS requeue of the same card is a fresh presentation — content alone does not fix the order', () => {
+    const item = paronymPracticeItem();
+    // `shuffle` derives its seed from array content (SSR-safe determinism), so without a
+    // presentation-specific salt every call over the same unchanged item content would
+    // reproduce the exact same order — this is the regression #8733's fix guards against.
+    const positions = new Set<number>();
+    for (let requeue = 0; requeue < 40; requeue += 1) {
+      const options = paronymOptions(item, `session-1:${requeue}`);
+      positions.add(options.findIndex((option) => option.correct));
+    }
+    expect(positions.size).toBeGreaterThan(1);
+  });
+
+  test('#8733: rendered paronym options vary in position across sessions, and the correct choice still scores good wherever it lands', async () => {
+    const positionsSeen = new Set<number>();
+    // A spread of session seeds verified (via paronymOptions directly) to land the
+    // answer at both positions — a random subset can occasionally tie by chance since
+    // there are only two options, so this list is picked, not drawn, for a stable test.
+    for (const randomSeed of [0.05, 0.1, 0.15, 0.2, 0.3, 0.5]) {
+      localStorage.clear();
+      loadState(localStorage, NOW);
+      vi.spyOn(Date, 'now').mockReturnValue(0);
+      vi.spyOn(Math, 'random').mockReturnValue(randomSeed);
+      const user = userEvent.setup();
+      const { unmount } = render(
+        <LexiconPractice initialDeck={paronymDeck()} autoStart initialMode="paronym" />,
+      );
+
+      const stage = within(await screen.findByTestId('practice-paronym'));
+      const buttons = stage.getAllByRole('button');
+      const index = buttons.findIndex((button) => /бігає/.test(button.textContent ?? ''));
+      expect(index).toBeGreaterThanOrEqual(0);
+      positionsSeen.add(index);
+
+      await user.click(buttons[index]);
+      expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent('Правильно!');
+
+      unmount();
+      vi.restoreAllMocks();
+    }
+    expect(positionsSeen.size).toBeGreaterThan(1);
+  });
+
+  /**
+   * #8733 (review round 2): the two lifecycle cases the shuffle-only unit tests above
+   * cannot exercise — the presentation key used to be bumped in a `useEffect` keyed on
+   * `selection?.itemId`, which (a) only took effect a render AFTER the card first mounted
+   * (the very first paint used the salt left over from before mount) and (b) never re-fired
+   * on a same-lemma SRS requeue, since `itemId` is unchanged. `presentationSeq` is now
+   * `history.length`, computed synchronously in the same render that produces `selection`.
+   */
+  test('#8733: a same-lemma requeue of a paronym card is a fresh presentation in the rendered component, not the frozen first order', async () => {
+    // The deck has exactly ONE paronym-eligible lemma, so answering it (right or wrong)
+    // always requeues the SAME itemId as the next selection — the exact same-id-requeue
+    // shape the shuffle-only tests could not exercise on a live component tree.
+    const initialPositions: number[] = [];
+    const requeuePositions: number[] = [];
+    for (const randomSeed of [0.05, 0.1, 0.15, 0.2, 0.3, 0.5]) {
+      localStorage.clear();
+      loadState(localStorage, NOW);
+      vi.spyOn(Date, 'now').mockReturnValue(0);
+      vi.spyOn(Math, 'random').mockReturnValue(randomSeed);
+      const user = userEvent.setup();
+      const { unmount } = render(
+        <LexiconPractice initialDeck={paronymDeck()} autoStart initialMode="paronym" />,
+      );
+
+      const correctIndex = async () => {
+        const stage = within(await screen.findByTestId('practice-paronym'));
+        const buttons = stage.getAllByRole('button');
+        return { buttons, index: buttons.findIndex((button) => /бігає/.test(button.textContent ?? '')) };
+      };
+
+      const first = await correctIndex();
+      expect(first.index).toBeGreaterThanOrEqual(0);
+      initialPositions.push(first.index);
+
+      // Answer WRONG so the card lapses and — being the only playable item — is
+      // immediately requeued as the very next selection: same itemId, fresh presentation.
+      const wrongButton = first.buttons[first.index === 0 ? 1 : 0];
+      await user.click(wrongButton);
+      await user.click(await screen.findByTestId('practice-advance-button'));
+
+      const second = await correctIndex();
+      expect(second.index).toBeGreaterThanOrEqual(0);
+      requeuePositions.push(second.index);
+
+      unmount();
+      vi.restoreAllMocks();
+      localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+    }
+
+    // Pre-fix, the commit effect never re-fires for a same-itemId requeue, so every
+    // requeue freezes at the exact order the first presentation already settled on —
+    // `requeuePositions` would equal `initialPositions` element-for-element. Fixed
+    // behavior: history.length (and so the presentation key) advances on every requeue
+    // regardless of itemId, so at least one requeue lands on a different order.
+    expect(requeuePositions).not.toEqual(initialPositions);
+  });
+
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
     const { container } = render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 
@@ -4891,6 +5025,276 @@ describe('LexiconPractice', () => {
     });
   });
 
+  describe('Flashcards queue boundary (#8732)', () => {
+    // 12 never-reviewed lemmas plus 3 already-reviewed ones due soon (2min/30min/3h) —
+    // a realistic session mixes both. The due-soon cards stay out-ranked by the new
+    // cards' hardcoded urgency=1 while under DEFAULT_NEW_PER_SESSION, so they never
+    // interrupt the first 7 servings; once the cap excludes every other new candidate,
+    // they become the only legitimately different next pick.
+    function newAndDueSoonFlashcardsDeck(newCount: number, dueCount: number): PracticeDeckData {
+      const newLexemes = Array.from({ length: newCount }, (_unused, index) =>
+        lexeme(`newcard-${index}`, `слово${index}`, `word${index}`, {
+          nominative: `слово${index}`,
+          accusative: `слово${index}`,
+          locative: `слові${index}`,
+        }),
+      );
+      const dueLexemes = Array.from({ length: dueCount }, (_unused, index) =>
+        lexeme(`duecard-${index}`, `дюкарта${index}`, `dueword${index}`, {
+          nominative: `дюкарта${index}`,
+          accusative: `дюкарта${index}`,
+          locative: `дюкарті${index}`,
+        }),
+      );
+      const lexemes = [...newLexemes, ...dueLexemes];
+      return {
+        deckVersion: 'test-new-card-boundary',
+        level: 'A1',
+        lexemes,
+        index: lexemes.map((entry, index) => ({
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: index,
+        })),
+        cloze: [],
+        stress: [],
+        classify: [],
+        paradigm: [],
+        synonym: [],
+      };
+    }
+
+    function seedDueSoonFlashcards(delaysMs: number[]) {
+      const state = loadState(localStorage, NOW);
+      delaysMs.forEach((delay, index) => {
+        state.cards.set(cardKey(`duecard-${index}`, 'flashcards'), {
+          due: Date.now() + delay,
+          stability: 2,
+          difficulty: 4,
+          elapsed_days: 0,
+          scheduled_days: 0,
+          learning_steps: 1,
+          reps: 1,
+          lapses: 0,
+          state: 1,
+        });
+      });
+      saveState(state, localStorage, NOW.getTime());
+    }
+
+    /**
+     * #8732: rating a card synchronously bumps `revision`/`reviewsCompleted`/
+     * `sessionNewIntroduced` (commitAnsweredSelection -> refreshProgress/recordReview),
+     * all BEFORE the learner presses «Далі →». Those feed `sessionPoolConstraints`, a
+     * dependency of `poolFilter`, a dependency of the `selection` useMemo — so a single
+     * rating can recompute `selection` before any Next click.
+     *
+     * Rating the 8th new card crosses `DEFAULT_NEW_PER_SESSION`. Its own persisted
+     * card state updates synchronously (`rateCard`), so a freshly rebuilt candidate for
+     * THIS card is no longer "new" and would be fine on its own — but the *committed*
+     * selection object pinning the display is a stale snapshot from before the rating
+     * (still flagged new), so `poolFilter(committed.selection)` reads false. With an
+     * already-reviewed, soon-due card also in the pool, `selectNextPracticeItem`
+     * legitimately now prefers IT over the just-answered card. The old pinning check
+     * re-validated the committed selection against this now-false `poolFilter` on
+     * every render, so it swapped to that different, unrelated card — no Next involved.
+     */
+    test('rating the 8th new card in a session never swaps the displayed card before Next', async () => {
+      expect(DEFAULT_NEW_PER_SESSION).toBe(8);
+      // Seed the session RNG only (real clock: FSRS scheduling and due-soon ranking
+      // are exercised against actual elapsed time). Verified by direct instrumentation
+      // of the selection recompute to reproduce the swap on unfixed code for this exact
+      // deck/seed pairing.
+      vi.spyOn(Math, 'random').mockReturnValue(0.01);
+      seedDueSoonFlashcards([2 * 60 * 1000, 30 * 60 * 1000, 3 * 60 * 60 * 1000]);
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice
+          initialDeck={newAndDueSoonFlashcardsDeck(12, 3)}
+          autoStart
+          initialMode="flashcards"
+        />,
+      );
+
+      const frontText = () => container.querySelector('.flashcard-front .flashcard-word')?.textContent;
+      const rateVisibleCard = async () => {
+        const card = container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+        await user.click(card);
+        await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+      };
+      const clickNext = async () => {
+        const advance = await screen.findByTestId('practice-advance-button');
+        await user.click(advance);
+        await waitFor(() => {
+          expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+        });
+      };
+
+      // Serve and explicitly advance through the first 7 new cards normally.
+      for (let served = 0; served < DEFAULT_NEW_PER_SESSION - 1; served += 1) {
+        await rateVisibleCard();
+        await clickNext();
+      }
+
+      // The 8th new card crosses DEFAULT_NEW_PER_SESSION the instant it's rated.
+      const eighthCardFront = frontText();
+      expect(eighthCardFront).toBeTruthy();
+      await rateVisibleCard();
+
+      // Feedback dwells: the rating alone (no Next yet) must never change the card.
+      await screen.findByTestId('practice-advance-button');
+      expect(frontText()).toBe(eighthCardFront);
+
+      // Positive path: an explicit Next still advances — the round's planned total
+      // was itself capped at 8 by the new-card limit, so it correctly reaches the
+      // summary here rather than serving a 9th card.
+      await clickNext();
+      expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
+    });
+
+    /**
+     * #8732 (review round 2): the fix above pins the committed selection against a
+     * poolFilter-driven swap, but left `committedSelectionRef.current.historyLen` stale
+     * whenever the commit effect skipped a same-itemId requeue (see the presentationSeq
+     * fix's own comment). Left unfixed, `committedStillValid` can misfire false the next
+     * time that requeued card is rated, defeating the exact pin this test's sibling above
+     * proves for a plain re-render. This plays a 2-lemma deck past its planned total so an
+     * extension forces a same-itemId requeue (verified generically: with only 2 lemmas and
+     * a 3rd+ serving, some itemId must repeat), then exercises the honest extension
+     * progress text, no-swap-before-Next on every serving, Enter-to-advance, and a summary
+     * retry, end to end in one continuous session.
+     */
+    function twoChoiceLemmaDeck(): PracticeDeckData {
+      // 'knyha'/'robota' are the only selectable items (mode 'choice'); 'misto'/'shkola'
+      // stay mode:[] (unselectable) and exist purely as the meaning-distractor pool.
+      const base = sampleDeck();
+      return {
+        ...base,
+        index: base.index.map((item) => ({
+          ...item,
+          modes: (item.lemmaId === 'knyha' || item.lemmaId === 'robota')
+            ? (['choice'] as PracticeMode[])
+            : [],
+          hasCloze: false,
+          clozeIds: [],
+        })),
+        cloze: [],
+      };
+    }
+
+    test('a same-lemma requeue never swaps before Next, the progress pill stays honest through the extension, Enter advances, and Another session replays cleanly (#8732)', async () => {
+      const user = userEvent.setup();
+      render(
+        <LexiconPractice initialDeck={twoChoiceLemmaDeck()} autoStart initialMode="choice" />,
+      );
+
+      // #M-4: identify the ACTIVE card from the prompt (which names the current lemma
+      // explicitly), never from which option buttons are present — both lemmas' UA
+      // forms/glosses can appear together as one correct answer + one distractor, so
+      // matching on option text alone silently misidentifies which card is live.
+      const currentCard = async () => {
+        await screen.findByTestId('practice-choice');
+        const promptText = screen.getByText(/^Що означає «|^Яке слово означає «/).textContent ?? '';
+        const isWordToMeaning = promptText.includes('Що означає «');
+        const isKnyha = /книга|book/.test(promptText);
+        const lemma: 'knyha' | 'robota' = isKnyha ? 'knyha' : 'robota';
+        const answerText = isKnyha
+          ? (isWordToMeaning ? 'book' : 'книга')
+          : (isWordToMeaning ? 'work' : 'робота');
+        const scope = within(screen.getByTestId('practice-choice'));
+        const buttons = scope.getAllByRole('button');
+        const correct = buttons.find((button) => button.textContent?.includes(answerText))!;
+        const wrong = buttons.find((button) => button !== correct)!;
+        return { lemma, correct, wrong };
+      };
+      const clickNext = async () => {
+        const advance = await screen.findByTestId('practice-advance-button');
+        await user.click(advance);
+        await waitFor(() => {
+          expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+        });
+      };
+
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/2');
+      const seenLemmas: Array<'knyha' | 'robota'> = [];
+
+      // Resolve whichever card comes up first normally.
+      const first = await currentCard();
+      seenLemmas.push(first.lemma);
+      await user.click(first.correct);
+      await screen.findByTestId('practice-advance-button');
+      await clickNext();
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/2');
+
+      // Lapse the second card: it stays unresolved, so the round must EXTEND.
+      const second = await currentCard();
+      seenLemmas.push(second.lemma);
+      await user.click(second.wrong);
+      await screen.findByTestId('practice-advance-button');
+      await clickNext();
+      // #8732: the honest extension total (plannedTotal 2 + extensionUsed 1), not a
+      // pre-extension total stuck showing no visible progress for the requeue.
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('2/3');
+
+      // With only 2 lemmas total and this the 3rd serving, this MUST be a re-presentation
+      // of an itemId already shown above — a genuine same-lemma requeue (FSRS's own
+      // learning-step schedule decides which one; either is a valid requeue for this test).
+      const requeued = await currentCard();
+      expect(seenLemmas).toContain(requeued.lemma);
+
+      // Rating it again is exactly where `committedSelectionRef` used to go stale (the
+      // commit effect never re-fired for the same itemId on the requeue above), so
+      // `committedStillValid` misfired false here and the dwell-freeze protecting the
+      // just-answered card silently stopped applying before the explicit Next — the
+      // display could swap to something else mid-dwell.
+      await user.click(requeued.correct);
+      await screen.findByTestId('practice-advance-button');
+      const stillShowing = await currentCard();
+      expect(stillShowing.lemma).toBe(requeued.lemma); // no swap before Next
+
+      // Enter advances exactly like a «Далі →» click. The round may extend further
+      // (FSRS can keep re-serving a learning-step card), so drain it the same way,
+      // checking the pill stays honest and nothing swaps before its own explicit advance.
+      let previousDenominator = 3;
+      for (let i = 0; i < 10 && !screen.queryByTestId('practice-session-summary'); i += 1) {
+        const before = await currentCard();
+        await user.click(before.correct);
+        await screen.findByTestId('practice-advance-button');
+        const after = await currentCard();
+        expect(after.lemma).toBe(before.lemma); // no swap before Next
+        const text = screen.getByTestId('practice-session-progress').textContent ?? '';
+        const match = text.match(/^(\d+)\/(\d+)$/);
+        expect(match).toBeTruthy();
+        const [, numerator, denominator] = match!;
+        expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
+        expect(Number(denominator)).toBeGreaterThanOrEqual(previousDenominator);
+        previousDenominator = Number(denominator);
+        if (i === 0) {
+          await user.keyboard('{Enter}');
+          await waitFor(() => {
+            expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+          });
+        } else {
+          await clickNext();
+        }
+      }
+
+      const summary = await screen.findByTestId('practice-session-summary');
+      expect(summary).toHaveTextContent('2/2'); // the summary still scores the frozen plan
+
+      // Retry after the summary starts a fresh, playable session — not a dead end.
+      await user.click(screen.getByRole('button', { name: /Another session/i }));
+      await waitFor(() => {
+        expect(screen.queryByTestId('practice-session-summary')).not.toBeInTheDocument();
+      });
+      expect(await screen.findByTestId('practice-choice')).toBeInTheDocument();
+    });
+  });
+
   describe('PracticeStress N-vowel generality', () => {
     function stressDeckWithNuclei(
       word: string,
@@ -5182,6 +5586,248 @@ describe('LexiconPractice', () => {
       expect(feedback).toHaveTextContent('Неправильно. «книга» = book.');
     });
 
+    /**
+     * #8713: 'antonym'/'homonym' index modes have no dedicated renderer and fall
+     * through to the word<->meaning surface (isMeaningChoiceSurface), but their index
+     * list — unlike 'choice' — was never filtered to MC-eligible lemmas. Mixed could
+     * rank an ineligible antonym/homonym candidate first and render `orderedChoiceOptions`
+     * `[]`, landing on "No cards available for multiple choice right now" with no way
+     * forward. `knyha`/`robota`/`misto`/`shkola` stay in `deck.lexemes` (unfiltered by
+     * index.modes) purely as the eligible distractor pool `meaningDistractors` needs;
+     * only `knyha` (mode 'choice') and the ineligible fixture are actually selectable.
+     * CEFR is set so the ineligible candidate's `levelBias` (0, matches deck.level)
+     * beats the eligible 'choice' candidate's (matches nothing else about ranking —
+     * urgency and the mode-balance penalty already tie for a fresh, empty-history pool
+     * of exactly two modes) — pre-fix this deterministically wins the very first pick.
+     */
+    function mixedEligibilityDeck(deadMode: 'antonym' | 'homonym'): PracticeDeckData {
+      const base = sampleDeck();
+      const ineligible = lexeme(
+        'stuck-choice-surface',
+        'тихий',
+        'quiet',
+        { nominative: 'тихий', accusative: 'тихий', locative: 'тихому' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      return {
+        ...base,
+        level: 'A1',
+        lexemes: [...base.lexemes, ineligible],
+        index: [
+          ...base.index.map((item) => ({
+            ...item,
+            modes: item.lemmaId === 'knyha' ? (['choice'] as PracticeMode[]) : [],
+            cefr: 'C1',
+            hasCloze: false,
+            clozeIds: [],
+          })),
+          {
+            lemmaId: ineligible.lemmaId,
+            lemma: ineligible.lemma,
+            cefr: 'A1',
+            modes: [deadMode] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: base.index.length,
+          },
+        ],
+        cloze: [],
+      };
+    }
+
+    test.each(['antonym', 'homonym'] as const)(
+      'Mixed never lands on "No cards available" when an MC-ineligible %s candidate ranks first (#8713)',
+      async (deadMode) => {
+        render(
+          <LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} autoStart initialMode="mixed" />,
+        );
+
+        await screen.findByTestId('practice-choice');
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+      },
+    );
+
+    test.each(['antonym', 'homonym'] as const)(
+      'a persisted %s stuck-Mixed session restores to a playable session, not the same dead end (#8713)',
+      async (deadMode) => {
+        writePracticeSessionSnapshot('mixed', {
+          sessionSeed: 12345,
+          history: [],
+          budget: 20,
+          completed: 3,
+          modeFilter: 'mixed',
+          level: 'A1',
+          deckId: 'all',
+          dateSeed: dateSeed(new Date()),
+          startedAt: Date.now(),
+          plannedTotal: 8,
+        });
+
+        // Resuming re-enters ensureDeck (needDrills for 'mixed'), which fetches this
+        // level's drill shards even though `initialDeck` already seeded the session —
+        // mock it so that fetch resolves instead of hitting the real network.
+        const { fn } = mockShardFetch({ A1: 0 });
+        vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+        const user = userEvent.setup();
+        render(<LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} />);
+
+        await user.click(await screen.findByTestId('practice-start-session'));
+
+        await screen.findByTestId('practice-choice');
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+
+        localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+      },
+    );
+
+    /**
+     * #8713 (review round 2, blocking verification gap): the two tests above only ever
+     * check the FIRST playable screen. Session planning (`countAvailableNewCards`/
+     * `countDueReviewCards`) counts at (lemma, mode) candidate granularity, so a dead
+     * antonym/homonym mode that is STILL "new" always inflates `plannedTotal` by one
+     * permanently-uncompletable slot — no deck shape can reach a literal summary while
+     * poolFilter is (correctly) refusing to ever serve that candidate. This deck instead
+     * gives each ineligible lemma a SECOND, always-playable 'flashcards' mode alongside
+     * its dead antonym/homonym mode (closer to real Atlas data, where a lemma's
+     * meaning-choice ineligibility does not disable its other modes), and the test seeds
+     * the dead-mode candidate's own SRS card as already mastered (reviewed, due far in
+     * the future) so it is honestly excluded from planning — exactly like a real learner
+     * who long ago answered the same lemma's flashcard side while its antonym surface was
+     * never eligible to review at all. Every planned slot is then genuinely completable
+     * and the round can run all the way to the actual session summary. (The FIRST test
+     * above already covers poolFilter skipping a live, top-ranked ineligible candidate.)
+     */
+    function mixedEligibilityFlashcardsDeck(deadMode: 'antonym' | 'homonym'): PracticeDeckData {
+      const base = sampleDeck();
+      const ineligibleOne = lexeme(
+        'stuck-flash-1',
+        'тихий',
+        'quiet',
+        { nominative: 'тихий', accusative: 'тихий', locative: 'тихому' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      const ineligibleTwo = lexeme(
+        'stuck-flash-2',
+        'гучний',
+        'loud',
+        { nominative: 'гучний', accusative: 'гучний', locative: 'гучному' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      return {
+        ...base,
+        level: 'A1',
+        lexemes: [...base.lexemes, ineligibleOne, ineligibleTwo],
+        index: [
+          ...base.index.map((item) => ({
+            ...item,
+            modes: ['flashcards'] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+          })),
+          ...[ineligibleOne, ineligibleTwo].map((entry, offset) => ({
+            lemmaId: entry.lemmaId,
+            lemma: entry.lemma,
+            cefr: 'A1',
+            modes: [deadMode, 'flashcards'] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: base.index.length + offset,
+          })),
+        ],
+        cloze: [],
+      };
+    }
+
+    test.each(['antonym', 'homonym'] as const)(
+      'a Mixed session over a pool with MC-ineligible %s cards plays to the real session summary (#8713)',
+      async (deadMode) => {
+        // Mark each ineligible lemma's dead-mode candidate as already mastered (reviewed,
+        // due a year out) so it is excluded from `plannedTotal` planning — see the deck
+        // fixture's own comment for why an uncompleted dead candidate can never let a
+        // fresh session reach a literal summary.
+        const masteredState = loadState(localStorage, NOW);
+        for (const lemmaId of ['stuck-flash-1', 'stuck-flash-2']) {
+          masteredState.cards.set(cardKey(lemmaId, deadMode), {
+            due: NOW.getTime() + 365 * 24 * 60 * 60 * 1000,
+            stability: 200,
+            difficulty: 3,
+            elapsed_days: 30,
+            scheduled_days: 365,
+            learning_steps: 0,
+            reps: 3,
+            lapses: 0,
+            state: State.Review,
+          });
+        }
+        saveState(masteredState, localStorage, NOW.getTime());
+
+        const user = userEvent.setup();
+        const { container } = render(
+          <LexiconPractice
+            initialDeck={mixedEligibilityFlashcardsDeck(deadMode)}
+            autoStart
+            initialMode="mixed"
+          />,
+        );
+
+        // 6 lemmas total (4 base + 2 MC-ineligible); every planned slot is completable
+        // via 'flashcards', so the round can genuinely reach 6/6 and close normally.
+        expect(await screen.findByTestId('practice-session-progress')).toHaveTextContent('0/6');
+
+        for (let served = 0; served < 6; served += 1) {
+          expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+          const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+          expect(flashcard).toBeInTheDocument();
+          await user.click(flashcard!);
+          await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+          await user.click(await screen.findByTestId('practice-advance-button'));
+        }
+
+        expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
+      },
+    );
+
+    test.each(['antonym', 'homonym'] as const)(
+      'resuming a persisted stuck %s-Mixed session reaches the real session summary, not just the first card (#8713)',
+      async (deadMode) => {
+        // A coherent stuck snapshot: the prior session got through zero cards before it
+        // (pre-fix) dead-ended on the ineligible candidate's first turn.
+        writePracticeSessionSnapshot('mixed', {
+          sessionSeed: 12345,
+          history: [],
+          budget: 20,
+          completed: 0,
+          modeFilter: 'mixed',
+          level: 'A1',
+          deckId: 'all',
+          dateSeed: dateSeed(new Date()),
+          startedAt: Date.now(),
+          plannedTotal: 1,
+        });
+
+        const { fn } = mockShardFetch({ A1: 0 });
+        vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+        const user = userEvent.setup();
+        render(<LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} />);
+
+        await user.click(await screen.findByTestId('practice-start-session'));
+
+        const scope = within(await screen.findByTestId('practice-choice'));
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+        const correctButton = scope.getAllByRole('button').find((button) =>
+          /книга|book/.test(button.textContent ?? ''),
+        )!;
+        await user.click(correctButton);
+        await user.click(await screen.findByTestId('practice-advance-button'));
+
+        expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
+
+        localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+      },
+    );
+
     test('synonym mode: wrong pick teaches the prompt ↔ correct-option pair, not the word↔gloss pair (#6816)', async () => {
       // Before this fix, mode==='synonym' skipped choiceFeedbackFor (mode !== 'choice'/
       // 'antonym'/'homonym') AND classifyFeedbackFor (selection.classify unset) — handleChoice
@@ -5228,6 +5874,7 @@ describe('LexiconPractice', () => {
           deck={deck}
           pairs={[]}
           sessionSeed={1}
+          presentationSeq={0}
           answerLocked={false}
           clozeInput=""
           clozeFeedback={null}
@@ -6025,7 +6672,7 @@ describe('LexiconPractice', () => {
       };
     }
 
-    test('#6720 session badge keeps one denominator for the whole round and the summary agrees', async () => {
+    test('#6720/#8732 session badge tracks one denominator per completed card and grows honestly on extension, while the summary keeps the frozen round size', async () => {
       const user = userEvent.setup();
       const { container } = render(
         <LexiconPractice initialDeck={threeFlashcardDeck()} autoStart initialMode="flashcards" />,
@@ -6045,20 +6692,30 @@ describe('LexiconPractice', () => {
       await answerCurrent('good');
       expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('2/3');
       await answerCurrent('good');
-      // The extension must not grow the denominator mid-round (was 3/4 → 4/5 …).
-      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('3/3');
+      // #8732: the round now genuinely extends (the lapsed card is still unresolved), so
+      // the pill's own denominator grows with it — it must never sit stuck at "3/3" while
+      // more cards are actually being served underneath it.
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('3/4');
 
-      // Answer whatever the extension re-serves until the round closes; the badge
-      // denominator must stay frozen the whole time.
+      // Answer whatever the extension re-serves until the round closes; each answered
+      // extension card must keep the numerator/denominator honestly matched (never stuck).
+      let previousDenominator = 4;
       for (let i = 0; i < 8; i += 1) {
         if (screen.queryByTestId('practice-session-summary')) break;
         await answerCurrent('good');
         if (screen.queryByTestId('practice-session-summary')) break;
-        expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(/^\d+\/3$/);
+        const text = screen.getByTestId('practice-session-progress').textContent ?? '';
+        const match = text.match(/^(\d+)\/(\d+)$/);
+        expect(match).toBeTruthy();
+        const [, numerator, denominator] = match!;
+        expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
+        expect(Number(denominator)).toBeGreaterThanOrEqual(previousDenominator);
+        previousDenominator = Number(denominator);
       }
 
       const summary = await screen.findByTestId('practice-session-summary');
-      // Same denominator as the badge: the score is against the frozen round size.
+      // The summary still scores against the frozen round size, independent of how far
+      // the live badge grew during extension.
       expect(summary).toHaveTextContent('3/3');
     });
 
