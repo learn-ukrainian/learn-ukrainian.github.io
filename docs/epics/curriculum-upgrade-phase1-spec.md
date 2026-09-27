@@ -1,5 +1,10 @@
 # Curriculum upgrade Phase 1 — V7 machinery (#7994)
 
+**Superseded (2026-09-21).** `--upgrade` is abandoned for A1–B2
+([`fresh-build-requirements.md`](fresh-build-requirements.md) §1). Kept as history and
+for its scars; do not follow it for new work. Current plan:
+[`fresh-build-build-program.md`](fresh-build-build-program.md).
+
 **Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md).
 PR #7999 is merged; modules 8–9 are live on `/a1/`. Auto-deploy does not publish
 curriculum — see that file for Pages dispatch.

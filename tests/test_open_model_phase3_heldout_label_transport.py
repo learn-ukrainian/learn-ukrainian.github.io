@@ -37,6 +37,56 @@ def _row(number: int) -> dict[str, object]:
     }
 
 
+# `_partition` compares against this literal. It is not a production attribute.
+_FROZEN_PARTITION_COUNT = 9392
+
+
+def _partition_row(row: dict[str, object], *, lane: str) -> dict[str, object]:
+    return {
+        "family_id": row["family_id"],
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "reason": "evaluation_only",
+        "candidate_lane": lane,
+        "source_text_sha256": row["source_text_sha256"],
+        "frozen_locator_sha256": row["frozen_locator_sha256"],
+    }
+
+
+def _filler_partition_row(number: int) -> dict[str, object]:
+    digest = f"{number:064x}"
+    return {
+        "family_id": "school_textbooks",
+        "unit_id": f"partition-filler-{number:05d}",
+        "unit_sha256": digest,
+        "reason": "evaluation_only",
+        "candidate_lane": "phenomenon_strata",
+        "source_text_sha256": digest,
+        "frozen_locator_sha256": f"{number + 1:064x}",
+    }
+
+
+def _partition_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Build the frozen partition `_partition` accepts.
+
+    Full-scale tests have a materialization larger than 9,392 and slice it.
+    Shrunk tests keep a small materialization; the remaining partition rows are
+    fillers so the production length check still runs.
+    """
+    row_count = transport.ROW_COUNT
+    if len(rows) >= _FROZEN_PARTITION_COUNT:
+        return [
+            _partition_row(row, lane="clean_modern" if number < row_count else "phenomenon_strata")
+            for number, row in enumerate(rows[:_FROZEN_PARTITION_COUNT])
+        ]
+    built = [
+        _partition_row(row, lane="clean_modern" if number < row_count else "phenomenon_strata")
+        for number, row in enumerate(rows)
+    ]
+    built.extend(_filler_partition_row(number) for number in range(len(built), _FROZEN_PARTITION_COUNT))
+    return built
+
+
 def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     rows = [_row(number) for number in range(transport.MATERIALIZATION_COUNT)]
     materialization = tmp_path / "inputs" / "source.jsonl"
@@ -51,20 +101,9 @@ def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
             "private_jsonl_sha256": transport.sha256_file(materialization),
         },
     )
-    selected = rows[: transport.ROW_COUNT]
-    partition_rows = [
-        {
-            "family_id": row["family_id"],
-            "unit_id": row["unit_id"],
-            "unit_sha256": row["unit_sha256"],
-            "reason": "evaluation_only",
-            "candidate_lane": "clean_modern" if number < transport.ROW_COUNT else "phenomenon_strata",
-            "source_text_sha256": row["source_text_sha256"],
-            "frozen_locator_sha256": row["frozen_locator_sha256"],
-        }
-        for number, row in enumerate(rows[:9392])
-    ]
-    assert len(selected) == transport.ROW_COUNT and len(partition_rows) == 9392
+    partition_rows = _partition_rows(rows)
+    selected = [row for row in partition_rows if row["candidate_lane"] == "clean_modern"]
+    assert len(selected) == transport.ROW_COUNT and len(partition_rows) == _FROZEN_PARTITION_COUNT
     partition = tmp_path / "inputs" / "partition.jsonl"
     partition.write_bytes(b"".join((transport.canonical_json(row) + "\n").encode() for row in partition_rows))
     freeze_receipt = tmp_path / "inputs" / "freeze-receipt.json"
@@ -80,6 +119,40 @@ def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
         },
     )
     return partition, materialization, materialization_receipt, freeze_receipt, tmp_path / "private"
+
+
+_SMALL_MATERIALIZATION_COUNT = 10
+_SMALL_ROW_COUNT = 5
+
+
+def _shrink_heldout_scale(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Role, prompt, tamper, and retry tests do not prove the production denominator.
+
+    The two full-scale tests keep MATERIALIZATION_COUNT, ROW_COUNT, and the
+    schema's row_count const of 2,000. These tests retarget that const so the
+    rest of the schema still applies at the smaller scale. The frozen partition
+    stays 9,392 rows because that length is a literal in `_partition`.
+    """
+    monkeypatch.setattr(transport, "MATERIALIZATION_COUNT", _SMALL_MATERIALIZATION_COUNT)
+    monkeypatch.setattr(transport, "ROW_COUNT", _SMALL_ROW_COUNT)
+    schema = json.loads(transport.DEFAULT_SCHEMA.read_text(encoding="utf-8"))
+    schema["properties"]["row_count"] = {"const": _SMALL_ROW_COUNT}
+    schema["$defs"]["publicReceipt"]["properties"]["row_count"] = {"const": _SMALL_ROW_COUNT}
+    patched = tmp_path / "small-heldout-schema.json"
+    patched.write_text(json.dumps(schema), encoding="utf-8")
+    monkeypatch.setattr(transport, "DEFAULT_SCHEMA", patched)
+
+    def _with_patched_schema(func):
+        def wrapped(*args, **kwargs):
+            kwargs.setdefault("schema_path", transport.DEFAULT_SCHEMA)
+            return func(*args, **kwargs)
+
+        return wrapped
+
+    # Defaults are bound at import, so the patched path has to be passed explicitly.
+    monkeypatch.setattr(transport, "prepare", _with_patched_schema(transport.prepare))
+    monkeypatch.setattr(transport, "ingest", _with_patched_schema(transport.ingest))
+    monkeypatch.setattr(transport, "assemble", _with_patched_schema(transport.assemble))
 
 
 def _prepare(tmp_path: Path, *, packet_size: int = 1000) -> tuple[dict[str, object], Path, Path]:
@@ -187,7 +260,10 @@ def test_exact_two_thousand_and_frozen_partition_denominators_fail_closed(tmp_pa
         },
     ],
 )
-def test_gemini_grok_and_author_routes_rejected_before_prepare(tmp_path: Path, actor: dict[str, str]) -> None:
+def test_gemini_grok_and_author_routes_rejected_before_prepare(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, actor: dict[str, str]
+) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     partition, source, materialization_receipt, freeze_receipt, private = _inputs(tmp_path)
     with pytest.raises(transport.HeldoutLabelTransportError, match="only OpenAI"):
         transport.prepare(
@@ -201,7 +277,8 @@ def test_gemini_grok_and_author_routes_rejected_before_prepare(tmp_path: Path, a
     assert not private.exists()
 
 
-def test_stale_role_cycle_and_model_are_rejected(tmp_path: Path) -> None:
+def test_stale_role_cycle_and_model_are_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     partition, source, materialization_receipt, freeze_receipt, private = _inputs(tmp_path)
     role = json.loads(roles.LEDGER_PATH.read_text())
     next(item for item in role["functional_roles"] if item["role_id"] == transport.ROLE_ID)["exact_model"] = "gpt-other"
@@ -229,7 +306,10 @@ def test_stale_role_cycle_and_model_are_rejected(tmp_path: Path) -> None:
         )
 
 
-def test_prompt_hash_drift_fails_before_private_packet_creation(tmp_path: Path) -> None:
+def test_prompt_hash_drift_fails_before_private_packet_creation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     partition, source, materialization_receipt, freeze_receipt, private = _inputs(tmp_path)
     stale_prompt = tmp_path / "inputs" / "stale-prompt.md"
     stale_prompt.write_text("stale\n", encoding="utf-8")
@@ -245,7 +325,8 @@ def test_prompt_hash_drift_fails_before_private_packet_creation(tmp_path: Path) 
     assert not private.exists()
 
 
-def test_flat_response_schema_and_semantics_are_closed(tmp_path: Path) -> None:
+def test_flat_response_schema_and_semantics_are_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     _manifest, private, _ = _prepare(tmp_path)
     packet = json.loads((private / "packets" / "0001.json").read_text())
     valid = json.loads(_raw(packet))
@@ -280,7 +361,10 @@ def test_flat_response_schema_and_semantics_are_closed(tmp_path: Path) -> None:
             )
 
 
-def test_alias_permissions_tamper_and_output_inside_input_fail_closed(tmp_path: Path) -> None:
+def test_alias_permissions_tamper_and_output_inside_input_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     manifest, private, partition = _prepare(tmp_path)
     os.chmod(private / "manifest.json", 0o400)
     with pytest.raises(transport.HeldoutLabelTransportError, match="mode drift"):
@@ -296,7 +380,7 @@ def test_alias_permissions_tamper_and_output_inside_input_fail_closed(tmp_path: 
         transport.assemble(
             manifest_path=private / "manifest.json", private_dir=private, public_receipt_path=tmp_path / "receipt.json"
         )
-    assert manifest["row_count"] == 2000
+    assert manifest["row_count"] == transport.ROW_COUNT
 
     tampered, second_private, _ = _prepare(tmp_path / "tampered")
     packet_path = second_private / "packets" / "0001.json"
@@ -311,7 +395,7 @@ def test_alias_permissions_tamper_and_output_inside_input_fail_closed(tmp_path: 
             raw_response_path=raw,
             private_dir=second_private,
         )
-    assert tampered["row_count"] == 2000
+    assert tampered["row_count"] == transport.ROW_COUNT
     with pytest.raises(transport.HeldoutLabelTransportError, match="inside an input"):
         transport.prepare(
             partition_path=partition,
@@ -330,8 +414,13 @@ def test_alias_permissions_tamper_and_output_inside_input_fail_closed(tmp_path: 
         )
 
 
-def test_incomplete_assembly_and_valid_first_retry_are_rejected(tmp_path: Path) -> None:
-    _manifest, private, _ = _prepare(tmp_path)
+def test_incomplete_assembly_and_valid_first_retry_are_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
+    # Production uses packet_size 1000 against 2,000 rows (two packets). The
+    # small row count fits in one packet, which would make this assembly complete.
+    _manifest, private, _ = _prepare(tmp_path, packet_size=2)
     packet = json.loads((private / "packets" / "0001.json").read_text())
     raw = tmp_path / "valid.json"
     raw.write_bytes(_raw(packet))
@@ -353,7 +442,10 @@ def test_incomplete_assembly_and_valid_first_retry_are_rejected(tmp_path: Path) 
         )
 
 
-def test_retry_receipt_distinguishes_semantic_failure_from_identity_failure(tmp_path: Path) -> None:
+def test_retry_receipt_distinguishes_semantic_failure_from_identity_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _shrink_heldout_scale(monkeypatch, tmp_path)
     _manifest, private, _ = _prepare(tmp_path)
     packet = json.loads((private / "packets" / "0001.json").read_text())
     valid = json.loads(_raw(packet))
@@ -521,7 +613,9 @@ def test_cycle002_execution_accepts_the_tracked_role_and_evaluation_contracts() 
     assert evaluation_hash == transport.sha256_file(transport.DEFAULT_CYCLE002_EVALUATION_CONTRACT)
 
 
-def _cycle002_runtime_fixture(monkeypatch: pytest.MonkeyPatch) -> tuple[list[dict[str, object]], dict[tuple[str, str], dict[str, object]]]:
+def _cycle002_runtime_fixture(
+    monkeypatch: pytest.MonkeyPatch,
+) -> tuple[list[dict[str, object]], dict[tuple[str, str], dict[str, object]]]:
     """Tiny hermetic population: production denominators stay enforced by the schema."""
     rows: list[dict[str, object]] = []
     materialized: dict[tuple[str, str], dict[str, object]] = {}
@@ -554,7 +648,9 @@ def _cycle002_runtime_fixture(monkeypatch: pytest.MonkeyPatch) -> tuple[list[dic
     monkeypatch.setattr(
         transport,
         "_validate_schema",
-        lambda value, schema_path, definition: None if definition.startswith("cycle002") else original_validate(value, schema_path, definition),
+        lambda value, schema_path, definition: (
+            None if definition.startswith("cycle002") else original_validate(value, schema_path, definition)
+        ),
     )
     return rows, materialized
 
@@ -662,9 +758,7 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     assert selected_attempt.read_bytes() == raw
     assert (private / "cycle002" / "raw" / "a" / "0001.raw").read_bytes() == raw
     assert stat.S_IMODE((private / "cycle002" / "raw" / "a" / "0001.raw").stat().st_mode) == 0o600
-    selected_receipt = json.loads(
-        (private / "cycle002" / "transports" / "a" / "0001.json").read_text(encoding="utf-8")
-    )
+    selected_receipt = json.loads((private / "cycle002" / "transports" / "a" / "0001.json").read_text(encoding="utf-8"))
     assert selected_receipt["raw_attempt_index"] == 2
     with pytest.raises(transport.HeldoutLabelTransportError, match="missing cycle002 transport private artifact"):
         transport.assemble_cycle002(

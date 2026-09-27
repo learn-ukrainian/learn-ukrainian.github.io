@@ -17,16 +17,19 @@ import os
 import re
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
 from scripts.ci.pytest_shards import (
+    _complete_junit_durations,
     _file_from_junit_id,
     aggregate_junit_file_durations,
     assert_set_integrity,
     assign_files,
     load_durations,
+    prepare_ci_file_durations,
     write_file_durations,
     write_file_shard_plan,
 )
@@ -283,6 +286,41 @@ def test_write_file_durations_raises_when_nothing_mappable(tmp_path: Path) -> No
         write_file_durations(junit_paths=[junit], output=tmp_path / "out.json")
 
 
+def test_ci_duration_source_rejects_duplicate_or_incomplete_junit(tmp_path: Path) -> None:
+    committed = {f"tests/test_{index}.py": 1.0 for index in range(4)}
+    paths = [
+        _write_junit(
+            tmp_path / f"shard-{index}.xml",
+            [f'<testcase classname="tests.test_{index}" name="test_x" time="1.0" />'],
+        )
+        for index in range(4)
+    ]
+    durations, count = _complete_junit_durations(paths, committed)
+    assert count == 4 and len(durations) == 4
+    paths[3].write_text(paths[0].read_text(encoding="utf-8"), encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate"):
+        _complete_junit_durations(paths, committed)
+
+
+def test_ci_duration_source_logs_incomplete_fallback(tmp_path: Path, monkeypatch) -> None:
+    fallback = tmp_path / "committed.json"
+    fallback.write_text('{"tests/test_a.py": 1.0}\n', encoding="utf-8")
+    run = {"id": 123, "created_at": datetime.now(UTC).isoformat()}
+
+    def fake_gh_json(path: str) -> dict:
+        if "/workflows/" in path:
+            return {"workflow_runs": [run]}
+        if "/jobs?" in path:
+            return {"jobs": [{"name": f"pytest ({index})", "conclusion": "success"} for index in range(1, 5)]}
+        return {"artifacts": []}
+
+    monkeypatch.setattr("scripts.ci.pytest_shards._gh_json", fake_gh_json)
+    output = tmp_path / "selected.json"
+    message = prepare_ci_file_durations(output=output, fallback=fallback, repo="owner/repo")
+    assert output.read_bytes() == fallback.read_bytes()
+    assert "committed fallback" in message and "incomplete 4-shard" in message
+
+
 # =============================================================================
 # tests/conftest.py: pytest_ignore_collect allowlist hook
 # =============================================================================
@@ -339,6 +377,7 @@ def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> 
     assert pytest_ignore_collect(conftest_file, config=None) is True
 
 
+@pytest.mark.slow
 def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
     """The CI entry path must not let pytest's default `build` exclusion win."""
     tracked = subprocess.run(
@@ -416,9 +455,9 @@ def _ci_text() -> str:
 
 
 def test_ci_yml_declares_full_tier_shard_count_once() -> None:
-    """Full-tier default stays 4; plan-files must follow Changes.shard_count."""
+    """Full-tier default is single-source; plan-files follows Changes.shard_count."""
     ci_text = _ci_text()
-    assert re.search(r"(?m)^\s*PYTEST_SHARD_COUNT:\s*'4'\s*$", ci_text), (
+    assert re.search(r"(?m)^\s*PYTEST_SHARD_COUNT:\s*\$\{\{ inputs.shards \|\| '(?:4|6|8|10)' \}\}\s*$", ci_text), (
         "full-tier shard count must be declared once at workflow env level"
     )
     assert ci_text.count("PYTEST_SHARD_COUNT:") == 1
@@ -436,12 +475,16 @@ def test_ci_yml_plan_files_uses_changes_shard_count() -> None:
     ci_text = _ci_text()
     assert "pytest_shards.py plan-files" in ci_text
     assert "scripts/ci/pytest-file-durations.json" in ci_text
-    assert 'PYTEST_MODE" = "selected"' in ci_text or "PYTEST_MODE\" = \"selected\"" in ci_text
+    assert 'PYTEST_MODE" = "selected"' in ci_text or 'PYTEST_MODE" = "selected"' in ci_text
     # Selected and full both pass Changes.outputs.shard_count (1 vs 4), not env alone.
     assert '--shard-id "$SHARD" --shard-count "$SHARD_COUNT"' in ci_text
     assert "SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}" in ci_text
     assert "PYTEST_CANDIDATES" in ci_text
     assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
+
+
+def test_content_lane_excludes_slow_partition_test() -> None:
+    assert "pytest tests/test_ci_shard_partition.py -m 'not slow' --timeout=120" in _ci_text()
 
 
 def test_selected_plan_files_stdin_is_exact_candidates_no_silent_drop(tmp_path: Path) -> None:

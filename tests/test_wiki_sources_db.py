@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 import re
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
@@ -188,3 +190,78 @@ def test_search_sections_fts5_results_route_to_textbook_attribution(textbook_sec
 
     assert attribution["type"] == "textbook"
     assert re.fullmatch(r"^\d+-klas-.+_s\d+$", attribution["file"])
+
+
+def test_build_fts_query_is_identical_under_two_hash_seeds() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    code = (
+        "import sys\n"
+        "from pathlib import Path\n"
+        f"sys.path.insert(0, {str(repo / 'scripts')!r})\n"
+        "from wiki.sources_db import _build_fts_query\n"
+        "print(_build_fts_query({'яблуко', 'а', 'мова', 'дім', 'bb', 'школа'}))\n"
+    )
+    outputs = []
+    for seed in ("1", "2"):
+        env = os.environ.copy()
+        env["PYTHONHASHSEED"] = seed
+        completed = subprocess.run(
+            [sys.executable, "-c", code],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=60,
+        )
+        outputs.append(completed.stdout)
+    assert outputs[0] == outputs[1]
+    assert outputs[0].strip() == '"дім" OR "мова" OR "школа" OR "яблуко"'
+
+
+def test_fts_search_breaks_equal_ranks_by_rowid() -> None:
+    conn = _make_conn()
+    body = "мова " * 40
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, source_file) VALUES (20, 'later', 'Мова', ?, 'later')",
+        (body,),
+    )
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, source_file) VALUES (5, 'earlier', 'Мова', ?, 'earlier')",
+        (body,),
+    )
+    with sources_db.using_connection(conn):
+        rows = sources_db._fts_search(
+            "textbooks_fts",
+            "textbooks",
+            {"мова"},
+            max_total=2,
+            min_text_len=0,
+        )
+    assert [row["id"] for row in rows] == [5, 20]
+
+
+def test_dict_lookup_limit_orders_by_word_then_rowid(tmp_path: Path) -> None:
+    db_path = tmp_path / "mini.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        """
+        CREATE TABLE sum11 (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO sum11 (id, word) VALUES (?, ?)",
+        [(9, "яблуко"), (8, "мова"), (4, "молоко"), (2, "мова")],
+    )
+    conn.commit()
+    conn.close()
+
+    exact = sources_db._dict_lookup("sum11", "мова", limit=1, db_path=db_path)
+    assert [row["id"] for row in exact] == [2]
+    prefix = sources_db._dict_lookup("sum11", "мо", limit=3, db_path=db_path)
+    assert [row["id"] for row in prefix] == [2, 8, 4]

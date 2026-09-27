@@ -16,7 +16,7 @@ only.
 | Fast checks: Ruff step | not docs-only |
 | Fast checks: Plan Validate step | always (the v2 plan validator self-scopes on `pull_request` to its input paths; the generated arc landing `a1 --check` always runs) |
 | Fast checks: TypeSafe triage step | always (advisory during soak, #8232: `continue-on-error`, and CI Gate accepts any outcome, so a red TypeSafe step is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the step red) |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| pytest | always (`full` → 10 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | CI Gate | always |
@@ -54,12 +54,24 @@ events then differ deliberately:
 
 The content class emits `pytest_mode=content`: one shard running
 `-m 'reads_content and not slow and not atlas_release'` (same filters and
-`--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,
+`--timeout=120` as the full PR tier) plus the non-slow tests in
+`tests/test_ci_shard_partition.py`,
 with Ruff, Contracts and the Frontend build still on (`docs_only=false`,
 `frontend=true`). The marker is load-bearing:
 `tests/test_reads_content_marker_invariant.py` fails when a test module
 references those content roots without carrying `reads_content`, so new
 content-reading tests cannot silently fall out of the class.
+
+**Runner-slot budget (#8876).** `scripts.ci.slot_inventory --check` expands
+every PR-path workflow. Its dynamic `ci.yml` pytest matrix uses the full-tier
+default from that workflow's `env.PYTEST_SHARD_COUNT`; an unreadable default
+fails the check. The current inventory is 32 jobs, including 10 pytest shards
+and 17 jobs in `ci.yml`. On the GitHub Team plan, 60 hosted jobs can run
+concurrently. The inventory ceiling is 58 = 60 - 2 reserved slots. Two
+overlapping full `ci.yml` workflows use at most 2 × 17 = 34 slots, leaving
+24 for other PR workflows plus two reserved slots. The 32-job inventory is a
+sum across workflows, not a simultaneous peak: if every job in two copies were
+runnable together, 2 × 32 = 64 would exceed 60 and some jobs would queue.
 
 CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body
 edits do not start it. `full-ci` is read from the PR's current labels
@@ -79,7 +91,7 @@ pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,
 conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under
 `tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted
 test files, empty or ≥80 candidates, and anything outside the allowlist stay
-`pytest_mode=full` with four shards. Contracts and ruff stay on whenever
+`pytest_mode=full` with ten shards. Contracts and ruff stay on whenever
 `docs_only=false`. After merge, the CI stream owner tracks one week of
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).
@@ -190,10 +202,11 @@ after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s
 after the run started; `CI Gate` was red; the shards' repo_wide backstop also
 failed.
 
-Known limit: the preflight competes with the pytest shards for runners. All CI
-jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so
-queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into
-one `fast-checks` job.
+Known limit at the time of this measurement: the preflight competed with the
+pytest shards for GitHub-hosted runners at the former 20-job Free-plan cap, so
+queue time could dominate. Phase A.2 (issue #8750) consolidated short checks
+into one `fast-checks` job. The organization moved to the 60-job Team plan on
+2026-09-27; the historical queue measurements above predate that change.
 
 **When it runs.** `scripts/ci/classify_changes.py` decides once and emits
 `preflight`. `preflight_for()` returns `true` only for a `pull_request` event
@@ -322,9 +335,9 @@ only the red one. A Ruff fix therefore costs up to one more Preflight run
 The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`
 which counts physical cores), collect through one initial `tests` path
 instead of positional file arguments, and balance by measured per-file
-duration instead of a modulo split. Full-tier shard count (`4`) is declared
+duration instead of a modulo split. Full-tier shard count (`10`) is declared
 once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job
-emits `shard_count` (1 or 4) and `shards`; `plan-files` always uses
+emits `shard_count` (1 or 10) and `shards`; `plan-files` always uses
 `needs.changes.outputs.shard_count` so selected mode never LPT-partitions a
 candidate set into unused buckets.
 `--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's
@@ -368,14 +381,14 @@ filtered by the hook: it explicitly admits them and allowed files, overriding
 pytest's default `norecursedirs` exclusions such as `build`; other files are
 ignored. This preserves the tracked-file selection, including `tests/build/`.
 
-**Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,
+**Balance — `scripts/ci/pytest_shards.py` file plane.** The file-plane subcommands,
 extending the existing planner (Cursor Cloud's node-ID plane — `plan` /
 `plan-shard` / `run` / `verify-artifacts` — is untouched):
 
 - `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:
   reads candidate repo-relative file paths from stdin (`ci.yml` pipes in
   `git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort`), LPT-assigns
-  them across `K` shards from the committed duration snapshot (median
+  them across `K` shards from the run's frozen duration snapshot (median
   fallback for files without history), writes shard `N`'s sorted allowlist,
   and prints every shard's predicted weight.
 - `file-durations --junit <xml>... --output <json>`: refreshes the committed
@@ -387,19 +400,36 @@ extending the existing planner (Cursor Cloud's node-ID plane — `plan` /
   before per-file totals are formed; a testcase whose `classname`/`name`
   doesn't resolve to a repo test file is skipped and counted, never raised.
 
-**Snapshot refresh procedure.** After a landing-tier CI run (`merge_group` or
-`push` to `main`), download each shard's uploaded `pytest-junit-shard-N`
-artifact and run:
+**Duration source.** For a full-tier run, Changes searches recent successful
+merge-queue runs for the newest complete pytest matrix. It requires all pytest
+jobs and their matching JUnit artifacts, checks disjoint testcase identities,
+rejects failures and reports with less than 90% of the committed file coverage,
+and ignores runs older than seven days. It uploads one immutable duration file
+for every shard of this CI run. An unavailable, incomplete, or stale source
+selects `scripts/ci/pytest-file-durations.json` and logs why. Selected runs use
+the committed file directly. CI Gate checks the exact number and successful
+conclusion of pytest matrix jobs through the current run-attempt API; a missing
+or unexpectedly skipped shard fails the required gate. The `needs_artifact`
+skip-set audit runs as a parallel required job, so its collection and runtime
+checks do not extend shard 1's pytest path.
+Manual `workflow_dispatch` shard trials use a run-specific concurrency group;
+pull-request cancellation and merge-group sequencing retain their existing keys.
+Pytest jobs retain full checkout history because reviewer parity tests load
+historical source with `git show`.
+
+**Committed snapshot refresh procedure.** After a complete full merge-queue CI
+run, download each shard's uploaded `pytest-junit-shard-N` artifact and run:
 
 ```
+args=()
+for shard in $(seq 1 10); do args+=(--junit "pytest-shard-${shard}.xml"); done
 .venv/bin/python scripts/ci/pytest_shards.py file-durations \
-  --junit pytest-shard-1.xml --junit pytest-shard-2.xml \
-  --junit pytest-shard-3.xml --junit pytest-shard-4.xml \
-  --output scripts/ci/pytest-file-durations.json
+  "${args[@]}" --output scripts/ci/pytest-file-durations.json
 ```
 
-Commit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard
-balance measurably drifts — not on every green run.
+Use one `--junit` per shard in that run. Commit the refreshed snapshot (sorted
+keys, 3-decimal rounding) when shard balance measurably drifts — not on every
+green run.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 

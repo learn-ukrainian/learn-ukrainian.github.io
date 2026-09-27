@@ -1,6 +1,6 @@
 ---
 name: drive-epic
-description: Drive one explicitly assigned epic or track through Fleet Comms. For CORE V7 --upgrade / A1 rollout see §0d. Use track-completion for a single fresh CORE module.
+description: Drive one explicitly assigned epic or track through Fleet Comms. For the core fresh lesson-based build (#7994) see §0d. Use track-completion for a single V7 module on a track that still uses V7.
 effort: xhigh
 ---
 
@@ -150,42 +150,41 @@ correct the other view the same session. Full contract:
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.
 
-### 0d. CORE V7 `--upgrade` / A1 rollout (epics #7994 / #7995)
+### 0d. Core fresh lesson-based build (epic #7994, sub-epic #8397)
 
-This is **not** `$track-completion` (fresh CORE) and **not** a second driver skill.
-Same `$drive-epic` loop. Product loop and scars:
-[`docs/epics/a1-upgrade-operating-rules.md`](../../../../docs/epics/a1-upgrade-operating-rules.md).
-Writer/reviewer seats live there and in `/api/rules` — do not freeze a roster here.
+A1–B2 core modules are built fresh from new lesson plans by the fresh-build engine;
+`--upgrade` is abandoned (`docs/epics/fresh-build-requirements.md` §1). Same
+`$drive-epic` loop — **not** a second driver skill, and **not** `$track-completion`.
 
-**Done** is the learner URL on the canonical track (`/a1/<slug>/` for this epic),
-with Pages only on present-tense operator GO (§7-rollout). Engine-on-`main` and
-`run_lesson_gates` green in a worktree are **not** done.
+Read first: [`docs/epics/fresh-build-build-program.md`](../../../../docs/epics/fresh-build-build-program.md)
+(§1–§3, §5, §6), then the requirements, plan schema, writer contract and review
+contracts as the phase needs. Seats live in `model-assignment.md` (Ukrainian
+content authoring row) — do not freeze a roster here.
+
+**Done** is the learner URL on the level's track (`/<level>/<slug>/`, e.g. `/a1/<slug>/`), with Pages only
+on present-tense operator GO (§7-rollout), and the LU QA sweep triaged (build
+program §5 step 10). Engine-on-`main` and gates green in a worktree are **not**
+done.
 
 Binding for this lane:
 
-1. Preserve-and-expand archived `a1-v1` (or the stated archive). Do not rebuild by
-   hand. Do not rewrite original prose because an upgrade activity is wrong — drop
-   or replace the **invented** pair; show archive vs upgrade when a CF finding
-   looks like a rewrite.
-2. The **driver does not decide Ukrainian**. Gemini 3.8 Flash is the preferred
-   Ukrainian authoring lane. Route review through an independent language lane
-   per live `model-assignment.md`; reserve Astra for hard, contested linguistic
-   adjudication. Do not referee stress, letters, or morphology in the driver
-   seat.
-3. **Machinery is Fable 5.1, not Sonnet** (operator 2026-09-18). Advanced
-   machinery (`scripts/`, gates, the writer-prompt contract) goes to
-   `claude-fable-5-1` with `--mode danger`. Claude `workspace-write` does not
-   grant writes, so that mode returns a no-op. A bug found in the old module is
-   fixed by this machine: the writer is not given the bad content, and the gate
-   fails if it comes back. Do not hand-edit the lesson, the plan, or
-   `lessons.yaml` to hide it. Do not start the paid writer until a rendered
-   prompt is clean of the reported defect. The driver does not solo-implement.
-4. Content PRs are **scripts-free**. Keep the independent cross-family review
-   gate; Astra is an advisor for hard judgment, not the routine content reviewer.
-   While CF/CI runs on module N, package N+1 (pipeline). Do not dump every module
-   on one reviewer in one turn.
-5. After gates pass in a worktree, **open the content PR the same session**.
-   Sitting on green worktrees is a driver defect (§2a / §2c).
+1. **Nothing typed**: every Ukrainian string is a tool copy or the writer's
+   resolved text; a defect is fixed at its layer (plan, pack, word store, prompt,
+   gate or code), never by hand-editing a lesson or a generated file (R-12, R-35).
+2. A module has as many lessons as its content needs (R-02). The arc's
+   `est_lessons` is an estimate, never a target; nobody pads or squeezes a module.
+3. The plan fixes each lesson's activities (count, type, placement); the writer
+   cannot add or change them. Activity volume, correctness and workbook variety
+   are acceptance criteria (teacher feedback, operator 2026-09-27).
+4. The **driver does not decide Ukrainian**; the sources override any model
+   (R-35). Language work and its reviews go only to sanctioned language lanes,
+   cross-family to the author; Gemini seats review Ukrainian only, never code.
+   If an AGY run ends `agy_background_task_canceled` (#8771), retry once, then
+   reroute.
+5. Review at scale is automated (review tooling WP 14–16, LU QA sweep); the
+   operator reviews the pilot module and spot-checks after it (2026-09-27).
+6. Content PRs are **scripts-free**. While CF/CI runs on unit N, prepare N+1.
+   After gates pass in a worktree, **open the PR the same session**.
 
 ### 1. Read topology + metrics (don't hold state — query it)
 
@@ -803,7 +802,7 @@ is necessary, not sufficient — verify the real artifact renders/runs before "r
 - A replacement for the served rules (`/api/rules`) — it points to them; it never
   restates the live roster.
 - The main-orchestrator cold-start (that has its own SessionStart hook / handoff chain).
-- A single-module writer (fresh CORE: `$track-completion`; V7 `--upgrade`: §0d).
+- A single-module writer (V7 module: `$track-completion`; core fresh build: §0d).
 - A second orchestrator skill for curriculum — do not fork this file.
 - Authority to flip the plane cutover, self-merge a fleet-wide process change, or
   self-review your own dispatched work.

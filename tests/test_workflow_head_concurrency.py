@@ -22,15 +22,15 @@ import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PR_NUMBER_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
-_EVENT_PR_NUMBER_GROUP = (
+_EVENT_PR_NUMBER_OR_DISPATCH_GROUP = (
     "${{ github.workflow }}-${{ github.event_name }}-"
-    "${{ github.event.pull_request.number || github.ref }}"
+    "${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}"
 )
 _PR_NUMBER_ONLY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number }}"
 _EVENT_SHA_GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}"
 _WORKFLOW_EXPECTATIONS = {
     ".github/workflows/ci.yml": {
-        "group": _EVENT_PR_NUMBER_GROUP,
+        "group": _EVENT_PR_NUMBER_OR_DISPATCH_GROUP,
         "cancel-in-progress": "${{ github.event_name == 'pull_request' }}",
     },
     ".github/workflows/content-ci.yml": {

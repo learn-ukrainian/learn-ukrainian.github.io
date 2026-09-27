@@ -13,18 +13,18 @@ concurrency:
   # (docs.github.com troubleshooting-required-status-checks
   # #handling-skipped-but-required-checks). merge_group and schedule keep the
   # ref-keyed group and never cancel.
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 env:
-  # Full-tier default (docs/decisions/2026-07-22-pytest-four-shard-matrix.md).
+  # Full-tier default; workflow_dispatch may override it for shard measurements.
   # Selected/docs modes emit shard_count=1 from Changes; plan-files reads
   # needs.changes.outputs.shard_count (not this env alone) so selected never
   # LPT-partitions into unused buckets.
-  PYTEST_SHARD_COUNT: '4'
+  PYTEST_SHARD_COUNT: ${{ inputs.shards || '10' }}
 
 on:
   # No `edited` or `labeled` (#8505): neither a PR-body edit nor a label may
@@ -36,6 +36,12 @@ on:
     types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
+    inputs:
+      shards:
+        description: Full-tier pytest shards for measured CI runs
+        required: false
+        type: choice
+        options: ['4', '6', '8', '10']
   # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
   schedule:
     - cron: '30 3 * * *'
@@ -44,9 +50,10 @@ jobs:
   changes:
     name: Changes
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     permissions:
       contents: read
+      actions: read
       # classify_changes.py reads current PR labels via the API for
       # pull_request and for every PR in a merge group (#8505); a lookup
       # error fails closed to the full tier.
@@ -84,6 +91,21 @@ jobs:
           HEAD_REF: ${{ github.event.merge_group.head_ref }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m scripts.ci.classify_changes
+      - name: Freeze pytest duration source
+        if: steps.classify.outputs.pytest_mode == 'full'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/ci/pytest_shards.py ci-durations \
+            --repo "$GITHUB_REPOSITORY" --output ci-artifacts/pytest-file-durations.json
+      - name: Share pytest duration source
+        if: steps.classify.outputs.pytest_mode == 'full'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-duration-source
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 1
 
   secret-scan:
     name: Secret scan
@@ -309,6 +331,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Historical parity tests read committed source from old SHAs.
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -359,6 +382,12 @@ jobs:
       - name: Hydrate Atlas lexicon manifest
         run: |
           .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Download pytest duration source
+        if: needs.changes.outputs.pytest_mode == 'full'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pytest-duration-source
+          path: ci-artifacts
       - name: Plan pytest shard files
         if: needs.changes.outputs.docs_only == 'false'
         env:
@@ -381,7 +410,7 @@ jobs:
             git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
               .venv/bin/python scripts/ci/pytest_shards.py plan-files \
                 --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
-                --durations scripts/ci/pytest-file-durations.json \
+                --durations ci-artifacts/pytest-file-durations.json \
                 --output "$allowlist"
           fi
           echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
@@ -464,7 +493,7 @@ jobs:
               -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v --durations=25 \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
-            .venv/bin/python -m pytest tests/test_ci_shard_partition.py --timeout=120 \
+            .venv/bin/python -m pytest tests/test_ci_shard_partition.py -m 'not slow' --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi
@@ -491,8 +520,66 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
           fi
+      - name: Stop memory sampler
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        run: |
+          if [ -f "${RUNNER_TEMP}/mem-sampler.pid" ]; then
+            kill "$(cat "${RUNNER_TEMP}/mem-sampler.pid")" 2>/dev/null || true
+          fi
+      - name: Upload pytest JUnit report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-junit-shard-${{ matrix.shard }}
+          path: ci-artifacts/pytest-shard-*.xml
+          # docs_only runs skip the "Plan pytest shard files"/junitxml path
+          # entirely (short-circuited `docs_skills` run above), so no report
+          # ever exists there — "ignore" is correct only for that lane. Any
+          # other run that fails to produce a report is a real gap, so it
+          # must fail loudly instead of silently uploading nothing.
+          if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}
+          retention-days: 14
+      - name: Upload memory sample log
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mem-sample-shard-${{ matrix.shard }}
+          path: ci-artifacts/mem-shard-*.log
+          if-no-files-found: error
+          retention-days: 14
+
+  needs-artifact-audit:
+    name: Needs artifact audit
+    needs: [changes]
+    if: needs.changes.outputs.backend == 'true' && needs.changes.outputs.docs_only == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: '0.12.9'
+          enable-cache: true
+          cache-dependency-glob: requirements-lock.txt
+      - name: Install Python deps
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python packages/v4-runtime/build_assets.py
+      - name: Hydrate Atlas lexicon manifest
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
       - name: Verify needs_artifact skip set
-        if: matrix.shard == '1' && needs.changes.outputs.docs_only == 'false'
         run: |
           set -euo pipefail
           mkdir -p ci-artifacts
@@ -553,33 +640,6 @@ jobs:
               sys.exit(1)
           print(f"needs_artifact collected={len(collected)} skips={len(artifact_skips)} expected={len(expected)}")
           PY
-      - name: Stop memory sampler
-        if: always() && needs.changes.outputs.docs_only == 'false'
-        run: |
-          if [ -f "${RUNNER_TEMP}/mem-sampler.pid" ]; then
-            kill "$(cat "${RUNNER_TEMP}/mem-sampler.pid")" 2>/dev/null || true
-          fi
-      - name: Upload pytest JUnit report
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: pytest-junit-shard-${{ matrix.shard }}
-          path: ci-artifacts/pytest-shard-*.xml
-          # docs_only runs skip the "Plan pytest shard files"/junitxml path
-          # entirely (short-circuited `docs_skills` run above), so no report
-          # ever exists there — "ignore" is correct only for that lane. Any
-          # other run that fails to produce a report is a real gap, so it
-          # must fail loudly instead of silently uploading nothing.
-          if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}
-          retention-days: 14
-      - name: Upload memory sample log
-        if: always() && needs.changes.outputs.docs_only == 'false'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: mem-sample-shard-${{ matrix.shard }}
-          path: ci-artifacts/mem-shard-*.log
-          if-no-files-found: error
-          retention-days: 14
 
   contracts:
     name: Contracts
@@ -851,9 +911,11 @@ jobs:
     # treats a skipped required check as success. The step below fails the
     # job when a required dependency was cancelled or skipped unexpectedly.
     if: always()
-    needs: [changes, secret-scan, fast-checks, pytest, contracts, frontend]
+    needs: [changes, secret-scan, fast-checks, pytest, needs-artifact-audit, contracts, frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions:
+      actions: read
     steps:
       - name: Require event jobs
         env:
@@ -870,6 +932,9 @@ jobs:
           FC_PLAN_VALIDATE: ${{ needs.fast-checks.outputs.plan_validate }}
           FC_TYPESAFE: ${{ needs.fast-checks.outputs.typesafe }}
           PYTEST: ${{ needs.pytest.result }}
+          AUDIT: ${{ needs['needs-artifact-audit'].result }}
+          SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}
+          GH_TOKEN: ${{ github.token }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
         run: |
@@ -950,8 +1015,23 @@ jobs:
           fi
           if [ "$BACKEND" = false ]; then
             skip_ok "$PYTEST"
+            skip_ok "$AUDIT"
           else
             ok "$PYTEST"
+            if [ "$DOCS_ONLY" = false ]; then ok "$AUDIT"; else skip_ok "$AUDIT"; fi
+            case "$SHARD_COUNT" in
+              ''|*[!0-9]*) echo "::error::invalid shard count '$SHARD_COUNT'"; exit 1 ;;
+            esac
+            [ "$SHARD_COUNT" -gt 0 ] || { echo "::error::zero pytest shards"; exit 1; }
+            expected_jobs=$(for i in $(seq 1 "$SHARD_COUNT"); do echo "pytest ($i)|success"; done | sort)
+            actual_jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}/jobs?per_page=100" \
+              --jq '.jobs[] | select(.name | startswith("pytest (")) | "\(.name)|\(.conclusion)"' | sort)
+            if [ "$actual_jobs" != "$expected_jobs" ]; then
+              echo "::error::pytest matrix jobs differ from Changes.shard_count=$SHARD_COUNT"
+              echo "actual pytest jobs: $actual_jobs"
+              exit 1
+            fi
+            echo "pytest matrix jobs: $SHARD_COUNT successful"
           fi
           if [ "$DOCS_ONLY" = true ]; then
             skip_ok "$CONTRACTS"

@@ -88,5 +88,5 @@ def test_search_routes_return_empty_when_corpus_missing(tmp_path: Path) -> None:
     client = _client_for(tmp_path / "empty")
     assert client.get("/api/sources/search_text", params={"q": "мова"}).json() == []
     assert client.get("/api/sources/search_literary", params={"q": "мова"}).json() == []
-    assert client.get("/api/sources/search_images", params={"q": "мова"}).json() == []
+    assert client.get("/api/sources/search_images", params={"q": "мова"}).status_code == 404
     assert client.get("/api/rag/search_text", params={"q": "мова"}).status_code == 404
