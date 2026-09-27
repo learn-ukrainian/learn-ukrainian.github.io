@@ -137,6 +137,18 @@ def test_dry_run_missing_candidate_reports_not_ok(tmp_path: Path) -> None:
     assert plan["missing"]
 
 
+def test_dry_run_default_kaikki_requires_hydrated_artifact(tmp_path: Path) -> None:
+    from scripts.lexicon.runner.enrich_offline_20k import build_parser, dry_run_plan
+    from scripts.storage import paths
+
+    manifest = paths.manifest_path("lexicon_kaikki", tmp_path)
+    manifest.parent.mkdir(parents=True)
+    manifest.write_bytes(paths.manifest_path("lexicon_kaikki").read_bytes())
+    args = build_parser().parse_args(["--repo", str(tmp_path), "--dry-run"])
+    with pytest.raises(paths.MissingArtifactError, match="hydrate --group lexicon_kaikki"):
+        dry_run_plan(args)
+
+
 def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """≤50-lemma fixture dry-run of the full driver path (resumable, no finalize)."""
     _ensure_fixture()
