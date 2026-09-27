@@ -18,7 +18,12 @@ def cohort(tmp_path: Path) -> dict[str, object]:
     sources = tmp_path / "sources.sqlite"
     measure.build_synthetic_sources(sources, entries)
     grac = measure.build_synthetic_grac(entries, puls_count=10)
-    return {"entries": entries, "sources": sources, "grac": grac}
+    return {
+        "entries": entries,
+        "sources": sources,
+        "grac": grac,
+        "dictionary_rows": measure.build_synthetic_dictionary_rows(entries),
+    }
 
 
 def test_fixed_path_reports_zero_cefr_and_relation_delta(cohort: dict[str, object]) -> None:
@@ -27,6 +32,7 @@ def test_fixed_path_reports_zero_cefr_and_relation_delta(cohort: dict[str, objec
         cohort["entries"],  # type: ignore[arg-type]
         cohort["sources"],  # type: ignore[arg-type]
         cohort["grac"],  # type: ignore[arg-type]
+        dictionary_rows=cohort["dictionary_rows"],  # type: ignore[arg-type]
     )
 
     assert result["schema"] == "fill-enrich-divergence-v2"
@@ -52,6 +58,7 @@ def test_legacy_path_still_shows_pre_fix_divergence(cohort: dict[str, object]) -
         cohort["entries"],  # type: ignore[arg-type]
         cohort["sources"],  # type: ignore[arg-type]
         cohort["grac"],  # type: ignore[arg-type]
+        dictionary_rows=cohort["dictionary_rows"],  # type: ignore[arg-type]
     )
 
     legacy_cefr = result["legacy"]["cefr"]
@@ -81,6 +88,9 @@ def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
 
     monkeypatch.setattr(em, "_vesum_valid_synonym", lambda term: bool(term))
     monkeypatch.setattr(em, "_vesum_word_analyses", lambda word: ((word, "noun"),))
+    dictionary_rows = cohort["dictionary_rows"]
+    assert isinstance(dictionary_rows, dict)
+    monkeypatch.setattr(em, "_read_cached_slovnyk_rows", lambda lemma: dictionary_rows.get(lemma, {}))
 
     conn = sqlite3.connect(f"file:{sources.resolve().as_posix()}?mode=ro", uri=True)
     try:
@@ -126,6 +136,7 @@ def test_json_roundtrip(tmp_path: Path, cohort: dict[str, object]) -> None:
         cohort["entries"],  # type: ignore[arg-type]
         cohort["sources"],  # type: ignore[arg-type]
         cohort["grac"],  # type: ignore[arg-type]
+        dictionary_rows=cohort["dictionary_rows"],  # type: ignore[arg-type]
     )
     path = tmp_path / "out.json"
     path.write_text(json.dumps(result, ensure_ascii=False, sort_keys=True), encoding="utf-8")

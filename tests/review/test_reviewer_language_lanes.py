@@ -46,6 +46,35 @@ def test_unrelated_paths_do_not_match_content_patterns():
     )
 
 
+def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path, capsys):
+    inputs = ResolverInputs(author_model="codex", owned_paths=("curriculum/a.mdx",))
+    assert is_ukrainian_content_change(inputs)
+    result = evaluate_candidate(GROK_4_7, inputs)
+    assert result.status == "excluded"
+    assert "Ukrainian-content language-lanes exclusion" in result.reason
+
+    state_file = tmp_path / "review.json"
+    assert (
+        main(
+            [
+                "--state-file",
+                str(state_file),
+                "resolve-reviewer",
+                "--author-model",
+                "codex",
+                "--owned-path",
+                "curriculum/a.mdx",
+            ]
+        )
+        == 0
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert any(
+        item["name"] == GROK_4_7.name and "Ukrainian-content language-lanes exclusion" in item["reason"]
+        for item in payload["trace"]
+    )
+
+
 @pytest.mark.parametrize(
     "inputs",
     [

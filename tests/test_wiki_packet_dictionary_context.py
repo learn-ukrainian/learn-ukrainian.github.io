@@ -60,10 +60,11 @@ def test_build_knowledge_packet_appends_dictionary_context(monkeypatch) -> None:
             }
         ]
 
-    def fake_search_definitions(lemma: str, limit: int = 1) -> list[dict]:
-        assert limit == 1
-        definition = long_definition if lemma == "кава" else f"{lemma}: short SUM-11 definition"
-        return [{"word": lemma, "definition": definition, "source": "СУМ-11"}]
+    def fake_query_sum20(lemma: str) -> list[dict]:
+        if lemma == "школа":
+            return []
+        definition = long_definition if lemma == "кава" else f"{lemma}: short official definition"
+        return [{"source_id": "sum20_official", "senses": [{"definition": definition}]}]
 
     def fake_search_style_guide(lemma: str, limit: int = 1) -> list[dict]:
         assert limit == 1
@@ -82,7 +83,7 @@ def test_build_knowledge_packet_appends_dictionary_context(monkeypatch) -> None:
     )
     monkeypatch.setattr(vesum, "verify_words", fake_verify_words)
     monkeypatch.setattr(vesum, "verify_lemma", fake_verify_lemma)
-    monkeypatch.setattr(sources_db, "search_definitions", fake_search_definitions)
+    monkeypatch.setattr(sources_db, "query_sum20", fake_query_sum20)
     monkeypatch.setattr(sources_db, "search_style_guide", fake_search_style_guide)
 
     packet = linear_pipeline.build_knowledge_packet(
@@ -97,7 +98,10 @@ def test_build_knowledge_packet_appends_dictionary_context(monkeypatch) -> None:
     assert "- **йти** [verb]" in packet
     assert "Style note: Style guidance for йти." in packet
     assert "TAIL_SHOULD_NOT_APPEAR" not in packet
-    assert "Definition: довге0 довге1" in packet
+    assert "СУМ-20 definition: довге0 довге1" in packet
+    assert "Not found in SUM-11" not in packet
+    assert "**школа**" in packet
+    assert "школа: short official definition" not in packet
     assert "..." in packet
 
 

@@ -100,6 +100,7 @@ class World:
     def provenance(self, n: int, spans: list[dict[str, Any]]) -> None:
         document = {"provenance_schema": 1, "lesson": {"level": LEVEL, "slug": SLUG, "n": n}, "spans": spans}
         lock.atomic_write(self.state_dir / f"lesson-{n}.provenance.yaml", lock.yaml_bytes(document))
+        self.write_manifests((n,))
 
     # --- a review -----------------------------------------------------------------------
     def next_ids(self) -> tuple[str, str]:

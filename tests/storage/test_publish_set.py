@@ -874,3 +874,659 @@ def test_failed_post_commit_fsync_keeps_journal_until_recovery(
     assert artifacts.recover_incomplete(repo) == 1
     assert artifacts.recover_incomplete(repo) == 0
     assert _state(repo) == NEW
+
+
+def _digest(repo: Path) -> str:
+    return artifacts._manifest_digest(paths.artifact_set("raw_source", repo=repo).manifest)
+
+
+def _members(repo: Path) -> set[str]:
+    return {item["path"][5:] for item in paths.load_manifest("raw_source", repo)["entries"]}
+
+
+def _a_snapshot(repo: Path) -> tuple:
+    """A entry metadata plus live bytes, mtime, and mode. Companion bytes are not included."""
+    manifest = paths.load_manifest("raw_source", repo)
+    files = []
+    for entry in manifest["entries"]:
+        path = repo / entry["path"]
+        stat = path.stat()
+        files.append((path.read_bytes(), stat.st_mtime_ns, stat.st_mode & 0o777))
+    return (manifest["entries"], manifest.get("retired", []), tuple(files))
+
+
+def _frozen(repo: Path) -> tuple:
+    manifest = paths.load_manifest("raw_source", repo)
+    stamps = []
+    relatives = [entry["path"] for entry in manifest["entries"]]
+    relatives.extend(sorted(manifest.get("set_descriptor", {}).get("companions", {})))
+    for relative in relatives:
+        path = repo / relative
+        if path.is_symlink() or not path.is_file():
+            stamps.append((relative, None))
+            continue
+        stat = path.stat()
+        stamps.append((relative, path.read_bytes(), stat.st_mtime_ns, stat.st_mode & 0o777))
+    return (
+        paths.manifest_path("raw_source", repo).read_bytes(),
+        tuple(stamps),
+        artifacts._journal_path(repo, "raw_source", "@set").exists(),
+    )
+
+
+def _bind_companions(repo: Path, tmp_path: Path, count: int) -> None:
+    """Bind the first ``count`` companions at their committed bytes, via one real A replace."""
+    staged_a = tmp_path / "bind-a"
+    staged_a.write_bytes(b"A-bound")
+    manifest = paths.load_manifest("raw_source", repo)
+    old_a = next(item["sha256"] for item in manifest["entries"] if item["path"] == "data/raw/a.txt")
+    companions = []
+    for index in range(count):
+        relative = f"registry/companion-{index}.json"
+        source = tmp_path / f"bind-k-{index}"
+        source.write_bytes((repo / relative).read_bytes())
+        companions.append(artifacts.CompanionChange(relative, source, hashlib.sha256(source.read_bytes()).hexdigest()))
+    artifacts.publish_set(
+        repo,
+        "raw_source",
+        [artifacts.ArtifactChange("replace", "raw/a.txt", staged_a, old_a)],
+        "fixture",
+        companions=companions,
+        expected_members={item["path"][5:] for item in manifest["entries"]},
+    )
+
+
+def _stage_companion(tmp_path: Path, name: str, content: bytes) -> Path:
+    path = tmp_path / name
+    path.write_bytes(content)
+    return path
+
+
+def _bound_repo(tmp_path: Path, name: str) -> Path:
+    root = tmp_path / name
+    root.mkdir()
+    repo = _repo(root)
+    _bind_companions(repo, root, 1)
+    return repo
+
+
+def test_companion_only_api_helper_and_cli_leave_a_unchanged(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _bound_repo(tmp_path, "api")
+    before = _a_snapshot(repo)
+    members = _members(repo)
+    recipe = repo / "registry/companion-0.json"
+    staged = _stage_companion(tmp_path, "k-api", b"K-api")
+    result = artifacts.publish_set(
+        repo,
+        "raw_source",
+        [],
+        "api",
+        companions=[
+            artifacts.CompanionChange("registry/companion-0.json", staged, hashlib.sha256(b"K0-old").hexdigest())
+        ],
+        expected_members=members,
+        expected_manifest=_digest(repo),
+    )
+    assert result == {}
+    assert not result
+    assert recipe.read_bytes() == b"K-api"
+    assert _a_snapshot(repo) == before
+
+    repo = _bound_repo(tmp_path, "helper")
+    before = _a_snapshot(repo)
+    members = _members(repo)
+    recipe = repo / "registry/companion-0.json"
+    helper = artifacts.write_artifact_set(
+        repo,
+        "raw_source",
+        "helper",
+        {},
+        expected_hashes={},
+        expected_members=members,
+        companions={
+            "registry/companion-0.json": (
+                hashlib.sha256(b"K0-old").hexdigest(),
+                lambda target: target.write_bytes(b"K-helper"),
+            )
+        },
+        expected_manifest=_digest(repo),
+    )
+    assert helper == {}
+    assert not helper
+    assert recipe.read_bytes() == b"K-helper"
+    assert _a_snapshot(repo) == before
+
+    repo = _bound_repo(tmp_path, "cli")
+    before = _a_snapshot(repo)
+    members = _members(repo)
+    recipe = repo / "registry/companion-0.json"
+    staged_cli = _stage_companion(tmp_path, "k-cli", b"K-cli")
+    plan = {
+        "group": "raw_source",
+        "producer": "cli",
+        "expected_members": sorted(members),
+        "expected_manifest": _digest(repo),
+        "artifacts": [],
+        "companions": [
+            {
+                "path": "registry/companion-0.json",
+                "source": str(staged_cli),
+                "expected_sha256": hashlib.sha256(b"K0-old").hexdigest(),
+            }
+        ],
+    }
+    plan_file = tmp_path / "plan.json"
+    plan_file.write_text(json.dumps(plan))
+    assert artifacts.main(["publish-set", "--plan", str(plan_file)], repo=repo) == 0
+    assert json.loads(capsys.readouterr().out) == {}
+    assert recipe.read_bytes() == b"K-cli"
+    assert _a_snapshot(repo) == before
+    snapshot = paths.artifact_set("raw_source", repo=repo)
+    assert snapshot.artifacts["raw/a.txt"] == b"A-bound"
+    assert snapshot.artifacts["raw/b.txt"] == b"B1"
+    assert snapshot.companions == {"registry/companion-0.json": b"K-cli"}
+    assert artifacts.verify(repo, [("raw_source", entry) for entry in snapshot.manifest["entries"]]) == 2
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "stale_members",
+        "stale_k_hash",
+        "stale_manifest",
+        "dirty_changed_k",
+        "dirty_mode",
+        "empty_request",
+        "unbound_companion",
+        "missing_companion",
+        "corrupt_store_object",
+        "missing_manifest_digest",
+    ],
+)
+def test_companion_only_refusals_leave_the_group_unchanged(tmp_path: Path, fault: str) -> None:
+    repo = _repo(tmp_path, companion_count=2)
+    _bind_companions(repo, tmp_path, 1)
+    members = _members(repo)
+    digest = _digest(repo)
+    recipe = "registry/companion-0.json"
+    staged = _stage_companion(tmp_path, "k-next", b"K-next")
+    companions = [artifacts.CompanionChange(recipe, staged, hashlib.sha256(b"K0-old").hexdigest())]
+    expected_manifest: str | None = digest
+    match = "stale expected hash"
+    if fault == "stale_members":
+        members = {"raw/a.txt"}
+        match = "stale expected membership"
+    elif fault == "stale_k_hash":
+        companions = [artifacts.CompanionChange(recipe, staged, "0" * 64)]
+    elif fault == "stale_manifest":
+        replacement = _stage_companion(tmp_path, "b2", b"B2")
+        old_b = paths.find_entry("raw_source", "raw/b.txt", repo)["sha256"]
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [artifacts.ArtifactChange("replace", "raw/b.txt", replacement, old_b)],
+            "fixture",
+            expected_members=members,
+        )
+        expected_manifest = digest
+        match = "stale expected manifest"
+    elif fault == "dirty_changed_k":
+        first = _stage_companion(tmp_path, "k-mid", b"K-mid")
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [],
+            "fixture",
+            companions=[artifacts.CompanionChange(recipe, first, hashlib.sha256(b"K0-old").hexdigest())],
+            expected_members=members,
+            expected_manifest=digest,
+        )
+        companions = [artifacts.CompanionChange(recipe, staged, hashlib.sha256(b"K-mid").hexdigest())]
+        expected_manifest = _digest(repo)
+        match = "dirty K companion:"
+    elif fault == "dirty_mode":
+        (repo / recipe).chmod(0o755)
+        same = _stage_companion(tmp_path, "k-same", b"K0-old")
+        companions = [artifacts.CompanionChange(recipe, same, hashlib.sha256(b"K0-old").hexdigest())]
+        match = "dirty K companion mode"
+    elif fault == "empty_request":
+        frozen = _frozen(repo)
+        with pytest.raises(ValueError, match="artifact or companion"):
+            artifacts.publish_set(
+                repo,
+                "raw_source",
+                [],
+                "fixture",
+                companions=[],
+                expected_members=members,
+                expected_manifest=digest,
+            )
+        assert _frozen(repo) == frozen
+        with pytest.raises(ValueError, match="artifact or companion"):
+            artifacts.write_artifact_set(
+                repo,
+                "raw_source",
+                "fixture",
+                {},
+                expected_hashes={},
+                expected_members=members,
+                expected_manifest=digest,
+            )
+        assert _frozen(repo) == frozen
+        plan = tmp_path / "empty.json"
+        plan.write_text(
+            json.dumps(
+                {
+                    "group": "raw_source",
+                    "producer": "fixture",
+                    "expected_members": sorted(members),
+                    "expected_manifest": digest,
+                    "artifacts": [],
+                    "companions": [],
+                }
+            )
+        )
+        assert artifacts.main(["publish-set", "--plan", str(plan)], repo=repo) == 1
+        assert _frozen(repo) == frozen
+        return
+    elif fault == "unbound_companion":
+        other = _stage_companion(tmp_path, "k1", b"K1-new")
+        companions = [
+            artifacts.CompanionChange("registry/companion-1.json", other, hashlib.sha256(b"K1-old").hexdigest())
+        ]
+        match = "not bound to the group"
+    elif fault == "missing_companion":
+        (repo / recipe).unlink()
+        match = "set companion differs"
+    elif fault == "corrupt_store_object":
+        (paths.artifact_store_root(repo) / hashlib.sha256(b"K0-old").hexdigest()).write_bytes(b"XX")
+        match = "corrupt store object"
+    else:
+        expected_manifest = None
+        match = "expected manifest digest"
+    frozen = _frozen(repo)
+    with pytest.raises(ValueError, match=match):
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [],
+            "fixture",
+            companions=companions,
+            expected_members=members,
+            expected_manifest=expected_manifest,
+        )
+    assert _frozen(repo) == frozen
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+def test_prepare_prepare_run_verify_identical_recipe_without_commit(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    _bind_companions(repo, tmp_path, 1)
+    members = _members(repo)
+    recipe = repo / "registry/companion-0.json"
+    commits = subprocess.run(
+        ["git", "rev-list", "--count", "HEAD"], cwd=repo, capture_output=True, text=True, check=True, timeout=30
+    )
+    prepared = _stage_companion(tmp_path, "recipe-v2", b"RECIPE-V2")
+    assert (
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [],
+            "prepare",
+            companions=[
+                artifacts.CompanionChange("registry/companion-0.json", prepared, hashlib.sha256(b"K0-old").hexdigest())
+            ],
+            expected_members=members,
+            expected_manifest=_digest(repo),
+        )
+        == {}
+    )
+    assert recipe.read_bytes() == b"RECIPE-V2"
+    a_after_prepare = _a_snapshot(repo)
+    manifest_bytes = paths.manifest_path("raw_source", repo).read_bytes()
+    recipe_mtime = recipe.stat().st_mtime_ns
+    recipe_mode = recipe.stat().st_mode
+    repeated = _stage_companion(tmp_path, "recipe-v2-again", b"RECIPE-V2")
+    assert (
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [],
+            "prepare",
+            companions=[
+                artifacts.CompanionChange(
+                    "registry/companion-0.json", repeated, hashlib.sha256(b"RECIPE-V2").hexdigest()
+                )
+            ],
+            expected_members=members,
+            expected_manifest=_digest(repo),
+        )
+        == {}
+    )
+    assert paths.manifest_path("raw_source", repo).read_bytes() == manifest_bytes
+    assert recipe.stat().st_mtime_ns == recipe_mtime
+    assert recipe.stat().st_mode == recipe_mode
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+    run_output = _stage_companion(tmp_path, "run-b", b"B-run")
+    old_b = paths.find_entry("raw_source", "raw/b.txt", repo)["sha256"]
+    published = artifacts.publish_set(
+        repo,
+        "raw_source",
+        [artifacts.ArtifactChange("replace", "raw/b.txt", run_output, old_b)],
+        "run",
+        companions=[
+            artifacts.CompanionChange("registry/companion-0.json", repeated, hashlib.sha256(b"RECIPE-V2").hexdigest())
+        ],
+        expected_members=members,
+        expected_manifest=_digest(repo),
+    )
+    assert published == {"raw/b.txt": hashlib.sha256(b"B-run").hexdigest()}
+    assert recipe.read_bytes() == b"RECIPE-V2"
+    assert recipe.stat().st_mtime_ns == recipe_mtime
+    assert _a_snapshot(repo)[0][0]["path"] == "data/raw/a.txt"
+    assert (repo / "data/raw/a.txt").read_bytes() == a_after_prepare[2][0][0]
+    assert (repo / "data/raw/a.txt").stat().st_mtime_ns == a_after_prepare[2][0][1]
+    head = subprocess.run(
+        ["git", "show", "HEAD:registry/companion-0.json"], cwd=repo, capture_output=True, check=True, timeout=30
+    )
+    assert head.stdout == b"K0-old"
+    assert (
+        subprocess.run(
+            ["git", "rev-list", "--count", "HEAD"], cwd=repo, capture_output=True, text=True, check=True, timeout=30
+        ).stdout
+        == commits.stdout
+    )
+    snapshot = paths.artifact_set("raw_source", repo=repo)
+    assert snapshot.companions == {"registry/companion-0.json": b"RECIPE-V2"}
+    assert snapshot.artifacts == {"raw/a.txt": b"A-bound", "raw/b.txt": b"B-run"}
+    assert artifacts.verify(repo, [("raw_source", entry) for entry in snapshot.manifest["entries"]]) == 2
+
+
+def test_companion_only_journal_records_only_changed_k_rows(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = _repo(tmp_path, companion_count=2)
+    _bind_companions(repo, tmp_path, 2)
+    saved: dict[str, dict] = {}
+    finish = artifacts._finish_journal
+
+    def keep(journal: Path, record: dict) -> None:
+        saved["record"] = record
+        finish(journal, record)
+
+    monkeypatch.setattr(artifacts, "_finish_journal", keep)
+    unchanged = _stage_companion(tmp_path, "k0-same", b"K0-old")
+    changed = _stage_companion(tmp_path, "k1-new", b"K1-new")
+    before = _a_snapshot(repo)
+    unchanged_mtime = (repo / "registry/companion-0.json").stat().st_mtime_ns
+    assert (
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            [],
+            "fixture",
+            companions=[
+                artifacts.CompanionChange(
+                    "registry/companion-0.json", unchanged, hashlib.sha256(b"K0-old").hexdigest()
+                ),
+                artifacts.CompanionChange("registry/companion-1.json", changed, hashlib.sha256(b"K1-old").hexdigest()),
+            ],
+            expected_members=_members(repo),
+            expected_manifest=_digest(repo),
+        )
+        == {}
+    )
+    record = saved["record"]
+    assert record["schema"] == 2
+    assert record["rows"] == []
+    assert [row["path"] for row in record["companions"]] == ["registry/companion-1.json"]
+    assert record["new_manifest"]["entries"] == record["manifest"]["entries"]
+    assert record["new_manifest"].get("retired", []) == record["manifest"].get("retired", [])
+    assert _a_snapshot(repo) == before
+    assert (repo / "registry/companion-0.json").stat().st_mtime_ns == unchanged_mtime
+    assert (repo / "registry/companion-1.json").read_bytes() == b"K1-new"
+
+
+@pytest.mark.parametrize(
+    "point",
+    [
+        *(f"store:{index}" for index in range(1, 7)),
+        "prejournal",
+        "journal_scratch",
+        "journal",
+        "temp_open",
+        *(f"temp:{index}" for index in range(1, 4)),
+        *(f"install:{index}" for index in range(1, 5)),
+        "companion",
+        "descriptor",
+        "cleanup",
+    ],
+)
+def test_sigkill_companion_only_at_every_boundary_recovers_twice(tmp_path: Path, point: str) -> None:
+    repo = _repo(tmp_path, companion_count=4)
+    _bind_companions(repo, tmp_path, 4)
+    stage = tmp_path / "k-only"
+    stage.mkdir()
+    for index in range(4):
+        (stage / f"k{index}").write_bytes(f"K{index}-new".encode())
+    digest = _digest(repo)
+    before_a = _a_snapshot(repo)
+    script = """
+import os, signal, sys
+from pathlib import Path
+from scripts.storage import artifacts
+repo, stage, point, expected_manifest = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], sys.argv[4]
+companions = []
+for index in range(4):
+    relative = f'registry/companion-{index}.json'
+    companions.append(artifacts.CompanionChange(
+        relative, stage / f'k{index}', artifacts.paths.hash_file(repo / relative)))
+def kill(): os.kill(os.getpid(), signal.SIGKILL)
+copy = artifacts._store_copy
+copies = 0
+def hooked_copy(*args):
+    global copies
+    copy(*args)
+    copies += 1
+    if point == f'store:{copies}': kill()
+artifacts._store_copy = hooked_copy
+open_file = artifacts.os.open
+def hooked_open(path, flags, *args, **kwargs):
+    fd = open_file(path, flags, *args, **kwargs)
+    if point == 'journal_scratch' and '.lu-journal-' in str(path): kill()
+    if point == 'temp_open' and '.lu-artifact-' in str(path): kill()
+    return fd
+artifacts.os.open = hooked_open
+make_temp = artifacts._make_temp
+temps = 0
+def hooked_temp(*args):
+    global temps
+    temp = make_temp(*args)
+    temps += 1
+    if point == f'temp:{temps}': kill()
+    return temp
+artifacts._make_temp = hooked_temp
+install = artifacts._install
+installs = 0
+def hooked_install(temp, target):
+    global installs
+    install(temp, target)
+    installs += 1
+    if point == f'install:{installs}' or (point == 'companion' and target.name == 'companion-0.json'):
+        kill()
+artifacts._install = hooked_install
+write = artifacts._json_write
+def hooked_write(path, value):
+    if point == 'prejournal' and path == artifacts._journal_path(repo, 'raw_source', '@set'): kill()
+    write(path, value)
+    if point == 'journal' and path == artifacts._journal_path(repo, 'raw_source', '@set'): kill()
+    if point == 'descriptor' and path == artifacts.paths.manifest_path('raw_source', repo): kill()
+artifacts._json_write = hooked_write
+unlink = Path.unlink
+def hooked_unlink(self, *args, **kwargs):
+    if point == 'cleanup' and self == artifacts._journal_path(repo, 'raw_source', '@set'): kill()
+    return unlink(self, *args, **kwargs)
+Path.unlink = hooked_unlink
+artifacts.publish_set(repo, 'raw_source', [], 'fixture', companions=companions,
+                      expected_members={'raw/a.txt', 'raw/b.txt'},
+                      expected_manifest=expected_manifest)
+"""
+    unrelated = repo / "data/raw" / (".lu-artifact-" + "0" * 32 + "-999.tmp")
+    unrelated.write_bytes(b"unrelated")
+    journal_dir = paths.artifact_store_root(repo) / ".transactions"
+    journal_dir.mkdir(parents=True, exist_ok=True)
+    unrelated_journal = journal_dir / "tmp-unrelated-keep"
+    unrelated_journal.write_bytes(b"unrelated journal scratch")
+    unrelated_named = journal_dir / (".lu-journal-" + "0" * 32 + "-unrelated.tmp")
+    unrelated_named.write_bytes(b"unrelated named file")
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(repo), str(stage), point, digest],
+        cwd=Path(__file__).resolve().parents[2],
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == -signal.SIGKILL
+    first = artifacts.recover_incomplete(repo)
+    assert artifacts.recover_incomplete(repo) == 0
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+    assert first == (0 if point.startswith("store:") or point in {"prejournal", "journal_scratch"} else 1)
+    committed = point in {"descriptor", "cleanup"}
+    assert _a_snapshot(repo) == before_a
+    manifest = paths.load_manifest("raw_source", repo)
+    expected_companions = {}
+    for index in range(4):
+        content = f"K{index}-new".encode() if committed else f"K{index}-old".encode()
+        assert (repo / f"registry/companion-{index}.json").read_bytes() == content
+        expected_companions[f"registry/companion-{index}.json"] = hashlib.sha256(content).hexdigest()
+    assert manifest["set_descriptor"]["companions"] == expected_companions
+    assert manifest["set_descriptor"]["members"] == ["raw/a.txt", "raw/b.txt"]
+    snapshot = paths.artifact_set("raw_source", repo=repo)
+    assert snapshot.artifacts == {"raw/a.txt": b"A-bound", "raw/b.txt": b"B1"}
+    assert snapshot.companions == {
+        f"registry/companion-{index}.json": (f"K{index}-new".encode() if committed else f"K{index}-old".encode())
+        for index in range(4)
+    }
+    assert unrelated.read_bytes() == b"unrelated"
+    assert unrelated_journal.read_bytes() == b"unrelated journal scratch"
+    assert unrelated_named.read_bytes() == b"unrelated named file"
+    assert not any(artifacts._JOURNAL_SCRATCH.fullmatch(path.name) for path in journal_dir.iterdir())
+    assert list((repo / "data").rglob(".lu-artifact-*.tmp")) == [unrelated]
+    assert list((repo / "registry").rglob(".lu-artifact-*.tmp")) == []
+
+
+def test_companion_only_reader_waits_for_the_complete_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    _bind_companions(repo, tmp_path, 1)
+    stage = tmp_path / "k"
+    stage.write_bytes(b"K0-new")
+    pause = tmp_path / "paused"
+    release = tmp_path / "release"
+    a_mtime = (repo / "data/raw/a.txt").stat().st_mtime_ns
+    script = """
+import sys, time
+from pathlib import Path
+from scripts.storage import artifacts
+repo, stage, pause, release = map(Path, sys.argv[1:5])
+expected_manifest = sys.argv[5]
+sha_k = artifacts.paths.hash_file(repo / 'registry/companion-0.json')
+install = artifacts._install
+def hooked_install(temp, target):
+    install(temp, target)
+    if target.name == 'companion-0.json':
+        pause.write_text('ready')
+        while not release.exists(): time.sleep(0.01)
+artifacts._install = hooked_install
+artifacts.publish_set(repo, 'raw_source', [], 'fixture',
+    companions=[artifacts.CompanionChange('registry/companion-0.json', stage, sha_k)],
+    expected_members={'raw/a.txt', 'raw/b.txt'}, expected_manifest=expected_manifest)
+"""
+    child = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(repo),
+            str(stage),
+            str(pause),
+            str(release),
+            _digest(repo),
+        ],
+        cwd=Path(__file__).resolve().parents[2],
+    )
+    try:
+        deadline = time.monotonic() + 10
+        while not pause.exists() and time.monotonic() < deadline and child.poll() is None:
+            time.sleep(0.01)
+        assert pause.exists()
+        outcome: list[paths.ArtifactSet] = []
+        saw_pending = threading.Event()
+        pending = paths._pending_publication
+
+        def observed_pending(checkout: Path) -> bool:
+            result = pending(checkout)
+            if result:
+                saw_pending.set()
+            return result
+
+        monkeypatch.setattr(paths, "_pending_publication", observed_pending)
+        reader = threading.Thread(target=lambda: outcome.append(paths.artifact_set("raw_source", repo=repo)))
+        reader.start()
+        assert saw_pending.wait(timeout=5)
+        release.write_text("go")
+        reader.join(timeout=10)
+        assert not reader.is_alive()
+        assert child.wait(timeout=10) == 0
+        assert outcome[0].artifacts == {"raw/a.txt": b"A-bound", "raw/b.txt": b"B1"}
+        assert outcome[0].companions == {"registry/companion-0.json": b"K0-new"}
+        assert (repo / "data/raw/a.txt").stat().st_mtime_ns == a_mtime
+    finally:
+        release.write_text("go")
+        if child.poll() is None:
+            child.kill()
+            child.wait(timeout=10)
+
+
+def test_companion_only_recovery_refuses_missing_store_object(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    _bind_companions(repo, tmp_path, 1)
+    stage = tmp_path / "k"
+    stage.write_bytes(b"K0-new")
+    script = """
+import os, signal, sys
+from pathlib import Path
+from scripts.storage import artifacts
+repo, stage, expected_manifest = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+sha_k = artifacts.paths.hash_file(repo / 'registry/companion-0.json')
+install = artifacts._install
+def interrupt(temp, target):
+    install(temp, target)
+    os.kill(os.getpid(), signal.SIGKILL)
+artifacts._install = interrupt
+artifacts.publish_set(repo, 'raw_source', [], 'fixture',
+    companions=[artifacts.CompanionChange('registry/companion-0.json', stage, sha_k)],
+    expected_members={'raw/a.txt', 'raw/b.txt'}, expected_manifest=expected_manifest)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(repo), str(stage), _digest(repo)],
+        cwd=Path(__file__).resolve().parents[2],
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == -signal.SIGKILL
+    old_obj = paths.artifact_store_root(repo) / hashlib.sha256(b"K0-old").hexdigest()
+    old_obj.unlink()
+    journal = artifacts._journal_path(repo, "raw_source", "@set")
+    with pytest.raises(artifacts.RecoveryError, match="missing or corrupt store object"):
+        artifacts.recover_incomplete(repo)
+    assert journal.exists()
+    with pytest.raises(ValueError, match="did not settle"):
+        paths.artifact_set("raw_source", repo=repo, retries=2)
+    old_obj.write_bytes(b"K0-old")
+    assert artifacts.recover_incomplete(repo) == 1
+    assert artifacts.recover_incomplete(repo) == 0
+    assert (repo / "registry/companion-0.json").read_bytes() == b"K0-old"
+    assert (repo / "data/raw/a.txt").read_bytes() == b"A-bound"
+    assert paths.artifact_set("raw_source", repo=repo).companions == {"registry/companion-0.json": b"K0-old"}

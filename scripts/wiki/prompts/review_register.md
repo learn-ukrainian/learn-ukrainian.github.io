@@ -43,7 +43,7 @@ domain: {DOMAIN} # grammar | vocabulary | culture | history
 |---|---|
 | `mcp__sources__search_style_guide` | **PRIMARY TOOL.** Антоненко-Давидович's *Як ми говоримо* — the canonical Ukrainian calque/Russianism reference. Check suspect words/constructions here first. |
 | `mcp__sources__verify_word` / `verify_lemma` | Does the suspect form exist in VESUM at all? (If not, it may be a Russianism spelled Ukrainian-style.) |
-| `mcp__sources__search_definitions` | СУМ-11 usage examples — does the word appear in Ukrainian literary contexts, or only in calque territory? |
+| `mcp__sources__search_grinchenko_1907` / `search_literary` | Check historical Ukrainian usage and literary contexts before flagging a form |
 | `mcp__sources__search_synonyms` | Ukrajinet WordNet — find the idiomatic Ukrainian alternative to a suspected calque. |
 | `mcp__sources__search_idioms` | Фразеологічний — check whether a suspected translationese phrase has an idiomatic Ukrainian counterpart. |
 | `mcp__sources__search_literary` | Verify whether a construction appears in actual Ukrainian literary prose. |
@@ -202,7 +202,7 @@ Do NOT write fixes that:
 | "This sounds translated." | "*«вирішення питання розвитку інфраструктури»* — Russian-style genitive stack; natural UK: *«як розвивати інфраструктуру»*. TRANSLATIONESE." |
 | Trusting your own ear for RUSSIANISM | Running `search_style_guide` on the suspect word/construction before flagging |
 | Flagging simple A1 language as "lacking literary register" | Recognizing that simplicity is correct register for A1 |
-| Flagging Russian loanwords with deep Ukrainian literary history | Checking whether Антоненко-Давидович or СУМ-11 flag the form — many internationalisms are legitimate |
+| Flagging Russian loanwords with deep Ukrainian literary history | Checking Антоненко-Давидович, Грінченко, and literary attestations — many internationalisms are legitimate |
 | Reporting factual errors as register issues | Staying strictly in register; factual errors → dim 1 |
 | Commenting on framing as "wrong register" | Framing issues → dim 3 |
 | Rewriting a whole paragraph | Surgical find/replace; structural rewrite → REJECT and let the writer redo |

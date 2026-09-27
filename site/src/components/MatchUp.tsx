@@ -18,6 +18,13 @@ export interface MatchPair {
    */
   right: string;
   lemmaId?: string;
+  /**
+   * Feedback shown on a wrong attempt to match this pair's left item.
+   * Absent on every existing module, which keeps today's rendering.
+   * @schemaDescription Feedback explaining why this pair's left item matches its right item.
+   * @ukrainianText true
+   */
+  why?: string;
 }
 
 export interface MatchUpProps {

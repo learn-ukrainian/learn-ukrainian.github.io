@@ -192,26 +192,39 @@ def _run_generator(target: ModuleTarget) -> None:
         target.mdx_path.write_text(content, encoding="utf-8")
         return
 
-    if not VENV_PYTHON.exists():
-        raise FileNotFoundError(
-            f"Expected project venv at {VENV_PYTHON}. "
-            "Create it before running the MDX generation drift check."
-        )
+    has_project_venv = VENV_PYTHON.is_file()
+    generator_python = VENV_PYTHON if has_project_venv else Path(sys.executable)
+    generator_args = [
+        str(generator_python),
+        "scripts/generate_mdx.py",
+        "l2-uk-en",
+        target.level,
+        str(target.local_num),
+    ]
+    if has_project_venv:
+        generator_args.append("--validate")
 
     try:
         subprocess.run(
-            [
-                str(VENV_PYTHON),
-                "scripts/generate_mdx.py",
-                "l2-uk-en",
-                target.level,
-                str(target.local_num),
-                "--validate",
-            ],
+            generator_args,
             cwd=PROJECT_ROOT,
             check=True,
             timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
         )
+        if not has_project_venv:
+            # The generator's --validate path assumes a project .venv too.
+            subprocess.run(
+                [
+                    str(generator_python),
+                    "scripts/validate_mdx.py",
+                    "l2-uk-en",
+                    target.level,
+                    str(target.local_num),
+                ],
+                cwd=PROJECT_ROOT,
+                check=True,
+                timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
+            )
     except subprocess.TimeoutExpired as exc:
         raise subprocess.CalledProcessError(
             returncode=124,

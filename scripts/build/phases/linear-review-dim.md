@@ -333,18 +333,15 @@ that touches dimension `{DIM}`. The audit feeds the evidence list above:
 unverified items become FLAG strings in your evidence and weigh the score
 down, not silent passes.
 
-A. **Source-attribution audit (all dims).** For every dictionary / style-guide / author cited in the Generated Content, use the single-call primitive `mcp__sources__verify_source_attribution(source, claim)` where `source` ∈ {`grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`}. Verdict `discusses=false` → FLAG `unverified citation`, treat as score-against. The compose-pattern (calling `search_definitions` / `search_style_guide` / `search_grinchenko_1907` / `query_pravopys` / `search_esum` separately) is acceptable only when you need to inspect specific evidence chunks beyond the boolean verdict; for the audit pass itself, the single-call primitive is mandatory.
+A. **Source-attribution audit (all dims).** For every dictionary / style-guide / author cited in the Generated Content, use the single-call primitive `mcp__sources__verify_source_attribution(source, claim)` where `source` ∈ {`grinchenko_1907`, `esum`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`}. For modern meaning, inspect `query_sum20` or ВТС directly. Verdict `discusses=false` → FLAG `unverified citation`, treat as score-against. The compose-pattern (calling `query_sum20` / `search_style_guide` / `search_grinchenko_1907` / `query_pravopys` / `search_esum` separately) is acceptable only when you need to inspect specific evidence chunks beyond the boolean verdict; for supported source-attribution checks, the single-call primitive is mandatory.
 
 B. **Quote verification (all dims).** For every authored quote attributed to a literary source, call `mcp__sources__verify_quote(author, text)`. Required: `matched=true` AND `best_confidence ≥ 0.85`. Verdict false or confidence below threshold → FLAG `fabricated quote`. The tool detects fused composites (two real sources stitched into one attributed line) by returning `matched=false` with non-zero near-misses — flag those as `fused quote`. The compose-pattern (`mcp__sources__search_literary` + grep) is forbidden for this audit; use `verify_quote` exclusively.
 
-C. **Sovietization flag (decolonization, naturalness).** When the content
-   draws from `search_definitions` (СУМ-11) for politically loaded
-   headwords (`ленін*`, `більшовик*`, `радянськ*`, `соціалістичн*`,
-   `партійн*`, `національн*`, `школа`, `шлях`, `прапор`), apply
-   heightened scrutiny. The result row's `sovietization_risk` field
-   (0/1/2) is ground truth; until it is wired through the writer, fall
-   back to the keyword regex above. Soviet framing reproduced into the
-   module without paraphrase or correction → FLAG
+C. **Sovietization flag (decolonization, naturalness).** СУМ-11 is contrast-only and may appear
+   only as explicit Sovietization contrast, never as evidence for meaning,
+   stress, part of speech, or validity. Any verification citation to it in
+   generated content → FLAG `sovietized_source_not_authority`, regardless of
+   `sovietization_risk`. Soviet framing reproduced without correction → FLAG
    `soviet-framed definition unsupervised`.
 
 D. **Modern Ukrainian + heritage-defense audit (naturalness, decolonization).** Flag historical / Old East Slavic / Russian-shadow / pre-Pravopys-2019 forms presented as modern Ukrainian. Also flag the opposite error: authentic Ukrainian archaisms, historisms, or dialectisms mislabeled as Russianism/surzhyk/calque without VESUM/check_modern_form plus historical/etymological/source-context verification. Authentic non-standard forms must carry `[Archaism]`, `[Historism]`, or `[Dialectism]`, a modern standard equivalent, and a brief heritage note. Missing tag/equivalent → FLAG `untagged heritage form`; false Russianism claim → FLAG `heritage form misclassified`.

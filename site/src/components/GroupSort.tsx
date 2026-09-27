@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './Activities.module.css';
 import { shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
@@ -20,12 +20,27 @@ function getWordColor(word: string, index: number): string {
   return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
 }
 
+/**
+ * A group entry is a plain string on every existing module, or a
+ * `{text, record, why}` object in fresh drafts — `why` explains a wrong
+ * placement of this entry.
+ */
+type GroupSortEntry = string | { text: string; record?: string; why?: string };
+
+function entryText(entry: GroupSortEntry): string {
+  return typeof entry === 'string' ? entry : entry.text;
+}
+
+function entryWhy(entry: GroupSortEntry): string | undefined {
+  return typeof entry === 'string' ? undefined : entry.why;
+}
+
 interface GroupSortProps {
   /**
    * @schemaDescription Groups value consumed by this component.
    * @ukrainianText true
    */
-  groups: { [key: string]: string[] };
+  groups: { [key: string]: GroupSortEntry[] };
   /**
    * @schemaDescription Instruction shown to the learner above the activity.
    * @ukrainianText true
@@ -45,13 +60,15 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
 
   // Flatten and shuffle all items with colors
   const allItems = useMemo(() => {
-    const items: { id: string; word: string; correctGroup: string; color: string }[] = [];
+    const items: { id: string; word: string; why?: string; correctGroup: string; color: string }[] = [];
     let idx = 0;
-    for (const [group, words] of Object.entries(groups)) {
-      for (const word of words) {
+    for (const [group, entries] of Object.entries(groups)) {
+      for (const entry of entries) {
+        const word = entryText(entry);
         items.push({
           id: `item-${idx}`,
           word,
+          why: entryWhy(entry),
           correctGroup: group,
           color: getWordColor(word, idx)
         });
@@ -74,6 +91,23 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
   const [showResult, setShowResult] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverGroup, setDragOverGroup] = useState<string | null>(null);
+  // Keyboard path (no native HTML5 drag-and-drop keyboard support exists):
+  // Tab/Enter to select a tile, then Tab/Enter one of the group-choice
+  // buttons that appear. Mirrors Order.tsx's click-to-place pattern.
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  // After a keyboard placement, the tile and chooser that had focus are
+  // gone from the DOM — this carries the id of whatever should receive
+  // focus next so it never falls back to document.body.
+  const [pendingFocusId, setPendingFocusId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hasAnyWhy = allItems.some((item) => item.why);
+
+  useEffect(() => {
+    if (!pendingFocusId) return;
+    const el = containerRef.current?.querySelector<HTMLElement>(`[data-focus-id="${pendingFocusId}"]`);
+    el?.focus();
+    setPendingFocusId(null);
+  }, [pendingFocusId]);
 
   const handleDragStart = (e: React.DragEvent, itemId: string) => {
     setDraggedItem(itemId);
@@ -159,6 +193,9 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
 
   const handleCheck = () => {
     setShowResult(true);
+    // Check Answers unmounts once results show, replaced by Try Again —
+    // send focus there so it never falls back to document.body.
+    setPendingFocusId('group-sort-retry');
   };
 
   const handleReset = () => {
@@ -169,6 +206,60 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
     }
     setSorted(initial);
     setShowResult(false);
+    setSelectedItemId(null);
+    // Try Again unmounts once the pool refills — send focus to the first
+    // refilled tile so it never falls back to document.body.
+    setPendingFocusId(allItems[0]?.id ?? null);
+  };
+
+  const handleTileSelect = (itemId: string) => {
+    if (showResult) return;
+    setSelectedItemId((prev) => (prev === itemId ? null : itemId));
+  };
+
+  // Keyboard equivalent of a drag-and-drop: moves the selected tile into
+  // `target` (a group name, or '__pool__' to return it to the pool).
+  const handlePlaceSelected = (target: string) => {
+    if (!selectedItemId || showResult) return;
+    const poolItem = remaining.find((i) => i.id === selectedItemId);
+    if (poolItem) {
+      if (target !== '__pool__') {
+        const nextRemaining = remaining.filter((i) => i.id !== selectedItemId);
+        setRemaining(nextRemaining);
+        setSorted((prev) => ({ ...prev, [target]: [...prev[target], poolItem] }));
+        setPendingFocusId(nextRemaining[0]?.id ?? 'group-sort-check');
+      }
+      setSelectedItemId(null);
+      return;
+    }
+    let sourceGroup: string | null = null;
+    let found: (typeof allItems)[number] | undefined;
+    for (const [group, groupItems] of Object.entries(sorted)) {
+      const hit = groupItems.find((i) => i.id === selectedItemId);
+      if (hit) {
+        sourceGroup = group;
+        found = hit;
+        break;
+      }
+    }
+    if (found && sourceGroup && sourceGroup !== target) {
+      const movedItem = found;
+      const fromGroup = sourceGroup;
+      setSorted((prev) => {
+        const next = { ...prev, [fromGroup]: prev[fromGroup].filter((i) => i.id !== selectedItemId) };
+        if (target !== '__pool__') next[target] = [...prev[target], movedItem];
+        return next;
+      });
+      if (target === '__pool__') {
+        setRemaining((prev) => [...prev, movedItem]);
+        // The placed tile itself re-enters the pool as the next reachable
+        // unplaced tile when there's nothing already ahead of it there.
+        setPendingFocusId(remaining[0]?.id ?? selectedItemId);
+      } else {
+        setPendingFocusId(remaining[0]?.id ?? 'group-sort-check');
+      }
+    }
+    setSelectedItemId(null);
   };
 
   const isAllCorrect = () => {
@@ -180,6 +271,45 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
     return remaining.length === 0;
   };
 
+  // Renders the group-choice buttons for the currently selected tile. Called
+  // inline right after that tile (in the pool or in its bucket) so Tab
+  // reaches it immediately after the tile, instead of after every other tile
+  // in the activity. `currentGroup` (unset for pool tiles) is left out of the
+  // offered buttons — choosing a tile's own bucket is a no-op that would
+  // strand focus when the chooser it lived in disappears.
+  const renderChooser = (itemId: string, currentGroup?: string) => (
+    <div
+      role="group"
+      aria-label={isUkrainian ? 'Виберіть дію' : 'Choose an action'}
+      data-activity="group-sort-chooser"
+      style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', margin: '0.5rem 0', flexBasis: '100%' }}
+    >
+      {!remaining.some((i) => i.id === itemId) && (
+        <button
+          type="button"
+          className={styles.resetButton}
+          data-activity="group-sort-choice"
+          data-target="__pool__"
+          onClick={() => handlePlaceSelected('__pool__')}
+        >
+          {isUkrainian ? '↩ Повернути до нерозподілених слів' : '↩ Return to unsorted words'}
+        </button>
+      )}
+      {groupNames.filter((name) => name !== currentGroup).map((name) => (
+        <button
+          key={name}
+          type="button"
+          className={styles.submitButton}
+          data-activity="group-sort-choice"
+          data-target={name}
+          onClick={() => handlePlaceSelected(name)}
+        >
+          {isUkrainian ? `Перемістити до групи «${name}»` : `Move to group "${name}"`}
+        </button>
+      ))}
+    </div>
+  );
+
   const headerLabel = isUkrainian ? 'Розподіліть за категоріями' : 'Group Sort';
   const poolEmptyLabel = isUkrainian ? 'Всі слова розподілено!' : 'All words sorted!';
   const bucketPlaceholderLabel = isUkrainian ? 'Перетягніть слова сюди' : 'Drop words here';
@@ -189,7 +319,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
   const errorLabel = isUkrainian ? '✗ Деякі слова в неправильних групах.' : '✗ Some items are in the wrong group.';
 
   return (
-    <div className={styles.activityContainer} data-activity="group-sort">
+    <div className={styles.activityContainer} data-activity="group-sort" ref={containerRef}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📊</span>
         <span>{headerLabel}</span>
@@ -209,22 +339,30 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           onDrop={handleDropOnPool}
         >
           {remaining.length > 0 ? (
-            remaining.map((item) => (
-              <button
-                key={item.id}
-                className={styles.wordTile}
-                style={{
-                  backgroundColor: item.color,
-                  color: 'white',
-                  cursor: showResult ? 'default' : 'grab'
-                }}
-                draggable={!showResult}
-                onDragStart={(e) => handleDragStart(e, item.id)}
-                onDragEnd={handleDragEnd}
-              >
-                {item.word}
-              </button>
-            ))
+            remaining.map((item) => {
+              const isSelected = selectedItemId === item.id;
+              return (
+                <React.Fragment key={item.id}>
+                  <button
+                    className={`${styles.wordTile} ${isSelected ? styles.selectedWord : ''}`}
+                    style={{
+                      backgroundColor: isSelected ? undefined : item.color,
+                      color: isSelected ? undefined : 'white',
+                      cursor: showResult ? 'default' : 'grab'
+                    }}
+                    draggable={!showResult}
+                    onDragStart={(e) => handleDragStart(e, item.id)}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => handleTileSelect(item.id)}
+                    data-focus-id={item.id}
+                    {...(isSelected ? { 'aria-pressed': true } : {})}
+                  >
+                    {item.word}
+                  </button>
+                  {isSelected && !showResult && renderChooser(item.id)}
+                </React.Fragment>
+              );
+            })
           ) : (
             <span className={styles.poolEmpty}>{poolEmptyLabel}</span>
           )}
@@ -246,23 +384,54 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
               <div className={styles.groupItems}>
                 {sorted[groupName].map((item) => {
                   const isCorrect = item.correctGroup === groupName;
-                  return (
+                  const isSelected = selectedItemId === item.id;
+                  const tile = (
                     <button
-                      key={item.id}
                       className={`${styles.wordTile} ${
-                        showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''
+                        showResult ? (isCorrect ? styles.correct : styles.incorrect) : (isSelected ? styles.selectedWord : '')
                       }`}
                       style={{
-                        backgroundColor: showResult ? undefined : item.color,
-                        color: showResult ? undefined : 'white',
+                        backgroundColor: showResult || isSelected ? undefined : item.color,
+                        color: showResult || isSelected ? undefined : 'white',
                         cursor: showResult ? 'default' : 'grab'
                       }}
                       draggable={!showResult}
                       onDragStart={(e) => handleDragStart(e, item.id)}
                       onDragEnd={handleDragEnd}
+                      onClick={() => handleTileSelect(item.id)}
+                      data-focus-id={item.id}
+                      {...(isSelected ? { 'aria-pressed': true } : {})}
                     >
                       {item.word}
                     </button>
+                  );
+                  const chooser = isSelected && !showResult ? renderChooser(item.id, groupName) : null;
+                  // Only wrap in an extra element (and gain the why paragraph)
+                  // when this entry actually carries a `why` — legacy
+                  // string entries render the bare tile, exactly as on main.
+                  if (item.why === undefined) {
+                    return (
+                      <React.Fragment key={item.id}>
+                        {tile}
+                        {chooser}
+                      </React.Fragment>
+                    );
+                  }
+                  return (
+                    <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      {tile}
+                      {chooser}
+                      {showResult && !isCorrect && (
+                        <p
+                          className={styles.explanation}
+                          data-activity="group-sort-entry-why"
+                          role="status"
+                          aria-live="polite"
+                        >
+                          {item.why}
+                        </p>
+                      )}
+                    </div>
                   );
                 })}
                 {sorted[groupName].length === 0 && !showResult && (
@@ -276,12 +445,12 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
 
       <div className={styles.buttonRow}>
         {remaining.length === 0 && !showResult && (
-          <button className={styles.submitButton} onClick={handleCheck}>
+          <button className={styles.submitButton} onClick={handleCheck} data-focus-id="group-sort-check">
             {checkBtnLabel}
           </button>
         )}
         {showResult && (
-          <button className={styles.resetButton} onClick={handleReset}>
+          <button className={styles.resetButton} onClick={handleReset} data-focus-id="group-sort-retry">
             {retryBtnLabel}
           </button>
         )}
@@ -292,6 +461,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="group-sort-feedback"
           data-correct={isAllCorrect() ? 'true' : 'false'}
+          {...(hasAnyWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
         >
           {isAllCorrect() ? successLabel : errorLabel}
         </div>

@@ -116,15 +116,16 @@ if not results:
 "
 ```
 
-### 8. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+### 8. Look up a modern word definition in official СУМ-20
 
 ```bash
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from wiki.sources_db import search_definitions
-results = search_definitions('WORD_HERE', 3)
+from wiki.sources_db import query_sum20
+results = query_sum20('WORD_HERE')
 for r in results:
-    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+    for sense in r.get('senses', []):
+        print(f'{r.get(\"headword\", \"\")}: {sense.get(\"definition\", \"\")[:200]}')
 "
 ```
 
@@ -165,7 +166,7 @@ for r in results:
 4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
    to see the full paradigm.
 5. **When covering a grammar topic or looking for supporting pedagogy** — start with unified retrieval (tool 5), then use textbook-only search (tool 6) if you need school-textbook scope only.
-6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 8).
+6. **When you need the precise Ukrainian meaning** — use СУМ-20 (tool 8), or ВТС when СУМ-20 has no entry.
 7. **When looking for natural Ukrainian expressions** — search idioms (tool 9).
 
 **Batching rule:** Collect all words you want to verify, then run ONE `verify_words`

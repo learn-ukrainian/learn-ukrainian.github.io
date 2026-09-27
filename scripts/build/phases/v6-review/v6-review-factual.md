@@ -41,7 +41,7 @@ You are the **FACTUAL** reviewer for a Ukrainian language module. You review **t
 ## Authority hierarchy
 
 Use these sources when relevant:
-- **Definitions / history:** Грінченко, СУМ-11
+- **Definitions / history:** СУМ-20 or ВТС for modern meaning; Грінченко for historical usage
 - **General facts / historical-cultural claims:** Wikipedia or primary-source references already present in the module packet
 - If a claim cannot be verified safely, flag it as `<!-- VERIFY -->` territory rather than guessing
 

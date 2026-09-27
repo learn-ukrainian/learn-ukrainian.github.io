@@ -235,6 +235,25 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
     monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
     monkeypatch.setattr(enrich_manifest, "_vesum_valid_synonym", lambda term: bool(term))
     monkeypatch.setattr(enrich_manifest, "_vesum_word_analyses", lambda word: ((word, "noun"),))
+    modern_pointer_rows = {
+        str(entries[index]["lemma"]): {
+            "lookups": {"newsum": {
+                "word": str(entries[index]["lemma"]),
+                "text": f"протилежне {entries[index + 1]['lemma']}.",
+            }}
+        }
+        for index in (16, 18)
+    }
+    for index in (10, 12, 14):
+        for source_index, target_index in ((index, index + 1), (index + 1, index)):
+            lemma = str(entries[source_index]["lemma"])
+            modern_pointer_rows[lemma] = {
+                "lookups": {"newsum": {
+                    "word": lemma,
+                    "text": f"див. {entries[target_index]['lemma']}.",
+                }}
+            }
+    monkeypatch.setattr(enrich_manifest, "_read_cached_slovnyk_rows", lambda lemma: modern_pointer_rows.get(lemma, {}))
 
     try:
         fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))

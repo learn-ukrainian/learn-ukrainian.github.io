@@ -148,8 +148,11 @@ def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
         assert len(calls) == 1  # one planned_state result feeds the identity hash and the materialized file
         Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(doc)
         inputs = doc["inputs"]
-        for name in ("plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "lesson"):
+        for name in ("plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "lesson", "provenance"):
             assert inputs[name]["sha256"] == hashlib.sha256((tmp_path / inputs[name]["path"]).read_bytes()).hexdigest()
+        assert inputs["provenance"]["path"] == (
+            f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{n}.provenance.yaml"
+        )
         assert inputs["pack"]["path"] == f"curriculum/l2-uk-en/evidence/a1/{slug}.yaml"
         assert inputs["words"]["path"] == "curriculum/l2-uk-en/evidence/a1/_words.yaml"
         assert lock.check(tmp_path / inputs["pack"]["path"]) and lock.check(tmp_path / inputs["words"]["path"])
@@ -461,6 +464,19 @@ def test_a_changed_pack_or_state_gives_a_different_manifest(tmp_path, monkeypatc
     assert yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_bytes())["learner_state"] == {"a": 2}
 
 
+def test_changed_lesson_provenance_stales_the_manifest_and_closure(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
+    doc, digest = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    provenance_path = tmp_path / doc["inputs"]["provenance"]["path"]
+    provenance_path.write_bytes(provenance_path.read_bytes() + b"\n")
+    assert [change["input"] for change in manifest.changed_inputs(doc, tmp_path)] == ["inputs.provenance"]
+    closure = compute_closure(
+        level, slug, [{"n": 1, "kind": "lesson"}], repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir
+    )
+    assert any(row["manifest_sha256"] == digest and row["input"] == "inputs.provenance" for row in closure["stale"])
+
+
 def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state({"b": 2, "a": 1}))
@@ -570,8 +586,17 @@ def _rereview_closure(tmp_path, monkeypatch):
         tmp_path, monkeypatch
     )
     doc, digest = manifest.write_manifest(
-        level, slug, 2, lesson_kind="lesson", state_dir=state_dir, repo_root=tmp_path, plans_dir=plan_dir,
-        evidence_dir=evidence_dir, position=1, site_dir=page_dir, previous_attempt=previous,
+        level,
+        slug,
+        2,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+        previous_attempt=previous,
     )
 
     def stale_of_rereview():
@@ -601,6 +626,7 @@ def test_the_pin_walk_covers_every_pinned_file_in_the_manifest(tmp_path, monkeyp
     doc, _review, _stale = _rereview_closure(tmp_path, monkeypatch)
     names = [name for name, _entry in manifest.pinned_entries(doc)]
     assert {"module_digest", "diff", "previous_attempt.review", "previous_attempt.ledger", "inputs.plan"} <= set(names)
+    assert "inputs.provenance" in names
     assert "inputs.activity_data[0]" in names or not doc["inputs"]["activity_data"]
     assert len(names) == len(set(names))
     # not a pin: the lock entry (entry_sha256) and the learner-state identity (no path)

@@ -1,14 +1,16 @@
 """Prepare and record the one bounded settle attempt for an unsupported finding.
 
-The language seat judges whether a quoted source attests the disputed construction
-in its sense. This module checks only identity, receipt provenance and return shape.
-The prompt is rendered by ``scripts.review.prompts.render`` from this task's own
-manifest, and the outcome is written through ``findings_db.record_settle_outcome``.
+The language seat judges one finding the sources did not settle: a quoted construction
+in its sense, or an absence (something the finding says is missing from a scoped unit
+of the lesson or the plan). This module checks only identity, receipt provenance and
+return shape. The prompt is rendered by ``scripts.review.prompts.render`` from this
+task's own manifest, and the outcome is written through ``findings_db.record_settle_outcome``.
 """
 
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import os
@@ -19,16 +21,56 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.assemble import component_props_from_jsx
+from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.curriculum.evidence.lock import atomic_write
 from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts import ledger
+from scripts.review.validate.validate import _MISSING, _leaf_texts, _plan_unit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TREE = "curriculum/l2-uk-en"
 TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
+_TAB_ITEM = re.compile(r"<TabItem\b([^>]*)>(.*?)</TabItem>", re.DOTALL)
+_TAB_LABEL = re.compile(r'\blabel="([^"]*)"')
+_ACTIVITY_SPAN = re.compile(r'<span id="([^"]+)"></span>')
+_ACTIVITY_HEADING = re.compile(r"(?m)^###[ \t]+([^\n]+?)\s*$")
+_DASH = "\u2014"  # the em dash generate_mdx puts between a tab's Ukrainian and English labels
+_NO_SCOPE = "finding has no quoted disputed span"
+_ABSENT_UNIT = "scope names a unit absent from the document"
+_AMBIGUOUS_UNIT = "scope names more than one unit in the document"
+
+
+def _tab_by_label() -> dict[str, str]:
+    """Engine tab labels (``scripts/generate_mdx/core.py``) to the review scope's ASCII key.
+
+    A1 prints the Ukrainian label, an em dash, and the English label. A Ukrainian-only page
+    prints the Ukrainian label, and the a2.2 workbook tab uses its own Ukrainian label.
+    The ASCII key itself is accepted so a fixture can name the tab without a display label.
+    """
+    ukrainian = {
+        "urok": "\u0423\u0440\u043e\u043a",
+        "slovnyk": "\u0421\u043b\u043e\u0432\u043d\u0438\u043a",
+        "vpravy": "\u0412\u043f\u0440\u0430\u0432\u0438",
+        "resursy": "\u0420\u0435\u0441\u0443\u0440\u0441\u0438",
+    }
+    english = {"urok": "Lesson", "slovnyk": "Vocabulary", "vpravy": "Activities", "resursy": "Resources"}
+    labels = {key: key for key in ukrainian}
+    for key, uk in ukrainian.items():
+        labels[english[key]] = key
+        labels[uk] = key
+        labels[f"{uk} {_DASH} {english[key]}"] = key
+    workbook = "\u0417\u043e\u0448\u0438\u0442"
+    labels[workbook] = "vpravy"
+    labels[f"{workbook} {_DASH} Activities"] = "vpravy"
+    return labels
+
+
+_TAB_BY_LABEL = _tab_by_label()
 
 # Distinct authorities, rather than distinct calls, are required for a conflict.
 # Ambiguous signal tools have no authority here and cannot establish a conflict.
@@ -120,9 +162,12 @@ def _original_finding(conn: Any, item: Any) -> dict[str, Any]:
     return finding
 
 
-def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
+def _quoted_spans(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
     spans: list[dict[str, Any]] = []
-    for location in finding.get("locations", []):
+    locations = finding.get("locations", [])
+    if not isinstance(locations, list):
+        return spans
+    for location in locations:
         quote = location.get("quote") if isinstance(location, dict) else None
         if not isinstance(quote, str) or not quote:
             continue
@@ -139,9 +184,318 @@ def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
                     "occurrence": occurrence,
                 }
             )
-    if not spans:
-        raise SettleError("finding has no quoted disputed span")
     return spans
+
+
+def _is_lesson_scope(scope: Any) -> bool:
+    """A lesson absence scope: a tab, optionally one activity inside that tab."""
+    if not isinstance(scope, dict) or "tab" not in scope or set(scope) - {"tab", "activity"}:
+        return False
+    tab = scope.get("tab")
+    if not isinstance(tab, str) or not tab:
+        return False
+    activity = scope.get("activity")
+    return "activity" not in scope or (isinstance(activity, str) and bool(activity))
+
+
+def _is_plan_scope(scope: Any) -> bool:
+    """A plan absence scope: one lesson, optionally one step or one activity of it."""
+    if not isinstance(scope, dict) or "lesson" not in scope or set(scope) - {"lesson", "step", "activity"}:
+        return False
+    if "step" in scope and "activity" in scope:
+        return False
+    lesson = scope["lesson"]
+    if isinstance(lesson, bool) or not isinstance(lesson, int) or lesson < 1:
+        return False
+    return all(isinstance(scope[key], str) and scope[key] for key in ("step", "activity") if key in scope)
+
+
+def _require_one(texts: list[str]) -> str:
+    if not texts:
+        raise SettleError(_ABSENT_UNIT)
+    if len(texts) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    return texts[0]
+
+
+def _tab_bodies(document: str) -> dict[str, list[str]]:
+    """Each tab key's inner text, in document order, exactly as it stands between the tags."""
+    found: dict[str, list[str]] = {}
+    for attrs, body in _TAB_ITEM.findall(document):
+        label = _TAB_LABEL.search(attrs)
+        if label is None:
+            continue
+        key = _TAB_BY_LABEL.get(label.group(1))
+        if key is not None:
+            found.setdefault(key, []).append(body)
+    return found
+
+
+def _activity_blocks(body: str) -> list[tuple[str | None, str | None, str]]:
+    """Activity blocks in one tab: ``(span id, heading, exact slice)``.
+
+    A block starts at an anchor ``<span id="..."></span>`` or, when that anchor does not
+    own it, at a ``###`` heading. The anchor owns the heading that follows it with only
+    whitespace between, which is how the page renderer writes an anchored activity.
+    The slice runs up to the next block and no further.
+    """
+    spans = list(_ACTIVITY_SPAN.finditer(body))
+    headings = list(_ACTIVITY_HEADING.finditer(body))
+    owned: dict[int, re.Match[str]] = {}
+    taken: set[int] = set()
+    for index, span in enumerate(spans):
+        following = spans[index + 1].start() if index + 1 < len(spans) else len(body)
+        for heading in headings:
+            if span.end() <= heading.start() < following and not body[span.end() : heading.start()].strip():
+                owned[span.start()] = heading
+                taken.add(heading.start())
+                break
+    starts: list[tuple[int, str | None, str | None]] = []
+    for span in spans:
+        heading = owned.get(span.start())
+        starts.append((span.start(), span.group(1), heading.group(1).strip() if heading else None))
+    starts.extend(
+        (heading.start(), None, heading.group(1).strip()) for heading in headings if heading.start() not in taken
+    )
+    starts.sort(key=lambda item: item[0])
+    blocks: list[tuple[str | None, str | None, str]] = []
+    for index, (start, span_id, heading) in enumerate(starts):
+        end = starts[index + 1][0] if index + 1 < len(starts) else len(body)
+        blocks.append((span_id, heading, body[start:end]))
+    return blocks
+
+
+def _string_values(node: Any) -> set[str]:
+    """Every string the page's component props hold, after the JSX escapes are decoded."""
+    if isinstance(node, str):
+        return {node}
+    if isinstance(node, dict):
+        return {text for value in node.values() for text in _string_values(value)}
+    if isinstance(node, list):
+        return {text for value in node for text in _string_values(value)}
+    return set()
+
+
+def _block_contains_units(block: str, units: list[str]) -> bool:
+    """Whether this rendered activity block carries every provenance unit of the activity.
+
+    A unit's text is the field the page component receives (check 9). It is compared with
+    the decoded props, and with the block source for prose the component does not wrap.
+    The heading is only the block boundary; it is never matched against the activity id.
+    """
+    decoded = _string_values(component_props_from_jsx(block))
+    for unit in units:
+        if unit in decoded or unit in block:
+            continue
+        escaped = json.dumps(unit, ensure_ascii=False)[1:-1]
+        if escaped != unit and escaped in block:
+            continue
+        return False
+    return True
+
+
+def _activity_unit_texts(provenance: dict[str, Any], tab: str, activity: str) -> list[str]:
+    """Rendered text of each provenance unit of this activity, spans concatenated in order.
+
+    One activity id on more than one step is two units. That is the ambiguous-unit refusal,
+    raised before any block is chosen.
+    """
+    spans = provenance.get("spans")
+    if not isinstance(spans, list):
+        raise SettleError("provenance file is not usable")
+    owned = [
+        span for span in spans if isinstance(span, dict) and span.get("tab") == tab and span.get("activity") == activity
+    ]
+    if not owned:
+        raise SettleError(_ABSENT_UNIT)
+    if len({span.get("step") for span in owned}) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    groups: dict[tuple[Any, Any], list[dict[str, Any]]] = {}
+    for span in owned:
+        groups.setdefault((span.get("item"), span.get("block")), []).append(span)
+    texts: list[str] = []
+    for group in groups.values():
+        group.sort(key=lambda span: span.get("span") if isinstance(span.get("span"), int) else 0)
+        piece = "".join(str(span.get("text") or "") for span in group)
+        if piece:
+            texts.append(piece)
+    if not texts:
+        raise SettleError(_ABSENT_UNIT)
+    return texts
+
+
+def _lesson_unit(document: str, scope: dict[str, Any], provenance: dict[str, Any] | None) -> str:
+    """One tab, or the one activity block inside it.
+
+    An activity is the block whose rendered text carries that activity's provenance units.
+    A ``<span id>`` equal to the activity id is the same block when the page has one; a
+    heading whose text happens to equal the id is not an activity. Duplicate span ids,
+    duplicate provenance steps, or two blocks that both carry the units are ambiguous.
+    """
+    body = _require_one(_tab_bodies(document).get(scope["tab"], []))
+    activity = scope.get("activity")
+    if not isinstance(activity, str):
+        return body
+    blocks = [text for span_id, _heading, text in _activity_blocks(body) if span_id == activity]
+    if len(blocks) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if provenance is None:
+        return _require_one(blocks)
+    units = _activity_unit_texts(provenance, scope["tab"], activity)
+    located = [text for _span_id, _heading, text in _activity_blocks(body) if _block_contains_units(text, units)]
+    if len(located) > 1 or (len(located) == 1 and blocks and blocks[0] != located[0]):
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if len(located) == 1:
+        return located[0]
+    raise SettleError(_ABSENT_UNIT)
+
+
+def _plan_matches(items: Any, key: str, value: Any) -> list[Any]:
+    if not isinstance(items, list):
+        return []
+    return [item for item in items if isinstance(item, dict) and item.get(key) == value]
+
+
+def _refuse_duplicate_plan_ids(plan: dict[str, Any], scope: dict[str, Any]) -> None:
+    """Duplicate lesson, step or activity ids are ambiguous before the first match is used."""
+    lessons = _plan_matches(plan.get("lessons"), "n", scope["lesson"])
+    if len(lessons) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if len(lessons) != 1:
+        return
+    lesson = lessons[0]
+    if "step" in scope and len(_plan_matches(lesson.get("steps"), "id", scope["step"])) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if "activity" in scope and len(_plan_matches(lesson.get("activities"), "id", scope["activity"])) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+
+
+def _plan_unit_text(document: str, scope: dict[str, Any]) -> str:
+    """The plan unit's scalar values, one per line, the same text the review validator checks."""
+    try:
+        plan = yaml.safe_load(document)
+    except yaml.YAMLError as exc:
+        raise SettleError(_ABSENT_UNIT) from exc
+    if not isinstance(plan, dict):
+        raise SettleError(_ABSENT_UNIT)
+    _refuse_duplicate_plan_ids(plan, scope)
+    unit = _plan_unit(plan, scope)
+    if unit is _MISSING:
+        raise SettleError(_ABSENT_UNIT)
+    return "\n".join(_leaf_texts(unit))
+
+
+def _context(document: str, finding: dict[str, Any], provenance: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """Quoted windows, or one absence context for a scope the document actually contains.
+
+    A quoted location keeps the window around each occurrence. An absence finding has no
+    quote: a lesson scope is one tab (or one activity block inside it), and a plan scope
+    is one lesson, step or activity of the plan. Anything else fails closed. ``provenance``
+    is the lesson's provenance document when the scope names an activity; plan scopes ignore it.
+    """
+    quoted = _quoted_spans(document, finding)
+    if quoted:
+        return quoted
+    scope = finding.get("scope")
+    if _is_lesson_scope(scope):
+        text = _lesson_unit(document, scope, provenance)
+    elif _is_plan_scope(scope):
+        text = _plan_unit_text(document, scope)
+    else:
+        raise SettleError(_NO_SCOPE)
+    return [{"absence": True, "locator": dict(scope), "context": text}]
+
+
+@functools.cache
+def _provenance_validator() -> Draft202012Validator:
+    schema = json.loads((REPO_ROOT / "schemas" / "lesson-provenance-v1.schema.json").read_text(encoding="utf-8"))
+    return Draft202012Validator(schema)
+
+
+def _parse_provenance(data: bytes) -> dict[str, Any]:
+    try:
+        document = yaml.safe_load(data)
+    except yaml.YAMLError as exc:
+        raise SettleError("provenance file is not usable") from exc
+    if not isinstance(document, dict):
+        raise SettleError("provenance file is not usable")
+    if any(_provenance_validator().iter_errors(document)):
+        raise SettleError("provenance file does not conform to lesson-provenance-v1")
+    return document
+
+
+def _pin_file(root: Path, pin: dict[str, Any]) -> bytes:
+    """Bytes of one manifest pin, refused unless the path stays in the repository and the sha256 matches."""
+    path_text, recorded = pin.get("path"), pin.get("sha256")
+    if not isinstance(path_text, str) or not isinstance(recorded, str):
+        raise SettleError("lesson manifest pin is malformed")
+    relative = Path(path_text)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise SettleError("lesson manifest pin escapes the repository")
+    full = (root / relative).resolve()
+    if not full.is_file() or not full.is_relative_to(root.resolve()):
+        raise SettleError("lesson manifest pin is not a file in the repository")
+    data = full.read_bytes()
+    if _sha(data) != recorded:
+        raise SettleError("lesson manifest pin does not match the file")
+    return data
+
+
+def _lesson_manifest_bytes(root: Path, level: str, slug: str, lesson_n: int, digest: str) -> bytes | None:
+    """The original lesson manifest, found by the hash the settle item recorded, or None when it is not on disk."""
+    if not isinstance(digest, str) or not SLUG_RE.fullmatch(level) or not SLUG_RE.fullmatch(slug):
+        return None
+    state = root / TREE / "evidence" / level / "_state" / slug
+    candidates = (
+        state / "manifests" / f"lesson-{lesson_n}" / f"{digest}.yaml",
+        state / f"lesson-{lesson_n}.manifest.yaml",
+    )
+    for path in candidates:
+        try:
+            data = path.read_bytes()
+        except OSError:
+            continue
+        if _sha(data) == digest:
+            return data
+    return None
+
+
+def _provenance_document(root: Path, level: str, slug: str, lesson_n: int, manifest_sha: str) -> dict[str, Any]:
+    """Read this lesson's provenance only through its original manifest's exact pin."""
+    raw = _lesson_manifest_bytes(root, level, slug, lesson_n, manifest_sha)
+    if raw is None:
+        raise SettleError("lesson_manifest_unavailable_for_activity_provenance")
+    try:
+        manifest = yaml.safe_load(raw)
+    except yaml.YAMLError as exc:
+        raise SettleError("lesson manifest is not usable") from exc
+    if not isinstance(manifest, dict):
+        raise SettleError("lesson manifest is not usable")
+    inputs = manifest.get("inputs")
+    pin = inputs.get("provenance") if isinstance(inputs, dict) else None
+    if not isinstance(pin, dict):
+        raise SettleError("lesson_manifest_missing_provenance_pin")
+    expected = f"{TREE}/evidence/{level}/_state/{slug}/lesson-{lesson_n}.provenance.yaml"
+    if pin.get("path") != expected:
+        raise SettleError("lesson_manifest_provenance_path_mismatch")
+    try:
+        data = _pin_file(root, pin)
+    except SettleError as exc:
+        raise SettleError(f"lesson_manifest_provenance_pin_invalid: {exc}") from exc
+    parsed = _parse_provenance(data)
+    return _provenance_for_lesson(parsed, level, slug, lesson_n)
+
+
+def _provenance_for_lesson(document: dict[str, Any], level: str, slug: str, lesson_n: int) -> dict[str, Any]:
+    described = document.get("lesson")
+    if (
+        not isinstance(described, dict)
+        or described.get("level") != level
+        or described.get("slug") != slug
+        or described.get("n") != lesson_n
+    ):
+        raise SettleError("provenance file is not this lesson's")
+    return document
 
 
 def _prior_searches(
@@ -201,7 +555,13 @@ def prepare(
         if actual != expected:
             raise SettleError(f"document path is {actual}; expected {expected}")
         document_bytes = document_path.read_bytes()
-        spans = _context(document_bytes.decode("utf-8"), finding)
+        scope = finding.get("scope")
+        provenance = None
+        if item["lesson_n"] is not None and _is_lesson_scope(scope) and isinstance(scope.get("activity"), str):
+            provenance = _provenance_document(
+                root, item["level"], item["slug"], item["lesson_n"], item["manifest_sha256"]
+            )
+        spans = _context(document_bytes.decode("utf-8"), finding, provenance)
         source_review, source_attempt, _ = item["finding_ref"].split("/", 2)
         searches = _prior_searches(finding, prior_ledger, source_review, source_attempt, item["manifest_sha256"])
         manifest = {
@@ -253,10 +613,16 @@ _UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _u
 
 
 def _source(entry: dict[str, Any]) -> str | None:
+    """The authority a hit receipt counts as, or None when the call names none.
+
+    ``search_text`` stays ``style_guide`` in ``SOURCES`` (the authority table). Its label
+    names the tool and the ``source_file`` argument, because that call searches textbooks
+    and the style-guide prose through the same tool.
+    """
     authority = SOURCES.get(entry.get("tool"))
     if authority == "style_guide" and entry.get("tool") == "search_text":
         source_file = entry.get("arguments", {}).get("source_file")
-        return f"style_guide:{source_file}" if isinstance(source_file, str) and source_file else None
+        return f"search_text:{source_file}" if isinstance(source_file, str) and source_file else None
     return authority
 
 

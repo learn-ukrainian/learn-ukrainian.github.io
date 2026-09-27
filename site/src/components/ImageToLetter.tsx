@@ -29,6 +29,14 @@ interface ImageToLetterItem {
    * @ukrainianText false
    */
   explanation?: string;
+  /**
+   * Per-option feedback aligned by index to `[answer, ...distractors]`
+   * (before shuffling). Absent on every existing module, which keeps
+   * today's rendering (only the note/explanation, shown on a correct pick).
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
 }
 
 interface ImageToLetterProps {
@@ -70,6 +78,10 @@ export default function ImageToLetter({
   const [answered, setAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [completedCount, setCompletedCount] = useState(0);
+  // Unlike selectedAnswer (cleared after the shake animation), this persists
+  // until the next attempt or the next card, so per-option feedback stays
+  // readable rather than flashing for 400ms.
+  const [attemptedOption, setAttemptedOption] = useState<string | null>(null);
 
   if (!items || items.length === 0) return null;
 
@@ -97,6 +109,7 @@ export default function ImageToLetter({
       setCurrentIndex((i) => i + 1);
       setAnswered(false);
       setSelectedAnswer(null);
+      setAttemptedOption(null);
       setWrongCount(0);
       setShowHint(false);
     }
@@ -106,6 +119,7 @@ export default function ImageToLetter({
     if (answered) return;
 
     setSelectedAnswer(option);
+    setAttemptedOption(option);
 
     if (option === item.answer) {
       // Stay on the card so the learner reads the note/explanation; the
@@ -121,6 +135,12 @@ export default function ImageToLetter({
       setTimeout(() => setSelectedAnswer(null), 400);
     }
   };
+
+  // Original (pre-shuffle) option order: option_why is aligned to it, with
+  // the key always at index 0.
+  const originalOrder = [item.answer, ...item.distractors];
+  const attemptedOrigIndex = attemptedOption !== null ? originalOrder.indexOf(attemptedOption) : -1;
+  const isAttemptCorrect = attemptedOption === item.answer;
 
   if (isComplete) {
     return (
@@ -140,7 +160,7 @@ export default function ImageToLetter({
   }
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="image-to-letter">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🖼️</span>
         <span>{headerLabel}</span>
@@ -187,7 +207,7 @@ export default function ImageToLetter({
         )}
 
         {/* Letter options */}
-        <div className={directStyles.itlOptions}>
+        <div className={directStyles.itlOptions} data-activity="itl-options">
           {options.map((option) => {
             let className = directStyles.itlOption;
             if (answered && option === item.answer) {
@@ -209,6 +229,23 @@ export default function ImageToLetter({
           })}
         </div>
 
+        {/* Per-option feedback: the chosen option's why, then — if wrong —
+            the correct option's why. Absent optionWhy keeps today's
+            correct-only note/explanation rendering. */}
+        {item.optionWhy && attemptedOption !== null && (
+          <div role="status" aria-live="polite" data-activity="itl-option-why-panel">
+            {attemptedOrigIndex >= 0 && item.optionWhy[attemptedOrigIndex] && (
+              <p className={directStyles.warNote} data-activity="itl-option-why">
+                {item.optionWhy[attemptedOrigIndex]}
+              </p>
+            )}
+            {!isAttemptCorrect && item.optionWhy[0] && (
+              <p className={directStyles.warNote} data-activity="itl-correct-why">
+                {item.optionWhy[0]}
+              </p>
+            )}
+          </div>
+        )}
         {/* Note and explanation shown after correct answer */}
         {answered && item.note && (
           <p className={directStyles.warNote}>{item.note}</p>

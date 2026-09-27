@@ -886,12 +886,27 @@ def publish_set(
     *,
     companions: list[CompanionChange] | None = None,
     expected_members: set[str],
+    expected_manifest: str | None = None,
 ) -> dict[str, str | None]:
-    """Publish one group's complete intended change set under one durable descriptor."""
+    """Publish one group's complete intended change set under one durable descriptor.
+
+    ``artifacts`` may be empty when ``companions`` names existing companions of this
+    group. ``expected_manifest``, when given, is the canonical digest of
+    ``paths.artifact_set(group).manifest`` and is required for that companion-only
+    shape. The returned mapping lists A changes only; companion-only success is ``{}``.
+    """
     _preflight_publish_paths(repo, group, artifacts, companions or [])
     with _lock(repo):
         _recover_locked(repo)
-        return _publish_set_locked(repo, group, artifacts, producer, companions or [], expected_members)
+        return _publish_set_locked(
+            repo,
+            group,
+            artifacts,
+            producer,
+            companions or [],
+            expected_members,
+            expected_manifest=expected_manifest,
+        )
 
 
 def _preflight_publish_paths(
@@ -918,13 +933,22 @@ def _publish_set_locked(
     expected_members: set[str],
     *,
     strict_set: bool = True,
+    expected_manifest: str | None = None,
 ) -> dict[str, str | None]:
     manifest = paths.load_manifest(group, repo)
     before = {item["path"][5:]: item for item in manifest["entries"]}
     if set(before) != expected_members:
         raise ValueError("stale expected membership")
-    if not artifacts or not producer:
-        raise ValueError("publish set requires artifacts and producer")
+    if not producer or not (artifacts or companions):
+        raise ValueError("publish set requires a producer and an artifact or companion change")
+    if not artifacts and expected_manifest is None:
+        raise ValueError("companion-only publish requires an expected manifest digest")
+    # Same canonical digest as paths.artifact_set(...).manifest. Checked before any
+    # store copy or pathname change so an A replacement with the same members is refused.
+    if expected_manifest is not None and (
+        not isinstance(expected_manifest, str) or expected_manifest != _manifest_digest(manifest)
+    ):
+        raise ValueError("stale expected manifest")
     if strict_set:
         _verify_set_state(repo, group, manifest)
     if len({change.rel for change in artifacts}) != len(artifacts):
@@ -1036,6 +1060,8 @@ def _publish_set_locked(
                     "new_mode": installed_mode,
                 }
             )
+        previous_companions = manifest.get("set_descriptor", {}).get("companions", {})
+        companion_mutations: list[CompanionChange] = []
         for change in companions:
             if change.path.startswith("registry/artifacts/"):
                 raise ValueError(f"companion conflicts with artifact metadata: {change.path}")
@@ -1043,17 +1069,23 @@ def _publish_set_locked(
             actual = _actual_sha(target)
             if actual != change.expected_sha256:
                 raise ValueError(f"dirty K companion or stale expected hash: {change.path}")
-            tracked = subprocess.run(["git", "show", f"HEAD:{change.path}"], cwd=repo, capture_output=True, timeout=30)
-            if (tracked.returncode == 0) != (actual is not None) or (
-                actual is not None and hashlib.sha256(tracked.stdout).hexdigest() != actual
-            ):
-                raise ValueError(f"dirty K companion: {change.path}")
             if actual is not None:
                 tree_line = _git(repo, "ls-tree", "HEAD", "--", change.path).decode().split()
                 if not tree_line or tree_line[0] != _git_mode(_actual_mode(target)):
                     raise ValueError(f"dirty K companion mode: {change.path}")
             sha, size, source_mode = _source_info(change.source, destinations, repo)
+            # Already-bound bytes that match the staged file are an under-lock assertion.
+            if previous_companions.get(change.path) == actual == sha:
+                continue
+            if not artifacts and change.path not in previous_companions:
+                raise ValueError(f"companion is not bound to the group: {change.path}")
+            tracked = subprocess.run(["git", "show", f"HEAD:{change.path}"], cwd=repo, capture_output=True, timeout=30)
+            if (tracked.returncode == 0) != (actual is not None) or (
+                actual is not None and hashlib.sha256(tracked.stdout).hexdigest() != actual
+            ):
+                raise ValueError(f"dirty K companion: {change.path}")
             mode = f"100{target.stat().st_mode & 0o777:03o}" if actual is not None else source_mode
+            companion_mutations.append(change)
             companion_records.append(
                 {
                     "kind": "companion",
@@ -1066,6 +1098,8 @@ def _publish_set_locked(
                     "new_mode": mode,
                 }
             )
+        if not row_records and not companion_records:
+            return {}
         # All live versions and staged inputs have been checked. The store copies are
         # durable before any published pathname changes.
         if strict_set:
@@ -1080,7 +1114,7 @@ def _publish_set_locked(
             if row["new_sha256"] is not None:
                 assert change.source is not None
                 _store_copy(change.source, row["new_sha256"], store)
-        for row, change in zip(companion_records, companions, strict=True):
+        for row, change in zip(companion_records, companion_mutations, strict=True):
             target = _safe_destination(repo, row["path"], "registry")
             if row["old_sha256"] is not None:
                 _store_copy(target, row["old_sha256"], store)
@@ -1107,7 +1141,6 @@ def _publish_set_locked(
             row["temp_mtime_ns"] = time.time_ns()
             if row["kind"] == "artifact":
                 new_entries[row["path"][5:]]["mtime_ns"] = row["temp_mtime_ns"]
-        previous_companions = manifest.get("set_descriptor", {}).get("companions", {})
         for relative, sha in previous_companions.items():
             if relative not in {row["path"] for row in companion_records}:
                 target = _safe_destination(repo, relative, "registry")
@@ -1219,8 +1252,13 @@ def write_artifact_set(
     expected_members: set[str],
     removals: dict[str, str] | None = None,
     companions: dict[str, tuple[str | None, Callable[[Path], object]]] | None = None,
+    expected_manifest: str | None = None,
 ) -> dict[str, str | None]:
-    """Stage all writer outputs, then publish their explicit membership change."""
+    """Stage all writer outputs, then publish their explicit membership change.
+
+    ``writes`` may be empty when ``companions`` is not. ``expected_manifest`` is
+    passed through to ``publish_set`` and is required for that companion-only shape.
+    """
     removals = removals or {}
     companions = companions or {}
     if set(writes) != set(expected_hashes) or set(writes) & set(removals):
@@ -1241,7 +1279,13 @@ def write_artifact_set(
             write(source)
             companion_changes.append(CompanionChange(relative, source, expected))
         return publish_set(
-            repo, group, changes, producer, companions=companion_changes, expected_members=expected_members
+            repo,
+            group,
+            changes,
+            producer,
+            companions=companion_changes,
+            expected_members=expected_members,
+            expected_manifest=expected_manifest,
         )
 
 
@@ -1495,7 +1539,10 @@ def _parser() -> argparse.ArgumentParser:
             "Example: /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts "
             "publish-set --plan /tmp/group-plan.json\n"
             "Plan JSON: group, producer, expected_members (data-relative strings), artifacts "
-            "(operation, rel, source, expected_sha256), companions (path, source, expected_sha256).\n"
+            "(operation, rel, source, expected_sha256), companions (path, source, expected_sha256), "
+            "and optional expected_manifest (canonical digest of artifact_set().manifest; "
+            "required when artifacts is empty).\n"
+            "artifacts may be [] when companions is non-empty. Companion-only success prints {}.\n"
             "Outputs: published A paths, tracked K companions, group manifest, and host store objects; "
             "prints the new A hashes.\n"
             "Exit codes: 0 = durable commit; 1 = refused or failed publication; 2 = invalid CLI arguments.\n"
@@ -1506,7 +1553,10 @@ def _parser() -> argparse.ArgumentParser:
         "--plan",
         required=True,
         type=Path,
-        help="JSON plan with group, producer, expected_members, artifacts and companions; sources are staged paths.",
+        help=(
+            "JSON plan with group, producer, expected_members, artifacts, companions, "
+            "and optional expected_manifest; sources are staged paths. artifacts may be []."
+        ),
     )
     exp = sub.add_parser("export", help="Verify and write a group tarball for another required host.")
     exp.add_argument("--group", required=True, help="Classification group, for example raw_source.")
@@ -1586,6 +1636,7 @@ def main(argv: list[str] | None = None, *, repo: Path = ROOT) -> int:
                 plan["producer"],
                 companions=companion_changes,
                 expected_members=set(plan["expected_members"]),
+                expected_manifest=plan.get("expected_manifest"),
             )
             print(json.dumps(result, sort_keys=True))
             return 0

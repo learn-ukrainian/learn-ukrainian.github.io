@@ -85,15 +85,6 @@ def build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
         path.unlink()
     n = len(entries)
     puls_end = min(10, n)
-    synonym_start = puls_end
-    # Even-aligned pairs inside the remaining middle third.
-    synonym_end = min(n, synonym_start + max(0, ((n - synonym_start) // 3) * 2))
-    if synonym_end % 2 != synonym_start % 2:
-        synonym_end -= 1
-    antonym_start = synonym_end
-    antonym_end = min(n, antonym_start + max(0, ((n - antonym_start) // 2) * 2))
-    if antonym_end % 2 != antonym_start % 2:
-        antonym_end -= 1
 
     conn = sqlite3.connect(path)
     try:
@@ -108,13 +99,6 @@ def build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
                 text TEXT NOT NULL DEFAULT '',
                 source TEXT DEFAULT ''
             );
-            CREATE TABLE sum11 (
-                word TEXT NOT NULL,
-                definition TEXT NOT NULL DEFAULT '',
-                text TEXT NOT NULL DEFAULT '',
-                sovietization_risk INTEGER NOT NULL DEFAULT 0,
-                sovietization_keywords TEXT NOT NULL DEFAULT ''
-            );
             """
         )
         for i in range(puls_end):
@@ -123,28 +107,34 @@ def build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
                 "INSERT INTO puls_cefr(word, level, text) VALUES (?, 'A1', ?)",
                 (lemma, f"PULS {lemma}"),
             )
-        for i in range(synonym_start, synonym_end, 2):
-            a = str(entries[i]["lemma"])
-            b = str(entries[i + 1]["lemma"])
-            conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (a, f"див. {b}.", f"див. {b}."),
-            )
-            conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (b, f"див. {a}.", f"див. {a}."),
-            )
-        for i in range(antonym_start, antonym_end, 2):
-            a = str(entries[i]["lemma"])
-            b = str(entries[i + 1]["lemma"])
-            # One-directional pointer only — reciprocal comes from by_headword closure.
-            conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (a, f"протилежне {b}.", f"протилежне {b}."),
-            )
         conn.commit()
     finally:
         conn.close()
+
+
+def build_synthetic_dictionary_rows(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Build synthetic СУМ-20 cache rows for relation-path measurements."""
+    n = len(entries)
+    synonym_start = min(10, n)
+    synonym_end = min(n, synonym_start + max(0, ((n - synonym_start) // 3) * 2))
+    if synonym_end % 2 != synonym_start % 2:
+        synonym_end -= 1
+    antonym_start = synonym_end
+    antonym_end = min(n, antonym_start + max(0, ((n - antonym_start) // 2) * 2))
+    if antonym_end % 2 != antonym_start % 2:
+        antonym_end -= 1
+    rows: dict[str, dict[str, Any]] = {}
+    for i in range(synonym_start, synonym_end, 2):
+        a = str(entries[i]["lemma"])
+        b = str(entries[i + 1]["lemma"])
+        rows[a] = {"lookups": {"newsum": {"word": a, "text": f"див. {b}."}}}
+        rows[b] = {"lookups": {"newsum": {"word": b, "text": f"див. {a}."}}}
+    for i in range(antonym_start, antonym_end, 2):
+        a = str(entries[i]["lemma"])
+        b = str(entries[i + 1]["lemma"])
+        # One-directional pointer only — reciprocal comes from by_headword closure.
+        rows[a] = {"lookups": {"newsum": {"word": a, "text": f"протилежне {b}."}}}
+    return rows
 
 
 def build_synthetic_grac(entries: list[dict[str, Any]], *, puls_count: int = 10) -> dict[str, Any]:
@@ -175,12 +165,17 @@ def _vesum_always_valid() -> Iterator[None]:
 
 
 @contextmanager
-def _engine_state(grac_cache: dict[str, Any]) -> Iterator[None]:
+def _engine_state(
+    grac_cache: dict[str, Any], dictionary_rows: dict[str, dict[str, Any]] | None = None
+) -> Iterator[None]:
     """Isolate mutable enrich_manifest globals for a measurement run."""
     previous_cefr = dict(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
     previous_grac = em._GRAC_FREQUENCY_CACHE_DATA
+    previous_reader = em._read_cached_slovnyk_rows
     em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
     em._GRAC_FREQUENCY_CACHE_DATA = dict(grac_cache)
+    if dictionary_rows is not None:
+        em._read_cached_slovnyk_rows = lambda lemma: dictionary_rows.get(lemma, {})  # type: ignore[assignment]
     try:
         with _vesum_always_valid():
             yield
@@ -188,6 +183,7 @@ def _engine_state(grac_cache: dict[str, Any]) -> Iterator[None]:
         em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
         em._CEFR_ESTIMATE_LEVEL_BY_KEY.update(previous_cefr)
         em._GRAC_FREQUENCY_CACHE_DATA = previous_grac
+        em._read_cached_slovnyk_rows = previous_reader
 
 
 def _entry_key(lemma: str) -> str | None:
@@ -348,6 +344,7 @@ def measure_divergence(
     grac_cache: dict[str, Any],
     *,
     open_conn: Callable[[Path], sqlite3.Connection] | None = None,
+    dictionary_rows: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Compare fill_local paths vs full-enrich-style CEFR + relation precomputes.
 
@@ -365,7 +362,7 @@ def measure_divergence(
     lemmas = [str(entry.get("lemma") or "") for entry in entries]
     connect = open_conn or (lambda path: sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True))
 
-    with _engine_state(grac_cache):
+    with _engine_state(grac_cache, dictionary_rows):
         conn = connect(sources_db)
         try:
             has_sum11 = em._sum11_has_flag_columns(conn)
@@ -453,7 +450,9 @@ def run_default_measurement(cohort_size: int = DEFAULT_COHORT_SIZE) -> dict[str,
         sources = tmp_path / "sources.sqlite"
         build_synthetic_sources(sources, entries)
         grac = build_synthetic_grac(entries, puls_count=min(10, len(entries)))
-        return measure_divergence(entries, sources, grac)
+        return measure_divergence(
+            entries, sources, grac, dictionary_rows=build_synthetic_dictionary_rows(entries)
+        )
 
 
 def format_summary(result: dict[str, Any]) -> str:

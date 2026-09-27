@@ -180,6 +180,17 @@ old `expected_members` (paths relative to `data/`), and `artifacts` rows with
 `operation` (`add`, `replace`, `remove`), `rel`, staged `source` for writes, and
 `expected_sha256` (`null` only for an addition). `companions` rows name a
 `registry/` path, staged `source`, and expected old hash. Removal has no source.
+`artifacts` may be an empty list when `companions` is non-empty. That
+companion-only publication may change only companions already bound to the
+group. It leaves every A entry, membership, retirement record, byte, mode, and
+timestamp unchanged, journals only the changed K rows, and returns an empty
+A-change mapping. `expected_manifest` is optional on every plan and required
+for a companion-only plan: it is the canonical digest of
+`paths.artifact_set(group).manifest`, checked under the publication lock before
+any mutation. A companion whose staged bytes already equal its expected,
+descriptor-bound live bytes is an assertion. Its mode is checked and the file
+is not rewritten. Changed companion bytes still require a clean Git HEAD. A
+request made only of successful assertions returns without a transaction.
 An addition must match a narrow `registration_patterns` declaration in that
 group's tracked manifest. Unmatched and cross-group paths are refused. Every
 existing component of a published or retired path beneath the checkout root
