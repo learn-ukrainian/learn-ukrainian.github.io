@@ -33,6 +33,27 @@ def count_vowels(word: str) -> int:
     return sum(1 for ch in word if ch in UKRAINIAN_VOWELS)
 
 
+def needs_no_stress(form: str) -> bool:
+    """Monosyllables and vowel-free Cyrillic function words have no accent."""
+    vowels = count_vowels(form)
+    return vowels == 1 or (vowels == 0 and all("\u0400" <= ch <= "\u04ff" for ch in form))
+
+
+def is_learner_form(tags: str, markers: list[Any]) -> bool:
+    """Keep VESUM's stylistic :long tag out of the A1 learner paradigm."""
+    return not (
+        codes.EXCLUDING_TAGS.intersection(tags.split(":"))
+        or any((m["marker"] if isinstance(m, dict) else m) in codes.EXCLUDING_MARKERS for m in markers)
+    )
+
+
+def packed_stress_reason(match: dict[str, Any]) -> str | None:
+    """A packed trie reading is not a single pedagogical stress choice."""
+    if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
+        return "multiple_stressed_vowels"
+    return None
+
+
 def strip_combining_stress(text: str) -> str:
     nfd = unicodedata.normalize("NFD", text)
     return unicodedata.normalize("NFC", "".join(ch for ch in nfd if ch not in ("\u0301", "\u0300")))
@@ -267,6 +288,7 @@ def build_words(
 
         words_out: dict[str, dict[str, Any]] = dict(existing_words)
         changed_ids: list[str] = []
+        pending_reasons: list[dict[str, str]] = []
 
         for rw in requested_words:
             lemma = sources.normalize_spelling(rw["lemma"])
@@ -397,6 +419,7 @@ def build_words(
                 "ulif": ulif_field,
             }
 
+            pronoun_entry = False
             if entry == "unresolved":
                 candidates: list[dict[str, Any]] = []
                 for cand_eid, cand_forms in sorted(forms_by_entry.items()):
@@ -406,6 +429,7 @@ def build_words(
                 word_doc["forms"] = []
             else:
                 forms_source = forms_by_entry[selected_entry_id]
+                pronoun_entry = any("pron" in f["tags"].split(":") for f in forms_source)
                 forms_list: list[dict[str, Any]] = []
                 ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
 
@@ -414,14 +438,11 @@ def build_words(
                     tags_str = f["tags"]
                     markers = f.get("markers", [])
 
-                    is_learner = not any(
-                        (m["marker"] if isinstance(m, dict) else m) in codes.EXCLUDING_MARKERS for m in markers
-                    )
+                    is_learner = is_learner_form(tags_str, markers)
 
                     # Rule 4: stress per form
                     # a. Monosyllables gated before oracle
-                    vowel_count = count_vowels(form_str)
-                    if vowel_count == 1:
+                    if needs_no_stress(form_str):
                         stress_source = "none"
                         stressed = form_str
                         f_entry: dict[str, Any] = {
@@ -450,7 +471,7 @@ def build_words(
                         status = raw_stress.get("status")
                         matches = raw_stress.get("matches", [])
 
-                        if status == "ok" and len(matches) == 1:
+                        if status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
                             stress_source = "trie"
                             stressed = matches[0]["stressed_form"]
                             f_entry = {
@@ -463,7 +484,7 @@ def build_words(
                             }
                             if matches[0].get("override_applied"):
                                 f_entry["override"] = True
-                        elif status == "ambiguous":
+                        elif status == "ambiguous" or (status == "ok" and len(matches) == 1):
                             stress_source = "pending"
                             f_entry = {
                                 "form": form_str,
@@ -476,6 +497,10 @@ def build_words(
                                 f_entry["stress_candidates"] = matches
                             if raw_stress.get("unresolvable_by_tags"):
                                 f_entry["unresolvable_by_tags"] = True
+                            if len(matches) == 1 and (reason := packed_stress_reason(matches[0])):
+                                pending_reasons.append(
+                                    {"word_id": word_id, "form": form_str, "tags": tags_str, "reason": reason}
+                                )
                         else:  # not_found or invalid_input
                             stress_source = "pending"
                             f_entry = {
@@ -499,6 +524,19 @@ def build_words(
 
             # Gloss: first translation of matching row
             gloss_rows = gloss_batch.get((lemma, pos), [])
+            if pos in {"noun", "adj"}:
+                if pronoun_entry:
+                    allowed_gloss_pos = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
+                else:
+                    allowed_gloss_pos = {"noun"} if pos == "noun" else {"adjective", "adj"}
+                gloss_rows = [row for row in gloss_rows if row["pos"] in allowed_gloss_pos]
+                if pronoun_entry and pos == "adj":
+                    # VESUM's adj:pron is attributive; dmklinger's particle
+                    # rows are determiner senses, ahead of standalone pronouns.
+                    # Exception: its first particle row narrows reflexive свій
+                    # to "its" (id 19455); pronoun row 18763 covers all persons.
+                    preferred = "pronoun" if lemma == "свій" else "particle"
+                    gloss_rows.sort(key=lambda row: row["pos"] != preferred)
             if gloss_rows:
                 first_row = gloss_rows[0]
                 raw_trans = first_row.get("translations", "")
@@ -613,6 +651,7 @@ def build_words(
             "ulif_checked_count": ulif_checked_count,
             "forms_count": total_forms,
             "stress_sources": stress_counts,
+            "pending_reasons": pending_reasons,
             "overrides_count": override_count,
             "changed_ids": changed_ids,
             "affected_plans": changed_plans_map,

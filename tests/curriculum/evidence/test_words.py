@@ -8,6 +8,144 @@ import pytest
 import yaml
 
 from scripts.curriculum.evidence import codes, lock, registry, sources, words
+from scripts.verification import stress
+
+
+@pytest.mark.parametrize(
+    ("form", "expected"),
+    [("його", "його́"), ("Його", "Його́"), ("переді", "пе́реді"), ("межи", "межи́"), ("піді", "пі́ді")],
+)
+def test_cited_stress_overrides_are_exact_and_single_accent(form, expected):
+    stress._load_overrides.cache_clear()
+    result = stress.verify_stress(form)
+    assert result["status"] == "ok"
+    assert result["matches"][0]["override_applied"] is True
+    assert result["matches"][0]["stressed_form"] == expected
+    assert expected.count("\u0301") == 1
+
+
+def test_zero_vowel_ukrainian_words_need_no_stress():
+    for form in ("в", "з", "й", "ж"):
+        assert words.needs_no_stress(form)
+
+
+def test_long_tag_excludes_learner_form():
+    assert not words.is_learner_form("adj:f:v_naz:pron:dem:long", [])
+    assert words.is_learner_form("adj:f:v_naz:pron:dem", [])
+
+
+def test_packed_stress_requires_pending_with_source_reason():
+    match = {"stressed_form": "пе́ре́ді", "vowel_indices": [1, 3], "override_applied": False}
+    assert words.packed_stress_reason(match) == "multiple_stressed_vowels"
+    assert words.packed_stress_reason({**match, "override_applied": True}) is None
+
+
+def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'переді', 'переді', 'prep', 'prep', '', '')")
+
+    def oracle(word, *, tags):
+        return {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": "пе́ре́ді",
+                    "unstressed_form": word,
+                    "vowel_index": 1,
+                    "vowel_indices": [1, 3],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "a" * 64},
+        }
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "переді", "pos": "prep", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    form = result["store"]["words"][0]["forms"][0]
+    assert form["stress_source"] == "pending"
+    assert "stressed" not in form
+    assert form["stress_candidates"][0]["vowel_indices"] == [1, 3]
+    assert result["pending_reasons"] == [
+        {
+            "word_id": "W-001",
+            "form": "переді",
+            "tags": "prep",
+            "reason": "multiple_stressed_vowels",
+        }
+    ]
+
+
+def test_pronominal_adjective_prefers_attributive_gloss(synthetic_vesum, synthetic_sources, tmp_path):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute(
+            "INSERT INTO forms_all VALUES (5, 50, 'synthetic-pos', 'synthetic-pos', 'adj', "
+            "'adj:m:v_naz:pron:pos', '', '')"
+        )
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, "synthetic-pos", "pronoun", '["mine"]', "", "synthetic"),
+                (11, "synthetic-pos", "particle", '["my (determiner)"]', "", "synthetic"),
+            ],
+        )
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "synthetic-pos", "pos": "adj", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    word = result["store"]["words"][0]
+    assert word["gloss_en"] == "my (determiner)"
+    assert word["gloss_source"]["id"] == 11
+
+
+def test_reflexive_possessive_uses_broad_sourced_sense(synthetic_vesum, synthetic_sources, tmp_path):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'свій', 'свій', 'adj', 'adj:m:v_naz:pron:pos', '', '')")
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, "свій", "pronoun", '["one’s (all grammatical persons)"]', "", "synthetic"),
+                (11, "свій", "particle", '["its (only third-person neuter)"]', "", "synthetic"),
+            ],
+        )
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "свій", "pos": "adj", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    assert result["store"]["words"][0]["gloss_source"]["id"] == 10
 
 
 def test_monosyllable_never_calls_oracle(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
