@@ -56,9 +56,21 @@ except ImportError:
     from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
 
 try:
-    from scripts.practice.extract_textbook_error_corrections import REGISTER_LABEL_RE, VesumLookup, assess_pair
+    from scripts.practice.extract_textbook_error_corrections import (
+        REGISTER_LABEL_RE,
+        VesumLookup,
+        assess_pair,
+        load_reviewed_withholds,
+        pair_key,
+    )
 except ImportError:
-    from practice.extract_textbook_error_corrections import REGISTER_LABEL_RE, VesumLookup, assess_pair
+    from practice.extract_textbook_error_corrections import (
+        REGISTER_LABEL_RE,
+        VesumLookup,
+        assess_pair,
+        load_reviewed_withholds,
+        pair_key,
+    )
 
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
@@ -272,6 +284,7 @@ def audit_error_correction_deck(
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
     pair_vesum = _error_correction_vesum(vesum_db)
+    reviewed_withholds = load_reviewed_withholds()
 
     seen_ids: set[str] = set()
     for idx, item in enumerate(items, 1):
@@ -311,6 +324,17 @@ def audit_error_correction_deck(
                     "type": "IDENTICAL_TARGETS",
                     "item": item_id,
                     "message": f"errorTarget and correctTarget are identical: {correct_target!r}",
+                }
+            )
+
+        review = reviewed_withholds.get(pair_key(error_target, correct_target)) if error_target else None
+        if review:
+            violations.append(
+                {
+                    "type": "REVIEWED_WITHHELD_PAIR",
+                    "item": item_id,
+                    "message": f"{error_target!r} → {correct_target!r} was withheld by language review "
+                    f"({review['code']}: {review['reason']})",
                 }
             )
 

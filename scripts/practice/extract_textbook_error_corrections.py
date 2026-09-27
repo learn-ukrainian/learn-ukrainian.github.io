@@ -16,6 +16,9 @@ Regenerate the bundled Culture-of-Speech deck (and the audited registry copy):
         --export-json site/src/data/practice-error-corrections.json \\
         --export-json registry/practice/textbook-error-corrections.json \\
         --withheld-json /tmp/error-corrections-withheld.json
+
+Pairs a language reviewer rejected are withheld by their text through the committed,
+reviewed list ``registry/practice/error-correction-withheld.yaml``.
 """
 
 import argparse
@@ -25,6 +28,8 @@ import sqlite3
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 # Trigger patterns that identify deliberate pedagogical error prompts/tables
 ERROR_CONTEXT_PATTERNS = [
@@ -36,6 +41,9 @@ ERROR_CONTEXT_PATTERNS = [
     re.compile(r"(?i)\bвставте\s+пропущен[іі]\s+(?:букви|літери)\b"),
     re.compile(r"(?i)\bрозкрийте\s+дужки\b"),
 ]
+
+REVIEWED_WITHHELD_PATH = Path(__file__).resolve().parents[2] / "registry/practice/error-correction-withheld.yaml"
+REVIEW_CODES = frozenset({"WRONG_ERROR", "WRONG_FIX", "CONTESTED"})
 
 CULTURE_DECK_ID = "culture-error-correction"
 CULTURE_DECK_TITLE = "Культура мовлення: Редагування помилок"
@@ -62,6 +70,19 @@ _LOWER_START_RE = re.compile(r"^[а-щьюяєіїґ]")
 _UPPER_START_RE = re.compile(r"^[А-ЩЬЮЯЄІЇҐ]")
 
 _TABLE_STOP_RE = re.compile(r"^(?:\d|[А-ЩЬЮЯЄІЇҐA-Z]\.)")
+# A comma before a relative word joins a clause ("град, що випав"); other commas and
+# " / " separate alternative corrections ("по п’ятницях, щоп’ятниці").
+_ALTERNATIVE_SEPARATOR_RE = re.compile(r", | / ")
+_RELATIVE_WORDS = frozenset(
+    {"що", "хто", "який", "яка", "яке", "які", "де", "куди", "коли", "чий", "чия", "чиє", "чиї"}
+)
+_PARENTHETICAL_RE = re.compile(r"\(([^()]*)\)")
+# Analytic comparison is one unit with the synthetic degree it replaces
+# ("найбільш потрібний" ~ "найпотрібніший"); VESUM tags comparatives "compc".
+_ANALYTIC_DEGREE = {"більш": "compc", "менш": "compc", "найбільш": "comps", "найменш": "comps"}
+_DEGREES = ("compb", "compc", "comps")
+_CASES = ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis", "v_kly")
+_FUNCTION_POS = frozenset({"prep", "part", "conj", "intj"})
 _MAX_TABLE_ROWS = 9
 _MAX_ROW_CHARS = 90
 
@@ -84,23 +105,23 @@ class VesumLookup:
     ``status`` is ``"marked"`` when any analysis of the form carries a ``bad`` /
     ``subst`` marker (VESUM records it as a known error), ``"clean"`` when the form
     is attested only as standard Ukrainian, and ``"unattested"`` when VESUM has no
-    such form.
+    such form. ``signatures`` are the inflectional slots a substitute must fill.
     """
 
     _ERROR_MARKERS = ("bad", "subst")
 
     def __init__(self, db_path: Path | str):
         self._conn = sqlite3.connect(f"file:{Path(db_path)}?mode=ro", uri=True)
-        self._cache: dict[str, list[tuple[str, bool]]] = {}
+        self._cache: dict[str, list[tuple[str, str, bool]]] = {}
 
-    def _analyses(self, word: str) -> list[tuple[str, bool]]:
+    def _analyses(self, word: str) -> list[tuple[str, str, bool]]:
         # VESUM spells the apostrophe as ASCII "'"; a word capitalised in the source is
         # also looked up lowercased, never the reverse ("десна" is not the river Десна).
         key = word.replace("’", "'").replace("ʼ", "'")
         if key not in self._cache:
             rows = self._conn.execute(
                 """
-                SELECT f.pos, EXISTS (
+                SELECT f.pos, f.tags, EXISTS (
                     SELECT 1 FROM form_markers m
                     WHERE m.form_id = f.id AND m.marker IN (?, ?)
                 )
@@ -108,19 +129,44 @@ class VesumLookup:
                 """,
                 (*self._ERROR_MARKERS, key, key.lower()),
             ).fetchall()
-            self._cache[key] = [(pos, bool(marked)) for pos, marked in rows]
+            self._cache[key] = [(pos, tags, bool(marked)) for pos, tags, marked in rows]
         return self._cache[key]
 
     def status(self, word: str) -> str:
         analyses = self._analyses(word)
         if not analyses:
             return "unattested"
-        if any(marked for _, marked in analyses):
+        if any(marked for *_, marked in analyses):
             return "marked"
         return "clean"
 
     def pos(self, word: str) -> set[str]:
-        return {pos for pos, _ in self._analyses(word)}
+        return {pos for pos, *_ in self._analyses(word)}
+
+    def signatures(self, word: str) -> set[tuple[str | None, ...]]:
+        return {_signature(pos, tags) for pos, tags, _ in self._analyses(word)}
+
+
+def _pick(features: set[str], values: Iterable[str]) -> str | None:
+    return next((value for value in values if value in features), None)
+
+
+def _signature(pos: str, tags: str) -> tuple[str | None, ...]:
+    """Inflectional slot of one VESUM analysis.
+
+    Adjectives must agree (gender/number, case, degree), verbs keep their form, person,
+    number and gender; aspect and a noun's case (set by its governing word: «згідно з
+    планом» / «відповідно до плану») may differ between variants.
+    """
+    features = set(tags.split(":"))
+    if pos == "adj":
+        return (pos, _pick(features, "mfnp"), _pick(features, _CASES), _pick(features, _DEGREES) or "compb")
+    if pos == "adv":
+        return (pos, _pick(features, _DEGREES) or "compb")
+    if pos == "verb":
+        form = _pick(features, ("inf", "pres", "futr", "past", "impr", "impers"))
+        return (pos, form, _pick(features, "123"), _pick(features, "sp"), _pick(features, "mfn"))
+    return (pos,)
 
 
 # ---------------------------------------------------------------------------
@@ -215,6 +261,137 @@ def _shape_reason(error: str, correct: str) -> str | None:
     return "not_a_lowercase_phrase"
 
 
+def _tidy(phrase: str) -> str:
+    return " ".join(phrase.split()).replace(" ,", ",")
+
+
+def split_alternatives(text: str) -> list[str]:
+    """Top-level alternative corrections of one source correction (outside parentheses)."""
+    segments, start = [], 0
+    for match in _ALTERNATIVE_SEPARATOR_RE.finditer(text):
+        before = text[: match.start()]
+        if before.count("(") != before.count(")"):
+            continue
+        following = _words(text[match.end() :])
+        if match.group() == ", " and following and following[0].casefold() in _RELATIVE_WORDS:
+            continue
+        segments.append(text[start : match.start()])
+        start = match.end()
+    segments.append(text[start:])
+    return [_tidy(segment) for segment in segments if segment.strip()]
+
+
+def _units(words: list[str], vesum: VesumLookup) -> list[tuple[int, frozenset]]:
+    """``(word count, signatures)`` per syntactic unit.
+
+    An analytic comparison ("найбільш довгий") and a compound preposition (a
+    preposition-only word plus a function word: "незважаючи на") are one unit each.
+    """
+    units: list[tuple[int, frozenset]] = []
+    i = 0
+    while i < len(words):
+        word, following = words[i], words[i + 1] if i + 1 < len(words) else None
+        degree = _ANALYTIC_DEGREE.get(word.casefold())
+        if degree and following:
+            analytic = frozenset(
+                (*sig[:-1], degree)
+                for sig in vesum.signatures(following)
+                if sig[0] in {"adj", "adv"} and sig[-1] == "compb"
+            )
+            if analytic:
+                units.append((2, analytic))
+                i += 2
+                continue
+        if following and vesum.pos(word) == {"prep"} and vesum.pos(following) <= _FUNCTION_POS and vesum.pos(following):
+            units.append((2, frozenset({("prep",)})))
+            i += 2
+            continue
+        units.append((1, frozenset(vesum.signatures(word))))
+        i += 1
+    return units
+
+
+def _expand_parentheticals(segment: str, vesum: VesumLookup | None) -> list[str] | None:
+    """Every reading of a correction with parenthetical variants, or None if one is not parallel.
+
+    A parenthetical variant stands for the units right before it: "брати (узяти)
+    участь" reads "брати участь" / "узяти участь". It is parallel when it has as many
+    units as it replaces and each fills the same VESUM inflectional slot. An insertion
+    ("дехто (з нас)"), a government hint ("ставлення (до когось)") or a different
+    construction ("є в продажу (поступила в продаж)") is not a variant of the main form.
+    """
+    match = _PARENTHETICAL_RE.search(segment)
+    if not match:
+        return [_tidy(segment)]
+    prefix, suffix = segment[: match.start()], segment[match.end() :]
+    readings = [_tidy(f"{prefix} {suffix}")]
+    if vesum is not None:
+        prefix_words = list(_WORD_RE.finditer(prefix))
+        prefix_units = _units([m.group() for m in prefix_words], vesum)
+        for alternative in split_alternatives(match.group(1)):
+            alternative_units = _units(_words(alternative), vesum)
+            count = len(alternative_units)
+            if not count or count > len(prefix_units):
+                return None
+            replaced = prefix_units[-count:]
+            if not all(a[1] & b[1] for a, b in zip(replaced, alternative_units, strict=True)):
+                return None
+            first_word = prefix_words[-sum(size for size, _ in replaced)]
+            readings.append(
+                _tidy(f"{prefix[: first_word.start()]}{alternative}{prefix[prefix_words[-1].end() :]} {suffix}")
+            )
+    expanded: list[str] = []
+    for reading in readings:
+        more = _expand_parentheticals(reading, vesum)
+        if more is None:
+            return None
+        expanded.extend(more)
+    return expanded
+
+
+def _expand_slashed_words(segment: str) -> list[str]:
+    """Both readings of a slash inside one token: "барви/кольори осіннього лісу"."""
+    readings = [""]
+    for token in segment.split(" "):
+        options = token.split("/") if "/" in token.strip("/") else [token]
+        readings = [f"{reading} {option}" for reading in readings for option in options]
+    return [_tidy(reading) for reading in readings]
+
+
+def _complete_head_alternative(segment: str, following: str, vesum: VesumLookup) -> str:
+    """Complete a head-only alternative: "вразливе / слабке місце" -> "вразливе місце"."""
+    if "(" in segment or "(" in following:
+        return segment
+    units, following_units = _units(_words(segment), vesum), _units(_words(following), vesum)
+    count = len(units)
+    if not count or count >= len(following_units):
+        return segment
+    if not all(a[1] & b[1] for a, b in zip(units, following_units[:count], strict=True)):
+        return segment
+    following_words = list(_WORD_RE.finditer(following))
+    return _tidy(f"{segment} {following[following_words[sum(size for size, _ in following_units[:count])].start() :]}")
+
+
+def correction_answers(correct: str, vesum: VesumLookup | None = None) -> list[str] | None:
+    """Corrections a learner may type for ``correct``, or None when a variant is not parallel.
+
+    The source correction itself comes first, then every alternative and variant reading
+    it lists. Without VESUM a parenthetical cannot be verified, so only its main
+    reading is derived.
+    """
+    answers = [correct]
+    segments = split_alternatives(correct)
+    for index, segment in enumerate(segments):
+        if vesum is not None and index + 1 < len(segments):
+            segment = _complete_head_alternative(segment, segments[index + 1], vesum)
+        for reading in _expand_slashed_words(segment):
+            expanded = _expand_parentheticals(reading, vesum)
+            if expanded is None:
+                return None
+            answers.extend(expanded)
+    return list(dict.fromkeys(answers))
+
+
 def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> tuple[str | None, str | None]:
     """Validate an error→correction pair against its own text and VESUM.
 
@@ -227,6 +404,9 @@ def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> t
       VESUM itself records as an error, or does not know as Ukrainian at all;
     * ``parallel_shape`` / ``table_row`` — structural-only evidence used when VESUM is
       unavailable (audit fallback; the extractor always runs with VESUM).
+
+    A correction whose parenthetical variant is not parallel to its main form is
+    withheld (language review of #8723).
     """
     reason = _shape_reason(error, correct)
     if reason:
@@ -239,6 +419,8 @@ def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> t
         for word in correct_words:
             if vesum.status(word) == "unattested":
                 return None, "correct_form_unattested_in_vesum"
+        if correction_answers(correct, vesum) is None:
+            return None, "non_parallel_parenthetical_variant"
 
     if len(error_words) == 1:
         if vesum is None:
@@ -588,6 +770,54 @@ def withhold_conflicting_pairs(
     return kept
 
 
+def pair_key(error: str, correct: str) -> tuple[str, str]:
+    """Text key of a pair, stable across regeneration (ids are positional)."""
+
+    def norm(text: str) -> str:
+        return _tidy(re.sub(f"[{_APOSTROPHES}]", "’", text)).casefold()
+
+    return norm(error), norm(correct)
+
+
+def load_reviewed_withholds(path: Path | str = REVIEWED_WITHHELD_PATH) -> dict[tuple[str, str], dict[str, Any]]:
+    """Pairs a language reviewer rejected, keyed by ``pair_key``."""
+    entries = (yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}).get("withheld") or []
+    reviewed: dict[tuple[str, str], dict[str, Any]] = {}
+    for entry in entries:
+        missing = [field for field in ("error", "correct", "code", "reason", "reviewer") if not entry.get(field)]
+        if missing:
+            raise ValueError(f"{path}: withheld entry {entry!r} lacks {missing}")
+        if entry["code"] not in REVIEW_CODES:
+            raise ValueError(f"{path}: unknown review code {entry['code']!r} (expected one of {sorted(REVIEW_CODES)})")
+        key = pair_key(entry["error"], entry["correct"])
+        if key in reviewed:
+            raise ValueError(f"{path}: duplicate withheld pair {entry['error']!r} → {entry['correct']!r}")
+        reviewed[key] = entry
+    return reviewed
+
+
+def apply_reviewed_withholds(
+    pairs: list[dict[str, Any]],
+    reviewed: dict[tuple[str, str], dict[str, Any]],
+    withheld: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    """Drop the pairs a language reviewer rejected, recording the review code as reason."""
+    kept = []
+    for pair in pairs:
+        entry = reviewed.get(pair_key(pair["error"], pair["correct"]))
+        if entry is None:
+            kept.append(pair)
+            continue
+        _withhold(
+            withheld,
+            pair["source"],
+            f"reviewed_{entry['code'].lower()}",
+            error=pair["error"],
+            correct=pair["correct"],
+        )
+    return kept
+
+
 # ---------------------------------------------------------------------------
 # Drill + deck assembly
 # ---------------------------------------------------------------------------
@@ -598,11 +828,13 @@ def create_error_correction_drill(
     correct_phrase: str,
     explanation: str | None = None,
     source: str = "textbook",
+    answers: list[str] | None = None,
 ) -> dict[str, Any]:
     """Format an error-correction drill conforming to ErrorCorrectionItemProps.
 
     Options are only the two forms the source itself contrasts; no distractor is
     invented (the pre-#8723 builder appended "(розм.)"/"(застаріле)" labels).
+    ``answers`` are the corrections a learner may type (``correction_answers``).
     """
     sentence = f"Уважно прочитайте: «{error_phrase}» — тут допущено помилку."
     expl = explanation or f"Правильно вживати «{correct_phrase}» замість помилкового «{error_phrase}»."
@@ -612,6 +844,7 @@ def create_error_correction_drill(
         "errorWord": error_phrase,
         "correctForm": correct_phrase,
         "options": sorted([correct_phrase, error_phrase]),
+        "answers": answers or [correct_phrase],
         "explanation": expl,
         "isUkrainian": True,
         "source": source,
@@ -635,6 +868,7 @@ def extract_error_correction_deck(
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
     *,
+    reviewed: dict[tuple[str, str], dict[str, Any]] | None = None,
     log: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     textbook_pairs = parse_contrastive_textbook_tables(conn, vesum, withheld)
@@ -642,6 +876,14 @@ def extract_error_correction_deck(
     log(f"Extracted {len(textbook_pairs)} textbook contrastive pairs.")
     log(f"Extracted {len(style_pairs)} style-guide contrastive pairs.")
     pairs = withhold_conflicting_pairs(textbook_pairs + style_pairs, withheld)
+    if reviewed:
+        already = {pair_key(row["error"], row["correct"]) for row in withheld or []} & reviewed.keys()
+        before = len(pairs)
+        pairs = apply_reviewed_withholds(pairs, reviewed, withheld)
+        log(
+            f"Reviewed withholds: {before - len(pairs)} applied, {len(already)} already withheld by a rule, "
+            f"{len(reviewed) - (before - len(pairs)) - len(already)} not extracted."
+        )
 
     drills = [
         create_error_correction_drill(
@@ -649,6 +891,7 @@ def extract_error_correction_deck(
             item["correct"],
             explanation=item.get("explanation"),
             source=item["source"],
+            answers=correction_answers(item["correct"], vesum),
         )
         for item in pairs
     ]
@@ -668,6 +911,12 @@ def main():
         help="Write the deck JSON here (repeatable: site bundle and registry copy)",
     )
     parser.add_argument("--withheld-json", type=Path, help="Write withheld source rows with reasons here")
+    parser.add_argument(
+        "--reviewed-withheld",
+        type=Path,
+        default=REVIEWED_WITHHELD_PATH,
+        help="Reviewed list of pairs to withhold (language review)",
+    )
     parser.add_argument("--check-string", type=str, help="Test if string is intentional error context")
     args = parser.parse_args()
 
@@ -681,7 +930,9 @@ def main():
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     withheld: list[dict[str, Any]] = []
-    deck = extract_error_correction_deck(conn, VesumLookup(args.vesum_db), withheld)
+    deck = extract_error_correction_deck(
+        conn, VesumLookup(args.vesum_db), withheld, reviewed=load_reviewed_withholds(args.reviewed_withheld)
+    )
     print(f"Withheld {len(withheld)} source rows.")
 
     for path in args.export_json:

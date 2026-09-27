@@ -748,3 +748,13 @@ def test_production_practice_shards_all_modes_gate_passes():
     assert results.shard_counts.get("paronym", 0) >= VOLUME_THRESHOLDS["paronym"]
     assert results.shard_counts.get("homonym", 0) >= VOLUME_THRESHOLDS["homonym"]
     assert results.shard_counts.get("heritage", 0) >= VOLUME_THRESHOLDS["heritage"]
+
+
+def test_audit_error_correction_flags_reviewed_withheld_pairs(tmp_path: Path):
+    """#8723 language review: a withheld pair must not return with a regenerated deck."""
+    drills = [
+        _drill("err_contested", "відпочивати на морі", "відпочивати біля моря"),
+        _drill("err_good", "влучний вираз", "влучний вислів"),
+    ]
+    violations = audit_error_correction_deck(_error_correction_deck(tmp_path, drills), vesum_db=None)
+    assert [(v["type"], v["item"]) for v in violations] == [("REVIEWED_WITHHELD_PAIR", "err_contested")]

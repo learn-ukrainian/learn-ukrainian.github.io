@@ -1,5 +1,6 @@
 """Unit tests for textbook error correction extraction and negative context filtering."""
 
+import json
 import sqlite3
 from pathlib import Path
 
@@ -50,7 +51,7 @@ def _textbook_db(*chunks: tuple[int, str, str]) -> sqlite3.Connection:
 
 
 def _fake_vesum(tmp_path: Path, forms: dict[str, tuple[str, bool]]):
-    """Minimal VESUM file: word form -> (part of speech, carries a `bad` marker)."""
+    """Minimal VESUM file: word form -> (VESUM tag or bare part of speech, carries a `bad` marker)."""
     from scripts.practice.extract_textbook_error_corrections import VesumLookup
 
     path = tmp_path / "vesum.db"
@@ -60,10 +61,10 @@ def _fake_vesum(tmp_path: Path, forms: dict[str, tuple[str, bool]]):
         " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
     )
     conn.execute("CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)")
-    for form_id, (form, (pos, bad)) in enumerate(forms.items(), 1):
+    for form_id, (form, (tag, bad)) in enumerate(forms.items(), 1):
         conn.execute(
             "INSERT INTO forms_all VALUES (?, ?, ?, ?, ?, ?, NULL, '')",
-            (form_id, form_id, form, form, pos, pos + (":bad" if bad else "")),
+            (form_id, form_id, form, form, tag.split(":")[0], tag + (":bad" if bad else "")),
         )
         if bad:
             conn.execute("INSERT INTO form_markers VALUES (?, 'bad', 'tag', 'invalid')", (form_id,))
@@ -335,3 +336,171 @@ def test_committed_culture_decks_are_one_regeneration():
     site = (root / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8")
     registry = (root / "registry/practice/textbook-error-corrections.json").read_text(encoding="utf-8")
     assert site == registry
+
+
+# ---------------------------------------------------------------------------
+# Review round 2 (#8723): parallel parenthetical variants, typed answers,
+# reviewed withholds
+# ---------------------------------------------------------------------------
+
+_PARENTHETICAL_FORMS = {
+    "брати": ("verb:imperf:inf", False),
+    "узяти": ("verb:perf:inf", False),
+    "участь": ("noun:inanim:f:v_zna", False),
+    "є": ("verb:imperf:pres:s:3", False),
+    "поступила": ("verb:perf:past:f", False),
+    "в": ("prep", False),
+    "продажу": ("noun:inanim:m:v_mis", False),
+    "продаж": ("noun:inanim:m:v_zna", False),
+    "дехто": ("noun:anim:m:v_naz:pron:ind", False),
+    "з": ("prep", False),
+    "нас": ("noun:anim:p:v_rod:pron:pers:1", False),
+    "навчаються": ("verb:imperf:pres:p:3", False),
+    "незважаючи": ("prep", False),
+    "на": ("prep", False),
+    "попри": ("prep", False),
+    "труднощі": ("noun:inanim:p:v_zna", False),
+    "найбільш": ("adv:comps", False),
+    "більш": ("adv:compc", False),
+    "потрібний": ("adj:m:v_naz:compb", False),
+    "найпотрібніший": ("adj:m:v_naz:comps", False),
+    "корисний": ("adj:m:v_naz:compb", False),
+    "найкорисніший": ("adj:m:v_naz:comps", False),
+    "вразливе": ("adj:n:v_naz:compb", False),
+    "слабке": ("adj:n:v_naz:compb", False),
+    "місце": ("noun:inanim:n:v_naz", False),
+    "по": ("prep", False),
+    "п’ятницях": ("noun:inanim:p:v_mis", False),
+    "щоп’ятниці": ("adv", False),
+}
+
+
+@pytest.mark.parametrize(
+    ("correct", "expected"),
+    [
+        ("брати (узяти) участь", ["брати (узяти) участь", "брати участь", "узяти участь"]),
+        # A compound preposition is one unit: «попри» replaces «незважаючи на».
+        (
+            "незважаючи на (попри) труднощі",
+            ["незважаючи на (попри) труднощі", "незважаючи на труднощі", "попри труднощі"],
+        ),
+        # An analytic superlative is one unit of the same degree as the synthetic one.
+        (
+            "найбільш потрібний (найпотрібніший)",
+            ["найбільш потрібний (найпотрібніший)", "найбільш потрібний", "найпотрібніший"],
+        ),
+        # Alternatives listed for the head only take the shared tail.
+        ("вразливе / слабке місце", ["вразливе / слабке місце", "вразливе місце", "слабке місце"]),
+        ("по п’ятницях, щоп’ятниці", ["по п’ятницях, щоп’ятниці", "по п’ятницях", "щоп’ятниці"]),
+        # #8723 language review: err_0016 / err_0170 and the reviewer's systematic note.
+        ("є в продажу (поступила в продаж)", None),
+        ("дехто (з нас) навчаються", None),
+        ("більш корисний (найкорисніший)", None),
+    ],
+)
+def test_correction_answers_expand_only_parallel_parenthetical_variants(tmp_path: Path, correct, expected):
+    from scripts.practice.extract_textbook_error_corrections import correction_answers
+
+    assert correction_answers(correct, _fake_vesum(tmp_path, _PARENTHETICAL_FORMS)) == expected
+
+
+def test_correction_answers_without_vesum_are_structural():
+    from scripts.practice.extract_textbook_error_corrections import correction_answers
+
+    # A comma before a relative word joins a clause; it does not list alternatives.
+    assert correction_answers("град, що випав") == ["град, що випав"]
+    assert correction_answers("барви/кольори осіннього лісу") == [
+        "барви/кольори осіннього лісу",
+        "барви осіннього лісу",
+        "кольори осіннього лісу",
+    ]
+    # Unverifiable without VESUM: only the main reading is derived, nothing is rejected.
+    assert correction_answers("є в продажу (поступила в продаж)") == [
+        "є в продажу (поступила в продаж)",
+        "є в продажу",
+    ]
+
+
+def test_non_parallel_parenthetical_variant_is_withheld(tmp_path: Path):
+    from scripts.practice.extract_textbook_error_corrections import assess_pair
+
+    vesum = _fake_vesum(tmp_path, {**_PARENTHETICAL_FORMS, "продажі": ("noun:inanim:f:v_mis", True)})
+    assert assess_pair("є в продажі", "є в продажу (поступила в продаж)", vesum) == (
+        None,
+        "non_parallel_parenthetical_variant",
+    )
+
+
+def test_drill_carries_the_typed_answers():
+    drill = create_error_correction_drill("приймати участь", "брати участь")
+    assert drill["answers"] == ["брати участь"]
+    drill = create_error_correction_drill(
+        "приймати участь", "брати (узяти) участь", answers=["брати (узяти) участь", "брати участь", "узяти участь"]
+    )
+    assert drill["answers"][0] == drill["correctForm"]
+    assert drill["options"] == ["брати (узяти) участь", "приймати участь"]
+
+
+def test_committed_reviewed_withholds_are_well_formed():
+    from scripts.practice.extract_textbook_error_corrections import REVIEW_CODES, load_reviewed_withholds
+
+    reviewed = load_reviewed_withholds()
+    assert len(reviewed) == 7
+    for entry in reviewed.values():
+        assert entry["code"] in REVIEW_CODES
+        assert entry["reviewer"] == "gemini-3.8-flash-high (review-8723-lang)"
+    assert ("відпочивати на морі", "відпочивати біля моря") in reviewed
+
+
+@pytest.mark.parametrize(
+    ("entry", "message"),
+    [
+        ({"error": "а", "correct": "б", "code": "WRONG", "reason": "r", "reviewer": "x"}, "unknown review code"),
+        ({"error": "а", "correct": "б", "code": "CONTESTED", "reviewer": "x"}, "lacks"),
+    ],
+)
+def test_reviewed_withholds_reject_malformed_entries(tmp_path: Path, entry, message):
+    import yaml
+
+    from scripts.practice.extract_textbook_error_corrections import load_reviewed_withholds
+
+    path = tmp_path / "withheld.yaml"
+    path.write_text(yaml.safe_dump({"withheld": [entry]}, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        load_reviewed_withholds(path)
+
+
+def test_reviewed_withholds_are_keyed_by_pair_text():
+    """The review saw positional ids; the withhold must survive renumbering and spelling variants."""
+    from scripts.practice.extract_textbook_error_corrections import (
+        extract_error_correction_deck,
+        load_reviewed_withholds,
+    )
+
+    conn = _textbook_db(
+        (
+            10,
+            "glazova",
+            "НЕПРАВИЛЬНО ПРАВИЛЬНО\nвлучний вираз влучний вислів\nпригадувати особливості пам'ятати особливості",
+        ),
+        (6, "avramenko", "НЕПРАВИЛЬНО ПРАВИЛЬНО\nвідпочивати на морі відпочивати біля моря"),
+    )
+    withheld: list[dict] = []
+    deck = extract_error_correction_deck(
+        conn, None, withheld, reviewed=load_reviewed_withholds(), log=lambda _msg: None
+    )
+    assert [(d["errorWord"], d["correctForm"]) for d in deck["drills"]] == [("влучний вираз", "влучний вислів")]
+    assert [row["reason"] for row in withheld] == ["reviewed_wrong_error", "reviewed_contested"]
+
+
+def test_committed_deck_excludes_reviewed_withholds():
+    from scripts.practice.extract_textbook_error_corrections import load_reviewed_withholds, pair_key
+
+    root = Path(__file__).resolve().parents[1]
+    deck = json.loads((root / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
+    reviewed = load_reviewed_withholds()
+    assert deck["totalDrills"] == len(deck["drills"])
+    for drill in deck["drills"]:
+        assert pair_key(drill["errorWord"], drill["correctForm"]) not in reviewed
+        assert drill["answers"][0] == drill["correctForm"]
+        assert "(" not in "".join(drill["answers"][1:]), drill["id"]
