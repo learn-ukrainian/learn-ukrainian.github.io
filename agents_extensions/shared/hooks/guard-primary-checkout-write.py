@@ -112,9 +112,10 @@ example, ``find -files0-from /tmp/list -delete`` and
 ``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
 worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
 only when a command literal names the primary checkout or the effective cwd
-is the primary checkout. Secret-file list consumers such as
-``xargs cat < list`` and copied sources such as ``cp .env x; cat x`` are
-outside this write-target model. Config files such as curl ``-K`` may themselves
+is the primary checkout. Secret-value flow through external file lists
+(``xargs cat < list``) or copies (``cp .env x; cat x``) is not modeled here;
+the ``cp`` destination is still classified as a write target. Config files
+such as curl ``-K`` may themselves
 direct writes; their contents are not inspected. Unlisted writers and shell
 features not parsed here remain residuals. This is defense-in-depth, not a
 sandbox; physical worktree isolation and the monitor remain necessary.
