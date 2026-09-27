@@ -1114,3 +1114,261 @@ def test_sealed_executable_catalog_and_resolver_parity():
             # Tampered executable is rejected
             mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
             assert _hard_exclusion_reason(mismatched, inputs) == "candidate is not bound to the sealed ACP executable"
+
+
+def _grok_trace(resolution):
+    return {entry.name: entry for entry in resolution.trace if entry.name.startswith("grok")}
+
+
+def test_resolve_reviewer_subject_seat_for_grok_adapter_never_selects_grok():
+    """AC-01: a Grok adapter change excludes every Grok seat and says why."""
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude",
+            risk="high",
+            owned_paths=("scripts/agent_runtime/adapters/grok_build.py",),
+        )
+    )
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != "xai"
+    assert not resolution.selected.name.startswith("grok")
+    assert resolution.selected.name == "openai_frontier"
+    grok = _grok_trace(resolution)
+    assert set(grok) >= {"grok-4.7", "grok-4.7-cursor-fallback"}
+    for entry in grok.values():
+        assert entry.status == "excluded"
+        assert entry.reason is not None
+        assert "subject exclusion" in entry.reason
+        assert "subject seat grok" in entry.reason
+        assert "scripts/agent_runtime/adapters/grok_build.py" in entry.reason
+
+
+def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy():
+    """The #8912 shape: codex author, infra domain, high risk, Grok adapter."""
+    without = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex:gpt-6-sol",
+            domain="infra",
+            risk="high",
+            routing_snapshot={"claude": "unhealthy"},
+        )
+    )
+    assert without.selected is not None
+    assert without.selected.name == "grok-4.7"
+
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex:gpt-6-sol",
+            domain="infra",
+            risk="high",
+            routing_snapshot={"claude": "unhealthy"},
+            owned_paths=("scripts/agent_runtime/adapters/grok_build.py",),
+        )
+    )
+    assert resolution.selected is None or resolution.selected.family != "xai"
+    assert resolution.selected is None or not resolution.selected.name.startswith("grok")
+    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
+    assert grok.status == "excluded"
+    assert "subject exclusion" in grok.reason
+    fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
+    assert fallback.status == "excluded"
+    assert "subject seat grok" in fallback.reason
+
+
+def test_resolve_reviewer_explicit_subject_family_excludes_xai_without_guessing_paths():
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="claude", risk="high", subject_families=frozenset({"xai"}))
+    )
+    assert resolution.selected is not None
+    assert resolution.selected.family != "xai"
+    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
+    assert grok.status == "excluded"
+    assert "subject family xai" in grok.reason
+    assert "paths=" not in grok.reason
+
+
+def test_resolve_reviewer_without_subject_information_matches_empty_subject_fields():
+    """AC-02: explicit empty subject inputs do not change the trace."""
+    authors = (
+        dict(author_model="claude", risk="medium"),
+        dict(author_model="claude", risk="high"),
+        dict(author_model="codex", risk="high"),
+        dict(author_model="codex:gpt-6-sol", risk="high", domain="infra"),
+        dict(author_model="cursor:auto", risk="medium"),
+        dict(author_model="kimi-code/k3", risk="critical"),
+        dict(author_model="pool", risk="low"),
+        dict(author_model="gpt-5.6-terra", risk="high"),
+    )
+    for kwargs in authors:
+        plain = resolve_reviewer(ResolverInputs(**kwargs))
+        empty = resolve_reviewer(
+            ResolverInputs(
+                **kwargs,
+                subject_seats=frozenset(),
+                subject_families=frozenset(),
+                owned_paths=(),
+                subject_evidence=(),
+            )
+        )
+        assert plain == empty, kwargs
+
+
+def test_resolve_reviewer_unrelated_owned_path_does_not_change_selection():
+    plain = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
+    with_readme = resolve_reviewer(
+        ResolverInputs(author_model="claude", risk="high", owned_paths=("README.md",))
+    )
+    assert with_readme == plain
+    assert with_readme.selected is not None
+    assert with_readme.selected.name == "grok-4.7"
+
+
+def test_resolve_reviewer_ambiguous_adapter_path_requires_explicit_subject():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="high",
+            owned_paths=("scripts/agent_runtime/adapters/acpx.py",),
+        )
+    )
+    assert resolution.selected is None
+    assert resolution.trace == ()
+    assert resolution.fail_closed_reason is not None
+    assert "ambiguous subject-seat inference" in resolution.fail_closed_reason
+    assert "acpx.py" in resolution.fail_closed_reason
+    assert "--subject-seat" in resolution.fail_closed_reason
+
+    explicit = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude",
+            risk="high",
+            subject_seats=frozenset({"grok"}),
+            owned_paths=("scripts/agent_runtime/adapters/acpx.py",),
+        )
+    )
+    assert explicit.fail_closed_reason is None
+    assert explicit.selected is not None
+    assert explicit.selected.family != "xai"
+
+
+def test_resolve_reviewer_subject_seat_kimi_does_not_exclude_composer():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="high",
+            owned_paths=("scripts/agent_runtime/adapters/kimi.py", "scripts/agent_runtime/adapters/kimicc.py"),
+        )
+    )
+    kimi = next(entry for entry in resolution.trace if entry.name == "kimi-k3")
+    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
+    assert kimi.status == "excluded"
+    assert "subject seat kimi" in kimi.reason
+    assert "subject exclusion" not in (composer.reason or "")
+
+
+def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="high",
+            subject_seats=frozenset({"cursor"}),
+        )
+    )
+    native = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
+    fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
+    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
+    assert "subject exclusion" not in (native.reason or "")
+    assert fallback.status == "excluded"
+    assert "subject seat cursor" in fallback.reason
+    assert composer.status == "excluded"
+    assert "subject seat cursor" in composer.reason
+
+
+def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
+    bad_seat = resolve_reviewer(ResolverInputs(author_model="codex", subject_seats=frozenset({"not-a-seat"})))
+    assert bad_seat.selected is None
+    assert bad_seat.trace == ()
+    assert "unknown subject seat" in bad_seat.fail_closed_reason
+
+    bad_family = resolve_reviewer(ResolverInputs(author_model="codex", subject_families=frozenset({"cursor"})))
+    assert bad_family.selected is None
+    assert "unknown subject family" in bad_family.fail_closed_reason
+
+
+def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="high",
+            subject_seats=frozenset({"grok-4.7"}),
+            pinned_candidate="grok-4.7",
+            pressure_override_reason="operator pin",
+        )
+    )
+    assert resolution.selected is None
+    assert "hard eligibility" in resolution.fail_closed_reason
+    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
+    assert grok.status == "excluded"
+    assert "subject seat grok" in grok.reason
+
+
+def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
+    from scripts.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
+
+    repo = Path(__file__).resolve().parent.parent
+    expected = {
+        "__init__.py": None,
+        "_output_schema.py": None,
+        "_template.py": None,
+        "acpx.py": None,
+        "agy.py": "agy",
+        "base.py": None,
+        "claude.py": "claude",
+        "codex.py": "codex",
+        "cursor.py": "cursor",
+        "deepseek.py": "deepseek",
+        "gemini.py": "gemini",
+        "glm.py": "glm",
+        "grok_build.py": "grok",
+        "hermes_common.py": None,
+        "hermes_deepseek.py": "deepseek",
+        "hermes_grok.py": "grok",
+        "hermes_qwen.py": "qwen",
+        "kimi.py": "kimi",
+        "kimicc.py": "kimi",
+    }
+    adapter_dir = repo / "scripts/agent_runtime/adapters"
+    found = sorted(path.name for path in adapter_dir.glob("*.py"))
+    assert found == sorted(expected)
+    for name, seat in expected.items():
+        classified = classify_owned_path(f"scripts/agent_runtime/adapters/{name}")
+        if seat is None:
+            assert classified.kind == "ambiguous", name
+        else:
+            assert classified.kind == "seat", name
+            assert classified.seats == frozenset({seat})
+            assert seat in KNOWN_SUBJECT_SEATS
+
+    hooks = {
+        "scripts/agent_runtime/grok_hook_bridge.py": "grok",
+        "scripts/hooks/apply_grok_hook_profile.py": "grok",
+        "scripts/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
+        "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
+        "scripts/agent_runtime/codex_hook_entry.sh": "codex",
+        "scripts/agent_runtime/codex_hook_policy.py": "codex",
+        "scripts/agent_runtime/codex_hook_probe.py": "codex",
+        "agents_extensions/codex/hooks.json": "codex",
+        "agents_extensions/shared/hooks/guard-reviewer-publish.py": None,
+        "scripts/agent_runtime/hermes_hooks/log_tool_call.sh": None,
+    }
+    for rel, seat in hooks.items():
+        assert (repo / rel).is_file(), rel
+        classified = classify_owned_path(rel)
+        if seat is None:
+            assert classified.kind == "ambiguous", rel
+        else:
+            assert classified == type(classified)("seat", frozenset({seat}), seat)
+
+    for seats in adapter_subject_index().values():
+        assert seats <= KNOWN_SUBJECT_SEATS

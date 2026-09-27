@@ -119,8 +119,19 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   --risk "<same risk as Step 2>" \
   --domain "<code|infra>" \
   --data-egress-policy "<omit unless this run is genuinely local-interactive>" \
-  --routing-snapshot-file /tmp/routing-snapshot.json
+  --routing-snapshot-file /tmp/routing-snapshot.json \
+  --owned-path "<each changed per-seat adapter or reviewer hook; repeat the flag>"
 ```
+
+When the frozen diff governs a seat — its adapter under
+`scripts/agent_runtime/adapters/<seat>*.py`, or that seat's reviewer hooks —
+pass those paths as repeatable `--owned-path` values, or name the seat with
+repeatable `--subject-seat` / `--subject-family`. The resolver then excludes
+that seat and records why on the trace. An unambiguous path such as
+`scripts/agent_runtime/adapters/grok_build.py` infers `grok`. A shared surface
+(`acpx.py`, `base.py`, `guard-reviewer-publish.py`) is ambiguous: pass
+`--subject-seat` or `--subject-family` instead of guessing. Omit all three
+when the change governs no seat; selection stays on the author-family ladder.
 
 If the Monitor API isn't reachable, omit `--routing-snapshot-file` — the
 resolver is fail-open on health (no signal reads as healthy, so ladder
