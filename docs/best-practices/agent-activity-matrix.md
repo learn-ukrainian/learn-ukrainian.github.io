@@ -55,7 +55,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
 - **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read native usage (`python -m scripts.fleet.usage show`; `json` for pace metadata, `refresh` for blocking probes) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. DeepSeek (review), cursor + grok (writer/fixer) are additional lanes evaluated the same way.
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
-  - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors. **agy/Flash (#5737):** treat as a **worker given a complete brief**, not an orchestrator that invents its own micro-PR sequence; one shippable unit per dispatch.
+  - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, schema edits, bounded refactors. Ukrainian wiki/content writing is agy (Gemini), codex (GPT), or claude only. **agy/Flash (#5737):** treat as a **worker given a complete brief**, not an orchestrator that invents its own micro-PR sequence; one shippable unit per dispatch.
   - **kimi K3:** consequential coding, long-context debugging, and strong review; pair authored output with the normal cross-family gate and continue collecting local bakeoff evidence.
   - **DeepSeek Flash (default) / Pro (hard implement only):** code/infra PR diffs and CF volume — `deepseek-v4.1-flash`; Pro @ high only for hard implement tasks (complex multi-file, hard lookup — 2026-08-13). Not language/VESUM seats (LANGUAGE-LANES). Don't review inline on the author seat.
   - **Cursor Auto (Ultra month first pick through ~2026-09-13):** prefer for mechanical + ordinary infra/code implement when fit allows — do not leave Auto idle while Codex/Kimi/DeepSeek burn those jobs; still not language/advisor/CF identity.
@@ -263,7 +263,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
 | Adversarial review | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-sol --effort high --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
-| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** agy / codex / claude / grok-4.7 — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
+| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** claude / codex (GPT) / agy (Gemini) — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
 | Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
 | Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
 | Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
@@ -296,7 +296,7 @@ Listed by priority for next-session fill:
 | --- | --- | --- |
 | Gemini for novel-impl (4.6 runner-up = OPEN) | Routing routinely defers to Codex; Gemini may take pieces of this lane | File bakeoff: same well-scoped novel-impl brief to both Gemini + Codex |
 | DeepSeek for adversarial review (4.4 runner-up = limited) | Deepseek-pro only landed 2026-05-17; need more shipped reviews to score | Use it on next 2-3 design-review opportunities |
-| Grok for V7 reviewing (4.2 runner-up = calibration-in-progress) | Multiple calibration matrices in audit/2026-05-15-* and 2026-05-17-* | Finalize aggregator report → promote or eliminate |
+| Historical Grok V7 review calibration (no current Ukrainian review seat) | Multiple calibration matrices in audit/2026-05-15-* and 2026-05-17-* | Preserve as historical evidence; 2026-09-27 LANGUAGE-LANES RULE excludes Grok |
 | Grok for code dispatch (4.5/4.6 = absent) | `HermesGrokAdapter` is one-shot text; can't ship commits today (#2072) | Implement file-edit wrapper per #2072 to unlock the lane |
 | Codex Desktop for UI testing (4.11 runner-up = present but unused) | Has @browser tools we haven't exercised | Try Codex Desktop on next browser-test session |
 
@@ -460,8 +460,8 @@ Bakeoff cost (~$10-20 for a 6-writer fair test per §8.10) pays for itself if it
 
 **Recommended sequence to populate this table** (priority order):
 
-1. **A1 m20 6-writer bakeoff** (claude / codex / gemini-3.1-pro / deepseek-pro / qwen-plus / grok) — closes ❓ on A2 transition by extension; validates the §8.1 ranking under the post-#2148-fix contract. ~$10-15.
-2. **B1 m01 bakeoff** (same roster minus grok) — closes ❓ on B1+ register-relaxed core; if codex-tools beats claude-tools here, the post-June-15 transition gets easier. ~$15-20 (longer modules).
+1. **A1 m20 three-writer bakeoff** (claude / codex / agy only, per the 2026-09-27 LANGUAGE-LANES RULE) — closes ❓ on A2 transition by extension; validates the §8.1 ranking under the post-#2148-fix contract.
+2. **B1 m01 bakeoff** (same three sanctioned lanes) — closes ❓ on B1+ register-relaxed core; if codex-tools beats claude-tools here, the post-June-15 transition gets easier.
 3. **Bio canary bakeoff** — closes ❓ on seminar-biography bucket; biography arc is a narrative-writing task class distinct from grammar-progression modules. ~$10/module.
 4. **Lit-essay canary bakeoff** — closes ❓ on the literary seminar bucket; literary register is the deepest UA-native test we have. ~$10/module.
 5. **C1 m01 bakeoff** — closes ❓ on advanced core. Only worth running after B1+ result is in, since rankings likely transfer. ~$10-15.
