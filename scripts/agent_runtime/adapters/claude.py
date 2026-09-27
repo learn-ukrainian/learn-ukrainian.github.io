@@ -33,13 +33,24 @@ Mode handling:
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
-- ``workspace-write``: Retains Claude's default permission behavior; the
-  reviewer profile does not apply.
+- ``workspace-write``: ``--permission-mode dontAsk`` plus an allow list of
+  every worker tool: all Bash, Read/Edit/Write/NotebookEdit, Grep/Glob/LS,
+  WebFetch, WebSearch, and one ``mcp__<server>`` rule per server in the
+  checkout ``.mcp.json`` (or in an explicit ``mcp_config_path``). Headless
+  ``-p`` otherwise starts in manual mode and denies every tool that would
+  prompt. ``acceptEdits`` still prompts for shell and network. ``auto`` can
+  refuse a legitimate worker action. ``bypassPermissions`` is not used:
+  it is the same skip as ``--dangerously-skip-permissions``, which stays
+  on the danger argv. An allow glob ``mcp__*`` is ignored, so each
+  configured server is named. The reviewer deny list does not apply.
+  An explicit ``allowed_tools`` value stays the sole allow list.
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
 Every headless invocation receives shared PreToolUse guard settings from the
-tracked checkout. Sealed ``review_isolation`` retains ``--safe-mode`` and its
-OS sandbox; safe mode suppresses hooks and shell/write tools there.
+tracked checkout. A hook that exits 2 still blocks the call under
+``dontAsk``. ``--bare`` is what skips hooks. Sealed ``review_isolation``
+retains ``--safe-mode`` and its OS sandbox; safe mode suppresses hooks and
+shell/write tools there.
 
 Liveness paths:
 - Returns the project-scoped Claude session JSONL file
@@ -93,6 +104,27 @@ _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
 
+# Installed Claude Code 2.1.283 ``--permission-mode`` value for a headless
+# worker. dontAsk runs pre-approved tools and denies anything that would
+# prompt, so the session never waits. bypassPermissions is danger's skip.
+WORKSPACE_WRITE_PERMISSION_MODE = "dontAsk"
+
+# Bare tool names match every use. An allow glob ``mcp__*`` is ignored, so
+# configured servers are named individually from the MCP config.
+_WORKSPACE_WRITE_TOOLS = (
+    "Bash",
+    "Read",
+    "Edit",
+    "Write",
+    "NotebookEdit",
+    "Grep",
+    "Glob",
+    "LS",
+    "WebFetch",
+    "WebSearch",
+)
+_MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
 # Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
 # patterns match prefixes only: git -C, wrappers, and interpreters can bypass
 # them. The shared PreToolUse guards below provide the checkout backstop.
@@ -119,6 +151,37 @@ REVIEWER_PERMISSION_PROFILE = {
         "Bash(gh workflow run *)",
     ),
 }
+
+
+def _mcp_server_names(path: Path) -> tuple[str, ...]:
+    """Return MCP server names from a Claude ``.mcp.json`` file.
+
+    Names that cannot sit in a comma-separated ``--allowedTools`` value are
+    dropped. A missing or unreadable file grants no MCP tools.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return ()
+    servers = data.get("mcpServers") if isinstance(data, dict) else None
+    if not isinstance(servers, dict):
+        return ()
+    return tuple(
+        name for name in servers if isinstance(name, str) and _MCP_SERVER_NAME_RE.fullmatch(name)
+    )
+
+
+def _workspace_write_allows(tool_config: dict[str, Any]) -> tuple[str, ...]:
+    """Tools a headless write worker may run without a prompt."""
+    names: list[str] = list(_WORKSPACE_WRITE_TOOLS)
+    mcp_path = tool_config.get("mcp_config_path")
+    if isinstance(mcp_path, str) and mcp_path:
+        config_path = Path(mcp_path)
+    else:
+        config_path = Path(__file__).resolve().parents[3] / ".mcp.json"
+    for server in _mcp_server_names(config_path):
+        names.append(f"mcp__{server}")
+    return tuple(dict.fromkeys(names))
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
@@ -460,7 +523,10 @@ class ClaudeAdapter:
                 )
             cmd.extend(["--agent", str(requested_agent)])
 
-        # Mode-specific flags
+        # Mode-specific flags. workspace-write must not stay on the print-mode
+        # default (manual): nothing answers the prompt, so Bash, edits, web,
+        # and MCP are denied. dontAsk runs the worker allow list and still
+        # executes the --settings guards; --bare is what skips hooks.
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
         elif ordinary_reviewer:
@@ -471,6 +537,10 @@ class ClaudeAdapter:
                 granted.extend(profile["mcp_allow"])
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
+        elif mode == "workspace-write" and not review_isolation:
+            cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
+            if not explicit_allowed_tools:
+                cmd.extend(["--allowedTools", ",".join(_workspace_write_allows(tc))])
 
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")

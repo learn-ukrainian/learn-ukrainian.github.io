@@ -363,8 +363,22 @@ pytest, and read-only `git`/`gh` commands without interactive approval.
 Edit/Write/NotebookEdit and common
 Git/GitHub mutation commands are denied. `discussion_readonly` and
 `review_isolation` retain their separate tool profiles. `workspace-write`
-keeps the existing default permission behavior; `danger` uses
-`--dangerously-skip-permissions`.
+passes `--permission-mode dontAsk` and allows Bash, Read, Edit, Write,
+NotebookEdit, Grep, Glob, LS, WebFetch, and WebSearch, plus one
+`mcp__<server>` rule for each server in the checkout `.mcp.json`. An
+explicit `mcp_config_path` is read instead of that file. An explicit
+`allowed_tools` value stays the only allow list. Headless `claude -p`
+otherwise starts in manual mode and denies every tool that would prompt.
+`dontAsk` is the documented non-interactive mode (`claude --help` on the
+installed Claude Code): pre-approved tools run, and anything that would
+prompt is denied, so the session does not wait. `acceptEdits` still prompts
+for shell and network. `auto` can refuse a legitimate worker action.
+`bypassPermissions` is not used for this mode; it is the same skip as
+`danger`'s `--dangerously-skip-permissions`, which stays on the danger argv
+alone. An allow glob of `mcp__*` does not grant MCP tools, so each
+configured server is named. The tracked PreToolUse guards still load via
+`--settings`, including under `dontAsk`; a hook that exits 2 blocks the
+call. `--bare` is what skips hooks.
 
 Without the opt-in, read-only calls retain the prior Claude CLI permissions.
 This covers content quality reviews and tool-less bakeoff calls. Outside sealed
