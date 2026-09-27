@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import json
+
+import pytest
+
 from scripts.ci.check_issue_task_quality import main, score_body
 from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
@@ -100,6 +104,46 @@ def test_trivial_exemption() -> None:
     result = score_body("trivial: yes\nFix typo in README\n", trivial=False)
     assert result["verdict"] == "PASS"
     assert result["trivial"] is True
+
+
+@pytest.mark.parametrize("first_line", ["trivial:", "trivial: yes", "Trivial: TRUE", "trivial: exempt"])
+def test_first_line_trivial_exemption(first_line: str) -> None:
+    assert score_body(f"{first_line}\nFix typo in README")["trivial"] is True
+    assert main(["--body", f"{first_line}\nFix typo in README", "--strict"]) == 0
+
+
+@pytest.mark.parametrize("label", ["trivial", "TrIvIaL"])
+def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
+    payload = {"title": "Fix typo", "body": "Correct spelling", "labels": [{"name": label}]}
+    monkeypatch.setattr(
+        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        lambda *_args, **_kwargs: json.dumps(payload),
+    )
+    assert main(["--issue", "123", "--strict", "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["trivial"] is True
+    assert "PASS (trivial exemption)" in render_comment(payload)
+
+
+def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
+    payload = {"title": "Fix typo", "body": "trivial:\nCorrect spelling", "labels": []}
+    monkeypatch.setattr(
+        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        lambda *_args, **_kwargs: json.dumps(payload),
+    )
+    assert main(["--issue", "123", "--strict", "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["trivial"] is True
+    assert "PASS (trivial exemption)" in render_comment(payload)
+
+
+def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
+    payload = {"title": "trivial:", "body": "Correct spelling", "labels": [{"name": "task"}]}
+    monkeypatch.setattr(
+        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        lambda *_args, **_kwargs: json.dumps(payload),
+    )
+    assert main(["--issue", "123", "--strict", "--json"]) == 1
+    assert json.loads(capsys.readouterr().out)["verdict"] == "WARN"
+    assert "DoR card check: WARN" in render_comment(payload)
 
 
 def test_prose_mentioning_trivial_is_not_exempt() -> None:

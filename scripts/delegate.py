@@ -8149,20 +8149,36 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     return pt.FAST_FAIL_EXIT_CODE
 
 
-_DOR_ISSUE_RE = re.compile(r"(?<![\w/])#(\d+)\b|https://github\.com/[^\s/]+/[^\s/]+/issues/(\d+)\b")
+_DOR_ISSUE_RE = re.compile(r"(?<![\w/=])#(\d+)\b|https://github\.com/[^\s/]+/[^\s/]+/issues/(\d+)\b")
 
 
 def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | None, dict[str, Any] | None]:
     """Check each issue named by an implementation brief before dispatch side effects."""
-    issue_numbers = sorted(
+    candidates = sorted(
         {int(match.group(1) or match.group(2)) for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt))}
     )
-    if not issue_numbers:
+    if not candidates:
         return None, None
     warnings: dict[str, str] = {}
+    issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
-    for number in issue_numbers:
+    for number in candidates:
         try:
+            issue = subprocess.run(
+                ["gh", "api", f"repos/{_CANONICAL_GITHUB_REPO}/issues/{number}"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+            if issue.returncode:
+                raise ValueError("issue lookup failed")
+            issue_payload = json.loads(issue.stdout)
+            if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
+                raise ValueError("issue lookup must identify the requested number")
+            if "pull_request" in issue_payload:
+                continue
+            issue_numbers.append(number)
             result = subprocess.run(
                 [sys.executable, str(checker), "--issue", str(number), "--strict", "--json"],
                 capture_output=True,
@@ -8176,7 +8192,11 @@ def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | Non
             if result.returncode or payload.get("verdict") != "PASS":
                 warnings[str(number)] = ",".join(payload.get("missing") or ["checker_error"])
         except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
+            if number not in issue_numbers:
+                issue_numbers.append(number)
             warnings[str(number)] = "checker_error"
+    if not issue_numbers:
+        return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
     if allow_reason is not None:
         record["allow_warn_reason"] = allow_reason

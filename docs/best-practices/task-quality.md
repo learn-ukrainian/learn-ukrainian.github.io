@@ -33,7 +33,9 @@ implementation `delegate.py dispatch` whose brief names a GitHub issue, the
 runtime checks that issue with `check_issue_task_quality.py --strict` and refuses
 WARN. If urgent in-flight work must proceed, pass `--allow-dor-warn <reason>`;
 the reason is recorded in the task JSON. A brief without an issue reference is
-not gated. The bounded `trivial` exemption below still applies.
+not gated. GitHub/API lookup or checker failures also refuse dispatch unless
+`--allow-dor-warn <reason>` is passed. PR references are skipped after API
+resolution. The bounded `trivial` exemption below still applies.
 
 **Quality posture (binding intent at DoR; graded at CF):** research established
 best practice first (`docs/best-practices/`, prior art, standards). Prefer the
@@ -195,7 +197,7 @@ Waiting on review/CI is an actionable nonterminal state — **not** “blocked�
 
 ---
 
-## Advisory check (fail-open)
+## Advisory issue check and strict dispatch gate
 
 Before dispatch and before close:
 
@@ -205,8 +207,11 @@ Before dispatch and before close:
 .venv/bin/python scripts/ci/check_issue_task_quality.py --body-file /tmp/issue.md
 ```
 
-Exit `0` with `PASS` or `WARN` (missing fields listed). v1 does **not** block
-merge. `--strict` fails non-zero on WARN for local gates only.
+Without `--strict`, the advisory CLI exits `0` with `PASS` or `WARN` (missing
+fields listed), including when GitHub/API input cannot be read. It does **not**
+block issue creation or merge. Implementation dispatch uses `--strict`: WARN,
+GitHub/API lookup failure, or checker failure refuses dispatch unless the
+recorded `--allow-dor-warn <reason>` override is supplied.
 
 ---
 

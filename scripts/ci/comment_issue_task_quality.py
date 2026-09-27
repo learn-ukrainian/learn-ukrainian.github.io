@@ -10,16 +10,15 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from scripts.ci.check_issue_task_quality import FIELDS, score_body
+from scripts.ci.check_issue_task_quality import FIELDS, issue_is_trivial, score_body
 
 MARKER = "<!-- issue-task-quality:v1 -->"
 BOT_LOGIN = "github-actions[bot]"
 
 
 def render_comment(issue: dict[str, Any]) -> str:
-    labels = " ".join(label.get("name", "") for label in issue.get("labels") or [])
-    body = f"{issue.get('title') or ''}\n{labels}\n{issue.get('body') or ''}"
-    result = score_body(body)
+    issue_body = issue.get("body") or ""
+    result = score_body(issue_body, trivial=issue_is_trivial(issue_body, issue.get("labels") or []))
     if result["verdict"] == "PASS":
         details = "DoR card check: PASS (trivial exemption)." if result["trivial"] else "DoR card check: PASS."
     else:

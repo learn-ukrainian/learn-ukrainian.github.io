@@ -109,10 +109,18 @@ FIELDS: tuple[FieldCheck, ...] = (
 )
 
 TRIVIAL_RE = re.compile(
-    r"(?im)^(?:\*\*)?(?:trivial|typo-only|single-line)(?:\*\*)?\s*:\s*(?:yes|true|exempt)\b"
-    r"|^(?:trivial|typo-only)\s+fix\b"
+    r"(?im)^(?:\*\*)?(?:trivial|typo-only|single-line)(?:\*\*)?[ \t]*:[ \t]*(?:yes|true|exempt)\b"
+    r"|^(?:trivial|typo-only)[ \t]+fix\b"
 )
+FIRST_LINE_TRIVIAL_RE = re.compile(r"(?i)trivial:[ \t]*(?:yes|true|exempt)?[ \t]*")
 HEADING_LINE_RE = re.compile(r"(?m)^(#{1,6}\s+\S.*|\*\*[^*]+\*\*\s*:.*)$")
+
+
+def issue_is_trivial(body: str, labels: list[dict[str, str]]) -> bool:
+    first_line = (body or "").split("\n", 1)[0].strip()
+    return bool(FIRST_LINE_TRIVIAL_RE.fullmatch(first_line)) or any(
+        label.get("name", "").casefold() == "trivial" for label in labels
+    )
 
 
 def _strip_noise(text: str) -> str:
@@ -173,7 +181,7 @@ def _terminal_goal_ok(chunk: str | None) -> bool:
 
 def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
     text = _strip_noise(body or "")
-    if trivial or TRIVIAL_RE.search(text):
+    if trivial or issue_is_trivial(body, []) or TRIVIAL_RE.search(text):
         return {
             "verdict": "PASS",
             "trivial": True,
@@ -207,7 +215,7 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
     }
 
 
-def _fetch_issue_body(repo: str, number: int) -> str:
+def _fetch_issue_body(repo: str, number: int) -> tuple[str, bool]:
     raw = subprocess.check_output(
         [
             "gh",
@@ -223,8 +231,8 @@ def _fetch_issue_body(repo: str, number: int) -> str:
         timeout=60,
     )
     data = json.loads(raw)
-    labels = " ".join(label.get("name", "") for label in data.get("labels") or [])
-    return f"{data.get('title') or ''}\n{labels}\n{data.get('body') or ''}"
+    body = data.get("body") or ""
+    return body, issue_is_trivial(body, data.get("labels") or [])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -255,13 +263,15 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.issue is not None:
-            body = _fetch_issue_body(args.repo, args.issue)
+            body, issue_trivial = _fetch_issue_body(args.repo, args.issue)
         elif args.body_file:
             with open(args.body_file, encoding="utf-8") as handle:
                 body = handle.read()
+            issue_trivial = False
         else:
             body = args.body or ""
-        result = score_body(body, trivial=args.trivial)
+            issue_trivial = False
+        result = score_body(body, trivial=args.trivial or issue_trivial)
     except (
         OSError,
         subprocess.SubprocessError,

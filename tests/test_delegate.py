@@ -1133,18 +1133,76 @@ def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
 
     def checker(command, **kwargs):
         calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return CompletedProcess(command, 0, '{"number":8886}', "")
         return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
 
     monkeypatch.setattr(delegate.subprocess, "run", checker)
     error, record = delegate._run_dor_preflight("Implement issue #8886", None)
     assert "#8886: verify" in error
     assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
-    assert calls[0][-4:] == ["--issue", "8886", "--strict", "--json"]
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
+    assert calls[1][-4:] == ["--issue", "8886", "--strict", "--json"]
 
     error, record = delegate._run_dor_preflight("Implement issue #8886", "urgent repair")
     assert error is None
     assert record["allow_warn_reason"] == "urgent repair"
     assert delegate._run_dor_preflight("Implement without a linked issue", None) == (None, None)
+
+
+def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            number = int(command[-1].rsplit("/", 1)[-1])
+            payload = {"number": number, **({"pull_request": {"url": "pr"}} if number == 8750 else {})}
+            return CompletedProcess(command, 0, json.dumps(payload), "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
+    error, record = delegate._run_dor_preflight(prompt, None)
+    assert error is None
+    assert record == {"issues": [8886], "warnings": {}}
+    assert [call for call in calls if call[:2] == ["gh", "api"]] == [
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
+    ]
+    assert len([call for call in calls if "--issue" in call]) == 1
+    assert delegate._run_dor_preflight("PR #8750", None) == (None, None)
+
+
+def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def failed_gh(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 1, "", "lookup unavailable")
+
+    monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    error, record = delegate._run_dor_preflight("Fixes #8886", "urgent repair")
+    assert error is None
+    assert record["allow_warn_reason"] == "urgent repair"
+
+
+def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def wrong_issue(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 0, '{"number":8750}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
 
 
 def test_dor_dispatch_refuses_warn_before_worker_spawn(tmp_tasks_dir, monkeypatch, capsys):
