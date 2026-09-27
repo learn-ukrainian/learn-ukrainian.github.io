@@ -401,6 +401,11 @@ describe('GroupSort keyboard-only placement', () => {
     expect(wordTiles(pool(container)).map((t) => t.textContent?.trim())).toEqual(
       expect.arrayContaining(['apple', 'carrot']),
     );
+
+    // Try Again unmounts itself — focus must move to the refilled pool's
+    // first tile, never fall back to document.body.
+    expect(document.activeElement).not.toBe(document.body);
+    expect(document.activeElement).toBe(wordTiles(pool(container))[0]);
   });
 
   test("a placed tile's chooser does not offer a button for its own bucket, and choosing another bucket keeps focus off document.body", async () => {

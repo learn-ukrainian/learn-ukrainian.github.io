@@ -207,6 +207,9 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
     setSorted(initial);
     setShowResult(false);
     setSelectedItemId(null);
+    // Try Again unmounts once the pool refills — send focus to the first
+    // refilled tile so it never falls back to document.body.
+    setPendingFocusId(allItems[0]?.id ?? null);
   };
 
   const handleTileSelect = (itemId: string) => {
