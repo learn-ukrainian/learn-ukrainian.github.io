@@ -189,6 +189,19 @@ records were reproduced with the same messages against an archive of base
 `55d0ed1515` using the same shared databases. Their CI baseline status was
 `skipped`, so the local base replay is the evidence for those two tests.
 
+The next round-4 checkpoint ran the full top-level selection before its
+latest consumer fixes: `359 failed, 1789 passed, 13 skipped, 6 errors`.
+Physical K reads were then corrected in the P4 pilot, recovery validator,
+source-disposition adapter, chronology, and historical spine. The frozen P4
+pilot was reconstructed byte for byte with its original generator provenance,
+while both predecessor implementations received independent current source
+pins. The historical spine kept its frozen logical paths and source hashes;
+current migrated sources received exact separate pins, each old identity
+matched to a Git history blob. The combined focused selection for these
+consumers printed `332 passed` with no failures or errors. The full top-level
+and project selections must be rerun on the final head; this checkpoint is
+not consumer acceptance.
+
 ## Unresolved P3a gates at this checkpoint
 
 - The round-3 top-level `tests/test_open_model_*.py` consumer run failed:

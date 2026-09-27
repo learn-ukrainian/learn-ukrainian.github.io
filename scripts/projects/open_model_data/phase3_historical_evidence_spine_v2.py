@@ -24,9 +24,10 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_evidence_spine as spine_v1
 from scripts.projects.open_model_data import phase3_historical_periodization as periodization
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-SPINE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_evidence_spine_v2.json"
+SPINE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_evidence_spine_v2.json"
 SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_evidence_spine_v2.schema.json"
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v2"
 
@@ -38,22 +39,22 @@ EXPECTED_PROMPT_V3_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebf
 EXPECTED_PROMPT_V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 
 EXPECTED_CODE_BINDINGS = {
-    "registry/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json": (
         "b0e19c906b1c487b8ad390987c1c3ba6afc6171afe584170e45ec0497d03e9f6"
     ),
-    "registry/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json": (
         "b516cf879c07ea7267f1c1a481f454bc7c4765c5b8e5b94042632436166b25be"
     ),
-    "registry/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json": (
         "63605b8825627701dd696f97a9e29b9ed6a67ad6b4dea0613af7b7af2b99daae"
     ),
-    "registry/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json": (
         "50931ae2ecb7eecad58fa88a902b54838e22ec64f9b23f43832d610f1832f081"
     ),
-    "registry/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json": (
         "26ad006a4e654f94e18779f8ae21900630660611490ef638ff76f8e490cfc140"
     ),
-    "registry/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json": (
+    "data/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json": (
         "d8be596ce5ce0cf17e2d133f7b1a863388cdcb1e54f8aefd156d831e94a161a6"
     ),
     "scripts/projects/open_model_data/phase3_historical_document_chronology_source_dates.py": (
@@ -74,6 +75,18 @@ EXPECTED_CODE_BINDINGS = {
     "scripts/projects/open_model_data/phase3_spas_source_attribution.py": (
         "b2d1aedc003a202b613a1c7cecab596ad0826b488eff05c496f8a470e7ce00d0"
     ),
+}
+
+# Frozen spine provenance above is pinned to the original Git source blobs.
+# The migrated implementations have separate, exact current byte pins. This
+# keeps the historical receipt unchanged while still rejecting runtime drift.
+CURRENT_CODE_BINDINGS = {
+    "scripts/projects/open_model_data/phase3_historical_document_chronology_source_dates.py": "a3e9c440b89c479d1fd110fa3191739e20f4eec9e3ef9a989e3dc7d8fc4f64e4",
+    "scripts/projects/open_model_data/phase3_lavra_near_caves_intake.py": "861d6f59e8bca5ba9f1a43b21ac9c434ceb54152fb92c38d7ef13006c11e3e16",
+    "scripts/projects/open_model_data/phase3_spas_catalog_materialization.py": "e0b008ec2f1f9e7ba177c0e22af7eef196b4e68f2da712c2532adf3c1ce37f26",
+    "scripts/projects/open_model_data/phase3_spas_glyph_adapter.py": "bde91d5e075887b4811eb509734523e222d8f133f78df6b9c3cfbbaa2c2bdc91",
+    "scripts/projects/open_model_data/phase3_spas_layout_candidates.py": "eaae0574bdefcad03834835dc582e3ccf7a921b7e8d106590826b435a2f591a3",
+    "scripts/projects/open_model_data/phase3_spas_source_attribution.py": "a2cd6923401fc8e013f0d610204e27f209503b8e09d8b3a1b8b2cebfdd4b3e23",
 }
 
 EXPECTED_PRIVATE_RECEIPTS = {
@@ -373,7 +386,15 @@ def load_spine(path: Path = SPINE_PATH) -> dict[str, Any]:
     require(sha256_file(spine_v1.SPINE_PATH) == EXPECTED_V1_SHA256, "v1 spine byte drift")
     require(sha256_file(spine_v1.SCHEMA_PATH) == EXPECTED_V1_SCHEMA_SHA256, "v1 spine schema byte drift")
     for logical_path, expected_sha256 in EXPECTED_CODE_BINDINGS.items():
-        require(sha256_file(ROOT / logical_path) == expected_sha256, f"bound source byte drift: {logical_path}")
+        physical_path = (
+            REGISTRY_OPEN_MODEL_DATA_DIR / Path(logical_path).relative_to("data/projects/open_model_data")
+            if logical_path.startswith("data/projects/open_model_data/contracts/")
+            else ROOT / logical_path
+        )
+        require(
+            sha256_file(physical_path) == CURRENT_CODE_BINDINGS.get(logical_path, expected_sha256),
+            f"bound source byte drift: {logical_path}",
+        )
     checked = validate_spine(_read_json(path, "historical evidence spine v2"))
     if path.resolve() == SPINE_PATH.resolve():
         require(sha256_file(path) == EXPECTED_SPINE_SHA256, "tracked historical evidence spine v2 byte drift")

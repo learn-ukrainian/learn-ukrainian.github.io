@@ -28,7 +28,7 @@ def _write_json(path: Path, value: dict[str, Any]) -> None:
 def _isolated_root(tmp_path: Path) -> Path:
     target = tmp_path / "repo"
     target.mkdir(parents=True)
-    destination = target / "data/projects/open_model_data"
+    destination = target / "registry/projects/open_model_data"
     contract_destination = destination / "contracts"
     evidence_destination = destination / "evidence"
     contract_destination.mkdir(parents=True)
@@ -74,7 +74,7 @@ def _install_synthetic_binding_inputs(root: Path, monkeypatch: pytest.MonkeyPatc
 
 
 def _artifact(root: Path, name: str) -> tuple[Path, dict[str, Any]]:
-    path = root / "data/projects/open_model_data/evidence" / name
+    path = root / "registry/projects/open_model_data/evidence" / name
     return path, json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -191,7 +191,7 @@ def test_near_duplicate_implementation_binding_drift_fails_closed(tmp_path: Path
 
 def test_near_duplicate_policy_artifact_content_drift_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
-    artifact_path = root / contracts.NEAR_DUPLICATE_POLICY_ARTIFACT
+    artifact_path = root / "registry" / Path(contracts.NEAR_DUPLICATE_POLICY_ARTIFACT).relative_to("data")
     policy_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
     policy_artifact["implementation"]["module"] = "scripts/projects/open_model_data/drift.py"
     fingerprint_input = dict(policy_artifact)

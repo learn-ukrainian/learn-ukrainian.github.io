@@ -22,12 +22,13 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_materialization as materialization
 from scripts.projects.open_model_data import phase3_historical_periodization as periodization
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-SPINE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_evidence_spine_v1.json"
+SPINE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_evidence_spine_v1.json"
 SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_evidence_spine_v1.schema.json"
 DENOMINATOR_PATH = ROOT / "registry/historical_language_corpus_denominator.yaml"
-FULL_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_full_materialization_gate_v1.json"
+FULL_GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_full_materialization_gate_v1.json"
 
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v1"
 EXPECTED_SPINE_SHA256 = "61a937f150a4cbecf6b12774ef812d67289705d9523c4e766c95e721b7451076"

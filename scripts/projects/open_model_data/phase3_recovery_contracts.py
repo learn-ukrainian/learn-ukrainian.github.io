@@ -14,9 +14,11 @@ from typing import Any
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
-EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+EVIDENCE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence"
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_NAMES = (
     "correction_protection_coverage_contract_v1.schema.json",
@@ -638,7 +640,8 @@ def _validate_evaluation(evaluation: dict[str, Any], repo_root: Path) -> None:
         "near-duplicate policy fingerprint drift",
     )
     require((repo_root / policy["implementation_module"]).is_file(), "near-duplicate implementation missing")
-    policy_artifact = read_json(repo_root / policy["implementation_artifact"])
+    logical_policy_path = Path(policy["implementation_artifact"])
+    policy_artifact = read_json(repo_root / "registry" / logical_policy_path.relative_to("data"))
     require(
         policy_artifact["policy_fingerprint_sha256"] == NEAR_DUPLICATE_POLICY_FINGERPRINT,
         "near-duplicate policy artifact fingerprint drift",
@@ -902,8 +905,9 @@ def _validate_roles(roles: dict[str, Any]) -> None:
 
 def validate_contracts(repo_root: Path = ROOT) -> dict[str, Any]:
     repo_root = repo_root.resolve()
-    schema_paths = [repo_root / "registry/projects/open_model_data/contracts" / name for name in SCHEMA_NAMES]
-    artifact_paths = [repo_root / "data/projects/open_model_data/evidence" / name for name in ARTIFACT_NAMES]
+    registry_base = repo_root / REGISTRY_OPEN_MODEL_DATA_DIR.relative_to(ROOT)
+    schema_paths = [registry_base / "contracts" / name for name in SCHEMA_NAMES]
+    artifact_paths = [registry_base / "evidence" / name for name in ARTIFACT_NAMES]
     artifacts = [
         _schema_validate(schema_path, artifact_path)
         for schema_path, artifact_path in zip(schema_paths, artifact_paths, strict=True)

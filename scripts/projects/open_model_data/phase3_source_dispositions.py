@@ -23,13 +23,14 @@ from jsonschema.exceptions import SchemaError, ValidationError
 
 from scripts.projects.open_model_data import phase3_disposition_audit as disposition_audit
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_source_universe import canonical_json, sha256_file
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 DEFAULT_SCHEMA = CONTRACTS / "phase3_source_disposition_input_v1.schema.json"
 DEFAULT_ROLE_CONTRACT = (
-    ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+    REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_functional_role_contract_v2_1.json"
 )
 FREEZE_RECEIPT_FILE = "source-universe-freeze-receipt.json"
 OUTPUT_LEDGER_FILE = "phase3-source-dispositions.jsonl"
