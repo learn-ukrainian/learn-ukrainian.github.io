@@ -1,4 +1,4 @@
-"""The findings database migration (version 2 to 3) and the typed review parameters (#8430 R3-A)."""
+"""The findings database migration (version 2 to 4, via 3) and the typed review parameters (#8430 R3-A)."""
 
 from __future__ import annotations
 
@@ -42,11 +42,13 @@ FINDING = {
 
 
 def make_v2(path: Path) -> None:
-    """A database exactly as R2b-A wrote it: the five tables, schema_version 2, rows in every one of them."""
+    """A database exactly as R2b-A wrote it, before #8774 added ``budget_decisions``: the five tables,
+    schema_version 2, rows in every one of them.
+    """
     conn = sqlite3.connect(path, isolation_level=None)
     conn.execute("PRAGMA foreign_keys = ON")
-    for statement in db._TABLES.split(";"):  # the R2b-A schema is exactly what _TABLES still holds
-        if statement.strip():
+    for statement in db._TABLES.split(";"):  # _TABLES minus budget_decisions is the R2b-A schema
+        if statement.strip() and "budget_decisions" not in statement:
             conn.execute(statement)
     conn.execute("INSERT INTO schema_version (version) VALUES (2)")
     marks = ", ".join("?" for _ in ATTEMPT)
@@ -100,28 +102,31 @@ def versions(path: Path) -> list[int]:
         conn.close()
 
 
-def test_the_schema_version_is_three_and_a_fresh_database_has_the_measurement_tables(tmp_path: Path) -> None:
-    assert db.SCHEMA_VERSION == 3
+def test_the_schema_version_is_four_and_a_fresh_database_has_every_table(tmp_path: Path) -> None:
+    assert db.SCHEMA_VERSION == 4
     conn = db.connect(tmp_path / "fresh.sqlite")
     conn.close()
-    assert {*OLD_TABLES, *NEW_TABLES, "schema_version"} <= table_names(tmp_path / "fresh.sqlite")
-    assert versions(tmp_path / "fresh.sqlite") == [3]
+    assert {*OLD_TABLES, *NEW_TABLES, "budget_decisions", "schema_version"} <= table_names(tmp_path / "fresh.sqlite")
+    assert versions(tmp_path / "fresh.sqlite") == [4]
 
 
-def test_a_populated_version_two_database_upgrades_to_three_and_keeps_every_row(tmp_path: Path) -> None:
+def test_a_populated_version_two_database_upgrades_to_four_and_keeps_every_row(tmp_path: Path) -> None:
     path = tmp_path / "a1.sqlite"
     make_v2(path)
     before = dump(path)
     assert all(before[name] for name in OLD_TABLES), "the fixture has rows in every existing table"
     assert versions(path) == [2] and not set(NEW_TABLES) & table_names(path)
+    assert "budget_decisions" not in table_names(path), "a true pre-#8774 v2 database lacks it"
 
     conn = db.connect(path)
     conn.close()
 
-    assert versions(path) == [3]
+    assert versions(path) == [4]
     assert set(NEW_TABLES) <= table_names(path)
+    assert "budget_decisions" in table_names(path)
     assert dump(path) == before, "every existing row is byte-for-byte what it was"
     assert all(dump(path, NEW_TABLES)[name] == [] for name in NEW_TABLES)
+    assert dump(path, ("budget_decisions",))["budget_decisions"] == []
 
 
 def test_the_upgraded_database_takes_measurement_rows_and_its_foreign_keys_hold(tmp_path: Path) -> None:
@@ -162,9 +167,9 @@ def test_opening_an_upgraded_database_again_changes_nothing(tmp_path: Path) -> N
     path = tmp_path / "a1.sqlite"
     make_v2(path)
     db.connect(path).close()
-    first = dump(path, (*OLD_TABLES, *NEW_TABLES))
+    first = dump(path, (*OLD_TABLES, *NEW_TABLES, "budget_decisions"))
     db.connect(path).close()
-    assert dump(path, (*OLD_TABLES, *NEW_TABLES)) == first and versions(path) == [3]
+    assert dump(path, (*OLD_TABLES, *NEW_TABLES, "budget_decisions")) == first and versions(path) == [4]
 
 
 def test_a_failing_migration_leaves_the_version_two_database_as_it_was(
@@ -181,7 +186,7 @@ def test_a_failing_migration_leaves_the_version_two_database_as_it_was(
     assert dump(path) == before
 
 
-@pytest.mark.parametrize("version", [0, 1, 4, 99])
+@pytest.mark.parametrize("version", [0, 1, 5, 99])
 def test_a_database_of_an_unknown_version_is_still_refused_and_left_untouched(tmp_path: Path, version: int) -> None:
     path = tmp_path / "a1.sqlite"
     make_v2(path)

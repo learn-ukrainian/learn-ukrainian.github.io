@@ -8,9 +8,15 @@ validator's rejection codes and the dispatch's task id, a finding keeps every
 receipt it cites and the whole finding as the reviewer returned it.
 
 ``schema_version`` is checked on every open. A file at ``SCHEMA_VERSION`` opens as is. A file at
-a version listed in ``MIGRATIONS`` (today: 2) is upgraded in one transaction that only adds tables,
-so every existing row is kept; a file at any other version, or with tables and no version, is
-refused, never guessed at.
+a version listed in ``MIGRATIONS`` (today: 2 or 3) is upgraded, in one transaction, step by step to
+``SCHEMA_VERSION``; each step only adds tables (``CREATE TABLE IF NOT EXISTS``), so every existing
+row is kept. A file at any other version, or with tables and no version, is refused, never guessed at.
+
+Version history: 2 predates R3 (and, on ``main``, gained ``budget_decisions`` in place without a
+version bump — see #8774/#8905); 3 (this branch, before it merged ``main``) added the R3
+measurement tables without ``budget_decisions``; 4 folds ``budget_decisions`` into every earlier
+state, so a version-2 database (with or without it) and a version-3 database (without it) all
+reach the same version-4 shape.
 
 Unrelated to ``scripts/review/findings.py`` (the closeout code-review ledger).
 
@@ -45,7 +51,7 @@ from scripts.common.repo_root import main_checkout_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PARAMETERS_PATH = REPO_ROOT / "scripts" / "config" / "review_parameters.yaml"
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 DB_DIRECTORY = ("batch_state", "review-findings")
 LEVEL_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,31}\Z")
 
@@ -59,7 +65,23 @@ OPERATOR_OUTCOMES = frozenset({"source_conflict", "unresolved"})
 BUDGET_FIELDS = ("revise_rounds", "regenerations", "review_failures")
 PLAN_LESSON_N = 0  # the budgets row of a module's plan review
 
-_TABLES = """
+# Added by the migration from version 3 to 4 (folded in from main's #8774 after this branch forked).
+_TABLE_BUDGET_DECISIONS = """
+CREATE TABLE IF NOT EXISTS budget_decisions (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    level TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    lesson_n INTEGER NOT NULL,
+    budget TEXT NOT NULL CHECK (budget IN ('revise_rounds', 'regenerations')),
+    counted INTEGER NOT NULL,
+    decision TEXT NOT NULL,
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL
+);
+"""
+
+_TABLES = (
+    """
 CREATE TABLE IF NOT EXISTS schema_version (version INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS attempts (
     seq INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -114,17 +136,9 @@ CREATE TABLE IF NOT EXISTS budgets (
     disputed TEXT,
     PRIMARY KEY (level, slug, lesson_n)
 );
-CREATE TABLE IF NOT EXISTS budget_decisions (
-    seq INTEGER PRIMARY KEY AUTOINCREMENT,
-    level TEXT NOT NULL,
-    slug TEXT NOT NULL,
-    lesson_n INTEGER NOT NULL,
-    budget TEXT NOT NULL CHECK (budget IN ('revise_rounds', 'regenerations')),
-    counted INTEGER NOT NULL,
-    decision TEXT NOT NULL,
-    decided_by TEXT NOT NULL,
-    decided_at TEXT NOT NULL
-);
+"""
+    + _TABLE_BUDGET_DECISIONS
+    + """
 CREATE TABLE IF NOT EXISTS settle_items (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     finding_ref TEXT NOT NULL,
@@ -156,6 +170,7 @@ CREATE TABLE IF NOT EXISTS agreement (
     PRIMARY KEY (level, slug, lesson_n, attempt_a, attempt_b)
 );
 """
+)
 
 # Added by the migration from version 2 (R3): the measurement tables. Nothing above changes.
 _TABLES_V3 = """
@@ -267,8 +282,18 @@ def _migrate_2_to_3(conn: sqlite3.Connection, tables: set[str]) -> None:
         conn.execute(statement)
 
 
+def _migrate_3_to_4(conn: sqlite3.Connection, tables: set[str]) -> None:
+    """Version 3 to 4: add ``budget_decisions``.
+
+    Idempotent: a version-2 database migrated through 3 may already have it (one opened after
+    main's #8774 landed), in which case this is a no-op.
+    """
+    for statement in _statements(_TABLE_BUDGET_DECISIONS):
+        conn.execute(statement)
+
+
 # from schema_version -> the function that upgrades a file at that version to the next one
-MIGRATIONS: dict[int, Callable[[sqlite3.Connection, set[str]], None]] = {2: _migrate_2_to_3}
+MIGRATIONS: dict[int, Callable[[sqlite3.Connection, set[str]], None]] = {2: _migrate_2_to_3, 3: _migrate_3_to_4}
 
 
 def _ensure_schema(conn: sqlite3.Connection, path: Path) -> None:
