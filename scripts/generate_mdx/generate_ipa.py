@@ -24,7 +24,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.verification.stress import STRESS_OVERRIDES_PATH
+from scripts.verification.stress import STRESS_OVERRIDES_PATH, pending_stress_reason
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +131,7 @@ def generate_ipa(word: str) -> str | None:
     Returns bracketed IPA string like '[ˈmʲistɔ]', or None on failure.
 
     Pipeline (with hierarchical fallback):
+    0. Refuse forms whose stress is pending source confirmation
     1. Check ipa_overrides.yaml for full IPA override
     2. Check stress_overrides.yaml for stress override; else use Stressifier
     3. Pass stressed form to ipa_uk.ipa()
@@ -141,6 +142,11 @@ def generate_ipa(word: str) -> str | None:
         return None
 
     clean = word.strip()
+
+    # Pending forms have no source-confirmed single stress. Neither an IPA
+    # override nor Stressifier may supply a stressed pronunciation for them.
+    if pending_stress_reason(clean):
+        return None
 
     # 1. Full IPA override (highest priority)
     ipa_ovr = _get_ipa_overrides().get(clean)

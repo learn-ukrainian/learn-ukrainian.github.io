@@ -119,6 +119,42 @@ def test_verify_rejects_pending_vowel_free_form(clean_store, synthetic_vesum, sy
     assert any(codes.STRESS_MISMATCH in error and "'в'" in error for error in result["errors"])
 
 
+def test_verify_built_pending_stress_form_and_rejects_tampering(
+    clean_store, synthetic_vesum, synthetic_sources, tmp_path,
+):
+    pending_forms = ("його", "Його", "йому", "Йому", "нього", "переді", "піді")
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("UPDATE forms_all SET word_form = ? WHERE id = 1", (pending_forms[0],))
+        conn.executemany(
+            "INSERT INTO forms_all VALUES (?, 10, ?, 'synthetic', 'noun', 'noun:inanim:f:v_naz', '', '')",
+            enumerate(pending_forms[1:], start=5),
+        )
+
+    evidence_dir = tmp_path / "pending-form"
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        built = words.build_words(
+            "a1", clean_store / "req.yaml", evidence_dir=evidence_dir,
+            sources_instance=api, mcp_commit="a" * 40,
+        )
+        forms = {f["form"]: f for f in built["store"]["words"][0]["forms"]}
+        for form_str in pending_forms:
+            assert forms[form_str]["stress_source"] == "pending"
+            assert "stressed" not in forms[form_str]
+        assert verify.verify_words_store("a1", evidence_dir=evidence_dir, sources_instance=api)["status"] == "ok"
+
+        store_path = evidence_dir / "_words.yaml"
+        for source, stressed in (("trie", "йо́го"), ("none", "його"), ("pending", "йо́го")):
+            store = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+            stored_form = next(f for f in store["words"][0]["forms"] if f["form"] == "його")
+            stored_form["stress_source"] = source
+            stored_form["stressed"] = stressed
+            lock.write(store_path, lock.yaml_bytes(store))
+
+            result = verify.verify_words_store("a1", evidence_dir=evidence_dir, sources_instance=api)
+            assert result["status"] == "failed"
+            assert any(codes.STRESS_MISMATCH in error and "'його'" in error for error in result["errors"])
+
+
 def test_verify_rejects_packed_two_accent_form(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
     packed = "synthétíc-a"
     monkeypatch.setattr(
@@ -182,7 +218,7 @@ def test_verify_uses_builder_pronominal_gloss_choice(
         )
         verified = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api)
 
-    assert built["store"]["words"][0]["gloss_source"]["id"] == (
+    assert built["store"]["words"][0]["gloss_ref"]["id"] == (
         10 if preferred_pos == "pronoun" else 11
     )
     assert verified["status"] == "ok"
@@ -287,6 +323,19 @@ def test_verify_fails_on_learner_marker_violation(clean_store, synthetic_vesum, 
 
     assert res["status"] == "failed"
     assert any(codes.LEARNER_MARKER in err for err in res["errors"])
+
+
+def test_verify_rejects_long_form_marked_learner(clean_store, synthetic_vesum, synthetic_sources):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("UPDATE forms_all SET tags = tags || ':long' WHERE id = 1")
+    store_path = clean_store / "_words.yaml"
+    doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    doc["words"][0]["forms"][0]["tags"] += ":long"
+    doc["words"][0]["forms"][0]["learner"] = True
+    lock.write(store_path, lock.yaml_bytes(doc))
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api)
+    assert any(codes.LEARNER_MARKER in error for error in result["errors"])
 
 
 def test_verify_fails_on_unchecked_ulif_stress(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
@@ -724,7 +773,7 @@ def test_verify_legacy_store_and_tampered_identities(clean_store, synthetic_vesu
     legacy = yaml.safe_load(lock.yaml_bytes(built))
     legacy["built_with"].pop("sources_db_scheme")
     legacy["built_with"]["sources_db"] = "b" * 64
-    legacy["words"][0]["gloss_source"].pop("row_sha256")
+    legacy["words"][0]["gloss_ref"].pop("row_sha256")
     legacy["words"][0]["cefr"] = {"level": "A1", "source": "puls"}
     lock.write(store_path, lock.yaml_bytes(legacy))
     res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
@@ -735,7 +784,7 @@ def test_verify_legacy_store_and_tampered_identities(clean_store, synthetic_vesu
     assert any(codes.LEGACY_IDENTITY in e for e in res["errors"])
 
     missing = yaml.safe_load(lock.yaml_bytes(built))
-    missing["words"][0]["gloss_source"].pop("row_sha256")
+    missing["words"][0]["gloss_ref"].pop("row_sha256")
     lock.write(store_path, lock.yaml_bytes(missing))
     res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
     assert res["status"] == "failed"

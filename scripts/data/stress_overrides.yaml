@@ -22,27 +22,20 @@
 # explicitly to cover mid-sentence "її" and sentence-initial "Її".
 її: "її́"
 Її: "Її́"
-# sources MCP search_definitions: СУМ-11 "він" id 13932 and "воно" id
-# 15081 both give "його́"; verify_stresses returned the wrong "йо́го".
-# stress.py keys are exact-case, so sentence-initial casing needs its own key.
-його: "його́"
-# Same СУМ-11 entries (ids 13932, 15081); exact-case lookup.
-Його: "Його́"
-# sources MCP search_definitions: СУМ-11 "він" id 13932 includes "йому́";
-# verify_stresses returned not_found for the VESUM dative form.
-йому: "йому́"
-# sources MCP search_definitions: СУМ-11 "він" id 13932 and "воно"
-# id 15081 explicitly give prepositional "ньо́го"; trie: not_found.
-нього: "ньо́го"
-# sources MCP search_definitions: СУМ-11 "переді" id 67992: "ПЕ́РЕДІ";
-# verify_stresses returned packed "пе́ре́ді".
-переді: "пе́реді"
-# sources MCP search_definitions: СУМ-11 "межи" id 47773: "МЕЖИ́";
-# verify_stresses returned packed "ме́жи́".
+# ULIF DictUA entry for межи (query_ulif, 2026-09-27) lists [ МЕЖИ́ ]
+# explicitly in its stressed synonyms; the trie packs ме́жи́.
 межи: "межи́"
-# sources MCP search_definitions: СУМ-11 "піді" id 72376: "ПІ́ДІ";
-# verify_stresses returned not_found.
-піді: "пі́ді"
+# These exact forms have no confirmed single stress in the allowed sources.
+# Reasons record the 2026-09-27 verify_stresses + cached ULIF/СУМ-20 checks.
+# A pending form must bypass both the trie and the site annotator's stressifier.
+stress_pending:
+  його: "trie йо́го; ULIF він/воно has no paradigm; СУМ-20 has no ingested entry"
+  Його: "trie Йо́го; ULIF він/воно has no paradigm; СУМ-20 has no ingested entry"
+  йому: "trie not_found; ULIF він/воно has no paradigm; СУМ-20 has no ingested entry"
+  Йому: "trie not_found; ULIF він/воно has no paradigm; СУМ-20 has no ingested entry"
+  нього: "trie not_found; ULIF він/воно has no paradigm; СУМ-20 has no ingested entry"
+  переді: "trie пе́ре́ді packed; ULIF переді not_found; СУМ-20 not ingested"
+  піді: "trie not_found; ULIF піді not_found; СУМ-20 not ingested"
 # ULIF packs Fem "family" (сім'я́, end-stress) and Neut "seed" (сі́м'я) under
 # the same surface. Ambiguous verify_stress returns Neut first; annotator then
 # picks matches[0] and fails A1 pedagogy / slow nightly (#8082). Prefer Fem.
