@@ -9,28 +9,13 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.lexicon_runner_fixtures import sources_slice
+
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "enrich_offline_20k.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 MAX_FIXTURE_LEMMAS = 50
-
-
-def _ensure_fixture() -> None:
-    needed = (
-        FIXTURE / "slice_input.json",
-        FIXTURE / "sources_slice.sqlite",
-        FIXTURE / "kaikki_slice.json",
-        FIXTURE / "grac_frequency_slice.json",
-    )
-    if all(path.is_file() for path in needed):
-        return
-    from scripts.lexicon.runner.generate_pr1_fixture import main as gen
-
-    with pytest.MonkeyPatch.context() as mp:
-        mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
-        assert gen() == 0
-    assert all(path.is_file() for path in needed)
 
 
 def _run_driver(*args: str, timeout: int = 120) -> subprocess.CompletedProcess[str]:
@@ -83,7 +68,7 @@ def test_bare_invocation_refuses_without_running() -> None:
 
 
 def test_dry_run_plan_fixture_slice(tmp_path: Path) -> None:
-    _ensure_fixture()
+    sources = sources_slice(tmp_path)
     work = tmp_path / "enrich_work"
     proc = _run_driver(
         "--dry-run",
@@ -92,7 +77,7 @@ def test_dry_run_plan_fixture_slice(tmp_path: Path) -> None:
         "--candidate",
         str(FIXTURE / "slice_input.json"),
         "--sources-db",
-        str(FIXTURE / "sources_slice.sqlite"),
+        str(sources),
         "--kaikki-json",
         str(FIXTURE / "kaikki_slice.json"),
         "--max-lemmas",
@@ -151,7 +136,7 @@ def test_dry_run_default_kaikki_requires_hydrated_artifact(tmp_path: Path) -> No
 
 def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """≤50-lemma fixture dry-run of the full driver path (resumable, no finalize)."""
-    _ensure_fixture()
+    sources = sources_slice(tmp_path)
     from scripts.lexicon import enrich_manifest as em
     from scripts.lexicon.runner.enrich_offline_20k import main as enrich_main
     from scripts.lexicon.runner.memory import EnforcementProof
@@ -211,7 +196,7 @@ def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.
             "--candidate",
             str(FIXTURE / "slice_input.json"),
             "--sources-db",
-            str(FIXTURE / "sources_slice.sqlite"),
+            str(sources),
             "--kaikki-json",
             str(FIXTURE / "kaikki_slice.json"),
             "--grac-cache",
@@ -243,7 +228,7 @@ def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.
 
 
 def test_resume_after_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _ensure_fixture()
+    sources = sources_slice(tmp_path)
     from scripts.lexicon import enrich_manifest as em
     from scripts.lexicon.runner.enrich_offline_20k import main as enrich_main
     from scripts.lexicon.runner.memory import EnforcementProof
@@ -289,7 +274,7 @@ def test_resume_after_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.Monk
         "--candidate",
         str(FIXTURE / "slice_input.json"),
         "--sources-db",
-        str(FIXTURE / "sources_slice.sqlite"),
+        str(sources),
         "--kaikki-json",
         str(FIXTURE / "kaikki_slice.json"),
         "--grac-cache",

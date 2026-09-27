@@ -28,6 +28,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from tests.helpers.lexicon_runner_fixtures import sources_slice
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 MAX_FIXTURE_LEMMAS = 50
@@ -37,23 +39,6 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from wiki import dense_rerank, ukrainian_wiki_corpus
 
 pytestmark = pytest.mark.reads_content
-
-
-def _ensure_enrich_fixture() -> None:
-    needed = (
-        FIXTURE / "slice_input.json",
-        FIXTURE / "sources_slice.sqlite",
-        FIXTURE / "kaikki_slice.json",
-        FIXTURE / "grac_frequency_slice.json",
-    )
-    if all(path.is_file() for path in needed):
-        return
-    from scripts.lexicon.runner.generate_pr1_fixture import main as gen
-
-    with pytest.MonkeyPatch.context() as mp:
-        mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
-        assert gen() == 0
-    assert all(path.is_file() for path in needed)
 
 
 class _FakeTokenizer:
@@ -95,7 +80,7 @@ def _install_fake_encoder(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(dense_rerank, "_get_encoder", lambda: fake_encoder)
 
 
-def _run_in_process_enrich(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def _run_in_process_enrich(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, sources: Path) -> None:
     from scripts.lexicon import enrich_manifest as em
     from scripts.lexicon.runner.enrich_offline_20k import main as enrich_main
     from scripts.lexicon.runner.memory import EnforcementProof
@@ -153,7 +138,7 @@ def _run_in_process_enrich(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
             "--candidate",
             str(FIXTURE / "slice_input.json"),
             "--sources-db",
-            str(FIXTURE / "sources_slice.sqlite"),
+            str(sources),
             "--kaikki-json",
             str(FIXTURE / "kaikki_slice.json"),
             "--grac-cache",
@@ -233,10 +218,10 @@ def test_in_process_enrich_does_not_poison_rlimit_before_wiki_encode(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Same-process sequence that hung the -n auto suite when RLIMIT leaked (#5776)."""
-    _ensure_enrich_fixture()
+    sources = sources_slice(tmp_path)
     before = resource.getrlimit(resource.RLIMIT_AS)
 
-    _run_in_process_enrich(tmp_path, monkeypatch)
+    _run_in_process_enrich(tmp_path, monkeypatch, sources)
 
     after_enrich = resource.getrlimit(resource.RLIMIT_AS)
     assert after_enrich == before, (

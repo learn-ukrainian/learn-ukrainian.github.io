@@ -39,6 +39,7 @@ from scripts.lexicon.runner.stream_manifest import (
     stream_manifest_entries_json,
 )
 from scripts.lexicon.runner.worker import run_capped_worker
+from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"
 
@@ -57,31 +58,12 @@ def test_kaikki_side_db_refuses_unreadable_or_malformed_input(tmp_path: Path, co
     assert output.read_bytes() == b"previous output"
 
 
-def _ensure_fixture() -> None:
-    needed = (
-        FIXTURE / "baseline.sha256",
-        FIXTURE / "baseline_enriched.json",
-        FIXTURE / "sources_slice.sqlite",
-        FIXTURE / "slice_input.json",
-        FIXTURE / "grac_frequency_slice.json",
-    )
-    if not all(path.is_file() for path in needed):
-        from scripts.lexicon.runner.generate_pr1_fixture import main as gen
-
-        # Explicit offline for fixture regen; do not rely on import-time env
-        # mutation (and undo after so later tests keep a clean process env).
-        with pytest.MonkeyPatch.context() as mp:
-            mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
-            assert gen() == 0
-        assert all(path.is_file() for path in needed)
-
-
 @pytest.fixture(scope="module")
 def fixture_paths(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
-    _ensure_fixture()
+    sources_dir = tmp_path_factory.mktemp("runner_pr1_sources")
     return {
         "input": FIXTURE / "slice_input.json",
-        "sources": FIXTURE / "sources_slice.sqlite",
+        "sources": sources_slice(sources_dir),
         "grac": FIXTURE / "grac_frequency_slice.json",
         "kaikki": FIXTURE / "kaikki_slice.json",
         "baseline": FIXTURE / "baseline_enriched.json",
@@ -396,10 +378,9 @@ def test_relation_closure_matches_legacy_by_headword(
 
 
 def test_500_lemma_equivalence_cefr_and_relations(
-    fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Record-equivalent CEFR + reciprocal relations vs committed legacy baseline."""
-    _ensure_fixture()
     baseline = json.loads(fixture_paths["baseline"].read_text(encoding="utf-8"))
     expected_sha = fixture_paths["baseline_sha"].read_text(encoding="utf-8").strip()
     actual_sha = hashlib.sha256(fixture_paths["baseline"].read_bytes()).hexdigest()
@@ -411,8 +392,8 @@ def test_500_lemma_equivalence_cefr_and_relations(
     em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
     em._GRAC_FREQUENCY_CACHE_DATA = grac
 
-    tmp_cefr = fixture_paths["input"].parent / "_tmp_cefr.sqlite"
-    tmp_rel = fixture_paths["input"].parent / "_tmp_rel.sqlite"
+    tmp_cefr = tmp_path / "cefr.sqlite"
+    tmp_rel = tmp_path / "rel.sqlite"
     conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
     try:
         sealed_cefr_precompute(
@@ -460,6 +441,3 @@ def test_500_lemma_equivalence_cefr_and_relations(
             assert closed == baseline["relations"][kind], kind
     finally:
         conn.close()
-        for path in (tmp_cefr, tmp_rel):
-            if path.exists():
-                path.unlink()

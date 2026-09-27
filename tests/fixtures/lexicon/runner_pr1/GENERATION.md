@@ -3,7 +3,7 @@
 ## Command
 
 ```bash
-.venv/bin/python scripts/lexicon/runner/generate_pr1_fixture.py
+.venv/bin/python scripts/lexicon/runner/generate_pr1_fixture.py --write-sealed
 ```
 
 ## What the baseline proves
