@@ -761,6 +761,71 @@ def test_every_clean_finding_must_be_classified_and_planted_is_not_a_class(clean
 # --- the CLI ---------------------------------------------------------------------------------------------------------------
 
 
+def test_a_task_without_model_is_refused(seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
+    """``--model`` must be explicit: an omitted model resolves to a provider default that
+    ``check_dispatch_binding`` can never reconstruct byte-for-byte, so the task could never be
+    adjudicated (#8430 R3-A r9 BLOCKER 1)."""
+    lesson = tmp_path / "lesson.expanded.yaml"
+    lesson.write_text(LESSON_TEXT, encoding="utf-8")
+    argv = [
+        "task",
+        "seed-a1",
+        "--review-id",
+        seeded.review_id,
+        "--attempt-id",
+        seeded.attempt_id,
+        "--repo-root",
+        str(seeded.env.root),
+        "--db",
+        str(seeded.env.db),
+        "--lesson",
+        str(lesson),
+        "--agent",
+        "agy",
+    ]
+    with pytest.raises(SystemExit) as caught:
+        adj.main(argv)
+    assert caught.value.code == 2
+    assert "--model" in capsys.readouterr().err
+
+
+def test_a_task_created_with_model_round_trips_through_the_emitted_command(
+    seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A task created through the CLI with ``--model`` emits a dispatch command that, dispatched as printed,
+    passes ``check_dispatch_binding`` and resolves the adjudicator's identity from it (#8430 R3-A r9)."""
+    lesson = tmp_path / "lesson.expanded.yaml"
+    lesson.write_text(LESSON_TEXT, encoding="utf-8")
+    argv = [
+        "task",
+        "seed-a1",
+        "--review-id",
+        seeded.review_id,
+        "--attempt-id",
+        seeded.attempt_id,
+        "--repo-root",
+        str(seeded.env.root),
+        "--db",
+        str(seeded.env.db),
+        "--lesson",
+        str(lesson),
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.1-pro-preview",
+    ]
+    assert adj.main(argv) == 0
+    payload = json.loads(capsys.readouterr().out)
+    parsed = delegate.build_parser().parse_args(payload["dispatch"][2:])
+    assert parsed.model == "gemini-3.1-pro-preview"
+    task_id = payload["task_id"]
+    seeded.dispatch(parsed.agent, parsed.model, task_id=task_id, mode=parsed.mode)
+    identity = adj.check_dispatch_binding(
+        seeded.unit_id, seeded.review_id, seeded.attempt_id, task_id, seeded.env.tasks, seeded.env.root
+    )
+    assert identity == {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+
+
 def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
     lesson = tmp_path / "lesson.expanded.yaml"
     lesson.write_text(LESSON_TEXT, encoding="utf-8")
@@ -774,7 +839,12 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
         "--db",
         str(seeded.env.db),
     ]
-    assert adj.main(["task", "seed-a1", *common, "--lesson", str(lesson), "--agent", "agy"]) == 0
+    assert (
+        adj.main(
+            ["task", "seed-a1", *common, "--lesson", str(lesson), "--agent", "agy", "--model", "gemini-3.1-pro-preview"]
+        )
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert Path(payload["task_file"]).is_file() and payload["dispatch"][2:4] == ["dispatch", "--agent"]
     reply = tmp_path / "reply.txt"
@@ -810,6 +880,8 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
                 str(lesson),
                 "--agent",
                 "agy",
+                "--model",
+                "gemini-3.1-pro-preview",
                 "--repo-root",
                 str(seeded.env.root),
                 "--db",

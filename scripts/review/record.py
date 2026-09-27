@@ -139,19 +139,20 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
         raise RecordError(
             f"the dispatch record {path} is unreadable ({error}); the reviewer's identity is unknown"
         ) from error
-    return identity_from_record(task, task_id)
+    return identity_from_record(task, task_id, record_path=path)
 
 
-def identity_from_record(task: Any, task_id: str) -> dict[str, str]:
+def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | None = None) -> dict[str, str]:
     """The reviewer's ``model``, ``harness`` and ``family`` from an already-parsed dispatch record.
 
     Takes the parsed record itself (not a path) so a caller that has already read and checked a record
     (e.g. ``adjudicate.check_dispatch_binding``) derives identity from that same parse: nothing here
     re-reads the file, so a record replaced on disk between a caller's read and this call cannot change
-    the identity returned.
+    the identity returned. ``record_path``, when known to the caller, names the file in the "not an object"
+    message instead of the task id, which is not a filesystem path.
     """
     if not isinstance(task, dict):
-        raise RecordError(f"the dispatch record {task_id} is not an object")
+        raise RecordError(f"the dispatch record {record_path if record_path is not None else task_id} is not an object")
     harness = task.get("agent")
     if not isinstance(harness, str) or not harness.strip():
         raise RecordError(f"the dispatch record {task_id} names no harness")

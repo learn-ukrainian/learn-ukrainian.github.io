@@ -311,12 +311,18 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
     return path, task_id
 
 
-def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str | None = None) -> list[str]:
+def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
     """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
 
     Deliberately no ``--worktree`` (nor lifecycle/research flags): the dispatch must append no prompt blocks.
+
+    ``model`` is required: a task dispatched without an explicit model resolves to a provider default before
+    delegate records ``model``, and ``check_dispatch_binding`` cannot reconstruct that resolution byte-for-byte
+    from the recorded value alone — such a task could never be adjudicated (#8430 R3-A r9 BLOCKER 1).
     """
-    argv = [
+    if not model:
+        raise ValueError("dispatch_argv requires an explicit model (delegate.py dispatch's --model)")
+    return [
         sys.executable,
         str(DELEGATE),
         "dispatch",
@@ -328,10 +334,9 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str | Non
         str(task_file),
         "--mode",
         READ_ONLY_MODE,
+        "--model",
+        model,
     ]
-    if model:
-        argv += ["--model", model]
-    return argv
 
 
 # --- the reply --------------------------------------------------------------------------
@@ -443,14 +448,15 @@ def validate_reply(reply: Any, subject: Subject) -> Verdict:
     )
 
 
-def adjudicator_identity(dispatched: dict[str, Any], task_id: str) -> dict[str, str]:
+def adjudicator_identity(dispatched: dict[str, Any], task_id: str, record_path: Path) -> dict[str, str]:
     """The adjudicator's model and family from the already-parsed dispatch record; never from the reply.
 
     Takes the record ``check_dispatch_binding`` already read and checked, not a path: the identity comes from that
-    same parse, so a record replaced on disk after the check cannot change the identity returned.
+    same parse, so a record replaced on disk after the check cannot change the identity returned. ``record_path``
+    is passed through only to name the file in an "is not an object" error (it is never reread from it).
     """
     try:
-        return record.identity_from_record(dispatched, task_id)
+        return record.identity_from_record(dispatched, task_id, record_path=record_path)
     except record.RecordError as error:
         raise AdjudicationError(str(error), ADJUDICATOR_UNKNOWN) from error
 
@@ -459,23 +465,23 @@ def _expected_dispatch_args_sha256(delegate: Any, dispatched: dict[str, Any], ta
     """The ``dispatch_args_sha256`` a canonical dispatch of this record's own ``agent``/``model`` would carry.
 
     ``dispatch_argv`` takes exactly four free inputs: the task file and task id (both already pinned above by
-    the task-id and prompt-hash checks) and the agent and optional model — every other flag it builds is fixed.
+    the task-id and prompt-hash checks) and the agent and model — every other flag it builds is fixed.
     Reconstructing with the record's own ``agent``/``model`` and parsing the result through
     ``delegate.build_parser()`` yields the one ``dispatch`` Namespace a canonical dispatch of *this* record could
     have parsed to; hashing it the same way delegate does and comparing against the recorded
     ``dispatch_args_sha256`` catches any additional or altered flag (e.g. a caller-supplied ``--output-schema``)
     without naming each field one at a time — and automatically covers a flag added to ``dispatch`` later.
 
-    Residual: when ``--model`` is omitted at task-creation, delegate resolves it to a provider default before
-    recording ``model``, so a dispatch that legitimately omitted ``--model`` cannot be reconstructed byte-for-byte
-    from the recorded (resolved) ``model`` alone and is refused here rather than guessed at. Always pass
-    ``--model`` explicitly to ``adjudicate.py task`` — the established convention; every call site in this
-    codebase already does.
+    ``adjudicate.py task`` requires ``--model`` (#8430 R3-A r9 BLOCKER 1), so a record from this codebase's own
+    dispatch always names one; a record naming none cannot be reconstructed byte-for-byte and is refused here.
     """
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
         raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)
-    argv = dispatch_argv(task_file, task_id, agent, model=dispatched.get("model"))
+    model = dispatched.get("model")
+    if not isinstance(model, str) or not model:
+        raise AdjudicationError(f"the dispatch record of {task_id} names no model", TASK_MISMATCH)
+    argv = dispatch_argv(task_file, task_id, agent, model=model)
     try:
         parsed = delegate.build_parser().parse_args(argv[2:])
     except SystemExit as error:
@@ -569,7 +575,7 @@ def check_dispatch_binding(
             "show up here",
             TASK_MISMATCH,
         )
-    return adjudicator_identity(dispatched, task_id)
+    return adjudicator_identity(dispatched, task_id, record_path)
 
 
 def check_independence(subject: Subject, adjudicator_family: str) -> None:
@@ -683,7 +689,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate task seed-1 --review-id R --attempt-id A \\\n"
-            "    --lesson lesson-2.expanded.yaml --agent codex\n"
+            "    --lesson lesson-2.expanded.yaml --agent codex --model gpt-6-astra\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate record seed-1 --review-id R --attempt-id A \\\n"
             "    --reply batch_state/tasks/adj-0123456789abcdef.result --task-id adj-0123456789abcdef\n"
             "\nOutputs: one JSON object on stdout. Exit codes: 0 done; 2 refused (error and its code on stderr)."
@@ -700,7 +706,14 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "task":
             command.add_argument("--lesson", type=Path, required=True, help="the expanded measurement lesson")
             command.add_argument("--agent", required=True, help="the adjudicating harness (delegate.py --agent)")
-            command.add_argument("--model", default=None)
+            command.add_argument(
+                "--model",
+                required=True,
+                help=(
+                    "the adjudicating model (delegate.py dispatch's --model); required so "
+                    "check_dispatch_binding can reconstruct the canonical dispatch byte-for-byte"
+                ),
+            )
         else:
             command.add_argument("--reply", type=Path, required=True, help="the adjudicator's reply text")
             command.add_argument("--task-id", required=True, help="the adjudication's dispatch task id")
