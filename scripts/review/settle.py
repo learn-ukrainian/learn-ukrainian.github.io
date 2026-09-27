@@ -388,14 +388,34 @@ def record(
         outcome, receipts = validate_reply(reply_bytes, manifest_bytes, ledger_path)
         state = repo_root / TREE / "evidence" / item["level"] / "_state" / item["slug"]
         saved = state / f"settle-{item['item_id']}.reply.yaml"
+        created = True
         try:
             _save_exclusive(saved, reply_bytes)
         except FileExistsError as exc:
-            raise SettleError("settle reply already saved; no second attempt") from exc
+            # A prior run, or a competing recorder racing this one, may have saved this exact reply
+            # already (the item's outcome is still NULL, per the ``_item`` check above): that retry is
+            # the same reply arriving again, not a second attempt, and must be let through to record().
+            created = False
+            if saved.read_bytes() != reply_bytes:
+                raise SettleError(
+                    f"settle item {item['item_id']}: a different reply is already saved; no second attempt"
+                ) from exc
         try:
             db.record_settle_outcome(conn, item["item_id"], outcome, receipts, decided_by)
+        except db.SettleAlreadyDecided:
+            # Another recorder decided this item before this call's own write reached the
+            # database — whether that recorder created ``saved`` or found it already there with
+            # identical bytes, the file is the reply of record (or byte-identical to it) either
+            # way. Never unlink it here, regardless of whether this call is the one that created
+            # it: doing so on ``created`` alone deletes the winner's saved reply out from under it
+            # when this call happened to be the one that raced ahead of the winner to the
+            # filesystem but lost the database race (#8774 r7).
+            raise
         except BaseException:
-            saved.unlink()
+            # A genuine failure with no outcome recorded for this item at all: only the call that
+            # created ``saved`` cleans it up.
+            if created:
+                saved.unlink()
             raise
         return outcome
 

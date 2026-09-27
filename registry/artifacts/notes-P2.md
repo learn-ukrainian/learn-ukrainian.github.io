@@ -65,6 +65,20 @@ that return an empty value. The regenerated 505-row consumer census records
 P2 readers and writers with executed checks, including two manually listed
 Kaikki readers that its syntax scan does not detect.
 
+Reproduce the source sweep from the repository root with these exact commands
+(the outputs were 10, 95, and 132 matching files respectively on this head):
+
+```sh
+rg -l 'kaikki_uk_lookup|DEFAULT_KAIKKI|KAIKKI_LOOKUP' scripts/lexicon scripts/atlas scripts/audit | wc -l
+rg -l 'data/lexicon|["\x27]lexicon["\x27]' scripts/lexicon scripts/atlas scripts/audit scripts/practice_deck | wc -l
+rg -l 'except .*OSError|except .*FileNotFoundError|raw = \{\}|return \{\}' scripts/lexicon scripts/atlas scripts/audit scripts/practice_deck | wc -l
+```
+
+Inspect the matching lines with the same `rg -n` patterns (remove `-l` and
+`| wc -l`). The second search includes non-artifact lexicon paths, which the
+dispositions below separate by use. The third includes unrelated exception
+handlers; `runner/side_db.py` was the additional Kaikki reader it exposed.
+
 - Physical K output: `curated_textbook_jsonl_repromote.py` now defaults to its
   existing registry inventory; `INV_REL` remains a provenance identifier.
   K joins in `build_data_manifest.py`, `esum_garbled.py`,
@@ -98,7 +112,44 @@ Kaikki readers that its syntax scan does not detect.
   `heritage_classifier.py` an unrelated registry lookup and optional DB,
   `runner/finalize.py` optional process metrics, and
   `check_manifest_vocabulary_coverage.py` a Git-diff failure that triggers
-  full coverage. None reads a P2 K or A artifact.
+  full coverage. `runner/side_db.py` now rejects unreadable or malformed
+  Kaikki JSON with hydrate guidance, before replacing any existing side DB.
+  The remaining catches do not read a P2 K or A artifact.
+
+The census follow-up checks used this command after `artifacts hydrate --group`
+for `lexicon_kaikki`, `lexicon_candidates`, `lexicon_parked`, and
+`lexicon_end_dictionaries` in this dispatch worktree. Every `artifact_path()`
+call verified the named P2 manifest entry and its hydrated file:
+
+```sh
+/home/ops/learn-ukrainian/.venv/bin/python - <<'PY'
+from scripts.storage import paths
+for group in ('lexicon_kaikki', 'lexicon_candidates', 'lexicon_parked', 'lexicon_end_dictionaries'):
+    for entry in paths.load_manifest(group)['entries']:
+        rel = entry['path'].removeprefix('data/')
+        assert paths.artifact_path(group, rel).is_file()
+        print(f'{group}/{rel}: PASS')
+PY
+```
+
+```text
+lexicon_kaikki/lexicon/kaikki_uk_lookup.json: PASS
+lexicon_candidates/lexicon/calque_inflow_queue.json: PASS
+lexicon_candidates/lexicon/heritage_pairs.wave1-calque.residual.json: PASS
+lexicon_candidates/lexicon/intake/private_teacher_lesson_intake_candidates.json: PASS
+lexicon_candidates/lexicon/paronym_candidates_grinchyshyn.json: PASS
+lexicon_candidates/lexicon/paronym_candidates_ukrmova.json: PASS
+lexicon_candidates/lexicon/relation_candidates_miyklas.json: PASS
+lexicon_candidates/lexicon/relation_candidates_sample.json: PASS
+lexicon_candidates/lexicon/stem_slice_2a_candidates.json: PASS
+lexicon_parked/lexicon/parked/parked-thin-entries-2026-07-10.json: PASS
+lexicon_end_dictionaries/lexicon/textbook-end-dictionaries/inventory.json: PASS
+lexicon_end_dictionaries/lexicon/textbook-end-dictionaries/sections.json: PASS
+```
+
+For the moved cohort path, `wc -l registry/lexicon/cohort-20k-20260717.txt`
+printed `20323 registry/lexicon/cohort-20k-20260717.txt`. These outputs are
+the checks cited by the corrected census rows.
 
 ## CI test-ID reference
 

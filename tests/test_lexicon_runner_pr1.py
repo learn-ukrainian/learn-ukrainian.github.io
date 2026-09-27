@@ -43,6 +43,20 @@ from scripts.lexicon.runner.worker import run_capped_worker
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"
 
 
+@pytest.mark.parametrize("contents", [None, "{broken", "[]"])
+def test_kaikki_side_db_refuses_unreadable_or_malformed_input(tmp_path: Path, contents: str | None) -> None:
+    lookup = tmp_path / "kaikki.json"
+    if contents is not None:
+        lookup.write_text(contents, encoding="utf-8")
+    output = tmp_path / "kaikki.sqlite"
+    output.write_bytes(b"previous output")
+
+    with pytest.raises(ValueError, match="hydrate --group lexicon_kaikki"):
+        build_kaikki_side_db(lookup, output)
+
+    assert output.read_bytes() == b"previous output"
+
+
 def _ensure_fixture() -> None:
     needed = (
         FIXTURE / "baseline.sha256",
@@ -353,12 +367,8 @@ def test_relation_closure_matches_legacy_by_headword(
     try:
         has_sum11 = em._sum11_has_flag_columns(conn)
         manifest = {"entries": entries}
-        legacy_syn = em._definition_pointer_relations_by_headword(
-            conn, manifest, has_sum11_flags=has_sum11
-        )
-        legacy_ant = em._definition_antonym_relations_by_headword(
-            conn, manifest, has_sum11_flags=has_sum11
-        )
+        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
+        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
         headwords = em._manifest_headwords(manifest)
         extract_and_close_relations(
             entries=entries,
@@ -436,12 +446,8 @@ def test_500_lemma_equivalence_cefr_and_relations(
                 "antonym": lambda entry: em._definition_antonym_relations(
                     conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
                 ),
-                "homonym": lambda entry: em._homonym_relations(
-                    conn, str(entry.get("lemma") or "")
-                ),
-                "paronym": lambda entry: em._paronym_relations(
-                    conn, str(entry.get("lemma") or "")
-                ),
+                "homonym": lambda entry: em._homonym_relations(conn, str(entry.get("lemma") or "")),
+                "paronym": lambda entry: em._paronym_relations(conn, str(entry.get("lemma") or "")),
             },
             headwords=headwords,
             canonical_term_fn=em._canonical_synonym_term,

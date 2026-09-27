@@ -24,6 +24,7 @@ import math
 import os
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -346,7 +347,7 @@ def test_changes_job_reads_labels_for_pull_request_and_merge_group() -> None:
     # pull-requests: read) and resolves merge-group PRs from the queue ref.
     changes = _load("ci.yml")["jobs"]["changes"]
     assert changes["permissions"]["pull-requests"] == "read"
-    env = changes["steps"][-1]["env"]
+    env = next(step["env"] for step in changes["steps"] if step.get("id") == "classify")
     assert env["HEAD_REF"] == "${{ github.event.merge_group.head_ref }}"
     assert "github.event.merge_group.base_sha" in env["BASE"]
 
@@ -383,14 +384,39 @@ def test_ci_gate_runs_after_cancel() -> None:
 
 
 def _run_gate(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["bash", "-c", _gate_script()],
-        check=False,
-        capture_output=True,
-        text=True,
-        env={**os.environ, **env},
-        timeout=30,
-    )
+    with tempfile.TemporaryDirectory(dir=_REPO_ROOT, prefix="gate-gh-") as temp:
+        # The real gate queries this run attempt; replace only that transport
+        # so its shell logic is exercised against controlled matrix outcomes.
+        gh = Path(temp) / "gh"
+        gh.write_text(
+            "#!/bin/sh\n"
+            'if [ -n "${MOCK_PYTEST_JOB_LINES+x}" ]; then\n'
+            "  printf '%s\\n' \"$MOCK_PYTEST_JOB_LINES\"\n"
+            "  exit 0\n"
+            "fi\n"
+            "i=1\n"
+            'while [ "$i" -le "$SHARD_COUNT" ]; do\n'
+            "  printf 'pytest (%s)|success\\n' \"$i\"\n"
+            "  i=$((i+1))\n"
+            "done\n",
+            encoding="utf-8",
+        )
+        gh.chmod(0o755)
+        return subprocess.run(
+            ["bash", "-c", _gate_script()],
+            check=False,
+            capture_output=True,
+            text=True,
+            env={
+                **os.environ,
+                "PATH": f"{temp}:{os.environ['PATH']}",
+                "GITHUB_REPOSITORY": "owner/repo",
+                "GITHUB_RUN_ID": "123",
+                "GITHUB_RUN_ATTEMPT": "1",
+                **env,
+            },
+            timeout=30,
+        )
 
 
 # --- fast-checks (#8750 phase A.2) -------------------------------------------
@@ -425,7 +451,7 @@ def test_fast_checks_replaces_the_short_check_jobs() -> None:
         assert jobs[job_id]["needs"] == ["changes"], job_id
     assert "needs" not in jobs["secret-scan"]
     assert sorted(_ci_gate_job()["needs"]) == sorted(
-        ["changes", "secret-scan", "fast-checks", "pytest", "contracts", "frontend"]
+        ["changes", "secret-scan", "fast-checks", "pytest", "needs-artifact-audit", "contracts", "frontend"]
     )
 
 
@@ -541,6 +567,8 @@ _GREEN = {
     "FC_PLAN_VALIDATE": "success",
     "FC_TYPESAFE": "success",
     "PYTEST": "success",
+    "AUDIT": "success",
+    "SHARD_COUNT": "4",
     "CONTRACTS": "success",
     "FRONTEND_JOB": "skipped",
 }
@@ -566,6 +594,12 @@ def test_ci_gate_fails_when_a_required_job_was_skipped() -> None:
     assert "CI Gate green" not in result.stdout
 
 
+def test_ci_gate_fails_when_a_pytest_matrix_job_is_missing() -> None:
+    result = _run_gate({**_GREEN, "MOCK_PYTEST_JOB_LINES": "pytest (1)|success\npytest (2)|success"})
+    assert result.returncode != 0
+    assert "pytest matrix jobs differ" in result.stdout
+
+
 def test_ci_gate_fails_when_changes_was_cancelled() -> None:
     result = _run_gate({**_GREEN, "CHANGES": "cancelled"})
     assert result.returncode != 0
@@ -579,6 +613,8 @@ _DOCS_TIER = {
     "FC_PREFLIGHT": "skipped",
     "FC_RUFF": "skipped",
     "CONTRACTS": "skipped",
+    "AUDIT": "skipped",
+    "SHARD_COUNT": "1",
 }
 
 
@@ -601,7 +637,7 @@ def _gate_env(check: str, applies: bool, outcome: str) -> dict[str, str]:
     elif check == "ruff":
         env["DOCS_ONLY"] = "false" if applies else "true"
         if not applies:
-            env.update(FC_RUFF="skipped", CONTRACTS="skipped")
+            env.update(FC_RUFF="skipped", CONTRACTS="skipped", AUDIT="skipped", SHARD_COUNT="1")
     env["FC_" + check.upper()] = outcome
     # A failed blocking step fails the job; any other outcome is tested with
     # a successful job so the gate must reject it from the output alone.
@@ -700,7 +736,7 @@ def test_ci_gate_fast_checks_wiring() -> None:
     for check in _FAST_CHECKS:
         assert env["FC_" + check.upper()] == "${{ needs.fast-checks.outputs." + check + " }}"
     text = yaml.safe_dump(_ci_gate_job())
-    for removed in ("needs.ruff", "needs.preflight", "needs.plan-validate", "needs.typesafe-triage", "conclusion"):
+    for removed in ("needs.ruff", "needs.preflight", "needs.plan-validate", "needs.typesafe-triage"):
         assert removed not in text, removed
 
 

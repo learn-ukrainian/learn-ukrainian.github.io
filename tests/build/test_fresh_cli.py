@@ -685,3 +685,40 @@ def test_cli_rejects_symlinked_draft_before_assemble(tmp_path, capsys):
     with patch("scripts.build.fresh.assemble.assemble_lesson", side_effect=AssertionError("read attempted")):
         assert main(["assemble", "a1", "safe-slug", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
     assert "path_outside_allowed_root" in capsys.readouterr().err
+
+
+# --- build --module refuses to complete on a stale module verdict (#8774 r5) -----------------------------------
+
+
+def test_stale_module_verdict_problems_is_empty_before_any_review(tmp_path):
+    """A module never reviewed has no module-verdict.yaml yet: that is not staleness."""
+    from scripts.build.fresh.cli import _stale_module_verdict_problems
+
+    assert _stale_module_verdict_problems("a1", "fixture-module", repo_root=tmp_path) == []
+
+
+def _fake_complete_module_report(level, slug, *, repo_root, lesson_n, writer_seat, question_seat):
+    return {"level": level, "slug": slug, "complete": True, "lessons": []}
+
+
+def test_build_module_completion_refuses_a_stale_module_verdict(tmp_path, capsys):
+    from scripts.build.fresh import cli
+
+    with (
+        patch("scripts.build.fresh.module.build_module", side_effect=_fake_complete_module_report),
+        patch.object(
+            cli, "_stale_module_verdict_problems", return_value=["the file disagrees with a fresh recomputation"]
+        ),
+    ):
+        assert main(["build", "a1", "fixture-module", "--module", "--repo-root", str(tmp_path)]) == 1
+    assert "module-verdict.yaml is stale" in capsys.readouterr().err
+
+
+def test_build_module_completion_passes_when_the_verdict_check_finds_nothing(tmp_path, capsys):
+    from scripts.build.fresh import cli
+
+    with (
+        patch("scripts.build.fresh.module.build_module", side_effect=_fake_complete_module_report),
+        patch.object(cli, "_stale_module_verdict_problems", return_value=[]),
+    ):
+        assert main(["build", "a1", "fixture-module", "--module", "--repo-root", str(tmp_path)]) == 0

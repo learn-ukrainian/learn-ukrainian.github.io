@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -512,6 +513,271 @@ def test_each_revise_verdict_is_a_round_and_the_third_is_terminal(world: World) 
     )
 
 
+def _revise(world: World) -> record.Outcome:
+    return world.record(world.make_return(2, [finding("F-01", severity="MAJOR")]))
+
+
+def _decide(world: World, budget: str, decided_by: str = "operator") -> int:
+    conn = findings_db.connect(world.db)
+    try:
+        return findings_db.record_budget_operator_decision(
+            conn, LEVEL, SLUG, 2, "one more round", decided_by, budget=budget
+        )
+    finally:
+        conn.close()
+
+
+def test_a_revise_round_past_the_terminal_budget_is_refused_and_counts_nothing(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    projection = world.verdict_file(2).read_bytes()
+    attempts = len(world.db_rows("attempts"))
+    outcome = _revise(world)  # the reviewer's reproduction: a fourth record after the terminal third
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert outcome.rejection_codes == [record.BUDGET_TERMINAL] and not outcome.terminal
+    assert "budget-decision" in outcome.next
+    [budget] = world.db_rows("budgets", "lesson_n = 2")
+    assert budget["revise_rounds"] == 3
+    assert world.verdict_file(2).read_bytes() == projection
+    rows = world.db_rows("attempts")
+    assert len(rows) == attempts + 1 and rows[-1]["verdict"] == "REJECTED"
+    assert json.loads(rows[-1]["rejection_codes_json"]) == [record.BUDGET_TERMINAL]
+    assert world.db_rows("findings", f"attempt_id = '{rows[-1]['attempt_id']}'") == []
+
+
+def test_the_cli_exits_1_on_a_refused_round_past_the_terminal_budget(
+    world: World, capsys: pytest.CaptureFixture[str]
+) -> None:
+    for _ in range(3):
+        _revise(world)
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    assert record.main(_argv(world, made)) == 1
+    assert json.loads(capsys.readouterr().out)["rejection_codes"] == [record.BUDGET_TERMINAL]
+
+
+def test_a_refused_round_is_replayed_as_refused(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    first, again = world.record(made), world.record(made)
+    assert first.rejection_codes == again.rejection_codes == [record.BUDGET_TERMINAL] and not again.accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 3
+
+
+def test_an_operator_decision_allows_one_more_round_then_the_budget_is_terminal_again(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    assert _decide(world, "revise_rounds") == 3
+    fourth = _revise(world)
+    assert fourth.accepted and world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+    assert fourth.terminal[0]["reason"] == "revise_budget_exhausted"  # a fourth round is terminal again
+    fifth = _revise(world)
+    assert fifth.rejection_codes == [record.BUDGET_TERMINAL]
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+    assert _decide(world, "revise_rounds") == 4
+    assert _revise(world).accepted
+
+
+def test_a_decision_for_another_lesson_or_before_the_budget_is_terminal_does_not_release_a_lesson(
+    world: World,
+) -> None:
+    _revise(world)
+    _revise(world)
+    _decide(world, "revise_rounds")  # count 2: the budget is not terminal yet, the decision is spent by round 3
+    assert _revise(world).accepted
+    assert _revise(world).rejection_codes == [record.BUDGET_TERMINAL]
+
+
+def test_an_approve_of_another_lesson_is_not_blocked_by_a_terminal_lesson(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    assert world.record(world.make_return(1)).accepted
+
+
+def _spend_regenerations(world: World, count: int) -> None:
+    conn = findings_db.connect(world.db)
+    try:
+        for n in [1, 2, 3, 1, 2, 3][:count]:
+            fixloop.regenerate(conn, LEVEL, SLUG, n, [1, 2, 3], findings_db.load_parameters(), None)
+    finally:
+        conn.close()
+
+
+def test_a_review_of_an_unregenerated_revise_manifest_is_refused_once_the_regenerations_are_spent(
+    world: World,
+) -> None:
+    assert _revise(world).verdict == "REVISE"
+    _spend_regenerations(world, 6)
+    outcome = _revise(world)  # the same manifest, still REVISE, and nothing left to regenerate it with
+    assert outcome.rejection_codes == [record.BUDGET_TERMINAL] and not outcome.accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 1
+    _decide(world, "regenerations")
+    assert _revise(world).accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 2
+
+
+def test_the_review_of_the_last_regeneration_is_not_refused(world: World) -> None:
+    assert _revise(world).verdict == "REVISE"
+    _spend_regenerations(world, 6)
+    regenerate_lesson_two(world)  # a new manifest: this is the regenerated lesson's own review
+    assert world.record(world.make_return(2)).accepted
+
+
+def test_regeneration_is_refused_past_the_budget_until_the_operator_decides(world: World) -> None:
+    _spend_regenerations(world, 6)
+    conn = findings_db.connect(world.db)
+    try:
+        params, lessons = findings_db.load_parameters(), [1, 2, 3]
+        with pytest.raises(fixloop.TerminalTransition):
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        findings_db.record_budget_operator_decision(
+            conn, LEVEL, SLUG, 2, "one more", "operator", budget="regenerations"
+        )
+        assert fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)["regenerations"] == 7
+        with pytest.raises(fixloop.TerminalTransition):
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+    finally:
+        conn.close()
+
+
+def _run_together(calls: list[Any]) -> list[Any]:
+    """Run each call on its own thread and return the results (an exception is returned in place of one)."""
+    results: list[Any] = [None] * len(calls)
+
+    def run(index: int) -> None:
+        try:
+            results[index] = calls[index]()
+        except BaseException as error:  # the test inspects what each contender got
+            results[index] = error
+
+    threads = [threading.Thread(target=run, args=(index,)) for index in range(len(calls))]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=60)
+    assert not any(thread.is_alive() for thread in threads)
+    return results
+
+
+def test_two_concurrent_records_at_the_budget_edge_accept_exactly_one(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _revise(world)
+    _revise(world)  # two rounds spent: one more is allowed
+    contenders = [world.make_return(2, [finding("F-01", severity="MAJOR")]) for _ in range(2)]
+    barrier = threading.Barrier(2, timeout=30)
+    checked = record._rejection_codes
+
+    def synchronized(*args: Any, **kwargs: Any) -> list[str]:
+        result = checked(*args, **kwargs)
+        barrier.wait()  # both have passed the early budget check; neither has begun the write transaction
+        return result
+
+    monkeypatch.setattr(record, "_rejection_codes", synchronized)
+    outcomes = _run_together([lambda made=made: world.record(made) for made in contenders])
+    assert all(isinstance(outcome, record.Outcome) for outcome in outcomes), outcomes
+    assert sorted(outcome.accepted for outcome in outcomes) == [False, True]
+    [refused] = [outcome for outcome in outcomes if not outcome.accepted]
+    assert refused.rejection_codes == [record.BUDGET_TERMINAL]
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 3
+    rows = {row["attempt_id"]: row for row in world.db_rows("attempts", "lesson_n = 2")}
+    assert rows[refused.attempt_id]["verdict"] == "REJECTED"
+    assert json.loads(rows[refused.attempt_id]["rejection_codes_json"]) == [record.BUDGET_TERMINAL]
+    assert world.db_rows("findings", f"attempt_id = '{refused.attempt_id}'") == []
+
+
+def test_a_decision_committed_before_the_write_transaction_is_honoured(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    for _ in range(3):
+        _revise(world)  # terminal: a fourth round is refused unless the operator decides first
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    checked = record._rejection_codes
+
+    def decided_meanwhile(*args: Any, **kwargs: Any) -> list[str]:
+        result = checked(*args, **kwargs)
+        _decide(world, "revise_rounds")  # committed after every pre-transaction step, before the write transaction
+        return result
+
+    monkeypatch.setattr(record, "_rejection_codes", decided_meanwhile)
+    outcome = world.record(made)
+    assert outcome.accepted and outcome.verdict == "REVISE", outcome
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+
+
+def test_two_concurrent_regenerations_at_five_of_six_spend_exactly_one(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _spend_regenerations(world, 5)
+    barrier = threading.Barrier(2, timeout=30)
+    real = findings_db.transaction
+    armed = threading.local()
+
+    def synchronized(conn: sqlite3.Connection) -> Any:
+        if getattr(armed, "on", False):
+            armed.on = False
+            barrier.wait()  # both are about to open the write transaction
+        return real(conn)
+
+    monkeypatch.setattr(findings_db, "transaction", synchronized)
+    params, lessons = findings_db.load_parameters(), [1, 2, 3]
+
+    def regenerate() -> dict[str, Any]:
+        conn = findings_db.connect(world.db)
+        try:
+            armed.on = True
+            return fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        finally:
+            conn.close()
+
+    results = _run_together([regenerate, regenerate])
+    assert sorted(type(result).__name__ for result in results) == ["TerminalTransition", "dict"], results
+    [spent] = [result for result in results if isinstance(result, dict)]
+    assert spent["regenerations"] == 6
+    assert sum(row["regenerations"] for row in world.db_rows("budgets")) == 6
+
+
+def test_a_revise_terminal_lesson_cannot_be_regenerated_until_the_operator_decides(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    conn = findings_db.connect(world.db)
+    try:
+        params, lessons = findings_db.load_parameters(), [1, 2, 3]
+        with pytest.raises(fixloop.TerminalTransition) as terminal:
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        assert terminal.value.reason == fixloop.REASON_REVISE
+        findings_db.record_budget_operator_decision(conn, LEVEL, SLUG, 2, "regenerate it", "operator")
+        assert fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)["lesson"] == 2
+    finally:
+        conn.close()
+
+
+def test_a_budget_decision_needs_a_decision_a_decider_and_a_known_budget(world: World) -> None:
+    conn = findings_db.connect(world.db)
+    try:
+        for args, kwargs in (
+            (("x", " "), {}),
+            ((" ", "operator"), {}),
+            (("x", "operator"), {"budget": "review_failures"}),
+        ):
+            with pytest.raises(findings_db.FindingsDbError):
+                findings_db.record_budget_operator_decision(conn, LEVEL, SLUG, 2, *args, **kwargs)
+        assert conn.execute("SELECT count(*) FROM budget_decisions").fetchone()[0] == 0
+    finally:
+        conn.close()
+
+
+def test_the_fixloop_cli_records_a_budget_decision(world: World, capsys: pytest.CaptureFixture[str]) -> None:
+    for _ in range(3):
+        _revise(world)
+    argv = ["--repo-root", str(world.root), "--db", str(world.db)]
+    assert (
+        fixloop.main([*argv, "budget-decision", LEVEL, SLUG, "2", "--decision", "one more", "--decided-by", "op"]) == 0
+    )
+    assert json.loads(capsys.readouterr().out) == {"budget": "revise_rounds", "counted": 3, "decision": "one more"}
+    assert _revise(world).accepted
+
+
 def test_an_approve_is_not_a_round(world: World) -> None:
     world.record(world.make_return(2))
     assert world.db_rows("budgets") == []
@@ -555,6 +821,49 @@ def test_recording_the_same_failure_twice_counts_it_once(world: World) -> None:
     record.record_return(None, **kwargs)
     assert record.record_return(None, **kwargs).replay
     assert world.db_rows("budgets")[0]["review_failures"] == 1
+
+
+def test_two_concurrent_failure_records_of_one_attempt_count_it_once(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    made = world.make_return(2, [finding(evidence={"receipt": "r-fabricated"})])
+    world.record(made)  # a rejected return: a --failure record counts it, once
+    barrier = threading.Barrier(2, timeout=30)
+    real_transaction, real_connect = findings_db.transaction, findings_db.connect
+    armed = threading.local()
+
+    def connect(*args: Any, **kwargs: Any) -> sqlite3.Connection:
+        conn = real_connect(*args, **kwargs)
+        armed.on = True  # the first write transaction after the connection opens is the one to synchronize
+        return conn
+
+    def synchronized(conn: sqlite3.Connection) -> Any:
+        if getattr(armed, "on", False):
+            armed.on = False
+            barrier.wait()  # both are about to open the write transaction, whatever they read before it
+        return real_transaction(conn)
+
+    monkeypatch.setattr(findings_db, "connect", connect)
+    monkeypatch.setattr(findings_db, "transaction", synchronized)
+
+    def fail() -> record.Outcome:
+        return record.record_return(
+            None,
+            manifest_path=world.manifest(2),
+            task_id="review-claude",
+            repo_root=world.root,
+            db_path=world.db,
+            tasks_dir=world.tasks_dir,
+            review_id=made["review_id"],
+            attempt_id=made["attempt_id"],
+            failure="rejected_return",
+        )
+
+    outcomes = _run_together([fail, fail])
+    assert all(isinstance(outcome, record.Outcome) for outcome in outcomes), outcomes
+    assert sorted(outcome.replay for outcome in outcomes) == [False, True]
+    [budget] = world.db_rows("budgets")
+    assert budget["review_failures"] == 1
 
 
 def test_a_rejected_return_is_counted_as_a_failed_review_by_a_later_failure_record(world: World) -> None:

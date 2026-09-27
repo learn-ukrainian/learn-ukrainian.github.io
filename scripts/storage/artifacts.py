@@ -640,24 +640,40 @@ def write_artifact(
     data_root = (repo / "data").absolute()
     lexical_target = Path(os.path.abspath(target))
     resolved = Path(target).resolve()
-    if lexical_target.is_relative_to(data_root):
-        rel = lexical_target.relative_to(data_root).as_posix()
-        owners = sorted({owner for owner, entry in _all_manifests(repo) if entry["path"] == f"data/{rel}"})
+    manifests = _all_manifests(repo)
+    trees = _migrated_a_trees(repo)
+
+    def ownership(path: Path) -> tuple[str | None, list[str]]:
+        if not path.is_relative_to(data_root):
+            return None, []
+        rel = path.relative_to(data_root).as_posix()
+        return rel, sorted({owner for owner, entry in manifests if entry["path"] == f"data/{rel}"})
+
+    lexical_rel, lexical_owners = ownership(lexical_target)
+    resolved_rel, resolved_owners = ownership(resolved)
+    for rel, owners in ((lexical_rel, lexical_owners), (resolved_rel, resolved_owners)):
         if owners and group not in owners:
             raise ValueError(f"data/{rel} is a published artifact of group {', '.join(owners)}, not {group}")
-        if owners:
-            with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
-                staged = Path(staging) / resolved.name
-                write(staged)
-                publish(repo, group, rel, staged, producer)
-            return resolved
-        if any(lexical_target.is_relative_to(tree) for tree in _migrated_a_trees(repo)) and not _lexicon_host_state(
-            repo, lexical_target
+    if lexical_owners and lexical_target != resolved:
+        raise ValueError(f"data/{lexical_rel} is a published artifact reached through a symlink")
+    for path, rel, owners in ((lexical_target, lexical_rel, lexical_owners), (resolved, resolved_rel, resolved_owners)):
+        if (
+            rel is not None
+            and not owners
+            and any(path.is_relative_to(tree) for tree in trees)
+            and not _lexicon_host_state(repo, path)
         ):
             raise ValueError(
                 f"data/{rel} is under a migrated artifact tree but has no manifest entry; "
                 "register the output in its artifact group before writing"
             )
+    rel = lexical_rel if lexical_owners else resolved_rel if resolved_owners else None
+    if rel is not None and (lexical_owners or resolved_owners):
+        with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
+            staged = Path(staging) / resolved.name
+            write(staged)
+            publish(repo, group, rel, staged, producer)
+        return resolved
     write(Path(target))
     return Path(target)
 
