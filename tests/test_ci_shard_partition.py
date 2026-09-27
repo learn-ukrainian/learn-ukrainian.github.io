@@ -377,6 +377,7 @@ def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> 
     assert pytest_ignore_collect(conftest_file, config=None) is True
 
 
+@pytest.mark.slow
 def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
     """The CI entry path must not let pytest's default `build` exclusion win."""
     tracked = subprocess.run(
