@@ -4860,9 +4860,147 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     assert validate_option_set(uzbichchya) == []
 
     assert set(emitted) == {"узбіччя:inventory:1"}
-    assert {(row["clozeId"], row["reason"]) for row in withheld} == {
+    assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_context"} == {
         ("відповісти:inventory:2", "capitalized_mid_sentence"),
         ("вразити:inventory:3", "list_fragment"),
         ("геймер:inventory:4", "definition_prompt"),
         ("медіаграмотність:inventory:5", "context_free_stub"),
     }
+    # The listed verbs carry no CEFR in this fixture, so the level gate also fires.
+    assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_level"} == {
+        ("вразити:inventory:3", "above B2: зобразити, звести"),
+    }
+
+
+def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Replay #8724 AC-02: A1 `її:inventory:5134` is a Grade 11 prism sentence.
+
+    Levels are the live Atlas ``enrichment.cefr`` values; VESUM analyses are
+    copied from data/vesum.db.  призма, грань, бічний, прямокутник and
+    дорівнювати have no Atlas CEFR, so they count as above A1.  The A1 bus
+    sentence keeps one above-level word (приїхати, A2) and stays.  Decoys are
+    the live cards' (твій, який, ваш; книга, місто, школа).
+    """
+
+    def entry(lemma: str, pos: str, level: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "url_slug": lemma,
+            "gloss": lemma,
+            "pos": pos,
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": level.lower(), "slug": lemma}],
+            "enrichment": {"cefr": {"level": level}},
+        }
+
+    entries = [
+        entry("її", "pronoun", "A1"),
+        entry("твій", "pronoun", "A1"),
+        entry("який", "pronoun", "A1"),
+        entry("ваш", "pronoun", "A1"),
+        entry("автобус", "noun", "A1"),
+        entry("книга", "noun", "A1"),
+        entry("місто", "noun", "A1"),
+        entry("школа", "noun", "A1"),
+        entry("середа", "noun", "A1"),
+        entry("новий", "adjective", "A1"),
+        entry("приїхати", "verb", "A2"),
+        entry("зрозуміло", "adverb", "A2"),
+        entry("прямий", "adjective", "A2"),
+        entry("висота", "noun", "A2"),
+        entry("ребро", "noun", "B1"),
+    ]
+
+    def row(lemma: str, sentence: str, locator: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "lemmaId": lemma,
+            "sentence": sentence,
+            "targetForm": lemma,
+            "cefr": "A1",
+            "uses": ["example"],
+            "provenance": {"source": "textbook", "label": "Ukrainian school textbook", "locator": locator},
+            "license": {"status": "fixture"},
+        }
+
+    inventory_path = tmp_path / "sentence-inventory.json"
+    prism = "Зрозуміло, що бічні грані прямої призми – прямокутники, а висота прямої призми дорівнює її бічному ребру."
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    row("її", prism, "11-klas-geometria-ister-2019-prof_s0011"),
+                    row("автобус", "А в середу приїхав новий автобус.", "1-klas-bukvar-bolshakova-2018-2_s0010"),
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    def analyses(lemma: str, pos: str, *tags: str) -> list[dict[str, str]]:
+        return [{"lemma": lemma, "pos": pos, "tags": tag} for tag in tags]
+
+    yiyi_adj = [
+        f"adj:{gender}:{case}:nv:pron:pos"
+        for gender in ("f", "m", "n", "p")
+        for case in ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis")
+    ]
+    vesum = JsonVesumVerifier(
+        {
+            "її": analyses("вона", "noun", "noun:unanim:f:v_rod:pron:pers:3", "noun:unanim:f:v_zna:pron:pers:3")
+            + analyses("її", "adj", *yiyi_adj),
+            "зрозуміло": analyses("зрозуміло", "adv", "adv:compb:insert:predic")
+            + analyses("зрозуміти", "verb", "verb:perf:past:n"),
+            "що": analyses("що", "conj", "conj:subord") + analyses("що", "noun", "noun:inanim:n:v_naz:pron:int:rel"),
+            "бічні": analyses("бічний", "adj", "adj:p:v_naz", "adj:p:v_zna:rinanim", "adj:p:v_kly"),
+            "грані": analyses("грань", "noun", "noun:inanim:f:v_rod", "noun:inanim:p:v_naz")
+            + analyses("граний", "adj", "adj:p:v_naz:adjp:pasv:imperf"),
+            "прямої": analyses("прямий", "adj", "adj:f:v_rod:compb") + analyses("пряма", "noun", "noun:inanim:f:v_rod"),
+            "призми": analyses("призма", "noun", "noun:inanim:f:v_rod", "noun:inanim:p:v_naz"),
+            "прямокутники": analyses("прямокутник", "noun", "noun:inanim:p:v_naz", "noun:inanim:p:v_zna"),
+            "а": analyses("а", "conj", "conj:coord") + analyses("а", "part", "part"),
+            "висота": analyses("висота", "noun", "noun:inanim:f:v_naz"),
+            "дорівнює": analyses("дорівнювати", "verb", "verb:imperf:pres:s:3"),
+            "бічному": analyses("бічний", "adj", "adj:m:v_dav", "adj:m:v_mis", "adj:n:v_dav", "adj:n:v_mis"),
+            "ребру": analyses("ребро", "noun", "noun:inanim:n:v_dav", "noun:inanim:n:v_mis"),
+            "в": analyses("в", "prep", "prep"),
+            "середу": analyses("середа", "noun", "noun:inanim:f:v_zna"),
+            "приїхав": analyses("приїхати", "verb", "verb:perf:past:m"),
+            "новий": analyses("новий", "adj", "adj:m:v_naz:compb", "adj:m:v_zna:rinanim:compb", "adj:m:v_kly:compb"),
+            "автобус": analyses("автобус", "noun", "noun:inanim:m:v_naz", "noun:inanim:m:v_zna"),
+        }
+    )
+    from scripts.practice.creation_review import CreationReview, frame_identity
+
+    monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
+    candidates = read_sentence_inventory(inventory_path)
+    creation_review = CreationReview(
+        frozenset(
+            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
+        )
+    )
+    withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
+        vesum,
+        candidates,
+        BuildConfig(target=len(entries), source_label="fixture"),
+        creation_review=creation_review,
+        cloze_withheld=withheld,
+    )
+
+    emitted = {item["clozeId"] for level in shards.values() for item in level["cloze"]["cloze"]}
+    assert emitted == {"автобус:inventory:2"}
+    assert [(row["clozeId"], row["rule"], row["level"]) for row in withheld] == [
+        ("її:inventory:1", "inventory_prompt_level", "A1")
+    ]
+    assert withheld[0]["reason"] == (
+        "above A1: Зрозуміло, бічні, грані, прямої, призми, прямокутники, висота, прямої, призми, дорівнює, "
+        "бічному, ребру"
+    )

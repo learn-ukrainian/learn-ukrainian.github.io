@@ -42,10 +42,12 @@ from practice_linguistic import (
     IDENTITY_RULE_IDS,
     LEXICAL_INSERTION_RULE_ID,
     check_cloze_item,
+    check_inventory_prompt_level,
     check_stress_item,
     identity_blank_case,
     index_from_generator_candidates,
 )
+from practice_linguistic import plain as linguistic_plain
 
 from scripts.lexicon.curated_membership import (
     apply_membership,
@@ -849,6 +851,17 @@ def _cefr_level(entry: dict[str, Any]) -> str | None:
         if level:
             return level
     return None
+
+
+def _lemma_levels(entries: list[dict[str, Any]]) -> dict[str, str]:
+    """Map every levelled Atlas lemma to its lowest CEFR level (prompt level fit, #8724)."""
+    levels: dict[str, str] = {}
+    for entry in entries:
+        lemma = linguistic_plain(str(entry.get("lemma") or ""))
+        level = _cefr_level(entry)
+        if lemma and level and (lemma not in levels or CEFR_RANK[level] < CEFR_RANK[levels[lemma]]):
+            levels[lemma] = level
+    return levels
 
 
 def _ipa(entry: dict[str, Any]) -> str | None:
@@ -1945,7 +1958,9 @@ def _build_cloze_items(
     source_index: Any | None = None,
     creation_review: CreationReview | None = None,
     withheld: list[dict[str, str]] | None = None,
+    lemma_levels: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
+    """Build a lexeme's cloze cards; ``lemma_levels`` enables the prompt level-fit gate."""
     items: list[dict[str, Any]] = []
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     for index, candidate in enumerate(cloze_rows):
@@ -2083,6 +2098,10 @@ def _build_cloze_items(
             # Agreement already enforced above via _cloze_blank_context_agrees.
             check_agreement=False,
         )
+        if lemma_levels is not None:
+            linguistic_findings.extend(
+                check_inventory_prompt_level(item, lexeme["cefr"], lemma_levels, verifier, item_id=cloze_id)
+            )
         if linguistic_findings:
             if withheld is not None:
                 withheld.extend(
@@ -5096,6 +5115,7 @@ def build_practice_shards(
         target = cloze_by_lemma_id if key_type == "lemmaId" else cloze_by_lemma
         target.setdefault(key_value, []).append(row)
     cloze_source_index = index_from_generator_candidates(cloze_sources)
+    cloze_lemma_levels = _lemma_levels(entries)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
@@ -5122,6 +5142,7 @@ def build_practice_shards(
             source_index=cloze_source_index,
             creation_review=creation_review,
             withheld=cloze_withheld,
+            lemma_levels=cloze_lemma_levels,
         )
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)

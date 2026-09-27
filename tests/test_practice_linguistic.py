@@ -15,12 +15,14 @@ from scripts.audit.practice_linguistic import (
     RULE_LEADING_QUIZ,
     RULE_PREP_NOM,
     RULE_PROMPT_CONTEXT,
+    RULE_PROMPT_LEVEL,
     RULE_STRESS,
     check_cloze_blank_count,
     check_cloze_item,
     check_homograph_oblique,
     check_identity_rule_consistency,
     check_intentional_error_quarantine,
+    check_inventory_prompt_level,
     check_leading_quiz,
     check_nominative_only_after_prep,
     check_options_uniqueness,
@@ -30,6 +32,7 @@ from scripts.audit.practice_linguistic import (
     inventory_prompt_defect,
     is_identity_form,
     plain,
+    prompt_words_above_level,
 )
 
 
@@ -514,3 +517,53 @@ def test_prompt_context_gate_applies_only_to_inventory_sentences() -> None:
     assert [(finding.rule_id, finding.message) for finding in findings] == [(RULE_PROMPT_CONTEXT, "context_free_stub")]
     reviewed = {**stub, "provenance": {"status": "reviewed", "path": "curated.json"}}
     assert check_cloze_item(reviewed, verifier, lemma_plain="медіаграмотність", check_agreement=False) == []
+
+
+def _level_verifier() -> JsonVesumVerifier:
+    return JsonVesumVerifier(
+        {
+            "мама": [{"lemma": "мама", "pos": "noun", "tags": "noun:anim:f:v_naz"}],
+            "читає": [{"lemma": "читати", "pos": "verb", "tags": "verb:imperf:pres:s:3"}],
+            "у": [{"lemma": "у", "pos": "prep", "tags": "prep"}],
+            "бібліотеці": [{"lemma": "бібліотека", "pos": "noun", "tags": "noun:inanim:f:v_mis"}],
+            "призми": [{"lemma": "призма", "pos": "noun", "tags": "noun:inanim:f:v_rod"}],
+            "ребру": [{"lemma": "ребро", "pos": "noun", "tags": "noun:inanim:n:v_dav"}],
+            "франко": [
+                {"lemma": "Франко", "pos": "noun", "tags": "noun:anim:m:v_naz:prop:lname"},
+                {"lemma": "франко", "pos": "adv", "tags": "adv"},
+            ],
+            "грані": [
+                {"lemma": "грань", "pos": "noun", "tags": "noun:inanim:p:v_naz"},
+                {"lemma": "гран", "pos": "noun", "tags": "noun:inanim:m:v_mis"},
+            ],
+        }
+    )
+
+
+LEVELS = {"мама": "A1", "читати": "A1", "бібліотека": "A2", "ребро": "B1", "грань": "A1"}
+
+
+def test_prompt_level_counts_unrated_and_higher_content_words() -> None:
+    verifier = _level_verifier()
+    # Prepositions, names, digits and one-letter abbreviations carry no level.
+    assert prompt_words_above_level("Мама читає ___ у бібліотеці, 2 м.", "A1", LEVELS, verifier) == ["бібліотеці"]
+    assert prompt_words_above_level("Франко читає ___.", "A1", LEVELS, verifier) == []
+    # призма is unrated (beyond the rated vocabulary); ребро is B1.
+    assert prompt_words_above_level("___ призми ребру.", "A1", LEVELS, verifier) == ["призми", "ребру"]
+    assert prompt_words_above_level("___ призми ребру.", "B1", LEVELS, verifier) == ["призми"]
+    # A homograph takes its lowest rated lemma.
+    assert prompt_words_above_level("___ грані.", "A1", LEVELS, verifier) == []
+
+
+def test_prompt_level_gate_tolerates_one_word_above_level_for_inventory_only() -> None:
+    verifier = _level_verifier()
+    inventory = {"clozeId": "x", "provenance": {"status": "sentence_inventory"}}
+    one_above = {**inventory, "sentence": "Мама читає ___ у бібліотеці."}
+    two_above = {**inventory, "sentence": "Мама читає ___ призми ребру."}
+    assert check_inventory_prompt_level(one_above, "A1", LEVELS, verifier, item_id="x") == []
+    findings = check_inventory_prompt_level(two_above, "A1", LEVELS, verifier, item_id="x")
+    assert [(finding.rule_id, finding.message) for finding in findings] == [
+        (RULE_PROMPT_LEVEL, "above A1: призми, ребру")
+    ]
+    curated = {**two_above, "provenance": {"status": "reviewed", "path": "curated.json"}}
+    assert check_inventory_prompt_level(curated, "A1", LEVELS, verifier, item_id="x") == []

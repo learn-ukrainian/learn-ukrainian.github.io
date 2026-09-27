@@ -60,6 +60,7 @@ RULE_BLANK_COUNT = "cloze_blank_count"
 RULE_DISTRACTOR_DISTINCT = "distractor_uniqueness"
 RULE_CASE_LABEL = "case_label_determinate"
 RULE_PROMPT_CONTEXT = "inventory_prompt_context"
+RULE_PROMPT_LEVEL = "inventory_prompt_level"
 
 # Identity clozes blank the dictionary form itself.  Only the first rule names
 # a case (nominative, when context proves it); the second is a case-free word
@@ -908,6 +909,86 @@ def check_inventory_prompt_context(
     if reason is None:
         return []
     return [Finding(RULE_PROMPT_CONTEXT, item_id, reason)]
+
+
+# Level fit of a scraped prompt sentence (#8724 AC-02).  An inventory row's
+# ``cefr`` is its target lemma's level, not the sentence's, so a Grade 11
+# geometry sentence reached A1.  The words around the blank are rated with the
+# Atlas lexicon's own CEFR (PULS, else the GRAC-frequency estimate: the same
+# ``enrichment.cefr`` that levels the cards).  One word above the card's level
+# is tolerated: Krashen's i+1, and in a 10–20-word cloze sentence one unknown
+# word keeps running-word coverage near the 95% floor (Laufer 1989; Hu &
+# Nation 2000).  A second above-level word drops the prompt.
+PROMPT_LEVEL_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
+PROMPT_ABOVE_LEVEL_TOLERANCE = 1
+_LEVEL_FUNCTION_POS = frozenset({"prep", "conj", "part", "intj"})
+
+
+def _prompt_word_above_level(
+    token: str,
+    card_rank: int,
+    lemma_levels: dict[str, str],
+    verifier: VesumVerifier,
+) -> bool:
+    if token.isdigit() or len(token) < 2:
+        # Numbers and one-letter abbreviations («м», «с») carry no level.
+        return False
+    matches = verified_surface_matches(token, verifier)
+    if not matches:
+        # VESUM cannot lemmatise it (names, OCR, foreign): no level evidence.
+        return False
+    proper = [("prop" in str(match.get("tags") or "").split(":")) for match in matches]
+    if all(proper) or (token[:1].isupper() and any(proper)):
+        # A name («Франко», «Христина») is not vocabulary load, even when its
+        # lower-cased spelling is also a common word.
+        return False
+    for match in matches:
+        tags = set(str(match.get("tags") or "").split(":"))
+        if str(match.get("pos") or "") in _LEVEL_FUNCTION_POS or "pron" in tags:
+            # Closed-class grammar words are course grammar, not vocabulary load.
+            return False
+    ranks = [
+        PROMPT_LEVEL_ORDER.index(level)
+        for match in matches
+        if (level := lemma_levels.get(plain(str(match.get("lemma") or "")))) in PROMPT_LEVEL_ORDER
+    ]
+    # Homographs resolve in the learner's favour (lowest rated lemma).  A word
+    # outside every rated list is beyond the rated vocabulary, so above level.
+    return not ranks or min(ranks) > card_rank
+
+
+def prompt_words_above_level(
+    sentence: str,
+    card_level: str,
+    lemma_levels: dict[str, str],
+    verifier: VesumVerifier,
+) -> list[str]:
+    """Return the prompt's context words rated above ``card_level``."""
+    if card_level not in PROMPT_LEVEL_ORDER:
+        return []
+    card_rank = PROMPT_LEVEL_ORDER.index(card_level)
+    return [
+        token
+        for token in _WORD_RE.findall(sentence.replace("___", " "))
+        if _prompt_word_above_level(token, card_rank, lemma_levels, verifier)
+    ]
+
+
+def check_inventory_prompt_level(
+    item: dict[str, Any],
+    card_level: str,
+    lemma_levels: dict[str, str],
+    verifier: VesumVerifier,
+    *,
+    item_id: str,
+) -> list[Finding]:
+    provenance = item.get("provenance")
+    if not isinstance(provenance, dict) or provenance.get("status") != "sentence_inventory":
+        return []
+    above = prompt_words_above_level(_clean(item.get("sentence")) or "", card_level, lemma_levels, verifier)
+    if len(above) <= PROMPT_ABOVE_LEVEL_TOLERANCE:
+        return []
+    return [Finding(RULE_PROMPT_LEVEL, item_id, f"above {card_level}: {', '.join(above)}")]
 
 
 def check_homograph_oblique(
