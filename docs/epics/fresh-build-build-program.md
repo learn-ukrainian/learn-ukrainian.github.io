@@ -76,7 +76,7 @@ In this order; each step's artifact is checked by the tool named before the next
 `--allow-missing-prior` waiver is not used for any of them.
 
 1. **Base layer and word store**: WP 10's request file → `build-words a1 --request …` → `words-verify a1` green; count the `pending` forms and the `unresolved` records; the operator's expectation is that ULIF-sourced stress is absent today (`homonym_checked = 0` everywhere) and the trie covers most A1 forms — quote the numbers.
-2. **Evidence pack** for `things-have-gender`: request from the arc row (position 8) and the plan's teaching points for position 8 → `pack-verify` green → **provisional lock** (review contract, Contract 1 timing).
+2. **Evidence pack** for `things-have-gender`: request from the arc row for position 8 (its job, skills and scope in `_arc.yaml`) → `pack-verify` green → **provisional lock** (review contract, Contract 1 timing).
 3. **Module plan** in the v2 format (as many lessons as its content needs (R-02); the arc's estimate is not a target, the last lesson is the recap), written by a language lane from the pack and the arc, with the operator's decisions record; `plan-validate --strict` green (positions 1–7 are already plan-validated, so `--allow-missing-prior` is not used).
 4. **Plan review** (Contract 1) by a cross-family language seat with the full manifest; on APPROVE the pack lock is promoted into `evidence_ref`.
 5. **Reviewer measurement** (WP 16): the first seeded set for the lesson reviewer seat — from *built* lessons, so this step interleaves with 7: the canary lesson and the contract fixtures are the first seed material; the operator sets the threshold after the first report; the held-out confirmation set is frozen before that.
