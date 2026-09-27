@@ -44,7 +44,9 @@ import json
 import re
 import subprocess
 import sys
+import unicodedata
 import uuid
+from collections import Counter
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -187,6 +189,120 @@ def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str
 
 def _forms(record: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {f["form"]: f for f in record.get("forms") or [] if f.get("learner") is True}
+
+
+_VOWELS = frozenset("аеіїоуяює")
+_A1_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
+_CHOICE_TYPES = frozenset(
+    {"quiz", "multiple-choice", "fill-in", "odd-one-out", "error-correction", "translate", "image-to-letter"}
+)
+
+
+def _normal_letters(value: str) -> str:
+    """Use the build's apostrophe folding, then ignore case, stress and punctuation."""
+    from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
+
+    folded = unicodedata.normalize("NFD", value.translate(_VESUM_APOSTROPHE_TRANSLATION).casefold())
+    return "".join(char for char in folded if unicodedata.category(char)[0] in {"L", "N"})
+
+
+def _choice_text(option: Any) -> str | None:
+    value = option.get("text") if isinstance(option, dict) else option
+    return value if isinstance(value, str) else None
+
+
+def _choice_key(item: dict[str, Any], typ: str, options: list[Any]) -> int | None:
+    if typ in {"quiz", "multiple-choice"} and isinstance(item.get("_resolved_key_index"), int):
+        return item["_resolved_key_index"]
+    if typ == "true-false":
+        answer = next((item[k] for k in ("correct", "is_true", "isTrue", "answer") if k in item), None)
+        return (0 if answer else 1) if isinstance(answer, bool) else None
+    marked = [i for i, option in enumerate(options) if isinstance(option, dict) and option.get("correct") is True]
+    if len(marked) == 1:
+        return marked[0]
+    if typ == "odd-one-out" and isinstance(item.get("correct"), int):
+        return item["correct"]
+    answer = next((item[k] for k in ("answer", "correction", "letter") if isinstance(item.get(k), str)), None)
+    matches = [i for i, option in enumerate(options) if _choice_text(option) == answer]
+    return matches[0] if len(matches) == 1 else None
+
+
+def _structural_activity_error(activity: dict[str, Any], typ: str, records: dict[str, dict[str, Any]]) -> str | None:
+    """Checks that do not depend on resolution or a contextual language judgement."""
+    if typ == "classify":
+        return "classify_forbidden"
+    if typ == "order":
+        order = activity.get("correct_order")
+        items = activity.get("items")
+        if not isinstance(items, list) or not isinstance(order, list) or sorted(order) != list(range(len(items))):
+            return "order_index_coverage"
+    if typ == "pick-syllables" and not activity.get("explanation"):
+        return "pick_syllables_explanation_missing"
+    if typ == "match-up":
+        if activity.get("left_role") not in {"form", "gloss", "question", "answer"} or activity.get(
+            "right_role"
+        ) not in {"form", "gloss", "question", "answer"}:
+            return "match_up_role_invalid"
+        for pair in activity.get("pairs") or []:
+            if not isinstance(pair, dict) or not pair.get("why"):
+                return "match_up_why_missing"
+            for side in ("left", "right"):
+                if activity[f"{side}_role"] == "form":
+                    record = records.get(pair.get(f"{side}_record"))
+                    if record is None or not any(
+                        form.get("learner") is True and form.get("form") == pair.get(side)
+                        for form in record.get("forms") or []
+                    ):
+                        return "match_up_form_record_invalid"
+    for item in activity.get("items") or []:
+        if not isinstance(item, dict):
+            continue
+        if typ == "divide-words":
+            parts = item.get("answer", "").split("-")
+            if (
+                len(parts) < 2
+                or any(not part or sum(char.casefold() in _VOWELS for char in part) != 1 for part in parts)
+                or "".join(parts).casefold() != str(item.get("word", "")).casefold()
+            ):
+                return "divide_words_parts_invalid"
+        if typ == "count-syllables":
+            count = sum(char.casefold() in _VOWELS for char in str(item.get("word", "")))
+            if type(item.get("correct")) is not int or item["correct"] != count:
+                return "count_syllables_key_invalid"
+        if typ in {"anagram", "unjumble"}:
+            from scripts.build.activity_renderer import unjumble_tokens
+
+            pieces = item.get("letters") if typ == "anagram" else unjumble_tokens(item)
+            answer = item.get("answer")
+            if (
+                not isinstance(pieces, list)
+                or not isinstance(answer, str)
+                or Counter(_normal_letters("".join(map(str, pieces)))) != Counter(_normal_letters(answer))
+            ):
+                return f"{typ.replace('-', '_')}_multiset_mismatch"
+            if typ == "anagram" and not any(
+                form.get("learner") is True and _normal_letters(form.get("form", "")) == _normal_letters(answer)
+                for record in records.values()
+                for form in record.get("forms") or []
+            ):
+                return "anagram_key_not_store_form"
+        if typ == "translate" and item.get("options") and item.get("alternatives"):
+            return "translate_alternatives_forbidden"
+        if typ in _CHOICE_TYPES or typ == "true-false":
+            options = item.get("words") if typ == "odd-one-out" else item.get("options")
+            options = [True, False] if typ == "true-false" else options
+            if not isinstance(options, list) or not options:
+                continue  # The fresh constraint and per-type key checks own missing options.
+            why = item.get("option_why")
+            if (
+                not isinstance(why, list)
+                or len(why) != len(options)
+                or any(not isinstance(entry, str) or not entry.strip() for entry in why)
+            ):
+                return "option_why_alignment"
+            if _choice_key(item, typ, options) is None:
+                return "answer_key_missing"
+    return None
 
 
 def check_4_activities(
@@ -399,6 +515,9 @@ def check_4_activities(
                 min_req = item.get("min_correct", min_allowed)
                 if correct_count < max(min_allowed, min_req):
                     return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
+        structural_reason = _structural_activity_error(activity, typ, records)
+        if structural_reason is not None:
+            return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
     return _pass(4), form_options
 
 

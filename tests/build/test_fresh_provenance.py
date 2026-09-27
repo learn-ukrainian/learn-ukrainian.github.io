@@ -13,6 +13,8 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.assemble import PROVENANCE_SCHEMA_PATH, get_provenance_validator
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.resolver import receipts
+from scripts.curriculum.resolver.inputs import ResolverError
 from tests.build.test_fresh_assemble import (
     make_word_record,
     validate_fixture_draft,
@@ -23,6 +25,62 @@ from tests.build.test_fresh_assemble import (
 from tests.build.test_fresh_runner import _fixture, _run_contract
 
 pytestmark = pytest.mark.reads_content
+
+
+def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path) -> None:
+    lesson = {"level": "a1", "slug": "sample", "n": 1}
+    inputs = {"plan_sha256": "a" * 64, "words_lock": "b" * 64}
+    demand = {"Case": "Acc", "Number": "Sing"}
+    row = {
+        "activity": "quiz1",
+        "item": 0,
+        "requires": demand,
+        "writer": {"seat": "writer@model", "family": "openai"},
+        "reviewer": {"seat": "reviewer@model", "family": "anthropic", "lane": "language"},
+        "confirmed": True,
+    }
+    doc = {"requirements_schema": 1, "lesson": lesson, "inputs": inputs, "items": [row]}
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    assert receipts.read_requirement_receipts(path) is None
+    assert (
+        receipts.requirement_status(None, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
+        == "not_checked"
+    )
+    receipts.write_requirement_receipts(path, doc)
+    checked = receipts.read_requirement_receipts(path)
+    assert checked == doc
+    assert (
+        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
+        == "confirmed"
+    )
+    assert (
+        receipts.requirement_status(
+            checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires={"Case": "Nom"}
+        )
+        == "not_checked"
+    )
+    assert (
+        receipts.requirement_status(
+            checked, lesson=lesson, inputs={"plan_sha256": "c" * 64}, activity="quiz1", item=0, requires=demand
+        )
+        == "not_checked"
+    )
+    assert (
+        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=1, requires=demand)
+        == "not_checked"
+    )
+
+    same_family = copy.deepcopy(doc)
+    same_family["items"][0]["reviewer"]["family"] = "OpenAI"
+    with pytest.raises(ResolverError, match="receipt_invalid"):
+        receipts.write_requirement_receipts(path, same_family)
+    wrong_lane = copy.deepcopy(doc)
+    wrong_lane["items"][0]["reviewer"]["lane"] = "general"
+    with pytest.raises(ResolverError, match="receipt_invalid"):
+        receipts.write_requirement_receipts(path, wrong_lane)
+    path.write_text("{}", encoding="utf-8")
+    with pytest.raises(ResolverError, match="lock_mismatch"):
+        receipts.read_requirement_receipts(path)
 
 
 def test_live_runner_error_correction_item_provenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

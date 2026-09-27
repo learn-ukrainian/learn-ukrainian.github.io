@@ -233,6 +233,52 @@ def load_fresh_constraints(schemas_dir: str) -> dict:
     return data
 
 
+def _required_item_fields(errors: list[DraftError], key: str, item: dict, path: str, rule: dict) -> None:
+    """Apply the field-presence part of one fresh ``by_type`` rule."""
+    required = list(rule.get("required_item_fields", []))
+    if "options" in item:
+        required.extend(rule.get("required_item_fields_if_options", []))
+    for field_name in dict.fromkeys(required):
+        if field_name not in item:
+            errors.append(
+                DraftError(
+                    "activity_fresh_constraints",
+                    path + "/" + field_name,
+                    f"{key}: required_item_field_missing ({field_name})",
+                )
+            )
+
+
+def _alias_conflicts(errors: list[DraftError], key: str, item: dict, path: str) -> None:
+    """Reject contradictory spellings of the same answer field in fresh drafts."""
+    if "correct" in item and "answer" in item:
+        correct, answer = item["correct"], item["answer"]
+        equivalent = correct == answer
+        if isinstance(correct, int) and not isinstance(correct, bool) and isinstance(answer, str):
+            options = item.get("options")
+            if isinstance(options, list) and 0 <= correct < len(options):
+                option = options[correct]
+                if isinstance(option, dict):
+                    option = option.get("text")
+                equivalent = option == answer
+        if not equivalent:
+            errors.append(
+                DraftError(
+                    "activity_fresh_constraints",
+                    path + "/answer",
+                    f"{key}: conflicting_answer_aliases (correct vs answer)",
+                )
+            )
+    if "correction" in item and "answer" in item and item["correction"] != item["answer"]:
+        errors.append(
+            DraftError(
+                "activity_fresh_constraints",
+                path + "/answer",
+                f"{key}: conflicting_answer_aliases (correction vs answer)",
+            )
+        )
+
+
 def _activity_fresh_constraint_errors(
     draft: dict,
     level: str,
@@ -265,6 +311,18 @@ def _activity_fresh_constraint_errors(
         rule = by_type.get(key)
         if rule is None:
             continue
+        if rule.get("forbidden"):
+            errors.append(DraftError("activity_fresh_constraints", path + "/type", f"{key}: forbidden in fresh drafts"))
+            continue
+        for field_name in rule.get("required_activity_fields", []):
+            if field_name not in activity:
+                errors.append(
+                    DraftError(
+                        "activity_fresh_constraints",
+                        path + "/" + field_name,
+                        f"{key}: required_activity_field_missing ({field_name})",
+                    )
+                )
         items = activity.get("items")
         items_max = rule.get("items_max")
         if items_max is not None and isinstance(items, list) and len(items) > items_max:
@@ -275,17 +333,105 @@ def _activity_fresh_constraint_errors(
                     f"{key}: {len(items)} items exceeds the cap of {items_max}",
                 )
             )
-        if "modes" not in rule:
-            continue
+        groups = activity.get("groups")
+        if isinstance(groups, list):
+            for g_index, group in enumerate(groups):
+                if not isinstance(group, dict):
+                    continue
+                group_path = f"{path}/groups/{g_index}"
+                for field_name in rule.get("required_group_fields", []):
+                    if field_name not in group:
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                group_path + "/" + field_name,
+                                f"{key}: required_group_field_missing ({field_name})",
+                            )
+                        )
+                entries = group.get("items")
+                if rule.get("group_entry_shape") == "object" and isinstance(entries, list):
+                    for e_index, entry in enumerate(entries):
+                        entry_path = f"{group_path}/items/{e_index}"
+                        if not isinstance(entry, dict):
+                            errors.append(
+                                DraftError(
+                                    "activity_fresh_constraints",
+                                    entry_path,
+                                    f"{key}: group_entry_must_be_object",
+                                )
+                            )
+                            continue
+                        for field_name in rule.get("required_group_entry_fields", []):
+                            if field_name not in entry:
+                                errors.append(
+                                    DraftError(
+                                        "activity_fresh_constraints",
+                                        entry_path + "/" + field_name,
+                                        f"{key}: required_group_entry_field_missing ({field_name})",
+                                    )
+                                )
+        pairs = activity.get("pairs")
+        if isinstance(pairs, list):
+            role_rule = rule.get("record_field_by_side_role", {})
+            for p_index, pair in enumerate(pairs):
+                if not isinstance(pair, dict):
+                    continue
+                pair_path = f"{path}/pairs/{p_index}"
+                for field_name in rule.get("required_pair_fields", []):
+                    if field_name not in pair:
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                pair_path + "/" + field_name,
+                                f"{key}: required_pair_field_missing ({field_name})",
+                            )
+                        )
+                for role_name, record_name in (
+                    ("left_role", role_rule.get("left_role")),
+                    ("right_role", role_rule.get("right_role")),
+                ):
+                    if record_name and activity.get(role_name) == role_rule.get("when") and record_name not in pair:
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                pair_path + "/" + record_name,
+                                f"{key}: required_pair_record_missing ({record_name})",
+                            )
+                        )
+        modes = rule.get("modes", {})
         if not isinstance(items, list):
-            errors.append(DraftError("activity_fresh_constraints", path + "/items", f"{key}: items must be a list"))
-            continue
-        modes = rule["modes"]
+            if "modes" in rule:
+                errors.append(DraftError("activity_fresh_constraints", path + "/items", f"{key}: items must be a list"))
+            items = []
         for i_index, item in enumerate(items):
             item_path = f"{path}/items/{i_index}"
             if not isinstance(item, dict):
                 errors.append(DraftError("activity_fresh_constraints", item_path, f"{key}: item is not an object"))
                 continue
+            _required_item_fields(errors, key, item, item_path, rule)
+            _alias_conflicts(errors, key, item, item_path)
+            if rule.get("options_mode_forbids") and "options" in item:
+                for field_name in rule["options_mode_forbids"]:
+                    if field_name in item:
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                item_path + "/" + field_name,
+                                f"{key}: options_mode_forbids_field ({field_name})",
+                            )
+                        )
+            if rule.get("options_mode_exactly_one_correct") and isinstance(item.get("options"), list):
+                correct_count = sum(
+                    isinstance(option, dict) and option.get("correct") is True for option in item["options"]
+                )
+                if correct_count != 1:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/options",
+                            f"{key}: options_mode_requires_exactly_one_correct ({correct_count} found)",
+                        )
+                    )
             sentence = item.get("sentence")
             blank_count = len(blank_re.findall(sentence)) if isinstance(sentence, str) else 0
             if blank_count != rule["sentence_blanks"]:
@@ -297,6 +443,71 @@ def _activity_fresh_constraint_errors(
                     )
                 )
             mode = item.get("mode")
+            kind = item.get("kind")
+            allowed_kinds = rule.get("allowed_kinds")
+            if "options" in item and "allowed_kinds_if_options" in rule:
+                allowed_kinds = rule["allowed_kinds_if_options"]
+            elif mode in rule.get("allowed_kinds_by_mode", {}):
+                allowed_kinds = rule["allowed_kinds_by_mode"][mode]
+            if allowed_kinds is not None and kind not in allowed_kinds:
+                errors.append(
+                    DraftError(
+                        "activity_fresh_constraints",
+                        item_path + "/kind",
+                        f"{key}: kind_not_admitted ({kind!r})",
+                    )
+                )
+            if rule.get("kind_is") is not None and kind != rule["kind_is"]:
+                errors.append(
+                    DraftError(
+                        "activity_fresh_constraints",
+                        item_path + "/kind",
+                        f"{key}: kind_must_be_{rule['kind_is']} ({kind!r})",
+                    )
+                )
+            expected_kinds = rule.get("mode_kind", {}).get(mode)
+            if expected_kinds is not None and kind not in expected_kinds:
+                errors.append(
+                    DraftError(
+                        "activity_fresh_constraints",
+                        item_path + "/kind",
+                        f"{key}: kind_not_admitted_for_mode ({mode}: {kind!r})",
+                    )
+                )
+            kind_fields = rule.get("required_item_fields_by_kind", {})
+            if "options" in item and "required_item_fields_by_kind_if_options" in rule:
+                kind_fields = rule["required_item_fields_by_kind_if_options"]
+            for field_name in kind_fields.get(kind, []):
+                if field_name not in item:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/" + field_name,
+                            f"{key}: required_kind_field_missing ({field_name}; kind={kind})",
+                        )
+                    )
+            if rule.get("option_why_length") is not None:
+                feedback = item.get("option_why")
+                if isinstance(feedback, list) and len(feedback) != rule["option_why_length"]:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/option_why",
+                            f"{key}: option_why_length_mismatch (expected {rule['option_why_length']})",
+                        )
+                    )
+            if "modes" not in rule:
+                continue
+            required_by_mode = rule.get("required_item_fields_by_mode", {}).get(mode, [])
+            for field_name in required_by_mode:
+                if field_name not in item:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/" + field_name,
+                            f"{key}: required_mode_field_missing ({field_name}; mode={mode})",
+                        )
+                    )
             if mode not in modes:
                 if mode == "orthography":
                     reason = f"{key}: orthography is admitted only at a1"

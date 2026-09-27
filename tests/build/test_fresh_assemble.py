@@ -338,6 +338,86 @@ def test_no_cyrillic_string_literals_in_assembler():
     assert len(found_literals) == 0, f"Found Cyrillic string literals in assemble.py: {found_literals}"
 
 
+def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
+    """Every new learner string stays visible to resolver, stress and page checks."""
+    from scripts.build.fresh.assemble import component_props_from_jsx, page_field_text
+    from scripts.yaml_activities import ActivityParser
+
+    activities = [
+        {
+            "id": "quiz1",
+            "instruction": "Choose",
+            "items": [
+                {
+                    "question": "Which?",
+                    "options": ["A", "B"],
+                    "correct": 0,
+                    "option_why": ["A works", "B misses"],
+                    "explanation": "Because A",
+                }
+            ],
+        },
+        {
+            "id": "group1",
+            "instruction": "Sort",
+            "grouping_feature": "Case",
+            "groups": [
+                {"name": "First", "value": "Nom", "items": [{"text": "A", "record": "W-1", "why": "First reason"}]},
+                {"name": "Second", "value": "Acc", "items": [{"text": "B", "record": "W-2", "why": "Second reason"}]},
+            ],
+        },
+        {
+            "id": "match1",
+            "instruction": "Match",
+            "left_role": "question",
+            "right_role": "answer",
+            "pairs": [
+                {"left": "A?", "right": "A!", "why": "Pair one"},
+                {"left": "B?", "right": "B!", "why": "Pair two"},
+            ],
+        },
+        {
+            "id": "order1",
+            "instruction": "Order",
+            "items": ["A", "B"],
+            "correct_order": [0, 1],
+            "explanation": "Order reason",
+        },
+    ]
+    types = {"quiz1": "quiz", "group1": "group-sort", "match1": "match-up", "order1": "order"}
+    plan = {
+        "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}]
+    }
+    draft = {"status": "ok", "steps": [], "activities": activities}
+    expanded, provenance = assemble_expanded_document(draft, plan, {}, {}, "a1", "sample", 1)
+    expected = {
+        ("quiz1", 0, "option_why_0"): "A works",
+        ("quiz1", 0, "option_why_1"): "B misses",
+        ("group1", None, "entry_why_0_0"): "First reason",
+        ("group1", None, "entry_why_1_0"): "Second reason",
+        ("match1", None, "pair_why_0"): "Pair one",
+        ("match1", None, "pair_why_1"): "Pair two",
+        ("order1", None, "explanation"): "Order reason",
+    }
+    found = {(u["activity"], u["item"], u["block"]): u["text"] for u in expanded["units"]}
+    assert expected.items() <= found.items()
+    assert {key: value for key, value in found.items() if key in expected} == expected
+    for span in provenance["spans"]:
+        if (span["activity"], span["item"], span["block"]) in expected:
+            assert span["source"] == "writer_prose"
+            assert span["role"] == "instruction"
+
+    stressed, pieces = apply_stress_to_activities(activities, expanded, lambda text: text, activity_types=types)
+    assert len(pieces) == len(expanded["units"])
+    parser = ActivityParser()
+    for act in stressed:
+        act_type = types[act["id"]]
+        props = component_props_from_jsx(parser._activity_to_mdx(parser._parse_activity({**act, "type": act_type})))
+        for (aid, item, block), value in expected.items():
+            if aid == act["id"]:
+                assert page_field_text(act_type, props, item, block) == value
+
+
 def test_r11_forbidden_paths_in_assemble():
     """R-11: assemble.py never opens or references legacy v1 paths or plans dir."""
     assemble_file = REPO_ROOT / "scripts" / "build" / "fresh" / "assemble.py"
