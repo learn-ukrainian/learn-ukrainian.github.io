@@ -422,9 +422,16 @@ and push rewrite stop ordinary command forms only.
 On Grok 1.0.41 an explicit `--permission-mode auto` wins over `--always-approve`
 and leaves `yolo_mode` false. The auto classifier then refuses `git push`
 before the command runs, including a write worker's push of its own branch
-(#8965). `workspace-write` uses `bypassPermissions` so that classifier is not
-the session mode. The read-only reviewer opt-in, its publish hook, and the
-push rewrite stay on `auto` and do not apply to write mode.
+(#8965). `workspace-write` and `danger` use `bypassPermissions` so that
+classifier is not the session mode. Both also install the tracked fleet
+PreToolUse guards from `agents_extensions/shared/settings.json` (primary-checkout
+write, secret-print, merge, and the other worker hooks) through
+`scripts/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
+agent. That agent does not load `guard-reviewer-publish.py` and does not set
+the read-only Git push rewrite. The read-only reviewer opt-in keeps its publish
+hook and push rewrite on `auto`. Matchers for the write worker also name the
+Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
+`hashline_edit`, which the Claude matcher aliases do not all cover.
 
 ## Weak-driver trail isolation (P5)
 

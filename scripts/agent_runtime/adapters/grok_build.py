@@ -20,8 +20,10 @@ Mode → ``--permission-mode``:
   publish PreToolUse guards.
 - ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
+  plus the tracked fleet PreToolUse guards through the hook bridge
 - ``danger``          → ``bypassPermissions`` + ``--always-approve``
   (unattended full autonomy within the dispatch worktree)
+  plus the same fleet PreToolUse guards
 
 Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
@@ -34,7 +36,10 @@ Issue #8965: Grok 1.0.41 treats an explicit ``--permission-mode auto`` as winnin
 over ``--always-approve``, so ``yolo_mode`` stays false and the auto classifier
 refuses ``git push`` before the command runs. ``workspace-write`` therefore uses
 ``bypassPermissions``, the same mode ``danger`` already uses successfully.
-Read-only reviewer guards are unchanged.
+Write sessions install the fleet PreToolUse guards (primary-checkout write,
+secret-print, merge, and the rest of the tracked worker set) through the same
+hook bridge. They do not load the reviewer publish guard or the read-only Git
+push rewrite. Read-only reviewer sessions stay as #8945 shipped them.
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.
@@ -150,32 +155,57 @@ _META_RESUME_SESSION_ID = "resume_session_id"
 _META_LIVENESS_SESSION_ID = "liveness_session_id"
 _META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
 _META_REVIEWER_AGENT_FILE = "reviewer_agent_file"
+_META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
+
+# Claude matchers auto-expand to some Grok ids. These are the model-facing
+# ids that expansion does not cover, so a write session's guards still see
+# the shell and file tools the model actually calls.
+_WRITE_MATCHER_ALIASES: dict[str, tuple[str, ...]] = {
+    "Bash": ("run_terminal_command", "run_terminal_cmd"),
+    "Write|Edit|MultiEdit": ("write", "search_replace", "hashline_edit"),
+}
 
 
-def _reviewer_agent_definition() -> str:
-    """Build a per-invocation Grok agent with the tracked fleet guards.
+def _grok_matcher(matcher: str, *, native_aliases: bool) -> str:
+    extras = _WRITE_MATCHER_ALIASES.get(matcher) if native_aliases else None
+    if not extras:
+        return matcher
+    return "|".join((matcher, *extras))
+
+
+def _guard_agent_definition(
+    *,
+    name: str,
+    description: str,
+    body: str,
+    publish_guard: bool,
+    native_aliases: bool,
+) -> str:
+    """Build a per-invocation Grok agent whose hooks call the fleet guards.
 
     Grok has no ``--settings`` flag. Its ``--agent`` definition supports
     PreToolUse hooks for the primary session, as verified against the native
     CLI. The wrapper translates Grok's camelCase event into the Claude-shaped
-    payload consumed by the existing guards.
+    payload consumed by the existing guards. ``promptMode`` stays at its
+    default (extend), so the body is appended to the base system prompt.
     """
     from .claude import _worker_guard_settings
 
     source_root = Path(__file__).resolve().parents[3]
     wrapper = source_root / "scripts/agent_runtime/grok_hook_bridge.py"
     if not wrapper.is_file():
-        raise RuntimeError(f"Grok reviewer hook bridge unavailable: {wrapper}")
-    groups = json.loads(_worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
+        raise RuntimeError(f"Grok hook bridge unavailable: {wrapper}")
+    groups = json.loads(_worker_guard_settings(publish_guard=publish_guard))["hooks"]["PreToolUse"]
     lines = [
         "---",
-        "name: lu-read-only-reviewer",
-        "description: Read-only reviewer with fleet PreToolUse guards",
+        f"name: {name}",
+        f"description: {description}",
         "hooks:",
         "  PreToolUse:",
     ]
     for group in groups:
-        lines.extend([f"    - matcher: {json.dumps(group['matcher'])}", "      hooks:"])
+        matcher = _grok_matcher(str(group["matcher"]), native_aliases=native_aliases)
+        lines.extend([f"    - matcher: {json.dumps(matcher)}", "      hooks:"])
         for hook in group["hooks"]:
             command = f"{shlex.quote(str(wrapper))} {shlex.quote(hook['command'])}"
             lines.extend(
@@ -185,8 +215,30 @@ def _reviewer_agent_definition() -> str:
                     f"          timeout: {max(15, int(hook.get('timeout', 5)))}",
                 ]
             )
-    lines.extend(["---", "Review the requested work using the available tools and report executed evidence.", ""])
+    lines.extend(["---", body, ""])
     return "\n".join(lines)
+
+
+def _reviewer_agent_definition() -> str:
+    """Read-only reviewer agent: fleet guards plus the publish guard."""
+    return _guard_agent_definition(
+        name="lu-read-only-reviewer",
+        description="Read-only reviewer with fleet PreToolUse guards",
+        body="Review the requested work using the available tools and report executed evidence.",
+        publish_guard=True,
+        native_aliases=False,
+    )
+
+
+def _write_guard_agent_definition() -> str:
+    """Write-worker agent: fleet guards, no publish guard, no push rewrite."""
+    return _guard_agent_definition(
+        name="lu-write-worker",
+        description="Write worker with fleet PreToolUse guards",
+        body="",
+        publish_guard=False,
+        native_aliases=True,
+    )
 
 
 def validate_grok_effort(effort: str | None) -> str | None:
@@ -303,14 +355,35 @@ class GrokBuildAdapter:
             prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
-        reviewer_agent_file: str | None = None
+        mcp_servers_requested = set(tc.get("mcp_server_names") or [])
+        mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
+        guard_agent_file: str | None = None
+        guard_agent_key: str | None = None
+        guard_agent_suffix: str | None = None
+        guard_definition: str | None = None
         if reviewer_tools:
+            guard_definition = _reviewer_agent_definition()
+            guard_agent_suffix = ".grok-reviewer-agent.md"
+            guard_agent_key = _META_REVIEWER_AGENT_FILE
+        elif (
+            mode in _UNATTENDED_WRITE_MODES
+            and not trail_isolation
+            and not review_isolation
+            and not mcp_read_only
+        ):
+            # Same tracked PreToolUse set Claude workers load, without the
+            # reviewer publish guard. The push rewrite is env-only and stays
+            # off this path.
+            guard_definition = _write_guard_agent_definition()
+            guard_agent_suffix = ".grok-write-agent.md"
+            guard_agent_key = _META_WRITE_GUARD_AGENT_FILE
+        if guard_definition is not None and guard_agent_suffix is not None:
             with tempfile.NamedTemporaryFile(
-                "w", suffix=".grok-reviewer-agent.md", delete=False, encoding="utf-8"
+                "w", suffix=guard_agent_suffix, delete=False, encoding="utf-8"
             ) as handle:
-                handle.write(_reviewer_agent_definition())
-                reviewer_agent_file = handle.name
-            cmd.extend(["--agent", reviewer_agent_file])
+                handle.write(guard_definition)
+                guard_agent_file = handle.name
+            cmd.extend(["--agent", guard_agent_file])
         execution_cwd = trail_cwd or cwd
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
         # would be misparsed by clap as a flag, so route those through a temp
@@ -351,8 +424,6 @@ class GrokBuildAdapter:
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
-        mcp_servers_requested = set(tc.get("mcp_server_names") or [])
-        mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
         # Review isolation (#5285): expose only built-in read tools. The
         # parent-owned OS sandbox limits them to the sealed view; explicit deny
         # rules remove shell/write/nested execution even though headless tool
@@ -481,8 +552,8 @@ class GrokBuildAdapter:
             # state (#6935).
             _META_LIVENESS_SNAPSHOT: sorted(path.name for path in snapshot),
         }
-        if reviewer_agent_file is not None:
-            metadata[_META_REVIEWER_AGENT_FILE] = reviewer_agent_file
+        if guard_agent_file is not None and guard_agent_key is not None:
+            metadata[guard_agent_key] = guard_agent_file
         liveness_paths, _discovered = self._liveness_paths_for_cwd(
             execution_cwd,
             bound_session_id=resume_session_id,
@@ -502,10 +573,14 @@ class GrokBuildAdapter:
         )
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
-        """Remove only the reviewer agent definition created for this plan."""
-        path = plan.metadata.get(_META_REVIEWER_AGENT_FILE)
-        if isinstance(path, str) and path.endswith(".grok-reviewer-agent.md"):
-            Path(path).unlink(missing_ok=True)
+        """Remove only the guard agent definition created for this plan."""
+        for key, suffix in (
+            (_META_REVIEWER_AGENT_FILE, ".grok-reviewer-agent.md"),
+            (_META_WRITE_GUARD_AGENT_FILE, ".grok-write-agent.md"),
+        ):
+            path = plan.metadata.get(key)
+            if isinstance(path, str) and path.endswith(suffix):
+                Path(path).unlink(missing_ok=True)
 
     def parse_response(
         self,
