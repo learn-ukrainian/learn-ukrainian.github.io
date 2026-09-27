@@ -1464,7 +1464,7 @@ def test_the_activity_set_is_derived_with_the_engines_own_import_reader(tmp_path
     assert _refusal_codes(doc, tmp_path) == [] and len(calls) == 1
 
 
-@pytest.mark.parametrize("missing", ["lessons_lock", "decisions"])
+@pytest.mark.parametrize("missing", ["lessons_lock", "decisions", "provenance"])
 def test_a_required_input_the_lesson_manifest_omits_is_refused_by_the_schema(tmp_path, monkeypatch, missing):
     _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     assert missing in doc["inputs"] and _refusal_codes(doc, tmp_path) == []

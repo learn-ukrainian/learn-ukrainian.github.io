@@ -24,7 +24,6 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.assemble import component_props_from_jsx
-from scripts.build.fresh.manifest import pinned_entries
 from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.curriculum.evidence.lock import atomic_write
 from scripts.review import findings_db as db
@@ -461,52 +460,29 @@ def _lesson_manifest_bytes(root: Path, level: str, slug: str, lesson_n: int, dig
     return None
 
 
-def _provenance_document(root: Path, level: str, slug: str, lesson_n: int, manifest_sha: str) -> dict[str, Any] | None:
-    """The lesson's provenance document, from the lesson manifest's pins.
-
-    Settle's own inputs name only the disputed page. The provenance file is read from the
-    original lesson manifest: a pin whose path is ``lesson-<n>.provenance.yaml`` when the
-    manifest lists that file, otherwise the engine path
-    ``curriculum/l2-uk-en/evidence/<level>/_state/<slug>/lesson-<n>.provenance.yaml`` whose
-    sha256 is ``sources[].provenance_sha256`` in the pinned module digest. A real lesson
-    manifest pins the digest, not the provenance path. None when that manifest is not on disk.
-    """
+def _provenance_document(root: Path, level: str, slug: str, lesson_n: int, manifest_sha: str) -> dict[str, Any]:
+    """Read this lesson's provenance only through its original manifest's exact pin."""
     raw = _lesson_manifest_bytes(root, level, slug, lesson_n, manifest_sha)
     if raw is None:
-        return None
+        raise SettleError("lesson_manifest_unavailable_for_activity_provenance")
     try:
         manifest = yaml.safe_load(raw)
     except yaml.YAMLError as exc:
         raise SettleError("lesson manifest is not usable") from exc
     if not isinstance(manifest, dict):
         raise SettleError("lesson manifest is not usable")
-    name = f"lesson-{lesson_n}.provenance.yaml"
-    direct = [pin for _location, pin in pinned_entries(manifest) if Path(str(pin.get("path", ""))).name == name]
-    if len(direct) > 1:
-        raise SettleError("lesson manifest pins more than one provenance file for this lesson")
-    if direct:
-        return _provenance_for_lesson(_parse_provenance(_pin_file(root, direct[0])), level, slug, lesson_n)
-    digest_pin = manifest.get("module_digest")
-    if not isinstance(digest_pin, dict):
-        return None
+    inputs = manifest.get("inputs")
+    pin = inputs.get("provenance") if isinstance(inputs, dict) else None
+    if not isinstance(pin, dict):
+        raise SettleError("lesson_manifest_missing_provenance_pin")
+    expected = f"{TREE}/evidence/{level}/_state/{slug}/lesson-{lesson_n}.provenance.yaml"
+    if pin.get("path") != expected:
+        raise SettleError("lesson_manifest_provenance_path_mismatch")
     try:
-        digest = yaml.safe_load(_pin_file(root, digest_pin))
-    except yaml.YAMLError as exc:
-        raise SettleError("lesson manifest digest is not usable") from exc
-    sources = digest.get("sources") if isinstance(digest, dict) else None
-    if not isinstance(sources, list):
-        return None
-    attested = [
-        item.get("provenance_sha256")
-        for item in sources
-        if isinstance(item, dict) and item.get("lesson") == lesson_n and isinstance(item.get("provenance_sha256"), str)
-    ]
-    if not attested:
-        return None
-    if len(attested) > 1:
-        raise SettleError("lesson manifest names this lesson's provenance more than once")
-    relative = f"{TREE}/evidence/{level}/_state/{slug}/{name}"
-    parsed = _parse_provenance(_pin_file(root, {"path": relative, "sha256": attested[0]}))
+        data = _pin_file(root, pin)
+    except SettleError as exc:
+        raise SettleError(f"lesson_manifest_provenance_pin_invalid: {exc}") from exc
+    parsed = _parse_provenance(data)
     return _provenance_for_lesson(parsed, level, slug, lesson_n)
 
 

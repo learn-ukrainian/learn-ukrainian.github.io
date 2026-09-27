@@ -189,6 +189,9 @@ The planned learner state, immersion rule, gate report, style card and any built
 ### Built Lesson (Tabs: urok, slovnyk, vpravy, resursy)
 {{ lesson_content | fence("mdx") }}
 
+### Lesson Provenance
+{{ provenance_text | fence("yaml") }}
+
 {% for act in activity_data_files %}
 ### Activity Data: `{{ act.path }}`
 {{ act.content | fence("yaml") }}

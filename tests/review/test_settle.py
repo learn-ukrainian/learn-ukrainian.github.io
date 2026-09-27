@@ -831,7 +831,8 @@ def test_rendered_settle_prompt_for_an_absence_item_shows_the_scoped_unit(tmp_pa
     module_list.write_text(
         yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": ["fixture-module"]}}}), encoding="utf-8"
     )
-    world = _world(tmp_path, document, "b" * 64, scope={"tab": "vpravy", "activity": "a1"})
+    manifest_hash = _pin_provenance(tmp_path, _provenance([_span(text="ONLY ACTIVITY A1")]), direct=True)
+    world = _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
     assert _prepared_spans(world) == [
         {"absence": True, "locator": {"tab": "vpravy", "activity": "a1"}, "context": _ACTIVITY_A1}
     ]
@@ -1076,8 +1077,7 @@ def _module_list(root: Path) -> None:
     )
 
 
-@pytest.mark.parametrize("direct", [False, True])
-def test_an_engine_rendered_activity_absence_resolves_through_provenance(tmp_path: Path, direct: bool) -> None:
+def test_an_engine_rendered_activity_absence_resolves_through_provenance(tmp_path: Path) -> None:
     page = _engine_activities_page(_ENGINE_ACTIVITIES)
     assert "### Choose the right answer" in page
     assert "### Name the picture" in page
@@ -1087,7 +1087,7 @@ def test_an_engine_rendered_activity_absence_resolves_through_provenance(tmp_pat
     document.parent.mkdir(parents=True)
     document.write_text(page, encoding="utf-8")
     _module_list(tmp_path)
-    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=direct)
+    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=True)
     world = _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
     context = _prepared_spans(world)[0]["context"]
     assert "### Choose the right answer" in context
@@ -1101,13 +1101,23 @@ def test_an_engine_rendered_activity_absence_resolves_through_provenance(tmp_pat
     assert all(line not in instructions for line in _QUOTED_PROCEDURE)
 
 
-def test_an_engine_rendered_activity_without_provenance_is_absent(tmp_path: Path) -> None:
+def test_an_engine_rendered_activity_without_manifest_refuses(tmp_path: Path) -> None:
     document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
     document.parent.mkdir(parents=True)
     document.write_text(_engine_activities_page(_ENGINE_ACTIVITIES), encoding="utf-8")
     _module_list(tmp_path)
-    with pytest.raises(settle.SettleError, match="scope names a unit absent from the document"):
+    with pytest.raises(settle.SettleError, match="lesson_manifest_unavailable_for_activity_provenance"):
         _world(tmp_path, document, "d" * 64, scope={"tab": "vpravy", "activity": "a1"})
+
+
+def test_old_lesson_manifest_without_provenance_pin_refuses(tmp_path: Path) -> None:
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(_engine_activities_page(_ENGINE_ACTIVITIES), encoding="utf-8")
+    _module_list(tmp_path)
+    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=False)
+    with pytest.raises(settle.SettleError, match="lesson_manifest_missing_provenance_pin"):
+        _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
 
 
 def test_a_provenance_pin_that_does_not_match_is_refused(tmp_path: Path) -> None:
@@ -1115,10 +1125,12 @@ def test_a_provenance_pin_that_does_not_match_is_refused(tmp_path: Path) -> None
     document.parent.mkdir(parents=True)
     document.write_text(_engine_activities_page(_ENGINE_ACTIVITIES), encoding="utf-8")
     _module_list(tmp_path)
-    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=False)
+    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=True)
     provenance_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module/lesson-2.provenance.yaml"
     provenance_path.write_text(provenance_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
-    with pytest.raises(settle.SettleError, match="lesson manifest pin does not match the file"):
+    with pytest.raises(
+        settle.SettleError, match="lesson_manifest_provenance_pin_invalid: lesson manifest pin does not match the file"
+    ):
         _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
 
 
