@@ -382,10 +382,16 @@ def test_wrapper_killed_before_release_never_runs_payload(tmp_path: Path) -> Non
 
 
 def test_killed_wrapper_with_live_child_is_preserved_then_recovered(tmp_path: Path) -> None:
+    # The running lease is written before the launch gate opens (spawn()
+    # persists identity, then writes the gate token); killing the wrapper in
+    # that window closes the gate and the shim exits without exec'ing the
+    # payload (#8927). Wait for the child to actually become "sleep" so the
+    # kill lands on a running payload, not a still-gated shim.
     root = tmp_path / "root"
     proc = _spawn_cli(root, "survivor", ["sleep", "30"])
     name, lease = _wait_running_lease(root)
     child_pid = lease["child"]["pid"]
+    _wait_for(lambda: _comm(child_pid) == "sleep", what="payload to exec")
     proc.kill()
     proc.wait(timeout=15)
     assert _pid_alive(child_pid)
