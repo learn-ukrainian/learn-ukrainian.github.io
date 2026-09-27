@@ -77,7 +77,7 @@ def _states(root: gen.Roots, arc: list[ArcPosition]) -> dict[str, str]:
 
 
 LEVEL_STATUS = (
-    "# header\n\na1:\n  planned: 99  # note kept\n  status: auto\n  description: \"x\"\n\n"
+    '# header\n\na1:\n  planned: 99  # note kept\n  status: auto\n  description: "x"\n\n'
     "a2:\n  planned: 76\n  status: auto\n"
 )
 
@@ -322,6 +322,25 @@ def test_display_job_drops_line_references_and_backticks() -> None:
     assert gen.display_job("Read the text (`:549-551`).") == "Read the text."
     assert gen.display_job("Use `є` and `немає` (`:12`)") == "Use є and немає"
     assert gen.display_job("Plain text, (not a ref)") == "Plain text, (not a ref)"
+    # several citations in one group (A2-B2 arc jobs), en dash, semicolon, bare backticked reference
+    assert gen.display_job("Eat out; complain (:1947-1952, :1709-1710)") == "Eat out; complain"
+    assert gen.display_job("Read signs (`:361`; :523–525) at the border") == "Read signs at the border"
+    assert gen.display_job("Fill a form `:361` here") == "Fill a form here"
+    assert gen.display_job("Meet at 10:30 (see page 4)") == "Meet at 10:30 (see page 4)"
+
+
+@pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
+def test_every_arc_job_renders_without_a_source_line_reference(level: str) -> None:
+    """The landing shows ``display_job(job)``; no level's job may leak a Standard line reference into it."""
+    arc = yaml.safe_load(
+        (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml").read_text(encoding="utf-8")
+    )
+    leaking = [
+        (record["position"], shown)
+        for record in arc["positions"]
+        if re.search(r"(?<!\d):\d+(?:[-–]\d+)?", shown := gen.display_job(record["job"]))
+    ]
+    assert leaking == []
 
 
 def test_real_arc_jobs_carry_no_line_references_or_backticks() -> None:

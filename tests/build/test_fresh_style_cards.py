@@ -112,3 +112,14 @@ def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_d
 def test_the_three_bands_and_nothing_else() -> None:
     names = sorted(p.name for p in CARDS.iterdir())
     assert names == sorted([f"{b}.md" for b in BANDS] + [f"{b}.sha256" for b in BANDS])
+
+
+@pytest.mark.parametrize("band", sorted(BANDS))
+def test_card_language_rule_is_one_sentence_one_language(band: str) -> None:
+    """The writer sees the card, not the contract: the operator's rule (2026-09-27) must be in §7 itself."""
+    _, body, _ = read_card(band)
+    section = body.split("## 7. The language rule", 1)[1].split("## 8.", 1)[0]
+    assert "Every sentence is in one language" in section
+    assert "Mixed sentences outside those two spans fail" in section
+    if band != "b1plus":
+        assert "about that item" in section, "the quoted-term span is licensed only for a sentence about the item"
