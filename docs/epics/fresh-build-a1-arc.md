@@ -138,7 +138,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | Pos | Slug | Phase | One-sentence job | Skills duty | L |
 | --- | --- | --- | --- | --- | --- |
 | 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |
-| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions (`:485`) | Li | 3 |
+| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions | Li (`:485`) | 3 |
 | 6 | `my-family` | A1.1 | Show a family photo and say who is who | W (captions) | 3 |
 | 7 | `checkpoint-first-contact` | A1.1 | Self-check: read aloud, greet, introduce yourself and family | R, W | 2 |
 | 8 | `things-have-gender` | A1.2 | Tell the gender of a noun and pick він / вона / воно, мій / моя / моє | — | 3 |

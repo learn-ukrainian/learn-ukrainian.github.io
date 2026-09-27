@@ -36,9 +36,9 @@ A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 # Pinned when `level: a1` was added (#8424): regenerating A1 may add that one
 # key and nothing else — the positions block stays byte-identical.
 # Updated for the one-sentence-one-language fix (position 1 job rewritten to drop
-# a Ukrainian/English mix; positions 24, 34, 39, 45 jobs lose a leaked source line
+# a Ukrainian/English mix; positions 5, 24, 34, 39, 45 jobs lose a leaked source line
 # reference, moved into their skills-duty cell).
-A1_POSITIONS_BLOCK_SHA256 = "3f70350b08df6ead03a8fc03a39a2c97f583fe0aed6bfcc9a8ddc9468f73a16c"
+A1_POSITIONS_BLOCK_SHA256 = "4b4125226de168b4befea8f0115f955983411c4d13dc2096b998627141ddb90b"
 
 
 def _doc(level: str) -> Path:
