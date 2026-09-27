@@ -1280,6 +1280,66 @@ def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, c
     assert state["substitution"]["actual_model"] == "claude-opus-5-5-high"
 
 
+def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, tmp_path, capsys):
+    """Hot claude → codex: an explicit model Codex rejects, with no mapping row, never spawns."""
+    commands: list[list[str]] = []
+
+    def fake_popen(cmd, *_args, **_kwargs):
+        commands.append([str(part) for part in cmd])
+        return _FakeProc()
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture", "warnings": []},
+            "agents": {
+                "claude": {
+                    "status": "hot",
+                    "burn_pct_7d": 95.0,
+                    "interactive": {"status": "hot", "burn_pct_7d": 95.0},
+                },
+                "codex": {"status": "cool", "burn_pct_7d": 10.0},
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
+            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "claude",
+                "--task-id",
+                "probe-8855-reject",
+                "--prompt",
+                "noop",
+                "--mode",
+                "read-only",
+                "--check-budget",
+                "--model",
+                "claude-fable-5-1",
+            ]
+        )
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "rejects explicit --model claude-fable-5-1" in err
+    assert "CodexAdapter: model='claude-fable-5-1' rejected" in err
+    assert "Refusing before spawn." in err
+    assert "catalog default" not in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert not any("_worker" in command for command in commands)
+    assert not (tmp_path / "tasks" / "probe-8855-reject.json").exists()
+
+
 def test_budget_sub_refuses_before_spawn_when_no_model_is_valid(monkeypatch, tmp_path, capsys):
     """AC-02: neither the mapped model nor the catalog default is valid → no task, no worker."""
     commands = _capture_worker_commands(monkeypatch, tmp_path)

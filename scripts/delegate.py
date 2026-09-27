@@ -10068,8 +10068,8 @@ def _discard_model_probe_output(plan: object) -> None:
         return
 
 
-def _adapter_rejects_model(agent: str, model: str) -> bool:
-    """True when the target adapter refuses this explicit model before spawn.
+def _adapter_model_rejection(agent: str, model: str) -> str | None:
+    """Return the adapter's refusal text, or None when this model is not refused.
 
     A successful probe is not a rejection. Any error other than the adapter's
     model ValueError is inconclusive: keep the explicit model instead of
@@ -10081,7 +10081,7 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
     entry = get_agent_entry(agent)
     spec = str(entry.get("adapter") or "")
     if ":" not in spec:
-        return False
+        return None
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
@@ -10097,15 +10097,22 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
         )
     except ValueError as exc:
         text = str(exc)
-        return model in text and ("rejected" in text or "unsupported" in text.lower())
+        if model in text and ("rejected" in text or "unsupported" in text.lower()):
+            return text
+        return None
     except Exception as exc:
         print(
             f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
             file=sys.stderr,
         )
-        return False
+        return None
     _discard_model_probe_output(plan)
-    return False
+    return None
+
+
+def _adapter_rejects_model(agent: str, model: str) -> bool:
+    """True when the target adapter refuses this explicit model before spawn."""
+    return _adapter_model_rejection(agent, model) is not None
 
 
 def _lane_default_model(agent: str) -> str | None:
@@ -10144,14 +10151,29 @@ def _substitution_model_admitted(agent: str, model: str) -> bool:
 def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -> tuple[str, str]:
     """Map ``explicit_model`` onto ``target_agent``, or use that lane's registry default.
 
+    A mapping row wins when the substitute admits the mapped model. With no
+    explicit model, or an explicit model the substitute adapter does not
+    reject, dispatch uses that lane's registry default. An explicit model
+    with no mapping row that the adapter rejects is refused before spawn:
+    the default must not hide that refusal (retired alias and budget guard).
+
     Returns ``(model, "mapped"|"catalog-default")``. Raises BudgetGuardRefuseError
-    when neither a mapped model nor the default is valid for the substitute.
+    when the explicit model is rejected, or neither a mapped model nor the
+    default is valid for the substitute.
     """
     table = _load_budget_substitution_table().get(target_agent, {})
     mapped = table.get(explicit_model) if explicit_model else None
     default = _lane_default_model(target_agent)
     if mapped and _substitution_model_admitted(target_agent, mapped):
         return mapped, "mapped"
+    if explicit_model and mapped is None:
+        rejection = _adapter_model_rejection(target_agent, explicit_model)
+        if rejection:
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: substitute "
+                f"--agent {target_agent} rejects explicit --model {explicit_model} "
+                f"({rejection}). Refusing before spawn."
+            )
     if default and _substitution_model_admitted(target_agent, default):
         return default, "catalog-default"
     raise BudgetGuardRefuseError(

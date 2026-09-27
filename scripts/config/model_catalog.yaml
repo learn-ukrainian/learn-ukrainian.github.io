@@ -1251,10 +1251,15 @@ review_ladders:
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
-# Keyed by the substitute lane. A source model with no row is dropped and
-# dispatch uses that lane's registry default — the dispatch pin named on
-# orchestrator_seats (cursor: grok-4.7). That pin is not the cursor seat
+# Keyed by the substitute lane. A source model with a row rewrites to that
+# target. No explicit --model, or an explicit model the substitute adapter
+# does not reject, uses that lane's registry default — the dispatch pin named
+# on orchestrator_seats (cursor: grok-4.7). That pin is not the cursor seat
 # identity `auto`, and not the interactive driver's grok-4.7-high slug.
+# An explicit model with no row that the substitute adapter rejects is
+# refused before spawn (agy rejects an unknown Gemini slug; codex rejects
+# anything outside gpt-6-sol/luna/astra). Cursor forwards an unrecognized
+# --model, so an unmapped slug such as gpt-6-sol still uses grok-4.7.
 # GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
 budget_substitution_models:
   codex:

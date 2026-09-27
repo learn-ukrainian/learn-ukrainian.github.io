@@ -801,8 +801,11 @@ lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallback
 row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. A hard
 substitution rewrites an explicit `--model` through `model_catalog.yaml`
 `budget_substitution_models`, or drops it for that lane's registry default
-(cursor's dispatch pin is `grok-4.7`). If neither the mapped model nor that
-default is valid for the substitute, dispatch refuses before spawn. Flag stays
+(cursor's dispatch pin is `grok-4.7`) when no `--model` was given or the
+substitute adapter does not reject the explicit model. An explicit `--model`
+with no mapping row that the substitute adapter rejects is refused before
+spawn. If neither the mapped model nor that default is valid for the
+substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
