@@ -16,7 +16,7 @@ only.
 | Fast checks: Ruff step | not docs-only |
 | Fast checks: Plan Validate step | always (the v2 plan validator self-scopes on `pull_request` to its input paths; the generated arc landing `a1 --check` always runs) |
 | Fast checks: TypeSafe triage step | always (advisory during soak, #8232: `continue-on-error`, and CI Gate accepts any outcome, so a red TypeSafe step is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the step red) |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| pytest | always (`full` → 10 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | CI Gate | always |
@@ -79,7 +79,7 @@ pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,
 conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under
 `tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted
 test files, empty or ≥80 candidates, and anything outside the allowlist stay
-`pytest_mode=full` with four shards. Contracts and ruff stay on whenever
+`pytest_mode=full` with ten shards. Contracts and ruff stay on whenever
 `docs_only=false`. After merge, the CI stream owner tracks one week of
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).
@@ -322,9 +322,9 @@ only the red one. A Ruff fix therefore costs up to one more Preflight run
 The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`
 which counts physical cores), collect through one initial `tests` path
 instead of positional file arguments, and balance by measured per-file
-duration instead of a modulo split. Full-tier shard count (`4`) is declared
+duration instead of a modulo split. Full-tier shard count (`10`) is declared
 once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job
-emits `shard_count` (1 or 4) and `shards`; `plan-files` always uses
+emits `shard_count` (1 or 10) and `shards`; `plan-files` always uses
 `needs.changes.outputs.shard_count` so selected mode never LPT-partitions a
 candidate set into unused buckets.
 `--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's
@@ -408,10 +408,10 @@ historical source with `git show`.
 run, download each shard's uploaded `pytest-junit-shard-N` artifact and run:
 
 ```
+args=()
+for shard in $(seq 1 10); do args+=(--junit "pytest-shard-${shard}.xml"); done
 .venv/bin/python scripts/ci/pytest_shards.py file-durations \
-  --junit pytest-shard-1.xml --junit pytest-shard-2.xml \
-  --junit pytest-shard-3.xml --junit pytest-shard-4.xml \
-  --output scripts/ci/pytest-file-durations.json
+  "${args[@]}" --output scripts/ci/pytest-file-durations.json
 ```
 
 Use one `--junit` per shard in that run. Commit the refreshed snapshot (sorted

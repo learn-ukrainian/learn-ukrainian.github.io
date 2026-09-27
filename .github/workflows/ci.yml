@@ -24,7 +24,7 @@ env:
   # Selected/docs modes emit shard_count=1 from Changes; plan-files reads
   # needs.changes.outputs.shard_count (not this env alone) so selected never
   # LPT-partitions into unused buckets.
-  PYTEST_SHARD_COUNT: ${{ inputs.shards || '4' }}
+  PYTEST_SHARD_COUNT: ${{ inputs.shards || '10' }}
 
 on:
   # No `edited` or `labeled` (#8505): neither a PR-body edit nor a label may
