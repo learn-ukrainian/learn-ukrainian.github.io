@@ -1112,7 +1112,8 @@ def test_a2_classify_items_do_not_raise_english_labels() -> None:
     assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
-def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> None:
+def test_classify_pos_set_keys_only_the_displayed_reading_of_a_multi_pos_lemma() -> None:
+    """#8729: VESUM also knows «проте» as an adverb, but the card shows the conjunction."""
     entry = {
         "lemma": "проте",
         "pos": "conjunction",
@@ -1128,13 +1129,28 @@ def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> No
     }
     lexeme = {"lemmaId": "prote", "lemma": "проте", "cefr": "B1"}
 
-    classify = _build_classify_items(entry, lexeme)
+    classify = _build_classify_items(entry, lexeme, vesum_pos_buckets={"adverb", "conjunction"})
 
     pos_sets = [item for item in classify[0]["sets"] if item["setId"] == "pos"]
     assert len(pos_sets) == 1
-    assert pos_sets[0]["answer"] == "adverb"
-    assert pos_sets[0]["answers"] == ["adverb", "conjunction"]
-    assert pos_sets[0]["answerLabelUk"] == "прислівник"
+    assert pos_sets[0]["answer"] == "conjunction"
+    assert "answers" not in pos_sets[0]
+    assert pos_sets[0]["answerLabelUk"] == "сполучник"
+
+
+def test_classify_emits_every_attested_reading_the_displayed_pos_names() -> None:
+    entry = {
+        "lemma": "після",
+        "pos": "adverb, preposition",
+        "enrichment": {"morphology": {"pos": "adverb", "forms": [{"label": "присл."}]}},
+    }
+    lexeme = {"lemmaId": "pislia", "lemma": "після", "cefr": "A2"}
+
+    classify = _build_classify_items(entry, lexeme, vesum_pos_buckets={"adverb", "preposition"})
+
+    pos_set = next(item for item in classify[0]["sets"] if item["setId"] == "pos")
+    assert pos_set["answer"] == "adverb"
+    assert pos_set["answers"] == ["adverb", "preposition"]
 
 
 def test_classify_validator_requires_ordered_multi_pos_answers() -> None:
@@ -1170,7 +1186,7 @@ def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
     }
     lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
 
-    classify = _build_classify_items(entry, lexeme)[0]
+    classify = _build_classify_items(entry, lexeme, vesum_pos_buckets={"noun"})[0]
 
     pos_sets = [item for item in classify["sets"] if item["setId"] == "pos"]
     assert len(pos_sets) == 1
@@ -1200,10 +1216,6 @@ def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(raw_pos: str,
 def test_classify_pos_generic_part_does_not_match_prose() -> None:
     assert generate_practice_deck._normalize_pos_buckets("part of speech") == []
     assert generate_practice_deck._normalize_pos_buckets("participle") == []
-    assert (
-        generate_practice_deck._definition_card_pos_buckets({"definition_cards": [{"definitions": ["part of speech"]}]})
-        == []
-    )
 
 
 def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
