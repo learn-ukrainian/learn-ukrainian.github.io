@@ -6,6 +6,7 @@ import LexiconPractice, {
   addDailyExamples,
   isEnglishLearnerGloss,
   isMeaningMcEligible,
+  paronymOptions,
   PracticeItem,
 } from '@site/src/components/LexiconPractice';
 import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
@@ -2699,6 +2700,81 @@ describe('LexiconPractice', () => {
     });
   });
 
+  /**
+   * #8733: the published Atlas Paronym deck had every card authored with
+   * `answer === options[0]` and the renderer showed `item.options` in that authored
+   * order verbatim — the correct answer was always the first button, so the exercise
+   * tested nothing. `paronymOptions` now shuffles per presentation (see the function's
+   * own #8733 comment in LexiconPractice.tsx for why a plain `shuffle(item.options)`
+   * isn't enough on its own).
+   */
+  test('#8733: paronym options are shuffled per presentation — the answer is not fixed at options[0]', () => {
+    const item = paronymPracticeItem(); // authored with answer === options[0] ('бігає')
+    const positionsSeen = new Set<number>();
+    for (let presentation = 0; presentation < 40; presentation += 1) {
+      const options = paronymOptions(item, `presentation-${presentation}`);
+      expect(options.map((option) => option.label).sort()).toEqual(
+        item.options.map((option) => option.label).sort(),
+      );
+      const correctIndex = options.findIndex((option) => option.correct);
+      expect(options[correctIndex].label).toBe(item.answer);
+      // Only one option is ever flagged correct, and it's always the authored answer.
+      expect(options.filter((option) => option.correct)).toHaveLength(1);
+      positionsSeen.add(correctIndex);
+    }
+    expect(positionsSeen.size).toBeGreaterThan(1);
+  });
+
+  test('#8733: the same presentation renders a stable order across re-renders', () => {
+    const item = paronymPracticeItem();
+    const first = paronymOptions(item, 'same-presentation-key');
+    const second = paronymOptions(item, 'same-presentation-key');
+    expect(second.map((option) => option.label)).toEqual(first.map((option) => option.label));
+  });
+
+  test('#8733: an SRS requeue of the same card is a fresh presentation — content alone does not fix the order', () => {
+    const item = paronymPracticeItem();
+    // `shuffle` derives its seed from array content (SSR-safe determinism), so without a
+    // presentation-specific salt every call over the same unchanged item content would
+    // reproduce the exact same order — this is the regression #8733's fix guards against.
+    const positions = new Set<number>();
+    for (let requeue = 0; requeue < 40; requeue += 1) {
+      const options = paronymOptions(item, `session-1:${requeue}`);
+      positions.add(options.findIndex((option) => option.correct));
+    }
+    expect(positions.size).toBeGreaterThan(1);
+  });
+
+  test('#8733: rendered paronym options vary in position across sessions, and the correct choice still scores good wherever it lands', async () => {
+    const positionsSeen = new Set<number>();
+    // A spread of session seeds verified (via paronymOptions directly) to land the
+    // answer at both positions — a random subset can occasionally tie by chance since
+    // there are only two options, so this list is picked, not drawn, for a stable test.
+    for (const randomSeed of [0.05, 0.1, 0.15, 0.2, 0.3, 0.5]) {
+      localStorage.clear();
+      loadState(localStorage, NOW);
+      vi.spyOn(Date, 'now').mockReturnValue(0);
+      vi.spyOn(Math, 'random').mockReturnValue(randomSeed);
+      const user = userEvent.setup();
+      const { unmount } = render(
+        <LexiconPractice initialDeck={paronymDeck()} autoStart initialMode="paronym" />,
+      );
+
+      const stage = within(await screen.findByTestId('practice-paronym'));
+      const buttons = stage.getAllByRole('button');
+      const index = buttons.findIndex((button) => /бігає/.test(button.textContent ?? ''));
+      expect(index).toBeGreaterThanOrEqual(0);
+      positionsSeen.add(index);
+
+      await user.click(buttons[index]);
+      expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent('Правильно!');
+
+      unmount();
+      vi.restoreAllMocks();
+    }
+    expect(positionsSeen.size).toBeGreaterThan(1);
+  });
+
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
     const { container } = render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 
@@ -5228,6 +5304,7 @@ describe('LexiconPractice', () => {
           deck={deck}
           pairs={[]}
           sessionSeed={1}
+          presentationSeq={0}
           answerLocked={false}
           clozeInput=""
           clozeFeedback={null}

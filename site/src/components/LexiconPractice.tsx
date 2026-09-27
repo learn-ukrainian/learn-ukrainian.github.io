@@ -2339,6 +2339,11 @@ function LexiconPracticeIsland({
   });
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
+  // #8733: bumped once per fresh card presentation (see the commit effect below) so
+  // Paronym can salt its option shuffle — an SRS requeue of the same card gets a new
+  // order even though the card's own content (and thus a plain content-seeded shuffle)
+  // is identical to its first presentation.
+  const [presentationSeq, setPresentationSeq] = useState(0);
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [sessionBudget, setSessionBudget] = useState<SessionBudget>(20);
   const [sessionPlan, setSessionPlan] = useState<SessionScopeStats | null>(null);
@@ -3349,6 +3354,7 @@ function LexiconPracticeIsland({
     if (selection) {
       // Record for stabilization across future deck swaps (bg merges).
       committedSelectionRef.current = { selection, historyLen: history.length };
+      setPresentationSeq((value) => value + 1);
       window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
   }, [selection?.itemId, resetItemFeedback]);
@@ -5301,6 +5307,7 @@ function LexiconPracticeIsland({
                     deck={deck}
                     pairs={pairs}
                     sessionSeed={sessionSeed}
+                    presentationSeq={presentationSeq}
                     answerLocked={answerLocked}
                     clozeInput={clozeInput}
                     clozeFeedback={clozeFeedback}
@@ -5397,6 +5404,7 @@ export function PracticeItem({
   deck,
   pairs,
   sessionSeed,
+  presentationSeq,
   answerLocked,
   clozeInput,
   clozeFeedback,
@@ -5426,6 +5434,7 @@ export function PracticeItem({
   deck: PracticeDeckData;
   pairs: ReturnType<typeof matchingPairs>;
   sessionSeed: number;
+  presentationSeq: number;
   answerLocked: boolean;
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
@@ -5651,6 +5660,7 @@ export function PracticeItem({
     return (
       <PracticeParonym
         item={selection.paronym}
+        presentationKey={`${sessionSeed}:${presentationSeq}`}
         feedback={paronymFeedback}
         answerLocked={answerLocked}
         selectedLabel={paronymSelectedLabel}
@@ -5897,10 +5907,23 @@ export function PracticeItem({
   );
 }
 
-function paronymOptions(item: PracticeParonymItem): ChoiceOption[] {
-  return item.options.map((option) => ({
+/**
+ * #8733: every published Paronym card had `answer === options[0]`, leaking the
+ * answer by position. `shuffle` derives its seed from array content alone (SSR-safe
+ * determinism), so salt each option with `presentationKey` first — otherwise
+ * reshuffling the same card's unchanged content always reproduces the same order,
+ * including when an SRS requeue re-serves the identical card later in the session.
+ * Exported so a unit test can drive the shuffle directly (see PracticeItem for the
+ * same convention).
+ */
+export function paronymOptions(item: PracticeParonymItem, presentationKey: string): ChoiceOption[] {
+  const base = item.options.map((option) => ({
     label: option.label,
     correct: option.label === item.answer,
+  }));
+  return shuffle(base.map((option) => ({ ...option, presentationKey }))).map((option) => ({
+    label: option.label,
+    correct: option.correct,
   }));
 }
 
@@ -5921,6 +5944,7 @@ function paronymFeedbackFor(item: PracticeParonymItem, option: ChoiceOption): Dr
 
 function PracticeParonym({
   item,
+  presentationKey,
   feedback,
   answerLocked,
   selectedLabel,
@@ -5930,6 +5954,7 @@ function PracticeParonym({
   learnerLevel,
 }: {
   item: PracticeParonymItem;
+  presentationKey: string;
   feedback: DrillFeedback | null;
   answerLocked: boolean;
   selectedLabel: string | null;
@@ -5939,7 +5964,12 @@ function PracticeParonym({
   learnerLevel: CefrLevel;
 }) {
   const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
-  const options = paronymOptions(item);
+  // Stable while this card stays on screen (re-renders don't change `item`/`presentationKey`);
+  // a fresh order is computed whenever a new presentation of this card begins.
+  const options = useMemo(
+    () => paronymOptions(item, presentationKey),
+    [item, presentationKey],
+  );
   const slotText = feedback?.kind === 'correct' ? displayPracticeForm(item.answer, learnerLevel) : '___';
   const sentenceEnglish = postAnswerSentenceEnglish(feedback, item.promptEn);
   return (
