@@ -68,6 +68,48 @@ The repository already has per-type item schemas: `schemas/activities-<level>.sc
 ### 1d. Inline glosses (r3)
 The plan requires `incidental` words to be glossed inline (§2). The writer may not type a gloss. So the draft marks the span: in any text field a token may be wrapped as `[[W-040]]`-style reference (`{{gloss:W-040}}` — exact syntax fixed by the schema), and the engine prints the word and its gloss from the record. A gloss reference to a record outside `incidental` (or outside `core` on its first occurrence) fails the schema gate. This is the only inline markup the writer may use besides the quoted-term span of §6.
 
+### 1e. A1 choice items and scored feedback (#8889, A1 phase)
+
+For each A1 choice item (quiz, fill-in in `form-choice` or `orthography` mode, odd-one-out,
+error-correction with options, translate in options mode, image-to-letter, true-false), the
+writer declares `kind` and a sibling `option_why` array aligned with its options (`words` for
+odd-one-out). True-false is `kind: comprehension` and uses
+`option_why: [why_if_true, why_if_false]`. For every wrong option the feedback says why that
+choice fails here, and for the correct one why it works. Each is one real learner-facing
+sentence in the permitted register. A wrong option whose failure cannot be explained in one
+real sentence is replaced. Distractors come first from the pack's `E-` error records, with
+the recorded reason informing feedback; the item-level `explanation` remains. Every new `why`
+or `explanation` is subject to resolver, inventory, stress and immersion checks.
+
+`kind: form` tests one taught A1 group (`Gender`, `Number`, `Case`, `Person`, `VerbForm`).
+All options from one lemma force this kind. It supplies `tests_feature`, aligned
+`option_records` (or the fill-in `record`), and `requires`: **all** A1 group values imposed
+on the slot by the full sentence, not merely the value being taught. A language-lane seat
+from another family confirms this complete demand and records a requirement receipt beside
+the resolution receipts. The post-resolution check admits an option only if one analysis
+of its bound record's form carries the whole demand; it reads every analysis. An A1 noun
+without a plural atom can satisfy `Number: Sing`. An unbound option or a bound record
+lacking a required group fails. The key alone must be admitted and each distractor differs
+from it in `tests_feature`. Tense, aspect, mood and sense are not A1 distractor groups. The
+A1 analytic future uses a single store form from the auxiliary record in the auxiliary slot
+or a single store form from the main verb record in the infinitive slot, never a composite
+option string.
+
+`kind: orthography` is a sourced closed-list spelling fill-in: it names `target_record`,
+the key completes to its learner form and each wrong completion is no VESUM word form.
+`kind: vocabulary` binds each different-lemma option to `option_records` and names
+`target_record`; only the key names the target. `kind: comprehension` binds an eligible
+dialogue or quote `host`; semantic uniqueness stays with the reviewer. A1 translate rejects
+`alternatives` and a second `correct: true`. Group-sort has one A1 `grouping_feature`, group
+`value`s, bound `{text, record, why}` entries, and abstains on an entry that can fit two
+values until a language-lane resolution receipt or replacement. Match-up declares
+`left_role` and `right_role` from `form | gloss | question | answer`, binds every form side
+to a word record, and gives each pair a `why`. Order and unjumble explain the sequence;
+pick-syllables has an activity explanation. The A1 checks also reject conflicting answer
+aliases, missing keys and invalid index orders, and verify the deterministic syllable and
+anagram/unjumble rules in #8889 §C1–C8. These fresh-draft requirements leave existing
+`a1-v1` activities valid under the level schema.
+
 ## 2. Steps are binding — how a gate checks it
 The draft is keyed by step id, so there are no boundaries to detect. The `structure` gate checks: the step ids and their order equal the plan's; each step's `activity` refs equal the plan's `practice` list in order; `consolidation.activities` equals the plan's; the dialogue block sits in exactly the step `dialogue.step` names; `type` and `placement` are taken from the plan for every activity (the draft does not carry them); no block kind outside the list above; `bilingual.uk` and `.en` equal in length; `dialogue.translation_en` equal in length to `lines` or absent.
 
@@ -120,11 +162,12 @@ Change the inventory; add, drop, merge or reorder a step or an activity; raise t
 | 1 | schema: `lesson-draft-v1` with the per-type item schemas by `$ref`, echoed hashes equal the inputs, no accent characters, no unknown block kind, gap invariants (§4) | shape | writer |
 | 2 | status: `evidence_gap` → stop | declared gaps | pack builder or plan |
 | 3 | structure (§2) and evidence-use set arithmetic (§1a) | shape | writer |
-| 4 | activities, deterministic part: the key index exists and is in range; multi-select sets are subsets of the options; every error item's `error_ref` resolves and its `incorrect` is in `sentence`, its `correct` is the correction | shape | writer |
+| 4 | activities, deterministic part: the key index exists and is in range; multi-select sets are subsets of the options; every error item's `error_ref` resolves and its `incorrect` is in `sentence`, its `correct` is the correction; for fresh A1 apply #8889's pre-resolution alias, key, unit and choice-structure checks (§1e) | shape | writer |
 | 5 | **assembly to the expanded document** (engine prints refs, glosses, paradigms, cards, resources) — from here on every check reads the expanded learner-facing text, not the writer's strings | — | engine |
 | 6 | word target and immersion for the position — **measured on the expanded document by one counting contract** (below) | counts | writer |
 | 7 | **words, deterministic part:** every token classified (§3) and narrowed to allowlist candidates; every `core` item and `recycled` id appears; each taught `forms` entry appears in a teaching position; used forms' stress not `pending`; tokens with no allowlist candidate fail | allowlist | writer; a word or form the lesson needs → **plan**; a form without a record → word store |
 | 8 | **constrained questions** for the remaining ambiguities (§3 ii and iii), batched, answered by a language-lane seat, stored as resolution receipts — **a model's judgement, recorded, not a proof** | resolution | writer, if the answers show the text needs a sense outside the allowlist |
+| 8a | **A1 post-resolution choice and group-sort admission** (§1e): use every analysis of each bound form with the recorded complete `requires`; no inference of agreement or government by the resolver; ambiguous sorting entries abstain pending a receipt or replacement | unique form answer / recorded ambiguity | writer or language lane |
 | 9 | stress applied from the records; Словник and Ресурси generated; the lesson locks and frontmatter written (#8413 Brief C) | — | engine |
 | 10 | spelling and agreement by script — **proposed, not existing**: no grammar checker exists in the repository; an implementing brief settles whether to add one (LanguageTool was suggested) and what it may fail on; findings are evidence for a gate, never a verdict on Ukrainian (R-35) | signal | writer, or reported only |
 | 11 | render: the four tabs build (`verify_shippable --astro-build`) | render | engine |
