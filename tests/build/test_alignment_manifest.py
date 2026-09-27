@@ -101,7 +101,7 @@ def test_v6_build_module_survives_sys_modules_mutation_during_iteration(
 
     stable_modules = {
         name: module
-        for name, module in sys.modules.items()
+        for name, module in list(sys.modules.items())
         if name not in {"build.v6_build", "scripts.build.v6_build", "v6_build"}
     }
     fake_modules: dict[str, object] = {"decoy_8919": _MutatingEntry()}
