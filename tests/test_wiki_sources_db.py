@@ -211,6 +211,7 @@ def test_build_fts_query_is_identical_under_two_hash_seeds() -> None:
             capture_output=True,
             text=True,
             env=env,
+            timeout=60,
         )
         outputs.append(completed.stdout)
     assert outputs[0] == outputs[1]
