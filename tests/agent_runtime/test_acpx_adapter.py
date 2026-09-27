@@ -1565,6 +1565,124 @@ def test_parse_response_classifies_acpx_turn_limit_without_persisting_body():
     assert result.failure_code == "acp_turn_limit"
 
 
+def _acp_error_ndjson(*, message: str, data: object, code: int = -32603) -> str:
+    """One terminal JSON-RPC error line, the shape acpx appends on failure."""
+    return json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "error": {"code": code, "message": message, "data": data},
+        }
+    ) + "\n"
+
+
+def _parse_acp_error(*, message: str, data: object, code: int = -32603):
+    return AcpxAdapter().parse_response(
+        stdout=_acp_error_ndjson(message=message, code=code, data=data),
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+
+
+# Recorded from the provider ACP error object acpx merges into error.data.
+# Messages deliberately omit quota / 429 / "rate limit" wording so a pass
+# cannot come from free-text matching.
+_RECORDED_RATE_LIMIT_PAYLOADS = [
+    pytest.param(
+        {
+            "acpxCode": "RUNTIME",
+            "origin": "acp",
+            "retryable": True,
+            "sessionId": "unknown",
+            "errorKind": "rate_limit",
+        },
+        id="claude-errorKind-rate_limit",
+    ),
+    pytest.param(
+        {
+            "acpxCode": "RUNTIME",
+            "origin": "acp",
+            "message": "turn failed",
+            "codexErrorInfo": "usageLimitExceeded",
+        },
+        id="codex-codexErrorInfo-usageLimitExceeded",
+    ),
+    pytest.param(
+        {
+            "acpxCode": "RUNTIME",
+            "origin": "acp",
+            "message": "turn failed",
+            "codexErrorInfo": "rateLimitExceeded",
+        },
+        id="codex-codexErrorInfo-rateLimitExceeded",
+    ),
+    pytest.param(
+        {
+            "acpxCode": "RUNTIME",
+            "origin": "acp",
+            "codexErrorInfo": {
+                "responseStreamDisconnected": {"httpStatusCode": 429, "detail": "upstream"},
+            },
+        },
+        id="codex-httpStatusCode-429",
+    ),
+]
+
+
+@pytest.mark.parametrize("data", _RECORDED_RATE_LIMIT_PAYLOADS)
+def test_parse_response_typed_provider_rate_limit_sets_rate_limited(data):
+    result = _parse_acp_error(message="Internal error: provider rejected the turn", data=data)
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.rate_limited is True
+    assert result.failure_code == "rate_limited"
+    assert "provider rejected the turn" in (result.stderr_excerpt or "")
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        {"errorKind": "overloaded", "acpxCode": "RUNTIME"},
+        {"errorKind": "billing_error", "acpxCode": "RUNTIME"},
+        {"errorKind": "authentication_failed", "acpxCode": "RUNTIME"},
+        {"errorKind": "rate_limit_event", "acpxCode": "RUNTIME"},
+        {"codexErrorInfo": "contextWindowExceeded", "acpxCode": "RUNTIME"},
+        {"codexErrorInfo": "serverOverloaded", "acpxCode": "RUNTIME"},
+        {"codexErrorInfo": "unauthorized", "acpxCode": "RUNTIME"},
+        {
+            "codexErrorInfo": {"responseStreamDisconnected": {"httpStatusCode": 500}},
+            "acpxCode": "RUNTIME",
+        },
+        {
+            "codexErrorInfo": {"responseStreamDisconnected": {"httpStatusCode": "429"}},
+            "acpxCode": "RUNTIME",
+        },
+        {
+            "codexErrorInfo": {
+                "note": {"detail": "not a status"},
+                "responseStreamDisconnected": {"httpStatusCode": 429},
+            },
+            "acpxCode": "RUNTIME",
+        },
+        {"errorName": "APIError", "service": "session", "acpxCode": "RUNTIME"},
+        {"message": "HTTP 429 rate limit exceeded", "acpxCode": "RUNTIME"},
+        "provider quota exhausted HTTP 429",
+        429,
+    ],
+)
+def test_parse_response_non_rate_limit_typed_fields_and_text_stay_generic(data):
+    result = _parse_acp_error(
+        message="provider quota exhausted HTTP 429 rate limit",
+        data=data,
+    )
+
+    assert result.ok is False
+    assert result.rate_limited is False
+    assert result.failure_code == "transport_error"
+
+
 # ---------------------------------------------------------------------------
 # parse_response — never best-effort on a nonzero exit with an otherwise
 # complete-looking stream (belt and suspenders on the fail-closed posture)
