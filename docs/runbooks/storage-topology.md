@@ -169,12 +169,50 @@ stay gitignored, and no consumer reads bulk data through them:
 | Drive + SMB both absent | Bulk root `unavailable`; rebuilds that need raw JSONL fail closed; Sources MCP still serves local `data/sources.db` |
 | Someone points `LU_SOURCES_DB` at SMB | Resolver **refuses**; active DB stays repository-local |
 
+## Managed artifact publication
+
+`scripts.storage.artifacts publish` uses the group transaction engine for one
+existing A file. For a group-wide regeneration, stage every A output and tracked
+K companion away from `data/` and `registry/`, then pass a JSON plan to
+`publish-set --plan <path>` or call `write_artifact_set()` with staged writer
+callbacks. The plan names one `group`, a `producer`, the exact
+old `expected_members` (paths relative to `data/`), and `artifacts` rows with
+`operation` (`add`, `replace`, `remove`), `rel`, staged `source` for writes, and
+`expected_sha256` (`null` only for an addition). `companions` rows name a
+`registry/` path, staged `source`, and expected old hash. Removal has no source.
+An addition must match a narrow `registration_patterns` declaration in that
+group's tracked manifest. Unmatched and cross-group paths are refused. Every
+existing component of a published or retired path beneath the checkout root
+must be a real directory or file, never a symlink.
+
+The writer preserves old and new objects in the host store, installs all rows,
+and atomically replaces one group manifest as the commit descriptor. That
+manifest binds exact A membership and K hashes. A reader of the whole set uses
+`paths.artifact_set(group)`, which returns verified bytes and raises if a
+publication is unfinished or a member differs. It does not create a store.
+After a crash, run `artifacts status` to recover the transaction before retrying
+publication. The journal names each planned target temp before it is created;
+recovery removes those named temps under the publication lock. Do not discard
+a journal whose recovery refuses drift. Explicitly
+retired paths keep their store objects and are removed during `hydrate` only
+when their bytes match a recorded retired version. Run `snapshot` after a local
+publication to verify the active objects in that host store, then transfer
+them to each required host. Local publication alone proves no off-host backup.
+
+Path validation refuses a static symlink in a published path or the store path
+before publication creates store or lock state. A second process can still swap
+a path component for a symlink after validation while the publisher holds its
+lock; cooperating writers are expected to honor that lock. If the threat model
+includes hostile concurrent path changes, open every component through directory
+file descriptors with per-component `O_NOFOLLOW` and
+`os.open(..., dir_fd=)` before treating publication as safe against that race.
+
 ## Safety boundaries
 
 - Do not move live SQLite onto SMB or open it across a network filesystem.
 - Do not delete or evict corpus bytes from automation in this topology slice.
 - Do not commit secrets, account emails, host/IP addresses, or private source text.
-- Phase 3/4 product artifacts are out of scope for this runbook.
+- Phase 3/4 product artifact migration remains out of scope for this runbook.
 
 ## Related
 

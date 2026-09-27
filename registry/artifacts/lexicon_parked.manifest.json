@@ -16,5 +16,8 @@
     }
   ],
   "group": "lexicon_parked",
+  "registration_patterns": [
+    "data/lexicon/parked/parked-thin-entries-*.json"
+  ],
   "schema": 1
 }
