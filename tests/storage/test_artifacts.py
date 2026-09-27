@@ -175,19 +175,62 @@ def test_write_artifact_rejects_a_target_published_under_another_group(repo: Pat
     assert (repo / "data/other/map.json").read_bytes() == b"clobbered"
 
 
+def test_write_artifact_publishes_resolved_owner_through_aliases(repo: Path, tmp_path: Path) -> None:
+    # A second P1 directory makes data/raw unguarded, as in the real P1 classification.
+    (repo / "data/other").mkdir()
+    (repo / "data/other/map.json").write_bytes(b"{}")
+    with (repo / "registry/artifacts/classification-v1.tsv").open("a", newline="") as stream:
+        csv.writer(stream, delimiter="\t").writerow(
+            ("data/other/map.json", "100644", "", "2", "A", "other_group", "test", "rule")
+        )
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "second P1 directory")
+    assert artifacts.manifest_build(repo, "other_group", "HEAD") == 1
+    assert not artifacts._migrated_a_trees(repo)
+
+    published = repo / "data/raw/source.txt"
+    outside_alias = tmp_path / "outside-alias.txt"
+    outside_alias.symlink_to(published)
+    inside_alias = repo / "data/raw/inside-alias.txt"
+    inside_alias.symlink_to(published)
+    for alias, payload in ((outside_alias, b"from outside"), (inside_alias, b"from P1")):
+        before = published.read_bytes()
+        with pytest.raises(ValueError, match="published artifact of group raw_source, not other_group"):
+            artifacts.write_artifact(alias, "other_group", "test", lambda dest: dest.write_bytes(b"bad"), repo=repo)
+        assert published.read_bytes() == before
+
+        def write(dest: Path, content: bytes = payload) -> None:
+            dest.write_bytes(content)
+
+        assert artifacts.write_artifact(alias, "raw_source", "test", write, repo=repo) == published
+        assert published.read_bytes() == payload
+        assert entries(repo)[0][1]["sha256"] == hashlib.sha256(payload).hexdigest()
+        assert artifacts.verify(repo, entries(repo)) == 1
+
+
 def test_write_artifact_refuses_unregistered_migrated_tree_but_keeps_host_state(repo: Path, tmp_path: Path) -> None:
+    (repo / "data/lexicon").mkdir()
+    (repo / "data/lexicon/root.json").write_bytes(b"{}")
     (repo / "data/lexicon/parked").mkdir(parents=True)
     (repo / "data/lexicon/parked/original.json").write_bytes(b"{}")
     with (repo / "registry/artifacts/classification-v1.tsv").open("a", newline="") as stream:
-        csv.writer(stream, delimiter="\t").writerow(
-            ("data/lexicon/parked/original.json", "100644", "", "2", "A", "lexicon_parked", "test", "rule")
-        )
+        writer = csv.writer(stream, delimiter="\t")
+        writer.writerow(("data/lexicon/root.json", "100644", "", "2", "A", "lexicon_parked", "test", "rule"))
+        writer.writerow(("data/lexicon/parked/original.json", "100644", "", "2", "A", "lexicon_parked", "test", "rule"))
     (repo / ".gitignore").write_text(
         "data/lexicon/intake/*_journal.json\ndata/lexicon/intake/*.lock\ndata/lexicon/cache/\n/data/lexicon/\n"
     )
-    git(repo, "add", "-f", "data/lexicon/parked/original.json", "registry", ".gitignore")
+    git(repo, "add", "-f", "data/lexicon/root.json", "data/lexicon/parked/original.json", "registry", ".gitignore")
     git(repo, "commit", "-qm", "P2 fixture")
-    assert artifacts.manifest_build(repo, "lexicon_parked", "HEAD") == 1
+    assert artifacts.manifest_build(repo, "lexicon_parked", "HEAD") == 2
+    assert repo / "data/lexicon" in artifacts._migrated_a_trees(repo)
+
+    unregistered_root = repo / "data/lexicon/unregistered.json"
+    with pytest.raises(ValueError, match="no manifest entry; register"):
+        artifacts.write_artifact(
+            unregistered_root, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"new"), repo=repo
+        )
+    assert not unregistered_root.exists()
 
     unregistered = repo / "data/lexicon/parked/new.json"
     with pytest.raises(ValueError, match="no manifest entry; register"):
