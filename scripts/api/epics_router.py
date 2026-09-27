@@ -646,11 +646,21 @@ async def remote_epics_graph(
 
         streams_data = _load_issue_streams(ctx)
         audit_data = report if report is not None else (stale or {})
-        effective_membership = audit_data.get("effective_membership") or {}
-        open_issue_numbers = {int(n) for n in (audit_data.get("open_issue_numbers") or [])}
-        open_issue_titles = {
-            str(k): v for k, v in (audit_data.get("open_issue_titles") or {}).items()
-        }
+        # Membership is a trust decision even on a display graph (#8870): an
+        # incomplete or unflagged (pre-P4, missing/non-True flag) audit must
+        # not be read as if it certified ownership, so drop the membership
+        # index instead of rendering under/over-reported epic counts.
+        membership_complete = audit.membership_report_is_complete(audit_data)
+        if membership_complete:
+            effective_membership = audit_data.get("effective_membership") or {}
+            open_issue_numbers = {int(n) for n in (audit_data.get("open_issue_numbers") or [])}
+            open_issue_titles = {
+                str(k): v for k, v in (audit_data.get("open_issue_titles") or {}).items()
+            }
+        else:
+            effective_membership = {}
+            open_issue_numbers = set()
+            open_issue_titles = {}
 
         registry_status = registry_health_snapshot()["status"]
         projections = {str(row["stream_id"]): row for row in store.list_remote_projections()}
@@ -794,6 +804,10 @@ async def remote_epics_graph(
             else:
                 payload["status"] = "no-cache"
                 payload["ok"] = None
+
+        if not membership_complete:
+            payload["membership_complete"] = False
+            payload["incomplete_nodes"] = sorted(audit.unread_membership_nodes(audit_data))
 
         refresh = audit.public_refresh_view(state)
         payload["refreshing"] = refresh["phase"] in {"scheduled", "running"}

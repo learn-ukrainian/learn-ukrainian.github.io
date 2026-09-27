@@ -304,6 +304,8 @@ def test_epics_graph_endpoint_contract_and_structure(tmp_path: Path, monkeypatch
 
     mock_audit = {
         "generated_at": 1700000000,
+        "membership_complete": True,
+        "incomplete_nodes": [],
         "effective_membership": {
             "7269": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
             "7270": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
@@ -333,6 +335,10 @@ def test_epics_graph_endpoint_contract_and_structure(tmp_path: Path, monkeypatch
     assert "generated_at" in data
     assert data["refreshing"] is False
     assert data["refresh"]["phase"] == "idle"
+    # AC-02 (#8870): a complete cache yields the same payload as before the
+    # completeness gate — no membership_complete/incomplete_nodes markers.
+    assert "membership_complete" not in data
+    assert "incomplete_nodes" not in data
 
     # Verify nodes.areas
     areas = {a["id"]: a for a in data["nodes"]["areas"]}
@@ -418,6 +424,68 @@ def test_epics_graph_stale_and_no_cache_fallbacks(tmp_path: Path, monkeypatch) -
     assert scheduled == [True]
 
 
+def test_epics_graph_incomplete_cache_drops_membership(tmp_path: Path, monkeypatch) -> None:
+    """AC-01 (#8870): an explicitly incomplete traversal must not be shown as membership."""
+    client = _client(tmp_path, monkeypatch)
+
+    incomplete_audit = {
+        "generated_at": 1700000000,
+        "membership_complete": False,
+        "incomplete_nodes": [7100],
+        "effective_membership": {
+            "7269": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+        },
+        "open_issue_numbers": [7269],
+        "open_issue_titles": {"7269": "Epics graph endpoint"},
+    }
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: incomplete_audit)
+    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: {"phase": "idle"})
+
+    response = client.get("/api/epics/graph/v1")
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["membership_complete"] is False
+    assert data["incomplete_nodes"] == [7100]  # allow-hardcoded-epic: mock audit data
+
+    monitor_epic = {e["id"]: e for e in data["nodes"]["epics"]}[
+        "epic:7919"
+    ]  # allow-hardcoded-epic: graph contract check
+    assert monitor_epic["open_issue_count"] == 0
+    assert monitor_epic["closed_issue_count"] == 0
+    assert data["issues_by_epic"]["7919"]["total_open"] == 0  # allow-hardcoded-epic: graph contract check
+
+
+def test_epics_graph_unflagged_legacy_cache_drops_membership(tmp_path: Path, monkeypatch) -> None:
+    """AC-01 (#8870): a pre-P4 cache with no membership_complete flag is unverified, not trusted."""
+    client = _client(tmp_path, monkeypatch)
+
+    unflagged_audit = {
+        "generated_at": 1700000000,
+        "effective_membership": {
+            "7269": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+        },
+        "open_issue_numbers": [7269],
+        "open_issue_titles": {"7269": "Epics graph endpoint"},
+    }
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: unflagged_audit)
+    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: {"phase": "idle"})
+
+    response = client.get("/api/epics/graph/v1")
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["membership_complete"] is False
+    assert data["incomplete_nodes"] == []
+
+    monitor_epic = {e["id"]: e for e in data["nodes"]["epics"]}[
+        "epic:7919"
+    ]  # allow-hardcoded-epic: graph contract check
+    assert monitor_epic["open_issue_count"] == 0
+    assert monitor_epic["closed_issue_count"] == 0
+    assert data["issues_by_epic"]["7919"]["total_open"] == 0  # allow-hardcoded-epic: graph contract check
+
+
 def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, monkeypatch) -> None:
     """merge_group has no host audit cache; denied Popen must stay 200 no-cache."""
     client = _client(tmp_path, monkeypatch)
@@ -450,6 +518,8 @@ def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
 
     mock_audit = {
         "generated_at": 1700000000,
+        "membership_complete": True,
+        "incomplete_nodes": [],
         "effective_membership": effective_membership,
         "open_issue_numbers": open_issue_numbers,
         "open_issue_titles": open_issue_titles,
