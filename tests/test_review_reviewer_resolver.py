@@ -1313,6 +1313,7 @@ def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
     assert "subject seat grok" in grok.reason
 
 
+@pytest.mark.repo_wide
 def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     from scripts.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
 
