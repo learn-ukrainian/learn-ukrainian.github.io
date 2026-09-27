@@ -25,7 +25,8 @@ to land because it has the most special-case logic:
   tool calls can be captured from the CLI trace.
 
 Mode handling:
-- ``read-only`` reviewer without explicit ``allowed_tools``: ``dontAsk`` permits
+- ``read-only`` with ``reviewer_tools=True`` and no explicit ``allowed_tools``:
+  ``dontAsk`` permits
   read/search and shell execution (including tests and Python) while denying
   edits and common Git/GitHub mutations. Explicit caller tool lists pass
   through unchanged and do not receive reviewer-only restrictions.
@@ -257,9 +258,9 @@ class ClaudeAdapter:
               existing). Only meaningful when ``session_id`` is provided.
             - ``mcp_config_path: str`` — path to .mcp.json for tool restrictions
             - ``allowed_tools: str`` — explicit comma-separated --allowedTools
-              value; suppresses the ordinary read-only reviewer profile.
-            - ``reviewer_profile: False`` — preserve legacy CLI permissions
-              for a read-only call that produces writer content.
+              value; takes precedence over the opt-in reviewer profile.
+            - ``reviewer_tools: True`` — enable the ordinary read-only reviewer
+              profile only when no explicit tool list is supplied.
             - ``output_format: str`` — defaults to "stream-json" so tool
               calls can be captured from the CLI trace.
             - ``use_bare: bool`` — legacy option ignored for guarded workers;
@@ -280,7 +281,7 @@ class ClaudeAdapter:
         explicit_allowed_tools = tc.get("allowed_tools") is not None
         reviewer_guard = (
             mode == "read-only" and not explicit_allowed_tools
-            and tc.get("reviewer_profile") is not False
+            and tc.get("reviewer_tools") is True
         )
         # Caller tool restrictions take precedence. Reviewer-only protections
         # are scoped to the default profile so an explicit Bash grant is not

@@ -48,7 +48,7 @@ def test_happy_path_returns_callresult(tmp_path):
     assert result.response_text == "done"
     assert result.error_message is None
     invoke.assert_called_once()
-    assert invoke.call_args.kwargs["tool_config"] == {"reviewer_profile": False}
+    assert invoke.call_args.kwargs["tool_config"] is None
 
 
 def test_returns_error_on_runner_failure(tmp_path):

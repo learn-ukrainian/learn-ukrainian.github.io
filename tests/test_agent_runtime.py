@@ -3908,10 +3908,7 @@ def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_m
     assert "--permission-mode" not in plan.cmd
     assert "--tools" in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
-    assert plan.env_overrides == {
-        "AB_DISCUSS_READONLY": "1",
-        "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1",
-    }
+    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
 
 
 def test_claude_adapter_resume_existing_session(tmp_path):

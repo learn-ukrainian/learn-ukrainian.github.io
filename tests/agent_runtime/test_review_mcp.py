@@ -328,8 +328,9 @@ def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) ->
 
     assert "--strict-mcp-config" not in plan.cmd
     assert "--mcp-config" not in plan.cmd
-    assert "--allowedTools" in plan.cmd
-    assert "mcp__sources__*" not in plan.cmd[plan.cmd.index("--allowedTools") + 1]
+    assert "--allowedTools" not in plan.cmd
+    assert "--permission-mode" not in plan.cmd
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:

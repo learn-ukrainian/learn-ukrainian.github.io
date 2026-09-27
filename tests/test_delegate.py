@@ -4968,7 +4968,9 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
         )
 
     assert rc == 0
-    assert mock_invoke.call_args.kwargs["tool_config"] == {"max_budget_usd": 0.5}
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "max_budget_usd": 0.5, "reviewer_tools": True,
+    }
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["max_budget_usd"] == 0.5

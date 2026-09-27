@@ -30,22 +30,30 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     ):
         assert str(tracked_hooks / name) in commands
     assert all(Path(command).is_file() for command in commands)
-    assert (str(tracked_hooks / "guard-reviewer-publish.py") in commands) is (mode == "read-only")
-
-    if mode == "read-only":
-        assert plan.env_overrides["LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK"] == "1"
-        assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
-        assert set(REVIEWER_PERMISSION_PROFILE["allow"]) <= set(
-            plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
-        )
-        assert set(REVIEWER_PERMISSION_PROFILE["deny"]) == set(
-            plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
-        )
-    else:
-        assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
-        assert "--permission-mode" not in plan.cmd
-        assert "--disallowedTools" not in plan.cmd
+    assert str(tracked_hooks / "guard-reviewer-publish.py") not in commands
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
+    assert "--permission-mode" not in plan.cmd
+    assert "--allowedTools" not in plan.cmd
+    assert "--disallowedTools" not in plan.cmd
     assert ("--dangerously-skip-permissions" in plan.cmd) is (mode == "danger")
+
+
+def test_reviewer_tools_opt_in_installs_profile(tmp_path: Path) -> None:
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
+        task_id=None, session_id=None, tool_config={"reviewer_tools": True},
+    )
+    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
+    assert set(REVIEWER_PERMISSION_PROFILE["allow"]) == set(
+        plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    )
+    assert set(REVIEWER_PERMISSION_PROFILE["deny"]) == set(
+        plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
+    )
+    assert plan.env_overrides["LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK"] == "1"
+    settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
+    commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+    assert any(command.endswith("guard-reviewer-publish.py") for command in commands)
 
 
 def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
@@ -57,7 +65,7 @@ def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
     assert "--permission-mode" not in plan.cmd
     assert "--disallowedTools" not in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
-    assert plan.env_overrides["LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK"] == "1"
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
 def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch) -> None:
@@ -114,7 +122,7 @@ def test_readonly_transport_rejects_every_push_wrapper(tmp_path: Path) -> None:
 
     plan = ClaudeAdapter().build_invocation(
         prompt="inspect", mode="read-only", cwd=work, model=None,
-        task_id=None, session_id=None, tool_config=None,
+        task_id=None, session_id=None, tool_config={"reviewer_tools": True},
     )
     env = build_agent_env(provider="claude", overrides=plan.env_overrides)
     assert subprocess.run(["git", "-C", str(work), "status", "--porcelain"], env=env, capture_output=True, timeout=30).returncode == 0
@@ -167,8 +175,8 @@ def test_sources_allowance_only_when_mcp_config_is_passed(tmp_path: Path) -> Non
             task_id=None, session_id=None, tool_config=config,
         ).cmd
 
-    ordinary = plan({})
-    with_mcp = plan({"mcp_config_path": "/tmp/sources.json"})
+    ordinary = plan({"reviewer_tools": True})
+    with_mcp = plan({"reviewer_tools": True, "mcp_config_path": "/tmp/sources.json"})
     assert "mcp__sources__*" not in ordinary[ordinary.index("--allowedTools") + 1]
     assert "mcp__sources__*" in with_mcp[with_mcp.index("--allowedTools") + 1]
     assert with_mcp.count("--allowedTools") == 1
@@ -183,6 +191,7 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
         prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
         task_id=None, session_id=None,
         tool_config={
+            "reviewer_tools": True,
             "allowed_tools": allowed_tools,
             "mcp_config_path": str(tmp_path / "sources.json"),
             "strict_mcp_config": strict_mcp_config,
@@ -202,7 +211,7 @@ def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) ->
     plan = ClaudeAdapter().build_invocation(
         prompt="write content", mode="read-only", cwd=tmp_path, model=None,
         task_id=None, session_id=None,
-        tool_config={"reviewer_profile": False},
+        tool_config={},
     )
     assert "--allowedTools" not in plan.cmd
     assert "--permission-mode" not in plan.cmd

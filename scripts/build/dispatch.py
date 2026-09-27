@@ -539,9 +539,7 @@ def _dispatch_claude_via_runtime(
         else:
             tool_config = {"allowed_tools": allowed_tools}
     else:
-        # This legacy dispatcher uses read-only mode for content writers too.
-        # A writer without a tool list must retain main's CLI permissions.
-        tool_config = {"reviewer_profile": False} if phase != "review" else None
+        tool_config = None
 
     claude_effort = "xhigh"
     t0 = time.monotonic()
