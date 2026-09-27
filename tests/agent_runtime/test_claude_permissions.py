@@ -1,8 +1,10 @@
 """Command and deployed-hook coverage for headless Claude workers."""
 
+import io
 import json
 import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 import pytest
@@ -95,11 +97,37 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
 def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Path, monkeypatch) -> None:
     from scripts.agent_runtime.adapters import claude
 
+    # Fixture clone of the tracked hook tree. Cloning this repository
+    # (`git clone --shared`) exceeds the 30s bound when the host is busy (#8947).
     root = Path(__file__).resolve().parents[2]
+    seed = tmp_path / "fixture"
     clone = tmp_path / "fresh"
-    subprocess.run(["git", "clone", "--shared", "--no-checkout", str(root), str(clone)], check=True, capture_output=True, timeout=30)
-    subprocess.run(["git", "-C", str(clone), "sparse-checkout", "set", "agents_extensions", "scripts"], check=True, capture_output=True, timeout=30)
-    subprocess.run(["git", "-C", str(clone), "checkout", "HEAD"], check=True, capture_output=True, timeout=30)
+    seed.mkdir()
+    tracked_claude = subprocess.run(
+        ["git", "-C", str(root), "ls-tree", "--name-only", "HEAD", ".claude"],
+        check=True, capture_output=True, text=True, timeout=30,
+    )
+    assert tracked_claude.stdout == ""
+    archived = subprocess.run(
+        [
+            "git", "-C", str(root), "archive", "--format=tar", "HEAD",
+            "agents_extensions/shared/settings.json",
+            "agents_extensions/shared/hooks",
+            "scripts/agent_runtime/adapters/claude.py",
+        ],
+        check=True, capture_output=True, timeout=30,
+    )
+    with tarfile.open(fileobj=io.BytesIO(archived.stdout), mode="r|") as bundle:
+        bundle.extractall(seed, filter="data")
+    for args in (
+        ["init"],
+        ["config", "user.name", "Test"],
+        ["config", "user.email", "test@example.invalid"],
+        ["add", "agents_extensions", "scripts"],
+        ["commit", "-m", "fixture"],
+    ):
+        subprocess.run(["git", "-C", str(seed), *args], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "clone", str(seed), str(clone)], check=True, capture_output=True, timeout=30)
     assert not (clone / ".claude").exists()
     monkeypatch.setattr(claude, "__file__", str(clone / "scripts/agent_runtime/adapters/claude.py"))
     settings = json.loads(claude._worker_guard_settings(publish_guard=True))
