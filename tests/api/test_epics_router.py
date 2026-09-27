@@ -451,9 +451,12 @@ def test_epics_graph_incomplete_cache_drops_membership(tmp_path: Path, monkeypat
     monitor_epic = {e["id"]: e for e in data["nodes"]["epics"]}[
         "epic:7919"
     ]  # allow-hardcoded-epic: graph contract check
-    assert monitor_epic["open_issue_count"] == 0
-    assert monitor_epic["closed_issue_count"] == 0
-    assert data["issues_by_epic"]["7919"]["total_open"] == 0  # allow-hardcoded-epic: graph contract check
+    assert monitor_epic["open_issue_count"] is None
+    assert monitor_epic["closed_issue_count"] is None
+    epic_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: graph contract check
+    assert epic_issues["total_open"] is None
+    assert epic_issues["items"] is None
+    assert epic_issues["truncated"] is None
 
 
 def test_epics_graph_unflagged_legacy_cache_drops_membership(tmp_path: Path, monkeypatch) -> None:
@@ -481,9 +484,12 @@ def test_epics_graph_unflagged_legacy_cache_drops_membership(tmp_path: Path, mon
     monitor_epic = {e["id"]: e for e in data["nodes"]["epics"]}[
         "epic:7919"
     ]  # allow-hardcoded-epic: graph contract check
-    assert monitor_epic["open_issue_count"] == 0
-    assert monitor_epic["closed_issue_count"] == 0
-    assert data["issues_by_epic"]["7919"]["total_open"] == 0  # allow-hardcoded-epic: graph contract check
+    assert monitor_epic["open_issue_count"] is None
+    assert monitor_epic["closed_issue_count"] is None
+    epic_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: graph contract check
+    assert epic_issues["total_open"] is None
+    assert epic_issues["items"] is None
+    assert epic_issues["truncated"] is None
 
 
 def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, monkeypatch) -> None:

@@ -750,10 +750,18 @@ async def remote_epics_graph(
                 epic_title = reg_fields.get("title") or _response_registry_text(open_issue_titles.get(str(epic_num)))
                 epic_reg_status = registry_status if reg_fields.get("registered") else "unregistered"
 
-                open_issues = sorted(open_by_epic.get(epic_num, []))
-                closed_issues = closed_by_epic.get(epic_num, [])
-                open_count = len(open_issues)
-                closed_count = len(closed_issues)
+                # Membership-derived fields are unknown, not zero, when the cache is
+                # incomplete (#8870 follow-up): a client reading `0` here cannot tell
+                # "no open issues" from "we never verified this epic's membership".
+                if membership_complete:
+                    open_issues = sorted(open_by_epic.get(epic_num, []))
+                    closed_issues = closed_by_epic.get(epic_num, [])
+                    open_count: int | None = len(open_issues)
+                    closed_count: int | None = len(closed_issues)
+                else:
+                    open_issues = []
+                    open_count = None
+                    closed_count = None
 
                 epics_nodes.append(
                     {
@@ -772,20 +780,27 @@ async def remote_epics_graph(
                     }
                 )
 
-                capped_items = open_issues[:50]
-                issues_by_epic[str(epic_num)] = {
-                    "items": [
-                        {
-                            "number": n,
-                            "title": " ".join(str(open_issue_titles.get(str(n)) or f"Issue #{n}").split()),
-                            "state": "open",
-                            "url": f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/{n}",
-                        }
-                        for n in capped_items
-                    ],
-                    "total_open": open_count,
-                    "truncated": open_count > 50,
-                }
+                if membership_complete:
+                    capped_items = open_issues[:50]
+                    issues_by_epic[str(epic_num)] = {
+                        "items": [
+                            {
+                                "number": n,
+                                "title": " ".join(str(open_issue_titles.get(str(n)) or f"Issue #{n}").split()),
+                                "state": "open",
+                                "url": f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/{n}",
+                            }
+                            for n in capped_items
+                        ],
+                        "total_open": open_count,
+                        "truncated": open_count > 50,
+                    }
+                else:
+                    issues_by_epic[str(epic_num)] = {
+                        "items": None,
+                        "total_open": None,
+                        "truncated": None,
+                    }
 
         payload: dict[str, Any] = {
             "schema": GRAPH_SCHEMA,
