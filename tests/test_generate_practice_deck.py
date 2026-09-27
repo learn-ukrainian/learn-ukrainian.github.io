@@ -29,16 +29,22 @@ from scripts.audit.generate_practice_deck import (
     _declension_category,
     _eligible_decoys,
     _heritage_availability_level,
+    _heritage_frame_calque_mismatch,
+    _heritage_normative_support_error,
     _meaning_mc_eligible,
+    _merge_heritage_pair_overlay,
     _option_strategy_for_level,
     _plain,
     _select_practice_lexemes,
     _stress_position,
+    _valid_heritage_frames,
     _vesum_aspect_by_lemma,
     admit_thin_mode_pair_leg_surfaces,
     apply_size_budgets,
     build_practice_shards,
     compact_cloze_emit_fields,
+    explanation_gate_errors,
+    explanation_language_errors,
     main,
     merge_practice_seed_entries,
     read_antonym_pairs,
@@ -465,6 +471,11 @@ def _fixture_lexemes() -> list[dict[str, object]]:
 
 def _fixture_heritage_pair() -> dict[str, object]:
     return read_heritage_pairs(HERITAGE_PAIRS)[0]
+
+
+def _gloss_verifier(*words: str) -> JsonVesumVerifier:
+    """Fixture VESUM that knows the given forms as clean lemmas (explanation gate, #8728)."""
+    return JsonVesumVerifier({word: [{"lemma": word, "pos": "x", "tags": "x"}] for word in words})
 
 
 def _single_deck_version(shards: dict[str, dict[str, dict[str, object]]]) -> str:
@@ -2626,7 +2637,7 @@ def test_source_inventory_antonym_legs_emit_via_curated_pair_admission() -> None
     empty = build_practice_shards(
         entries,
         ReviewedSourceAllowlist.from_payload([]),
-        JsonVesumVerifier({}),
+        _gloss_verifier("протилежний", "ночі"),
         [],
         BuildConfig(target=10),
         antonym_pairs=[],
@@ -2636,7 +2647,7 @@ def test_source_inventory_antonym_legs_emit_via_curated_pair_admission() -> None
     shards = build_practice_shards(
         entries,
         ReviewedSourceAllowlist.from_payload([]),
-        JsonVesumVerifier({}),
+        _gloss_verifier("протилежний", "ночі"),
         [],
         BuildConfig(target=10),
         antonym_pairs=[pair],
@@ -3689,7 +3700,7 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
+    verifier = _gloss_verifier("надсилає", "отримує")
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
     b1_items = shards.get("B1", {}).get("paronym", {}).get("paronym", [])
     b2_items = shards.get("B2", {}).get("paronym", {}).get("paronym", [])
@@ -3749,7 +3760,7 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
+    verifier = _gloss_verifier("предмет", "давнини", "споруда", "на", "честь", "особи")
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
     a1_items = shards.get("A1", {}).get("paronym", {}).get("paronym", [])
     a2_items = shards.get("A2", {}).get("paronym", {}).get("paronym", [])
@@ -3896,7 +3907,7 @@ def test_antonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
+    verifier = _gloss_verifier("протилежний", "ночі")
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), antonym_pairs=[pair])
     a1_items = shards.get("A1", {}).get("antonym", {}).get("antonym", [])
     assert len(a1_items) >= 1, "antonym should emit at least one item"
@@ -4037,7 +4048,7 @@ def test_homonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
+    verifier = _gloss_verifier("алегоричний", "твір", "чи", "м'яка", "тканина")
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), homonym_pairs=[pair])
     a1_items = shards.get("A1", {}).get("homonym", {}).get("homonym", [])
     assert len(a1_items) >= 1, "homonym should emit at least one item"
@@ -4737,3 +4748,355 @@ def test_imperative_held_out_stratified_audit_200_items():
     # (1 in B2: пасися; 7 in C1: пилососьте, затікай, переповіжмо, переповіж, перезавантажуйте, зазвучімо, облаштуйтеся).
     stressed_count = sum(1 for it in sample_200 if it.get("audit", {}).get("target_stress_verified"))
     assert stressed_count == 192, f"Expected 192 stressed targets, got {stressed_count}"
+
+
+# --- #8727 / #8728: calque judgments need a normative source; explanations must be clean Ukrainian
+
+
+class _AllowAllCreationReview:
+    def allows(self, *args: object) -> bool:
+        return True
+
+
+def _published_vybachennia_pair() -> dict[str, Any]:
+    """The pair behind published B1 card her_324943ef5a47 (#8727), verbatim from the registry."""
+    return {
+        "calqueLabel": "вибачення",
+        "calqueSurfaces": ["вибачення"],
+        "nativeSlug": "вибачити",
+        "nativeLemma": "вибачити",
+        "kind": "lexical",
+        "corrections": ["вибачити"],
+        "rationale": (
+            "UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) "
+            "across 1 document(s)): «вибачення» flagged non-standard; reviewed correction «вибачити»."
+        ),
+        "citations": ["ua-gec:F/Calque n=1"],
+        "sourceFamily": "ua-gec",
+        "severity": "enrichment",
+        "curator": "script:heritage_calque_wave-2026-08-11",
+        "frames": [
+            {
+                "sentence_with_slot": "Тому прошу ___, коли що-небудь зроблю не так Але іншого виходу не маю.",
+                "answer_form": "вибачити",
+                "calque_form": "вибачення",
+                "origin": "ua-gec-calque-wave1:literary_texts/e27925aa_c0161",
+            }
+        ],
+    }
+
+
+def test_heritage_single_corpus_correction_of_clean_vesum_word_is_withheld(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pair = _published_vybachennia_pair()
+    lexemes = _fixture_lexemes()
+    verifier = _gloss_verifier("вибачення", "вибачити")
+
+    assert validate_heritage_pair(pair) == []
+    assert _heritage_normative_support_error(pair, verifier) is not None
+    items = _build_heritage_items(
+        pair, lexemes[0], lexemes, "deck-v1", verifier=verifier, creation_review=_AllowAllCreationReview()
+    )
+    assert items == []
+    err = capsys.readouterr().err
+    assert "heritage_pair 'вибачення' withheld" in err
+    assert "clean VESUM form (вибачення)" in err
+    assert "ua-gec:F/Calque n=1" in err
+
+
+def test_heritage_vesum_absent_calque_with_corpus_only_citation_is_admitted() -> None:
+    pair = {**_published_vybachennia_pair(), "calqueLabel": "вдруг", "calqueSurfaces": ["вдруг"]}
+    pair["frames"] = [{**pair["frames"][0], "calque_form": "вдруг", "answer_form": "книгу"}]
+    lexemes = _fixture_lexemes()
+    verifier = JsonVesumVerifier.from_path(VESUM)
+
+    assert _heritage_normative_support_error(pair, verifier) is None
+    items = _build_heritage_items(
+        pair, lexemes[0], lexemes, "deck-v1", verifier=verifier, creation_review=_AllowAllCreationReview()
+    )
+    assert len(items) == 1
+    assert items[0]["calque"] == "вдруг"
+
+
+def test_heritage_pair_with_normative_citation_is_not_gated_by_vesum() -> None:
+    pair = {**_published_vybachennia_pair(), "citations": ["ua-gec:F/Calque n=1", "antonenko:Вибачення"]}
+    assert _heritage_normative_support_error(pair, _gloss_verifier("вибачення")) is None
+    # Without a verifier the corpus-only pair fails closed.
+    assert _heritage_normative_support_error(_published_vybachennia_pair(), None) is not None
+
+
+def _published_da_tak_pair() -> dict[str, Any]:
+    """The «да → так» pair with the wave-1 frames behind A1 cards her_da1da709367b / her_a8300df52532."""
+    return {
+        "calqueLabel": "да",
+        "calqueSurfaces": ["да"],
+        "nativeSlug": "так",
+        "nativeLemma": "так",
+        "kind": "lexical",
+        "corrections": ["так"],
+        "rationale": "канонічний суржик-маркер: рос. да; укр. так",
+        "citations": ["ua-gec:F/Calque n=3 docs=2"],
+        "sourceFamily": "ua-gec",
+        "cefrAvailability": "a1",
+        "severity": "russianism",
+        "frames": [
+            {
+                "sentence_with_slot": "Оля відповіла ___, коли її спитали про готовність.",
+                "answer_form": "так",
+                "calque_form": "да",
+                "origin": "authored-codex-2026-07-06",
+            },
+            {
+                "sentence_with_slot": "На прохання допомогти брат сказав ___.",
+                "answer_form": "так",
+                "calque_form": "да",
+                "origin": "authored-codex-2026-07-06",
+            },
+            {
+                "sentence_with_slot": "Усе тут було нове, і в повітрі, яке ___ нагадувало глибину, слова не лишали бульки.",
+                "answer_form": "так",
+                "calque_form": "наступним чином",
+                "origin": "ua-gec-calque-wave1:literary_texts/5cbffa78_c0001",
+            },
+            {
+                "sentence_with_slot": "Можливо, вона ___ і дожила б віку, якби не побачила рибалку.",
+                "answer_form": "так",
+                "calque_form": "настільки",
+                "origin": "ua-gec-calque-wave1:literary_texts/5cbffa78_c0002",
+            },
+            {
+                "sentence_with_slot": "Почувши ___ близько від себе розмову, говорюща риба не втрималася.",
+                "answer_form": "так",
+                "calque_form": "таким чином",
+                "origin": "ua-gec-calque-wave1:literary_texts/5cbffa78_c0002",
+            },
+        ],
+    }
+
+
+def test_heritage_frames_for_a_different_calque_are_withheld_not_relabelled(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pair = _published_da_tak_pair()
+    verifier = _gloss_verifier("так", "настільки", "таким", "чином", "наступним")
+
+    frames = _valid_heritage_frames(pair, verifier)
+
+    assert [frame["calque_form"] for frame in frames] == ["да", "да"]
+    err = capsys.readouterr().err
+    assert "heritage_pair 'да' frame 4 withheld: calque_form 'настільки' is not a form of calqueLabel 'да'" in err
+    assert "frame 5 withheld: calque_form 'таким чином'" in err
+
+
+def test_heritage_frame_calque_mismatch_accepts_forms_of_the_same_calque() -> None:
+    def pair(label: str, *surfaces: str) -> dict[str, Any]:
+        return {"calqueLabel": label, "calqueSurfaces": list(surfaces)}
+
+    def frame(calque_form: str) -> dict[str, Any]:
+        return {"calque_form": calque_form}
+
+    inflect = JsonVesumVerifier(
+        {
+            "пробку": [{"lemma": "пробка"}],
+            "точки": [{"lemma": "точка"}],
+            "зору": [{"lemma": "зір"}],
+            "вверх": [{"lemma": "вверх"}],
+            "слідує": [{"lemma": "слідувати"}],
+            "включи": [{"lemma": "включити"}],
+        }
+    )
+    # exact surface, declared surface, VESUM lemma, multiword lemma, shared stem when VESUM is silent
+    assert _heritage_frame_calque_mismatch(frame("Но"), pair("но"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("бажаючі"), pair("бажаючий", "бажаючі"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("пробку"), pair("пробка"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("включи"), pair("включити"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("З моєї точки зору"), pair("точка зору"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("шляпу"), pair("шляпа"), inflect) is None
+    assert _heritage_frame_calque_mismatch(frame("кнігу"), pair("кніга"), None) is None
+    # different words: an inherited rationale would be a copied, false claim
+    mismatch = _heritage_frame_calque_mismatch(frame("вверх"), pair("уверх"), inflect)
+    assert mismatch is not None and "not a form of calqueLabel 'уверх'" in mismatch
+    assert _heritage_frame_calque_mismatch(frame("слідує"), pair("надо"), inflect) is not None
+    assert _heritage_frame_calque_mismatch(frame("настільки"), pair("да"), None) is not None
+
+
+def test_merge_heritage_pair_overlay_keeps_foreign_calque_frames_out_of_curated_pair() -> None:
+    base = _published_da_tak_pair()
+    base["frames"] = base["frames"][:2]
+    overlay = {
+        "calqueLabel": "настільки",
+        "nativeSlug": "так",
+        "rationale": "overlay rationale",
+        "citations": ["ua-gec:F/Calque n=1"],
+        "frames": [
+            {
+                "sentence_with_slot": "Вона ___ і дожила б віку.",
+                "answer_form": "так",
+                "calque_form": "настільки",
+                "origin": "wave",
+            },
+            {"sentence_with_slot": "Брат сказав ___.", "answer_form": "так", "calque_form": "да", "origin": "wave"},
+        ],
+    }
+
+    merged = _merge_heritage_pair_overlay([base], [overlay])
+
+    assert [frame["calque_form"] for frame in merged[0]["frames"]] == ["да", "да", "да"]
+    assert len(merged) == 2
+    assert merged[1]["calqueLabel"] == "настільки"
+    assert merged[1]["rationale"] == "overlay rationale"
+    assert [frame["calque_form"] for frame in merged[1]["frames"]] == ["настільки"]
+
+
+def _taktovnyi_entries() -> list[dict[str, Any]]:
+    return [
+        {
+            "lemmaId": lemma,
+            "lemma": lemma,
+            "gloss": gloss,
+            "pos": "adjective",
+            "cefr": "B1",
+            "url_slug": lemma,
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b1"}],
+        }
+        for lemma, gloss in (("тактичний", "tactical"), ("тактовний", "tactful"))
+    ]
+
+
+def _taktovnyi_pair(gloss: str) -> dict[str, Any]:
+    return {
+        "slugA": "тактичний",
+        "slugB": "тактовний",
+        "distinction_gloss_uk": gloss,
+        "citations": ["miyklas.com.ua"],
+        "frames": [
+            {
+                "sentence_with_slot": "Командир розробив грамотний ___ хід у бою.",
+                "answer_form": "тактичний",
+                "confusable_form": "тактовний",
+                "origin": "authored-paronym-frame",
+            },
+            {
+                "sentence_with_slot": "Дипломат зробив дуже ___ і ввічливий жест.",
+                "answer_form": "тактовний",
+                "confusable_form": "тактичний",
+                "origin": "authored-paronym-frame",
+            },
+        ],
+    }
+
+
+_TAKTOVNYI_VERIFIER_WORDS = (
+    "тактичний",
+    "тактовний",
+    "який",
+    "стосується",
+    "тактики",
+    "бою",
+    "чи",
+    "плану",
+    "дій",
+    "способів",
+    "у",
+    "спорті",
+    "політиці",
+    "на",
+    "війні",
+    "володіє",
+    "почуттям",
+    "міри",
+    "той",
+    "що",
+    "й",
+    "такту",
+)
+
+
+def test_paronym_explanation_with_russian_word_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
+    """Published par_42a6a39064f8 / par_687bf8430790 taught «вежливий» (VESUM NOT_FOUND) in feedback (#8728)."""
+    published_gloss = (
+        "Тактичний — який стосується тактики бою чи плану дій; тактовний — вежливий, який володіє почуттям міри."
+    )
+    verifier = _gloss_verifier(*_TAKTOVNYI_VERIFIER_WORDS)
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+
+    shards = build_practice_shards(
+        _taktovnyi_entries(),
+        allowlist,
+        verifier,
+        [],
+        BuildConfig(target=10),
+        paronym_pairs=[_taktovnyi_pair(published_gloss)],
+    )
+
+    assert shards["B1"]["paronym"]["paronym"] == []
+    err = capsys.readouterr().err
+    assert "item withheld by explanation-language gate: distinction_gloss_uk: explanation token «вежливий»" in err
+    assert 'explanation-language gate: withheld {"paronym": 2}' in err
+
+
+def test_paronym_source_verified_gloss_passes_the_explanation_gate() -> None:
+    live = next(
+        pair for pair in read_paronym_pairs(Path("registry/lexicon/paronym_pairs.yaml")) if pair["slugA"] == "тактичний"
+    )
+    assert "вежливий" not in live["distinction_gloss_uk"]
+    assert any(citation.startswith("textbook:5-klas-ukrmova-avramenko-2022_s0201") for citation in live["citations"])
+    verifier = _gloss_verifier(*_TAKTOVNYI_VERIFIER_WORDS)
+
+    shards = build_practice_shards(
+        _taktovnyi_entries(),
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        [],
+        BuildConfig(target=10),
+        paronym_pairs=[live],
+    )
+
+    items = shards["B1"]["paronym"]["paronym"]
+    assert len(items) == 2
+    assert {item["distinction_gloss_uk"] for item in items} == {live["distinction_gloss_uk"]}
+
+
+def test_explanation_language_errors_exempt_mentions_abbreviations_and_own_forms() -> None:
+    verifier = _gloss_verifier(
+        "канонічний", "суржик", "маркер", "так", "офіційно", "діловому", "великий", "стилі", "канцелярит"
+    )
+
+    assert explanation_language_errors("канонічний суржик-маркер: рос. да; укр. так", verifier) == []
+    assert (
+        explanation_language_errors("«вибачення» flagged non-standard; reviewed correction «вибачити».", verifier) == []
+    )
+    assert explanation_language_errors("канцелярит «в даний час», «дана книга» (рос. данный)", verifier) == []
+    assert explanation_language_errors("в офіційно-діловому стилі (розм.)", verifier) == []
+    assert explanation_language_errors("великий бык", verifier) == ["explanation token «бык» is not a clean VESUM form"]
+    assert explanation_language_errors("великий бык", verifier, allowed=["бык"]) == []
+    assert explanation_language_errors("", verifier) == []
+    assert explanation_language_errors("великий бык", None) == []
+
+
+def test_explanation_gate_errors_cover_every_learner_facing_field() -> None:
+    verifier = _gloss_verifier("так")
+    item = {
+        "answer": "так",
+        "calque": "да",
+        "rationale": "рос. да; укр. так",
+        "rationaleUk": "хорошо",
+        "calqueSense": "так",
+        "authenticSense": "«так»",
+        "options": [{"label": "так"}, {"label": "да"}],
+    }
+    assert explanation_gate_errors("heritage", item, verifier) == [
+        "rationaleUk: explanation token «хорошо» is not a clean VESUM form"
+    ]
+    assert explanation_gate_errors("paronym", {"distinction_gloss_uk": "так вежливий"}, verifier) == [
+        "distinction_gloss_uk: explanation token «вежливий» is not a clean VESUM form"
+    ]
+    assert explanation_gate_errors("cloze", {"distinction_gloss_uk": "вежливий"}, verifier) == []
+
+
+def test_broken_validator_fixtures_prove_the_explanation_language_gate(capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["--broken-validator-fixtures"]) == 1
+    out = capsys.readouterr().out
+    assert "explanation_language: ['explanation token «вежливий» is not a clean VESUM form']" in out

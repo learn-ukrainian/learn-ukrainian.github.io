@@ -176,6 +176,49 @@ NO_PAIR_PROBABILITY = {
 HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
+# Corpus correction counts (UA-GEC annotator rows) are evidence about single
+# sentences, not a norm. A calque judgment needs a normative citation (style
+# guide, dictionary, standard, textbook) or VESUM attesting the calque itself
+# is not a standard form (#8727).
+HERITAGE_CORPUS_CITATION_PREFIXES = ("ua-gec",)
+# Learner-facing Ukrainian explanation strings per relation mode; every
+# Cyrillic token outside a quoted mention must be a clean VESUM form (#8728).
+EXPLANATION_FIELDS_BY_MODE: dict[str, tuple[str, ...]] = {
+    "heritage": ("rationale", "rationaleUk", "calqueSense", "authenticSense"),
+    "paronym": ("distinction_gloss_uk",),
+    "antonym": ("distinction_gloss_uk",),
+    "homonym": ("distinction_gloss_uk",),
+}
+# Quoted material («…», "…", “…”) and an explicit Russian mention («рос. да»)
+# name the form being warned against: they are mentions, not Ukrainian use.
+_EXPLANATION_MENTION_RE = re.compile(r"«[^»]*»|\"[^\"]*\"|“[^”]*”|(?<![А-Яа-яЇїІіЄєҐґ])рос\.\s*[^;,.)»\n]*")
+_CYRILLIC = "А-Яа-яЇїІіЄєҐґЁёЪъЫыЭэ"
+_EXPLANATION_TOKEN_RE = re.compile(rf"[{_CYRILLIC}][{_CYRILLIC}'’ʼ\u0301-]*\.?")
+# Dictionary-style abbreviations (only when written with their period) and
+# source names that are not dictionary words.
+EXPLANATION_ABBREVIATIONS = frozenset(
+    {
+        "рос",
+        "укр",
+        "розм",
+        "англ",
+        "пол",
+        "заст",
+        "діал",
+        "книжн",
+        "перен",
+        "напр",
+        "т",
+        "ін",
+        "с",
+        "р",
+        "мн",
+        "одн",
+        "кл",
+        "ст",
+    }
+)
+EXPLANATION_ALLOWED_TOKENS = frozenset({"сум", "втс", "уліф", "есум"})
 SYNONYM_DEFAULT_AVAILABILITY = "B1"
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
@@ -3667,12 +3710,141 @@ def _heritage_frame_errors(frame: Any, kind: str) -> list[str]:
     return errors
 
 
-def _valid_heritage_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
+def _is_corpus_citation(citation: str) -> bool:
+    text = _plain(citation)
+    return any(text.startswith(prefix) for prefix in HERITAGE_CORPUS_CITATION_PREFIXES)
+
+
+def _heritage_calque_surfaces(pair: dict[str, Any]) -> list[str]:
+    label = _clean_text(pair.get("calqueLabel"))
+    return [surface for surface in dict.fromkeys([label, *_clean_text_list(pair.get("calqueSurfaces"))]) if surface]
+
+
+def _vesum_lemmas(form: str, verifier: VesumVerifier | None) -> set[str]:
+    """Return plain VESUM lemmas for a surface form (empty when unanalysable)."""
+    if verifier is None or not form:
+        return set()
+    variants = list(_surface_variants(form))
+    matches = verifier.verify_words(variants)
+    return {
+        _plain(str(row.get("lemma")))
+        for variant in variants
+        for row in matches.get(variant, [])
+        if isinstance(row, dict) and _clean_text(row.get("lemma"))
+    }
+
+
+def _shares_stem(form: str, other: str) -> bool:
+    """Conservative same-word test for forms VESUM cannot analyse («шляпу»/«шляпа»)."""
+    prefix = 0
+    for left, right in zip(form, other, strict=False):
+        if left != right:
+            break
+        prefix += 1
+    return prefix >= 3 and prefix >= min(len(form), len(other)) - 2
+
+
+def _heritage_frame_calque_mismatch(
+    frame: dict[str, Any],
+    pair: dict[str, Any],
+    verifier: VesumVerifier | None = None,
+) -> str | None:
+    """Explain why a frame's calque_form is not a form of the pair's calque.
+
+    A frame inherits the pair's calqueLabel, rationale and citations, so a
+    frame whose calque is a different word would teach that word with a
+    copied, unrelated rationale (#8727: «настільки» and «таким чином» under
+    the «да → так» pair). Match order: exact surface, VESUM lemma, and — only
+    when VESUM cannot analyse one side — a shared-stem test.
+    """
+    calque_form = _plain(_clean_text(frame.get("calque_form")) or "")
+    surfaces = [_plain(surface) for surface in _heritage_calque_surfaces(pair)]
+    if not calque_form or not surfaces:
+        return None
+    if calque_form in surfaces:
+        return None
+    form_tokens = calque_form.split()
+    form_lemmas: set[str] = set(form_tokens)
+    form_analysed = False
+    for token in form_tokens:
+        lemmas = _vesum_lemmas(token, verifier)
+        if lemmas:
+            form_analysed = True
+            form_lemmas |= lemmas
+    for surface in surfaces:
+        surface_tokens = surface.split()
+        surface_analysed = False
+        matched_all = True
+        for token in surface_tokens:
+            lemmas = _vesum_lemmas(token, verifier)
+            if lemmas:
+                surface_analysed = True
+            if not ({token} | lemmas) & form_lemmas:
+                matched_all = False
+                break
+        if matched_all:
+            return None
+        if (
+            len(surface_tokens) == 1
+            and len(form_tokens) == 1
+            and not (surface_analysed and form_analysed)
+            and _shares_stem(calque_form, surface)
+        ):
+            return None
+    label = _clean_text(pair.get("calqueLabel")) or "?"
+    return f"calque_form {calque_form!r} is not a form of calqueLabel {label!r}; the pair rationale would be copied"
+
+
+def _heritage_normative_support_error(pair: dict[str, Any], verifier: VesumVerifier | None = None) -> str | None:
+    """Return why a pair cannot make a calque judgment, or None when it can.
+
+    A learner-facing calque label needs a normative source: a citation that is
+    not a corpus correction count (style guide, dictionary, standard, textbook)
+    or VESUM itself attesting that every calque surface is not a standard
+    form. A one-off UA-GEC annotator correction of a clean VESUM word (#8727:
+    «вибачення» → «вибачити», n=1) is evidence about one sentence, not a norm.
+    """
+    citations = _clean_text_list(pair.get("citations"))
+    if any(not _is_corpus_citation(citation) for citation in citations):
+        return None
+    label = _clean_text(pair.get("calqueLabel")) or "?"
+    surfaces = _heritage_calque_surfaces(pair)
+    single = [surface for surface in surfaces if len(surface.split()) == 1]
+    if verifier is None or not single or len(single) != len(surfaces):
+        return f"calque {label!r} has only corpus citations {citations} and no VESUM attestation of a non-standard form"
+    variants = sorted({variant for surface in single for variant in _surface_variants(surface)})
+    matches = verifier.verify_words(variants)
+    clean = [surface for surface in single if any(matches.get(variant) for variant in _surface_variants(surface))]
+    if clean:
+        return (
+            f"calque {label!r} is a clean VESUM form ({', '.join(clean)}) "
+            f"and its only evidence is corpus citations {citations}"
+        )
+    return None
+
+
+def _valid_heritage_frames(
+    pair: dict[str, Any],
+    verifier: VesumVerifier | None = None,
+    *,
+    report: bool = True,
+) -> list[dict[str, Any]]:
     kind = _clean_text(pair.get("kind")) or ""
     frames = pair.get("frames")
     if not isinstance(frames, list):
         return []
-    return [frame for frame in frames if isinstance(frame, dict) and not _heritage_frame_errors(frame, kind)]
+    valid: list[dict[str, Any]] = []
+    for index, frame in enumerate(frames, start=1):
+        if not isinstance(frame, dict) or _heritage_frame_errors(frame, kind):
+            continue
+        mismatch = _heritage_frame_calque_mismatch(frame, pair, verifier)
+        if mismatch:
+            if report:
+                label = _clean_text(pair.get("calqueLabel")) or "?"
+                print(f"WARN: heritage_pair {label!r} frame {index} withheld: {mismatch}", file=sys.stderr)
+            continue
+        valid.append(frame)
+    return valid
 
 
 def _heritage_pair_native_lexeme(
@@ -3822,8 +3994,13 @@ def _build_heritage_items(
     creation_review: CreationReview | None = None,
 ) -> list[dict[str, Any]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
-    frames = _valid_heritage_frames(pair)
+    frames = _valid_heritage_frames(pair, verifier)
     if not frames:
+        return []
+    support_error = _heritage_normative_support_error(pair, verifier)
+    if support_error:
+        pair_label = _clean_text(pair.get("calqueLabel")) or lexeme["lemmaId"]
+        print(f"WARN: heritage_pair {pair_label!r} withheld: {support_error}", file=sys.stderr)
         return []
     # Heritage SRS identity is the native lemma, and the static client reaches
     # drill items through the same-level index/lexeme shards — so the item must
@@ -4096,6 +4273,76 @@ def validate_synonym_item(item: dict[str, Any]) -> list[str]:
         if label and label != answer and (label in {answer, prompt} or answer in label or label in answer):
             errors.append("synonym distractor must not be a near-duplicate of prompt or answer")
             break
+    return errors
+
+
+def explanation_language_errors(
+    text: Any,
+    verifier: VesumVerifier | None,
+    *,
+    allowed: list[str] | tuple[str, ...] = (),
+) -> list[str]:
+    """VESUM-check every Cyrillic token of a learner-facing explanation.
+
+    Quoted mentions and «рос. …» spans are skipped, as are the item's own
+    forms (the calque or confusable being contrasted), dictionary
+    abbreviations written with their period, and hyphenated compounds whose
+    parts are all clean forms. A Russian word used as Ukrainian (#8728:
+    «вежливий» for «ввічливий») is reported so the item is withheld.
+    """
+    cleaned = _clean_text(text)
+    if not cleaned or verifier is None:
+        return []
+    stripped = _EXPLANATION_MENTION_RE.sub(" ", cleaned)
+    allowed_plain = {_plain(value) for value in allowed if _clean_text(value)} | EXPLANATION_ALLOWED_TOKENS
+    allowed_plain |= {part for value in list(allowed_plain) for part in re.split(r"[\s-]+", value) if part}
+    pending: dict[str, list[str]] = {}
+    for raw in _EXPLANATION_TOKEN_RE.findall(stripped):
+        abbreviated = raw.endswith(".")
+        core = raw.rstrip(".").strip("'’ʼ-")
+        if len(core) < 2:
+            continue
+        plain_core = _plain(core)
+        if plain_core in allowed_plain or (abbreviated and plain_core in EXPLANATION_ABBREVIATIONS):
+            continue
+        pending.setdefault(core, [part for part in core.split("-") if part] or [core])
+    if not pending:
+        return []
+    variants = sorted(
+        {variant for core, parts in pending.items() for word in (core, *parts) for variant in _surface_variants(word)}
+    )
+    matches = verifier.verify_words(variants)
+
+    def known(word: str) -> bool:
+        return _plain(word) in allowed_plain or any(matches.get(variant) for variant in _surface_variants(word))
+
+    return [
+        f"explanation token «{core}» is not a clean VESUM form"
+        for core, parts in pending.items()
+        if not (known(core) or all(known(part) for part in parts))
+    ]
+
+
+def explanation_gate_errors(
+    mode: str,
+    item: dict[str, Any],
+    verifier: VesumVerifier | None,
+    *,
+    allowed: list[str] | tuple[str, ...] = (),
+) -> list[str]:
+    """Run the explanation-language gate over one built item's learner-facing fields."""
+    own_forms = [
+        *(item.get(key) for key in ("answer", "calque", "confusable", "calqueLabel", "lemma", "nativeLemma")),
+        *(item.get("corrections") or []),
+        *(option.get("label") for option in item.get("options", []) if isinstance(option, dict)),
+        *allowed,
+    ]
+    own_forms = [str(value) for value in own_forms if _clean_text(value)]
+    errors: list[str] = []
+    for field in EXPLANATION_FIELDS_BY_MODE.get(mode, ()):
+        errors.extend(
+            f"{field}: {error}" for error in explanation_language_errors(item.get(field), verifier, allowed=own_forms)
+        )
     return errors
 
 
@@ -5150,6 +5397,7 @@ def build_practice_shards(
         file=sys.stderr,
     )
 
+    explanation_withheld: Counter[str] = Counter()
     heritage_frame_debt = 0
     for index, pair in enumerate(heritage_pairs or []):
         pair_errors = validate_heritage_pair(pair)
@@ -5159,7 +5407,7 @@ def build_practice_shards(
                 file=sys.stderr,
             )
             continue
-        frames = _valid_heritage_frames(pair)
+        frames = _valid_heritage_frames(pair, verifier, report=False)
         if not frames:
             heritage_frame_debt += 1
             continue
@@ -5199,6 +5447,16 @@ def build_practice_shards(
             if public_errors:
                 print(
                     f"WARN: heritage_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            gate_errors = explanation_gate_errors(
+                "heritage", public_item, verifier, allowed=_clean_text_list(pair.get("calqueSurfaces"))
+            )
+            if gate_errors:
+                explanation_withheld["heritage"] += 1
+                print(
+                    f"WARN: heritage_pair[{index}] item withheld by explanation-language gate: {'; '.join(gate_errors)}",
                     file=sys.stderr,
                 )
                 continue
@@ -5267,6 +5525,14 @@ def build_practice_shards(
                     file=sys.stderr,
                 )
                 continue
+            gate_errors = explanation_gate_errors("paronym", public_item, verifier, allowed=[slug_a, slug_b])
+            if gate_errors:
+                explanation_withheld["paronym"] += 1
+                print(
+                    f"WARN: paronym_pair[{index}] item withheld by explanation-language gate: {'; '.join(gate_errors)}",
+                    file=sys.stderr,
+                )
+                continue
             mode_by_level[level]["paronym"].append(public_item)
     if paronym_frame_debt:
         print(
@@ -5324,6 +5590,14 @@ def build_practice_shards(
             if public_errors:
                 print(
                     f"WARN: antonym_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            gate_errors = explanation_gate_errors("antonym", public_item, verifier, allowed=[slug_a, slug_b])
+            if gate_errors:
+                explanation_withheld["antonym"] += 1
+                print(
+                    f"WARN: antonym_pair[{index}] item withheld by explanation-language gate: {'; '.join(gate_errors)}",
                     file=sys.stderr,
                 )
                 continue
@@ -5387,10 +5661,23 @@ def build_practice_shards(
                     file=sys.stderr,
                 )
                 continue
+            gate_errors = explanation_gate_errors("homonym", public_item, verifier, allowed=[slug_a, slug_b])
+            if gate_errors:
+                explanation_withheld["homonym"] += 1
+                print(
+                    f"WARN: homonym_pair[{index}] item withheld by explanation-language gate: {'; '.join(gate_errors)}",
+                    file=sys.stderr,
+                )
+                continue
             mode_by_level[level]["homonym"].append(public_item)
     if homonym_frame_debt:
         print(
             f"homonym frame coverage: {homonym_frame_debt} records without frames — emitted 0 items for them",
+            file=sys.stderr,
+        )
+    if explanation_withheld:
+        print(
+            "explanation-language gate: withheld " + json.dumps(dict(explanation_withheld), ensure_ascii=False),
             file=sys.stderr,
         )
 
@@ -5867,8 +6154,16 @@ def _merge_heritage_pair_overlay(
                 for frame in overlay_frames
                 if isinstance(frame, dict) and _clean_text(frame.get("sentence_with_slot")) not in existing_sentences
             ]
-            if new_frames:
-                target["frames"] = [*existing_frames, *new_frames]
+            # A frame only joins the curated pair when its calque is a form of
+            # that pair's calque; otherwise the curated rationale would be
+            # copied onto an unrelated word (#8727). Foreign frames stay with
+            # the overlay row's own calqueLabel, rationale and citations.
+            own_frames = [frame for frame in new_frames if _heritage_frame_calque_mismatch(frame, target) is None]
+            foreign_frames = [frame for frame in new_frames if not any(frame is own for own in own_frames)]
+            if own_frames:
+                target["frames"] = [*existing_frames, *own_frames]
+            if foreign_frames:
+                merged.append({**overlay_pair, "frames": foreign_frames})
         else:
             merged.append(overlay_pair)
             if slug:
@@ -6030,6 +6325,15 @@ def run_broken_validator_fixtures() -> int:
             }
         ),
         "paronym_pair": validate_paronym_pair({"slugA": "адресант", "slugB": "адресат", "frames": [], "citations": []}),
+        "explanation_language": explanation_language_errors(
+            "Тактовний — вежливий, який володіє почуттям міри.",
+            JsonVesumVerifier(
+                {
+                    word: [{"lemma": word, "pos": "x", "tags": "x"}]
+                    for word in ("Тактовний", "який", "володіє", "почуттям", "міри")
+                }
+            ),
+        ),
         "homonym_pair": validate_homonym_pair({"slugA": "байка", "slugB": "байка", "frames": [], "citations": []}),
     }
     print("Broken validator fixtures:")

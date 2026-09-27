@@ -23,6 +23,37 @@ the 15 rows whose native counterparts already resolve from
 only a phrase replacement, a morphology-only correction, or insufficient
 sense evidence remain candidates rather than cards.
 
+## Build-time gates on calque judgments and explanations (#8727, #8728)
+
+The factory withholds, with a `WARN … withheld` line on stderr, any pair or
+item that fails one of these checks. Withheld records stay in the YAML; a
+curator repairs the evidence, never the gate.
+
+| Gate | Rule | Repair |
+| --- | --- | --- |
+| Normative support (`_heritage_normative_support_error`) | A pair whose `citations` are only corpus counts (`ua-gec:…`) is emitted only when VESUM has no clean analysis for its `calqueLabel` and every `calqueSurfaces` entry, i.e. the calque itself is not a standard form. A clean VESUM word backed by a single annotator correction (`вибачення` → `вибачити`, n=1) is not a calque judgment. | Add a normative citation (Антоненко-Давидович, State Standard, dictionary, textbook chunk) verified with the `sources` tools, or leave the pair withheld. |
+| Frame calque identity (`_heritage_frame_calque_mismatch`) | Each frame's `calque_form` must be a form of the pair's calque: exact surface, VESUM lemma, or a shared stem when VESUM cannot analyse one side. A frame for another word (`настільки` under `да → так`) would inherit a copied rationale. The overlay merge in `read_heritage_pairs` applies the same test, so a wave row's frames only join a curated pair when they share its calque. | Give the frame its own pair with its own rationale and citations. |
+| Explanation language (`explanation_language_errors`) | Every Cyrillic token of a learner-facing explanation (`rationale`, `rationaleUk`, `calqueSense`, `authenticSense`, and `distinction_gloss_uk` for paronym, antonym and homonym items) must be a clean VESUM form. Quoted mentions («…») and `рос. …` spans, the item's own contrasted forms, and dictionary abbreviations written with their period are exempt. | Replace the word with wording copied from a verified source; never paraphrase by hand. `--broken-validator-fixtures` proves the gate on a planted «вежливий». |
+
+### Measured effect (2026-09-27, same `atlas.db`/VESUM inputs, `--disable-cloze`)
+
+| mode | level | origin/main generator | gated generator |
+| --- | --- | --- | --- |
+| heritage | A1 / A2 / B1 / B2 / C1 | 7 / 44 / 265 / 26 / 12 | 4 / 24 / 105 / 14 / 11 |
+| paronym | A1 / A2 / B1 / B2 / C1 | 35 / 44 / 138 / 33 / 6 | 32 / 43 / 137 / 33 / 6 |
+
+The heritage loss is 123 pairs (130 build-time withhold lines) whose only
+evidence is a UA-GEC count while VESUM analyses the calque as a clean form or
+cannot analyse a multiword calque («так як», «в якості», «в першу чергу»), plus
+five frames whose calque is a different word. Eight of the withheld pairs carry
+`severity: russianism` («но», «надо», «пол», «стакан», «залив», «сідий»,
+«тьотя», «любий»): their calque is a VESUM homograph of a real Ukrainian word,
+so the gate cannot clear them from VESUM alone and they need a verified
+normative citation to return. The explanation gate withheld 3 heritage, 10
+paronym and 22 homonym items, all on VESUM `:bad` forms (active participles
+such as «існуючий», «діюча»; «доставки», «прийому», «поліцейського»,
+«торговельна») or one unknown form («начесом»).
+
 ## Severity and level guidance
 
 Every pair has one of two textual learner-facing values:

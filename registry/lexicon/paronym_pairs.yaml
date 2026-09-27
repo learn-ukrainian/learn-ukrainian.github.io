@@ -1625,11 +1625,17 @@ pairs:
     origin: authored-paronym-frame
 - slugA: тактичний
   slugB: тактовний
-  distinction_gloss_uk: Тактичний — який стосується тактики бою чи плану дій; тактовний — вежливий, який володіє почуттям
-    міри.
+  distinction_gloss_uk: Тактичний — який стосується тактики, способів дій у спорті, політиці, на війні; тактовний — той,
+    що володіє почуттям міри й такту.
   citations:
   - miyklas.com.ua
+  - 'textbook:5-klas-ukrmova-zabolotnyi-2023_s0027 «тактичний (який стосується тактики, способів дій у спорті, політиці,
+    на війні)»'
+  - 'textbook:5-klas-ukrmova-avramenko-2022_s0201 «Тактовний — той, що володіє почуттям міри й такту.»'
+  - 'textbook:5-klas-ukrmova-zabolotnyi-2023_s0200 «Тактичний // тактовний» (словничок паронімів)'
   curator: miyklas-reviewed
+  notes: '#8728: «вежливий» (VESUM NOT_FOUND) removed; both halves are copied verbatim from textbook definitions (Заболотний
+    5 кл. s0027 for тактичний, Авраменко 5 кл. s0201 for тактовний).'
   frames:
   - sentence_with_slot: Командир розробив грамотний ___ хід у бою.
     answer_form: тактичний
