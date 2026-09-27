@@ -29,6 +29,17 @@ command: read-only, **no** ``--worktree``, no ``--lifecycle-file`` and no ``--re
 delegate append a block to the prompt the seat receives (the worktree block interpolates the caller's path), so the
 adjudication dispatch has no appended blocks at all and ``record`` refuses any other dispatch.
 
+**The recorded dispatch must equal the canonical dispatch (R3-A r7).** ``dispatch_argv`` is the only way an
+adjudication task is dispatched, and it never passes ``--cwd`` or ``--worktree``, so the seat runs at delegate's own
+default working directory, the primary checkout (``delegate._REPO_ROOT``). ``check_dispatch_binding`` checks that
+directly (a caller-chosen ``--cwd`` could otherwise carry its own instructive ``AGENTS.md``/``CLAUDE.md`` outside
+the hashed prompt) and reads the adjudicator's identity from the very same parsed record it checked, never rereading
+the file, so a record replaced between the check and the identity read cannot change who is trusted. **Documented
+residual, not fixed here:** instructions the runtime reads from its own home directory (not the dispatch cwd) are
+outside this binding; the scoped review homes (#8618, #8623) bound them. The instruction files at the canonical
+root are the repository's own tracked ``AGENTS.md``/``CLAUDE.md`` — the fleet's standard context — and are accepted
+as such.
+
 **What a valid reply is.** The reply matches its schema; it names this unit and attempt; the attempt is an accepted
 first-seat attempt of that unit; the mapping names every finding id of the attempt exactly once and no other;
 ``planted_found`` is true exactly when a finding is mapped ``planted``; ``planted_blocking`` is true exactly when a
@@ -52,6 +63,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts import delegate
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -410,10 +422,14 @@ def validate_reply(reply: Any, subject: Subject) -> Verdict:
     )
 
 
-def adjudicator_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
-    """The adjudicator's model and family from its dispatch record; never from the reply."""
+def adjudicator_identity(dispatched: dict[str, Any], task_id: str) -> dict[str, str]:
+    """The adjudicator's model and family from the already-parsed dispatch record; never from the reply.
+
+    Takes the record ``check_dispatch_binding`` already read and checked, not a path: the identity comes from that
+    same parse, so a record replaced on disk after the check cannot change the identity returned.
+    """
     try:
-        return record.resolve_reviewer_identity(task_id, tasks_dir)
+        return record.identity_from_record(dispatched, task_id)
     except record.RecordError as error:
         raise AdjudicationError(str(error), ADJUDICATOR_UNKNOWN) from error
 
@@ -421,20 +437,29 @@ def adjudicator_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
 def check_dispatch_binding(
     unit_id: str, review_id: str, attempt_id: str, task_id: str, tasks_dir: Path, root: Path | None = None
 ) -> dict[str, str]:
-    """The dispatch record is this adjudication's own task, and it ran the prompt this module rendered for it.
+    """The dispatch record is this adjudication's own task, dispatched exactly as ``dispatch_argv`` builds it.
 
-    An independent dispatch of some other task must not be able to stand in for the adjudicator: its task id must be
-    the id derived for this unit and attempt, and the ``prompt_sha256`` its record carries (the prompt as handed to
-    ``delegate.py``) must equal the sha256 of the task file this module wrote. A record with no prompt hash cannot
-    prove which prompt ran and is refused.
+    ``dispatch_argv`` is the only way an adjudication task is dispatched, and what it builds is fully determined:
+    ``--mode read-only``, the task file, the task id, and never a ``--cwd`` or ``--worktree`` flag — so the seat runs
+    at ``delegate``'s own default working directory, the primary checkout (``delegate._REPO_ROOT``). This function
+    compares every context-bearing field of the dispatch record against that canonical dispatch: an independent
+    dispatch of some other task, a caller-chosen ``--cwd`` (which can carry its own ``AGENTS.md``/``CLAUDE.md``
+    outside the hashed prompt), a ``--worktree``, a non-read-only mode, or any appended prompt block, must not be
+    able to stand in for the adjudicator. Any difference is ``adjudication_task_mismatch``.
 
-    An adjudication dispatch carries **no appended prompt blocks at all**: ``mode`` is ``read-only``, ``prompt_blocks``
-    is ``[]`` and ``effective_prompt_sha256`` equals ``prompt_sha256`` equals the sha256 of the task file rendered
-    here. Every block delegate can append (worktree note, lifecycle, research) is caller-influenced (the worktree
-    note interpolates the caller-chosen ``--worktree`` path), so none is allowed: dispatch read-only without
-    ``--worktree``. Anything else, or a record lacking these fields, is ``adjudication_task_mismatch``.
+    Concretely: the task id must be the one derived for this unit and attempt; ``mode`` is ``read-only``; ``cwd``
+    equals ``str(delegate._REPO_ROOT)``; ``worktree_path`` is absent (falsy); ``prompt_blocks`` is ``[]`` (every
+    block delegate can append — worktree note, lifecycle, research — is caller-influenced, so none is allowed); and
+    ``prompt_sha256`` and ``effective_prompt_sha256`` both equal the sha256 of the task file this module rendered. A
+    record with no prompt hash cannot prove which prompt ran and is refused.
 
-    Returns the adjudicator's identity from the same record (its ``agent`` and ``model`` must resolve).
+    Residual (not fixed here): instructions the runtime reads from its own home directory (not the dispatch cwd) are
+    outside this binding; the scoped review homes (#8618, #8623) bound them. The instruction files at the canonical
+    root (``AGENTS.md``/``CLAUDE.md``) are the repository's own tracked files — the fleet's standard context — and
+    are accepted as such.
+
+    Returns the adjudicator's identity read from this same parsed record (its ``agent`` and ``model`` must resolve);
+    nothing rereads the file.
     """
     expected = task_id_for(unit_id, review_id, attempt_id)
     if task_id != expected:
@@ -467,6 +492,20 @@ def check_dispatch_binding(
             "dispatch adds instructions to the adjudication prompt (dispatch it with --mode read-only)",
             TASK_MISMATCH,
         )
+    canonical_cwd = str(delegate._REPO_ROOT)
+    if dispatched.get("cwd") != canonical_cwd:
+        raise AdjudicationError(
+            f"the dispatch of {task_id} ran with cwd {dispatched.get('cwd')!r}, not the primary checkout "
+            f"{canonical_cwd!r} a plain dispatch (no --cwd) resolves to: a caller-chosen --cwd can carry its own "
+            "AGENTS.md/CLAUDE.md instructions the adjudicator would read outside the hashed prompt",
+            TASK_MISMATCH,
+        )
+    if dispatched.get("worktree_path"):
+        raise AdjudicationError(
+            f"the dispatch of {task_id} ran in worktree {dispatched.get('worktree_path')!r}: dispatch it without "
+            "--worktree so it runs at the primary checkout root",
+            TASK_MISMATCH,
+        )
     if dispatched.get("prompt_blocks") != []:
         raise AdjudicationError(
             f"the dispatch of {task_id} appended prompt blocks {dispatched.get('prompt_blocks')!r} (or records none) to "
@@ -479,7 +518,7 @@ def check_dispatch_binding(
             f"(effective sha256 {dispatched.get('effective_prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
-    return adjudicator_identity(task_id, tasks_dir)
+    return adjudicator_identity(dispatched, task_id)
 
 
 def check_independence(subject: Subject, adjudicator_family: str) -> None:
