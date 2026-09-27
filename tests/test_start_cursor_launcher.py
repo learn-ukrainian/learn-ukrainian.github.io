@@ -74,6 +74,17 @@ def test_cursor_driver_claims_lease_for_supported_selectors(selector: str) -> No
     assert "--model grok-4.7-high" in result.stdout
 
 
+@pytest.mark.parametrize(
+    "selector, slot", (("folk", "cursor-folk"), ("seminars-bio", "cursor-bio"), ("hramatka", "cursor-hramatka"))
+)
+def test_cursor_driver_refuses_ukrainian_content_slots(selector: str, slot: str) -> None:
+    result = run_launcher(DRIVER, "--epic", selector)
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert slot in result.stderr
+    assert "operator order 2026-09-27" in result.stderr
+    assert "would claim lease" not in result.stdout
+
+
 def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
     uncertified = run_launcher(DRIVER, "--epic", "devops", "--model", "cursor-unknown")
     harness = run_launcher(DRIVER, "--epic", "devops", "--harness", "agy")

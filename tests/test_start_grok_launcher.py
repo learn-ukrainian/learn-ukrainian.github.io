@@ -45,7 +45,7 @@ def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:
     assert "--effort" not in without.stdout
 
 
-@pytest.mark.parametrize("selector", ("atlas", "practice", "infra.devops", "seminars-folk", "infra"))
+@pytest.mark.parametrize("selector", ("atlas", "practice", "infra.devops", "infra"))
 def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> None:
     result = run_launcher("start-grok-driver.sh", "--epic", selector)
     assert result.returncode == 0, result.stderr
@@ -54,6 +54,17 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> No
     assert "would bind drive-epic" in result.stdout
     assert "--model grok-4.5" not in result.stdout
     assert "--model" not in result.stdout
+
+
+@pytest.mark.parametrize(
+    "selector, slot", (("seminars-folk", "grok-folk"), ("bio", "grok-bio"), ("hramatka", "grok-hramatka"))
+)
+def test_grok_driver_refuses_ukrainian_content_slots(selector: str, slot: str) -> None:
+    result = run_launcher("start-grok-driver.sh", "--epic", selector)
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert slot in result.stderr
+    assert "operator order 2026-09-27" in result.stderr
+    assert "would claim lease" not in result.stdout
 
 
 def test_grok_driver_rejects_uncertified_model_and_non_grok_harness() -> None:
