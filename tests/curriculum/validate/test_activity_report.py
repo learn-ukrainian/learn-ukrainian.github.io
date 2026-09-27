@@ -396,12 +396,15 @@ def test_rendered_report_omitted_planned_activity_does_not_count_as_rendered() -
     assert report["module"]["rendered_and_playable_total"] == 1
 
 
-def test_draft_and_rendered_reports_expose_the_same_response_opportunity_fields() -> None:
-    # Regression for finding 3 (r2): rendered_report omitted
-    # workbook_response_opportunities_total and inline_response_opportunities_total
-    # entirely, unlike draft_report's module dict (frozen §4 interface: a
-    # field a stage cannot know is not_available_at_this_stage, never
-    # silently omitted).
+def test_draft_and_rendered_reports_expose_the_same_module_and_lesson_fields() -> None:
+    # Regression for finding 3 (r2) and its r3 follow-up: rendered_report's
+    # module dict omitted response_opportunities_total,
+    # response_opportunities_by_type and explanation_coverage entirely, and
+    # draft_report's module and lesson dicts likewise lacked
+    # planned_workbook(_total)/rendered_and_playable(_total) — unlike
+    # rendered_report's. The frozen §4 interface requires the full field set
+    # at both grains on both sides: a field a stage cannot know is
+    # not_available_at_this_stage, never silently omitted.
     plan = _plan_with_one_lesson([_activity("a1", "quiz", "workbook")])
     drafts = [
         {
@@ -411,11 +414,20 @@ def test_draft_and_rendered_reports_expose_the_same_response_opportunity_fields(
     ]
     draft = draft_report(plan, drafts)
     rendered = rendered_report(plan, built_pages=[])
-    response_opportunity_fields = {"workbook_response_opportunities_total", "inline_response_opportunities_total"}
-    assert response_opportunity_fields <= draft["module"].keys()
-    assert response_opportunity_fields <= rendered["module"].keys()
-    assert rendered["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
-    assert rendered["module"]["inline_response_opportunities_total"] == NOT_AVAILABLE
+
+    assert draft["module"].keys() == rendered["module"].keys()
+    assert draft["lessons"][0].keys() == rendered["lessons"][0].keys()
+
+    assert rendered["module"]["response_opportunities_total"] == NOT_AVAILABLE
+    assert rendered["module"]["response_opportunities_by_type"] == NOT_AVAILABLE
+    assert rendered["module"]["explanation_coverage"] == NOT_AVAILABLE
+    assert rendered["lessons"][0]["response_opportunities"] == NOT_AVAILABLE
+    assert rendered["lessons"][0]["explanation_coverage"] == NOT_AVAILABLE
+
+    assert draft["module"]["planned_workbook_total"] == 1
+    assert draft["module"]["rendered_and_playable_total"] == NOT_AVAILABLE
+    assert draft["lessons"][0]["planned_workbook"] == 1
+    assert draft["lessons"][0]["rendered_and_playable"] == NOT_AVAILABLE
 
 
 def test_rendered_report_module_total_is_not_available_when_any_page_is_missing() -> None:

@@ -316,6 +316,15 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
     payload does not carry the field its type needs. A lesson is complete
     only when every planned activity has a payload whose units can be
     computed.
+
+    ``planned_workbook`` is the plan's own count of workbook activities for
+    the lesson (and ``planned_workbook_total`` for the module) — known at
+    this stage regardless of draft completeness, so it is a real number, not
+    ``not_available_at_this_stage``. ``rendered_and_playable`` and
+    ``rendered_and_playable_total`` are always
+    ``not_available_at_this_stage`` here — no page has been built yet;
+    present for field-set parity with :func:`rendered_report`, per the
+    frozen §4 interface.
     """
     drafts_by_lesson = {draft["lesson"]["n"]: draft for draft in drafts}
     lessons: list[dict] = []
@@ -324,13 +333,24 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
     module_inline_units = 0
     module_explained = 0
     module_by_type: Counter[str] = Counter()
+    module_planned = 0
     module_complete = True
 
     for lesson in plan["lessons"]:
         n = lesson["n"]
+        planned_ids = {activity["id"] for activity in _lesson_activities(lesson) if activity["placement"] == "workbook"}
+        module_planned += len(planned_ids)
         draft = drafts_by_lesson.get(n)
         if draft is None:
-            lessons.append({"n": n, "response_opportunities": NOT_AVAILABLE, "explanation_coverage": NOT_AVAILABLE})
+            lessons.append(
+                {
+                    "n": n,
+                    "response_opportunities": NOT_AVAILABLE,
+                    "explanation_coverage": NOT_AVAILABLE,
+                    "planned_workbook": len(planned_ids),
+                    "rendered_and_playable": NOT_AVAILABLE,
+                }
+            )
             module_complete = False
             continue
         draft_activities = {activity.get("id"): activity for activity in draft.get("activities") or []}
@@ -369,11 +389,21 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
                     "n": n,
                     "response_opportunities": {"total": lesson_units, "by_type": dict(sorted(by_type.items()))},
                     "explanation_coverage": {"explained": lesson_explained, "total": lesson_units},
+                    "planned_workbook": len(planned_ids),
+                    "rendered_and_playable": NOT_AVAILABLE,
                 }
             )
         else:
             module_complete = False
-            lessons.append({"n": n, "response_opportunities": NOT_AVAILABLE, "explanation_coverage": NOT_AVAILABLE})
+            lessons.append(
+                {
+                    "n": n,
+                    "response_opportunities": NOT_AVAILABLE,
+                    "explanation_coverage": NOT_AVAILABLE,
+                    "planned_workbook": len(planned_ids),
+                    "rendered_and_playable": NOT_AVAILABLE,
+                }
+            )
 
     module = _module_workbook_stats(plan)
     if module_complete:
@@ -396,6 +426,12 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
                 "explanation_coverage": NOT_AVAILABLE,
             }
         )
+    module.update(
+        {
+            "planned_workbook_total": module_planned,
+            "rendered_and_playable_total": NOT_AVAILABLE,
+        }
+    )
     return {
         "stage": "draft",
         "module_slug": plan.get("slug"),
@@ -416,10 +452,12 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
 
     ``workbook_tasks`` carries no per-unit payload (no ``items``/``pairs``/etc
     to feed :data:`RESPONSE_UNIT_TABLE`), so this stage can never compute
-    response-opportunity units; ``workbook_response_opportunities_total`` and
-    ``inline_response_opportunities_total`` are always
-    ``not_available_at_this_stage`` here — present for module field-set parity
-    with :func:`draft_report`, per the frozen §4 interface.
+    response-opportunity units; ``workbook_response_opportunities_total``,
+    ``inline_response_opportunities_total``, ``response_opportunities_total``,
+    ``response_opportunities_by_type`` and ``explanation_coverage`` are always
+    ``not_available_at_this_stage`` here — present (at both module and lesson
+    grain) for field-set parity with :func:`draft_report`, per the frozen §4
+    interface.
     """
     pages_by_lesson = {page["n"]: page for page in built_pages}
     lessons: list[dict] = []
@@ -433,7 +471,15 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
         module_planned += len(planned_ids)
         page = pages_by_lesson.get(n)
         if page is None:
-            lessons.append({"n": n, "planned_workbook": len(planned_ids), "rendered_and_playable": NOT_AVAILABLE})
+            lessons.append(
+                {
+                    "n": n,
+                    "planned_workbook": len(planned_ids),
+                    "rendered_and_playable": NOT_AVAILABLE,
+                    "response_opportunities": NOT_AVAILABLE,
+                    "explanation_coverage": NOT_AVAILABLE,
+                }
+            )
             module_complete = False
             continue
         tasks = {task["id"]: task for task in page.get("workbook_tasks") or []}
@@ -443,7 +489,15 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
             if activity_id in tasks and tasks[activity_id].get("rendered") and tasks[activity_id].get("playable")
         )
         module_rendered += rendered
-        lessons.append({"n": n, "planned_workbook": len(planned_ids), "rendered_and_playable": rendered})
+        lessons.append(
+            {
+                "n": n,
+                "planned_workbook": len(planned_ids),
+                "rendered_and_playable": rendered,
+                "response_opportunities": NOT_AVAILABLE,
+                "explanation_coverage": NOT_AVAILABLE,
+            }
+        )
 
     module = _module_workbook_stats(plan)
     module.update(
@@ -452,6 +506,9 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
             "rendered_and_playable_total": module_rendered if module_complete else NOT_AVAILABLE,
             "workbook_response_opportunities_total": NOT_AVAILABLE,
             "inline_response_opportunities_total": NOT_AVAILABLE,
+            "response_opportunities_total": NOT_AVAILABLE,
+            "response_opportunities_by_type": NOT_AVAILABLE,
+            "explanation_coverage": NOT_AVAILABLE,
         }
     )
     return {"stage": "rendered", "module_slug": plan.get("slug"), "lessons": lessons, "module": module}
