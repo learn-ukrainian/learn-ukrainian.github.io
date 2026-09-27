@@ -9,10 +9,10 @@ Concurrent duplicate creates are rejected.
 
 PR-F slice 2 (sealed verdict acceptance): store a content-addressed sealed
 verdict payload on the job so PR-G can publish with
-``publish-review-verdict --review-id`` alone (no CLI-supplied provenance).
+durable provenance (sealed review-pr was removed in #8520).
 
-This module still does **not** cut over ``review-pr``, create reviewer-neutral
-snapshots, or resolve reviewers (later PR-F slices / Terra ownership).
+This module does **not** invoke reviewers, create reviewer-neutral
+snapshots, or resolve reviewers (sealed review-pr was removed in #8520).
 """
 
 from __future__ import annotations

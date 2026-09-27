@@ -213,7 +213,7 @@ def test_inventory_session_streams_wiring() -> None:
         ("seminars-folk", "folk", "epic:2836"),
         ("bio", "bio", "epic:4431"),
         ("seminars-bio", "bio", "epic:4431"),
-        ("curriculum-upgrade", "curriculum-upgrade", "epic:7994"),
+        ("curriculum-upgrade", "core", "epic:7994"),
         ("core-quality", "core-quality", "epic:4274"),
         ("corpus", "corpus", "epic:4706"),
         ("corpus-channels", "corpus", "epic:4706"),
@@ -379,11 +379,17 @@ def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
-    ("session_epic", "expected_mode", "expected_token"),
+    ("session_epic", "expected_mode", "expected_token", "handoff_path"),
     [
-        ("hramatka", "valid", "ASSIGNED EPIC: hramatka.epic"),
-        ("invalid_selector_xyz", "unknown", "ERROR: unknown SESSION_EPIC 'invalid_selector_xyz'"),
-        ("", "empty", "NO EPIC ASSIGNED (launcher had no --epic flag)"),
+        ("hramatka", "valid", "ASSIGNED EPIC: hramatka.epic", ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md"),
+        (
+            "curriculum-upgrade",
+            "valid",
+            "ASSIGNED EPIC: curriculum-upgrade.epic",
+            ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md",
+        ),
+        ("invalid_selector_xyz", "unknown", "ERROR: unknown SESSION_EPIC 'invalid_selector_xyz'", ""),
+        ("", "empty", "NO EPIC ASSIGNED (launcher had no --epic flag)", ""),
     ],
 )
 def test_session_setup_hook_epic_validation_contract(
@@ -391,6 +397,7 @@ def test_session_setup_hook_epic_validation_contract(
     session_epic: str,
     expected_mode: str,
     expected_token: str,
+    handoff_path: str,
 ) -> None:
     """Verify SessionStart hook validates SESSION_EPIC against launcher_selector_resolve."""
     import json
@@ -425,9 +432,7 @@ def test_session_setup_hook_epic_validation_contract(
         "CLAUDE_PROFILE_RESOLVER_PYTHON": sys.executable,
         "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
         "CLAUDE_SESSION_RECORD_PYTHON": sys.executable,
-        "SESSION_BOUNDED_RUNNER": str(
-            _REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"
-        ),
+        "SESSION_BOUNDED_RUNNER": str(_REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
     }
@@ -451,16 +456,14 @@ def test_session_setup_hook_epic_validation_contract(
     try:
         data = json.loads(result.stdout)
     except json.JSONDecodeError as exc:
-        pytest.fail(
-            f"SessionStart hook stdout was not JSON ({exc}); "
-            f"stdout={result.stdout!r} stderr={result.stderr!r}"
-        )
+        pytest.fail(f"SessionStart hook stdout was not JSON ({exc}); stdout={result.stdout!r} stderr={result.stderr!r}")
     context = data.get("hookSpecificOutput", {}).get("additionalContext", "")
 
     assert expected_token in context
 
     if expected_mode == "valid":
-        assert ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+        assert handoff_path in context
+        assert "core-epic/CLAUDE-DRIVER-HANDOFF.md" not in context
         assert "ERROR: unknown SESSION_EPIC" not in context
     elif expected_mode == "unknown":
         assert "Valid lane selectors:" in context

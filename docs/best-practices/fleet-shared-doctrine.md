@@ -6,7 +6,7 @@
 **Complements:**
 
 - `agents_extensions/shared/rules/model-assignment.md` — machine routing / LANGUAGE-LANES
-- [`agent-bridge.md`](agent-bridge.md) — review isolation, `review-pr`, worktree reaper
+- [`agent-bridge.md`](agent-bridge.md) — review isolation, cross-family review, worktree reaper
 - `agents_extensions/shared/rules/operator-expectations.md` — operator contract
 
 ---

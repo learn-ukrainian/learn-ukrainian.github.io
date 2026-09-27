@@ -553,6 +553,15 @@ def allowlist_open_stream_membership(membership: Any, known: frozenset[str]) -> 
     return out
 
 
+def _audit_payload_untrusted(payload: dict[str, Any]) -> bool:
+    """True when this payload is an audit report that did not certify completeness."""
+    if not any(key in payload for key in ("membership_complete", "incomplete_nodes", "effective_membership")):
+        return False
+    from scripts.orchestration.issue_stream_audit import membership_report_is_complete
+
+    return not membership_report_is_complete(payload)
+
+
 def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]]:
     """Public-safe issue→stream-names map for OPEN issues only (#6880 / #6890).
 
@@ -561,7 +570,14 @@ def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]
     time re-allowlists so a typo or private-index drift cannot mint unknown
     lanes into the projection. Epic ownership, closed issues, and the
     via/uniqueness proofs never leave the private cache.
+
+    An incomplete or unflagged audit publishes no map (#8661). ``ok: false``
+    on the hygiene report is not a substitute for dropping the membership.
     """
+    from scripts.orchestration.issue_stream_audit import membership_report_is_complete
+
+    if not membership_report_is_complete(report):
+        return {}
     known = registry_stream_names(report)
     membership = report.get("effective_membership")
     open_numbers = report.get("open_issue_numbers")
@@ -588,7 +604,14 @@ def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]
 
 
 def _admit_open_stream_membership(payload: dict[str, Any]) -> dict[str, list[str]]:
-    """Derive-or-revalidate membership; always overwrite untrusted pre-sets (#6890)."""
+    """Derive-or-revalidate membership; always overwrite untrusted pre-sets (#6890).
+
+    An audit report that failed the completeness check drops both the derived
+    map and any pre-set ``open_stream_membership``. Payloads that are not
+    audit reports keep the registry allowlist.
+    """
+    if _audit_payload_untrusted(payload):
+        return {}
     known = registry_stream_names(payload)
     derived = public_open_stream_membership(payload)
     if derived:
@@ -610,6 +633,8 @@ def fetch_streams_projection(
         state = audit.schedule_refresh(force=False) if report is None else audit.read_refresh_state()
         if report is not None:
             payload = _strip_private_index(report)
+            # Incomplete or unflagged audits keep the hygiene report (``ok``
+            # included) but must not publish issue→stream membership.
             membership = public_open_stream_membership(report)
             status = "ok"
         elif stale is not None:

@@ -26,10 +26,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest
 

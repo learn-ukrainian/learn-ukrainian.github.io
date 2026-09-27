@@ -791,8 +791,8 @@ printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings.
 ```
 
 **Shielded formal CF is RETIRED.** Do not run `review-pr` / `publish-review-verdict`
-/ sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails closed (tests may
-set `LU_FORMAL_SHIELDED_CF=1` only). Cross-family still means outside the author's
+/ sealed `lu-review-*` / `shielded-reviews` clones — its commands were removed in #8520
+and the snapshot flow is refused with no bypass. Cross-family still means outside the author's
 model family; discussion and same-family chat are not the gate.
 
 Bridge steers with a **warning** (not refuse) if `ask-* --review` looks like PR CF

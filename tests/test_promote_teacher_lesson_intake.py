@@ -4,10 +4,13 @@ import json
 import re
 import sqlite3
 from pathlib import Path
+from types import MappingProxyType
 
+import pytest
 import yaml
 
-from scripts.audit.source_inventory_intake import read_source_inventory
+from scripts.audit.generate_source_inventory_review_candidates import COMMITTED_SOURCE_INVENTORIES
+from scripts.audit.source_inventory_intake import read_source_inventories, read_source_inventory
 from scripts.audit.source_inventory_review_decisions import (
     source_inventory_key,
     validate_decision_file,
@@ -21,12 +24,10 @@ from scripts.lexicon.promote_teacher_lesson_intake import (
 )
 
 DELTA_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml"
 )
 DELTA_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-09-02-teacher-lesson-delta-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-09-02-teacher-lesson-delta-approve.yaml"
 )
 DELTA_SOURCE_SHAPE_SHA256 = "a3349f88c6a7a97682544d61ae6ddee9545a7103eec73479b8ac9f344d1b4320"
 # Full delta: high_frequency_missing (2433) + post_boundary_table_missing (228) +
@@ -40,11 +41,25 @@ _SAFE_LOCATOR = re.compile(
 )
 
 
+@pytest.fixture(scope="module")
+def source_records():
+    """Share parsed, frozen source rows while each validation runs afresh."""
+    delta = tuple(read_source_inventory(DELTA_INVENTORY, project_root=PROJECT_ROOT))
+    committed = read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
+    index = MappingProxyType(
+        {
+            (record.lemma, record.inventory_path, record.source_locator): record
+            for record in (*committed, *delta)
+        }
+    )
+    return delta, index
+
+
 def test_default_full_decisions_is_a_committed_repository_file() -> None:
     relative_path = DEFAULT_FULL_DECISIONS.relative_to(PROJECT_ROOT)
 
     assert relative_path == (
-        Path("data")
+        Path("registry")
         / "lexicon"
         / "source-inventory-review-decisions"
         / "2026-07-23-alona-full-document-intake.yaml"
@@ -52,8 +67,8 @@ def test_default_full_decisions_is_a_committed_repository_file() -> None:
     assert DEFAULT_FULL_DECISIONS.is_file()
 
 
-def test_private_teacher_lesson_delta_inventory_is_privacy_safe() -> None:
-    records = read_source_inventory(DELTA_INVENTORY, project_root=PROJECT_ROOT)
+def test_private_teacher_lesson_delta_inventory_is_privacy_safe(source_records) -> None:
+    records, _ = source_records
 
     assert len(records) == DELTA_HEADWORD_COUNT
     assert {record.source_family for record in records} == {"teacher_lesson"}
@@ -67,17 +82,20 @@ def test_private_teacher_lesson_delta_inventory_is_privacy_safe() -> None:
     assert "alona" not in inventory_text.lower()
 
 
-def test_private_teacher_lesson_delta_decisions_validate_as_practice_only() -> None:
-    summary = validate_decision_file(DELTA_DECISIONS)
-    payload = yaml.safe_load(DELTA_DECISIONS.read_text(encoding="utf-8"))
+def test_private_teacher_lesson_delta_decisions_validate_as_practice_only(source_records) -> None:
+    _, source_index = source_records
+    summary = validate_decision_file(DELTA_DECISIONS, source_index=source_index)
+    # Match the validator's safe C loader for this 8.6 MB ledger. The full
+    # validation above still runs independently on every test invocation.
+    safe_loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+    payload = yaml.load(DELTA_DECISIONS.read_text(encoding="utf-8"), Loader=safe_loader)
 
     assert summary["rows"] == DELTA_HEADWORD_COUNT
     assert summary["decision_counts"] == {"approve_for_publish": DELTA_HEADWORD_COUNT}
     assert payload["source_queue"]["total_queue_rows"] == DELTA_HEADWORD_COUNT
     assert payload["source_queue"]["approved_in_queue"] == DELTA_HEADWORD_COUNT
     assert all(
-        row["surface_admission"] == {"practice": True, "cloze": False, "daily": False}
-        for row in payload["decisions"]
+        row["surface_admission"] == {"practice": True, "cloze": False, "daily": False} for row in payload["decisions"]
     )
 
 
@@ -154,9 +172,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
         "dictionary_or_manifest_gloss_fallbacks": 0,
         "sum11_attested_canonical_lemmas": 0,
     }
-    monkeypatch.setattr(
-        promote_module, "_build_rows", lambda *a, **kw: (candidates, decisions, report)
-    )
+    monkeypatch.setattr(promote_module, "_build_rows", lambda *a, **kw: (candidates, decisions, report))
 
     # Route every stateful path under tmp_path; never touch the real journal/lock.
     intake_dir = tmp_path / "intake"
@@ -197,9 +213,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(promote_module.enrich_module, "_sum11_has_flag_columns", lambda conn: False)
 
     manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(
-        json.dumps({"entries": [], "stats": {}}, ensure_ascii=False), encoding="utf-8"
-    )
+    manifest_path.write_text(json.dumps({"entries": [], "stats": {}}, ensure_ascii=False), encoding="utf-8")
     fingerprint_path = tmp_path / "manifest.fingerprint.json"
     sources_db_path = tmp_path / "sources.db"
     sqlite3.connect(sources_db_path).close()
@@ -326,10 +340,7 @@ def _write_decisions_ledger(path: Path, lemmas: list[str]) -> None:
     payload = {
         "version": 1,
         "kind": "atlas_source_inventory_review_decisions",
-        "decisions": [
-            {"lemma": lemma, "decision": "approve_for_publish", "approved_pos": "noun"}
-            for lemma in lemmas
-        ],
+        "decisions": [{"lemma": lemma, "decision": "approve_for_publish", "approved_pos": "noun"} for lemma in lemmas],
     }
     path.write_text(yaml.safe_dump(payload, allow_unicode=True), encoding="utf-8")
 

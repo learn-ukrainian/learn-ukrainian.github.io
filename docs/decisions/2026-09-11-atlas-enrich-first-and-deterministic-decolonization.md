@@ -35,7 +35,7 @@ We explicitly adopt an **Enrich-First** strategy over raw bulk expansion:
 2. **Zero-LLM Deterministic Pipelines**:
    - **No LLMs are to be used for lexicographical definitions, synonym extraction, or decolonization alternatives.**
    - LLMs carry severe Russian-imperial training priors, hallucinate false synsets, and are non-deterministic.
-   - All reconciliation, validation, and wiring must be executed by deterministic Python scripts against local ground-truth SQLite databases (`data/sources.db`, `data/vesum.db`, `data/lt_replacements.json`, `data/lexicon/heritage_pairs.yaml`).
+   - All reconciliation, validation, and wiring must be executed by deterministic Python scripts against local ground-truth SQLite databases (`data/sources.db`, `data/vesum.db`, `data/lt_replacements.json`, `registry/lexicon/heritage_pairs.yaml`).
 3. **Clustered Gap Inflow (The Vacuum Effect)**:
    - When an existing entry is enriched or decolonized (e.g. `пилосос`), the engine detects any missing authentic alternatives that are verified in VESUM and attested in school textbooks (`пилосмок`, `порохотяг`, `пилотяг`, `кримець`).
    - These missing words are admitted immediately as **100% fully enriched, zero-debt articles** (VESUM paradigm, stress, CEFR, authentic СУМ-20/ВТС definitions, learner EN gloss, textbook citations).

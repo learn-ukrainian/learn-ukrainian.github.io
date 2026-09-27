@@ -21,3 +21,9 @@ bio	seminars-bio	bio
 seminars-bio	seminars-bio	bio
 corpus	corpus-channels	corpus
 corpus-channels	corpus-channels	corpus
+# Registry key whose minted slot is the empty-roster core lane. The session
+# epic stays this selector, so the file handoff remains curriculum-upgrade-epic/.
+# core-quality (epic 4274) is still a fleet_taxonomy core alias and is not
+# listed here: its inventory handoff is already core-epic/, and one core slot
+# cannot also carry that stream.
+curriculum-upgrade	curriculum-upgrade	core

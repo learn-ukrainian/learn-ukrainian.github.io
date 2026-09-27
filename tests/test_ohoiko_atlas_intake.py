@@ -150,7 +150,7 @@ def test_build_intake_classifies_book_and_running_text_candidates(tmp_path: Path
 def test_rejects_committed_inventory_lemmas(tmp_path: Path) -> None:
     private_root = tmp_path / "private"
     write_private_fixture(private_root)
-    inventory_dir = tmp_path / "data" / "lexicon" / "source-inventory"
+    inventory_dir = tmp_path / "registry" / "lexicon" / "source-inventory"
     inventory_dir.mkdir(parents=True)
     (inventory_dir / "ohoiko-abetka-keywords.yaml").write_text(
         "version: 1\n"

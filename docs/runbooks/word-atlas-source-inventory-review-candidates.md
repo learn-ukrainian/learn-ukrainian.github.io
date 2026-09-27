@@ -13,21 +13,21 @@ live Atlas data files.
 
 The committed source inventory input is:
 
-- `data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml`
-- `data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml`
-- `data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml`
-- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml`
-- `data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml`
-- `data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
+- `registry/lexicon/source-inventory/pos-balanced-grammar-sample.yaml`
+- `registry/lexicon/source-inventory/ohoiko-abetka-keywords.yaml`
+- `registry/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml`
+- `registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml`
+- `registry/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml`
+- `registry/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
 
 The candidate JSON follows the existing grow-candidate shape: `counts`,
 `auto_merge`, and `needs_review`. The wrapper also adds `review_only` metadata:
@@ -59,7 +59,7 @@ the full Markdown queue on stdout.
 Queue rows include stable queue ids, lemma, POS, grow bucket,
 English-anchor state, review reasons, and source references. Human review
 decisions should survive beyond the ephemeral queue in tracked ledger files
-under `data/lexicon/source-inventory-review-decisions/`. Those files are still
+under `registry/lexicon/source-inventory-review-decisions/`. Those files are still
 review records, not live Atlas output. Validate them with:
 
 ```bash

@@ -194,7 +194,8 @@ def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path
     """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
 
     Never embed full PR body or diff — worker/delegate pulls evidence under
-    read-only mode. Prefer ``review-pr`` for formal CF gates.
+    read-only mode. Exact-head cross-family review through ``ask-<lane> --type review``
+    (headless dispatch) replaced the removed ``review-pr``.
     """
     from ._review_safety import (
         MAX_REVIEW_REQUEST_BYTES,

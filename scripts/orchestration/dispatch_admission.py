@@ -25,6 +25,10 @@ every check passes. Read-only dispatches are exempt.
 * **``MemAvailable``** from ``/proc/meminfo`` at or above the floor.
 * **CPU:** the 1-minute load average divided by ``os.cpu_count()`` at or below
   the limit.
+* **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
+  active, the admission line adds its current memory against ``MemoryMax``.
+  An inactive or missing slice omits that clause. The floor and the caps
+  above do not change.
 
 Without ``/proc`` (macOS) memory and CPU are ``unknown`` and only the cap is
 enforced; the admission line says so. Thresholds default to the constants in
@@ -57,6 +61,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.orchestration import task_record_store, worktree_prep
+from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
 _logger = logging.getLogger(__name__)
 
@@ -143,6 +148,11 @@ class AdmissionDecision:
         parts.append(
             f"load {load:.2f} per CPU (limit {limits.max_load_per_cpu:.2f})" if load is not None else "load unknown"
         )
+        # Slice use is informational. A missing or inactive slice adds nothing,
+        # and it never changes the floor or the caps above.
+        slice_use = slice_usage_clause()
+        if slice_use:
+            parts.append(slice_use)
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"

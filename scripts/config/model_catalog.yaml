@@ -103,7 +103,7 @@ review_scheduler:
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: claude
       credential_bucket: claude
       quota_limit: 1
@@ -115,7 +115,7 @@ review_scheduler:
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: codex
       credential_bucket: codex
       quota_limit: 1
@@ -127,7 +127,7 @@ review_scheduler:
       participant: glm
       adapter_transport: acp
       catalog_transport: opencode
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: glm
       credential_bucket: glm
       quota_limit: 1
@@ -140,7 +140,7 @@ review_scheduler:
       participant: agy
       adapter_transport: acp
       catalog_transport: agy
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: agy
       credential_bucket: agy
       quota_limit: 2
@@ -152,7 +152,7 @@ review_scheduler:
       participant: grok
       adapter_transport: acp
       catalog_transport: native_grok
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: grok
       credential_bucket: grok
       quota_limit: 1
@@ -166,7 +166,7 @@ review_scheduler:
       adapter_transport: acp
       # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
       catalog_transport: native_kimi
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: kimi
       credential_bucket: kimi
       quota_limit: 1
@@ -184,7 +184,7 @@ review_scheduler:
       adapter_transport: acp
       # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
       catalog_transport: native_kimi
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: kimi
       credential_bucket: kimi
       quota_limit: 1
@@ -196,7 +196,7 @@ review_scheduler:
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: cursor
       credential_bucket: cursor
       quota_limit: 1
@@ -210,7 +210,7 @@ review_scheduler:
       # Native opencode ACP transport since the Hermes removal (operator order
       # 2026-08-16, #6805) — mirrors the glm/gemma seats.
       catalog_transport: opencode
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: deepseek
       credential_bucket: deepseek
       quota_limit: 1
@@ -222,7 +222,7 @@ review_scheduler:
       participant: pool
       adapter_transport: acp
       catalog_transport: opencode
-      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: pool
       credential_bucket: pool
       quota_limit: 1
@@ -433,7 +433,7 @@ models:
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
     notes: >-
       Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
-      on the sealed claude endpoint (review-pr --reviewer claude --model claude-opus-5).
+      on the sealed claude endpoint (sealed review-pr was removed in #8520).
       Advisory consultations remain non-binding for designated advisor authority (Astra/Fable).
       Kimi may consult on non-Ukrainian design/coding; it does not alone satisfy architecture GO.
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
@@ -1148,7 +1148,7 @@ orchestrator_seats:
       Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
       from within the driver session).
 
-# Formal CF transport defaults for review-pr (model + effort). Advisor/authority
+# Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
 # roles use high effort; Sol high fills the routine Codex reviewer role.
 # Fable remains off the
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
@@ -1157,7 +1157,7 @@ formal_cf_defaults:
     model_id: gpt-6-sol
     effort: high
     # Advisory escalation. The one-shot Codex ACP participant does not expose
-    # reasoning effort, so review-pr pins the model only.
+    # reasoning effort, so previously review-pr pinned the model only.
     escalate_model_id: gpt-6-astra
     escalate_effort: high
   claude:
@@ -1200,7 +1200,7 @@ formal_cf_defaults:
     fallback_transport: cursor
     fallback_model_id: grok-4.7
   agy:
-    # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
+    # Orchestrator pin + ladder seat; not a reviewer transport until
     # sealed isolation (#5555). Operator 2026-09-25 also excludes AGY from
     # every code-review candidate and ladder; this is not a CF route.
     model_id: gemini-3.8-flash-high

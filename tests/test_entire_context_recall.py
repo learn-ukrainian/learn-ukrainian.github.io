@@ -2089,6 +2089,8 @@ def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, P
         json.dumps(
             {
                 "generated_at": utc_now().timestamp(),
+                "membership_complete": True,
+                "incomplete_nodes": [],
                 "open_issue_numbers": [6183],
                 "effective_membership": {
                     "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}
@@ -2213,6 +2215,8 @@ def test_github_namespace_and_monitor_default_paths_fail_closed_or_stay_unambigu
         json.dumps(
             {
                 "generated_at": utc_now().timestamp(),
+                "membership_complete": True,
+                "incomplete_nodes": [],
                 "open_issue_numbers": [6183],
                 "effective_membership": {
                     "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}

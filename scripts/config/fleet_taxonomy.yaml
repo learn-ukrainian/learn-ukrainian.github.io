@@ -8,7 +8,6 @@
 # - Epics themselves (and their child drive boards) are exempt from membership.
 #
 # Operator rulings applied:
-# - benchmark (#4639) -> harness area
 # - corpus (#4706) -> harness area (datasets mission)
 # - devops (#5703) -> devops area (separate slot — operator #5703 order)
 
@@ -40,11 +39,8 @@ areas:
   harness:
     id: harness
     aliases:
-      - benchmark-2156
       - corpus-channels
     epics:
-      - number: 4639  # operator ruling: benchmark->harness
-        name: "Ukrainian LLM factuality benchmark — community release"
       - number: 4706  # operator ruling: corpus->harness, datasets mission
         name: "Corpus channels — acquisition & ingestion"
   open-model-data:

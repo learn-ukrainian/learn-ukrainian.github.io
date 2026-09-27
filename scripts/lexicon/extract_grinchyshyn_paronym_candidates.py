@@ -19,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_word
 
 DEFAULT_SOURCE = PROJECT_ROOT / "docs" / "references" / "private" / "grinchyshyn-slovnyk-paronimiv-1986.txt"
@@ -124,8 +125,11 @@ def extract_candidates(
 
 
 def write_output(result: ExtractionResult, output: Path) -> None:
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result.rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    def write(staged: Path) -> None:
+        staged.parent.mkdir(parents=True, exist_ok=True)
+        staged.write_text(json.dumps(result.rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    write_artifact(output, "lexicon_candidates", "scripts.lexicon.extract_grinchyshyn_paronym_candidates", write)
 
 
 def _report(result: ExtractionResult) -> str:

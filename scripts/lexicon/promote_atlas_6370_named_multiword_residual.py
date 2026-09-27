@@ -65,28 +65,23 @@ from scripts.lexicon.build_data_manifest import _lemma_key
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 
-BIG_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
-)
+BIG_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 BIG_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml"
 )
 LEG_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-multiword-legs-2026-08-23.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-multiword-legs-2026-08-23.yaml"
 )
 LEG_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-08-23-atlas-6370-paired-split-multiword-leg-approve.yaml"
 )
 SPACE_COLLAPSE_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml"
 )
 SPACE_COLLAPSE_DECISIONS = (
     PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-08-14-ohoiko-ulp-ocr-space-collapse-approve.yaml"
+    / "registry/lexicon/source-inventory-review-decisions/2026-08-14-ohoiko-ulp-ocr-space-collapse-approve.yaml"
 )
 
 # #6370 residual-27 (2026-08-18): entry_type per docs/runbooks/word-atlas-entry-model.md
@@ -118,9 +113,7 @@ PRACTICE_ADMISSION = {"practice": True}
 def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None) -> dict[str, Any]:
     """Build one auto_merge candidate entry from an already-committed inventory row."""
     records = [
-        record
-        for record in read_source_inventory(inventory_path, project_root=PROJECT_ROOT)
-        if record.lemma == lemma
+        record for record in read_source_inventory(inventory_path, project_root=PROJECT_ROOT) if record.lemma == lemma
     ]
     if not records:
         raise SourceInventoryError(f"{lemma!r} not found in {inventory_path}")
@@ -192,13 +185,9 @@ def _scratch_decision_subset(source_path: Path, lemmas: set[str], out_path: Path
 def build_candidates_and_decisions(scratch_dir: Path) -> tuple[Path, list[Path]]:
     """Return (candidates_path, decision_files) for the #6370 residual-27 batch."""
     big_lemmas = [lemma for lemma in TARGET_ENTRY_TYPES if lemma != "виходити заміж"]
-    candidates = [
-        _build_candidate(lemma, BIG_INVENTORY, entry_type=TARGET_ENTRY_TYPES[lemma]) for lemma in big_lemmas
-    ]
+    candidates = [_build_candidate(lemma, BIG_INVENTORY, entry_type=TARGET_ENTRY_TYPES[lemma]) for lemma in big_lemmas]
     candidates.append(
-        _build_candidate(
-            "виходити заміж", LEG_INVENTORY, entry_type=TARGET_ENTRY_TYPES["виходити заміж"]
-        )
+        _build_candidate("виходити заміж", LEG_INVENTORY, entry_type=TARGET_ENTRY_TYPES["виходити заміж"])
     )
     candidates.append(_build_candidate(ZABOJATYSJA_LEMMA, SPACE_COLLAPSE_INVENTORY, entry_type=None))
 

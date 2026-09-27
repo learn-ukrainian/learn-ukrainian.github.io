@@ -233,7 +233,7 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
         min_mem_available_gib=config.DISPATCH_MIN_MEM_AVAILABLE_GIB,
         max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
     )
-    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (5, 3.5, 1.5)
+    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (6, 3.5, 1.5)
 
     overridden = adm.load_thresholds(
         {
@@ -329,3 +329,30 @@ def test_pidless_record_of_a_gone_dispatcher_without_start_time_is_not_counted_o
 
     assert decision.live_task_ids == ()
     assert decision.dead_task_ids == ()
+
+
+@pytest.fixture(autouse=True)
+def _omit_live_slice(monkeypatch):
+    """Admission fixtures do not read the host's lu-dispatch.slice."""
+    monkeypatch.setattr(adm, "slice_usage_clause", lambda: None)
+
+
+def test_summary_adds_active_slice_use_without_changing_the_decision(tmp_path, probe, monkeypatch):
+    tasks = tmp_path / "tasks"
+    _record(tasks, "writer", pid=11)
+    monkeypatch.setattr(adm, "slice_usage_clause", lambda: "lu-dispatch.slice 0.4/11.0 GiB")
+
+    decision = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert decision.failures == ()
+    assert "lu-dispatch.slice 0.4/11.0 GiB" in decision.summary()
+
+
+def test_summary_omits_the_slice_when_it_is_not_reported(tmp_path, probe):
+    tasks = tmp_path / "tasks"
+    _record(tasks, "writer", pid=11)
+
+    summary = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS).summary()
+
+    assert "lu-dispatch.slice" not in summary

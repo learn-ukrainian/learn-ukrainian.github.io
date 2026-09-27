@@ -1369,6 +1369,40 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys):
+    """A late scope start must fail the task instead of leaving it spawning."""
+    path = delegate._state_path("ambiguous-scope")
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="ambiguous-scope",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    def explode(*_args, **_kwargs):
+        raise delegate.dispatch_isolation.DispatchIsolationError(
+            "systemd-run: worker start marker arrived after the startup timeout (2s) "
+            "for unit lu-worker-ambiguous-scope; the scope was stopped and will not be relaunched"
+        )
+
+    with patch("delegate.dispatch_isolation.spawn_detached_worker", side_effect=explode):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "scoped worker startup was ambiguous; not relaunched"
+    assert "will not be relaunched" in (state.get("stderr_excerpt") or "")
+    assert "failed to spawn" in capsys.readouterr().err
+
+
 def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch):
     _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="popen-head")
     monkeypatch.setattr(
@@ -1583,6 +1617,50 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
     cmd = captured["cmd"]
     assert "--max-budget-usd" in cmd
     assert cmd[cmd.index("--max-budget-usd") + 1] == "0.5"
+
+
+def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, capsys):
+    """Isolation can be forced off; the worker argv and pid tracking stay the old spawn."""
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "isolation-fallback", "--prompt", "hi"]
+    )
+    captured: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 4242
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("isolation-fallback"))
+    assert state is not None
+    assert state["pid"] == 4242
+    assert state["launch_mode"] == "popen-fallback"
+    assert "LU_DISPATCH_ISOLATION=fallback" in state["launch_fallback_reason"]
+    assert "launch_unit" not in state
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert "_worker" in cmd
+    assert "systemd-run" not in cmd
+    kwargs = captured["kwargs"]
+    assert isinstance(kwargs, dict)
+    assert kwargs["start_new_session"] is True
+    assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
 def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):

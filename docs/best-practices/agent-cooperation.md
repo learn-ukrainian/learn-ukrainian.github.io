@@ -28,7 +28,7 @@
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
-seal PRs. Formal CF (shielded `review-pr` / `publish-review-verdict` RETIRED):
+seal PRs. Formal CF (shielded `review-pr` / `publish-review-verdict` removed in #8520):
 
 ```bash
 printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + findings." \
@@ -501,7 +501,7 @@ mcp__message-broker__send_message(
 
 **It is NOT formal cross-family review.** Discussion output is design input only.
 Independent PR CF is `ask-<lane> --type review` with the verdict posted on the PR
-(shielded `review-pr` / `publish-review-verdict` RETIRED — see ownership matrix in
+(shielded `review-pr` / `publish-review-verdict` removed in #8520 — see ownership matrix in
 [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.

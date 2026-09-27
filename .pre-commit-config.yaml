@@ -272,6 +272,20 @@ repos:
         pass_filenames: false
         stages: [pre-commit, pre-push]
 
+      - id: subprocess-timeout-guard
+        name: check subprocess calls for explicit timeout
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.ci.subprocess_timeout_guard
+        language: system
+        files: ^(scripts|tests)/.*\.py$
+        stages: [pre-commit]
+
+      - id: lint-test-assertions
+        name: check test assertions for stale pinned epic IDs
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.lint_test_assertions
+        language: system
+        files: ^tests/.*\.py$
+        stages: [pre-commit]
+
       # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
       # Cause: Dagger's cache_volume design accumulates pip wheels every
       # cold run (was 30 GB/run pre-#2088, ~6 GB/run post-#2088 with .venv

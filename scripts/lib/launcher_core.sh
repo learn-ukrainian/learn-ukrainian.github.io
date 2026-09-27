@@ -517,7 +517,10 @@ launcher_validate_mode() {
     exit 2
   fi
   launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
-  LC_EPIC="$(launcher_selector_lane "$LC_EPIC")"
+  # Slot identity uses the resolved lane (launcher_require_registered_slot).
+  # SESSION_EPIC keeps the selector when that lane is not the same stream, so
+  # the file handoff directory does not follow the area slot.
+  LC_EPIC="$(launcher_session_epic "$LC_EPIC")"
 }
 
 launcher_validate_driver_certification() {
@@ -616,6 +619,8 @@ launcher_claim_driver_lease() {
   launcher_prepare_driver_identity
   if [ "$LC_DRY_RUN" = "1" ]; then
     printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS"
+    printf 'launcher: session epic=%s slot=%s handoff=.claude/%s-epic/CLAUDE-DRIVER-HANDOFF.md\n' \
+      "$SESSION_EPIC" "$LC_DRIVER_HANDOFF" "$SESSION_EPIC"
     if [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
       printf 'launcher: would force-release any live holder on %s then claim\n' "$stream"
     fi

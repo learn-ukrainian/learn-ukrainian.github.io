@@ -24,8 +24,12 @@
 #   ./scripts/backup-data.sh backup
 #   ./scripts/backup-data.sh backup --execute
 #
-# Mutating commands are previews unless --execute is present. There is no
-# prune/delete command. See docs/runbooks/data-backup.md.
+# Mutating commands are previews unless --execute is present. The only
+# prune/delete command is `retention`, which applies the operator-approved
+# weekly keep policy run-aware: it selects the completed runs to keep, then
+# forgets by explicit snapshot ID only the snapshots of runs outside the keep
+# set, so a retained receipt never loses a snapshot it references. See
+# docs/runbooks/data-backup.md.
 
 set -Eeuo pipefail
 umask 077
@@ -43,12 +47,26 @@ readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
 readonly MIN_RESTIC_VERSION="0.19.0"
 readonly CLOUD_ROOT="${HOME}/Library/CloudStorage"
 readonly TMP_ROOT="${LU_BACKUP_TMPDIR:-${TMPDIR:-/tmp}}"
-readonly LOCK_DIR="$TMP_ROOT/learn-ukrainian-backup.${UID}.lock"
+if [[ -n "${XDG_RUNTIME_DIR:-}" ]]; then
+  readonly LOCK_ROOT="$XDG_RUNTIME_DIR"
+elif [[ -d "/run/user/$UID" ]]; then
+  readonly LOCK_ROOT="/run/user/$UID"
+else
+  readonly LOCK_ROOT="/tmp"
+fi
+readonly LOCK_FILE="$LOCK_ROOT/learn-ukrainian-backup.${UID}.lock"
+readonly LOCK_WAIT_SECONDS="${LU_BACKUP_LOCK_WAIT_SECONDS:-3600}"
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
+# Operator-approved retention policy (2026-09-26), applied weekly by
+# `retention --execute` to completed backup runs (never to individual
+# snapshots) of this backup family's tag only.
+readonly KEEP_DAILY=7
+readonly KEEP_WEEKLY=4
+readonly KEEP_MONTHLY=6
 
 STAGE_DIR=""
 STAGED_ROOT=""
-LOCK_HELD=0
+LOCK_FD=""
 LEGACY_DIR=""
 RESTIC_EXCLUDES=()
 LEGACY_EXCLUDES=()
@@ -149,12 +167,13 @@ Usage:
   ./scripts/backup-data.sh doctor
   ./scripts/backup-data.sh init [--execute]
   ./scripts/backup-data.sh backup [--execute]
+  ./scripts/backup-data.sh retention [--execute]
   ./scripts/backup-data.sh snapshots
   ./scripts/backup-data.sh verify [--read-data]
   ./scripts/backup-data.sh restore SNAPSHOT --to ABSOLUTE_EMPTY_DIR [--path RELATIVE_PATH] [--execute]
 
 Safety:
-  - init, backup, and restore are previews unless --execute is supplied.
+  - init, backup, retention, and restore are previews unless --execute is supplied.
   - backup requires epic state, .agent/, batch_state/, data/, and full source coverage.
   - successful snapshots contain BACKUP-RECEIPT.json and a restore command.
   - restore refuses non-empty, project, cloud, and legacy-backup targets.
@@ -164,7 +183,11 @@ Safety:
   - restore --path RELATIVE_PATH restores only that file or directory of the run
     (for example data/atlas.db, read from its database snapshot via the receipt;
     other paths come from the file-phase snapshot). Same guards and preflight.
-  - no command prunes or deletes snapshots.
+  - retention applies --keep-daily 7 --keep-weekly 4 --keep-monthly 6 to the
+    completed runs of this backup family's tag, then forgets by explicit
+    snapshot ID only the snapshots of runs outside the keep set; other tags
+    are untouched. Runs newer than the newest completed run are always kept.
+    Prune is a separate explicit step. Run it weekly, not on every backup.
 
 Required environment:
   LU_BACKUP_REPOSITORY  Restic rclone backend, for example:
@@ -177,7 +200,10 @@ Optional environment:
   LU_BACKUP_PROJECT_ROOT
                         Project checkout (default: script's repository).
   LU_BACKUP_LEGACY_DIR Read-only legacy Drive directory used for symlink checks.
-  LU_BACKUP_TMPDIR      Private staging parent (default: $TMPDIR or /tmp).
+  LU_BACKUP_TMPDIR      Private staging parent (default: $TMPDIR or /tmp). On
+                        Linux it may also be the designated data-volume staging
+                        directory <project>/data/.backup-staging, which keeps
+                        staging on the same filesystem as data/.
   LU_BACKUP_TAG         Restic tag (default: learn-ukrainian-data).
   LU_BACKUP_HOST        Stable restic host label (default: learn-ukrainian).
 
@@ -204,7 +230,7 @@ info() {
 }
 
 restic_repository_command() {
-  restic "$@" --option rclone.connections=1
+  restic "$@" --option rclone.connections=1 --retry-lock 5m
 }
 
 cleanup() {
@@ -221,8 +247,8 @@ cleanup() {
     esac
   fi
 
-  if [[ "$LOCK_HELD" -eq 1 && -d "$LOCK_DIR" ]]; then
-    rmdir "$LOCK_DIR" 2>/dev/null || true
+  if [[ -n "$LOCK_FD" ]]; then
+    exec {LOCK_FD}>&-
   fi
 
   return "$status"
@@ -333,6 +359,19 @@ paths_overlap() {
   path_is_within "$first" "$second" || path_is_within "$second" "$first"
 }
 
+# The one staging location allowed inside the backup source: an explicit
+# LU_BACKUP_TMPDIR at data/.backup-staging, on Linux only, so SQLite staging
+# follows data/ onto its (future) dedicated volume and the per-database free
+# space preflight measures the data filesystem. Every scan and restic phase
+# excludes this directory; the scheduled unit creates it and it is gitignored.
+staging_on_data_volume_allowed() {
+  local tmp_real=$1
+  local source_real=$2
+  [[ "$(uname -s)" == Linux ]] || return 1
+  [[ -n "${LU_BACKUP_TMPDIR:-}" ]] || return 1
+  [[ "$tmp_real" == "$source_real/.backup-staging" ]]
+}
+
 resolve_legacy_dir() {
   local mount candidate
 
@@ -358,7 +397,8 @@ validate_password_file() {
     die "RESTIC_PASSWORD_FILE must point to a mode-600 password file."
   [[ "$PASSWORD_FILE" == /* ]] ||
     die "RESTIC_PASSWORD_FILE must be an absolute path."
-  [[ -f "$PASSWORD_FILE" ]] || die "Password file does not exist: $PASSWORD_FILE"
+  [[ -f "$PASSWORD_FILE" ]] ||
+    die "RESTIC_PASSWORD_FILE is set but the file does not exist."
   mode="$(file_mode "$PASSWORD_FILE")"
   (( (8#$mode & 077) == 0 )) ||
     die "Password file must not be accessible by group/others (mode is $mode)."
@@ -386,7 +426,7 @@ validate_repository_config() {
   esac
 
   if ! rclone listremotes | grep -Fqx "$remote_name:"; then
-    die "rclone remote '$remote_name:' is not configured. Run 'rclone config' first."
+    die "The rclone remote named in LU_BACKUP_REPOSITORY is not configured. Run 'rclone config' first."
   fi
   export RESTIC_REPOSITORY="$REPOSITORY"
 }
@@ -400,6 +440,7 @@ validate_environment() {
   require_command jq "brew install jq"
   require_command realpath
   require_command touch
+  require_command flock
   check_restic_version
   validate_password_file
   validate_repository_config
@@ -455,7 +496,7 @@ validate_source_symlinks() {
       die "Symlink escapes the backup source: $relative -> $target"
   done < <(
     find "$SOURCE" \
-      -path "$SOURCE/qdrant" -prune -o \
+      \( -path "$SOURCE/qdrant" -o -path "$TMP_ROOT" \) -prune -o \
       -type l -print0
   )
 }
@@ -585,12 +626,14 @@ validate_source() {
   [[ "$git_root" == "$project_real" ]] ||
     die "LU_BACKUP_PROJECT_ROOT must be the Git checkout root."
 
-  paths_overlap "$source_real" "$tmp_real" &&
-    die "Staging directory and backup source overlap."
-  paths_overlap "$repo_real" "$tmp_real" &&
-    die "Staging directory must be outside the project checkout."
-  paths_overlap "$project_real" "$tmp_real" &&
-    die "Staging directory must be outside the selected project checkout."
+  if ! staging_on_data_volume_allowed "$tmp_real" "$source_real"; then
+    paths_overlap "$source_real" "$tmp_real" &&
+      die "Staging directory and backup source overlap."
+    paths_overlap "$repo_real" "$tmp_real" &&
+      die "Staging directory must be outside the project checkout."
+    paths_overlap "$project_real" "$tmp_real" &&
+      die "Staging directory must be outside the selected project checkout."
+  fi
   [[ "$source_real" != "$project_real" ]] ||
     die "Refusing to back up the entire repository as data/."
   resolve_legacy_dir
@@ -606,10 +649,20 @@ validate_source() {
 }
 
 acquire_lock() {
-  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-    die "Another backup operation holds the local lock: $LOCK_DIR"
+  [[ "$LOCK_WAIT_SECONDS" =~ ^[0-9]+$ ]] || die "LU_BACKUP_LOCK_WAIT_SECONDS must be whole seconds."
+  [[ -d "$LOCK_ROOT" ]] || die "Backup lock directory does not exist: $LOCK_ROOT"
+  [[ ! -L "$LOCK_FILE" ]] || die "Refusing symlink at backup lock path: $LOCK_FILE"
+  exec {LOCK_FD}>>"$LOCK_FILE" || die "Could not open backup lock file: $LOCK_FILE"
+  if ! flock -w "$LOCK_WAIT_SECONDS" "$LOCK_FD"; then
+    die "Timed out after ${LOCK_WAIT_SECONDS}s waiting for backup lock: $LOCK_FILE"
   fi
-  LOCK_HELD=1
+  # A killed backup can leave private staging; only the lock holder may clear it.
+  [[ ! -L "$STAGE_PATH" ]] || die "Refusing symlink at the private staging path: $STAGE_PATH"
+  if [[ -d "$STAGE_PATH" ]]; then
+    find "$STAGE_PATH" -depth -delete || die "Could not clear stale private staging: $STAGE_PATH"
+  elif [[ -e "$STAGE_PATH" ]]; then
+    die "Private staging path is not a directory: $STAGE_PATH"
+  fi
 }
 
 list_sqlite_sources() {
@@ -618,7 +671,7 @@ list_sqlite_sources() {
   while IFS= read -r -d '' database; do
     is_sqlite_database "$database" && printf '%s\0' "$database"
   done < <(find "$SOURCE" \
-    \( -path "$SOURCE/qdrant" -o -type d -name __pycache__ \) -prune -o \
+    \( -path "$SOURCE/qdrant" -o -path "$TMP_ROOT" -o -type d -name __pycache__ \) -prune -o \
     -type f \( -name '*.db' -o -name '*.sqlite*' \) \
     ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' \
     -print0)
@@ -870,6 +923,11 @@ build_restic_excludes() {
   for relative in "${EPHEMERAL_HOME_EXCLUDES[@]}"; do
     RESTIC_EXCLUDES+=(--exclude "$relative")
   done
+  # Never upload the private staging tree when it lives inside data/
+  # (the data-volume staging location).
+  if path_is_within "$TMP_ROOT" "$SOURCE"; then
+    RESTIC_EXCLUDES+=(--exclude "$TMP_ROOT")
+  fi
 }
 
 source_for_backup_path() {
@@ -913,7 +971,7 @@ source_tree_stats() {
     esac
     total=$((total + size))
     count=$((count + 1))
-  done < <(find "$tree" -type f -printf '%p\0%s\0')
+  done < <(find "$tree" \( -path "$TMP_ROOT" -prune \) -o -type f -printf '%p\0%s\0')
   printf '%s %s\n' "$total" "$count"
 }
 
@@ -1212,6 +1270,7 @@ run_backup() {
   local backup_root backup_output snapshot_id
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   validate_source
   print_backup_selection
 
@@ -1241,7 +1300,6 @@ run_backup() {
   fi
 
   require_initialized_repository
-  acquire_lock
   if [[ "$(uname -s)" == Linux ]]; then
     run_linux_backup
     return
@@ -1408,6 +1466,7 @@ run_restore() {
   local -a whole_ids=() step_ids=() step_includes=() step_db_paths=() step_db_modes=()
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   require_initialized_repository
   [[ -n "$snapshot" && "$snapshot" != -* ]] || die "Invalid snapshot ID."
   restore_margin_percent >/dev/null
@@ -1537,7 +1596,6 @@ run_restore() {
     return
   fi
 
-  acquire_lock
   for index in "${!step_ids[@]}"; do
     restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
       ${step_includes[$index]:+--include "${step_includes[$index]}"}
@@ -1567,6 +1625,7 @@ run_init() {
   local execute=$1
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   validate_source
   if repository_is_initialized; then
     die "Restic repository is already initialized."
@@ -1577,10 +1636,130 @@ run_init() {
     echo "Re-run with --execute after confirming the remote and password recovery plan."
     return
   fi
-  acquire_lock
   restic_repository_command init
   restic_repository_command check
   info "Repository initialized and checked."
+}
+
+# Run-aware retention planner (jq). Input: the `restic snapshots --json` array
+# for this backup family. Snapshots are grouped into runs by the lu-run-<id>
+# tag the backup command writes; a snapshot without it is a self-contained
+# legacy snapshot and forms its own complete run. A run is complete when its
+# lu-part-complete receipt snapshot exists. The daily/weekly/monthly keep
+# policy applies to completed runs only — counting runs, not snapshots — and
+# every run newer than the newest completed run is protected (it may be in
+# progress, or a failed run worth inspecting). Whole runs are dropped, so a
+# retained receipt never loses a snapshot it references. An empty list or a
+# list with no completed run errors out so the caller forgets nothing.
+# Snapshot times may carry fractional seconds and a numeric offset. Convert
+# each RFC 3339 timestamp to a UTC epoch before ordering or bucketing runs.
+# shellcheck disable=SC2016  # $daily/$run/... are jq variables, not shell.
+readonly RETENTION_PLAN_JQ='
+def run_key:
+  ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
+def epoch_seconds:
+  ([capture("^(?<base>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\\.(?<fraction>[0-9]+))?(?<zone>Z|[+-][0-9]{2}:[0-9]{2})$")]
+   | if length == 1 then .[0] else error("unparsable snapshot time") end) as $timestamp
+  | (($timestamp.base + "Z" | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime)
+     + ("0." + ($timestamp.fraction // "0") | tonumber)
+     - (if $timestamp.zone == "Z" then 0 else
+          (if $timestamp.zone[0:1] == "+" then 1 else -1 end)
+          * (($timestamp.zone[1:3] | tonumber) * 3600 + ($timestamp.zone[4:6] | tonumber) * 60)
+        end));
+def week_bucket:
+  ((.epoch + 259200) / 604800 | floor);
+def newest_per_bucket(bucket; limit):
+  reduce .[] as $run ({seen: [], keep: []};
+    ($run | bucket) as $value
+    | if (.seen | any(. == $value)) then .
+      elif (.seen | length) < limit then
+        {seen: (.seen + [$value]), keep: (.keep + [$run.run])}
+      else . end)
+  | .keep;
+([.[] | . as $snapshot | $snapshot + {run: ($snapshot | run_key)}]
+ | group_by(.run)
+ | map({
+     run: .[0].run,
+     time: (max_by(.time | epoch_seconds) | .time),
+     epoch: (map(.time | epoch_seconds) | max),
+     complete: (any(.[]; (.tags // []) | any(. == "lu-part-complete"))
+                or (.[0].run | startswith("snapshot:"))),
+     snapshots: [.[].id]
+   })
+ | sort_by(.epoch)) as $runs
+| if ($runs | length) == 0 then error("snapshot list is empty") else . end
+| ([$runs[] | select(.complete)]) as $completed
+| if ($completed | length) == 0 then error("no completed backup runs in snapshot list") else . end
+| ($completed | last | .epoch) as $newest_completed
+| ([$runs[] | select(.epoch >= $newest_completed) | .run] | unique) as $protected
+| ($completed | reverse) as $newest_first
+| ($newest_first | newest_per_bucket(.epoch | strftime("%Y-%m-%d"); $daily)) as $daily_keep
+| ($newest_first | newest_per_bucket(week_bucket; $weekly)) as $weekly_keep
+| ($newest_first | newest_per_bucket(.epoch | strftime("%Y-%m"); $monthly)) as $monthly_keep
+| (($daily_keep + $weekly_keep + $monthly_keep + $protected) | unique) as $keep_runs
+| {
+    keep: [$runs[] | select(.run as $r | ($keep_runs | any(. == $r)))
+           | {run, time, complete, snapshots}],
+    drop: [$runs[] | select(.run as $r | (($keep_runs | any(. == $r)) | not))
+           | {run, time, complete, snapshots}],
+    forget_ids: [$runs[] | select(.run as $r | (($keep_runs | any(. == $r)) | not))
+                 | .snapshots[]]
+  }
+'
+
+retention_snapshot_list() {
+  restic_repository_command snapshots --json --host "$BACKUP_HOST" --tag "$BACKUP_TAG"
+}
+
+run_retention() {
+  local execute=$1
+  local snapshots_json plan forget_count
+  local forget_ids=()
+
+  validate_environment
+  acquire_lock
+  require_initialized_repository
+  snapshots_json="$(retention_snapshot_list)" ||
+    die "Could not list snapshots of tag $BACKUP_TAG; refusing to plan retention."
+  plan="$(jq -e \
+    --argjson daily "$KEEP_DAILY" \
+    --argjson weekly "$KEEP_WEEKLY" \
+    --argjson monthly "$KEEP_MONTHLY" \
+    "$RETENTION_PLAN_JQ" <<< "$snapshots_json")" ||
+    die "Retention planning failed (empty or unparsable snapshot list, or no completed run); forgetting nothing."
+  forget_count="$(jq -er '.forget_ids | length' <<< "$plan")" ||
+    die "Retention plan is malformed; forgetting nothing."
+
+  info "Retention plan for tag $BACKUP_TAG: keep-daily=$KEEP_DAILY keep-weekly=$KEEP_WEEKLY keep-monthly=$KEEP_MONTHLY applied to completed runs."
+  jq -er '
+    "Runs kept: \(.keep | length)",
+    (.keep[] | "  keep \(.run) time=\(.time) snapshots=\(.snapshots | length)"),
+    "Runs dropped: \(.drop | length)",
+    (.drop[] | "  drop \(.run) time=\(.time) snapshots=\(.snapshots | length)"),
+    "Snapshots to forget: \(.forget_ids | length)",
+    (.forget_ids[] | "  forget \(.)")
+  ' <<< "$plan"
+
+  if [[ "$execute" -eq 0 ]]; then
+    info "Retention preview only; no snapshots will be forgotten."
+    echo "Preview complete. Re-run with --execute to apply the retention policy."
+    return
+  fi
+
+  if [[ "$forget_count" -gt 0 ]]; then
+    while IFS= read -r id; do
+      forget_ids+=("$id")
+    done < <(jq -er '.forget_ids[]' <<< "$plan")
+    info "Forgetting ${#forget_ids[@]} snapshot(s) of dropped runs by explicit snapshot ID."
+    restic_repository_command forget "${forget_ids[@]}"
+  else
+    info "Every run is inside the keep set; nothing to forget."
+  fi
+  info "Pruning unreferenced repository data."
+  restic_repository_command prune
+  info "Checking repository metadata after retention."
+  restic_repository_command check
+  info "Retention complete."
 }
 
 run_doctor() {
@@ -1590,7 +1769,7 @@ run_doctor() {
   echo "Repository: ${REPOSITORY:-<unset>}"
   echo "Legacy Drive directory: read-only discovery"
 
-  for command in restic rclone sqlite3 find git jq realpath touch; do
+  for command in restic rclone sqlite3 find git jq realpath touch flock; do
     if command -v "$command" >/dev/null 2>&1; then
       echo "OK: $command"
     else
@@ -1668,6 +1847,10 @@ main() {
     backup)
       execute="$(parse_execute_only "$@")"
       run_backup "$execute"
+      ;;
+    retention)
+      execute="$(parse_execute_only "$@")"
+      run_retention "$execute"
       ;;
     snapshots)
       [[ $# -eq 0 ]] || die "snapshots does not accept arguments."

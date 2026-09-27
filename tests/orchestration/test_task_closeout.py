@@ -136,9 +136,7 @@ def _observation(
                 "review_decision": "APPROVED",
                 "requested_changes": False,
                 "reviews": [],
-                "checks": [
-                    {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}
-                ],
+                "checks": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}],
                 "body": pr_body,
                 "closing_issue_numbers": [],
             },
@@ -234,9 +232,7 @@ def test_intent_recovery_does_not_repeat_remote_close(tmp_path: Path) -> None:
         detail="intent persisted before simulated crash",
     )
     task_lifecycle.write_lifecycle(path, ledger)
-    adapter = FakeAdapter(
-        _observation(body=_body(checked=True), issue_state="CLOSED", pr_state="MERGED")
-    )
+    adapter = FakeAdapter(_observation(body=_body(checked=True), issue_state="CLOSED", pr_state="MERGED"))
 
     result = task_closeout.perform_mutation(
         path,
@@ -251,9 +247,7 @@ def test_intent_recovery_does_not_repeat_remote_close(tmp_path: Path) -> None:
     assert adapter.calls == []
     assert result["replayed"] is True
     assert result["remote_mutation_performed"] is False
-    assert task_lifecycle.mutation_status(
-        task_lifecycle.load_lifecycle(path), operation_id
-    ) == "complete"
+    assert task_lifecycle.mutation_status(task_lifecycle.load_lifecycle(path), operation_id) == "complete"
 
 
 def test_verified_merge_permits_one_explicit_close(tmp_path: Path) -> None:
@@ -361,9 +355,7 @@ def test_missing_authorization_is_durable_and_nonmutating(tmp_path: Path) -> Non
     assert "--authorize" in ledger["mutation_receipts"][-1]["detail"]
 
 
-def test_membership_audit_report_forwards_adapter_repo_root(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_membership_audit_report_forwards_adapter_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Review finding F001 (PR #6030): ``GhGitHubAdapter.membership_audit_report``
     must carry ``self.repo_root`` into ``issue_stream_audit.run_audit`` — every
     call site that reaches it (init/reconcile/mutation/closeout, all routed
@@ -404,9 +396,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                 }
             )
         if "api graphql" in command:
-            return json.dumps(
-                {"data": {"repository": {"issue": {"parent": {"number": 10}}}}}
-            )
+            return json.dumps({"data": {"repository": {"issue": {"parent": {"number": 10}}}}})
         if "pr view" in command:
             return json.dumps(
                 {
@@ -474,9 +464,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
         }
     ]
     deployment_call = next(
-        args
-        for args in calls
-        if any(value.endswith("/deployments") for value in args) and "-f" in args
+        args for args in calls if any(value.endswith("/deployments") for value in args) and "-f" in args
     )
     assert deployment_call[deployment_call.index("--method") + 1] == "GET"
 
@@ -656,9 +644,7 @@ def test_cmd_init_accepts_native_membership_without_a_live_audit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
-    monkeypatch.setattr(
-        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10)
-    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
 
     def _fail_audit(self) -> dict:
@@ -680,9 +666,7 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     the audit here would let an unrelated audit failure (or the ``_fail_audit``
     stub below) mask the correct stream-membership error."""
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
-    monkeypatch.setattr(
-        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99)
-    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=99))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
 
     def _fail_audit(self) -> dict:
@@ -695,22 +679,18 @@ def test_cmd_init_rejects_wrong_native_parent_without_a_live_audit(
     assert not (tmp_path / "lifecycle.json").exists()
 
 
-def test_cmd_init_accepts_unique_body_membership(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
-    monkeypatch.setattr(
-        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None)
-    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter,
         "membership_audit_report",
         lambda self: {
             "generated_at": time.time(),
-            "effective_membership": {
-                "42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}
-            },
+            "membership_complete": True,
+            "incomplete_nodes": [],
+            "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
             "open_issue_numbers": [42, 10],
         },
     )
@@ -722,21 +702,45 @@ def test_cmd_init_accepts_unique_body_membership(
 
 def test_cmd_init_rejects_orphaned_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
-    monkeypatch.setattr(
-        task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None)
-    )
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10])
     monkeypatch.setattr(
         task_closeout.GhGitHubAdapter,
         "membership_audit_report",
         lambda self: {
             "generated_at": time.time(),
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {},
             "open_issue_numbers": [42, 10],
         },
     )
 
     with pytest.raises(task_lifecycle.LifecycleError, match="stream epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
+
+
+def test_cmd_init_rejects_incomplete_membership_audit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Opus 5.5 review finding 1: closeout must fail closed with a clear error
+    naming the unread nodes when the membership audit is incomplete."""
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter,
+        "membership_audit_report",
+        lambda self: {
+            "generated_at": time.time(),
+            "membership_complete": False,
+            "incomplete_nodes": [20],
+            "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+            "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+            "open_issue_numbers": [42, 10],
+        },
+    )
+
+    with pytest.raises(task_lifecycle.LifecycleError, match=r"#20"):
         task_closeout.cmd_init(_init_args(tmp_path, identity_path))
     assert not (tmp_path / "lifecycle.json").exists()
 
@@ -775,9 +779,7 @@ def test_github_read_failure_becomes_a_blocked_receipt(tmp_path: Path, monkeypat
     monkeypatch.setattr(adapter, "_github_observation", fail)
     monkeypatch.setattr(task_lifecycle, "observe_local_git", lambda *_args, **_kwargs: {})
     observation = adapter.observe(ledger, now=NOW)
-    updated, receipt, _ = task_lifecycle.reconcile(
-        task_lifecycle.load_lifecycle(path), observation, now=NOW
-    )
+    updated, receipt, _ = task_lifecycle.reconcile(task_lifecycle.load_lifecycle(path), observation, now=NOW)
 
     assert receipt["state"] == "BLOCKED_WITH_RECEIPT"
     assert "GitHub observation failed" in " ".join(receipt["hard_blockers"])

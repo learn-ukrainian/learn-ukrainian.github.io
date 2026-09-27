@@ -13,9 +13,16 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.storage.artifacts import write_artifact
 
 # Abbreviations used as MiyKlas qualifiers, including observed spelling errors
 # (``спрт.``) and label stems which previously leaked into the artifact.  This
@@ -103,7 +110,7 @@ QUALIFIER_LABELS = frozenset(
 # cleanup as well as at every future candidate boundary.
 REJECTED_MALFORMED_TERMS = frozenset({"адка", "инно", "упник", "учка", "ьний"})
 
-_EDGE_PUNCTUATION = " \t\r\n,;:!?()[]{}«»\"“”"
+_EDGE_PUNCTUATION = ' \t\r\n,;:!?()[]{}«»"“”'
 _WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ]+(?:['’ʼ-][А-Яа-яЄєІіЇїҐґ]+)*$", re.IGNORECASE)
 _QUALIFIER_RE = re.compile(
     rf"^(?:{'|'.join(re.escape(label) for label in sorted(QUALIFIER_LABELS, key=len, reverse=True))})\."
@@ -123,12 +130,7 @@ def parse_relation_term(raw: object) -> str | None:
     term = re.sub(r"\s+", " ", str(raw or "")).strip(_EDGE_PUNCTUATION).casefold()
     while match := _QUALIFIER_RE.match(term):
         term = term[match.end() :].lstrip()
-    if (
-        not term
-        or term in QUALIFIER_LABELS
-        or term in REJECTED_MALFORMED_TERMS
-        or not _WORD_RE.fullmatch(term)
-    ):
+    if not term or term in QUALIFIER_LABELS or term in REJECTED_MALFORMED_TERMS or not _WORD_RE.fullmatch(term):
         return None
     return term
 
@@ -151,9 +153,11 @@ def clean_candidate_file(input_path: Path, output_path: Path) -> tuple[int, int]
     if not isinstance(payload, list) or not all(isinstance(record, dict) for record in payload):
         raise ValueError(f"Expected a JSON list of candidate records: {input_path}")
     cleaned = clean_candidate_records(payload)
-    output_path.write_text(
-        json.dumps(cleaned, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    write_artifact(
+        output_path,
+        "lexicon_candidates",
+        "scripts.lexicon.miyklas_relation_miner",
+        lambda staged: staged.write_text(json.dumps(cleaned, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"),
     )
     return len(payload), len(cleaned)
 

@@ -9,6 +9,9 @@
 # - New issues link their stream epic at creation time.
 # - Active root epics themselves are exempt from membership. Closed epics may
 #   stay registered for launcher/session consumers but are not audit roots.
+# - An optional `retired: true` marker (boolean; rejected otherwise) likewise
+#   keeps a stream registered for launcher/session consumers without making it
+#   an audit root. Retired lanes are normally removed outright instead.
 schema_version: 1
 streams:
   atlas-practice:

@@ -707,10 +707,10 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
   --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
 
 # 3) Set-diff the triage lemmas against every lemma already approved in
-#    data/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
+#    registry/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
 #    not just the last batch) to get the new delta only, then hand-review and write:
-#      - data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
-#      - data/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
+#      - registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
+#      - registry/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
 #    Both commit the source-shape SHA-256 from step 1 in their notes for traceability.
 
 # 4) Record the checksum in the intake journal's audit trail (append-only; never
@@ -721,7 +721,7 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 
 # 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
-  --curated-inventory data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
+  --curated-inventory registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
   --vesum-db /tmp/vesum-shadow.db --apply --write --report
 
 # 6) Fold every approved lemma that already has an Atlas route (not just the newly
@@ -808,7 +808,7 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 
 | Check | Refused when | Default |
 | --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 5 |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 6 |
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 3.5 GiB |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
 
@@ -826,6 +826,26 @@ decision as its last line (JSON key `admission`). Write task records keep the `a
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
+
+**Worker isolation (#8645 part C):** the detached worker runs in the user slice
+`lu-dispatch.slice` (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`) via
+`systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
+is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
+arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
+is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+Fallback is the supported path when no user manager is reachable, linger is off, cgroup
+v2 memory is not delegated, or the slice is missing or does not have those limits:
+dispatch prints one warning and uses plain `Popen`. The same fallback is used when
+`systemd-run` exits before the worker writes its start marker, and when the startup
+window ends while `/proc/<pid>` still shows `systemd-run` (the worker never exec'd):
+that process is stopped and plain `Popen` is used. If the process image is already
+the worker, that process is kept and not relaunched. If the start marker arrives only
+as the process is stopped, or `/proc` cannot be read, the task is marked failed and
+is not started again. `LU_DISPATCH_ISOLATION=fallback` forces that path. Install steps
+and the linger/cgroup prerequisites are in
+`packaging/systemd/README.md`. When the slice is active, the admission line adds its
+current memory use against `MemoryMax`. An inactive or missing slice is left off the
+line. `peak_rss_mib` is unchanged.
 
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
@@ -1556,7 +1576,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
-| Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
+| Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
 | Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
@@ -1571,7 +1591,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   and initiator/quota telemetry land. Do not add new provider launch logic
   there. `ask-gemini` is retired; AGY is the Gemini-family route.
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
-- **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
+- **`discuss` is not formal review.** Use direct `ask-* --type review` + PR comment for CF (sealed `review-pr` / `publish-review-verdict` removed in #8520).
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
 - ACPX is the structured transport for supported bounded 2-to-4-seat panels;
   rollback is feature-flag off + native runtime. It is

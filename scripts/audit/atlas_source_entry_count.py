@@ -23,10 +23,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import atlas_source_census
 from scripts.audit.atlas_entry_model_census import (
@@ -569,14 +570,10 @@ def detail_payload(result: SourceEntryCountResult, *, limit: int = DETAIL_LIMIT_
         "generated_at": result.public_payload["generated_at"],
         "production_outputs_updated": [],
         "lanes": {
-            lane_id: accumulator.detail_rows(limit=limit)
-            for lane_id, accumulator in result.lane_details.items()
+            lane_id: accumulator.detail_rows(limit=limit) for lane_id, accumulator in result.lane_details.items()
         },
         "textbook_grades_by_lane": {
-            lane_id: {
-                grade: accumulator.detail_rows(limit=limit)
-                for grade, accumulator in by_grade.items()
-            }
+            lane_id: {grade: accumulator.detail_rows(limit=limit) for grade, accumulator in by_grade.items()}
             for lane_id, by_grade in result.textbook_grade_details.items()
         },
     }
@@ -880,11 +877,7 @@ def _public_source_inputs(inputs: Mapping[str, Any]) -> dict[str, Any]:
 
     def clean(value: Any) -> Any:
         if isinstance(value, Mapping):
-            return {
-                str(key): clean(item)
-                for key, item in value.items()
-                if str(key).casefold() not in forbidden_keys
-            }
+            return {str(key): clean(item) for key, item in value.items() if str(key).casefold() not in forbidden_keys}
         if isinstance(value, list):
             return [clean(item) for item in value]
         return value
