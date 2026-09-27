@@ -11,9 +11,11 @@ import json
 
 import pytest
 
-from scripts.generate_mdx import resources
+from scripts.generate_mdx import atlas_links, resources
 from scripts.generate_mdx.atlas_links import (
     atlas_href_for,
+    english_content_words,
+    lesson_word_is_proper,
     normalize_lemma,
     slug_from_atlas_href,
     validated_atlas_href,
@@ -107,10 +109,9 @@ def test_href_missing_manifest_is_graceful(tmp_path):
 
 
 def test_href_missing_manifest_warns_stderr(tmp_path, capsys):
-    from scripts.generate_mdx import atlas_links
     # Reset global state for test reliability
     atlas_links._warned_manifest_unavailable = False
-    atlas_links._load_index.cache_clear()
+    atlas_links._load_manifest_tables.cache_clear()
 
     missing = str(tmp_path / "does-not-exist.json")
     assert atlas_href_for("робота", missing) is None
@@ -275,7 +276,7 @@ def test_vocab_component_resolves_preset_href_instead_of_copying_it(monkeypatch)
 def test_vocab_component_links_only_lemmas_with_atlas_pages(monkeypatch):
     """The generator emits atlas_href for lemmas that have a page, and omits it
     entirely for lemmas that do not — never a broken link."""
-    def fake_href(word):
+    def fake_href(word, **_sense):
         return "/lexicon/робота/" if word == "робота" else None
 
     monkeypatch.setattr(resources, "atlas_href_for", fake_href)
@@ -291,3 +292,175 @@ def test_vocab_component_links_only_lemmas_with_atlas_pages(monkeypatch):
     assert "atlas_href" in out
     # The un-pageable lemma must not carry an atlas_href key/value.
     assert out.count("/lexicon/") == 1
+
+
+# ── sense check (#9002) ──────────────────────────────────────────────────────
+
+def _entry(lemma, slug, *, gloss="", pos="noun", en=None):
+    entry = {"lemma": lemma, "url_slug": slug, "gloss": gloss, "pos": pos}
+    if en is not None:
+        entry["enrichment"] = {"translation": {"en": en, "source": "dmklinger"}}
+    return entry
+
+
+@pytest.fixture
+def sense_atlas(tmp_path, monkeypatch):
+    """Atlas fixture shaped like the published entries #9002 reviewed."""
+    monkeypatch.setattr(atlas_links, "_vesum_has_proper_reading", lambda form: False)
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {
+            "entries": [
+                # Common nouns: Ukrainian gloss, English senses from dmklinger.
+                _entry("поділля", "поділля", gloss="Низовинна місцевість; долина.",
+                       en=["(colloquial) lowland, valley"]),
+                _entry("реєстр", "реєстр", gloss="Список, письмовий перелік.",
+                       en=["inventory (detailed list of all of the items on hand)"]),
+                _entry("робота", "робота", gloss="work"),
+                _entry("хто", "хто", pos="pronoun", en=["who", "who"]),
+                _entry("бабусин", "бабусин", pos="adjective", gloss="Належний бабусі."),
+                # Proper-noun articles.
+                _entry("Київ", "київ", pos="proper noun",
+                       en=["Kyiv (capital city of Ukraine) (proper noun)"]),
+                _entry("Андрій", "андрій", gloss="Andrii", pos="proper noun",
+                       en=["a male given name, Andriy, equivalent to English Andrew (proper noun)"]),
+                _entry("Олена", "олена", pos="proper noun",
+                       en=["Helen (female given name) (proper noun)", "Olena (female given name) (proper noun)"]),
+                _entry("Карпати", "карпати", pos="proper noun:pl",
+                       en=["Carpathians (mountainous system in Central Europe) (proper noun)"]),
+            ]
+        },
+    )
+    aliases = _write_json(tmp_path / "aliases.json", [{"a": "олену", "s": "олена"}])
+    published = {"поділля", "реєстр", "робота", "хто", "бабусин", "київ", "андрій", "олена", "карпати"}
+
+    def href(word, **sense):
+        return atlas_href_for(word, manifest, aliases_path=aliases, published_slugs=published, **sense)
+
+    return href
+
+
+# The six links GPT-6 Sol verified wrong on #8950 (issue #9002), with the
+# lesson card fields exactly as committed.
+_WRONG_SENSE_CARDS = [
+    ("folk/narodni-tantsi", "Поділля", "Podilia", "власна назва",
+     "Поділля в описах козачка пов'язане з жвавою парною драматургією."),
+    ("folk/pysankarstvo", "Поділля", "Podilia", "власна назва",
+     "Поділля часто пояснюють через геометричну виразність писанки."),
+    ("b2/advanced-conjunctions-ii", "реєстр", "register", "noun",
+     "Реєстр визначає, чи пасує бо, оскільки або незважаючи на те що."),
+    ("b2/active-participles-past", "реєстр", "register", "noun",
+     "Реєстр визначає, чи звучить форма доречно."),
+    ("b2/advanced-conjunctions-i", "реєстр", "register", "noun",
+     "Реєстр визначає, чи доречна емоційна повторюваність."),
+    ("b2/b2-final-exam", "реєстр", "register", "noun",
+     "Реєстр має відповідати ситуації, адресатові і жанру."),
+]
+
+
+@pytest.mark.parametrize(
+    "lesson, word, translation, pos, example",
+    _WRONG_SENSE_CARDS,
+    ids=[card[0] for card in _WRONG_SENSE_CARDS],
+)
+def test_wrong_sense_links_from_9002_are_dropped(sense_atlas, lesson, word, translation, pos, example):
+    # Without the lesson's sense the spelling still resolves — the old bug.
+    assert sense_atlas(word) is not None
+    assert sense_atlas(word, translation=translation, pos=pos, example=example) is None
+
+
+@pytest.mark.parametrize(
+    "word, translation, pos, expected",
+    [
+        ("робота", "work", "noun", "/lexicon/робота/"),
+        ("робо́та", "hard work; job", "noun", "/lexicon/робота/"),
+        ("хто", "who", "pronoun", "/lexicon/хто/"),
+        ("Київ", "Kyiv", "proper noun", "/lexicon/київ/"),
+        # The article's English gloss carries the lesson romanisation.
+        ("Андрій", "Andrii", "proper noun", "/lexicon/андрій/"),
+        # An inflected proper noun still reaches its proper-noun lemma.
+        ("Олену", "Olena (object form)", "proper noun", "/lexicon/олена/"),
+        # Plural folding: "Carpathians" matches "the Carpathians".
+        ("Карпати", "the Carpathians", "proper noun", "/lexicon/карпати/"),
+    ],
+)
+def test_correct_links_survive_the_sense_check(sense_atlas, word, translation, pos, expected):
+    assert sense_atlas(word, translation=translation, pos=pos) == expected
+
+
+def test_english_translation_without_shared_word_drops_link(sense_atlas):
+    assert sense_atlas("робота", translation="employment", pos="noun") is None
+
+
+def test_article_without_english_sense_cannot_confirm_meaning(sense_atlas):
+    assert sense_atlas("бабусин", translation="grandmother's", pos="adjective") is None
+    # No translation to check against: only the proper-noun rule applies.
+    assert sense_atlas("бабусин") == "/lexicon/бабусин/"
+
+
+def test_non_english_translation_is_not_sense_checked(sense_atlas):
+    assert sense_atlas("реєстр", translation="список, перелік", pos="іменник") == "/lexicon/реєстр/"
+
+
+def test_proper_noun_from_mid_sentence_capital(sense_atlas):
+    # No proper-noun pos label: the example's mid-sentence capital decides.
+    example = "Вишивка з Поділля має свої кольори."
+    assert lesson_word_is_proper("Поділля", "noun", example)
+    assert sense_atlas("Поділля", pos="noun", example=example) is None
+
+
+def test_sentence_start_capital_is_not_a_proper_noun(sense_atlas):
+    example = "Поділля — це низовина біля річки."
+    assert not lesson_word_is_proper("поділля", "noun", example)
+    assert sense_atlas("поділля", pos="noun", example=example) == "/lexicon/поділля/"
+
+
+def test_proper_noun_from_vesum_prop_tag(sense_atlas, monkeypatch):
+    monkeypatch.setattr(atlas_links, "_vesum_has_proper_reading", lambda form: form == "Поділля")
+    assert sense_atlas("Поділля") is None
+    # Lowercase headword is not looked up as a name.
+    assert sense_atlas("поділля") == "/lexicon/поділля/"
+
+
+def test_preset_href_is_sense_checked_against_the_lesson_word(sense_atlas):
+    # The pre-set slug is lowercase; the lesson's capitalised proper noun decides.
+    assert sense_atlas("поділля", lesson_word="Поділля", pos="власна назва") is None
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("(colloquial) lowland, valley", {"colloquial", "lowland", "valley"}),
+        ("Kyiv (capital city of Ukraine) (proper noun)", {"kyiv", "capital", "city", "ukraine"}),
+        ("to the student", {"student"}),
+        ("to", {"to"}),
+        ("studies", {"study"}),
+        ("boxes", {"box"}),
+        ("grandmother's", {"grandmother"}),
+    ],
+)
+def test_english_content_words(text, expected):
+    assert english_content_words(text) == expected
+
+
+def test_vocab_component_passes_card_sense_to_resolver(monkeypatch):
+    calls = []
+
+    def fake_href(word, **sense):
+        calls.append((word, sense))
+        return None
+
+    monkeypatch.setattr(resources, "atlas_href_for", fake_href)
+    resources.vocab_items_to_components(
+        [
+            {"lemma": "реєстр", "translation": "register", "pos": "noun", "example": "Реєстр визначає."},
+            {"lemma": "Поділля", "translation": "Podilia", "pos": "власна назва",
+             "atlas_href": "/lexicon/поділля/"},
+        ]
+    )
+    assert calls == [
+        ("реєстр", {"translation": "register", "pos": "noun", "example": "Реєстр визначає.",
+                    "lesson_word": "реєстр"}),
+        ("поділля", {"translation": "Podilia", "pos": "власна назва", "example": "",
+                     "lesson_word": "Поділля"}),
+    ]
