@@ -89,6 +89,14 @@ def manifest_file(tmp_path: Path) -> Path:
     return manifest
 
 
+def _attempt_prompt(review_id: str, attempt_id: str) -> str:
+    """A --review-attempt prompt must print the ids its seat echoes (#8996)."""
+    return (
+        "### Return Schema Template:\n```yaml\nreview_schema: 1\nkind: lesson\nattempt:\n"
+        f'  review_id: "{review_id}"\n  attempt_id: "{attempt_id}"\n```\n'
+    )
+
+
 @pytest.mark.parametrize("harness", sorted(SUPPORTED_HARNESSES))
 def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manifest_file: Path, tmp_path: Path) -> None:
     receipts_root = tmp_path / "receipts"
@@ -227,7 +235,7 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
             "--task-id",
             "review-task-grok",
             "--prompt",
-            "perform review",
+            _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -252,7 +260,7 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
             "--task-id",
             "review-task-kimicc",
             "--prompt",
-            "perform review",
+            _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -371,7 +379,7 @@ def test_delegate_dispatch_cursor_refuses_primary_checkout(
             "--task-id",
             "review-task-cursor-primary",
             "--prompt",
-            "perform review",
+            _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -419,7 +427,7 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             "--task-id",
             "review-task-budget-sub",
             "--prompt",
-            "perform review",
+            _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -447,7 +455,7 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
             "--task-id",
             "review-task-retired-alias",
             "--prompt",
-            "perform review",
+            _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -482,7 +490,7 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
                 "--task-id",
                 task_id,
                 "--prompt",
-                "perform review",
+                _attempt_prompt("rev-dry-001", "att-dry-001"),
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",
@@ -520,7 +528,7 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
                 "--task-id",
                 task_id,
                 "--prompt",
-                "perform review",
+                _attempt_prompt("rev-dup-001", "att-dup-001"),
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",
