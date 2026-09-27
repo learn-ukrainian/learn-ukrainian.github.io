@@ -344,10 +344,7 @@ def own_aspect(entry: dict[str, Any], lookup: AspectLookup) -> dict[str, Any] | 
     if head is None:
         if not says_verb:
             return None
-        if not entry["multiword"]:
-            v_aspects, v_other, u_aspects, u_other = lookup.lemma(entry["key"])
-            if v_other or u_other:
-                return None
+        # A verb meaning that no source attests as a verb (even if it is a noun there): unknown.
         value, basis, v_aspects, u_aspects = "unknown", "none", set(), set()
     else:
         v_aspects, _v_other, u_aspects, _u_other = lookup.lemma(head)

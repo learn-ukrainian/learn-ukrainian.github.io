@@ -363,11 +363,11 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "bc2ea9c696797ca708bb71e46eea471dddb6ab0c78078693bdf8750418fbf98e"
+        "sha256": "801e01ae2bb0d84d110c92633e403dea773f88b41c48f60b92c4145c3af9212e"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
-        "sha256": "082c3b922a8fc6b3c3551998870c7529994da9d321c14a44d25050aa22a4ed3b"
+        "sha256": "7aa1c25c60ebc9b72addb0acc86a22a18ba9d89240d7b2c93933bc4c61879f33"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",

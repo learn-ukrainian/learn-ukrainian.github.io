@@ -147,6 +147,39 @@ def test_aspect_comes_from_vesum_and_checked_ulif(vesum: set[str], ulif: set[str
     assert checker.decide_aspect(vesum, ulif) == expected
 
 
+class _NounOnlySources:
+    """Both sources attest every spelling only as a noun (VESUM and a checked ULIF entry)."""
+
+    def evidence(self, _lemma: str) -> shard.LemmaEvidence:
+        return shard.LemmaEvidence(frozenset(), True, frozenset(), True)
+
+    def lemma(self, _word: str) -> tuple[set[str], bool, set[str], bool]:
+        return set(), True, set(), True
+
+
+@pytest.mark.parametrize(
+    ("key", "multiword", "teacher", "expected"),
+    [
+        ("пара", False, "To steam (impf)", ("unknown", "none")),
+        ("пара", False, "To steam", ("unknown", "none")),
+        ("пара слів", True, "To have a word", ("unknown", "none")),
+        ("пара", False, "Couple", None),
+    ],
+)
+def test_a_verb_meaning_attested_only_as_a_non_verb_has_unknown_aspect(
+    key: str, multiword: bool, teacher: str, expected: tuple[str, str] | None
+) -> None:
+    entry = {"key": key, "multiword": multiword, "teacherEn": teacher}
+    sources = _NounOnlySources()
+    generated = shard.entry_aspect(entry, sources)  # type: ignore[arg-type]
+    checked = checker.own_aspect(entry, sources)  # type: ignore[arg-type]
+    if expected is None:
+        assert generated is None and checked is None
+        return
+    assert (generated["value"], generated["basis"], generated["lemma"]) == (*expected, None)
+    assert generated == checked
+
+
 @pytest.mark.parametrize(
     ("teacher", "aspect", "shown"),
     [
@@ -727,10 +760,67 @@ class FakeGh:
         raise AssertionError(command)
 
 
-def test_first_publish_creates_the_release_then_uploads_then_pins_the_pointer(
-    world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+def _review_all(world: dict[str, Path], scratch: Path) -> None:
+    """Record every queued lesson sentence as kept, the way a clean language review does.
+
+    The build runs against scratch outputs so *world*'s published set stays as it was."""
+
+    scratch.mkdir()
+    names = {"out": scratch / "deck", "table": scratch / "t.json", "frozen": scratch / "f.json"}
+    assert _refresh({**world, **names, "pointer": scratch / "p.json"}) == 0
+    queue = names["out"] / shard.REVIEW_FILE
+    if not json.loads(queue.read_text(encoding="utf-8"))["sentences"]:
+        return
+    (scratch / "results.tsv").write_text("", encoding="utf-8")
+    assert (
+        teacher_deck.main(
+            [
+                "record-review",
+                "--queue",
+                str(queue),
+                "--cloze",
+                str(names["out"] / shard.CLOZE_FILE),
+                "--results",
+                str(scratch / "results.tsv"),
+                "--reviewer",
+                "fixture",
+                "--reviewed-at",
+                "2026-09-27",
+                "--ledger",
+                str(world["withheld"]),
+            ]
+        )
+        == 0
+    )
+
+
+def test_publish_is_refused_while_a_served_lesson_sentence_is_unreviewed(
+    world: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     fake = FakeGh(monkeypatch)
+    assert _refresh(world, "--publish") == 1
+    err = capsys.readouterr().err
+    assert re.search(r"refusing to publish: \d+ served teacher-lesson cloze items", err), err
+    assert "Run without --publish" in err
+    assert fake.calls == []
+    assert not world["out"].exists() and not world["table"].exists() and not world["pointer"].exists()
+
+    # One unreviewed sentence is enough to refuse.
+    _review_all(world, tmp_path / "scratch")
+    ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
+    ledger["kept"] = ledger["kept"][1:]
+    world["withheld"].write_text(json.dumps(ledger), encoding="utf-8")
+    assert _refresh(world, "--publish", "--skip-ingest") == 1
+    assert "refusing to publish: 1 served" in capsys.readouterr().err
+    assert fake.calls == [] and not world["pointer"].exists()
+
+
+def test_first_publish_creates_the_release_then_uploads_then_pins_the_pointer(
+    world: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    fake = FakeGh(monkeypatch)
+    _review_all(world, tmp_path / "scratch")
+    capsys.readouterr()
     assert _refresh(world, "--publish") == 0
     assert "publish: uploaded lexicon-teacher-deck-teacher-v1-" in capsys.readouterr().out
     assert fake.titles == [teacher_deck.RELEASE_TITLE]
@@ -760,11 +850,13 @@ def _committed(world: dict[str, Path]) -> dict[str, bytes | None]:
 
 
 def test_a_failed_publish_changes_nothing_committed_facing(
-    world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    world: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert _refresh(world) == 0
     before = _committed(world)
     _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
+    _review_all(world, tmp_path / "scratch")
+    capsys.readouterr()
     FakeGh(monkeypatch, release_exists=True, fail_upload=True)
     assert _refresh(world, "--publish", "--skip-ingest") == 2
     assert "cannot read inputs or reach the release" in capsys.readouterr().err
@@ -798,20 +890,49 @@ def test_replace_published_set_restores_the_old_set_when_the_swap_fails(
     assert (out / "a.json").read_bytes() == b"old" and not (tmp_path / ".deck.previous").exists()
 
 
-def test_commit_outputs_leaves_committed_files_untouched_when_the_swap_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("failing", ["deck", "table-deck.json", "frozen-keys.json", "pointer.json"])
+def test_a_failure_at_any_replacement_step_rolls_the_whole_set_back(
+    world: dict[str, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    failing: str,
 ) -> None:
-    target = tmp_path / "frozen.json"
-    target.write_bytes(b"committed")
+    FakeGh(monkeypatch)
+    _review_all(world, tmp_path / "scratch1")
+    assert _refresh(world, "--publish") == 0
+    _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
+    _review_all(world, tmp_path / "scratch2")
+    before = _committed(world)
+    capsys.readouterr()
 
-    def fail(*_args: object) -> bool:
-        raise OSError("swap failed")
+    # Replacement order: the local set (a directory rename), then the table deck, the
+    # frozen keys and the pointer (os.replace each); fail exactly one of them, once.
+    real_rename, real_replace = Path.rename, Path.replace
+    injected: list[str] = []
 
-    monkeypatch.setattr(teacher_deck, "replace_published_set", fail)
-    with pytest.raises(OSError):
-        teacher_deck.commit_outputs({"a": b"x"}, tmp_path / "deck", {target: b"new"})
-    assert target.read_bytes() == b"committed"
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["frozen.json"]
+    def inject(real):
+        def move(self: Path, target: Path) -> Path:
+            if self.name == f".{failing}.next" and not injected:
+                injected.append(self.name)
+                raise OSError(f"injected failure replacing {failing}")
+            return real(self, target)
+
+        return move
+
+    monkeypatch.setattr(Path, "rename", inject(real_rename))
+    monkeypatch.setattr(Path, "replace", inject(real_replace))
+    assert _refresh(world, "--publish", "--skip-ingest") == 2
+    assert f"injected failure replacing {failing}" in capsys.readouterr().err
+    assert injected == [f".{failing}.next"]
+    assert _committed(world) == before
+    assert sorted(path.name for path in tmp_path.iterdir() if path.name.startswith(".")) == []
+
+    # Without the failure the same run moves every file of the set.
+    assert _refresh(world, "--publish", "--skip-ingest") == 0
+    after = _committed(world)
+    changed = {name for name in {*before, *after} if before.get(name) != after.get(name)}
+    assert {"table-deck.json", "frozen-keys.json", "pointer.json", shard.DECK_FILE, shard.CLOZE_FILE} <= changed
 
 
 # ----------------------------------------------------------------------------- reviewed lesson sentences

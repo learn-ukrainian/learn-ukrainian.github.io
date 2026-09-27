@@ -20,14 +20,17 @@ textbook in `data/sources.db`; items are selected and assembled by rule, never w
 The command ingests the dated lessons into `sources.db` (`private_teacher_lessons_ingest`,
 source `private-teacher-lessons-a`; unchanged lessons are skipped, a changed source is replaced
 as one unit), syncs the table, builds the deck and cloze, runs the generator gate and the
-independent checker. With `--publish` it then creates the GitHub release `atlas-teacher-deck` if it
+independent checker. `--publish` is refused (exit 1, nothing replaced or uploaded) while any served
+teacher-lesson sentence has no record in the review ledger; run without it to write the review queue.
+With `--publish` it then creates the GitHub release `atlas-teacher-deck` if it
 does not exist yet and uploads the set as `lexicon-teacher-deck-<deckVersion>.json.gz` (an existing
 identical version is verified, not re-uploaded). Only when every step succeeded does it write its
-outputs: the local published set directory (`data/lexicon/teacher-deck/`, untracked) is swapped in
-one step (the old set is restored if the swap fails), and the committed
-`site/src/data/lexicon-teacher-table-deck.json`, `site/src/data/lexicon-teacher-deck-frozen-keys.json`
-and, with `--publish`, the pointer `site/src/data/lexicon-teacher-deck.pointer.json` are replaced
-from staged copies. A failed checker, build or upload leaves every one of them untouched (a versioned
+outputs, all together or not at all: the local published set directory (`data/lexicon/teacher-deck/`,
+untracked) is swapped in one step, then the committed `site/src/data/lexicon-teacher-table-deck.json`,
+`site/src/data/lexicon-teacher-deck-frozen-keys.json` and, with `--publish`, the pointer
+`site/src/data/lexicon-teacher-deck.pointer.json` are replaced from staged copies. A failure at any of
+these steps restores every file already replaced and the old local set (the review ledger is written
+only by `record-review`). A failed checker, build or upload leaves every one of them untouched (a versioned
 asset uploaded before a later failure is harmless: nothing points to it). The generated shard and cloze are never
 committed: they exceed the repository's 2,000 KB file limit, and the lesson sentences must be scanned
 by a person before anything is published. It prints the document and input versions,
@@ -55,7 +58,7 @@ with its counts against all served lesson items and deterministic flags —
 `prop`/`fname`/`lname`/`pname`), `vesum_unknown_tokens` (tokens unknown to VESUM's normative `forms`
 view, so forms marked `bad`/`obsc`/`subst` count as unknown) and `digits_or_contact` (digits, emails,
 phone- or URL-like strings). Lesson logs can hold the learner's own attempts; the language review and
-the privacy scan decide. Publish only when the queue is empty.
+the privacy scan decide. `--publish` refuses while the queue is not empty.
 
 ### Lesson-sentence screening and the review ledger
 
@@ -161,7 +164,8 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
   single-word entry looks up its key; a phrase looks up its first token the sources know as a verb
   lemma (its governing verb, `aspect.lemma`). A spelling that is also a non-verb lemma counts as the
   verb only when the teacher's English is a verb meaning (all meanings start with `to ` or carry a
-  marker); a verb meaning no source knows gets `unknown` (basis `none`). Resolution (`basis`): both
+  marker); a verb meaning no source knows as a verb (an unknown spelling, or one attested only as a
+  non-verb) gets `unknown` (basis `none`). Resolution (`basis`): both
   sources name the same aspect → `agree`; only one source knows the lemma → `vesum-only` /
   `ulif-only`; they disagree → `unknown` (`conflict`). VESUM lists a biaspectual verb as two lemmas
   (imperf + perf), exactly like two homograph verbs, so VESUM imperf+perf with ULIF dual → `dual`

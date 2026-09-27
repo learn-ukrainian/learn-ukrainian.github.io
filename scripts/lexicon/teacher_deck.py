@@ -305,12 +305,30 @@ def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> 
     return result.stdout
 
 
-def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
-    """Swap the whole directory at once; return False when nothing changed.
+class PublishedSetSwap:
+    """A swapped-in local published set whose old copy is kept until the run commits."""
 
-    The old set moves to ``.<name>.previous`` and the staged set takes its place; if
-    that second rename fails the old set is moved back, so *out_dir* is never lost.
-    A ``.previous`` left behind by an interrupted run is restored before anything else.
+    def __init__(self, out_dir: Path, backup: Path | None) -> None:
+        self.out_dir = out_dir
+        self.backup = backup  # the old set (None: there was none)
+
+    def finish(self) -> None:
+        if self.backup is not None:
+            shutil.rmtree(self.backup)
+
+    def undo(self) -> None:
+        shutil.rmtree(self.out_dir)
+        if self.backup is not None:
+            self.backup.rename(self.out_dir)
+
+
+def swap_published_set(files: dict[str, bytes], out_dir: Path) -> PublishedSetSwap | None:
+    """Swap the whole directory at once, keeping the old set as ``.<name>.previous``
+    until ``finish()`` or ``undo()``; return None when nothing changed.
+
+    If the second rename fails the old set is moved back, so *out_dir* is never lost.
+    A ``.previous`` left behind by an interrupted run is restored (or, when the new set
+    is in place, discarded) before anything else.
     """
 
     staging = out_dir.with_name(f".{out_dir.name}.next")
@@ -322,7 +340,7 @@ def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
             backup.rename(out_dir)
     unchanged = out_dir.exists() and {path.name for path in out_dir.iterdir()} == set(files)
     if unchanged and all((out_dir / name).read_bytes() == data for name, data in files.items()):
-        return False
+        return None
     if staging.exists():
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
@@ -338,8 +356,16 @@ def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
             backup.rename(out_dir)
         shutil.rmtree(staging, ignore_errors=True)
         raise
-    if had_previous:
-        shutil.rmtree(backup)
+    return PublishedSetSwap(out_dir, backup if had_previous else None)
+
+
+def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
+    """Swap the whole directory at once; return False when nothing changed."""
+
+    swap = swap_published_set(files, out_dir)
+    if swap is None:
+        return False
+    swap.finish()
     return True
 
 
@@ -347,29 +373,54 @@ def _json_bytes(payload: dict[str, Any]) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
-def commit_outputs(local_files: dict[str, bytes], out_dir: Path, committed: dict[Path, bytes]) -> bool:
-    """Write the run's outputs only after every step (checker, publish) succeeded.
+def _restore_file(target: Path, original: bytes | None) -> None:
+    if original is None:
+        target.unlink(missing_ok=True)
+        return
+    temp = target.with_name(f".{target.name}.previous")
+    temp.write_bytes(original)
+    temp.replace(target)
 
-    Committed files are staged next to their targets first; the local set is swapped;
-    then each staged file replaces its target (``os.replace``, atomic per file). Any
-    failure before the swap leaves every target untouched.
+
+def commit_outputs(local_files: dict[str, bytes], out_dir: Path, committed: dict[Path, bytes]) -> bool:
+    """Write the run's outputs only after every step (checker, publish) succeeded,
+    all together or not at all.
+
+    Committed files (table deck, frozen keys, pointer) are staged next to their targets
+    and their current bytes kept; the local set is swapped (its old copy kept); then each
+    staged file replaces its target (``os.replace``). A failure at any step undoes every
+    step already taken: replaced files get their old bytes back (or are removed when they
+    did not exist) and the old local set is swapped back. Only then are the backups
+    discarded. (A killed process can still stop mid-way; the committed files then show in
+    ``git status``.)
     """
 
+    originals = {target: target.read_bytes() if target.exists() else None for target in committed}
     staged: list[tuple[Path, Path]] = []
+    replaced: list[Path] = []
+    swap: PublishedSetSwap | None = None
     try:
         for target, data in committed.items():
             target.parent.mkdir(parents=True, exist_ok=True)
             temp = target.with_name(f".{target.name}.next")
             temp.write_bytes(data)
             staged.append((temp, target))
-        replaced = replace_published_set(local_files, out_dir)
+        swap = swap_published_set(local_files, out_dir)
+        for temp, target in staged:
+            temp.replace(target)
+            replaced.append(target)
     except BaseException:
+        for target in reversed(replaced):
+            _restore_file(target, originals[target])
+        if swap is not None:
+            swap.undo()
         for temp, _target in staged:
             temp.unlink(missing_ok=True)
         raise
-    for temp, target in staged:
-        temp.replace(target)
-    return replaced
+    if swap is None:
+        return False
+    swap.finish()
+    return True
 
 
 def refresh(args: argparse.Namespace) -> int:
@@ -406,6 +457,15 @@ def refresh(args: argparse.Namespace) -> int:
 
     review = shard.lesson_sentence_review(deck_build, args.vesum_db)
     local_files = {**files, shard.REVIEW_FILE: shard.render_json(review, list_keys=("sentences",))}
+    pending = review["counts"]
+    if args.publish and pending["sentences"]:
+        raise RefreshError(
+            f"refusing to publish: {pending['sentences']} served teacher-lesson cloze items "
+            f"({pending['distinctSentences']} distinct sentences) have no language-review record in "
+            f"{args.withheld}; nothing was replaced or uploaded. Run without --publish to write the queue to "
+            f"{out_dir / shard.REVIEW_FILE}, record the review with `teacher-deck record-review`, then rerun "
+            "with --publish."
+        )
 
     check_dir = out_dir.with_name(f".{out_dir.name}.check")
     if check_dir.exists():
@@ -632,7 +692,8 @@ def _parser() -> argparse.ArgumentParser:
   rewrites --pointer. Prints the document and input versions, added/removed/changed entries, merges, every
   teacher-lesson sentence that becomes public with the review flag counts, the teacher's aspect markers and the
   source-derived verb aspect counts, and the independent checker's matrix and residual lists.
-Exit codes: 0 success or no-op; 1 validation/checker failure or refused shrink (nothing replaced);
+Exit codes: 0 success or no-op; 1 validation/checker failure, refused shrink, or --publish refused while a served
+  lesson sentence has no review record (nothing replaced);
   2 unreadable inputs or failed download/upload.
 Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_deck.py; #8843.
 """,
@@ -696,7 +757,10 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_de
     add(
         "--publish",
         action="store_true",
-        help="Upload the set as a release asset and rewrite --pointer (default: build locally only).",
+        help=(
+            "Upload the set as a release asset and rewrite --pointer; refused while any served lesson sentence "
+            "has no review record in --withheld (default: build locally only)."
+        ),
     )
     add(
         "--repo",

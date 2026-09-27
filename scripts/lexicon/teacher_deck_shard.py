@@ -506,27 +506,23 @@ def entry_aspect(entry: dict[str, Any], sources: AspectSources) -> dict[str, Any
 
     Single words look up the key. A phrase looks up its first token that the
     sources know as a verb lemma (its governing verb, e.g. ``вийти`` in ``Вийти з ладу``).
+    A verb meaning with no source verb lemma (unknown spelling, or attested only as a
+    non-verb) is still a verb entry, with aspect ``unknown``.
     """
 
     teacher_en = str(entry["teacherEn"])
     says_verb = teacher_implies_verb(teacher_en)
+    key = str(entry["key"])
+    candidates = [_canonical(token) for token in UK_TOKEN_RE.findall(key)] if entry["multiword"] else [key]
     lemma: str | None = None
     evidence: LemmaEvidence | None = None
-    if entry["multiword"]:
-        for token in UK_TOKEN_RE.findall(str(entry["key"])):
-            candidate = _canonical(token)
-            found = sources.evidence(candidate)
-            if _is_verb_lemma(found, says_verb):
-                lemma, evidence = candidate, found
-                break
-        if lemma is None and not says_verb:
-            return None
-    else:
-        found = sources.evidence(str(entry["key"]))
+    for candidate in candidates:
+        found = sources.evidence(candidate)
         if _is_verb_lemma(found, says_verb):
-            lemma, evidence = str(entry["key"]), found
-        elif not (says_verb and not found.verb and not found.other_pos):
-            return None
+            lemma, evidence = candidate, found
+            break
+    if lemma is None and not says_verb:
+        return None
     aspect, basis = resolve_aspect(evidence) if evidence else ("unknown", "none")
     marker = teacher_aspect(teacher_en)
     agrees: bool | None = None
