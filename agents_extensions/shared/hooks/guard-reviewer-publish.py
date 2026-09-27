@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Block direct Git and GitHub publication from a read-only Claude Bash tool.
+"""Block ordinary Git and GitHub publish commands from a read-only Claude Bash tool.
 
-The adapter registers this hook only for read-only runs. Git transport policy
-also applies to subprocesses that never appear as a Bash command here.
+The adapter registers this hook only for read-only runs. The deny list, this
+hook, and the push rewrite stop ordinary command forms only. Code the reviewer
+runs (Python, scripts, HTTP) can publish using the host's credentials: it can
+override its git config to push or write through the GitHub API.
 """
 
 from __future__ import annotations

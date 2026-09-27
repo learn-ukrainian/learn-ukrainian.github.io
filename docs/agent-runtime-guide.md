@@ -366,16 +366,18 @@ keeps the existing default permission behavior; `danger` uses
 `--dangerously-skip-permissions`.
 
 Every headless Claude invocation receives `--settings` with PreToolUse guards
-generated from
-`agents_extensions/shared/settings.json`, with hook commands resolved to the
-primary checkout's deployed `.claude/hooks` files. Sealed `review_isolation`
-keeps its existing `--safe-mode` and sandbox. Safe mode suppresses hooks and
-shell/write tools there; a live CLI probe with a missing hook path and a Bash
+generated from `agents_extensions/shared/settings.json`. Hook commands resolve
+to tracked `agents_extensions/shared/hooks` files in the checkout containing
+the adapter. Sealed `review_isolation` keeps its existing `--safe-mode` and
+sandbox. Safe mode suppresses hooks and shell/write tools there; a live CLI
+probe with a missing hook path and a Bash
 call completed without trying to load the hook. The guards stop recognized
 direct primary-checkout writes while allowing
 worktree writes; arbitrary interpreter writes remain a known parser limit.
-Prefix Bash deny rules
-do not cover wrappers such as `git -C`, so they are not a security boundary.
+Code the reviewer runs (Python, scripts, HTTP) can publish using the host's
+credentials: it can override its git config to push or write through the GitHub
+API. The deny list, publish hook, and push rewrite stop ordinary command forms
+only. Prefix Bash deny rules do not cover wrappers such as `git -C`.
 Claude `--bare` is disabled because it skips hooks. A live bubblewrap probe
 also allowed a primary-checkout write, so the bubblewrap sandbox is not relied
 on as the guard.
