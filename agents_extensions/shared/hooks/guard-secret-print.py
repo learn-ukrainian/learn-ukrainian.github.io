@@ -19,11 +19,14 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. External file lists (for example,
 ``xargs cat < list``) and copies whose destination is read later (for example,
-``cp .env x; cat x``) are not modeled. This is defense-in-depth, not a sandbox.
+``cp .env x; cat x``), as well as values loaded by ``source .env`` or
+``. .env`` and printed later, are not modeled. This is defense-in-depth,
+not a sandbox.
 """
 
 from __future__ import annotations
 
+import codecs
 import json
 import os
 import re
@@ -150,22 +153,59 @@ def _collapse_shell_line_continuations(command: str) -> str:
 def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(
-            _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command))),
+            _strip_shell_comments(
+                _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
+            ),
             posix=False,
-            punctuation_chars=";&|<>\n",
+            punctuation_chars="();{}&|<>\n",
         )
         lexer.whitespace_split = True
         lexer.whitespace = " \t"
         lexer.commenters = ""
         return list(lexer)
     except ValueError:
-        return []
+        return ["__UNDECIDABLE_SECRET_COMMAND__"]
 
 
 def _strip_quotes(token: str) -> str:
     if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
         return token[1:-1]
     return token
+
+
+def _decode_ansi_c_quotes(command: str) -> str:
+    """Turn Bash ANSI-C words into shell-quoted decoded words before parsing."""
+    out: list[str] = []
+    quote = ""
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            i += 2
+            continue
+        if not quote and command.startswith("$'", i):
+            end = i + 2
+            while end < len(command):
+                if command[end] == "\\":
+                    end += 2
+                elif command[end] == "'":
+                    break
+                else:
+                    end += 1
+            if end < len(command):
+                try:
+                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
+                except UnicodeError:
+                    value = command[i + 2 : end]
+                out.append(shlex.quote(value))
+                i = end + 1
+                continue
+        if char in {"'", '"'}:
+            quote = "" if quote == char else quote if quote else char
+        out.append(char)
+        i += 1
+    return "".join(out)
 
 
 def _is_single_quoted(token: str) -> bool:
@@ -270,7 +310,7 @@ def _pipelines(command: str) -> list[list[list[str]]]:
     for token in tokens:
         if token == "|":
             flush_segment()
-        elif token in SEPARATORS:
+        elif token in SEPARATORS or token in {"(", ")", "{", "}", ";;"}:
             flush_pipeline()
         else:
             segment.append(token)
@@ -287,43 +327,84 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
         i = 2
     elif len(seg) >= 4 and seg[0] == "function" and seg[2] == "{":
         i = 3
-    while i < len(seg) and _is_assignment(seg[i]):
+    reserved = {
+        "{",
+        "}",
+        "(",
+        ")",
+        "if",
+        "then",
+        "elif",
+        "else",
+        "fi",
+        "while",
+        "until",
+        "for",
+        "select",
+        "do",
+        "done",
+        "case",
+        "in",
+        "esac",
+        "!",
+    }
+    while i < len(seg) and _strip_quotes(seg[i]) in reserved:
         i += 1
-    while i < len(seg) and _strip_quotes(seg[i]) in {"sudo", "time", "nohup", "command"}:
-        i += 1
+    while i < len(seg):
         while i < len(seg) and _is_assignment(seg[i]):
             i += 1
+        if i >= len(seg):
+            return None
+        wrapper = _strip_quotes(seg[i])
+        if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
+            i += 1
+            if wrapper == "command":
+                while i < len(seg) and _strip_quotes(seg[i]) in {"-p", "--"}:
+                    i += 1
+            continue
+        if wrapper in {"nice", "timeout", "stdbuf"}:
+            i += 1
+            if wrapper == "nice":
+                if i < len(seg) and _strip_quotes(seg[i]) == "-n":
+                    i += 2
+                elif i < len(seg) and re.fullmatch(r"-\d+", _strip_quotes(seg[i])):
+                    i += 1
+            elif wrapper == "timeout":
+                while i < len(seg) and _strip_quotes(seg[i]).startswith("-"):
+                    i += 2 if _strip_quotes(seg[i]) in {"-s", "--signal", "-k", "--kill-after"} else 1
+                i += 1  # duration
+            else:
+                while i < len(seg) and re.fullmatch(r"-[ioe](?:\d+)?", _strip_quotes(seg[i])):
+                    i += 1
+            continue
+        if wrapper == "env":
+            j = i + 1
+            while j < len(seg):
+                token = _strip_quotes(seg[j])
+                if _is_assignment(seg[j]):
+                    j += 1
+                elif token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
+                    j += 2
+                elif (
+                    token.startswith(("--unset=", "--chdir=", "--split-string="))
+                    or token in {"-i", "-0", "--ignore-environment", "--null"}
+                    or token.startswith("-")
+                ):
+                    j += 1
+                else:
+                    break
+            if j >= len(seg):
+                return "env", seg[i + 1 :], i
+            i = j
+            continue
+        break
     if i >= len(seg):
         return None
 
     cmd = _strip_quotes(seg[i])
-    if cmd != "env":
-        return cmd, seg[i + 1 :], i
-
-    # `env` is both a dump command and a wrapper. If a real command follows
-    # options/assignments, return that command; otherwise return env itself.
-    j = i + 1
-    while j < len(seg):
-        token = _strip_quotes(seg[j])
-        if _is_assignment(seg[j]):
-            j += 1
-            continue
-        if token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
-            j += 2
-            continue
-        if token.startswith("--unset=") or token.startswith("--chdir=") or token.startswith("--split-string="):
-            j += 1
-            continue
-        if token in {"-i", "-0", "--ignore-environment", "--null"}:
-            j += 1
-            continue
-        if token.startswith("-"):
-            j += 1
-            continue
-        break
-    if j < len(seg):
-        return _strip_quotes(seg[j]), seg[j + 1 :], j
-    return "env", seg[i + 1 :], i
+    if cmd == "busybox" and i + 1 < len(seg) and _strip_quotes(seg[i + 1]) == "sh":
+        return "sh", seg[i + 2 :], i + 1
+    return cmd, seg[i + 1 :], i
 
 
 def _has_override(seg: list[str]) -> bool:
@@ -769,22 +850,29 @@ def _substitution_spans(command: str, *, heredoc: bool = False) -> list[tuple[in
                 continue
             start = index + 2
             depth = 1
-            inner_quote = ""
+            quotes = [""]
             end = start
             while end < len(command) and depth:
                 current = command[end]
-                if current == "\\" and inner_quote != "'":
+                if current == "\\" and quotes[-1] != "'":
                     end += 2
                     continue
-                if current == "'" and inner_quote != '"':
-                    inner_quote = "" if inner_quote else "'"
-                elif current == '"' and inner_quote != "'":
-                    inner_quote = "" if inner_quote else '"'
-                elif not inner_quote:
+                if command.startswith("$(", end) and not command.startswith("$((", end) and quotes[-1] != "'":
+                    depth += 1
+                    quotes.append("")
+                    end += 2
+                    continue
+                if current == "'" and quotes[-1] != '"':
+                    quotes[-1] = "" if quotes[-1] else "'"
+                elif current == '"' and quotes[-1] != "'":
+                    quotes[-1] = "" if quotes[-1] else '"'
+                elif not quotes[-1]:
                     if current == "(":
                         depth += 1
+                        quotes.append("")
                     elif current == ")":
                         depth -= 1
+                        quotes.pop()
                 end += 1
             if not depth:
                 spans.append((index, end, command[start : end - 1]))
@@ -805,8 +893,24 @@ def _eval_secret_source(args: list[str], copied: set[str], named: dict[str, str]
     return False
 
 
-def _shell_script(args: list[str]) -> str | None:
-    """Extract the script operand of a bash/sh -c invocation."""
+def _shell_script(args: list[str]) -> list[str]:
+    """Extract the script operand of a shell -c invocation."""
+
+    def decode(index: int) -> list[str]:
+        if index >= len(args):
+            return []
+        # shlex in preservation mode separates adjacent quoted fragments.
+        # Bash concatenates them into one -c word before the child shell runs.
+        try:
+            words = shlex.split("".join(args[index:]), posix=True)
+        except ValueError:
+            return [_strip_quotes(args[index])]
+        candidates = [words[0]] if words else []
+        first = _strip_quotes(args[index])
+        if first not in candidates:
+            candidates.append(first)
+        return candidates
+
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
@@ -816,22 +920,27 @@ def _shell_script(args: list[str]) -> str | None:
         if option.startswith(("--rcfile=", "--init-file=")):
             i += 1
             continue
+        if option.startswith("--"):
+            i += 1
+            continue
         if option.startswith("-") and not option.startswith("--"):
             script_index = i + 1 + sum(flag in {"o", "O"} for flag in option[1:])
             if "c" in option[1:]:
-                return _strip_quotes(args[script_index]) if script_index < len(args) else None
+                return decode(script_index)
             i = script_index
             continue
         break
-    return None
+    return []
 
 
 def _scan_command(command: str, copied: set[str], named: dict[str, str] | None = None, *, depth: int = 0) -> str | None:
-    if depth >= 8:
-        return None
+    if depth >= 12:
+        return "shell recursion limit reached while scanning for secret output"
     if named is None:
         named = {}
-    executable = _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+    executable = _strip_shell_comments(
+        _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
+    )
     # Scan the complete text first: shlex may expose a separator inside a
     # substitution as a top-level token, but Bash executes its whole body.
     for body in _substitution_bodies(executable):
@@ -852,6 +961,8 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
             if found is None:
                 continue
             cmd, args, _ = found
+            if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
+                return "shell command could not be parsed safely"
             if cmd == "eval" and args:
                 if any(_substitution_bodies(arg) for arg in args) and _eval_secret_source(args, copied, named):
                     return "dynamic eval can reach a known secret source"
@@ -860,9 +971,8 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
                 )
                 if reason:
                     return reason
-            elif cmd in {"bash", "sh"}:
-                script = _shell_script(args)
-                if script is not None:
+            elif cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+                for script in _shell_script(args):
                     reason = _scan_command(script, set(copied), dict(named), depth=depth + 1)
                     if reason:
                         return reason

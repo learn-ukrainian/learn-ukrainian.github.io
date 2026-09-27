@@ -24,6 +24,7 @@ import importlib.util
 import io
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -311,6 +312,34 @@ def test_issue_8896_review_round_two_write_bypasses_block(repo: Path, command: s
     assert result.returncode == 2, result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        'echo "$(echo "$(tee AGENTS.md)")"',
+        "cat <<EOF\n$(tee \\\nAGENTS.md)\nEOF",
+    ],
+)
+def test_issue_8896_review_round_three_nested_writes_block(repo: Path, command: str):
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_8896_write_recursion_limit_blocks(repo: Path):
+    command = "tee AGENTS.md"
+    for _ in range(9):
+        command = f"bash -c {shlex.quote(command)}"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_8896_quoted_substitution_recursion_limit_blocks(repo: Path):
+    command = "tee AGENTS.md"
+    for _ in range(9):
+        command = f'echo "$({command})"'
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+
+
 def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp_path: Path):
     # Only the payload cwd is outside Git; the hook never executes the command.
     outside = Path("/tmp")
@@ -331,6 +360,24 @@ def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp
         {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {tmp_path}/harmless"}},
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_issue_8896_review_round_three_outside_cwd_expanded_targets(repo: Path, tmp_path: Path):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    for command, home, expected in (
+        (f"touch ~/{repo.name}/new-file", repo.parent, 2),
+        (f"tee $'{repo}/new-file'", outside, 2),
+        ("touch ~/harmless", outside, 0),
+        ("touch ../harmless", outside, 0),
+        ("touch /tmp/harmless", outside, 0),
+    ):
+        result = _run(
+            repo,
+            {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": command}},
+            {"HOME": str(home)},
+        )
+        assert result.returncode == expected, (command, result.stderr)
 
 
 def test_issue_8896_other_repo_feature_cwd_cannot_write_primary(repo: Path, tmp_path: Path):
@@ -360,6 +407,10 @@ def test_issue_8896_other_repo_feature_cwd_cannot_write_primary(repo: Path, tmp_
         "cat <<'EOF'\n$(tee AGENTS.md)\nEOF",
         "bash -c 'echo ok'",
         "while read l; do echo $l; done < notes.txt",
+        "if [ -f x ]; then echo ok; fi",
+        "( cd /tmp && ls )",
+        "{ echo a; echo b; } > /tmp/x",
+        "gh pr view 8896",
     ],
 )
 def test_issue_8896_review_round_two_ordinary_write_allow(repo: Path, command: str):

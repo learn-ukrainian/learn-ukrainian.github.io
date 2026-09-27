@@ -17,6 +17,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import shlex
 from pathlib import Path
 
 import pytest
@@ -119,6 +120,60 @@ def test_issue_8896_review_round_two_secret_bypasses_block(monkeypatch, command)
 @pytest.mark.parametrize(
     "command",
     [
+        "{ cat .env; }",
+        "( cat .env )",
+        "if true; then cat .env; elif false; then echo ok; else echo ok; fi",
+        'while read l; do echo "$l"; done < .env',
+        "until false; do cat .env; done",
+        "for x in one; do cat .env; done",
+        "case x in x) cat .env;; esac",
+        "! cat .env",
+        "exec cat .env",
+        'builtin printf %s "$GH_TOKEN"',
+        "command -p cat .env",
+        "env -i cat .env",
+        "nice cat .env",
+        "timeout 3 cat .env",
+        "stdbuf -o0 cat .env",
+        "cat $'.env'",
+        "eval $'cat .env'",
+        "bash -c $'cat .env'",
+        "bash --posix -c 'cat .env'",
+        "bash -e -x -c 'cat .env'",
+        "bash -o posix -c 'cat .env'",
+        "dash -c 'cat .env'",
+        "zsh -c 'cat .env'",
+        "ksh -c 'cat .env'",
+        "busybox sh -c 'cat .env'",
+        "cat <<EOF\n$(cat \\\n.env)\nEOF",
+    ],
+)
+def test_issue_8896_review_round_three_secret_shapes_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_8896_secret_recursion_limit_blocks(monkeypatch):
+    command = "cat .env"
+    for _ in range(12):
+        command = f"echo $({command})"
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_8896_nested_shell_quote_concatenation_blocks(monkeypatch):
+    command = "cat .env"
+    for _ in range(4):
+        command = f"bash -c {shlex.quote(command)}"
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("command", ['source .env; printf %s "$FOO"', '. .env; printf %s "$FOO"'])
+def test_issue_8896_source_data_flow_named_residual(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "git status",
         "ls -la",
         "echo ok > /tmp/x",
@@ -127,6 +182,10 @@ def test_issue_8896_review_round_two_secret_bypasses_block(monkeypatch, command)
         "cat <<'EOF'\n$(cat .env)\nEOF",
         "bash -c 'echo ok'",
         "while read l; do echo $l; done < notes.txt",
+        "if [ -f x ]; then echo ok; fi",
+        "( cd /tmp && ls )",
+        "{ echo a; echo b; } > /tmp/x",
+        "gh pr view 8896",
         'eval "$(echo ok)"',
         "echo '$(cat .env)'",
     ],

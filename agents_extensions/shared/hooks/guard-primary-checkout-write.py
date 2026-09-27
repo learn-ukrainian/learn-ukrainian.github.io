@@ -114,16 +114,16 @@ worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
 only when a command literal names the primary checkout or the effective cwd
 is the primary checkout. Secret-value flow through external file lists
 (``xargs cat < list``) or copies (``cp .env x; cat x``) is not modeled here;
-the ``cp`` destination is still classified as a write target. Config files
+values loaded by ``source .env`` or ``. .env`` and printed later are also
+outside this command parser's data-flow model; the ``cp`` destination is still
+classified as a write target. Config files
 such as curl ``-K`` may themselves
 direct writes; their contents are not inspected. Unlisted writers and shell
 features not parsed here remain residuals. This is defense-in-depth, not a
 sandbox; physical worktree isolation and the monitor remain necessary.
 
-The primary-checkout containment layer fails **open**: any parse/import/git
-error there exits 0 (allow). Physical worktree isolation, the primary checkout
-tripwire, CI, and protected-branch review gates remain the repository safety
-boundary.
+Unresolved write targets and exhausted parser recursion block. Physical
+worktree isolation remains the repository safety boundary.
 
 Emergency override (explicit operator only): set
 ``LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1`` to skip the git-mediated primary block
@@ -132,6 +132,7 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
+import codecs
 import fnmatch
 import json
 import os
@@ -153,8 +154,7 @@ def _load_containment():
     The hook runs from a deployed copy (``<root>/.{claude,codex,agent}/hooks/``)
     or from source (``agents_extensions/shared/hooks/``); in both the repo root
     that owns ``scripts/`` is an ancestor. Walk upward for it and put it on
-    ``sys.path``. Returns ``None`` if it cannot be found/imported so the caller
-    fails open rather than blocking every write on an import error.
+    ``sys.path``. The caller blocks if containment cannot be loaded.
     """
     here = Path(__file__).resolve()
     for candidate in (here.parent, *here.parents):
@@ -164,7 +164,7 @@ def _load_containment():
             break
     try:
         from scripts.guardrails import worktree_containment as wc
-    except Exception:  # pragma: no cover - defensive fail-open
+    except Exception:  # pragma: no cover - defensive import failure
         return None
     return wc
 
@@ -458,6 +458,41 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
+def _decode_ansi_c_quotes(command: str) -> str:
+    """Decode executable Bash ANSI-C words before token and path expansion."""
+    out: list[str] = []
+    quote = ""
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            i += 2
+            continue
+        if not quote and command.startswith("$'", i):
+            end = i + 2
+            while end < len(command):
+                if command[end] == "\\":
+                    end += 2
+                elif command[end] == "'":
+                    break
+                else:
+                    end += 1
+            if end < len(command):
+                try:
+                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
+                except UnicodeError:
+                    value = command[i + 2 : end]
+                out.append(shlex.quote(value))
+                i = end + 1
+                continue
+        if char in {"'", '"'}:
+            quote = "" if quote == char else quote if quote else char
+        out.append(char)
+        i += 1
+    return "".join(out)
+
+
 # Preserve literal expansion characters and redirect punctuation through shlex,
 # which otherwise strips quotes before redirect tokens can be distinguished from
 # argv words. Restore each sentinel in the expanded word (#8500, #8887).
@@ -491,6 +526,7 @@ _SHELL_OPERATORS = (
     "\n",
 )
 _PUNCTUATION = frozenset("();<>|&\n")
+_MAX_SHELL_DEPTH = 8
 
 
 def _strip_shell_comments(command: str) -> str:
@@ -622,8 +658,10 @@ def _normalize_backtick_substitutions(command: str) -> str:
     return "".join(out)
 
 
-def _normalize_quoted_command_substitutions(command: str) -> str:
+def _normalize_quoted_command_substitutions(command: str, depth: int = 0) -> str:
     """Expose $(...) bodies inside double quotes to the command tokenizer."""
+    if depth >= _MAX_SHELL_DEPTH:
+        raise RecursionError("quoted shell substitution limit")
     out: list[str] = []
     quote = ""
     i = 0
@@ -638,26 +676,33 @@ def _normalize_quoted_command_substitutions(command: str) -> str:
         elif char == '"' and quote != "'":
             quote = "" if quote else '"'
         elif quote == '"' and command.startswith("$(", i) and not command.startswith("$((", i):
-            depth = 1
-            inner_quote = ""
+            paren_depth = 1
+            quotes = [""]
             end = i + 2
-            while end < len(command) and depth:
+            while end < len(command) and paren_depth:
                 current = command[end]
-                if current == "\\" and inner_quote != "'":
+                if current == "\\" and quotes[-1] != "'":
                     end += 2
                     continue
-                if current == "'" and inner_quote != '"':
-                    inner_quote = "" if inner_quote else "'"
-                elif current == '"' and inner_quote != "'":
-                    inner_quote = "" if inner_quote else '"'
-                elif not inner_quote:
+                if command.startswith("$(", end) and not command.startswith("$((", end) and quotes[-1] != "'":
+                    quotes.append("")
+                    paren_depth += 1
+                    end += 2
+                    continue
+                if current == "'" and quotes[-1] != '"':
+                    quotes[-1] = "" if quotes[-1] else "'"
+                elif current == '"' and quotes[-1] != "'":
+                    quotes[-1] = "" if quotes[-1] else '"'
+                elif not quotes[-1]:
                     if current == "(":
-                        depth += 1
+                        paren_depth += 1
+                        quotes.append("")
                     elif current == ")":
-                        depth -= 1
+                        paren_depth -= 1
+                        quotes.pop()
                 end += 1
-            if depth == 0:
-                out.extend(('"', command[i:end], '"'))
+            if paren_depth == 0:
+                out.extend(('"', _normalize_quoted_command_substitutions(command[i:end], depth + 1), '"'))
                 i = end
                 continue
         out.append(char)
@@ -694,7 +739,9 @@ def _tokenize(command: str) -> list[str]:
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(
                     _normalize_backtick_substitutions(
-                        _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+                        _strip_shell_comments(
+                            _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
+                        )
                     )
                 )
             ),
@@ -709,10 +756,11 @@ def _tokenize(command: str) -> list[str]:
         lexer.whitespace = " \t"
         lexer.commenters = ""
         return [part for token in lexer for part in _split_operator_run(token)]
+    except RecursionError:
+        # A nested executable form cannot be proven harmless after this limit.
+        return ["tee", "$__UNDECIDABLE_SHELL_PARSE__"]
     except ValueError:
-        # Unbalanced quotes / un-tokenizable — fail open (the shell will reject
-        # the malformed command itself).
-        return []
+        return ["tee", "$__UNDECIDABLE_SHELL_PARSE__"]
 
 
 # ---------------------------------------------------------------------------
@@ -1710,7 +1758,7 @@ def _writer_targets(
                     word.decision_reason = "unresolved_shell_variable"
                 word.base = str(git_base) if git_base is not None else None
                 targets.append(word)
-    elif cmd == "eval" and depth < 3:
+    elif cmd == "eval":
         args = segment[idx + 1 :]
         if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
             unknown = ShellWord("eval dynamic target")
@@ -1718,7 +1766,7 @@ def _writer_targets(
             targets.append(unknown)
         else:
             targets.extend(bash_write_targets(" ".join(args), cwd=cwd, main_root=main_root, depth=depth + 1))
-    elif cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
+    elif cmd in {"sh", "bash", "zsh", "dash"}:
         script = _shell_command_script(segment[idx + 1 :])
         if script is not None:
             if getattr(script, "unresolved_at", None) is not None:
@@ -1727,7 +1775,7 @@ def _writer_targets(
                 targets.append(unknown)
             else:
                 targets.extend(bash_write_targets(str(script), cwd=cwd, main_root=main_root, depth=depth + 1))
-    elif cmd == "find" and depth < 3:
+    elif cmd == "find":
         targets.extend(_find_targets(segment[idx + 1 :], cwd=cwd, main_root=main_root, depth=depth))
     return targets
 
@@ -1909,6 +1957,10 @@ def bash_write_targets(
     vectors are intentionally out of scope (see module docstring); they rely on
     physical worktree isolation and the monitor/git-shim layers.
     """
+    if depth >= _MAX_SHELL_DEPTH:
+        unknown = ShellWord("shell recursion limit")
+        unknown.decision_reason = "undecidable_shell_recursion_target"
+        return [unknown]
     targets: list[str] = []
     pipeline: list[str] = []
     for segment, effective_cwd, shell_cwd in _segments_with_cwd(command, cwd):
@@ -1934,7 +1986,7 @@ def bash_write_targets(
             unknown = ShellWord("xargs stdin write target")
             unknown.decision_reason = "undecidable_xargs_stdin_target"
             segment_targets.append(unknown)
-        if template and depth < 3:
+        if template:
             segment_targets.extend(
                 _writer_targets(
                     template, cwd=effective_cwd, redirect_cwd=effective_cwd, main_root=main_root, depth=depth + 1
@@ -2053,12 +2105,12 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
 
     for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
-        if cmd == "eval" and depth < 3:
+        if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
                 intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
             continue
-        if cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
+        if cmd in {"sh", "bash", "zsh", "dash"} and depth < _MAX_SHELL_DEPTH:
             script = _shell_command_script(segment[idx + 1 :])
             if script is not None and getattr(script, "unresolved_at", None) is None:
                 intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
@@ -2463,6 +2515,14 @@ def _label(word: str) -> str:
     return word if raw == word else f"{raw}→{word}"
 
 
+def _block_uncertain(reason: str) -> int:
+    sys.stderr.write(
+        f"BLOCKED by guard-primary-checkout-write: cannot classify a possible primary write [{reason}]. "
+        "Use a literal target from a known dispatch worktree cwd.\n"
+    )
+    return 2
+
+
 def main() -> int:
     payload = _read_payload()
     tool_name = _tool_name(payload)
@@ -2487,13 +2547,13 @@ def main() -> int:
     if tool_name == "Bash" and command:
         try:
             git_intents = bash_git_write_intents(command, cwd=cwd)
-        except Exception:  # pragma: no cover - defensive fail-open
-            git_intents = []
+        except Exception:
+            return _block_uncertain("undecidable_git_command")
 
     wc = _load_containment()
 
     if wc is None:
-        return 0
+        return _block_uncertain("containment_unavailable")
 
     # The cwd may be outside Git while an absolute target still names the
     # protected checkout. In that case classify each resolved target below.
@@ -2504,8 +2564,8 @@ def main() -> int:
             main_root = cwd_root
     except wc.NotAGitRepositoryError:
         pass
-    except Exception:  # pragma: no cover - defensive fail-open
-        return 0
+    except Exception:
+        return _block_uncertain("undecidable_cwd")
 
     if tool_name == "Bash":
         raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
@@ -2557,8 +2617,8 @@ def main() -> int:
                     decision = _bash_path_decision(raw, str(git_cwd), wc)
                     if not decision.allowed:
                         return _block_git_mediated(summary, intent_root, reason=decision.reason)
-        except Exception:  # pragma: no cover - defensive fail-open
-            pass
+        except Exception:
+            return _block_uncertain("undecidable_git_target")
 
     if not raw_targets:
         return 0
@@ -2573,9 +2633,9 @@ def main() -> int:
             else:
                 target = _resolve(raw, cwd)
                 decision = wc.evaluate_write(target, cwd=cwd if main_root is not None else target.parent)
-            decisions.append((_label(raw), decision))
-    except Exception:  # pragma: no cover - defensive fail-open
-        return 0
+            decisions.append((raw, decision))
+    except Exception:
+        return _block_uncertain("undecidable_write_target")
 
     for raw, decision in decisions:
         if not decision.allowed:
@@ -2588,10 +2648,10 @@ def main() -> int:
                     if not wc.is_protected_branch(target_root):
                         continue
                 except Exception:
-                    continue
+                    target_root = None
             sys.stderr.write(
                 f"BLOCKED by guard-primary-checkout-write: {tool_name} would write "
-                f"'{raw}' inside the protected primary checkout ({target_root}) "
+                f"'{_label(raw)}' inside the protected primary checkout ({target_root or 'possible primary target'}) "
                 f"[{decision.reason}].\n\n"
                 "The primary checkout must stay clean on `main`. Do all write "
                 "work in a dispatch worktree instead:\n\n"
