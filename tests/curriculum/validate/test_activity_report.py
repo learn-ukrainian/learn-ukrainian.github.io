@@ -246,6 +246,36 @@ def test_draft_report_complete_option_why_counts_as_explained() -> None:
     assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 3}
 
 
+def test_draft_report_true_false_option_why_counts_as_explained() -> None:
+    # Regression for finding 2 (r2): true-false carries neither "options" nor
+    # "words", so it fell through _option_list to None and every option_why
+    # was treated as incomplete. Its two implicit options are the statement
+    # being true or false, so a complete option_why is the two-entry
+    # [why_if_true, why_if_false] (header §3).
+    plan = _plan_with_one_lesson([_activity("a1", "true-false", "workbook")])
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {
+                    "id": "a1",
+                    "items": [
+                        {
+                            "statement": "Кияни їдять борщ.",
+                            "correct": True,
+                            "option_why": ["true reason", "false reason"],
+                        },
+                        {"statement": "Собаки літають.", "correct": False, "option_why": ["only one entry"]},
+                        {"statement": "Кава гаряча.", "correct": True, "option_why": []},
+                    ],
+                }
+            ],
+        }
+    ]
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["explanation_coverage"] == {"explained": 1, "total": 3}
+
+
 def test_draft_report_odd_one_out_option_why_aligns_to_words() -> None:
     plan = _plan_with_one_lesson([_activity("a1", "odd-one-out", "workbook")])
     drafts = [
@@ -314,6 +344,78 @@ def test_draft_report_module_total_is_not_available_when_any_lesson_draft_is_mis
     assert report["module"]["response_opportunities_total"] == NOT_AVAILABLE
     assert report["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
     assert report["module"]["explanation_coverage"] == NOT_AVAILABLE
+
+
+def test_draft_report_omitted_planned_activity_is_not_available() -> None:
+    # Regression for finding 1 (r2): a lesson draft that exists but has no
+    # payload at all for one of the plan's activities must not silently total
+    # only the activities it does have — an omitted planned activity makes
+    # the lesson (and every module total depending on it)
+    # not_available_at_this_stage, same as a malformed one.
+    plan = _plan_with_one_lesson(
+        [
+            _activity("a1", "quiz", "workbook"),
+            _activity("a2", "match-up", "inline"),
+        ]
+    )
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [
+                {"id": "a1", "items": [{"prompt": "?", "options": ["x"], "explanation": "why"}]}
+                # a2 is entirely absent from the draft's activities
+            ],
+        }
+    ]
+    report = draft_report(plan, drafts)
+    assert report["lessons"][0]["response_opportunities"] == NOT_AVAILABLE
+    assert report["lessons"][0]["explanation_coverage"] == NOT_AVAILABLE
+    assert report["module"]["response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["inline_response_opportunities_total"] == NOT_AVAILABLE
+    assert report["module"]["explanation_coverage"] == NOT_AVAILABLE
+
+
+def test_rendered_report_omitted_planned_activity_does_not_count_as_rendered() -> None:
+    # Regression for finding 1 (r2), rendered stage: a built page that omits
+    # a planned workbook activity's task entry entirely (not merely
+    # unrendered/unplayable) is a known fact, not an unknown one — the page
+    # was built, so the omission legitimately counts as not rendered, and the
+    # module total stays a real number rather than not_available_at_this_stage.
+    plan = _plan_with_one_lesson(
+        [
+            _activity("a1", "quiz", "workbook"),
+            _activity("a2", "match-up", "workbook"),
+        ]
+    )
+    built_pages = [{"n": 1, "workbook_tasks": [{"id": "a1", "rendered": True, "playable": True}]}]  # a2 absent
+    report = rendered_report(plan, built_pages)
+    assert report["lessons"][0]["planned_workbook"] == 2
+    assert report["lessons"][0]["rendered_and_playable"] == 1
+    assert report["module"]["planned_workbook_total"] == 2
+    assert report["module"]["rendered_and_playable_total"] == 1
+
+
+def test_draft_and_rendered_reports_expose_the_same_response_opportunity_fields() -> None:
+    # Regression for finding 3 (r2): rendered_report omitted
+    # workbook_response_opportunities_total and inline_response_opportunities_total
+    # entirely, unlike draft_report's module dict (frozen §4 interface: a
+    # field a stage cannot know is not_available_at_this_stage, never
+    # silently omitted).
+    plan = _plan_with_one_lesson([_activity("a1", "quiz", "workbook")])
+    drafts = [
+        {
+            "lesson": {"n": 1},
+            "activities": [{"id": "a1", "items": [{"prompt": "?", "options": ["x"], "explanation": "why"}]}],
+        }
+    ]
+    draft = draft_report(plan, drafts)
+    rendered = rendered_report(plan, built_pages=[])
+    response_opportunity_fields = {"workbook_response_opportunities_total", "inline_response_opportunities_total"}
+    assert response_opportunity_fields <= draft["module"].keys()
+    assert response_opportunity_fields <= rendered["module"].keys()
+    assert rendered["module"]["workbook_response_opportunities_total"] == NOT_AVAILABLE
+    assert rendered["module"]["inline_response_opportunities_total"] == NOT_AVAILABLE
 
 
 def test_rendered_report_module_total_is_not_available_when_any_page_is_missing() -> None:

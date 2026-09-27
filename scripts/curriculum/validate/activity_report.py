@@ -141,10 +141,13 @@ def _response_units(activity_type: str, payload: dict) -> int | None:
     return len(unit_list) if unit_list is not None else None
 
 
-def _option_list(unit: dict) -> list | None:
+def _option_list(activity_type: str, unit: dict) -> list | None:
     """A choice item's option list: ``options``, or ``words`` for odd-one-out
     (header §3: "option_why: [string] aligned by index to the option list
-    (options, or words for odd-one-out)")."""
+    (options, or words for odd-one-out)"); true-false's two fixed implicit
+    options (true, false)."""
+    if activity_type == "true-false":
+        return [True, False]
     options = unit.get("options")
     if isinstance(options, list):
         return options
@@ -152,24 +155,24 @@ def _option_list(unit: dict) -> list | None:
     return words if isinstance(words, list) else None
 
 
-def _has_complete_option_why(unit: dict) -> bool:
+def _has_complete_option_why(activity_type: str, unit: dict) -> bool:
     """A choice item is explained by a per-option ``option_why`` only when it
     is complete: one non-empty entry for every option (issue #8889 r5 header
     §3). A shorter or sparser array is not aligned to the option list and does
     not count."""
     option_why = unit.get("option_why")
-    options = _option_list(unit)
+    options = _option_list(activity_type, unit)
     if not isinstance(option_why, list) or not options or len(option_why) != len(options):
         return False
     return all(bool(entry) for entry in option_why)
 
 
-def _has_explanation(unit: object) -> bool:
+def _has_explanation(activity_type: str, unit: object) -> bool:
     if not isinstance(unit, dict):
         return False
     if bool(unit.get("explanation")) or bool(unit.get("why")):
         return True
-    return _has_complete_option_why(unit)
+    return _has_complete_option_why(activity_type, unit)
 
 
 def _explained_units(activity_type: str, payload: dict, units: int) -> int:
@@ -186,7 +189,7 @@ def _explained_units(activity_type: str, payload: dict, units: int) -> int:
     unit_list = _unit_list(activity_type, payload)
     if unit_list is None:
         return 0
-    return sum(1 for unit in unit_list if _has_explanation(unit))
+    return sum(1 for unit in unit_list if _has_explanation(activity_type, unit))
 
 
 def _lesson_activities(lesson: dict) -> list[dict]:
@@ -308,8 +311,11 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
     ...}, "activities": [...], ...}``); a lesson the writer has not reached
     yet is simply absent from the list. Response units and explanation
     coverage are counted per :data:`RESPONSE_UNIT_TABLE` and reported
-    ``not_available_at_this_stage`` for a lesson with no draft yet, or for one
-    activity whose payload does not carry the field its type needs.
+    ``not_available_at_this_stage`` for a lesson with no draft yet, for one
+    planned activity with no payload in the draft, or for one activity whose
+    payload does not carry the field its type needs. A lesson is complete
+    only when every planned activity has a payload whose units can be
+    computed.
     """
     drafts_by_lesson = {draft["lesson"]["n"]: draft for draft in drafts}
     lessons: list[dict] = []
@@ -327,17 +333,18 @@ def draft_report(plan: dict, drafts: list[dict]) -> dict:
             lessons.append({"n": n, "response_opportunities": NOT_AVAILABLE, "explanation_coverage": NOT_AVAILABLE})
             module_complete = False
             continue
-        plan_activities = {activity["id"]: activity for activity in _lesson_activities(lesson)}
+        draft_activities = {activity.get("id"): activity for activity in draft.get("activities") or []}
         lesson_units = 0
         lesson_workbook_units = 0
         lesson_inline_units = 0
         lesson_explained = 0
         by_type: Counter[str] = Counter()
         lesson_complete = True
-        for activity in draft.get("activities") or []:
-            plan_activity = plan_activities.get(activity.get("id"))
-            if plan_activity is None:
-                continue  # id/type/placement agreement with the plan is the structure gate's, not this report's
+        for plan_activity in _lesson_activities(lesson):
+            activity = draft_activities.get(plan_activity["id"])
+            if activity is None:
+                lesson_complete = False  # a planned activity with no draft payload; the lesson total can't be a number
+                continue
             activity_type = plan_activity["type"]
             units = _response_units(activity_type, activity)
             if units is None:
@@ -406,6 +413,13 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
     lesson page. A planned workbook activity absent from ``workbook_tasks``,
     or present but not both rendered and playable, does not count — a
     cross-reference is not a rendered task (§D).
+
+    ``workbook_tasks`` carries no per-unit payload (no ``items``/``pairs``/etc
+    to feed :data:`RESPONSE_UNIT_TABLE`), so this stage can never compute
+    response-opportunity units; ``workbook_response_opportunities_total`` and
+    ``inline_response_opportunities_total`` are always
+    ``not_available_at_this_stage`` here — present for module field-set parity
+    with :func:`draft_report`, per the frozen §4 interface.
     """
     pages_by_lesson = {page["n"]: page for page in built_pages}
     lessons: list[dict] = []
@@ -436,6 +450,8 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
         {
             "planned_workbook_total": module_planned,
             "rendered_and_playable_total": module_rendered if module_complete else NOT_AVAILABLE,
+            "workbook_response_opportunities_total": NOT_AVAILABLE,
+            "inline_response_opportunities_total": NOT_AVAILABLE,
         }
     )
     return {"stage": "rendered", "module_slug": plan.get("slug"), "lessons": lessons, "module": module}
