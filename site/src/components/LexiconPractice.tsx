@@ -2339,11 +2339,6 @@ function LexiconPracticeIsland({
   });
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
-  // #8733: bumped once per fresh card presentation (see the commit effect below) so
-  // Paronym can salt its option shuffle — an SRS requeue of the same card gets a new
-  // order even though the card's own content (and thus a plain content-seeded shuffle)
-  // is identical to its first presentation.
-  const [presentationSeq, setPresentationSeq] = useState(0);
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [sessionBudget, setSessionBudget] = useState<SessionBudget>(20);
   const [sessionPlan, setSessionPlan] = useState<SessionScopeStats | null>(null);
@@ -2378,6 +2373,12 @@ function LexiconPracticeIsland({
   const [feedback, setFeedback] = useState<{ uk: string; en?: string } | null>(null);
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
+  // #8733: derived synchronously from the session history position, not bumped in a
+  // post-render effect — the first paint of a fresh card already has the final salt,
+  // and an immediate same-lemma requeue (a new history entry, same itemId) still gets
+  // a new value since history.length itself advances, so Paronym's per-presentation
+  // option shuffle never reorders in front of the learner or replays the prior order.
+  const presentationSeq = history.length;
   const [answerLocked, setAnswerLocked] = useState(false);
   // After ANY answer (correct or wrong), park the scored outcome here instead of
   // auto-advancing so the learner explicitly continues via «Далі →» or Enter.
@@ -3373,10 +3374,14 @@ function LexiconPracticeIsland({
     if (selection) {
       // Record for stabilization across future deck swaps (bg merges).
       committedSelectionRef.current = { selection, historyLen: history.length };
-      setPresentationSeq((value) => value + 1);
       window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
-  }, [selection?.itemId, resetItemFeedback]);
+    // #8732/#8733: `history.length` (not just `selection?.itemId`) is a dependency so a
+    // same-lemma requeue — a new history entry that happens to pick the same itemId
+    // again — still re-commits here. Without it, `committedSelectionRef.current.historyLen`
+    // is left stale, `committedStillValid` misfires false on the very next rating, and the
+    // card can swap out from under the learner before they click Next.
+  }, [selection?.itemId, history.length, resetItemFeedback]);
 
   // Rate the selected lemma if matched but never completed (due to session abort/unmount)
   useEffect(() => {
@@ -4489,7 +4494,12 @@ function LexiconPracticeIsland({
       : MODE_META[visibleStageMode].en;
   // #6720: re-served lapsed cards push `sessionCompleted` past the frozen target —
   // clamp the numerator so the badge never overshoots its own denominator.
-  const progressLabel = `${Math.min(sessionCompleted, effectiveSessionTarget())}/${effectiveSessionTarget()}`;
+  // #8732: a deliberate round EXTENSION (`extensionUsed`, distinct from ordinary live
+  // due-count jitter #6720 guards against) genuinely adds cards to the round, so fold it
+  // into the pill's own denominator too — otherwise extension/requeue cards keep showing
+  // the pre-extension total (e.g. stuck at "8/8") with no visible progress at all.
+  const progressTarget = effectiveSessionTarget() + extensionUsed;
+  const progressLabel = `${Math.min(sessionCompleted, progressTarget)}/${progressTarget}`;
   const dailySnapshotIds = useMemo(
     () => new Set(dailySnapshot?.items.map((item) => item.lemmaId) ?? []),
     [dailySnapshot],

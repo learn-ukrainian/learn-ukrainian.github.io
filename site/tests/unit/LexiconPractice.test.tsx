@@ -2776,6 +2776,63 @@ describe('LexiconPractice', () => {
     expect(positionsSeen.size).toBeGreaterThan(1);
   });
 
+  /**
+   * #8733 (review round 2): the two lifecycle cases the shuffle-only unit tests above
+   * cannot exercise — the presentation key used to be bumped in a `useEffect` keyed on
+   * `selection?.itemId`, which (a) only took effect a render AFTER the card first mounted
+   * (the very first paint used the salt left over from before mount) and (b) never re-fired
+   * on a same-lemma SRS requeue, since `itemId` is unchanged. `presentationSeq` is now
+   * `history.length`, computed synchronously in the same render that produces `selection`.
+   */
+  test('#8733: a same-lemma requeue of a paronym card is a fresh presentation in the rendered component, not the frozen first order', async () => {
+    // The deck has exactly ONE paronym-eligible lemma, so answering it (right or wrong)
+    // always requeues the SAME itemId as the next selection — the exact same-id-requeue
+    // shape the shuffle-only tests could not exercise on a live component tree.
+    const initialPositions: number[] = [];
+    const requeuePositions: number[] = [];
+    for (const randomSeed of [0.05, 0.1, 0.15, 0.2, 0.3, 0.5]) {
+      localStorage.clear();
+      loadState(localStorage, NOW);
+      vi.spyOn(Date, 'now').mockReturnValue(0);
+      vi.spyOn(Math, 'random').mockReturnValue(randomSeed);
+      const user = userEvent.setup();
+      const { unmount } = render(
+        <LexiconPractice initialDeck={paronymDeck()} autoStart initialMode="paronym" />,
+      );
+
+      const correctIndex = async () => {
+        const stage = within(await screen.findByTestId('practice-paronym'));
+        const buttons = stage.getAllByRole('button');
+        return { buttons, index: buttons.findIndex((button) => /бігає/.test(button.textContent ?? '')) };
+      };
+
+      const first = await correctIndex();
+      expect(first.index).toBeGreaterThanOrEqual(0);
+      initialPositions.push(first.index);
+
+      // Answer WRONG so the card lapses and — being the only playable item — is
+      // immediately requeued as the very next selection: same itemId, fresh presentation.
+      const wrongButton = first.buttons[first.index === 0 ? 1 : 0];
+      await user.click(wrongButton);
+      await user.click(await screen.findByTestId('practice-advance-button'));
+
+      const second = await correctIndex();
+      expect(second.index).toBeGreaterThanOrEqual(0);
+      requeuePositions.push(second.index);
+
+      unmount();
+      vi.restoreAllMocks();
+      localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+    }
+
+    // Pre-fix, the commit effect never re-fires for a same-itemId requeue, so every
+    // requeue freezes at the exact order the first presentation already settled on —
+    // `requeuePositions` would equal `initialPositions` element-for-element. Fixed
+    // behavior: history.length (and so the presentation key) advances on every requeue
+    // regardless of itemId, so at least one requeue lands on a different order.
+    expect(requeuePositions).not.toEqual(initialPositions);
+  });
+
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
     const { container } = render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 
@@ -5098,6 +5155,144 @@ describe('LexiconPractice', () => {
       await clickNext();
       expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
     });
+
+    /**
+     * #8732 (review round 2): the fix above pins the committed selection against a
+     * poolFilter-driven swap, but left `committedSelectionRef.current.historyLen` stale
+     * whenever the commit effect skipped a same-itemId requeue (see the presentationSeq
+     * fix's own comment). Left unfixed, `committedStillValid` can misfire false the next
+     * time that requeued card is rated, defeating the exact pin this test's sibling above
+     * proves for a plain re-render. This plays a 2-lemma deck past its planned total so an
+     * extension forces a same-itemId requeue (verified generically: with only 2 lemmas and
+     * a 3rd+ serving, some itemId must repeat), then exercises the honest extension
+     * progress text, no-swap-before-Next on every serving, Enter-to-advance, and a summary
+     * retry, end to end in one continuous session.
+     */
+    function twoChoiceLemmaDeck(): PracticeDeckData {
+      // 'knyha'/'robota' are the only selectable items (mode 'choice'); 'misto'/'shkola'
+      // stay mode:[] (unselectable) and exist purely as the meaning-distractor pool.
+      const base = sampleDeck();
+      return {
+        ...base,
+        index: base.index.map((item) => ({
+          ...item,
+          modes: (item.lemmaId === 'knyha' || item.lemmaId === 'robota')
+            ? (['choice'] as PracticeMode[])
+            : [],
+          hasCloze: false,
+          clozeIds: [],
+        })),
+        cloze: [],
+      };
+    }
+
+    test('a same-lemma requeue never swaps before Next, the progress pill stays honest through the extension, Enter advances, and Another session replays cleanly (#8732)', async () => {
+      const user = userEvent.setup();
+      render(
+        <LexiconPractice initialDeck={twoChoiceLemmaDeck()} autoStart initialMode="choice" />,
+      );
+
+      // #M-4: identify the ACTIVE card from the prompt (which names the current lemma
+      // explicitly), never from which option buttons are present — both lemmas' UA
+      // forms/glosses can appear together as one correct answer + one distractor, so
+      // matching on option text alone silently misidentifies which card is live.
+      const currentCard = async () => {
+        await screen.findByTestId('practice-choice');
+        const promptText = screen.getByText(/^Що означає «|^Яке слово означає «/).textContent ?? '';
+        const isWordToMeaning = promptText.includes('Що означає «');
+        const isKnyha = /книга|book/.test(promptText);
+        const lemma: 'knyha' | 'robota' = isKnyha ? 'knyha' : 'robota';
+        const answerText = isKnyha
+          ? (isWordToMeaning ? 'book' : 'книга')
+          : (isWordToMeaning ? 'work' : 'робота');
+        const scope = within(screen.getByTestId('practice-choice'));
+        const buttons = scope.getAllByRole('button');
+        const correct = buttons.find((button) => button.textContent?.includes(answerText))!;
+        const wrong = buttons.find((button) => button !== correct)!;
+        return { lemma, correct, wrong };
+      };
+      const clickNext = async () => {
+        const advance = await screen.findByTestId('practice-advance-button');
+        await user.click(advance);
+        await waitFor(() => {
+          expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+        });
+      };
+
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/2');
+      const seenLemmas: Array<'knyha' | 'robota'> = [];
+
+      // Resolve whichever card comes up first normally.
+      const first = await currentCard();
+      seenLemmas.push(first.lemma);
+      await user.click(first.correct);
+      await screen.findByTestId('practice-advance-button');
+      await clickNext();
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/2');
+
+      // Lapse the second card: it stays unresolved, so the round must EXTEND.
+      const second = await currentCard();
+      seenLemmas.push(second.lemma);
+      await user.click(second.wrong);
+      await screen.findByTestId('practice-advance-button');
+      await clickNext();
+      // #8732: the honest extension total (plannedTotal 2 + extensionUsed 1), not a
+      // pre-extension total stuck showing no visible progress for the requeue.
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('2/3');
+
+      // With only 2 lemmas total and this the 3rd serving, this MUST be a re-presentation
+      // of an itemId already shown above — a genuine same-lemma requeue (FSRS's own
+      // learning-step schedule decides which one; either is a valid requeue for this test).
+      const requeued = await currentCard();
+      expect(seenLemmas).toContain(requeued.lemma);
+
+      // Rating it again is exactly where `committedSelectionRef` used to go stale (the
+      // commit effect never re-fired for the same itemId on the requeue above), so
+      // `committedStillValid` misfired false here and the dwell-freeze protecting the
+      // just-answered card silently stopped applying before the explicit Next — the
+      // display could swap to something else mid-dwell.
+      await user.click(requeued.correct);
+      await screen.findByTestId('practice-advance-button');
+      const stillShowing = await currentCard();
+      expect(stillShowing.lemma).toBe(requeued.lemma); // no swap before Next
+
+      // Enter advances exactly like a «Далі →» click. The round may extend further
+      // (FSRS can keep re-serving a learning-step card), so drain it the same way,
+      // checking the pill stays honest and nothing swaps before its own explicit advance.
+      let previousDenominator = 3;
+      for (let i = 0; i < 10 && !screen.queryByTestId('practice-session-summary'); i += 1) {
+        const before = await currentCard();
+        await user.click(before.correct);
+        await screen.findByTestId('practice-advance-button');
+        const after = await currentCard();
+        expect(after.lemma).toBe(before.lemma); // no swap before Next
+        const text = screen.getByTestId('practice-session-progress').textContent ?? '';
+        const match = text.match(/^(\d+)\/(\d+)$/);
+        expect(match).toBeTruthy();
+        const [, numerator, denominator] = match!;
+        expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
+        expect(Number(denominator)).toBeGreaterThanOrEqual(previousDenominator);
+        previousDenominator = Number(denominator);
+        if (i === 0) {
+          await user.keyboard('{Enter}');
+          await waitFor(() => {
+            expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+          });
+        } else {
+          await clickNext();
+        }
+      }
+
+      const summary = await screen.findByTestId('practice-session-summary');
+      expect(summary).toHaveTextContent('2/2'); // the summary still scores the frozen plan
+
+      // Retry after the summary starts a fresh, playable session — not a dead end.
+      await user.click(screen.getByRole('button', { name: /Another session/i }));
+      await waitFor(() => {
+        expect(screen.queryByTestId('practice-session-summary')).not.toBeInTheDocument();
+      });
+      expect(await screen.findByTestId('practice-choice')).toBeInTheDocument();
+    });
   });
 
   describe('PracticeStress N-vowel generality', () => {
@@ -6330,7 +6525,7 @@ describe('LexiconPractice', () => {
       };
     }
 
-    test('#6720 session badge keeps one denominator for the whole round and the summary agrees', async () => {
+    test('#6720/#8732 session badge tracks one denominator per completed card and grows honestly on extension, while the summary keeps the frozen round size', async () => {
       const user = userEvent.setup();
       const { container } = render(
         <LexiconPractice initialDeck={threeFlashcardDeck()} autoStart initialMode="flashcards" />,
@@ -6350,20 +6545,30 @@ describe('LexiconPractice', () => {
       await answerCurrent('good');
       expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('2/3');
       await answerCurrent('good');
-      // The extension must not grow the denominator mid-round (was 3/4 → 4/5 …).
-      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('3/3');
+      // #8732: the round now genuinely extends (the lapsed card is still unresolved), so
+      // the pill's own denominator grows with it — it must never sit stuck at "3/3" while
+      // more cards are actually being served underneath it.
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('3/4');
 
-      // Answer whatever the extension re-serves until the round closes; the badge
-      // denominator must stay frozen the whole time.
+      // Answer whatever the extension re-serves until the round closes; each answered
+      // extension card must keep the numerator/denominator honestly matched (never stuck).
+      let previousDenominator = 4;
       for (let i = 0; i < 8; i += 1) {
         if (screen.queryByTestId('practice-session-summary')) break;
         await answerCurrent('good');
         if (screen.queryByTestId('practice-session-summary')) break;
-        expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(/^\d+\/3$/);
+        const text = screen.getByTestId('practice-session-progress').textContent ?? '';
+        const match = text.match(/^(\d+)\/(\d+)$/);
+        expect(match).toBeTruthy();
+        const [, numerator, denominator] = match!;
+        expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
+        expect(Number(denominator)).toBeGreaterThanOrEqual(previousDenominator);
+        previousDenominator = Number(denominator);
       }
 
       const summary = await screen.findByTestId('practice-session-summary');
-      // Same denominator as the badge: the score is against the frozen round size.
+      // The summary still scores against the frozen round size, independent of how far
+      // the live badge grew during extension.
       expect(summary).toHaveTextContent('3/3');
     });
 
