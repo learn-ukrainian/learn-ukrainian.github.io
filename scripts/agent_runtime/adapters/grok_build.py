@@ -15,8 +15,9 @@ The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
-- ``read-only``       → ``auto`` + fail-closed ``--deny`` on write tools and ``Bash``
-  (Read/Grep/Glob still run; no shell — prefix deny lists are not a closed allowlist under ``auto``)
+- ``read-only``       → ``auto`` + ``--deny`` on write tools and ``Bash`` by
+  default. Ordinary reviewer opt-ins replace the Bash deny with fleet and
+  publish PreToolUse guards.
 - ``workspace-write`` → ``auto`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
 - ``danger``          → ``bypassPermissions`` + ``--always-approve``
@@ -25,9 +26,9 @@ Mode → ``--permission-mode``:
 Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
 while ``plan`` blocks all tool calls outright. Write dispatches map to execution-capable
-``auto``/``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only`` also
-maps to ``auto`` so non-shell read tools can run, but must deny ``Bash`` and write tools
-fail-closed (same posture as sealed ``review_isolation`` Bash denial).
+``auto``/``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
+maps to ``auto`` so non-shell read tools can run; only opted-in reviewers get
+guarded Bash. Other read-only calls retain their Bash deny.
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.
@@ -43,6 +44,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import tempfile
 from pathlib import Path
@@ -69,7 +71,7 @@ _RATE_LIMIT_RE = re.compile(
 # Runtime mode → grok CLI --permission-mode value.
 # Issue #7583: on grok 1.0.x, acceptEdits does not cover shell headlessly (turn
 # cancels), while plan blocks all tool calls. We map workspace-write to auto
-# (with --always-approve) and read-only to auto with fail-closed Bash/write denies.
+# (with --always-approve) and read-only to auto with Bash/write denies by default.
 _MODE_PERMISSION: dict[str, str] = {
     "read-only": "auto",
     "workspace-write": "auto",
@@ -80,10 +82,10 @@ _MODE_PERMISSION: dict[str, str] = {
 # run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
 
-# Deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
+# Default deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
 # --permission-mode auto may approve unnamed commands, and prefix Bash denies
 # are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
-# write tools wholesale — same fail-closed shell posture as review_isolation.
+# write tools wholesale unless the caller opts into reviewer hooks.
 # Native Grok's documented permission-rule prefixes are Bash, Edit, Write, Read,
 # Grep, WebFetch, and MCPTool. These are permission prefixes, not built-in tool
 # IDs: ``search_replace`` belongs to ``--disallowed-tools``, not ``--deny``.
@@ -138,6 +140,44 @@ _TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
 _META_RESUME_SESSION_ID = "resume_session_id"
 _META_LIVENESS_SESSION_ID = "liveness_session_id"
 _META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
+_META_REVIEWER_AGENT_FILE = "reviewer_agent_file"
+
+
+def _reviewer_agent_definition() -> str:
+    """Build a per-invocation Grok agent with the tracked fleet guards.
+
+    Grok has no ``--settings`` flag. Its ``--agent`` definition supports
+    PreToolUse hooks for the primary session, as verified against the native
+    CLI. The wrapper translates Grok's camelCase event into the Claude-shaped
+    payload consumed by the existing guards.
+    """
+    from .claude import _worker_guard_settings
+
+    source_root = Path(__file__).resolve().parents[3]
+    wrapper = source_root / "scripts/agent_runtime/grok_hook_bridge.py"
+    if not wrapper.is_file():
+        raise RuntimeError(f"Grok reviewer hook bridge unavailable: {wrapper}")
+    groups = json.loads(_worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
+    lines = [
+        "---",
+        "name: lu-read-only-reviewer",
+        "description: Read-only reviewer with fleet PreToolUse guards",
+        "hooks:",
+        "  PreToolUse:",
+    ]
+    for group in groups:
+        lines.extend([f"    - matcher: {json.dumps(group['matcher'])}", "      hooks:"])
+        for hook in group["hooks"]:
+            command = f"{shlex.quote(str(wrapper))} {shlex.quote(hook['command'])}"
+            lines.extend(
+                [
+                    "        - type: command",
+                    f"          command: {json.dumps(command)}",
+                    f"          timeout: {max(15, int(hook.get('timeout', 5)))}",
+                ]
+            )
+    lines.extend(["---", "Review the requested work using the available tools and report executed evidence.", ""])
+    return "\n".join(lines)
 
 
 def validate_grok_effort(effort: str | None) -> str | None:
@@ -219,6 +259,15 @@ class GrokBuildAdapter:
                 raise TrailIsolationError(f"Grok trail isolation refuses incompatible tool_config keys: {unsupported}")
             trail_cwd = assert_trail_isolation_config(tc, profile="grok")
         review_isolation = bool(tc.get("review_isolation"))
+        reviewer_tools = (
+            mode == "read-only"
+            and tc.get("reviewer_tools") is True
+            and not trail_isolation
+            and not review_isolation
+            and not tc.get("strict_mcp_config")
+            and not tc.get("mcp_server_names")
+            and "allowed_tools" not in tc
+        )
         review_write_root: Path | None = None
         if review_isolation:
             from scripts.review.isolation import validated_review_write_root
@@ -245,6 +294,14 @@ class GrokBuildAdapter:
             prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
+        reviewer_agent_file: str | None = None
+        if reviewer_tools:
+            with tempfile.NamedTemporaryFile(
+                "w", suffix=".grok-reviewer-agent.md", delete=False, encoding="utf-8"
+            ) as handle:
+                handle.write(_reviewer_agent_definition())
+                reviewer_agent_file = handle.name
+            cmd.extend(["--agent", reviewer_agent_file])
         execution_cwd = trail_cwd or cwd
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
         # would be misparsed by clap as a flag, so route those through a temp
@@ -281,7 +338,7 @@ class GrokBuildAdapter:
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run, with fail-closed `--deny` on Bash + write tools.
+        # read tools can run. The reviewer opt-in replaces the Bash deny with hooks.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
@@ -308,6 +365,8 @@ class GrokBuildAdapter:
                 cmd.extend(["--deny", rule])
         elif mode == "read-only" and not trail_isolation and not review_isolation:
             for rule in _READ_ONLY_DENY_RULES:
+                if reviewer_tools and rule == "Bash":
+                    continue
                 cmd.extend(["--deny", rule])
         if trail_isolation:
             cmd.extend(
@@ -413,6 +472,8 @@ class GrokBuildAdapter:
             # state (#6935).
             _META_LIVENESS_SNAPSHOT: sorted(path.name for path in snapshot),
         }
+        if reviewer_agent_file is not None:
+            metadata[_META_REVIEWER_AGENT_FILE] = reviewer_agent_file
         liveness_paths, _discovered = self._liveness_paths_for_cwd(
             execution_cwd,
             bound_session_id=resume_session_id,
@@ -425,11 +486,17 @@ class GrokBuildAdapter:
             cwd=execution_cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={},
+            env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
             liveness_paths=liveness_paths,
             metadata=metadata,
             host_harness="grok",
         )
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Remove only the reviewer agent definition created for this plan."""
+        path = plan.metadata.get(_META_REVIEWER_AGENT_FILE)
+        if isinstance(path, str) and path.endswith(".grok-reviewer-agent.md"):
+            Path(path).unlink(missing_ok=True)
 
     def parse_response(
         self,

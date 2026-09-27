@@ -190,7 +190,7 @@ def process_for_grok_build(
                     )
                 review_tool_config = checkout.isolation_tool_config("grok")
             else:
-                review_tool_config = None
+                review_tool_config = {"reviewer_tools": True}
             prompt = append_review_prompt_evidence(
                 _build_grok_build_prompt(
                     msg,
