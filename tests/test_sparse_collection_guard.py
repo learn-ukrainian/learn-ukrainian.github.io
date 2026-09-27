@@ -17,7 +17,10 @@ Coverage is derived, not sampled: every test module whose module-level code
 sparse trees, unioned with the test modules changed by #8581 that reach the
 trees through helper calls the scan cannot see. Modules that read the trees
 only inside test bodies cannot break collection and are excluded to keep the
-guard fast.
+guard fast. The child collects their common parent directory once and ignores
+every other test file (``tests.sparse_collection_scope``). One pytest
+argument per module makes pytest re-scan that directory each time, which was
+the per-PR cost.
 """
 
 from __future__ import annotations
@@ -28,10 +31,12 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
+from tests.sparse_collection_scope import SCOPE_FILE_ENV
 from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
@@ -116,6 +121,35 @@ def _collection_targets() -> list[str]:
     return sorted(targets)
 
 
+def _resolved_targets(targets: list[str]) -> list[Path]:
+    resolved: list[Path] = []
+    for target in targets:
+        path = Path(target)
+        if not path.is_absolute():
+            path = _REPO_ROOT / path
+        resolved.append(path.resolve())
+    missing = [str(path) for path in resolved if not path.is_file()]
+    assert not missing, f"collection targets no longer exist: {missing}"
+    return resolved
+
+
+def _collection_directory(resolved: list[Path]) -> Path:
+    """Narrowest directory that contains every target."""
+    common = Path(os.path.commonpath([str(path) for path in resolved]))
+    if common.is_file():
+        return common.parent
+    return common
+
+
+def _pytest_collection_arg(directory: Path, cwd: Path) -> str:
+    try:
+        relative = directory.resolve().relative_to(cwd.resolve())
+    except ValueError:
+        return directory.as_posix()
+    text = relative.as_posix()
+    return text or "."
+
+
 def collect_with_absent_trees(
     targets: list[str],
     *,
@@ -126,9 +160,14 @@ def collect_with_absent_trees(
 
     The audit plugin is named on the command line and imported only by the
     child. This process does not import it, so the hook stays inactive here.
+    The same child loads ``tests.sparse_collection_scope`` and collects the
+    targets' common parent once, ignoring every test module outside ``targets``.
+    Eager-read failures still abort that collection.
     """
     work = cwd or _REPO_ROOT
     root = Path(os.path.abspath(repo_root or _REPO_ROOT))
+    resolved = _resolved_targets(targets)
+    directory = _collection_directory(resolved)
     env = os.environ.copy()
     env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
     env[REPO_ROOT_ENV] = str(root)
@@ -137,37 +176,55 @@ def collect_with_absent_trees(
     env.pop("PYTEST_PLUGINS", None)
     prior = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
-    return subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            *targets,
-            "--collect-only",
-            "-q",
-            "--tb=line",
-            "-o",
-            "addopts=",
-            "-p",
-            "no:cacheprovider",
-            "-p",
-            "tests.sparse_collection_audit",
-        ],
-        cwd=work,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=100,
-    )
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix="sparse-collection-scope-",
+        suffix=".txt",
+        delete=False,
+    ) as scope_file:
+        scope_file.write("\n".join(path.as_posix() for path in resolved) + "\n")
+        scope_file.flush()
+        env[SCOPE_FILE_ENV] = scope_file.name
+        try:
+            return subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pytest",
+                    _pytest_collection_arg(directory, work),
+                    "--collect-only",
+                    "-q",
+                    "--tb=line",
+                    "-o",
+                    "addopts=",
+                    "-p",
+                    "no:cacheprovider",
+                    "-p",
+                    "tests.sparse_collection_scope",
+                    "-p",
+                    "tests.sparse_collection_audit",
+                ],
+                cwd=work,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=100,
+            )
+        finally:
+            os.unlink(scope_file.name)
 
 
 def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
-    completed = collect_with_absent_trees(_collection_targets())
+    targets = _collection_targets()
+    completed = collect_with_absent_trees(targets)
     output = completed.stdout + completed.stderr
     assert completed.returncode == 0, output
     assert "errors during collection" not in output
     assert "Interrupted:" not in output
+    missing = [target for target in targets if target not in output]
+    assert not missing, f"collection did not report targets: {missing}\n{output[-2000:]}"
 
 
 def _existing_curriculum_file(repo: Path) -> Path | None:
