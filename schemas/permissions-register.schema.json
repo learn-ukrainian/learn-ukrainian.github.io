@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/krisztiankoos/learn-ukrainian/schemas/permissions-register.schema.json",
+  "title": "Source permissions register (#8979)",
+  "description": "Per (source, field, scale) and per use permission record for every source feeding word cards, the Word Atlas, practice and the open dataset. Human-readable twin: docs/sources/permissions-register.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "register_date",
+    "uses",
+    "statuses",
+    "scales",
+    "gates",
+    "legal_references",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "register_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "uses": {
+      "description": "Closed list of uses; every permission row must state every one.",
+      "const": [
+        "acquire",
+        "store",
+        "transform",
+        "display",
+        "redistribute"
+      ]
+    },
+    "statuses": {
+      "const": [
+        "permitted",
+        "assessed",
+        "unknown",
+        "refused"
+      ]
+    },
+    "scales": {
+      "const": [
+        "lookup",
+        "quotation",
+        "bulk"
+      ]
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "site_display",
+        "dataset_and_atlas_export"
+      ],
+      "properties": {
+        "site_display": {
+          "$ref": "#/$defs/gate"
+        },
+        "dataset_and_atlas_export": {
+          "$ref": "#/$defs/gate"
+        }
+      }
+    },
+    "legal_references": {
+      "type": "array",
+      "description": "Statutory text quoted once and cited from `assessed` uses via terms_refs.",
+      "items": {
+        "$ref": "#/$defs/termsQuote"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmpty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "use",
+        "publish_if",
+        "description"
+      ],
+      "properties": {
+        "use": {
+          "enum": [
+            "acquire",
+            "store",
+            "transform",
+            "display",
+            "redistribute"
+          ]
+        },
+        "publish_if": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "permitted",
+              "assessed"
+            ]
+          }
+        },
+        "description": {
+          "$ref": "#/$defs/nonEmpty"
+        }
+      }
+    },
+    "termsQuote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "quote",
+        "url",
+        "read_on"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "quote": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "gloss_en": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://"
+        },
+        "read_on": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "useStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "permitted",
+            "assessed",
+            "unknown",
+            "refused"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "terms_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          }
+        }
+      }
+    },
+    "permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fields",
+        "scale",
+        "uses"
+      ],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          }
+        },
+        "scale": {
+          "enum": [
+            "lookup",
+            "quotation",
+            "bulk"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "uses": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "acquire",
+            "store",
+            "transform",
+            "display",
+            "redistribute"
+          ],
+          "properties": {
+            "acquire": {
+              "$ref": "#/$defs/useStatus"
+            },
+            "store": {
+              "$ref": "#/$defs/useStatus"
+            },
+            "transform": {
+              "$ref": "#/$defs/useStatus"
+            },
+            "display": {
+              "$ref": "#/$defs/useStatus"
+            },
+            "redistribute": {
+              "$ref": "#/$defs/useStatus"
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "organisation",
+        "role",
+        "fields_used",
+        "stored_in",
+        "terms",
+        "licence",
+        "conditions",
+        "permissions",
+        "open_questions",
+        "contact"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "organisation": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "role": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "fields_used": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          }
+        },
+        "stored_in": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmpty"
+          }
+        },
+        "terms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "found",
+            "quotes",
+            "searched"
+          ],
+          "properties": {
+            "found": {
+              "type": "boolean"
+            },
+            "quotes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/termsQuote"
+              }
+            },
+            "searched": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nonEmpty"
+              }
+            }
+          }
+        },
+        "licence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "spdx"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/nonEmpty"
+            },
+            "spdx": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "conditions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attribution",
+            "share_alike",
+            "non_commercial"
+          ],
+          "properties": {
+            "attribution": {
+              "$ref": "#/$defs/nonEmpty"
+            },
+            "share_alike": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "non_commercial": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "other": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nonEmpty"
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/permission"
+          }
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmpty"
+          }
+        },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route"
+          ],
+          "properties": {
+            "route": {
+              "$ref": "#/$defs/nonEmpty"
+            },
+            "email": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "outreach": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
