@@ -827,6 +827,26 @@ snapshot, and every terminal record keeps `peak_rss_mib`. That value is the larg
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
 
+**Worker isolation (#8645 part C):** the detached worker runs in the user slice
+`lu-dispatch.slice` (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`) via
+`systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
+is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
+arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
+is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+Fallback is the supported path when no user manager is reachable, linger is off, cgroup
+v2 memory is not delegated, or the slice is missing or does not have those limits:
+dispatch prints one warning and uses plain `Popen`. The same fallback is used when
+`systemd-run` exits before the worker writes its start marker, and when the startup
+window ends while `/proc/<pid>` still shows `systemd-run` (the worker never exec'd):
+that process is stopped and plain `Popen` is used. If the process image is already
+the worker, that process is kept and not relaunched. If the start marker arrives only
+as the process is stopped, or `/proc` cannot be read, the task is marked failed and
+is not started again. `LU_DISPATCH_ISOLATION=fallback` forces that path. Install steps
+and the linger/cgroup prerequisites are in
+`packaging/systemd/README.md`. When the slice is active, the admission line adds its
+current memory use against `MemoryMax`. An inactive or missing slice is left off the
+line. `peak_rss_mib` is unchanged.
+
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
 
