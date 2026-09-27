@@ -193,6 +193,9 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
 
   const handleCheck = () => {
     setShowResult(true);
+    // Check Answers unmounts once results show, replaced by Try Again —
+    // send focus there so it never falls back to document.body.
+    setPendingFocusId('group-sort-retry');
   };
 
   const handleReset = () => {
@@ -268,8 +271,10 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
   // Renders the group-choice buttons for the currently selected tile. Called
   // inline right after that tile (in the pool or in its bucket) so Tab
   // reaches it immediately after the tile, instead of after every other tile
-  // in the activity.
-  const renderChooser = (itemId: string) => (
+  // in the activity. `currentGroup` (unset for pool tiles) is left out of the
+  // offered buttons — choosing a tile's own bucket is a no-op that would
+  // strand focus when the chooser it lived in disappears.
+  const renderChooser = (itemId: string, currentGroup?: string) => (
     <div
       role="group"
       aria-label={isUkrainian ? 'Виберіть групу' : 'Choose a group'}
@@ -287,7 +292,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           {isUkrainian ? '↩ Повернути до набору' : '↩ Return to pool'}
         </button>
       )}
-      {groupNames.map((name) => (
+      {groupNames.filter((name) => name !== currentGroup).map((name) => (
         <button
           key={name}
           type="button"
@@ -397,7 +402,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
                       {item.word}
                     </button>
                   );
-                  const chooser = isSelected && !showResult ? renderChooser(item.id) : null;
+                  const chooser = isSelected && !showResult ? renderChooser(item.id, groupName) : null;
                   // Only wrap in an extra element (and gain the why paragraph)
                   // when this entry actually carries a `why` — legacy
                   // string entries render the bare tile, exactly as on main.
@@ -442,7 +447,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           </button>
         )}
         {showResult && (
-          <button className={styles.resetButton} onClick={handleReset}>
+          <button className={styles.resetButton} onClick={handleReset} data-focus-id="group-sort-retry">
             {retryBtnLabel}
           </button>
         )}

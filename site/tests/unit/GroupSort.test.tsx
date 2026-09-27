@@ -391,6 +391,44 @@ describe('GroupSort keyboard-only placement', () => {
     const why = container.querySelector('[data-activity="group-sort-entry-why"]');
     expect(why).toBeInTheDocument();
     expect(why).toHaveTextContent('apple is a fruit.');
+
+    // Checking replaces "Check Answers" with "Try Again" — focus must move
+    // to it, never fall back to document.body.
+    expect(document.activeElement).not.toBe(document.body);
+    expect(document.activeElement?.textContent?.trim()).toBe('Try Again');
+
+    await user.keyboard('{Enter}');
+    expect(wordTiles(pool(container)).map((t) => t.textContent?.trim())).toEqual(
+      expect.arrayContaining(['apple', 'carrot']),
+    );
+  });
+
+  test("a placed tile's chooser does not offer a button for its own bucket, and choosing another bucket keeps focus off document.body", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<GroupSort groups={groups} />);
+
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    await tabUntil(user, () => document.activeElement === appleTile);
+    await user.keyboard('{Enter}');
+    const fruitsChoice = container.querySelector<HTMLButtonElement>('[data-target="Fruits"]')!;
+    await tabUntil(user, () => document.activeElement === fruitsChoice);
+    await user.keyboard('{Enter}');
+    expect(wordTiles(bucketByName(container, 'Fruits')).map((t) => t.textContent?.trim())).toContain('apple');
+
+    // Re-select the placed "apple" — its chooser must not offer "Fruits"
+    // again, since choosing it would be a no-op that strands focus.
+    const placedApple = wordTiles(bucketByName(container, 'Fruits'))[0];
+    await tabUntil(user, () => document.activeElement === placedApple);
+    await user.keyboard('{Enter}');
+    expect(container.querySelector('[data-target="Fruits"]')).toBeNull();
+
+    const vegChoice = container.querySelector<HTMLButtonElement>('[data-target="Vegetables"]')!;
+    await tabUntil(user, () => document.activeElement === vegChoice);
+    await user.keyboard('{Enter}');
+
+    expect(wordTiles(bucketByName(container, 'Vegetables')).map((t) => t.textContent?.trim())).toContain('apple');
+    expect(wordTiles(bucketByName(container, 'Fruits'))).toHaveLength(0);
+    expect(document.activeElement).not.toBe(document.body);
   });
 
   test('selecting a placed entry and choosing "return to pool" moves it back, by keyboard, with focus staying off document.body', async () => {
