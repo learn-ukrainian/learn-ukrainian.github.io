@@ -1,8 +1,8 @@
-"""The launcher refuses unregistered handoff slots and every mintable one is registered (#8303).
+"""The launcher refuses unregistered handoff slots before a session starts (#8303).
 
 ``scripts/config/area_assignments.yaml`` is the roster of addressable slots.  Its header says
 "do not add rows without a mintable selector"; these tests enforce that rule in both
-directions and prove the launcher fails closed instead of minting ``<provider>-<lane>``.
+directions and prove the launcher fails closed for removed content identities.
 """
 
 from __future__ import annotations
@@ -168,18 +168,22 @@ def test_launcher_providers_are_read_from_the_driver_entry_points() -> None:
     assert {"claude", "codex"} <= set(PROVIDERS)
 
 
-def test_every_alias_selector_mints_a_registered_slot_for_every_provider() -> None:
-    """Forward direction: nothing the compatibility map can mint is missing from the roster."""
+def test_alias_selector_gate_matches_content_provider_policy() -> None:
+    """Every alias works except non-approved providers in Ukrainian content areas."""
     lanes, gate = _gate_matrix()
     aliases = _alias_selectors()
     assert set(aliases) <= set(lanes), "an alias selector no longer resolves"
-    refused = [
+    mismatches = [
         f"{provider}-{lanes[selector]} (selector {selector}, gate exit {gate[provider][lanes[selector]]})"
         for selector in aliases
         for provider in PROVIDERS
-        if gate[provider][lanes[selector]] != 0
+        if gate[provider][lanes[selector]] != (
+            3
+            if provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"}
+            else 0
+        )
     ]
-    assert not refused, f"aliases mint slots the launcher gate refuses: {refused}"
+    assert not mismatches, f"alias slot gate disagrees with operator order: {mismatches}"
 
 
 def test_alias_table_session_epic_matches_lane_except_curriculum_upgrade() -> None:
@@ -204,16 +208,16 @@ def test_alias_table_session_epic_matches_lane_except_curriculum_upgrade() -> No
 def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -> None:
     """Converse direction, judged by the real gate per provider, not assumed from one provider.
 
-    Every lane the roster has for any provider must be accepted by every launcher provider:
-    a stream with slots for five providers but none for ``codex`` is refused by the Codex
-    launcher, so the roster row set must be uniform across the launcher providers.
+    Every registered slot for a launcher provider must be reachable through a selector.
     """
     roster = _channels._load_registry_slots()
     assert roster, "area_assignments.yaml roster must load"
     _, gate = _gate_matrix()
     accepted = {provider: {lane for lane, code in gate[provider].items() if code == 0} for provider in PROVIDERS}
-    roster_lanes = {slot.split("-", 1)[1] for slot in roster}
-    unreachable = [f"{provider}-{lane}" for provider in PROVIDERS for lane in sorted(roster_lanes - accepted[provider])]
+    unreachable = [
+        slot for slot in roster
+        if slot.split("-", 1)[0] in PROVIDERS and slot.split("-", 1)[1] not in accepted[slot.split("-", 1)[0]]
+    ]
     assert not unreachable, f"launcher providers cannot reach these roster lanes: {unreachable}"
     # Roster providers without a driver launcher (kimi) still need a selector that mints their lane.
     minted = set().union(*accepted.values())
@@ -224,24 +228,30 @@ def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -
 
 
 def test_generic_registry_keys_are_registered_or_refused_for_every_provider() -> None:
-    """A registry key the alias map does not cover is backed by a slot for every provider or refused for all."""
+    """A registry key is accepted only when its provider slot is registered."""
     keys = _registry_stream_keys()
     lanes, gate = _gate_matrix()
     for selector in [*keys, *(f"infra.{key}" for key in keys)]:
         if selector not in lanes:
             continue
         lane = lanes[selector]
-        accepting = [provider for provider in PROVIDERS if gate[provider][lane] == 0]
-        refusing = [provider for provider in PROVIDERS if provider not in accepting]
-        for provider in accepting:
-            assert registry.is_registered_slot(f"{provider}-{lane}"), (
-                f"{selector}: gate accepted unregistered {provider}-{lane}"
-            )
-        assert not (accepting and refusing), (
-            f"{selector}: lane '{lane}' is registered for {accepting} but the launcher refuses {refusing}"
-        )
-        for provider in refusing:
-            assert gate[provider][lane] == 3, f"{selector}: {provider}-{lane} refusal must be 'not registered' (3)"
+        for provider in PROVIDERS:
+            expected = 0 if registry.is_registered_slot(f"{provider}-{lane}") else 3
+            assert gate[provider][lane] == expected, f"{selector}: {provider}-{lane} gate disagrees with roster"
+            if lane in {"folk", "bio", "hramatka"}:
+                assert (expected == 0) == (provider in {"claude", "codex", "gemini"}), (
+                    f"{selector}: {provider}-{lane} violates operator order"
+                )
+
+
+@pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
+@pytest.mark.parametrize("selector, lane", (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka")))
+def test_removed_content_slot_refused_by_operator_order(provider: str, selector: str, lane: str) -> None:
+    result = _gate(provider, selector)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert f"'{provider}-{lane}'" in result.stderr
+    assert "operator order 2026-09-27" in result.stderr
+    assert "only claude, gpt and gemini" in result.stderr
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
