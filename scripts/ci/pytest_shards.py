@@ -373,9 +373,9 @@ def _gh_json(path: str) -> dict[str, Any]:
 
 
 def _complete_junit_durations(paths: Sequence[Path], committed: dict[str, float]) -> tuple[dict[str, float], int]:
-    """Accept only four complete, disjoint full-tier JUnit reports."""
-    if len(paths) != 4:
-        raise ValueError("full merge-queue JUnit requires four shard reports")
+    """Accept complete, disjoint full-tier JUnit reports."""
+    if len(paths) < 4:
+        raise ValueError("full merge-queue JUnit requires at least four shard reports")
     seen: set[tuple[str, str]] = set()
     for path in paths:
         cases = list(element_tree.parse(path).getroot().iter("testcase"))
@@ -409,15 +409,32 @@ def prepare_ci_file_durations(*, output: Path, fallback: Path, repo: str) -> str
                 reasons.append("remaining merge-queue runs are stale (>7 days)")
                 break
             run_id = int(run["id"])
+            jobs = _gh_json(
+                f"repos/{repo}/actions/runs/{run_id}/attempts/{int(run.get('run_attempt', 1))}/jobs?per_page=100"
+            ).get("jobs", [])
+            pytest_jobs = [
+                (int(match.group(1)), job.get("conclusion"))
+                for job in jobs
+                if (match := re.fullmatch(r"pytest \((\d+)\)", job.get("name", "")))
+            ]
+            job_numbers = {number for number, _ in pytest_jobs}
+            if (
+                len(job_numbers) < 4
+                or len(job_numbers) != len(pytest_jobs)
+                or job_numbers != set(range(1, max(job_numbers) + 1))
+                or any(conclusion != "success" for _, conclusion in pytest_jobs)
+            ):
+                reasons.append(f"run {run_id}: incomplete full-tier pytest jobs")
+                continue
             artifacts = _gh_json(f"repos/{repo}/actions/runs/{run_id}/artifacts?per_page=100").get("artifacts", [])
-            expected = {f"pytest-junit-shard-{index}" for index in range(1, 5)}
+            expected = {f"pytest-junit-shard-{index}" for index in job_numbers}
             available = {
                 item["name"]
                 for item in artifacts
                 if item.get("name") in expected and not item.get("expired") and item.get("size_in_bytes", 0) > 0
             }
             if available != expected:
-                reasons.append(f"run {run_id}: incomplete four-shard JUnit artifacts")
+                reasons.append(f"run {run_id}: incomplete {len(job_numbers)}-shard JUnit artifacts")
                 continue
             with tempfile.TemporaryDirectory(prefix="pytest-junit-") as temp:
                 subprocess.run(
@@ -439,7 +456,8 @@ def prepare_ci_file_durations(*, output: Path, fallback: Path, repo: str) -> str
                     timeout=120,
                 )
                 paths = [
-                    Path(temp) / f"pytest-junit-shard-{index}" / f"pytest-shard-{index}.xml" for index in range(1, 5)
+                    Path(temp) / f"pytest-junit-shard-{index}" / f"pytest-shard-{index}.xml"
+                    for index in sorted(job_numbers)
                 ]
                 try:
                     durations, count = _complete_junit_durations(paths, committed)
@@ -447,7 +465,8 @@ def prepare_ci_file_durations(*, output: Path, fallback: Path, repo: str) -> str
                     reasons.append(f"run {run_id}: {error}")
                     continue
                 _write_json(output, durations)
-                return f"pytest durations: merge_group run={run_id} tests={count} files={len(durations)}"
+                source = f"pytest durations: merge_group run={run_id} tests={count} files={len(durations)}"
+                return source + ("; skipped " + "; ".join(reasons) if reasons else "")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         reasons.append(f"GitHub JUnit lookup unavailable ({type(error).__name__})")
     output.parent.mkdir(parents=True, exist_ok=True)

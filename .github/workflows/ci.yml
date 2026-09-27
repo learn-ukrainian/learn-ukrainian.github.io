@@ -13,7 +13,7 @@ concurrency:
   # (docs.github.com troubleshooting-required-status-checks
   # #handling-skipped-but-required-checks). merge_group and schedule keep the
   # ref-keyed group and never cancel.
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:

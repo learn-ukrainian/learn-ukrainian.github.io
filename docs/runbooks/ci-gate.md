@@ -368,14 +368,14 @@ filtered by the hook: it explicitly admits them and allowed files, overriding
 pytest's default `norecursedirs` exclusions such as `build`; other files are
 ignored. This preserves the tracked-file selection, including `tests/build/`.
 
-**Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,
+**Balance — `scripts/ci/pytest_shards.py` file plane.** The file-plane subcommands,
 extending the existing planner (Cursor Cloud's node-ID plane — `plan` /
 `plan-shard` / `run` / `verify-artifacts` — is untouched):
 
 - `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:
   reads candidate repo-relative file paths from stdin (`ci.yml` pipes in
   `git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort`), LPT-assigns
-  them across `K` shards from the committed duration snapshot (median
+  them across `K` shards from the run's frozen duration snapshot (median
   fallback for files without history), writes shard `N`'s sorted allowlist,
   and prints every shard's predicted weight.
 - `file-durations --junit <xml>... --output <json>`: refreshes the committed
@@ -387,9 +387,23 @@ extending the existing planner (Cursor Cloud's node-ID plane — `plan` /
   before per-file totals are formed; a testcase whose `classname`/`name`
   doesn't resolve to a repo test file is skipped and counted, never raised.
 
-**Snapshot refresh procedure.** After a landing-tier CI run (`merge_group` or
-`push` to `main`), download each shard's uploaded `pytest-junit-shard-N`
-artifact and run:
+**Duration source.** For a full-tier run, Changes searches recent successful
+merge-queue runs for the newest complete pytest matrix. It requires all pytest
+jobs and their matching JUnit artifacts, checks disjoint testcase identities,
+rejects failures and reports with less than 90% of the committed file coverage,
+and ignores runs older than seven days. It uploads one immutable duration file
+for every shard of this CI run. An unavailable, incomplete, or stale source
+selects `scripts/ci/pytest-file-durations.json` and logs why. Selected runs use
+the committed file directly. CI Gate checks the exact number and successful
+conclusion of pytest matrix jobs through the current run-attempt API; a missing
+or unexpectedly skipped shard fails the required gate. The `needs_artifact`
+skip-set audit runs as a parallel required job, so its collection and runtime
+checks do not extend shard 1's pytest path.
+Manual `workflow_dispatch` shard trials use a run-specific concurrency group;
+pull-request cancellation and merge-group sequencing retain their existing keys.
+
+**Committed snapshot refresh procedure.** After a complete full merge-queue CI
+run, download each shard's uploaded `pytest-junit-shard-N` artifact and run:
 
 ```
 .venv/bin/python scripts/ci/pytest_shards.py file-durations \
@@ -398,8 +412,9 @@ artifact and run:
   --output scripts/ci/pytest-file-durations.json
 ```
 
-Commit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard
-balance measurably drifts — not on every green run.
+Use one `--junit` per shard in that run. Commit the refreshed snapshot (sorted
+keys, 3-decimal rounding) when shard balance measurably drifts — not on every
+green run.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 

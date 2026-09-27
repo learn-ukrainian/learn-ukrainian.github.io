@@ -310,13 +310,15 @@ def test_ci_duration_source_logs_incomplete_fallback(tmp_path: Path, monkeypatch
     def fake_gh_json(path: str) -> dict:
         if "/workflows/" in path:
             return {"workflow_runs": [run]}
+        if "/jobs?" in path:
+            return {"jobs": [{"name": f"pytest ({index})", "conclusion": "success"} for index in range(1, 5)]}
         return {"artifacts": []}
 
     monkeypatch.setattr("scripts.ci.pytest_shards._gh_json", fake_gh_json)
     output = tmp_path / "selected.json"
     message = prepare_ci_file_durations(output=output, fallback=fallback, repo="owner/repo")
     assert output.read_bytes() == fallback.read_bytes()
-    assert "committed fallback" in message and "incomplete four-shard" in message
+    assert "committed fallback" in message and "incomplete 4-shard" in message
 
 
 # =============================================================================
