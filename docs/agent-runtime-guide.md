@@ -415,8 +415,8 @@ on as the guard.
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
-blocks all tool calls outright. The adapter maps `workspace-write` to
-`auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
+blocks all tool calls outright. The adapter maps `workspace-write` and `danger`
+to `bypassPermissions --always-approve`, and
 ordinary `read-only` to `auto` with `--deny` on the native write
 permission prefixes (`Write`, `Edit`) and `Bash` unless reviewer tools are
 opted in. The built-in ID
@@ -437,6 +437,20 @@ ordinary Git push rewrite used by Claude. Code the reviewer runs (Python,
 scripts, HTTP) can still publish using host credentials: it can override its
 Git config to push or call GitHub APIs directly. The deny rules, publish hook,
 and push rewrite stop ordinary command forms only.
+
+On Grok 1.0.41 an explicit `--permission-mode auto` wins over `--always-approve`
+and leaves `yolo_mode` false. The auto classifier then refuses `git push`
+before the command runs, including a write worker's push of its own branch
+(#8965). `workspace-write` and `danger` use `bypassPermissions` so that
+classifier is not the session mode. Both also install the tracked fleet
+PreToolUse guards from `agents_extensions/shared/settings.json` (primary-checkout
+write, secret-print, merge, and the other worker hooks) through
+`scripts/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
+agent. That agent does not load `guard-reviewer-publish.py` and does not set
+the read-only Git push rewrite. The read-only reviewer opt-in keeps its publish
+hook and push rewrite on `auto`. Matchers for the write worker also name the
+Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
+`hashline_edit`, which the Claude matcher aliases do not all cover.
 
 ## Weak-driver trail isolation (P5)
 
