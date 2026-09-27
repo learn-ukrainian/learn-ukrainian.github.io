@@ -8667,6 +8667,28 @@ def _dispatch(
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
+    if review_attempt:
+        # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
+        # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
+        from scripts.review.prompts.check import parse_attempt_ids
+
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        id_mismatches = [
+            f"{name} prompt={found!r} dispatch={expected!r}"
+            for name, found, expected in (
+                ("review_id", prompt_review_id, review_id),
+                ("attempt_id", prompt_attempt_id, attempt_id),
+            )
+            if found is not None and found != expected
+        ]
+        if id_mismatches:
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
+                f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
+
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
         if dor_error:

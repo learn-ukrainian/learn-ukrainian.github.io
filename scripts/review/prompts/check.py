@@ -133,6 +133,27 @@ MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
 FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
+#: A plan/lesson/re-review return template's ``attempt:`` block (#8996): its indented body, read only up to
+#: the next unindented line, so a pinned datum that later happens to contain its own "attempt:" prose (a
+#: quoted lesson, a previous review's findings) can never be mistaken for it — the schema template's own
+#: block always renders first, in "## 4. Return Schema Instructions", well before any fenced pinned data.
+ATTEMPT_BLOCK = re.compile(r"(?m)^attempt:\n((?:^[ \t]+\S.*\n?)+)")
+ATTEMPT_FIELD = re.compile(r'(?m)^[ \t]+(review_id|attempt_id):\s*"([^"]*)"\s*$')
+
+
+def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
+    """The ``review_id``/``attempt_id`` a rendered prompt's own ``attempt:`` block names, or ``(None, None)``.
+
+    Only a template with the return schema's ``attempt`` block carries these (plan review, lesson review,
+    lesson re-review); a template without one (settle, a custom template) parses to ``(None, None)`` and
+    dispatching it does not require them.
+    """
+    block = ATTEMPT_BLOCK.search(prompt_text)
+    if block is None:
+        return None, None
+    found = dict(ATTEMPT_FIELD.findall(block.group(1)))
+    return found.get("review_id"), found.get("attempt_id")
+
 
 @dataclass(frozen=True)
 class RenderedPromptCheckResult:
@@ -344,8 +365,16 @@ def check_prompt(
     recorded_sha256: str | None = None,
     template_sha256: dict[str, str] | None = None,
     prompts_dir: Path | None = None,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
 ) -> RenderedPromptCheckResult:
-    """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates."""
+    """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates.
+
+    ``review_id``/``attempt_id`` (#8996), when given, are the ids this attempt is expected to carry; a
+    prompt whose own ``attempt:`` block names different ids fails with a named error. When not given, the
+    exact re-render uses whatever the prompt's own attempt block names (or none, for a template that prints
+    none), so the re-render can still match a prompt rendered for real dispatch ids.
+    """
     root = (repo_root or REPO_ROOT).resolve()
     errors: list[str] = []
     verifier_reads: list[str] = []
@@ -379,11 +408,33 @@ def check_prompt(
     verified = _verify_manifest_inputs(manifest_doc, root, errors)
     if errors:
         return result()
+
+    # 2b. The prompt's own attempt block (#8996), if it prints one, must agree with the ids this attempt
+    # is expected to carry; a mismatch is refused by name rather than surfacing as an opaque render diff.
+    prompt_review_id, prompt_attempt_id = parse_attempt_ids(rendered_prompt)
+    if review_id is not None and prompt_review_id is not None and review_id != prompt_review_id:
+        errors.append(
+            f"review_id_mismatch: the prompt's attempt.review_id is {prompt_review_id!r}, expected {review_id!r}"
+        )
+    if attempt_id is not None and prompt_attempt_id is not None and attempt_id != prompt_attempt_id:
+        errors.append(
+            f"attempt_id_mismatch: the prompt's attempt.attempt_id is {prompt_attempt_id!r}, expected {attempt_id!r}"
+        )
+    effective_review_id = review_id if review_id is not None else prompt_review_id
+    effective_attempt_id = attempt_id if attempt_id is not None else prompt_attempt_id
+
     # 3. Exact render: the same render.py path, the same manifest, byte for byte
     used_text: str | None = None
     used_templates: dict[Path, str] = {}
     try:
-        rendering = render(manifest_source, template_name, repo_root=root, prompts_dir=prompts_dir)
+        rendering = render(
+            manifest_source,
+            template_name,
+            repo_root=root,
+            prompts_dir=prompts_dir,
+            review_id=effective_review_id,
+            attempt_id=effective_attempt_id,
+        )
     except RenderError as err:
         errors.append(f"render_failed: {type(err).__name__}: {err}")
     else:
@@ -443,6 +494,24 @@ def main(argv: list[str] | None = None) -> int:
         "--files-read",
         default=None,
         help="Path to files_read sidecar (default: <prompt_file>.files_read.json)",
+    )
+    parser.add_argument(
+        "--review-id",
+        default=None,
+        help=(
+            "This attempt's expected review id (#8996); a prompt whose attempt block names a different one "
+            "fails with review_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
+            "Example: --review-id rev-20260922-001"
+        ),
+    )
+    parser.add_argument(
+        "--attempt-id",
+        default=None,
+        help=(
+            "This attempt's expected attempt id (#8996); a prompt whose attempt block names a different one "
+            "fails with attempt_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
+            "Example: --attempt-id claude-att-1"
+        ),
     )
     args = parser.parse_args(argv)
 
@@ -505,6 +574,8 @@ def main(argv: list[str] | None = None) -> int:
         files_read=files_read_list,
         recorded_sha256=recorded,
         template_sha256=sidecar.get("template_sha256"),
+        review_id=args.review_id,
+        attempt_id=args.attempt_id,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 

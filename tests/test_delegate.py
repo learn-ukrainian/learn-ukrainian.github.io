@@ -12693,6 +12693,42 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     assert "worktree_review_attempt_only" not in state
 
 
+def test_review_attempt_refuses_a_prompt_whose_attempt_ids_differ_from_the_dispatch_ids(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#8996: a prompt whose own attempt block names different ids than --review-id/--attempt-id would let a
+    seat's return validate against the wrong receipt ledger; the dispatch must refuse before any side effect
+    (no worktree, no task record), not merely log a warning."""
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-mismatch",
+                mode="read-only",
+                prompt=(
+                    "Kind: lesson\n"
+                    "attempt:\n"
+                    '  review_id: "rev-other"\n'
+                    '  attempt_id: "att-other"\n'
+                    '  manifest_sha256: "' + ("ab" * 32) + '"\n'
+                    "  previous_attempt_id: null\n"
+                ),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "prompt_attempt_ids_mismatch" in err
+    assert "rev-other" in err and "rev-test" in err
+    assert "att-other" in err and "att-test" in err
+    assert delegate._read_state(delegate._state_path("review-mismatch")) is None
+
+
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
