@@ -71,7 +71,7 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
             "setting_sources": "", "allowed_tools": "",
         },
     )
-    assert "--settings" not in plan.cmd
+    assert "--settings" in plan.cmd
     assert "--safe-mode" in plan.cmd
     assert "--permission-mode" not in plan.cmd
     assert "--disallowedTools" not in plan.cmd

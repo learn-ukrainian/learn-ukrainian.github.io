@@ -365,12 +365,14 @@ Git/GitHub mutation commands are denied. `discussion_readonly` and
 keeps the existing default permission behavior; `danger` uses
 `--dangerously-skip-permissions`.
 
-Headless Claude workers in the ordinary three modes and `discussion_readonly`
-receive PreToolUse guards generated from
+Every headless Claude invocation receives `--settings` with PreToolUse guards
+generated from
 `agents_extensions/shared/settings.json`, with hook commands resolved to the
 primary checkout's deployed `.claude/hooks` files. Sealed `review_isolation`
-keeps its existing `--safe-mode` and sandbox, which exclude hooks and shell/write
-tools. The guards stop recognized direct primary-checkout writes while allowing
+keeps its existing `--safe-mode` and sandbox. Safe mode suppresses hooks and
+shell/write tools there; a live CLI probe with a missing hook path and a Bash
+call completed without trying to load the hook. The guards stop recognized
+direct primary-checkout writes while allowing
 worktree writes; arbitrary interpreter writes remain a known parser limit.
 Prefix Bash deny rules
 do not cover wrappers such as `git -C`, so they are not a security boundary.

@@ -34,9 +34,9 @@ Mode handling:
   reviewer profile does not apply.
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
-Ordinary modes and discussion runs load shared PreToolUse guards from the
+Every headless invocation receives shared PreToolUse guard settings from the
 primary checkout. Sealed ``review_isolation`` retains ``--safe-mode`` and its
-OS sandbox, which exclude hooks and shell/write tools.
+OS sandbox; safe mode suppresses hooks and shell/write tools there.
 
 Liveness paths:
 - Returns the project-scoped Claude session JSONL file
@@ -332,10 +332,10 @@ class ClaudeAdapter:
         has_session = session_id is not None
         # --bare skips hooks, including the primary-checkout guard. Never use
         # it for a headless worker, even when an API key is available. Sealed
-        # review isolation deliberately disables hooks and shell/write tools;
-        # its OS sandbox does not mount the primary checkout's deployed hooks.
-        if not review_isolation:
-            cmd.extend(["--settings", _worker_guard_settings()])
+        # review isolation receives the settings flag too, but its existing
+        # --safe-mode suppresses hooks and shell/write tools; the isolated OS
+        # sandbox does not mount the primary checkout's deployed hook paths.
+        cmd.extend(["--settings", _worker_guard_settings()])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
