@@ -68,3 +68,69 @@ test('choice mode: answering never auto-advances; only «Далі» moves the se
   await page.getByTestId('practice-advance-button').click();
   await expect(progress).toContainText('1/');
 });
+
+/**
+ * #8732 — the queue boundary. Rating a card synchronously updates session
+ * bookkeeping (reviews completed, new cards introduced) before the learner
+ * ever presses «Далі», and once `DEFAULT_NEW_PER_SESSION` (8) is crossed the
+ * pool the display is pinned against can legitimately re-rank — but the
+ * currently shown card must still never change until «Далі» is pressed, and
+ * the session must still resolve predictably afterward (a further card or the
+ * summary), not a dead card / frozen progress.
+ */
+test('flashcards: no card change across the queue boundary (8 new cards), then a predictable next step', async ({
+  page,
+  context,
+}) => {
+  await context.clearCookies();
+  await page.goto('/practice/');
+
+  await page.locator('button[data-mode="flashcards"]').click();
+  const card = page.locator('[data-activity="flashcard"]');
+  const advance = page.getByTestId('practice-advance-button');
+  const progress = page.getByTestId('practice-session-progress');
+
+  const rateVisibleCard = async (): Promise<string> => {
+    await expect(card).toBeVisible();
+    const front = (await card.locator('.flashcard-front .flashcard-word').textContent()) ?? '';
+    await card.click();
+    await expect(card).toHaveAttribute('data-flipped', 'true');
+    await page.locator('[data-rate="good"]').click();
+    return front;
+  };
+
+  // Serve and explicitly advance through the first 7 cards normally.
+  for (let served = 0; served < 7; served += 1) {
+    await rateVisibleCard();
+    await expect(advance).toBeVisible();
+    await advance.click();
+    await expect(advance).toBeHidden();
+  }
+
+  // The 8th rating crosses DEFAULT_NEW_PER_SESSION.
+  const eighthFront = await rateVisibleCard();
+
+  // Dwell: the rating alone (no «Далі» yet) must never change the displayed card.
+  await expect(advance, 'the advance control must stay offered while dwelling').toBeVisible();
+  await expect(
+    card.locator('.flashcard-front .flashcard-word'),
+    'the card changed before «Далі» was pressed',
+  ).toHaveText(eighthFront);
+
+  // Positive path: «Далі» still resolves the session predictably — either a
+  // further (different) card, or the summary. Never a frozen/dead state.
+  await advance.click();
+  await expect(advance).toBeHidden();
+  await expect
+    .poll(async () => {
+      const summaryVisible = await page.getByTestId('practice-session-summary').isVisible().catch(() => false);
+      if (summaryVisible) return 'summary';
+      const nextFront = await card
+        .locator('.flashcard-front .flashcard-word')
+        .textContent()
+        .catch(() => null);
+      return nextFront && nextFront !== eighthFront ? 'advanced' : null;
+    }, { message: 'session must reach the summary or serve a genuinely different card' })
+    .not.toBeNull();
+  await expect(progress).not.toContainText('NaN');
+});

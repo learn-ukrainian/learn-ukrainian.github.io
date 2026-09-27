@@ -3321,12 +3321,23 @@ function LexiconPracticeIsland({
     // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
     // uses the grown pool.
     const committed = committedSelectionRef.current;
-    if (
+    const committedStillValid =
       committed &&
       committed.historyLen === history.length &&
+      itemIdPresentInDeck(selectionDeck, committed.selection.itemId);
+    // #8732: while an answer dwells (rated, waiting for «Далі →»/Enter), the rating
+    // itself bumps `revision`/`reviewsCompleted`/`sessionNewIntroduced` synchronously —
+    // before the learner ever clicks Next — which can flip `poolFilter` against the very
+    // card just answered (e.g. a session boundary just crossed), or even empty the pool
+    // outright (`fresh` turns null). Neither may ever change what's on screen before an
+    // explicit Next; only an actual filter change on an UNanswered card may reshuffle it.
+    if (pendingOutcome !== null && committedStillValid) {
+      return committed.selection;
+    }
+    if (
+      committedStillValid &&
       fresh &&
       fresh.itemId !== committed.selection.itemId &&
-      itemIdPresentInDeck(selectionDeck, committed.selection.itemId) &&
       (!poolFilter || poolFilter(committed.selection))
     ) {
       return committed.selection;
@@ -3336,6 +3347,7 @@ function LexiconPracticeIsland({
     deckLemmaKeySet,
     history,
     mode,
+    pendingOutcome,
     poolFilter,
     revision,
     selectionDeck,

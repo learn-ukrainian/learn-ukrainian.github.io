@@ -24,6 +24,7 @@ import {
   PRACTICE_SESSION_STORAGE_KEY,
   writePracticeSessionSnapshot,
   DAILY_PRACTICE_DECK_SIZE,
+  DEFAULT_NEW_PER_SESSION,
   cardKey,
   clearLoadedSrsState,
   loadState,
@@ -4964,6 +4965,138 @@ describe('LexiconPractice', () => {
       await waitFor(() => {
         expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
       });
+    });
+  });
+
+  describe('Flashcards queue boundary (#8732)', () => {
+    // 12 never-reviewed lemmas plus 3 already-reviewed ones due soon (2min/30min/3h) —
+    // a realistic session mixes both. The due-soon cards stay out-ranked by the new
+    // cards' hardcoded urgency=1 while under DEFAULT_NEW_PER_SESSION, so they never
+    // interrupt the first 7 servings; once the cap excludes every other new candidate,
+    // they become the only legitimately different next pick.
+    function newAndDueSoonFlashcardsDeck(newCount: number, dueCount: number): PracticeDeckData {
+      const newLexemes = Array.from({ length: newCount }, (_unused, index) =>
+        lexeme(`newcard-${index}`, `слово${index}`, `word${index}`, {
+          nominative: `слово${index}`,
+          accusative: `слово${index}`,
+          locative: `слові${index}`,
+        }),
+      );
+      const dueLexemes = Array.from({ length: dueCount }, (_unused, index) =>
+        lexeme(`duecard-${index}`, `дюкарта${index}`, `dueword${index}`, {
+          nominative: `дюкарта${index}`,
+          accusative: `дюкарта${index}`,
+          locative: `дюкарті${index}`,
+        }),
+      );
+      const lexemes = [...newLexemes, ...dueLexemes];
+      return {
+        deckVersion: 'test-new-card-boundary',
+        level: 'A1',
+        lexemes,
+        index: lexemes.map((entry, index) => ({
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: index,
+        })),
+        cloze: [],
+        stress: [],
+        classify: [],
+        paradigm: [],
+        synonym: [],
+      };
+    }
+
+    function seedDueSoonFlashcards(delaysMs: number[]) {
+      const state = loadState(localStorage, NOW);
+      delaysMs.forEach((delay, index) => {
+        state.cards.set(cardKey(`duecard-${index}`, 'flashcards'), {
+          due: Date.now() + delay,
+          stability: 2,
+          difficulty: 4,
+          elapsed_days: 0,
+          scheduled_days: 0,
+          learning_steps: 1,
+          reps: 1,
+          lapses: 0,
+          state: 1,
+        });
+      });
+      saveState(state, localStorage, NOW.getTime());
+    }
+
+    /**
+     * #8732: rating a card synchronously bumps `revision`/`reviewsCompleted`/
+     * `sessionNewIntroduced` (commitAnsweredSelection -> refreshProgress/recordReview),
+     * all BEFORE the learner presses «Далі →». Those feed `sessionPoolConstraints`, a
+     * dependency of `poolFilter`, a dependency of the `selection` useMemo — so a single
+     * rating can recompute `selection` before any Next click.
+     *
+     * Rating the 8th new card crosses `DEFAULT_NEW_PER_SESSION`. Its own persisted
+     * card state updates synchronously (`rateCard`), so a freshly rebuilt candidate for
+     * THIS card is no longer "new" and would be fine on its own — but the *committed*
+     * selection object pinning the display is a stale snapshot from before the rating
+     * (still flagged new), so `poolFilter(committed.selection)` reads false. With an
+     * already-reviewed, soon-due card also in the pool, `selectNextPracticeItem`
+     * legitimately now prefers IT over the just-answered card. The old pinning check
+     * re-validated the committed selection against this now-false `poolFilter` on
+     * every render, so it swapped to that different, unrelated card — no Next involved.
+     */
+    test('rating the 8th new card in a session never swaps the displayed card before Next', async () => {
+      expect(DEFAULT_NEW_PER_SESSION).toBe(8);
+      // Seed the session RNG only (real clock: FSRS scheduling and due-soon ranking
+      // are exercised against actual elapsed time). Verified by direct instrumentation
+      // of the selection recompute to reproduce the swap on unfixed code for this exact
+      // deck/seed pairing.
+      vi.spyOn(Math, 'random').mockReturnValue(0.01);
+      seedDueSoonFlashcards([2 * 60 * 1000, 30 * 60 * 1000, 3 * 60 * 60 * 1000]);
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice
+          initialDeck={newAndDueSoonFlashcardsDeck(12, 3)}
+          autoStart
+          initialMode="flashcards"
+        />,
+      );
+
+      const frontText = () => container.querySelector('.flashcard-front .flashcard-word')?.textContent;
+      const rateVisibleCard = async () => {
+        const card = container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+        await user.click(card);
+        await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+      };
+      const clickNext = async () => {
+        const advance = await screen.findByTestId('practice-advance-button');
+        await user.click(advance);
+        await waitFor(() => {
+          expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+        });
+      };
+
+      // Serve and explicitly advance through the first 7 new cards normally.
+      for (let served = 0; served < DEFAULT_NEW_PER_SESSION - 1; served += 1) {
+        await rateVisibleCard();
+        await clickNext();
+      }
+
+      // The 8th new card crosses DEFAULT_NEW_PER_SESSION the instant it's rated.
+      const eighthCardFront = frontText();
+      expect(eighthCardFront).toBeTruthy();
+      await rateVisibleCard();
+
+      // Feedback dwells: the rating alone (no Next yet) must never change the card.
+      await screen.findByTestId('practice-advance-button');
+      expect(frontText()).toBe(eighthCardFront);
+
+      // Positive path: an explicit Next still advances — the round's planned total
+      // was itself capped at 8 by the new-card limit, so it correctly reaches the
+      // summary here rather than serving a 9th card.
+      await clickNext();
+      expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
     });
   });
 
