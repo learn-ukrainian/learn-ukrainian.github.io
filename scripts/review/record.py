@@ -24,6 +24,10 @@ rejections is re-implemented), then:
    ``fixloop verdict <level> <slug> --repair-projections`` rewrites it;
 3. **rejected** — writes the saved return and an ``attempts`` row (``verdict: REJECTED`` with the
    validator's codes), nothing else. Count it as a failed review with ``--failure``;
+   A first-seat lesson attempt past a **terminal budget** is refused the same way (``budget_terminal``, a
+   REJECTED row that touches no budget, settle item or verdict file): the lesson's REVISE rounds are past the
+   limit, or the module's regenerations are spent and the lesson's verdict of record is a REVISE on the very
+   manifest under review. It is accepted again after ``fixloop budget-decision`` records the operator's decision;
 4. ``--failure <reason>`` records a review that returned nothing (or a rejected return): an
    ``attempts`` row and one more ``budgets.review_failures``.
 
@@ -75,6 +79,7 @@ ATTEMPT_IDENTITY_MISMATCH = "attempt_identity_mismatch"
 SAME_FAMILY_REVIEW = "same_family_review"
 WRITER_IDENTITY_UNKNOWN = "writer_identity_unknown"
 ATTEMPT_RETURN_CONFLICT = "attempt_return_conflict"
+BUDGET_TERMINAL = "budget_terminal"
 
 
 class RecordError(Exception):
@@ -301,11 +306,9 @@ def record_return(
         raise RecordError("a second seat reviews lessons, not plans")
     conn = findings_db.connect(db_path or findings_db.db_path(level, root))
     try:
-        existing = findings_db.get_attempt(conn, review_id, attempt_id)
         if failure is not None:
             return _record_failure(
                 conn,
-                existing,
                 review_id,
                 attempt_id,
                 kind,
@@ -321,6 +324,7 @@ def record_return(
                 second,
                 moment,
             )
+        existing = findings_db.get_attempt(conn, review_id, attempt_id)
         writer = None
         if existing is None and kind == "lesson" and (seed_id is None or second):
             try:
@@ -351,6 +355,8 @@ def record_return(
                 )
             except second_seat.SecondSeatError as error:
                 raise RecordError(str(error)) from error
+        terminal_budget = None
+        budgeted = kind == "lesson" and seed_id is None and not second
         codes = list(
             dict.fromkeys(
                 [
@@ -398,24 +404,39 @@ def record_return(
             "return_sha256": return_sha,
         }
         try:
-            if codes:
-                with findings_db.transaction(conn):
+            with findings_db.transaction(conn):  # the budget check, the attempt row and the increment are one write
+                if budgeted:  # the only budget read that decides the outcome: it sees every committed decision
+                    terminal_budget = _terminal_budget(conn, root, level, slug, lesson_n, manifest_sha, params)
+                    if terminal_budget is not None:
+                        codes = list(dict.fromkeys([BUDGET_TERMINAL, *codes]))
+                        row.update(
+                            verdict="REJECTED", prompt_sha256=None, rejection_codes_json=findings_db.dumps(codes)
+                        )
+                if codes:
                     findings_db.insert_attempt(conn, row)
                     verify_saved()  # what is stored is what was validated and hashed, or nothing is recorded
-                return Outcome(
-                    False,
-                    "REJECTED",
-                    review_id,
-                    attempt_id,
-                    kind,
-                    rejection_codes=codes,
-                    saved_return=_rel(root, saved),
-                    seed_id=seed_id,
-                    next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
-                )
-            outcome = _persist_accepted(
-                conn, root, directory, review, row, seed_id, second, first, moment, verify_saved
-            )
+                    outcome = Outcome(
+                        False,
+                        "REJECTED",
+                        review_id,
+                        attempt_id,
+                        kind,
+                        rejection_codes=codes,
+                        saved_return=_rel(root, saved),
+                        seed_id=seed_id,
+                        next=(
+                            f"{terminal_budget}; the operator decides: python -m scripts.review.fixloop budget-decision"
+                            f" {level} {slug} {lesson_n} --decision ... --decided-by ..."
+                            if BUDGET_TERMINAL in codes
+                            else f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}"
+                        ),
+                    )
+                else:
+                    outcome = _persist_accepted(
+                        conn, root, directory, review, row, seed_id, second, first, moment, verify_saved
+                    )
+            if not outcome.accepted:
+                return outcome
         except sqlite3.IntegrityError:  # a concurrent recorder committed this attempt first
             existing = findings_db.get_attempt(conn, review_id, attempt_id)
             if existing is None:
@@ -428,6 +449,42 @@ def record_return(
         return outcome
     finally:
         conn.close()
+
+
+def _terminal_budget(
+    conn: sqlite3.Connection,
+    root: Path,
+    level: str,
+    slug: str,
+    lesson_n: int,
+    manifest_sha: str,
+    params: dict[str, Any],
+) -> str | None:
+    """Why a new first-seat attempt of the lesson is past a terminal budget (the operator has not decided), or None.
+
+    The REVISE budget is the lesson's own: past it, every attempt is refused. The regeneration budget is the
+    module's: once spent, a lesson still REVISE on the manifest under review cannot be regenerated, so a
+    review of that same manifest only cycles; a review of a new manifest (the last regeneration's) stays open.
+    """
+    if findings_db.revise_budget_terminal(conn, level, slug, lesson_n, params):
+        return (
+            f"lesson {lesson_n}: REVISE round {findings_db.module_budgets(conn, level, slug)[lesson_n]['revise_rounds']}"
+            f" exceeds {params['max_revise_rounds']}; no further round is allowed"
+        )
+    latest = findings_db.latest_accepted(conn, level, slug, "lesson", lesson_n)
+    if latest is None or latest["verdict"] != "REVISE" or latest["manifest_sha256"] != manifest_sha:
+        return None
+    try:
+        lesson_count = len(fixloop.plan_lessons(root, level, slug))
+    except fixloop.FixLoopError as error:
+        raise RecordError(
+            f"the module's lessons are unknown ({error}); the regeneration budget cannot be checked"
+        ) from error
+    if findings_db.regeneration_budget_terminal(conn, level, slug, lesson_count, params):
+        return (
+            f"the regeneration budget of {level}/{slug} is spent and lesson {lesson_n} is still REVISE on this manifest"
+        )
+    return None
 
 
 def review_verdict(review: Any) -> str:
@@ -494,38 +551,37 @@ def _persist_accepted(
     moot: list[int] = []
     moot_note = None
     agreement = None
-    with findings_db.transaction(conn):
-        findings_db.insert_attempt(conn, row)
-        verify_saved()  # what is stored is what was validated and hashed, or nothing is recorded
-        for finding in findings:
-            layer = None if seed_id is not None else fixloop.layer_for_finding(finding, provenance, kind=kind)
-            findings_db.insert_finding(conn, row["review_id"], row["attempt_id"], finding, layer=layer, seed_id=seed_id)
-            if seed_id is None and finding["status"] == "active" and "unsupported_by_source" in finding:
-                opened.append(
-                    findings_db.open_settle_item(
-                        conn,
-                        ref=findings_db.finding_ref(row["review_id"], row["attempt_id"], finding["id"]),
-                        kind="unsupported_by_source",
-                        level=level,
-                        slug=slug,
-                        lesson_n=lesson_n,
-                        manifest_sha256=row["manifest_sha256"],
-                        opened_at=moment,
-                    )
+    findings_db.insert_attempt(conn, row)
+    verify_saved()  # what is stored is what was validated and hashed, or nothing is recorded
+    for finding in findings:
+        layer = None if seed_id is not None else fixloop.layer_for_finding(finding, provenance, kind=kind)
+        findings_db.insert_finding(conn, row["review_id"], row["attempt_id"], finding, layer=layer, seed_id=seed_id)
+        if seed_id is None and finding["status"] == "active" and "unsupported_by_source" in finding:
+            opened.append(
+                findings_db.open_settle_item(
+                    conn,
+                    ref=findings_db.finding_ref(row["review_id"], row["attempt_id"], finding["id"]),
+                    kind="unsupported_by_source",
+                    level=level,
+                    slug=slug,
+                    lesson_n=lesson_n,
+                    manifest_sha256=row["manifest_sha256"],
+                    opened_at=moment,
                 )
-        if seed_id is None and not second:
-            moot, moot_note = _close_moot(conn, root, directory, level, slug, kind, lesson_n, moment)
-            opened = [item for item in opened if item not in moot]
-        stored = findings_db.count_findings(conn, row["review_id"], row["attempt_id"])
-        if stored != len(findings):  # no finding may be dropped between the validator and the database
-            raise RecordError(f"{len(findings)} findings validated but {stored} stored; nothing was recorded")
-        if seed_id is None and not second and kind == "lesson" and row["verdict"] == "REVISE":
-            findings_db.bump_budget(conn, level, slug, lesson_n, "revise_rounds")
-        if second:
-            agreement = second_seat.record_agreement(
-                conn, first, findings_db.get_attempt(conn, row["review_id"], row["attempt_id"]), opened_at=moment
             )
-            opened += agreement.pop("settle_items")
+    if seed_id is None and not second:
+        moot, moot_note = _close_moot(conn, root, directory, level, slug, kind, lesson_n, moment)
+        opened = [item for item in opened if item not in moot]
+    stored = findings_db.count_findings(conn, row["review_id"], row["attempt_id"])
+    if stored != len(findings):  # no finding may be dropped between the validator and the database
+        raise RecordError(f"{len(findings)} findings validated but {stored} stored; nothing was recorded")
+    if seed_id is None and not second and kind == "lesson" and row["verdict"] == "REVISE":
+        findings_db.bump_budget(conn, level, slug, lesson_n, "revise_rounds")
+    if second:
+        agreement = second_seat.record_agreement(
+            conn, first, findings_db.get_attempt(conn, row["review_id"], row["attempt_id"]), opened_at=moment
+        )
+        opened += agreement.pop("settle_items")
     return Outcome(
         True,
         row["verdict"],
@@ -567,14 +623,13 @@ def _terminal_now(
     conn: Any, level: str, slug: str, lesson_n: int | None, params: dict[str, Any]
 ) -> list[dict[str, Any]]:
     """The terminal transitions the counters of ``lesson_n`` (or the plan) imply right now."""
-    budget = findings_db.module_budgets(conn, level, slug).get(
-        lesson_n if lesson_n is not None else findings_db.PLAN_LESSON_N
-    )
+    target = lesson_n if lesson_n is not None else findings_db.PLAN_LESSON_N
+    budget = findings_db.module_budgets(conn, level, slug).get(target)
     if budget is None:
         return []
     where = f"lesson {lesson_n}" if lesson_n is not None else "the plan review"
     found = []
-    if budget["revise_rounds"] > params["max_revise_rounds"]:
+    if findings_db.revise_budget_terminal(conn, level, slug, target, params):
         found.append(
             {
                 "transition": fixloop.TERMINAL,
@@ -636,7 +691,6 @@ def _replay(
 
 def _record_failure(
     conn: Any,
-    existing: Any,
     review_id: str,
     attempt_id: str,
     kind: str,
@@ -652,28 +706,13 @@ def _record_failure(
     second: bool,
     moment: str,
 ) -> Outcome:
-    counted = seed_id is None and not second
+    """Count one failed review, once. The attempt is read, decided on and written in one write transaction."""
     budget_n = lesson_n if lesson_n is not None else findings_db.PLAN_LESSON_N
-    if existing is not None:
-        # a rejected return is counted by a later --failure on its own attempt; anything else is refused
-        if existing["failure_reason"] is not None:
-            return Outcome(
-                False, existing["verdict"], review_id, attempt_id, kind, replay=True, seed_id=existing["seed_id"]
-            )
-        if existing["verdict"] != "REJECTED" or existing["manifest_sha256"] != manifest_sha:
-            raise RecordError(
-                f"attempt {attempt_id} of review {review_id} was already recorded as {existing['verdict']}"
-            )
-        counted = existing["seed_id"] is None and existing["role"] == "first"
-        with findings_db.transaction(conn):
-            conn.execute(
-                "UPDATE attempts SET failure_reason = ? WHERE review_id = ? AND attempt_id = ?",
-                (reason, review_id, attempt_id),
-            )
-            if counted:
-                findings_db.bump_budget(conn, level, slug, budget_n, "review_failures")
-    else:
-        with findings_db.transaction(conn):
+    counted = seed_id is None and not second
+    replayed: Outcome | None = None
+    with findings_db.transaction(conn):
+        existing = findings_db.get_attempt(conn, review_id, attempt_id)
+        if existing is None:
             findings_db.insert_attempt(
                 conn,
                 {
@@ -695,8 +734,25 @@ def _record_failure(
                     "failure_reason": reason,
                 },
             )
-            if counted:
-                findings_db.bump_budget(conn, level, slug, budget_n, "review_failures")
+        # a rejected return is counted by a later --failure on its own attempt; anything else is refused
+        elif existing["failure_reason"] is not None:
+            replayed = Outcome(
+                False, existing["verdict"], review_id, attempt_id, kind, replay=True, seed_id=existing["seed_id"]
+            )
+        elif existing["verdict"] != "REJECTED" or existing["manifest_sha256"] != manifest_sha:
+            raise RecordError(
+                f"attempt {attempt_id} of review {review_id} was already recorded as {existing['verdict']}"
+            )
+        else:
+            counted = existing["seed_id"] is None and existing["role"] == "first"
+            conn.execute(
+                "UPDATE attempts SET failure_reason = ? WHERE review_id = ? AND attempt_id = ?",
+                (reason, review_id, attempt_id),
+            )
+        if replayed is None and counted:
+            findings_db.bump_budget(conn, level, slug, budget_n, "review_failures")
+    if replayed is not None:
+        return replayed
     outcome = Outcome(False, "FAILED", review_id, attempt_id, kind, seed_id=seed_id)
     if counted:
         outcome.terminal = _terminal_now(conn, level, slug, lesson_n, params)
