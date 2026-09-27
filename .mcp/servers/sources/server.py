@@ -1578,13 +1578,13 @@ def _detect_git_commit() -> str:
             return res.stdout.strip()
     except Exception:
         pass
-    return ""
+    return "unknown"
 
 
 # Cached once at import. /health reports this process-start commit and does
 # not re-run git, so a checkout that moves later stays invisible until the
-# process restarts. Failure is "" — nothing in-repo reads commit_sha except
-# the health body, and that body does not need another sentinel.
+# process restarts. Failure is "unknown". Two readers: /health commit_sha
+# and the server identity in _review_server_version.
 _SERVER_GIT_COMMIT: str = _detect_git_commit()
 
 

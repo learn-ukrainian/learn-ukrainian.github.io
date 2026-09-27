@@ -1394,12 +1394,12 @@ class TestHealthEndpoint:
         assert first_body["commit_sha"] == second_body["commit_sha"] == server_module._SERVER_GIT_COMMIT
         assert first_body["commit_sha"]
 
-    def test_git_commit_failure_is_empty(self, server_module, monkeypatch):
+    def test_git_commit_failure_is_unknown(self, server_module, monkeypatch):
         def boom(*args, **kwargs):
             raise OSError("git missing")
 
         monkeypatch.setattr("subprocess.run", boom)
-        assert server_module._detect_git_commit() == ""
+        assert server_module._detect_git_commit() == "unknown"
 
 
 class TestCollectionStatsHandler:
