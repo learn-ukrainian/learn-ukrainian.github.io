@@ -48,6 +48,7 @@ from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh.cli import main as fresh_cli
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateReport
 from scripts.curriculum.resolver.inputs import Allowlist
@@ -74,7 +75,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 RECEIPTS_ROOT = resolve_repo_root(Path(review_mcp.__file__), 2) / "batch_state" / "review-receipts"
-TASKS_DIR = PRIMARY / "batch_state" / "tasks"  # where the dispatcher writes the task records identities come from
 PYTHON = PRIMARY / ".venv" / "bin" / "python"
 STATE_NAME = "integration-state.json"
 BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a terminal budget (#8774), pinned by name
@@ -1022,7 +1022,7 @@ def record_argv_of(world: ModuleWorld, seat: Seat, manifest: Path, return_path: 
         "--db",
         str(world.db),
         "--tasks-dir",
-        str(TASKS_DIR),
+        str(tasks_dir()),
     ]
 
 
@@ -1111,7 +1111,7 @@ def prepare_lesson_card(out: Path, token: str, lesson_agent: str) -> tuple[dict[
             "attempt_id": seat.attempt_id,
             "manifest_sha256": lesson["manifest_sha256"],
             "task_id": seat.task_id,
-            "tasks_dir": str(TASKS_DIR),
+            "tasks_dir": str(tasks_dir()),
         }
 
 
@@ -1202,7 +1202,7 @@ def prepare_settle_card(out: Path, token: str, settle_agent: str) -> tuple[dict[
             "attempt_id": seat.attempt_id,
             "task_id": seat.task_id,
             "ledger": str(seat.ledger),
-            "tasks_dir": str(TASKS_DIR),
+            "tasks_dir": str(tasks_dir()),
             "manifest_sha256": settled["manifest_sha256"],
             "while_open_verdict": str(kept),
             "open_verdict": open_verdict["verdict"],

@@ -159,7 +159,7 @@ def prepare(root: Path) -> tuple[Path, Path, Path]:
     tasks.mkdir()
     patch = pytest.MonkeyPatch()
     patch.setattr(ic, "RECEIPTS_ROOT", receipts)
-    patch.setattr(ic, "TASKS_DIR", tasks)
+    patch.setenv("LU_TASKS_DIR", str(tasks))
     try:
         assert ic.main(["prepare-real", "--out", str(root / "out")]) == 0
     finally:
