@@ -4,8 +4,10 @@
 > versioned plan; the measurement history lives in issue **#8750** (comments) and
 > the area-lanes design in **#8872**. Written by the infra driver (Claude), 2026-09-27.
 > Status: program in progress — Team plan and pre-commit guards already landed;
-> most child tickets are `ready` (dispatched but not yet merged); two children are
-> blocked; the merge-queue timeout change needs the operator's repo-admin action.
+> #8876, #8877, and #8887 are dispatched and in progress; #8872 and #8874 have
+> passed DoR and are open for dispatch; #8878–#8881 and #8886 are open, ready
+> (not yet dispatched); #8882 and #8883 are blocked on prerequisites; #8884
+> needs the operator's repo-admin action; this document (#8885) is in review.
 
 ## 1. Purpose and user-visible outcome
 
@@ -129,9 +131,9 @@ forward (zero drops over 7 days after the fix).
 
 ### 2f. Coupling map (test-file dependency graph)
 
-Source: `batch_state/tasks/analysis-ci-coupling-map.result` (read-only
-`git grep`/`find`/`git log` analysis, 2026-09-27; some sub-findings gathered
-by parallel read-only research agents and summarized by the driver).
+Source: [#8750 comment, "CI coupling map"](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8750#issuecomment-5854239481)
+(read-only `git grep`/`find`/`git log` analysis, 2026-09-27; some sub-findings
+gathered by parallel read-only research agents and summarized by the driver).
 
 - Total test files: 1,572.
 - Central-loader coupling (`scripts/agent_runtime/runner.py`,
@@ -156,9 +158,10 @@ by parallel read-only research agents and summarized by the driver).
 
 ### 2g. Slow-test root-cause analysis (30 slowest files)
 
-Source: `batch_state/tasks/analysis-8750-slow-tests.result` (11 read-only
-investigation passes over the worktree, 2026-09-27; every claim in the
-underlying report cites file:line). Total addressable savings identified
+Source: [#8750 comment, "Slow-test root-cause analysis"](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8750#issuecomment-5854239345)
+(11 read-only investigation passes over the worktree, 2026-09-27; every claim
+in the underlying report cites file:line; the comment posts the six
+implementation briefs verbatim). Total addressable savings identified
 across the 30 files: **roughly 730–865s (~12–14 min) of the ~2,569s these
 files currently cost**, split into six ordered "briefs" (see §5, Briefs 1–6,
 now filed as issues #8877–#8882). Briefs 1–4 (~475–590s) were assessed as
@@ -208,10 +211,10 @@ check pending, and cross-area breakage escapes if the filters are wrong.
 | **Pre-commit guards for the two most frequent late-catch failures** (`subprocess_timeout_guard`, stale-epic `lint_test_assertions`) | Red-run causes, §2d (16 and 25 of 150 failed runs respectively); repo tests kept as the CI backstop | **Landed**, PR #8864 (merged) |
 | **Slow-test batches 1–6** (reclassify genuinely full-scope tests to nightly; remove incidental fsync/subprocess overhead; cache deterministic recomputation; stub non-under-test boundaries; shrink oversized fixtures; `open_model_data` fixture work) | Slow-test analysis, §2g | Tracked as **#8877–#8882**; #8882 blocked on #8809 P3 |
 | **Merge-queue `check_response_timeout_minutes` 30 → 60** | Starvation incident, §2e (two green PRs dropped: #8852, #8858) | Proposed on #8750; needs a human with repo-admin rights (agent's own attempt was refused by the permission layer); tracked as **#8884**, waiting on the operator |
-| **Area lanes for exactly two areas — atlas/lexicon/practice and open_model_data — after two prerequisite refactors, not four** | Coupling map, §2f/§6; design panel ADOPT WITH CHANGES | Tracked as **#8872**, being rewritten to DoR; refactors (fix the `pytest_plugins` borrowing, `git mv` the 17 misrouted files) are its own prerequisite scope |
+| **Area lanes for exactly two areas — atlas/lexicon/practice and open_model_data — after two prerequisite refactors, not four** | Coupling map, §2f/§6; design panel ADOPT WITH CHANGES | Tracked as **#8872**, DoR-complete (passes `check_issue_task_quality.py --strict`), open for dispatch; refactors (fix the `pytest_plugins` borrowing, `git mv` the 17 misrouted files) are its own prerequisite scope |
 | **Merge queue must run every lane for code changes before any PR-side lane selection ships** | Panel finding on #8872: `classify_changes.classify_tier` today applies the same path classes to `merge_group` as to `pull_request` (operator decision #8437, 2026-09-21) — lane selection on PRs is only safe if the queue is a full backstop | Operator decision needed; recorded as a dependency of #8872, not yet made |
 | **DoR/DoD enforcement for every agent-filed issue** | Motivated by this program's own experience rewriting #8872/#8874 to meet the task-quality bar mid-flight | Tracked as **#8886**, open |
-| **Root-cause the stale `.git/index.lock`** | Blocked the primary checkout's fast-forward for ~10h (issue title, #8874) | Tracked as **#8874**, being rewritten to DoR |
+| **Root-cause the stale `.git/index.lock`** | Blocked the primary checkout's fast-forward for ~10h (issue title, #8874) | Tracked as **#8874**, DoR-complete (passes `check_issue_task_quality.py --strict`), open for dispatch |
 
 ## 5. What was considered and rejected, and why
 
@@ -291,10 +294,10 @@ the design panel (Codex + Grok) reviewed the resulting plan twice
 
 | # | Child | Author → reviewer | Status (as of 2026-09-27) |
 | --- | --- | --- | --- |
-| #8872 | Area lanes: atlas/lexicon/practice + `open_model_data` only, after two refactors; other four areas stay on shards | Codex → Claude | being rewritten to DoR |
-| #8874 | Stale `.git/index.lock` root cause | Codex → Claude | being rewritten to DoR |
-| #8876 | More balanced shards on the Team plan | Codex → Claude | open, ready |
-| #8877 | Slow tests batch 1: nightly tier for four full-scope tests | Cursor → Claude | open, ready |
+| #8872 | Area lanes: atlas/lexicon/practice + `open_model_data` only, after two refactors; other four areas stay on shards | Codex → Claude | open, ready (DoR-complete) |
+| #8874 | Stale `.git/index.lock` root cause | Codex → Claude | open, ready (DoR-complete) |
+| #8876 | More balanced shards on the Team plan | Codex → Claude | in progress |
+| #8877 | Slow tests batch 1: nightly tier for four full-scope tests | Cursor → Claude | in progress |
 | #8878 | Slow tests batch 2: fsync / git bootstrap / guard memoization | Codex → Claude | open, ready |
 | #8879 | Slow tests batch 3: cache deterministic recomputation | Cursor → Claude | open, ready |
 | #8880 | Slow tests batch 4: stub non-under-test boundaries; batch slot lookups | Codex → Claude | open, ready |
@@ -302,8 +305,9 @@ the design panel (Codex + Grok) reviewed the resulting plan twice
 | #8882 | Slow tests batch 6: `open_model_data` fixtures | Codex → Claude | open, **blocked by #8809 P3** |
 | #8883 | Wiki prompts describe paging | Cursor → Claude | open, **blocked by #8873 merge** |
 | #8884 | Merge queue must not drop green PRs (timeout 30→60 min) | operator setting; driver verifies | open, **waiting on operator** |
-| #8885 | This plan document | Claude → Codex | this document |
+| #8885 | This plan document | Claude → Codex | in review |
 | #8886 | DoR/DoD enforcement for every agent-filed issue | Codex → Claude | open, ready |
+| #8887 | Remove false alarms from the agent guard hooks; safe stale-lock tool | Codex → Claude | in progress |
 
 Already landed, not tracked as an open child: pre-commit guards for the
 timeout and stale-epic checks (PR #8864, merged) and the Team-plan capacity
