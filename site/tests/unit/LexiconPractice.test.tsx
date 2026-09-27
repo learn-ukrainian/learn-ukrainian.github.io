@@ -5681,6 +5681,153 @@ describe('LexiconPractice', () => {
       },
     );
 
+    /**
+     * #8713 (review round 2, blocking verification gap): the two tests above only ever
+     * check the FIRST playable screen. Session planning (`countAvailableNewCards`/
+     * `countDueReviewCards`) counts at (lemma, mode) candidate granularity, so a dead
+     * antonym/homonym mode that is STILL "new" always inflates `plannedTotal` by one
+     * permanently-uncompletable slot — no deck shape can reach a literal summary while
+     * poolFilter is (correctly) refusing to ever serve that candidate. This deck instead
+     * gives each ineligible lemma a SECOND, always-playable 'flashcards' mode alongside
+     * its dead antonym/homonym mode (closer to real Atlas data, where a lemma's
+     * meaning-choice ineligibility does not disable its other modes), and the test seeds
+     * the dead-mode candidate's own SRS card as already mastered (reviewed, due far in
+     * the future) so it is honestly excluded from planning — exactly like a real learner
+     * who long ago answered the same lemma's flashcard side while its antonym surface was
+     * never eligible to review at all. Every planned slot is then genuinely completable
+     * and the round can run all the way to the actual session summary. (The FIRST test
+     * above already covers poolFilter skipping a live, top-ranked ineligible candidate.)
+     */
+    function mixedEligibilityFlashcardsDeck(deadMode: 'antonym' | 'homonym'): PracticeDeckData {
+      const base = sampleDeck();
+      const ineligibleOne = lexeme(
+        'stuck-flash-1',
+        'тихий',
+        'quiet',
+        { nominative: 'тихий', accusative: 'тихий', locative: 'тихому' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      const ineligibleTwo = lexeme(
+        'stuck-flash-2',
+        'гучний',
+        'loud',
+        { nominative: 'гучний', accusative: 'гучний', locative: 'гучному' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      return {
+        ...base,
+        level: 'A1',
+        lexemes: [...base.lexemes, ineligibleOne, ineligibleTwo],
+        index: [
+          ...base.index.map((item) => ({
+            ...item,
+            modes: ['flashcards'] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+          })),
+          ...[ineligibleOne, ineligibleTwo].map((entry, offset) => ({
+            lemmaId: entry.lemmaId,
+            lemma: entry.lemma,
+            cefr: 'A1',
+            modes: [deadMode, 'flashcards'] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: base.index.length + offset,
+          })),
+        ],
+        cloze: [],
+      };
+    }
+
+    test.each(['antonym', 'homonym'] as const)(
+      'a Mixed session over a pool with MC-ineligible %s cards plays to the real session summary (#8713)',
+      async (deadMode) => {
+        // Mark each ineligible lemma's dead-mode candidate as already mastered (reviewed,
+        // due a year out) so it is excluded from `plannedTotal` planning — see the deck
+        // fixture's own comment for why an uncompleted dead candidate can never let a
+        // fresh session reach a literal summary.
+        const masteredState = loadState(localStorage, NOW);
+        for (const lemmaId of ['stuck-flash-1', 'stuck-flash-2']) {
+          masteredState.cards.set(cardKey(lemmaId, deadMode), {
+            due: NOW.getTime() + 365 * 24 * 60 * 60 * 1000,
+            stability: 200,
+            difficulty: 3,
+            elapsed_days: 30,
+            scheduled_days: 365,
+            learning_steps: 0,
+            reps: 3,
+            lapses: 0,
+            state: State.Review,
+          });
+        }
+        saveState(masteredState, localStorage, NOW.getTime());
+
+        const user = userEvent.setup();
+        const { container } = render(
+          <LexiconPractice
+            initialDeck={mixedEligibilityFlashcardsDeck(deadMode)}
+            autoStart
+            initialMode="mixed"
+          />,
+        );
+
+        // 6 lemmas total (4 base + 2 MC-ineligible); every planned slot is completable
+        // via 'flashcards', so the round can genuinely reach 6/6 and close normally.
+        expect(await screen.findByTestId('practice-session-progress')).toHaveTextContent('0/6');
+
+        for (let served = 0; served < 6; served += 1) {
+          expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+          const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+          expect(flashcard).toBeInTheDocument();
+          await user.click(flashcard!);
+          await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+          await user.click(await screen.findByTestId('practice-advance-button'));
+        }
+
+        expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
+      },
+    );
+
+    test.each(['antonym', 'homonym'] as const)(
+      'resuming a persisted stuck %s-Mixed session reaches the real session summary, not just the first card (#8713)',
+      async (deadMode) => {
+        // A coherent stuck snapshot: the prior session got through zero cards before it
+        // (pre-fix) dead-ended on the ineligible candidate's first turn.
+        writePracticeSessionSnapshot('mixed', {
+          sessionSeed: 12345,
+          history: [],
+          budget: 20,
+          completed: 0,
+          modeFilter: 'mixed',
+          level: 'A1',
+          deckId: 'all',
+          dateSeed: dateSeed(new Date()),
+          startedAt: Date.now(),
+          plannedTotal: 1,
+        });
+
+        const { fn } = mockShardFetch({ A1: 0 });
+        vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+        const user = userEvent.setup();
+        render(<LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} />);
+
+        await user.click(await screen.findByTestId('practice-start-session'));
+
+        const scope = within(await screen.findByTestId('practice-choice'));
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+        const correctButton = scope.getAllByRole('button').find((button) =>
+          /книга|book/.test(button.textContent ?? ''),
+        )!;
+        await user.click(correctButton);
+        await user.click(await screen.findByTestId('practice-advance-button'));
+
+        expect(screen.getByTestId('practice-session-summary')).toBeInTheDocument();
+
+        localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+      },
+    );
+
     test('synonym mode: wrong pick teaches the prompt ↔ correct-option pair, not the word↔gloss pair (#6816)', async () => {
       // Before this fix, mode==='synonym' skipped choiceFeedbackFor (mode !== 'choice'/
       // 'antonym'/'homonym') AND classifyFeedbackFor (selection.classify unset) — handleChoice
