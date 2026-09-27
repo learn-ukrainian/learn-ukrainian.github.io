@@ -87,7 +87,7 @@ def _v6_build_module() -> Any | None:
         if module is not None:
             return module
 
-    for module in sys.modules.values():
+    for module in list(sys.modules.values()):
         module_file = getattr(module, "__file__", None)
         if module_file is not None and Path(module_file).resolve() == v6_build_path:
             return module

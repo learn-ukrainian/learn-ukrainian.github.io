@@ -5,6 +5,7 @@ import logging
 import sys
 from importlib import import_module
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 import yaml
@@ -75,3 +76,39 @@ def test_compose_manifest_uses_sentinel_when_plan_missing(
     manifest = alignment_manifest.compose_manifest(level="A1", slug="missing-plan")
 
     assert manifest["plan_hash"] == alignment_manifest._EMPTY_PLAN_SENTINEL
+
+
+def test_v6_build_module_survives_sys_modules_mutation_during_iteration(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A sys.modules entry whose __file__ lookup inserts a new module must not
+    crash the file-scan fallback; regression for #8919."""
+
+    class _MutatingEntry:
+        fired = False
+
+        def __getattr__(self, name: str) -> object:
+            if name == "__file__" and not _MutatingEntry.fired:
+                _MutatingEntry.fired = True
+                sys.modules["_regression_probe_8919"] = object()
+            raise AttributeError(name)
+
+    v6_build_path = (
+        alignment_manifest._default_project_root() / "scripts" / "build" / "v6_build.py"
+    ).resolve()
+    target = ModuleType("target_8919")
+    target.__file__ = str(v6_build_path)
+
+    stable_modules = {
+        name: module
+        for name, module in sys.modules.items()
+        if name not in {"build.v6_build", "scripts.build.v6_build", "v6_build"}
+    }
+    fake_modules: dict[str, object] = {"decoy_8919": _MutatingEntry()}
+    fake_modules.update(stable_modules)
+    fake_modules["target_8919"] = target
+    monkeypatch.setattr(sys, "modules", fake_modules)
+
+    found = alignment_manifest._v6_build_module()
+
+    assert found is target
