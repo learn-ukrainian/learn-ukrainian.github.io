@@ -28,12 +28,16 @@ put ``not slow`` in global addopts (nightly would inherit it).
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 import math
 import re
+import shutil
 import statistics
+import subprocess
 import sys
+import tempfile
 import xml.etree.ElementTree as element_tree
 from collections.abc import Iterable, Sequence
 from pathlib import Path
@@ -358,6 +362,99 @@ def write_file_durations(*, junit_paths: Sequence[Path], output: Path) -> dict[s
         raise RuntimeError("file-durations found zero mappable test files across the given JUnit reports")
     _write_json(output, file_seconds)
     return {"files": len(file_seconds), "unmapped_testcases": unmapped, "total_seconds": round(sum(file_seconds.values()), 3)}
+
+
+def _gh_json(path: str) -> dict[str, Any]:
+    result = subprocess.run(["gh", "api", path], capture_output=True, text=True, check=True, timeout=30)
+    value = json.loads(result.stdout)
+    if not isinstance(value, dict):
+        raise ValueError(f"GitHub API returned a non-object for {path}")
+    return value
+
+
+def _complete_junit_durations(paths: Sequence[Path], committed: dict[str, float]) -> tuple[dict[str, float], int]:
+    """Accept only four complete, disjoint full-tier JUnit reports."""
+    if len(paths) != 4:
+        raise ValueError("full merge-queue JUnit requires four shard reports")
+    seen: set[tuple[str, str]] = set()
+    for path in paths:
+        cases = list(element_tree.parse(path).getroot().iter("testcase"))
+        if not cases:
+            raise ValueError(f"empty JUnit report: {path.name}")
+        for case in cases:
+            if case.find("failure") is not None or case.find("error") is not None:
+                raise ValueError(f"failed JUnit report: {path.name}")
+            identity = (case.get("classname", ""), case.get("name", ""))
+            if not identity[1] or identity in seen:
+                raise ValueError(f"missing or duplicate JUnit test identity: {path.name}")
+            seen.add(identity)
+    durations, unmapped = aggregate_junit_file_durations(paths)
+    if unmapped or len(durations) < 0.9 * len(committed):
+        raise ValueError(
+            f"incomplete JUnit coverage: files={len(durations)} committed={len(committed)} unmapped={unmapped}"
+        )
+    return durations, len(seen)
+
+
+def prepare_ci_file_durations(*, output: Path, fallback: Path, repo: str) -> str:
+    """Freeze the latest complete recent merge-queue JUnit, or log and copy the committed file."""
+    committed = load_durations(fallback)
+    reasons: list[str] = []
+    now = dt.datetime.now(dt.UTC)
+    try:
+        runs = _gh_json(f"repos/{repo}/actions/workflows/ci.yml/runs?event=merge_group&status=success&per_page=30")
+        for run in runs.get("workflow_runs", []):
+            created = dt.datetime.fromisoformat(run["created_at"].replace("Z", "+00:00"))
+            if now - created > dt.timedelta(days=7):
+                reasons.append("remaining merge-queue runs are stale (>7 days)")
+                break
+            run_id = int(run["id"])
+            artifacts = _gh_json(f"repos/{repo}/actions/runs/{run_id}/artifacts?per_page=100").get("artifacts", [])
+            expected = {f"pytest-junit-shard-{index}" for index in range(1, 5)}
+            available = {
+                item["name"]
+                for item in artifacts
+                if item.get("name") in expected and not item.get("expired") and item.get("size_in_bytes", 0) > 0
+            }
+            if available != expected:
+                reasons.append(f"run {run_id}: incomplete four-shard JUnit artifacts")
+                continue
+            with tempfile.TemporaryDirectory(prefix="pytest-junit-") as temp:
+                subprocess.run(
+                    [
+                        "gh",
+                        "run",
+                        "download",
+                        str(run_id),
+                        "--repo",
+                        repo,
+                        "--pattern",
+                        "pytest-junit-shard-*",
+                        "--dir",
+                        temp,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    timeout=120,
+                )
+                paths = [
+                    Path(temp) / f"pytest-junit-shard-{index}" / f"pytest-shard-{index}.xml" for index in range(1, 5)
+                ]
+                try:
+                    durations, count = _complete_junit_durations(paths, committed)
+                except (OSError, ValueError, element_tree.ParseError) as error:
+                    reasons.append(f"run {run_id}: {error}")
+                    continue
+                _write_json(output, durations)
+                return f"pytest durations: merge_group run={run_id} tests={count} files={len(durations)}"
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
+        reasons.append(f"GitHub JUnit lookup unavailable ({type(error).__name__})")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(fallback, output)
+    return f"pytest durations: committed fallback files={len(committed)}; " + "; ".join(
+        reasons or ["no complete recent merge-queue JUnit"]
+    )
 
 
 def _plan_payload(
@@ -728,7 +825,8 @@ def _parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/ci/pytest_shards.py plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
             "  .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
-            "Outputs: shard plans, node-ID lists, execution receipts, and validation errors; no databases or remote state.\n"
+            "  .venv/bin/python scripts/ci/pytest_shards.py ci-durations --repo owner/repo --output ci-artifacts/pytest-file-durations.json\n"
+            "Outputs: shard plans, node-ID lists, execution receipts, duration JSON, and validation errors; ci-durations reads GitHub Actions.\n"
             "Exit codes: 0 means the requested operation passed; 1 means an input, partition, or test failed; 2 means CLI usage failed.\n"
             "Related: .github/workflows/ci.yml, tests/test_ci_shard_partition.py, and docs/runbooks/ci-gate.md."
         ),
@@ -778,6 +876,27 @@ def _parser() -> argparse.ArgumentParser:
     file_durations = commands.add_parser("file-durations", help="Refresh the committed per-file duration snapshot from JUnit reports.", description="Aggregate per-file test seconds from one or more JUnit XML reports (GitHub Actions file plane).", formatter_class=formatter)
     file_durations.add_argument("--junit", type=Path, action="append", required=True, help="JUnit XML report path; repeat once per shard report.")
     file_durations.add_argument("--output", type=Path, required=True, help="Output duration JSON path (flat {file: seconds}, sorted keys, 3-decimal rounding).")
+    ci_durations = commands.add_parser(
+        "ci-durations",
+        help="Freeze recent complete merge-queue JUnit durations for this CI run.",
+        description="Fetch the latest complete full merge-queue JUnit, falling back to the committed duration file with a reason.",
+        formatter_class=formatter,
+    )
+    ci_durations.add_argument(
+        "--repo", required=True, help="GitHub owner/repo, e.g. learn-ukrainian/learn-ukrainian.github.io."
+    )
+    ci_durations.add_argument(
+        "--fallback",
+        type=Path,
+        default=Path("scripts/ci/pytest-file-durations.json"),
+        help="Committed JSON fallback (default: scripts/ci/pytest-file-durations.json).",
+    )
+    ci_durations.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Shared duration JSON artifact for every full-tier shard, e.g. ci-artifacts/pytest-file-durations.json.",
+    )
     plan_files = commands.add_parser("plan-files", help="Write one shard's file allowlist from candidate paths on stdin (GitHub Actions file plane).", description="LPT-partition candidate repo-relative file paths (read from stdin, one per line) across shards and write shard-id's sorted allowlist.", formatter_class=formatter)
     plan_files.add_argument("--shard-id", type=int, required=True, help="1-based shard number, e.g. 1.")
     plan_files.add_argument("--shard-count", type=int, required=True, help="Total shard count.")
@@ -834,6 +953,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"wrote {args.output}: files={summary['files']} "
                 f"total_seconds={summary['total_seconds']} unmapped_testcases={summary['unmapped_testcases']}"
             )
+        elif args.command == "ci-durations":
+            print(prepare_ci_file_durations(output=args.output, fallback=args.fallback, repo=args.repo))
         elif args.command == "plan-files":
             candidate_paths = [line.strip() for line in sys.stdin if line.strip()]
             if not candidate_paths:
