@@ -312,8 +312,11 @@ def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:
     otherwise falls back to the main checkout's database, which would
     collect the module; ``LU_SOURCES_DB`` points the child only at an
     unpopulated scratch database under ``tmp_path`` so the same skip fires
-    without writing into the repository tree. A companion test keeps the
-    exit code at 0 (a skip-only collection exits 5).
+    without writing into the repository tree. The collected directory is the
+    citation module's own parent (``tests/``), so the companion that keeps
+    the exit code at 0 (a skip-only collection exits 5) must already live
+    there too: reusing a small, stable, unrelated test file stands in for a
+    companion without writing into a read-only checkout.
     """
     scratch_db = tmp_path / "sources.db"
     connection = sqlite3.connect(scratch_db)
@@ -322,23 +325,18 @@ def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:
     connection.close()
     assert scratch_db.stat().st_size > 0
 
-    with tempfile.TemporaryDirectory(dir=_REPO_ROOT / "tests", prefix="_sparse_guard_outcome_") as raw:
-        companion = Path(raw) / "test_companion_collects.py"
-        companion.write_text(
-            "def test_companion_collects() -> None:\n    pass\n",
-            encoding="utf-8",
-        )
-        citation = "tests/test_citation_resolution_invariant.py"
-        targets = [citation, companion.relative_to(_REPO_ROOT).as_posix()]
-        completed, outcomes = collect_with_absent_trees(
-            targets,
-            extra_env={"LU_SOURCES_DB": str(scratch_db)},
-        )
-        _assert_targets_reported(completed, outcomes, targets)
-        citation_outcome = outcomes[(_REPO_ROOT / citation).resolve().as_posix()]
-        assert citation_outcome["status"] == "skipped"
-        assert "sources.db not populated" in str(citation_outcome["reason"])
-        assert outcomes[companion.resolve().as_posix()]["status"] == "collected"
+    citation = "tests/test_citation_resolution_invariant.py"
+    companion = "tests/test_scripts_import_root.py"
+    targets = [citation, companion]
+    completed, outcomes = collect_with_absent_trees(
+        targets,
+        extra_env={"LU_SOURCES_DB": str(scratch_db)},
+    )
+    _assert_targets_reported(completed, outcomes, targets)
+    citation_outcome = outcomes[(_REPO_ROOT / citation).resolve().as_posix()]
+    assert citation_outcome["status"] == "skipped"
+    assert "sources.db not populated" in str(citation_outcome["reason"])
+    assert outcomes[(_REPO_ROOT / companion).resolve().as_posix()]["status"] == "collected"
 
 
 def test_unallowed_module_skip_fails_the_collection_guard(tmp_path: Path) -> None:
