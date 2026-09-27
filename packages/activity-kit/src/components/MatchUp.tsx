@@ -15,6 +15,14 @@ export interface MatchPair {
    */
   right: string;
   lemmaId?: string;
+  /**
+   * Feedback shown on a wrong attempt to match this pair's left item.
+   * Absent on every existing module, which keeps today's rendering (no
+   * feedback text on a wrong attempt).
+   * @schemaDescription Feedback explaining why this pair's left item matches its right item.
+   * @ukrainianText true
+   */
+  why?: string;
 }
 
 export interface MatchUpProps {
@@ -102,6 +110,9 @@ export default function MatchUp({
   const [matchedOrder, setMatchedOrder] = useState<Map<number, number>>(new Map());
   const matchedOrderRef = useRef<Map<number, number>>(new Map());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
+  // Unlike wrongPair (cleared after the shake animation), this persists
+  // until the next attempt, so the pair's `why` stays readable.
+  const [wrongPairWhy, setWrongPairWhy] = useState<string | undefined>(undefined);
   const [misses, setMisses] = useState<Record<number, number>>({});
   const completedRef = useRef(false);
   const hadIncorrectAttemptRef = useRef(false);
@@ -114,6 +125,7 @@ export default function MatchUp({
     setMatchedOrder(new Map());
     matchedOrderRef.current = new Map();
     setWrongPair(null);
+    setWrongPairWhy(undefined);
     setMisses({});
     completedRef.current = false;
     hadIncorrectAttemptRef.current = false;
@@ -129,6 +141,7 @@ export default function MatchUp({
     if (disabled || matchedRef.current.has(index) || wrongPair) return;
     setSelectedLeft(index);
     setWrongPair(null);
+    setWrongPairWhy(undefined);
   };
 
   const handleRightClick = (originalIndex: number) => {
@@ -148,6 +161,7 @@ export default function MatchUp({
       setMatched(new Set(matchedRef.current));
       setMatchedOrder(new Map(matchedOrderRef.current));
       setSelectedLeft(null);
+      setWrongPairWhy(undefined);
     } else {
       // Wrong match
       hadIncorrectAttemptRef.current = true;
@@ -156,6 +170,7 @@ export default function MatchUp({
         [selectedLeft]: (prev[selectedLeft] || 0) + 1,
       }));
       setWrongPair({ left: selectedLeft, right: originalIndex });
+      setWrongPairWhy(pairs[selectedLeft]?.why);
       setTimeout(() => {
         setWrongPair(null);
         setSelectedLeft(null);
@@ -341,11 +356,22 @@ export default function MatchUp({
           ))}
         </div>
       </div>
+      {!allMatched && wrongPairWhy && (
+        <div
+          className={`${styles.feedback} ${styles.feedbackIncorrect}`}
+          data-activity="match-wrong-why"
+          role="status"
+          aria-live="polite"
+        >
+          {wrongPairWhy}
+        </div>
+      )}
       {allMatched && (
         <div
           className={`${styles.feedback} ${styles.feedbackCorrect}`}
           data-activity="match-feedback"
           data-correct="true"
+          {...(pairs.some((p) => p.why) ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
         >
           {successLabel}
         </div>

@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: a1bb34d52fcbb1cb75e0fce49968398f850fd7ab37f85b8972a0309c662649c6
+  components_sha256: eac75939a8efb12c677aff45c02982d76179d1af624e5a1abf38dc6e27ac3a0e
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -683,6 +683,10 @@ components:
         type: string
         description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
+      - name: optionWhy
+        type: string[]
+        description: Feedback for each fix option, aligned by original index.
+        ukrainian_text: 'true'
     example:
       instruction: Приклад
     deprecated: false
@@ -865,6 +869,10 @@ components:
         type: string
         description: explanation prop.
         ukrainian_text: 'false'
+      - name: optionWhy
+        type: string[]
+        description: Feedback for each option, aligned by original index.
+        ukrainian_text: 'true'
       - name: mode
         type: '''form-choice'' | ''orthography'''
         description: Fresh-build mode. Items without it keep the select renderer.
@@ -1012,7 +1020,7 @@ components:
     props:
       required:
       - name: groups
-        type: '{ [key: string]: string[] }'
+        type: '{ [key: string]: GroupSortEntry[] }'
         description: Groups value consumed by this component.
         ukrainian_text: 'true'
       optional:
@@ -1150,6 +1158,10 @@ components:
         type: string
         description: Teaching feedback shown after the correct answer.
         ukrainian_text: 'false'
+      - name: optionWhy
+        type: string[]
+        description: Feedback for each option, aligned by original index.
+        ukrainian_text: 'true'
     example:
       items:
       - <ImageToLetterItem>
@@ -1376,6 +1388,10 @@ components:
         type: string
         description: lemmaId prop.
         ukrainian_text: 'false'
+      - name: why
+        type: string
+        description: Feedback explaining why this pair's left item matches its right item.
+        ukrainian_text: 'true'
     example:
       pairs:
       - <MatchPair>
@@ -1551,7 +1567,7 @@ components:
     props:
       required:
       - name: items
-        type: '{ /** * @schemaDescription Words shown to the learner. * @ukrainianText true */ words: string[]; /** * @schemaDescription Correct value consumed by this component. * @ukrainianText false */ correct: number; /** * @schemaDescription Optional context label for this item. * @ukrainianText true */ prompt?: string; /** * @schemaDescription Feedback explanation shown after the learner answers. * @ukrainianText true */ explanation: string; }[]'
+        type: '{ /** * @schemaDescription Words shown to the learner. * @ukrainianText true */ words: string[]; /** * @schemaDescription Correct value consumed by this component. * @ukrainianText false */ correct: number; /** * @schemaDescription Optional context label for this item. * @ukrainianText true */ prompt?: string; /** * @schemaDescription Feedback explanation shown after the learner answers. * @ukrainianText true */ explanation: string; /** * Per-word feedback aligned by index to `words` (before shuffling). * Absent on every existing module, which keeps the single `explanation`. * @schemaDescription Feedback for each word, aligned by original index. * @ukrainianText true */ optionWhy?: string[]; }[]'
         description: items prop.
         ukrainian_text: 'false'
       optional:
@@ -1585,6 +1601,10 @@ components:
         description: Zero-based order indices for the correct sequence.
         ukrainian_text: 'false'
       optional:
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner checks the order.
+        ukrainian_text: 'true'
       - name: instruction
         type: string
         description: Instruction shown to the learner above the activity.
@@ -2204,6 +2224,10 @@ components:
         type: string
         description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
+      - name: optionWhy
+        type: string[]
+        description: Feedback for each option, aligned by original index.
+        ukrainian_text: 'true'
     example:
       instruction: Приклад
     deprecated: false
@@ -2673,6 +2697,10 @@ components:
         type: string
         description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
+      - name: optionWhy
+        type: string[]
+        description: Feedback for each option, aligned by original index.
+        ukrainian_text: 'true'
     example:
       instruction: Приклад
     deprecated: false
@@ -2788,6 +2816,10 @@ components:
       - name: explanation
         type: string
         description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+      - name: optionWhy
+        type: '[string, string]'
+        description: Feedback for each true/false pick.
         ukrainian_text: 'true'
     example:
       items:

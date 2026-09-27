@@ -156,6 +156,86 @@ describe('QuizQuestion', () => {
   });
 });
 
+// ── per-option feedback (optionWhy, #8889 A1-P3) ────────────────────────────
+
+describe('QuizQuestion optionWhy', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const baseProps = {
+    question: 'What is 2+2?',
+    options: ['3', '4', '5', '6'],
+    correctIndex: 1, // '4'
+    optionWhy: ['3 is one less.', '4 is the sum.', '5 is one more.', '6 is too many.'],
+  };
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<QuizQuestion {...baseProps} />);
+    await user.click(findOptionByText(container, '4'));
+
+    const fb = feedbackBox(container);
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('a correct pick shows only that option\'s why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<QuizQuestion {...baseProps} />);
+    await user.click(findOptionByText(container, '4'));
+
+    expect(container.querySelector('[data-activity="quiz-option-why"]')?.textContent).toBe('4 is the sum.');
+    expect(container.querySelector('[data-activity="quiz-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen option why, then the correct option why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<QuizQuestion {...baseProps} />);
+    await user.click(findOptionByText(container, '3'));
+
+    expect(container.querySelector('[data-activity="quiz-option-why"]')?.textContent).toBe('3 is one less.');
+    expect(container.querySelector('[data-activity="quiz-correct-why"]')?.textContent).toBe('4 is the sum.');
+  });
+
+  test('feedback maps by original index even though options are shuffled on the page', async () => {
+    // Every option's "why" must name only that option — a swapped mapping
+    // would fail this for at least one of the four picks.
+    for (const [text, why] of [
+      ['3', '3 is one less.'],
+      ['4', '4 is the sum.'],
+      ['5', '5 is one more.'],
+      ['6', '6 is too many.'],
+    ]) {
+      const user = userEvent.setup();
+      const { container } = render(<QuizQuestion {...baseProps} />);
+      await user.click(findOptionByText(container, text));
+      expect(container.querySelector('[data-activity="quiz-option-why"]')?.textContent).toBe(why);
+    }
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <QuizQuestion
+        question="What is 2+2?"
+        options={['3', '4']}
+        correctIndex={1}
+        explanation="Basic arithmetic."
+      />,
+    );
+    await user.click(findOptionByText(container, '4'));
+
+    expect(container.textContent).toContain('Basic arithmetic.');
+    expect(container.querySelector('[data-activity="quiz-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: no optionWhy means no new live region either —
+    // the feedback div must match main's markup exactly (no role/aria-live).
+    const fb = container.querySelector('[data-activity="quiz-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
+  });
+});
+
 // ── Quiz wrapper ──────────────────────────────────────────────────────────────
 
 describe('Quiz wrapper', () => {
@@ -232,6 +312,29 @@ describe('Quiz wrapper', () => {
     await user.click(bBtn);
 
     expect(firstQuestion.textContent).toContain('Q1 explanation.');
+  });
+
+  test('passes per-question optionWhy through to QuizQuestion', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Quiz
+        questions={[
+          {
+            question: 'Q3?',
+            options: [
+              { text: 'a', correct: true },
+              { text: 'b', correct: false },
+            ],
+            optionWhy: ['a is right.', 'b is wrong.'],
+          },
+        ]}
+      />,
+    );
+
+    const question = container.querySelector<HTMLElement>('[data-activity="quiz-question"]')!;
+    await user.click(within(question).getByRole('button', { name: 'a' }));
+
+    expect(question.querySelector('[data-activity="quiz-option-why"]')?.textContent).toBe('a is right.');
   });
 
   test('renders children when no questions prop is passed', () => {

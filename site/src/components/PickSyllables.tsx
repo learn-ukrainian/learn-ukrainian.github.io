@@ -69,7 +69,7 @@ export default function PickSyllables({
   };
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="pick-syllables">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔍</span>
         <span className={styles.activityTitle}>Вибери {category} склади</span>
@@ -81,7 +81,7 @@ export default function PickSyllables({
         </div>
       )}
 
-      <div style={{
+      <div data-activity="pick-syllables-options" style={{
         display: 'flex',
         flexWrap: 'wrap',
         gap: '10px',
@@ -134,20 +134,24 @@ export default function PickSyllables({
       </div>
 
       {showResult && (
-        <div style={{
-          padding: '0.75rem 1rem',
-          background: isFullyCorrect ? 'var(--co-success-bg)' : 'var(--co-error-bg)',
-          borderRadius: '8px',
-          marginBottom: '1rem',
-          textAlign: 'center',
-        }}>
+        <div
+          data-activity="pick-syllables-feedback"
+          data-correct={isFullyCorrect ? 'true' : 'false'}
+          style={{
+            padding: '0.75rem 1rem',
+            background: isFullyCorrect ? 'var(--co-success-bg)' : 'var(--co-error-bg)',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+            textAlign: 'center',
+          }}
+        >
           <p style={{ margin: 0, fontWeight: 600 }}>
             {isFullyCorrect
               ? '✅ Правильно!'
               : `❌ Правильні ${category} склади: ${correctIndices.map(i => syllables[i]).join(', ')}`}
           </p>
           {explanation && (
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>{explanation}</p>
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }} data-activity="pick-syllables-explanation">{explanation}</p>
           )}
         </div>
       )}

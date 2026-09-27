@@ -664,6 +664,109 @@ describe('ErrorCorrection wrapper', () => {
   });
 });
 
+describe('ErrorCorrectionItem optionWhy (#8889 A1-P3)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  // optionWhy is aligned by index to `options` (before the spotted error
+  // is filtered out and the rest shuffled): ['went', 'go', 'going'].
+  const baseProps = {
+    sentence: 'I goed to school yesterday.',
+    errorWord: 'goed',
+    correctForm: 'went',
+    options: ['went', 'go', 'going'],
+    explanation: 'Past tense of "go" is irregular: went.',
+    optionWhy: ['went is the past tense.', 'go is present tense.', 'going is the gerund.'],
+  };
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ErrorCorrectionItem {...baseProps} />);
+    await user.click(wordByText(container, 'goed'));
+    await user.click(fixChipByText(container, 'went'));
+
+    const fb = feedback(container);
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('a correct fix shows only that option\'s why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ErrorCorrectionItem {...baseProps} />);
+    await user.click(wordByText(container, 'goed'));
+    await user.click(fixChipByText(container, 'went'));
+
+    expect(container.querySelector('[data-activity="error-correction-option-why"]')?.textContent).toBe(
+      'went is the past tense.',
+    );
+    expect(container.querySelector('[data-activity="error-correction-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong fix shows the chosen option why, then the correct option why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ErrorCorrectionItem {...baseProps} />);
+    await user.click(wordByText(container, 'goed'));
+    await user.click(fixChipByText(container, 'go'));
+
+    expect(container.querySelector('[data-activity="error-correction-option-why"]')?.textContent).toBe(
+      'go is present tense.',
+    );
+    expect(container.querySelector('[data-activity="error-correction-correct-why"]')?.textContent).toBe(
+      'went is the past tense.',
+    );
+  });
+
+  test('optionWhy stays aligned to the original options list after the spotted error is filtered out', async () => {
+    // options include the error itself ('goed'); it is filtered before
+    // shuffling. optionWhy must still be looked up by ORIGINAL index.
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="I goed to school."
+        errorWord="goed"
+        correctForm="went"
+        options={['went', 'goed', 'going']}
+        explanation="Past tense of &quot;go&quot; is irregular: went."
+        optionWhy={['went is right.', 'goed is the error itself.', 'going is the gerund.']}
+      />,
+    );
+    await user.click(wordByText(container, 'goed'));
+    // 'goed' chip must not even be offered (regression #8237), so only
+    // 'went' and 'going' remain to pick from.
+    await user.click(fixChipByText(container, 'going'));
+
+    expect(container.querySelector('[data-activity="error-correction-option-why"]')?.textContent).toBe(
+      'going is the gerund.',
+    );
+    expect(container.querySelector('[data-activity="error-correction-correct-why"]')?.textContent).toBe(
+      'went is right.',
+    );
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="I goed to school yesterday."
+        errorWord="goed"
+        correctForm="went"
+        options={['went', 'go']}
+        explanation="Past tense of &quot;go&quot; is irregular: went."
+      />,
+    );
+    await user.click(wordByText(container, 'goed'));
+    await user.click(fixChipByText(container, 'went'));
+
+    expect(container.textContent).toContain('Past tense of');
+    expect(container.querySelector('[data-activity="error-correction-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="error-correction-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
+  });
+});
+
 describe('step-2 chips never replay the spotted error (#8237)', () => {
   beforeEach(() => {
     document.documentElement.dataset.chromeLocale = 'en';
