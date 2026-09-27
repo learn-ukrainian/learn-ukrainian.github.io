@@ -92,7 +92,8 @@ export function cleanErrorToken(word: string): string {
 
 /**
  * Comparison key for a typed correction: case, apostrophe variants, stress
- * marks, surrounding spaces and final punctuation do not make an answer wrong.
+ * marks, spacing around `, ; :` and final punctuation (including a trailing
+ * `, ; :`) do not make an answer wrong.
  */
 export function normalizeTypedCorrection(value: string): string {
   return value
@@ -101,10 +102,9 @@ export function normalizeTypedCorrection(value: string): string {
     .normalize('NFC')
     .replace(/['ʼʹ`‘]/g, '’')
     .toLocaleLowerCase('uk')
+    .replace(/\s*([,;:])\s*/g, '$1 ')
     .replace(/\s+/g, ' ')
-    .replace(/ ([,;])/g, '$1')
-    .trim()
-    .replace(/[.!?…]+$/u, '')
+    .replace(/[\s.!?…,;:]+$/u, '')
     .trim();
 }
 

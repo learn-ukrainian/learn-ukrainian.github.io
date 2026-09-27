@@ -148,14 +148,41 @@ describe('ErrorCorrectionPractice', () => {
     expect(screen.getByTestId('drill-counter-badge')).toHaveTextContent('Виконано: 1 (правильно: 1)');
   });
 
-  test('typed answers tolerate case, apostrophes, stress marks and surrounding spaces only', () => {
+  test('typed answers tolerate case, apostrophes, stress marks, spacing and final punctuation only', () => {
     expect(normalizeTypedCorrection('  Щоп\'я́тниці. ')).toBe('щоп’ятниці');
     expect(normalizeTypedCorrection('по п’ятницях ,  щоп’ятниці')).toBe('по п’ятницях, щоп’ятниці');
+    // Missing space after `, ; :` and a trailing `, ; :` are not errors either.
+    expect(normalizeTypedCorrection('по п’ятницях,щоп’ятниці')).toBe('по п’ятницях, щоп’ятниці');
+    expect(normalizeTypedCorrection('по п’ятницях, щоп’ятниці,')).toBe('по п’ятницях, щоп’ятниці');
+    expect(normalizeTypedCorrection('тепер;нині :зараз ; ')).toBe('тепер; нині: зараз');
+    expect(isAcceptedTypedCorrection('по п’ятницях,щоп’ятниці', mockDrills[1].answers!)).toBe(true);
+    expect(isAcceptedTypedCorrection('по п’ятницях, щоп’ятниці,', mockDrills[1].answers!)).toBe(true);
     // й / ї survive stress stripping (NFD splits them too).
     expect(normalizeTypedCorrection('Її  край')).toBe('її край');
     expect(isAcceptedTypedCorrection('УЗЯТИ УЧАСТЬ', mockDrills[0].answers!)).toBe(true);
     expect(isAcceptedTypedCorrection('узяти', mockDrills[0].answers!)).toBe(false);
     expect(isAcceptedTypedCorrection('   ', ['а'])).toBe(false);
+  });
+
+  test('on the committed deck every listed answer is accepted and no uncorrected error is', () => {
+    const drills = cultureDeck.drills as ErrorCorrectionDrill[];
+    const listed = drills.flatMap((drill) => (drill.answers ?? [drill.correctForm]).map((answer) => ({ drill, answer })));
+    const errors = drills.filter((drill) => drill.errorWord !== null);
+    expect(listed).toHaveLength(516);
+    expect(errors).toHaveLength(432);
+
+    const accepted = (typed: string, drill: ErrorCorrectionDrill) =>
+      isAcceptedTypedCorrection(typed, drill.answers ?? [drill.correctForm]);
+    // Each answer as listed, and as typed without the space after `, ; :` and with a trailing comma.
+    const rejectedAnswers = listed.filter(({ drill, answer }) =>
+      ![answer, answer.replace(/([,;:]) /g, '$1'), `${answer},`].every((typed) => accepted(typed, drill)),
+    );
+    expect(rejectedAnswers.map(({ answer }) => answer)).toEqual([]);
+
+    const acceptedErrors = errors.filter((drill) =>
+      [drill.errorWord!, `${drill.errorWord!},`, `${drill.errorWord!}.`].some((typed) => accepted(typed, drill)),
+    );
+    expect(acceptedErrors.map((drill) => drill.errorWord)).toEqual([]);
   });
 
   test('useErrorCorrectionPracticeOverlay manages state transitions', async () => {
