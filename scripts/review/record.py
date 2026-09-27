@@ -41,8 +41,16 @@ A plan review has no lesson writer record, so the writer check applies to lesson
 
 A lesson attempt is also refused as **stale** when any file its manifest pins (found structurally,
 ``scripts.build.fresh.manifest.changed_inputs``) has changed since the manifest was written.
-An attempt recorded with ``--seed-id`` (a seeded lesson, R3) is kept apart: it never writes a verdict
-file, a budget or a settle item, and the fix loop never reads it.
+An attempt recorded with ``--seed-id`` (a seeded lesson ``seed-<id>``, or a measurement lesson meant to be clean
+``clean-<id>``, R3) is kept apart: it never writes a verdict file, a budget or a settle item, and the fix loop never
+reads it. It is also refused unless its identities are established and independent
+(``scripts.review.seeds.manifest.check_attempt_identity``): the writer (from ``lesson-<n>.writer.yaml``), the
+reviewer (from the dispatch record), and for a linguistic seed the planter and gold checker recorded in its scoring
+manifest, all as families the resolver confirms. Each violated rule is refused with its named code
+(``same_family_review``, ``planter_is_writer``, ``planter_is_reviewer``, ``gold_checker_is_planter``,
+``gold_checker_is_reviewer``, ``gold_check_not_passed``), an identity that cannot be established with
+``seed_identity_unknown`` or ``seed_identity_mismatch``; nothing is recorded for a refused pair, so it can never
+become a scored observation. The seed's identities are then written to ``seed_identities``.
 """
 
 from __future__ import annotations
@@ -67,6 +75,7 @@ import yaml
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.review import findings_db, fixloop, second_seat
+from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate.validate import validate_review
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -79,6 +88,8 @@ ATTEMPT_IDENTITY_MISMATCH = "attempt_identity_mismatch"
 SAME_FAMILY_REVIEW = "same_family_review"
 WRITER_IDENTITY_UNKNOWN = "writer_identity_unknown"
 ATTEMPT_RETURN_CONFLICT = "attempt_return_conflict"
+SEED_ID_UNRECOGNISED = "seed_id_unrecognised"
+SEED_UNSUPPORTED = "seed_unsupported"
 BUDGET_TERMINAL = "budget_terminal"
 
 
@@ -133,8 +144,20 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
         raise RecordError(
             f"the dispatch record {path} is unreadable ({error}); the reviewer's identity is unknown"
         ) from error
+    return identity_from_record(task, task_id, record_path=path)
+
+
+def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | None = None) -> dict[str, str]:
+    """The reviewer's ``model``, ``harness`` and ``family`` from an already-parsed dispatch record.
+
+    Takes the parsed record itself (not a path) so a caller that has already read and checked a record
+    (e.g. ``adjudicate.check_dispatch_binding``) derives identity from that same parse: nothing here
+    re-reads the file, so a record replaced on disk between a caller's read and this call cannot change
+    the identity returned. ``record_path``, when known to the caller, names the file in the "not an object"
+    message instead of the task id, which is not a filesystem path.
+    """
     if not isinstance(task, dict):
-        raise RecordError(f"the dispatch record {path} is not an object")
+        raise RecordError(f"the dispatch record {record_path if record_path is not None else task_id} is not an object")
     harness = task.get("agent")
     if not isinstance(harness, str) or not harness.strip():
         raise RecordError(f"the dispatch record {task_id} names no harness")
@@ -151,6 +174,38 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
     except second_seat.IdentityError as error:
         raise RecordError(str(error)) from error
     return {"model": model.strip(), "harness": harness.strip(), "family": family}
+
+
+def _writer_family(directory: Path, lesson_n: int) -> str:
+    """The writer's family from ``lesson-<n>.writer.yaml``; an unresolvable writer refuses (nothing is recorded)."""
+    try:
+        return second_seat.writer_family(directory, lesson_n)
+    except second_seat.IdentityError as error:
+        raise RecordError(str(error), WRITER_IDENTITY_UNKNOWN) from error
+
+
+def _check_seed_identity(
+    conn: sqlite3.Connection,
+    root: Path,
+    seed_id: str,
+    target: tuple[str, str, int],
+    writer: str,
+    reviewer_family: str,
+) -> None:
+    """Refuse a measurement attempt whose identities are unknown or break an independence rule (fail closed).
+
+    On success the seed's identities are written to ``seed_identities`` (a clean lesson has no planter or gold
+    checker, so it has no row).
+    """
+    try:
+        record = seed_manifest.check_attempt_identity(
+            seed_id, target=target, writer_family=writer, reviewer_family=reviewer_family, repo_root=root
+        )
+    except seed_manifest.MeasurementError as error:
+        raise RecordError(str(error).removeprefix(f"{error.code}: "), error.code) from error
+    if isinstance(record, seed_manifest.Seed):
+        with findings_db.transaction(conn):
+            findings_db.record_seed_identity(conn, record.identity_row())
 
 
 # --- files ------------------------------------------------------------------------------
@@ -304,9 +359,29 @@ def record_return(
     params = findings_db.load_parameters()
     if second and kind != "lesson":
         raise RecordError("a second seat reviews lessons, not plans")
+    if seed_id is not None:
+        if kind != "lesson":
+            raise RecordError("a measurement attempt reviews a lesson; plan measurement is not built", SEED_UNSUPPORTED)
+        if second:
+            raise RecordError("a measurement attempt is a first-seat attempt", SEED_UNSUPPORTED)
+        if not (seed_manifest.SEED_ID_RE.fullmatch(seed_id) or seed_manifest.CLEAN_ID_RE.fullmatch(seed_id)):
+            raise RecordError(
+                f"--seed-id {seed_id!r} must be {seed_manifest.SEED_PREFIX}<token> or {seed_manifest.CLEAN_PREFIX}<token>",
+                SEED_ID_UNRECOGNISED,
+            )
     conn = findings_db.connect(db_path or findings_db.db_path(level, root))
     try:
+        existing = findings_db.get_attempt(conn, review_id, attempt_id)
         if failure is not None:
+            if existing is None and seed_id is not None:
+                _check_seed_identity(
+                    conn,
+                    root,
+                    seed_id,
+                    (level, slug, lesson_n),
+                    _writer_family(directory, lesson_n),
+                    identity["family"],
+                )
             return _record_failure(
                 conn,
                 review_id,
@@ -324,13 +399,11 @@ def record_return(
                 second,
                 moment,
             )
-        existing = findings_db.get_attempt(conn, review_id, attempt_id)
         writer = None
-        if existing is None and kind == "lesson" and (seed_id is None or second):
-            try:
-                writer = second_seat.writer_family(directory, lesson_n)
-            except second_seat.IdentityError as error:
-                raise RecordError(str(error), WRITER_IDENTITY_UNKNOWN) from error
+        if existing is None and kind == "lesson":
+            writer = _writer_family(directory, lesson_n)
+        if existing is None and seed_id is not None:
+            _check_seed_identity(conn, root, seed_id, (level, slug, lesson_n), writer, identity["family"])
         name = f"lesson-{lesson_n}.review.{attempt_id}.yaml" if kind == "lesson" else f"plan-review.{attempt_id}.yaml"
         saved, return_sha = _reserve_return(root, directory, name, data)
         verify_saved = functools.partial(_require_saved, saved, return_sha, name)
@@ -819,7 +892,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--seed-id",
         default=None,
-        help="the attempt reviews a seeded lesson (R3): recorded apart, never enters the fix loop",
+        help=(
+            "the attempt reviews a measurement lesson (R3): seed-<id> (a seeded lesson) or clean-<id> (meant to be clean). "
+            "Recorded apart, never enters the fix loop; refused unless its identities (writer, reviewer and, for a "
+            "linguistic seed, planter and gold checker, from the scoring manifest) are known and independent"
+        ),
     )
     parser.add_argument(
         "--second-seat",

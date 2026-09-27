@@ -323,3 +323,109 @@ def test_close_superseded_items_closes_only_older_open_items_of_that_target(conn
     assert by_id[old]["needs_operator"] == 0 and by_id[old]["decided_at"] == "now"
     assert by_id[current]["outcome"] is None and by_id[other_lesson]["outcome"] is None
     assert by_id[other_module]["outcome"] is None and by_id[decided]["outcome"] == "refuted"
+
+
+# --- schema migration to v4 (folding budget_decisions in after the #8774 merge) -----------------------
+
+
+_BUDGET_PARAMS = {"max_revise_rounds": 100, "regeneration_factor": 100}
+
+
+def _build_legacy_db(path: Path, *, version: int, include_budget_decisions: bool, include_measurement: bool) -> None:
+    """A database file as it would exist on disk at an earlier schema version, with real rows in it."""
+    raw = sqlite3.connect(path)
+    try:
+        for statement in db._statements(db._TABLES):
+            if include_budget_decisions or "budget_decisions" not in statement:
+                raw.execute(statement)
+        if include_measurement:
+            for statement in db._statements(db._TABLES_V3):
+                raw.execute(statement)
+        raw.execute("INSERT INTO schema_version (version) VALUES (?)", (version,))
+        db.insert_attempt(raw, attempt_row())
+        db.bump_budget(raw, "a1", "m", 2, "revise_rounds")
+        if include_budget_decisions:
+            raw.execute(
+                "INSERT INTO budget_decisions (level, slug, lesson_n, budget, counted, decision, decided_by,"
+                " decided_at) VALUES ('a1', 'm', 1, 'revise_rounds', 1, 'legacy decision', 'operator', 't0')"
+            )
+        if include_measurement:
+            db.record_seed_identity(
+                raw,
+                {
+                    "seed_id": "seed-1",
+                    "writer_family": "anthropic",
+                    "planter_model": "claude-sonnet-5",
+                    "planter_family": "anthropic",
+                    "gold_checker_model": "claude-opus-5-5",
+                    "gold_checker_family": "anthropic",
+                    "gold_verdict": "pass",
+                },
+            )
+        raw.commit()
+    finally:
+        raw.close()
+
+
+@pytest.mark.parametrize(
+    ("include_budget_decisions", "include_measurement"),
+    [
+        (False, False),  # a v2 database from before #8774: no budget_decisions
+        (True, False),  # a v2 database from after #8774: has budget_decisions
+        (False, True),  # a v3 database from before this branch merged main: R3 tables, no budget_decisions
+    ],
+    ids=["v2-pre-8774", "v2-post-8774", "v3-pre-merge"],
+)
+def test_every_earlier_state_reaches_v4_with_budget_decisions_and_rows_intact(
+    tmp_path: Path, include_budget_decisions: bool, include_measurement: bool
+) -> None:
+    path = tmp_path / "a1.sqlite"
+    _build_legacy_db(
+        path,
+        version=3 if include_measurement else 2,
+        include_budget_decisions=include_budget_decisions,
+        include_measurement=include_measurement,
+    )
+    conn = db.connect(path)
+    try:
+        assert [row[0] for row in conn.execute("SELECT version FROM schema_version")] == [4]
+        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        assert set(db._TABLE_NAMES) <= tables
+
+        # existing rows survived the migration
+        assert conn.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
+        assert (
+            conn.execute(
+                "SELECT revise_rounds FROM budgets WHERE level = 'a1' AND slug = 'm' AND lesson_n = 2"
+            ).fetchone()[0]
+            == 1
+        )
+        if include_budget_decisions:
+            assert conn.execute("SELECT COUNT(*) FROM budget_decisions").fetchone()[0] == 1
+        if include_measurement:
+            assert db.get_seed_identity(conn, "seed-1") is not None
+
+        # the reviewer's failing calls (#8774 merge review, R3-A fix round 10): budget_decisions must exist
+        assert db.revise_budget_terminal(conn, "a1", "m", 2, _BUDGET_PARAMS) is False
+        db.record_budget_operator_decision(conn, "a1", "m", 9, "one more round", "operator")
+        assert conn.execute("SELECT COUNT(*) FROM budget_decisions WHERE lesson_n = 9").fetchone()[0] == 1
+    finally:
+        conn.close()
+
+
+def test_opening_a_v4_file_twice_is_a_no_op(tmp_path: Path) -> None:
+    path = tmp_path / "a1.sqlite"
+    first = db.connect(path)
+    with db.transaction(first):
+        db.insert_attempt(first, attempt_row())
+    db.record_budget_operator_decision(first, "a1", "m", 2, "one more round", "operator")
+    first.close()
+
+    second = db.connect(path)
+    try:
+        assert [row[0] for row in second.execute("SELECT version FROM schema_version")] == [4]
+        assert second.execute("SELECT COUNT(*) FROM schema_version").fetchone()[0] == 1
+        assert second.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
+        assert second.execute("SELECT COUNT(*) FROM budget_decisions").fetchone()[0] == 1
+    finally:
+        second.close()
