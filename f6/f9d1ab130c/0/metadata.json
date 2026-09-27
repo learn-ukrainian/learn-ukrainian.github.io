@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f6f9d1ab130c",
+  "session_id": "e562520c-52e3-42bf-a584-b25d00d5eaab",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T14:54:21.377132592Z",
+  "branch": "claude/impl-8914-etag-flake",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_preparation_api.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "8818c67785d8",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 232,
+    "cache_creation_tokens": 189541,
+    "cache_read_tokens": 15634316,
+    "output_tokens": 68512,
+    "api_call_count": 116
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-27T14:54:21.259621666Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 1,
+    "total_committed": 0,
+    "total_lines_changed": 1,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 16,
+      "user_lines_removed": 1,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "tests/test_preparation_api.py": 16
+      },
+      "user_removed_per_file": {
+        "tests/test_preparation_api.py": 1
+      }
+    }
+  ]
+}

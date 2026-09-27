@@ -1,0 +1,7 @@
+<task-notification>
+<task-id>bkugg4bm9</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/var/tmp/lu/learn-ukrainian/impl-8914-etag-flake/claude-1000/-home-ops-learn-ukrainian--worktrees-dispatch-claude-impl-8914-etag-flake/e562520c-52e3-42bf-a584-b25d00d5eaab/tasks/bkugg4bm9.output</output-file>
+<status>failed</status>
+<summary>Background command "p=0; for i in $(seq 50); do /home/ops/learn-ukrainian/.venv/bin/python -m pytest -q -p no:cacheprovider tests/test_preparation_api.py -n 4 &gt;/tmp/lu-scratch-8914/verify_run.log 2&gt;&amp;1 &amp;&amp; p=$((p+1)) || echo "FAIL on iteration $i"; done; echo "PASS $p/50"" failed with exit code 144</summary>
+</task-notification>

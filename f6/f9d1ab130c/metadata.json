@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f6f9d1ab130c",
+  "strategy": "manual-commit",
+  "branch": "claude/impl-8914-etag-flake",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_preparation_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f6/f9d1ab130c/0/metadata.json",
+      "transcript": "/f6/f9d1ab130c/0/full.jsonl",
+      "compact_transcript": "/f6/f9d1ab130c/0/transcript.jsonl",
+      "content_hash": "/f6/f9d1ab130c/0/content_hash.txt",
+      "prompt": "/f6/f9d1ab130c/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 232,
+    "cache_creation_tokens": 189541,
+    "cache_read_tokens": 15634316,
+    "output_tokens": 68512,
+    "api_call_count": 116
+  }
+}
