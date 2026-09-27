@@ -19,6 +19,13 @@ from pathlib import Path
 
 import yaml
 
+# The legacy scripts/generate_ipa.py wrapper also runs this file by path.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.verification.stress import STRESS_OVERRIDES_PATH
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -28,7 +35,7 @@ _stressifier = None
 _ipa_overrides: dict | None = None
 _stress_overrides: dict | None = None
 
-DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR = STRESS_OVERRIDES_PATH.parent
 
 STRESS_MARK = "\u0301"  # combining acute accent
 
@@ -46,11 +53,13 @@ def _get_stressifier():
 
 def _load_overrides(name: str) -> dict:
     path = DATA_DIR / name
-    if not path.exists():
-        return {}
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return data if isinstance(data, dict) else {}
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise ValueError(f"Expected a YAML mapping in {path}")
+    return data
 
 
 def _get_ipa_overrides() -> dict:
