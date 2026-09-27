@@ -19,6 +19,7 @@ const REQUIRED_ARTIFACTS = [
   'site/src/data/lexicon-daily-pool.json',
   'site/src/data/lexicon-practice-cloze-sources.json',
   'site/src/data/lexicon-practice-reviewed-sources.json',
+  'site/src/data/lexicon-teacher-deck.pointer.json',
 ];
 
 function requireArtifact(relativePath, missing) {

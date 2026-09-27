@@ -3,6 +3,12 @@
 The source document remains private.  This module deliberately reads only the
 table immediately following the exact requested heading; it is not a general
 document-vocabulary miner.
+
+Besides the legacy lemma-only special set, the table sync produces the deck
+entries used by the teacher practice shard (#8843): one entry per normalised
+Ukrainian key, with the teacher's English, the source rows, a stable entry id
+derived from the normalised key only, and a ``firstSeen`` order key that is
+carried forward from the previous published deck.
 """
 
 from __future__ import annotations
@@ -11,6 +17,7 @@ import argparse
 import hashlib
 import json
 import sys
+import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
 from collections.abc import Sequence
@@ -27,6 +34,14 @@ DECK_ID = "virtual_teacher_table"
 TITLE = "Dev's example deck"
 TITLE_UK = "Приклад розробника"
 DESCRIPTION = "Shared example from the developer's classroom list."
+HEADING = "Combined Master Vocabulary Table (#3)"
+FROZEN_KEYS_SCHEMA = "teacher-table-frozen-keys"
+FROZEN_KEYS_SCHEMA_VERSION = 1
+ENTRY_ID_PREFIX = "tt-"
+STRESS_MARKS = frozenset({"\u0301", "\u0300"})
+APOSTROPHE_VARIANTS = str.maketrans(
+    {"\u2019": "'", "\u02bc": "'", "\u2018": "'", "`": "'", "\u00b4": "'", "\u2032": "'"}
+)
 
 
 class TeacherTableSyncError(ValueError):
@@ -88,10 +103,16 @@ def _find_target_table(document_xml: bytes, heading: str) -> ET.Element:
     raise TeacherTableSyncError(f"no table follows exact heading: {heading!r}")
 
 
-def _ukrainian_column_index(header_cells: list[str]) -> int:
+def _english_column_index(header_cells: list[str]) -> int:
     normalized = [_normalize_text(cell).casefold() for cell in header_cells]
     if "english" not in normalized:
         raise TeacherTableSyncError("target table header must include an English column")
+    return normalized.index("english")
+
+
+def _ukrainian_column_index(header_cells: list[str]) -> int:
+    normalized = [_normalize_text(cell).casefold() for cell in header_cells]
+    _english_column_index(header_cells)
 
     # Current master-table exports have used both names for the Ukrainian source
     # column.  Prefer the explicit Ukrainian header when both are present.
@@ -103,14 +124,39 @@ def _ukrainian_column_index(header_cells: list[str]) -> int:
     )
 
 
-def extract_teacher_table(docx_path: Path, heading: str) -> tuple[TeacherTableReport, list[str]]:
-    """Extract ordered, unique Ukrainian cells from the table after *heading*."""
+@dataclass(frozen=True)
+class TeacherTableRow:
+    """One data row of the master table; ``row`` is the 1-based data-row position."""
+
+    row: int
+    uk: str
+    en: str
+
+
+def normalize_uk_key(value: str) -> str:
+    """Normalised Ukrainian key: stress marks stripped, apostrophes unified, case-folded.
+
+    This is the only input of the stable entry id and of the Atlas join, so a
+    corrected meaning, a moved row, or a capitalisation variant keeps the same id.
+    """
+
+    decomposed = unicodedata.normalize("NFD", value)
+    stripped = "".join(char for char in decomposed if char not in STRESS_MARKS)
+    composed = unicodedata.normalize("NFC", stripped).translate(APOSTROPHE_VARIANTS)
+    return " ".join(composed.split()).casefold()
+
+
+def entry_id_for_key(normalized_key: str) -> str:
+    return ENTRY_ID_PREFIX + hashlib.sha256(normalized_key.encode("utf-8")).hexdigest()[:12]
+
+
+def extract_teacher_rows(docx_path: Path, heading: str) -> tuple[str, list[TeacherTableRow]]:
+    """Return the DOCX SHA-256 and every data row (Ukrainian + English) after *heading*."""
 
     try:
         docx_bytes = docx_path.read_bytes()
     except OSError as exc:
         raise TeacherTableSyncError(f"cannot read DOCX: {docx_path}") from exc
-
     try:
         with zipfile.ZipFile(docx_path) as archive:
             document_xml = archive.read(DOCUMENT_XML)
@@ -123,32 +169,151 @@ def extract_teacher_table(docx_path: Path, heading: str) -> tuple[TeacherTableRe
     rows = table.findall("./w:tr", NS)
     if not rows:
         raise TeacherTableSyncError("target table has no rows")
-
-    ukrainian_column = _ukrainian_column_index(_row_cells(rows[0]))
-    raw_data_rows = len(rows) - 1
-    seen: set[str] = set()
-    lemma_keys: list[str] = []
-    for row in rows[1:]:
+    header = _row_cells(rows[0])
+    uk_column = _ukrainian_column_index(header)
+    en_column = _english_column_index(header)
+    result: list[TeacherTableRow] = []
+    for position, row in enumerate(rows[1:], start=1):
         cells = _row_cells(row)
-        value = cells[ukrainian_column] if ukrainian_column < len(cells) else ""
-        if value and value not in seen:
-            seen.add(value)
-            lemma_keys.append(value)
+        uk = cells[uk_column] if uk_column < len(cells) else ""
+        en = cells[en_column] if en_column < len(cells) else ""
+        result.append(TeacherTableRow(row=position, uk=uk, en=en))
+    return hashlib.sha256(docx_bytes).hexdigest(), result
 
+
+@dataclass(frozen=True)
+class DeckBuild:
+    entries: list[dict[str, object]]
+    merges: list[dict[str, object]]
+    source_keys: list[str]
+    raw_data_rows: int
+
+
+def _distinct_meanings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    meanings: list[str] = []
+    for value in values:
+        folded = value.casefold()
+        if value and folded not in seen:
+            seen.add(folded)
+            meanings.append(value)
+    return meanings
+
+
+def previous_first_seen(previous_entries: Sequence[dict[str, object]] | None) -> dict[str, int]:
+    """Map normalised key -> carried ``firstSeen`` from a previous deck artifact."""
+
+    carried: dict[str, int] = {}
+    for entry in previous_entries or []:
+        key = entry.get("key")
+        first_seen = entry.get("firstSeen")
+        if isinstance(key, str) and isinstance(first_seen, int) and not isinstance(first_seen, bool):
+            carried[key] = first_seen
+    return carried
+
+
+def build_deck_entries(
+    rows: list[TeacherTableRow],
+    previous_entries: Sequence[dict[str, object]] | None = None,
+) -> DeckBuild:
+    """Merge rows into one entry per normalised key and assign order keys.
+
+    ``firstSeen`` is copied from *previous_entries* for every surviving key.  A
+    key that is new in this document gets ``max(previous) + n`` in row order, so
+    newer keys always sort after older ones.  Without any previous order keys
+    (first sync) the earliest source row number is the order key.
+    """
+
+    groups: dict[str, list[TeacherTableRow]] = {}
+    source_keys: list[str] = []
+    seen_source_keys: set[str] = set()
+    for row in rows:
+        if not row.uk:
+            continue
+        if not row.en:
+            raise TeacherTableSyncError(f"table row {row.row} has no English meaning")
+        groups.setdefault(normalize_uk_key(row.uk), []).append(row)
+        if row.uk not in seen_source_keys:
+            seen_source_keys.add(row.uk)
+            source_keys.append(row.uk)
+
+    carried = previous_first_seen(previous_entries)
+    next_order = max(carried.values(), default=0)
+    entries: list[dict[str, object]] = []
+    merges: list[dict[str, object]] = []
+    ids: dict[str, str] = {}
+    for key, group in groups.items():
+        entry_id = entry_id_for_key(key)
+        if entry_id in ids:
+            raise TeacherTableSyncError(f"entry id collision between {ids[entry_id]!r} and {key!r}")
+        ids[entry_id] = key
+        if key in carried:
+            first_seen = carried[key]
+        elif carried:
+            next_order += 1
+            first_seen = next_order
+        else:
+            first_seen = group[0].row
+        meanings = _distinct_meanings([row.en for row in group])
+        entry: dict[str, object] = {
+            "entryId": entry_id,
+            "key": key,
+            "uk": group[0].uk,
+            "en": "; ".join(meanings),
+            "firstSeen": first_seen,
+            "multiword": any(char.isspace() for char in group[0].uk),
+            "sourceRows": [row.row for row in group],
+            "sourceKeys": list(dict.fromkeys(row.uk for row in group)),
+        }
+        entries.append(entry)
+        if len(group) > 1:
+            merges.append(
+                {
+                    "entryId": entry_id,
+                    "uk": group[0].uk,
+                    "rows": [row.row for row in group],
+                    "spellings": entry["sourceKeys"],
+                    "meanings": [row.en for row in group],
+                    "differentEnglish": len(meanings) > 1,
+                }
+            )
+    return DeckBuild(entries=entries, merges=merges, source_keys=source_keys, raw_data_rows=len(rows))
+
+
+def frozen_keys_payload(docx_sha256: str, build: DeckBuild, heading: str = HEADING) -> dict[str, object]:
+    """Frozen denominator: every distinct source key with the document hash."""
+
+    return {
+        "schema": FROZEN_KEYS_SCHEMA,
+        "schemaVersion": FROZEN_KEYS_SCHEMA_VERSION,
+        "docxSha256": docx_sha256,
+        "heading": heading,
+        "rawDataRows": build.raw_data_rows,
+        "sourceKeyCount": len(build.source_keys),
+        "entryCount": len(build.entries),
+        "keys": build.source_keys,
+    }
+
+
+def extract_teacher_table(docx_path: Path, heading: str) -> tuple[TeacherTableReport, list[str]]:
+    """Extract ordered, unique Ukrainian cells from the table after *heading*."""
+
+    docx_sha256, rows = extract_teacher_rows(docx_path, heading)
+    lemma_keys = list(dict.fromkeys(row.uk for row in rows if row.uk))
     report = TeacherTableReport(
-        raw_data_rows=raw_data_rows,
+        raw_data_rows=len(rows),
         unique_uk=len(lemma_keys),
         multiword=sum(1 for key in lemma_keys if any(char.isspace() for char in key)),
         first5=lemma_keys[:5],
         last5=lemma_keys[-5:],
-        sha256_docx=hashlib.sha256(docx_bytes).hexdigest(),
+        sha256_docx=docx_sha256,
     )
     return report, lemma_keys
 
 
-def _read_previous_lemma_count(site_data_path: Path) -> int:
+def _read_previous_lemma_keys(site_data_path: Path) -> list[str]:
     if not site_data_path.exists():
-        return 0
+        return []
     try:
         payload = json.loads(site_data_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -158,7 +323,7 @@ def _read_previous_lemma_count(site_data_path: Path) -> int:
         raise TeacherTableSyncError(
             f"existing site data has no valid lemma_keys list: {site_data_path}",
         )
-    return len(set(lemma_keys))
+    return lemma_keys
 
 
 def write_site_data(
@@ -167,13 +332,18 @@ def write_site_data(
     site_data_path: Path = DEFAULT_SITE_DATA_PATH,
     allow_shrink: bool = False,
 ) -> None:
-    """Write the public, lemma-only special-set payload after the shrink guard."""
+    """Write the public, lemma-only special-set payload after the shrink guard.
 
-    previous_count = _read_previous_lemma_count(site_data_path)
-    if len(lemma_keys) < previous_count and not allow_shrink:
+    The guard compares normalised keys: merging capitalisation or apostrophe
+    variants of one word is not a shrink, but dropping a word is.
+    """
+
+    current = {normalize_uk_key(key) for key in lemma_keys}
+    dropped = [key for key in _read_previous_lemma_keys(site_data_path) if normalize_uk_key(key) not in current]
+    if dropped and not allow_shrink:
         raise TeacherTableSyncError(
-            "refusing to shrink teacher-table deck from "
-            f"{previous_count} to {len(lemma_keys)} keys; pass --allow-shrink to confirm",
+            f"refusing to shrink teacher-table deck: {len(dropped)} previous keys would be dropped "
+            f"(first: {dropped[:3]}); pass --allow-shrink to confirm",
         )
 
     payload = {
@@ -193,34 +363,53 @@ def write_site_data(
 
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract the table after an exact DOCX heading into the Teacher table Practice set.",
+        description=(
+            "Extract the table after an exact DOCX heading into the Teacher table Practice set.\n"
+            "Use for a table-only report or legacy key-list write; use "
+            "`python -m scripts.lexicon.teacher_deck refresh` to rebuild the whole teacher deck."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.lexicon.sync_teacher_table_deck --docx /private/master.docx \\
+      --heading "Combined Master Vocabulary Table (#3)"
+  .venv/bin/python -m scripts.lexicon.sync_teacher_table_deck --docx /private/master.docx \\
+      --heading "Combined Master Vocabulary Table (#3)" --write-site-data
+Outputs: JSON report on stdout (and --report); --write-site-data rewrites
+  site/src/data/lexicon-teacher-table-deck.json (one key per normalised entry).
+Exit codes: 0 success; 1 unreadable DOCX, missing heading/table/columns, or shrink refused.
+Related: #8843; scripts/lexicon/teacher_deck.py; docs/practice/teacher-deck-artifacts.md.
+""",
     )
-    parser.add_argument("--docx", type=Path, required=True, help="Private teacher master DOCX path.")
+    parser.add_argument(
+        "--docx", type=Path, required=True, help="Private teacher master DOCX path (e.g. /private/master.docx)."
+    )
     parser.add_argument(
         "--heading",
         required=True,
-        help="Exact heading whose next table is the Combined Master Vocabulary Table.",
+        help=f"Exact heading whose next table is the master vocabulary table (e.g. {HEADING!r}).",
     )
     parser.add_argument(
         "--write-site-data",
         action="store_true",
-        help="Write site/src/data/lexicon-teacher-table-deck.json after the shrink guard.",
+        help="Write site/src/data/lexicon-teacher-table-deck.json after the shrink guard (default: report only).",
     )
     parser.add_argument(
         "--allow-shrink",
         action="store_true",
-        help="Allow --write-site-data to replace a larger existing key set.",
+        help="Allow --write-site-data to drop previously published keys (default: refuse).",
     )
-    parser.add_argument("--report", type=Path, help="Optional JSON report output path.")
+    parser.add_argument("--report", type=Path, help="Optional JSON report output path (default: stdout only).")
     return parser.parse_args(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     try:
-        report, lemma_keys = extract_teacher_table(args.docx, args.heading)
+        report, _lemma_keys = extract_teacher_table(args.docx, args.heading)
         if args.write_site_data:
-            write_site_data(lemma_keys, allow_shrink=args.allow_shrink)
+            _sha, rows = extract_teacher_rows(args.docx, args.heading)
+            entries = build_deck_entries(rows).entries
+            write_site_data([str(entry["uk"]) for entry in entries], allow_shrink=args.allow_shrink)
     except TeacherTableSyncError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

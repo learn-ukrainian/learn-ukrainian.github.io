@@ -67,7 +67,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "006337cee6bff6d17e8804023431eb8801ed1265604e0170e1cee07ea66660b6"
+        "sha256": "f2ffd92259b09ef692a2518153bdb5b1e7aba3b689485c7df1dfc8bff4d4ec71"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -359,7 +359,15 @@
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
-        "sha256": "0756a2a5c50b58955d1678b7cdf9bdf198d876b0e542a2d3903edee47e3111f6"
+        "sha256": "d5522d909f63aa961eaf1177f9fafd1af3c485de899d377c22d3940db9a08656"
+      },
+      {
+        "path": "scripts/lexicon/teacher_deck.py",
+        "sha256": "c393af068496ce5e568f89198befa443f1d8fceac77502f88f69a8c3ca5e7db1"
+      },
+      {
+        "path": "scripts/lexicon/teacher_deck_shard.py",
+        "sha256": "a16285e359f72e392b22054aaad06ac25274c5c5c072d8788c78995ac12bb991"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
