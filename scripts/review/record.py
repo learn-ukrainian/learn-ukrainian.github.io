@@ -411,11 +411,16 @@ def record_return(
             return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n, moment)
         first = None
         preset: list[str] = []
-        if writer is not None and identity["family"] == writer:
+        same_family = writer is not None and identity["family"] == writer
+        second_seat_pending = second and not same_family
+        if same_family:
             preset.append(SAME_FAMILY_REVIEW)  # the seat is the writer's own family: it may not review the lesson
-        elif second:
+        elif second_seat_pending:
             try:
-                first = second_seat.check_eligible(
+                # a cheap early refusal only (fails fast before validation); it is never the basis of
+                # acceptance or pairing, which are decided again inside the write transaction below,
+                # against the latest accepted first attempt read under the write lock
+                second_seat.check_eligible(
                     conn,
                     level=level,
                     slug=slug,
@@ -478,6 +483,21 @@ def record_return(
         }
         try:
             with findings_db.transaction(conn):  # the budget check, the attempt row and the increment are one write
+                if second_seat_pending:  # eligibility and pairing, decided now, against the latest accepted first
+                    try:
+                        first = second_seat.check_eligible(
+                            conn,
+                            level=level,
+                            slug=slug,
+                            lesson_n=lesson_n,
+                            manifest_sha256=manifest_sha,
+                            first_attempt=None,
+                            second_family=identity["family"],
+                            writer=writer,
+                            params=params,
+                        )
+                    except second_seat.SecondSeatError as error:
+                        raise RecordError(str(error)) from error
                 if budgeted:  # the only budget read that decides the outcome: it sees every committed decision
                     terminal_budget = _terminal_budget(conn, root, level, slug, lesson_n, manifest_sha, params)
                     if terminal_budget is not None:
