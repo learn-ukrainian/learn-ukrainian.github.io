@@ -1,8 +1,10 @@
 built_with:
-  mcp_commit: d3e5e6e3eaab7cc24822ba68a897991a52b95f03
-  overrides_sha256: 57b2b17cc991582af6cd2a786ba2d7aa63f2ff3193736e0c0304d4578e119efa
+  kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
+  kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
+  mcp_commit: ca2c3a50e13f1a700c3627eb57d1866424467c95
+  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: ab77fbe62e5b768cb883ff1d4264633f32cb21db7962dc48e37339d84078294e
+  sources_db: 2c9a196510252ffe04aaf787c475a9b2a91567bfcbb8164a268d04057a98297e
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -74,10 +76,11 @@ words:
     stressed: мя
     tags: noun:anim:s:v_zna:pron:pers:1:arch
   gloss_en: I (personal pronoun)
-  gloss_source:
+  gloss_ref:
     id: 15
     row_sha256: 43139920eaad62eab01037a21d7cecae9ec23139f06d467e09b85a9262e31e86
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-001
   lemma: я
   note: 'closed class: personal pronoun (1st pers sing); basic speaker reference'
@@ -156,10 +159,11 @@ words:
     stressed: тя
     tags: noun:anim:s:v_zna:pron:pers:2:arch
   gloss_en: thou (singular nominative form of you)
-  gloss_source:
+  gloss_ref:
     id: 269
     row_sha256: c26798fbeaf218a1cf49750532cf0a6c7fd106ff2417ce5e66d23ccdc4099783
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-002
   lemma: ти
   note: 'closed class: personal pronoun (2nd pers sing); base-layer item (position 43 please-do-this teaches imperative contrast
@@ -186,9 +190,7 @@ words:
   - form: йому
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: йому́
+    stress_source: pending
     tags: noun:unanim:m:v_dav:pron:pers:3
   - form: єму
     learner: false
@@ -224,16 +226,12 @@ words:
   - form: його
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: його́
+    stress_source: pending
     tags: noun:unanim:m:v_rod:pron:pers:3
   - form: нього
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: ньо́го
+    stress_source: pending
     tags: noun:unanim:m:v_rod:pron:pers:3
   - form: него
     learner: false
@@ -254,16 +252,12 @@ words:
   - form: його
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: його́
+    stress_source: pending
     tags: noun:unanim:m:v_zna:pron:pers:3
   - form: нього
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: ньо́го
+    stress_source: pending
     tags: noun:unanim:m:v_zna:pron:pers:3
   - form: него
     learner: false
@@ -282,10 +276,11 @@ words:
     stress_source: pending
     tags: noun:unanim:m:v_zna:pron:pers:3:arch
   gloss_en: personal pronoun "he"
-  gloss_source:
+  gloss_ref:
     id: 14269
     row_sha256: 05e8d3ca79e889bdf8a1fe8102d2054fce5b10fbdaeb223be47d2171bc633b93
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-003
   lemma: він
   note: 'closed class: personal pronoun (3rd pers masc sing); taught at position 8 (things-have-gender)'
@@ -376,6 +371,8 @@ words:
     stress_source: trie
     stressed: є́ї
     tags: noun:unanim:f:v_zna:pron:pers:3:arch
+  gloss_en: she (person); it (feminine gender)
+  gloss_source: kaikki_wiktionary
   id: W-004
   lemma: вона
   note: 'closed class: personal pronoun (3rd pers fem sing); taught at position 8 (things-have-gender)'
@@ -401,9 +398,7 @@ words:
   - form: йому
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: йому́
+    stress_source: pending
     tags: noun:unanim:n:v_dav:pron:pers:3
   - form: ньому
     learner: true
@@ -425,31 +420,25 @@ words:
   - form: його
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: його́
+    stress_source: pending
     tags: noun:unanim:n:v_rod:pron:pers:3
   - form: нього
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: ньо́го
+    stress_source: pending
     tags: noun:unanim:n:v_rod:pron:pers:3
   - form: його
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: його́
+    stress_source: pending
     tags: noun:unanim:n:v_zna:pron:pers:3
   - form: нього
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: ньо́го
+    stress_source: pending
     tags: noun:unanim:n:v_zna:pron:pers:3
+  gloss_en: it
+  gloss_source: kaikki_wiktionary
   id: W-005
   lemma: воно
   note: 'closed class: personal pronoun (3rd pers neut sing); taught at position 8 (things-have-gender)'
@@ -508,10 +497,11 @@ words:
     stressed: нас
     tags: noun:anim:p:v_zna:pron:pers:1
   gloss_en: generic we (the speaker and at least one other person, regardless of whether it's the person being addressed)
-  gloss_source:
+  gloss_ref:
     id: 14
     row_sha256: 244ea8fdcf76183fd927f2db4fd463d73521c46728fcc59ec97580d31092b4c5
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-006
   lemma: ми
   note: 'closed class: personal pronoun (1st pers plur); basic plural reference'
@@ -576,10 +566,11 @@ words:
     stressed: вас
     tags: noun:anim:p:v_zna:pron:pers:2
   gloss_en: 'you (subject pronoun: the group being addressed)'
-  gloss_source:
+  gloss_ref:
     id: 37
     row_sha256: d9df543eefdfc60e9b60f2aa034629294de10e73cb746711d0b5662da356c440
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-007
   lemma: ви
   note: 'closed class: personal pronoun (2nd pers plur/polite); base-layer item (position 43 please-do-this teaches imperative
@@ -658,6 +649,8 @@ words:
     stress_source: none
     stressed: їх
     tags: noun:unanim:p:v_zna:pron:pers:3
+  gloss_en: they
+  gloss_source: kaikki_wiktionary
   id: W-008
   lemma: вони
   note: 'closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)'
@@ -710,6 +703,8 @@ words:
     stress_source: ulif
     stressed: себе́
     tags: noun:unanim:s:v_zna:pron:refl
+  gloss_en: oneself (reflexive pronoun); myself; yourself; himself; herself; itself
+  gloss_source: kaikki_wiktionary
   id: W-009
   lemma: себе
   note: 'closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference'
@@ -1049,10 +1044,11 @@ words:
     stressed: мої́
     tags: adj:p:v_zna:rinanim:pron:pos
   gloss_en: my (belonging to me) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 19272
     row_sha256: 0b6e85ed789d82cea873973cef161677375f79103fd9b1157ad410eb4fec91ab
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-010
   lemma: мій
   note: 'closed class: possessive pronoun (1st pers sing); taught at position 8 (things-have-gender)'
@@ -1388,10 +1384,11 @@ words:
     stressed: твої́
     tags: adj:p:v_zna:rinanim:pron:pos
   gloss_en: your (belonging to you (singular; one owner)) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 19467
     row_sha256: 8a2a11cf35600852d5d738b8f8f04e6e97f9d417d8d06a554bab08f516d753cb
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-011
   lemma: твій
   note: 'closed class: possessive pronoun (2nd pers sing); taught at position 8 (things-have-gender)'
@@ -1703,10 +1700,11 @@ words:
     stressed: свої́
     tags: adj:p:v_zna:rinanim:pron:pos
   gloss_en: (possessive) one's, my, his, her, its, our, your, their (always refers to the subject of the sentence)
-  gloss_source:
+  gloss_ref:
     id: 18763
     row_sha256: 8bd5886627a4ebe30aa8641e30aba8b71b158c13c1f573bdb40f21cb0be1da97
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-012
   lemma: свій
   note: 'closed class: reflexive possessive pronoun; basic possessive reference'
@@ -1922,10 +1920,11 @@ words:
     stressed: на́ші
     tags: adj:p:v_zna:rinanim:pron:pos
   gloss_en: our (belonging to us) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 19278
     row_sha256: d0bea47dc84d9f8dac29e08d1d23581265659c2dfac9dd130b1fd21bfd15db1e
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-013
   lemma: наш
   note: 'closed class: possessive pronoun (1st pers plur); basic possessive reference'
@@ -2141,10 +2140,11 @@ words:
     stressed: ва́ші
     tags: adj:p:v_zna:rinanim:pron:pos
   gloss_en: your (belonging to you (singular; one owner)) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 19235
     row_sha256: a8a7eee6d5b15a088e0aaf4b7510525ea0d929b04dfd4460a746386dbf479db0
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-014
   lemma: ваш
   note: 'closed class: possessive pronoun (2nd pers plur); basic possessive reference'
@@ -2360,6 +2360,8 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:pos:long
+  gloss_en: their, theirs
+  gloss_source: kaikki_wiktionary
   id: W-015
   lemma: їхній
   note: 'closed class: possessive pronoun (3rd pers plur); basic possessive reference'
@@ -2408,7 +2410,7 @@ words:
   - form: цією
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: ціє́ю
     tags: adj:f:v_oru:pron:dem
   - form: цею
@@ -2422,7 +2424,7 @@ words:
   - form: цієї
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: ціє́ї
     tags: adj:f:v_rod:pron:dem
   - form: цеї
@@ -2447,14 +2449,14 @@ words:
   - form: цьому
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цьому́
     tags: adj:m:v_dav:pron:dem
   - form: цьому
     learner: true
     markers: []
-    stress_source: trie
-    stressed: цьо́му
+    stress_source: ulif
+    stressed: цьому́
     tags: adj:m:v_mis:pron:dem
   - form: цім
     learner: true
@@ -2477,13 +2479,13 @@ words:
   - form: цього
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цього́
     tags: adj:m:v_rod:pron:dem
   - form: цього
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цього́
     tags: adj:m:v_zna:ranim:pron:dem
   - form: цей
@@ -2495,13 +2497,13 @@ words:
   - form: цьому
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цьому́
     tags: adj:n:v_dav:pron:dem
   - form: цьому
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цьому́
     tags: adj:n:v_mis:pron:dem
   - form: цім
@@ -2530,7 +2532,7 @@ words:
   - form: цього
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: цього́
     tags: adj:n:v_rod:pron:dem
   - form: це
@@ -2579,7 +2581,7 @@ words:
   - form: цими
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: ци́ми
     tags: adj:p:v_oru:pron:dem
   - form: цих
@@ -2624,10 +2626,11 @@ words:
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:dem:long
   gloss_en: this (the (thing) here) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 10484
     row_sha256: 3039208321b379f83382da5a00ab22d7b437d61e75d5c7d8eb28867b2d224adb
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-016
   lemma: цей
   note: 'closed class: demonstrative pronoun (proximal); taught at position 12 (this-and-that)'
@@ -2635,7 +2638,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - цей
+    - 1
+    row_sha256: b0fa077e470dcf9f8c2f479a16b53c73477d5273007c35a3d5b39f63bdf7b530
+    source: ulif
 - cefr:
     level: A1
     row_id: 633
@@ -2878,10 +2886,11 @@ words:
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:dem:long
   gloss_en: that (what is being indicated) (determiner)
-  gloss_source:
+  gloss_ref:
     id: 18941
     row_sha256: 9f59eb66057d55da2485fa3e9b766064ed26f00526dc9d984907dc99980c2904
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-017
   lemma: той
   note: 'closed class: demonstrative pronoun (distal); taught at position 12 (this-and-that)'
@@ -2906,10 +2915,11 @@ words:
     stressed: у
     tags: prep
   gloss_en: contained by (preposition)
-  gloss_source:
+  gloss_ref:
     id: 3
     row_sha256: 8f4fa83f7c9f63eab2aa3da78770d3fa2d70dfceccea13658e473227c2458509
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-018
   lemma: у
   note: 'closed class: preposition; taught at position 28 (euphony) and position 29 (where-is-it)'
@@ -2929,10 +2939,11 @@ words:
     stressed: в
     tags: prep
   gloss_en: contained by (preposition)
-  gloss_source:
+  gloss_ref:
     id: 2
     row_sha256: cfe093c0d8ce2c59086caecd90f22897f83f8d7d95e1a2bb66fdfd6f57093222
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-019
   lemma: в
   note: 'closed class: preposition, euphonic partner of у; taught at position 28 (euphony) and position 29 (where-is-it)'
@@ -2980,10 +2991,11 @@ words:
     stressed: з
     tags: prep
   gloss_en: of (containing, comprising or made from) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 5
     row_sha256: 3850cfb33c989ccdb02c7b3b162bc1e2e03ddd229b5c3fef337ab00efd7de8b5
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-021
   lemma: з
   note: 'closed class: preposition; taught at position 28 (euphony) and position 34 (where-from)'
@@ -3008,10 +3020,11 @@ words:
     stressed: із
     tags: prep
   gloss_en: with (in the company of) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 17
     row_sha256: c9b68d0a7594f3613e0f57c74fa9514a140f8b8c9068446952e76fc16e22896e
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-022
   lemma: із
   note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony) and position 34 (where-from)'
@@ -3036,10 +3049,11 @@ words:
     stressed: зі
     tags: prep
   gloss_en: with (in the company of) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 87
     row_sha256: bdc237a3a0362f1cc4bf5617e3627826fca1561b7a06a6245cc89f45b5daeae6
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-023
   lemma: зі
   note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony) and position 34 (where-from)'
@@ -3064,10 +3078,11 @@ words:
     stressed: зо
     tags: prep
   gloss_en: with (in the company of) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 7194
     row_sha256: 524f08c3e1127c383d3513f4b4a2c492f0bd0572493f0edaa7091e1154afa855
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-024
   lemma: зо
   note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony)'
@@ -3097,10 +3112,11 @@ words:
     stressed: на
     tags: prep
   gloss_en: positioned at the upper surface of (preposition)
-  gloss_source:
+  gloss_ref:
     id: 1
     row_sha256: 074e5a052cd3e000a40e1e0b6973b87763d7a1f74f92fb87fe9a21c239f7e5df
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-025
   lemma: на
   note: 'closed class: preposition; taught at position 29 (where-is-it)'
@@ -3125,10 +3141,11 @@ words:
     stressed: до
     tags: prep
   gloss_en: (to tell the time) before, to, e.g. a quarter of three (2:45) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 7
     row_sha256: 091b64439e9a908d49f07bca46955d1558d1aff99ca2c518e4e6b2108a9ac04f
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-026
   lemma: до
   note: 'closed class: preposition; taught at position 31 (where-to)'
@@ -3153,10 +3170,11 @@ words:
     stressed: від
     tags: prep
   gloss_en: from (with the source or provenance of or at) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 16
     row_sha256: 011b98b54ec41096d3528c852488e171f424ac45df5977142c92591386c420a0
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-027
   lemma: від
   note: 'closed class: preposition; taught at position 34 (where-from)'
@@ -3181,10 +3199,11 @@ words:
     stressed: од
     tags: prep
   gloss_en: (nonstandard) from (preposition)
-  gloss_source:
+  gloss_ref:
     id: 7219
     row_sha256: 9b3a7226629469b42cdb85399b2aa26ee7773793b227649deac71a1e208c6471
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-028
   lemma: од
   note: 'closed class: preposition, euphonic partner of від; taught at position 34 (where-from)'
@@ -3209,10 +3228,11 @@ words:
     stressed: для
     tags: prep
   gloss_en: for (directed at, intended to belong to) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 12
     row_sha256: 18fe75631a5d109797ba949e6172f506fb8d3398ff205bdad01ee051e96bff51
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-029
   lemma: для
   note: 'closed class: preposition; relational preposition of purpose/beneficiary'
@@ -3242,10 +3262,11 @@ words:
     stressed: без
     tags: prep
   gloss_en: without (not having) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 75
     row_sha256: 03aac7307532abe78f6d0edc4afca091bb215fcebb3d37f0afd83955712bc352
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-030
   lemma: без
   note: 'closed class: preposition; met at position 36 (food-and-drink) and position 38 (at-the-cafe)'
@@ -3270,10 +3291,11 @@ words:
     stressed: за
     tags: prep
   gloss_en: for (supporting) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 8
     row_sha256: 331a576ff94d547d853aff948fb462c1f6e65f7164f1ad5bddd0692a85795dd0
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-031
   lemma: за
   note: 'closed class: preposition; relational preposition'
@@ -3298,10 +3320,11 @@ words:
     stressed: під
     tags: prep
   gloss_en: under (at a lower level than) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 38
     row_sha256: 04cfeb17f67871447767b8a35464aff77bfaa89691c290030b457ba1f9af8c09
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-032
   lemma: під
   note: 'closed class: preposition; spatial preposition'
@@ -3317,9 +3340,7 @@ words:
   - form: піді
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: пі́ді
+    stress_source: pending
     tags: prep
   id: W-033
   lemma: піді
@@ -3368,10 +3389,11 @@ words:
     stressed: над
     tags: prep
   gloss_en: above (in or to a higher place) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 233
     row_sha256: 34203d336eea5724d233d69517d4b5da8625d3ea7d87f2b1d53ed030bcc8d274
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-035
   lemma: над
   note: 'closed class: preposition; spatial preposition'
@@ -3461,9 +3483,7 @@ words:
   - form: переді
     learner: true
     markers: []
-    override: true
-    stress_source: trie
-    stressed: пе́реді
+    stress_source: pending
     tags: prep
   id: W-039
   lemma: переді
@@ -3537,6 +3557,9 @@ words:
     stress_source: none
     stressed: між
     tags: prep
+  gloss_en: between, among (expressing position in space or time) (+ instrumental or more rarely genitive); between, among
+    (expressing motion towards) (+ accusative)
+  gloss_source: kaikki_wiktionary
   id: W-042
   lemma: між
   note: 'closed class: preposition; spatial relational preposition'
@@ -3589,6 +3612,8 @@ words:
     stress_source: trie
     stressed: бі́ля
     tags: prep
+  gloss_en: next to; near (as a preposition)
+  gloss_source: kaikki_wiktionary
   id: W-044
   lemma: біля
   note: 'closed class: preposition; taught at position 29 (where-is-it) and position 30 (my-city)'
@@ -3617,6 +3642,9 @@ words:
     stress_source: trie
     stressed: че́рез
     tags: prep
+  gloss_en: across, over (from one side to the other of); through; via; through, with (means); because of, due to; in, after
+    (time)
+  gloss_source: kaikki_wiktionary
   id: W-045
   lemma: через
   note: 'closed class: preposition; relational preposition of traversal/cause'
@@ -3624,7 +3652,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - че́рез
+    - 1
+    row_sha256: 908838ee9c0df3a0bfad0d1e95d9eedf4fb530a7331da5acb00fa9a4f4fe046a
+    source: ulif
 - cefr:
     level: A1
     row_id: 1704
@@ -3641,10 +3674,11 @@ words:
     stressed: про
     tags: prep
   gloss_en: about (concerning) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 10
     row_sha256: 3ddfa43d9c242591324e7ce746f2c5d0a3fc07e7528596901fe710984c055e56
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-046
   lemma: про
   note: 'closed class: preposition; taught at position 40 (people-around-me) with accusative'
@@ -3674,10 +3708,11 @@ words:
     stressed: при
     tags: prep
   gloss_en: at (in or very near a particular place) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 103
     row_sha256: 3c3e8107a8fc56610f2fba82f3fc933d6274fb343366eb61590c12f744903be0
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-047
   lemma: при
   note: 'closed class: preposition; relational preposition'
@@ -3707,10 +3742,11 @@ words:
     stressed: о
     tags: prep
   gloss_en: indicating time (preposition)
-  gloss_source:
+  gloss_ref:
     id: 7431
     row_sha256: bd5092d22556c9779ad6f11b962652ca551657b7a3c04e950831447690e69bc9
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-048
   lemma: о
   note: 'closed class: preposition; taught at position 22 (what-time) for clock time'
@@ -3735,10 +3771,11 @@ words:
     stressed: об
     tags: prep
   gloss_en: at (for indicating time in hours) (preposition)
-  gloss_source:
+  gloss_ref:
     id: 1033
     row_sha256: 6d9b4308fdb77b6892c8f96419af69e0c21105b32993c5a7a53dcc0399ad24c0
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-049
   lemma: об
   note: 'closed class: preposition, euphonic partner of о; taught at position 22 (what-time)'
@@ -3758,10 +3795,11 @@ words:
     stressed: і
     tags: conj:coord
   gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 2582
     row_sha256: ecf74a124f99adb839325ab8a55a0c4c0193705b585b55cbde2f654dfede22d5
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-050
   lemma: і
   note: 'closed class: coordinating conjunction; taught at position 28 (euphony) and position 44 (linking-ideas)'
@@ -3781,10 +3819,11 @@ words:
     stressed: й
     tags: conj:coord
   gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 4742
     row_sha256: 2ec3c9f817a1f0f4f21952e36a32450ad3ea5987d61100dc2b406858ca8b7cd1
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-051
   lemma: й
   note: 'closed class: coordinating conjunction, euphonic partner of і; taught at position 28 (euphony) and position 44 (linking-ideas)'
@@ -3809,10 +3848,11 @@ words:
     stressed: та
     tags: conj:coord
   gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 19171
     row_sha256: 962d3df6816096e625993e51ee03894e6a0876036fa2b49ea70d7152bf3a6ef2
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-052
   lemma: та
   note: 'closed class: coordinating conjunction, semantic/euphonic partner of і; taught at position 44 (linking-ideas)'
@@ -3842,10 +3882,11 @@ words:
     stressed: а
     tags: conj:coord
   gloss_en: and (used to string together sentences or sentence fragments in chronological order) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 19146
     row_sha256: 596bfcbf0290e2d6a1dd33eb524b6345f0d3c62a179643ab857021c2bd4e5808
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-053
   lemma: а
   note: 'closed class: coordinating conjunction (adversative); taught at position 44 (linking-ideas)'
@@ -3869,6 +3910,8 @@ words:
     stress_source: trie
     stressed: але́
     tags: conj:coord
+  gloss_en: but (rather)
+  gloss_source: kaikki_wiktionary
   id: W-054
   lemma: але
   note: 'closed class: coordinating conjunction (adversative); taught at position 44 (linking-ideas)'
@@ -3893,10 +3936,11 @@ words:
     stressed: бо
     tags: conj:subord
   gloss_en: because (by or for the cause that; on this account that; for the reason that) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 19159
     row_sha256: 858028414cacd83a4955ca8dda875122035c05ffcf92beadf51f249f7b06da21
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-055
   lemma: бо
   note: 'closed class: subordinating conjunction (causal); taught at position 44 (linking-ideas)'
@@ -3920,6 +3964,8 @@ words:
     stress_source: trie
     stressed: або́
     tags: conj:coord
+  gloss_en: or
+  gloss_source: kaikki_wiktionary
   id: W-056
   lemma: або
   note: 'closed class: coordinating conjunction (disjunctive); basic clause connector'
@@ -3943,6 +3989,8 @@ words:
     stress_source: trie
     stressed: якщо́
     tags: conj:subord
+  gloss_en: if, in case
+  gloss_source: kaikki_wiktionary
   id: W-057
   lemma: якщо
   note: 'closed class: subordinating conjunction (conditional); basic clause connector'
@@ -3967,10 +4015,11 @@ words:
     stressed: щоб
     tags: conj:subord
   gloss_en: that (connecting a clause indicating purpose ("final")) (conjunction)
-  gloss_source:
+  gloss_ref:
     id: 486
     row_sha256: d0d247f17582698f12147ab0601f22378e92ede687138734187f564aa2acb1c1
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-058
   lemma: щоб
   note: 'closed class: subordinating conjunction (purpose); basic clause connector'
@@ -3994,6 +4043,8 @@ words:
     stress_source: trie
     stressed: що́би
     tags: conj:subord
+  gloss_en: so that, in order that; in order to; lest
+  gloss_source: kaikki_wiktionary
   id: W-059
   lemma: щоби
   note: 'closed class: subordinating conjunction (purpose), partner of щоб; basic clause connector'
@@ -4046,10 +4097,11 @@ words:
     stressed: не
     tags: part
   gloss_en: not
-  gloss_source:
+  gloss_ref:
     id: 4
     row_sha256: 811f5a4de97556f6795902c5cd02728c3fe2f660b1c675b9554c7ec69874ba11
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-061
   lemma: не
   note: 'closed class: negative particle; taught at position 19 (questions: negate)'
@@ -4158,10 +4210,11 @@ words:
     stressed: ось
     tags: part
   gloss_en: here (is), this (is), there (is), that (is)
-  gloss_source:
+  gloss_ref:
     id: 395
     row_sha256: a935eb12ccf0472d63a649a569a95be42dd78417787555681493b4cb7e943c44
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-065
   lemma: ось
   note: 'closed class: deictic/demonstrative particle'
@@ -4191,10 +4244,11 @@ words:
     stressed: ще
     tags: adv
   gloss_en: yet (in addition)
-  gloss_source:
+  gloss_ref:
     id: 29
     row_sha256: 7039c2824353fbb9872037d9937febe0afe990ba02c4ce22e5631bd6216e53a2
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-066
   lemma: ще
   note: 'closed class: temporal/additive discourse adverb functioning as particle; met at position 38 (at-the-cafe)'
@@ -4264,6 +4318,8 @@ words:
     stress_source: trie
     stressed: уже́
     tags: adv
+  gloss_en: already
+  gloss_source: kaikki_wiktionary
   id: W-069
   lemma: уже
   note: 'closed class: temporal discourse adverb, euphonic partner of вже'
@@ -4734,6 +4790,9 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:compb:long
+  gloss_en: good, benign, genial, gentle, kind, kindly; good (having positive qualities; useful for a particular purpose);
+    good, tasty (food)
+  gloss_source: kaikki_wiktionary
   id: W-075
   lemma: добрий
   note: Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson 2.
@@ -4858,6 +4917,8 @@ words:
     stress_source: none
     stressed: дні
     tags: noun:inanim:p:v_zna
+  gloss_en: day
+  gloss_source: kaikki_wiktionary
   id: W-076
   lemma: день
   note: Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.
@@ -5017,10 +5078,11 @@ words:
     stressed: зву́ки
     tags: noun:inanim:p:v_zna:xp1
   gloss_en: sound (sensation perceived by the ear)
-  gloss_source:
+  gloss_ref:
     id: 3740
     row_sha256: 6f0c5887b62d9b19dd78f278cc0e28aecf9890f44f4005700e75d70f81e1da54
     table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-077
   lemma: звук
   note: Linguistic sound sense, VESUM comment у музиці, лінгвістиці; primer part 1 p. 13.
@@ -5122,6 +5184,8 @@ words:
     stress_source: ulif
     stressed: лі́тери
     tags: noun:inanim:p:v_zna
+  gloss_en: letter (a symbol in an alphabet)
+  gloss_source: kaikki_wiktionary
   id: W-078
   lemma: літера
   note: Written letter, contrasted with heard sound; primer part 1 pp. 30–82.
@@ -5620,6 +5684,8 @@ words:
       - 3
     stress_source: pending
     tags: noun:anim:p:v_zna:rare
+  gloss_en: mama, mummy, mom, ma
+  gloss_source: kaikki_wiktionary
   id: W-081
   lemma: мама
   note: First decodable CVCV word on primer letter pages.
@@ -5718,6 +5784,8 @@ words:
     stress_source: ulif
     stressed: мали́ни
     tags: noun:inanim:p:v_zna
+  gloss_en: raspberries (fruit); raspberry (plant)
+  gloss_source: kaikki_wiktionary
   id: W-082
   lemma: малина
   note: Decodable word from primer reading practice.
@@ -5824,6 +5892,8 @@ words:
     stress_source: ulif
     stressed: сли́ви
     tags: noun:inanim:p:v_zna
+  gloss_en: plum (tree and fruit)
+  gloss_source: kaikki_wiktionary
   id: W-083
   lemma: слива
   note: Decodable word from primer reading practice.
@@ -5930,6 +6000,9 @@ words:
     stress_source: ulif
     stressed: ру́ки
     tags: noun:inanim:p:v_zna
+  gloss_en: hand; arm; hand, handwriting; the culprit of a theft, the person who stole something (used with a possessive pronoun
+    to indicate the thief)
+  gloss_source: kaikki_wiktionary
   id: W-084
   lemma: рука
   note: Decodable word using the final letter group.
@@ -6036,6 +6109,8 @@ words:
     stress_source: ulif
     stressed: рі́ки
     tags: noun:inanim:p:v_zna
+  gloss_en: river
+  gloss_source: kaikki_wiktionary
   id: W-085
   lemma: ріка
   note: Decodable word using the final letter group.
@@ -6061,61 +6136,61 @@ words:
   - form: чутимем
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тимем
     tags: verb:imperf:futr:p:1
   - form: чутимемо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тимемо
     tags: verb:imperf:futr:p:1
   - form: чутимете
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тимете
     tags: verb:imperf:futr:p:2
   - form: чутимуть
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тимуть
     tags: verb:imperf:futr:p:3
   - form: чутиму
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тиму
     tags: verb:imperf:futr:s:1
   - form: чутимеш
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тимеш
     tags: verb:imperf:futr:s:2
   - form: чутиме
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́тиме
     tags: verb:imperf:futr:s:3
   - form: чуто
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́то
     tags: verb:imperf:impers
   - form: чуймо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ймо
     tags: verb:imperf:impr:p:1
   - form: чуйте
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́йте
     tags: verb:imperf:impr:p:2
   - form: чуй
@@ -6127,7 +6202,7 @@ words:
   - form: чути
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ти
     tags: verb:imperf:inf:insert:predic
   - form: чуть
@@ -6139,7 +6214,7 @@ words:
   - form: чула
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ла
     tags: verb:imperf:past:f
   - form: чув
@@ -6151,19 +6226,19 @@ words:
   - form: чуло
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ло
     tags: verb:imperf:past:n
   - form: чули
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ли
     tags: verb:imperf:past:p
   - form: чуємо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ємо
     tags: verb:imperf:pres:p:1
   - form: чуєм
@@ -6172,39 +6247,41 @@ words:
     - marker: subst
       marker_class: nonstandard
       origin: tag
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́єм
     tags: verb:imperf:pres:p:1:subst
   - form: чуєте
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́єте
     tags: verb:imperf:pres:p:2:insert
   - form: чують
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ють
     tags: verb:imperf:pres:p:3
   - form: чую
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́ю
     tags: verb:imperf:pres:s:1
   - form: чуєш
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́єш
     tags: verb:imperf:pres:s:2
   - form: чує
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чу́є
     tags: verb:imperf:pres:s:3
+  gloss_en: to hear; to feel, to sense; to smell
+  gloss_source: kaikki_wiktionary
   id: W-086
   lemma: чути
   note: 'Hear: primer sound-first teacher verb; lexical action only, no conjugation system.'
@@ -6212,7 +6289,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - чу́ти
+    - 1
+    row_sha256: a342e5ad7d716d0b09bfe91f2166c59426f826c0f954cb6d0bfca7d016e9234c
+    source: ulif
 - cefr:
     level: A1
     row_id: 5760
@@ -6385,6 +6467,8 @@ words:
       origin: tag
     stress_source: pending
     tags: verb:imperf:pres:s:3:subst
+  gloss_en: to see (perceive with the eyes); to have the faculty of eyesight
+  gloss_source: kaikki_wiktionary
   id: W-087
   lemma: бачити
   note: 'See: primer contrasts seeing a letter and hearing a sound; lexical action only.'
@@ -6410,73 +6494,73 @@ words:
   - form: читатимем
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тимем
     tags: verb:imperf:futr:p:1
   - form: читатимемо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тимемо
     tags: verb:imperf:futr:p:1
   - form: читатимете
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тимете
     tags: verb:imperf:futr:p:2
   - form: читатимуть
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тимуть
     tags: verb:imperf:futr:p:3
   - form: читатиму
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тиму
     tags: verb:imperf:futr:s:1
   - form: читатимеш
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тимеш
     tags: verb:imperf:futr:s:2
   - form: читатиме
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́тиме
     tags: verb:imperf:futr:s:3
   - form: читано
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чи́тано
     tags: verb:imperf:impers
   - form: читаймо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ймо
     tags: verb:imperf:impr:p:1
   - form: читайте
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́йте
     tags: verb:imperf:impr:p:2
   - form: читай
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́й
     tags: verb:imperf:impr:s:2
   - form: читати
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ти
     tags: verb:imperf:inf
   - form: читать
@@ -6487,31 +6571,31 @@ words:
   - form: читала
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ла
     tags: verb:imperf:past:f
   - form: читав
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́в
     tags: verb:imperf:past:m
   - form: читало
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ло
     tags: verb:imperf:past:n
   - form: читали
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ли
     tags: verb:imperf:past:p
   - form: читаємо
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ємо
     tags: verb:imperf:pres:p:1
   - form: читаєм
@@ -6520,37 +6604,37 @@ words:
     - marker: subst
       marker_class: nonstandard
       origin: tag
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́єм
     tags: verb:imperf:pres:p:1:subst
   - form: читаєте
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́єте
     tags: verb:imperf:pres:p:2
   - form: читають
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ють
     tags: verb:imperf:pres:p:3
   - form: читаю
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́ю
     tags: verb:imperf:pres:s:1
   - form: читаєш
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́єш
     tags: verb:imperf:pres:s:2
   - form: читає
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: чита́є
     tags: verb:imperf:pres:s:3
   - form: чита
@@ -6559,6 +6643,8 @@ words:
     stress_source: trie
     stressed: чита́
     tags: verb:imperf:pres:s:3:short
+  gloss_en: to read
+  gloss_source: kaikki_wiktionary
   id: W-088
   lemma: читати
   note: 'Read: primer reading instruction; lexical action only.'
@@ -6566,7 +6652,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - чита́ти
+    - 1
+    row_sha256: 43e91922826a9c373bd2db2abfde9d420d39924f40e156f2b5c9b1e7c742ac1f
+    source: ulif
 - cefr:
     level: A1
     row_id: 2346
@@ -6733,6 +6824,9 @@ words:
     stress_source: ulif
     stressed: пи́ше
     tags: verb:imperf:pres:s:3
+  gloss_en: to write; to send written information to, to notify, to text; to create text in written form; to be the author
+    (of a book, article, poem, etc.); to draw (an art piece); to give someone or something a name (in a document)
+  gloss_source: kaikki_wiktionary
   id: W-089
   lemma: писати
   note: 'Write and copy: primer workbook action; lexical action only.'
@@ -6845,6 +6939,8 @@ words:
     stress_source: ulif
     stressed: повто́рення
     tags: noun:inanim:p:v_zna
+  gloss_en: repetition; reiteration
+  gloss_source: kaikki_wiktionary
   id: W-090
   lemma: повторення
   note: Recap title and task label, from ULP S1 lesson 10 review pattern.

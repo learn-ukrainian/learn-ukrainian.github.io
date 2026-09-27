@@ -1,6 +1,6 @@
 built_with:
-  mcp_commit: d3e5e6e3eaab7cc24822ba68a897991a52b95f03
-  overrides_sha256: 57b2b17cc991582af6cd2a786ba2d7aa63f2ff3193736e0c0304d4578e119efa
+  mcp_commit: ca2c3a50e13f1a700c3627eb57d1866424467c95
+  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: ab7f522b625c7f4d039cf11b4ae1770dd61a92ebb728ad19badbbc120c9ebb7c
   sources_db_scheme: rows-v2
