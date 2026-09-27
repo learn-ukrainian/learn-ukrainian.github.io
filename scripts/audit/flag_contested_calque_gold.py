@@ -45,7 +45,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.lexicon.heritage_classifier import classify_surface_form
 
-DEFAULT_FIXTURE = PROJECT_ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+DEFAULT_FIXTURE = PROJECT_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 
 
 def contested_entry(status: dict[str, Any]) -> dict[str, Any]:

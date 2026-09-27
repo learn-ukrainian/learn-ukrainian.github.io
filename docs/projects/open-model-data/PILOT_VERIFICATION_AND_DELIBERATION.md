@@ -1,15 +1,18 @@
 # ULDR Pilot Canary: Evaluation Root-Cause Diagnosis & Astra Multi-Agent Deliberation
 
+> [!WARNING]
+> **Withdrawn 2026-09-25: this Hugging Face model is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
+
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423)
 > **Participating Agents:** Gemini (Yellow Team / Alignment), Codex GPT-6.0 Astra (Red Team / Deterministic Architecture)
-> **Model Checkpoint:** [`krisztiankoos/uldr-gemma3-4b-lora`](https://huggingface.co/krisztiankoos/uldr-gemma3-4b-lora) on `google/gemma-3-4b-it`
+> **Model Checkpoint (withdrawn, private):** [`krisztiankoos/uldr-gemma3-4b-lora`](https://huggingface.co/krisztiankoos/uldr-gemma3-4b-lora) on `google/gemma-3-4b-it`
 > **Related Sub-Issues:** [#8037](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8037) (Pilot Training), [#8050](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8050) (Phase 5.1 Evaluation Suite)
 
 ---
 
 ## 1. Executive Summary
 
-Following the completion of the ULDR v1.0 training pipeline (6,000 SFT reasoning trajectories + 3,000 DPO contrastive pairs) and the open-weight release of `krisztiankoos/uldr-gemma3-4b-lora` on Hugging Face Hub, an initial in-container 1,000-case evaluation loop reported severe failures:
+Following the completion of the ULDR v1.0 training pipeline (6,000 SFT reasoning trajectories + 3,000 DPO contrastive pairs) and the (since withdrawn) Hugging Face Hub release of `krisztiankoos/uldr-gemma3-4b-lora`, an initial in-container 1,000-case evaluation loop reported severe failures:
 * **Reported Calque Elimination Rate:** 16.25% (Gate: $\ge 90.0\%$)
 * **Reported Harmful-Edit Rate (Raw):** 87.67% (Gate: $\le 1.0\%$ Clopper-Pearson bound)
 

@@ -14,23 +14,17 @@ from scripts.audit.source_inventory_review_decisions import source_inventory_key
 pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-BOLSHAKOVA_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml"
-)
-VASHULENKO_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml"
-)
+BOLSHAKOVA_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml"
+VASHULENKO_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/vashulenko-grade3-headwords.yaml"
 VASHULENKO_FAMILY_NUMERALS_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml"
 )
 VASHULENKO_MAP = PROJECT_ROOT / "docs/l2-uk-direct/textbook-map.yaml"
 VASHULENKO_FAMILY_NUMERALS_LEDGER = (
     PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-07-03-fifth-approved-textbook-ledger-batch.yaml"
+    / "registry/lexicon/source-inventory-review-decisions/2026-07-03-fifth-approved-textbook-ledger-batch.yaml"
 )
-BOLSHAKOVA_NOTES = (
-    PROJECT_ROOT / "docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md"
-)
+BOLSHAKOVA_NOTES = PROJECT_ROOT / "docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md"
 TEXTBOOK_INVENTORIES = [
     BOLSHAKOVA_INVENTORY,
     VASHULENKO_INVENTORY,
@@ -123,9 +117,7 @@ def test_vashulenko_family_numerals_approval_ledger_matches_inventory() -> None:
         assert row["decision"] == "approve_for_publish"
         assert row["approved_pos"] == record.pos
         assert row["approved_gloss"] == record.gloss
-        assert source_inventory["path"] == str(
-            VASHULENKO_FAMILY_NUMERALS_INVENTORY.relative_to(PROJECT_ROOT)
-        )
+        assert source_inventory["path"] == ("data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml")
         assert source_inventory["source_family"] == "textbook"
         assert source_inventory["source_id"] == record.source_id
         assert source_inventory["key"] == source_inventory_key(

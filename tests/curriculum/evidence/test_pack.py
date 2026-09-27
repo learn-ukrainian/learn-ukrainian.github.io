@@ -203,10 +203,7 @@ def test_span_with_two_matches_build_fails(synthetic_sources, synthetic_standard
     assert "T-004" in err
 
 
-def test_moved_chunk_id_with_same_text_passes_with_chunk_id_moved(
-    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
-):
-    """A moved chunk id with same text -> verify passes with chunk_id_moved."""
+def _text_request(tmp_path, chunk_id="chunk-1", first="synthetic-first", last="synthetic-last") -> Path:
     req_file = tmp_path / "req.yaml"
     req_file.write_text(
         yaml.safe_dump(
@@ -216,44 +213,207 @@ def test_moved_chunk_id_with_same_text_passes_with_chunk_id_moved(
                 "texts": [
                     {
                         "id": "T-001",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
-                        "supports": "Moved chunk verification.",
+                        "source": {"table": "textbooks", "chunk_id": chunk_id},
+                        "span": {"first_words": first, "last_words": last},
+                        "supports": "Cited-row identity.",
                     }
                 ],
             }
         ),
         encoding="utf-8",
     )
+    return req_file
 
-    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-    pack.build_pack(
-        "a1",
-        "test-mod",
-        req_file,
-        evidence_dir=synthetic_word_store,
-        sources_instance=src,
-        offline=True,
-    )
 
-    src.close()
+def _build(synthetic_sources, synthetic_standard, evidence_dir, req_file):
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        return pack.build_pack(
+            "a1", "test-mod", req_file, evidence_dir=evidence_dir, sources_instance=src, offline=True
+        )
 
-    # Now simulate a chunk id shift in the database: chunk-1 is re-chunked to chunk-renamed
+
+def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        return verify.verify_pack(
+            "a1", "test-mod", evidence_dir=evidence_dir, sources_instance=src, offline=not strict, strict=strict
+        )
+
+
+def test_moved_chunk_id_with_same_text_is_drift_and_still_reports_chunk_id_moved(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """The cited row is gone from its locator: SOURCE_CHANGED on its own (warning; strict fails),
+    and chunk_id_moved stays as the additional report because the quote survives in the file.
+    """
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+
     with sqlite3.connect(synthetic_sources) as conn:
         conn.execute("UPDATE textbooks SET chunk_id = 'chunk-renamed' WHERE chunk_id = 'chunk-1'")
 
-    # Pack verification should notice chunk_id is moved but quote still exists in synthetic-file-1
-    src2 = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-    res = verify.verify_pack(
-        "a1",
-        "test-mod",
-        evidence_dir=synthetic_word_store,
-        sources_instance=src2,
-        offline=True,
-    )
-    src2.close()
-    assert res["status"] == "ok"
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []
     assert "T-001" in res["chunk_id_moved"]
+    assert res["cited_rows_drifted"] == ["T-001"]
+    assert any(codes.SOURCE_CHANGED in w and "missing at its locator" in w for w in res["warnings"])
+    assert any(codes.CHUNK_ID_MOVED in r for r in res["reports"])
+
+    res_strict = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res_strict["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in e for e in res_strict["errors"])
+
+
+def test_deleted_and_reinserted_chunk_fails_strict_even_though_the_quote_is_found(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """MUST 1: delete the cited chunk and re-insert identical content under a new chunk id."""
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        row = conn.execute("SELECT * FROM textbooks WHERE chunk_id = 'chunk-1'").fetchone()
+        conn.execute("DELETE FROM textbooks WHERE chunk_id = 'chunk-1'")
+        conn.execute("INSERT INTO textbooks VALUES (?,?,?,?,?,?,?,?,?,?,?)", (99, "chunk-99", *row[2:]))
+
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []
+    assert res["chunk_id_moved"] == ["T-001"]
+    assert any(codes.SOURCE_CHANGED in w and "T-001" in w for w in res["warnings"])
+
+    res_strict = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res_strict["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in e and "T-001" in e for e in res_strict["errors"])
+    assert not any(codes.QUOTE_MISMATCH in e for e in res_strict["errors"])
+
+
+def test_lock_fails_only_when_cited_content_changes(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    res = _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    built_with = res["pack"]["built_with"]
+    assert built_with["sources_db_scheme"] == "rows-v2"
+    source = res["pack"]["texts"][0]["source"]
+    assert len(source["row_sha256"]) == 64
+    assert built_with["sources_db"] == sources.aggregate_digest([("textbooks:chunk-1", source["row_sha256"])])
+
+    # An uncited chunk changes: strict ok, no warnings, nothing drifted.
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET text = 'rewritten uncited chunk' WHERE chunk_id = 'chunk-2'")
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert (res["status"], res["warnings"], res["cited_rows_drifted"]) == ("ok", [], [])
+
+    # The cited chunk's page moves (quote untouched): metadata-only drift is never silent.
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbook_sections SET page_start = 43 WHERE section_id = 10")
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert any(codes.SOURCE_CHANGED in w and "cited row changed" in w for w in res["warnings"])
+    assert not any(codes.QUOTE_MISMATCH in e for e in res["errors"])
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in e for e in res["errors"])
+
+    # The cited chunk's text is edited: value corruption is an error in every mode.
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET text = 'synthetic-first replaced synthetic-last' WHERE chunk_id = 'chunk-1'")
+    for strict in (False, True):
+        res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=strict)
+        assert res["status"] == "failed"
+        assert any(codes.QUOTE_MISMATCH in e for e in res["errors"])
+
+
+@pytest.mark.parametrize(
+    ("section", "request_key", "record", "table", "drift_sql"),
+    [
+        (
+            "errors",
+            {
+                "id": "E-001",
+                "source": {"table": "ua_gec_errors", "error": "synthetic-bad", "correct": "synthetic-good"},
+                "pattern": "p",
+            },
+            "E-001",
+            "ua_gec_errors",
+            "UPDATE ua_gec_errors SET error_type = 'Relabelled' WHERE id = 1",
+        ),
+        (
+            "notes",
+            {"id": "N-001", "source": {"table": "style_guide", "id": 1}},
+            "N-001",
+            "style_guide",
+            "UPDATE style_guide SET section = 'renamed section' WHERE id = 1",
+        ),
+    ],
+)
+def test_metadata_only_drift_on_errors_and_notes(
+    synthetic_sources,
+    synthetic_standard,
+    synthetic_word_store,
+    tmp_path,
+    section,
+    request_key,
+    record,
+    table,
+    drift_sql,
+):
+    req_file = tmp_path / "req.yaml"
+    req_file.write_text(
+        yaml.safe_dump({"request_schema": 1, "module": "a1/test-mod", section: [request_key]}), encoding="utf-8"
+    )
+    res = _build(synthetic_sources, synthetic_standard, synthetic_word_store, req_file)
+    source = res["pack"][section][0]["source"]
+    assert source["table"] == table and len(source["row_sha256"]) == 64
+    assert res["pack"]["built_with"]["sources_db"] == sources.aggregate_digest([(f"{table}:1", source["row_sha256"])])
+
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert (res["status"], res["warnings"]) == ("ok", [])
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(drift_sql)
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []  # the copied values still match; only the row's identity moved
+    assert any(codes.SOURCE_CHANGED in w and record in w for w in res["warnings"])
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res["status"] == "failed"
+    assert res["cited_rows_drifted"] == [record]
+
+
+def test_legacy_pack_and_tampered_identities(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    pack_path = synthetic_word_store / "test-mod.yaml"
+    built = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
+
+    # file-v1: a 64-hex file digest and no scheme validates, but is a legacy identity.
+    legacy = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
+    legacy["built_with"].pop("sources_db_scheme")
+    legacy["built_with"]["sources_db"] = "b" * 64
+    legacy["texts"][0]["source"].pop("row_sha256")
+    lock.write(pack_path, lock.yaml_bytes(legacy))
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["sources_db_scheme"] == "file-v1"
+    assert any(codes.LEGACY_IDENTITY in w for w in res["warnings"])
+    assert res["errors"] == []
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res["status"] == "failed"
+    assert any(codes.LEGACY_IDENTITY in e for e in res["errors"])
+
+    # rows-v2 with a cited record lacking row_sha256: absence is tampering.
+    missing = yaml.safe_load(lock.yaml_bytes(built))
+    missing["texts"][0]["source"].pop("row_sha256")
+    lock.write(pack_path, lock.yaml_bytes(missing))
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.FORM_MISMATCH in e and "no row_sha256" in e for e in res["errors"])
+
+    # A hand-edited row_sha256 no longer aggregates to built_with.sources_db.
+    edited = yaml.safe_load(lock.yaml_bytes(built))
+    edited["texts"][0]["source"]["row_sha256"] = "0" * 64
+    lock.write(pack_path, lock.yaml_bytes(edited))
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.LOCK_MISMATCH in e and "aggregate" in e for e in res["errors"])
 
 
 def test_changed_text_fails_with_both_values(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
@@ -349,7 +509,10 @@ def test_error_from_gec_found_by_pair(synthetic_sources, synthetic_standard, syn
     assert res["status"] == "ok"
     err_rec = res["pack"]["errors"][0]
     assert err_rec["id"] == "E-001"
-    assert err_rec["source"] == {"table": "ua_gec_errors", "id": 1}
+    assert err_rec["source"]["table"] == "ua_gec_errors"
+    assert err_rec["source"]["id"] == 1
+    assert len(err_rec["source"]["row_sha256"]) == 64
+    assert set(err_rec["source"]) == {"table", "id", "row_sha256"}
     assert err_rec["incorrect"] == "synthetic-bad"
     assert err_rec["correct"] == "synthetic-good"
     assert err_rec["error_type"] == "Grammar"
@@ -447,7 +610,9 @@ def test_style_guide_copied_as_note_never_as_error(
     assert note_rec["id"] == "N-001"
     assert note_rec["word"] == "synthetic-note-word"
     assert note_rec["text"] == "synthetic note explanation text"
-    assert note_rec["source"] == {"table": "style_guide", "id": 1}
+    assert note_rec["source"]["table"] == "style_guide"
+    assert note_rec["source"]["id"] == 1
+    assert set(note_rec["source"]) == {"table", "id", "row_sha256"}
 
 
 def test_request_naming_other_error_source_schema_failure(synthetic_word_store, tmp_path):

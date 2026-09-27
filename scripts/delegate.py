@@ -51,11 +51,19 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "finished_at": iso-8601 UTC | null,
         "duration_s": float | null,
         "prompt_chars": int,
+        "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
+        "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
         "returncode": int | null,
-        "returncode_reason": str | null
+        "returncode_reason": str | null,
+        "launch_mode": "scope" | "popen-fallback",  # #8645 part C
+        "launch_unit": str | null,                  # scope unit when launch_mode is scope
+        "launch_fallback_reason": str | null,
+        "peak_rss_mib": float | null                # terminal records; largest reaped child
     }
 
 Design notes:
@@ -109,6 +117,7 @@ import json
 import logging
 import os
 import re
+import resource
 import shutil
 import signal
 import stat
@@ -120,13 +129,12 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import yaml
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
 # Resolve repo root from this file's location so we work from any cwd —
@@ -144,13 +152,32 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.common.task_store_paths import tasks_dir
+from scripts.config import (
+    DELEGATE_WORKTREE_ADD_MAX_S,
+    DELEGATE_WORKTREE_ADD_STALL_S,
+    DELEGATE_WORKTREE_ADD_TIMEOUT_S,
+)
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
+from scripts.orchestration import (
+    dispatch_admission,
+    dispatch_isolation,
+    reaper_lifecycle,
+    task_record_store,
+    worktree_claims,
+    worktree_prep,
+)
+from scripts.orchestration.dead_worker_state import (
+    mark_dead_worker_terminal,
+    mark_orphaned_admission_hold_crashed,
+    mark_orphaned_worktree_prep_crashed,
+    task_state_lock,
+    write_state_unlocked,
+)
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
-_TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 # The Gemini-family seat is intentionally absent in BOTH spellings: the
 # retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
@@ -223,6 +250,40 @@ _EFFORT_VALIDATOR_BY_DISPATCH_AGENT = {
 }
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
+
+# Fields of the parsed `dispatch` Namespace that legitimately differ between
+# otherwise-identical runs and carry no content of the request itself — the
+# only fields ``dispatch_args_sha256`` excludes. Every other parsed `dispatch`
+# argument (including --output-schema, --cwd, --worktree, --mode, --model,
+# --effort, and every research/lifecycle flag) is bound into the hash, so a
+# caller cannot smuggle an extra flag past a check that only names a subset
+# of fields (#8430 R3-A r8).
+DISPATCH_ARGS_HASH_EXCLUDED_FIELDS = {
+    "run_nonce": "unique per attempt; only used for stale cross-host split-brain detection (#7168)",
+    "force_new": "a retry/idempotency knob for reusing an existing --task-id, not part of what the seat is asked",
+    "initiator": "orchestrator attribution metadata, auto-detected when omitted",
+}
+# argparse plumbing present on every subcommand's Namespace, not a CLI-supplied
+# dispatch argument.
+_DISPATCH_ARGS_HASH_ARGPARSE_KEYS = frozenset({"command", "func"})
+
+
+def dispatch_args_sha256(args: argparse.Namespace) -> str:
+    """sha256 of the canonical JSON of every parsed ``dispatch`` argument that binds the record.
+
+    Additive to ``prompt_sha256``/``effective_prompt_sha256`` (which prove the prompt): this proves the
+    *arguments* that produced the dispatch, so a record cannot pass a check that compares only a named
+    subset of fields while carrying an unchecked extra flag (e.g. a caller-supplied --output-schema).
+    Canonical means ``sort_keys=True`` and no separator whitespace, so the same arguments always hash the
+    same regardless of argv order.
+    """
+    payload = {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -343,10 +404,10 @@ DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
 def _state_path(task_id: str) -> Path:
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
-    return _TASKS_DIR / f"{safe}.json"
+    return tasks_dir() / f"{safe}.json"
 
 
 def _result_path(task_id: str) -> Path:
@@ -359,7 +420,7 @@ def _archived_state_path(task_id: str) -> Path:
     Only terminal records are archived. By-id readers (status, wait, task-id
     reuse) fall back to this path; the worktree claim scan never needs it.
     """
-    return task_record_store.archived_task_record_path(_TASKS_DIR, task_id)
+    return task_record_store.archived_task_record_path(tasks_dir(), task_id)
 
 
 def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
@@ -404,8 +465,17 @@ def _read_only_snapshot_dir_for(task_id: str) -> Path:
     return state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
 
 
+_READ_ONLY_SNAPSHOT_DIGEST_NAME = "digest.json"
+_READ_ONLY_SNAPSHOT_RETENTION_DIGEST = "digest"
+_READ_ONLY_SNAPSHOT_RETENTION_FULL = "full"
+
+
 def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
     return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
+
+
+def _read_only_snapshot_digest_path(task_id: str) -> Path:
+    return _read_only_snapshot_dir_for(task_id) / _READ_ONLY_SNAPSHOT_DIGEST_NAME
 
 
 def _write_read_only_snapshot_sidecar(
@@ -422,6 +492,96 @@ def _write_read_only_snapshot_sidecar(
         encoding="utf-8",
     )
     os.replace(tmp, path)
+
+
+def _canonical_snapshot_bytes(snapshot: dict[str, str] | None) -> bytes:
+    """Bytes written for a phase sidecar: compact JSON, empty object when missing."""
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return json.dumps(payload, separators=(",", ":")).encode("utf-8")
+
+
+def _snapshot_digest_phase(snapshot: dict[str, str] | None) -> dict[str, Any]:
+    raw = _canonical_snapshot_bytes(snapshot)
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return {"sha256": hashlib.sha256(raw).hexdigest(), "entries": len(payload)}
+
+
+def read_only_snapshot_digest(
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> dict[str, Any]:
+    """Content digest of the two canonical checkout snapshots."""
+    return {"pre": _snapshot_digest_phase(pre), "post": _snapshot_digest_phase(post)}
+
+
+def read_only_snapshot_keep_full(
+    mutation_paths: list[str] | None,
+    snapshot_error: str | None,
+) -> bool:
+    """Full sidecars stay only for a recorded mutation or a snapshot error."""
+    return bool(mutation_paths) or snapshot_error is not None
+
+
+def _read_only_phase_paths(snapshot_dir: Path) -> list[Path]:
+    return [snapshot_dir / f"read_only_checkout_{phase}.json" for phase in ("pre", "post")]
+
+
+def stage_read_only_snapshot_digest(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Write ``digest.json`` and leave the phase files in place.
+
+    Returns the bytes a later discard would reclaim. Writing the digest first
+    means a crash before the task record is published still leaves the full
+    sidecars on disk.
+    """
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    before = 0
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            before += info.st_size
+    digest = read_only_snapshot_digest(pre, post)
+    digest_path = snapshot_dir / _READ_ONLY_SNAPSHOT_DIGEST_NAME
+    raw = json.dumps(digest, separators=(",", ":")).encode("utf-8")
+    tmp = digest_path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_bytes(raw)
+    os.replace(tmp, digest_path)
+    return before - len(raw)
+
+
+def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
+    """Unlink regular phase files. Symlinks are left in place."""
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            path.unlink()
+
+
+def collapse_read_only_snapshot_dir(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
+
+    The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
+    writes. Callers that still have to publish the task record must
+    :func:`stage_read_only_snapshot_digest`, write the record, then
+    :func:`discard_read_only_snapshot_phases`. This helper does both file steps
+    and is for a caller that has already published the record.
+    """
+    reclaimed = stage_read_only_snapshot_digest(snapshot_dir, pre, post)
+    discard_read_only_snapshot_phases(snapshot_dir)
+    return reclaimed
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -451,22 +611,30 @@ def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, An
 
 
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
-    """Move the prior record and result aside. Never overwrite an archive."""
+    """Move the prior record and result aside. Never overwrite an archive.
+
+    Holds the per-task lock for the whole rename. The retention sweep holds
+    that same lock across its digest and record write; without it, this move
+    can land after the sweep's hot-name recheck and the sweep then creates a
+    new hot record whose sidecar is already gone.
+    """
     stamp = stamp or _archive_stamp()
+    state_path = _state_path(task_id)
     archived: list[Path] = []
-    for path in (_state_path(task_id), _result_path(task_id)):
-        if not path.exists():
-            continue
-        dest = _archived_artifact_path(path, stamp)
-        os.replace(path, dest)
-        archived.append(dest)
-    snapshot_dir = _read_only_snapshot_dir_for(task_id)
-    if snapshot_dir.is_dir():
-        dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
-        if dest.exists():
-            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
-        os.replace(snapshot_dir, dest)
-        archived.append(dest)
+    with task_state_lock(state_path):
+        for path in (state_path, _result_path(task_id)):
+            if not path.exists():
+                continue
+            dest = _archived_artifact_path(path, stamp)
+            os.replace(path, dest)
+            archived.append(dest)
+        snapshot_dir = state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
+        if snapshot_dir.is_dir():
+            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
+            if dest.exists():
+                dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
+            os.replace(snapshot_dir, dest)
+            archived.append(dest)
     return archived
 
 
@@ -519,7 +687,28 @@ def _core_terminal_fields(
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
         "finalize_error": finalize_error,
+        "peak_rss_mib": _children_peak_rss_mib(),
     }
+
+
+def _children_peak_rss_mib() -> float | None:
+    """Peak RSS of the largest process this worker has reaped, in MiB (#8645).
+
+    The worker is the waiting parent of the agent CLI, so
+    ``getrusage(RUSAGE_CHILDREN)`` covers the CLI and every descendant that was
+    itself waited for (a shell tool's pytest, xdist workers, git). It is the
+    largest single process, not the tree's sum, and misses descendants that
+    were never reaped up the chain (daemonized or still running at exit).
+    """
+    try:
+        peak = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
+    except (OSError, ValueError):
+        return None
+    if peak <= 0:
+        return None
+    # Linux reports KiB; macOS reports bytes.
+    peak_bytes = peak if sys.platform == "darwin" else peak * 1024
+    return round(peak_bytes / (1024 * 1024), 1)
 
 
 def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
@@ -584,19 +773,12 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     before writing — callers that bypass _state_path may not have
     created it yet.
 
-    Concurrency: each writer uses a PID-suffixed tmp filename so
-    multiple concurrent writers (e.g. two operators both running
-    status on the same zombie task) don't collide on a shared
-    ``.json.tmp`` scratch file. Without the PID suffix, one writer's
-    os.replace() would move the tmp file out from under another
-    writer that's still writing to it, causing FileNotFoundError on
-    the second os.replace. Fixed after Gemini review 2026-04-10.
+    Concurrency: a per-task lock serializes worker and probe writes. Each
+    writer also uses a PID-suffixed tmp filename before ``os.replace``.
     """
     state = _detach_read_only_checkout_snapshots(state)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-    tmp.write_text(json.dumps(state, indent=2, default=str))
-    os.replace(tmp, path)
+    with task_state_lock(path):
+        write_state_unlocked(path, state)
 
 
 def _append_dispatch_event(event: str, **fields: Any) -> None:
@@ -607,10 +789,10 @@ def _append_dispatch_event(event: str, **fields: Any) -> None:
         **fields,
     }
     try:
-        _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+        tasks_dir().mkdir(parents=True, exist_ok=True)
         line = (json.dumps(payload, ensure_ascii=False, default=str) + "\n").encode("utf-8")
         fd = os.open(
-            str(_TASKS_DIR / "dispatch_events.jsonl"),
+            str(tasks_dir() / "dispatch_events.jsonl"),
             os.O_APPEND | os.O_CREAT | os.O_WRONLY,
             0o600,
         )
@@ -769,7 +951,7 @@ def _worktree_lock_dir() -> Path:
     if _WORKTREE_LOCK_DIR is not None:
         return _WORKTREE_LOCK_DIR
     common_dir = _git_common_dir(_REPO_ROOT)
-    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / worktree_claims.LOCK_DIR_NAME
+    return (common_dir if common_dir is not None else tasks_dir().parent) / worktree_claims.LOCK_DIR_NAME
 
 
 def _worktree_lock_path(path: Path | str) -> tuple[str, Path]:
@@ -1011,7 +1193,7 @@ def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
     """Map lease names to task-record stems without opening any JSON."""
     index: dict[str, str] = {}
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return index
     for state_path in state_files:
@@ -1030,9 +1212,9 @@ def _read_runtime_tmp_state_for_legacy_lease(
     """Resolve one marker-less lease, falling back to a bounded record scan."""
     stem = legacy_stem_index.get(lease_name)
     if stem is not None:
-        return _read_state_json(_TASKS_DIR / f"{stem}.json")
+        return _read_state_json(tasks_dir() / f"{stem}.json")
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return None
     for state_path in state_files:
@@ -1285,6 +1467,547 @@ def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = No
     return root / ".worktrees" / "dispatch" / agent / safe
 
 
+# ``git worktree add`` bounds, configurable in scripts/config.py (#8663). Tests
+# shrink them here instead of generating host load.
+_WORKTREE_ADD_TIMEOUT_S: float = DELEGATE_WORKTREE_ADD_TIMEOUT_S
+_WORKTREE_ADD_STALL_S: float = DELEGATE_WORKTREE_ADD_STALL_S
+_WORKTREE_ADD_MAX_S: float = DELEGATE_WORKTREE_ADD_MAX_S
+# How often a slow add's checkout is re-counted once the base window has passed.
+_WORKTREE_ADD_POLL_S: float = 5.0
+# How long a stopped add gets to run git's own cleanup after SIGTERM, and to
+# exit after SIGKILL.
+_WORKTREE_ADD_STOP_GRACE_S: float = 30.0
+
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
+
+
+class WorktreeAddFailed(RuntimeError):
+    """``git worktree add`` failed or timed out before any worker was spawned (#8663).
+
+    ``cleanup`` records what dispatch found and did after the add; the failed
+    task record carries it as ``worktree_prep_cleanup``. ``prep`` is this
+    call's path reservation, stored as ``worktree_prep``, or ``None`` when the
+    path could not be reserved.
+    """
+
+    def __init__(self, message: str, *, cleanup: dict[str, Any], prep: dict[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.cleanup = cleanup
+        self.prep = prep
+
+
+class WorktreeAddTimeout(subprocess.TimeoutExpired):
+    """A stopped ``git worktree add``; ``git_exited`` says whether its exit was confirmed."""
+
+    def __init__(self, cmd: list[str], timeout: float, *, git_exited: bool) -> None:
+        super().__init__(cmd, timeout)
+        self.git_exited = git_exited
+
+
+def _checkout_entry_count(path: Path) -> int:
+    """Count the files and directories under ``path``, skipping ``.git``.
+
+    The progress signal for a slow ``git worktree add``: a checkout that is
+    still being written keeps gaining entries. Entries that vanish mid-walk
+    are skipped; a missing ``path`` counts as zero.
+    """
+    count = 0
+    pending = [path]
+    while pending:
+        try:
+            with os.scandir(pending.pop()) as entries:
+                for entry in entries:
+                    if entry.name == ".git":
+                        continue
+                    count += 1
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            pending.append(Path(entry.path))
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return count
+
+
+def _stop_worktree_add(proc: subprocess.Popen[str]) -> bool:
+    """Stop a slow ``git worktree add`` and its checkout child.
+
+    SIGTERM goes to the whole process group first, and git gets
+    :data:`_WORKTREE_ADD_STOP_GRACE_S` to run its own signal cleanup, which
+    deletes the worktree directory and admin directory it was building.
+    SIGKILL follows only after that grace. Returns whether the add was
+    confirmed exited; a process that outlives even SIGKILL (for example one
+    stuck in uninterruptible I/O) may still write, so nothing may be touched
+    while this is False.
+    """
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(proc.pid, sig)
+        try:
+            proc.communicate(timeout=_WORKTREE_ADD_STOP_GRACE_S)
+            return True
+        except subprocess.TimeoutExpired:
+            continue
+    return False
+
+
+def _run_worktree_add(
+    add_command: list[str],
+    *,
+    cwd: Path,
+    worktree_path: Path,
+    env: dict[str, str] | None = None,
+    on_spawn: Callable[[int], None] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ``git worktree add`` with a progress-aware bound (#8663).
+
+    The add always gets :data:`_WORKTREE_ADD_TIMEOUT_S`. After that it keeps
+    running while the checkout at ``worktree_path`` is still gaining entries,
+    is stopped once it gains none for :data:`_WORKTREE_ADD_STALL_S`, and is
+    never allowed past :data:`_WORKTREE_ADD_MAX_S`. A stopped add (see
+    :func:`_stop_worktree_add`) raises :class:`WorktreeAddTimeout`. The add
+    runs in the C locale so the lock reason git holds during it is the
+    literal ``initializing``. ``on_spawn`` receives git's pid as soon as it
+    is spawned.
+    """
+    add_env = dict(os.environ if env is None else env)
+    add_env["LC_ALL"] = "C"
+    add_env.pop("LANGUAGE", None)
+    proc = subprocess.Popen(
+        add_command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=add_env,
+        # Its own process group, so a stop also reaches the checkout child.
+        start_new_session=True,
+    )
+    started = time.monotonic()
+    if on_spawn is not None:
+        on_spawn(proc.pid)
+    poll_s = max(min(_WORKTREE_ADD_POLL_S, _WORKTREE_ADD_STALL_S), 0.01)
+    last_count: int | None = None
+    last_growth = started
+    while True:
+        elapsed = time.monotonic() - started
+        if elapsed < _WORKTREE_ADD_TIMEOUT_S:
+            wait_s = min(_WORKTREE_ADD_TIMEOUT_S, _WORKTREE_ADD_MAX_S) - elapsed
+        else:
+            wait_s = min(poll_s, _WORKTREE_ADD_MAX_S - elapsed)
+        try:
+            stdout, stderr = proc.communicate(timeout=max(wait_s, 0.01))
+        except subprocess.TimeoutExpired:
+            pass
+        else:
+            return subprocess.CompletedProcess(add_command, proc.returncode, stdout, stderr)
+        now = time.monotonic()
+        if now - started >= _WORKTREE_ADD_MAX_S:
+            break
+        if now - started < _WORKTREE_ADD_TIMEOUT_S:
+            continue
+        count = _checkout_entry_count(worktree_path)
+        if last_count is None or count > last_count:
+            last_count = count
+            last_growth = now
+        elif now - last_growth >= _WORKTREE_ADD_STALL_S:
+            break
+    git_exited = _stop_worktree_add(proc)
+    raise WorktreeAddTimeout(add_command, time.monotonic() - started, git_exited=git_exited)
+
+
+def _worktree_registration(repo_root: Path, worktree_path: Path) -> tuple[bool, str | None] | None:
+    """Return whether ``repo_root`` registers ``worktree_path`` and its lock reason.
+
+    The lock reason is ``None`` for an unlocked worktree and ``""`` for a lock
+    without a reason. Returns ``None`` when git cannot list its worktrees.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    target = worktree_path.resolve()
+    registered = False
+    lock_reason: str | None = None
+    for line in (proc.stdout or "").splitlines():
+        if line.startswith("worktree "):
+            if registered:
+                break
+            registered = Path(line.removeprefix("worktree ")).resolve() == target
+            lock_reason = None
+        elif registered and (line == "locked" or line.startswith("locked ")):
+            lock_reason = line.removeprefix("locked").strip()
+    return registered, lock_reason if registered else None
+
+
+def _is_own_worktree_prep_record(state: dict[str, Any], run_nonce: str) -> bool:
+    """True when ``state`` is this run's pre-``git worktree add`` reservation record."""
+    prep = state.get("worktree_prep")
+    return (
+        state.get("run_nonce") == run_nonce
+        and state.get("pid", False) is None
+        and isinstance(prep, dict)
+        and prep.get("run_nonce") == run_nonce
+    )
+
+
+def _is_own_admission_hold(state: dict[str, Any], run_nonce: str) -> bool:
+    """True when ``state`` is this run's admission hold (#8717), without a worktree reservation."""
+    return (
+        state.get("run_nonce") == run_nonce
+        and "worktree_prep" not in state
+        and dispatch_admission.is_admission_hold_record(state)
+    )
+
+
+def _is_own_provisional_record(state: dict[str, Any], run_nonce: str) -> bool:
+    """True for this run's pid-less admission hold or worktree reservation record."""
+    return _is_own_worktree_prep_record(state, run_nonce) or _is_own_admission_hold(state, run_nonce)
+
+
+# Fields an admission hold carries into the worktree reservation record that
+# replaces it, so the reservation keeps the admitted slot (#8717).
+_ADMISSION_HOLD_FIELDS = ("mode", "admission", dispatch_admission.ADMISSION_HOLD_KEY)
+
+
+def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admission: dict[str, Any]) -> None:
+    """Publish the ``spawning`` record that holds this run's admitted write slot (#8717).
+
+    Dispatch calls this under the admission lock, before any worktree side
+    effect, so a refusal leaves nothing behind. The hold names this
+    dispatcher, so admission counts it for as long as the dispatcher lives
+    (however long its worktree add takes) and heals it once the dispatcher is
+    provably gone. The worktree reservation and the full task record replace
+    it in place. Raises ``RuntimeError`` rather than overwrite a live record
+    of another run.
+    """
+    state_path = _state_path(task_id)
+    with task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if (
+            existing is not None
+            and existing.get("status") in ("running", "spawning")
+            and not _is_own_provisional_record(existing, run_nonce)
+        ):
+            raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
+        hold = dispatch_admission.new_admission_hold(run_nonce)
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                "mode": mode,
+                "started_at": hold["admitted_at"],
+                "finished_at": None,
+                "admission": admission,
+                dispatch_admission.ADMISSION_HOLD_KEY: hold,
+            },
+        )
+
+
+def _release_admission_hold(task_id: str, run_nonce: str) -> None:
+    """Drop this run's admission hold when dispatch stops before publishing any other record.
+
+    A no-op once the hold was replaced by the full task record, a failure
+    record, or a worktree reservation (kept as the reaper's evidence).
+    """
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is not None and _is_own_admission_hold(existing, run_nonce):
+            state_path.unlink(missing_ok=True)
+
+
+def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+    """Record this run's path reservation in its task record before git starts (#8663).
+
+    The record says ``spawning`` with ``pid: null`` (dispatch is preparing,
+    no worker exists yet), so claim scans treat the path as taken while the
+    add runs, and a dispatcher that dies meanwhile is detectable from the
+    recorded owner. It replaces this run's admission hold and keeps its
+    fields, so the admitted slot stays held while the add runs (#8717). The
+    terminal record a failed add later writes keeps ``worktree_prep`` as
+    evidence for the reaper's report. Raises ``RuntimeError`` rather than
+    overwrite a live record of another run.
+    """
+    state_path = _state_path(task_id)
+    with task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if (
+            existing is not None
+            and existing.get("status") in ("running", "spawning")
+            and not _is_own_provisional_record(existing, run_nonce)
+        ):
+            raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
+        held = (
+            {key: existing[key] for key in _ADMISSION_HOLD_FIELDS if key in existing}
+            if existing is not None and _is_own_provisional_record(existing, run_nonce)
+            else {}
+        )
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                **held,
+                "cwd": prep["path"],
+                "worktree_path": prep["path"],
+                "started_at": prep["reserved_at"],
+                "finished_at": None,
+                "worktree_prep": prep,
+            },
+        )
+
+
+def _update_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+    """Rewrite ``worktree_prep`` in this run's provisional record; best effort."""
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is not None and _is_own_worktree_prep_record(existing, run_nonce):
+            existing["worktree_prep"] = dict(prep)
+            write_state_unlocked(state_path, existing)
+
+
+def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
+    """Drop this run's reservation record once its ``git worktree add`` succeeded.
+
+    Dispatch publishes the full task record next; until then no record
+    claims the finished worktree, exactly as before reservations existed.
+    A reservation that replaced an admission hold reverts to that hold, so
+    the admitted slot stays held until the full record replaces it (#8717).
+    """
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is None or not _is_own_worktree_prep_record(existing, run_nonce):
+            return
+        hold = existing.get(dispatch_admission.ADMISSION_HOLD_KEY)
+        if not isinstance(hold, dict):
+            state_path.unlink(missing_ok=True)
+            return
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                **{key: existing[key] for key in _ADMISSION_HOLD_FIELDS if key in existing},
+                "started_at": hold.get("admitted_at"),
+                "finished_at": None,
+            },
+        )
+
+
+def _leave_reservation(worktree_path: Path, prep: dict[str, Any]) -> dict[str, Any]:
+    """Report the reserved directory a failed add left unregistered; never remove it (#8663).
+
+    Git 2.53 can write another add's admin registration while this path is
+    still empty and before its ``.git`` exists, so no ``rmdir`` of the
+    reservation is safe. The directory stays as it is, empty or not, and
+    ``reserved_dir_left`` is recorded in ``prep`` and the returned report.
+    An empty, unregistered one is swept later by the reaper's existing
+    dispatch-husk rule (``reap_worktrees._reap_dispatch_husks``).
+    """
+    left = os.path.lexists(worktree_path)
+    prep["reserved_dir_left"] = left
+    report: dict[str, Any] = {"error": None, "reserved_dir_left": left}
+    if not left:
+        return {**report, "action": "none", "reason": "git left no worktree behind"}
+    if not worktree_prep.identity_matches(prep, worktree_path):
+        reason = "path holds a directory this run did not reserve (device/inode differ); never removed"
+    else:
+        reason = "git registered no worktree; reserved directory left in place, never removed automatically"
+    return {**report, "action": "skipped", "reason": reason}
+
+
+def _settle_failed_worktree_add(
+    worktree_path: Path,
+    *,
+    repo_root: Path,
+    git_exited: bool,
+    prep: dict[str, Any],
+) -> dict[str, Any]:
+    """Record what this run's failed ``git worktree add`` left; remove nothing (#8663).
+
+    A stopped add got SIGTERM first, so git normally deleted its own partial
+    worktree and admin directory. Whatever remains stays: a reserved
+    directory git left unregistered is reported with ``reserved_dir_left``
+    (see :func:`_leave_reservation`). A worktree git left
+    registered is never removed, unlocked or pruned here: it is reported, as
+    :data:`worktree_prep.LEFTOVER_KIND` when git still holds its
+    ``initializing`` lock, with a removal command to run only after
+    verification. Returns the record stored as ``worktree_prep_cleanup``;
+    never raises.
+    """
+    prep["reserved_dir_left"] = os.path.lexists(worktree_path)
+    base: dict[str, Any] = {
+        "path": str(worktree_path),
+        "branch_ref_kept": True,
+        "reserved_dir_left": prep["reserved_dir_left"],
+    }
+    if not git_exited:
+        return {
+            **base,
+            "action": "skipped",
+            "reason": "git worktree add not confirmed exited after SIGKILL; nothing touched",
+            "error": None,
+            "git_exited": False,
+        }
+    registration = _worktree_registration(repo_root, worktree_path)
+    if registration is None:
+        return {**base, "action": "error", "reason": "could not list git worktrees; nothing touched", "error": None}
+    registered, lock_reason = registration
+    if not registered:
+        return {**base, **_leave_reservation(worktree_path, prep)}
+    report = {
+        **base,
+        "action": "skipped",
+        "error": None,
+        "lock_reason": lock_reason,
+        "command": worktree_prep.verify_first_command(repo_root, worktree_path),
+    }
+    if lock_reason == _GIT_INITIALIZING_LOCK_REASON:
+        return {
+            **report,
+            "needs_attention": worktree_prep.LEFTOVER_KIND,
+            "reason": "git left a registered worktree locked 'initializing'; never removed automatically",
+        }
+    return {**report, "reason": f"git left a registered worktree (lock={lock_reason!r}); never removed automatically"}
+
+
+def _resolve_commit(repo_root: Path, ref: str, env: dict[str, str] | None) -> str | None:
+    """Resolve ``ref`` to a commit SHA in ``repo_root``, or ``None``."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env() if env is None else env,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    sha = (proc.stdout or "").strip()
+    return sha if proc.returncode == 0 and sha else None
+
+
+def _add_reserved_worktree(
+    add_command: list[str],
+    *,
+    repo_root: Path,
+    worktree_path: Path,
+    task_id: str,
+    run_nonce: str | None = None,
+    env: dict[str, str] | None = None,
+    base_sha: str | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run this dispatch's ``git worktree add`` into a freshly reserved path (#8663).
+
+    The path is first reserved with ``mkdir``, which fails when anything is
+    already there (git accepts the empty directory). A path that cannot be
+    reserved is never passed to git and never removed. ``base_sha`` is the
+    commit the add checks out; without it, the last element of
+    ``add_command`` is resolved.
+
+    The reservation (see :mod:`scripts.orchestration.worktree_prep`) records
+    the reserved directory's device and inode, the base commit, this
+    dispatcher's pid and start time, and git's as soon as it is spawned. With
+    ``run_nonce``, it is published as ``worktree_prep`` in the task record
+    before git starts.
+
+    Returns the completed process on success. On a timeout or a non-zero
+    exit, reports what the add left (see :func:`_settle_failed_worktree_add`),
+    removing nothing, and raises :class:`WorktreeAddFailed`.
+    """
+    try:
+        os.mkdir(worktree_path)
+    except OSError as exc:
+        exists = isinstance(exc, FileExistsError)
+        raise WorktreeAddFailed(
+            f"could not reserve worktree path {worktree_path}: {type(exc).__name__}: {exc}",
+            cleanup={
+                "path": str(worktree_path),
+                "action": "skipped" if exists else "none",
+                "reason": "path existed before this dispatch reserved it; never removed"
+                if exists
+                else "path could not be reserved; git was not run",
+                "error": None,
+                "branch_ref_kept": True,
+            },
+        ) from exc
+    identity = worktree_prep.directory_identity(worktree_path)
+    owner = worktree_prep.process_identity(os.getpid())
+    prep: dict[str, Any] = {
+        "path": str(worktree_path),
+        "run_nonce": run_nonce,
+        "reserved_by_mkdir": True,
+        "reserved_at": datetime.now(UTC).isoformat(),
+        "dir_dev": identity[0] if identity else None,
+        "dir_ino": identity[1] if identity else None,
+        "base_sha": base_sha or _resolve_commit(repo_root, add_command[-1], env),
+        "git_pid": None,
+        "git_start": None,
+        "owner_pid": owner["pid"],
+        "owner_start": owner["start"],
+    }
+
+    def record_git(pid: int) -> None:
+        git_identity = worktree_prep.process_identity(pid)
+        prep["git_pid"] = git_identity["pid"]
+        prep["git_start"] = git_identity["start"]
+        if run_nonce is not None:
+            _update_worktree_prep(task_id, run_nonce, prep)
+
+    if run_nonce is not None:
+        try:
+            _publish_worktree_prep(task_id, run_nonce, prep)
+        except (OSError, RuntimeError) as exc:
+            left = _leave_reservation(worktree_path, prep)
+            raise WorktreeAddFailed(
+                f"could not record the reservation of {worktree_path}: {exc}",
+                cleanup={"path": str(worktree_path), **left, "branch_ref_kept": True},
+                prep=dict(prep),
+            ) from exc
+    git_exited = True
+    try:
+        proc = _run_worktree_add(add_command, cwd=repo_root, worktree_path=worktree_path, env=env, on_spawn=record_git)
+    except subprocess.TimeoutExpired as exc:
+        # Only a stop that saw git exit proves it can no longer write.
+        git_exited = getattr(exc, "git_exited", False)
+        message = f"git worktree add timed out after {exc.timeout:.1f}s"
+    except OSError as exc:
+        message = f"git worktree add could not start: {type(exc).__name__}: {exc}"
+    else:
+        if proc.returncode == 0:
+            if run_nonce is not None:
+                _retire_worktree_prep(task_id, run_nonce)
+            return proc
+        message = (proc.stderr or proc.stdout or "git worktree add failed").strip()
+    cleanup = _settle_failed_worktree_add(worktree_path, repo_root=repo_root, git_exited=git_exited, prep=prep)
+    if run_nonce is not None:
+        _update_worktree_prep(task_id, run_nonce, prep)
+    raise WorktreeAddFailed(message, cleanup=cleanup, prep=dict(prep))
+
+
 def _ensure_sibling_repo_worktree(
     *,
     repo_root: Path,
@@ -1293,6 +2016,7 @@ def _ensure_sibling_repo_worktree(
     raw_path: str,
     base: str = "main",
     dry_run: bool = False,
+    run_nonce: str | None = None,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
@@ -1309,9 +2033,7 @@ def _ensure_sibling_repo_worktree(
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
-        raise ValueError(
-            f"sibling worktree path {worktree_path} is outside target repo {root}"
-        ) from exc
+        raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
     worktree_branch = _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1334,8 +2056,7 @@ def _ensure_sibling_repo_worktree(
         return worktree_path, worktree_branch, telemetry
     if dry_run:
         raise ValueError(
-            f"sibling --repo dry-run found no worktree at {worktree_path}; "
-            "rerun without --dry-run to create one"
+            f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
     branch_name = _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
@@ -1355,9 +2076,7 @@ def _ensure_sibling_repo_worktree(
             env=_sanitized_git_env(),
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
-        ) from exc
+        raise RuntimeError(f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}") from exc
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
@@ -1365,21 +2084,14 @@ def _ensure_sibling_repo_worktree(
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-            env=_sanitized_git_env(),
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_reserved_worktree(
+        add_command,
+        repo_root=root,
+        worktree_path=worktree_path,
+        task_id=task_id,
+        run_nonce=run_nonce,
+        env=_sanitized_git_env(),
+    )
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -1421,15 +2133,19 @@ _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 # ordinary read-only discussion of a proposed change as write intent.
 _WRITE_SHAPED_PROMPT_RE = re.compile(
     r"""(?imx)
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
-    |
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    ^\s*(?P<prefix>[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
+    (?:
+        (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
+        |
+        write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    )
     """,
 )
 _FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
+_HEADING_BOUNDARY_RE = re.compile(r"^\s*\#{1,6}\s+")
+_LIST_BOUNDARY_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)")
+_THEMATIC_BREAK_RE = re.compile(r"^\s*[-*_]{3,}\s*$")
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 # A clean read-only checkout holds no uncommitted deliverable. Every terminal
 # status the worker can persist is enough to drop it (#8536). Write-capable
@@ -1508,6 +2224,41 @@ def _cursor_model_state(
     return state
 
 
+def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
+    """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    if agent != "deepseek":
+        return {}
+    if model == "deepseek-v4-pro":
+        return {
+            "resolved_model": model,
+            "resolved_model_known": True,
+            "resolved_model_source": "versioned_first_party_route",
+        }
+    if model not in {"deepseek-v4.1-flash", "deepseek/deepseek-flash"}:
+        return {
+            "resolved_model": "unattested-harness",
+            "resolved_model_known": False,
+            "resolved_model_source": "unrecognized_deepseek_route",
+        }
+    path = cache_path or Path.home() / ".cache" / "opencode" / "models.json"
+    try:
+        cache = json.loads(path.read_text(encoding="utf-8"))
+        name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
+    except (OSError, ValueError, KeyError, TypeError):
+        name = None
+    if name == "DeepSeek V4.1 Flash":
+        return {
+            "resolved_model": "deepseek-v4.1-flash",
+            "resolved_model_known": True,
+            "resolved_model_source": "models_dev_cached_alias",
+        }
+    return {
+        "resolved_model": "unattested-harness",
+        "resolved_model_known": False,
+        "resolved_model_source": "models_dev_alias_unverified",
+    }
+
+
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_NO_COMMITS_REASON = "no_commits_no_changes"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
@@ -1516,13 +2267,32 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
-# scripts/ai_agent_bridge/_review_verdict.py and
-# scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
+# scripts/fleet_comms/review_publication.py (and formerly
+# scripts/ai_agent_bridge/_review_verdict.py, removed in #8520). REQUEST_CHANGES is the token
 # cf_preflight.py and the review prompts actually ask reviewers to write.
+# Reviewers routinely render the label and token in Markdown emphasis
+# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
+# full verdicts and must not be misread as missing (#8786). A verdict line
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# emphasis/backticks/whitespace around its colon, then the token and a word
+# boundary. Anything may follow the token — reviewers write
+# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
+# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
+# quoted example ("I will report ``VERDICT: APPROVE`` later",
+# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
+# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
+# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
+# Indentation follows CommonMark: at most three leading spaces; four or more,
+# or a tab, make the line an indented code block, i.e. an example.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
+    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
+# A CommonMark fence line: at most three leading spaces, then three or more
+# backticks or tildes; group 2 is the rest of the line (info string).
+_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -1559,6 +2329,75 @@ def _strip_quoted_content(prompt: str) -> str:
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 
+def _is_list_or_heading_boundary(line: str) -> bool:
+    """Return True if line is a markdown heading, list item, or thematic break."""
+    return bool(_HEADING_BOUNDARY_RE.match(line) or _LIST_BOUNDARY_RE.match(line) or _THEMATIC_BREAK_RE.match(line))
+
+
+def _is_write_directive(line: str, prev_non_empty: str | None) -> bool:
+    """Classify whether a line in a prompt is a write directive (#8703).
+
+    A line is a directive only if:
+    1. It matches the write verb action pattern.
+    2. It does not end in '?' (which indicates a question to the reviewer).
+    3. It starts a sentence:
+       - The line itself is a numbered/bulleted item or heading; OR
+       - The previous non-empty line is absent (e.g. first line of the prompt); OR
+       - The previous non-empty line ends in '.', ':', '!', '?'; OR
+       - The previous non-empty line is a list item or heading boundary.
+    A line that continues the previous line's sentence is prose, not a directive.
+    """
+    match = _WRITE_SHAPED_PROMPT_RE.match(line)
+    if not match:
+        return False
+
+    # A line ending in '?' is a question to the reviewer, not a directive.
+    stripped = line.rstrip()
+    if stripped.endswith("?") or stripped.rstrip("\"'`").endswith("?"):
+        return False
+
+    # A numbered or bulleted item (or heading) starting with a write verb is a directive.
+    if match.group("prefix"):
+        return True
+
+    # Continuation rule: a line without a list/heading prefix is a directive
+    # only if it starts a sentence (the previous non-empty line is absent,
+    # ends in '.', ':', '!', '?', or is a list item / heading boundary).
+    # A line that continues the previous line's sentence is prose, not a directive.
+    if prev_non_empty is None:
+        return True
+
+    prev_stripped = prev_non_empty.rstrip()
+    if prev_stripped.rstrip("\"')`").endswith((".", ":", "!", "?")):
+        return True
+
+    if _HEADING_BOUNDARY_RE.match(prev_stripped) or _THEMATIC_BREAK_RE.match(prev_stripped):
+        return True
+
+    if _LIST_BOUNDARY_RE.match(prev_stripped):
+        # Indented line under an unpunctuated list item continues that item's sentence
+        is_indented_continuation = line.startswith(("  ", "\t")) and not prev_stripped.rstrip("\"')`").endswith(
+            (".", ":", "!", "?")
+        )
+        return not is_indented_continuation
+
+    return False
+
+
+def _has_write_directive(prompt: str) -> bool:
+    """Scan stripped prompt lines for an unquoted write directive (#8703)."""
+    stripped_prompt = _strip_quoted_content(prompt)
+    prev_non_empty: str | None = None
+    for line in stripped_prompt.splitlines():
+        if not line.strip():
+            prev_non_empty = None
+            continue
+        if _is_write_directive(line, prev_non_empty):
+            return True
+        prev_non_empty = line
+    return False
+
+
 def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     """Reject clearly write-shaped briefs before a read-only worker starts.
 
@@ -1569,11 +2408,12 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     requires an instruction-shaped line, rather than matching incidental
     words such as "changes" in a review prompt.  Fenced blocks and blockquote
     lines are excluded from the scan: they carry the brief under critique,
-    not the worker's own instructions.
+    not the worker's own instructions.  Wrapped continuation prose and
+    review questions ending in '?' are not classified as directives (#8703).
     """
     if mode != "read-only":
         return None
-    if not _WRITE_SHAPED_PROMPT_RE.search(_strip_quoted_content(prompt)):
+    if not _has_write_directive(prompt):
         return None
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "
@@ -1673,17 +2513,73 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
+def _code_fence_opener(line: str) -> str | None:
+    """Return the fence run when ``line`` opens a CommonMark code fence.
+
+    A backtick fence's info string may not contain a backtick (that line is
+    inline code, not a fence).
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return None
+    fence, info = match.groups()
+    if fence[0] == "`" and "`" in info:
+        return None
+    return fence
+
+
+def _closes_code_fence(line: str, opener: str) -> bool:
+    """Return whether ``line`` closes the fence opened by ``opener``.
+
+    Per CommonMark the closer uses the opener's character, is at least as
+    long, and carries nothing but trailing spaces or tabs; any other line —
+    including a fence of the other character — is block content.
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return False
+    fence, rest = match.groups()
+    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
+
+
+def parse_review_verdict(response: str) -> str | None:
+    """Return the review's verdict token, or ``None`` when it states none.
+
+    The single verdict parser for the review-success contract (#8786): the
+    dispatch worker and the ask-* review wrapper both call it. Only a line
+    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
+    code block counts, and the LAST such line wins — a report may discuss earlier
+    drafts, but its closing line is its verdict. An unclosed fence runs to the
+    end of the text, as in CommonMark.
+    """
+    verdict: str | None = None
+    open_fence: str | None = None
+    for line in response.splitlines():
+        if open_fence is not None:
+            if _closes_code_fence(line, open_fence):
+                open_fence = None
+            continue
+        open_fence = _code_fence_opener(line)
+        if open_fence is not None:
+            continue
+        match = _REVIEW_VERDICT_LINE_RE.match(line)
+        if match:
+            verdict = match.group(1).upper()
+    return verdict
+
+
 def _review_verdict_failure_reason(response: str) -> str | None:
     """Return the failure reason when a review-typed reply has no verdict line.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
     require a magic marker. A review reply that never states
-    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED>`` is not a
-    completed review — on 2026-09-21 several review tasks settled ``done``
-    with a promise to wait for a background command as the whole body (#8421).
+    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
+    at the start of a line is not a completed review — on 2026-09-21 several
+    review tasks settled ``done`` with a promise to wait for a background
+    command as the whole body (#8421).
     """
-    if _REVIEW_VERDICT_LINE_RE.search(response):
+    if parse_review_verdict(response) is not None:
         return None
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
@@ -2201,7 +3097,7 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  primary-integrity watchdog errored ({type(exc).__name__}: {exc}); "
@@ -2242,7 +3138,7 @@ def _warn_venv_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  venv-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -2276,7 +3172,7 @@ def _warn_worktree_cleanup_integrity() -> None:
                 check_worktree_cleanup_integrity,
             )
 
-        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  worktree-cleanup-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -2309,7 +3205,7 @@ def _warn_node_modules_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  node_modules-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -2350,7 +3246,9 @@ def _warn_if_monitor_api_unreachable() -> None:
 
 def _origin_tracking_refspec(branch: str) -> str:
     """Explicit fetch mapping that lands ``branch`` under refs/remotes/origin."""
-    return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
+    from scripts.common.git_context import origin_tracking_refspec
+
+    return origin_tracking_refspec(branch)
 
 
 def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProcess[str] | None:
@@ -2527,14 +3425,16 @@ def _fetch_base(base: str) -> bool:
 
 
 def _validate_branch_reuse_name(branch: str) -> str:
-    """Reject unsafe or ambiguous ``--branch`` values before touching git."""
-    normalized = branch.strip()
-    if not normalized:
-        raise ValueError("--branch must name an existing non-protected branch")
-    if normalized.startswith(("origin/", "refs/", "github/")):
+    """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise ValueError(
-            f"--branch must be a local branch name without origin/, github/, or refs/ prefixes: got {branch!r}"
-        )
+            "--branch must be a local branch name without origin/, github/, or refs/ "
+            f"prefixes, and a valid git branch: got {branch!r} ({exc})"
+        ) from exc
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:
@@ -2729,7 +3629,7 @@ def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | N
     resolved = path.resolve()
     # 1) Authoritative: scan states for worktree_path match.
     try:
-        state_files = list(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+        state_files = list(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
     except OSError:
         state_files = []
     for state_file in state_files:
@@ -3312,6 +4212,112 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     return sha or None
 
 
+def _record_final_branch_head(state: dict[str, Any]) -> None:
+    """Capture the current HEAD when a terminal task still owns a worktree."""
+    raw_path = state.get("worktree_path")
+    if isinstance(raw_path, str) and Path(raw_path).is_dir():
+        state["final_branch_head_commit"] = _resolve_sha(Path(raw_path))
+
+
+def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
+    """Persist a zombie correction with the worktree's final branch head."""
+    current, _changed = mark_dead_worker_terminal(
+        state_path,
+        state,
+        source=source,
+        terminal_status="crashed",
+        allowed_statuses=("running", "spawning"),
+        pid_alive=_pid_alive,
+        resolve_head=_resolve_sha,
+    )
+    state.clear()
+    state.update(_hydrate_read_only_checkout_snapshots(current))
+
+
+def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
+    """Mark an active record ``crashed`` when the process that owns it is gone.
+
+    A worker record's owner is its pid. A worktree-prep record (``pid: null``
+    while dispatch runs ``git worktree add``) is owned by the dispatcher
+    recorded in ``worktree_prep``; if the dispatcher died, no pid will ever be
+    written, so it is marked ``crashed`` with reason
+    ``dispatch_died_during_worktree_prep`` (#8663). An admission hold is
+    owned by the dispatcher recorded in ``admission_hold`` and is marked
+    ``crashed`` with reason ``dispatch_died_after_admission`` (#8717).
+    """
+    if state.get("status") not in ("running", "spawning"):
+        return
+    pid = state.get("pid")
+    if pid and not _pid_alive(int(pid)):
+        _mark_crashed_task(state_path, state, source=source)
+    elif worktree_prep.is_orphaned_prep_record(state):
+        current, _changed = mark_orphaned_worktree_prep_crashed(
+            state_path,
+            state,
+            source=source,
+            is_orphaned=worktree_prep.is_orphaned_prep_record,
+        )
+        state.clear()
+        state.update(current)
+    elif dispatch_admission.is_orphaned_admission_hold(state):
+        current, _changed = mark_orphaned_admission_hold_crashed(
+            state_path,
+            state,
+            source=source,
+            is_orphaned=dispatch_admission.is_orphaned_admission_hold,
+            reason=dispatch_admission.ORPHANED_HOLD_REASON,
+        )
+        state.clear()
+        state.update(current)
+
+
+# Exit code for a dispatch refused by host admission: retryable once a worker
+# finishes or the host recovers, unlike exit 2 (invalid request).
+_ADMISSION_REFUSED_EXIT = 3
+
+
+def _evaluate_dispatch_admission(
+    mode: str,
+    *,
+    sweep: bool,
+    thresholds: dispatch_admission.Thresholds | None = None,
+) -> dispatch_admission.AdmissionDecision:
+    """Host admission for a ``mode`` dispatch (#8645 part A).
+
+    With ``sweep`` every running/spawning record whose owner is gone (a dead
+    worker pid, or a pid-less worktree reservation or admission hold whose
+    dispatcher died) is marked ``crashed`` first by the healer ``status``,
+    ``wait``, ``list`` and reconcile use, so it never holds a slot and never
+    sits active until someone probes it (#8717).
+    """
+    return dispatch_admission.evaluate(
+        mode,
+        tasks_dir(),
+        pid_alive=_pid_alive,
+        on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
+        thresholds=thresholds,
+    )
+
+
+def _report_dispatch_admission(
+    decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None
+) -> int | None:
+    """Print the admission outcome; return the exit code when dispatch must stop."""
+    if decision.exempt:
+        return None
+    if decision.admitted:
+        print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
+        return None
+    if force_reason is not None:
+        print(
+            f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
+            file=sys.stderr,
+        )
+        return None
+    print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+    return _ADMISSION_REFUSED_EXIT
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -3740,7 +4746,12 @@ def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
     parts = normalized.split("/")
     if len(parts) < 2:
         return False
-    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
+    if not parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"):
+        return False
+    name = parts[-1]
+    if name == _READ_ONLY_SNAPSHOT_DIGEST_NAME:
+        return True
+    return name.startswith("read_only_checkout_") and name.endswith(".json")
 
 
 def _is_read_only_runtime_state_path(path: str) -> bool:
@@ -3887,7 +4898,7 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     try:
         tracked = subprocess.run(
-            ["git", "diff", "--name-only", "HEAD", "--"],
+            ["git", "diff", "--name-only", "-z", "HEAD", "--"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -3896,7 +4907,7 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         untracked = subprocess.run(
-            ["git", "ls-files", "--others", "--exclude-standard"],
+            ["git", "ls-files", "-z", "--others", "--exclude-standard"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -3908,7 +4919,7 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
         return ()
     if tracked.returncode != 0 or untracked.returncode != 0:
         return ()
-    changed = {path.strip() for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines()) if path.strip()}
+    changed = {path for path in (*tracked.stdout.split("\0"), *untracked.stdout.split("\0")) if path}
     return tuple(sorted(changed))
 
 
@@ -3956,6 +4967,68 @@ def _x_agent_task_id(agent: str, task_id: str) -> str:
     normalized = _normalize_task_id(agent, task_id)
     safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip(".-")
     return safe or "task"
+
+
+def _x_agent_trailer(agent: str, task_id: str) -> str:
+    return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
+
+
+def _build_worker_env(
+    *,
+    task_id: str,
+    dispatch_agent: str,
+    attribution: Any | None = None,
+    run_nonce: str = "",
+    runtime_tmp_root: Path | str | None = None,
+    runtime_tmp_namespace_root: Path | str | None = None,
+    worktree_path: Path | None = None,
+    allow_merge: bool = False,
+    base_env: Mapping[str, str] | None = None,
+) -> dict[str, str]:
+    """Construct the execution environment for a dispatched worker process."""
+    source = dict(os.environ if base_env is None else base_env)
+    worker_env = _pinned_worker_venv_env(source)
+    if attribution is not None:
+        worker_env["LU_RUNTIME_INITIATOR"] = getattr(attribution, "initiator", str(attribution))
+        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = getattr(attribution, "source", "")
+    if run_nonce:
+        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
+    # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
+    # this marker to skip the per-agent thread lease, which belongs to the
+    # orchestrator of the agent family, never to a headless worker. Both
+    # names are allowlisted in agent_runtime/env_sanitize.py (name and
+    # value lists — a task id containing "sk-" must survive the secret
+    # redactor), so the marker reaches the harness CLI's SessionStart hook.
+    # The marker is the primary signal: a read-only dispatch without
+    # --worktree runs from the primary checkout, so the
+    # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
+    worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+    worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
+    worker_env["LU_X_AGENT_TRAILER"] = _x_agent_trailer(dispatch_agent, task_id)
+    # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
+    # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
+    _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
+    _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
+    if _dispatch_cap_plugin not in _pytest_plugins:
+        _pytest_plugins.append(_dispatch_cap_plugin)
+    worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
+    _inject_gh_token_for_agent(worker_env, dispatch_agent)
+    _scrub_unusable_gh_config_dir(worker_env)
+    worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    if runtime_tmp_root is not None:
+        worker_env["TMPDIR"] = str(runtime_tmp_root)
+        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+    if runtime_tmp_namespace_root is not None:
+        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
+    if worktree_path is not None:
+        _apply_worktree_git_ceiling(worker_env, worktree_path)
+    if allow_merge:
+        worker_env.pop("AGENT_NO_MERGE", None)
+        worker_env["AGENT_ALLOW_MERGE"] = "1"
+    else:
+        worker_env["AGENT_NO_MERGE"] = "1"
+        worker_env.pop("AGENT_ALLOW_MERGE", None)
+    return worker_env
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
@@ -4021,8 +5094,9 @@ def _auto_finalize_dirty_worktree(
     agent: str,
     branch: str | None,
     base_branch: str,
+    open_pr: bool = False,
 ) -> AutoFinalizeResult:
-    """Stage, commit, push, and draft-PR a cleanly exited dirty dispatch."""
+    """Stage, commit, and push a cleanly exited dirty dispatch."""
     changed_files = _auto_finalize_changed_files(worktree)
     try:
         worktree_proc = subprocess.run(
@@ -4100,7 +5174,7 @@ def _auto_finalize_dirty_worktree(
                 "-m",
                 body,
                 "--trailer",
-                f"X-Agent: {agent}/{safe_task}",
+                _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
             capture_output=True,
@@ -4128,18 +5202,6 @@ def _auto_finalize_dirty_worktree(
 
         commit_sha = _resolve_sha(worktree)
         _push_auto_finalize_branch(worktree, resolved_branch)
-        pr_url = _create_auto_finalize_pr(
-            worktree,
-            branch=resolved_branch,
-            base_branch=_base_branch_name(base_branch),
-            title=subject,
-            body=(
-                f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
-                "The agent exited with `returncode=0`, left a dirty worktree, "
-                "and had made zero commits, so delegate.py staged the work, "
-                "created the commit, pushed the branch, and opened this draft PR."
-            ),
-        )
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         error = str(exc)
         if commit_sha is not None:
@@ -4167,12 +5229,282 @@ def _auto_finalize_dirty_worktree(
             changed_files=changed_files,
         )
 
+    pr_url = None
+    if open_pr:
+        try:
+            pr_url = _create_auto_finalize_pr(
+                worktree,
+                branch=resolved_branch,
+                base_branch=_base_branch_name(base_branch),
+                title=subject,
+                body=(
+                    f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
+                    "The agent exited with `returncode=0`, left a dirty worktree, "
+                    "and had made zero commits, so delegate.py staged and pushed the work."
+                ),
+            )
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            # The commit is already pushed. Never soft-reset it after a PR error.
+            return AutoFinalizeResult(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
+
     return AutoFinalizeResult(
         ok=True,
         commit_sha=commit_sha,
         pr_url=pr_url,
         changed_files=changed_files,
     )
+
+
+_RESCUE_TERMINAL_STATUSES = frozenset({"crashed", "timeout", "failed", "no_deliverable", "needs_finalize"})
+_RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
+
+
+def _rescue_git(worktree: Path, *args: str, network: bool = False) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+        timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S if network else DEFAULT_GIT_TIMEOUT_S,
+    )
+
+
+def _rescue_remote_head(worktree: Path, branch: str) -> str | None:
+    proc = _rescue_git(worktree, "ls-remote", "--heads", "origin", branch, network=True)
+    if proc.returncode != 0:
+        raise RuntimeError("rescue remote proof unavailable")
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    if not lines:
+        return None
+    if len(lines) != 1 or lines[0].split("\t")[-1] != f"refs/heads/{branch}":
+        raise RuntimeError("rescue remote proof ambiguous")
+    return lines[0].split("\t", 1)[0]
+
+
+def _clean_rescue_junk(worktree: Path, changed: tuple[str, ...]) -> bool:
+    """Remove only the already classified disposable changes."""
+    index = _rescue_git(worktree, "ls-files", "-z", "--", *changed)
+    head = _rescue_git(worktree, "ls-tree", "-r", "-z", "--name-only", "HEAD", "--", *changed)
+    if index.returncode != 0 or head.returncode != 0:
+        return False
+    indexed_paths = set(index.stdout.split("\0"))
+    head_paths = set(head.stdout.split("\0"))
+    indexed = tuple(path for path in changed if path in indexed_paths)
+    restore = tuple(path for path in changed if path in head_paths)
+    remove = tuple(path for path in changed if path not in head_paths)
+    if indexed and _rescue_git(worktree, "restore", "--staged", "--", *indexed).returncode != 0:
+        return False
+    if restore and _rescue_git(worktree, "restore", "--source=HEAD", "--worktree", "--", *restore).returncode != 0:
+        return False
+    if remove and _rescue_git(worktree, "clean", "-fd", "--", *remove).returncode != 0:
+        return False
+    return _worktree_is_dirty(worktree) is False
+
+
+def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
+    """Preserve one terminal task on origin; never remove its worktree here."""
+    state = _read_state(state_path)
+    task_id = state.get("task_id") if state else None
+    row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
+    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+        row["reason"] = "task is not terminal non-success"
+        return row
+    raw_worktree = state.get("worktree_path")
+    if not isinstance(raw_worktree, str):
+        row["reason"] = "no recorded worktree"
+        return row
+    worktree = Path(raw_worktree).resolve()
+    dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
+    if not worktree.is_relative_to(dispatch_root) or _resolve_verified_worktree_path(worktree) != worktree:
+        row["reason"] = "not a registered dispatch worktree"
+        return row
+    if state.get("worktree_reused") is not False:
+        row["reason"] = "worktree ownership unknown or reused"
+        return row
+    lease = state.get("lease")
+    if (isinstance(lease, dict) and lease.get("state") == "active") or state.get("lease_state") == "active":
+        row["reason"] = "task lease active"
+        return row
+    try:
+        from scripts.orchestration import reap_worktrees
+
+        with worktree_lock(worktree) if apply else contextlib.nullcontext():
+            current = _read_state(state_path)
+            if current != state:
+                row["reason"] = "task state changed"
+                return row
+            if reap_worktrees._task_pid_alive(state):
+                row["reason"] = "task process alive"
+                return row
+            active_ids = reap_worktrees._active_task_ids()
+            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            if active_ids is None or live_cwds is None:
+                row["reason"] = "activity probe unavailable"
+                return row
+            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+                row["reason"] = "worktree active"
+                return row
+            current_branch = _current_branch(worktree)
+            recorded_branch = state.get("worktree_branch")
+            branch = f"rescue/{_x_agent_task_id(str(state.get('agent') or 'agent'), str(task_id))}"
+            if current_branch not in {recorded_branch, branch}:
+                row["reason"] = "worktree branch differs from task record"
+                return row
+            dirty = _worktree_is_dirty(worktree)
+            if dirty is None:
+                row["reason"] = "git status unavailable"
+                return row
+            changed = _auto_finalize_changed_files(worktree) if dirty else ()
+            if dirty and not changed:
+                row["reason"] = "changed files unavailable"
+                return row
+            large = [
+                name
+                for name in changed
+                if (worktree / name).is_file() and (worktree / name).stat().st_size > _RESCUE_MAX_FILE_BYTES
+            ]
+            if large:
+                row["reason"] = "files exceed 5 MB"
+                row["large_files"] = large
+                return row
+            cleaned_junk = False
+            if _auto_finalize_is_junk_only(changed):
+                if not apply:
+                    row["action"] = "candidate"
+                    row["reason"] = "clean disposable residue"
+                    return row
+                if not _clean_rescue_junk(worktree, changed):
+                    row["action"] = "error"
+                    row["reason"] = "could not clean disposable residue"
+                    return row
+                cleaned_junk = True
+                dirty = False
+                changed = ()
+            head = _resolve_sha(worktree)
+            if head is None:
+                row["reason"] = "HEAD unavailable"
+                return row
+            if not dirty and state.get("rescue_status") == "rescued" and state.get("rescue_head_commit") == head:
+                row["reason"] = "already rescued at HEAD"
+                return row
+            if not dirty:
+                ahead = _count_commits_ahead(
+                    worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
+                )
+                if ahead is None:
+                    row["reason"] = "ahead count unavailable"
+                    return row
+                if ahead == 0 or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0:
+                    row["action"] = "cleaned" if cleaned_junk else "skipped"
+                    row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
+                    return row
+            existing_remote = _rescue_remote_head(worktree, branch)
+            if existing_remote is not None and existing_remote != head:
+                row["reason"] = "rescue remote branch already exists at another head"
+                return row
+            row.update({"action": "candidate", "rescue_ref": branch, "head": head})
+            if not apply:
+                return row
+            if dirty:
+                if current_branch != branch:
+                    proc = _rescue_git(worktree, "switch", "-c", branch)
+                    if proc.returncode != 0:
+                        raise RuntimeError("cannot create rescue branch")
+                proc = _rescue_git(worktree, "add", "-A")
+                if proc.returncode != 0:
+                    raise RuntimeError("cannot stage rescue work")
+                proc = _rescue_git(
+                    worktree,
+                    "commit",
+                    "-m",
+                    f"chore(dispatch): rescue {task_id}",
+                    "--trailer",
+                    f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
+                )
+                if proc.returncode != 0:
+                    raise RuntimeError("cannot commit rescue work")
+                head = _resolve_sha(worktree)
+                if head is None:
+                    raise RuntimeError("rescue commit HEAD unavailable")
+            proc = _rescue_git(worktree, "push", "origin", f"HEAD:refs/heads/{branch}", network=True)
+            if proc.returncode != 0:
+                raise RuntimeError("cannot push rescue branch")
+            if _rescue_remote_head(worktree, branch) != head:
+                raise RuntimeError("rescue remote verification failed")
+            proc = _rescue_git(
+                worktree,
+                "fetch",
+                "origin",
+                f"refs/heads/{branch}:refs/remotes/origin/{branch}",
+                network=True,
+            )
+            if proc.returncode != 0 or _resolve_sha(worktree, f"refs/remotes/origin/{branch}") != head:
+                raise RuntimeError("rescue tracking ref verification failed")
+            state.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
+            _write_state_atomic(state_path, state)
+            row.update({"action": "rescued", "head": head})
+            return row
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        row.update({"action": "error", "reason": str(exc)})
+        return row
+
+
+def cmd_rescue(args: argparse.Namespace) -> int:
+    """Show or preserve terminal dispatch work before the P0 reaper runs."""
+    if args.all_stale:
+        try:
+            amount = str(args.older_than).removesuffix("h")
+            min_age_hours = float(amount)
+            if min_age_hours < 0:
+                raise ValueError
+        except (TypeError, ValueError):
+            print("--older-than must be a non-negative hour duration, such as 6h", file=sys.stderr)
+            return 2
+        paths = sorted(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
+    elif args.task_id:
+        paths = [_state_path(args.task_id)]
+        min_age_hours = 0
+    else:
+        print("provide a task ID or --all-stale", file=sys.stderr)
+        return 2
+
+    rows: list[dict[str, Any]] = []
+    now = datetime.now(UTC)
+    for path in paths:
+        state = _read_state(path)
+        if args.all_stale:
+            if state is None:
+                rows.append({"task_id": path.stem, "action": "skipped", "reason": "unreadable task state"})
+                continue
+            if state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+                continue
+            try:
+                finished = datetime.fromisoformat(str(state["finished_at"]).replace("Z", "+00:00"))
+                age_hours = (now - finished).total_seconds() / 3600
+            except (KeyError, TypeError, ValueError, OverflowError):
+                rows.append(
+                    {
+                        "task_id": state.get("task_id"),
+                        "action": "skipped",
+                        "reason": "no finished_at" if not state.get("finished_at") else "invalid finished_at",
+                    }
+                )
+                continue
+            if age_hours < min_age_hours:
+                continue
+        rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
+    summary = {
+        action: sum(row["action"] == action for row in rows)
+        for action in ("candidate", "rescued", "cleaned", "skipped", "error")
+    }
+    print(
+        json.dumps(
+            {"mode": "apply" if args.apply or not args.all_stale else "dry_run", "summary": summary, "tasks": rows}
+        )
+    )
+    return 1 if summary["error"] else 0
 
 
 def _branch_ref_exists(repo_root: Path, branch: str) -> bool:
@@ -4275,7 +5607,7 @@ def _remove_dispatch_worktree(
         owner_task_id=owner_task_id,
         releasable=releasable,
         force=force,
-        tasks_dir=_TASKS_DIR,
+        tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
@@ -4533,8 +5865,27 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
 # of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
 # data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
-# 450MB. Opt back in with --sparse-include or --full-checkout. wiki/ is still
-# a top-level tree (`git ls-tree -d HEAD wiki`), so it stays excluded.
+# 450MB (re-measured 2026-09-25: 287MB). Opt back in with --sparse-include
+# or --full-checkout. wiki/ is still a top-level tree
+# (`git ls-tree -d HEAD wiki`), so it stays excluded.
+#
+# curriculum/ stays in the exclusion set, with one cone anchor so
+# ``pytest -m repo_wide`` can read the manifest. Measured 2026-09-25 in a
+# default sparse worktree (no curriculum/): that command failed 15 tests,
+# and each one read only ``curriculum/l2-uk-en/curriculum.yaml``
+# (FileNotFoundError, or ORCH_TRACK_NOT_ACTIVE because a missing manifest
+# yields no active levels). Cone mode also checks out files that sit
+# directly in every ancestor of an included directory. The anchor is
+# ``curriculum/l2-uk-en/lesson-plans`` (192K), not a smaller sibling:
+# once ``curriculum/`` exists, collection of
+# tests/curriculum/test_plan_validate_cross.py loads
+# ``lesson-plans/a1/_arc.yaml`` (tree_absent is false). An evidence-only
+# anchor (3.4M, yaml present, arc absent) died at collection with exit 2.
+# Including lesson-plans materialises the arc, curriculum.yaml, and the
+# other loose files beside the manifest (vocabulary.db,
+# module-mapping.json, callout-claims-review.md). ``du -sh`` of that
+# tree: 3.6M, not 289M. The anchor is added only when that directory
+# exists at HEAD.
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -4543,6 +5894,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/lexicon",
     }
 )
+_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
@@ -4776,8 +6128,13 @@ def _apply_dispatch_sparse_checkout(
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), and ``data/lexicon/`` (~277MB). ``--full-checkout`` disables
-    sparse mode. ``--sparse-include`` keeps a named excluded tree.
+    (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
+    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
+    directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
+    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
+    of ``curriculum/``.
+    ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
+    named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -4823,6 +6180,9 @@ def _apply_dispatch_sparse_checkout(
     all_dirs = _list_worktree_top_dirs(worktree_path)
     data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
     included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
+    manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
+    if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
+        included.append(manifest_cone)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -4913,6 +6273,15 @@ def _record_worktree_local_venv_warning(
         )
 
 
+def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> None:
+    """Refuse when a later fetch is not the SHA the Gemini path gate checked."""
+    if pinned_head_sha is not None and origin_sha != pinned_head_sha:
+        raise RuntimeError(
+            "refusing dispatch: fetched branch head "
+            f"{origin_sha} differs from the Gemini path-gate SHA {pinned_head_sha}"
+        )
+
+
 def _resolve_worktree_base_sha(
     *,
     agent: str,
@@ -4921,6 +6290,7 @@ def _resolve_worktree_base_sha(
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
+    pinned_head_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -4954,7 +6324,10 @@ def _resolve_worktree_base_sha(
             # Validate only after the dirty check above, so a dirty checkout
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
-            _require_local_branch_is_ancestor_of_origin(requested_branch)
+            _refuse_if_gate_head_moved(
+                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                pinned_head_sha,
+            )
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
@@ -4962,7 +6335,9 @@ def _resolve_worktree_base_sha(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
-        return _require_local_branch_is_ancestor_of_origin(requested_branch)
+        origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
+        _refuse_if_gate_head_moved(origin_sha, pinned_head_sha)
+        return pinned_head_sha or origin_sha
 
     origin_ref = _origin_base_ref(base)
     if _fetch_base(base):
@@ -5033,8 +6408,12 @@ def _ensure_worktree(
     dry_run: bool = False,
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
+    run_nonce: str | None = None,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
+
+    ``run_nonce`` names the dispatch run a fresh worktree's path reservation
+    is recorded under (see :func:`_add_reserved_worktree`).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -5196,20 +6575,14 @@ def _ensure_worktree(
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_reserved_worktree(
+        add_command,
+        repo_root=_REPO_ROOT,
+        worktree_path=worktree_path,
+        task_id=task_id,
+        run_nonce=run_nonce,
+        base_sha=resolved_base_sha,
+    )
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -5277,7 +6650,7 @@ def _augment_prompt_with_worktree(
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
-            "Commit your work.\n"
+            "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Do not open or merge PRs unless the brief says so; "
@@ -5489,6 +6862,20 @@ def _classify_final_status(
     return "failed"
 
 
+def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
+    """True when the adapter could not prove the worker's run finished its work.
+
+    AGY print mode can exit 0 while the agent's backgrounded commands are still
+    running or were killed (#8502/#8503); the adapter then leads
+    ``stderr_excerpt`` with a reason code — including when no transcript bound
+    to this run exists to prove completion. Whatever that worker left in its
+    worktree is unconfirmed, so it must never be auto-finalized as ``done``.
+    """
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
+
+
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
     """Return the first non-blank captured stderr line for task summaries."""
     if not stderr_excerpt:
@@ -5561,6 +6948,68 @@ def _emit_terminal_dispatch_event(
         )
 
 
+def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
+    """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
+
+    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
+    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``review_plan`` branch and are not part of this list.
+    """
+    flags: list[str] = []
+    if requested_harness is not None:
+        flags.extend(["--harness", requested_harness])
+    if bool(getattr(args, "require_review_verdict", False)):
+        flags.append("--require-review-verdict")
+    return flags
+
+
+def _kimicc_read_only_review_grant(
+    *,
+    harness: str | None,
+    mode: str,
+    require_review_verdict: bool,
+    cwd: Path | None = None,
+) -> dict[str, Any]:
+    """Sources MCP grant for ``ask-kimi --review``.
+
+    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
+    --require-review-verdict``. The headless wrapper always passes ``--bare``,
+    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
+    names is always the trusted primary checkout file ``_REPO_ROOT /
+    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
+    dispatch worktree is the branch under review, so its config is untrusted:
+    a stdio entry would run the author's command, and a repointed sources URL
+    would forge verification results. ``cwd`` is accepted and ignored so
+    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
+    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
+    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
+    and non-review read-only dispatches get nothing. A missing trusted file
+    refuses the grant instead of launching without the sources server.
+    """
+    del cwd  # untrusted; the reviewed checkout must not supply MCP config
+    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
+        return {}
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    allowed = review_tools_allowed_csv("claude")
+    if not allowed:
+        return {}
+    mcp_config = _REPO_ROOT / ".mcp.json"
+    if not mcp_config.is_file():
+        raise ValueError(
+            "kimicc review grant refused: trusted MCP config is missing at "
+            f"{mcp_config}. Refusing to launch without it."
+        )
+    return {
+        "allowed_tools": allowed,
+        "mcp_config_path": str(mcp_config),
+        "strict_mcp_config": True,
+        # The adapter leaves plan mode only with this marker plus its own
+        # checks of the config path and the tool allowlist (#8652).
+        "review_verdict_required": True,
+    }
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -5586,6 +7035,7 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -5641,6 +7091,9 @@ def _run_worker(
     read_only_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
     read_only_ignored_mutation_paths: list[str] = []
+    # Set only after digest.json is on disk. Phase files stay until the
+    # terminal record that names retention=digest has been written.
+    clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
@@ -5686,6 +7139,7 @@ def _run_worker(
     # read. A terminal status with no context is not an improvement over a stale
     # running one. (Cross-family review of #5807, round nine.)
     final_state: dict[str, Any] = _read_state(state_path) or {}
+    worktree_path = final_state.get("worktree_path")
     final_status = ""
     duration_s = time.monotonic() - start
     result_file: str | None = None
@@ -5699,6 +7153,7 @@ def _run_worker(
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
+    rescue_status: str | None = None
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
@@ -5732,6 +7187,19 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            # ask-kimi --review is dispatch --agent kimi --harness kimicc
+            # --mode read-only --require-review-verdict, not --review-attempt.
+            # A sealed review attempt already set strict_mcp_config and its
+            # mcp_config_path; do not overwrite those keys.
+            if not tool_config.get("strict_mcp_config"):
+                tool_config.update(
+                    _kimicc_read_only_review_grant(
+                        harness=harness,
+                        mode=mode,
+                        require_review_verdict=require_review_verdict,
+                        cwd=cwd,
+                    )
+                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -5790,6 +7258,13 @@ def _run_worker(
                         cursor_mcp_backup = cursor_mcp_path.read_bytes()
                     except OSError as exc:
                         raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
+
+            if strict_mcp_config and review_id is not None and attempt_id is not None and mcp_config_path is not None:
+                # Last check before the path strings reach the launcher: re-walk the attempt
+                # directory no-follow and owner-checked (#8652). It narrows, not closes, the window.
+                from scripts.agent_runtime.review_mcp import verify_review_attempt_paths
+
+                verify_review_attempt_paths(mcp_config_path)
 
             result = runtime_invoke(
                 agent,
@@ -5958,6 +7433,21 @@ def _run_worker(
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
+            if read_only_snapshot_keep_full(read_only_mutation_paths, read_only_snapshot_error):
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_FULL
+            else:
+                snapshot_dir = _read_only_snapshot_dir_for(task_id)
+                stage_read_only_snapshot_digest(
+                    snapshot_dir,
+                    read_only_checkout_pre,
+                    read_only_checkout_post,
+                )
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+                # Drop hydrated copies so the terminal record stays small even
+                # while the phase files are still on disk.
+                final_state.pop("read_only_checkout_pre", None)
+                final_state.pop("read_only_checkout_post", None)
+                clean_snapshots_to_discard = snapshot_dir
             if read_only_mutation_paths:
                 final_status = "failed"
                 ok_outcome = False
@@ -5974,7 +7464,6 @@ def _run_worker(
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
-        worktree_path = final_state.get("worktree_path")
         # Ownership is fixed at launch: only a worktree_path recorded with an
         # explicit ``worktree_reused: false`` was created by this dispatch. A
         # path derived from cwd below, or a legacy record without the flag,
@@ -6030,7 +7519,10 @@ def _run_worker(
                 #
                 # Neither unknown can prove the work was committed, so either one surfaces
                 # the task for finalization rather than letting it settle as ``done``.
-                if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                # A worker cut off mid-work (#8502) leaves unfinished edits even
+                # when it had pushed earlier commits: surface them, never ``done``.
+                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
                 # Catch committed-but-unpushed write dispatches (#7311):
@@ -6045,9 +7537,8 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if (
-                        normalized_branch not in containment.PROTECTED_BRANCHES
-                        and not (commits_ahead == 0 and dirty_on_exit is False)
+                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
+                        commits_ahead == 0 and dirty_on_exit is False
                     ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
@@ -6055,14 +7546,27 @@ def _run_worker(
                         )
                         if unpushed_commits is None or unpushed_commits > 0:
                             needs_finalize = True
+                            if unpushed_commits is not None and unpushed_commits > 0:
+                                rescue_status = "unpushed work - needs rescue"
+                            elif commits_ahead != 0:
+                                rescue_status = "unpushed state unknown - needs rescue"
+                            if rescue_status:
+                                finalize_error = rescue_status
 
-                if needs_finalize and returncode == 0 and mode == "danger":
+                if (
+                    needs_finalize
+                    and rescue_status is None
+                    and returncode == 0
+                    and mode == "danger"
+                    and not run_incomplete
+                ):
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
+                        open_pr=finalize_open_pr,
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
@@ -6180,7 +7684,12 @@ def _run_worker(
             finalize_error=finalize_error,
             last_error=last_error,
         )
+        final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
+        final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
+        if clean_snapshots_to_discard is not None:
+            discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+            clean_snapshots_to_discard = None
     except BaseException as interrupt_exc:
         # Defer SIGTERM across the ENTIRE handler, not just its write. A second
         # cancel arriving while the fallback was still computing raised from
@@ -6215,6 +7724,8 @@ def _run_worker(
                     # final_state was read before the region, so this MERGES onto
                     # the real task record instead of replacing it...
                     **final_state,
+                    "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
+                    "rescue_status": rescue_status,
                     # ...and the outcome fields come from the same builder the
                     # checkpoint uses, so an interrupted run never persists a
                     # terminal status beside stale placeholder values.
@@ -6237,6 +7748,9 @@ def _run_worker(
                     ),
                 },
             )
+            if clean_snapshots_to_discard is not None:
+                discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+                clean_snapshots_to_discard = None
         raise
 
     last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
@@ -6284,6 +7798,10 @@ def _run_worker(
             **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
             **cursor_model_state,
+            **_deepseek_model_state(
+                agent=agent,
+                model=getattr(result, "model", final_state.get("model")),
+            ),
             "effort": getattr(result, "effort", final_state.get("effort")),
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
@@ -6315,6 +7833,13 @@ def _run_worker(
         }
     )
     _write_state_atomic(state_path, final_state)
+    if worktree_path:
+        print(
+            f"[delegate] final branch={final_state.get('worktree_branch')} "
+            f"head={final_state.get('final_branch_head_commit') or 'unknown'} "
+            f"rescue_status={final_state.get('rescue_status') or 'none'}",
+            file=sys.stderr,
+        )
     _emit_terminal_dispatch_event(
         task_id=task_id,
         agent=agent,
@@ -6334,7 +7859,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
         if not pi_ok:
             _append_dispatch_event(
                 "primary_integrity_post_worker",
@@ -6362,7 +7887,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not nmi_ok:
             _append_dispatch_event(
                 "node_modules_integrity_post_worker",
@@ -6387,7 +7912,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not vi_ok:
             _append_dispatch_event(
                 "venv_integrity_post_worker",
@@ -6415,7 +7940,7 @@ def _run_worker(
                 check_worktree_cleanup_integrity,
             )
 
-        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not wci_ok:
             _append_dispatch_event(
                 "worktree_cleanup_integrity_post_worker",
@@ -6477,11 +8002,17 @@ def _record_worktree_prep_failure(
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
     returncode_reason: str = "worktree preparation failed",
+    worktree_prep_cleanup: dict[str, Any] | None = None,
+    worktree_prep: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
     Returns True when a record was written. Refuses to overwrite an existing
-    running/spawning record (pre-write re-check closes the guard→write race).
+    running/spawning record (pre-write re-check closes the guard→write race),
+    except this run's own admission hold or path-reservation record, whose
+    admission snapshot it keeps. ``worktree_prep`` is that
+    reservation and ``worktree_prep_cleanup`` what dispatch found and did
+    after a failed ``git worktree add`` (#8663); each is recorded when given.
     """
     if str(_REPO_ROOT / "scripts") not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT / "scripts"))
@@ -6506,6 +8037,7 @@ def _record_worktree_prep_failure(
         "agent": agent,
         "model": start_telemetry.model,
         **_cursor_model_state(agent=agent, initial=True),
+        **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
         "allow_merge": False,
@@ -6513,6 +8045,7 @@ def _record_worktree_prep_failure(
         "cwd": wt_path_str or str(_REPO_ROOT),
         "worktree_path": wt_path_str,
         "worktree_branch": worktree_branch,
+        "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
         "worktree_rebased": False,
@@ -6550,10 +8083,17 @@ def _record_worktree_prep_failure(
         failed_state["harness"] = requested_harness
     if lifecycle_carrier is not None:
         failed_state["task_lifecycle"] = lifecycle_carrier
+    if worktree_prep is not None:
+        failed_state["worktree_prep"] = worktree_prep
+    if worktree_prep_cleanup is not None:
+        failed_state["worktree_prep_cleanup"] = worktree_prep_cleanup
     state_path = _state_path(task_id)
     existing = _read_state(state_path)
     if existing is not None and existing.get("status") in ("running", "spawning"):
-        return False
+        if not _is_own_provisional_record(existing, run_nonce):
+            return False
+        if isinstance(existing.get("admission"), dict):
+            failed_state["admission"] = existing["admission"]
     _write_state_atomic(state_path, failed_state)
     return True
 
@@ -6643,21 +8183,88 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     print(result.message, file=sys.stderr)
     if not result.fast_fail:
         return None
-    pt.record_fast_fail(args.task_id, result, _TASKS_DIR.parent / "preflight_fast_fail.jsonl")
+    pt.record_fast_fail(args.task_id, result, tasks_dir().parent / "preflight_fast_fail.jsonl")
     return pt.FAST_FAIL_EXIT_CODE
+
+
+_DOR_ISSUE_RE = re.compile(r"(?<![\w/=])#(\d+)\b|https://github\.com/[^\s/]+/[^\s/]+/issues/(\d+)\b")
+
+
+def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | None, dict[str, Any] | None]:
+    """Check each issue named by an implementation brief before dispatch side effects."""
+    candidates = sorted(
+        {int(match.group(1) or match.group(2)) for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt))}
+    )
+    if not candidates:
+        return None, None
+    warnings: dict[str, str] = {}
+    issue_numbers: list[int] = []
+    checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
+    for number in candidates:
+        try:
+            issue = subprocess.run(
+                ["gh", "api", f"repos/{_CANONICAL_GITHUB_REPO}/issues/{number}"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+            if issue.returncode:
+                raise ValueError("issue lookup failed")
+            issue_payload = json.loads(issue.stdout)
+            if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
+                raise ValueError("issue lookup must identify the requested number")
+            if "pull_request" in issue_payload:
+                continue
+            issue_numbers.append(number)
+            result = subprocess.run(
+                [sys.executable, str(checker), "--issue", str(number), "--strict", "--json"],
+                capture_output=True,
+                text=True,
+                timeout=75,
+                check=False,
+            )
+            payload = json.loads(result.stdout)
+            if not isinstance(payload, dict):
+                raise ValueError("checker result must be an object")
+            if result.returncode or payload.get("verdict") != "PASS":
+                warnings[str(number)] = ",".join(payload.get("missing") or ["checker_error"])
+        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
+            if number not in issue_numbers:
+                issue_numbers.append(number)
+            warnings[str(number)] = "checker_error"
+    if not issue_numbers:
+        return None, None
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if allow_reason is not None:
+        record["allow_warn_reason"] = allow_reason
+    if warnings and allow_reason is None:
+        details = "; ".join(f"#{number}: {missing}" for number, missing in warnings.items())
+        return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    return None, record
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
     # releases it once the task record is published; every earlier return or
-    # exception releases it here (#8610).
-    with contextlib.ExitStack() as worktree_locks:
-        return _dispatch(args, worktree_locks=worktree_locks)
+    # exception releases it here (#8610). ``admission_holds`` drops an
+    # admission hold that no later record replaced (#8717).
+    with contextlib.ExitStack() as worktree_locks, contextlib.ExitStack() as admission_holds:
+        return _dispatch(args, worktree_locks=worktree_locks, admission_holds=admission_holds)
 
 
-def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack) -> int:
-    """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock."""
+def _dispatch(
+    args: argparse.Namespace,
+    *,
+    worktree_locks: contextlib.ExitStack,
+    admission_holds: contextlib.ExitStack,
+) -> int:
+    """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock.
+
+    ``admission_holds`` releases this run's admission hold on any return or
+    exception before the task record replaces it.
+    """
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -6666,6 +8273,11 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         forward_dispatch,
         notebook_fallback_after_forward,
     )
+
+    # Captured before any later mutation of ``args`` (e.g. --pr resolving into
+    # args.branch, a rejected --model cleared to None): the hash binds what was
+    # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
+    dispatch_args_hash = dispatch_args_sha256(args)
 
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
@@ -6690,6 +8302,19 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         except OSError:
             early_prompt = None
 
+    dor_reason = getattr(args, "allow_dor_warn", None)
+    if dor_reason is not None:
+        dor_reason = str(dor_reason).strip()
+        if not dor_reason:
+            print("❌ --allow-dor-warn requires a non-empty reason", file=sys.stderr)
+            return 2
+    dor_record: dict[str, Any] | None = None
+    if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
+        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason)
+        if dor_error:
+            print(dor_error, file=sys.stderr)
+            return 2
+
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.routes import is_retired_gpt56_model
@@ -6704,11 +8329,72 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    from scripts.ai_agent_bridge._agy import (
+        GeminiChangedPathListError,
+        gemini_review_verdict_dispatch_error,
+        resolve_same_repo_pr_head,
+    )
+
+    pr_number = getattr(args, "pr", None)
+    pinned_head = getattr(args, "pinned_head", None)
+    if pr_number is not None:
+        try:
+            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+        except GeminiChangedPathListError as exc:
+            print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
+            return 2
+        supplied_head = str(pinned_head).strip().lower() if pinned_head else ""
+        if supplied_head and supplied_head != resolved_head:
+            print(
+                f"❌ --pinned-head {pinned_head} is not PR #{pr_number} head {resolved_head}",
+                file=sys.stderr,
+            )
+            return 2
+        named_branch = getattr(args, "branch", None)
+        if named_branch and named_branch != pr_branch:
+            print(
+                f"❌ --branch {named_branch!r} is not PR #{pr_number} head {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        if supplied_head and not named_branch:
+            print(
+                f"❌ --pr {pr_number} with --pinned-head requires --branch {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        pinned_head = resolved_head
+        args.branch = pr_branch
+        args.pinned_head = pinned_head
+
+    gemini_checked_heads: list[str] = []
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(args.agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=pr_number,
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
+        head_sha=pinned_head,
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    force_admission_reason = getattr(args, "force_admission", None)
+    if force_admission_reason is not None:
+        force_admission_reason = str(force_admission_reason).strip()
+        if not force_admission_reason:
+            print("❌ --force-admission requires a non-empty reason", file=sys.stderr)
+            return 2
 
     review_attempt = getattr(args, "review_attempt", None)
     review_id = getattr(args, "review_id", None)
@@ -6975,6 +8661,15 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     else:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
+    # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
+    # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
+    source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+    if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
+        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
+        if dor_error:
+            print(dor_error, file=sys.stderr)
+            return 2
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
@@ -6987,7 +8682,13 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     except (OSError, ValueError) as exc:
         print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
         return 2
-    prompt += lifecycle_prompt
+    # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
+    # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
+    # instructions the worker saw beyond the source prompt.
+    prompt_blocks: list[str] = []
+    if lifecycle_prompt:
+        prompt += lifecycle_prompt
+        prompt_blocks.append("lifecycle")
 
     # ADR-011 P3 research context — explicit --research-* flags only. Validate the
     # request-side caps up front (fail fast, before any worktree side effect) so a
@@ -7041,9 +8742,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         try:
             language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent, provider="openrouter", language_lane=language_lane
-                )
+                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
                 if getattr(args, "provider", None) == "openrouter"
                 else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
             )
@@ -7111,11 +8810,35 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         and _adapter_rejects_model(dispatch_agent, str(explicit_model))
     ):
         print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. "
-            "Using that lane's default.",
+            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
             file=sys.stderr,
         )
         args.model = None
+
+    from agent_runtime.telemetry import _resolve_model_from_defaults
+
+    resolved_model = _resolve_model_from_defaults(
+        dispatch_agent,
+        getattr(args, "model", None),
+        harness=requested_harness,
+    )
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(dispatch_agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=pr_number,
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        resolved_model=resolved_model,
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
+        head_sha=getattr(args, "pinned_head", None) or pinned_head,
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
 
     try:
         _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
@@ -7202,6 +8925,20 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         elif reason in {"unavailable", "full"}:
             print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
 
+    # Host admission (#8645 part A) for the host that spawns the worker, so it
+    # follows VPS forwarding. This check fails fast before the base fetch; the
+    # authoritative one runs under the admission lock just before the first
+    # worktree or task-record side effect. Dry-run reports dead-pid records
+    # without marking them.
+    try:
+        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+    except ValueError as exc:
+        print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
+        return 2
+    admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
+    if admission_rc is not None:
+        return admission_rc
+
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
             getattr(args, "output_schema", None),
@@ -7239,6 +8976,10 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
+                    pinned_head_sha=(
+                        getattr(args, "pinned_head", None)
+                        or (gemini_checked_heads[-1] if gemini_checked_heads else None)
+                    ),
                 )
             else:
                 # Sibling repos resolve the base SHA at create time inside
@@ -7391,6 +9132,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
+                **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
                 "cli_version": start_telemetry.cli_version,
                 "mode": args.mode,
@@ -7421,6 +9163,8 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             }
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
+            if not admission.exempt:
+                dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_reap = _reap_runtime_tmp_lease(
@@ -7450,6 +9194,33 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         print(run_nonce)
         return 0
 
+    # Authoritative admission (#8645 part A, #8717): count → check → publish
+    # the admission hold under one host-wide lock, so concurrent dispatches
+    # cannot all pass the check above and then exceed the cap together. It
+    # runs before the review attempt, log files, worktree and task record, so
+    # a refusal leaves none of them. The hold names this dispatcher and keeps
+    # the slot until the full task record replaces it before the spawn.
+    admission_record: dict[str, Any] | None = None
+    if not admission.exempt:
+        admission_refusal: str | None = None
+        try:
+            with dispatch_admission.admission_lock(tasks_dir()):
+                admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
+                if admission.admitted or force_admission_reason is not None:
+                    admission_record = admission.to_record(force_reason=force_admission_reason)
+                    _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=admission_record)
+                    admission_holds.callback(_release_admission_hold, task_id, run_nonce)
+                else:
+                    admission_refusal = admission.refusal_line()
+        except dispatch_admission.AdmissionLockTimeout as exc:
+            admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
+        except (OSError, RuntimeError) as exc:
+            print(f"❌ could not publish the admission hold for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+        if admission_refusal is not None:
+            print(f"❌ {admission_refusal}", file=sys.stderr)
+            return _ADMISSION_REFUSED_EXIT
+
     if review_attempt:
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
@@ -7468,7 +9239,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
-    log_dir = _TASKS_DIR / "logs"
+    log_dir = tasks_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     stdout_log = log_dir / f"{task_id}.stdout.log"
     stderr_log = log_dir / f"{task_id}.stderr.log"
@@ -7509,6 +9280,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
+                    run_nonce=run_nonce,
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -7517,6 +9289,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     task_id=task_id,
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
+                    run_nonce=run_nonce,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -7553,8 +9326,25 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
+                worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
             )
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
+            if isinstance(exc, WorktreeAddFailed):
+                print(
+                    f"   worktree cleanup: {exc.cleanup.get('action')} — {exc.cleanup.get('reason')}",
+                    file=sys.stderr,
+                )
+                if exc.cleanup.get("reserved_dir_left"):
+                    print(
+                        f"   reserved_dir_left: {exc.cleanup.get('path')} — left in place, never removed automatically",
+                        file=sys.stderr,
+                    )
+                if exc.cleanup.get("needs_attention"):
+                    print(
+                        f"   needs_attention: {exc.cleanup['needs_attention']} — {exc.cleanup.get('command')}",
+                        file=sys.stderr,
+                    )
             return 1
     elif args.cwd:
         candidate_cwd = _resolve_cwd_path(args.cwd)
@@ -7651,6 +9441,8 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             if isinstance(worktree_telemetry.get("sparse"), dict)
             else None,
         )
+        if worktree_path is not None:
+            prompt_blocks.insert(0, "worktree")
 
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
@@ -7659,7 +9451,10 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         research_state: dict[str, Any] | None = None
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
+            if research_block:
+                prompt_blocks.append("research")
             prompt = prompt + research_block
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=dispatch_agent,
@@ -7683,6 +9478,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             "agent": dispatch_agent,
             "model": start_telemetry.model,
             **_cursor_model_state(agent=dispatch_agent, initial=True),
+            **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
             "allow_merge": bool(getattr(args, "allow_merge", False)),
@@ -7707,6 +9503,10 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             "max_budget_usd": max_budget_usd,
             "output_schema_path": output_schema_path,
             "output_schema_sha256": output_schema_sha256,
+            "prompt_sha256": source_prompt_sha256,
+            "effective_prompt_sha256": effective_prompt_sha256,
+            "prompt_blocks": prompt_blocks,
+            "dispatch_args_sha256": dispatch_args_hash,
             "pid": None,  # worker fills this
             "status": "spawning",
             "started_at": datetime.now(UTC).isoformat(),
@@ -7722,6 +9522,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             "exit_code": None,
             "substitution": None,
             "agent_alias_note": agent_alias_note,
+            "dor_preflight": dor_record,
         }
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
@@ -7737,6 +9538,10 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 file=sys.stderr,
             )
             return 1
+        # The admission hold published under the lock is replaced in place, so
+        # the admitted slot stays held until the worker writes its pid (#8717).
+        if admission_record is not None:
+            initial_state["admission"] = admission_record
         _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
@@ -7805,12 +9610,11 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        if requested_harness is not None:
-            cmd.extend(["--harness", requested_harness])
+        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
         if keep_worktree:
             cmd.append("--keep-worktree")
-        if bool(getattr(args, "require_review_verdict", False)):
-            cmd.append("--require-review-verdict")
+        if bool(getattr(args, "finalize_open_pr", False)):
+            cmd.append("--finalize-open-pr")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:
@@ -7847,50 +9651,32 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
         # worker survives our exit, which is what we want.
-        # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
-        # not retain a parent process's activated venv: pip can otherwise rewrite
-        # console scripts in that foreign checkout (#5134).
-        worker_env = _pinned_worker_venv_env(os.environ)
-        worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
-        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
-        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
-        # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
-        # this marker to skip the per-agent thread lease, which belongs to the
-        # orchestrator of the agent family, never to a headless worker. Both
-        # names are allowlisted in agent_runtime/env_sanitize.py (name and
-        # value lists — a task id containing "sk-" must survive the secret
-        # redactor), so the marker reaches the harness CLI's SessionStart hook.
-        # The marker is the primary signal: a read-only dispatch without
-        # --worktree runs from the primary checkout, so the
-        # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
-        worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
-        worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
-        _inject_gh_token_for_agent(worker_env, dispatch_agent)
-        _scrub_unusable_gh_config_dir(worker_env)
-        worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
-        worker_env["TMPDIR"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
-        if worktree_path is not None:
-            _apply_worktree_git_ceiling(worker_env, worktree_path)
-        if getattr(args, "allow_merge", False):
-            worker_env.pop("AGENT_NO_MERGE", None)
-            worker_env["AGENT_ALLOW_MERGE"] = "1"
-        else:
-            worker_env["AGENT_NO_MERGE"] = "1"
-            worker_env.pop("AGENT_ALLOW_MERGE", None)
+        worker_env = _build_worker_env(
+            task_id=task_id,
+            dispatch_agent=dispatch_agent,
+            attribution=attribution,
+            run_nonce=run_nonce,
+            runtime_tmp_root=runtime_tmp_root,
+            runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+            worktree_path=worktree_path,
+            allow_merge=bool(getattr(args, "allow_merge", False)),
+        )
         try:
-            proc = subprocess.Popen(
+            # Scoped when lu-dispatch.slice is really in force; plain Popen
+            # otherwise. The recorded pid is the worker in both cases (#8645).
+            proc, launch = dispatch_isolation.spawn_detached_worker(
                 cmd,
+                task_id=task_id,
+                run_nonce=run_nonce,
+                popen=subprocess.Popen,
+                env=worker_env,
                 stdin=subprocess.PIPE,
                 stdout=stdout_fd,
                 stderr=stderr_fd,
-                env=worker_env,
-                start_new_session=True,  # detach from our process group
-                close_fds=True,
+                stderr_log=stderr_log,
             )
             spawned = True
-        except (OSError, FileNotFoundError, ValueError) as exc:
+        except (OSError, FileNotFoundError, ValueError, dispatch_isolation.DispatchIsolationError) as exc:
             # Popen itself failed — typically because the Python
             # interpreter isn't where we expected, or the file
             # descriptors are somehow invalid. Without this handler
@@ -7898,7 +9684,15 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
-            spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
+            # DispatchIsolationError means the scope may already have started
+            # the worker (late marker, or /proc could not prove it never
+            # exec'd). The task is failed and not relaunched.
+            if isinstance(exc, dispatch_isolation.DispatchIsolationError):
+                spawn_error = f"dispatch isolation: {exc}"[:500]
+                returncode_reason = "scoped worker startup was ambiguous; not relaunched"
+            else:
+                spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
+                returncode_reason = "worker process was not started"
             failed_state = _read_state(state_path) or initial_state
             failed_state.update(
                 {
@@ -7906,7 +9700,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     "finished_at": datetime.now(UTC).isoformat(),
                     "stderr_excerpt": spawn_error,
                     "returncode": None,
-                    "returncode_reason": "worker process was not started",
+                    "returncode_reason": returncode_reason,
                     "last_error": _first_error_line(spawn_error),
                     "exit_code": None,
                 }
@@ -7917,6 +9711,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     runtime_tmp_namespace_root,
                 )
             )
+            _record_final_branch_head(failed_state)
             _write_state_atomic(state_path, failed_state)
             print(
                 f"❌ failed to spawn worker for {task_id!r}: {type(exc).__name__}: {exc}",
@@ -7935,6 +9730,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # Fixed after Gemini review 2026-04-10.
         state_with_pid = _read_state(state_path) or initial_state
         state_with_pid["pid"] = proc.pid
+        state_with_pid.update(launch.as_state())
         _write_state_atomic(state_path, state_with_pid)
         # Bind ownership ledger rows to the long-lived worker PID (not the
         # short-lived dispatch CLI). Best-effort: WARN path must not fail spawn.
@@ -8007,16 +9803,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     # crashed (OOM, SIGKILL, reboot, etc.) and never got to update the
     # state file. Mark as "crashed" and persist the correction so
     # subsequent status calls get the right answer without redoing the check.
-    prior_status = state.get("status")
-    if prior_status in ("running", "spawning"):
-        pid = state.get("pid")
-        if pid and not _pid_alive(int(pid)):
-            state["status"] = "crashed"
-            state["finished_at"] = datetime.now(UTC).isoformat()
-            state["stderr_excerpt"] = (
-                f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by status probe"
-            )
-            _write_state_atomic(state_path, state)
+    _heal_dead_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -8110,14 +9897,9 @@ def _fetch_routing_budget() -> dict[str, Any]:
 
 
 def _load_dispatch_fallbacks() -> dict[str, str]:
-    try:
-        data = yaml.safe_load(_FALLBACK_SUBS_PATH.read_text(encoding="utf-8")) or {}
-    except Exception:
-        return {}
-    subs = data.get("dispatch_fallbacks") if isinstance(data, dict) else {}
-    if isinstance(subs, dict):
-        return {str(k).lower(): str(v).lower() for k, v in subs.items() if v}
-    return {}
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    return load_dispatch_fallbacks(_FALLBACK_SUBS_PATH)
 
 
 def _budget_lane_status(agent: str, agent_info: dict[str, Any]) -> str | None:
@@ -8289,7 +10071,11 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+        if (
+            status not in {"cool", "warm"}
+            or account.get("is_available") is False
+            or account.get("status") == "near_cap"
+        ):
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
@@ -8373,8 +10159,15 @@ def _resolve_agent_with_budget_guard(
         else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
     )
 
-    needs_action, reason = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
-        status=status, will_last=will_last, is_stale=is_stale, records_loaded=records_loaded,
+    needs_action, reason = (
+        (False, "")
+        if reserve_relaxes
+        else _budget_needs_hard_capacity_action(
+            status=status,
+            will_last=will_last,
+            is_stale=is_stale,
+            records_loaded=records_loaded,
+        )
     )
     if not needs_action:
         return requested
@@ -8441,15 +10234,17 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(
-                reset_reserve or {}, info_dict, snapshot_stale=is_stale
-            )
+            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
         )
-        needs, why = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
-            status=status,
-            will_last=will_last,
-            is_stale=is_stale,
-            records_loaded=records_loaded,
+        needs, why = (
+            (False, "")
+            if reserve_relaxes
+            else _budget_needs_hard_capacity_action(
+                status=status,
+                will_last=will_last,
+                is_stale=is_stale,
+                records_loaded=records_loaded,
+            )
         )
         if not needs:
             return seat
@@ -8468,9 +10263,7 @@ def _language_lane_substitute(
         seen.add(nxt)
         seat = nxt
         if len(seen) > 4:
-            raise BudgetGuardRefuseError(
-                "ROUTING REFUSED: language-lane fallback chain did not reach a cool seat."
-            )
+            raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
 
 
 def _session_stream_store() -> Any:
@@ -8652,8 +10445,8 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        if _TASKS_DIR.is_dir():
-            for state_file in _TASKS_DIR.glob("*.json"):
+        if tasks_dir().is_dir():
+            for state_file in tasks_dir().glob("*.json"):
                 state = _read_state(state_file)
                 if not state or state.get("status") not in ("running", "spawning"):
                     continue
@@ -8670,7 +10463,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
 
         health: dict[str, Any] = {}
         with contextlib.suppress(Exception):
-            health = compute_lane_health(_TASKS_DIR)
+            health = compute_lane_health(tasks_dir())
 
         idle_lanes = [
             lane
@@ -8791,16 +10584,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
             continue
 
         # Zombie probe (same logic as cmd_status)
-        prior_status = state.get("status")
-        if prior_status in ("running", "spawning"):
-            pid = state.get("pid")
-            if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
-                state["finished_at"] = datetime.now(UTC).isoformat()
-                state["stderr_excerpt"] = (
-                    f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by wait probe"
-                )
-                _write_state_atomic(state_path, state)
+        _heal_dead_task(state_path, state, source="wait")
 
         status = state.get("status")
         if status in _TERMINAL_STATUSES:
@@ -8907,19 +10691,16 @@ def cmd_list(args: argparse.Namespace) -> int:
     too, marked ``"archived": true``. Without ``--all`` a stderr note counts the
     archived records left out.
     """
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     include_archive = bool(getattr(args, "all", False))
     tasks: list[dict[str, Any]] = []
     flat_tasks: list[str] = []
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=include_archive):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=include_archive):
         state = _read_state(state_file)
         if state is None:
             continue
         # Zombie probe inline for running tasks
-        if state.get("status") in ("running", "spawning"):
-            pid = state.get("pid")
-            if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
+        _heal_dead_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at
@@ -8946,7 +10727,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         )
     print(json.dumps(tasks, indent=2, default=str))
     if not include_archive:
-        archive_dir = _TASKS_DIR / task_record_store.ARCHIVE_DIR_NAME
+        archive_dir = tasks_dir() / task_record_store.ARCHIVE_DIR_NAME
         archived = sum(1 for _ in task_record_store.iter_task_records(archive_dir, include_archive=False))
         if archived:
             print(
@@ -8980,12 +10761,12 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
     be proven stay unclassified.
     """
     apply_changes = bool(getattr(args, "apply", False))
-    if not _TASKS_DIR.is_dir():
-        print(f"❌ tasks dir not found: {_TASKS_DIR}", file=sys.stderr)
+    if not tasks_dir().is_dir():
+        print(f"❌ tasks dir not found: {tasks_dir()}", file=sys.stderr)
         return 1
     scanned = stamped = already = unresolved = conflicts = errors = 0
     # Archived records (#8625) are history too; they are stamped where they lie.
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=True):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=True):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -9069,6 +10850,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
 
@@ -9108,7 +10890,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  To bypass VPS forwarding and force local spawn: export LU_ALLOW_NOTEBOOK_DISPATCH=1\n"
             "  Configuration errors fail closed without fallback to prevent silent local drift.\n\n"
             "Exit codes:\n"
-            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
+            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures;\n"
+            "  dispatch exits 3 when host admission refuses a write worker (see `dispatch --help`).\n\n"
             "Related:\n"
             "  Runtime: scripts/agent_runtime/\n"
             "  Rule: agents_extensions/shared/rules/delegate-must-use-worktree.md\n"
@@ -9118,10 +10901,37 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = p.add_subparsers(dest="command", required=True)
 
+    rescue = sub.add_parser(
+        "rescue",
+        help="Inspect or preserve terminal dispatch work on rescue/<task>.",
+        description=(
+            "Preserve terminal non-success dispatch work on a verified rescue branch.\n"
+            "Use after a worker exits; --all-stale previews candidates unless --apply is set."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py rescue impl-8508\n"
+            "  .venv/bin/python scripts/delegate.py rescue --all-stale --older-than 6h\n"
+            "  .venv/bin/python scripts/delegate.py rescue --all-stale --older-than 6h --apply\n\n"
+            "Outputs: JSON summary and task dispositions; apply may clean residue, commit, and push rescue refs.\n"
+            "Exit codes: 0 inspection or rescue completed; 1 rescue error; 2 invalid arguments.\n"
+            "Related: docs/runbooks/worktree-cleanup.md; issue #8508."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    rescue.add_argument("task_id", nargs="?", help="One terminal task ID, e.g. impl-8508; applies immediately.")
+    rescue.add_argument("--all-stale", action="store_true", help="Inspect all terminal tasks older than --older-than.")
+    rescue.add_argument("--older-than", default="6h", metavar="HOURS", help="Minimum terminal age (default: 6h).")
+    rescue.add_argument(
+        "--apply", action="store_true", help="Apply rescue to --all-stale candidates (default: dry-run)."
+    )
+    rescue.set_defaults(func=cmd_rescue)
+
     # dispatch
     def _dispatch_help_formatter(prog: str) -> argparse.HelpFormatter:
-        return argparse.HelpFormatter(prog, max_help_position=36, width=120)
+        return argparse.RawDescriptionHelpFormatter(prog, max_help_position=36, width=120)
 
+    admission_defaults = dispatch_admission.config_defaults()
     d = sub.add_parser(
         "dispatch",
         help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
@@ -9129,6 +10939,36 @@ def build_parser() -> argparse.ArgumentParser:
             "Fire an async agent task and return immediately with the task ID and run nonce.\n"
             "Routes to available VPS worker hosts unless LU_ALLOW_NOTEBOOK_DISPATCH=1 is set.\n"
             "Forward configuration requires LU_JOB_DISPATCH_HOST (or ATLAS_RUNNER_HOST) and LU_JOB_REPO."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id fix-123 --prompt-file brief.md "
+            "--mode workspace-write --worktree\n"
+            "  DISPATCH_MAX_LIVE_WRITE_WORKERS=0 .venv/bin/python scripts/delegate.py dispatch --agent codex "
+            "--task-id probe-1 --prompt x --mode workspace-write --worktree --dry-run\n"
+            '  .venv/bin/python scripts/delegate.py dispatch ... --force-admission "hotfix for #1234; one worker is draining"\n\n'
+            "Host admission (#8645; workspace-write and danger only, read-only is exempt):\n"
+            "  Refuses a new worker when live write workers (running/spawning, pid alive) reach "
+            f"DISPATCH_MAX_LIVE_WRITE_WORKERS (default {admission_defaults.max_live_write_workers}),\n"
+            f"  /proc/meminfo MemAvailable is below DISPATCH_MIN_MEM_AVAILABLE_GIB (default "
+            f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
+            f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}). "
+            "Environment variables override the scripts/config.py defaults.\n"
+            "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
+            "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
+            "  is published. Preview the decision with: .venv/bin/python -m scripts.fleet.capacity_pick\n\n"
+            "Outputs:\n"
+            "  stdout `<task_id>\\n<run_nonce>`; batch_state/tasks/<task_id>.json (write modes carry an `admission`\n"
+            "  snapshot; `launch_mode` is `scope` or `popen-fallback`; terminal records carry `peak_rss_mib`);\n"
+            "  worker logs under batch_state/tasks/logs/. Workers run in the user slice lu-dispatch.slice when\n"
+            "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
+            "  A scoped start that does not prove the worker never started is marked failed and is not relaunched.\n"
+            "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
+            "Exit codes:\n"
+            "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "Related:\n"
+            "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),
         formatter_class=_dispatch_help_formatter,
     )
@@ -9166,6 +11006,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--force-admission",
+        metavar="REASON",
+        default=None,
+        help=(
+            "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
+            "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
+            "task record under admission.force_reason."
+        ),
+    )
+    d.add_argument(
         "--initiator",
         default=None,
         help=(
@@ -9180,6 +11030,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
+    d.add_argument(
+        "--allow-dor-warn",
+        metavar="REASON",
+        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+    )
     d.add_argument(
         "--lifecycle-file",
         help=(
@@ -9196,9 +11051,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview."
-    )
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview.")
     d.add_argument(
         "--provider",
         default=None,
@@ -9258,6 +11111,24 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--pr",
+        type=int,
+        default=None,
+        help=(
+            "Review this same-repo PR. The head SHA is resolved once and pinned; "
+            "a later fetch of a different tip refuses the dispatch."
+        ),
+    )
+    d.add_argument(
+        "--pinned-head",
+        default=None,
+        metavar="SHA",
+        help=(
+            "Exact commit the worktree must check out. A fetched branch tip that "
+            "differs from this SHA refuses the dispatch."
+        ),
+    )
+    d.add_argument(
         "--branch",
         default=None,
         metavar="EXISTING",
@@ -9279,13 +11150,30 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--finalize-open-pr",
+        action="store_true",
+        help="Explicitly open a draft PR after a successful dirty-worktree auto-finalize push.",
+    )
+    d.add_argument(
         "--require-review-verdict",
         action="store_true",
         help=(
             "Review-typed dispatch: a run that settles done without a "
-            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
+            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
-            "ask-* review wrapper; ordinary dispatches are unaffected."
+            "ask-* review wrapper; ordinary dispatches are unaffected. "
+            "On agy/gemini this also requires --review-profile ukrainian, and "
+            "a --branch target must be a Ukrainian-content diff."
+        ),
+    )
+    d.add_argument(
+        "--review-profile",
+        default=None,
+        choices=("code", "ukrainian"),
+        help=(
+            "Required with --require-review-verdict when --agent is agy or gemini. "
+            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(
@@ -9648,6 +11536,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
     wk.add_argument("--keep-worktree", action="store_true")
+    wk.add_argument("--finalize-open-pr", action="store_true")
     wk.add_argument("--require-review-verdict", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.add_argument("--output-schema", default=None)

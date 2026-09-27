@@ -10,10 +10,12 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import os
 import re
 import shutil
 import signal
 import subprocess
+import tempfile
 import threading
 import uuid
 from collections.abc import Callable, Iterator
@@ -231,6 +233,11 @@ def acp_execution_cwd(repo_root: Path, *, task_id: str) -> Iterator[Path]:
     # filesystem segment (#6863).
     label = _execution_label(task_id)
     resolved = repo_root.resolve()
+    test_primary = os.environ.get("LU_TEST_ACP_PRIMARY_ROOT")
+    test_scratch = os.environ.get("LU_TEST_ACP_SCRATCH_ROOT")
+    if os.environ.get("PYTEST_CURRENT_TEST") and test_primary and test_scratch and resolved == Path(test_primary).resolve():
+        yield Path(tempfile.mkdtemp(prefix="acp-execution-", dir=test_scratch))
+        return
     path_class = classify_repo_path(resolved, cwd=resolved)
     if path_class in {"dispatch_worktree", "other_worktree"}:
         yield resolved

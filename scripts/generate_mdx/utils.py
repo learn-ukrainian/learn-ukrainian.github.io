@@ -7,8 +7,9 @@ template literals, and shared path constants.
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
+
+from .unit_map import EditLog
 
 # Shared path constants
 SCRIPT_DIR = Path(__file__).resolve().parent.parent  # scripts/
@@ -68,10 +69,16 @@ def escape_jsx(text: str) -> str:
 
 def fix_html_for_jsx(text: str) -> str:
     """Convert HTML tags to JSX-compatible self-closing format."""
+    log = EditLog(text, record=False)
+    edit_fix_html_for_jsx(log)
+    return log.text
+
+
+def edit_fix_html_for_jsx(log: EditLog) -> None:
+    """`fix_html_for_jsx` on an `EditLog`: every tag rewrite is reported as an edit."""
     # Convert <br> to <br />
-    text = re.sub(r'<br\s*/?>', '<br />', text)
+    log.sub(r'<br\s*/?>', '<br />')
     # Convert <hr> to <hr />
-    text = re.sub(r'<hr\s*/?>', '<hr />', text)
+    log.sub(r'<hr\s*/?>', '<hr />')
     # Convert <img ...> to <img ... />
-    text = re.sub(r'<img([^>]*?)(?<!/)>', r'<img\1 />', text)
-    return text
+    log.sub(r'<img([^>]*?)(?<!/)>', r'<img\1 />')

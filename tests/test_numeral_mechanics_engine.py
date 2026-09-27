@@ -12,7 +12,7 @@ Tests:
   9. Authentic time and approximate quantity constructions.
   10. Deck validation: exactly 75 cards, 15 categories, zero collisions, 4 unique options.
   11. Option shuffling balance across positions 0..3.
-  12. Committed deck file parity (data/practice/numeral_mechanics_deck.json).
+  12. Committed deck file parity (registry/practice/numeral_mechanics_deck.json).
   13. VESUM database validation for all target tokens.
 """
 
@@ -194,8 +194,8 @@ def test_numeral_deck_json_export_and_file_parity(tmp_path: Path):
     assert len(payload["categories"]) == 15
     assert len(payload["cards"]) == 75
 
-    committed_path = Path(__file__).resolve().parents[1] / "data/practice/numeral_mechanics_deck.json"
-    assert committed_path.exists(), "Committed data/practice/numeral_mechanics_deck.json does not exist"
+    committed_path = Path(__file__).resolve().parents[1] / "registry/practice/numeral_mechanics_deck.json"
+    assert committed_path.exists(), "Committed registry/practice/numeral_mechanics_deck.json does not exist"
 
     with open(committed_path, encoding="utf-8") as f:
         committed_data = json.load(f)

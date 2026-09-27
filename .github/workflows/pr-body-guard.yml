@@ -1,0 +1,41 @@
+name: PR body guard
+
+# Negated-closing-reference guard (#8505). ci.yml used to run this check inside
+# its Secret scan job, which is why ci.yml subscribed to `edited`; that made
+# every PR-body edit restart the full 15-minute CI on an unchanged commit. The
+# guard now lives here so `edited` re-checks only the body, while opened /
+# synchronize / reopened keep the guard enforced at push time (S2).
+#
+# Status: advisory. "CI Gate" remains the only required check; promoting this
+# status to required is a deliberate branch-protection change for the operator.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  # Keyed by PR number: a rapid body edit cancels the previous guard run. The
+  # job is a two-second linter, so cancellation is cheap and safe.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  closing-references:
+    name: Reject negated closing references
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Stdlib-only linter; no other tree content is needed.
+          sparse-checkout: |
+            scripts/audit/lint_pr_closing_references.py
+          sparse-checkout-cone-mode: false
+      - name: Reject negated closing references
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin

@@ -9,6 +9,7 @@ No ordinary test invokes a provider. Live direct review requires explicit opt-in
 from __future__ import annotations
 
 import copy
+import dataclasses
 import hashlib
 import importlib
 import json
@@ -111,9 +112,30 @@ def terminal_output(route: str, payload: Any) -> str:
     return json.dumps(payload)
 
 
+AGY_FIXTURE_CONVERSATION = "00000000-0000-4000-8000-000000007810"
+
+
+def bind_agy_transcript(plan):
+    """Give an AGY plan the per-run transcript its completion check requires (#8502)."""
+    app_data = plan.cwd / "agy-app-data"
+    transcript = app_data / "brain" / AGY_FIXTURE_CONVERSATION / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True, exist_ok=True)
+    transcript.write_text(
+        '{"step_index": 0, "type": "USER_INPUT", "content": "<USER_REQUEST>\\nfixture\\n</USER_REQUEST>"}\n'
+        '{"step_index": 1, "type": "PLANNER_RESPONSE", "content": "fixture reply"}\n',
+        encoding="utf-8",
+    )
+    log_file = plan.cwd / "agy-runtime.log"
+    log_file.write_text(f"Print mode: conversation={AGY_FIXTURE_CONVERSATION}\n", encoding="utf-8")
+    env = {**plan.env_overrides, "AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)}
+    return dataclasses.replace(plan, env_overrides=env)
+
+
 def parse_terminal(adapter, plan, route: str, wire: str, *, returncode=0):
     if route == "codex" and plan.output_file is not None:
         plan.output_file.write_text(wire, encoding="utf-8")
+    if route == "agy":
+        plan = bind_agy_transcript(plan)
     return adapter.parse_response(
         stdout=wire if route != "codex" else "",
         stderr="", returncode=returncode, output_file=plan.output_file, plan=plan,

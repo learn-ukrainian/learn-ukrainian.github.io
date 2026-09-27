@@ -123,7 +123,7 @@ should quote it or it's unverified) — context resolves the homograph.
   function `classify(form, *, lemma=None) -> heritage_status` over local DBs, importable by both
   `enrich_manifest.py` (render) and `_vesum_gate` (gate).
 - **The folk/lit gate work CONSUMES it — do not duplicate.** `#2899`'s
-  `data/folk_heritage_attestations.yaml` collapses into a thin **curated override** layer on top of
+  `registry/folk_heritage_attestations.yaml` collapses into a thin **curated override** layer on top of
   the engine (cited edge cases / corrections).
 - **Until the engine lands:** `#2899`'s folk allowlist is the stopgap; **folk module re-fires that
   trip this (e.g. kalendarna `другоє`) are ON HOLD** rather than patched per-word.

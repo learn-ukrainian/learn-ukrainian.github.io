@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from textwrap import dedent
 
+import pytest
 import yaml
 
 from scripts.lint.lint_fleet_roster import (
@@ -18,6 +19,8 @@ from scripts.lint.lint_fleet_roster import (
     parse_eligible_projection,
     parse_seat_projection,
 )
+
+pytestmark = pytest.mark.repo_wide
 
 
 def _seat_block(seats: dict[str, dict[str, str]]) -> str:

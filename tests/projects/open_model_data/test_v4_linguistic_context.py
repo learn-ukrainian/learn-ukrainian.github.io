@@ -16,8 +16,6 @@ from test_v4_protected_parent_mechanism import _run_real_pair
 
 from scripts.fleet_comms.request_executor import RequestExecutor
 
-pytest_plugins = ("test_v4_operation_lifecycle", "test_v4_protected_parent_mechanism")
-
 
 def _assignment(pg, tmp_path, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg.info.dsn)

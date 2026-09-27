@@ -8,7 +8,7 @@ import pytest
 
 from scripts.lint import lint_test_assertions
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 
 def test_lint_detects_hardcoded_epic_in_assertion(tmp_path: Path) -> None:

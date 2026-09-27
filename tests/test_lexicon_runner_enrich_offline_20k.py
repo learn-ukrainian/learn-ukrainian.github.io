@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "enrich_offline_20k.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 MAX_FIXTURE_LEMMAS = 50
@@ -123,7 +124,9 @@ def test_dry_run_missing_candidate_reports_not_ok(tmp_path: Path) -> None:
         "--candidate",
         str(tmp_path / "missing-candidate.json"),
         "--sources-db",
-        str(FIXTURE / "sources_slice.sqlite") if (FIXTURE / "sources_slice.sqlite").is_file() else str(tmp_path / "no-sources"),
+        str(FIXTURE / "sources_slice.sqlite")
+        if (FIXTURE / "sources_slice.sqlite").is_file()
+        else str(tmp_path / "no-sources"),
         "--kaikki-json",
         str(tmp_path / "no-kaikki.json"),
     )
@@ -132,6 +135,18 @@ def test_dry_run_missing_candidate_reports_not_ok(tmp_path: Path) -> None:
     plan = next(e for e in events if e.get("event") == "offline_enrich_dry_run")
     assert plan["ok"] is False
     assert plan["missing"]
+
+
+def test_dry_run_default_kaikki_requires_hydrated_artifact(tmp_path: Path) -> None:
+    from scripts.lexicon.runner.enrich_offline_20k import build_parser, dry_run_plan
+    from scripts.storage import paths
+
+    manifest = paths.manifest_path("lexicon_kaikki", tmp_path)
+    manifest.parent.mkdir(parents=True)
+    manifest.write_bytes(paths.manifest_path("lexicon_kaikki").read_bytes())
+    args = build_parser().parse_args(["--repo", str(tmp_path), "--dry-run"])
+    with pytest.raises(paths.MissingArtifactError, match="hydrate --group lexicon_kaikki"):
+        dry_run_plan(args)
 
 
 def test_in_process_slice_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -89,7 +89,7 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-thinking-high`. Draws the API pool. |
-| **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
+| **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
@@ -99,7 +99,7 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / Flash / AGY /
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / implementation only /
 k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.

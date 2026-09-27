@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "seed-adjudication-v1.schema.json",
+  "title": "Blinded adjudication of one review of a seeded lesson, schema 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["adjudication_schema", "seed_id", "attempt_id", "adjudicator", "mapping", "planted_found", "planted_blocking"],
+  "properties": {
+    "adjudication_schema": {"const": 1},
+    "seed_id": {"type": "string", "pattern": "^seed-[A-Za-z0-9][A-Za-z0-9._-]{0,119}$"},
+    "attempt_id": {"$ref": "#/$defs/token"},
+    "adjudicator": {"$ref": "#/$defs/adjudicator"},
+    "mapping": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/mapped_finding"}
+    },
+    "planted_found": {"type": "boolean"},
+    "planted_blocking": {"type": "boolean"}
+  },
+  "$defs": {
+    "token": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "adjudicator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolved_model", "family"],
+      "properties": {
+        "resolved_model": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1}
+      }
+    },
+    "mapped_finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding_id", "class", "reason"],
+      "properties": {
+        "finding_id": {"type": "string", "pattern": "^F-[0-9]+$"},
+        "class": {"enum": ["planted", "genuine_additional", "false", "unresolved"]},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

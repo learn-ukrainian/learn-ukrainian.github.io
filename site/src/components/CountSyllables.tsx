@@ -17,6 +17,11 @@ interface CountSyllablesItem {
    * @ukrainianText true
    */
   translation?: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface CountSyllablesProps {
@@ -186,6 +191,11 @@ export default function CountSyllables({ instruction, items, maxCount = 6 }: Cou
           <p style={{ margin: 0, fontWeight: 600 }}>
             {isCorrect ? '✅' : '❌'} {current.correct} {current.correct === 1 ? 'склад' : current.correct < 5 ? 'склади' : 'складів'}
           </p>
+          {current.explanation && (
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>
+              {current.explanation}
+            </p>
+          )}
         </div>
       )}
 

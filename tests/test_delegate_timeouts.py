@@ -96,7 +96,9 @@ def test_fetch_existing_branch_timeouts() -> None:
     assert calls[0]["timeout"] == DEFAULT_NETWORK_GIT_TIMEOUT_S
     assert calls[1]["timeout"] == DEFAULT_GIT_TIMEOUT_S
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "fetch"], DEFAULT_NETWORK_GIT_TIMEOUT_S)):
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "fetch"], DEFAULT_NETWORK_GIT_TIMEOUT_S)
+    ):
         with pytest.raises(RuntimeError, match=r"fetch timed out after 180\.0s"):
             _fetch_existing_branch("feature-branch")
 
@@ -137,7 +139,9 @@ def test_branch_worktree_paths_timeouts() -> None:
     assert len(calls) == 1
     assert calls[0]["timeout"] == DEFAULT_GIT_TIMEOUT_S
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "list"], DEFAULT_GIT_TIMEOUT_S)):
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "list"], DEFAULT_GIT_TIMEOUT_S)
+    ):
         with pytest.raises(RuntimeError, match=r"timed out after 30\.0s"):
             _branch_worktree_paths("feature")
 
@@ -162,15 +166,21 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
 def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     with (
         patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
-        patch("scripts.delegate._TASKS_DIR", tmp_path / "tasks"),
+        patch.dict("os.environ", {"LU_TASKS_DIR": str(tmp_path / "tasks")}),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "remove"], DEFAULT_GIT_TIMEOUT_S)) as run_mock,
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["git", "worktree", "remove"], DEFAULT_GIT_TIMEOUT_S),
+        ) as run_mock,
     ):
         released = _release_stale_branch_holders(branch="feature", holders=[tmp_path], dry_run=False)
         assert released == []
 
     err = capsys.readouterr().err
-    assert f"failed to release stale branch holder {tmp_path}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s" in err
+    assert (
+        f"failed to release stale branch holder {tmp_path}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s"
+        in err
+    )
     assert "🌲 released stale branch holder" not in err
 
 
@@ -194,7 +204,9 @@ def test_resolve_sha_timeouts(tmp_path: Path) -> None:
 def test_tracking_remote_for_current_branch_timeouts(tmp_path: Path) -> None:
     with (
         patch("scripts.delegate._current_branch", return_value="feature"),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "config"], DEFAULT_GIT_TIMEOUT_S)) as run_mock,
+        patch(
+            "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "config"], DEFAULT_GIT_TIMEOUT_S)
+        ) as run_mock,
     ):
         assert _tracking_remote_for_current_branch(tmp_path) is None
 
@@ -202,7 +214,9 @@ def test_tracking_remote_for_current_branch_timeouts(tmp_path: Path) -> None:
 def test_count_commits_ahead_timeouts(tmp_path: Path) -> None:
     with (
         patch("scripts.delegate._commit_count_refs", return_value=("origin/main",)),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-list"], DEFAULT_GIT_TIMEOUT_S)) as run_mock,
+        patch(
+            "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-list"], DEFAULT_GIT_TIMEOUT_S)
+        ) as run_mock,
     ):
         assert _count_commits_ahead(tmp_path, "origin/main") is None
 
@@ -225,14 +239,20 @@ def test_auto_finalize_changed_files_timeouts(tmp_path: Path) -> None:
 
     def fake_run(cmd, **kwargs):
         calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="file.py\n")
+        return _completed(cmd, returncode=0, stdout="file.py\0")
 
     with patch("subprocess.run", side_effect=fake_run):
         assert _auto_finalize_changed_files(tmp_path) == ("file.py",)
 
     assert len(calls) == 2
+    assert "-z" in calls[0]["cmd"]
+    assert "-z" in calls[1]["cmd"]
     assert calls[0]["timeout"] == DEFAULT_GIT_TIMEOUT_S
     assert calls[1]["timeout"] == DEFAULT_GIT_TIMEOUT_S
+
+    # Newlines are valid filename characters with Git's NUL-delimited output.
+    with patch("subprocess.run", return_value=_completed(stdout="with\nnewline.py\0")):
+        assert _auto_finalize_changed_files(tmp_path) == ("with\nnewline.py",)
 
     with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "diff"], DEFAULT_GIT_TIMEOUT_S)):
         assert _auto_finalize_changed_files(tmp_path) == ()
@@ -281,7 +301,9 @@ def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
     assert len(calls) == 1
     assert calls[0]["timeout"] == DEFAULT_GH_CLI_TIMEOUT_S
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["gh", "pr", "create"], DEFAULT_GH_CLI_TIMEOUT_S)):
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["gh", "pr", "create"], DEFAULT_GH_CLI_TIMEOUT_S)
+    ):
         with pytest.raises(RuntimeError, match=r"gh pr create timed out after 180\.0s"):
             _create_auto_finalize_pr(
                 tmp_path,
@@ -336,9 +358,9 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
             "subprocess.run",
             side_effect=[
                 _completed(stdout="true\n"),  # is-inside-work-tree
-                _completed(returncode=0),     # git add
+                _completed(returncode=0),  # git add
                 _completed(returncode=1, stderr="pre-commit hook failed"),  # git commit failed
-                _completed(returncode=0),     # git restore --staged
+                _completed(returncode=0),  # git restore --staged
             ],
         ) as run_mock,
     ):
@@ -420,22 +442,34 @@ def test_list_worktree_top_dirs_timeouts(tmp_path: Path) -> None:
 
 
 def test_apply_dispatch_sparse_checkout_timeouts(tmp_path: Path) -> None:
+    def fake_run(cmd, **kwargs):
+        del kwargs
+        if cmd[:2] == ["git", "ls-tree"]:
+            return _completed(cmd, returncode=0, stdout="")
+        raise subprocess.TimeoutExpired(["git", "sparse-checkout"], DEFAULT_GIT_TIMEOUT_S)
+
     with (
         patch("scripts.delegate._list_worktree_top_dirs", return_value=["scripts", "tests", "curriculum"]),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "sparse-checkout"], DEFAULT_GIT_TIMEOUT_S)),
+        patch("subprocess.run", side_effect=fake_run),
     ):
         with pytest.raises(RuntimeError, match=r"failed to init sparse-checkout"):
             _apply_dispatch_sparse_checkout(tmp_path, full_checkout=False, sparse_include=())
 
 
 def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
-    # 1. worktree add timeout
+    # 1. worktree add timeout (#8663: the add has its own progress-aware bound)
     with (
         patch("scripts.delegate._fetch_base", return_value=True),
         patch("scripts.delegate._resolve_sha", return_value="sha123"),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], DEFAULT_GIT_TIMEOUT_S)),
+        patch(
+            "scripts.delegate._run_worktree_add",
+            side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], 120.0),
+        ),
+        patch(
+            "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "list"], DEFAULT_GIT_TIMEOUT_S)
+        ),
     ):
-        with pytest.raises(RuntimeError, match=r"git worktree add timed out after 30\.0s"):
+        with pytest.raises(RuntimeError, match=r"git worktree add timed out after 120\.0s"):
             _ensure_worktree(
                 agent="agy",
                 task_id="task-123",
@@ -449,10 +483,10 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
         patch("scripts.delegate._fetch_base", return_value=True),
         patch("scripts.delegate._branch_worktree_paths", return_value=[]),
         patch("scripts.delegate._resolve_sha", return_value="sha123"),
+        patch("scripts.delegate._run_worktree_add", return_value=_completed(returncode=0)),
         patch(
             "subprocess.run",
             side_effect=[
-                _completed(returncode=0),  # worktree add
                 subprocess.TimeoutExpired(["git", "branch"], DEFAULT_GIT_TIMEOUT_S),  # branch --set-upstream-to
             ],
         ),
@@ -461,7 +495,8 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
             _ensure_worktree(
                 agent="agy",
                 task_id="task-123",
-                raw_path=str(tmp_path / "wt"),
+                # A stopped add not confirmed exited keeps its reservation at "wt".
+                raw_path=str(tmp_path / "wt-upstream"),
                 base="main",
                 branch="feature-branch",
                 resolved_base_sha="sha123",

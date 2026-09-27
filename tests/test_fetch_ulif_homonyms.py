@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import os
 import shlex
 import signal
@@ -23,14 +24,17 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     HomonymFetcher,
     HttpResult,
     InterruptedByOperator,
+    OperatorProgress,
     PoliteClient,
     SpellingLedger,
     _dedupe_register_rows,
     _write_group,
     build_a1_a2_spellings,
     declared_user_agent,
+    format_periodic_progress,
     main,
     parse_stored,
+    resolve_progress_interval,
     run_fetch,
     status_text,
 )
@@ -190,11 +194,11 @@ def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
         ]
         request = ledger.conn.execute("SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1").fetchone()
         cache = sqlite3.connect(tmp_path / "cache.db")
-        payload = cache.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (request["request_sha256"],),
-        ).fetchone()[0]
-        text = bytes(payload).decode("utf-8")
+        from scripts.lexicon import ulif_raw_cache
+
+        payload = ulif_raw_cache.get(request["request_sha256"], path=ulif_raw_cache.cache_path(tmp_path / "cache.db"))
+        assert payload is not None
+        text = payload.decode("utf-8")
         assert "__VIEWSTATE" in text
         assert "/wEPDw" not in text
         differing = parse_stored(ledger, cache)
@@ -233,11 +237,11 @@ def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
         digest = ledger.conn.execute("SELECT response_sha256 FROM responses WHERE role = 'entry'").fetchone()[
             "response_sha256"
         ]
-        body = cache.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (digest,),
-        ).fetchone()[0]
-        parsed = parse_ulif_entry(bytes(body).decode("utf-8"), homonym_index=1)
+        from scripts.lexicon import ulif_raw_cache
+
+        body = ulif_raw_cache.get(digest, path=ulif_raw_cache.cache_path(tmp_path / "cache.db"))
+        assert body is not None
+        parsed = parse_ulif_entry(body.decode("utf-8"), homonym_index=1)
         tabs = [
             row["tab_kind"]
             for row in ledger.conn.execute("SELECT tab_kind FROM responses WHERE role = 'tab' ORDER BY tab_kind")
@@ -419,6 +423,54 @@ def test_prepare_database_creates_new_db_owner_only(tmp_path):
             conn.close()
     finally:
         os.umask(old_umask)
+
+
+def test_prepare_database_declares_wal_on_new_and_existing_caches(tmp_path):
+    """#8527: the walk is the writer that needs concurrency, so it declares WAL and proves it."""
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    fresh = tmp_path / "fresh" / "cache.db"
+    conn = prepare_database(fresh)
+    try:
+        assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    finally:
+        conn.close()
+    assert fresh.read_bytes()[18:20] == b"\x02\x02"
+
+    # A pre-existing rollback-journal cache is converted on the next start.
+    legacy = tmp_path / "legacy.db"
+    with sqlite3.connect(legacy) as seed:
+        seed.execute("CREATE TABLE placeholder (id INTEGER PRIMARY KEY)")
+    assert legacy.read_bytes()[18:20] == b"\x01\x01"
+    conn = prepare_database(legacy)
+    try:
+        assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    finally:
+        conn.close()
+    assert legacy.read_bytes()[18:20] == b"\x02\x02"
+
+
+def test_prepare_database_fails_loudly_when_wal_is_declined(tmp_path, monkeypatch):
+    from scripts.lexicon.runner import fetch_ulif_homonyms as mod
+
+    class Declines:
+        def __init__(self, inner):
+            self._inner = inner
+
+        def execute(self, sql, *args):
+            if "journal_mode=WAL" in sql:
+                return self._inner.execute("PRAGMA journal_mode")  # reports the unchanged mode
+            return self._inner.execute(sql, *args)
+
+        def __getattr__(self, name):
+            return getattr(self._inner, name)
+
+    from scripts.wiki import sources_db as sdb
+
+    real = sdb._ulif_dictua_conn
+    monkeypatch.setattr(sdb, "_ulif_dictua_conn", lambda path, *, create=False: Declines(real(path, create=create)))
+    with pytest.raises(RuntimeError, match="expected 'wal'"):
+        mod.prepare_database(tmp_path / "declined.db")
 
 
 def test_ensure_private_dir_warns_on_permissive_existing_keeps_mode(tmp_path, capsys):
@@ -910,11 +962,9 @@ def test_walk_printed_number_mismatch_records_and_saves_group(tmp_path, monkeypa
             },
         ]
         for h_idx in (1, 2):
-            digest = f"digest{h_idx}"
-            cache.execute(
-                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
-                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
-            )
+            body = _html(f"ishym-entry-{h_idx}.html").encode("utf-8")
+            digest = runner._sha256(body)
+            runner._store_blob(cache, digest, body, "text/html; charset=utf-8")
             ledger.conn.execute(
                 """
                 INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
@@ -974,11 +1024,9 @@ def test_walk_printed_number_mismatch_retry_idempotent(tmp_path, monkeypatch):
 
         prepare_database(tmp_path / "cache.db").close()
         for h_idx in (1, 2):
-            digest = f"digest{h_idx}"
-            cache.execute(
-                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
-                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
-            )
+            body = _html(f"ishym-entry-{h_idx}.html").encode("utf-8")
+            digest = runner._sha256(body)
+            runner._store_blob(cache, digest, body, "text/html; charset=utf-8")
             ledger.conn.execute(
                 """
                 INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
@@ -1080,6 +1128,53 @@ def test_walk_printed_number_mismatch_marker_failure_rolls_back_atomically(tmp_p
         # Step 3: Re-attempting on already-mismatched group is idempotent
         ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
         assert ledger.meta("mismatch_groups") == "1"
+    finally:
+        ledger.close()
+
+
+def test_register_rows_normalized_spelling_index_added_to_legacy_ledger(tmp_path):
+    """#8807 follow-up: a ledger built without the index gains it on next open."""
+    legacy_path = tmp_path / "state" / "ledger.sqlite"
+    legacy_path.parent.mkdir(parents=True)
+    with sqlite3.connect(legacy_path) as seed:
+        seed.executescript(
+            """
+            CREATE TABLE register_rows (
+                page_num INTEGER NOT NULL,
+                row_index INTEGER NOT NULL,
+                select_arg TEXT NOT NULL,
+                stressed_headword TEXT NOT NULL,
+                normalized_spelling TEXT NOT NULL,
+                state TEXT NOT NULL,
+                entry_sha256 TEXT NOT NULL DEFAULT '',
+                homonym_index INTEGER,
+                unknown_controls TEXT NOT NULL DEFAULT '',
+                paradigm_source TEXT NOT NULL DEFAULT '',
+                error TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                PRIMARY KEY (page_num, row_index)
+            );
+            """
+        )
+        assert not any(
+            row[1] == "register_rows_normalized_spelling" for row in seed.execute("PRAGMA index_list(register_rows)")
+        )
+
+    ledger = SpellingLedger(legacy_path)
+    try:
+        index_names = {row["name"] for row in ledger.conn.execute("PRAGMA index_list(register_rows)")}
+        assert "register_rows_normalized_spelling" in index_names
+
+        plan = [
+            str(row["detail"])
+            for row in ledger.conn.execute(
+                "EXPLAIN QUERY PLAN SELECT 1 FROM register_rows "
+                "WHERE normalized_spelling = ? AND error LIKE 'printed_number_mismatch%' LIMIT 1",
+                ("арканзас",),
+            )
+        ]
+        assert any("register_rows_normalized_spelling" in detail for detail in plan), plan
     finally:
         ledger.close()
 
@@ -1420,6 +1515,8 @@ def test_heartbeat_during_long_backoff(tmp_path, capsys):
     )
     assert code == EXIT_OK
     err = capsys.readouterr().err
+    assert "heartbeat: waiting for response" not in err
+    assert "heartbeat: waiting for back-off: 150s remaining (attempt 1)" in err
     assert "heartbeat: waiting for back-off: 90s remaining (attempt 1)" in err
     assert "heartbeat: waiting for back-off: 30s remaining (attempt 1)" in err
 
@@ -2432,7 +2529,7 @@ def test_interruption_during_outcome_persistence_restores_pending_and_clears_res
         ledger.close()
 
 
-def test_quiet_mode_emits_heartbeats_during_steady_progress(tmp_path, capsys):
+def test_quiet_mode_emits_rate_limited_progress_not_per_request_heartbeats(tmp_path, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
     spellings = [f"слово{i}" for i in range(10)]
@@ -2455,14 +2552,215 @@ def test_quiet_mode_emits_heartbeats_during_steady_progress(tmp_path, capsys):
         sleep=_noop_sleep,
         clock=fake_clock,
         scanner=lambda: False,
+        progress_interval=60.0,
     )
     assert code == EXIT_OK
 
     err = capsys.readouterr().err
     assert "absent_from_ulif" not in err
-    heartbeats = [line for line in err.splitlines() if "heartbeat:" in line]
-    assert len(heartbeats) >= 2
-    for hb in heartbeats:
-        assert "heartbeat: waiting for response" in hb
+    assert "heartbeat: waiting for response" not in err
+    progress = [line for line in err.splitlines() if line.startswith("progress:")]
+    assert progress
+    assert len(progress) < len(handler.calls)
+    for line in progress:
+        assert line.startswith("progress: spellings=")
+        assert "requests=" in line
+        assert "rate=" in line
+        assert "eta=" in line
+    assert not (state_dir / "liveness").exists()
     assert "=== ULIF Homonym Fetch Runner ===" in err
     assert "=== ULIF Fetch Stop Summary ===" in err
+
+
+def test_progress_line_is_rate_limited_on_a_fake_clock(capsys):
+    sim = [0.0]
+
+    def clock() -> float:
+        return sim[0]
+
+    emitted: list[float] = []
+    gate = OperatorProgress(
+        interval=60.0,
+        clock=clock,
+        emit=lambda: emitted.append(sim[0]),
+    )
+    for second in range(180):
+        sim[0] = float(second)
+        gate("waiting for response")
+
+    err = capsys.readouterr().err
+    assert "heartbeat:" not in err
+    assert "waiting for response" not in err
+    assert emitted == [60.0, 120.0]
+
+
+def test_backoff_messages_print_immediately(capsys):
+    sim = [0.0]
+    gate = OperatorProgress(
+        interval=60.0,
+        clock=lambda: sim[0],
+        emit=lambda: (_ for _ in ()).throw(AssertionError("progress must wait")),
+    )
+    due = gate("waiting for back-off: 150s remaining (attempt 1)")
+    err = capsys.readouterr().err
+    assert due == 60.0
+    assert "heartbeat: waiting for back-off: 150s remaining (attempt 1)" in err
+    assert "progress:" not in err
+
+
+def test_progress_interval_flag_overrides_env(monkeypatch):
+    monkeypatch.setenv("ULIF_PROGRESS_INTERVAL_SECONDS", "15")
+    assert resolve_progress_interval(None) == 15.0
+    assert resolve_progress_interval(90.0) == 90.0
+
+
+def test_progress_interval_rejects_non_finite(monkeypatch):
+    for bad in (float("nan"), float("inf"), float("-inf")):
+        with pytest.raises(ValueError, match="finite"):
+            resolve_progress_interval(bad)
+    monkeypatch.setenv("ULIF_PROGRESS_INTERVAL_SECONDS", "nan")
+    with pytest.raises(ValueError, match="finite"):
+        resolve_progress_interval(None)
+
+
+def test_periodic_progress_line_includes_pages_requests_rate_and_eta():
+    line = format_periodic_progress(
+        kind="pages",
+        done=1409,
+        total=10513,
+        requests_made=46508,
+        process_requests=20,
+        elapsed_seconds=60.0,
+        eta_seconds=308066.0,
+    )
+    assert line == "progress: pages=1409/10513 requests=46508 rate=0.333/s eta=308066s"
+
+
+def test_resumed_progress_rate_uses_this_process_requests(tmp_path, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.set_requests_made(30000)
+    ledger.close()
+
+    spellings = [f"слово{i}" for i in range(8)]
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 5.0
+        return cur_time[0]
+
+    seen: list[dict[str, object]] = []
+    real = format_periodic_progress
+
+    def spy(**kwargs):
+        seen.append(kwargs)
+        return real(**kwargs)
+
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.fetch_ulif_homonyms.format_periodic_progress",
+        spy,
+    )
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+        progress_interval=60.0,
+    )
+    assert code == EXIT_OK
+    assert seen
+    assert any(int(row["process_requests"]) > 0 for row in seen)
+    for row in seen:
+        requests_made = int(row["requests_made"])
+        process_requests = int(row["process_requests"])
+        elapsed = float(row["elapsed_seconds"])
+        assert requests_made == 30000 + process_requests
+        assert elapsed > 0
+        line = real(**row)
+        assert f"requests={requests_made}" in line
+        assert f"rate={process_requests / elapsed:.3f}/s" in line
+        assert f"rate={requests_made / elapsed:.3f}/s" not in line
+
+
+def test_progress_ledger_error_warns_once_per_interval(tmp_path, capsys, monkeypatch):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+
+    def locked(self):
+        raise sqlite3.OperationalError("database is locked")
+
+    monkeypatch.setattr(SpellingLedger, "walk_counts", locked)
+    sim = [0.0]
+
+    def emit() -> None:
+        ledger.walk_counts()
+
+    gate = OperatorProgress(interval=60.0, clock=lambda: sim[0], emit=emit)
+    gate("waiting for response")
+    for stamp in (60.0, 61.0, 90.0, 120.0, 121.0):
+        sim[0] = stamp
+        gate("waiting for response")
+
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if line.startswith("warning: progress line failed:")]
+    assert warnings == [
+        "warning: progress line failed: database is locked",
+        "warning: progress line failed: database is locked",
+    ]
+    ledger.close()
+
+
+def test_progress_ledger_error_warns_once_per_interval_and_continues(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.close()
+
+    orig_counts = SpellingLedger.counts
+
+    def locked_during_progress(self):
+        if any(frame.function == "_emit_fetch_progress" for frame in inspect.stack()):
+            raise sqlite3.OperationalError("database is locked")
+        return orig_counts(self)
+
+    monkeypatch.setattr(SpellingLedger, "counts", locked_during_progress)
+
+    spellings = [f"слово{i}" for i in range(6)]
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+    sim = [0.0]
+
+    def clock() -> float:
+        sim[0] += 30.0
+        return sim[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=clock,
+        scanner=lambda: False,
+        progress_interval=60.0,
+    )
+    assert code == EXIT_OK
+
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if line.startswith("warning: progress line failed:")]
+    assert warnings
+    assert all("database is locked" in line for line in warnings)
+    assert "Traceback" not in err
+    opened = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert int(opened.meta("requests_made", "0") or "0") == len(handler.calls)
+    finally:
+        opened.close()

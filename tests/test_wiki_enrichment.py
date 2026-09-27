@@ -27,7 +27,7 @@ class TestLoadLocalData:
                 {"text": "Що росте без коріння?", "answer": "камінь"},
             ],
         }
-        data_dir = tmp_path / "data"
+        data_dir = tmp_path / "registry"
         data_dir.mkdir()
         with open(data_dir / "folk_micro_genres.yaml", "w", encoding="utf-8") as f:
             yaml.dump(data, f, allow_unicode=True)

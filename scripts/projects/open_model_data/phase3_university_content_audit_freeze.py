@@ -474,7 +474,7 @@ def build_document(
             "contextual_sources_cannot_authorize_rules": True,
             "quarantined_sources_have_no_lanes": True,
             "source_text_committed": False,
-            "superseded_denominator_path": "data/university_corpus_denominator.yaml",
+            "superseded_denominator_path": "registry/university_corpus_denominator.yaml",
             "superseded_denominator_sha256": "c677220bea2ba5b3449f528b53a93cf2e55f4b8f5b654d6af3c55910c6fd299f",
             "supersession_reason": "The legacy 12-source denominator mixes L2, stale custody, and pre-reconciliation database identities; the reviewed 30-source policy and exact 20-source corpus subset now govern Phase 3.",
         },

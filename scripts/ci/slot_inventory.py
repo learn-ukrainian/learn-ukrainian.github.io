@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
+import re
 import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -18,17 +19,16 @@ from typing import Any
 
 import yaml
 
-# #5818/#5907: the measured PR inventory is 29 runner slots (including the
-# parallel pytest fastlane and four-way pytest matrix). Two slots are deliberate
-# headroom for an incident response without silently oversubscribing runners.
-CI_SLOT_CEILING = 31
-
-# CI's planner and its Python job document a four-way pytest topology. This
-# constant is also the fail-closed count for that job should its shard matrix
-# become a runtime expression that static YAML cannot expand.
-PYTEST_SHARD_CEILING = 4
+# GitHub Team provides 60 concurrent hosted jobs. Reserve two slots for
+# incident response: the inventory may describe at most 60 - 2 = 58 jobs.
+# The current full ci.yml workflow has 17 jobs, so two overlapping full CI
+# workflows need at most 2 * 17 = 34 slots, leaving 24 for other workflows
+# and the two reserved slots.
+CI_SLOT_CEILING = 58
 
 DEFAULT_WORKFLOW_DIR = Path(".github/workflows")
+_SHARD_DEFAULT = re.compile(r"\$\{\{\s*inputs\.shards\s*\|\|\s*['\"]([1-9][0-9]*)['\"]\s*\}\}")
+_SHARD_MATRIX = re.compile(r"\$\{\{\s*fromJSON\(needs\.changes\.outputs\.shards\)\s*\}\}")
 
 
 @dataclass(frozen=True)
@@ -37,6 +37,7 @@ class WorkflowInventory:
 
     path: Path
     jobs: dict[str, int]
+    pytest_shard_ceiling: int | None = None
 
     @property
     def total(self) -> int:
@@ -78,7 +79,16 @@ def _matches(candidate: Mapping[str, Any], selector: Mapping[str, Any]) -> bool:
     return all(candidate.get(key) == value for key, value in selector.items())
 
 
-def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str) -> int:
+def _pytest_shard_count(workflow: Mapping[str, Any]) -> int:
+    """Read the full-tier default from the env value consumed by Changes."""
+    env = _mapping(workflow.get("env"), description="ci.yml env")
+    value = env.get("PYTEST_SHARD_COUNT")
+    if not isinstance(value, str) or (match := _SHARD_DEFAULT.fullmatch(value)) is None:
+        raise ValueError("ci.yml env.PYTEST_SHARD_COUNT must declare a readable inputs.shards default")
+    return int(match.group(1))
+
+
+def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str, pytest_shard_count: int | None = None) -> int:
     """Count a documented static matrix; reject unknown runtime expansion."""
     matrix_map = _mapping(matrix, description=f"{workflow_name}:{job_name} matrix")
     include = matrix_map.get("include", [])
@@ -87,11 +97,15 @@ def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str) -> int:
 
     if workflow_name == "ci.yml" and job_name == "pytest" and isinstance(dimensions.get("shard"), str):
         shard_expression = dimensions["shard"]
-        if "${{" not in shard_expression:
-            raise ValueError("ci.yml:pytest shard matrix must be a static list or GitHub expression")
+        if _SHARD_MATRIX.fullmatch(shard_expression) is None:
+            raise ValueError("ci.yml:pytest dynamic shard matrix must use Changes.outputs.shards")
         if set(dimensions) != {"shard"}:
             raise ValueError("ci.yml:pytest dynamic shard matrix may not have other dimensions")
-        return PYTEST_SHARD_CEILING
+        if include or exclude:
+            raise ValueError("ci.yml:pytest dynamic shard matrix may not use include or exclude")
+        if pytest_shard_count is None:
+            raise ValueError("ci.yml:pytest requires env.PYTEST_SHARD_COUNT")
+        return pytest_shard_count
 
     values = {
         key: _static_values(value, location=f"{workflow_name}:{job_name} matrix.{key}")
@@ -124,21 +138,29 @@ def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str) -> int:
         shards = values.get("shard")
         if shards is None and "${{" not in str(dimensions.get("shard", "")):
             raise ValueError("ci.yml:pytest must retain its documented shard matrix")
-        if shards is not None and len(shards) > PYTEST_SHARD_CEILING:
+        if shards is not None and pytest_shard_count is not None and len(shards) > pytest_shard_count:
             raise ValueError(
-                f"ci.yml:pytest has {len(shards)} shards, above PYTEST_SHARD_CEILING={PYTEST_SHARD_CEILING}"
+                f"ci.yml:pytest has {len(shards)} shards, above env.PYTEST_SHARD_COUNT={pytest_shard_count}"
             )
     return len(combinations)
 
 
-def job_slots(job: Mapping[str, Any], *, workflow_name: str, job_name: str) -> int:
+def job_slots(
+    job: Mapping[str, Any], *, workflow_name: str, job_name: str, pytest_shard_count: int | None = None
+) -> int:
     """Return the number of runner jobs produced by one top-level job."""
     strategy = job.get("strategy")
     if strategy is None:
         return 1
     strategy_map = _mapping(strategy, description=f"{workflow_name}:{job_name} strategy")
     matrix = strategy_map.get("matrix")
-    return 1 if matrix is None else _matrix_slots(matrix, workflow_name=workflow_name, job_name=job_name)
+    return (
+        1
+        if matrix is None
+        else _matrix_slots(
+            matrix, workflow_name=workflow_name, job_name=job_name, pytest_shard_count=pytest_shard_count
+        )
+    )
 
 
 def inventory_workflows(workflow_dir: Path = DEFAULT_WORKFLOW_DIR) -> list[WorkflowInventory]:
@@ -153,11 +175,17 @@ def inventory_workflows(workflow_dir: Path = DEFAULT_WORKFLOW_DIR) -> list[Workf
         if not is_pr_path(workflow):
             continue
         raw_jobs = _mapping(workflow.get("jobs", {}), description=f"{path}: jobs")
+        pytest_shard_count = _pytest_shard_count(workflow) if path.name == "ci.yml" and "pytest" in raw_jobs else None
         jobs = {
-            job_name: job_slots(_mapping(job, description=f"{path}:{job_name}"), workflow_name=path.name, job_name=job_name)
+            job_name: job_slots(
+                _mapping(job, description=f"{path}:{job_name}"),
+                workflow_name=path.name,
+                job_name=job_name,
+                pytest_shard_count=pytest_shard_count,
+            )
             for job_name, job in raw_jobs.items()
         }
-        inventories.append(WorkflowInventory(path=path, jobs=jobs))
+        inventories.append(WorkflowInventory(path=path, jobs=jobs, pytest_shard_ceiling=pytest_shard_count))
     return inventories
 
 
@@ -168,7 +196,9 @@ def inventory_report(workflow_dir: Path = DEFAULT_WORKFLOW_DIR) -> dict[str, Any
     return {
         "ceiling": CI_SLOT_CEILING,
         "pass": total <= CI_SLOT_CEILING,
-        "pytest_shard_ceiling": PYTEST_SHARD_CEILING,
+        "pytest_shard_ceiling": next(
+            (workflow.pytest_shard_ceiling for workflow in workflows if workflow.path.name == "ci.yml"), None
+        ),
         "total": total,
         "workflows": [
             {"jobs": workflow.jobs, "total": workflow.total, "workflow": str(workflow.path)} for workflow in workflows

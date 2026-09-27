@@ -24,6 +24,8 @@ from lint_prompts import (
     scan_prompts,
 )
 
+pytestmark = pytest.mark.repo_wide
+
 # ---------- Unit tests for individual rules ----------
 
 class TestRules:

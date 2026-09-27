@@ -493,6 +493,9 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
+    if [ "$LC_EPIC" != "AUTO" ]; then
+      launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
+    fi
     if [ "$LC_MODEL" = gpt-6-luna ]; then
       launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
       exit 4
@@ -513,7 +516,11 @@ launcher_validate_mode() {
     launcher_selector_help >&2
     exit 2
   fi
-  LC_EPIC="$(launcher_selector_lane "$LC_EPIC")"
+  launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
+  # Slot identity uses the resolved lane (launcher_require_registered_slot).
+  # SESSION_EPIC keeps the selector when that lane is not the same stream, so
+  # the file handoff directory does not follow the area slot.
+  LC_EPIC="$(launcher_session_epic "$LC_EPIC")"
 }
 
 launcher_validate_driver_certification() {
@@ -612,6 +619,8 @@ launcher_claim_driver_lease() {
   launcher_prepare_driver_identity
   if [ "$LC_DRY_RUN" = "1" ]; then
     printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS"
+    printf 'launcher: session epic=%s slot=%s handoff=.claude/%s-epic/CLAUDE-DRIVER-HANDOFF.md\n' \
+      "$SESSION_EPIC" "$LC_DRIVER_HANDOFF" "$SESSION_EPIC"
     if [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
       printf 'launcher: would force-release any live holder on %s then claim\n' "$stream"
     fi

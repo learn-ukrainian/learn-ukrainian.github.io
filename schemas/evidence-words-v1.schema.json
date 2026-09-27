@@ -422,6 +422,10 @@
         },
         "sovietization_keywords": {
           "type": "string"
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       },
       "required": [],
@@ -475,6 +479,12 @@
         "built_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "sources_db_scheme": {
+          "enum": [
+            "file-v1",
+            "rows-v2"
+          ]
         }
       },
       "required": [
@@ -584,7 +594,7 @@
               "const": "pending"
             },
             {
-              "$ref": "#/$defs/ulif"
+              "$ref": "#/$defs/ulif_cited"
             }
           ]
         },
@@ -615,6 +625,14 @@
             },
             "source": {
               "const": "puls"
+            },
+            "row_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "row_id": {
+              "type": "integer",
+              "minimum": 1
             }
           },
           "required": [
@@ -636,6 +654,10 @@
             "id": {
               "type": "integer",
               "minimum": 1
+            },
+            "row_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
             }
           },
           "required": [
@@ -751,6 +773,39 @@
           }
         }
       ]
+    },
+    "ulif_cited": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "ulif"
+        },
+        "key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "source",
+        "key"
+      ],
+      "additionalProperties": false
     }
   },
   "$comment": "Shape contract only: the builder/verifier checks source equality, one-entry paradigms, unique ids, and stressed == form for stress_source none. Store records use numeric id order; form lists retain VESUM order."

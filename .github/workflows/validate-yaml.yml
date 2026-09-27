@@ -83,7 +83,7 @@ jobs:
         if: steps.changed-yaml.outputs.files != ''
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml jsonschema pytest yamllint
+          pip install pyyaml jsonschema pytest yamllint regex==2026.5.9
 
       - name: Lint YAML Files
         if: steps.changed-yaml.outputs.files != ''
@@ -204,7 +204,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml jsonschema
+          pip install pyyaml jsonschema regex==2026.5.9
 
       - name: Validate Plan YAMLs
         if: steps.changed-plans.outputs.files != ''

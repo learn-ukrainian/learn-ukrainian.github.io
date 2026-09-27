@@ -21,6 +21,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -33,6 +34,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.orchestration import reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
@@ -365,8 +367,7 @@ def _stale_ref_delete_reason(
         )
     if closed_not_durable and exact_closed is not None and exact_closed.number is not None:
         return None, (
-            f"{kind} but CLOSED PR #{exact_closed.number} head is not durably "
-            f"on refs/pull/{exact_closed.number}/head"
+            f"{kind} but CLOSED PR #{exact_closed.number} head is not durably on refs/pull/{exact_closed.number}/head"
         )
     if not fetch_ok:
         return None, (
@@ -968,6 +969,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "errors": [],
         "reaper_disabled": False,
         "needs_finalize_worktrees": [],
+        "rescue": None,
     }
 
 
@@ -1014,6 +1016,27 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     if apply and live_cwds is None:
         result["errors"].append("process-CWD activity probe unavailable; apply skipped")
         return result
+
+    # Report terminal rescue candidates before reaping. Only an explicit
+    # driver-invoked rescue may commit or push their work.
+    delegate_script = repo_root / "scripts" / "delegate.py"
+    if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
+        try:
+            rescue_proc = subprocess.run(
+                [sys.executable, str(delegate_script), "rescue", "--all-stale", "--older-than", "6h"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=600,
+                env=reap_worktrees.sanitized_git_env(),
+            )
+            payload = json.loads(rescue_proc.stdout)
+            result["rescue"] = {"summary": payload.get("summary"), "tasks": payload.get("tasks")}
+            if rescue_proc.returncode != 0:
+                result["errors"].append("terminal rescue reported errors")
+        except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
+            result["errors"].append("terminal rescue unavailable")
 
     try:
         rows = reap_worktrees.reap_worktrees(
@@ -1087,6 +1110,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 "bytes_freed": leak_res.get("bytes_freed", 0),
                 "candidates": leak_res.get("candidates", 0),
                 "skipped_live": leak_res.get("skipped_live", 0),
+                "inventory_only": leak_res.get("inventory_only", 0),
+                "inventory_bytes": leak_res.get("inventory_bytes", 0),
                 "errors": leak_res.get("errors", 0),
                 "disk_pressure": leak_res.get("disk_pressure"),
             }
@@ -1094,6 +1119,23 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 result["errors"].append(f"tmp leak sweep encountered {leak_res['errors']} error(s)")
         except Exception as exc:
             result["errors"].append(f"tmp leak sweep failed: {exc}")
+        # #8738: task-owned scratch leases whose owner and child group are
+        # provably dead. Counts only — never paths — reach the receipt.
+        try:
+            scratch_res = recover_task_scratch(apply=apply)
+            result["task_scratch_recovery"] = {
+                "candidates": scratch_res.get("candidates", 0),
+                "reaped": scratch_res.get("reaped", 0),
+                "bytes_freed": scratch_res.get("bytes_freed", 0),
+                "preserved": scratch_res.get("preserved", 0),
+                "preserved_by_reason": dict(scratch_res.get("preserved_by_reason") or {}),
+                "errors": scratch_res.get("errors", 0),
+                "disk_pressure": scratch_res.get("disk_pressure"),
+            }
+            if scratch_res.get("errors"):
+                result["errors"].append(f"task scratch recovery encountered {scratch_res['errors']} error(s)")
+        except Exception as exc:
+            result["errors"].append(f"task scratch recovery failed: {exc}")
 
         result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
         counts = classify_repo_results(result["results"])
@@ -1154,6 +1196,15 @@ def build_receipt(
         for repository in repositories
         if repository.get("review_temp_sweep")
     )
+    task_scratch_reaped = sum(
+        (repository.get("task_scratch_recovery") or {}).get("reaped", 0) for repository in repositories
+    )
+    task_scratch_bytes_freed = sum(
+        (repository.get("task_scratch_recovery") or {}).get("bytes_freed", 0) for repository in repositories
+    )
+    task_scratch_preserved = sum(
+        (repository.get("task_scratch_recovery") or {}).get("preserved", 0) for repository in repositories
+    )
     needs_finalize_worktrees = [
         item for repository in repositories for item in repository.get("needs_finalize_worktrees", [])
     ]
@@ -1177,6 +1228,9 @@ def build_receipt(
             "errors": errors,
             "review_temp_reaped": review_temp_reaped,
             "review_temp_bytes_freed": review_temp_bytes_freed,
+            "task_scratch_reaped": task_scratch_reaped,
+            "task_scratch_bytes_freed": task_scratch_bytes_freed,
+            "task_scratch_preserved": task_scratch_preserved,
             "needs_finalize_worktrees": needs_finalize_worktrees,
         },
         "repositories": repositories,
@@ -1244,6 +1298,22 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _apply_error_counts(row: dict[str, Any]) -> dict[str, int]:
+    """Count apply-time ``error`` rows by errno name. Dry-run rows are not errors."""
+    apply = row.get("apply")
+    if not isinstance(apply, dict):
+        return {}
+    counts: dict[str, int] = {}
+    for selected in apply.get("selected") or []:
+        if not isinstance(selected, dict) or selected.get("action") != "error":
+            continue
+        key = selected.get("error")
+        if not isinstance(key, str) or not key:
+            key = "OSError"
+        counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
 def build_public_summary(
     receipt: dict[str, Any],
     receipt_path: Path | str | None = None,
@@ -1255,9 +1325,7 @@ def build_public_summary(
         repo_name = Path(raw_root).name if raw_root else "unknown"
         repos_summary[repo_name] = {
             "reaped": sum(
-                1
-                for row in repo_dict.get("results", [])
-                if row.get("action") in {"removed", "preserved_then_removed"}
+                1 for row in repo_dict.get("results", []) if row.get("action") in {"removed", "preserved_then_removed"}
             ),
             "retained": repo_dict.get("retained", 0),
             "retained_exceptions": repo_dict.get("retained_exceptions", 0),
@@ -1265,6 +1333,7 @@ def build_public_summary(
             "by_owner": repo_dict.get("by_owner", {}),
             "orphans_reported": len(repo_dict.get("orphans", [])),
             "errors": len(repo_dict.get("errors", [])),
+            "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
             "branches_deleted": (
                 sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
                 + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)
@@ -1289,14 +1358,53 @@ def build_public_summary(
             "errors": summary.get("errors", 0),
             "review_temp_reaped": summary.get("review_temp_reaped", 0),
             "review_temp_bytes_freed": summary.get("review_temp_bytes_freed", 0),
+            "task_scratch_reaped": summary.get("task_scratch_reaped", 0),
+            "task_scratch_bytes_freed": summary.get("task_scratch_bytes_freed", 0),
+            "task_scratch_preserved": summary.get("task_scratch_preserved", 0),
         },
         "repositories": repos_summary,
     }
     if "home_session_retention" in receipt:
         public_payload["home_session_retention"] = receipt["home_session_retention"]
+    if "batch_state_retention" in receipt:
+        public_payload["batch_state_retention"] = [
+            {
+                "mode": (row.get("apply") or row.get("dry_run") or {}).get("mode"),
+                "reclaimable_bytes": (row.get("dry_run") or {}).get("totals", {}).get("reclaimable_bytes", 0),
+                "selected": len((row.get("dry_run") or {}).get("selected", [])),
+                "allowlist": (row.get("dry_run") or {}).get("allowlist"),
+                "errors": _apply_error_counts(row),
+            }
+            for row in receipt["batch_state_retention"]
+        ]
     if receipt_path is not None:
         public_payload["receipt_id"] = Path(receipt_path).name
     return public_payload
+
+
+def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> list[dict[str, Any]]:
+    """Dry-run the snapshot allowlist, then apply it when this hygiene run applies.
+
+    The sweep rewrites only ``tasks/*.snapshots`` and ``tasks/archive/*.snapshots``.
+    Ended-session scratch is a separate cleanup and is not run here.
+    """
+    from scripts.maintenance.batch_state_retention import plan_retention
+
+    reports: list[dict[str, Any]] = []
+    for repo_root in repo_roots:
+        batch_state = Path(repo_root) / "batch_state"
+        try:
+            info = batch_state.lstat()
+        except OSError:
+            continue
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+            continue
+        dry = plan_retention(batch_state, apply=False)
+        entry: dict[str, Any] = {"dry_run": dry}
+        if apply:
+            entry["apply"] = plan_retention(batch_state, apply=True)
+        reports.append(entry)
+    return reports
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1305,6 +1413,7 @@ def main(argv: list[str] | None = None) -> int:
     receipt = build_receipt(repo_roots, apply=bool(args.apply))
     home_session_retention = home_session_retention_check.build_report()
     receipt["home_session_retention"] = home_session_retention
+    receipt["batch_state_retention"] = batch_state_retention_reports(repo_roots, apply=bool(args.apply))
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())

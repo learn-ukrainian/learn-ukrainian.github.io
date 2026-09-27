@@ -128,4 +128,23 @@ describe('LetterGrid', () => {
     const { container } = render(<LetterGrid letters={ukAlphabet} />);
     expect(cards(container)).toHaveLength(33);
   });
+
+  test('renders cleanly without optional emoji, key_word, or name', () => {
+    const minimalLetters = [{ upper: 'Д', lower: 'д' }];
+    const { container } = render(<LetterGrid letters={minimalLetters} />);
+    const dCard = cardByUpper(container, 'Д');
+    expect(dCard.textContent).toContain('Д');
+    expect(dCard.textContent).toContain('д');
+    expect(dCard.querySelector('[class*="letterCardEmoji"]')).toBeNull();
+    expect(dCard.querySelector('[class*="letterCardKeyWord"]')).toBeNull();
+  });
+
+  test('renders name and instruction when provided', () => {
+    const lettersWithName = [{ upper: 'Е', lower: 'е', name: 'е' }];
+    const { container } = render(
+      <LetterGrid letters={lettersWithName} instruction="Натисніть на літеру" />
+    );
+    expect(container.textContent).toContain('Натисніть на літеру');
+    expect(container.textContent).toContain('е');
+  });
 });

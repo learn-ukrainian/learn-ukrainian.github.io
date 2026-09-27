@@ -8,6 +8,7 @@ import ast
 import contextlib
 import functools
 import ipaddress
+import itertools
 import os
 import shutil
 import socket
@@ -25,9 +26,115 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _loaded_module(*parts: str):
+    """Find an already imported module without making it a fixture import."""
+    return sys.modules.get(".".join(parts))
+
+# Identity a launched agent session carries (#8778). A test that inherits it
+# keys hook dedupe, leases, and telemetry on the operator's live session.
+# tests/test_session_identity_env_isolation.py parses the export sites and
+# fails when a launcher or runtime exports a name missing here.
+SESSION_IDENTITY_ENV_VARS = (
+    # Launcher driver identity (scripts/lib/launcher_core.sh).
+    "SESSION_EPIC",
+    "SESSION_HANDOFF_AGENT",
+    # Stream lease capsule (scripts/lib/session_supervisor.sh).
+    "SESSION_STREAM_ID",
+    "SESSION_STREAM_SESSION_ID",
+    "SESSION_STREAM_LEASE_ID",
+    "SESSION_STREAM_GENERATION",
+    "SESSION_STREAM_FENCING_TOKEN",
+    "SESSION_STREAM_AGENT",
+    "SESSION_STREAM_HARNESS",
+    "SESSION_STREAM_INSTANCE_ID",
+    "SESSION_STREAM_PROCESS_ID",
+    "SESSION_STREAM_HEARTBEAT_AT",
+    "SESSION_STREAM_EXPIRES_AT",
+    "SESSION_STREAM_TTL_SECONDS",
+    "SESSION_STREAM_VERSION",
+    "SESSION_STREAM_TASK_ID",
+    "SESSION_SUPERVISOR_CAPSULE_PATH",
+    "SESSION_SUPERVISOR_WAKE_DELIVERY",
+    "SESSION_SUPERVISOR_WAKE_STREAM",
+    # Codex launcher and thread rollover (scripts/launchers/codex.sh,
+    # scripts/lib/thread_rollover_link.sh).
+    "CODEX_SESSION",
+    "CODEX_LAUNCHER_ROLLOVER_AGENT",
+    "CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID",
+    "CODEX_LAUNCHER_ROLLOVER_ID",
+    # Resolved context profile (scripts/lib/profile_resolver.sh and the
+    # glmcc/kimicc route libraries).
+    "LEARN_UKRAINIAN_PROFILE_ID",
+    "LEARN_UKRAINIAN_TRANSPORT",
+    "LEARN_UKRAINIAN_MAIN_MODEL_ID",
+    "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS",
+    "LEARN_UKRAINIAN_COLD_START_PROFILE",
+    "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
+    "LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES",
+    "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID",
+    "LEARN_UKRAINIAN_REQUESTED_MODEL_ID",
+    "LEARN_UKRAINIAN_RESOLUTION_REASON",
+    "LEARN_UKRAINIAN_TRUSTED",
+    "LEARN_UKRAINIAN_MODEL_MISMATCH",
+    "LEARN_UKRAINIAN_EXPECTED_PROFILE_ID",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_MODEL_ID",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH",
+    # Claudex supervisor child launch (scripts/orchestration/claudex_supervisor.py);
+    # rollover and SessionStart bind to the supervisor run through these.
+    "LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH",
+    "LEARN_UKRAINIAN_CLAUDEX_RUN_ID",
+    "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION",
+    # SessionStart runtime (scripts/lib/session_record.py, session-setup.sh).
+    "LEARN_UKRAINIAN_SESSION_ID",
+    "LEARN_UKRAINIAN_SESSION_RECORD",
+    "LEARN_UKRAINIAN_TRANSCRIPT_PATH",
+    "LEARN_UKRAINIAN_OBSERVED_MODEL_ID",
+    "LEARN_UKRAINIAN_OBSERVED_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_THREAD_LEASE_GENERATION",
+    # Dispatch worker identity (scripts/delegate.py ``_build_worker_env``).
+    "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+    "LEARN_UKRAINIAN_DISPATCH_AGENT",
+    "LU_X_AGENT_TRAILER",
+    "LU_RUNTIME_INITIATOR",
+    "LU_RUNTIME_INITIATOR_SOURCE",
+    "LU_RUNTIME_RUN_NONCE",
+    # Telemetry run/session ids (scripts/telemetry/emit.py).
+    "LU_RUN_ID",
+    "LU_SESSION_ID",
+    # Codex hook probe session (scripts/agent_runtime/codex_hook_probe.py).
+    "CODEX_HOOK_PROBE_LOG",
+    "CODEX_HOOK_PROBE_DENY_TOOLS",
+    # Harness-native ids the hooks read; the harness, not a launcher, sets them.
+    "LEARN_UK_HOOK_SESSION_ID",
+    "CODEX_THREAD_ID",
+    "CODEX_SESSION_ID",
+    "CLAUDE_CODE_SESSION_ID",
+    # SessionStart env file; a leaked path lets a test append to the live session.
+    "CLAUDE_ENV_FILE",
+)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> Generator[None, object, object]:
+    """Run every test without the launching agent session's identity (#8778).
+
+    The outermost wrapper around setup, call, and teardown, so no fixture of
+    any scope sees the identity. Tests that need a variable set it themselves;
+    the original environment returns after teardown.
+    """
+    with pytest.MonkeyPatch.context() as patch:
+        for name in SESSION_IDENTITY_ENV_VARS:
+            patch.delenv(name, raising=False)
+        return (yield)
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
@@ -39,11 +146,7 @@ def _resolve_real_gh_binary() -> str | None:
     """Resolve gh behind agent-runtime shims using the runner's path rules."""
     candidates = [os.environ.get("AGENT_REAL_GH")]
     search_path = os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath))
-    candidates.extend(
-        os.path.join(entry, "gh")
-        for entry in search_path.split(os.pathsep)
-        if entry
-    )
+    candidates.extend(os.path.join(entry, "gh") for entry in search_path.split(os.pathsep) if entry)
     for candidate in candidates:
         if not candidate or _is_agent_runtime_shim(candidate):
             continue
@@ -77,7 +180,11 @@ def _default_fake_github_cli(
     """Resolve ordinary test GitHub CLI lookups to a failing local stub."""
     if request.node.get_closest_marker("live_github") is not None:
         return
-    monkeypatch.setenv("PATH", f"{_fake_github_bin}{os.pathsep}{os.environ.get('PATH', '')}")
+    # An empty PATH entry means "the current directory". Drop unset, empty,
+    # and blank inherited entries so the stub is prepended without putting
+    # cwd on PATH.
+    inherited = [entry for entry in os.environ.get("PATH", "").split(os.pathsep) if entry]
+    monkeypatch.setenv("PATH", os.pathsep.join([os.fspath(_fake_github_bin), *inherited]))
 
 
 @pytest.fixture(scope="session")
@@ -95,26 +202,30 @@ def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 def _bridge_db_paths() -> tuple[Path, Path]:
     """Return the primary bridge DB and any configured path before tests begin."""
-    from scripts.ai_agent_bridge import _config
-
-    primary = _config.PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
-    return primary.resolve(), Path(_config.DB_PATH).resolve()
+    primary_repo_root = resolve_repo_root(Path(__file__), 1)
+    return (
+        default_bridge_db_path(primary_repo_root).resolve(),
+        configured_bridge_db_path(primary_repo_root).resolve(),
+    )
 
 
 _REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
-_API_BRIDGE_DB_PATH = (_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db").resolve()
-_UNISOLATED_BRIDGE_DB_PATHS = frozenset(
-    {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
-)
+_API_BRIDGE_DB_PATH = default_bridge_db_path(_REPO_ROOT).resolve()
+_UNISOLATED_BRIDGE_DB_PATHS = frozenset({_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH})
 _BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
 _BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
 
 def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
-    """Return a SQLite path and whether a URI explicitly opens it read-only."""
-    raw_path = os.fspath(database) if isinstance(database, (str, os.PathLike)) else None
-    if raw_path is None:
+    """Return a SQLite path and whether a URI explicitly opens it read-only.
+
+    ``bytes`` and ``os.PathLike`` objects whose ``__fspath__`` returns bytes are
+    paths. Decode them before the ``file:`` check so the guard does not raise
+    ``TypeError`` or treat a raw bytes path as "not a path".
+    """
+    if not isinstance(database, (str, bytes, os.PathLike)):
         return None, False
+    raw_path = os.fsdecode(os.fspath(database))
     if raw_path.startswith("file:"):
         parsed = urlsplit(raw_path)
         query = parse_qs(parsed.query)
@@ -141,7 +252,7 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
-    api_main = sys.modules.get("scripts.api.main")
+    api_main = _loaded_module("scripts", "api", "main")
     if api_main is not None:
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
@@ -200,11 +311,92 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
     return size, False
 
 
+# =============================================================================
+# CONTENT-TREE POLLUTION GUARD (#8631)
+# =============================================================================
+# A test that drives a build/promote writer against the real repo root leaves
+# files under ``curriculum/`` (e.g. ``a1/my-morning/wiki_completeness_gate.json``).
+# That makes the checkout dirty, and ``curriculum/`` changes read as content
+# drift. The controller snapshots ``git status`` for the content trees at
+# session start and fails the session if it differs at session end.
+
+_CONTENT_TREE_PATHSPECS = ("curriculum/", "site/src/content/")
+_CONTENT_TREE_GIT_TIMEOUT_S = 60
+_CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
+
+
+def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for the content trees, or None outside git."""
+    git_args = ["git", "-C", str(root)]
+    try:
+        top = subprocess.run(
+            [*git_args, "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+        if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
+            return None
+        status = subprocess.run(
+            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *_CONTENT_TREE_PATHSPECS],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if status.returncode != 0:
+        return None
+    return frozenset(line for line in status.stdout.splitlines() if line.strip())
+
+
+def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> tuple[list[str], list[str]]:
+    """Sorted ``(added, removed)`` status lines between two snapshots.
+
+    Both directions count: deleting a pre-existing untracked file or restoring a
+    pre-existing tracked modification changes the tree just as much as a new file.
+    """
+    if before is None or after is None:
+        return [], []
+    return sorted(after - before), sorted(before - after)
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+    setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
+
+
+def _enforce_content_tree_clean(session: pytest.Session) -> None:
+    before = getattr(session.config, _CONTENT_TREE_SNAPSHOT_KEY, None)
+    added, removed = _content_tree_changes(before, _content_tree_snapshot(_REPO_ROOT))
+    if not added and not removed:
+        return
+    print(
+        "content-tree guard: git status under "
+        f"{', '.join(_CONTENT_TREE_PATHSPECS)} changed during the test session. "
+        "Either a test wrote to (or removed files from) the real checkout — point its "
+        "writer at tmp_path — or another process in the same checkout, such as an "
+        "operator build, wrote concurrently:"
+    )
+    for label, lines in (("added", added), ("removed", removed)):
+        if lines:
+            print(f"  status entries {label} since session start:")
+            for line in lines:
+                print(f"    {line}")
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    _enforce_content_tree_clean(session)
 
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
@@ -353,13 +545,23 @@ def _require_data_artifact(
     data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
     artifact = data_root / relative_path
     if not artifact.is_file():
+        try:
+            from scripts.guardrails.worktree_containment import resolve_main_root
+
+            fallback = resolve_main_root(_REPO_ROOT) / relative_path
+            if fallback.is_file():
+                artifact = fallback
+        except Exception:
+            pass
+    if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
     if required_sqlite_tables:
         try:
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
-                    row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+                    row[0]
+                    for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")
                 }
         except sqlite3.Error:
             available_tables = set()
@@ -416,9 +618,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv(
-        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
 @pytest.fixture(autouse=True)
@@ -429,23 +629,45 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
     bounce can reload it. Tests must not read or overwrite that host file,
     and in-memory last-good must not leak across cases.
     """
-    import sys
-
     monkeypatch.setenv(
         "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
         str(tmp_path / "dashboard_overview_last_good.json"),
     )
-    router = sys.modules.get("scripts.api.dashboard_router")
+    router = _loaded_module("scripts", "api", "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
     yield
-    router = sys.modules.get("scripts.api.dashboard_router")
+    router = _loaded_module("scripts", "api", "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
 
 
 @pytest.fixture(autouse=True)
-def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
+def _hermetic_dispatch_admission_host(monkeypatch):
+    """Dispatch admission sees a healthy host and config-default thresholds (#8645).
+
+    Admission reads this host's MemAvailable and load average; a busy CI runner
+    or developer box must not refuse the write dispatches other tests make.
+    Admission tests monkeypatch ``probe_host`` themselves.
+    """
+    for name in ("DISPATCH_MAX_LIVE_WRITE_WORKERS", "DISPATCH_MIN_MEM_AVAILABLE_GIB", "DISPATCH_MAX_LOAD_PER_CPU"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
+
+
+# One numbered directory per process. ``mktemp`` lists the base to pick the
+# next number, so a per-test call is quadratic over a long session (#8654).
+_WRITE_OWNERSHIP_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _write_ownership_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One base directory for every per-test ownership ledger in this process."""
+    return tmp_path_factory.mktemp("write-ownership-stores")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     """Every test gets its own write-path ownership ledger.
 
     Root cause (2026-07-25): the ledger path was a module constant baked into
@@ -459,9 +681,12 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     ``tmp_path``: an autouse fixture that creates a subdirectory there breaks
     every test asserting its ``tmp_path`` is empty. Caught in CI by
     test_grok_envelope_failure_skips_forensics_when_unconfigured after the
-    first version of this fixture did exactly that.
+    first version of this fixture did exactly that. The session base is
+    numbered once; each test is ``<base>/<n>`` via ``mkdir``, not another
+    ``mktemp``.
     """
-    ledger_dir = tmp_path_factory.mktemp("write-ownership")
+    ledger_dir = _write_ownership_base / str(next(_WRITE_OWNERSHIP_SEQ))
+    ledger_dir.mkdir(parents=True)
     db_file = ledger_dir / "write-ownership.sqlite3"
     conn = sqlite3.connect(db_file)
     conn.execute(
@@ -471,6 +696,215 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     conn.close()
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_file))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
+
+
+# =============================================================================
+# DISPATCH TASK STORE ISOLATION (#8654)
+# =============================================================================
+# All dispatch task-store consumers resolve ``LU_TASKS_DIR`` at call time.
+# The ownership ledger above is a separate seam (env override).
+
+_REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
+# Live paths ``scripts/delegate.py`` derives from ``tasks_dir().parent``:
+# - ``tasks_dir().parent / "preflight_fast_fail.jsonl"``
+# - fallback ``tasks_dir().parent / worktree_claims.LOCK_DIR_NAME``
+#   (``lu-worktree-locks``) when the git common dir is unknown.
+# This set is explicit. It does not cover the rest of ``batch_state/``.
+_DERIVED_LIVE_TASK_PATHS = (
+    (_REAL_TASKS_DIR.parent / "preflight_fast_fail.jsonl").resolve(),
+    (_REAL_TASKS_DIR.parent / "lu-worktree-locks").resolve(),
+)
+_REAL_TASKS_DIR_STR = os.fspath(_REAL_TASKS_DIR)
+_REAL_TASKS_DIR_PREFIX = _REAL_TASKS_DIR_STR + os.sep
+_DERIVED_LIVE_TASK_STRS = tuple(os.fspath(path) for path in _DERIVED_LIVE_TASK_PATHS)
+_DERIVED_LIVE_TASK_PREFIXES = tuple(path + os.sep for path in _DERIVED_LIVE_TASK_STRS)
+# Directory realpaths already known not to be a symlink into the live store.
+# One realpath per directory, not one Path.resolve per written file.
+_TASK_STORE_OUTSIDE_PARENTS: set[str] = set()
+_TASK_STORE_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+_TASK_STORE_MUTATION_EVENTS = {
+    "os.chmod": (0,),
+    "os.chown": (0,),
+    "os.link": (0, 1),
+    "os.mkdir": (0,),
+    "os.remove": (0,),
+    "os.rename": (0, 1),
+    "os.rmdir": (0,),
+    "os.symlink": (0, 1),
+    "os.truncate": (0,),
+    "os.unlink": (0,),
+    "os.utime": (0,),
+    "shutil.copyfile": (1,),
+    "shutil.copytree": (1,),
+    "shutil.move": (0, 1),
+    "shutil.rmtree": (0,),
+}
+# One membership test per audit event. Python calls every hook for every
+# event (``import``, ``compile``, ``exec``, ``os.listdir``, ``sys._getframe``,
+# …). The #8640 opsec hook lives in another module and is not installed for
+# this suite, so this hook stays separate and returns before any path work.
+_TASK_STORE_HANDLED_EVENTS = frozenset(("open", "sqlite3.connect", *_TASK_STORE_MUTATION_EVENTS))
+
+
+def _text_under_live_tasks(text: str) -> bool:
+    """True when ``text`` is already a normalized path inside the live store."""
+    if text == _REAL_TASKS_DIR_STR or text.startswith(_REAL_TASKS_DIR_PREFIX):
+        return True
+    for exact, prefix in zip(_DERIVED_LIVE_TASK_STRS, _DERIVED_LIVE_TASK_PREFIXES, strict=True):
+        if text == exact or text.startswith(prefix):
+            return True
+    return False
+
+
+def _path_under_real_tasks(path: object) -> bool:
+    """True for the live task store, a file inside it, or a derived sibling path."""
+    if isinstance(path, int) or path is None:
+        return False
+    try:
+        text = os.fsdecode(path)
+    except (TypeError, ValueError):
+        return False
+    if _text_under_live_tasks(text):
+        return True
+    norm = os.path.normpath(text)
+    if norm != text and _text_under_live_tasks(norm):
+        return True
+    if os.path.isabs(norm) and ".." not in norm:
+        parent = os.path.dirname(norm)
+        if parent not in _TASK_STORE_OUTSIDE_PARENTS:
+            try:
+                real_parent = os.path.realpath(parent)
+            except OSError:
+                return False
+            if real_parent == parent:
+                _TASK_STORE_OUTSIDE_PARENTS.add(parent)
+            elif _text_under_live_tasks(os.path.normpath(os.path.join(real_parent, os.path.basename(norm)))):
+                return True
+        try:
+            if os.path.islink(norm):
+                return _text_under_live_tasks(os.path.normpath(os.path.realpath(norm)))
+        except OSError:
+            return False
+        return False
+    try:
+        return _text_under_live_tasks(os.path.normpath(os.path.realpath(text)))
+    except OSError:
+        return False
+
+
+def _sqlite_path_under_real_tasks(database: object) -> bool:
+    path, read_only = _sqlite_database_path(database)
+    return path is not None and not read_only and _path_under_real_tasks(path)
+
+
+def _refuse_real_task_store_write(kind: str, path: object) -> None:
+    node = os.environ.get("PYTEST_CURRENT_TEST", "<unknown>")
+    pytest.fail(
+        f"{node} attempted to {kind} the real dispatch task store at {path} "
+        f"({_REAL_TASKS_DIR}); set LU_TASKS_DIR for isolation",
+        pytrace=False,
+    )
+
+
+def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
+    """Fail a writable open, rename, or sqlite connect under the live task store.
+
+    Installed once with ``sys.addaudithook`` (#8640): a monkeypatch of ``open``
+    misses ``Path.write_text`` aliases and ``os.open`` captured before the
+    fixture ran. The hook cannot be removed, so it stays installed and only
+    refuses paths inside ``_REAL_TASKS_DIR`` and the explicit derived files
+    under ``_REAL_TASKS_DIR.parent`` listed in ``_DERIVED_LIVE_TASK_PATHS``.
+    The first statement rejects every event this hook does not handle.
+    """
+    if event not in _TASK_STORE_HANDLED_EVENTS:
+        return
+    if event == "open" and len(args) >= 3:
+        path, mode, flags = args[0], args[1], args[2]
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if (writing or (isinstance(flags, int) and flags & _TASK_STORE_WRITE_FLAGS)) and _path_under_real_tasks(path):
+            _refuse_real_task_store_write("write", path)
+        return
+    indexes = _TASK_STORE_MUTATION_EVENTS.get(event)
+    if indexes is not None:
+        for index in indexes:
+            if index < len(args) and _path_under_real_tasks(args[index]):
+                _refuse_real_task_store_write(event, args[index])
+        return
+    if event == "sqlite3.connect" and args and _sqlite_path_under_real_tasks(args[0]):
+        _refuse_real_task_store_write("open a database in", args[0])
+
+
+sys.addaudithook(_task_store_write_hook)
+
+
+def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
+    """Point Monitor's task-store root at this test's ``batch_state``.
+
+    ``production_context()`` reads ``config.BATCH_STATE_DIR`` when called, so
+    importing Monitor here would only pull in FastAPI during fixture setup in
+    minimal test environments. ``create_app(production_context())`` freezes
+    the root onto ``app.state.ctx`` at import. ``delegate_router._tasks_dir``
+    then writes ``.task_cache.sqlite3`` under that directory. The delegate
+    ``LU_TASKS_DIR`` does not move it, and the audit guard turns that
+    connect into a 500 (``Failed`` is a ``BaseException``, so the orient
+    section handler does not catch it).
+
+    ``git_hygiene_router._active_task_ids`` is not this seam: it reads
+    ``project_root / "batch_state" / "tasks"`` (the checkout, via
+    ``live_repo_root``), and only opens task JSON read-only. It never opens
+    the task-cache database. Pointing ``live_repo_root`` at the temp store
+    would detach git-backed API tests from the repo.
+
+    ``hramatka_router`` binds ``BATCH_STATE_DIR / "hramatka"`` at import. That
+    is the lesson store, not ``tasks/``, and this guard does not watch it.
+    """
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
+    api_config = _loaded_module("scripts", "api", "config")
+    if api_config is not None:
+        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+    monitor_context = _loaded_module("scripts", "api", "monitor_context")
+    if monitor_context is not None:
+        monitor_context.production_context.cache_clear()
+    api_main = _loaded_module("scripts", "api", "main")
+    if api_main is None:
+        return
+    app = vars(api_main).get("app")
+    context = getattr(getattr(app, "state", None), "ctx", None)
+    if context is not None:
+        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+
+
+# Per-process, not per-test: ``mktemp`` scans the base directory for the next
+# number, and that scan grows with every directory already created (#8654 review).
+_DISPATCH_STORE_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _dispatch_task_store_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One numbered base for every per-test task store in this process."""
+    return tmp_path_factory.mktemp("dispatch-stores")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Point the dispatch task store at a per-test directory (#8654).
+
+    The directory is ``<session base>/<n>/tasks``, so ``tasks_dir().parent``
+    (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
+    It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
+    fixture that creates a subdirectory of ``tmp_path`` breaks tests that
+    assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
+    Nothing is copied out of the live store. A test that sets ``LU_TASKS_DIR``
+    itself runs after this autouse fixture, so that override wins.
+    The same directory's parent becomes ``config.BATCH_STATE_DIR`` and
+    ``app.state.ctx.roots.batch_state_dir``, so Monitor requests do not open
+    the live ``.task_cache.sqlite3``.
+    """
+    isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
+    isolated.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(isolated))
+    _retarget_api_batch_state(monkeypatch, isolated.parent)
+    return isolated
 
 
 class SocketBlockedError(RuntimeError):
@@ -673,10 +1107,7 @@ def sparse_missing_tree_skip_reason(
     needed = _trees_needed_by_test(normalized, item_name)
     for tree in ("data/projects", "data/lexicon"):
         if tree in missing_trees and tree in needed:
-            return (
-                f"{tree} is absent from this sparse worktree; "
-                f"re-include it with --sparse-include {tree}"
-            )
+            return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
 
 
@@ -876,11 +1307,7 @@ def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]
         autouse = False
         if call is not None:
             for keyword in call.keywords:
-                if (
-                    keyword.arg == "autouse"
-                    and isinstance(keyword.value, ast.Constant)
-                    and keyword.value.value is True
-                ):
+                if keyword.arg == "autouse" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
                     autouse = True
         return True, autouse
     return False, False
@@ -1032,9 +1459,7 @@ def _analyze_test_module(
         if autouse:
             module_trees.update(direct.get(name, ()))
 
-    function_trees = tuple(
-        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
-    )
+    function_trees = tuple((name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees)
     return frozenset(module_trees), function_trees
 
 
@@ -1097,6 +1522,11 @@ def pytest_configure(config: pytest.Config) -> None:
         "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
         "skipped when sparse-checkout omits that tree",
     )
+    config.addinivalue_line(
+        "markers",
+        "needs_artifact(group, rel): test requires data/<rel> from artifact group; "
+        "skipped only when the artifact is absent",
+    )
     # The live app's request middleware defaults to 10s. Tests that drive
     # TestClient(api_main.app) and read the real decision/ADR tree have
     # exceeded that under xdist and come back as 504 (#8439). The assertions
@@ -1108,6 +1538,21 @@ def pytest_configure(config: pytest.Config) -> None:
 def pytest_runtest_setup(item: pytest.Item) -> None:
     if item.get_closest_marker("live_network"):
         _set_live_network_allowed(True)
+    marker = item.get_closest_marker("needs_artifact")
+    if marker is not None:
+        if len(marker.args) != 2 or marker.kwargs:
+            raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
+        from scripts.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+
+        group, rel = marker.args
+        try:
+            entry = find_entry(group, rel)
+            verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
+        except MissingArtifactError as error:
+            detail = error.detail.casefold()
+            if detail == "missing" or "manifest missing" in detail or "no unique manifest entry" in detail:
+                pytest.skip(f"needs_artifact: {error}")
+            raise
 
 
 def pytest_runtest_teardown(item: pytest.Item, nextitem: pytest.Item | None) -> None:
@@ -1424,15 +1869,6 @@ Content here.
 
 Practice content.
 """
-
-
-@pytest.fixture(autouse=True)
-def _enable_formal_shielded_cf_for_unit_tests(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Unit tests may still exercise isolation helpers; production CLI stays retired.
-
-    Production / drivers leave LU_FORMAL_SHIELDED_CF unset so review-pr refuses.
-    """
-    monkeypatch.setenv("LU_FORMAL_SHIELDED_CF", "1")
 
 
 # Real primary checkout's ``.worktrees/`` — not a ``.worktrees`` directory inside
@@ -1808,15 +2244,16 @@ def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
 
 def _guarded_popen_init(self, args, *pos, **kwargs):
     _guard_live_github_spawn(args, kwargs)
+    if not _worktree_guard_enabled():
+        _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
+        return
     dest: str | None = None
     absent_before = False
     try:
         found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
         if found is not None:
             dest = found
-            absent_before = (
-                found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
-            )
+            absent_before = found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
     except Exception as exc:
         # A guard bug must not replace the original call.
         _record_classify_failure(exc)
@@ -1827,9 +2264,7 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
     if dest is None:
         return
     try:
-        _POPEN_WORKTREE_CALLS.append(
-            _PopenWorktreeCall(self, dest, absent_before, _creation_attribution())
-        )
+        _POPEN_WORKTREE_CALLS.append(_PopenWorktreeCall(self, dest, absent_before, _creation_attribution()))
     except Exception as exc:
         _record_classify_failure(exc)
 
@@ -1838,6 +2273,10 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     """Reject a process spawn that resolves to the installed GitHub CLI."""
     if _LIVE_GITHUB_ALLOWED or not _gh_guard_enabled() or not _REAL_GH_BINARY:
         return
+    # Limits: a string argv is not inspected, so ``shell=True`` (the command
+    # is a string) is unguarded. A positional ``executable`` is ignored; only
+    # ``kwargs["executable"]`` is read. ``os.system`` and
+    # ``asyncio.create_subprocess_shell`` never reach this hook.
     if isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)) or not args:
         return
     argv = _decode_argv(args)
@@ -1958,11 +2397,7 @@ def _worktree_guard_teardown_message() -> str | None:
             _record_classify_failure(exc)
             continue
         if code is None:
-            _record_classify_failure(
-                TimeoutError(
-                    f"git worktree add {path}: timed out waiting for exit status"
-                )
-            )
+            _record_classify_failure(TimeoutError(f"git worktree add {path}: timed out waiting for exit status"))
             continue
         if code == 0 and (os.path.lexists(path) or path in listed):
             suspected.add(path)
@@ -2072,21 +2507,6 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     aimed at any other repo, including a test's own ``git init`` primary,
     still run the real helper.
     """
-    from scripts.ai_agent_bridge import _acp_execution as acp_mod
-
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
-    original = acp_mod.acp_execution_cwd
-
-    @contextlib.contextmanager
-    def scoped(repo_root, *, task_id):
-        try:
-            resolved = Path(repo_root).resolve()
-        except (OSError, RuntimeError, ValueError):
-            resolved = None
-        if resolved == real_checkout:
-            yield tmp_path_factory.mktemp("acp-execution")
-            return
-        with original(repo_root, task_id=task_id) as workspace:
-            yield workspace
-
-    monkeypatch.setattr(acp_mod, "acp_execution_cwd", scoped)
+    monkeypatch.setenv("LU_TEST_ACP_PRIMARY_ROOT", str(real_checkout))
+    monkeypatch.setenv("LU_TEST_ACP_SCRATCH_ROOT", str(tmp_path_factory.getbasetemp()))

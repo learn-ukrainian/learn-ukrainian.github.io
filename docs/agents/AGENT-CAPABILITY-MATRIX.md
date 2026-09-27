@@ -1,9 +1,13 @@
 # Agent Capability Matrix
 
-> **Living document.** Last full pass: 2026-05-17 evening. Re-run the role probes
+> **Historical capability snapshot.** Last full pass: 2026-05-17 evening. Re-run the role probes
 > whenever a new model variant lands. Raw evidence preserved at
 > `audit/2026-05-17-agent-bakeoff-evening/`. Companion doc:
 > `docs/best-practices/agent-cooperation.md` for protocols, this doc for routing.
+
+> The 2026-05-17 DeepSeek comparisons below are historical V4 evidence. Current
+> first-party Flash is `deepseek-v4.1-flash` via the moving OpenCode alias
+> `deepseek/deepseek-flash`; see `docs/runbooks/agent-seat-onboarding.md`.
 
 ## TL;DR
 
@@ -336,7 +340,7 @@ VIBE_ACTIVE_MODEL=mistral-medium-3.5 vibe -p "QUESTION" --output text --trust
 # DeepSeek v4 (via opencode; NEW lane — adapter PR pending)
 opencode run --model deepseek/deepseek-v4-pro --variant max \
   --dangerously-skip-permissions "QUESTION"
-opencode run --model deepseek/deepseek-v4-flash \
+opencode run --model deepseek/deepseek-flash \
   --dangerously-skip-permissions --format json "QUESTION"
 # JSON envelope gives token + cost telemetry per call.
 ```

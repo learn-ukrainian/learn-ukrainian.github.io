@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content, pytest.mark.repo_wide]
 
 _TESTS_ROOT = Path(__file__).resolve().parent
 

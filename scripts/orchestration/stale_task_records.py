@@ -16,7 +16,7 @@ finalized; they only inflate every scan and read as open attention items.
   worktree HEAD still holds a commit the record names;
 * **C** orphaned: the worktree path, the local branch and the remote branch are
   all gone, and so is the work. Either the record names a commit
-  (``auto_finalize.commit_sha``; records carry no other head id) that no ref
+  (``final_branch_head_commit``, or legacy ``auto_finalize.commit_sha``) that no ref
   reaches, every remote branch freshly fetched, or the task exited with no
   commits and a clean tree, leaving nothing to lose;
 * **D** anything else (never modified): evidence unavailable, a failed fetch
@@ -98,7 +98,9 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
 
 from scripts import delegate, secret_redactor
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
+from scripts.orchestration.dead_worker_state import task_state_lock
 
 SETTLED_BY = "settle-stale"
 ARCHIVE_DIR_NAME = task_record_store.ARCHIVE_DIR_NAME
@@ -378,15 +380,24 @@ _SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
 def recorded_work_commits(record: Mapping[str, Any]) -> list[str]:
     """Commit ids a record names as its work.
 
-    Delegate records carry no final head sha: ``worktree_base_sha`` is the
-    base the task started from, not its work. The one commit a record does
-    name is ``auto_finalize.commit_sha``, the commit delegate made from a dirty
-    tree at exit.
+    New delegate records name the final branch head. Older records may only
+    name the commit delegate made from a dirty tree at exit. The base SHA is
+    the task's starting point, not its work.
     """
     auto_finalize = record.get("auto_finalize")
-    raw = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
-    if isinstance(raw, str) and _SHA_RE.match(raw.strip().lower()):
-        return [raw.strip().lower()]
+    old_head = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
+    final_head = record.get("final_branch_head_commit")
+    base_sha = record.get("worktree_base_sha")
+    ahead = record.get("commits_ahead")
+    final_is_work = (type(ahead) is int and ahead != 0) or (
+        isinstance(final_head, str)
+        and isinstance(base_sha, str)
+        and _SHA_RE.fullmatch(base_sha.strip().lower())
+        and final_head.strip().lower() != base_sha.strip().lower()
+    )
+    for raw in (final_head if final_is_work else None, old_head):
+        if isinstance(raw, str) and _SHA_RE.fullmatch(raw.strip().lower()):
+            return [raw.strip().lower()]
     return []
 
 
@@ -1302,10 +1313,16 @@ def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> N
     The clash check before this is advisory: a writer can create the hot record
     after it. Every move is :func:`_move_no_replace`, so that writer's file is
     kept and the archived copy (a snapshot directory whole) stays where it is.
+
+    The record move holds the per-task lock on the archived record — the same
+    ``<record>.json.lock`` the retention sweep holds while it rewrites
+    ``tasks/archive``. Without it, the sweep can write that name back after
+    this move.
     """
     record_path, *sidecars = group
     try:
-        _move_no_replace(record_path, tasks_dir / record_path.name)
+        with task_state_lock(record_path):
+            _move_no_replace(record_path, tasks_dir / record_path.name)
     except FileExistsError:
         row["action"] = "skipped"
         row["skip_reason"] = f"a writer created {record_path.name} in the hot directory first; archived copy kept"
@@ -1428,7 +1445,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "--tasks-dir",
             type=Path,
             default=None,
-            help=f"Task record directory (default: {delegate._TASKS_DIR}).",
+            help=f"Task record directory (default: {default_tasks_dir()}).",
         )
         if min_age_default is not None:
             sub.add_argument(
@@ -1547,7 +1564,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
-    tasks_dir: Path = args.tasks_dir or delegate._TASKS_DIR
+    tasks_dir: Path = args.tasks_dir or default_tasks_dir()
     if not tasks_dir.is_dir():
         print(f"tasks dir not found: {tasks_dir}", file=sys.stderr)
         return EXIT_USAGE

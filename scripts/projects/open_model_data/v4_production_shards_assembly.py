@@ -67,7 +67,7 @@ DEFAULT_HELDOUT_SUITE = (
 )
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
-DEFAULT_LT_REPLACEMENTS = resolve_data_path("data/lt_replacements.json")
+DEFAULT_LT_REPLACEMENTS = resolve_data_path("registry/lt_replacements.json")
 DEFAULT_GOLD_SEEDS_TRAJECTORIES = resolve_data_path(
     "data/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_trajectories.jsonl"
 )

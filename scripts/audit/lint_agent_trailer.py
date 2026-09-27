@@ -45,15 +45,16 @@ Trailer format
 
 Where ``agent`` ∈ {``claude-inline``, ``claude``, ``codex``, ``gemini``,
 ``agy-inline``, ``agy``, ``grok``, ``grok-build``, ``grok-hermes``,
-``deepseek-v4-pro``, ``cursor``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
+``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
 dispatch task identifier or the ``inline`` literal for orchestrator commits.
 ``grok-build`` is a permanent alias of the native ``grok`` seat (historical
-trailers must keep validating). Examples::
+trailers must keep validating). ``gemini`` is an alias of ``agy``. Examples::
 
     X-Agent: claude-inline/orchestrator
     X-Agent: codex/1879-fix-ci-and-wikipedia
     X-Agent: claude/1657-adr-010
     X-Agent: gemini/1787-15-handoff-verifier
+    X-Agent: deepseek/8642-some-task
 
 Related
 =======
@@ -66,42 +67,234 @@ Related
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import re
 import subprocess
 import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from scripts.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
+
+_CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
-def _git(*args: str) -> str:
+def _detect_ci() -> str | None:
+    """Return name of CI environment variable if running in CI, else None."""
+    for var in _CI_ENV_VARS:
+        if os.environ.get(var):
+            return var
+    return None
+
+
+def _git(*args: str, cwd: Path | None = None) -> str:
     """Run a git command and return stdout, raising on non-zero exit."""
     return subprocess.check_output(
-        ["git", *args], text=True, stderr=subprocess.PIPE, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
+        ["git", *args], text=True, stderr=subprocess.PIPE, timeout=DEFAULT_GIT_TIMEOUT_SECONDS, cwd=cwd
     ).strip()
 
 
-def _commits_in_range(rev_range: str) -> list[str]:
+def _default_tasks_dir(repo_root: Path | None = None) -> Path:
+    """Return the default tasks directory under batch_state/tasks."""
+    root = main_checkout_root(Path(repo_root)) if repo_root else resolve_repo_root(Path(__file__), 2)
+    return (root / "batch_state" / "tasks").resolve()
+
+
+def _agents_match(a: str, b: str) -> bool:
+    """Return True if two agent names match directly or via known aliases."""
+    if a == b:
+        return True
+    pair = {a, b}
+    return pair <= {"grok", "grok-build"} or pair <= {"gemini", "agy"} or pair <= {"deepseek", "deepseek-v4-pro"}
+
+
+def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[Path | None, str | None]:
+    """Locate task record for a trailer agent/task, normalization-aware.
+
+    For trailer ``agent/task``, accepts a record named ``{agent}-task``,
+    ``{agent}_task``, or ``task`` (the inverse of ``_x_agent_task_id`` in delegate.py).
+    Prefers a candidate whose record agent matches the trailer agent.
+    """
+    normalized = task
+    for prefix in (f"{agent}-", f"{agent}/", f"{agent}_"):
+        if normalized.startswith(prefix):
+            normalized = normalized[len(prefix) :]
+            break
+
+    candidates: list[str] = [f"{agent}-{normalized}", f"{agent}_{normalized}"]
+    if agent in ("gemini", "agy"):
+        other = "agy" if agent == "gemini" else "gemini"
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
+    elif agent in ("grok", "grok-build"):
+        other = "grok-build" if agent == "grok" else "grok"
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
+    elif agent in ("deepseek", "deepseek-v4-pro"):
+        other = "deepseek" if agent == "deepseek-v4-pro" else "deepseek-v4-pro"
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
+
+    if normalized not in candidates:
+        candidates.append(normalized)
+    if task not in candidates:
+        candidates.append(task)
+
+    first_existing: tuple[Path, str] | None = None
+    for candidate in candidates:
+        rec_path = locate_task_record(tasks_dir, candidate)
+        if rec_path is None:
+            continue
+        if first_existing is None:
+            first_existing = (rec_path, candidate)
+        try:
+            data = json.loads(rec_path.read_text(encoding="utf-8"))
+            rec_agent = data.get("agent")
+            if rec_agent and _agents_match(agent, rec_agent):
+                return rec_path, candidate
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    if first_existing is not None:
+        return first_existing
+    return None, None
+
+
+def _is_exempt_trailer(agent: str, task: str) -> bool:
+    """Return True if the trailer represents a non-dispatched inline or bot commit.
+
+    These trailers are shape-checked only:
+    - *-inline/* (e.g. claude-inline/orchestrator, agy-inline/fix)
+    - */inline (e.g. codex/inline, agy/inline)
+    - dependabot/*
+    """
+    if agent.endswith("-inline") or agent == "dependabot":
+        return True
+    return task == "inline"
+
+
+@dataclass(frozen=True)
+class ProvenanceContext:
+    active: bool
+    skip_reason: str | None = None
+    expected_task_id: str | None = None
+    expected_agent: str | None = None
+    tasks_dir: Path | None = None
+    explicit_expected_trailer: str | None = None
+
+    @property
+    def expected_trailer(self) -> str | None:
+        if self.explicit_expected_trailer:
+            return self.explicit_expected_trailer
+        if self.expected_agent and self.expected_task_id:
+            task = self.expected_task_id
+            for prefix in (f"{self.expected_agent}-", f"{self.expected_agent}/", f"{self.expected_agent}_"):
+                if task.startswith(prefix):
+                    task = task[len(prefix) :]
+                    break
+            task = re.sub(r"[^A-Za-z0-9._-]+", "-", task).strip(".-")
+            task = task or "task"
+            return f"X-Agent: {self.expected_agent}/{task}"
+        return None
+
+
+def resolve_provenance_context(
+    tasks_dir: Path | None = None,
+    cwd: Path | None = None,
+) -> ProvenanceContext:
+    """Determine whether task provenance verification should run and resolve expected metadata."""
+    # 1. Detect CI explicitly
+    ci_var = _detect_ci()
+    if ci_var:
+        return ProvenanceContext(
+            active=False,
+            skip_reason=f"CI environment detected ({ci_var})",
+            tasks_dir=tasks_dir,
+        )
+
+    # 2. Check dispatch env marker
+    env_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID")
+    if not env_task_id:
+        return ProvenanceContext(
+            active=False,
+            skip_reason="dispatch task environment marker not set (LEARN_UKRAINIAN_DISPATCH_TASK_ID)",
+            tasks_dir=tasks_dir,
+        )
+
+    # 3. Check tasks directory
+    default_dir = _default_tasks_dir(repo_root=main_checkout_root(Path(cwd)) if cwd else None)
+    effective_tasks_dir = (tasks_dir or default_dir).resolve()
+    if not effective_tasks_dir.is_dir():
+        return ProvenanceContext(
+            active=False,
+            skip_reason=f"no task records directory found ({effective_tasks_dir})",
+            tasks_dir=effective_tasks_dir,
+        )
+
+    # 4. Check if that task's record is found
+    env_agent = os.environ.get("LEARN_UKRAINIAN_DISPATCH_AGENT")
+    env_trailer = os.environ.get("LU_X_AGENT_TRAILER")
+    explicit_trailer: str | None = None
+    if env_trailer and _TRAILER_RE.match(env_trailer.strip()):
+        explicit_trailer = env_trailer.strip()
+    if not env_agent and explicit_trailer:
+        m = _TRAILER_RE.match(explicit_trailer)
+        if m:
+            env_agent = m.group("agent")
+
+    rec_path, _ = locate_record_for_trailer(effective_tasks_dir, env_agent or "", env_task_id)
+    if rec_path is None:
+        return ProvenanceContext(
+            active=False,
+            skip_reason=f"task record {env_task_id!r} not found in {effective_tasks_dir.name}",
+            tasks_dir=effective_tasks_dir,
+        )
+
+    expected_agent = env_agent
+    expected_task_id = env_task_id
+    try:
+        data = json.loads(rec_path.read_text(encoding="utf-8"))
+        expected_agent = data.get("agent") or expected_agent
+        expected_task_id = data.get("task_id") or expected_task_id
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    return ProvenanceContext(
+        active=True,
+        expected_task_id=expected_task_id,
+        expected_agent=expected_agent,
+        tasks_dir=effective_tasks_dir,
+        explicit_expected_trailer=explicit_trailer,
+    )
+
+
+def _commits_in_range(rev_range: str, cwd: Path | None = None) -> list[str]:
     """Return commit SHAs (newest first) in the range, excluding merges."""
-    raw = _git("log", "--no-merges", "--format=%H", rev_range)
+    raw = _git("log", "--no-merges", "--format=%H", rev_range, cwd=cwd)
     return raw.splitlines() if raw else []
 
 
-def _commit_meta(sha: str) -> tuple[str, str, str, str]:
+def _commit_meta(sha: str, cwd: Path | None = None) -> tuple[str, str, str, str]:
     """Return (committer_email, author_email, author_name, subject)."""
-    raw = _git("log", "-1", "--format=%ce%n%ae%n%an%n%s", sha)
+    raw = _git("log", "-1", "--format=%ce%n%ae%n%an%n%s", sha, cwd=cwd)
     parts = raw.splitlines()
     while len(parts) < 4:
         parts.append("")
     return parts[0], parts[1], parts[2], parts[3]
 
 
-def _commit_body(sha: str) -> str:
-    return _git("log", "-1", "--format=%B", sha)
+def _commit_body(sha: str, cwd: Path | None = None) -> str:
+    return _git("log", "-1", "--format=%B", sha, cwd=cwd)
 
 
 def _looks_like_dependabot(committer_email: str, author_email: str, author_name: str, subject: str) -> bool:
@@ -114,19 +307,69 @@ def _looks_like_dependabot(committer_email: str, author_email: str, author_name:
     return subject.startswith(("deps:", "Bump ", "build(deps"))
 
 
-def _check_commit(sha: str) -> tuple[str, str]:
+def _check_commit(
+    sha: str,
+    *,
+    provenance: ProvenanceContext | None = None,
+    cwd: Path | None = None,
+) -> tuple[str, str]:
     """Return (verdict, reason). verdict ∈ {'PASS', 'SKIP', 'FAIL'}."""
-    committer_email, author_email, author_name, subject = _commit_meta(sha)
+    committer_email, author_email, author_name, subject = _commit_meta(sha, cwd=cwd)
 
     if _looks_like_dependabot(committer_email, author_email, author_name, subject):
         return "SKIP", f'dependabot/bot ("{subject[:50]}")'
 
-    body = _commit_body(sha)
+    body = _commit_body(sha, cwd=cwd)
     match = _TRAILER_RE.search(body)
     if match is None:
         return "FAIL", f'missing X-Agent trailer in commit "{subject[:60]}"'
 
-    return "PASS", f"X-Agent: {match.group('agent')}/{match.group('task')}"
+    agent = match.group("agent")
+    task = match.group("task")
+    trailer_str = f"X-Agent: {agent}/{task}"
+
+    if _is_exempt_trailer(agent, task):
+        return "PASS", trailer_str
+
+    if provenance is None:
+        provenance = resolve_provenance_context(cwd=cwd)
+
+    if not provenance.active:
+        return "PASS", trailer_str
+
+    if provenance.expected_trailer and trailer_str == provenance.expected_trailer:
+        return "PASS", trailer_str
+
+    tasks_dir = provenance.tasks_dir or _default_tasks_dir(
+        repo_root=main_checkout_root(Path(cwd)) if cwd else None
+    )
+    expected = (
+        provenance.expected_trailer
+        or f"X-Agent: {provenance.expected_agent or agent}/{provenance.expected_task_id or task}"
+    )
+
+    rec_path, _ = locate_record_for_trailer(tasks_dir, agent, task)
+    if rec_path is None:
+        return (
+            "FAIL",
+            f"task record {task!r} not found in {tasks_dir.name} (hot or archive); expected literal trailer: {expected!r}",
+        )
+
+    rec_agent: str | None = None
+    try:
+        rec_data = json.loads(rec_path.read_text(encoding="utf-8"))
+        rec_agent = rec_data.get("agent")
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    target_agent = rec_agent or provenance.expected_agent
+    if target_agent and not _agents_match(agent, target_agent):
+        return (
+            "FAIL",
+            f"trailer {trailer_str!r} names agent {agent!r} but dispatch worktree agent is {target_agent!r}; expected literal trailer: {expected!r}",
+        )
+
+    return "PASS", trailer_str
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -144,10 +387,22 @@ def main(argv: list[str] | None = None) -> int:
         help='Git rev range to check (default: "origin/main..HEAD"). '
         'Examples: "origin/main..HEAD", "HEAD~3..HEAD", "abc123..def456".',
     )
+    parser.add_argument(
+        "--tasks-dir",
+        type=Path,
+        default=None,
+        help="Path to tasks directory (default: batch_state/tasks under repository root).",
+    )
+    parser.add_argument(
+        "--cwd",
+        type=Path,
+        default=None,
+        help="Working directory for git operations (default: current directory).",
+    )
     args = parser.parse_args(argv)
 
     try:
-        shas = _commits_in_range(args.rev_range)
+        shas = _commits_in_range(args.rev_range, cwd=args.cwd)
     except subprocess.CalledProcessError as exc:
         print(f"git log failed: {exc.stderr or exc}", file=sys.stderr)
         return 2
@@ -156,11 +411,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"No commits in range {args.rev_range!r} (nothing to check).")
         return 0
 
+    provenance = resolve_provenance_context(tasks_dir=args.tasks_dir, cwd=args.cwd)
+    if not provenance.active:
+        print(f"ℹ️  Task provenance check skipped: {provenance.skip_reason}\n")
+    else:
+        print(f"🌲 Validating X-Agent task provenance (expected: {provenance.expected_trailer})\n")
+
     fails = 0
     print(f"Checking {len(shas)} commit(s) in {args.rev_range}:\n")
     for sha in shas:
         short = sha[:10]
-        verdict, reason = _check_commit(sha)
+        verdict, reason = _check_commit(sha, provenance=provenance, cwd=args.cwd)
         if verdict == "FAIL":
             fails += 1
             print(f"  {short}  FAIL  {reason}")
@@ -170,10 +431,11 @@ def main(argv: list[str] | None = None) -> int:
     print()
     if fails:
         print(
-            f"❌ {fails}/{len(shas)} commit(s) missing X-Agent trailer.\n"
+            f"❌ {fails}/{len(shas)} commit(s) failed X-Agent trailer check.\n"
             "   Add a trailer to each failing commit. Example for an orchestrator inline commit:\n"
             "       git commit --amend --trailer 'X-Agent: claude-inline/orchestrator'\n"
-            "   For dispatched-agent commits, the dispatch brief should specify the trailer.\n"
+            "   For dispatched-agent commits, use the expected literal trailer:\n"
+            f"       git commit --amend --trailer '{provenance.expected_trailer or 'X-Agent: <agent>/<task-id>'}'\n"
             "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/delegate-must-use-worktree.md."
         )
         return 1

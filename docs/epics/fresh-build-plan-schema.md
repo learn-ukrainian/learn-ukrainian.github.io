@@ -252,6 +252,9 @@ passes silently and never invents a value.
 - **Activity count minimums** at lesson grain are uncalibrated (§4): reported as
   `not_checked: lesson_activity_minimums_not_calibrated`. The type allowlist is the set of
   definitions in `schemas/activities-<level>.schema.json`, read at run time.
+- **A1 workbook presence (#8889 §A1):** every lesson except a recap has at least one activity with
+  `placement: workbook`. The recap keeps the R-03 / A1 arc D4 shape below and does not gain a
+  second exercise set. This is a presence rule, not a numeric per-lesson floor.
 - **Rule 7, precisely.** An inventory entry (`vocabulary.core` and `vocabulary.incidental`) names a
   word as `{ lemma, evidence, forms }` where `evidence` resolves to a word-store record, `lemma`
   equals that record's lemma, and every tag in `forms` exists in that record. Since revision 8 `forms`
@@ -269,6 +272,67 @@ passes silently and never invents a value.
   rejected with a message saying v1 plans are not read or converted (§7.4).
 - **Failure, not-checked and waiver codes are a registry**, one constant per code in the validator
   package, listed in its `--help`; tests assert the exact set of codes a fixture produces.
+
+### 2b. A1 activity planning and report (#8889, A1 phase)
+
+Choose activities from the pack's textbook models (`model: X-…`) first. The plan fixes type,
+placement, focus and order before the lesson writer runs. Give every non-recap lesson workbook
+practice that serves its teaching points. A recap is one short first-person story side by side in
+Ukrainian and English, Ukrainian-only questions about that story, and one production task (R-03;
+A1 arc D4); it has no separate workbook exercise set. Do not use `classify` in a new plan;
+`group-sort` is the supported sorting type.
+
+The A1 placement table is the intersection of the activity definitions in
+`schemas/activities-a1.schema.json` and the pedagogical placements in
+`docs/best-practices/activity-pedagogy.md`. The generated validator table owns enforcement;
+when the schema and pedagogy disagree, its discrepancy entry must state the resolution.
+`classify` is defined in the legacy schema but forbidden in fresh plans. The legacy §3 matrix
+in the pedagogy document remains the v1 reference; it does not grant fresh-build placement.
+
+| A1 type | Fresh placement | Plan use |
+| --- | --- | --- |
+| `image-to-letter`, `letter-grid`, `watch-and-repeat` | inline | Short alphabet or pronunciation work |
+| `divide-words`, `count-syllables`, `pick-syllables` | both | Syllable work |
+| `anagram` | workbook | Word puzzle |
+| `unjumble`, `order`, `odd-one-out` | both | Reordering or contrast |
+| `observe`, `phrase-table` | both | Visual or substitution support |
+| `match-up`, `group-sort` | both | Pairing or sorting; bind form records and feature groups as specified below |
+| `quiz`, `true-false`, `fill-in` | both | Checks; true-false follows the unchanged host and cap rule in activity pedagogy |
+| `error-correction`, `translate` | workbook | Find and fix or translation; A1 translation is workbook only |
+| `classify` | forbidden | Deprecated; use `group-sort` |
+
+At plan stage `plan-validate` emits an activity report per lesson and module: counts by placement
+and type, distinct types per lesson and workbook, largest single-type share, longest same-type
+run, and workbook presence. A field the stage cannot know is
+`not_available_at_this_stage`. The draft report adds response opportunities and explanation
+coverage; the rendered report counts workbook tasks actually rendered and playable. These
+reports help the reviewer judge variety and volume; a type count by itself is not variety.
+For a mapped v1 module, show v1 workbook activities and response opportunities beside the
+fresh totals. A reduction needs a stated reason in the plan review; it is not an automatic gate.
+No numeric per-lesson minimum is set before the pilot's observed workload and objective-coverage
+review (§2a; #8889 §A4).
+
+The draft report's response unit is fixed by type; the plan report cannot count the units that
+depend on draft items. This table describes the A1 types and the shared counting rule where
+applicable. Each `image-to-letter` choice item counts as one response opportunity.
+
+| Type | Response unit |
+| --- | --- |
+| `quiz`, `fill-in`, `true-false`, `error-correction`, `odd-one-out`, `translate`, `pick-syllables`, `image-to-letter` | Each item |
+| `match-up` | Each pair |
+| `group-sort` | Each entry |
+| `order`, `unjumble` | One per sequence |
+| `anagram`, `count-syllables`, `divide-words` | Each word |
+| `letter-grid`, `observe`, `phrase-table`, `watch-and-repeat` | Unscored; no response opportunity counted |
+
+A1 group-sort names an A1 `grouping_feature` (`Gender`, `Number`, `Case`, `Person`, or
+`VerbForm`), gives every group a `value`, and binds each entry to its word record and `why`.
+An entry that can fit two values needs a resolution receipt from a language-lane seat of
+another family than the writer, or the entry must be replaced. The engine may not choose
+the analysis that matches the key. Match-up names `left_role` and
+`right_role` (`form`, `gloss`, `question`, `answer`); any side with role `form` has its word
+record, and each pair has a `why`. These are draft item fields, while the plan states the
+activity type, focus, placement, model, and evidence it will need.
 
 ## 3. Evidence pack
 

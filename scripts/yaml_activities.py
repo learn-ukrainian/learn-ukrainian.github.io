@@ -18,12 +18,22 @@ try:
     # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
     from scripts.build.activity_renderer import (
         error_correction_render_values,
+        group_sort_group_name,
+        image_to_letter_render_values,
+        order_correct_indices,
+        quiz_correct_indices,
         unique_error_correction_options,
+        unjumble_tokens,
     )
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
     from build.activity_renderer import (
         error_correction_render_values,
+        group_sort_group_name,
+        image_to_letter_render_values,
+        order_correct_indices,
+        quiz_correct_indices,
         unique_error_correction_options,
+        unjumble_tokens,
     )
 
 # =============================================================================
@@ -149,6 +159,7 @@ class UnjumbleItem:
     words: list[str]
     answer: str
     hint: str | None = None
+    explanation: str = ""
 
 
 @dataclass
@@ -212,6 +223,7 @@ class AnagramItem:
     scrambled: str
     answer: str
     hint: str | None = None
+    explanation: str = ""
 
 
 @dataclass
@@ -513,6 +525,7 @@ class ImageToLetterItem:
     answer: str
     distractors: list[str] = field(default_factory=list)
     note: str = ""
+    explanation: str = ""
 
 
 @dataclass
@@ -530,6 +543,7 @@ class WatchAndRepeatItem:
     word: str = ""
     sound: str = ""
     note: str = ""
+    explanation: str = ""
 
 
 @dataclass
@@ -564,6 +578,7 @@ class CountSyllablesItem:
     word: str
     correct: int
     translation: str | None = None
+    explanation: str = ""
 
 
 @dataclass
@@ -580,6 +595,7 @@ class DivideWordsItem:
     word: str
     answer: str
     hint: str | None = None
+    explanation: str = ""
 
 
 @dataclass
@@ -612,6 +628,27 @@ class LetterGridActivity:
     title: str = ""
     instruction: str = ""
     letters: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
+class PhraseItem:
+    phrase: str
+    context: str | None = None
+    emoji: str | None = None
+
+
+@dataclass
+class PhraseGroup:
+    label: str
+    phrases: list[PhraseItem] = field(default_factory=list)
+
+
+@dataclass
+class PhraseTableActivity:
+    type: str = "phrase-table"
+    title: str = ""
+    instruction: str = ""
+    groups: list[PhraseGroup] = field(default_factory=list)
 
 
 @dataclass
@@ -769,6 +806,7 @@ class ActivityParser:
             'divide-words': self._parse_divide_words,
             'highlight-morphemes': self._parse_highlight_morphemes,
             'letter-grid': self._parse_letter_grid,
+            'phrase-table': self._parse_phrase_table,
             'odd-one-out': self._parse_odd_one_out,
             'pick-syllables': self._parse_pick_syllables,
         }
@@ -789,21 +827,17 @@ class ActivityParser:
 
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
-        for item_data in self._item_rows(data):
+        for item_index, item_data in enumerate(self._item_rows(data)):
             raw_options = item_data.get('options', [])
-            correct_answer = item_data.get('answer')
-            correct_index = item_data.get('correct')  # V2: integer index
+            correct = set(quiz_correct_indices(item_data, item_index))
             options = []
             for i, opt in enumerate(raw_options):
                 if isinstance(opt, str):
-                    # V2: correct is integer index; V1: match by answer string
-                    # Use type() not isinstance() — bool is subclass of int in Python
-                    is_correct = i == correct_index if type(correct_index) is int else opt == correct_answer
-                    options.append(QuizOption(text=opt, correct=is_correct))
+                    options.append(QuizOption(text=opt, correct=i in correct))
                 else:
                     options.append(QuizOption(
                         text=opt['text'],
-                        correct=opt.get('correct', False),
+                        correct=i in correct,
                         intentional_error=opt.get('intentional_error', False)
                     ))
             question = item_data.get('question') or item_data.get('prompt', '')
@@ -917,13 +951,13 @@ class ActivityParser:
         return MatchUpActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), pairs=pairs)
 
     def _parse_group_sort(self, data: dict) -> GroupSortActivity:
-        groups = [GroupSortGroup(name=g.get('name', g.get('label', '')), items=g.get('items', [])) for g in data.get('groups', [])]
+        groups = [GroupSortGroup(name=group_sort_group_name(g, i), items=g.get('items', [])) for i, g in enumerate(data.get('groups', []))]
         return GroupSortActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), groups=groups)
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []
         for item_index, item_data in enumerate(self._item_rows(data)):
-            words = self._unjumble_words(item_data, item_index)
+            words = unjumble_tokens(item_data, item_index)
             answer = (
                 item_data.get('answer') or item_data.get('word')
                 or item_data.get('sentence') or item_data.get('correct')
@@ -938,25 +972,9 @@ class ActivityParser:
             if answer is None:
                 raise KeyError(f"unjumble item {item_index} missing one of: answer, correct_order")
             hint = item_data.get('hint')
-            items.append(UnjumbleItem(words=words, answer=answer, hint=hint))
+            explanation = str(item_data.get('explanation') or '')
+            items.append(UnjumbleItem(words=words, answer=answer, hint=hint, explanation=explanation))
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
-
-    def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
-        for field_name in ('words', 'jumbled', 'prompt', 'scrambled', 'letters', 'tiles'):
-            if field_name in item_data:
-                return self._tokens_from_unjumble_field(item_data[field_name], field_name, item_index)
-        raise KeyError(f"unjumble item {item_index} missing one of: words, jumbled, prompt, scrambled")
-
-    def _tokens_from_unjumble_field(self, value: Any, field_name: str, item_index: int) -> list[str]:
-        if isinstance(value, list):
-            return [str(token) for token in value]
-        if isinstance(value, str):
-            separator = '/' if '/' in value else None
-            return [token.strip() for token in value.split(separator) if token.strip()]
-        raise TypeError(
-            f"unjumble item {item_index} field {field_name!r} must be str or list, "
-            f"got {type(value).__name__}"
-        )
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
         items = []
@@ -1072,7 +1090,7 @@ class ActivityParser:
                 scrambled = i['scrambled']
             else:
                 raise KeyError(f"Anagram item missing both 'letters' and 'scrambled': {list(i.keys())}")
-            items.append(AnagramItem(scrambled=scrambled, answer=i['answer'], hint=i.get('hint')))
+            items.append(AnagramItem(scrambled=scrambled, answer=i['answer'], hint=i.get('hint'), explanation=str(i.get('explanation') or '')))
         return AnagramActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_reading(self, data: dict) -> ReadingActivity:
@@ -1424,12 +1442,14 @@ class ActivityParser:
 
     def _parse_image_to_letter(self, data: dict) -> ImageToLetterActivity:
         items = []
-        for i in data.get('items', []):
+        for index, raw in enumerate(data.get('items', [])):
+            values = image_to_letter_render_values(raw, index)
             items.append(ImageToLetterItem(
-                emoji=i.get('emoji', ''),
-                answer=i.get('answer', ''),
-                distractors=i.get('distractors', []),
-                note=i.get('note', ''),
+                emoji=values['emoji'],
+                answer=values['answer'],
+                distractors=values['distractors'],
+                note=values.get('note', ''),
+                explanation=values.get('explanation', ''),
             ))
         return ImageToLetterActivity(
             title=data.get('title', ''),
@@ -1446,6 +1466,7 @@ class ActivityParser:
                 word=i.get('word', ''),
                 sound=i.get('sound', ''),
                 note=i.get('note', ''),
+                explanation=str(i.get('explanation') or ''),
             ))
         return WatchAndRepeatActivity(
             title=data.get('title', ''),
@@ -1483,21 +1504,7 @@ class ActivityParser:
             raise ValueError("order requires non-empty correct_order list")
         if not isinstance(is_ukrainian, bool):
             raise TypeError("order is_ukrainian must be a boolean")
-        # Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
-        # answer as the ordered ITEM STRINGS rather than integer indices into
-        # `items`. When correct_order is an exact permutation of UNIQUE items,
-        # resolve each string to its index — unambiguous, and a natural
-        # authoring form we accept rather than HARD-fail at MDX assembly.
-        str_items = [str(item) for item in items]
-        if (all(isinstance(entry, str) for entry in correct_order)
-                and len(str_items) == len(set(str_items))
-                and len(correct_order) == len(str_items)
-                and set(correct_order) == set(str_items)):
-            correct_order = [str_items.index(entry) for entry in correct_order]
-        if not all(isinstance(index, int) for index in correct_order):
-            raise TypeError("order correct_order must contain integers")
-        if any(index < 0 or index >= len(items) for index in correct_order):
-            raise ValueError("order correct_order index out of range")
+        correct_order = order_correct_indices(items, correct_order)
         return OrderActivity(
             title=data.get('title', ''),
             instruction=data.get('instruction', ''),
@@ -1521,6 +1528,7 @@ class ActivityParser:
                 word=str(word),
                 correct=correct,
                 translation=str(item['translation']) if item.get('translation') else None,
+                explanation=str(item.get('explanation') or ''),
             ))
         if not items:
             raise ValueError("count-syllables requires non-empty items list")
@@ -1548,6 +1556,7 @@ class ActivityParser:
                 word=str(item['word']),
                 answer=str(item['answer']),
                 hint=str(item['hint']) if item.get('hint') else None,
+                explanation=str(item.get('explanation') or ''),
             ))
         if not items:
             raise ValueError("divide-words requires non-empty items list")
@@ -1610,15 +1619,45 @@ class ActivityParser:
         for letter in letters:
             if not isinstance(letter, dict):
                 raise TypeError("letter-grid letters must be dictionaries")
-            required = ('upper', 'lower', 'emoji', 'key_word')
+            required = ('upper', 'lower')
             missing = [key for key in required if not letter.get(key)]
             if missing:
                 raise KeyError(f"letter-grid letter missing required fields: {missing}")
-            normalized.append({key: letter[key] for key in letter if key in {'upper', 'lower', 'emoji', 'key_word', 'note', 'sound_type'}})
+            normalized.append({key: letter[key] for key in letter if key in {'upper', 'lower', 'name', 'emoji', 'key_word', 'note', 'sound_type'}})
         return LetterGridActivity(
             title=data.get('title', ''),
             instruction=data.get('instruction', ''),
             letters=normalized,
+        )
+
+    def _parse_phrase_table(self, data: dict) -> PhraseTableActivity:
+        raw_groups = data.get('groups')
+        if not isinstance(raw_groups, list) or not raw_groups:
+            raise ValueError("phrase-table requires non-empty groups list")
+        groups = []
+        for g_idx, g in enumerate(raw_groups):
+            if not isinstance(g, dict) or 'label' not in g or 'phrases' not in g:
+                raise KeyError(f"phrase-table group {g_idx} requires label and phrases")
+            raw_phrases = g['phrases']
+            if not isinstance(raw_phrases, list) or not raw_phrases:
+                raise ValueError(f"phrase-table group {g_idx} requires non-empty phrases list")
+            phrases = []
+            for p in raw_phrases:
+                if isinstance(p, str):
+                    phrases.append(PhraseItem(phrase=p))
+                elif isinstance(p, dict) and 'phrase' in p:
+                    phrases.append(PhraseItem(
+                        phrase=str(p['phrase']),
+                        context=str(p['context']) if p.get('context') else None,
+                        emoji=str(p['emoji']) if p.get('emoji') else None,
+                    ))
+                else:
+                    raise TypeError(f"phrase-table phrase must be string or dict with 'phrase', got {type(p).__name__}")
+            groups.append(PhraseGroup(label=str(g['label']), phrases=phrases))
+        return PhraseTableActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            groups=groups,
         )
 
     def _parse_odd_one_out(self, data: dict) -> OddOneOutActivity:
@@ -1796,6 +1835,8 @@ class ActivityParser:
             return self._highlight_morphemes_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, LetterGridActivity):
             return self._letter_grid_to_mdx(activity)
+        if isinstance(activity, PhraseTableActivity):
+            return self._phrase_table_to_mdx(activity)
         if isinstance(activity, OddOneOutActivity):
             return self._odd_one_out_to_mdx(activity)
         if isinstance(activity, PickSyllablesActivity):
@@ -1877,6 +1918,8 @@ class ActivityParser:
             return self._highlight_morphemes_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'letter-grid':
             return self._letter_grid_to_mdx(activity)
+        if activity_type == 'phrase-table':
+            return self._phrase_table_to_mdx(activity)
         if activity_type == 'odd-one-out':
             return self._odd_one_out_to_mdx(activity)
         if activity_type == 'pick-syllables':
@@ -1948,6 +1991,8 @@ class ActivityParser:
             item = {'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)}
             if i.hint:
                 item['hint'] = str(i.hint)
+            if i.explanation:
+                item['explanation'] = str(i.explanation)
             items.append(item)
         return f"### {self._escape_jsx(heading)}\n\n<Unjumble client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} />"
 
@@ -2004,7 +2049,15 @@ class ActivityParser:
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
         heading = activity.title or 'Anagram'
-        items = [{'scrambled': str(i.scrambled), 'answer': str(i.answer), 'hint': str(i.hint) if i.hint else ''} for i in activity.items]
+        items = [
+            {
+                'scrambled': str(i.scrambled),
+                'answer': str(i.answer),
+                'hint': str(i.hint) if i.hint else '',
+                **({'explanation': str(i.explanation)} if i.explanation else {}),
+            }
+            for i in activity.items
+        ]
         return f"### {self._escape_jsx(heading)}\n\n<Anagram client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} />"
 
     def _essay_response_to_mdx(self, activity: EssayResponseActivity, is_ukrainian_forced: bool = False) -> str:
@@ -2235,10 +2288,18 @@ class ActivityParser:
         return f"### {self._escape_jsx(heading)}\n\n<Classify client:only='react' {props} />"
 
     def _image_to_letter_to_mdx(self, activity: ImageToLetterActivity) -> str:
-        items = [{'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors} for i in activity.items]
+        items = []
+        for i in activity.items:
+            entry: dict[str, Any] = {'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors}
+            if i.note:
+                entry['note'] = i.note
+            if i.explanation:
+                entry['explanation'] = i.explanation
+            items.append(entry)
         props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
+        props += self._instruction_prop(activity.instruction)
         heading = activity.title or 'Image to Letter'
         return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:only='react' {props} />"
 
@@ -2254,6 +2315,8 @@ class ActivityParser:
                 entry['sound'] = i.sound
             if i.note:
                 entry['note'] = i.note
+            if i.explanation:
+                entry['explanation'] = i.explanation
             items.append(entry)
         props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
         if activity.title:
@@ -2290,6 +2353,8 @@ class ActivityParser:
             payload: dict[str, Any] = {'word': item.word, 'correct': item.correct}
             if item.translation:
                 payload['translation'] = item.translation
+            if item.explanation:
+                payload['explanation'] = item.explanation
             items.append(payload)
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
         max_prop = f' maxCount={{{activity.max_count}}}' if activity.max_count is not None else ''
@@ -2302,6 +2367,8 @@ class ActivityParser:
             payload = {'word': item.word, 'answer': item.answer}
             if item.hint:
                 payload['hint'] = item.hint
+            if item.explanation:
+                payload['explanation'] = item.explanation
             items.append(payload)
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
         return f"### {self._escape_jsx(heading)}\n\n<DivideWords client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
@@ -2324,7 +2391,32 @@ class ActivityParser:
 
     def _letter_grid_to_mdx(self, activity: LetterGridActivity) -> str:
         heading = activity.title or 'Letter Grid'
-        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}} />"
+        props = f'letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}'
+        props += self._instruction_prop(activity.instruction)
+        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' {props} />"
+
+    def _phrase_table_to_mdx(self, activity: PhraseTableActivity) -> str:
+        heading = activity.title or 'Phrases'
+        groups = []
+        for g in activity.groups:
+            phrases = []
+            for p in g.phrases:
+                entry: dict[str, str] = {'phrase': p.phrase}
+                if p.context:
+                    entry['context'] = p.context
+                if p.emoji:
+                    entry['emoji'] = p.emoji
+                phrases.append(entry)
+            groups.append({
+                'label': g.label,
+                'function': g.label,
+                'phrases': phrases,
+            })
+        props = f'groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}'
+        if activity.title:
+            props += f' title="{self._escape_jsx(activity.title)}"'
+        props += self._instruction_prop(activity.instruction)
+        return f"### {self._escape_jsx(heading)}\n\n<PhraseTable client:only='react' {props} />"
 
     def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
         heading = activity.title or activity.instruction or 'Odd One Out'

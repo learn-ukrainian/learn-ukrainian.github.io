@@ -35,6 +35,7 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,
     has_mojibake_marker,
@@ -109,17 +110,8 @@ ULIF_DICTUA_MIGRATE_MESSAGE = (
     "run `python -m scripts.wiki.sources_db --migrate` on this database"
 )
 
-# DictUA is a live ASP.NET source.  The source DB stores the parsed material
-# and its exact HTML separately: keeping only the parsed JSON made cache rows
-# impossible to audit or re-parse after a parser upgrade.
+# DictUA's parsed material stays here; exact HTTP bodies live in the raw cache.
 ULIF_DICTUA_SCHEMA = """
-CREATE TABLE IF NOT EXISTS ulif_dictua_raw_responses (
-    response_sha256 TEXT PRIMARY KEY,
-    body BLOB NOT NULL,
-    content_type TEXT NOT NULL DEFAULT 'text/html; charset=utf-8',
-    stored_at TEXT NOT NULL DEFAULT ''
-);
-
 CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
     id INTEGER PRIMARY KEY,
     entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
@@ -523,20 +515,9 @@ def resolve_ulif_dictua_raw_response(
     db_path: str | Path | None = None,
 ) -> bytes | None:
     """Resolve a ``sha256:<digest>`` raw-response reference from the cache."""
-    digest = raw_response_ref.removeprefix("sha256:")
-    if len(digest) != 64:
-        return None
-    conn = _ulif_dictua_conn(db_path)
-    if conn is None:
-        return None
-    try:
-        row = conn.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (digest,),
-        ).fetchone()
-        return bytes(row["body"]) if row else None
-    finally:
-        conn.close()
+    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    cache = ulif_raw_cache.cache_path(path) if path != PROJECT_ROOT / "data/sources.db" else ulif_raw_cache.cache_path()
+    return ulif_raw_cache.resolve_ref(raw_response_ref, path=cache)
 
 
 def store_ulif_dictua_entry(
@@ -562,9 +543,9 @@ def store_ulif_dictua_entry(
     Transient failures are intentionally never persisted: a network outage is
     not evidence that a Ukrainian word does not exist.
 
-    Pass ``conn`` to join a caller's open transaction: this function then does
-    not commit or close. Without ``conn``, behaviour is unchanged (own
-    connection, commit, close).
+    Pass ``conn`` to join a caller's parsed-entry transaction: this function
+    then does not commit or close that connection. Raw bodies and the manifest
+    always commit independently to the cache before the entry is written.
     """
     if status == "transient_error":
         return None
@@ -586,30 +567,24 @@ def store_ulif_dictua_entry(
     conn.row_factory = sqlite3.Row
     try:
         raw_refs: dict[str, str] = {}
+        source_path = Path(db_path) if db_path is not None else Path(
+            conn.execute("PRAGMA database_list").fetchone()[2]
+        )
+        raw_cache_path = (
+            ulif_raw_cache.cache_path()
+            if source_path == PROJECT_ROOT / "data/sources.db"
+            else ulif_raw_cache.cache_path(source_path)
+        )
         for kind, response in sorted(raw_responses.items()):
-            if kind not in ULIF_DICTUA_SECTION_KINDS:
-                continue
             body = response.encode("utf-8") if isinstance(response, str) else response
             digest = hashlib.sha256(body).hexdigest()
-            conn.execute(
-                """
-                INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                    (response_sha256, body, stored_at)
-                VALUES (?, ?, ?)
-                """,
-                (digest, body, retrieved_at),
-            )
+            ulif_raw_cache.put(digest, body, stored_at=retrieved_at, path=raw_cache_path)
             raw_refs[kind] = f"sha256:{digest}"
 
         manifest = json.dumps(raw_refs, ensure_ascii=False, sort_keys=True).encode("utf-8")
         response_sha256 = hashlib.sha256(manifest).hexdigest()
-        conn.execute(
-            """
-            INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                (response_sha256, body, content_type, stored_at)
-            VALUES (?, ?, 'application/json', ?)
-            """,
-            (response_sha256, manifest, retrieved_at),
+        ulif_raw_cache.put(
+            response_sha256, manifest, "application/json", retrieved_at, path=raw_cache_path
         )
         raw_response_ref = f"sha256:{response_sha256}"
         stored_content_sha256 = content_sha256 or response_sha256
@@ -701,13 +676,7 @@ def extract_ulif_dictua_snapshot(
     conn: sqlite3.Connection | None = None
     try:
         conn = _open_conn(path)
-        raw_rows = list(conn.execute(
-            """
-            SELECT response_sha256, body, content_type, stored_at
-            FROM ulif_dictua_raw_responses
-            ORDER BY response_sha256
-            """
-        ))
+        raw_rows: list[tuple] = []  # Cache is independent of the sources.db rebuild.
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
         if "homonym_index" in columns and "sense_gloss" in columns:
             entry_sql = """
@@ -756,17 +725,17 @@ def restore_ulif_dictua_snapshot(
     entry_rows: list[tuple],
     section_rows: list[tuple],
 ) -> None:
-    """Restore DictUA cache rows in foreign-key-safe dependency order."""
+    """Restore parsed rows after verifying their independently stored raw refs."""
     ensure_ulif_dictua_schema(conn)
-    if raw_rows:
-        conn.executemany(
-            """
-            INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                (response_sha256, body, content_type, stored_at)
-            VALUES (?, ?, ?, ?)
-            """,
-            raw_rows,
-        )
+    source_path = Path(conn.execute("PRAGMA database_list").fetchone()[2])
+    raw_cache_path = ulif_raw_cache.cache_path(source_path)
+    for sha, body, content_type, stored_at in raw_rows:
+        ulif_raw_cache.put(sha, body, content_type, stored_at, path=raw_cache_path)
+    for entry in entry_rows:
+        # The raw reference precedes the retrieved_at column in every supported width.
+        ref = str(entry[-5])
+        if ref and ulif_raw_cache.resolve_ref(ref, path=raw_cache_path) is None:
+            raise ValueError(f"Missing ULIF raw response: {ref}")
     if entry_rows:
         width = len(entry_rows[0])
         if width == 14:
@@ -937,9 +906,9 @@ def _close_if_temporary(conn: sqlite3.Connection, db_path: str | Path | None) ->
 
 
 def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
-    """Build FTS5 MATCH query from keywords. Returns None if no valid terms."""
+    """Build an FTS5 MATCH query. Terms are sorted so the string ignores hash seed."""
     terms = []
-    for kw in keywords:
+    for kw in sorted(keywords):
         if len(kw) < min_len:
             continue
         # Strip FTS5 special characters that break MATCH syntax
@@ -1072,7 +1041,7 @@ def _search_sections_fts5(
         JOIN textbooks s ON s.id = textbooks_fts.rowid
         WHERE textbooks_fts MATCH ?
           AND {' AND '.join(extra_where)}
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, *extra_params, max_chunk_candidates),
@@ -1259,7 +1228,7 @@ def _search_literary_candidates(
         JOIN literary_texts s ON s.id = literary_fts.rowid
         WHERE literary_fts MATCH ?
           AND s.language_period IN ({placeholders})
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, *periods, candidate_k),
@@ -1317,7 +1286,7 @@ def _search_external_candidates(
         FROM external_fts
         JOIN external_articles s ON s.id = external_fts.rowid
         WHERE external_fts MATCH ?
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, candidate_k),
@@ -1381,7 +1350,7 @@ def _search_wikipedia_candidates(
         FROM wikipedia_fts
         JOIN wikipedia s ON s.id = wikipedia_fts.rowid
         WHERE wikipedia_fts MATCH ?
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, candidate_k),
@@ -1469,7 +1438,7 @@ def _search_ukrainian_wiki_candidates(
             FROM ukrainian_wiki_fts
             JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
             WHERE ukrainian_wiki_fts MATCH ?
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?
             """,
             (fts_query, candidate_k),
@@ -1956,7 +1925,7 @@ def _fts_search(fts_table: str, data_table: str,
             WHERE {fts_table} MATCH ?
             {length_filter}
             {extra_where}
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?"""
     params = (fts_query, *extra_params, max_total)
 
@@ -2109,7 +2078,7 @@ def search_external(
             FROM external_fts
             JOIN external_articles s ON s.id = external_fts.rowid
             WHERE {' AND '.join(where)}
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?""",
         (*params, max_total * 15),
     ).fetchall()
@@ -2252,7 +2221,7 @@ def _dict_lookup_contains(
         return []
 
     try:
-        rows = conn.execute(f"SELECT * FROM {table}").fetchall()
+        rows = conn.execute(f"SELECT * FROM {table} ORDER BY rowid").fetchall()
     except sqlite3.OperationalError:
         return []
 
@@ -2313,12 +2282,14 @@ def _dict_lookup(
         try:
             placeholders = ",".join("?" for _ in query_variants)
             rows = conn.execute(
-                f"SELECT * FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE LIMIT ?",
+                f"SELECT * FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE "
+                "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
                 (*query_variants, word, limit),
             ).fetchall()
             if not rows and cleaned_word:
                 rows = conn.execute(
-                    f"SELECT * FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE LIMIT ?",
+                    f"SELECT * FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE "
+                    "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
                     (f"{cleaned_word}%", f"{word}%", limit),
                 ).fetchall()
         except sqlite3.OperationalError:
@@ -2898,7 +2869,7 @@ def search_esum(
                 SELECT rowid, lemma, etymology_text, cognates, vol, page
                 FROM esum_etymology
                 WHERE esum_etymology MATCH ?{fts_vol_filter}
-                ORDER BY rank
+                ORDER BY rank, rowid
                 LIMIT ?
                 """,
                 tuple(fts_params),

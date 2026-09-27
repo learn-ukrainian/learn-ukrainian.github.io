@@ -13,9 +13,17 @@
 
 ## TL;DR
 
-- The live store is **`data/sources.db`** — a **1.8 GB SQLite + FTS5** database. The MCP
-  `sources` server (port 8766) reads it; every `mcp__sources__*` tool, `verify_quote`,
-  `search_literary`, etc. hit this file.
+- The live store is **`data/sources.db`** — a **9.4 GB SQLite + FTS5** database in
+  **WAL journal mode** (grown from 1.8 GB by the ULIF DictUA walk's cached entries and
+  raw responses, 2026-09). The MCP `sources` server (port 8766) reads it; every
+  `mcp__sources__*` tool, `verify_quote`, `search_literary`, etc. hit this file.
+- **Journal mode is WAL and is declared by the writers** (`build_sources_db.py` right after
+  its atomic swap, `fetch_ulif_homonyms.py prepare_database` on every walk start; each
+  asserts the PRAGMA returns `wal`). Evidence readers (`build-words`, `words-verify`,
+  `build-pack`, `pack-verify`) **pin one snapshot per session**: a long read transaction
+  that in WAL costs a concurrent writer nothing. In DELETE mode the same pinned read holds
+  a SHARED lock and blocks the walk's commits — see `docs/runbooks/storage-topology.md`
+  § Journal mode.
 - It holds **137.7K literary chunks + 55.0K textbook chunks + ~1M dictionary rows +
   22.4K wiki + Wikipedia** across ~27 content/dictionary tables.
 - It is **BUILT from the bulk raw-source root** (SMB mirror preferred, Google Drive
@@ -42,14 +50,24 @@
         │ reads literary + textbooks ← GDRIVE_DATA  ←  bulk raw-source root (see below)
         │ reads external             ← data/external_articles/  (local)
         ▼
-  data/sources.db  (1.8 GB SQLite + FTS5)  ←  what the MCP `sources` server serves
-                                               (ALWAYS local — never open from SMB)
+  data/sources.db  (9.4 GB SQLite + FTS5, WAL)  ←  what the MCP `sources` server serves
+                                                    (ALWAYS local — never open from SMB)
 ```
 
 ### Storage topology v1 (bulk root + local DB)
 
 - **Active DB:** `data/sources.db` stays on the Mac repository volume. Sources MCP
   and ordinary tests depend on this local file; an SMB outage must not break them.
+  `.venv/bin/python -m scripts.storage status` reports its size, `journal_mode` (read from
+  the SQLite header, no connection opened) and the `-wal` sidecar size.
+- **Readers pin one snapshot per session.** `scripts/curriculum/evidence/sources.py` opens
+  `sources.db` read-only with an explicit deferred `BEGIN` and keeps that read transaction
+  for the whole build/verify; the identity a lock records is the digest of the rows it
+  cites (`built_with.sources_db_scheme: rows-v2`), never a digest of the file. While a
+  session is open the WAL cannot be checkpointed past its read mark, so the reader stops
+  itself (`snapshot_limit`) if `sources.db-wal` exceeds 4 GiB or free disk on the data
+  volume drops below 10 GiB (`scripts/curriculum/evidence/config.py`; env overrides
+  `LU_EVIDENCE_WAL_CEILING_BYTES` / `LU_EVIDENCE_FREE_DISK_FLOOR_BYTES`).
 - **Bulk raw-source root** (legacy name `GDRIVE_DATA` in `scripts/wiki/config.py`)
   is resolved by `scripts.storage.topology.resolve_bulk_root`:
   1. `LU_BULK_ROOT` when marker-valid

@@ -49,6 +49,15 @@ class Report:
     notes: list[Outcome] = field(default_factory=list)
     not_checked: list[Outcome] = field(default_factory=list)
     waivers: list[Outcome] = field(default_factory=list)
+    #: "final" (evidence_ref.sha256 must equal the pack) or "provisional" (the
+    #: comparison is a not_checked pending_promotion item; --provisional-pack).
+    mode: str = "final"
+    #: Every file the run read, as {repo-relative path: sha256}; the plan-review
+    #: manifest refuses a report whose recorded hashes differ from the files.
+    inputs: dict[str, str] = field(default_factory=dict)
+    #: The plan-stage activity report (issue #8889 r5 §A2; activity_report.plan_report),
+    #: empty when the plan could not be loaded far enough to build one.
+    activity_report: dict = field(default_factory=dict)
 
     @property
     def ok(self) -> bool:
@@ -72,16 +81,59 @@ class Report:
             "level": self.level,
             "slug": self.slug,
             "status": self.status,
+            "mode": self.mode,
+            "inputs": dict(sorted(self.inputs.items())),
             "failures": entries(self.failures),
             "notes": entries(self.notes),
             "not_checked": entries(self.not_checked),
             "waivers": entries(self.waivers),
+            "activity_report": self.activity_report,
         }
 
     def render_text(self) -> str:
         lines = [VALIDATOR_NOTE, f"plan: {self.level}/{self.slug}", f"status: {self.status}"]
+        if self.mode != "final":
+            lines.append(f"mode: {self.mode}")
         lines += [f"FAIL {o.render()}" for o in self.failures]
         lines += [f"NOTE {o.render()}" for o in self.notes]
         lines += [f"NOT_CHECKED {o.render()}" for o in self.not_checked]
         lines += [f"waived: {o.code} ({o.message})" for o in self.waivers]
+        if self.activity_report:
+            stage = self.activity_report.get("stage", "plan")
+            module = self.activity_report.get("module", {})
+            lines.append(
+                f"activity_report ({stage} stage) module: "
+                f"workbook_activities={module.get('workbook_activities')} "
+                f"inline_activities={module.get('inline_activities')} "
+                f"workbook_presence_complete={module.get('workbook_presence_complete')} "
+                f"largest_workbook_type_share={module.get('largest_workbook_type_share')} "
+                f"longest_same_type_workbook_run={module.get('longest_same_type_workbook_run')}"
+            )
+            for lesson in self.activity_report.get("lessons", []):
+                lines.append(f"activity_report ({stage} stage) lesson {lesson.get('n')}: {_render_lesson(lesson)}")
         return "\n".join(lines)
+
+
+def _render_lesson(lesson: dict) -> str:
+    """One lesson's activity-report fields, whichever stage produced them
+    (plan_report, draft_report or rendered_report — issue #8889 r5 §A2)."""
+    parts = []
+    if "kind" in lesson:
+        parts.append(f"kind={lesson['kind']}")
+    activities = lesson.get("activities")
+    if isinstance(activities, dict):
+        parts.append(f"inline={activities.get('inline', {}).get('total')}")
+        parts.append(f"workbook={activities.get('workbook', {}).get('total')}")
+    if "distinct_types" in lesson:
+        parts.append(f"distinct_types={','.join(lesson['distinct_types'])}")
+    if "has_workbook" in lesson:
+        parts.append(f"has_workbook={lesson['has_workbook']}")
+    if "response_opportunities" in lesson:
+        parts.append(f"response_opportunities={lesson['response_opportunities']}")
+    if "explanation_coverage" in lesson:
+        parts.append(f"explanation_coverage={lesson['explanation_coverage']}")
+    if "planned_workbook" in lesson:
+        parts.append(f"planned_workbook={lesson['planned_workbook']}")
+    if "rendered_and_playable" in lesson:
+        parts.append(f"rendered_and_playable={lesson['rendered_and_playable']}")
+    return " ".join(parts)

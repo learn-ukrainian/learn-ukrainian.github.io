@@ -12,10 +12,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) in sys.path:
-    sys.path.remove(str(SCRIPT_DIR))
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if str(SCRIPT_DIR) in sys.path:
+        sys.path.remove(str(SCRIPT_DIR))
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import generate_source_inventory_review_candidates as review
 from scripts.audit import plan_source_inventory_promotion as plan

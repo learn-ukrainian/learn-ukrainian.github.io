@@ -1,5 +1,8 @@
 # V7 Design + Corpus Reference — load before any module work
 
+> **Scope:** V7 module builds. The core A1–B2 rebuild uses
+> [`docs/epics/fresh-build-build-program.md`](../epics/fresh-build-build-program.md).
+
 > **READ ME FIRST** before designing writer/reviewer prompts, before firing builds, before promoting modules. This doc consolidates the V7 design intent, the corpus available, and the writer/reviewer prompt requirements. Authoritative siblings: [`docs/north-star.md`](../north-star.md) (escalator + audience + voice), [`docs/lesson-contract.md`](../lesson-contract.md) (artifact + tab shape), [`docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md`](../decisions/2026-05-13-ulp-derived-student-aware-immersion.md) (immersion model).
 >
 > **Why this doc exists**: 2026-05-23 m20 (a1/my-morning) was promoted then reverted because the orchestrator declared "first complete V7 module shipped" while the rendered MDX had an empty Activities tab, stale Resources tab, all 10 activities placed inline (vs ACTIVITY_CONFIGS INLINE 4-6 / WORKBOOK 6-9), and a writer prompt that didn't surface most of the corpus. The deterministic gates (python_qg + wiki_coverage + LLM 9.5/10) all passed on broken content because they check artifact correctness against narrow contracts, not "does the writer actually use the corpus the design assumes." This doc closes that loop.
@@ -135,12 +138,12 @@ User direction 2026-05-23: *"we have a huge ukrainian corpus plus we gathered ex
 
 ### 2.3 YouTube + extended corpus
 
-- `data/youtube_discovery/patterns.yaml` + `ulp_grammar_guide_backfill.jsonl` — discovery + backfill
+- `registry/youtube_discovery/patterns.yaml` + `ulp_grammar_guide_backfill.jsonl` — discovery + backfill
 - `data/processed/esum_vol{1-6}.jsonl` — full ESUM (vol 1 indexed in sources.db; vols 2-6 JSONL-only)
 - `data/literary_texts/` — raw literary corpus before FTS indexing
 - `data/ubertext-freq/` — Ubertext frequency map (vocabulary sequencing signal)
 - `data/zno/` — ZNO standardized test materials (exercise design reference)
-- `data/translations/` — bilingual translation pairs
+- `registry/translations/` — bilingual translation pairs
 - `data/embeddings/modern_literary/` — vector embeddings
 - `data/qdrant_db/` — Qdrant vector DB
 - `data/references/private/` — ULP S1-S6 transcripts + 1000 Ukrainian Words + 500 Ukrainian Verbs + Ohoiko June book (gitignored, local only)

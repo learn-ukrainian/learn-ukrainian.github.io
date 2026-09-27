@@ -69,6 +69,7 @@ def _get_latest_review_score(slug: str) -> float | None:
     return None
 
 
+@pytest.mark.repo_wide
 class TestA1ReviewScores:
     """All 7 A1.1 modules must have review files with scores."""
 

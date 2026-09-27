@@ -2030,7 +2030,7 @@ def main() -> int:
     parser.add_argument(
         "--deck-output",
         type=Path,
-        default=PROJECT_ROOT / "data" / "practice" / "adjective_mechanics_deck.json",
+        default=PROJECT_ROOT / "registry" / "practice" / "adjective_mechanics_deck.json",
         help="Path to output deck JSON file",
     )
     parser.add_argument(

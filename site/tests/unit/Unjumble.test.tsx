@@ -105,6 +105,22 @@ describe('UnjumbleQuestion', () => {
     expect(container.querySelector('[data-activity="feedback"]')).toBeInTheDocument();
   });
 
+  test('renders explanation when provided after submission', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <UnjumbleQuestion {...props} explanation="Пояснення до порядку слів" />
+    );
+
+    while (tilesIn(container, 'word-bank').length > 0) {
+      await user.click(tilesIn(container, 'word-bank')[0]);
+    }
+    await user.click(submitBtn(container));
+
+    const explanation = container.querySelector('[data-activity="explanation"]');
+    expect(explanation).toBeInTheDocument();
+    expect(explanation?.textContent).toContain('Пояснення до порядку слів');
+  });
+
   test('reports completion to a practice host after checking', async () => {
     const onComplete = vi.fn();
     const user = userEvent.setup();

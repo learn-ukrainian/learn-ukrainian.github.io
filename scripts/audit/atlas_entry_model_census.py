@@ -21,10 +21,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_io import load_manifest
@@ -317,9 +318,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.fail_on_legacy_heuristic:
         legacy_count = sum(
-            count
-            for source, count in payload["classification_sources"].items()
-            if source.startswith("legacy_")
+            count for source, count in payload["classification_sources"].items() if source.startswith("legacy_")
         )
         if legacy_count:
             print(f"--fail-on-legacy-heuristic matched {legacy_count} records")

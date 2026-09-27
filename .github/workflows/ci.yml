@@ -4,24 +4,44 @@ name: CI
 # Required GitHub context is still named "CI Gate".
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.ref }}
+  # pull_request runs key by PR number, not head SHA (#8505): a new push
+  # cancels the stale in-flight run for the previous SHA instead of queuing
+  # behind it. S1: ci-gate is `if: always()`, so it still runs after that
+  # cancel and fails unless every required dependency for the classified tier
+  # succeeded in this same run. A skipped required check is not a substitute —
+  # GitHub reports a conditionally skipped job as success for branch protection
+  # (docs.github.com troubleshooting-required-status-checks
+  # #handling-skipped-but-required-checks). merge_group and schedule keep the
+  # ref-keyed group and never cancel.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 env:
-  # Full-tier default (docs/decisions/2026-07-22-pytest-four-shard-matrix.md).
+  # Full-tier default; workflow_dispatch may override it for shard measurements.
   # Selected/docs modes emit shard_count=1 from Changes; plan-files reads
   # needs.changes.outputs.shard_count (not this env alone) so selected never
   # LPT-partitions into unused buckets.
-  PYTEST_SHARD_COUNT: '4'
+  PYTEST_SHARD_COUNT: ${{ inputs.shards || '10' }}
 
 on:
+  # No `edited` or `labeled` (#8505): neither a PR-body edit nor a label may
+  # restart CI on an unchanged commit. The negated-closing-reference body guard
+  # lives in pr-body-guard.yml, which runs on `edited`. A `full-ci` label is
+  # read from the API by Changes: it forces the full tier on the next push and
+  # always in the merge-queue run, which gates every change into main.
   pull_request:
-    types: [opened, synchronize, reopened, edited, labeled]
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
+    inputs:
+      shards:
+        description: Full-tier pytest shards for measured CI runs
+        required: false
+        type: choice
+        options: ['4', '6', '8', '10']
   # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
   schedule:
     - cron: '30 3 * * *'
@@ -30,15 +50,26 @@ jobs:
   changes:
     name: Changes
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      # classify_changes.py reads current PR labels via the API for
+      # pull_request and for every PR in a merge group (#8505); a lookup
+      # error fails closed to the full tier.
+      pull-requests: read
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
+      docs_reads_content: ${{ steps.classify.outputs.docs_reads_content }}
       frontend: ${{ steps.classify.outputs.frontend }}
       backend: ${{ steps.classify.outputs.backend }}
       shards: ${{ steps.classify.outputs.shards }}
       pytest_mode: ${{ steps.classify.outputs.pytest_mode }}
       shard_count: ${{ steps.classify.outputs.shard_count }}
       pytest_candidates: ${{ steps.classify.outputs.pytest_candidates }}
+      # The one "should preflight run" decision (#8750): classify_changes
+      # .preflight_for. The fast-checks preflight step and CI Gate both read it.
+      preflight: ${{ steps.classify.outputs.preflight }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -57,26 +88,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m scripts.ci.classify_changes
-
-  ruff:
-    name: Ruff
-    needs: [changes]
-    if: needs.changes.outputs.docs_only == 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Freeze pytest duration source
+        if: steps.classify.outputs.pytest_mode == 'full'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/ci/pytest_shards.py ci-durations \
+            --repo "$GITHUB_REPOSITORY" --output ci-artifacts/pytest-file-durations.json
+      - name: Share pytest duration source
+        if: steps.classify.outputs.pytest_mode == 'full'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-          cache: pip
-      - run: python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"
-      - run: |
-          python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
+          name: pytest-duration-source
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 1
 
   secret-scan:
     name: Secret scan
@@ -111,16 +140,170 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - name: Reject negated closing references
-        if: github.event_name == 'pull_request'
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
+      # The negated-closing-reference PR-body guard moved to
+      # pr-body-guard.yml (#8505): it must rerun on `edited`, which this
+      # workflow does not subscribe to.
       - uses: trufflesecurity/trufflehog@363923b901c911a9164f50b6c423f47c15372b1c # v3.97.4
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+  fast-checks:
+    # Short checks share one runner (#8750 phase A.2): each held a full slot
+    # under the account's concurrent-job cap while the pytest shards waited.
+    # Every check is its own step with its own id and timeout. `!cancelled()`
+    # keeps a failed check from skipping the ones after it, so one run
+    # reports every red check. CI Gate reads each step's `outcome` from the
+    # job outputs below, never its `conclusion`: under continue-on-error a
+    # failed step concludes `success`. A re-run repeats all four checks.
+    name: Fast checks
+    needs: [changes]
+    runs-on: ubuntu-latest
+    # Step budgets 8 + 5 + 10 + 5 = 28, plus 7 for checkout and the preflight
+    # dependency install.
+    timeout-minutes: 35
+    outputs:
+      preflight: ${{ steps.preflight.outcome }}
+      ruff: ${{ steps.ruff.outcome }}
+      plan_validate: ${{ steps.plan_validate.outcome }}
+      typesafe: ${{ steps.typesafe.outcome }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Full history: plan-validate --strict compares _grammar.yaml
+          # against git merge-base HEAD origin/main; TypeSafe triage diffs
+          # BASE_SHA..HEAD_SHA.
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+          cache: pip
+      # Preflight setup. Early PR signal for repo-wide invariants (#8750). The
+      # full and selected shards still run the same repo_wide set (the
+      # backstop) and do not wait for this job, so a green run is no slower; a
+      # red invariant just reports minutes before the shards finish. No
+      # Postgres, npm or native apt deps: no repo_wide test uses them (see
+      # docs/runbooks/ci-gate.md). The venv lives in .venv; ruff,
+      # plan-validate and TypeSafe triage use the setup-python interpreter.
+      - name: Set up uv
+        if: needs.changes.outputs.preflight == 'true'
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: '0.12.9'
+          enable-cache: true
+          cache-dependency-glob: requirements-lock.txt
+      - name: Install preflight Python deps
+        if: needs.changes.outputs.preflight == 'true'
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          # Same install as the pytest shards.
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python packages/v4-runtime/build_assets.py
+      - name: Hydrate Atlas lexicon manifest
+        if: needs.changes.outputs.preflight == 'true'
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Preflight
+        id: preflight
+        if: ${{ !cancelled() && needs.changes.outputs.preflight == 'true' }}
+        timeout-minutes: 8
+        env:
+          LU_PYTEST_TMP_BUDGET_GB: "5"
+          # Registered non-repo_wide invariants that also run here, one path per
+          # line (#8750). tests/test_ci_preflight.py checks every path exists.
+          PREFLIGHT_EXTRA_TESTS: |
+            tests/curriculum/arc/test_decisions_record.py
+        run: |
+          set -euo pipefail
+          # Same allowlist construction and flags as the shards' repo_wide leg.
+          repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+          git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
+            | sort > "$repo_wide_list" || true
+          [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+          extra_list="${RUNNER_TEMP}/pytest-preflight-extra-files.txt"
+          printf '%s\n' "$PREFLIGHT_EXTRA_TESTS" | sed '/^[[:space:]]*$/d' > "$extra_list"
+          [ -s "$extra_list" ] || { echo "PREFLIGHT_EXTRA_TESTS is empty" >&2; exit 1; }
+          # Run both sets even when the first fails, so one run reports every
+          # broken invariant; the step still fails if either did.
+          status=0
+          LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+            -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+            -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v || status=$?
+          LU_PYTEST_SHARD_FILES="$extra_list" .venv/bin/python -m pytest tests \
+            -m 'not slow and not atlas_release' --strict-markers \
+            -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v || status=$?
+          exit "$status"
+      - name: Ruff
+        id: ruff
+        if: ${{ !cancelled() && needs.changes.outputs.docs_only == 'false' }}
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"
+          python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
+      - name: Plan Validate (v2 plans)
+        id: plan_validate
+        # No tier condition: this check always runs. The validator is
+        # path-scoped like content-ci.yml's section7-xref (git diff inside the
+        # step): on pull_request it skips unless its inputs changed; other
+        # events (merge_group, schedule, dispatch) always run it. The arc
+        # landing check after it always runs.
+        if: ${{ !cancelled() }}
+        timeout-minutes: 10
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          python -m pip install PyYAML jsonschema
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          validate_plans=true
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            changed=$(git diff --name-only origin/main...HEAD -- \
+              curriculum/l2-uk-en/lesson-plans \
+              curriculum/l2-uk-en/evidence \
+              schemas/module-plan-v2.schema.json \
+              scripts/curriculum/validate)
+            if [ -z "$changed" ]; then
+              echo "No v2 plan inputs changed; skipping the v2 plan validator."
+              validate_plans=false
+            fi
+          fi
+          if [ "$validate_plans" = true ]; then
+            for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
+              level=$(basename "$level_dir")
+              if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
+                python -m scripts.curriculum.validate "$level" --all --strict
+              else
+                echo "level $level: no plans"
+              fi
+            done
+          fi
+          # Generated arc landing (a1 --check). The landing, module pages and
+          # site/src/data/arc-a1.json are generated from _arc.yaml, the plans,
+          # the scope sidecars and the build state (#8397); a stale file fails
+          # here. It runs on every event: it is cheap and its inputs (state
+          # files, site/src/content/docs) are not all under one path.
+          python -m scripts.build.build_arc_landing a1 --check
+      - name: TypeSafe triage (advisory; docs/best-practices/typesafe-jev.md)
+        id: typesafe
+        if: ${{ !cancelled() }}
+        # Advisory only (#8232): a red triage never fails this job or CI Gate.
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+        run: python3 -m scripts.ci.typesafe_pr_triage
 
   pytest:
     name: pytest (${{ matrix.shard }})
@@ -148,6 +331,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Historical parity tests read committed source from old SHAs.
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -198,6 +382,12 @@ jobs:
       - name: Hydrate Atlas lexicon manifest
         run: |
           .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Download pytest duration source
+        if: needs.changes.outputs.pytest_mode == 'full'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pytest-duration-source
+          path: ci-artifacts
       - name: Plan pytest shard files
         if: needs.changes.outputs.docs_only == 'false'
         env:
@@ -220,7 +410,7 @@ jobs:
             git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
               .venv/bin/python scripts/ci/pytest_shards.py plan-files \
                 --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
-                --durations scripts/ci/pytest-file-durations.json \
+                --durations ci-artifacts/pytest-file-durations.json \
                 --output "$allowlist"
           fi
           echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
@@ -255,6 +445,7 @@ jobs:
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          DOCS_READS_CONTENT: ${{ needs.changes.outputs.docs_reads_content }}
           PYTEST_MODE: ${{ needs.changes.outputs.pytest_mode }}
           SHARD: ${{ matrix.shard }}
         run: |
@@ -262,6 +453,32 @@ jobs:
           if [ "$DOCS_ONLY" = "true" ]; then
             .venv/bin/python -m pytest tests -m docs_skills --strict-markers --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
+            # Docs-only PRs get no other pytest leg, but several repo-wide
+            # scanners read docs/ (#8707). Run the marked set under the same
+            # narrow allowlist the selected tier uses, so collection stays cheap.
+            repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
+              | sort > "$repo_wide_list" || true
+            [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+            LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+              -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+              -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+              --timeout-method=thread --override-ini addopts=-v
+            # A curriculum/ or wiki/ docs PR runs no reads_content tests
+            # otherwise, so an edit that breaks a test reading those live trees
+            # merges green and turns main red on the next full-tier run (#8720).
+            # Find the marked modules with the same narrow allowlist pattern as
+            # the repo_wide leg; an empty list fails the step loudly.
+            if [ "$DOCS_READS_CONTENT" = "true" ]; then
+              reads_content_list="${RUNNER_TEMP}/pytest-reads-content-files.txt"
+              git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.reads_content' \
+                | sort > "$reads_content_list" || true
+              [ -s "$reads_content_list" ] || { echo "no reads_content tests found; the reads_content marker invariant is broken" >&2; exit 1; }
+              LU_PYTEST_SHARD_FILES="$reads_content_list" .venv/bin/python -m pytest tests \
+                -m 'reads_content and not slow and not atlas_release' --strict-markers \
+                -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+                --timeout-method=thread --override-ini addopts=-v
+            fi
             exit 0
           fi
           if [ "$PYTEST_MODE" = "content" ]; then
@@ -276,7 +493,7 @@ jobs:
               -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v --durations=25 \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
-            .venv/bin/python -m pytest tests/test_ci_shard_partition.py --timeout=120 \
+            .venv/bin/python -m pytest tests/test_ci_shard_partition.py -m 'not slow' --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi
@@ -288,6 +505,21 @@ jobs:
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v --durations=25 \
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+          if [ "$PYTEST_MODE" = "selected" ]; then
+            # Repo-wide tree-scanning tests (#8707) have no import link to the
+            # changed module, so import selection can never pick them. Run them
+            # under their own allowlist so collection stays narrow, whatever
+            # candidates the Changes job chose.
+            repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
+              | sort > "$repo_wide_list" || true
+            [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+            LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+              -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+              -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+              --timeout-method=thread --override-ini addopts=-v \
+              --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
+          fi
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
         run: |
@@ -316,6 +548,99 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  needs-artifact-audit:
+    name: Needs artifact audit
+    needs: [changes]
+    if: needs.changes.outputs.backend == 'true' && needs.changes.outputs.docs_only == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: '0.12.9'
+          enable-cache: true
+          cache-dependency-glob: requirements-lock.txt
+      - name: Install Python deps
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python packages/v4-runtime/build_assets.py
+      - name: Hydrate Atlas lexicon manifest
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Verify needs_artifact skip set
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          git ls-files | grep -E '(^|/)test_[^/]+\.py$' > ci-artifacts/needs-artifact-files.txt
+          export LU_PYTEST_SHARD_FILES=ci-artifacts/needs-artifact-files.txt
+          .venv/bin/python -m pytest --collect-only -m needs_artifact -q --strict-markers \
+            --override-ini addopts= > ci-artifacts/needs-artifact-collected.txt || collection_status=$?
+          if [ "${collection_status:-0}" -ne 0 ] && [ "$collection_status" -ne 5 ]; then
+            exit "$collection_status"
+          fi
+          set +e
+          .venv/bin/python -m pytest -m needs_artifact --strict-markers --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v \
+            --junitxml=ci-artifacts/needs-artifact-audit.xml
+          audit_status=$?
+          set -e
+          # Pytest exits 5 when P0 has no marked tests; the exact-set check
+          # below still requires the committed expected set to be empty.
+          if [ "$audit_status" -ne 0 ] && [ "$audit_status" -ne 5 ]; then
+            exit "$audit_status"
+          fi
+          .venv/bin/python - <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from scripts.storage.test_baseline import nodeid_to_junit_id
+
+          expected_path = Path("registry/artifacts/needs-artifact-expected.txt")
+          expected = {
+              line.strip()
+              for line in expected_path.read_text(encoding="utf-8").splitlines()
+              if line.strip() and not line.lstrip().startswith("#")
+          }
+          collected = set()
+          for line in Path("ci-artifacts/needs-artifact-collected.txt").read_text(encoding="utf-8").splitlines():
+              if ".py::" not in line:
+                  continue
+              collected.add(nodeid_to_junit_id(line))
+          if collected != expected:
+              print(f"needs_artifact collection differs: missing={sorted(expected - collected)} unexpected={sorted(collected - expected)}")
+              sys.exit(1)
+          report = ET.parse("ci-artifacts/needs-artifact-audit.xml")
+          artifact_skips = set()
+          for case in report.iter("testcase"):
+              case_id = f"{case.get('classname', '')}::{case.get('name', '')}"
+              skipped = case.find("skipped")
+              reason = "" if skipped is None else skipped.get("message", "") + (skipped.text or "")
+              if "needs_artifact:" in reason:
+                  artifact_skips.add(case_id)
+          missing = sorted(expected - artifact_skips)
+          unexpected = sorted(artifact_skips - expected)
+          if missing or unexpected:
+              print("needs_artifact skip set does not match registry/artifacts/needs-artifact-expected.txt")
+              if missing:
+                  print("expected IDs not skipped:\n  " + "\n  ".join(missing))
+              if unexpected:
+                  print("unexpected artifact skips:\n  " + "\n  ".join(unexpected))
+              sys.exit(1)
+          print(f"needs_artifact collected={len(collected)} skips={len(artifact_skips)} expected={len(expected)}")
+          PY
+
   contracts:
     name: Contracts
     needs: [changes]
@@ -338,7 +663,7 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install contract-check dependencies
         run: |
-          python -m pip install PyYAML jsonschema requests==2.34.2
+          python -m pip install PyYAML jsonschema requests==2.34.2 regex==2026.5.9
           npm ci
       - run: python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest()"
       - name: Run Word Atlas sense-lint ratchet (#6437)
@@ -537,56 +862,6 @@ jobs:
           )
           PY
 
-  plan-validate:
-    name: Plan Validate (v2 plans)
-    needs: [changes]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          # Full history: --strict compares _grammar.yaml against git merge-base HEAD origin/main.
-          fetch-depth: 0
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-          cache: pip
-      - name: Install plan-validate dependencies
-        run: python -m pip install PyYAML jsonschema
-      - name: Validate v2 module plans (--all --strict)
-        # Path-scoped like content-ci.yml's section7-xref (git diff inside the
-        # step): on pull_request, skip unless the validator's inputs changed.
-        # Other events (merge_group, schedule, dispatch) always run it.
-        run: |
-          set -euo pipefail
-          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            changed=$(git diff --name-only origin/main...HEAD -- \
-              curriculum/l2-uk-en/lesson-plans \
-              curriculum/l2-uk-en/evidence \
-              schemas/module-plan-v2.schema.json \
-              scripts/curriculum/validate)
-            if [ -z "$changed" ]; then
-              echo "No v2 plan inputs changed; skipping."
-              exit 0
-            fi
-          fi
-          for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
-            level=$(basename "$level_dir")
-            if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
-              python -m scripts.curriculum.validate "$level" --all --strict
-            else
-              echo "level $level: no plans"
-            fi
-          done
-      - name: Check generated arc landing (a1 --check)
-        # The landing, module pages and site/src/data/arc-a1.json are generated from
-        # _arc.yaml, the plans, the scope sidecars and the build state (#8397); a stale
-        # file fails here. Unlike the validator step above, it always runs: it is cheap
-        # and its inputs (state files, site/src/content/docs) are not all under one path.
-        run: python -m scripts.build.build_arc_landing a1 --check
-
   frontend:
     name: Frontend
     needs: [changes]
@@ -609,7 +884,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install jsonschema PyYAML
+          .venv/bin/python -m pip install jsonschema PyYAML regex==2026.5.9
       - run: .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest()"
       - working-directory: site
         run: npm ci
@@ -629,67 +904,138 @@ jobs:
       - working-directory: site
         run: npm run test:built-output
 
-  typesafe-triage:
-    name: TypeSafe triage
-    needs: [changes]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-      - name: Run TypeSafe/Jev cheap triage (advisory; docs/best-practices/typesafe-jev.md)
-        env:
-          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: python3 -m scripts.ci.typesafe_pr_triage
-
   ci-gate:
     name: CI Gate
-    if: always() && !cancelled()
-    needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
+    # always(), not `always() && !cancelled()` (#8505). A concurrency cancel
+    # that lands before this job starts would otherwise skip it, and GitHub
+    # treats a skipped required check as success. The step below fails the
+    # job when a required dependency was cancelled or skipped unexpectedly.
+    if: always()
+    needs: [changes, secret-scan, fast-checks, pytest, needs-artifact-audit, contracts, frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions:
+      actions: read
     steps:
       - name: Require event jobs
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           FRONTEND: ${{ needs.changes.outputs.frontend }}
           BACKEND: ${{ needs.changes.outputs.backend }}
+          PREFLIGHT_SCHEDULED: ${{ needs.changes.outputs.preflight }}
           CHANGES: ${{ needs.changes.result }}
-          RUFF: ${{ needs.ruff.result }}
           SECRET: ${{ needs.secret-scan.result }}
+          FAST_CHECKS: ${{ needs.fast-checks.result }}
+          # Step outcomes, not conclusions (see the fast-checks job).
+          FC_PREFLIGHT: ${{ needs.fast-checks.outputs.preflight }}
+          FC_RUFF: ${{ needs.fast-checks.outputs.ruff }}
+          FC_PLAN_VALIDATE: ${{ needs.fast-checks.outputs.plan_validate }}
+          FC_TYPESAFE: ${{ needs.fast-checks.outputs.typesafe }}
           PYTEST: ${{ needs.pytest.result }}
+          AUDIT: ${{ needs['needs-artifact-audit'].result }}
+          SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}
+          GH_TOKEN: ${{ github.token }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
-          TYPESAFE_TRIAGE: ${{ needs.typesafe-triage.result }}
-          PLAN_VALIDATE: ${{ needs.plan-validate.result }}
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
-          skip_ok() { [ "$1" = success ] || [ "$1" = skipped ]; }
+          # `cancelled` is never an allowed skip. A job that the tier did not
+          # need may be `skipped`; a cancel before it starts must still fail
+          # this gate (skipped required checks count as success on GitHub).
+          skip_ok() {
+            if [ "$1" = cancelled ]; then
+              echo "::error::required job was cancelled"
+              exit 1
+            fi
+            [ "$1" = success ] || [ "$1" = skipped ]
+          }
           ok "$CHANGES"
           ok "$SECRET"
-          # plan-validate self-scopes to the v2 plan inputs (git diff inside the
-          # step on pull_request; always runs on merge_group/schedule), so a
-          # skip is never legitimate here — only success.
-          ok "$PLAN_VALIDATE"
+          # fast-checks (#8750 phase A.2) runs every check as a step, so its
+          # job result alone cannot say which check applied. A cancelled or
+          # skipped job fails closed; so does any missing step outcome.
+          case "$FAST_CHECKS" in
+            success | failure) ;;
+            *)
+              echo "::error::fast-checks concluded '$FAST_CHECKS'"
+              exit 1
+              ;;
+          esac
+          # The tier flags each check condition reads; anything but true/false
+          # fails closed instead of choosing a branch.
+          for flag in "preflight=$PREFLIGHT_SCHEDULED" "docs_only=$DOCS_ONLY"; do
+            case "${flag#*=}" in
+              true | false) ;;
+              *)
+                echo "::error::Changes output ${flag%%=*} is '${flag#*=}', expected true or false"
+                exit 1
+                ;;
+            esac
+          done
+          fast_checks_ok=true
+          # expect CHECK OUTCOME WANT: a check whose condition applied must be
+          # `success`; one whose condition did not apply must be `skipped`.
+          expect() {
+            if [ -z "$2" ]; then
+              echo "::error::fast-checks output '$1' is missing"
+              fast_checks_ok=false
+            elif [ "$2" != "$3" ]; then
+              echo "::error::fast-checks step $1 concluded '$2', expected '$3'"
+              fast_checks_ok=false
+            else
+              echo "fast-checks $1: $2"
+            fi
+          }
+          # Preflight (#8750): Changes decides once whether it runs. Scheduled,
+          # it must succeed; not scheduled, it must be skipped. merge_group,
+          # schedule and workflow_dispatch always take the second branch.
+          if [ "$PREFLIGHT_SCHEDULED" = true ]; then want=success; else want=skipped; fi
+          expect preflight "$FC_PREFLIGHT" "$want"
+          if [ "$DOCS_ONLY" = false ]; then want=success; else want=skipped; fi
+          expect ruff "$FC_RUFF" "$want"
+          # plan-validate self-scopes to the v2 plan inputs inside the step and
+          # has no tier condition, so a skip is never legitimate here.
+          expect plan_validate "$FC_PLAN_VALIDATE" success
+          # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
+          # authority. Any outcome is logged and accepted, so a red TypeSafe
+          # step never turns CI Gate red by itself; only a missing output does.
+          if [ -z "$FC_TYPESAFE" ]; then
+            echo "::error::fast-checks output 'typesafe' is missing"
+            fast_checks_ok=false
+          else
+            echo "fast-checks typesafe (advisory): $FC_TYPESAFE"
+          fi
+          [ "$fast_checks_ok" = true ] || exit 1
+          # Every check passed its rule, yet the job failed: a setup step
+          # (checkout, Python, preflight deps) broke. Fail closed.
+          if [ "$FAST_CHECKS" = failure ]; then
+            echo "::error::fast-checks failed outside its checks; see the job log"
+            exit 1
+          fi
           if [ "$BACKEND" = false ]; then
             skip_ok "$PYTEST"
+            skip_ok "$AUDIT"
           else
             ok "$PYTEST"
+            if [ "$DOCS_ONLY" = false ]; then ok "$AUDIT"; else skip_ok "$AUDIT"; fi
+            case "$SHARD_COUNT" in
+              ''|*[!0-9]*) echo "::error::invalid shard count '$SHARD_COUNT'"; exit 1 ;;
+            esac
+            [ "$SHARD_COUNT" -gt 0 ] || { echo "::error::zero pytest shards"; exit 1; }
+            expected_jobs=$(for i in $(seq 1 "$SHARD_COUNT"); do echo "pytest ($i)|success"; done | sort)
+            actual_jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}/jobs?per_page=100" \
+              --jq '.jobs[] | select(.name | startswith("pytest (")) | "\(.name)|\(.conclusion)"' | sort)
+            if [ "$actual_jobs" != "$expected_jobs" ]; then
+              echo "::error::pytest matrix jobs differ from Changes.shard_count=$SHARD_COUNT"
+              echo "actual pytest jobs: $actual_jobs"
+              exit 1
+            fi
+            echo "pytest matrix jobs: $SHARD_COUNT successful"
           fi
           if [ "$DOCS_ONLY" = true ]; then
-            skip_ok "$RUFF"
             skip_ok "$CONTRACTS"
           else
-            ok "$RUFF"
             ok "$CONTRACTS"
           fi
           if [ "$FRONTEND" = true ]; then
@@ -697,10 +1043,4 @@ jobs:
           else
             skip_ok "$FRONTEND_JOB"
           fi
-          # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
-          # authority. First slice stays advisory until soak: success,
-          # skipped and failure are all accepted here, so a red TypeSafe
-          # check is visible but never turns CI Gate red.
-          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ]; }
-          advisory_ok "$TYPESAFE_TRIAGE"
           echo "CI Gate green"

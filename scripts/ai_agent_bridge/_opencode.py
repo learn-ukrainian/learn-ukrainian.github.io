@@ -771,7 +771,7 @@ def _assert_glm_egress_allowed(verb: str = "ask-glm") -> None:
         # refuse — for a China-egress guard, err on the side of not sending data.
         if var in os.environ:
             raise SystemExit(
-                f"{verb}: refusing to run under {var}={os.environ[var]!r}. GLM is "
+                f"{verb}: refusing to run under {var}. GLM is "
                 "China-hosted (Zhipu/z.ai) → prompt data egresses to China; it "
                 "is LOCAL-ONLY and must never run in CI / automated pipelines."
             )

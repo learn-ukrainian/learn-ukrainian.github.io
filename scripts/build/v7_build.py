@@ -724,6 +724,12 @@ def _persist_build_artifacts(
 
 
 def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
+    """Run a real build inside a fresh worktree.
+
+    Never called for a dry run — main() runs `--dry-run --worktree` in place
+    instead, since a dry run writes nothing to persist (#8890). Every
+    worktree this creates persists its artifacts before being reaped.
+    """
     level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)
@@ -800,11 +806,12 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
             extra_paths=[mdx_path],
         )
         archive.write_commit_diff_summary(worktree_path=worktree.path)
-        # Persist artifacts BEFORE printing the summary so the summary
-        # can include the commit-status line. Even if the build crashed,
-        # the writer_prompt + partial writer_output remain queryable via
-        # the build branch SHA. Without this, `git worktree remove`
-        # silently destroys forensic evidence.
+        cleanup_result: reap_worktrees.ReapResult | None = None
+        # Persist artifacts BEFORE printing the summary so the summary can
+        # include the commit-status line. Even if the build crashed, the
+        # writer_prompt + partial writer_output remain queryable via the
+        # build branch SHA. Without this, `git worktree remove` silently
+        # destroys forensic evidence.
         try:
             persisted = _persist_build_artifacts(
                 worktree,
@@ -817,7 +824,6 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         except PrimaryCheckoutSafetyError as exc:
             print(f"v7_build: error — {exc}", file=sys.stderr)
             return exc.exit_code
-        cleanup_result = None
         if result == "success" and persisted and not args.keep_worktree:
             cleanup_result = reap_worktrees.reap_success_worktree(
                 repo_root=worktree.repo_root,
@@ -1638,11 +1644,23 @@ def build_parser() -> argparse.ArgumentParser:
             "and run this build there on a build/{level}/{slug}-{timestamp} branch. "
             "Pass --worktree PATH to choose the worktree path; relative paths "
             "resolve from the repository root. If --out is also passed, relative "
-            "--out paths resolve inside the build worktree.\n\n"
+            "--out paths resolve inside the build worktree. --dry-run --worktree "
+            "creates no worktree and no branch — a dry run writes nothing, so it "
+            "runs in place instead (#8890); --keep-worktree with --dry-run is a "
+            "usage error, since a dry run creates no worktree to keep. "
+            "--dry-run --worktree --telemetry-out is also a usage error: there "
+            "is no worktree to sink telemetry into, and opening the file in "
+            "place would break the dry run's no-writes contract. --upgrade "
+            "--dry-run --worktree is a usage error too, since an upgrade dry "
+            "run writes lessons.yaml, upgrade_inputs.json and writer_prompt.md "
+            "and cannot run in place like a plain --dry-run --worktree; bare "
+            "--upgrade --dry-run (no --worktree) is unaffected.\n\n"
             "Exit codes:\n"
             "  0 on successful build or dry run.\n"
             "  1 on plan, packet, writer, QG, review, MDX, or filesystem failure.\n"
-            "  2 on command-line usage errors from argparse or --worktree outside this repo.\n"
+            "  2 on command-line usage errors from argparse, --worktree outside "
+            "this repo, --keep-worktree with --dry-run, --dry-run --worktree "
+            "--telemetry-out, or --upgrade --dry-run --worktree.\n"
             "  3 when the requested --worktree path already exists.\n"
             "  4 when git worktree add fails.\n\n"
             "  5 when a primary-checkout safety guard refuses the run.\n\n"
@@ -1736,8 +1754,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Load the plan and build the knowledge packet, then stop before "
-            "writer invocation (default: false). In --upgrade mode, save lessons.yaml "
-            "and the rendered writer_prompt.md without calling any model."
+            "writer invocation (default: false). Without --upgrade, a dry "
+            "run writes nothing to disk and reports the wiki completeness "
+            "verdict on the phase_done event. With --upgrade, it writes "
+            "lessons.yaml, upgrade_inputs.json and writer_prompt.md to the "
+            "upgrade output directory and calls no model — because of that "
+            "write, --upgrade --dry-run --worktree is a usage error (exit 2); "
+            "bare --upgrade --dry-run (no --worktree) is unaffected."
         ),
     )
     parser.add_argument(
@@ -1780,7 +1803,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "PATH, uses .worktrees/builds/{level}-{slug}-{YYYYMMDD-HHMMSS}/ "
             "and branch build/{level}/{slug}-{YYYYMMDD-HHMMSS}. With PATH, "
             "uses that path and derives the branch from its basename when "
-            "possible."
+            "possible. Combined with --dry-run, creates no worktree and no "
+            "branch — a dry run writes nothing, so it runs in place instead "
+            "(#8890). --dry-run --worktree --telemetry-out and "
+            "--upgrade --dry-run --worktree are both usage errors (exit 2) "
+            "because each would write something the plain in-place dry run "
+            "does not."
         ),
     )
     parser.add_argument(
@@ -1788,7 +1816,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "When --worktree succeeds, keep the build worktree instead of "
-            "reaping it after artifact persistence."
+            "reaping it after artifact persistence. Incompatible with "
+            "--dry-run (usage error) — a dry run creates no worktree to keep."
         ),
     )
     parser.add_argument(
@@ -1797,7 +1826,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help=(
             "Append JSONL monitor events to PATH instead of stdout. Relative "
-            "paths resolve from the repository root; default: stdout."
+            "paths resolve from the repository root; default: stdout. "
+            "Incompatible with --dry-run --worktree (usage error, exit 2): "
+            "that combination runs in place with no writes, so there is no "
+            "sink to open (#8890)."
         ),
     )
     parser.add_argument(
@@ -1826,14 +1858,49 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
-    if args.worktree is not None:
+    dry_run = bool(getattr(args, "dry_run", False))
+    if dry_run and args.keep_worktree:
+        print(
+            "v7_build: error — --keep-worktree has nothing to keep: --dry-run "
+            "creates no build worktree (#8890). Drop --keep-worktree or --dry-run.",
+            file=sys.stderr,
+        )
+        return 2
+    worktree_requested = args.worktree is not None
+    if dry_run and worktree_requested and args.telemetry_out is not None:
+        print(
+            "v7_build: error — --dry-run --worktree --telemetry-out has nothing "
+            "to redirect: a dry run writes nothing, so --worktree runs it in "
+            "place with no telemetry sink to open (#8890). Drop --telemetry-out, "
+            "--dry-run, or --worktree.",
+            file=sys.stderr,
+        )
+        return 2
+    if dry_run and worktree_requested and getattr(args, "upgrade", False):
+        print(
+            "v7_build: error — --upgrade --dry-run --worktree has writes to "
+            "avoid: an upgrade dry run saves lessons.yaml, upgrade_inputs.json "
+            "and writer_prompt.md, so it cannot run in place the way a plain "
+            "--dry-run --worktree does (#8890). Drop --worktree, --dry-run, or "
+            "--upgrade.",
+            file=sys.stderr,
+        )
+        return 2
+    if worktree_requested and not dry_run:
         return _run_in_worktree(args, raw_argv)
-    if run_archive.ENV_KEY not in os.environ:
-        try:
-            _ensure_top_level_invocation_is_not_primary_checkout()
-        except PrimaryCheckoutSafetyError as exc:
-            print(str(exc), file=sys.stderr)
-            return exc.exit_code
+    if worktree_requested and dry_run:
+        # A dry run writes nothing (#8679), so there is nothing an isolated
+        # worktree would protect the primary checkout from; run it in place
+        # instead of creating a worktree and branch just to discard them
+        # (#8890).
+        print("No build worktree created — a dry run writes nothing (#8890).")
+    else:
+        if run_archive.ENV_KEY not in os.environ:
+            try:
+                _ensure_top_level_invocation_is_not_primary_checkout()
+            except PrimaryCheckoutSafetyError as exc:
+                print(str(exc), file=sys.stderr)
+                return exc.exit_code
     telemetry_out = _resolve_project_path(args.telemetry_out)
     with linear_pipeline.telemetry_event_sink(telemetry_out):
         return _run(args)
@@ -2387,7 +2454,11 @@ def _run(args: argparse.Namespace) -> int:
     phase = "start"
     timeout_agent = writer
     tracker = LastEventTracker()
-    archive = run_archive.RunArchive.from_env()
+    dry_run = bool(getattr(args, "dry_run", False))
+    # A dry run computes and reports but persists nothing: no run archive
+    # (it lives under curriculum/l2-uk-en/_orchestration), no module dir,
+    # no phase artefacts (#8679).
+    archive = None if dry_run else run_archive.RunArchive.from_env()
     plan_path: Path | None = None
     module_dir: Path | None = None
 
@@ -2464,7 +2535,8 @@ def _run(args: argparse.Namespace) -> int:
         phase = "wiki_completeness_gate"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        module_dir.mkdir(parents=True, exist_ok=True)
+        if not dry_run:
+            module_dir.mkdir(parents=True, exist_ok=True)
         if (
             resume_enabled
             and not force_rerun
@@ -2480,9 +2552,18 @@ def _run(args: argparse.Namespace) -> int:
                 slug=slug,
                 wiki_manifest=wiki_manifest_data,
             )
-            linear_pipeline.write_json(
-                module_dir / "wiki_completeness_gate.json", wiki_completeness_gate
-            )
+            if not dry_run:
+                linear_pipeline.write_json(
+                    module_dir / "wiki_completeness_gate.json", wiki_completeness_gate
+                )
+        gate_fields: dict[str, Any] = {}
+        if dry_run and isinstance(wiki_completeness_gate, Mapping):
+            # The operator still sees the gate result, on the event stream.
+            gate_fields = {
+                "dry_run": True,
+                "verdict": wiki_completeness_gate.get("verdict"),
+                "diagnostic": wiki_completeness_gate.get("diagnostic"),
+            }
         _phase_done(
             phase,
             started_at,
@@ -2491,6 +2572,7 @@ def _run(args: argparse.Namespace) -> int:
             event_sink=tracker.emit,
             archive=archive,
             artifact_dir=module_dir,
+            **gate_fields,
         )
         if not isinstance(wiki_completeness_gate, Mapping) or wiki_completeness_gate.get("verdict") != "PASS":
             diagnostic = (
@@ -2500,7 +2582,7 @@ def _run(args: argparse.Namespace) -> int:
             )
             raise linear_pipeline.LinearPipelineError(str(diagnostic))
 
-        if args.dry_run:
+        if dry_run:
             sections = [
                 str(item.get("section"))
                 for item in plan.get("content_outline", [])

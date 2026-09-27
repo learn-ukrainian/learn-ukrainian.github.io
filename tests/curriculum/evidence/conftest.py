@@ -179,6 +179,14 @@ def synthetic_sources(tmp_path):
 
 
 @pytest.fixture
+def synthetic_sources_wal(synthetic_sources):
+    """The same synthetic DB declared WAL, as the live sources.db is: writers commit past a pinned reader."""
+    with sqlite3.connect(synthetic_sources) as conn:
+        assert conn.execute("PRAGMA journal_mode=WAL").fetchone()[0] == "wal"
+    return synthetic_sources
+
+
+@pytest.fixture
 def synthetic_standard(tmp_path):
     path = tmp_path / "synthetic-standard.txt"
     lines = [

@@ -91,6 +91,7 @@ from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
 from .cursor import _load_cursor_api_key_from_env_file
+from .deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES, DeepSeekAdapter
 from .glm import assert_glm_egress_allowed
 
 try:
@@ -173,8 +174,8 @@ GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
 # OpenCode's currently advertised first-party provider/model is the invocation
 # detail; the retired deepseek-direct provider alias is not advertised by ACP.
-DEEPSEEK_ACP_MODEL = "deepseek-v4-flash"
-DEEPSEEK_ACP_INVOCATION_MODEL = "deepseek/deepseek-flash"
+DEEPSEEK_ACP_MODEL = DeepSeekAdapter.default_model
+DEEPSEEK_ACP_INVOCATION_MODEL = DEEPSEEK_OPENCODE_MODEL_ROUTES[DEEPSEEK_ACP_MODEL]
 # $0 toolless Gemma seat (#6805): the canonical catalog id doubles as the
 # opencode invocation id on the Google AI Studio direct provider. Gemma has no
 # paid SKU on the Gemini API (pricing verified 2026-07-07) and runs toolless —
@@ -1082,7 +1083,7 @@ def _require_local_metadata_field(
         )
     if not pattern.fullmatch(stripped):
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: {name}={stripped!r} must match a bounded local identifier "
+            f"{adapter_label}: {name} must match a bounded local identifier "
             f"pattern ({pattern.pattern}); refusing to forward unsafe metadata"
         )
     return stripped
@@ -1092,7 +1093,7 @@ def _require_shadow_transport(*, adapter_label: str) -> None:
     transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
     if transport != "shadow":
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: refusing to spawn ({TRANSPORT_ENV}={transport!r}); "
+            f"{adapter_label}: refusing to spawn ({TRANSPORT_ENV} is not shadow); "
             f"set {TRANSPORT_ENV}=shadow to enable the experimental ACPX shadow seat "
             "(default is off)"
         )
@@ -1137,7 +1138,7 @@ def _require_shadow_tool_config(
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
+            f"{adapter_label}: tool_config target_agent rejected; this seat supports "
             f"exactly one ACP participant: {required_target}"
         )
     if communication:
@@ -1181,7 +1182,7 @@ def _require_active_discussion_tool_config(
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
+            f"{adapter_label}: tool_config target_agent rejected; this seat supports "
             f"exactly one ACP participant: {required_target}"
         )
     if communication:

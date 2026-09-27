@@ -8,6 +8,144 @@ import pytest
 import yaml
 
 from scripts.curriculum.evidence import codes, lock, registry, sources, words
+from scripts.verification import stress
+
+
+@pytest.mark.parametrize(
+    ("form", "expected"),
+    [("його", "його́"), ("Його", "Його́"), ("переді", "пе́реді"), ("межи", "межи́"), ("піді", "пі́ді")],
+)
+def test_cited_stress_overrides_are_exact_and_single_accent(form, expected):
+    stress._load_overrides.cache_clear()
+    result = stress.verify_stress(form)
+    assert result["status"] == "ok"
+    assert result["matches"][0]["override_applied"] is True
+    assert result["matches"][0]["stressed_form"] == expected
+    assert expected.count("\u0301") == 1
+
+
+def test_zero_vowel_ukrainian_words_need_no_stress():
+    for form in ("в", "з", "й", "ж"):
+        assert words.needs_no_stress(form)
+
+
+def test_long_tag_excludes_learner_form():
+    assert not words.is_learner_form("adj:f:v_naz:pron:dem:long", [])
+    assert words.is_learner_form("adj:f:v_naz:pron:dem", [])
+
+
+def test_packed_stress_requires_pending_with_source_reason():
+    match = {"stressed_form": "пе́ре́ді", "vowel_indices": [1, 3], "override_applied": False}
+    assert words.packed_stress_reason(match) == "multiple_stressed_vowels"
+    assert words.packed_stress_reason({**match, "override_applied": True}) is None
+
+
+def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'переді', 'переді', 'prep', 'prep', '', '')")
+
+    def oracle(word, *, tags):
+        return {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": "пе́ре́ді",
+                    "unstressed_form": word,
+                    "vowel_index": 1,
+                    "vowel_indices": [1, 3],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "a" * 64},
+        }
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "переді", "pos": "prep", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    form = result["store"]["words"][0]["forms"][0]
+    assert form["stress_source"] == "pending"
+    assert "stressed" not in form
+    assert form["stress_candidates"][0]["vowel_indices"] == [1, 3]
+    assert result["pending_reasons"] == [
+        {
+            "word_id": "W-001",
+            "form": "переді",
+            "tags": "prep",
+            "reason": "multiple_stressed_vowels",
+        }
+    ]
+
+
+def test_pronominal_adjective_prefers_attributive_gloss(synthetic_vesum, synthetic_sources, tmp_path):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute(
+            "INSERT INTO forms_all VALUES (5, 50, 'synthetic-pos', 'synthetic-pos', 'adj', "
+            "'adj:m:v_naz:pron:pos', '', '')"
+        )
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, "synthetic-pos", "pronoun", '["mine"]', "", "synthetic"),
+                (11, "synthetic-pos", "particle", '["my (determiner)"]', "", "synthetic"),
+            ],
+        )
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "synthetic-pos", "pos": "adj", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    word = result["store"]["words"][0]
+    assert word["gloss_en"] == "my (determiner)"
+    assert word["gloss_source"]["id"] == 11
+
+
+def test_reflexive_possessive_uses_broad_sourced_sense(synthetic_vesum, synthetic_sources, tmp_path):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'свій', 'свій', 'adj', 'adj:m:v_naz:pron:pos', '', '')")
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, "свій", "pronoun", '["one’s (all grammatical persons)"]', "", "synthetic"),
+                (11, "свій", "particle", '["its (only third-person neuter)"]', "", "synthetic"),
+            ],
+        )
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "свій", "pos": "adj", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    assert result["store"]["words"][0]["gloss_source"]["id"] == 10
 
 
 def test_monosyllable_never_calls_oracle(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
@@ -185,7 +323,9 @@ def test_checked_ulif_entry_yields_ulif_stress(synthetic_vesum, synthetic_source
         )
 
     word = res["store"]["words"][0]
-    assert word["ulif"] == {"source": "ulif", "key": ["synthetic-original", 1]}
+    assert word["ulif"]["source"] == "ulif"
+    assert word["ulif"]["key"] == ["synthetic-original", 1]
+    assert len(word["ulif"]["row_sha256"]) == 64  # the entry row with its ordered sections
     assert len(word["forms"]) == 1
     assert word["forms"][0]["form"] == "synthetic-a"
     assert word["forms"][0]["stress_source"] == "ulif"
@@ -589,7 +729,12 @@ def test_gloss_absent_when_no_row_and_present_when_matching(synthetic_vesum, syn
     w_none = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic-no-gloss")
 
     assert w_verb["gloss_en"] == "wrong POS"
-    assert w_verb["gloss_source"] == {"table": "dmklinger_uk_en", "id": 3}
+    assert w_verb["gloss_source"]["table"] == "dmklinger_uk_en"
+    assert w_verb["gloss_source"]["id"] == 3
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.row_factory = sqlite3.Row
+        row = dict(conn.execute("SELECT * FROM dmklinger_uk_en WHERE id = 3").fetchone())
+    assert w_verb["gloss_source"]["row_sha256"] == sources.row_digest(row)
 
     assert "gloss_en" not in w_none
     assert "gloss_source" not in w_none
@@ -795,3 +940,149 @@ def test_file_and_directory_permissions(synthetic_vesum, synthetic_sources, tmp_
     lock_file = out_dir / "_words.yaml.lock"
     assert stat.S_IMODE(store_file.stat().st_mode) == 0o644
     assert stat.S_IMODE(lock_file.stat().st_mode) == 0o644
+
+
+OK_ORACLE = {
+    "status": "ok",
+    "matches": [
+        {
+            "stressed_form": "synthetic-stressed",
+            "unstressed_form": "synthetic",
+            "vowel_index": 0,
+            "vowel_indices": [0],
+            "vesum": None,
+            "required_tags": [],
+            "override_applied": False,
+        }
+    ],
+    "source": {"digest": "t" * 64},
+}
+
+
+def _oracle(monkeypatch):
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {**OK_ORACLE, "matches": [{**OK_ORACLE["matches"][0], "stressed_form": f"{w}-stressed"}]},
+    )
+
+
+def _request(tmp_path, words_list, name="req.yaml"):
+    req_path = tmp_path / name
+    req_path.write_text(yaml.safe_dump({"request_schema": 1, "level": "a1", "words": words_list}), encoding="utf-8")
+    return req_path
+
+
+SYNTHETIC_NOUN = {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}}
+
+
+def test_store_records_rows_v2_identities_and_aggregate(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    _oracle(monkeypatch)
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words("a1", _request(tmp_path, [SYNTHETIC_NOUN]), evidence_dir=tmp_path, sources_instance=api)
+    store = res["store"]
+    word = store["words"][0]
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.row_factory = sqlite3.Row
+        gloss_row = dict(conn.execute("SELECT * FROM dmklinger_uk_en WHERE id = 1").fetchone())
+        cefr_row = dict(conn.execute("SELECT * FROM puls_cefr WHERE id = 1").fetchone())
+    assert word["gloss_source"] == {"table": "dmklinger_uk_en", "id": 1, "row_sha256": sources.row_digest(gloss_row)}
+    assert word["cefr"] == {"level": "A1", "source": "puls", "row_id": 1, "row_sha256": sources.row_digest(cefr_row)}
+    assert store["built_with"]["sources_db_scheme"] == "rows-v2"
+    cited = words.cited_rows(word)
+    # The morphology check may flag the synthetic lemma as a shadow and add heritage pairs; the
+    # gloss and CEFR rows are always cited.
+    assert {pair for pair in cited if not pair[0].startswith("heritage:")} == {
+        ("dmklinger_uk_en:1", word["gloss_source"]["row_sha256"]),
+        ("puls_cefr:1", word["cefr"]["row_sha256"]),
+    }
+    assert store["built_with"]["sources_db"] == sources.aggregate_digest(cited)
+    assert res["snapshot"]["journal_mode"] == "delete"
+    assert lock.check(tmp_path / "_words.yaml")
+
+
+def test_allocated_at_build_is_the_request_read_set(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    _oracle(monkeypatch)
+    req = _request(tmp_path, [SYNTHETIC_NOUN])
+
+    def build(evidence_dir):
+        with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+            words.build_words("a1", req, evidence_dir=evidence_dir, sources_instance=api, mcp_commit="f" * 40)
+        return registry.load(evidence_dir / "_words.registry.yaml")
+
+    first = build(tmp_path / "one")
+    assert build(tmp_path / "two") == first  # deterministic for the same request and sources
+
+    # An uncited candidate in the gloss batch changes (the second row is never copied):
+    # the read set is different, so a fresh allocation records a different fingerprint …
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE dmklinger_uk_en SET text = 'uncited candidate edit' WHERE id = 2")
+    third = build(tmp_path / "three")
+    assert third[0]["allocated_at_build"] != first[0]["allocated_at_build"]
+
+    # … while an existing ledger row is never rewritten by a later build.
+    again = _request(tmp_path, [{**SYNTHETIC_NOUN, "want": "W-001"}], name="again.yaml")
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        words.build_words("a1", again, evidence_dir=tmp_path / "one", sources_instance=api, mcp_commit="f" * 40)
+    assert registry.load(tmp_path / "one" / "_words.registry.yaml") == first
+
+
+def test_legacy_store_migrates_only_when_the_request_covers_all_active_ids(
+    synthetic_vesum, synthetic_sources, tmp_path, monkeypatch
+):
+    _oracle(monkeypatch)
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        words.build_words("a1", _request(tmp_path, [SYNTHETIC_NOUN]), evidence_dir=tmp_path, sources_instance=api)
+    store_path = tmp_path / "_words.yaml"
+    doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    doc["built_with"].pop("sources_db_scheme")
+    doc["built_with"]["sources_db"] = "b" * 64
+    doc["words"][0]["gloss_source"].pop("row_sha256")
+    doc["words"][0]["cefr"] = {"level": "A1", "source": "puls"}
+    lock.write(store_path, lock.yaml_bytes(doc))
+    assert words.store_scheme(doc) == "file-v1"
+
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute(
+            "INSERT INTO forms_all VALUES (5, 40, 'synthetic-ng', 'synthetic-other', 'noun', 'noun:m:v_naz', '', '')"
+        )
+    other = {"lemma": "synthetic-other", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 40}}
+
+    partial = _request(tmp_path, [other], name="partial.yaml")
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        with pytest.raises(ValueError, match=codes.INVALID_REQUEST) as excinfo:
+            words.build_words("a1", partial, evidence_dir=tmp_path, sources_instance=api)
+    assert "legacy store" in str(excinfo.value) and "W-001" in str(excinfo.value)
+
+    full = _request(tmp_path, [{**SYNTHETIC_NOUN, "want": "W-001"}, other], name="full.yaml")
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words("a1", full, evidence_dir=tmp_path, sources_instance=api)
+    assert res["store"]["built_with"]["sources_db_scheme"] == "rows-v2"
+    assert all("row_sha256" in w["gloss_source"] for w in res["store"]["words"] if "gloss_source" in w)
+
+
+def _shadow_everything(monkeypatch):
+    from scripts.verification import check_ru_morph
+
+    monkeypatch.setattr(
+        check_ru_morph,
+        "check_russian_patterns_batch",
+        lambda requested, *, verified_words: {w: {"matches_russian": True, "confidence": 0.9} for w in requested},
+    )
+
+
+def test_heritage_hits_carry_the_identity_of_the_rows_they_were_read_from(
+    synthetic_vesum, synthetic_sources, tmp_path, monkeypatch
+):
+    _oracle(monkeypatch)
+    _shadow_everything(monkeypatch)
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words("a1", _request(tmp_path, [SYNTHETIC_NOUN]), evidence_dir=tmp_path, sources_instance=api)
+    word = res["store"]["words"][0]
+    assert word["shadow"]["russian_shadow"] is True
+    hits = word["heritage"]
+    assert hits and hits[0]["source_family"] == "style_guide"  # the synthetic style-guide row contains the lemma
+    assert hits[0]["text"] == "synthetic note explanation text"
+    assert all(sources.heritage_hit_digest(hit) == hit["row_sha256"] for hit in hits)
+    assert ("heritage:synthetic:0", hits[0]["row_sha256"]) in words.cited_rows(word)
+    words.validate_store_data(res["store"])

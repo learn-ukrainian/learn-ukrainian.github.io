@@ -134,6 +134,13 @@
               "minLength": 1
             }
           ]
+        },
+        "span": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
         }
       }
     },

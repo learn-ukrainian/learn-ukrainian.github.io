@@ -223,15 +223,16 @@ def build_kaikki_side_db(
 
     Workers query by key instead of reparsing the global JSON file.
     """
+    guidance = "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group lexicon_kaikki"
+    try:
+        raw = json.loads(kaikki_json.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"Kaikki lookup is unreadable or malformed: {kaikki_json}; run {guidance}") from exc
+    if not isinstance(raw, dict):
+        raise ValueError(f"Kaikki lookup must be a JSON object: {kaikki_json}; run {guidance}")
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         output.unlink()
-    try:
-        raw = json.loads(kaikki_json.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        raw = {}
-    if not isinstance(raw, dict):
-        raw = {}
 
     out = sqlite3.connect(output)
     try:

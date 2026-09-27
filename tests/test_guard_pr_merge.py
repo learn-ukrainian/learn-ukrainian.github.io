@@ -513,22 +513,56 @@ def _rollup_states(monkeypatch, rows):
         ([{"name": "CI Gate"}], None),
         (
             [
-                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
-                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+                {
+                    "name": "CI Gate",
+                    "workflowName": "CI",
+                    "startedAt": "2026-08-31T06:00:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "FAILURE",
+                },
+                {
+                    "name": "CI Gate",
+                    "workflowName": "CI",
+                    "startedAt": "2026-08-31T06:01:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "SUCCESS",
+                },
             ],
             ([], []),
         ),
         (
             [
-                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
-                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+                {
+                    "name": "CI Gate",
+                    "workflowName": "CI",
+                    "startedAt": "2026-08-31T06:00:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "FAILURE",
+                },
+                {
+                    "name": "CI Gate",
+                    "workflowName": "CI",
+                    "startedAt": "2026-08-31T06:00:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "SUCCESS",
+                },
             ],
             None,
         ),
         (
             [
-                {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
-                {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+                {
+                    "name": "CI Gate",
+                    "startedAt": "2026-08-31T06:00:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "FAILURE",
+                },
+                {
+                    "name": "CI Gate",
+                    "startedAt": "2026-08-31T06:01:00Z",
+                    "status": "COMPLETED",
+                    "conclusion": "SUCCESS",
+                },
             ],
             None,
         ),
@@ -557,8 +591,11 @@ def test_rollup_fallback_allows_only_unambiguous_green(monkeypatch, rows, expect
 def test_cancelled_matrix_parent_does_not_hide_real_job_failures(monkeypatch, failed_job, conclusion):
     def row(name, result, minute):
         return {
-            "name": name, "workflowName": "CI", "status": "COMPLETED",
-            "conclusion": result, "startedAt": f"2026-09-04T22:{minute}:00Z",
+            "name": name,
+            "workflowName": "CI",
+            "status": "COMPLETED",
+            "conclusion": result,
+            "startedAt": f"2026-09-04T22:{minute}:00Z",
         }
 
     jobs = ["CI Gate", "Frontend", *(f"pytest ({i})" for i in range(1, 5))]
@@ -579,11 +616,17 @@ def test_cancelled_matrix_parent_does_not_hide_real_job_failures(monkeypatch, fa
 
 
 def test_checks_json_ignores_unexpanded_matrix_parent(monkeypatch):
-    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps([
-        {"name": "pytest (${{ matrix.shard }})", "bucket": "fail", "state": "CANCELLED"},
-        {"name": "CI Gate", "bucket": "pass", "state": "SUCCESS"},
-        {"name": "pytest (1)", "bucket": "fail", "state": "CANCELLED"},
-    ]))
+    _fake_gh(
+        monkeypatch,
+        returncode=0,
+        stdout=json.dumps(
+            [
+                {"name": "pytest (${{ matrix.shard }})", "bucket": "fail", "state": "CANCELLED"},
+                {"name": "CI Gate", "bucket": "pass", "state": "SUCCESS"},
+                {"name": "pytest (1)", "bucket": "fail", "state": "CANCELLED"},
+            ]
+        ),
+    )
     assert guard._check_states("5") == (["pytest (1)"], [])
 
 
@@ -730,10 +773,7 @@ def test_pr_meta_requires_url_field(monkeypatch):
     _fake_gh(
         monkeypatch,
         returncode=0,
-        stdout=(
-            '{"isDraft":false,"baseRefName":"main","body":"","number":5,'
-            '"url":"https://github.com/o/r/pull/5"}'
-        ),
+        stdout=('{"isDraft":false,"baseRefName":"main","body":"","number":5,"url":"https://github.com/o/r/pull/5"}'),
     )
     assert guard._pr_meta("5") == {
         "isDraft": False,
@@ -862,6 +902,51 @@ def test_repo_is_propagated_to_every_gh_lookup(monkeypatch):
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
     guard._judge(["--repo", "other/repo", "9", "--squash"])
     assert all("--repo" in c and "other/repo" in c for c in calls), calls
+
+
+@pytest.mark.parametrize(
+    "meta,checks,expected",
+    [
+        (
+            {
+                "isDraft": False,
+                "baseRefName": "main",
+                "url": "https://github.com/learn-ukrainian/learn-ukrainian-infra-private/pull/689",
+            },
+            ([], []),
+            0,
+        ),
+        (
+            {
+                "isDraft": True,
+                "baseRefName": "main",
+                "url": "https://github.com/learn-ukrainian/learn-ukrainian-infra-private/pull/689",
+            },
+            ([], []),
+            2,
+        ),
+        (
+            {
+                "isDraft": False,
+                "baseRefName": "main",
+                "url": "https://github.com/learn-ukrainian/learn-ukrainian-infra-private/pull/689",
+            },
+            (["CI Gate"], []),
+            2,
+        ),
+    ],
+)
+def test_private_repo_selector_checks_its_own_pr(monkeypatch, meta, checks, expected):
+    assert (
+        _run(
+            monkeypatch,
+            "gh pr merge 689 -R learn-ukrainian/learn-ukrainian-infra-private --squash",
+            pr="689",
+            meta=meta,
+            checks=checks,
+        )
+        == expected
+    )
 
 
 # --- codex re-review round 4 (PR #5324): pflag shorthands + shell escaping ---

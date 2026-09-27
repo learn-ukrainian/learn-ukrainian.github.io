@@ -35,6 +35,8 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+pytestmark = pytest.mark.repo_wide
+
 # (file, innermost enclosing function) -> why that site may remove a worktree.
 ALLOWLIST: dict[tuple[str, str | None], str] = {
     ("scripts/orchestration/worktree_claims.py", "git_worktree_remove"): (

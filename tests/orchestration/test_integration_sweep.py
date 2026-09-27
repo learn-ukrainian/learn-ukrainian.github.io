@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import integration_sweep as sweep
 from scripts.review.record_cf_verdict import build_comment
 
@@ -122,6 +123,99 @@ def test_state_preserves_blockers_even_when_queued_or_armed():
     assert "CHANGES_REQUESTED" in queued.blockers
     assert armed.state == "armed"
     assert "CHANGES_REQUESTED" in armed.blockers
+
+
+def _gate(conclusion: str, started_at: str, workflow: str | None) -> dict:
+    row = {"name": "CI Gate", "status": "COMPLETED", "conclusion": conclusion, "startedAt": started_at}
+    if workflow is not None:
+        row["workflowName"] = workflow
+    return row
+
+
+def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T12:00:00Z", "CI"),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", "Nightly"),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_timestamp_tie_failure_is_not_hidden_by_list_order():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T13:00:00Z", "CI"),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", "CI"),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_named_check_without_workflow_keeps_a_red_row():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T12:00:00Z", None),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", None),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_cross_workflow_in_progress_is_pending():
+    """Nightly still running must not read green beside a SUCCESS of the same name."""
+    item = pr(
+        statusCheckRollup=[
+            {
+                "name": "CI Gate",
+                "status": "IN_PROGRESS",
+                "workflowName": "Nightly",
+                "startedAt": "2026-09-23T13:00:00Z",
+            },
+            _gate("SUCCESS", "2026-09-23T12:00:00Z", "CI"),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI pending CI Gate"]
+
+
+def test_single_green_row_without_timestamp_is_green():
+    item = pr(
+        statusCheckRollup=[
+            {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"}
+        ]
+    )
+    assert sweep._check_blockers(item) == []
+
+
+def test_row_with_neither_status_nor_conclusion_is_unknown():
+    item = pr(
+        statusCheckRollup=[{"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-09-23T12:00:00Z"}]
+    )
+    assert sweep._check_blockers(item) == ["CI unknown CI Gate"]
+
+
+def test_group_collapsed_by_name_drops_blanks_matrix_and_keeps_survivors():
+    blank_name = {"name": "  ", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"}
+    empty_name = {"name": "", "conclusion": "FAILURE"}
+    blank_context = {"context": "   "}
+    matrix = {
+        "name": "pytest (${{ matrix.shard }})",
+        "conclusion": "CANCELLED",
+        "workflowName": "CI",
+        "startedAt": "2026-09-23T12:00:00Z",
+    }
+    nightly = {
+        "name": "CI Gate",
+        "status": "IN_PROGRESS",
+        "workflowName": "Nightly",
+        "startedAt": "2026-09-23T13:00:00Z",
+    }
+    ci = _gate("SUCCESS", "2026-09-23T12:00:00Z", "CI")
+    named, other = group_collapsed_by_name([blank_name, empty_name, blank_context, matrix, "not-a-dict", 7, nightly, ci])
+    assert list(named) == ["CI Gate"]
+    assert named["CI Gate"] == [nightly, ci]
+    assert other == [blank_name, empty_name, blank_context, "not-a-dict", 7]
+    assert all("${{" not in str(row.get("name") or "") for row in other if isinstance(row, dict))
 
 
 def test_ci_red_pending_and_ready():

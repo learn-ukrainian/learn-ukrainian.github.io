@@ -41,9 +41,15 @@ if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from build.activity_renderer import (
+    GroupSortNameError,
+    ImageToLetterShapeError,
+    QuizCorrectnessError,
     derive_error_correction_replacement,
     error_correction_render_values,
+    group_sort_group_name,
+    image_to_letter_render_values,
     is_punctuation_error_correction,
+    quiz_correct_indices,
 )
 
 
@@ -167,6 +173,10 @@ def validate_activities(
                 issues.extend(_check_match_up(slug, section, pairs))
             elif atype == "true-false":
                 issues.extend(_check_true_false(slug, section, items))
+            elif atype == "image-to-letter":
+                issues.extend(_check_image_to_letter(slug, section, items))
+            elif atype == "group-sort":
+                issues.extend(_check_group_sort(slug, section, act.get("groups")))
 
     # Section-level checks (need level context)
     if level and module_num:
@@ -458,6 +468,16 @@ def _check_quiz(
                 f"duplicate options: {set(dupes)}",
             ))
 
+        # The emitters resolve the correct option(s) with this same function;
+        # an item whose inputs contradict or name none would mark nothing (the
+        # component would then fall back to the first choice). An out-of-range
+        # index is already reported above.
+        if not (type(correct) is int and not 0 <= correct < len(opts)):
+            try:
+                quiz_correct_indices(item, i)
+            except QuizCorrectnessError as exc:
+                issues.append(ActivityIssue(slug, section, "quiz", i, "error", str(exc)))
+
     return issues
 
 
@@ -568,6 +588,34 @@ def _check_true_false(
                 f"'correct' should be boolean, got {type(correct).__name__}: {correct}",
             ))
 
+    return issues
+
+
+def _check_image_to_letter(
+    slug: str, section: str, items: list,
+) -> list[ActivityIssue]:
+    """Run the renderer's own shape rules so a bad item fails here, not at render."""
+    issues: list[ActivityIssue] = []
+    for i, item in enumerate(items):
+        try:
+            image_to_letter_render_values(item, i)
+        except ImageToLetterShapeError as exc:
+            issues.append(ActivityIssue(
+                slug, section, "image-to-letter", i, "error", str(exc),
+            ))
+    return issues
+
+
+def _check_group_sort(
+    slug: str, section: str, groups: object,
+) -> list[ActivityIssue]:
+    """Reject groups whose ``label`` and ``name`` disagree, as the emitters would."""
+    issues: list[ActivityIssue] = []
+    for i, group in enumerate(groups if isinstance(groups, list) else []):
+        try:
+            group_sort_group_name(group, i)
+        except GroupSortNameError as exc:
+            issues.append(ActivityIssue(slug, section, "group-sort", i, "error", str(exc)))
     return issues
 
 

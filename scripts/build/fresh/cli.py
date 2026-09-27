@@ -6,6 +6,9 @@ Subcommands:
 - write: dispatch explicit writer seat, harvest result, validate draft schema, save state
 - build: run checks 1-12 for one lesson or an ordered module
 - closure: recompute historical manifest staleness
+- plan-manifest: run pack-verify --strict on the provisional pack and write the plan-review attempt manifest
+- plan-promote: after an APPROVE plan review, promote the pack hash into the plan's evidence_ref.sha256
+- plan-review-status: report whether the plan review of record still describes the tree
 """
 
 from __future__ import annotations
@@ -21,7 +24,7 @@ from typing import Any
 import yaml
 
 from scripts.build.fresh.draft_schema import LEVELS
-from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.path_guard import checked_existing_path, checked_path, validate_module
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
@@ -286,12 +289,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
             "Outputs:\n"
-            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n\n"
+            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n"
+            "  --module also refuses completion (exit 1, stderr) when module-verdict.yaml already exists and\n"
+            "  disagrees with a fresh recomputation (scripts.review.fixloop.module_verdict_problems): the gate\n"
+            "  that keeps a stale APPROVE from reaching the content PR (#8774 r5).\n\n"
             "Exit codes:\n"
             "  0: All checks passed\n"
-            "  1: A check failed or an input could not be loaded\n\n"
+            "  1: A check failed, an input could not be loaded, or (--module) the module verdict on disk is stale\n\n"
             "Related:\n"
-            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397"
+            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397; scripts/review/fixloop.py verdict --check"
         ),
     )
     p_build.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
@@ -338,6 +344,99 @@ def _build_parser() -> argparse.ArgumentParser:
     p_closure.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
     p_closure.add_argument("--repo-root", type=Path, default=None,
                            help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
+
+    p_plan_manifest = subparsers.add_parser(
+        "plan-manifest",
+        help="Write the plan-review attempt manifest (runs pack-verify --strict first)",
+        description=(
+            "Write the plan-review attempt manifest (kind: plan): run pack-verify --strict in-process on the\n"
+            "provisional pack, store its report, then hash every input the plan review sees.\n"
+            "Use after the pack builder wrote the provisional pack and plan-validate --provisional-pack\n"
+            "--write-report passed. Refuses a missing input (naming its path — a level with no grammar\n"
+            "registry needs _grammar.yaml holding []), a pack-verify result that is not a strict pass, and a\n"
+            "plan-validate report that is not a provisional pass with every recorded input hash still current."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --provisional-pack --write-report\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-manifest a1 mod-two\n\n"
+            "Outputs:\n"
+            "  Under curriculum/l2-uk-en/evidence/<level>/_state/<slug>/: pack-verify.report.json,\n"
+            "  plan-review.manifest.yaml, plan-review.manifest.sha256 and manifests/plan/<sha>.yaml.\n"
+            "  Prints {manifest_sha256, manifest} as JSON. A refusal removes the current manifest pointer.\n\n"
+            "Exit codes:\n"
+            "  0: Manifest written (a rerun with unchanged inputs writes identical bytes)\n"
+            "  1: Refused (a code and the paths at fault are printed to stderr as JSON)\n\n"
+            "Related:\n"
+            "  docs/epics/fresh-build-review-contracts.md (review attempt manifest), scripts/build/fresh/plan_manifest.py,\n"
+            "  schemas/plan-review-manifest-v1.schema.json, issues #8397 #8430"
+        ),
+    )
+    p_plan_promote = subparsers.add_parser(
+        "plan-promote",
+        help="Promote the reviewed provisional pack hash into the plan (transactional)",
+        description=(
+            "After an APPROVE plan review, set the plan's evidence_ref.sha256 to the reviewed provisional pack's.\n"
+            "Use once, after the review's plan-review.yaml (verdict, manifest_sha256, attempt_id) is recorded.\n"
+            "Refuses unless the review approved the current manifest and every manifest input (plan, locks, arc,\n"
+            "decisions, scope, grammar, both reports) and the planned learner state are unchanged; the promoted\n"
+            "bytes (only evidence_ref.sha256 differs) must pass the full strict validation in memory before\n"
+            "anything is written."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-promote a1 mod-two\n\n"
+            "Outputs:\n"
+            "  Publishes, atomically and in this order, plan-reviewed.<reviewed_sha>.yaml and plan-promotion.yaml\n"
+            "  under evidence/<level>/_state/<slug>/, then the promoted plan; a failed write undoes the earlier ones.\n"
+            "  Prints the receipt as JSON; a second run reports already_promoted.\n\n"
+            "Exit codes:\n"
+            "  0: Promoted (or already promoted)\n"
+            "  1: Refused, nothing written (inputs_changed_since_review names each changed path)\n\n"
+            "Related:\n"
+            "  docs/epics/fresh-build-review-contracts.md (Contract 1, Timing), scripts/build/fresh/plan_promote.py,\n"
+            "  issues #8397 #8430"
+        ),
+    )
+    p_plan_status = subparsers.add_parser(
+        "plan-review-status",
+        help="Report whether the plan review of record still describes the tree",
+        description=(
+            "Report the state of the plan review of record: unreviewed, not_approved, reviewed_pending_promotion,\n"
+            "reviewed_promoted or stale (every changed path named). Downstream steps and the landing call this.\n"
+            "After promotion the only allowed difference from the reviewed manifest is the plan's\n"
+            "evidence_ref.sha256, proven by the promotion receipt; any other change is stale."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-review-status a1 mod-two\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-review-status a1 mod-two --require-promoted\n\n"
+            "Outputs:\n"
+            "  One JSON object on stdout: state, manifest_sha256, attempt_id, and stale {path: why}. Read-only.\n\n"
+            "Exit codes:\n"
+            "  0: reviewed_promoted (and reviewed_pending_promotion unless --require-promoted)\n"
+            "  1: any other state\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/plan_manifest.py (plan_review_freshness), issues #8397 #8430"
+        ),
+    )
+    for sub in (p_plan_manifest, p_plan_promote, p_plan_status):
+        sub.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
+        sub.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
+        sub.add_argument(
+            "--repo-root",
+            type=Path,
+            default=None,
+            help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)",
+        )
+    p_plan_status.add_argument(
+        "--require-promoted",
+        action="store_true",
+        help="Exit 1 unless the plan is promoted (a pending promotion is not enough)",
+    )
 
     return parser
 
@@ -517,6 +616,55 @@ def _load_recap_built_lessons(
     return built
 
 
+def _stale_module_verdict_problems(level: str, slug: str, *, repo_root: Path) -> list[str]:
+    """Problems from ``scripts.review.fixloop.module_verdict_problems``, when a module verdict already exists.
+
+    A module that has never been reviewed has no ``module-verdict.yaml`` yet; that is not staleness,
+    so this reports nothing for it. Once the file exists, this is the gate a module build re-runs
+    before it lands: a later database write (a review failure, a settle outcome, an operator decision)
+    that superseded the state the file was computed from must fail here, before a stale ``APPROVE``
+    can reach the content PR that ``build_arc_landing.py`` reads it from directly (#8774 r5).
+    """
+    from scripts.review import findings_db, fixloop
+
+    directory = fixloop.state_dir(repo_root, level, slug)
+    if not (directory / fixloop.MODULE_VERDICT_NAME).is_file():
+        return []
+    conn = findings_db.connect(findings_db.db_path(level, repo_root))
+    try:
+        return fixloop.module_verdict_problems(conn, level, slug, root=repo_root, params=findings_db.load_parameters())
+    finally:
+        conn.close()
+
+
+def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
+    """plan-manifest, plan-promote and plan-review-status: JSON on stdout, refusals as JSON on stderr."""
+    from scripts.build.fresh import plan_manifest, plan_promote
+
+    try:
+        if args.command == "plan-manifest":
+            manifest, digest = plan_manifest.write_plan_manifest(args.level, args.slug, repo_root=repo_root)
+            print(json.dumps({"manifest_sha256": digest, "manifest": manifest}, ensure_ascii=False, sort_keys=True))
+            return 0
+        if args.command == "plan-promote":
+            receipt = plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root)
+            print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
+            return 0
+        status = plan_manifest.plan_review_status(args.level, args.slug, repo_root=repo_root)
+        print(json.dumps(status, ensure_ascii=False, sort_keys=True))
+        reviewed = {"reviewed_promoted"}
+        if not args.require_promoted:
+            reviewed.add("reviewed_pending_promotion")
+        return 0 if status["state"] in reviewed else 1
+    except plan_manifest.PlanReviewError as err:
+        refusal = {"code": err.code, "reason": err.message, "paths": err.paths, "layer": "driver"}
+        print(json.dumps(refusal, ensure_ascii=False, sort_keys=True), file=sys.stderr)
+        return 1
+    except (OSError, ValueError) as err:
+        print(json.dumps({"reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
+        return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
@@ -565,10 +713,19 @@ def main(argv: list[str] | None = None) -> int:
                                  ensure_ascii=False, sort_keys=True))
             else:
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            if args.module and report["complete"]:
+                stale = _stale_module_verdict_problems(args.level, args.slug, repo_root=repo_root)
+                for problem in stale:
+                    print(f"module-verdict.yaml is stale: {problem}", file=sys.stderr)
+                if stale:
+                    return 1
             return 0 if report["complete"] else 1
         except (OSError, ValueError, KeyError) as err:
             print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
             return 1
+
+    if args.command in {"plan-manifest", "plan-promote", "plan-review-status"}:
+        return _run_plan_review_command(args, repo_root)
 
     if args.command == "closure":
         from scripts.build.fresh.closure import compute_closure
@@ -598,9 +755,7 @@ def main(argv: list[str] | None = None) -> int:
             plans_dir=paths["plan"].parent,
             evidence_dir=paths["words"].parent,
         )
-        imm_payload = compute_immersion_payload(
-            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
-        )
+        imm_payload = lesson_immersion_payload(args.level, pos, args.lesson, p_state)
 
         # Load real cited records from pack and word store (Finding 1)
         cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
@@ -734,9 +889,7 @@ def main(argv: list[str] | None = None) -> int:
             plans_dir=paths["plan"].parent,
             evidence_dir=paths["words"].parent,
         )
-        imm_payload = compute_immersion_payload(
-            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
-        )
+        imm_payload = lesson_immersion_payload(args.level, pos, args.lesson, p_state)
 
         out_dir = args.output_dir or (paths["state_dir"] / args.slug)
         out_dir.mkdir(parents=True, exist_ok=True)

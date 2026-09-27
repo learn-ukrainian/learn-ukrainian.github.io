@@ -12,9 +12,10 @@ import urllib.request
 from pathlib import Path
 
 from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
+from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
-ZNO_ANNOTATIONS_WORKSHEET = ROOT / "data" / "lexicon" / "paronym_worksheet_candidates.yaml"
+ZNO_ANNOTATIONS_WORKSHEET = REGISTRY_ROOT / "lexicon" / "paronym_worksheet_candidates.yaml"
 
 # Verified 33 booklet documents from the matrix (2010 to 2025, excluding 2009 and 3 demo sessions)
 BOOKLETS = [
@@ -523,6 +524,7 @@ ONLINE_TEST_MAPPING = {
     (2025, "sesiya-2", "mova"): ("ukrmova", 668),
 }
 
+
 # The online-test catalogue is not itself a completeness signal: it has one
 # entry per booklet, while each entry expands to a full task set.  Keep this
 # ledger next to the mapping so a missing or truncated HTML extraction fails
@@ -666,7 +668,10 @@ def assert_session_completeness(conn: sqlite3.Connection) -> None:
         ORDER BY year, exam, session
         """
     ).fetchall()
-    actual = {(int(year), str(exam), str(session)): (int(tasks), int(letter_keyed), int(own_statement), int(single_choice)) for year, exam, session, tasks, single_choice, letter_keyed, own_statement in rows}
+    actual = {
+        (int(year), str(exam), str(session)): (int(tasks), int(letter_keyed), int(own_statement), int(single_choice))
+        for year, exam, session, tasks, single_choice, letter_keyed, own_statement in rows
+    }
     errors: list[str] = []
     if set(actual) != set(SESSION_COMPLETENESS):
         errors.append(f"session keys differ: expected={sorted(SESSION_COMPLETENESS)} actual={sorted(actual)}")

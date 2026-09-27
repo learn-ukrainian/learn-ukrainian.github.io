@@ -1,0 +1,113 @@
+# Review-loop parameters (#8430, work package R2b-A). One place for every number the
+# review contract leaves to the operator or the driver; nothing here is baked into code.
+# Each parameter carries the date it was decided and where the decision is recorded.
+# Loaded and validated by scripts/review/findings_db.py (load_parameters).
+parameters_schema: 1
+
+# Operator decision 5 (2026-09-21): a second seat of another family reviews 1 lesson in
+# N. A lesson is selected when int(sha256("<level>/<slug>/<n>")) % N == 0.
+second_seat_divisor:
+  value: 10
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 5 (1 in 10 to start)"
+
+# Operator decision 4 (2026-09-21): at most two REVISE rounds per lesson. A REVISE verdict
+# is one round; the third REVISE verdict is terminal (transition: operator).
+max_revise_rounds:
+  value: 2
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 4"
+
+# Operator decision 4: the regeneration budget of a module is this factor times its
+# lesson count (the plan's lessons, the recap included).
+regeneration_factor:
+  value: 2
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 4 (twice the lesson count)"
+
+# Principle 8: a failed review is re-run once on the same seat, then once on the fallback
+# seat; the next failure is terminal. Three recorded failures for one lesson (or the plan)
+# are the terminal transition (transition: operator).
+review_failures_terminal_at:
+  value: 3
+  decided: "2026-09-22"
+  basis: "#8430 r4 principle 8 (retry + fallback, then terminal), accepted by the operator 2026-09-22"
+
+# Decision rule (operator, 2026-09-21): the same unsupported claim in three or more
+# lessons of a level goes to the operator at once.
+unsupported_claim_lessons_to_operator:
+  value: 3
+  decided: "2026-09-21"
+  basis: "#8430 decision rule (operator, 2026-09-21)"
+
+# The settle step has a fixed call budget: the number of sources tool calls one settle
+# session may make. A owns this key, C (settle.py) reads it. The contract fixes that a
+# budget exists, not its size: 12 gives the six searches of the procedure (lemma and
+# construction, style-guide prose, UA-GEC with sentence context, GRAC, Pravopys,
+# counterevidence) two calls each. A driver-set initial value, not an operator decision.
+settle_call_budget:
+  value: 12
+  decided: "2026-09-25"
+  basis: "driver-set initial value (R2b-A); revise after the pilot's settle items are counted"
+
+# A finding whose could_be_a_gate matches this pattern (the review-v1 schema's own) is
+# listed for the driver, who files each as a tracked gate issue.
+gate_candidate_pattern:
+  value: "^yes .+$"
+  decided: "2026-09-22"
+  basis: "schemas/review-v1.schema.json could_be_a_gate (#8430 r4)"
+
+# --- R3: seeded-defect measurement (#8430 Part R3) -------------------------------------------
+
+# Operator decision 2 (2026-09-21): about 22 planted defects per dimension. A report is
+# threshold-eligible only when every dimension has at least this many scored planted defects
+# on real built lessons.
+min_planted_per_dimension:
+  value: 22
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 2 (about 22 planted defects per dimension)"
+
+# Operator decision 2: at least 30 clean lessons per seat.
+min_clean_lessons:
+  value: 30
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 2 (at least 30 clean lessons per seat)"
+
+# Rolling measurement: one seeded lesson in N of the production stream, per seat (r4 contract).
+rolling_one_in:
+  value: 30
+  decided: "2026-09-22"
+  basis: "#8430 r4 'Threshold and admission' (1 in 30), accepted by the operator 2026-09-22"
+
+# Confidence of every interval in a measurement report, as a whole percent (95 = 95 %).
+interval_confidence_percent:
+  value: 95
+  decided: "2026-09-25"
+  basis: "driver-set (R3 header r2.1); the contract fixes that intervals are reported, not their level"
+
+# Interval for a proportion (recall, share falsely blocked, evidence validation rate): the unit
+# is the seed or the clean lesson.
+interval_method_proportion:
+  value: "wilson"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (Wilson intervals, unit = seed)"
+
+# Interval for findings per clean lesson: a count over a number of lessons.
+interval_method_rate:
+  value: "poisson_exact"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (Poisson exact, unit = clean lesson)"
+
+# Paired comparison of two seats on the same seeds.
+paired_test:
+  value: "mcnemar_exact"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (exact McNemar on discordant pairs)"
+
+# The admission threshold a seat must reach. The operator's, chosen only from a
+# threshold-eligible report; null until he writes it. `decided` here is the date the parameter was
+# defined as unset. A runner in --set confirmation refuses to run while the value is null.
+admission_threshold:
+  value: null
+  decided: "2026-09-25"
+  basis: "unset until the operator writes it (#8430 'Threshold and admission'; R3 header r2.1)"

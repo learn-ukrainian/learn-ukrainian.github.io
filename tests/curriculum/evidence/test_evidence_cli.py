@@ -90,6 +90,11 @@ def test_cli_build_and_verify_subprocess(synthetic_sources, synthetic_vesum, tmp
     data_build = json.loads(proc_build.stdout)
     assert data_build["status"] == "ok"
     assert data_build["words_count"] == 1
+    assert data_build["store"]["built_with"]["sources_db_scheme"] == "rows-v2"
+    # Progress output names the journal mode, the WAL size at start and end, and the snapshot duration.
+    assert "progress: snapshot: pinned; journal_mode: delete; wal_bytes: 0;" in proc_build.stderr
+    assert "progress: snapshot: released after " in proc_build.stderr
+    assert "wal_bytes: 0 -> 0" in proc_build.stderr
 
     # Run words-verify via subprocess against the same synthetic databases
     cmd_verify = [
@@ -158,10 +163,12 @@ def test_cli_dry_run_does_not_write_files(synthetic_sources, synthetic_vesum, tm
 
 
 @pytest.mark.skipif(not HAS_REAL_SOURCES_DB, reason="requires the real data/sources.db dictionary")
-def test_cli_dry_run_committed_five_lemmas_request():
+def test_cli_dry_run_committed_five_lemmas_request(tmp_path):
     req_path = REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml"
     assert req_path.is_file()
 
+    # An isolated evidence dir: a store already built under curriculum/ would otherwise be
+    # carried into the dry-run and change the counts.
     proc = subprocess.run(
         [
             PYTHON,
@@ -171,6 +178,10 @@ def test_cli_dry_run_committed_five_lemmas_request():
             "a1",
             "--request",
             str(req_path),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+            "--plans-dir",
+            str(tmp_path / "plans"),
             "--dry-run",
             "--json",
         ],
@@ -185,6 +196,9 @@ def test_cli_dry_run_committed_five_lemmas_request():
     assert data["dry_run"] is True
     assert data["words_count"] == 5
     assert data["forms_count"] == 97
+    assert data["store"]["built_with"]["sources_db_scheme"] == "rows-v2"
+    assert data["snapshot"]["journal_mode"] in {"wal", "delete"}
+    assert "progress: snapshot: pinned; journal_mode: " in proc.stderr
 
 
 def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_standard, tmp_path):

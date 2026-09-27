@@ -1,5 +1,10 @@
 # A1 Upgrade Landing Contract & Normalization Architecture
 
+**Superseded (2026-09-21).** `--upgrade` is abandoned for A1–B2
+([`fresh-build-requirements.md`](fresh-build-requirements.md) §1). Kept as history and
+for its scars; do not follow it for new work. Current plan:
+[`fresh-build-build-program.md`](fresh-build-build-program.md).
+
 **Status:** Proposed Architecture & Advisory Memo
 **Author:** Gemini (AGY) — Advisor Only
 **Issue / PR Reference:** refs #7999, #7994, #7995

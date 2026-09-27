@@ -6,8 +6,20 @@ Agents and one-shot review flows leave multi-GB directories such as
 ``sweep_review_temp_orphans`` only reaps ``lu-review-*`` / shielded-reviews
 manifests, so these names never drain without manual intervention.
 
-This module is age-gated, name-pattern scoped, and fail-open on live
-processes.  It is not a blanket ``rm -rf /tmp/*``.
+This module is age-gated, name-pattern scoped, and fails closed on liveness:
+a path is deleted only when ``pgrep -f`` is negative AND a ``/proc`` walk fully
+probed every process (any owner: state, command line, cwd, environment, open
+descriptors) without finding a reference.  No ``/proc`` (macOS), or any process
+that refuses inspection, is an unknown answer, and unknown preserves the path.
+It is not a blanket ``rm -rf /tmp/*``.
+
+Atlas/QA legacy residue (#8738): only the exact large names left by the
+#8307 Atlas 410k run and the #8686 QA scratch directories are auto-deleted
+(``LEGACY_EXACT_ALLOWLIST``). Every other ``atlas-<n>-*`` / ``qa-<n>-*`` entry
+is inventoried in the report but never deleted here, and Atlas promotion
+plans / decision YAML are always protected. The managed ``task-scratch``
+namespace, the scratch roots and their ancestors are excluded from the scan;
+those leases are reclaimed only by :mod:`scripts.common.task_scratch`.
 """
 
 from __future__ import annotations
@@ -25,6 +37,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.scratch import resolve_scratch_root
+from scripts.common.task_scratch import NAMESPACE_DIRNAME, managed_scratch_paths
 from scripts.path_safety import assert_delete_target
 
 # 2h normal; 30m under disk pressure.
@@ -53,6 +66,39 @@ _LEAK_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^\d{4}-pytest"),
 )
 
+# Exact large legacy names that may be auto-deleted once age/ownership/liveness
+# gates pass (#8738): the #8307 Atlas 410k outputs and the #8686 QA scratch dirs.
+LEGACY_EXACT_ALLOWLIST: frozenset[str] = frozenset(
+    {
+        "atlas-8307-410k-final.db",
+        "atlas-8307-410k-r2.db",
+        "atlas-8307-synthetic-410k.json",
+        "qa-8686-ui-r2",
+        "qa-8686-exercises-r2",
+    }
+)
+
+# Atlas/QA families that are inventoried (reported) but never auto-deleted
+# without fresh ownership proof.
+_LEGACY_INVENTORY_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"^atlas-\d+"),
+    re.compile(r"^qa-\d+"),
+)
+
+# Never deleted, never inventoried as residue: Atlas promotion plans and
+# decision YAML must survive any sweep.
+_PROTECTED_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"promotion", re.IGNORECASE),
+    re.compile(r"decision.*\.ya?ml$", re.IGNORECASE),
+    re.compile(r"\.decision\.ya?ml$", re.IGNORECASE),
+)
+
+CANDIDATE_KIND_PATTERN = "pattern"
+CANDIDATE_KIND_LEGACY_EXACT = "legacy_exact"
+CANDIDATE_KIND_LEGACY_INVENTORY = "legacy_inventory"
+
+_PROC_ROOT = Path("/proc")
+
 
 @dataclass(frozen=True)
 class LeakCandidate:
@@ -61,6 +107,11 @@ class LeakCandidate:
     path: Path
     age_s: float
     size_bytes: int
+    kind: str = CANDIDATE_KIND_PATTERN
+
+    @property
+    def deletable(self) -> bool:
+        return self.kind != CANDIDATE_KIND_LEGACY_INVENTORY
 
 
 def default_tmp_roots() -> list[Path]:
@@ -106,6 +157,38 @@ def name_matches_leak_pattern(name: str) -> bool:
     return any(pattern.search(name) for pattern in _LEAK_NAME_PATTERNS)
 
 
+def is_protected_name(name: str) -> bool:
+    """Return whether a basename must never be swept (promotion plans, decision YAML)."""
+    return any(pattern.search(name) for pattern in _PROTECTED_NAME_PATTERNS)
+
+
+def classify_candidate_name(name: str) -> str | None:
+    """Return the candidate kind for a basename, or ``None`` when it is not residue.
+
+    Order matters: protected names are never residue; the exact legacy
+    allowlist beats the inventory families; generic leak patterns come last.
+    """
+    if name == NAMESPACE_DIRNAME or is_protected_name(name):
+        return None
+    if name in LEGACY_EXACT_ALLOWLIST:
+        return CANDIDATE_KIND_LEGACY_EXACT
+    if any(pattern.search(name) for pattern in _LEGACY_INVENTORY_PATTERNS):
+        return CANDIDATE_KIND_LEGACY_INVENTORY
+    if name_matches_leak_pattern(name):
+        return CANDIDATE_KIND_PATTERN
+    return None
+
+
+def excluded_scan_paths() -> set[Path]:
+    """Paths the sweep must skip even when their basename matches a pattern.
+
+    The managed task-scratch namespace, every scratch root and all of their
+    ancestors: e.g. the fallback root ``<tmp>/lu-scratch`` matches ``^lu-``
+    but is a root, not residue.
+    """
+    return managed_scratch_paths()
+
+
 def free_space_gb(path: Path) -> float | None:
     """Return free space in GiB for the volume containing ``path``."""
     try:
@@ -123,13 +206,8 @@ def path_owned_by_self(path: Path) -> bool:
         return False
 
 
-def path_has_live_process(path: Path) -> bool:
-    """Best-effort check: any process whose cmdline mentions this path.
-
-    Fails CLOSED on error/timeout/missing pgrep/fatal exit codes: if we cannot
-    reliably prove a path is unreferenced by running processes (rc == 1),
-    treat it as live to avoid deleting active task scratch.
-    """
+def _pgrep_references(path: Path) -> bool:
+    """``pgrep -f`` probe; fails CLOSED (True) on any error or fatal exit code."""
     try:
         completed = subprocess.run(
             ["pgrep", "-f", str(path)],
@@ -141,6 +219,170 @@ def path_has_live_process(path: Path) -> bool:
         # Fail closed: cannot prove unreferenced -> treat as live
         return True
     return completed.returncode != 1
+
+
+def _text_references(blob: bytes, needle: str, prefix: str) -> bool:
+    for raw in blob.split(b"\0"):
+        try:
+            text = raw.decode("utf-8", errors="surrogateescape")
+        except UnicodeDecodeError:  # pragma: no cover - surrogateescape never raises
+            continue
+        if needle in text or prefix in text:
+            return True
+    return False
+
+
+_PROC_DEAD_STATES = frozenset({"Z", "X"})  # zombie / dead: no cwd, fd table or environ
+
+
+def _process_vanished(entry: Path) -> bool:
+    """Return True only when ``/proc/<pid>`` itself is gone (the process exited)."""
+    try:
+        entry.lstat()
+    except FileNotFoundError:
+        return True
+    except OSError:
+        return False
+    return False
+
+
+def _process_state(entry: Path) -> str | None:
+    """Return the scheduler state letter from ``/proc/<pid>/stat``, or ``None`` if unreadable."""
+    try:
+        blob = (entry / "stat").read_bytes()
+    except OSError:
+        return None
+    _, _, tail = blob.rpartition(b")")
+    fields = tail.split()
+    return fields[0].decode("ascii", errors="replace") if fields else None
+
+
+def _probe_process(entry: Path, needle: str, prefix: str) -> bool | None:
+    """Probe one ``/proc/<pid>`` entry for a reference to ``needle``.
+
+    Returns ``True`` when the process references the path, ``False`` only when
+    every probe (state, command line, working directory, environment, open
+    descriptors) was read and none referenced it, and ``None`` when any of
+    them was unreadable for any reason while the process still exists. The
+    process owner is never consulted: a foreign-uid process can hold a
+    world-readable file open without naming it on its command line, so an
+    unreadable cwd/fd table is unknown, not "no reference". The only way an
+    unreadable probe becomes ``False`` is when ``/proc/<pid>`` has vanished
+    (the process exited) or its state is zombie/dead, which holds nothing.
+    """
+    state = _process_state(entry)
+    if state is None:
+        return False if _process_vanished(entry) else None
+    if state in _PROC_DEAD_STATES:
+        return False
+    try:
+        cmdline = (entry / "cmdline").read_bytes()
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if _text_references(cmdline, needle, prefix):
+        return True
+    try:
+        cwd = os.readlink(entry / "cwd")
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if cwd == needle or cwd.startswith(prefix):
+        return True
+    try:
+        environ = (entry / "environ").read_bytes()
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if _text_references(environ, needle, prefix):
+        return True
+    try:
+        fd_names = list((entry / "fd").iterdir())
+    except OSError:
+        return False if _process_vanished(entry) else None
+    for fd_entry in fd_names:
+        try:
+            target = os.readlink(fd_entry)
+        except FileNotFoundError:
+            continue  # descriptor closed between listing and readlink: holds nothing now
+        except OSError:
+            return False if _process_vanished(entry) else None
+        if target == needle or target.startswith(prefix):
+            return True
+    return False
+
+
+def proc_references(path: Path, *, proc_root: Path | None = None) -> bool | None:
+    """Scan ``/proc`` for processes that reference ``path``.
+
+    Every process except the caller is probed the same way regardless of its
+    owner: scheduler state, command line, working directory, environment and
+    open file descriptors. Returns ``True`` when any reference is found,
+    ``False`` only when every process was fully probed without finding one,
+    and ``None`` when the answer is unknown: ``/proc`` absent or unreadable,
+    or any process refused inspection of any probe for any reason
+    (``EACCES``/``EPERM`` from a non-dumpable same-uid daemon, a root-owned
+    service or a kernel thread, ``EIO``, ...). Unknown is never treated as
+    "no reference": such a process may hold the path open. Ownership is not
+    a proof of absence; a foreign-uid process can hold a world-readable
+    legacy file open without naming it on its command line.
+
+    Only two cases turn an unreadable process into "no reference": the
+    ``/proc/<pid>`` directory vanished (the process exited), or its state is
+    zombie/dead, which holds no cwd, descriptors or environment.
+
+    ``proc_root`` defaults to the module's ``_PROC_ROOT`` at call time.
+    """
+    root = _PROC_ROOT if proc_root is None else proc_root
+    if not root.is_dir():
+        return None
+    needle = str(path)
+    prefix = needle.rstrip("/") + "/"
+    my_pid = os.getpid()
+    unknown = False
+    try:
+        entries = list(root.iterdir())
+    except OSError:
+        return None
+    for entry in entries:
+        if not entry.name.isdigit() or int(entry.name) == my_pid:
+            continue
+        verdict = _probe_process(entry, needle, prefix)
+        if verdict:
+            return True
+        if verdict is None:
+            unknown = True
+    return None if unknown else False
+
+
+LIVENESS_LIVE = "live"
+LIVENESS_UNKNOWN = "unknown"
+LIVENESS_CLEAR = "clear"
+
+
+def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
+    """Classify ``path`` as ``live``, ``unknown`` or ``clear``.
+
+    Combines ``pgrep -f`` (command lines of every user) with the ``/proc``
+    probe (state, cwd, open files, environment and command line of every
+    process). Only ``clear`` permits deletion, and ``clear`` requires both a
+    negative ``pgrep`` and a ``/proc`` walk in which every process was fully
+    probed and none referenced the path.
+
+    A negative ``pgrep`` alone is not proof: it only sees command lines, so a
+    process holding the path as its cwd or through an open descriptor is
+    invisible to it. A host without ``/proc`` (macOS) therefore returns
+    ``unknown`` and preserves the path; there the legacy sweep is
+    inventory-only and the managed task-scratch lifecycle is the cleanup path.
+    """
+    if _pgrep_references(path):
+        return LIVENESS_LIVE
+    verdict = proc_references(path, proc_root=proc_root)
+    if verdict is None:
+        return LIVENESS_UNKNOWN
+    return LIVENESS_LIVE if verdict else LIVENESS_CLEAR
+
+
+def path_has_live_process(path: Path) -> bool:
+    """Return True unless every available probe proves ``path`` unreferenced."""
+    return path_liveness(path) != LIVENESS_CLEAR
 
 
 def _entry_age_s(path: Path, *, now: float) -> float | None:
@@ -182,13 +424,17 @@ def discover_candidates(
     """List age-eligible leak-pattern entries under the given tmp roots."""
     current = time.time() if now is None else now
     found: list[LeakCandidate] = []
+    excluded = excluded_scan_paths()
     for root in tmp_roots:
         try:
             children = list(root.iterdir())
         except OSError:
             continue
         for child in children:
-            if not name_matches_leak_pattern(child.name):
+            kind = classify_candidate_name(child.name)
+            if kind is None:
+                continue
+            if child in excluded or Path(os.path.abspath(str(child))) in excluded:
                 continue
             try:
                 st = child.lstat()
@@ -208,6 +454,7 @@ def discover_candidates(
                     path=child,
                     age_s=age,
                     size_bytes=_entry_size_bytes(child),
+                    kind=kind,
                 )
             )
     return found
@@ -223,6 +470,9 @@ def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path
         target.unlink(missing_ok=True)
         return
     shutil.rmtree(target, ignore_errors=True)
+
+
+_SKIP_REASONS = {LIVENESS_LIVE: "live_process", LIVENESS_UNKNOWN: "liveness_unknown"}
 
 
 def sweep_tmp_leaks(
@@ -262,15 +512,32 @@ def sweep_tmp_leaks(
         "roots_reaped": 0,
         "bytes_freed": 0,
         "skipped_live": 0,
+        "inventory_only": 0,
+        "inventory_bytes": 0,
         "errors": 0,
         "reaped": [],
         "skipped": [],
+        "inventory": [],
     }
 
     for candidate in candidates:
-        if path_has_live_process(candidate.path):
+        if not candidate.deletable:
+            result["inventory_only"] += 1
+            result["inventory_bytes"] += candidate.size_bytes
+            result["inventory"].append(
+                {
+                    "path": str(candidate.path),
+                    "bytes": candidate.size_bytes,
+                    "age_s": int(candidate.age_s),
+                    "kind": candidate.kind,
+                    "action": "inventory_only",
+                }
+            )
+            continue
+        liveness = path_liveness(candidate.path)
+        if liveness != LIVENESS_CLEAR:
             result["skipped_live"] += 1
-            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
+            result["skipped"].append({"path": str(candidate.path), "reason": _SKIP_REASONS[liveness]})
             continue
         if not apply:
             result["reaped"].append(
@@ -278,14 +545,16 @@ def sweep_tmp_leaks(
                     "path": str(candidate.path),
                     "bytes": candidate.size_bytes,
                     "age_s": int(candidate.age_s),
+                    "kind": candidate.kind,
                     "action": "would_reap",
                 }
             )
             continue
         # Re-check liveness immediately before deletion in apply mode
-        if path_has_live_process(candidate.path):
+        liveness = path_liveness(candidate.path)
+        if liveness != LIVENESS_CLEAR:
             result["skipped_live"] += 1
-            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
+            result["skipped"].append({"path": str(candidate.path), "reason": _SKIP_REASONS[liveness]})
             continue
         try:
             size = candidate.size_bytes or _entry_size_bytes(candidate.path)
@@ -306,6 +575,7 @@ def sweep_tmp_leaks(
                     "path": str(candidate.path),
                     "bytes": size,
                     "age_s": int(candidate.age_s),
+                    "kind": candidate.kind,
                     "action": "reaped",
                 }
             )
@@ -325,12 +595,17 @@ def _print_human(report: dict[str, Any]) -> None:
     print(
         f"tmp leak sweep [{mode}]: candidates={report['candidates']} "
         f"reaped={report['roots_reaped']} skipped_live={report['skipped_live']} "
-        f"errors={report['errors']} bytes_freed={report['bytes_freed']} ({free_s})"
+        f"errors={report['errors']} bytes_freed={report['bytes_freed']} "
+        f"inventory_only={report.get('inventory_only', 0)} ({free_s})"
     )
     for item in report.get("reaped") or []:
         print(f"  {item.get('action')}: {item.get('path')} ({item.get('bytes', 0)} bytes, age={item.get('age_s')}s)")
     for item in report.get("skipped") or []:
         print(f"  skip: {item.get('path')} ({item.get('reason')})")
+    for item in report.get("inventory") or []:
+        print(
+            f"  inventory: {item.get('path')} ({item.get('bytes', 0)} bytes, age={item.get('age_s')}s, not auto-deleted)"
+        )
 
 
 def main(argv: list[str] | None = None) -> int:

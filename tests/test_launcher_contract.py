@@ -21,6 +21,7 @@ from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import copy_slot_registry
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -215,6 +216,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         # The core's deploy staleness gate sources this; without package.json
@@ -228,6 +230,8 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     claim_marker = tmp_path / "lease-claimed"
     close_marker = tmp_path / "lease-closed"
@@ -375,6 +379,7 @@ def _core_driver_exit_fixture(
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
@@ -388,6 +393,8 @@ def _core_driver_exit_fixture(
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
@@ -709,6 +716,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -944,16 +952,19 @@ def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
     assert "glm-compat-secret" not in glm.stdout + glm.stderr
 
 
+@pytest.mark.repo_wide
 def test_retired_names_are_absent_from_tracked_content() -> None:
     tracked = subprocess.run(
         ["git", "ls-files"], cwd=REPO, text=True, capture_output=True, check=True, timeout=30
     ).stdout.splitlines()
     for retired in RETIRED:
         assert not (REPO / retired).exists()
-        for relative in tracked:
-            path = REPO / relative
-            if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
-                assert retired not in path.read_text(encoding="utf-8", errors="ignore"), relative
+    for relative in tracked:
+        path = REPO / relative
+        if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
+            content = path.read_text(encoding="utf-8", errors="ignore")
+            for retired in RETIRED:
+                assert retired not in content, relative
 
 
 def test_claude_driver_injects_lane_agent_type() -> None:
@@ -969,11 +980,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert "would select agent" not in explicit.stdout
     assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
 
-    # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
-    # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).
+    # A registry stream key with no roster slot would mint an unregistered handoff
+    # identity, so the launcher refuses it instead of starting the session (#8303).
     alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
-    assert alias.returncode == 0, alias.stderr
-    assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout
+    assert alias.returncode == 2
+    assert "claude-atlas-practice" in alias.stderr
+    assert "not registered" in alias.stderr
 
 
 def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:

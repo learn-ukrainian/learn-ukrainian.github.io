@@ -40,40 +40,32 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.lexicon.build_data_manifest import _lemma_key
 
 ONESHOT_INVENTORY = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/oneshot/textbook-jsonl-curated-2026-07-19-bulk.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/textbook-jsonl-curated-2026-07-19-bulk.yaml"
 )
 ONESHOT_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-19-textbook-jsonl-curated-bulk-approve.yaml"
 )
 NAMED_INVENTORIES: tuple[Path, ...] = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
-    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
-    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml",
+    PROJECT_ROOT / "registry/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
+    PROJECT_ROOT / "registry/lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
+    PROJECT_ROOT / "registry/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml",
 )
 NAMED_DECISIONS: tuple[Path, ...] = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-06-30-third-approved-textbook-ledger-batch.yaml",
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-fourth-approved-textbook-ledger-batch.yaml",
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-fifth-approved-textbook-ledger-batch.yaml",
 )
 DEFAULT_POINTER = PROJECT_ROOT / "site/src/data/lexicon-manifest.pointer.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data/vesum.db"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data/sources.db"
-DEFAULT_REPORT_MD = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/textbook-leftover-residual-census-6371.md"
-)
+DEFAULT_REPORT_MD = PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/textbook-leftover-residual-census-6371.md"
 DEFAULT_REPORT_JSON = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/textbook-leftover-residual-census-6371.json"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/textbook-leftover-residual-census-6371.json"
 )
 
 CENSUS_ID = "atlas-6371-textbook-leftover-residual.v1"
@@ -81,7 +73,7 @@ _UKRAINIAN_LETTERS = frozenset("абвгґдеєжзиіїйклмнопрсту
 _ITEM_START = re.compile(r"^(?P<indent> *)- (?P<rest>\S.*)$")
 _FIELD = re.compile(r"^(?P<indent> *)(?P<key>[A-Za-z0-9_]+):(?: (?P<value>.*))?$")
 _ENTRY_LEMMA = re.compile(r'^      "lemma": "((?:\\.|[^"\\])*)"', re.MULTILINE)
-_ENTRIES_ARRAY = "\n  \"entries\": ["
+_ENTRIES_ARRAY = '\n  "entries": ['
 _YAML_QUOTED = re.compile(r"^(?P<q>['\"])(?P<body>.*)(?P=q)$")
 
 
@@ -373,9 +365,7 @@ def load_atlas_lemma_keys(
             json_bytes = gzip.decompress(gz_bytes)
             json_sha = hashlib.sha256(json_bytes).hexdigest()
             if json_sha != pointer.get("json_sha256"):
-                raise ValueError(
-                    f"json sha256 mismatch: expected {pointer.get('json_sha256')}, got {json_sha}"
-                )
+                raise ValueError(f"json sha256 mismatch: expected {pointer.get('json_sha256')}, got {json_sha}")
             lemmas = list(iter_manifest_lemmas_from_text(json_bytes.decode("utf-8")))
             keys = {_lemma_key(lemma) for lemma in lemmas if lemma}
             report.update(
@@ -425,9 +415,7 @@ def _classify_rows(
     inventory_keys = {_lemma_key(row.lemma): row for row in inventory_rows if row.lemma}
     approved = [row for row in decision_rows if row.decision == "approve_for_publish" and row.lemma]
     approved_keys = {_lemma_key(row.lemma): row for row in approved}
-    english_approved = [
-        row for row in approved if is_learner_english(row.approved_gloss)
-    ]
+    english_approved = [row for row in approved if is_learner_english(row.approved_gloss)]
     english_inventory = [row for row in inventory_rows if is_learner_english(row.gloss)]
     missing: list[str] = []
     present: list[str] = []
@@ -463,9 +451,7 @@ def _classify_rows(
         "teacher_p1_eligible": teacher_p1,
         "teacher_p1_eligible_count": len(teacher_p1),
         "teacher_p1_missing_from_atlas": (
-            None
-            if unknown_atlas
-            else sorted(item["lemma"] for item in teacher_p1 if item["in_atlas"] is False)
+            None if unknown_atlas else sorted(item["lemma"] for item in teacher_p1 if item["in_atlas"] is False)
         ),
     }
 
@@ -510,12 +496,8 @@ def build_census(
         result.artifacts[f"named_decisions_{index}"] = _artifact(
             path, required_name="named textbook decisions", project_root=project_root
         )
-    result.artifacts["vesum_db"] = _artifact(
-        vesum_path, required_name="data/vesum.db", project_root=project_root
-    )
-    result.artifacts["sources_db"] = _artifact(
-        sources_path, required_name="data/sources.db", project_root=project_root
-    )
+    result.artifacts["vesum_db"] = _artifact(vesum_path, required_name="data/vesum.db", project_root=project_root)
+    result.artifacts["sources_db"] = _artifact(sources_path, required_name="data/sources.db", project_root=project_root)
     result.artifacts["pointer"] = _artifact(
         pointer_path, required_name="lexicon-manifest.pointer.json", project_root=project_root
     )
@@ -562,9 +544,7 @@ def build_census(
 
     named_missing = list(result.named.get("teacher_p1_missing_from_atlas") or [])
     oneshot_english_missing = [
-        item["lemma"]
-        for item in result.oneshot.get("teacher_p1_eligible") or []
-        if item.get("in_atlas") is False
+        item["lemma"] for item in result.oneshot.get("teacher_p1_eligible") or [] if item.get("in_atlas") is False
     ]
     admit_named = named_missing
     result.admission = {
@@ -584,9 +564,7 @@ def build_census(
     if result.blockers:
         reasons.append("BLOCKED: missing " + ", ".join(result.blockers))
     if atlas.get("loaded") and not admit_named:
-        reasons.append(
-            "no named teacher-P1 leftovers are missing from the Atlas catalog"
-        )
+        reasons.append("no named teacher-P1 leftovers are missing from the Atlas catalog")
     if reasons:
         result.admission["refuse_reason"] = "; ".join(reasons)
     else:

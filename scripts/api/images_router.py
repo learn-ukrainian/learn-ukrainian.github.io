@@ -10,7 +10,7 @@ Mounts at /api/images/ — provides:
 Data sources:
   - Per-book JSONLs: data/textbook_images/grade-*/*-images.jsonl (structural metadata)
   - Global annotations: data/textbook_images/image_text_pairs.jsonl (labels)
-  - PDFs: data/textbooks/grade-*/*.pdf
+  - PDFs: textbooks/grade-*/*.pdf under the resolved bulk root (MonitorRoots.textbooks_dir)
 """
 
 from __future__ import annotations
@@ -251,7 +251,7 @@ class ImageStore:
     def __init__(
         self,
         images_dir: Path,
-        textbooks_dir: Path,
+        textbooks_dir: Path | None,
         annotations_file: Path,
         project_root: Path,
     ):
@@ -281,13 +281,12 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
         return resolved_ctx.stores.image_store
     roots = resolved_ctx.roots
     images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
-    textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
     annotations_file = images_dir / "image_text_pairs.jsonl"
     return resolved_ctx.runtime.get_or_create_resource(
         "image_store:fallback",
         lambda: ImageStore(
             images_dir=images_dir,
-            textbooks_dir=textbooks_dir,
+            textbooks_dir=roots.textbooks_dir,
             annotations_file=annotations_file,
             project_root=roots.project_root,
         ),

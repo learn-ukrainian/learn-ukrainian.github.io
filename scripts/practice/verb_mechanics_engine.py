@@ -2962,7 +2962,7 @@ def main() -> None:
     parser.add_argument(
         "--export",
         type=Path,
-        default=PROJECT_ROOT / "data" / "practice" / "verb_mechanics_deck.json",
+        default=PROJECT_ROOT / "registry" / "practice" / "verb_mechanics_deck.json",
         help="Path to export compiled JSON practice deck",
     )
     parser.add_argument(

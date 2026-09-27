@@ -275,4 +275,10 @@ describe('WatchAndRepeat edge cases', () => {
     const iframe = root.querySelector('iframe') as HTMLIFrameElement;
     expect(iframe.src).toContain('youtube.com/embed/shortUrlId0');
   });
+
+  test('renders explanation when provided', () => {
+    const items = [{ video: 'https://youtu.be/shortUrlId0', explanation: 'Вимовляйте звук чітко.' }];
+    const { container: root } = render(<WatchAndRepeat items={items} />);
+    expect(root.textContent).toContain('Вимовляйте звук чітко.');
+  });
 });

@@ -614,37 +614,175 @@ def _start_server(
     return server
 
 
-def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dict[str, Any]:
-    env = {
-        **dict(**{k: v for k, v in os.environ.items()}),
-        "NODE_PATH": str(node_modules),
+_BROWSER_WORKER_JS = r"""
+const fs = require('fs');
+const puppeteer = require('puppeteer');
+const readline = require('readline');
+(async () => {
+
+function emit(value) {
+  fs.writeSync(1, JSON.stringify(value) + '\n');
+}
+
+const rl = readline.createInterface({ input: process.stdin, crlfDelay: Infinity });
+let browser = null;
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+
+for await (const line of rl) {
+  if (!line.trim()) continue;
+  if (!browser) {
+    const launchOptions = JSON.parse(line);
+    browser = await puppeteer.launch(launchOptions);
+    const child = browser.process();
+    emit({ ready: true, pid: process.pid, browserPid: child ? child.pid : null });
+    continue;
+  }
+  let job;
+  try {
+    job = JSON.parse(line);
+  } catch (err) {
+    emit({ ok: false, error: String(err) });
+    continue;
+  }
+  if (job.cmd === 'stop') {
+    await browser.close();
+    process.exit(0);
+  }
+  const context = await browser.createBrowserContext();
+  try {
+    const page = await context.newPage();
+    const leaked = await page.cookies();
+    if (leaked.length) {
+      throw new Error('shared browser leaked cookies into a fresh context');
     }
-    # Avoid color warnings noise
-    env.pop("NO_COLOR", None)
-    env.pop("FORCE_COLOR", None)
-    # CommonJS + async: wrap user script body so top-level await is legal.
-    wrapped = (
-        "(async () => {\n"
-        + script
-        + "\n})().catch((err) => { console.error(err && err.stack ? err.stack : err); process.exit(1); });\n"
-    )
-    proc = subprocess.run(
-        ["node", "-e", wrapped],
-        capture_output=True,
-        text=True,
-        env=env,
-        # The caller's page/assertion budget is separate from browser startup.
-        timeout=timeout + CHROME_LAUNCH_TIMEOUT_MS / 1000,
-        cwd=str(ROOT),
-    )
-    if proc.returncode != 0:
-        raise AssertionError(
-            f"puppeteer script failed rc={proc.returncode}\nstdout={proc.stdout}\nstderr={proc.stderr}"
+    const fn = new AsyncFunction('page', job.source);
+    const result = await fn(page);
+    emit({ ok: true, result });
+  } catch (err) {
+    emit({ ok: false, error: err && err.stack ? String(err.stack) : String(err) });
+  } finally {
+    await context.close();
+  }
+}
+})().catch((err) => {
+  console.error(err && err.stack ? err.stack : err);
+  process.exit(1);
+});
+"""
+
+
+class _SharedBrowser:
+    """One Node + Chromium process per pytest worker. Each call gets a fresh browser context."""
+
+    def __init__(self) -> None:
+        self._proc: subprocess.Popen[str] | None = None
+        self._lock = threading.Lock()
+        self._stderr: list[str] = []
+        self.browser_pid: int | None = None
+        self.launch_count = 0
+
+    def _drain_stderr(self) -> None:
+        proc = self._proc
+        if proc is None or proc.stderr is None:
+            return
+        for line in proc.stderr:
+            self._stderr.append(line)
+
+    def _read_line(self, timeout: float) -> str:
+        proc = self._proc
+        if proc is None or proc.stdout is None:
+            raise AssertionError("shared browser has no stdout")
+        holder: list[str] = []
+
+        def read() -> None:
+            holder.append(proc.stdout.readline() if proc.stdout is not None else "")
+
+        thread = threading.Thread(target=read, daemon=True)
+        thread.start()
+        thread.join(timeout)
+        if thread.is_alive():
+            self.close()
+            raise AssertionError(f"shared browser timed out after {timeout:.0f}s\n{''.join(self._stderr[-40:])}")
+        line = holder[0] if holder else ""
+        if not line:
+            stderr = "".join(self._stderr[-40:])
+            self.close()
+            raise AssertionError(f"shared browser closed\n{stderr}")
+        return line
+
+    def ensure(self) -> None:
+        if self._proc is not None and self._proc.poll() is None:
+            return
+        node_modules = _require_puppeteer()
+        env = {key: value for key, value in os.environ.items() if key not in {"NO_COLOR", "FORCE_COLOR"}}
+        env["NODE_PATH"] = str(node_modules)
+        self._stderr = []
+        self._proc = subprocess.Popen(
+            ["node", "-e", _BROWSER_WORKER_JS],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+            cwd=str(ROOT),
         )
-    # Last JSON line is the result; never print fixture payloads from Python.
-    lines = [ln for ln in proc.stdout.splitlines() if ln.strip().startswith("{")]
-    assert lines, f"no JSON result from puppeteer\nstdout={proc.stdout}\nstderr={proc.stderr}"
-    return json.loads(lines[-1])
+        threading.Thread(target=self._drain_stderr, daemon=True).start()
+        if self._proc.stdin is None:
+            raise AssertionError("shared browser has no stdin")
+        self._proc.stdin.write(json.dumps(_puppeteer_launch_options()) + "\n")
+        self._proc.stdin.flush()
+        ready = json.loads(self._read_line(CHROME_LAUNCH_TIMEOUT_MS / 1000))
+        if not ready.get("ready"):
+            raise AssertionError(f"shared browser failed to start: {ready}")
+        self.browser_pid = ready.get("browserPid")
+        self.launch_count += 1
+
+    def run(self, source: str, *, timeout: int = 60) -> dict[str, Any]:
+        with self._lock:
+            self.ensure()
+            if self._proc is None or self._proc.stdin is None:
+                raise AssertionError("shared browser is not running")
+            self._proc.stdin.write(json.dumps({"source": source}) + "\n")
+            self._proc.stdin.flush()
+            payload = json.loads(self._read_line(timeout))
+        if not payload.get("ok"):
+            raise AssertionError(f"puppeteer script failed\n{payload.get('error', payload)}")
+        result = payload["result"]
+        assert isinstance(result, dict)
+        return result
+
+    def close(self) -> None:
+        proc = self._proc
+        self._proc = None
+        if proc is None or proc.poll() is not None:
+            return
+        try:
+            if proc.stdin is not None:
+                proc.stdin.write(json.dumps({"cmd": "stop"}) + "\n")
+                proc.stdin.flush()
+            proc.wait(timeout=5)
+        except Exception:
+            proc.kill()
+            proc.wait(timeout=5)
+
+
+_SHARED_BROWSER = _SharedBrowser()
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _close_shared_browser():
+    yield
+    if os.environ.get("LU_SHARED_BROWSER_PROOF") == "1":
+        print(
+            f"shared_browser_launch_count={_SHARED_BROWSER.launch_count} browser_pid={_SHARED_BROWSER.browser_pid}",
+            flush=True,
+        )
+    _SHARED_BROWSER.close()
+
+
+def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dict[str, Any]:
+    del node_modules
+    return _SHARED_BROWSER.run(script, timeout=timeout)
 
 
 def _browser_scenario(
@@ -704,10 +842,7 @@ def _browser_scenario(
     hang_json_js = "true" if private_hang_json else "false"
     # Hang-json proofs still need the 5s abort budget + small settle margin.
     settle_floor_ms = 9000 if private_hang_json else 10000
-    launch_options_json = json.dumps(_puppeteer_launch_options())
-
     script = f"""
-const puppeteer = require('puppeteer');
 const PUBLIC_STATUS = {state.public_status};
 const PRIVATE_STATUS = {state.private_status};
 const PRIVATE_DELAY_MS = {private_delay_ms};
@@ -719,13 +854,9 @@ const ACTIONS = {actions_json};
 const VIEWPORT = {json.dumps(viewport)};
 const PRIVATE_URL = {json.dumps(PRIVATE_URL)};
 const CANARY = {json.dumps(CANARY)};
-const LAUNCH_OPTIONS = {launch_options_json};
 
 const observed = {{ public: [], private: [], options: 0, consoleErrors: [], pageErrors: [] }};
 
-const browser = await puppeteer.launch(LAUNCH_OPTIONS);
-try {{
-  const page = await browser.newPage();
   await page.setViewport(VIEWPORT);
   page.on('console', (msg) => {{
     if (msg.type() === 'error') observed.consoleErrors.push(msg.text());
@@ -911,7 +1042,7 @@ try {{
     }};
   }}, CANARY);
 
-  console.log(JSON.stringify({{
+  return {{
     ok: true,
     observed: {{
       publicCount: observed.public.length,
@@ -923,10 +1054,7 @@ try {{
       pageErrors: observed.pageErrors,
     }},
     snapshot,
-  }}));
-}} finally {{
-  await browser.close();
-}}
+  }};
 """
     try:
         return _run_puppeteer(script, node_modules=nm, timeout=90)
@@ -1627,32 +1755,23 @@ def test_real_fixed_port_cors_http_and_browser_smoke():
         assert got["origin"] == "http://127.0.0.1:8765"
 
         # Browser smoke from exact Monitor origin.
-        launch_options_json = json.dumps(_puppeteer_launch_options())
-        script = f"""
-const puppeteer = require('puppeteer');
-const LAUNCH_OPTIONS = {launch_options_json};
-const browser = await puppeteer.launch(LAUNCH_OPTIONS);
-try {{
-  const page = await browser.newPage();
+        script = """
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.message || e)));
-  await page.goto('http://127.0.0.1:8765/work.html?view=all', {{
+  await page.goto('http://127.0.0.1:8765/work.html?view=all', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
-  }});
-  await page.waitForFunction(() => {{
+  });
+  await page.waitForFunction(() => {
     const el = document.getElementById('source-private-meta');
     return el && (el.textContent || '').includes('status=');
-  }}, {{ timeout: 15000 }});
-  const snap = await page.evaluate(() => ({{
+  }, { timeout: 15000 });
+  const snap = await page.evaluate(() => ({
     privateMeta: document.getElementById('source-private-meta')?.textContent || '',
     rowCount: document.querySelectorAll('.work-row').length,
     errorHidden: document.getElementById('error-banner')?.classList.contains('hidden') ?? true,
-  }}));
-  console.log(JSON.stringify({{ ok: true, snap, errors, privateGets: true }}));
-}} finally {{
-  await browser.close();
-}}
+  }));
+  return { ok: true, snap, errors, privateGets: true };
 """
         result = _run_puppeteer(script, node_modules=nm, timeout=60)
         assert result["snap"]["rowCount"] == 2
@@ -1730,29 +1849,20 @@ def test_real_fixed_port_cors_localhost_origin_smoke():
             assert resp.headers.get("Vary") == "Origin"
             _ = resp.read()
 
-        launch_options_json = json.dumps(_puppeteer_launch_options())
-        script = f"""
-const puppeteer = require('puppeteer');
-const LAUNCH_OPTIONS = {launch_options_json};
-const browser = await puppeteer.launch(LAUNCH_OPTIONS);
-try {{
-  const page = await browser.newPage();
-  await page.goto('http://localhost:8765/work.html?view=all', {{
+        script = """
+  await page.goto('http://localhost:8765/work.html?view=all', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
-  }});
-  await page.waitForFunction(() => {{
+  });
+  await page.waitForFunction(() => {
     const el = document.getElementById('source-private-meta');
     return el && (el.textContent || '').includes('status=');
-  }}, {{ timeout: 15000 }});
-  const snap = await page.evaluate(() => ({{
+  }, { timeout: 15000 });
+  const snap = await page.evaluate(() => ({
     privateMeta: document.getElementById('source-private-meta')?.textContent || '',
     rowCount: document.querySelectorAll('.work-row').length,
-  }}));
-  console.log(JSON.stringify({{ ok: true, snap }}));
-}} finally {{
-  await browser.close();
-}}
+  }));
+  return { ok: true, snap };
 """
         result = _run_puppeteer(script, node_modules=nm, timeout=60)
         assert result["snap"]["rowCount"] == 2

@@ -28,6 +28,34 @@ from level_config import base_level
 # is accepted as the deliverable. Tune from observed runs.
 DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 
+# Bounds for the ``git worktree add`` that dispatch runs before it spawns a
+# worker (#8663). A full checkout writes tens of thousands of files, which can
+# take minutes when host I/O is saturated, so a fixed 30 s kill left half-built
+# worktrees behind. The add always gets the base window. Past it, dispatch
+# keeps waiting while the checkout is still gaining files, gives up once it has
+# gained none for the stall window, and never waits past the ceiling. A stopped
+# add gets SIGTERM first so git cleans up its own partial worktree.
+DELEGATE_WORKTREE_ADD_TIMEOUT_S = 120.0
+DELEGATE_WORKTREE_ADD_STALL_S = 60.0
+DELEGATE_WORKTREE_ADD_MAX_S = 900.0
+
+# Dispatch admission (#8645 part A; scripts/orchestration/dispatch_admission.py).
+# `delegate.py dispatch` refuses a new write-capable worker (workspace-write,
+# danger) when any check fails; read-only dispatches are exempt. An environment
+# variable with the same name overrides each default; `--force-admission
+# "<reason>"` overrides one dispatch and records the reason in its task record.
+# Basis (15 GB / 8-core host, 2026-09-24): 5-7 concurrent workers running
+# targeted `-n 2` tests kept MemAvailable at 11.1-13.5 GB; the 09:13Z OOM
+# needed full-suite `-n auto` runs. Tune from the per-worker `peak_rss_mib`
+# and the `admission` snapshot each task record now carries.
+# Live write workers (spawning/running, pid alive) at which a new one is refused.
+# Raised to 6 by operator decision 2026-09-26 (5 workers left 12.4 GB MemAvailable; worker peak RSS median 0.4 GB, p90 3.1 GB).
+DISPATCH_MAX_LIVE_WRITE_WORKERS = 6
+# /proc/meminfo MemAvailable floor, in GiB.
+DISPATCH_MIN_MEM_AVAILABLE_GIB = 3.5
+# 1-minute load average divided by os.cpu_count(); refused above this.
+DISPATCH_MAX_LOAD_PER_CPU = 1.5
+
 # =============================================================================
 # TRACK CONFIGURATION
 # =============================================================================

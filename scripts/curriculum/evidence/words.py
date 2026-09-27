@@ -33,9 +33,65 @@ def count_vowels(word: str) -> int:
     return sum(1 for ch in word if ch in UKRAINIAN_VOWELS)
 
 
+def needs_no_stress(form: str) -> bool:
+    """Monosyllables and vowel-free Cyrillic function words have no accent."""
+    vowels = count_vowels(form)
+    return vowels == 1 or (vowels == 0 and all("\u0400" <= ch <= "\u04ff" for ch in form))
+
+
+def is_learner_form(tags: str, markers: list[Any]) -> bool:
+    """Keep VESUM's stylistic :long tag out of the A1 learner paradigm."""
+    return not (
+        codes.EXCLUDING_TAGS.intersection(tags.split(":"))
+        or any((m["marker"] if isinstance(m, dict) else m) in codes.EXCLUDING_MARKERS for m in markers)
+    )
+
+
+def packed_stress_reason(match: dict[str, Any]) -> str | None:
+    """A packed trie reading is not a single pedagogical stress choice."""
+    if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
+        return "multiple_stressed_vowels"
+    return None
+
+
 def strip_combining_stress(text: str) -> str:
     nfd = unicodedata.normalize("NFD", text)
     return unicodedata.normalize("NFC", "".join(ch for ch in nfd if ch not in ("\u0301", "\u0300")))
+
+
+def cited_rows(word: dict[str, Any]) -> list[tuple[str, str]]:
+    """The (locator, row_sha256) pairs a word record cites; built_with.sources_db aggregates them (rows-v2)."""
+    pairs: list[tuple[str, str]] = []
+    gloss = word.get("gloss_source")
+    if isinstance(gloss, dict) and gloss.get("row_sha256"):
+        pairs.append((f"{gloss.get('table')}:{gloss.get('id')}", gloss["row_sha256"]))
+    cefr = word.get("cefr")
+    if isinstance(cefr, dict) and cefr.get("row_sha256"):
+        pairs.append((f"puls_cefr:{cefr.get('row_id', word.get('lemma'))}", cefr["row_sha256"]))
+    ulif = word.get("ulif")
+    if isinstance(ulif, dict) and ulif.get("row_sha256"):
+        pairs.append(
+            (f"ulif_dictua_entries:{word.get('lemma')}:{ulif.get('key', [None, None])[1]}", ulif["row_sha256"])
+        )
+    for index, hit in enumerate(word.get("heritage") or []):
+        if isinstance(hit, dict) and hit.get("row_sha256"):
+            pairs.append((f"heritage:{word.get('lemma')}:{index}", hit["row_sha256"]))
+    return pairs
+
+
+def cefr_field(row: dict[str, Any]) -> dict[str, Any]:
+    """The cefr record copied from an exact PULS row, with that row's identity."""
+    field: dict[str, Any] = {"level": row["level"], "source": "puls", "row_sha256": sources.row_digest(row)}
+    if row.get("id") is not None:
+        field["row_id"] = int(row["id"])
+    return field
+
+
+def store_scheme(store_doc: dict[str, Any]) -> str:
+    built_with = store_doc.get("built_with") if isinstance(store_doc, dict) else None
+    if not isinstance(built_with, dict):
+        return sources.LEGACY_SOURCES_DB_SCHEME
+    return str(built_with.get("sources_db_scheme") or sources.LEGACY_SOURCES_DB_SCHEME)
 
 
 def extract_ulif_paradigm_forms(entry: dict[str, Any] | None) -> dict[str, str]:
@@ -178,6 +234,16 @@ def build_words(
         existing_doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
         validate_store_data(existing_doc)
         existing_words = {w["id"]: w for w in existing_doc.get("words", []) if w["id"] in active_reg_ids}
+        if store_scheme(existing_doc) != sources.SOURCES_DB_SCHEME:
+            # A carried legacy record cannot gain row_sha256 without a re-read, so a
+            # file-v1 store migrates only when the request covers every active id.
+            covered = {rw["want"] for rw in request_raw["words"] if rw.get("want") != "new"}
+            uncovered = sorted(active_reg_ids - covered, key=registry.number)
+            if uncovered:
+                raise ValueError(
+                    f"{codes.INVALID_REQUEST}: legacy store ({store_scheme(existing_doc)}) at {store_path}; "
+                    f"the request must cover all active ids to migrate to {sources.SOURCES_DB_SCHEME}: {uncovered}"
+                )
 
     owns_sources = False
     if sources_instance is None:
@@ -186,7 +252,6 @@ def build_words(
 
     try:
         commit_sha = mcp_commit if mcp_commit is not None else get_mcp_commit()
-        sources_db_hash = sources_instance._fingerprint(sources_instance.sources_db)[0]
         vesum_hash = sources_instance._vesum_identity()[0]
         trie_hash = stress.source_info()["digest"]
 
@@ -194,24 +259,36 @@ def build_words(
             sources._file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
         )
 
-        built_fingerprint = hashlib.sha256(
-            f"{sources_db_hash}:{vesum_hash}:{trie_hash}:{commit_sha}".encode()
-        ).hexdigest()
-
         # Gather requests
         requested_words = request_raw["words"]
         lemmas_requested = [sources.normalize_spelling(rw["lemma"]) for rw in requested_words]
         lemma_pos_pairs = [(sources.normalize_spelling(rw["lemma"]), rw["pos"]) for rw in requested_words]
 
-        # Batch queries
-        ulif_batch = sources_instance.ulif_entries(lemmas_requested).raw
-        cefr_batch = sources_instance.cefr_levels(lemmas_requested).raw
-        gloss_batch = sources_instance.gloss_rows(lemma_pos_pairs).raw
+        # Batch queries: the results are kept whole because their content hashes
+        # (the digest of the rows each batch returned, rows-v2) seed the ledger's
+        # allocated_at_build below.
+        ulif_result = sources_instance.ulif_entries(lemmas_requested)
+        cefr_result = sources_instance.cefr_levels(lemmas_requested)
+        gloss_result = sources_instance.gloss_rows(lemma_pos_pairs)
+        ulif_batch = ulif_result.raw
+        cefr_batch = cefr_result.raw
+        gloss_batch = gloss_result.raw
         ru_batch = sources_instance.russian_patterns(lemmas_requested)
         ru_patterns_raw = ru_batch.raw
 
+        # allocated_at_build is the request's read set, known before any id is
+        # allocated: deterministic for the same request and sources. It also
+        # changes when an uncited candidate row in one of the three batches
+        # changes (a second gloss row, an unchecked ULIF homonym); the ledger is
+        # append-only, so existing allocations are never rewritten by that.
+        built_fingerprint = hashlib.sha256(
+            f"{ulif_result.content_hash}:{cefr_result.content_hash}:{gloss_result.content_hash}:"
+            f"{vesum_hash}:{trie_hash}:{commit_sha}".encode()
+        ).hexdigest()
+
         words_out: dict[str, dict[str, Any]] = dict(existing_words)
         changed_ids: list[str] = []
+        pending_reasons: list[dict[str, str]] = []
 
         for rw in requested_words:
             lemma = sources.normalize_spelling(rw["lemma"])
@@ -329,6 +406,9 @@ def build_words(
                             matching_entry.get("canonical_headword") or lemma,
                             matching_entry["homonym_index"],
                         ],
+                        # The entry row with its ordered sections: the paradigm payloads
+                        # a ULIF-sourced stress is copied from are part of this identity.
+                        "row_sha256": sources.row_digest(matching_entry),
                     }
 
             word_doc: dict[str, Any] = {
@@ -339,6 +419,7 @@ def build_words(
                 "ulif": ulif_field,
             }
 
+            pronoun_entry = False
             if entry == "unresolved":
                 candidates: list[dict[str, Any]] = []
                 for cand_eid, cand_forms in sorted(forms_by_entry.items()):
@@ -348,6 +429,7 @@ def build_words(
                 word_doc["forms"] = []
             else:
                 forms_source = forms_by_entry[selected_entry_id]
+                pronoun_entry = any("pron" in f["tags"].split(":") for f in forms_source)
                 forms_list: list[dict[str, Any]] = []
                 ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
 
@@ -356,14 +438,11 @@ def build_words(
                     tags_str = f["tags"]
                     markers = f.get("markers", [])
 
-                    is_learner = not any(
-                        (m["marker"] if isinstance(m, dict) else m) in codes.EXCLUDING_MARKERS for m in markers
-                    )
+                    is_learner = is_learner_form(tags_str, markers)
 
                     # Rule 4: stress per form
                     # a. Monosyllables gated before oracle
-                    vowel_count = count_vowels(form_str)
-                    if vowel_count == 1:
+                    if needs_no_stress(form_str):
                         stress_source = "none"
                         stressed = form_str
                         f_entry: dict[str, Any] = {
@@ -392,7 +471,7 @@ def build_words(
                         status = raw_stress.get("status")
                         matches = raw_stress.get("matches", [])
 
-                        if status == "ok" and len(matches) == 1:
+                        if status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
                             stress_source = "trie"
                             stressed = matches[0]["stressed_form"]
                             f_entry = {
@@ -405,7 +484,7 @@ def build_words(
                             }
                             if matches[0].get("override_applied"):
                                 f_entry["override"] = True
-                        elif status == "ambiguous":
+                        elif status == "ambiguous" or (status == "ok" and len(matches) == 1):
                             stress_source = "pending"
                             f_entry = {
                                 "form": form_str,
@@ -418,6 +497,10 @@ def build_words(
                                 f_entry["stress_candidates"] = matches
                             if raw_stress.get("unresolvable_by_tags"):
                                 f_entry["unresolvable_by_tags"] = True
+                            if len(matches) == 1 and (reason := packed_stress_reason(matches[0])):
+                                pending_reasons.append(
+                                    {"word_id": word_id, "form": form_str, "tags": tags_str, "reason": reason}
+                                )
                         else:  # not_found or invalid_input
                             stress_source = "pending"
                             f_entry = {
@@ -437,10 +520,23 @@ def build_words(
             cefr_hits = cefr_batch.get(lemma, [])
             exact_cefr = next((h for h in cefr_hits if sources.normalize_spelling(h.get("word", "")) == lemma), None)
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
-                word_doc["cefr"] = {"level": exact_cefr["level"], "source": "puls"}
+                word_doc["cefr"] = cefr_field(exact_cefr)
 
             # Gloss: first translation of matching row
             gloss_rows = gloss_batch.get((lemma, pos), [])
+            if pos in {"noun", "adj"}:
+                if pronoun_entry:
+                    allowed_gloss_pos = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
+                else:
+                    allowed_gloss_pos = {"noun"} if pos == "noun" else {"adjective", "adj"}
+                gloss_rows = [row for row in gloss_rows if row["pos"] in allowed_gloss_pos]
+                if pronoun_entry and pos == "adj":
+                    # VESUM's adj:pron is attributive; dmklinger's particle
+                    # rows are determiner senses, ahead of standalone pronouns.
+                    # Exception: its first particle row narrows reflexive свій
+                    # to "its" (id 19455); pronoun row 18763 covers all persons.
+                    preferred = "pronoun" if lemma == "свій" else "particle"
+                    gloss_rows.sort(key=lambda row: row["pos"] != preferred)
             if gloss_rows:
                 first_row = gloss_rows[0]
                 raw_trans = first_row.get("translations", "")
@@ -455,7 +551,11 @@ def build_words(
                     first_str = str(parsed_trans[0])
                     if first_str:
                         word_doc["gloss_en"] = first_str
-                        word_doc["gloss_source"] = {"table": "dmklinger_uk_en", "id": first_row["id"]}
+                        word_doc["gloss_source"] = {
+                            "table": "dmklinger_uk_en",
+                            "id": first_row["id"],
+                            "row_sha256": sources.row_digest(first_row),
+                        }
 
             # Russian shadow & heritage
             pat = ru_patterns_raw.get(lemma, {})
@@ -489,9 +589,14 @@ def build_words(
         # Check store against registry
         registry.check_store(registry_records, sorted_words)
 
+        cited: list[tuple[str, str]] = []
+        for w in sorted_words:
+            cited.extend(cited_rows(w))
+
         built_with: dict[str, Any] = {
             "mcp_commit": commit_sha,
-            "sources_db": sources_db_hash,
+            "sources_db": sources.aggregate_digest(cited),
+            "sources_db_scheme": sources.SOURCES_DB_SCHEME,
             "vesum": vesum_hash,
             "trie": trie_hash,
             "ulif_forms": "pending",
@@ -534,6 +639,7 @@ def build_words(
 
         unresolved_count = sum(1 for w in sorted_words if w.get("entry") == "unresolved")
         resolved_count = len(sorted_words) - unresolved_count
+        ulif_checked_count = sum(1 for w in sorted_words if isinstance(w.get("ulif"), dict))
 
         return {
             "status": "ok",
@@ -542,8 +648,10 @@ def build_words(
             "words_count": len(sorted_words),
             "resolved_count": resolved_count,
             "unresolved_count": unresolved_count,
+            "ulif_checked_count": ulif_checked_count,
             "forms_count": total_forms,
             "stress_sources": stress_counts,
+            "pending_reasons": pending_reasons,
             "overrides_count": override_count,
             "changed_ids": changed_ids,
             "affected_plans": changed_plans_map,
@@ -552,6 +660,7 @@ def build_words(
             "registry_path": str(registry_path),
             "store_lock": store_lock_digest,
             "registry_lock": registry_lock_digest,
+            "snapshot": sources_instance.snapshot_report(),
             "store": store_doc,
         }
     finally:
@@ -681,7 +790,15 @@ def main(argv: list[str] | None = None) -> int:
             f"Forms: {result['forms_count']} (trie: {sc['trie']}, none: {sc['none']}, ulif: {sc['ulif']}, pending: {sc['pending']})"
         )
         print(f"Overrides: {result['overrides_count']}")
-        print("ULIF status: pending on all records (0 checked groups)")
+        print(
+            f"ULIF status: {result['ulif_checked_count']} records with a checked group, "
+            f"{result['words_count'] - result['ulif_checked_count']} pending"
+        )
+        snap = result["snapshot"]
+        print(
+            f"Snapshot: journal_mode={snap['journal_mode']} wal_bytes={snap['wal_bytes_start']}->{snap['wal_bytes']} "
+            f"duration={snap['snapshot_seconds']}s"
+        )
         tm = result["tag_map"]
         print(f"Tag-map report: known_atoms={tm['known_atoms']}, unknown_atoms={tm['unknown_atoms']}")
         if result["changed_ids"]:

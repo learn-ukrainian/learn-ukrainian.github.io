@@ -1,0 +1,1060 @@
+"""Acceptance and Regression Tests for Grammar Component (#8342, Epic #6321).
+
+Verifies:
+1. Component directory structure and manifest integrity.
+2. 75.0% substantive corrections / 25.0% clean controls mixture invariants.
+3. Closed in-scope error scope (G/* + F/Calque) and category balancing.
+4. Document-level 90:10 partition integrity and official test set firewall.
+5. 45% silent rewrites / 55% explained corrections task mix.
+6. Zero self-contradictions and 100% approved Ukrainian authorities.
+7. Quarantine tombstone present in uldr_v05_grammar_valency.
+8. End-to-end acceptance audit pass via audit_dataset_acceptance.py with verified signoff.
+"""
+
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+import re
+from collections import Counter
+from pathlib import Path
+from unittest import mock
+
+import pytest
+
+from scripts.projects.open_model_data.audit_dataset_acceptance import (
+    APPROVED_AUTHORITY_PATTERNS,
+    SOVIET_SUM11_ALIASES,
+    TRANSLATION_DICT_IDS,
+    run_acceptance_audit,
+)
+from scripts.projects.open_model_data.build_grammar_component_8342 import (
+    build_jaccard_firewall_matcher,
+    validate_candidate_rejection,
+)
+from scripts.projects.open_model_data.generate_grammar_signoff_8342 import (
+    generate_signoff_and_receipt,
+)
+from scripts.projects.open_model_data.grammar_linguistic_catalog import (
+    IN_SCOPE_TAGS,
+    TAG_TO_COARSE_CATEGORY,
+    clean_sentence_for_query,
+    is_finite_active_verb,
+)
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+GRAMMAR_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
+OLD_RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
+TEST_M2_PATH = PROJECT_ROOT / "data" / "ua-gec" / "data" / "gec-fluency" / "test" / "gec-fluency.test.m2"
+
+
+@pytest.fixture(scope="module")
+def grammar_data():
+    """Load grammar component records and manifest."""
+    manifest_file = GRAMMAR_DIR / "manifest.json"
+    cases_file = GRAMMAR_DIR / "cases.json"
+    sample_md_file = GRAMMAR_DIR / "acceptance_review_sample.md"
+    sample_json_file = GRAMMAR_DIR / "acceptance_review_sample.json"
+    template_file = GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
+
+    assert manifest_file.is_file(), f"Missing manifest.json at {manifest_file}"
+    assert cases_file.is_file(), f"Missing cases.json at {cases_file}"
+    assert sample_md_file.is_file(), f"Missing review sample MD at {sample_md_file}"
+    assert sample_json_file.is_file(), f"Missing review sample JSON at {sample_json_file}"
+    assert template_file.is_file(), f"Missing signoff template at {template_file}"
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    cases = json.loads(cases_file.read_text(encoding="utf-8"))
+
+    train_records = []
+    eval_records = []
+
+    for fname, split in manifest["splits"].items():
+        fpath = GRAMMAR_DIR / fname
+        assert fpath.is_file(), f"Missing shard file {fname} declared in manifest"
+        assert fpath.stat().st_size < 2_000_000, f"Shard file {fname} exceeds 2,000,000 byte pre-commit limit"
+        records = [json.loads(line) for line in fpath.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if split == "train":
+            train_records.extend(records)
+        elif split == "eval":
+            eval_records.extend(records)
+        else:
+            raise ValueError(f"Unknown split {split} for {fname}")
+
+    return {
+        "manifest": manifest,
+        "cases": cases,
+        "train": train_records,
+        "eval": eval_records,
+        "all": train_records + eval_records,
+    }
+
+
+def test_tombstone_quarantine_exists():
+    """Verify uldr_v05_grammar_valency has a TOMBSTONE marking it retired per #8342."""
+    tombstone = OLD_RELEASE_DIR / "TOMBSTONE.md"
+    assert tombstone.is_file(), f"Missing TOMBSTONE.md at {tombstone}"
+    content = tombstone.read_text(encoding="utf-8")
+    assert "#8342" in content
+    assert "DO NOT USE" in content or "QUARANTINED" in content
+    assert "8143" in content
+
+
+def test_manifest_integrity(grammar_data):
+    """Verify manifest.json structure, split declarations, and statistics."""
+    manifest = grammar_data["manifest"]
+    assert manifest["dataset_name"] == "grammar_v1"
+    assert manifest["version"] == "1.0.0"
+    assert manifest["task_type"] == "correction"
+    assert manifest["has_evaluation_split"] is True
+    assert len(manifest["splits"]) >= 8
+    assert all(s in ("train", "eval") for s in manifest["splits"].values())
+    assert "#8342" in manifest["governing_issues"]
+
+    stats = manifest["statistics"]
+    assert stats["total_records"] == len(grammar_data["all"])
+    assert stats["train_records"] == len(grammar_data["train"])
+    assert stats["eval_records"] == len(grammar_data["eval"])
+
+    recon = manifest["source_denominator_reconciliation"]
+    assert recon["candidate_edit_sets_excluded_total"] == 4257
+    assert recon["candidate_edit_sets_retained_in_pipeline"] == 995
+    assert recon["delivered_substantive_corrections"] == 995
+    assert manifest["licenses"]["brown_uk"]["attribution_record"] == "BROWN_UK_ATTRIBUTION.md"
+    assert (GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md").is_file()
+
+
+def test_control_correction_ratio(grammar_data):
+    """Verify strict 20.0% to 30.0% clean controls and 70.0% to 80.0% corrections."""
+    all_records = grammar_data["all"]
+    total = len(all_records)
+    controls = sum(1 for r in all_records if r["is_erroneous"] is False)
+    corrections = sum(1 for r in all_records if r["is_erroneous"] is True)
+
+    assert controls + corrections == total
+    control_share = controls / total
+    correction_share = corrections / total
+
+    assert 0.20 <= control_share <= 0.30, f"Control share {control_share:.2%} out of range [20%, 30%]"
+    assert 0.70 <= correction_share <= 0.80, f"Correction share {correction_share:.2%} out of range [70%, 80%]"
+
+
+def test_category_balancing(grammar_data):
+    """Verify category balance (min 50 per category, max 40% single category share)."""
+    all_records = grammar_data["all"]
+    total = len(all_records)
+    category_counts = Counter(r["category"] for r in all_records)
+
+    assert len(category_counts) >= 6
+    for cat, count in category_counts.items():
+        assert count >= 50, f"Category {cat} has only {count} examples (< 50)"
+        share = count / total
+        assert share <= 0.40, f"Category {cat} dominates with {share:.2%} (> 40%)"
+
+
+def test_in_scope_tag_conformance(grammar_data):
+    """Verify that all error tags strictly belong to the in-scope set (G/* + F/Calque)."""
+    for r in grammar_data["all"]:
+        if r["is_erroneous"]:
+            assert r["tag"] in IN_SCOPE_TAGS, f"Out-of-scope tag '{r['tag']}' in record {r['record_id']}"
+            assert r["category"] in TAG_TO_COARSE_CATEGORY.values()
+        else:
+            assert r["tag"] == "control_clean"
+            assert r["category"] == "protective_authentic_control"
+
+
+def test_split_integrity_and_sha256_partition(grammar_data):
+    """Verify 90:10 document-level split by doc_id SHA-256 hash and 0 shared doc_ids."""
+    train_docs = {r["doc_id"] for r in grammar_data["train"]}
+    eval_docs = {r["doc_id"] for r in grammar_data["eval"]}
+
+    intersection = train_docs.intersection(eval_docs)
+    assert not intersection, f"Shared doc_ids between train and eval: {intersection}"
+
+    for d in eval_docs:
+        h = int(hashlib.sha256(d.encode("utf-8")).hexdigest(), 16)
+        assert h % 10 == 0, f"Doc {d} in eval split does not satisfy h % 10 == 0"
+
+    for d in train_docs:
+        h = int(hashlib.sha256(d.encode("utf-8")).hexdigest(), 16)
+        assert h % 10 != 0, f"Doc {d} in train split satisfies h % 10 == 0"
+
+
+def test_held_out_test_set_firewall(grammar_data):
+    """Verify zero overlap against the official held-out test partition via committed firewall manifest."""
+    manifest_path = (
+        PROJECT_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "components"
+        / "grammar"
+        / "grammar_held_out_firewall_manifest.json"
+    )
+    assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
+    with manifest_path.open("r", encoding="utf-8") as f:
+        manifest_data = json.load(f)
+
+    test_doc_ids = set(manifest_data["test_doc_ids"])
+    test_sources = set(manifest_data["test_source_sentences"])
+    test_targets = set(manifest_data["test_target_sentences"])
+
+    assert len(test_doc_ids) == 166
+    assert len(test_sources) == 2636
+    assert len(test_targets) == 5240
+
+    for r in grammar_data["all"]:
+        assert r["doc_id"] not in test_doc_ids, f"Test doc_id leaked to component: {r['doc_id']}"
+        assert r["original_text"] not in test_sources, f"Test source sentence leaked: {r['original_text']}"
+        assert r["original_text"] not in test_targets, f"Test target sentence leaked as original: {r['original_text']}"
+        if r["is_erroneous"]:
+            assert r["corrected_text"] not in test_sources, f"Test source leaked as correction: {r['corrected_text']}"
+            assert r["corrected_text"] not in test_targets, f"Test target leaked as correction: {r['corrected_text']}"
+
+
+def test_brown_uk_attribution(grammar_data):
+    """Verify Brown-UK controls preserve authentic doc_id, doc_name, license, and corpus."""
+    brown_records = [r for r in grammar_data["all"] if r["source_corpus"] == "brown_uk"]
+    assert len(brown_records) >= 350, f"Expected >= 350 Brown-UK records, got {len(brown_records)}"
+
+    attr_file = GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md"
+    assert attr_file.is_file(), f"Missing BROWN_UK_ATTRIBUTION.md at {attr_file}"
+    attr_content = attr_file.read_text(encoding="utf-8")
+    assert "CC BY-NC-SA 4.0" in attr_content
+    assert "БрУК" in attr_content
+
+    for r in brown_records:
+        assert r["doc_id"] != "brown_uk_corpus", f"Generic synthetic doc_id found in {r['record_id']}"
+        assert len(r["doc_id"]) > 5
+        assert r["doc_name"].endswith(".txt")
+        assert r["license"] == "CC BY-NC-SA 4.0"
+        assert r["source_corpus"] == "brown_uk"
+        assert r["source_metadata"]["license"] == "CC BY-NC-SA 4.0"
+        assert r["source_metadata"]["source_corpus"] == "brown_uk"
+        assert r["source_metadata"]["doc_name"] == r["doc_name"]
+        assert r["doc_id"] in attr_content
+
+
+def test_parallel_annotator_retention(grammar_data):
+    """Verify parallel annotator corrections under same doc_id are retained per SPEC §2.2."""
+    corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
+    orig_to_targets: dict[str, set[str]] = {}
+    for r in corrections:
+        orig = r["original_text"]
+        corr = r["corrected_text"]
+        if orig not in orig_to_targets:
+            orig_to_targets[orig] = set()
+        orig_to_targets[orig].add(corr)
+
+    multi_target_sents = {orig: targets for orig, targets in orig_to_targets.items() if len(targets) > 1}
+    assert len(multi_target_sents) >= 8, (
+        f"Expected >= 8 sentences with valid parallel annotator targets per SPEC §2.2, got {len(multi_target_sents)}"
+    )
+
+
+def test_explanation_relevance_and_target_cleanliness(grammar_data):
+    """Verify citations are specific and verified, silent rows are clean, and target texts have full edits."""
+    for r in grammar_data["all"]:
+        # Verify full edits applied: concurrent errors like spelling 'еффективно' are cleanly corrected
+        assert "еффективно" not in r["corrected_text"], f"Uncorrected spelling 'еффективно' in {r['record_id']}"
+        # Verify no empty quotes «» in final_response or reasoning_steps
+        assert "«»" not in r["final_response"], (
+            f"Empty quote in final_response of {r['record_id']}: {r['final_response']}"
+        )
+        for step in r.get("reasoning_steps", []):
+            assert "«»" not in step, f"Empty quote in reasoning_steps of {r['record_id']}: {step}"
+
+        if r["is_erroneous"]:
+            meta = r.get("source_metadata", {})
+            err_span = meta.get("error_span", "").lower()
+            orig_lower = r["original_text"].lower()
+
+            if r["task_type"] == "explained_correction":
+                full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+                if "так як" in full_text:
+                    assert "так як" in orig_lower or "так як" in err_span, (
+                        f"Record {r['record_id']} mentions 'так як' but sentence does not contain it: {r['original_text']}"
+                    )
+
+                if "на «-ся»" in full_text:
+                    assert any(w.endswith(("ся", "сь")) for w in err_span.split()) or any(
+                        w.endswith(("ся", "сь")) for w in orig_lower.split()
+                    ), f"Record {r['record_id']} cites passive on -ся but err_span '{err_span}' does not end in -ся/-сь"
+
+                if "давай / давайте" in full_text or "наказового способу з часткою" in full_text:
+                    assert "давай" in err_span or "давайте" in err_span or "давай" in orig_lower, (
+                        f"Record {r['record_id']} cites imperative 'давай' but err_span '{err_span}' lacks it"
+                    )
+
+                if "дієприслівников" in full_text:
+                    adv_sufs = ("чи", "ши", "вшись", "вшися", "ючись", "ючися")
+                    assert any(err_span.endswith(s) for s in adv_sufs) or any(
+                        any(w.endswith(s) for s in adv_sufs) for w in err_span.split()
+                    ), f"Record {r['record_id']} cites дієприслівник but err_span '{err_span}' lacks participle suffix"
+            else:
+                # Silent rewrite: linguistic_rule must be empty and reasoning_steps must be empty
+                assert r["task_type"] == "silent_rewrite"
+                assert r.get("reasoning_steps") == []
+                assert meta.get("linguistic_rule") == ""
+
+
+def test_global_sentence_deduplication(grammar_data):
+    """Verify zero duplicate (query, final_response) pairs and zero duplicate sentences."""
+    all_records = grammar_data["all"]
+    qa_pairs = [(r["query"], r["final_response"]) for r in all_records]
+    assert len(qa_pairs) == len(set(qa_pairs)), "Duplicate (query, response) pairs detected"
+
+    train_queries = {r["query"] for r in grammar_data["train"]}
+    for r in grammar_data["eval"]:
+        assert r["query"] not in train_queries, f"Eval query leaked to train: {r['query']}"
+
+
+def test_task_mix_partition(grammar_data):
+    """Verify 45% silent rewrites and 55% explained corrections (within [40%, 60%])."""
+    corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
+    total_corr = len(corrections)
+    explained = sum(1 for r in corrections if r["task_type"] == "explained_correction")
+    silent = sum(1 for r in corrections if r["task_type"] == "silent_rewrite")
+
+    assert explained + silent == total_corr
+    explained_share = explained / total_corr
+    assert 0.40 <= explained_share <= 0.60, f"Explained share {explained_share:.2%} outside [40%, 60%]"
+
+
+def test_self_contradiction_invariants(grammar_data):
+    """Verify label vs text differences and non-contradiction."""
+    for r in grammar_data["all"]:
+        if r["is_erroneous"]:
+            assert r["original_text"] != r["corrected_text"], (
+                f"Record {r['record_id']} is_erroneous True but orig == corr"
+            )
+            assert r["chosen"] == r["corrected_text"]
+            assert r["rejected"] == r["original_text"]
+        else:
+            assert r["original_text"] == r["corrected_text"], (
+                f"Record {r['record_id']} is_erroneous False but orig != corr"
+            )
+            assert r["chosen"] == r["original_text"]
+            assert r["rejected"] is None
+
+
+def test_approved_linguistic_authorities(grammar_data):
+    """Verify that all cited authorities match approved patterns and zero Soviet SUM-11."""
+    for r in grammar_data["all"]:
+        meta = r.get("source_metadata", {})
+        auth = str(meta.get("authority", "")).lower()
+        full_text = f"{r['query']} {r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+        is_approved = any(re.search(pat, auth, re.IGNORECASE) for pat in APPROVED_AUTHORITY_PATTERNS)
+        assert is_approved, f"Unapproved authority '{auth}' in record {r['record_id']}"
+
+        for alias in SOVIET_SUM11_ALIASES:
+            assert alias not in auth, f"Soviet SUM-11 cited in authority: {r['record_id']}"
+            assert alias not in full_text, f"Soviet SUM-11 in body text: {r['record_id']}"
+
+        for trans_id in TRANSLATION_DICT_IDS:
+            assert trans_id not in auth, f"Translation dictionary in authority: {r['record_id']}"
+
+
+def test_acceptance_audit_gate_end_to_end(requires_vesum_db):
+    """Verify that audit_dataset_acceptance.py passes with exit code 0 and verified signoff."""
+    signoff_path = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
+    report, exit_code = run_acceptance_audit(
+        dataset_dir=GRAMMAR_DIR,
+        profile_name="grammar_8342",
+        verify_signoff=signoff_path if signoff_path.is_file() else None,
+        require_human_signoff=signoff_path.is_file(),
+    )
+
+    assert exit_code == 0, f"Acceptance audit failed with exit code {exit_code}: {report.overall_status}"
+    expected_status = "ACCEPTED" if signoff_path.is_file() else "PASSED_AUTOMATED_CHECKS"
+    assert report.overall_status == expected_status
+    if signoff_path.is_file():
+        assert report.checks["check_7_sample_drawer"].metrics.get("signoff_verified") is True
+    for check_id, check_res in report.checks.items():
+        assert check_res.status == "PASS", f"Check {check_id} failed: {check_res.failures}"
+
+
+def test_held_out_token_jaccard_firewall(grammar_data):
+    """Verify zero near-duplicate records with token Jaccard >= 0.80 against held-out test."""
+    manifest_path = (
+        PROJECT_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "components"
+        / "grammar"
+        / "grammar_held_out_firewall_manifest.json"
+    )
+    assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
+    with manifest_path.open("r", encoding="utf-8") as f:
+        manifest_data = json.load(f)
+
+    all_test = set(manifest_data["test_source_sentences"]) | set(manifest_data["test_target_sentences"])
+    is_near_dup = build_jaccard_firewall_matcher(all_test, threshold=0.80)
+
+    for r in grammar_data["all"]:
+        assert not is_near_dup(r["original_text"]), (
+            f"Record {r['record_id']} original_text has Jaccard >= 0.80 to test sentence: {r['original_text']}"
+        )
+        if r["is_erroneous"]:
+            assert not is_near_dup(r["corrected_text"]), (
+                f"Record {r['record_id']} corrected_text has Jaccard >= 0.80 to test sentence: {r['corrected_text']}"
+            )
+
+
+def test_linguistic_catalog_vocative_and_voice_precision(grammar_data, requires_vesum_db):
+    """Verify linguistic precision: vocatives cite Pravopys § 87, reflexive verbs don't falsely claim active voice."""
+    # Direct unit checks on is_finite_active_verb
+    assert is_finite_active_verb("поважають") is True
+    assert is_finite_active_verb("використовують") is True
+    assert is_finite_active_verb("використовувати") is False  # infinitive
+    assert is_finite_active_verb("схвильований") is False  # adjp:pasv
+    assert is_finite_active_verb("хвилюючийся") is False
+
+    # G/VerbVoice is heterogeneous and must fail closed to silent_rewrite
+    assert all(r["task_type"] == "silent_rewrite" for r in grammar_data["all"] if r.get("tag") == "G/VerbVoice")
+
+    for r in grammar_data["all"]:
+        if not r["is_erroneous"] or r["task_type"] != "explained_correction":
+            continue
+        meta = r.get("source_metadata", {})
+        err_span = meta.get("error_span", "").strip().lower()
+        repl_span = meta.get("replacement_span", "").strip().lower()
+        full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+        # If active voice construction is claimed, replacement must not be a participle or adjective
+        if "активн" in full_text and ("пасивн" in full_text or "-ся" in full_text):
+            assert "схвильований" not in repl_span
+            assert "рекомендований" not in repl_span
+
+        # If both err and repl contain reflexive verbs (-ся/-сь), must not claim passive-to-active
+        explanation_text = (
+            f"{meta.get('linguistic_rule', '')} "
+            f"{r['reasoning_steps'][0] if r.get('reasoning_steps') else ''} "
+            f"{r['reasoning_steps'][1] if len(r.get('reasoning_steps', [])) > 1 else ''}"
+        ).lower()
+        err_tokens = [
+            w for w in err_span.split() if w.endswith(("ся", "сь")) and not w.startswith(("як", "хт", "щ", "чи"))
+        ]
+        repl_tokens = [
+            w for w in repl_span.split() if w.endswith(("ся", "сь")) and not w.startswith(("як", "хт", "щ", "чи"))
+        ]
+        if err_tokens and repl_tokens:
+            assert "пасивн" not in explanation_text and "активн" not in explanation_text, (
+                f"Record {r['record_id']} has reflexive in both spans ('{err_span}' -> '{repl_span}') "
+                f"but claims passive/active voice change: {explanation_text}"
+            )
+
+        # If vocative citation is present, it must cite Pravopys § 87 and not verb valency
+        if "кличний відмінок" in full_text:
+            assert "87" in full_text or "пономарів" in full_text or "звертанн" in full_text
+            assert "дієслівного керування" not in full_text, (
+                f"Record {r['record_id']} cites vocative address under verb government: {full_text}"
+            )
+
+
+def test_acceptance_review_sample_receipt_and_signoff():
+    """Verify itemized review receipt and cryptographic signoff report."""
+    receipt_file = GRAMMAR_DIR / "acceptance_review_sample.receipt.json"
+    signoff_file = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
+    template_file = GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
+
+    assert receipt_file.is_file(), f"Missing receipt file {receipt_file}"
+    assert signoff_file.is_file(), f"Missing signoff file {signoff_file}"
+
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    signoff = json.loads(signoff_file.read_text(encoding="utf-8"))
+    tmpl = json.loads(template_file.read_text(encoding="utf-8"))
+
+    assert receipt["dataset_sha256"] == tmpl["dataset_sha256"]
+    assert receipt["sample_seed"] == tmpl["sample_seed"]
+    assert receipt["profile_sha256"] == tmpl["profile_sha256"]
+    assert receipt["sample_size_drawn"] == tmpl["sample_size_drawn"]
+    assert receipt["sample_size_reviewed"] == tmpl["sample_size_drawn"]
+    assert len(receipt["reviewed_sample_items"]) == tmpl["sample_size_drawn"]
+    assert receipt["verdict"] == "APPROVED"
+    assert receipt["blocker_defect_count"] == 0
+
+    # Verify all reviewer rationales are completely distinct and authentic
+    rationales = [item["reviewer_rationale"] for item in receipt["reviewed_sample_items"]]
+    assert len(set(rationales)) == tmpl["sample_size_drawn"], (
+        f"Expected {tmpl['sample_size_drawn']} distinct rationales, got {len(set(rationales))}"
+    )
+
+    for item in receipt["reviewed_sample_items"]:
+        audit = item.get("item_verification_audit", {})
+        assert audit.get("query_norm_verified") is True
+        assert audit.get("vesum_morphology_verified") is True
+        assert audit.get("source_grounding_verified") is True
+        assert audit.get("chosen_rejected_pair_verified") is True
+        assert audit.get("zero_soviet_sum11_influence") is True
+        assert audit.get("held_out_firewall_verified") is True
+        crit = item.get("criteria", {})
+        assert set(crit.keys()) == {
+            "pedagogical_soundness",
+            "morphology_vesum",
+            "pravopys_2019",
+            "zero_russianisms",
+            "zero_soviet_sum11",
+        }
+        assert all(isinstance(v, bool) and v is True for v in crit.values())
+        assert item.get("reviewer_assessment") and isinstance(item["reviewer_assessment"], str)
+        assert item.get("verdict") == "APPROVED"
+        assert item.get("status") == "PASS"
+
+    assert signoff["dataset_sha256"] == tmpl["dataset_sha256"]
+    assert signoff["sample_seed"] == tmpl["sample_seed"]
+    assert signoff["profile_sha256"] == tmpl["profile_sha256"]
+    assert signoff["sample_size_reviewed"] == tmpl["sample_size_drawn"]
+    assert signoff["blocker_defect_count"] == 0
+    assert signoff["reviewer_id"] == "claude_blue_team_ling_review"
+    assert signoff["reviewer_family"] == "claude"
+
+
+def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requires_vesum_db):
+    """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
+    findings_file = GRAMMAR_DIR / "claude_review_findings.json"
+    raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
+    samples = json.loads((GRAMMAR_DIR / "acceptance_review_sample.json").read_text(encoding="utf-8"))
+    corr_idx = next(str(s["sample_index"]) for s in samples if s["is_erroneous"])
+    ctrl_idx = next(str(s["sample_index"]) for s in samples if not s["is_erroneous"])
+
+    # 1. Extra key rejected
+    bad_findings = copy.deepcopy(raw_findings)
+    bad_findings["9999"] = {
+        "sample_index": 9999,
+        "verdict": "APPROVED",
+        "status": "PASS",
+        "defect": None,
+        "reviewer_assessment": "зайвий ключ",
+        "criteria": {
+            "pedagogical_soundness": True,
+            "morphology_vesum": True,
+            "pravopys_2019": True,
+            "zero_russianisms": True,
+            "zero_soviet_sum11": True,
+        },
+    }
+    f_path = tmp_path / "extra_keys.json"
+    f_path.write_text(json.dumps(bad_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="unexpected extra 1 sample keys"):
+        generate_signoff_and_receipt(
+            findings_file=f_path,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 2. Embedded sample_index mismatch rejected
+    bad_index_findings = copy.deepcopy(raw_findings)
+    bad_index_findings["1"]["sample_index"] = 999
+    f_path2 = tmp_path / "bad_index.json"
+    f_path2.write_text(json.dumps(bad_index_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="does not match embedded sample_index"):
+        generate_signoff_and_receipt(
+            findings_file=f_path2,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 3. False criteria flips item to FAIL / CHANGES_REQUESTED
+    false_crit_findings = copy.deepcopy(raw_findings)
+    false_crit_findings["1"]["criteria"]["pedagogical_soundness"] = False
+    f_path3 = tmp_path / "false_crit.json"
+    f_path3.write_text(json.dumps(false_crit_findings), encoding="utf-8")
+    tmp_receipt = tmp_path / "test.receipt.json"
+    tmp_signoff = tmp_path / "test.signoff.json"
+    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt), \
+         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff):
+        generate_signoff_and_receipt(
+            findings_file=f_path3,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+    receipt_data = json.loads(tmp_receipt.read_text(encoding="utf-8"))
+    assert receipt_data["verdict"] == "CHANGES_REQUESTED"
+    assert receipt_data["blocker_defect_count"] >= 1
+    item1 = receipt_data["reviewed_sample_items"][0]
+    assert item1["status"] == "FAIL"
+    assert item1["verdict"] == "CHANGES_REQUESTED"
+    assert any("Порушення критеріїв оцінювання: pedagogical_soundness" in d for d in item1["defects"])
+
+    # 4. Non-canonical key like "01" rejected
+    non_canonical_findings = copy.deepcopy(raw_findings)
+    non_canonical_findings["01"] = non_canonical_findings["1"]
+    del non_canonical_findings["1"]
+    f_path4 = tmp_path / "non_canonical.json"
+    f_path4.write_text(json.dumps(non_canonical_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="non-canonical sample index key"):
+        generate_signoff_and_receipt(
+            findings_file=f_path4,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 5. Duplicate JSON key rejected during parsing
+    raw_text = findings_file.read_text(encoding="utf-8")
+    dup_text = '{"1": {"sample_index": 1, "verdict": "CHANGES_REQUESTED", "status": "FAIL", "reviewer_assessment": "x", "criteria": {"pedagogical_soundness": true, "morphology_vesum": true, "pravopys_2019": true, "zero_russianisms": true, "zero_soviet_sum11": true}}, ' + raw_text[1:]
+    f_path5 = tmp_path / "dup_key.json"
+    f_path5.write_text(dup_text, encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate key '1' in JSON object"):
+        generate_signoff_and_receipt(
+            findings_file=f_path5,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 6. Explicit reviewer rejection ("REJECTED") produces adverse defect
+    rejected_findings = copy.deepcopy(raw_findings)
+    rejected_findings["1"]["verdict"] = "REJECTED"
+    rejected_findings["1"]["status"] = "FAIL"
+    f_path6 = tmp_path / "rejected_verdict.json"
+    f_path6.write_text(json.dumps(rejected_findings), encoding="utf-8")
+    tmp_receipt6 = tmp_path / "test6.receipt.json"
+    tmp_signoff6 = tmp_path / "test6.signoff.json"
+    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt6), \
+         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff6):
+        generate_signoff_and_receipt(
+            findings_file=f_path6,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+    receipt_data6 = json.loads(tmp_receipt6.read_text(encoding="utf-8"))
+    assert receipt_data6["verdict"] == "CHANGES_REQUESTED"
+    assert receipt_data6["blocker_defect_count"] >= 1
+    item1 = receipt_data6["reviewed_sample_items"][0]
+    assert item1["status"] == "FAIL"
+    assert item1["verdict"] == "CHANGES_REQUESTED"
+
+    # 7. Unknown verdict string rejected
+    unknown_findings = copy.deepcopy(raw_findings)
+    unknown_findings["1"]["verdict"] = "CUSTOM_NON_APPROVAL"
+    f_path7 = tmp_path / "unknown_verdict.json"
+    f_path7.write_text(json.dumps(unknown_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid verdict 'CUSTOM_NON_APPROVAL'"):
+        generate_signoff_and_receipt(
+            findings_file=f_path7,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 8. Missing or null verdict rejected
+    null_verdict_findings = copy.deepcopy(raw_findings)
+    null_verdict_findings["1"]["verdict"] = None
+    f_path8 = tmp_path / "null_verdict.json"
+    f_path8.write_text(json.dumps(null_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid verdict None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path8,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    missing_verdict_findings = copy.deepcopy(raw_findings)
+    del missing_verdict_findings["1"]["verdict"]
+    f_path8b = tmp_path / "missing_verdict.json"
+    f_path8b.write_text(json.dumps(missing_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid verdict None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path8b,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 9. Missing or null status rejected
+    null_status_findings = copy.deepcopy(raw_findings)
+    null_status_findings["1"]["status"] = None
+    f_path9 = tmp_path / "null_status.json"
+    f_path9.write_text(json.dumps(null_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path9,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    missing_status_findings = copy.deepcopy(raw_findings)
+    del missing_status_findings["1"]["status"]
+    f_path9b = tmp_path / "missing_status.json"
+    f_path9b.write_text(json.dumps(missing_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path9b,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 10. Unknown status string rejected
+    unknown_status_findings = copy.deepcopy(raw_findings)
+    unknown_status_findings["1"]["status"] = "MAYBE"
+    f_path10 = tmp_path / "unknown_status.json"
+    f_path10.write_text(json.dumps(unknown_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status 'MAYBE'"):
+        generate_signoff_and_receipt(
+            findings_file=f_path10,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 11. Unhashable list or dict in verdict raises ValueError (not TypeError)
+    list_verdict_findings = copy.deepcopy(raw_findings)
+    list_verdict_findings["1"]["verdict"] = []
+    f_path11 = tmp_path / "list_verdict.json"
+    f_path11.write_text(json.dumps(list_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid verdict \[\]"):
+        generate_signoff_and_receipt(
+            findings_file=f_path11,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    dict_verdict_findings = copy.deepcopy(raw_findings)
+    dict_verdict_findings["1"]["verdict"] = {}
+    f_path12 = tmp_path / "dict_verdict.json"
+    f_path12.write_text(json.dumps(dict_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid verdict \{\}"):
+        generate_signoff_and_receipt(
+            findings_file=f_path12,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 12. Unhashable list or dict in status raises ValueError (not TypeError)
+    list_status_findings = copy.deepcopy(raw_findings)
+    list_status_findings["1"]["status"] = []
+    f_path13 = tmp_path / "list_status.json"
+    f_path13.write_text(json.dumps(list_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid status \[\]"):
+        generate_signoff_and_receipt(
+            findings_file=f_path13,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    dict_status_findings = copy.deepcopy(raw_findings)
+    dict_status_findings["1"]["status"] = {}
+    f_path14 = tmp_path / "dict_status.json"
+    f_path14.write_text(json.dumps(dict_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid status \{\}"):
+        generate_signoff_and_receipt(
+            findings_file=f_path14,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 13. Missing or mismatched record_id rejected
+    missing_rec_findings = copy.deepcopy(raw_findings)
+    del missing_rec_findings["1"]["record_id"]
+    f_path15 = tmp_path / "missing_rec.json"
+    f_path15.write_text(json.dumps(missing_rec_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched record_id"):
+        generate_signoff_and_receipt(
+            findings_file=f_path15,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    mismatched_rec_findings = copy.deepcopy(raw_findings)
+    mismatched_rec_findings["1"]["record_id"] = "wrong_record_id"
+    f_path16 = tmp_path / "mismatched_rec.json"
+    f_path16.write_text(json.dumps(mismatched_rec_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched record_id"):
+        generate_signoff_and_receipt(
+            findings_file=f_path16,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 14. Missing or mismatched content_hash rejected
+    missing_hash_findings = copy.deepcopy(raw_findings)
+    del missing_hash_findings["1"]["content_hash"]
+    f_path17 = tmp_path / "missing_hash.json"
+    f_path17.write_text(json.dumps(missing_hash_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched content_hash"):
+        generate_signoff_and_receipt(
+            findings_file=f_path17,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    mismatched_hash_findings = copy.deepcopy(raw_findings)
+    mismatched_hash_findings["1"]["content_hash"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    f_path18 = tmp_path / "mismatched_hash.json"
+    f_path18.write_text(json.dumps(mismatched_hash_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched content_hash"):
+        generate_signoff_and_receipt(
+            findings_file=f_path18,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 15. Correction assessment not naming edit pair rejected
+    no_span_findings = copy.deepcopy(raw_findings)
+    no_span_findings[corr_idx]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
+    f_path19 = tmp_path / "no_span.json"
+    f_path19.write_text(json.dumps(no_span_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="does not name edit pair"):
+        generate_signoff_and_receipt(
+            findings_file=f_path19,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 16. Clean control assessment lacking sentence-specific citation rejected
+    no_cite_findings = copy.deepcopy(raw_findings)
+    no_cite_findings[ctrl_idx]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
+    f_path20 = tmp_path / "no_cite.json"
+    f_path20.write_text(json.dumps(no_cite_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
+        generate_signoff_and_receipt(
+            findings_file=f_path20,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 17. Clean control assessment with only four-word partial citation rejected
+    partial_cite_findings = copy.deepcopy(raw_findings)
+    partial_cite_findings[ctrl_idx]["reviewer_assessment"] = (
+        "Унікальна оцінка: «і хоч депутатський корпус» — слововжиток нормативний."
+    )
+    f_path21 = tmp_path / "partial_cite.json"
+    f_path21.write_text(json.dumps(partial_cite_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
+        generate_signoff_and_receipt(
+            findings_file=f_path21,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+
+def test_no_duplicated_query_punctuation(grammar_data):
+    """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
+    double_punct_pattern = re.compile(
+        r"(?:\?[»”\"']\s*\?)"
+        r"|(?:![»”\"']\s*!)"
+        r"|(?:(?<!\.)\.\s*[»”\"']\s*\.)"
+        r"|(?:(\.{3}|[?!…])[»”\"']\s*\.)"
+        r"|(?:(?<!\.)\.\s*[»”\"']\s*[?!…])"
+    )
+    for r in grammar_data["all"]:
+        q = r.get("query", "")
+        assert "««" not in q and "»»" not in q, f"Nested guillemets found in query: {q}"
+        assert not double_punct_pattern.search(q), f"Duplicated punctuation found around quote in query: {q}"
+        assert not re.search(r"\.\s*»\s*\.", q), f"Double dot across quote found in query: {q}"
+        assert not re.search(r"\?\s*\.", q), f"Question followed by period found in query: {q}"
+        assert not re.search(r"!\s*\.", q), f"Exclamation followed by period found in query: {q}"
+        assert not re.search(r"\.\s*\.", q.replace("...", "").replace("…", "")), f"Double period found in query: {q}"
+        if q.startswith("Чи ") or "чи все тут правильно?" in q.lower():
+            assert "?" in q, f"Carrier question lost its question mark: {q}"
+
+
+def test_source_denominator_reconciliation(grammar_data):
+    """Verify that manifest and README contain documented source denominator reconciliation (#8342)."""
+    manifest = grammar_data["manifest"]
+    assert "source_denominator_reconciliation" in manifest, "Missing source_denominator_reconciliation in manifest.json"
+    recon = manifest["source_denominator_reconciliation"]
+
+    assert recon["ua_gec_m2_in_scope_edits_total"] == 9874
+    assert recon["ua_gec_m2_train_in_scope_edits"] == 8266
+    assert recon["ua_gec_m2_test_in_scope_edits_firewall_quarantined"] == 1608
+    assert recon["ua_gec_train_sentences_total"] == 31028
+    assert recon["ua_gec_train_in_scope_candidate_sentences"] == 5138
+    assert recon["ua_gec_train_in_scope_annotator_edit_sets"] == 5252
+    assert recon["delivered_substantive_corrections"] == 995
+    assert recon["delivered_substantive_corrections_train"] == 909
+    assert recon["delivered_substantive_corrections_eval"] == 86
+    assert recon["delivered_clean_controls"] == 380
+    assert recon["delivered_clean_controls_train"] == 330
+    assert recon["delivered_clean_controls_eval"] == 50
+    assert recon["delivered_total_records"] == 1375
+    assert recon["candidate_edit_sets_excluded_total"] == 4257
+    assert sum(recon["exclusions_by_policy"].values()) == 4257
+    assert recon["candidate_edit_sets_excluded_total"] + recon["delivered_substantive_corrections"] == 5252
+    assert recon["reserve_candidate_count"] == 0
+    assert "reserve_disposition" in recon
+    assert recon["measured_categories_count"] == len(recon["exclusions_by_policy"])
+
+    accounting_path = GRAMMAR_DIR / "candidate_exclusion_accounting.json"
+    assert accounting_path.is_file(), f"Missing candidate_exclusion_accounting.json at {accounting_path}"
+    accounting_data = json.loads(accounting_path.read_text(encoding="utf-8"))
+    assert accounting_data["total_candidate_annotator_edit_sets"] == 5252
+    assert accounting_data["delivered_substantive_corrections"] == 995
+    assert accounting_data["total_excluded_candidate_edit_sets"] == 4257
+    assert sum(accounting_data["measured_exclusions_total"].values()) == 4257
+    assert accounting_data["reserve_candidate_count"] == 0
+    assert accounting_data["measured_categories_count"] == len(accounting_data["measured_exclusions_total"])
+    assert accounting_data["measured_categories_count"] == 51
+    assert recon["measured_categories_count"] == 51
+    assert "adversarial_review_round_findings" not in accounting_data["measured_exclusions_total"]
+    assert len(accounting_data["candidate_exclusions"]) == 4257
+
+    ce_map = {ce["candidate_id"]: ce for ce in accounting_data["candidate_exclusions"]}
+    # Representative label accuracy assertions (addressing Codex R23 review)
+    assert ce_map["uagec_0846_s4_a1"]["rejection_gate"] == "grammatical_aspect_tense_or_mood_change"
+    assert ce_map["uagec_1082_s91_a0"]["rejection_gate"] == "grammatical_aspect_tense_or_mood_change"
+    assert ce_map["uagec_0249_s10_a0"]["rejection_gate"] == "claim_about_named_person"
+    assert ce_map["uagec_0648_s31_a0"]["rejection_gate"] == "unsubstantiated_political_assertion"
+    # Representative label accuracy assertions (addressing Codex R25 review)
+    assert ce_map["uagec_1114_s3_a0"]["rejection_gate"] == "ungrammatical_gold_correction"
+    assert ce_map["uagec_1702_s2_a0"]["rejection_gate"] == "unwarranted_valid_to_valid_lexical_swap"
+
+    for ce in accounting_data["candidate_exclusions"]:
+        assert "candidate_id" in ce
+        assert "doc_id" in ce
+        assert "sent_idx" in ce
+        assert "ann_id" in ce
+        assert ce["split"] in ("train", "eval")
+        assert "primary_tag" in ce
+        assert "rejection_gate" in ce
+        assert ce["rejection_gate"] != "adversarial_review_round_findings"
+        assert "original_snippet" in ce
+
+    readme_path = GRAMMAR_DIR / "README.md"
+    assert readme_path.is_file(), f"Missing README.md at {readme_path}"
+    readme_text = readme_path.read_text(encoding="utf-8")
+    assert "## Source Denominator Reconciliation (#8342)" in readme_text
+    assert "9,874" in readme_text or "9874" in readme_text
+    assert "8,266" in readme_text or "8266" in readme_text
+    assert "1,608" in readme_text or "1608" in readme_text
+    assert "31,028" in readme_text
+    assert "995" in readme_text
+    assert "909" in readme_text
+    assert "86" in readme_text
+    assert "380" in readme_text
+    assert "330" in readme_text
+    assert "50" in readme_text
+
+
+def test_clean_sentence_for_query_preserves_quoted_punctuation():
+    """Verify clean_sentence_for_query preserves ?, !, and … inside fully quoted utterances."""
+    assert clean_sentence_for_query("«Чому?»") == "Чому?"
+    assert clean_sentence_for_query("«Стій!»") == "Стій!"
+    assert clean_sentence_for_query("«Що це таке?!»") == "Що це таке?!"
+    assert clean_sentence_for_query("«Невже?...»") == "Невже?..."
+    assert clean_sentence_for_query("«Невже?…»") == "Невже?…"
+    assert clean_sentence_for_query("«Кажу я.»") == "Кажу я"
+    assert clean_sentence_for_query('"Why?"') == "Why?"
+    assert clean_sentence_for_query('"Wait!"') == "Wait!"
+    assert clean_sentence_for_query('"Said he."') == "Said he"
+
+
+def test_validator_rejection_label_accuracy():
+    """Verify validate_candidate_rejection semantic label accuracy on representative checks."""
+    # 1. Tense change: акцентує (present) -> акцентував (past)
+    orig_tense = "Февр акцентує на духовному житті, культурі та психології людей."
+    corr_tense = "Февр акцентував на духовному житті, культурі та психології людей."
+    assert (
+        validate_candidate_rejection(orig_tense, corr_tense, [(1, 2, "G/Tense", "акцентував")])
+        == "grammatical_aspect_tense_or_mood_change"
+    )
+
+    # 2. Aspect change: почитати -> прочитати
+    orig_aspect = "Кому цікаво, цим займається теорія раціональності і можна почитати в книзі."
+    corr_aspect = "Кому цікаво, цим займається теорія раціональності і можна прочитати в книзі."
+    assert (
+        validate_candidate_rejection(orig_aspect, corr_aspect, [(9, 10, "G/Aspect", "прочитати")])
+        == "grammatical_aspect_tense_or_mood_change"
+    )
+
+    # 3. Claim about named person (defamatory factual claim)
+    orig_named = "Коломойський — це олігарх, який став багатим за рахунок обману людей."
+    corr_named = "Коломойський — це олігарх, який збагатився за рахунок обману людей."
+    assert (
+        validate_candidate_rejection(orig_named, corr_named, [(5, 7, "F/Calque", "збагатився")])
+        == "claim_about_named_person"
+    )
+
+    # 4. Unsubstantiated political assertion
+    orig_pol = "Який сенс позбавляти роботи десятків мільйонів українців без будь-якої причини?"
+    corr_pol = "Який сенс позбавляти роботи десятків мільйонів українців без жодної причини?"
+    assert (
+        validate_candidate_rejection(orig_pol, corr_pol, [(7, 9, "F/Calque", "жодної")])
+        == "unsubstantiated_political_assertion"
+    )
+
+    # 5. Safety: violent / morbid / vulgar content
+    orig_morbid = "Після важкої хвороби він померлий лежав у кімнаті без допомоги."
+    corr_morbid = "Після важкої хвороби він померлим лежав у кімнаті без допомоги."
+    assert (
+        validate_candidate_rejection(orig_morbid, corr_morbid, [(4, 5, "G/Case", "померлим")])
+        == "safety_violent_morbid_vulgar"
+    )
+
+
+def test_isolated_perednia_to_peredpokii_lexical_swap_regression():
+    """Verify that swapping передній (or other inflections of передня) to передпокої
+
+    is rejected as unwarranted_valid_to_valid_lexical_swap even when isolated
+    (without an accompanying nadiahshy -> odiahnuvshy edit). Regression test for Codex R27.
+    """
+    orig_text = "Він стояв у передній і розмовляв."
+    corr_text = "Він стояв у передпокої і розмовляв."
+    orig_tokens = ["Він", "стояв", "у", "передній", "і", "розмовляв", "."]
+    in_scope = [(3, 4, "F/Calque", "передпокої")]
+
+    res = validate_candidate_rejection(
+        orig_text=orig_text,
+        corr_text=corr_text,
+        in_scope=in_scope,
+        orig_tokens=orig_tokens,
+    )
+    assert res == "unwarranted_valid_to_valid_lexical_swap"
+
+    # Also verify feminine form передня -> передпокій
+    orig_f = "Передня була просторою і світлою."
+    corr_f = "Передпокій був просторим і світлим."
+    tokens_f = ["Передня", "була", "просторою", "і", "світлою", "."]
+    in_scope_f = [(0, 1, "F/Calque", "Передпокій")]
+    res_f = validate_candidate_rejection(
+        orig_text=orig_f,
+        corr_text=corr_f,
+        in_scope=in_scope_f,
+        orig_tokens=tokens_f,
+    )
+    assert res_f == "unwarranted_valid_to_valid_lexical_swap"
+
+
+def test_systemic_gender_agreement_multiple_adjectives_regression():
+    """Verify systemic gender agreement mismatch detection on multiple intervening adjectives.
+
+    Specifically verifies that strings like «свого сумну, гірку, важку присутність»
+    with three or more adjectives are caught as gender_agreement_mismatch without ReDoS.
+    Regression test for Codex R30.
+    """
+    orig_text = "Він відчував свою сумну, гірку, важку присутність."
+    corr_text = "Він відчував свого сумну, гірку, важку присутність."
+    tokens = ["Він", "відчував", "свого", "сумну,", "гірку,", "важку", "присутність."]
+    in_scope = [(2, 3, "G/Gender", "свого")]
+
+    res = validate_candidate_rejection(
+        orig_text=orig_text,
+        corr_text=corr_text,
+        in_scope=in_scope,
+        orig_tokens=tokens,
+    )
+    assert res == "gender_agreement_mismatch"

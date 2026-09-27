@@ -154,3 +154,22 @@ def compute_immersion_payload(
         not_checked=list(lesson_band.not_checked),
         waiver=lesson_band.waiver,
     )
+
+
+def lesson_immersion_payload(
+    track: str, arc_position: int, lesson_n: int, state: Any, **kwargs: Any
+) -> ImmersionPayload:
+    """The immersion payload of one lesson, from its planned learner ``state``.
+
+    The single computation behind the writer prompt, the CLI prompt paths and the
+    review manifest: the core-word count and the state's waiver both come from
+    ``state``, so a waived state reads the same everywhere.
+    """
+    return compute_immersion_payload(
+        track,
+        arc_position,
+        lesson_n,
+        cumulative_core_count=state.cumulative_core_count,
+        waiver=state.waiver,
+        **kwargs,
+    )

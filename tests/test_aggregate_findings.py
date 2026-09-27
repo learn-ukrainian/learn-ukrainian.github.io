@@ -224,6 +224,7 @@ class TestFormatReport:
 
 
 class TestCollectFindings:
+    @pytest.mark.repo_wide
     def test_with_real_a1_data(self):
         """Integration test — only runs if A1 review data exists."""
         review_dir = Path(__file__).resolve().parent.parent / "curriculum" / "l2-uk-en" / "a1" / "review"

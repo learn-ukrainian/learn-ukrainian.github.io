@@ -28,6 +28,11 @@ interface WatchAndRepeatItem {
    * @ukrainianText false
    */
   note?: string;
+  /**
+   * @schemaDescription Feedback explanation shown under the item.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface WatchAndRepeatProps {
@@ -161,6 +166,9 @@ export default function WatchAndRepeat({
 
         {item.note && (
           <p className={directStyles.warNote}>{item.note}</p>
+        )}
+        {item.explanation && (
+          <p className={directStyles.warNote}>{item.explanation}</p>
         )}
       </div>
 

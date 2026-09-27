@@ -3,7 +3,9 @@
 
 Drivers run this before every implement dispatch. Prefer cool/idle seats;
 mark hot / near_cap / deficit lanes AVOID. Shares the Monitor snapshot and
-blocking native refresh path with ``scripts.fleet.usage``.
+blocking native refresh path with ``scripts.fleet.usage``. The admission line
+reports whether ``delegate.py dispatch`` would admit a write worker on this host
+now, from the same function dispatch calls (#8645).
 """
 
 from __future__ import annotations
@@ -34,6 +36,9 @@ try:
     from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 except ImportError:  # pragma: no cover - script path fallback
     from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
+
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
+from scripts.orchestration import dispatch_admission
 
 # Subscription + free seats drivers may pick for code implement. "gemini" and
 # "glm" are kept here for budget-row VISIBILITY (their quota/status still
@@ -69,6 +74,7 @@ _CODE_LANE_PRIORITY = {
     "deepseek": 8,
 }
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
+# delegate.py's task records, anchored to the primary checkout.
 
 
 def _monitor_base() -> str:
@@ -170,9 +176,7 @@ _SHARED_QUOTA_SOURCES: dict[str, str] = {
 }
 
 
-def _mirror_retired_quota(
-    agents: dict[str, Any], lane: str, info: dict[str, Any]
-) -> tuple[dict[str, Any], str | None]:
+def _mirror_retired_quota(agents: dict[str, Any], lane: str, info: dict[str, Any]) -> tuple[dict[str, Any], str | None]:
     """Mirror a shared-subscription probe onto its live dispatch lane.
 
     ``PROVIDER_TO_LANE`` keys AGY usage under ``gemini``, while
@@ -237,7 +241,16 @@ def build_lane_rows(
             account = (budget.get("api_accounts") or {}).get(lane) or {}
             status = api_lane_status_from_account(lane, account)
             info = {**info, "status": status, "probe_state": account.get("probe_state")}
-            if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+            # Prepaid balance probes stay green while the dispatch lane itself
+            # is down (e.g. opencode provider config loss, #8514) — carry the
+            # lane-health record so is_avoid_lane can demote it.
+            if isinstance(account.get("health"), dict):
+                info["health"] = account["health"]
+            if (
+                status not in {"cool", "warm"}
+                or account.get("is_available") is False
+                or account.get("status") == "near_cap"
+            ):
                 info["eligible"] = False
         else:
             info, quota_source = _mirror_retired_quota(agents, lane, info)
@@ -260,6 +273,10 @@ def build_lane_rows(
             notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
         if avoid:
             notes.append("AVOID")
+            health_info = info.get("health") if isinstance(info.get("health"), dict) else {}
+            if health_info.get("healthy") is False:
+                last_error = str(health_info.get("last_error") or "").strip()
+                notes.append(f"unhealthy: {last_error}" if last_error else "unhealthy lane")
             if info.get("eligible") is False:
                 notes.append(str(info.get("health", {}).get("failure_code") or "ineligible"))
             if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":
@@ -375,9 +392,22 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
     return [
         str(row["lane"])
         for row in rows
-        if not row.get("avoid")
-        and (row.get("status") in _COOL_STATUSES or row.get("reset_reserve_eligible"))
+        if not row.get("avoid") and (row.get("status") in _COOL_STATUSES or row.get("reset_reserve_eligible"))
     ]
+
+
+def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
+    """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept."""
+    try:
+        decision = dispatch_admission.evaluate("workspace-write", tasks_dir or default_tasks_dir())
+    except ValueError as exc:
+        return {"admitted": None, "line": f"admission (write dispatch): unknown — invalid threshold: {exc}"}
+    record = decision.to_record()
+    for key in ("forced", "force_reason", "swept_crashed"):
+        record.pop(key, None)
+    verdict = "would admit now" if decision.admitted else "would REFUSE now: " + "; ".join(decision.failures)
+    record["line"] = f"admission (write dispatch): {verdict} | {decision.summary()}"
+    return record
 
 
 def build_report(
@@ -385,6 +415,7 @@ def build_report(
     *,
     active_in_flight: dict[str, int] | None = None,
     reset_reserve: dict[str, Any] | None = None,
+    admission: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     rows = build_lane_rows(budget, active_in_flight=active_in_flight, reset_reserve=reset_reserve)
     pick_order = build_pick_order(rows)
@@ -418,6 +449,7 @@ def build_report(
         },
         "diagnostics": budget.get("diagnostics") or {},
         "active_in_flight": dict(active_in_flight or {}),
+        "admission": admission,
     }
 
 
@@ -439,6 +471,9 @@ def format_human(report: dict[str, Any]) -> str:
     cool = report.get("cooler_lanes") or []
     if cool:
         lines.append(f"cooler seats: {', '.join(cool)}")
+    admission = report.get("admission")
+    if isinstance(admission, dict) and admission.get("line"):
+        lines.append(str(admission["line"]))
     return "\n".join(lines)
 
 
@@ -451,9 +486,13 @@ def main(argv: list[str] | None = None) -> int:
             "Examples:\n"
             "  .venv/bin/python -m scripts.fleet.capacity_pick --json\n"
             "  .venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict\n\n"
-            "Outputs: routing table or JSON; no provider prompts.\n"
+            "Outputs: routing table or JSON; no provider prompts. The last line (JSON: `admission`) says whether\n"
+            "a write dispatch would pass host admission now: live write workers vs cap, MemAvailable vs floor,\n"
+            "load per CPU vs limit (thresholds: DISPATCH_* in scripts/config.py, env-overridable). When\n"
+            "lu-dispatch.slice is active the same line adds its memory use against MemoryMax.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
-            "Related: /api/state/routing-budget?transport=acp; issue #7812."
+            "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
+            "issues #7812, #8645."
         ),
     )
     parser.add_argument(
@@ -479,7 +518,7 @@ def main(argv: list[str] | None = None) -> int:
 
     budget = read_budget(fresh=bool(args.fresh), transport=args.transport)
     active = fetch_active_in_flight()
-    report = build_report(budget, active_in_flight=active)
+    report = build_report(budget, active_in_flight=active, admission=admission_status())
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

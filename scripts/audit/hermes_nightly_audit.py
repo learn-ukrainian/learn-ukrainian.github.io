@@ -37,7 +37,9 @@ def run_track_audit(track: str) -> dict:
         "never",
     ]
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS)
+        res = subprocess.run(
+            cmd, capture_output=True, text=True, check=True, timeout=DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS
+        )
         return json.loads(res.stdout)
     except subprocess.TimeoutExpired:
         return {
@@ -201,16 +203,18 @@ def build_markdown_report(timestamp: str, track_results: dict[str, dict], insigh
 
     for track, data in track_results.items():
         summary = data.get("summary", {})
-        lines.extend([
-            f"### Track `{track.upper()}`",
-            f"- **Modules**: Selected {summary.get('modules_selected', 0)} (Built: {summary.get('modules_built', 0)}, Not Built: {summary.get('modules_not_built', 0)})",
-            f"- **Findings**: Total {summary.get('findings_total', 0)}",
-            f"  - Blocker: {summary.get('findings_by_severity', {}).get('blocker', 0)}",
-            f"  - High: {summary.get('findings_by_severity', {}).get('high', 0)}",
-            f"  - Medium: {summary.get('findings_by_severity', {}).get('medium', 0)}",
-            f"  - Low: {summary.get('findings_by_severity', {}).get('low', 0)}",
-            f"  - Info: {summary.get('findings_by_severity', {}).get('info', 0)}",
-        ])
+        lines.extend(
+            [
+                f"### Track `{track.upper()}`",
+                f"- **Modules**: Selected {summary.get('modules_selected', 0)} (Built: {summary.get('modules_built', 0)}, Not Built: {summary.get('modules_not_built', 0)})",
+                f"- **Findings**: Total {summary.get('findings_total', 0)}",
+                f"  - Blocker: {summary.get('findings_by_severity', {}).get('blocker', 0)}",
+                f"  - High: {summary.get('findings_by_severity', {}).get('high', 0)}",
+                f"  - Medium: {summary.get('findings_by_severity', {}).get('medium', 0)}",
+                f"  - Low: {summary.get('findings_by_severity', {}).get('low', 0)}",
+                f"  - Info: {summary.get('findings_by_severity', {}).get('info', 0)}",
+            ]
+        )
 
         findings = data.get("findings", [])
         if findings:
@@ -220,21 +224,27 @@ def build_markdown_report(timestamp: str, track_results: dict[str, dict], insigh
                 location = item.get("file") or "<repo>"
                 if item.get("line"):
                     location = f"{location}:{item['line']}"
-                module = f"M{item.get('module_num', 0):02d} {item.get('slug', '')}" if item.get("module_num") else "track"
-                lines.append(f"    - `[{item.get('severity', 'info')}]` {module} ({item.get('category', '')}) `{location}`: {item.get('message', '')}")
+                module = (
+                    f"M{item.get('module_num', 0):02d} {item.get('slug', '')}" if item.get("module_num") else "track"
+                )
+                lines.append(
+                    f"    - `[{item.get('severity', 'info')}]` {module} ({item.get('category', '')}) `{location}`: {item.get('message', '')}"
+                )
             if len(findings) > 10:
                 lines.append(f"    - ... and {len(findings) - 10} more findings")
         else:
             lines.append("  - No findings reported.")
         lines.append("")
 
-    lines.extend([
-        "## Hermes Insights Snapshot",
-        "```",
-        insights.strip(),
-        "```",
-        "",
-    ])
+    lines.extend(
+        [
+            "## Hermes Insights Snapshot",
+            "```",
+            insights.strip(),
+            "```",
+            "",
+        ]
+    )
 
     return "\n".join(lines)
 
@@ -242,25 +252,24 @@ def build_markdown_report(timestamp: str, track_results: dict[str, dict], insigh
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run nightly deterministic curriculum track audits sequentially and aggregate findings.\n"
-                    "Use this tool to verify repository structural health, case parity, and findings status.\n"
-                    "Do NOT use this tool for mutating curriculum data or running LLM tasks.",
+        "Use this tool to verify repository structural health, case parity, and findings status.\n"
+        "Do NOT use this tool for mutating curriculum data or running LLM tasks.",
         epilog="Examples:\n"
-               "  .venv/bin/python scripts/audit/hermes_nightly_audit.py\n"
-               "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1\n"
-               "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1,a2 --insights-cmd /usr/local/bin/hermes\n\n"
-               "Outputs:\n"
-               "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.md   - Markdown report of findings and insights.\n"
-               "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.json - Machine-readable JSON sidecar.\n"
-               "  batch_state/hermes_cron/latest.md                  - Copy of the latest Markdown report.\n"
-               "  batch_state/hermes_cron/latest.json                - Copy of the latest JSON report.\n\n"
-               "Exit codes:\n"
-               "  0 - Sweep completed and reports written successfully.\n"
-               "  1 - Unexpected script execution failure.\n\n"
-               "Related:\n"
-               "  Prompt template: agents_extensions/shared/prompts/hermes-nightly-audit.md\n"
-               "  Monitor Router: scripts/api/hermes_cron_router.py\n"
-               "  Auditor script: scripts/audit/track_deterministic_audit.py\n"
-               "  Specification: docs/references/private/hermes-usage.md (gitignored; see stub at docs/best-practices/hermes-usage.md)",
+        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py\n"
+        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1\n"
+        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1,a2 --insights-cmd /usr/local/bin/hermes\n\n"
+        "Outputs:\n"
+        "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.md   - Markdown report of findings and insights.\n"
+        "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.json - Machine-readable JSON sidecar.\n"
+        "  batch_state/hermes_cron/latest.md                  - Copy of the latest Markdown report.\n"
+        "  batch_state/hermes_cron/latest.json                - Copy of the latest JSON report.\n\n"
+        "Exit codes:\n"
+        "  0 - Sweep completed and reports written successfully.\n"
+        "  1 - Unexpected script execution failure.\n\n"
+        "Related:\n"
+        "  Prompt template: agents_extensions/shared/prompts/hermes-nightly-audit.md\n"
+        "  Auditor script: scripts/audit/track_deterministic_audit.py\n"
+        "  Specification: docs/references/private/hermes-usage.md (gitignored; see stub at docs/best-practices/hermes-usage.md)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -330,7 +339,9 @@ def main() -> int:
 
     try:
         md_path.write_text(markdown_report, encoding="utf-8")
-        json_path.write_text(json.dumps(json_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        json_path.write_text(
+            json.dumps(json_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
 
         shutil.copy2(md_path, latest_md_path)
         shutil.copy2(json_path, latest_json_path)

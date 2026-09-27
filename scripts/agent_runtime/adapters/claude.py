@@ -375,7 +375,7 @@ class ClaudeAdapter:
             raise ValueError(
                 "ClaudeAdapter requires tool_config output_format='stream-json' "
                 "so tool-call trace parsing fails closed instead of degrading "
-                f"to text output; got {output_format!r}"
+                "to text output"
             )
         cmd.extend(["--output-format", output_format])
         cmd.append("--verbose")

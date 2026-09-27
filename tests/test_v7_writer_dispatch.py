@@ -283,6 +283,7 @@ def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
 ) -> None:
     telemetry = tmp_path / "out.jsonl"
 
+    # --out keeps the wiki gate artifact out of the real curriculum tree (#8631).
     exit_code = v7_build.main(
         [
             "a1",
@@ -290,6 +291,8 @@ def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
             "--writer",
             "codex-tools",
             "--dry-run",
+            "--out",
+            str(tmp_path / "module"),
             "--telemetry-out",
             str(telemetry),
         ]

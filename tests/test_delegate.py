@@ -10,9 +10,11 @@ Issue: #1184.
 
 from __future__ import annotations
 
+import argparse
 import contextlib
 import errno
 import fcntl
+import hashlib
 import json
 import os
 import signal
@@ -21,6 +23,7 @@ import sys
 import threading
 import time
 import urllib.error
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -42,11 +45,28 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
-    """Redirect delegate._TASKS_DIR to a tmp path so tests don't pollute
+    """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
+
+
+@pytest.fixture(autouse=True)
+def _worktree_add_via_run(monkeypatch):
+    """Route ``git worktree add`` through ``subprocess.run`` in this file.
+
+    Dispatch runs the add under ``Popen`` with a progress-aware bound (#8663);
+    that transport and its undo are covered in
+    tests/test_delegate_worktree_add_undo.py. Tests here stub
+    ``subprocess.run`` for every git call, or ``Popen`` for the worker, so the
+    add keeps its old transport and stays visible to those stubs.
+    """
+
+    def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
+        return delegate.subprocess.run(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", via_run)
 
 
 @pytest.fixture(autouse=True)
@@ -1107,6 +1127,133 @@ def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(tmp_tasks_d
     assert "write-shaped prompt" in capsys.readouterr().err
 
 
+def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return CompletedProcess(command, 0, '{"number":8886}', "")
+        return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", checker)
+    error, record = delegate._run_dor_preflight("Implement issue #8886", None)
+    assert "#8886: verify" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
+    assert calls[1][-4:] == ["--issue", "8886", "--strict", "--json"]
+
+    error, record = delegate._run_dor_preflight("Implement issue #8886", "urgent repair")
+    assert error is None
+    assert record["allow_warn_reason"] == "urgent repair"
+    assert delegate._run_dor_preflight("Implement without a linked issue", None) == (None, None)
+
+
+def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            number = int(command[-1].rsplit("/", 1)[-1])
+            payload = {"number": number, **({"pull_request": {"url": "pr"}} if number == 8750 else {})}
+            return CompletedProcess(command, 0, json.dumps(payload), "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
+    error, record = delegate._run_dor_preflight(prompt, None)
+    assert error is None
+    assert record == {"issues": [8886], "warnings": {}}
+    assert [call for call in calls if call[:2] == ["gh", "api"]] == [
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
+    ]
+    assert len([call for call in calls if "--issue" in call]) == 1
+    assert delegate._run_dor_preflight("PR #8750", None) == (None, None)
+
+
+def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def failed_gh(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 1, "", "lookup unavailable")
+
+    monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    error, record = delegate._run_dor_preflight("Fixes #8886", "urgent repair")
+    assert error is None
+    assert record["allow_warn_reason"] == "urgent repair"
+
+
+def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def wrong_issue(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 0, '{"number":8750}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+
+
+def test_dor_dispatch_refuses_warn_before_worker_spawn(tmp_tasks_dir, monkeypatch, capsys):
+    monkeypatch.setattr(
+        delegate,
+        "_run_dor_preflight",
+        lambda _prompt, _reason: ("❌ DoR issue card WARN (#8886: verify)", None),
+    )
+    monkeypatch.setattr(
+        delegate.subprocess,
+        "Popen",
+        lambda *_args, **_kwargs: pytest.fail("WARN issue must not spawn a worker"),
+    )
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-blocked",
+            "--mode",
+            "danger",
+            "--worktree",
+            "--prompt",
+            "Implement issue #8886",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert not (tmp_tasks_dir / "dor-blocked.json").exists()
+    assert "DoR issue card WARN" in capsys.readouterr().err
+
+
+def test_dor_override_cli_requires_reason():
+    parser = delegate.build_parser()
+    args = parser.parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-override",
+            "--prompt",
+            "Implement issue #8886",
+            "--allow-dor-warn",
+            "urgent repair",
+        ]
+    )
+    assert args.allow_dor_warn == "urgent repair"
+
+
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_write_shaped_prompt_is_admitted_by_write_capable_modes(mode):
     assert (
@@ -1175,6 +1322,76 @@ def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
     unclosed = "Critique this:\n```\nAdd a CLI."
     # An unclosed fence is not quoted content; the scan still sees it.
     assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
+
+
+def test_read_only_wrapped_prose_continuation_line_is_not_refused():
+    """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
+
+    Real brief from review-conftest-light-r2: 'fix report ...' was a noun phrase
+    continuing the previous line's sentence, not a directive.
+    """
+    prompt = (
+        "Review the task deliverable and verify that the\n"
+        "fix report `batch_state/tasks/impl-conftest-light-r2.result`.\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+
+def test_read_only_question_to_reviewer_is_not_refused():
+    """A line ending in '?' is a question to the reviewer, not a directive (#8703).
+
+    Real brief from review-8663-r1: 'remove a worktree it did not create? Is the branch ref always kept?'
+    """
+    prompt = "Can a crashed dispatcher\nremove a worktree it did not create? Is the branch ref always kept?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+    standalone_question = "remove a worktree it did not create? Is the branch ref always kept?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=standalone_question) is None
+
+    question_verb = "Fix the bug in the parser?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=question_verb) is None
+
+    bulleted_question = "- Remove the worktree it did not create?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=bulleted_question) is None
+
+
+@pytest.mark.parametrize(
+    "directive_prompt",
+    [
+        "Fix the bug in X.\n",
+        "Please fix the bug in X.\n",
+        "1. Fix the parser\n",
+        "1) Fix the parser\n",
+        "- Update docs\n",
+        "* Update docs\n",
+        "+ Fix the parser\n",
+        "# Fix the parser\n",
+        "Tasks:\nFix the bug in X.\n",
+        "Previous step.\nFix the bug in X.\n",
+        "Why is this broken!\nFix the bug in X.\n",
+        "Why is this broken?\nFix the bug in X.\n",
+        "# Work\nFix the bug in X.\n",
+        "- Step 1\nFix the bug in X.\n",
+        "Context\n\nFix the bug in foo.\n",
+    ],
+)
+def test_read_only_write_directive_cases_are_still_refused(directive_prompt):
+    """Genuine write directives (numbered, bulleted, first-line, or after sentence boundaries) are refused (#8703)."""
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=directive_prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+def test_read_only_blank_line_starts_new_sentence_refused():
+    """A blank line ends the paragraph, so a subsequent imperative verb is a directive (#8703).
+
+    A directive that opens a new paragraph after an unpunctuated line
+    (e.g., 'Context', 'Task', 'Background') must be refused.
+    """
+    prompt = "Context\n\nFix the bug in foo."
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
 
 
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
@@ -1278,6 +1495,104 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert state["returncode_reason"] == "worker process was not started"
     captured = capsys.readouterr()
     assert "failed to spawn" in captured.err
+
+
+def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys):
+    """A late scope start must fail the task instead of leaving it spawning."""
+    path = delegate._state_path("ambiguous-scope")
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="ambiguous-scope",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    def explode(*_args, **_kwargs):
+        raise delegate.dispatch_isolation.DispatchIsolationError(
+            "systemd-run: worker start marker arrived after the startup timeout (2s) "
+            "for unit lu-worker-ambiguous-scope; the scope was stopped and will not be relaunched"
+        )
+
+    with patch("delegate.dispatch_isolation.spawn_detached_worker", side_effect=explode):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "scoped worker startup was ambiguous; not relaunched"
+    assert "will not be relaunched" in (state.get("stderr_excerpt") or "")
+    assert "failed to spawn" in capsys.readouterr().err
+
+
+def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="popen-head")
+    monkeypatch.setattr(
+        delegate,
+        "_resolve_verified_worktree_path",
+        lambda path: worktree if Path(path).resolve() == worktree else None,
+    )
+    expected_head = delegate._resolve_sha(worktree)
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="popen-head",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=str(worktree),
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    real_popen = subprocess.Popen
+
+    def fail_worker_popen(command, *args, **kwargs):
+        if command[0] == "git":
+            return real_popen(command, *args, **kwargs)
+        raise FileNotFoundError("no such file")
+
+    with patch("delegate.subprocess.Popen", side_effect=fail_worker_popen):
+        assert delegate.cmd_dispatch(args) == 1
+
+    state = delegate._read_state(delegate._state_path("popen-head"))
+    assert state["status"] == "failed"
+    assert state["final_branch_head_commit"] == expected_head
+
+
+@pytest.mark.parametrize("probe", ["status", "wait", "list"])
+def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch, capsys, probe):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=f"{probe}-head")
+    state_path = delegate._state_path(f"{probe}-head")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": f"{probe}-head",
+            "agent": "codex",
+            "status": "running",
+            "pid": 999_999_998,
+            "worktree_path": str(worktree),
+        },
+    )
+    expected_head = delegate._resolve_sha(worktree)
+
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=f"{probe}-head")) == 0
+    elif probe == "wait":
+        assert delegate.cmd_wait(argparse.Namespace(task_id=f"{probe}-head", timeout=1, poll_interval=0.5)) == 1
+    else:
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+
+    state = delegate._read_state(state_path)
+    assert state["status"] == "crashed"
+    assert state["final_branch_head_commit"] == expected_head
+    assert state["finished_at"]
 
 
 def test_dispatch_parses_max_budget_usd_flag():
@@ -1430,6 +1745,50 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
     cmd = captured["cmd"]
     assert "--max-budget-usd" in cmd
     assert cmd[cmd.index("--max-budget-usd") + 1] == "0.5"
+
+
+def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, capsys):
+    """Isolation can be forced off; the worker argv and pid tracking stay the old spawn."""
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "isolation-fallback", "--prompt", "hi"]
+    )
+    captured: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 4242
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("isolation-fallback"))
+    assert state is not None
+    assert state["pid"] == 4242
+    assert state["launch_mode"] == "popen-fallback"
+    assert "LU_DISPATCH_ISOLATION=fallback" in state["launch_fallback_reason"]
+    assert "launch_unit" not in state
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert "_worker" in cmd
+    assert "systemd-run" not in cmd
+    kwargs = captured["kwargs"]
+    assert isinstance(kwargs, dict)
+    assert kwargs["start_new_session"] is True
+    assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
 def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
@@ -2106,6 +2465,25 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
     assert state["resolved_model_source"] == "cursor-stream-json"
 
 
+def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path):
+    cache = tmp_path / "models.json"
+    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.1 Flash"}}}}')
+    state = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
+    assert state == {
+        "resolved_model": "deepseek-v4.1-flash",
+        "resolved_model_known": True,
+        "resolved_model_source": "models_dev_cached_alias",
+    }
+    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.2 Flash"}}}}')
+    drifted = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
+    assert drifted["resolved_model_known"] is False
+    assert drifted["resolved_model"] == "unattested-harness"
+    assert (
+        delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4-pro", cache_path=cache)["resolved_model"]
+        == "deepseek-v4-pro"
+    )
+
+
 def test_run_worker_records_unattested_harness_cursor_model_without_inventing_selector(
     tmp_tasks_dir,
     tmp_path,
@@ -2566,6 +2944,177 @@ def test_run_worker_review_with_verdict_stays_done(
     assert state["no_deliverable_reason"] is None
 
 
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        (
+            "bold-label-and-token",
+            "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n",
+        ),
+        (
+            "bold-token",
+            "Findings cited at scripts/foo.py:42.\n\nVERDICT: **REQUEST_CHANGES**\n",
+        ),
+        (
+            "backticked-token",
+            "Findings: none.\n\nVERDICT: `APPROVED`\n",
+        ),
+        (
+            "bold-label",
+            "**VERDICT**: CHANGES_REQUESTED\n",
+        ),
+    ],
+)
+def test_run_worker_review_with_markdown_decorated_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    label,
+    response,
+):
+    """#8786: reviewers render the verdict in Markdown; it is still a verdict.
+
+    The live driver saw ``**Verdict**: **APPROVE**`` and
+    ``VERDICT: **REQUEST_CHANGES**`` misclassified as
+    ``review_missing_verdict_line``, so a completed read-only review was
+    reported ``no_deliverable``. Emphasis punctuation around the label or the
+    token must not hide the verdict.
+    """
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-md-verdict-{label}",
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("inline-backticked", "I will report `VERDICT: APPROVE` once the tests finish.\n"),
+        ("quoted-line", "The format is:\n> VERDICT: APPROVE\n"),
+        ("quoted-string", 'Write "VERDICT: REQUEST_CHANGES" at the end.\n'),
+        ("prose-prefix", "My final line will be VERDICT: APPROVE.\n"),
+        ("code-fence", "Example:\n```\nVERDICT: APPROVE\n```\nnothing else yet.\n"),
+        ("tilde-fence", "Example:\n~~~text\nVERDICT: BLOCKED\n~~~\n"),
+        ("fully-backticked-line", "`VERDICT: APPROVE`\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_examples_and_quotes(label, response):
+    """#8786: inline, quoted, or fenced examples are not the reviewer's verdict."""
+    assert delegate.parse_review_verdict(response) is None
+    assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        # Live 2026-09-25 (review-nogem-r5, claude-sonnet-5): both approvals
+        # were reported ``no_deliverable`` because prose followed the token.
+        (
+            "bold-sentence-then-prose",
+            "Findings resolved.\n\n**VERDICT: APPROVE.** Both issues from my earlier review are fixed.\n",
+            "APPROVE",
+        ),
+        (
+            "bold-then-parenthetical",
+            "**VERDICT: APPROVE** (three non-blocking findings below)\n\n1. Nit.\n",
+            "APPROVE",
+        ),
+        ("bold-label-bold-token-dash", "**Verdict**: **APPROVE** — see below\n", "APPROVE"),
+        ("double-underscore-token", "VERDICT: __REQUEST_CHANGES__\n", "REQUEST_CHANGES"),
+        ("token-then-comma", "VERDICT: BLOCKED, the migration drops data.\n", "BLOCKED"),
+    ],
+)
+def test_parse_review_verdict_accepts_trailing_prose(label, response, expected):
+    """#8786: a verdict line may carry punctuation, emphasis, or prose after the token."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("no-word-boundary", "VERDICT: APPROVEX\n"),
+        ("no-word-boundary-underscore", "VERDICT: APPROVE_LATER\n"),
+        ("no-word-boundary-cyrillic", "VERDICT: APPROVEд\n"),
+        ("inline-with-prose-after", "I will report VERDICT: APPROVE later, after CI.\n"),
+        ("quoted-with-prose-after", "> **VERDICT: APPROVE.** Looks good.\n"),
+        ("indented-with-prose-after", "Example:\n\n    VERDICT: APPROVE — fine\n"),
+        ("fenced-with-prose-after", "```\n**VERDICT: APPROVE** (see below)\n```\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_lines_with_trailing_text(label, response):
+    """#8786: trailing text is allowed, but the line must still start with the label."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+def test_parse_review_verdict_accepts_bold_line():
+    assert delegate.parse_review_verdict("Findings.\n\n**VERDICT: APPROVE**\n") == "APPROVE"
+
+
+def test_parse_review_verdict_last_line_wins():
+    response = "VERDICT: APPROVE\n\nOn reflection, one blocker.\n\n**Verdict**: **REQUEST_CHANGES**\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+def test_parse_review_verdict_ignores_fenced_line_after_real_verdict():
+    response = "VERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE\n```\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("four-space-indented-code", "Example:\n\n    VERDICT: APPROVE\n"),
+        ("tab-indented-code", "Example:\n\n\tVERDICT: APPROVE\n"),
+        ("tilde-inside-backtick-fence", "```text\n~~~\nVERDICT: APPROVE\n```\n"),
+        ("backtick-inside-tilde-fence", "~~~\n```\nVERDICT: APPROVE\n~~~\n"),
+        ("tilde-fence-with-verdict", "~~~~\nVERDICT: APPROVE\n~~~~\n"),
+        ("shorter-closer-does-not-close", "````\n```\nVERDICT: APPROVE\n````\n"),
+        ("closer-with-info-does-not-close", "```\n```python\nVERDICT: APPROVE\n```\n"),
+        ("unclosed-fence-swallows-rest", "Findings.\n```text\nVERDICT: APPROVE\n\nmore text\n"),
+    ],
+)
+def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
+    """#8786: a verdict inside a CommonMark code block (indented or fenced) is an example."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("three-space-indent", "Findings.\n\n   VERDICT: APPROVE\n", "APPROVE"),
+        ("three-space-indent-bold", "   **VERDICT**: **BLOCKED**\n", "BLOCKED"),
+        (
+            "longer-closer-closes",
+            "```\nVERDICT: APPROVE\n`````\nVERDICT: REQUEST_CHANGES\n",
+            "REQUEST_CHANGES",
+        ),
+        (
+            "indented-fence-closes",
+            "  ~~~\nVERDICT: APPROVE\n   ~~~  \nVERDICT: CHANGES_REQUESTED\n",
+            "CHANGES_REQUESTED",
+        ),
+        (
+            "inline-code-line-is-not-a-fence",
+            "```VERDICT: x``` is inline code\nVERDICT: APPROVE\n",
+            "APPROVE",
+        ),
+    ],
+)
+def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
+    """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
+    assert delegate.parse_review_verdict(response) == expected
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,
@@ -2717,9 +3266,9 @@ def test_run_worker_does_not_flag_read_only_tiny_response(
     assert state["status"] == "done"
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] is None
-    assert state["read_only_checkout_pre"] == {}
-    assert state["read_only_checkout_post"] == {}
+    assert state["read_only_snapshot_retention"] == "digest"
     assert state["read_only_mutation_paths"] == []
+    assert "read_only_checkout_pre" not in json.loads(delegate._state_path("read-only-tiny-response").read_text())
 
 
 def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
@@ -2774,6 +3323,8 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_checkout_pre"] == {}
+    assert state["read_only_snapshot_retention"] == "full"
+    assert (delegate._read_only_snapshot_dir_for("read-only-seminar-leak") / "read_only_checkout_post.json").is_file()
     assert state["read_only_mutation_paths"] == leaked_paths
     assert state["read_only_ignored_mutation_paths"] == ignored_paths
     assert state["read_only_checkout_post"] == {
@@ -2915,8 +3466,8 @@ def test_read_only_dispatch_allows_entire_harness_telemetry(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3096,10 +3647,13 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     assert delegate._read_only_ignored_mutation_paths(before, after_cache_leak) == sorted(
         [*after_runtime, ".cache/lemma-frequency-c1-999.json"]
     )
-    assert delegate._read_only_mutation_paths(
-        {".cache/lemma-frequency-c1-999.json": "!!"},
-        {},
-    ) == []
+    assert (
+        delegate._read_only_mutation_paths(
+            {".cache/lemma-frequency-c1-999.json": "!!"},
+            {},
+        )
+        == []
+    )
     assert delegate._read_only_ignored_mutation_paths(
         {".cache/lemma-frequency-c1-999.json": "!!"},
         {},
@@ -3164,8 +3718,8 @@ def test_read_only_dispatch_allows_harness_runtime_state(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3211,7 +3765,7 @@ def test_read_only_dispatch_allows_gitignored_cache_write(
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ignored_mutation_paths"] == [cache_path]
     assert state["last_error"] is None
-    assert state["read_only_checkout_post"][cache_path] == "!!"
+    assert state["read_only_snapshot_retention"] == "digest"
     assert (checkout / cache_path).exists()
 
 
@@ -3452,9 +4006,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     assert sibling.exists()
-    post = state["read_only_checkout_post"]
-    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in post)
 
 
 def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_worktree(
@@ -3811,12 +4364,17 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["status"] == "needs_finalize", (
-        f"unpushed commits reported {state['status']!r}; a clean dispatch with unpushed "
-        "commits must not settle as done"
+        f"unpushed commits reported {state['status']!r}; a clean dispatch with unpushed commits must not settle as done"
     )
     assert state["needs_finalize"] is True
     assert state["commits_ahead"] == 1
     assert state["worktree_dirty_on_exit"] is False
+    if unpushed_count is not None:
+        assert state["rescue_status"] == "unpushed work - needs rescue"
+        assert state["finalize_error"] == "unpushed work - needs rescue"
+    else:
+        assert state["rescue_status"] == "unpushed state unknown - needs rescue"
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
     assert rc == 1
 
 
@@ -3928,7 +4486,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     worktree = tmp_path / "worktree"
     subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "init", "--initial-branch=main", str(worktree)], check=True, capture_output=True, timeout=30)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     subprocess.run(["git", "config", "user.name", "test"], cwd=worktree, check=True, capture_output=True, timeout=30)
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
     subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
@@ -3937,7 +4497,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     subprocess.run(["git", "push", "-u", "origin", "main"], cwd=worktree, check=True, capture_output=True, timeout=30)
 
     # 1. New local branch not yet pushed to origin: returns None (cannot count / no remote ref)
-    subprocess.run(["git", "checkout", "-b", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "checkout", "-b", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     (worktree / "file.txt").write_text("hello\n", encoding="utf-8")
     subprocess.run(["git", "add", "file.txt"], cwd=worktree, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "feat: add file"], cwd=worktree, check=True, timeout=30)
@@ -3945,7 +4507,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     assert delegate._count_unpushed_commits(worktree, "feat/my-branch") is None
 
     # 2. Push branch to origin: now 0 unpushed commits
-    subprocess.run(["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 0
 
     # 3. Add 1 local commit without pushing: now 1 unpushed commit
@@ -4093,6 +4657,20 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert state["auto_finalize"]["ok"] is True
     assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
     assert pushed == ["agy/auto-finalize-test"]
+    assert created_prs == []
+    assert state["auto_finalize"]["pr_url"] is None
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
+
+    (worktree / "another.txt").write_text("more work\n", encoding="utf-8")
+    opt_in = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="agy-auto-finalize-test",
+        agent="agy",
+        branch="agy/auto-finalize-test",
+        base_branch="main",
+        open_pr=True,
+    )
+    assert opt_in.ok is True
     assert created_prs[0]["branch"] == "agy/auto-finalize-test"
     assert created_prs[0]["base_branch"] == "main"
 
@@ -4105,6 +4683,138 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         timeout=30,
     ).stdout
     assert "X-Agent: agy/auto-finalize-test" in message
+
+
+def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
+    """Git worktree on its own branch, tracking a bare origin, one base commit."""
+    origin = tmp_path / "origin.git"
+    worktree = tmp_path / "worktree"
+
+    def git(*args: str, cwd: Path = worktree) -> None:
+        subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, timeout=30)
+
+    git("init", "--bare", str(origin), cwd=tmp_path)
+    git("init", "--initial-branch=main", str(worktree), cwd=tmp_path)
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "test")
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    git("add", "README.md")
+    git("commit", "-m", "base")
+    git("remote", "add", "origin", str(origin))
+    git("push", "-u", "origin", "main")
+    git("checkout", "-b", branch)
+    return worktree
+
+
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "agy_background_task_abandoned",
+        "agy_background_task_unconfirmed",
+        "agy_background_task_canceled",
+        "agy_transcript_unbound",
+        "agy_transcript_unreadable",
+    ],
+)
+@pytest.mark.parametrize("pushed_commit_first", [False, True])
+def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    pushed_commit_first,
+    reason,
+):
+    """#8502/#8503: agy killed the worker's backgrounded pytest and exited 0.
+
+    The unfinished edits must surface as ``needs_finalize`` with the adapter's
+    reason as ``last_error`` — never be auto-committed and settled ``done``,
+    and never read as ``done`` just because an earlier commit was pushed.
+    """
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    assert reason in AGY_INCOMPLETE_RUN_REASONS
+    _sanitize_git_env_for_test(monkeypatch)
+    branch = "agy/cut-off-test"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if pushed_commit_first:
+        (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
+        for args in (["add", "wip.txt"], ["commit", "-m", "wip"], ["push", "-u", "origin", branch]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    state_path = delegate._state_path("agy-cut-off-test")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "agy-cut-off-test",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+        },
+    )
+    (worktree / "half_done.py").write_text("# unfinished\n", encoding="utf-8")
+
+    # Record rather than raise: settle swallows exceptions from this block.
+    publish_calls: list[str] = []
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: publish_calls.append("push"))
+    monkeypatch.setattr(
+        delegate,
+        "_create_auto_finalize_pr",
+        lambda *_a, **_k: publish_calls.append("pr") or "https://example.invalid/pr/1",
+    )
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": False,
+            "response": "",
+            "stderr_excerpt": (
+                f"{reason}\n"
+                "root agent idle; waiting up to 5s for 1 background task(s)\n"
+                "terminating 1 background task(s) on exit"
+            ),
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gemini-3.8-flash-high",
+            "effort": "unknown",
+            "cli_version": "1.2.8",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="agy-cut-off-test",
+            agent="agy",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["needs_finalize"] is True
+    assert state["worktree_dirty_on_exit"] is True
+    assert state["commits_ahead"] == (1 if pushed_commit_first else 0)
+    assert state.get("auto_finalize") is None
+    assert state.get("finalize_error") is None
+    assert publish_calls == []
+    assert state["last_error"] == reason
+    assert (worktree / "half_done.py").exists()
+
+
+def test_agy_interim_language_warning_is_not_an_incomplete_run():
+    """#8502 r9: a structurally complete run whose reply reads as pending only warns."""
+    from agent_runtime.adapters.agy import AGY_INTERIM_LANGUAGE_WARNING
+
+    excerpt = f"{AGY_INTERIM_LANGUAGE_WARNING}\npending-work wording: 'awaiting'"
+
+    assert delegate._worker_run_incomplete(excerpt) is False
+    assert delegate._worker_run_incomplete(f"agy_background_task_unconfirmed\n{excerpt}") is True
 
 
 @pytest.mark.parametrize(
@@ -4436,6 +5146,326 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
+def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypatch):
+    """ask-kimi --review is dispatch parsing through to the kimicc argv."""
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    from scripts.agent_runtime.adapters.kimicc import REVIEW_VERDICT_MARKER_KEY, KimiccHarness
+
+    dispatch = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-review-sources",
+            "--prompt",
+            "Review the diff and call mcp__sources__verify_word once.",
+            "--require-review-verdict",
+        ]
+    )
+    worker = delegate.build_parser().parse_args(
+        [
+            "_worker",
+            "--task-id",
+            dispatch.task_id,
+            "--agent",
+            dispatch.agent,
+            "--mode",
+            dispatch.mode,
+            "--cwd",
+            str(tmp_path),
+            *delegate._dispatch_worker_identity_flags(dispatch, dispatch.harness),
+        ]
+    )
+    grant = delegate._kimicc_read_only_review_grant(
+        harness=worker.harness,
+        mode=worker.mode,
+        require_review_verdict=worker.require_review_verdict,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode=worker.mode,
+        cwd=tmp_path,
+        model="k3",
+        task_id=worker.task_id,
+        session_id=None,
+        tool_config={"harness": worker.harness, **grant},
+    )
+    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1]
+    assert "mcp__sources__verify_words" in allowed.split(",")
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert "--strict-mcp-config" in plan.cmd
+    assert grant[REVIEW_VERDICT_MARKER_KEY] is True
+    # The wrapper runs this profile in dontAsk, not plan mode, which refuses MCP calls (#8652).
+    assert "--read-only-review" in plan.cmd
+
+    plain = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-not-a-review",
+            "--prompt",
+            "What does this function do?",
+        ]
+    )
+    assert (
+        delegate._kimicc_read_only_review_grant(
+            harness=plain.harness,
+            mode=plain.mode,
+            require_review_verdict=plain.require_review_verdict,
+        )
+        == {}
+    )
+    plain_plan = KimiccHarness().build_invocation(
+        prompt="What does this function do?",
+        mode=plain.mode,
+        cwd=tmp_path,
+        model="k3",
+        task_id=plain.task_id,
+        session_id=None,
+        tool_config={"harness": plain.harness},
+    )
+    assert "--read-only-review" not in plain_plan.cmd
+    write_review = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="workspace-write",
+        require_review_verdict=True,
+    )
+    assert write_review == {}
+
+
+def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, monkeypatch):
+    """A dispatch worktree's .mcp.json never reaches the kimicc review argv."""
+    import json
+
+    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+    from scripts.guardrails.worktree_containment import is_dispatch_worktree
+
+    # Throwaway repo: is_dispatch_worktree resolves the primary root from git,
+    # and the grant names delegate._REPO_ROOT / ".mcp.json". Both point here,
+    # never at the live checkout.
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_git_repo_for_test(repo, monkeypatch)
+    trusted = repo / ".mcp.json"
+    trusted.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "trusted-stdio"}}}),
+        encoding="utf-8",
+    )
+    worktree = repo / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
+    worktree.mkdir(parents=True)
+    malicious = worktree / ".mcp.json"
+    malicious.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio", "args": ["--forge"]}}}),
+        encoding="utf-8",
+    )
+    assert is_dispatch_worktree(worktree) is True
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+
+    grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=worktree,
+    )
+    assert grant["mcp_config_path"] == str(trusted)
+    assert grant["mcp_config_path"] != str(malicious)
+    assert grant["strict_mcp_config"] is True
+
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
+    assert str(malicious) not in plan.cmd
+    assert "--strict-mcp-config" in plan.cmd
+    # The adapter trusts only the primary .mcp.json; here the fixture repo stands in for it.
+    assert "--read-only-review" not in plan.cmd
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc.trusted_mcp_config_path", lambda: trusted)
+    trusted_plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert "--read-only-review" in trusted_plan.cmd
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}),
+        encoding="utf-8",
+    )
+    outside_grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=outside,
+    )
+    assert outside_grant["mcp_config_path"] == str(trusted)
+
+
+def test_kimicc_read_only_review_grant_refuses_missing_trusted_mcp(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    with pytest.raises(ValueError, match="trusted MCP config is missing"):
+        delegate._kimicc_read_only_review_grant(
+            harness="kimicc",
+            mode="read-only",
+            require_review_verdict=True,
+            cwd=tmp_path,
+        )
+
+
+def _kimicc_worker_result(response: str):
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+
+def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_path):
+    """The _run_worker update seam, not a hand-built grant, sets the sources tools."""
+    task_id = "worker-kimicc-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
+    ) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff and call mcp__sources__verify_word once.",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "mcp__sources__verify_words" in tool_config["allowed_tools"].split(",")
+    assert tool_config["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert tool_config["strict_mcp_config"] is True
+
+
+def test_run_worker_kimicc_review_attempt_keeps_sealed_mcp(tmp_tasks_dir, tmp_path):
+    """A sealed review-attempt config is not replaced by the kimicc grant."""
+    task_id = "worker-kimicc-sealed-review"
+    sealed = tmp_path / "sealed.mcp.json"
+    sealed.write_text('{"mcpServers":{"sources":{"url":"http://127.0.0.1/sealed"}}}\n', encoding="utf-8")
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
+    ) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff.",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+            review_id="rev-sealed",
+            attempt_id="att-sealed",
+            mcp_config_path=str(sealed),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config["mcp_config_path"] == str(sealed)
+    assert tool_config["strict_mcp_config"] is True
+    assert tool_config["review_id"] == "rev-sealed"
+    assert tool_config["attempt_id"] == "att-sealed"
+    assert "allowed_tools" not in tool_config
+
+
+def test_run_worker_kimicc_workspace_write_review_grants_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
+    task_id = "worker-kimicc-write-review"
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
+    )
+    response = (
+        "VERDICT: APPROVE\n"
+        'DELIVERABLE: {"outcome":"no_change","reason":"write mode must not receive the sources grant"}\n'
+    )
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_kimicc_worker_result(response)) as mock_invoke,
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "allowed_tools" not in tool_config
+    assert "mcp_config_path" not in tool_config
+
+
 def _codex_worker_result():
     return type(
         "_Result",
@@ -4494,7 +5524,7 @@ def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
     log = tmp_path / "fake-codex.log"
     fake = bin_dir / "codex"
     fake.write_text(
-        f"#!/bin/sh\nprintf '%s|%s\\n' \"$CODEX_HOME\" \"$*\" >> {log}\ncat {canned}\n",
+        f'#!/bin/sh\nprintf \'%s|%s\\n\' "$CODEX_HOME" "$*" >> {log}\ncat {canned}\n',
         encoding="utf-8",
     )
     fake.chmod(0o755)
@@ -4654,7 +5684,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
     # Record every invocation's argv: the dispatch-telemetry version probe legitimately
     # runs `agy --version`, so only an `mcp` call is the gate.
     fake.write_text(
-        f"#!/bin/sh\nprintf '%s|%s|%s\\n' \"$HOME\" \"$AGY_APP_DATA_DIR\" \"$*\" >> {log}\n"
+        f'#!/bin/sh\nprintf \'%s|%s|%s\\n\' "$HOME" "$AGY_APP_DATA_DIR" "$*" >> {log}\n'
         f'case "$1" in mcp) cat {canned};; *) echo 1.2.9;; esac\n',
         encoding="utf-8",
     )
@@ -4702,7 +5732,9 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert "allowed_tools" not in tool_config
     # The gate ran once, under the scoped home.
     gate_calls = [
-        line.split("|", 2) for line in log.read_text(encoding="utf-8").splitlines() if line.split("|", 2)[2] == "mcp list"
+        line.split("|", 2)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.split("|", 2)[2] == "mcp list"
     ]
     assert len(gate_calls) == 1
     assert gate_calls[0][0] == str(plan.agy_home)
@@ -5269,8 +6301,12 @@ def _make_run_stub(
             # Default dirs for sparse-checkout tests / ensure_worktree.
             # ``data/`` is listed separately so nested exclusions can drop
             # data/projects and data/lexicon while keeping sibling data dirs.
+            # The curriculum manifest cone exists so a default worktree keeps
+            # curriculum/l2-uk-en/curriculum.yaml without the rest of the tree.
             if cmd[-1:] == ["data/"]:
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
+                listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
                 listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
             return subprocess.CompletedProcess(cmd, 0, listing, "")
@@ -5302,12 +6338,21 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+    monkeypatch.setattr(
+        delegate,
+        "_run_dor_preflight",
+        lambda prompt, reason: (
+            None,
+            {"issues": [1383], "warnings": {"1383": "verify"}, "allow_warn_reason": reason},
+        ),
+    )
 
     args = argparse.Namespace(
         agent="codex",
         task_id="issue-1383-smoke",
-        prompt="Implement the fix",
+        prompt="Implement the fix for issue #1383",
         prompt_file=None,
+        allow_dor_warn="urgent repair",
         mode="danger",
         model=None,
         cwd=None,
@@ -5328,6 +6373,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["pid"] == 24680
     assert state["worktree_base_sha"] == "deadbeef"
     assert state["worktree_reused"] is False
+    assert state["dor_preflight"]["allow_warn_reason"] == "urgent repair"
     assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
     assert "delegate worktree" in recorded_prompt["text"]
     assert ".worktrees/codex-1383" in recorded_prompt["text"]
@@ -5508,6 +6554,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.delenv("PYTEST_PLUGINS", raising=False)
 
     args = argparse.Namespace(
         agent="codex",
@@ -5528,6 +6575,19 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
     env = recorded["env"]
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
     assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
+    assert env["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+
+    monkeypatch.setenv("PYTEST_PLUGINS", "already.loaded,ci.pytest_dispatch_cap")
+    args.task_id = "dispatch-marker-plugins"
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
+
+    monkeypatch.setenv("PYTEST_PLUGINS", "already.loaded")
+    args.task_id = "dispatch-marker-plugins-append"
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
 
 
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
@@ -5629,6 +6689,95 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     cmd = recorded["cmd"]
     assert isinstance(cmd, list)
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
+
+
+def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A caller that rendered its prompt to a file can prove the task ran exactly that file (R3 adjudication)."""
+
+    class _FakeProc:
+        pid = 24682
+
+        class stdin:
+            write = staticmethod(lambda _data: None)
+            close = staticmethod(lambda: None)
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("адуджикація\nline two\n", encoding="utf-8")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", "prompt-sha", "--prompt-file", str(prompt_file)]
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("prompt-sha"))
+    assert state is not None
+    assert state["prompt_sha256"] == hashlib.sha256(prompt_file.read_bytes()).hexdigest()
+
+
+def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_args):
+    """Dispatch with a fake worker; return (the state record, the prompt written to the worker's stdin)."""
+    written: list[str] = []
+
+    class _FakeProc:
+        pid = 24683
+
+        class stdin:
+            write = staticmethod(lambda data: written.append(data.decode() if isinstance(data, bytes) else data))
+            close = staticmethod(lambda: None)
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra_args]
+    )
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None
+    return state, "".join(written)
+
+
+def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The source hash covers only the caller's prompt; the effective hash covers what the worker was handed."""
+    source = hashlib.sha256(b"the source prompt").hexdigest()
+
+    # nothing appended: the effective prompt is the source prompt
+    state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
+    assert state["prompt_sha256"] == source
+    assert state["prompt_blocks"] == []
+    assert state["effective_prompt_sha256"] == source
+
+    # a read-only dispatch without --worktree (the adjudication contract) appends nothing
+    state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
+    assert state["mode"] == "read-only"
+    assert state["prompt_blocks"] == []
+    assert state["effective_prompt_sha256"] == state["prompt_sha256"] == source
+
+    # a lifecycle carrier, a worktree block and a research block, in the order they appear in the prompt
+    monkeypatch.setattr(
+        delegate, "_load_task_lifecycle_carrier", lambda raw: ({"lifecycle_id": "L"}, "\n[lifecycle carrier]\n")
+    )
+    monkeypatch.setattr(delegate, "_build_research_context", lambda args: object())
+    monkeypatch.setattr(delegate, "_resolve_research_injection", lambda ctx, task_id: ("\n[research]\n", None))
+    worktree = tmp_path / "wt"
+    worktree.mkdir()
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **kwargs: "0" * 40)
+    monkeypatch.setattr(
+        delegate,
+        "_ensure_worktree",
+        lambda **kwargs: (worktree, "codex/eff-all", {"sparse": {"full_checkout": True}, "base_sha": "0" * 40}),
+    )
+    state, worker_prompt = _dispatch_recording_the_worker_prompt(
+        tmp_path, monkeypatch, "eff-all", ["--worktree", str(worktree)]
+    )
+    assert state["prompt_sha256"] == source
+    assert state["prompt_blocks"] == ["worktree", "lifecycle", "research"]
+    assert state["effective_prompt_sha256"] == hashlib.sha256(worker_prompt.encode("utf-8")).hexdigest()
+    assert state["effective_prompt_sha256"] != source
+    assert worker_prompt.startswith("[delegate worktree]\n")
+    assert "the source prompt\n[lifecycle carrier]\n" in worker_prompt
+    assert worker_prompt.endswith("\n[research]\n")
 
 
 def test_dispatch_persists_and_forwards_output_schema(
@@ -6510,7 +7659,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     assert lines[1] == state["run_nonce"]
 
 
-def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
+def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
@@ -6916,6 +8065,27 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
     assert tasks[0]["status"] == "crashed"
 
 
+def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
+    path = delegate._state_path("race")
+    running = {"task_id": "race", "status": "running", "pid": 999_999_998, "run_nonce": "same-run"}
+    delegate._write_state_atomic(path, running)
+    observed = delegate._read_state(path)
+    done = {
+        **running,
+        "status": "done",
+        "finished_at": "2026-09-24T00:00:00+00:00",
+        "final_branch_head_commit": "completed-head",
+        "auto_finalize": {"status": "pushed"},
+        "rescue_status": "none",
+    }
+    delegate._write_state_atomic(path, done)
+
+    delegate._mark_crashed_task(path, observed, source="list")
+
+    assert observed == done
+    assert delegate._read_state(path) == done
+
+
 # ---------------------------------------------------------------------------
 # #1476 — Fix 1: fetch-before-branch (stale-base footgun)
 # ---------------------------------------------------------------------------
@@ -6954,6 +8124,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
+    assert "curriculum/l2-uk-en/lesson-plans" in set_calls[0]
     assert "wiki" not in set_calls[0]
     assert "data/projects" not in set_calls[0]
     assert "data/lexicon" not in set_calls[0]
@@ -7064,26 +8235,35 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["site/src/pages/index.astro"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["site/src/pages/index.astro"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_open_model_foundry_cli.py"],
     ) == ("data/projects",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["tests/test_open_model_data_timeouts.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["tests/test_open_model_data_timeouts.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/audit/source_inventory_intake.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/audit/source_inventory_intake.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_source_inventory_intake.py"],
@@ -7096,10 +8276,13 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/practice/noun_mechanics_engine.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
@@ -8733,6 +9916,80 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (worktree / "data" / "lexicon" / "f.txt").is_file()
 
 
+def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
+    """Default cone keeps curriculum.yaml via the evidence anchor, not the tree."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+            timeout=30,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    manifest = primary / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("levels: {}\n", encoding="utf-8")
+    arc = primary / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml"
+    arc.parent.mkdir(parents=True)
+    arc.write_text("level: a1\n", encoding="utf-8")
+    plans = primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml"
+    plans.parent.mkdir(parents=True)
+    plans.write_text("slug: x\n", encoding="utf-8")
+    other = primary / "curriculum" / "l2-uk-direct" / "manifest.yaml"
+    other.parent.mkdir(parents=True)
+    other.write_text("tracks: []\n", encoding="utf-8")
+    wiki = primary / "wiki" / "f.txt"
+    wiki.parent.mkdir(parents=True)
+    wiki.write_text("wiki\n", encoding="utf-8")
+    scripts = primary / "scripts" / "f.txt"
+    scripts.parent.mkdir(parents=True)
+    scripts.write_text("scripts\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+    assert meta["applied"] is True
+    assert "curriculum" in meta["excluded"]
+    assert "curriculum/l2-uk-en/lesson-plans" in meta["included_dirs"]
+    assert (worktree / "curriculum" / "l2-uk-en" / "curriculum.yaml").is_file()
+    assert (worktree / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml").is_file()
+    assert not (worktree / "curriculum" / "l2-uk-en" / "plans").exists()
+    assert not (worktree / "curriculum" / "l2-uk-direct").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+    assert (primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml").is_file()
+
+
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
     """A missing worktree is "cannot count", not an exception.
 
@@ -8929,6 +10186,240 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
     )
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
     return primary.resolve(), worktree.resolve(), branch
+
+
+def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
+    from scripts.orchestration import reap_worktrees
+
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test")
+    origin = tmp_path / "origin.git"
+    subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "remote", "add", "origin", str(origin)], cwd=primary, check=True, capture_output=True, timeout=30
+    )
+    subprocess.run(
+        ["git", "push", "origin", "HEAD:refs/heads/main"], cwd=primary, check=True, capture_output=True, timeout=30
+    )
+    if dirty:
+        (worktree / "artifact.txt").write_text("work to preserve\n", encoding="utf-8")
+    else:
+        (worktree / "artifact.txt").write_text("committed work\n", encoding="utf-8")
+        subprocess.run(["git", "add", "artifact.txt"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        subprocess.run(["git", "commit", "-m", "work"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _root: set())
+    state_path = delegate._state_path("rescue-test")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "rescue-test",
+            "agent": "cursor",
+            "status": "needs_finalize",
+            "finished_at": "2020-01-01T00:00:00Z",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_reused": False,
+        },
+    )
+    return primary, worktree, origin, state_path
+
+
+@pytest.mark.parametrize("dirty", [True, False])
+def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=dirty)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    state = delegate._read_state(state_path)
+    assert state["rescue_ref"] == "rescue/rescue-test"
+    assert state["rescue_head_commit"] == result["head"]
+    remote = subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    assert remote.startswith(result["head"])
+    assert worktree.exists()
+    if not dirty:
+        repeated = delegate._rescue_task(state_path, apply=True)
+        assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
+
+
+def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args: None)
+
+    result = delegate._rescue_task(state_path, apply=False)
+
+    assert result["action"] == "skipped"
+    assert result["reason"] == "ahead count unavailable"
+
+
+def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    original = delegate._rescue_git
+
+    def fail_push(path, *args, **kwargs):
+        if args[0] == "push":
+            return subprocess.CompletedProcess(["git", *args], 1, "", "failure")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", fail_push)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "error"
+    assert worktree.exists()
+    assert delegate._read_state(state_path).get("rescue_ref") is None
+
+
+def test_rescue_large_file_and_live_task_are_preserved(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    (worktree / "large.bin").write_bytes(b"x" * (5 * 1024 * 1024 + 1))
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "files exceed 5 MB"
+    assert worktree.exists()
+    state = delegate._read_state(state_path)
+    state["status"] = "running"
+    delegate._write_state_atomic(state_path, state)
+    assert delegate._rescue_task(state_path, apply=True)["reason"] == "task is not terminal non-success"
+
+
+def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    (worktree / "artifact.txt").unlink()
+    junk = worktree / "__pycache__" / "scratch.pyc"
+    junk.parent.mkdir()
+    junk.write_bytes(b"scratch")
+    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "cleaned", result
+    assert delegate._worktree_is_dirty(worktree) is False
+    assert not junk.exists()
+    assert not subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+
+
+def test_rescue_cleans_junk_then_preserves_unpushed_commit(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    junk = worktree / "__pycache__" / "scratch.pyc"
+    junk.parent.mkdir()
+    junk.write_bytes(b"scratch")
+    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    assert not junk.exists()
+    assert delegate._worktree_is_dirty(worktree) is False
+    assert delegate._read_state(state_path)["rescue_head_commit"] == result["head"]
+
+
+def test_rescue_refuses_branch_changed_since_task_exit(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    subprocess.run(["git", "switch", "-c", "other-work"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "worktree branch differs from task record"
+    assert (worktree / "artifact.txt").exists()
+
+
+def test_rescue_refuses_active_lease_on_terminal_record(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    state = delegate._read_state(state_path)
+    state["lease"] = {"state": "active"}
+    delegate._write_state_atomic(state_path, state)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "task lease active"
+    assert (worktree / "artifact.txt").exists()
+
+
+def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=False)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["candidate"] == 1
+    assert not subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    state = delegate._read_state(state_path)
+    state["finished_at"] = datetime.now(UTC).isoformat()
+    delegate._write_state_atomic(state_path, state)
+    assert delegate.cmd_rescue(args) == 0
+    assert json.loads(capsys.readouterr().out)["tasks"] == []
+    assert worktree.exists()
+
+
+def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    from scripts.orchestration import dispatch_settle as ds
+
+    primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(state_path)
+    state.update({"status": "running", "pid": 999_999_998, "finished_at": None})
+    delegate._write_state_atomic(state_path, state)
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: tmp_path / "ownership.sqlite3")
+    monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
+
+    result = ds.settle_task("rescue-test", repo_root=primary, task_dir=tmp_tasks_dir, release_stale=False)
+
+    settled = delegate._read_state(state_path)
+    head = delegate._resolve_sha(worktree)
+    assert result.status == "failed"
+    assert settled["finished_at"]
+    assert settled["final_branch_head_commit"] == head
+    assert delegate.cmd_rescue(argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=False)) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["candidate"] == 1
+    assert report["tasks"][0]["head"] == head
+
+
+def test_rescue_all_stale_reports_unaged_terminal_record(tmp_tasks_dir, capsys):
+    delegate._write_state_atomic(delegate._state_path("no-finish"), {"task_id": "no-finish", "status": "failed"})
+    delegate._state_path("unreadable").write_text("{broken", encoding="utf-8")
+    assert delegate.cmd_rescue(argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=False)) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["skipped"] == 2
+    assert report["tasks"] == [
+        {"task_id": "no-finish", "action": "skipped", "reason": "no finished_at"},
+        {"task_id": "unreadable", "action": "skipped", "reason": "unreadable task state"},
+    ]
+
+
+def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (worktree / "later.txt").write_text("more work\n", encoding="utf-8")
+
+    def forbidden_push(_worktree, _branch):
+        pytest.fail("exit must not auto-push existing unpushed commits")
+
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", forbidden_push)
+    with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+        rc = delegate._run_worker(
+            task_id="rescue-test",
+            agent="cursor",
+            prompt="finish",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+        )
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "needs_finalize"
+    assert state["rescue_status"] == "unpushed state unknown - needs rescue"
+    assert state["auto_finalize"] is None
+    assert (worktree / "later.txt").exists()
 
 
 def _branch_ref_present(primary: Path, branch: str) -> bool:
@@ -9358,10 +10849,10 @@ def _delegate_claim_refusal(worktree, *, task_id):
     """Run the shared claim scan over delegate's task records, exempting ``task_id``."""
     return worktree_claims.active_worktree_claim_refusal(
         worktree,
-        tasks_dir=delegate._TASKS_DIR,
+        tasks_dir=delegate.tasks_dir(),
         repo_root=delegate._REPO_ROOT,
         owner_task_id=task_id,
-        owner_state_file=worktree_claims.task_record_path(delegate._TASKS_DIR, task_id),
+        owner_state_file=worktree_claims.task_record_path(delegate.tasks_dir(), task_id),
     )
 
 
@@ -10840,6 +12331,75 @@ def test_interrupt_fallback_records_the_complete_outcome(
     assert state["returncode"] == 0
     assert state.get("finished_at")
     assert isinstance(state.get("duration_s"), float)
+
+
+def test_interrupt_fallback_records_rescue_status_after_unpushed_telemetry(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A checkpoint interrupt must retain the measured unpushed-work verdict."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-unpushed")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "interrupt-unpushed",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+            "worktree_branch": "codex/interrupt-unpushed",
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "committed work",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+    real_write = delegate._write_state_atomic
+    interrupted = False
+
+    def interrupt_checkpoint(path, state):
+        nonlocal interrupted
+        if not interrupted and "duration_s" in state:
+            interrupted = True
+            raise KeyboardInterrupt("SIGTERM at the checkpoint")
+        return real_write(path, state)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_count_unpushed_commits", return_value=1),
+        patch.object(delegate, "_write_state_atomic", side_effect=interrupt_checkpoint),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-unpushed",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert interrupted
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["rescue_status"] == "unpushed work - needs rescue"
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(tmp_path)
 
 
 # ---------------------------------------------------------------------------

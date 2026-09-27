@@ -104,4 +104,13 @@ describe('DivideWords — grapheme-aware splitting', () => {
     await user.click(submitBtn(container));
     expect(feedbackText(container)).toContain('Правильно!');
   });
+
+  test('renders explanation when provided after submitting', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <DivideWords items={[{ word: 'рак', answer: 'рак', explanation: 'Один склад.' }]} />,
+    );
+    await user.click(submitBtn(container));
+    expect(feedbackText(container)).toContain('Один склад.');
+  });
 });

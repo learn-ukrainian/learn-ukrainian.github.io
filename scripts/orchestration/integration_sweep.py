@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.gh_merge_queue_status import GRAPHQL_PR_MQ_QUERY
+from scripts.github_check_rollup import group_collapsed_by_name
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -153,34 +154,46 @@ def lookup_verdict(
     return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start, tuple(untrusted))
 
 
+def _check_row_kind(row: Mapping[str, Any]) -> str:
+    """Return ``red``, ``pending``, ``unknown``, or ``green`` for one surviving row."""
+    status = str(row.get("status") or row.get("state") or "").upper()
+    outcome = str(row.get("conclusion") or row.get("state") or "").upper()
+    if not status and not outcome:
+        return "unknown"
+    if status not in {"COMPLETED", "SUCCESS", "FAILURE", "ERROR"}:
+        return "pending"
+    if outcome not in SUCCESSFUL:
+        return "red" if outcome else "pending"
+    return "green"
+
+
 def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CHECKS) -> list[str]:
+    """Block when any row that survives the shared collapse is red or pending.
+
+    A missing rollup or a non-check value is still ``CI unknown``. Timestamp
+    ties and same-named jobs from different workflows are not collapsed to one
+    winner: one red or pending survivor fails that name.
+    """
     checks = pr.get("statusCheckRollup")
     if not isinstance(checks, list):
         return ["CI unknown"]
-    grouped: dict[str, list[Mapping[str, Any]]] = {}
-    for check in checks:
-        if not isinstance(check, Mapping):
-            return ["CI unknown"]
-        name = check.get("name") or check.get("context")
-        if isinstance(name, str) and name != "fleet/cross-family-review":
-            grouped.setdefault(name, []).append(check)
+    if any(not isinstance(check, Mapping) for check in checks):
+        return ["CI unknown"]
+    named, _other = group_collapsed_by_name(list(checks))
+    grouped = {name: rows for name, rows in named.items() if name != "fleet/cross-family-review"}
     blockers = []
     for name in set(required) | set(grouped):
         versions = grouped.get(name, [])
         if not versions:
             blockers.append(f"CI pending {name}")
             continue
-        dated = [(_timestamp(item.get("startedAt") or item.get("createdAt")), item) for item in versions]
-        if any(timestamp is None for timestamp, _ in dated):
-            blockers.append(f"CI unknown {name}")
-            continue
-        latest = max(dated, key=lambda pair: pair[0])[1]
-        status = str(latest.get("status") or latest.get("state") or "").upper()
-        outcome = str(latest.get("conclusion") or latest.get("state") or "").upper()
-        if status not in {"COMPLETED", "SUCCESS", "FAILURE", "ERROR"}:
+        kinds = {_check_row_kind(row) for row in versions}
+        if "red" in kinds:
+            blockers.append(f"CI red {name}")
+        elif "pending" in kinds:
             blockers.append(f"CI pending {name}")
-        elif outcome not in SUCCESSFUL:
-            blockers.append(f"CI red {name}" if outcome else f"CI pending {name}")
+        elif "unknown" in kinds:
+            blockers.append(f"CI unknown {name}")
     return sorted(blockers)
 
 

@@ -8,7 +8,7 @@ hermes the same way they route through codex/gemini.
 
 Invocation pattern:
     .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-hermes <content> \\
-      --task-id <task> --model deepseek-v4-flash
+      --task-id <task> --model deepseek-v4.1-flash
 
 Under the hood: hermes -z "<content>" -m <model>
 
@@ -63,7 +63,7 @@ from .routing_guard import assert_model_routing_allowed
 # previous default (qwen/qwen3.6-plus) violated the
 # standing qwen exclusion — every bare ask-hermes silently burned the banned
 # model (deepseek review 2026-07-05, PR #4473 finding 1).
-HERMES_DEFAULT_MODEL = "deepseek-v4-flash"
+HERMES_DEFAULT_MODEL = "deepseek-v4.1-flash"
 HERMES_DEFAULT_TIMEOUT_S = 900  # 15 min — adversarial reviews can be long
 
 

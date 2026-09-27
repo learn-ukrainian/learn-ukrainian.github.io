@@ -106,7 +106,9 @@ def validate_observed_schema(doc: Any, obs_path: Path, *, repo_root: Path | None
     if errors:
         first = errors[0]
         path_str = ".".join(str(p) for p in first.absolute_path) or "root"
-        raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} breaks schema at {path_str}: {first.message}")
+        raise DigestError(
+            codes.OBSERVED_INVALID, f"observed file {obs_path} breaks schema at {path_str}: {first.message}"
+        )
 
 
 def validate_resolutions_schema(doc: Any, res_path: Path, *, repo_root: Path | None = None) -> None:
@@ -116,4 +118,18 @@ def validate_resolutions_schema(doc: Any, res_path: Path, *, repo_root: Path | N
     if errors:
         first = errors[0]
         path_str = ".".join(str(p) for p in first.absolute_path) or "root"
-        raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} breaks schema at {path_str}: {first.message}")
+        raise DigestError(
+            codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} breaks schema at {path_str}: {first.message}"
+        )
+
+
+def validate_provenance_schema(doc: Any, prov_path: Path, *, repo_root: Path | None = None) -> None:
+    """Validate provenance document against lesson-provenance-v1.schema.json."""
+    validator = get_cached_validator("lesson-provenance-v1.schema.json", repo_root)
+    errors = sorted(validator.iter_errors(doc), key=lambda e: [str(p) for p in e.absolute_path])
+    if errors:
+        first = errors[0]
+        path_str = ".".join(str(p) for p in first.absolute_path) or "root"
+        raise DigestError(
+            codes.PROVENANCE_INVALID, f"provenance file {prov_path} breaks schema at {path_str}: {first.message}"
+        )

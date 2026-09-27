@@ -18,6 +18,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.github_check_rollup import collapse_status_rollup
 from scripts.orchestration import task_identity, task_lifecycle
 
 Runner = Callable[[list[str], str | None], str]
@@ -67,6 +68,70 @@ def _default_runner(repo_root: Path) -> Runner:
 
     return run
 
+
+
+_TERMINAL_CONCLUSIONS = frozenset(
+    {
+        "SUCCESS",
+        "FAILURE",
+        "ERROR",
+        "CANCELLED",
+        "NEUTRAL",
+        "SKIPPED",
+        "TIMED_OUT",
+        "ACTION_REQUIRED",
+        "STALE",
+    }
+)
+_CHECK_IDENTITY_FIELDS = (
+    "workflowName",
+    "appSlug",
+    "startedAt",
+    "completedAt",
+    "createdAt",
+    "updatedAt",
+    "context",
+)
+
+
+def project_closeout_checks(rollup: list[Any]) -> list[Any]:
+    """Keep workflow and timestamps, then the latest row of each check identity.
+
+    Collapse runs on the raw rollup so a status context stays a status context.
+    Copying ``context`` into ``name`` first would hide ``updatedAt`` from the
+    shared timestamp helper.
+    """
+    checks: list[dict[str, Any]] = []
+    for raw in collapse_status_rollup(list(rollup)):
+        if not isinstance(raw, dict):
+            checks.append(raw)
+            continue
+        typename = raw.get("__typename")
+        if typename == "CheckRun" or (not typename and raw.get("name") and not raw.get("context")):
+            conclusion = str(raw.get("conclusion") or "").upper()
+            status = str(raw.get("status") or "").upper()
+            if not status and conclusion in _TERMINAL_CONCLUSIONS:
+                status = "COMPLETED"
+            row = {
+                "name": raw.get("name"),
+                "status": status,
+                "conclusion": conclusion,
+                "url": raw.get("detailsUrl"),
+            }
+        else:
+            state = str(raw.get("state") or raw.get("conclusion") or "").upper()
+            row = {
+                "name": raw.get("context") or raw.get("name"),
+                "status": "COMPLETED" if state in _TERMINAL_CONCLUSIONS else "IN_PROGRESS",
+                "conclusion": state,
+                "url": raw.get("targetUrl") or raw.get("detailsUrl"),
+            }
+        for field in _CHECK_IDENTITY_FIELDS:
+            value = raw.get(field)
+            if isinstance(value, str) and value.strip():
+                row[field] = value
+        checks.append(row)
+    return checks
 
 
 class GhGitHubAdapter:
@@ -187,28 +252,7 @@ class GhGitHubAdapter:
                 "closingIssuesReferences",
             ]
         )
-        checks: list[dict[str, Any]] = []
-        for raw in pr.get("statusCheckRollup") or []:
-            typename = raw.get("__typename")
-            if typename == "CheckRun":
-                checks.append(
-                    {
-                        "name": raw.get("name"),
-                        "status": str(raw.get("status") or "").upper(),
-                        "conclusion": str(raw.get("conclusion") or "").upper(),
-                        "url": raw.get("detailsUrl"),
-                    }
-                )
-            else:
-                state = str(raw.get("state") or "").upper()
-                checks.append(
-                    {
-                        "name": raw.get("context") or raw.get("name"),
-                        "status": "COMPLETED" if state in {"SUCCESS", "FAILURE", "ERROR"} else "IN_PROGRESS",
-                        "conclusion": state,
-                        "url": raw.get("targetUrl"),
-                    }
-                )
+        checks = project_closeout_checks(pr.get("statusCheckRollup") or [])
         auto = pr.get("autoMergeRequest") or {}
         merge_commit = pr.get("mergeCommit") or {}
         closing_references = pr.get("closingIssuesReferences")

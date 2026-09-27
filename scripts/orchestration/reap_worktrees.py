@@ -14,15 +14,18 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import contextvars
 import fcntl
 import json
 import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import time
+from collections.abc import Iterator
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -42,7 +45,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -96,6 +99,9 @@ class ReapResult:
     branch_pruned: bool = False
     recovery_ref: str | None = None
     owner: str | None = None
+    # Report-only findings (#8663): kind, evidence, and a "verify first:"
+    # removal command a human runs; the reaper never acts on them.
+    needs_attention: dict[str, Any] | None = None
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -106,16 +112,62 @@ def sanitized_git_env() -> dict[str, str]:
     }
 
 
+# While set, every ``_run`` call without an explicit timeout inherits this
+# per-call cap. ``_reap_qualified_worktree`` sets it for the region in which
+# it holds delegate's per-worktree lock (#8748).
+_LOCKED_GIT_BUDGET_S: contextvars.ContextVar[float | None] = contextvars.ContextVar(
+    "reap_worktrees_locked_git_budget_s",
+    default=None,
+)
+# Monotonic deadline (``time.monotonic()`` seconds) for that same region.
+# Every call's timeout is also clipped to the time left on this deadline.
+_LOCKED_REGION_DEADLINE: contextvars.ContextVar[float | None] = contextvars.ContextVar(
+    "reap_worktrees_locked_region_deadline",
+    default=None,
+)
+
+
+def _remaining_locked_s() -> float | None:
+    """Seconds left on the locked-region deadline, or ``None`` outside it."""
+    deadline = _LOCKED_REGION_DEADLINE.get()
+    if deadline is None:
+        return None
+    return max(0.0, deadline - time.monotonic())
+
+
+def _effective_timeout(timeout: float | None) -> float | None:
+    """Per-call cap, clipped to the locked-region deadline when one is active."""
+    if timeout is None:
+        timeout = _LOCKED_GIT_BUDGET_S.get()
+    remaining = _remaining_locked_s()
+    if remaining is None:
+        return timeout
+    if timeout is None:
+        return remaining
+    return min(timeout, remaining)
+
+
+def _locked_call_timeout(cap: float) -> float:
+    """``cap`` clipped to the time left on the locked-region deadline."""
+    remaining = _remaining_locked_s()
+    if remaining is None:
+        return cap
+    return min(cap, remaining)
+
+
 def _run(
     args: list[str],
     *,
     cwd: Path,
-    timeout: int | None = None,
+    timeout: float | None = None,
     env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    timeout = _effective_timeout(timeout)
+    if timeout is not None and timeout <= 0:
+        raise subprocess.TimeoutExpired(args, 0)
     return subprocess.run(
         args,
         cwd=cwd,
@@ -125,6 +177,40 @@ def _run(
         timeout=timeout,
         env=env,
     )
+
+
+@contextlib.contextmanager
+def _bounded_locked_git() -> Iterator[None]:
+    """Bound git while delegate's per-worktree lock is held (#8748).
+
+    Two limits, and only these:
+
+    * A call that passes no timeout is capped at :data:`_LOCKED_GIT_TIMEOUT_S`
+      (5s). A call that passes one keeps that cap.
+    * The whole region shares one monotonic deadline of
+      :func:`_locked_region_budget_s` (``DEFAULT_LOCK_TIMEOUT_S`` minus
+      :data:`_LOCKED_REGION_MARGIN_S`). Every call, including one with its
+      own cap, receives at most the time left. When none is left the call
+      raises :class:`subprocess.TimeoutExpired` and the caller skips — it
+      does not delete.
+
+    Network probes (``git ls-remote``, ``gh``, :func:`_merged_origin_gone_proof`)
+    run before this context. Under it, those results are re-checked with
+    local git only (``rev-parse``, ``merge-base``). The context ends before
+    ``git worktree remove``. Removal keeps its own
+    :data:`worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S` (120s) and is not
+    clipped to the time left here: a fraction of a second is enough to kill
+    ``git worktree remove --force`` mid-delete. A dispatch waiting on the
+    lock that hits its 30s timeout retries. Branch prune is also outside
+    this bound.
+    """
+    budget_token = _LOCKED_GIT_BUDGET_S.set(_LOCKED_GIT_TIMEOUT_S)
+    deadline_token = _LOCKED_REGION_DEADLINE.set(time.monotonic() + _locked_region_budget_s())
+    try:
+        yield
+    finally:
+        _LOCKED_REGION_DEADLINE.reset(deadline_token)
+        _LOCKED_GIT_BUDGET_S.reset(budget_token)
 
 
 def resolve_repo_root(cwd: Path | None = None) -> Path:
@@ -237,8 +323,12 @@ def parse_worktree_porcelain(output: str) -> list[WorktreeInfo]:
     return entries
 
 
-def list_git_worktrees(repo_root: Path) -> list[WorktreeInfo]:
-    proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root)
+def list_git_worktrees(repo_root: Path, *, timeout: float | None = None) -> list[WorktreeInfo]:
+    """List registered worktrees; an expired ``timeout`` raises :class:`RuntimeError`."""
+    try:
+        proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git worktree list timed out after {exc.timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git worktree list failed: {_format_failure(proc)}")
     return parse_worktree_porcelain(proc.stdout or "")
@@ -256,13 +346,17 @@ def is_under_worktrees(repo_root: Path, path: Path) -> bool:
     return True
 
 
-def _worktree_clean(path: Path) -> bool | None:
+def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     """Return True when the worktree has no meaningful dirty files.
 
     Dispatch workers often leave an untracked ``.venv`` (or nested site
-    venv) which must not block reaping multi-hundred-MB trees.
+    venv) which must not block reaping multi-hundred-MB trees. Callers
+    holding delegate's per-worktree lock pass
+    :data:`_LOCKED_GIT_STATUS_TIMEOUT_S` so a wedged ``git status``
+    surfaces as :class:`subprocess.TimeoutExpired` (a skip) instead of
+    holding the lock (#8748).
     """
-    proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path)
+    proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path, timeout=timeout)
     if proc.returncode != 0:
         return None
     ignored_prefixes = (".venv/", ".venv", "node_modules/", "node_modules")
@@ -1037,12 +1131,48 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
 
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # Minimum age for a zero-file dispatch husk before it may be removed.
 # ``delegate.py`` creates the dispatch directory before ``git worktree add``
 # registers it, so an unregistered empty directory can be mid-creation; the
 # provisioning window is seconds, and one hour bounds it with a wide margin
 # while still reaping same-day debris.
 _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
+# How long the husk sweep waits for the per-path worktree lock before it
+# skips. ``git worktree add`` writes its admin registration
+# (``.git/worktrees/<name>/gitdir``) before ``.git`` appears in the target,
+# so the sweep's listing snapshot can predate a registration that is already
+# committed (#8711); the final re-check runs under the same lock dispatch
+# holds. A dispatch add holds that lock only briefly at this granularity, so
+# a short wait bounds the sweep without stalling it.
+_DISPATCH_HUSK_LOCK_TIMEOUT_S = 10.0
+# Per-call cap for a git command that passes no timeout while a per-worktree
+# lock is held: the husk removal's locked re-check, and every otherwise
+# unbounded git call inside :func:`_bounded_locked_git`. A hung ``git worktree
+# list`` would otherwise hold that lock indefinitely and a waiting dispatch
+# would fail on its own 30s lock timeout (#8748); an expired bound skips.
+_LOCKED_GIT_TIMEOUT_S = 5.0
+# Per-call cap for the tree-walking git calls in the qualified-reap locked
+# region: ``git status --porcelain -uall`` and the preserve ``git add`` /
+# ``git commit``. Measured 0.31s on a 283MB dispatch worktree (#8748
+# follow-up). This cap is still clipped by the region deadline below.
+_LOCKED_GIT_STATUS_TIMEOUT_S = 15.0
+# The locked region must finish inside a dispatch's
+# ``worktree_claims.DEFAULT_LOCK_TIMEOUT_S`` wait (30s) and still leave this
+# margin so the holder releases the lock before the waiter gives up.
+_LOCKED_REGION_MARGIN_S = 5.0
+# A preserve ``git add``/``git commit`` killed under the lock can leave
+# ``<admin>/index.lock``. A later sweep names a lock this old when no live
+# process has it open. The reaper never deletes the lock itself.
+_STALE_INDEX_LOCK_MIN_AGE_S = 600.0
+
+
+def _locked_region_budget_s() -> float:
+    """Seconds the qualified-reap locked region may hold the per-worktree lock.
+
+    ``worktree_claims.DEFAULT_LOCK_TIMEOUT_S`` minus :data:`_LOCKED_REGION_MARGIN_S`.
+    """
+    return max(0.0, worktree_claims.DEFAULT_LOCK_TIMEOUT_S - _LOCKED_REGION_MARGIN_S)
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -1099,9 +1229,19 @@ def _acp_dead_owner_reason(
 
 
 def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Re-prove every ACP runtime precondition immediately before deletion."""
+    """Re-prove every ACP runtime precondition immediately before deletion.
+
+    Runs under delegate's per-worktree lock, so the listing inherits the
+    locked-git budget (:func:`_bounded_locked_git`); a wedged or failed
+    listing is a skip reason here, never an exception escaping the guard
+    (#8748).
+    """
     fresh: WorktreeInfo | None = None
-    for current in list_git_worktrees(repo_root):
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except RuntimeError as exc:
+        return f"acp runtime worktree list unavailable during cleanup ({exc})"
+    for current in worktrees:
         if current.path.resolve() == info.path.resolve():
             fresh = current
             break
@@ -1120,6 +1260,71 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
     if not holds_only_git_pointer(info.path):
         return "acp runtime worktree gained files during cleanup"
     return None
+
+
+def _names_path(claimed: object, path: Path) -> bool:
+    """True when ``claimed`` is a non-empty path string resolving to ``path``."""
+    if not isinstance(claimed, str) or not claimed:
+        return False
+    try:
+        return Path(claimed).resolve() == path.resolve()
+    except (OSError, RuntimeError):
+        return False
+
+
+def _initializing_leftover_result(repo_root: Path, info: WorktreeInfo) -> ReapResult | None:
+    """Report-only class (#8663): a worktree dispatch's stopped ``git worktree add`` left.
+
+    Applies to a worktree git still locks ``initializing`` whose dispatch
+    task record carries the ``worktree_prep`` reservation for this path.
+    Such a worktree is never removed, unlocked or pruned automatically:
+    every ownership proof tried for that left a race in which a foreign or
+    completed worktree qualified. While the reserving dispatch may still be
+    running its add, the result says so; otherwise it is
+    ``needs_attention: initializing_leftover`` with the evidence and a
+    removal command marked "verify first:"; each pass journals it as a
+    ``needs_attention`` event. Returns ``None`` for any other worktree.
+    """
+    if info.locked_reason != _GIT_INITIALIZING_LOCK_REASON:
+        return None
+    task_id = _dispatch_task_id(repo_root, info)
+    payload = _task_record(repo_root, task_id)
+    prep = payload.get("worktree_prep") if payload is not None else None
+    if payload is None or not isinstance(prep, dict) or not _names_path(prep.get("path"), info.path):
+        return None
+    owner = _dispatch_owner(repo_root, info)
+    status = payload.get("status")
+    if status in ("running", "spawning") and not worktree_prep.is_orphaned_prep_record(payload):
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"active dispatch task-id={task_id} status={status}: git worktree add may still be running",
+            dirty=None,
+            owner=owner,
+        )
+    command = worktree_prep.verify_first_command(repo_root, info.path)
+    finding = {
+        "kind": worktree_prep.LEFTOVER_KIND,
+        "task_id": task_id,
+        "task_status": status,
+        "worktree_prep": prep,
+        "evidence": worktree_prep.leftover_evidence(prep, info.path),
+        "command": command,
+    }
+    reason = (
+        f"needs_attention: {worktree_prep.LEFTOVER_KIND}; task-id={task_id} status={status}; "
+        f"git worktree add left this worktree locked 'initializing'; never removed automatically; {command}"
+    )
+    return ReapResult(
+        path=str(info.path),
+        branch=info.branch,
+        action="skipped",
+        reason=reason,
+        dirty=None,
+        owner=owner,
+        needs_attention=finding,
+    )
 
 
 def _tree_has_any_file_or_symlink(root: Path) -> bool:
@@ -1169,6 +1374,99 @@ def _tree_newest_age_hours(root: Path, now: float | None = None) -> float | None
     return ((now or time.time()) - newest) / 3600
 
 
+def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
+    """Worktree paths named by a ``.git/worktrees/*/gitdir`` registration.
+
+    ``git worktree add`` writes this admin entry before ``.git`` appears in
+    the target directory, and ``git worktree list --porcelain`` can lag it
+    (#8711), so the locked re-check reads the admin directory directly. Each
+    ``gitdir`` file holds the path of the target's ``.git`` file; git 2.48+
+    can record it relative (``worktree.useRelativePaths`` /
+    ``--relative-paths``), resolved the way git resolves it — against the
+    admin entry's own directory. Only a proven absence
+    (``FileNotFoundError``/``NotADirectoryError``) reads as "no
+    registrations"; every other read failure raises: the caller fails closed.
+    """
+    registered: set[Path] = set()
+    admin_dir = common_git_dir / "worktrees"
+    # ``iterdir()`` directly: ``is_dir()`` also answers False on EACCES, which
+    # would read an untraversable admin dir as "no registrations" (#8748).
+    try:
+        entries = list(admin_dir.iterdir())
+    except (FileNotFoundError, NotADirectoryError):
+        return registered
+    except OSError as exc:
+        raise RuntimeError(f"git worktree admin dir {admin_dir} unreadable: {exc}") from exc
+    for entry in entries:
+        gitdir = entry / "gitdir"
+        # Only a proven absence skips an entry; ``Path.is_file()`` would also
+        # turn an untraversable entry into "no registration" on interpreters
+        # that swallow EACCES (#8748).
+        try:
+            raw = gitdir.read_text(encoding="utf-8", errors="surrogateescape").strip()
+        except (FileNotFoundError, NotADirectoryError):
+            continue
+        except OSError as exc:
+            raise RuntimeError(f"git worktree registration {gitdir} unreadable: {exc}") from exc
+        if not raw:
+            continue
+        target = Path(raw)
+        if not target.is_absolute():
+            target = entry / target
+        registered.add(target.parent.resolve())
+    return registered
+
+
+def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path) -> str | None:
+    """Re-check registration and emptiness under delegate's per-path lock, then remove (#8711).
+
+    Dispatch holds :func:`worktree_claims.worktree_lock` for the target path
+    across its whole ``git worktree add``, so while this holds the same lock
+    no add can be mid-registration: either the add registered first (and the
+    fresh re-check below sees it) or it waits and then finds the directory
+    gone. Returns a skip reason, or ``None`` after the husk was removed.
+    Raises :class:`worktree_claims.WorktreeLockError` when the lock is not
+    taken and :class:`RuntimeError` when a re-check probe fails or a git call
+    outlives ``_LOCKED_GIT_TIMEOUT_S``; the caller turns both into a skip,
+    never a removal.
+
+    The lock directory comes from the strict
+    :func:`worktree_claims.control_plane_root`, like
+    :func:`_enter_dispatch_worktree_guard`: a mutating caller must refuse
+    when the fleet catalog is unreadable, never fall back to the local
+    checkout — delegate holds the lock on the public primary for a
+    ``--repo`` sibling, so locking anywhere else would not exclude it
+    (#8711 review). A lock directory that cannot be resolved is reported
+    with the guard's :data:`worktree_claims.LOCK_UNAVAILABLE` reason.
+    """
+    try:
+        control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+        lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
+    except RuntimeError as exc:
+        return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
+    common_git_dir = _common_git_dir(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)
+    with worktree_claims.worktree_lock(child, lock_dir=lock_dir, timeout_s=_DISPATCH_HUSK_LOCK_TIMEOUT_S):
+        listing = {info.path for info in list_git_worktrees(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)}
+        if resolved in listing:
+            return "path registered as a git worktree during the locked re-check; a concurrent add claimed it"
+        admin_registered = _admin_registered_worktree_paths(common_git_dir)
+        if resolved in admin_registered:
+            return "path registered in .git/worktrees/*/gitdir during the locked re-check; a concurrent add claimed it"
+        if _tree_has_any_file_or_symlink(resolved):
+            return "files appeared in the husk during the locked re-check; treating as in use"
+        age_hours = _tree_newest_age_hours(resolved)
+        if age_hours is None:
+            raise RuntimeError(f"could not determine husk age during the locked re-check: {resolved}")
+        if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+            return (
+                f"empty placeholder husk is only {age_hours:.1f}h old "
+                f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum) at the locked re-check; treating as in use"
+            )
+        target = assert_delete_target(child, repo_root=repo_root)
+        shutil.rmtree(target)
+    return None
+
+
 def _reap_dispatch_husks(
     repo_root: Path,
     *,
@@ -1187,7 +1485,11 @@ def _reap_dispatch_husks(
     rule. Every other guard fails closed too: an unavailable process-CWD
     probe, a live process cwd inside, or a youngest-mtime age below
     ``_DISPATCH_HUSK_MIN_AGE_HOURS`` (measured across the whole subtree, so a
-    directory still being provisioned is never "old") all preserve.
+    directory still being provisioned is never "old") all preserve. The
+    removal itself runs under delegate's per-path worktree lock with a fresh
+    registration re-check (#8711): the ``registered`` snapshot this sweep was
+    called with can predate a concurrent ``git worktree add``, which writes
+    its admin registration before ``.git`` appears in the target.
     """
     results: list[ReapResult] = []
     dispatch_root = repo_root / ".worktrees" / "dispatch"
@@ -1303,8 +1605,31 @@ def _reap_dispatch_husks(
                 pr=None,
             )
             try:
-                target = assert_delete_target(child, repo_root=repo_root)
-                shutil.rmtree(target)
+                refusal = _remove_dispatch_husk_locked(repo_root, child=child, resolved=resolved)
+            except worktree_claims.WorktreeLockError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"{worktree_claims.lock_refusal(exc)} ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
+            except RuntimeError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"husk registration re-check failed closed ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
             except (ValueError, OSError) as exc:
                 results.append(
                     ReapResult(
@@ -1315,6 +1640,18 @@ def _reap_dispatch_husks(
                         dirty=False,
                         owner=owner,
                         error=str(exc),
+                    )
+                )
+                continue
+            if refusal is not None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=refusal,
+                        dirty=False,
+                        owner=owner,
                     )
                 )
                 continue
@@ -1340,7 +1677,7 @@ def classify_preservation(result: ReapResult) -> str:
             return "permission_error"
         return "error"
     reason = result.reason.lower()
-    if reason.startswith("needs_attention;"):
+    if result.needs_attention is not None or reason.startswith(("needs_attention;", "needs_attention:")):
         return "needs_attention"
     if "permission" in reason or "denied" in reason:
         return "permission_error"
@@ -1574,8 +1911,11 @@ def _activity_reason(
     return None
 
 
-def _common_git_dir(repo_root: Path) -> Path:
-    proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root)
+def _common_git_dir(repo_root: Path, *, timeout: float | None = None) -> Path:
+    try:
+        proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git rev-parse --git-common-dir timed out after {exc.timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"cannot resolve git common dir: {_format_failure(proc)}")
     path = Path((proc.stdout or "").strip())
@@ -1617,7 +1957,10 @@ def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
     """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
     if not branch:
         return False
-    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path)
+    # Called before the per-worktree lock. 30s is this probe's own cap; it is
+    # not part of the locked-region deadline. The locked re-check uses the
+    # local remote-tracking ref (:func:`_origin_branch_present`) instead.
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path, timeout=30)
     if proc.returncode != 0:
         return None
     return bool((proc.stdout or "").strip())
@@ -1741,6 +2084,144 @@ def _terminal_dispatch_reason(
     if not _is_head_reachable_from_remote(info.path, info.head):
         return None
     return f"settled dispatch task-id={task_id} status={task_status}"
+
+
+# Tool-regenerated caches a worker leaves behind. They are the only paths a
+# clean detached checkout may hold and still be reaped; everything else,
+# ``.venv/`` and ``node_modules/`` included, may hold an only copy of work.
+_PYCACHE_DIR = "__pycache__"
+_TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
+_ENV_DIRS = frozenset({".venv", "node_modules"})
+
+_DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
+
+
+def _is_regenerable_cache_path(path: str) -> bool:
+    """True for a path inside a ``__pycache__/`` or a top-level tool cache.
+
+    Any ``.venv`` or ``node_modules`` segment disqualifies the path, and a loose
+    ``*.pyc`` outside ``__pycache__/`` is not a cache. A hand-made file placed
+    inside an ignored cache directory is treated as disposable (documented
+    residual in the worktree-cleanup runbook).
+    """
+    segments = path.split("/")
+    if _ENV_DIRS.intersection(segments):
+        return False
+    return _PYCACHE_DIR in segments[:-1] or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
+
+
+def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
+    """True only when every entry git lists in ``path`` is an ignored regenerable cache.
+
+    Deliberately stricter than :func:`_worktree_clean`: only status ``!!``
+    (ignored) is tolerated, so any staged, modified, renamed or untracked entry
+    preserves the tree, and the cache allowlist is fixed rather than read from
+    ``.gitignore`` or ``info/exclude``. A git failure is not proof, so it reads
+    as "not disposable".
+    """
+    status = _run(
+        ["git", "status", "--porcelain=v1", "-z", "--ignored", "--untracked-files=all"],
+        cwd=path,
+        timeout=timeout,
+    )
+    if status.returncode != 0:
+        return False
+    for entry in (status.stdout or "").split("\0"):
+        if not entry:
+            continue
+        # ``XY <path>``; rename/copy entries carry a status other than ``!!``.
+        if not entry.startswith("!! ") or not _is_regenerable_cache_path(entry[3:]):
+            return False
+    return True
+
+
+def _detached_clean_contained_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+    timeout: float | None = None,
+    attention: list[str] | None = None,
+) -> str | None:
+    """Provably-safe class: a clean detached dispatch checkout whose HEAD is pushed.
+
+    A worker's baseline or scratch checkout (``git worktree add --detach``)
+    holds nothing unique once its HEAD is an ancestor of ``origin/main`` or
+    contained in some ``origin/*`` ref and the tree has no tracked, untracked,
+    or non-cache ignored changes. It is a Class B superset that needs neither
+    a settled task record nor a 24h age, and it never consults PR state:
+    nothing is lost even if a PR names the commit. A locked checkout, an
+    active or non-terminal task bound to the path, and live cwds (checked by
+    :func:`_activity_reason` before this runs, and again at removal) all keep
+    it preserved. An unavailable active-task probe fails closed, like the
+    terminal-dispatch path, and is reported through ``attention``.
+    """
+    if not info.detached or info.branch is not None or not info.head:
+        return None
+    if info.locked_reason is not None:
+        return None
+    if _is_acp_runtime_path(repo_root, info.path):
+        return None
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id is None:
+        return None
+    if active_ids is None:
+        if attention is not None:
+            attention.append(
+                "active-task probe unavailable; detached clean contained checkout preserved"
+            )
+        return None
+    if task_id in active_ids:
+        return None
+    task_status = _task_record_status(repo_root, task_id)
+    if task_status is not None and task_status not in _TERMINAL_DISPATCH_STATUSES:
+        return None
+    if not _tree_holds_only_disposable_residue(info.path, timeout=timeout):
+        return None
+    if _is_ancestor_of_origin_main(info.path):
+        contained = "an ancestor of origin/main"
+    elif _is_head_reachable_from_remote(info.path, info.head):
+        contained = "contained in an origin/* ref"
+    else:
+        return None
+    return f"{_DETACHED_CLEAN_CONTAINED_PREFIX}: HEAD {info.head[:12]} is {contained}"
+
+
+def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
+    """Re-prove the class immediately before deletion, under delegate's lock.
+
+    Returns a skip reason, or ``None`` when every precondition still holds.
+    """
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except RuntimeError as exc:
+        return f"detached worktree list unavailable during cleanup ({exc})"
+    fresh = next((wt for wt in worktrees if wt.path.resolve() == info.path.resolve()), None)
+    if fresh is None:
+        return "detached worktree unregistered during cleanup"
+    current_active_ids = _active_task_ids()
+    if current_active_ids is None:
+        return "active-task probe unavailable during cleanup"
+    current_live_cwds = _live_cwd_paths(repo_root)
+    if current_live_cwds is None:
+        return "process-CWD activity probe unavailable during cleanup"
+    activity = _activity_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        live_cwds=current_live_cwds,
+        check_pending=False,
+    )
+    if activity is not None:
+        return activity
+    if _detached_clean_contained_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
+    ) is None:
+        return "detached clean contained proof changed during cleanup"
+    return None
 
 
 def _qualifying_reason(
@@ -1978,9 +2459,88 @@ def adopt_dispatch_worktrees(repo_root: Path) -> list[dict[str, Any]]:
     return adopted
 
 
-def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
+def _worktree_git_dir(path: Path) -> Path | None:
+    """Return the git admin directory for ``path``, without invoking git."""
+    pointer = path / ".git"
+    try:
+        if pointer.is_file():
+            line = pointer.read_text(encoding="utf-8").splitlines()[0]
+            prefix = "gitdir:"
+            if not line.startswith(prefix):
+                return None
+            git_dir = Path(line[len(prefix):].strip())
+            if not git_dir.is_absolute():
+                git_dir = path / git_dir
+            return git_dir
+        if pointer.is_dir():
+            return pointer
+    except OSError:
+        return None
+    return None
+
+
+def _process_holds_file(path: Path) -> bool | None:
+    """True when a live process has ``path`` open. ``None`` if that cannot be told."""
+    try:
+        target = str(path.resolve())
+    except OSError:
+        return None
+    proc_root = Path("/proc")
+    if not proc_root.is_dir():
+        return None
+    try:
+        entries = list(proc_root.iterdir())
+    except OSError:
+        return None
+    saw_pid = False
+    for entry in entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            fds = list((entry / "fd").iterdir())
+        except OSError:
+            continue
+        saw_pid = True
+        for fd in fds:
+            try:
+                linked = os.readlink(fd)
+            except OSError:
+                continue
+            if linked == target or linked.startswith(f"{target} "):
+                return True
+    if not saw_pid:
+        return None
+    return False
+
+
+def _stale_index_lock(path: Path) -> Path | None:
+    """Return ``<admin>/index.lock`` when it is stale, else ``None``.
+
+    Stale means the file is a regular file older than
+    :data:`_STALE_INDEX_LOCK_MIN_AGE_S` and no live process has it open.
+    Unknown liveness is not stale. This never deletes the lock.
+    """
+    git_dir = _worktree_git_dir(path)
+    if git_dir is None:
+        return None
+    lock = git_dir / "index.lock"
+    try:
+        st = lock.stat()
+    except OSError:
+        return None
+    if not stat.S_ISREG(st.st_mode):
+        return None
+    if time.time() - st.st_mtime < _STALE_INDEX_LOCK_MIN_AGE_S:
+        return None
+    held = _process_holds_file(lock)
+    if held is not False:
+        return None
+    return lock
+
+
+def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None) -> str | None:
     branch = info.branch or "detached"
-    add_proc = _run(["git", "add", "-A"], cwd=info.path)
+    add_proc = _run(["git", "add", "-A"], cwd=info.path, timeout=timeout)
     if add_proc.returncode != 0:
         return f"git add failed: {_format_failure(add_proc)}"
     commit_proc = _run(
@@ -1992,6 +2552,7 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
             f"wip: preserve {branch} before reap [skip ci]",
         ],
         cwd=info.path,
+        timeout=timeout,
     )
     if commit_proc.returncode != 0:
         return f"git commit failed: {_format_failure(commit_proc)}"
@@ -2003,17 +2564,19 @@ def _prune_branch(
     branch: str | None,
     force: bool = False,
     expected_head: str | None = None,
+    timeout: float | None = None,
 ) -> str | None:
     if not branch:
         return None
     if expected_head is None:
         flag = "-D" if force else "-d"
-        proc = _run(["git", "branch", flag, "--", branch], cwd=repo_root)
+        proc = _run(["git", "branch", flag, "--", branch], cwd=repo_root, timeout=timeout)
         return None if proc.returncode == 0 else _format_failure(proc)
 
     current = _run(
         ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
         cwd=repo_root,
+        timeout=timeout,
     )
     if (
         current.returncode != 0
@@ -2022,7 +2585,7 @@ def _prune_branch(
         return "branch HEAD changed during cleanup"
 
     flag = "-D" if force else "-d"
-    deleted = _run(["git", "branch", flag, "--", branch], cwd=repo_root)
+    deleted = _run(["git", "branch", flag, "--", branch], cwd=repo_root, timeout=timeout)
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
@@ -2049,7 +2612,7 @@ def _enter_dispatch_worktree_guard(
     primary = primary_checkout_root(repo_root)
     try:
         control_root = worktree_claims.control_plane_root(primary)
-        lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
+        lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
         stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
     except worktree_claims.ControlPlaneError as exc:
         return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
@@ -2150,6 +2713,23 @@ def _reap_qualified_worktree(
         )
         pending_marked = True
 
+        # Network proofs before the per-worktree lock. ``ls-remote``, ``gh``,
+        # and ``_merged_origin_gone_proof`` are not part of the locked-region
+        # deadline. Under the lock the same facts are re-checked with local
+        # git only (remote-tracking ref, the snapshot just taken).
+        origin_gone: tuple[bool, str] | None = None
+        if reason.endswith("MERGED; origin branch gone") and pr_state is not None:
+            origin_gone = _merged_origin_gone_proof(info, pr_state)
+        live_origin: bool | None = None
+        pr_snapshot: tuple[list[PullRequestState], str | None] | None = None
+        if reason.startswith("dispatch HEAD ancestor of origin/main"):
+            live_origin = _live_origin_heads_present(info.path, info.branch)
+        if info.branch is not None and (
+            require_terminal_dispatch_guards
+            or reason.startswith("dispatch HEAD ancestor of origin/main")
+        ):
+            pr_snapshot = _query_pr_states(repo_root, info.branch)
+
         guard_refusal = _enter_dispatch_worktree_guard(dispatch_guard, repo_root=repo_root, info=info)
         if guard_refusal is not None:
             return ReapResult(
@@ -2161,277 +2741,333 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
-        if dirty:
-            preserve_error = _preserve_dirty_worktree(info)
-            if preserve_error is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="error",
-                    reason=f"preserve before reap failed: {reason}",
-                    dirty=True,
-                    pr=_pr_dict(pr_state),
-                    error=preserve_error,
-                )
-            refreshed_head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-            if refreshed_head.returncode != 0:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="error",
-                    reason=f"cannot verify preserved worktree HEAD: {reason}",
-                    dirty=True,
-                    pr=_pr_dict(pr_state),
-                    error=_format_failure(refreshed_head),
-                )
-            expected_head = (refreshed_head.stdout or "").strip()
-
-        current_head_proc = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-        current_head = (current_head_proc.stdout or "").strip()
-        if current_head_proc.returncode != 0 or not expected_head or current_head != expected_head:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=f"HEAD changed during cleanup; originally qualified because {reason}",
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-            )
-
-        if reason.startswith(_ACP_RUNTIME_REASON_PREFIX):
-            # A no-checkout tree is never "clean" for the generic status
-            # probe; its safety proof is the dead owner plus the only-.git
-            # pointer, both re-verified here, plus an explicit unlock so the
-            # final removal needs no double --force past the lock.
-            recheck = _acp_runtime_cleanup_recheck(repo_root, info)
-            if recheck is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=recheck,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            unlock = _run(["git", "worktree", "unlock", str(info.path)], cwd=repo_root)
-            if unlock.returncode != 0:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="error",
-                    reason=reason,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                    error=f"worktree unlock failed: {_format_failure(unlock)}",
-                )
-        else:
-            current_clean = _worktree_clean(info.path)
-            if current_clean is not True:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=f"worktree changed during cleanup; originally qualified because {reason}",
-                    dirty=None if current_clean is None else True,
-                    pr=_pr_dict(pr_state),
-                )
-
-        if reason.endswith("MERGED; origin branch gone"):
-            assert pr_state is not None
-            proved, detail = _merged_origin_gone_proof(replace(info, head=current_head), pr_state)
-            if not proved:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=detail,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-
-        if require_terminal_dispatch_guards:
-            current_active_ids = _active_task_ids()
-            current_live_cwds = _live_cwd_paths(repo_root)
-            if current_active_ids is None or current_live_cwds is None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="terminal dispatch guards unavailable during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            terminal_reason = _terminal_dispatch_reason(
-                repo_root=repo_root,
-                info=info,
-                active_ids=current_active_ids,
-            )
-            activity = _activity_reason(
-                repo_root=repo_root,
-                info=info,
-                active_ids=current_active_ids,
-                live_cwds=current_live_cwds,
-                check_pending=False,
-            )
-            if not _is_head_reachable_from_remote(info.path, current_head):
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="unpushed_head",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if terminal_reason is None or activity is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=activity or "terminal dispatch state changed during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if info.branch is not None:
-                current_prs, current_pr_error = _query_pr_states(repo_root, info.branch)
-                if current_pr_error is not None:
-                    return ReapResult(
-                        path=str(info.path),
-                        branch=info.branch,
-                        action="skipped",
-                        reason=f"PR guard unavailable during cleanup; {current_pr_error}",
-                        dirty=dirty,
-                        pr=_pr_dict(pr_state),
-                    )
-                if any(pr.state == "OPEN" for pr in current_prs):
-                    return ReapResult(
-                        path=str(info.path),
-                        branch=info.branch,
-                        action="skipped",
-                        reason="open PR appeared during cleanup",
-                        dirty=dirty,
-                        pr=_pr_dict(pr_state),
-                    )
-
-        if reason.startswith("dispatch HEAD ancestor of origin/main"):
-            current_active_ids = _active_task_ids()
-            current_live_cwds = _live_cwd_paths(repo_root)
-            if current_active_ids is None or current_live_cwds is None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="abandoned-main activity probe unavailable during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            activity = _activity_reason(
-                repo_root=repo_root,
-                info=info,
-                active_ids=current_active_ids,
-                live_cwds=current_live_cwds,
-                check_pending=False,
-            )
-            if activity is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=activity,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if _origin_branch_present(info.path, info.branch):
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="origin branch returned during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            live_origin = _live_origin_heads_present(info.path, info.branch)
-            if live_origin is None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="live origin probe unavailable during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if live_origin:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="origin branch returned during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if not _is_ancestor_of_origin_main(info.path):
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="HEAD left origin/main during cleanup",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            if info.branch is not None:
-                current_prs, current_pr_error = _query_pr_states(repo_root, info.branch)
-                if current_pr_error is not None:
-                    return ReapResult(
-                        path=str(info.path),
-                        branch=info.branch,
-                        action="skipped",
-                        reason=f"PR guard unavailable during cleanup; {current_pr_error}",
-                        dirty=dirty,
-                        pr=_pr_dict(pr_state),
-                    )
-                if any(pr.state == "OPEN" for pr in current_prs):
-                    return ReapResult(
-                        path=str(info.path),
-                        branch=info.branch,
-                        action="skipped",
-                        reason="open PR appeared during cleanup",
-                        dirty=dirty,
-                        pr=_pr_dict(pr_state),
-                    )
-
-        recovery_ref, recovery_error = reaper_lifecycle.create_recovery_ref(
-            repo_root,
-            branch=info.branch,
-            head=current_head,
-        )
-        if recovery_error is not None:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="error",
-                reason=f"could not create recovery material; {reason}",
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-                error=recovery_error,
-            )
-
-        # Decide branch deletion while the worktree directory still exists.
-        # ``git merge-base`` cannot run with a cwd that ``worktree remove``
-        # has already deleted, and a same-tree sibling is not proof.
+        # The block below holds delegate's per-worktree lock. Git inside
+        # ``_bounded_locked_git`` is bounded: each call at most
+        # ``_LOCKED_GIT_TIMEOUT_S`` (or the timeout it passes, such as the
+        # 15s status/add/commit cap), and every call also at most the time
+        # left on the region deadline (``DEFAULT_LOCK_TIMEOUT_S`` minus
+        # ``_LOCKED_REGION_MARGIN_S``). A timeout there skips and does not
+        # delete. That context ends before removal. Removal keeps its own
+        # 120s bound, then the lock is released before branch prune.
+        bounded_git = _bounded_locked_git()
+        bounded_git.__enter__()
         prune_contained = False
-        if (
-            prune_merged_branches
-            and info.branch is not None
-            and pr_state is not None
-            and pr_state.state == "MERGED"
-        ):
-            prune_contained = _pr_matches_worktree_head(
-                info, pr_state
-            ) or _tip_is_ancestor_of_origin_main(info)
+        try:
+            if dirty:
+                stale_lock = _stale_index_lock(info.path)
+                if stale_lock is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=(
+                            f"stale index.lock at {stale_lock} (no live git process "
+                            f"holds it; older than {_STALE_INDEX_LOCK_MIN_AGE_S / 60:g} minutes); "
+                            f"originally qualified because {reason}"
+                        ),
+                        dirty=True,
+                        pr=_pr_dict(pr_state),
+                    )
+                preserve_error = _preserve_dirty_worktree(info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
+                if preserve_error is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="error",
+                        reason=f"preserve before reap failed: {reason}",
+                        dirty=True,
+                        pr=_pr_dict(pr_state),
+                        error=preserve_error,
+                    )
+                refreshed_head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                if refreshed_head.returncode != 0:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="error",
+                        reason=f"cannot verify preserved worktree HEAD: {reason}",
+                        dirty=True,
+                        pr=_pr_dict(pr_state),
+                        error=_format_failure(refreshed_head),
+                    )
+                expected_head = (refreshed_head.stdout or "").strip()
 
-        # ``_worktree_clean`` deliberately accepts disposable ignored residue
-        # such as a worker's ``.venv``; git still counts it, so force is
-        # required at this final, guarded deletion boundary.
-        remove_error = worktree_claims.git_worktree_remove(repo_root, info.path, force=True)
+            current_head_proc = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+            current_head = (current_head_proc.stdout or "").strip()
+            if current_head_proc.returncode != 0 or not expected_head or current_head != expected_head:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=f"HEAD changed during cleanup; originally qualified because {reason}",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+
+            if reason.startswith(_ACP_RUNTIME_REASON_PREFIX):
+                # A no-checkout tree is never "clean" for the generic status
+                # probe; its safety proof is the dead owner plus the only-.git
+                # pointer, both re-verified here, plus an explicit unlock so the
+                # final removal needs no double --force past the lock.
+                recheck = _acp_runtime_cleanup_recheck(repo_root, info)
+                if recheck is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=recheck,
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                unlock = _run(["git", "worktree", "unlock", str(info.path)], cwd=repo_root)
+                if unlock.returncode != 0:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="error",
+                        reason=reason,
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                        error=f"worktree unlock failed: {_format_failure(unlock)}",
+                    )
+            elif reason.startswith(_DETACHED_CLEAN_CONTAINED_PREFIX):
+                recheck = _detached_clean_contained_recheck(repo_root, info)
+                if recheck is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"{recheck}; originally qualified because {reason}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+            else:
+                current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
+                if current_clean is not True:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"worktree changed during cleanup; originally qualified because {reason}",
+                        dirty=None if current_clean is None else True,
+                        pr=_pr_dict(pr_state),
+                    )
+
+            if reason.endswith("MERGED; origin branch gone"):
+                assert pr_state is not None
+                proved, detail = origin_gone if origin_gone is not None else (False, "origin-gone proof was not taken")
+                if current_head != info.head:
+                    proved, detail = False, "HEAD changed after origin-gone proof"
+                elif _origin_branch_present(info.path, info.branch):
+                    proved, detail = False, "origin branch returned during cleanup"
+                if not proved:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=detail,
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+
+            if require_terminal_dispatch_guards:
+                current_active_ids = _active_task_ids()
+                current_live_cwds = _live_cwd_paths(repo_root)
+                if current_active_ids is None or current_live_cwds is None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="terminal dispatch guards unavailable during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                terminal_reason = _terminal_dispatch_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=current_active_ids,
+                )
+                activity = _activity_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=current_active_ids,
+                    live_cwds=current_live_cwds,
+                    check_pending=False,
+                )
+                if not _is_head_reachable_from_remote(info.path, current_head):
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="unpushed_head",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if terminal_reason is None or activity is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=activity or "terminal dispatch state changed during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if info.branch is not None:
+                    if pr_snapshot is None:
+                        current_prs, current_pr_error = [], "PR snapshot missing"
+                    else:
+                        current_prs, current_pr_error = pr_snapshot
+                    if current_pr_error is not None:
+                        return ReapResult(
+                            path=str(info.path),
+                            branch=info.branch,
+                            action="skipped",
+                            reason=f"PR guard unavailable during cleanup; {current_pr_error}",
+                            dirty=dirty,
+                            pr=_pr_dict(pr_state),
+                        )
+                    if any(pr.state == "OPEN" for pr in current_prs):
+                        return ReapResult(
+                            path=str(info.path),
+                            branch=info.branch,
+                            action="skipped",
+                            reason="open PR appeared during cleanup",
+                            dirty=dirty,
+                            pr=_pr_dict(pr_state),
+                        )
+
+            if reason.startswith("dispatch HEAD ancestor of origin/main"):
+                current_active_ids = _active_task_ids()
+                current_live_cwds = _live_cwd_paths(repo_root)
+                if current_active_ids is None or current_live_cwds is None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="abandoned-main activity probe unavailable during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                activity = _activity_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=current_active_ids,
+                    live_cwds=current_live_cwds,
+                    check_pending=False,
+                )
+                if activity is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=activity,
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if _origin_branch_present(info.path, info.branch):
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="origin branch returned during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if live_origin is None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="live origin probe unavailable during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if live_origin:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="origin branch returned during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if not _is_ancestor_of_origin_main(info.path):
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="HEAD left origin/main during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if info.branch is not None:
+                    if pr_snapshot is None:
+                        current_prs, current_pr_error = [], "PR snapshot missing"
+                    else:
+                        current_prs, current_pr_error = pr_snapshot
+                    if current_pr_error is not None:
+                        return ReapResult(
+                            path=str(info.path),
+                            branch=info.branch,
+                            action="skipped",
+                            reason=f"PR guard unavailable during cleanup; {current_pr_error}",
+                            dirty=dirty,
+                            pr=_pr_dict(pr_state),
+                        )
+                    if any(pr.state == "OPEN" for pr in current_prs):
+                        return ReapResult(
+                            path=str(info.path),
+                            branch=info.branch,
+                            action="skipped",
+                            reason="open PR appeared during cleanup",
+                            dirty=dirty,
+                            pr=_pr_dict(pr_state),
+                        )
+
+            recovery_ref, recovery_error = reaper_lifecycle.create_recovery_ref(
+                repo_root,
+                branch=info.branch,
+                head=current_head,
+                timeout=_locked_call_timeout(reaper_lifecycle.DEFAULT_GIT_TIMEOUT_SECONDS),
+            )
+            if recovery_error is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=f"could not create recovery material; {reason}",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                    error=recovery_error,
+                )
+
+            # Decide branch deletion while the worktree directory still exists.
+            # ``git merge-base`` cannot run with a cwd that ``worktree remove``
+            # has already deleted, and a same-tree sibling is not proof.
+            if (
+                prune_merged_branches
+                and info.branch is not None
+                and pr_state is not None
+                and pr_state.state == "MERGED"
+            ):
+                prune_contained = _pr_matches_worktree_head(
+                    info, pr_state
+                ) or _tip_is_ancestor_of_origin_main(info)
+        finally:
+            bounded_git.__exit__(None, None, None)
+
+        # Outside the region deadline. The deadline is the dispatch lock
+        # wait minus a margin (~25s); clipping removal to a leftover
+        # fraction of a second kills ``git worktree remove --force``
+        # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
+        # (120s). A waiter that hits its 30s lock timeout retries.
+        # ``_worktree_clean`` accepts disposable ignored residue such as a
+        # worker's ``.venv``; git still counts it, so force is required.
+        remove_error = worktree_claims.git_worktree_remove(
+            repo_root,
+            info.path,
+            force=True,
+        )
         if remove_error is not None:
             return ReapResult(
                 path=str(info.path),
@@ -2444,17 +3080,28 @@ def _reap_qualified_worktree(
                 recovery_ref=recovery_ref,
             )
 
+        # Prune and the daily-cap write do not need the per-worktree lock.
+        # A waiter blocked on removal can proceed as soon as the checkout is gone.
+        dispatch_guard.close()
+
+        # Removal succeeded, so this is no longer the "never delete" bound.
+        # A prune timeout is a branch-prune error on an already-removed tree.
         branch_prune_error = None
         branch_pruned = False
         if prune_contained:
-            branch_prune_error = _prune_branch(
-                repo_root,
-                info.branch,
-                force=True,
-                expected_head=current_head,
-            )
+            try:
+                branch_prune_error = _prune_branch(
+                    repo_root,
+                    info.branch,
+                    force=True,
+                    expected_head=current_head,
+                    timeout=_LOCKED_GIT_TIMEOUT_S,
+                )
+            except subprocess.TimeoutExpired as exc:
+                branch_prune_error = f"branch prune timed out after {exc.timeout:g}s"
             branch_pruned = branch_prune_error is None
 
+        reaper_lifecycle.record_reap_for_cap(repo_root)
         if branch_prune_error is not None:
             return ReapResult(
                 path=str(info.path),
@@ -2466,8 +3113,6 @@ def _reap_qualified_worktree(
                 error=branch_prune_error,
                 recovery_ref=recovery_ref,
             )
-
-        reaper_lifecycle.record_reap_for_cap(repo_root)
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
@@ -2476,6 +3121,21 @@ def _reap_qualified_worktree(
             dirty=dirty,
             pr=_pr_dict(pr_state),
             branch_pruned=branch_pruned,
+            recovery_ref=recovery_ref,
+        )
+    except subprocess.TimeoutExpired as exc:
+        # A git call outlived its locked-region bound (#8748): skip, never
+        # delete — the killed git leaves the tree's state unproven.
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=(
+                f"git call timed out after {exc.timeout:g}s during cleanup; "
+                f"originally qualified because {reason}"
+            ),
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
             recovery_ref=recovery_ref,
         )
     finally:
@@ -2629,6 +3289,14 @@ def reap_worktrees(
                 qualified.append((info, acp_reason, False, None))
                 continue
 
+            # Report-only class (#8663): a dispatch worktree a stopped
+            # ``git worktree add`` left under git's ``initializing`` lock is
+            # reported for a human and never qualifies for removal.
+            leftover = _initializing_leftover_result(repo_root, info)
+            if leftover is not None:
+                results.append(leftover)
+                continue
+
             dirty_state = _worktree_clean(info.path)
             dirty = None if dirty_state is None else not dirty_state
 
@@ -2705,6 +3373,21 @@ def reap_worktrees(
                 pr_unknown=pr_unknown,
                 attention=attention,
             )
+            # Provably-safe class: a clean, pushed, detached dispatch checkout.
+            # It never reads PR state for its own proof, but an open PR named
+            # by the path still keeps the checkout mounted, like every other
+            # class; the legacy classes above get first refusal.
+            if (
+                reason is None
+                and not attention
+                and not (pr_state is not None and pr_state.state == "OPEN")
+            ):
+                reason = _detached_clean_contained_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=active_ids,
+                    attention=attention,
+                )
             if attention:
                 results.append(
                     ReapResult(
@@ -2828,6 +3511,10 @@ def reap_worktrees(
 
     for result in results:
         event = "reap" if result.action in {"removed", "preserved_then_removed"} else "skip"
+        extra: dict[str, Any] = {}
+        if result.needs_attention is not None:
+            event = "needs_attention"
+            extra["needs_attention"] = result.needs_attention
         reaper_lifecycle.append_journal(
             repo_root,
             event,
@@ -2839,6 +3526,7 @@ def reap_worktrees(
             pr=result.pr,
             error=result.error,
             recovery_ref=result.recovery_ref,
+            **extra,
         )
     return results
 
@@ -2929,8 +3617,12 @@ def format_text_results(results: list[ReapResult], *, apply: bool) -> str:
     candidates = sum(1 for result in results if result.action in remove_actions)
     skipped = sum(1 for result in results if result.action == "skipped")
     errors = sum(1 for result in results if result.action == "error")
+    attention = sum(1 for result in results if result.needs_attention is not None)
     mode = "APPLY" if apply else "DRY RUN"
-    lines = [f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"]
+    summary = f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"
+    if attention:
+        summary = f"{summary}, {attention} need(s) attention"
+    lines = [summary]
     lines.extend(_format_result_line(result) for result in results)
     return "\n".join(lines)
 
@@ -2951,8 +3643,13 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
     reaped = 0
     reaped_by_owner: dict[str, int] = {}
     retained_exceptions = 0
+    needs_attention: list[dict[str, Any]] = []
 
     for r in results:
+        if r.needs_attention is not None:
+            needs_attention.append(
+                {"path": r.path, "kind": r.needs_attention.get("kind"), "command": r.needs_attention.get("command")}
+            )
         owner = r.owner or "unattributed"
         by_owner[owner] = by_owner.get(owner, 0) + 1
         cls = classify_preservation(r)
@@ -2975,6 +3672,7 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
         "by_preservation_class": preservation_classes,
         "by_owner": dict(sorted(by_owner.items())),
         "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
+        "needs_attention": needs_attention,
     }
 
 
@@ -2992,6 +3690,12 @@ def format_aggregate_results(counts: dict[str, Any], *, apply: bool) -> str:
     lines.append("  By owner:")
     for owner, count in sorted(counts.get("by_owner", {}).items()):
         lines.append(f"    {owner}: {count}")
+    attention = counts.get("needs_attention") or []
+    if attention:
+        lines.append("  Needs attention (never removed automatically):")
+        for item in attention:
+            lines.append(f"    {item['kind']}: {item['path']}")
+            lines.append(f"      {item['command']}")
     return "\n".join(lines)
 
 
@@ -3090,7 +3794,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--safe-only",
         action="store_true",
-        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors).",
+        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors + clean pushed detached dispatch checkouts).",
     )
     parser.add_argument(
         "--merged",

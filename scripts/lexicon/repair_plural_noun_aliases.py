@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.storage.paths import artifact_path
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -37,12 +38,12 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     _write_atomic(path, (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
 
 
-def _load_kaikki_lookup(path: Path) -> dict[str, dict[str, Any]]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-    return payload if isinstance(payload, dict) else {}
+def _load_kaikki_lookup(path: Path | None) -> dict[str, dict[str, Any]]:
+    source = path if path is not None else artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Kaikki lookup must be a JSON object: {source}")
+    return payload
 
 
 def _course_usage_key(row: dict[str, Any]) -> tuple[object, object, object]:
@@ -206,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Repair explicit plural noun Atlas aliases.")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--kaikki-lookup", type=Path, default=enrich_manifest.KAIKKI_LOOKUP)
+    parser.add_argument("--kaikki-lookup", type=Path)
     parser.add_argument(
         "--refresh-enrichment",
         action="store_true",
@@ -217,7 +218,11 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest_path = args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
     sources_db = args.sources_db if args.sources_db.is_absolute() else ROOT / args.sources_db
-    kaikki_path = args.kaikki_lookup if args.kaikki_lookup.is_absolute() else ROOT / args.kaikki_lookup
+    kaikki_path = (
+        (args.kaikki_lookup if args.kaikki_lookup.is_absolute() else ROOT / args.kaikki_lookup)
+        if args.kaikki_lookup is not None
+        else None
+    )
 
     manifest = _load_json(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)

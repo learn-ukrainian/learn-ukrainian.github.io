@@ -28,6 +28,7 @@ from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     default_ledger_path,
 )
+from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal
 
 
 def repo_root_from_file() -> Path:
@@ -138,15 +139,20 @@ def heal_zombie_task(
         pid = None
 
     if status == "running" and not _pid_alive(pid):
-        data["status"] = "failed"
-        data["exit_code"] = data.get("exit_code") if data.get("exit_code") is not None else -9
-        data["returncode"] = data.get("returncode") if data.get("returncode") is not None else -9
-        data["last_error"] = data.get("last_error") or "dispatch_settle: recorded PID is dead while status=running"
-        _save_task(task_dir, task_id, data)
-        actions.append("marked_failed_zombie_running")
-        if ledger is not None:
-            ledger.release(task_id)
-            actions.append("released_ownership_claims")
+        _current, changed = mark_dead_worker_terminal(
+            task_dir / f"{task_id}.json",
+            data,
+            source="dispatch_settle",
+            terminal_status="failed",
+            allowed_statuses=("running",),
+            pid_alive=_pid_alive,
+            resolve_head=lambda path: _run(["git", "rev-parse", "HEAD"], cwd=path).stdout.strip() or None,
+        )
+        if changed:
+            actions.append("marked_failed_zombie_running")
+            if ledger is not None:
+                ledger.release(task_id)
+                actions.append("released_ownership_claims")
     return actions
 
 

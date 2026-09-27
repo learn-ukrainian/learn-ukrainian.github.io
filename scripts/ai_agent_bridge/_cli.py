@@ -3,13 +3,14 @@
 import argparse
 import json
 import os
+import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
 from agent_runtime.attribution import resolve_invocation_attribution
-from agent_runtime.errors import AgentTimeoutError
+from agent_runtime.errors import AgentTimeoutError, RateLimitedError
 from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
@@ -23,6 +24,7 @@ from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
 from ._dispatch_wrappers import (
     MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
+    REPO_ROOT,
     REVIEW_DEEP_INSTRUCTIONS,
     handle_dispatch_fix,
     handle_review_deep,
@@ -427,6 +429,40 @@ def _handle_codex_usage(args) -> None:
     _print_codex_usage_report(report)
 
 
+def _add_review_options(parser: argparse.ArgumentParser) -> None:
+    """Add the review-intent flags shared by every toolful ask-* lane.
+
+    One helper, not a per-lane copy (#8786): ``--review`` (or ``--type
+    review``) forces the headless read-only dispatch, and ``--branch`` /
+    ``--pr`` name the exact head under review. A lane that omits these cannot
+    be used as a formal review seat.
+    """
+    parser.add_argument(
+        "--review",
+        action="store_true",
+        help=(
+            "Review ask (same as --type review): reply must state VERDICT "
+            "grounded in evidence; sealed review-pr was removed in #8520"
+        ),
+    )
+    review_target = parser.add_mutually_exclusive_group()
+    review_target.add_argument(
+        "--branch",
+        help=(
+            "Remote branch to review via the lightweight direct path "
+            "(resolved as origin/<branch>; sealed review-pr was removed in #8520)"
+        ),
+    )
+    review_target.add_argument(
+        "--pr",
+        type=int,
+        help=(
+            "PR to review via the lightweight direct path "
+            "(same as ask-LANE - --type review; sealed review-pr was removed in #8520)"
+        ),
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
     # Recipient/inbox choices must cover EVERY valid agent, not just the
@@ -549,7 +585,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-claude
-    proc_claude_parser = subparsers.add_parser("process-claude", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_claude_parser = subparsers.add_parser(
+        "process-claude", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_claude_parser.add_argument("message_id", type=int, help="Message ID for Claude to process")
     proc_claude_parser.add_argument(
         "--new-session",
@@ -558,7 +596,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Force new session even if one exists for this task",
     )
     proc_claude_parser.add_argument(
-        "--async", dest="fire_and_forget", action="store_true", help="Legacy review background option; rejected for ordinary ACP asks."
+        "--async",
+        dest="fire_and_forget",
+        action="store_true",
+        help="Legacy review background option; rejected for ordinary ACP asks.",
     )
     proc_claude_parser.add_argument(
         "--no-timeout",
@@ -568,7 +609,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-codex
-    proc_codex_parser = subparsers.add_parser("process-codex", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_codex_parser = subparsers.add_parser(
+        "process-codex", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_codex_parser.add_argument("message_id", type=int, help="Message ID for Codex to process")
     proc_codex_parser.add_argument(
         "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
@@ -595,10 +638,16 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
-    proc_kimi_parser = subparsers.add_parser("process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_kimi_parser = subparsers.add_parser(
+        "process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
-    proc_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
-    proc_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
+    proc_kimi_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh"
+    )
+    proc_kimi_parser.add_argument(
+        "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
+    )
     proc_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # process-ask is the detached-worker re-entry point for ``ask-* --background``.
@@ -635,7 +684,6 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_claude_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
-    ask_claude_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-codex
     ask_codex_parser = subparsers.add_parser(
@@ -663,7 +711,6 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="ISSUE",
         help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)",
     )
-    ask_codex_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-gemini legacy compatibility shim
     ask_gemini_parser = subparsers.add_parser(
@@ -725,7 +772,17 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["auto", "subscription", "api-key", "api"],
         help="Gemini auth mode override for this invocation",
     )
-    ask_gemini_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
+    ask_gemini_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required for a Gemini review. code is refused "
+            "(Gemini reviews Ukrainian only, never code). "
+            "Ukrainian content review must pass ukrainian."
+        ),
+    )
 
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
@@ -758,11 +815,15 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_agy_parser.add_argument("--output-path", dest="output_path", help="Write Agy response body to a file")
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
     ask_agy_parser.add_argument(
-        "--review",
-        action="store_true",
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
         help=(
-            "Review ask on the lightweight direct path "
-            "(verdict + evidence required; sealed review-pr is retired)"
+            "Required with --review. code is refused "
+            "(Gemini reviews Ukrainian only, never code — operator 2026-09-25). "
+            "Ukrainian content review must pass ukrainian. "
+            "Omitting the flag refuses the review and names this flag."
         ),
     )
 
@@ -807,7 +868,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # ask-deepseek (first-party DeepSeek v4 Flash via the opencode ACP seat; ⚠️ China-hosted, LOCAL-ONLY)
     ask_deepseek_parser = subparsers.add_parser(
         "ask-deepseek",
-        help="Send message AND invoke first-party DeepSeek (deepseek-v4-flash) via the opencode ACP seat (#6805). LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
+        help="Send message AND invoke first-party DeepSeek (deepseek-v4.1-flash) via the opencode ACP seat (#6805). LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
     )
     ask_deepseek_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_deepseek_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -834,7 +895,9 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["minimal", "high", "max"],
         help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)",
     )
-    ask_pool_parser.add_argument("--model", default=None, help=f"Deprecated alias for --to-model (default {POOL_MODEL})")
+    ask_pool_parser.add_argument(
+        "--model", default=None, help=f"Deprecated alias for --to-model (default {POOL_MODEL})"
+    )
     ask_pool_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_pool_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_pool_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
@@ -851,7 +914,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
     ask_glm_parser.add_argument(
-        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. zai/glm-5.3-flash or zai-coding-plan/glm-5.3)"
+        "--model",
+        default=None,
+        help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. zai/glm-5.3-flash or zai-coding-plan/glm-5.3)",
     )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
@@ -923,7 +988,6 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_grok_build_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_grok_build_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     ask_kimi_parser = subparsers.add_parser(
         "ask-kimi", help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (use '-' for stdin)"
@@ -932,14 +996,17 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_kimi_parser.add_argument("--type", default="query", help="Message type")
     ask_kimi_parser.add_argument("--data", help="Path to data file to attach")
-    ask_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
-    ask_kimi_parser.add_argument("--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})")
+    ask_kimi_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh"
+    )
+    ask_kimi_parser.add_argument(
+        "--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})"
+    )
     ask_kimi_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_kimi_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_kimi_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_kimi_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     for review_parser in (
         ask_claude_parser,
@@ -948,23 +1015,9 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_agy_parser,
         ask_grok_build_parser,
         ask_kimi_parser,
+        ask_deepseek_parser,
     ):
-        review_target = review_parser.add_mutually_exclusive_group()
-        review_target.add_argument(
-            "--branch",
-            help=(
-                "Remote branch to review via the lightweight direct path "
-                "(resolved as origin/<branch>; sealed review-pr is retired)"
-            ),
-        )
-        review_target.add_argument(
-            "--pr",
-            type=int,
-            help=(
-                "PR to review via the lightweight direct path "
-                "(same as ask-LANE - --type review; sealed review-pr is retired)"
-            ),
-        )
+        _add_review_options(review_parser)
 
     for ask_parser in (
         ask_claude_parser,
@@ -1078,12 +1131,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Write the prompt/state preview and print the delegate.py command without dispatching.",
     )
 
-    from ._review_pr import register_review_pr_parser
-    from ._review_verdict import register_publish_review_verdict_parser
-
-    register_review_pr_parser(subparsers)
-    register_publish_review_verdict_parser(subparsers)
-
     review_deep_parser = subparsers.add_parser(
         "review-deep",
         help="Dispatch an adversarial Claude Opus read-only review run",
@@ -1136,7 +1183,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned")
     cleanup_parser.add_argument(
-        "--expire", action="store_true",
+        "--expire",
+        action="store_true",
         help=(
             "Also run the channel-delivery TTL auto-expire + dead-lane "
             "bulk-expire sweep (#4837 item 4). Honors --dry-run."
@@ -1322,9 +1370,7 @@ def _dispatch_command(args):
     elif args.command == "thread":
         resolve_thread(args.identifier)
     elif args.command == "process":
-        process_message_for_recipient(
-            args.message_id, model=args.model, no_timeout=args.no_timeout
-        )
+        process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
     elif args.command in {"process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi"}:
         if _process_target(args.message_id, args.command.removeprefix("process-"), vars(args)) is False:
             raise SystemExit("ACP processing failed; message left unconsumed")
@@ -1384,14 +1430,6 @@ def _dispatch_command(args):
         _handle_codex_usage(args)
     elif args.command == "dispatch-fix":
         sys.exit(handle_dispatch_fix(args))
-    elif args.command == "review-pr":
-        from ._review_pr import handle_review_pr
-
-        sys.exit(handle_review_pr(args))
-    elif args.command == "publish-review-verdict":
-        from ._review_verdict import handle_publish_review_verdict
-
-        sys.exit(handle_publish_review_verdict(args))
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":
@@ -1466,6 +1504,122 @@ def _dispatch_command(args):
     return True
 
 
+_GH_PR_VIEW_TIMEOUT_S = 60.0
+
+
+def _is_full_git_sha(value: object) -> bool:
+    return isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value)
+
+
+def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
+    """Return ``(headRefName, headRefOid)`` for one same-repo PR.
+
+    One ``gh pr view`` call. A cross-repository PR, or any failure to resolve
+    a branch and a full head SHA, exits non-zero. Never falls back to main.
+    """
+    cmd = [
+        "gh",
+        "pr",
+        "view",
+        str(pr_number),
+        "--json",
+        "headRefName,headRefOid,isCrossRepository",
+    ]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GH_PR_VIEW_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise SystemExit(
+            f"ask --pr {pr_number}: could not resolve the PR head ({exc}); refusing to review main"
+        ) from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
+        if len(detail) > 200:
+            detail = detail[:200] + "…"
+        suffix = f": {detail}" if detail else ""
+        raise SystemExit(
+            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}){suffix}; refusing to review main"
+        )
+    try:
+        payload = json.loads(proc.stdout or "")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ask --pr {pr_number}: gh pr view returned invalid JSON; refusing to review main") from exc
+    if not isinstance(payload, dict):
+        raise SystemExit(f"ask --pr {pr_number}: gh pr view returned a non-object payload; refusing to review main")
+    if payload.get("isCrossRepository") is not False:
+        raise SystemExit(f"ask --pr {pr_number}: cross-repository PR; refusing to review main")
+    branch = payload.get("headRefName")
+    head_sha = payload.get("headRefOid")
+    if not isinstance(branch, str) or not branch.strip():
+        raise SystemExit(f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main")
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
+    except UnsafeBranchNameError as exc:
+        raise SystemExit(
+            f"ask --pr {pr_number}: PR head branch {branch!r} is not a local branch name; "
+            f"refusing to review main ({exc})"
+        ) from exc
+    if not _is_full_git_sha(head_sha):
+        raise SystemExit(f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main")
+    return branch, str(head_sha)
+
+
+def _head_sha_binding_instruction(sha: str) -> str:
+    """Tell the reviewer to stop unless the worktree HEAD is this SHA."""
+    return (
+        f"First run `git rev-parse HEAD`. If it differs from {sha}, "
+        "say so in the first line of the reply and stop without a verdict."
+    )
+
+
+def _review_target_content(target_desc: str, content: str, *, sha: str | None) -> str:
+    """Fold the review target into the prompt, binding a known SHA."""
+    binding = f"\n{_head_sha_binding_instruction(sha)}" if sha else ""
+    return f"Cross-family review target: {target_desc}.{binding}\n\n{content}"
+
+
+_MISSING_ORIGIN_BRANCH_MARKERS = (
+    "couldn't find remote ref",
+    "was not found after fetch",
+)
+
+
+def _missing_origin_branch_message(exc: BaseException, *, branch: str | None, pr_number: int | None) -> str | None:
+    """Name a deleted or merged head when delegate cannot fetch it from origin."""
+    text = str(exc)
+    if not any(marker in text for marker in _MISSING_ORIGIN_BRANCH_MARKERS):
+        return None
+    name = branch or "unknown"
+    if pr_number is not None:
+        return f"ask --pr {pr_number}: head branch {name!r} no longer exists on origin (merged or deleted)"
+    return f"ask --branch {name}: branch no longer exists on origin (merged or deleted)"
+
+
+def _refuse_pr_head_movement(result: dict, *, pr_number: int, resolved_sha: str) -> None:
+    """Refuse when the dispatch checkout is not the SHA resolved for the path gate."""
+    recorded = result.get("worktree_base_sha")
+    if not isinstance(recorded, str) or not recorded.strip():
+        raise SystemExit(
+            f"ask --pr {pr_number}: refusing dispatch: no worktree base SHA was recorded "
+            f"for resolved head {resolved_sha}"
+        )
+    recorded = recorded.strip().lower()
+    if recorded == resolved_sha:
+        return
+    raise SystemExit(
+        f"ask --pr {pr_number}: refusing dispatch: branch head moved between resolution and dispatch: "
+        f"resolved {resolved_sha}, dispatch record base {recorded}"
+    )
+
+
 def _review_target_kwargs(args) -> dict[str, str | int | None]:
     """Pass an explicit branch target only to a review ask."""
     branch = getattr(args, "branch", None)
@@ -1489,26 +1643,41 @@ def _handle_acp_compat(args, target: str) -> None:
         raise SystemExit(f"ask-{target} requires --task-id")
     # Review intent comes from either spelling: the explicit --review flag or
     # the --type review drivers actually pass (#6805).
-    review = (
-        bool(getattr(args, "review", False))
-        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
-    )
+    review = bool(getattr(args, "review", False)) or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     pr_number = getattr(args, "pr", None)
     branch = getattr(args, "branch", None)
+    resolved_head_sha: str | None = None
     if pr_number is not None or branch is not None:
-        # #7010: sealed review-pr is retired (operator 2026-08-07). Route
+        # #7010: sealed review-pr was removed in #8520. Route
         # --pr/--branch to the same lightweight direct path as
         # `ask-LANE - --type review`: the target is folded into the prompt and
         # review mode is forced so the reply still needs a grounded verdict.
+        # #8706: --pr must check out that PR's head, not the default base.
         if pr_number is not None:
-            target_desc = (
-                f"PR #{pr_number} — resolve the exact head and diff with "
-                f"`gh pr view {pr_number} --json headRefOid` / `gh pr diff {pr_number}`"
-            )
+            branch, resolved_head_sha = _resolve_same_repo_pr_head(int(pr_number))
+            target_desc = f"PR #{pr_number} — exact head {resolved_head_sha} (`gh pr diff {pr_number}`)"
         else:
             target_desc = f"remote branch origin/{branch}"
-        content = f"Cross-family review target: {target_desc}.\n\n{content}"
+        content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
+
+    from ._agy import is_gemini_family_model
+
+    if review and (target in {"agy", "gemini"} or is_gemini_family_model(model)):
+        from ._agy import gemini_pr_or_branch_content_error, gemini_review_profile_error
+
+        profile_error = gemini_review_profile_error(getattr(args, "review_profile", None))
+        if profile_error is not None:
+            raise SystemExit(profile_error)
+        if pr_number is not None or branch is not None:
+            content_error = gemini_pr_or_branch_content_error(
+                pr_number=int(pr_number) if pr_number is not None else None,
+                branch=branch,
+                repo_root=str(REPO_ROOT),
+                head_sha=resolved_head_sha,
+            )
+            if content_error is not None:
+                raise SystemExit(content_error)
 
     if review:
         # #7155: a reviewer must be able to use tools (gh, fs, pytest) — ACP's
@@ -1533,6 +1702,10 @@ def _handle_acp_compat(args, target: str) -> None:
             # --no-timeout bypasses it with a generous ceiling.
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
             branch=branch,
+            resolved_head_sha=resolved_head_sha,
+            pinned_head=resolved_head_sha,
+            pr_number=int(pr_number) if pr_number is not None else None,
+            review_profile=getattr(args, "review_profile", None),
         )
         return
 
@@ -1566,10 +1739,12 @@ def _handle_acp_compat(args, target: str) -> None:
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
         )
         if not bool(getattr(result, "ok", False)):
-            raise SystemExit(
-                getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic"
-            )
+            raise SystemExit(getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic")
     except (ValueError, InterAgentTransportError) as exc:
+        raise SystemExit(str(exc)) from exc
+    except RateLimitedError as exc:
+        # Reached only when no ACP substitution was mapped (or the substitute
+        # was also over quota): _acp_compat already printed the reason.
         raise SystemExit(str(exc)) from exc
     except AgentTimeoutError as exc:
         raise SystemExit(
@@ -1595,6 +1770,10 @@ def _dispatch_headless_review(
     stdout_only: bool,
     hard_timeout: int | None,
     branch: str | None = None,
+    resolved_head_sha: str | None = None,
+    pinned_head: str | None = None,
+    pr_number: int | None = None,
+    review_profile: str | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1626,9 +1805,15 @@ def _dispatch_headless_review(
             effort=effort,
             hard_timeout=hard_timeout,
             branch=branch,
+            review_profile=review_profile,
+            pinned_head=pinned_head,
         )
     except RuntimeError as exc:
-        raise SystemExit(str(exc)) from exc
+        missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)
+        raise SystemExit(missing or str(exc)) from exc
+
+    if resolved_head_sha is not None and pr_number is not None:
+        _refuse_pr_head_movement(result, pr_number=pr_number, resolved_sha=resolved_head_sha)
 
     response = str(result.get("response") or "")
     if output_path:

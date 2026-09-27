@@ -4,10 +4,28 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
+import time
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
+
+from scripts.common import task_scratch
 from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+
+@pytest.fixture(autouse=True)
+def _isolated_task_scratch_root(tmp_path_factory, monkeypatch) -> Path:
+    """Keep the #8738 task-scratch recovery hook off the host's real scratch root.
+
+    ``_repo_result`` now runs ``recover_task_scratch``; without this override an
+    apply-mode test would inspect (and, for provably dead orphans, reclaim)
+    the live ``/var/tmp/lu/task-scratch`` namespace.
+    """
+    root = tmp_path_factory.mktemp("task-scratch-root")
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    return root
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -112,6 +130,49 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
     cleanup._repo_result(repo, apply=False)
 
     assert captured["include_terminal_dispatches"] is False
+
+
+def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "delegate.py"
+    script.parent.mkdir()
+    script.write_text("# fixture\n", encoding="utf-8")
+    calls: list[str] = []
+    original_run = subprocess.run
+
+    def capture_run(command, **kwargs):
+        if isinstance(command, list) and str(script) in command:
+            calls.append("rescue")
+            assert command[-3:] == ["--all-stale", "--older-than", "6h"]
+            assert "--apply" not in command
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                '{"summary":{"candidate":1},"tasks":[{"task_id":"rescue-test","action":"candidate"}]}',
+                "",
+            )
+        return original_run(command, **kwargs)
+
+    monkeypatch.setattr(cleanup.subprocess, "run", capture_run)
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: calls.append("reaper") or [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0})
+
+    result = cleanup._repo_result(repo, apply=True)
+    assert calls[:2] == ["rescue", "reaper"]
+    assert result["rescue"] == {
+        "summary": {"candidate": 1},
+        "tasks": [{"task_id": "rescue-test", "action": "candidate"}],
+    }
+    public = cleanup.build_public_summary({"repositories": [result], "summary": {}}, None)
+    assert public["repositories"]["repo"]["rescue_candidates"] == 1
 
 
 def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:
@@ -611,6 +672,9 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "errors": 0,
         "review_temp_reaped": 0,
         "review_temp_bytes_freed": 0,
+        "task_scratch_reaped": 0,
+        "task_scratch_bytes_freed": 0,
+        "task_scratch_preserved": 0,
         "needs_finalize_worktrees": [],
     }
     assert receipt["mode"] == "apply"
@@ -1307,9 +1371,10 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_base))
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_base))
 
-    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, create_review_temp_root
+    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, _write_review_temp_root_marker
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_base)
+    root = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=tmp_base))
+    _write_review_temp_root_marker(root, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = 999999
@@ -1448,3 +1513,97 @@ def test_classify_repo_results_retains_exceptions_and_owners() -> None:
     assert counts["by_preservation_class"]["permission_error"] == 1
     assert counts["by_owner"] == {"claude": 1, "codex": 2, "unattributed": 1}
     assert counts["reaped_by_owner"] == {"codex": 1}
+
+
+def _stub_repo_hooks(monkeypatch, *, leak_sweep_calls: list[bool]) -> None:
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: (
+            leak_sweep_calls.append(apply)
+            or {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0}
+        ),
+    )
+
+
+def _plant_dead_orphan(root: Path, *, age_s: float) -> Path:
+    """Allocate a lease whose owner is a fake dead pid and age it."""
+    scratch = task_scratch.allocate("8738-orphan", root=root)
+    (scratch.payload_dir / "atlas.db").write_bytes(b"x" * 4096)
+    scratch.lease["owner"] = {"pid": 2_000_000_000, "start_time": 1, "boot_id": scratch.lease["owner"]["boot_id"]}
+    task_scratch._write_lease_at(scratch._dir_fd, scratch.lease)
+    scratch.preserve()
+    past = time.time() - age_s
+    for path in [scratch.path, *scratch.path.rglob("*")]:
+        os.utime(path, (past, past))
+    return scratch.path
+
+
+def test_scheduled_dry_run_reports_task_scratch_without_mutation(tmp_path: Path, monkeypatch) -> None:
+    root = Path(os.environ["LU_SCRATCH_ROOT"])
+    orphan = _plant_dead_orphan(root, age_s=10 * 3600)
+    repo = _repo(tmp_path)
+    calls: list[bool] = []
+    _stub_repo_hooks(monkeypatch, leak_sweep_calls=calls)
+
+    result = cleanup._repo_result(repo, apply=False)
+
+    assert orphan.is_dir()
+    recovery = result["task_scratch_recovery"]
+    assert recovery["candidates"] == 1
+    assert recovery["reaped"] == 0
+    assert recovery["errors"] == 0
+    assert "entries" not in recovery
+    assert str(orphan) not in json.dumps(result["task_scratch_recovery"])
+
+
+def test_scheduled_apply_reclaims_proven_orphan_and_reports_counts_only(tmp_path: Path, monkeypatch) -> None:
+    root = Path(os.environ["LU_SCRATCH_ROOT"])
+    orphan = _plant_dead_orphan(root, age_s=10 * 3600)
+    live = task_scratch.allocate("8738-live", root=root)  # lock held: must be preserved
+    repo = _repo(tmp_path)
+    calls: list[bool] = []
+    _stub_repo_hooks(monkeypatch, leak_sweep_calls=calls)
+    try:
+        result = cleanup._repo_result(repo, apply=True)
+    finally:
+        live.preserve()
+
+    assert not orphan.exists()
+    assert live.path.is_dir()
+    recovery = result["task_scratch_recovery"]
+    assert recovery["reaped"] == 1
+    assert recovery["bytes_freed"] >= 4096
+    assert recovery["preserved_by_reason"] == {"in_use": 1}
+    assert recovery["errors"] == 0
+    assert result["errors"] == []
+
+    receipt = cleanup.build_receipt([repo], apply=True, observed_at="2026-09-24T20:00:00Z")
+    public = cleanup.build_public_summary(receipt, None)
+    assert public["summary"]["task_scratch_reaped"] == 0  # second pass: already reclaimed
+    serialized = json.dumps(public)
+    assert str(root) not in serialized
+    assert "8738-orphan" not in serialized
+
+
+def test_scheduled_recovery_failure_is_reported_not_fatal(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    calls: list[bool] = []
+    _stub_repo_hooks(monkeypatch, leak_sweep_calls=calls)
+
+    def boom(*, apply: bool):
+        raise RuntimeError("namespace exploded")
+
+    monkeypatch.setattr(cleanup, "recover_task_scratch", boom)
+    result = cleanup._repo_result(repo, apply=False)
+    assert any("task scratch recovery failed" in error for error in result["errors"])
+    assert "task_scratch_recovery" not in result

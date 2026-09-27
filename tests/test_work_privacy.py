@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.work_router as work_router
@@ -15,6 +16,7 @@ from scripts.work.schema import SchemaValidationError, parse_saved_view_params
 from scripts.work.sources_public import SectionResult, private_capability_seam
 
 ROOT = Path(__file__).resolve().parents[1]
+pytestmark = pytest.mark.repo_wide
 CANARY_FILE = ROOT / "tests" / "fixtures" / "work" / "fx07_canaries.txt"
 PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
 # Product + fixture surfaces only. Privacy tests may inject canaries as inputs;

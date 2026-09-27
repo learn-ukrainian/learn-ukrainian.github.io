@@ -9,34 +9,36 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import yaml
 
 from .converters import (
     activity_identity_key,
-    convert_bad_form_markers,
-    convert_callouts,
-    convert_folk_content_blocks,
-    normalize_mdx,
-    process_dialogues,
-    process_story_sections,
-    resolve_slug_links,
-    yaml_activities_to_jsx,
+    edit_convert_bad_form_markers,
+    edit_convert_callouts,
+    edit_convert_folk_content_blocks,
+    edit_normalize_mdx,
+    edit_process_dialogues,
+    edit_process_story_sections,
+    edit_resolve_slug_links,
+    yaml_activity_mdx_parts,
 )
 from .reading_links import reading_href_for, reading_title_for
 from .resources import (
-    embed_youtube_video_links,
+    edit_embed_youtube_video_links,
     format_resources_for_mdx,
     vocab_items_to_components,
 )
+from .unit_map import Edit, EditLog, LessonUnitMap
 from .utils import (
     CURRICULUM_DIR,
     PROJECT_ROOT,
     SCRIPT_DIR,
     STARLIGHT_DOCS_DIR,
+    edit_fix_html_for_jsx,
     escape_jsx,
-    fix_html_for_jsx,
 )
 
 # Ensure scripts/ is on sys.path for sibling imports
@@ -244,13 +246,19 @@ def _inline_activity_section_titles(body: str) -> dict[str, str]:
 
 
 def _inject_inline_activities(
-    body: str,
+    log: EditLog,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
-) -> tuple[str, set[str], set[int], set[str], dict[str, str]]:
-    """Replace Tab 1 INJECT_ACTIVITY markers with matching component JSX."""
+) -> tuple[set[str], set[int], set[str], dict[str, str], list[tuple[str, int, int]]]:
+    """Replace Tab 1 INJECT_ACTIVITY markers in `log` with matching component JSX.
+
+    Each marker's replacement is reported to the log as one edit. The last element lists
+    every injected block as `(activity id, start, end)`, the byte range of its JSX in the
+    resulting body (the injector's own marker->output mapping).
+    """
+    body = log.text
     if not yaml_activities or "INJECT_ACTIVITY" not in body:
-        return body, set(), set(), set(), {}
+        return set(), set(), set(), {}, []
 
     parser = ActivityParser()
     section_titles = _inline_activity_section_titles(body)
@@ -262,8 +270,11 @@ def _inject_inline_activities(
     injected_ids: set[str] = set()
     injected_positions: set[int] = set()
     injected_fingerprints: set[str] = set()
+    injected_blocks: list[tuple[str, int, int]] = []
 
-    def replace_marker(match: re.Match[str]) -> str:
+    edits: list[Edit] = []
+    delta = 0
+    for match in _INJECT_ACTIVITY_RE.finditer(body):
         activity_id = match.group(1)
         matched = by_id.get(activity_id)
         if matched is None:
@@ -272,14 +283,19 @@ def _inject_inline_activities(
         injected_ids.add(activity_id)
         injected_positions.add(index)
         injected_fingerprints.add(activity_identity_key(activity))
-        return parser._activity_to_mdx(activity, is_ukrainian_forced)
+        jsx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        edits.append(Edit(match.start(), match.end(), jsx))
+        start = match.start() + delta
+        injected_blocks.append((activity_id, start, start + len(jsx)))
+        delta += len(jsx) - (match.end() - match.start())
+    log.apply(edits)
 
     return (
-        _INJECT_ACTIVITY_RE.sub(replace_marker, body),
         injected_ids,
         injected_positions,
         injected_fingerprints,
         section_titles,
+        injected_blocks,
     )
 
 
@@ -383,18 +399,20 @@ def _format_plan_readings_for_mdx(readings: object, body: str = "", *, include_i
     return "\n".join(lines) if len(lines) > 2 else ""
 
 
-def _insert_plan_readings_block(body: str, readings: object, *, include_inline: bool = False) -> str:
-    block = _format_plan_readings_for_mdx(readings, body, include_inline=include_inline)
+def _insert_plan_readings_block(log: EditLog, readings: object, *, include_inline: bool = False) -> None:
+    """Insert the reading list into `log`: after the first Reading heading, else in front.
+
+    The heading is the whole match of `_READING_SECTION_RE`, so both cases are one insertion.
+    """
+    block = _format_plan_readings_for_mdx(readings, log.text, include_inline=include_inline)
     if not block:
-        return body
+        return
 
-    def replace(match: re.Match[str]) -> str:
-        return f"{match.group(1)}\n{block}\n\n"
-
-    updated, count = _READING_SECTION_RE.subn(replace, body, count=1)
-    if count:
-        return updated
-    return f"{block}\n\n{body}"
+    match = _READING_SECTION_RE.search(log.text)
+    if match:
+        log.insert(match.end(), f"\n{block}\n\n")
+    else:
+        log.insert(0, f"{block}\n\n")
 
 
 def generate_mdx(
@@ -409,6 +427,7 @@ def generate_mdx(
     build_status: str | None = None,
     activity_plans: list[dict] | None = None,
     fresh: bool = False,
+    unit_map: LessonUnitMap | None = None,
 ) -> str:
     """Convert markdown content to MDX.
 
@@ -422,11 +441,32 @@ def generate_mdx(
         level: Current level (used for specialized formatting like LIT)
         pipeline_version: Optional pipeline version ("v3", "v5", or "v6")
         build_status: Optional build status ("draft", "validated", "reviewed")
+        unit_map: Optional renderer mapping of `md_content` (fresh engine). It is carried
+            through every transform of the Lesson tab and the final document, and the
+            component JSX of every activity is tracked in it (keys `("activity", id, n)`),
+            so the caller can verify each unit at its own location in the returned MDX.
     """
+    def edit(text: str) -> EditLog:
+        """A log of one transform's edits; recorded only when a map is carried."""
+        return EditLog(text, record=unit_map is not None)
+
+    def carry(transform: str, log: EditLog) -> str:
+        if unit_map is not None:
+            unit_map.carry_log(log, transform)
+        return log.text
+
+    def parse_frontmatter_edit(text: str) -> tuple[dict, str]:
+        """`parse_frontmatter`: the body is the suffix after the frontmatter, so one removal."""
+        fm, body = parse_frontmatter(text)
+        log = edit(text)
+        if body != text:
+            # `apply` checks that the removal reproduces the parser's body exactly.
+            log.apply([Edit(0, len(text) - len(body), "")], body)
+        return fm, carry("parse_frontmatter", log)
+
     if meta_data:
         fm = meta_data
-        body = md_content
-        _, body = parse_frontmatter(md_content)
+        _, body = parse_frontmatter_edit(md_content)
         # Strip inline YAML preamble when frontmatter delimiters (---) were missing.
         _YAML_META_KEYS = {
             'module', 'level', 'sequence', 'slug', 'version', 'title', 'subtitle',
@@ -441,9 +481,11 @@ def generate_mdx(
                 heading_match = re.search(r'^#{1,2} ', body, flags=re.MULTILINE)
                 if heading_match and heading_match.start() > 0:
                     print("  \u26a0\ufe0f  Stripping inline YAML preamble (missing --- delimiters)")
-                    body = body[heading_match.start():]
+                    log = edit(body)
+                    log.replace(0, heading_match.start(), "")
+                    body = carry("strip_yaml_preamble", log)
     else:
-        fm, body = parse_frontmatter(md_content)
+        fm, body = parse_frontmatter_edit(md_content)
 
     if yaml_activities:
         yaml_activities = backfill_missing_activity_ids(list(yaml_activities))
@@ -531,9 +573,15 @@ sidebar:
 '''
 
     # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
-    body = re.sub(r'(^#{1,2}\s+(?:Activities|Вправи))[\s\S]*?(?=\n#{1,2}|\Z)', '', body, flags=re.MULTILINE)
-    body = re.sub(r'(^#{1,2}\s+(?:Vocabulary|Словник))[\s\S]*?(?=\n#{1,2}|\Z)', '', body, flags=re.MULTILINE)
-    body = re.sub(r'>\s*\[!resources\].*?(\n>.*)*', '', body, flags=re.MULTILINE | re.IGNORECASE)
+    log = edit(body)
+    log.sub(r'(^#{1,2}\s+(?:Activities|Вправи))[\s\S]*?(?=\n#{1,2}|\Z)', '', flags=re.MULTILINE)
+    body = carry("strip_activities_section", log)
+    log = edit(body)
+    log.sub(r'(^#{1,2}\s+(?:Vocabulary|Словник))[\s\S]*?(?=\n#{1,2}|\Z)', '', flags=re.MULTILINE)
+    body = carry("strip_vocabulary_section", log)
+    log = edit(body)
+    log.sub(r'>\s*\[!resources\].*?(\n>.*)*', '', flags=re.MULTILINE | re.IGNORECASE)
+    body = carry("strip_resources_callout", log)
 
     # =========================================================================
     # TABBED LAYOUT: Build 4 separate content blocks
@@ -541,23 +589,24 @@ sidebar:
 
     # --- TAB 1: Lesson (prose only) ---
     lesson_content = body
-    lesson_content = _insert_plan_readings_block(
-        lesson_content,
-        fm.get("readings"),
-        include_inline=level.lower() == "folk",
-    )
-    lesson_content = embed_youtube_video_links(lesson_content)
+    log = edit(lesson_content)
+    _insert_plan_readings_block(log, fm.get("readings"), include_inline=level.lower() == "folk")
+    lesson_content = carry("insert_plan_readings_block", log)
+    log = edit(lesson_content)
+    edit_embed_youtube_video_links(log)
+    lesson_content = carry("embed_youtube_video_links", log)
+    log = edit(lesson_content)
     (
-        lesson_content,
         injected_activity_ids,
         _injected_activity_positions,
         _injected_activity_fingerprints,
         _injected_activity_section_titles,
-    ) = _inject_inline_activities(
-        lesson_content,
-        yaml_activities,
-        activity_chrome_ukrainian,
-    )
+        injected_activity_blocks,
+    ) = _inject_inline_activities(log, yaml_activities, activity_chrome_ukrainian)
+    lesson_content = carry("inject_inline_activities", log)
+    if unit_map is not None:
+        for occurrence, (activity_id, start, end) in enumerate(injected_activity_blocks):
+            unit_map.track(("activity", activity_id, occurrence), start, end, lesson_content[start:end])
 
     # --- TAB 2: Vocabulary ---
     if vocab_items:
@@ -576,8 +625,9 @@ sidebar:
         if is_ukrainian_forced
         else "No workbook activities for this module; see the Lesson tab."
     )
+    tracked_activity_parts: list[tuple[str, int, int]] = []
     if tab3_activities:
-        activities_content = yaml_activities_to_jsx(
+        activity_parts = yaml_activity_mdx_parts(
             tab3_activities,
             activity_chrome_ukrainian,
             inline_cross_ref_ids=injected_activity_ids,
@@ -585,13 +635,24 @@ sidebar:
             inline_cross_ref_fingerprints=_injected_activity_fingerprints,
             inline_cross_ref_section_titles=_injected_activity_section_titles,
         )
+        activities_content = '\n\n'.join(mdx for _activity_id_or_none, mdx in activity_parts)
         if not activities_content.strip() and injected_activity_ids:
             activities_content = f"*{no_workbook_msg}*"
+        else:
+            offset = 0
+            for activity_id, mdx in activity_parts:
+                if activity_id is not None:
+                    tracked_activity_parts.append((activity_id, offset, offset + len(mdx)))
+                offset += len(mdx) + 2
     elif activity_plans:
         activities_content = _activity_plans_to_jsx(activity_plans)
     else:
         no_act_msg = "\u041d\u0435\u043c\u0430\u0454 \u0432\u043f\u0440\u0430\u0432 \u0434\u043b\u044f \u0446\u044c\u043e\u0433\u043e \u043c\u043e\u0434\u0443\u043b\u044f." if is_ukrainian_forced else "No activities for this module."
         activities_content = f"*{no_act_msg}*"
+    activities_map = LessonUnitMap(activities_content) if unit_map is not None else None
+    if activities_map is not None:
+        for activity_id, start, end in tracked_activity_parts:
+            activities_map.track(("activity", activity_id, "vpravy"), start, end, activities_content[start:end])
 
     # --- TAB 4: Resources ---
     resources_content = ""
@@ -608,29 +669,44 @@ sidebar:
     # =========================================================================
     # Apply shared transforms to all content blocks
     # =========================================================================
-    def _apply_shared_transforms(text: str, strip_bad_forms: bool = False) -> str:
-        """Apply callout conversion, slug links, HTML fixes, comments, stories, dialogues."""
-        text = convert_folk_content_blocks(text)
-        text = convert_callouts(text, is_ukrainian_forced)
-        text = resolve_slug_links(text)
-        text = convert_bad_form_markers(text, strip_only=strip_bad_forms)
-        text = fix_html_for_jsx(text)
-        text = re.sub(r'<!--.*?-->\n?', '', text, flags=re.DOTALL)
-        text = process_story_sections(text)
-        text = process_dialogues(text)
+    def _apply_shared_transforms(
+        text: str, strip_bad_forms: bool = False, track: LessonUnitMap | None = None
+    ) -> str:
+        """Apply callout conversion, slug links, HTML fixes, comments, stories, dialogues.
+
+        Each transform runs on its own `EditLog`; with `track` its edit record is carried.
+        """
+        def step(transform: str, apply: Callable[[EditLog], None]) -> None:
+            nonlocal text
+            log = EditLog(text, record=track is not None)
+            apply(log)
+            if track is not None:
+                track.carry_log(log, transform)
+            text = log.text
+
+        step("convert_folk_content_blocks", edit_convert_folk_content_blocks)
+        step("convert_callouts", lambda log: edit_convert_callouts(log, is_ukrainian_forced))
+        step("resolve_slug_links", edit_resolve_slug_links)
+        step("convert_bad_form_markers", lambda log: edit_convert_bad_form_markers(log, strip_only=strip_bad_forms))
+        step("fix_html_for_jsx", edit_fix_html_for_jsx)
+        step("strip_html_comments", lambda log: log.sub(r'<!--.*?-->\n?', '', flags=re.DOTALL))
+        step("process_story_sections", edit_process_story_sections)
+        step("process_dialogues", edit_process_dialogues)
         return text
 
-    lesson_content = _apply_shared_transforms(lesson_content)
+    lesson_content = _apply_shared_transforms(lesson_content, track=unit_map)
 
     # We pass strip_bad_forms=True to vocab and activities because they contain JSON-embedded JSX props.
     # Putting <del> inside a JSON string value would render literal <del> text in a card instead of semantic strikethrough.
     vocab_content = _apply_shared_transforms(vocab_content, strip_bad_forms=True)
-    activities_content = _apply_shared_transforms(activities_content, strip_bad_forms=True)
+    activities_content = _apply_shared_transforms(activities_content, strip_bad_forms=True, track=activities_map)
 
     resources_content = _apply_shared_transforms(resources_content)
 
     # Remove duplicate H1 title (from lesson tab only)
-    lesson_content = re.sub(r'^#\s+[^\n]+\n', '', lesson_content, count=1, flags=re.MULTILINE)
+    log = edit(lesson_content)
+    log.sub(r'^#\s+[^\n]+\n', '', count=1, flags=re.MULTILINE)
+    lesson_content = carry("remove_duplicate_h1", log)
 
     # Add emojis to H2 section headings (data-driven)
     _HEADING_RULES = [
@@ -640,15 +716,13 @@ sidebar:
         ('\u041a\u0443\u043b\u044c\u0442\u0443\u0440\u0430',            '\U0001f3fa', r'Culture|\u041a\u0443\u043b\u044c\u0442\u0443\u0440\u0430|Cultural Context|\u041a\u0443\u043b\u044c\u0442\u0443\u0440\u043d\u0438\u0439 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442|Folk Culture|\u041d\u0430\u0440\u043e\u0434\u043d\u0430 \u043a\u0443\u043b\u044c\u0442\u0443\u0440\u0430', 'lesson'),
         ('\u0406\u0441\u0442\u043e\u0440\u0438\u0447\u043d\u0438\u0439 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442', '\U0001f570\ufe0f',  r'History|Historical Context|\u0406\u0441\u0442\u043e\u0440\u0438\u0447\u043d\u0438\u0439 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442|Heritage|\u0421\u043f\u0430\u0434\u0449\u0438\u043d\u0430',                   'lesson'),
     ]
-    content_blocks = {'lesson': lesson_content, 'resources': resources_content}
+    # The heading text itself (`\g<1>`) is reported as kept in place; the marker is the edit.
+    content_blocks = {'lesson': edit(lesson_content), 'resources': EditLog(resources_content, record=False)}
     for uk_text, emoji, pattern, target in _HEADING_RULES:
         replacement = uk_text if is_ukrainian_forced else r'\g<1>'
-        content_blocks[target] = re.sub(
-            rf'^#{{1,2}} ({pattern})', f'## {emoji} {replacement}',
-            content_blocks[target], flags=re.MULTILINE,
-        )
-    lesson_content = content_blocks['lesson']
-    resources_content = content_blocks['resources']
+        content_blocks[target].sub(rf'^#{{1,2}} ({pattern})', f'## {emoji} {replacement}', flags=re.MULTILINE)
+    lesson_content = carry("heading_emojis", content_blocks['lesson'])
+    resources_content = content_blocks['resources'].text
 
     # =========================================================================
     # Wrap in Tabs
@@ -667,12 +741,41 @@ sidebar:
             return f"{uk} — {en}"
         return en
 
-    tab_items = '\n'.join(
-        f'<TabItem label="{_tab_label(en, uk)}">\n\n'
-        f'{content.strip()}\n\n</TabItem>'
-        for en, uk, content in tabs
-    )
-    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync />\n'
+    tabs_open = '\n<Tabs syncKey="module-tab">\n'
+    tab_items_list: list[str] = []
+    tab_content_offsets: list[int] = []  # where each tab's stripped content starts in `tabbed`
+    position = len(tabs_open)
+    for en, uk, content in tabs:
+        if tab_items_list:
+            position += 1  # the newline joining tab items
+        opening = f'<TabItem label="{_tab_label(en, uk)}">\n\n'
+        tab_content_offsets.append(position + len(opening))
+        item = f'{opening}{content.strip()}\n\n</TabItem>'
+        tab_items_list.append(item)
+        position += len(item)
+    tab_items = '\n'.join(tab_items_list)
+    tabbed = f'{tabs_open}{tab_items}\n</Tabs>\n\n<HashTabSync />\n'
+    if unit_map is not None:
+        # The tabs are wrapped from the stripped contents; carry each mapped tab into the
+        # wrapped document (its content is at a known offset: the wrapping is two
+        # insertions), then keep one map in the document's coordinates.
+        def wrap_tab(tab_map: LessonUnitMap, content: str, tab_index: int) -> None:
+            log = EditLog(content)
+            log.strip()
+            tab_map.carry_log(log, "strip_tab_content")
+            stripped = log.text
+            offset = tab_content_offsets[tab_index]
+            log = EditLog(stripped)
+            log.apply(
+                [Edit(0, 0, tabbed[:offset]), Edit(len(stripped), len(stripped), tabbed[offset + len(stripped):])],
+                tabbed,
+            )
+            tab_map.carry_log(log, "wrap_tabs")
+
+        wrap_tab(unit_map, lesson_content, 0)
+        if activities_map is not None:
+            wrap_tab(activities_map, activities_content, 2)
+            unit_map.adopt(activities_map)
 
     import_lines = [
         "import Quiz from '@site/src/components/Quiz';",
@@ -735,10 +838,15 @@ sidebar:
     ])
     imports = "\n".join(import_lines)
 
-    # Build MDX
-    parts = [frontmatter, imports, '', tabbed]
+    # Build MDX: the tabs are preceded by the frontmatter and imports (one insertion).
+    parts = [frontmatter, imports, '']
+    log = edit(tabbed)
+    log.insert(0, '\n'.join(parts) + '\n')
+    document = carry("assemble_document", log)
 
-    return normalize_mdx('\n'.join(parts))
+    log = edit(document)
+    edit_normalize_mdx(log)
+    return carry("normalize_mdx", log)
 
 
 def get_modules_from_manifest(target_level: str | None = None) -> list[Module]:

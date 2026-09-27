@@ -5147,6 +5147,20 @@ def _print_questions_only(path: Path) -> None:
     print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 
+def _derived_namespace(args: argparse.Namespace, **overrides: Any) -> argparse.Namespace:
+    """Derive one sub-step namespace from the caller instead of rebuilding it field-by-field.
+
+    A hand-written ``argparse.Namespace(...)`` silently drops any option the
+    author forgot; GH #8643 lost ``--monitor-base-url`` that way and the confirm
+    path never uploaded its rollover bundle. Starting from ``vars(args)`` means a
+    new top-level option flows into every synthesized sub-step by default, with
+    the step-specific overrides taking precedence.
+    """
+    values = dict(vars(args))
+    values.update(overrides)
+    return argparse.Namespace(**values)
+
+
 def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
     """Bind, resume, and create one answer-free semantic snapshot template."""
     packet = _wrapper_packet_context(args)
@@ -5162,7 +5176,8 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
     if not already_resumed:
         title_transition = replacement.get("title_transition") or {}
         if not title_transition.get("native_title_supported"):
-            bind_args = argparse.Namespace(
+            bind_args = _derived_namespace(
+                args,
                 repo_root=args.repo_root,
                 agent=args.agent,
                 lineage_id=args.lineage_id,
@@ -5173,7 +5188,8 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
             )
             if cmd_bind_replacement(bind_args) != 0:
                 return 2
-        resume_args = argparse.Namespace(
+        resume_args = _derived_namespace(
+            args,
             repo_root=args.repo_root,
             agent=args.agent,
             lineage_id=args.lineage_id,
@@ -5268,13 +5284,14 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
         print(json.dumps({"error": str(exc), "action": "confirm-replacement"}, indent=2))
         return 2
 
-    mint_args = argparse.Namespace(snapshot=snapshot_path, facts=None, out=probe_path)
+    mint_args = _derived_namespace(args, snapshot=snapshot_path, facts=None, out=probe_path)
     if context_canary.cmd_mint(mint_args) != 0:
         return 2
-    questions_args = argparse.Namespace(probe=probe_path, out=questions_path)
+    questions_args = _derived_namespace(args, probe=probe_path, out=questions_path)
     if context_canary.cmd_questions(questions_args) != 0:
         return 2
-    score_args = argparse.Namespace(
+    score_args = _derived_namespace(
+        args,
         probe=probe_path,
         answers=answers_path,
         expected_lineage_id=state["lineage_id"],
@@ -5304,7 +5321,8 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
     if canary_result != 0:
         _print_questions_only(questions_path)
         return 2
-    confirm_args = argparse.Namespace(
+    confirm_args = _derived_namespace(
+        args,
         repo_root=args.repo_root,
         agent=agent,
         lineage_id=args.lineage_id,

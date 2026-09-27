@@ -51,7 +51,7 @@ Issue #8339 establishes a mandatory, automated, fail-closed acceptance tool:
 
 ### 2.2. Arguments & Configuration
 
-* `dataset_dir` (positional, required): Path to dataset folder (e.g., `data/projects/open_model_data/release/uldr_v06_ulif_phraseology`). Scans all JSONL shards across `sft/`, `dpo/`, and evaluation splits (`eval/`, `*_eval.jsonl`).
+* `dataset_dir` (positional, required): Path to dataset folder (e.g., `data/projects/open_model_data/export/uldr_v06_ulif_phraseology`). Scans all JSONL shards across `sft/`, `dpo/`, and evaluation splits (`eval/`, `*_eval.jsonl`).
 * `--profile` (optional, default: `default`): Named, repository-committed acceptance profile from `scripts/projects/open_model_data/profiles/` (e.g., `grammar_8342`, `phraseology_8140`, `general_assistant_8341`). Arbitrary external YAML config paths are refused unless `--allow-uncommitted-config` is explicitly set, preventing authors from quietly loosening gates (M5).
 * `--sample-out` (optional): Output path for the drawn reviewer sample package. Default: `<dataset_dir>/acceptance_review_sample.md` (and paired `.json`).
 * `--sample-size` (optional, default: `300`): Number of records to draw for the human audit package ($n=300$ gives $>95\%$ detection power for a 1% defect rate; M3).

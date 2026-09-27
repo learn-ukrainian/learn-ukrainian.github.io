@@ -3170,7 +3170,7 @@ def validate_noun_mechanics_card(card: NounMechanicsCard) -> list[str]:
 
 
 def export_noun_mechanics_deck(
-    output_path: Path | str = PROJECT_ROOT / "data" / "practice" / "noun_mechanics_deck.json",
+    output_path: Path | str = PROJECT_ROOT / "registry" / "practice" / "noun_mechanics_deck.json",
 ) -> Path:
     """Export the canonical noun mechanics card bank to JSON."""
     cards = build_canonical_noun_mechanics_cards()
@@ -3210,7 +3210,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "data" / "practice" / "noun_mechanics_deck.json",
+        default=PROJECT_ROOT / "registry" / "practice" / "noun_mechanics_deck.json",
         help="Target path for deck export",
     )
     args = parser.parse_args()

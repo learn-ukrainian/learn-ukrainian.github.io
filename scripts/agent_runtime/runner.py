@@ -2859,7 +2859,16 @@ def _invoke_impl(
     _enforce_resume_policy(agent_name, session_id, entrypoint)
 
     # ---------- 5. Pre-call rate-limit check ----------
-    effective_model = model or adapter.default_model
+    # Native Kimi's registry default stays k3-256k. An omitted --model on
+    # --harness kimicc must not inherit it: that id is not on the kimicc route.
+    # The catalog's first routable kimicc model is the dispatch default.
+    requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
+    if agent_name == "kimi" and requested_harness == "kimicc":
+        from .adapters.kimicc import resolve_kimicc_dispatch_model
+
+        effective_model = resolve_kimicc_dispatch_model(model)
+    else:
+        effective_model = model or adapter.default_model
     failover_chain = (
         load_failover_chain(agent_name, effective_model=effective_model)
         if allow_runner_failover
@@ -3165,7 +3174,7 @@ def _require_acp_transport(transport: str | None) -> None:
     active = os.environ.get(ACPX_TRANSPORT_ENV, "off").strip().lower()
     if active != "active":
         raise InterAgentTransportError(
-            f"ACP transport is unavailable ({ACPX_TRANSPORT_ENV}={active!r}); refusing before spawn"
+            f"ACP transport is unavailable ({ACPX_TRANSPORT_ENV} is not active); refusing before spawn"
         )
 
 

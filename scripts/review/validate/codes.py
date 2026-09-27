@@ -31,6 +31,12 @@ EVIDENCE_BRANCH_COUNT = "evidence_branch_count"
 SCHEMA_INVALID = "schema_invalid"
 LESSON_UNREADABLE = "lesson_unreadable"
 REVIEW_UNREADABLE = "review_unreadable"
+MANIFEST_KIND_MISMATCH = "manifest_kind_mismatch"
+PLAN_MANIFEST_INVALID = "plan_manifest_invalid"
+PLAN_UNREADABLE = "plan_unreadable"
+PLAN_BYTES_MISMATCH = "plan_bytes_mismatch"
+PLAN_INPUTS_STALE = "plan_inputs_stale"
+LOCATION_NOT_IN_PLAN = "location_not_in_plan"
 
 DESCRIPTIONS: dict[str, str] = {
     MANIFEST_HASH_MISMATCH: "failure: attempt.manifest_sha256 is not the sha256 of the manifest file bytes",
@@ -59,6 +65,12 @@ DESCRIPTIONS: dict[str, str] = {
     SCHEMA_INVALID: "failure: the review document does not match schemas/review-v1.schema.json",
     LESSON_UNREADABLE: "failure: the expanded lesson is missing or has no units list",
     REVIEW_UNREADABLE: "failure: the review file is missing or not a YAML mapping",
+    MANIFEST_KIND_MISMATCH: "failure: the review's kind (lesson or plan) is not the kind of the manifest it echoes",
+    PLAN_MANIFEST_INVALID: "failure: a kind: plan manifest does not match schemas/plan-review-manifest-v1.schema.json",
+    PLAN_UNREADABLE: "failure: the plan document pinned by the manifest is missing or not a YAML mapping with lessons",
+    PLAN_BYTES_MISMATCH: "failure: the plan document's sha256 is not the manifest's inputs.plan.sha256",
+    PLAN_INPUTS_STALE: "failure: a manifest input (or a report's recorded input, or the planned learner state) changed since the manifest; the plan transition proven by a promotion receipt is the only allowed difference",
+    LOCATION_NOT_IN_PLAN: "failure: the named lesson, step, activity or field is not in the plan document",
 }
 
 

@@ -3,7 +3,8 @@
 
 Runs:
 1. `dispatch_settle release-stale` (releases write-ownership claims for inactive tasks)
-2. Lazy heal path (`delegate.py status`) for running task records whose PID is dead
+2. Lazy heal path (`delegate.py status`) for running task records whose PID is dead,
+   and for pid-less worktree-prep records whose dispatcher is dead (#8663)
 3. Logs a one-line summary (counts) to stdout (journal)
 
 DEFAULT DRY-RUN: without `--apply`, only reports what would be settled.
@@ -15,6 +16,7 @@ import argparse
 import contextlib
 import io
 import json
+import os
 import sqlite3
 import sys
 from dataclasses import asdict, dataclass, field
@@ -28,17 +30,17 @@ for path in (PROJECT_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(path))
 
 from scripts import delegate
+from scripts.common.task_store_paths import tasks_dir
 from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     _task_still_active,
     default_ledger_path,
 )
-from scripts.orchestration import dispatch_settle
+from scripts.orchestration import dispatch_admission, dispatch_settle
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
-    root = repo_root or PROJECT_ROOT
-    return root / "batch_state" / "tasks"
+    return repo_root / "batch_state" / "tasks" if repo_root is not None else tasks_dir()
 
 
 @dataclass
@@ -147,30 +149,46 @@ def run_reconcile_sweep(
             if status in ("running", "spawning"):
                 raw_pid = state.get("pid")
                 pid = _parse_pid(raw_pid)
-                if pid is None:
+                if (
+                    pid is None
+                    and raw_pid is None
+                    and (
+                        isinstance(state.get("worktree_prep"), dict)
+                        or dispatch_admission.is_admission_hold_record(state)
+                    )
+                ):
+                    # #8663/#8717: dispatch publishes ``pid: null`` after
+                    # admission and while its git worktree add runs; the
+                    # dispatcher recorded in ``admission_hold`` or
+                    # ``worktree_prep`` owns the record until a worker exists.
+                    pid_alive = not dispatch_admission.is_orphaned_pidless_record(state)
+                elif pid is None:
                     unparseable_tasks.append(task_id)
                     continue
-
-                try:
-                    pid_alive = delegate._pid_alive(pid)
-                except Exception:
-                    unparseable_tasks.append(task_id)
-                    continue
+                else:
+                    try:
+                        pid_alive = delegate._pid_alive(pid)
+                    except Exception:
+                        unparseable_tasks.append(task_id)
+                        continue
 
                 if not pid_alive:
                     zombie_tasks.append(task_id)
                     if apply:
                         # Invoke lazy heal path via delegate.cmd_status
-                        saved_tasks_dir = delegate._TASKS_DIR
+                        saved_tasks_dir = os.environ.get("LU_TASKS_DIR")
                         try:
-                            delegate._TASKS_DIR = tdir
+                            os.environ["LU_TASKS_DIR"] = str(tdir)
                             with (
                                 contextlib.redirect_stdout(io.StringIO()),
                                 contextlib.redirect_stderr(io.StringIO()),
                             ):
                                 delegate.cmd_status(argparse.Namespace(task_id=task_id, run_nonce=None))
                         finally:
-                            delegate._TASKS_DIR = saved_tasks_dir
+                            if saved_tasks_dir is None:
+                                os.environ.pop("LU_TASKS_DIR", None)
+                            else:
+                                os.environ["LU_TASKS_DIR"] = saved_tasks_dir
                 else:
                     live_tasks.append(task_id)
         except Exception:
@@ -206,6 +224,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Outputs:\n"
             "  Stdout: one-line summary line (and optional JSON payload).\n"
             "  In --apply mode: updates batch_state/tasks/*.json statuses to 'crashed' via delegate.py status\n"
+            "  (including worktree-prep records and admission holds whose dispatcher died:\n"
+            "  dispatch_died_during_worktree_prep, dispatch_died_after_admission)\n"
             "  and removes stale rows from write-ownership.sqlite3.\n\n"
             "Exit codes:\n"
             "  0 on successful sweep (in dry-run or apply mode);\n"

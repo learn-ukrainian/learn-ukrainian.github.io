@@ -1,0 +1,758 @@
+"""Pin the #8505 trigger split: body edits and labels must not start CI.
+
+Safety invariant under test: no event path may make the required "CI Gate"
+check green or skipped without the classified tier running.
+
+- ci.yml fires on opened/synchronize/reopened only, never `edited` or
+  `labeled`. The negated-closing-reference body guard lives in
+  pr-body-guard.yml, the only workflow subscribed to `edited` (S2).
+- `full-ci` is read from the API by the Changes job (see
+  scripts/ci/test_classify_changes.py), for pull_request and merge_group (S3).
+- Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
+  and fails when a required dependency was cancelled or skipped unexpectedly
+  (S1); GitHub treats a skipped required job as success.
+
+Job conditions, names and the concurrency group are GitHub expressions. The
+evaluator below implements the subset ci.yml uses, with GitHub semantics
+(case-insensitive string equality, `&&`/`||` return an operand), so the tests
+evaluate the real YAML against every event shape instead of grepping it.
+"""
+
+from __future__ import annotations
+
+import math
+import os
+import re
+import subprocess
+import tempfile
+from pathlib import Path
+from typing import Any
+
+import pytest
+import yaml
+
+from scripts.ci import classify_changes
+from scripts.ci.classify_changes import preflight_for
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_WORKFLOWS = _REPO_ROOT / ".github" / "workflows"
+
+
+def _load(name: str) -> dict:
+    workflow = yaml.safe_load((_WORKFLOWS / name).read_text(encoding="utf-8"))
+    assert isinstance(workflow, dict), f"{name} did not parse to a mapping"
+    return workflow
+
+
+def _triggers(workflow: dict) -> dict:
+    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
+    raw = workflow.get("on", workflow.get(True))
+    assert isinstance(raw, dict), "workflow has no `on:` mapping"
+    return raw
+
+
+def _pr_types(workflow: dict) -> set[str]:
+    pull_request = _triggers(workflow).get("pull_request")
+    if pull_request is None:
+        return set()
+    if isinstance(pull_request, dict):
+        return set(pull_request.get("types") or [])
+    return {"opened", "synchronize", "reopened"}  # default type set
+
+
+# --- GitHub Actions expression subset -------------------------------------
+
+_TOKEN = re.compile(
+    r"\s*(?:(?P<str>'(?:[^']|'')*')|(?P<op>&&|\|\||==|!=|[!(),])"
+    r"|(?P<num>\d+(?:\.\d+)?)|(?P<ident>[A-Za-z_][A-Za-z0-9_-]*(?:\.[A-Za-z_][A-Za-z0-9_-]*)*))"
+)
+_STATUS_FUNCTIONS = re.compile(r"\b(?:always|success|failure|cancelled)\s*\(")
+
+
+def _truthy(value: Any) -> bool:
+    if isinstance(value, float) and math.isnan(value):
+        return False
+    return value not in (None, False, 0, "")
+
+
+def _equal(left: Any, right: Any) -> bool:
+    if isinstance(left, str) and isinstance(right, str):
+        return left.casefold() == right.casefold()
+    return left == right
+
+
+def _tokens(expression: str) -> list[tuple[str, str]]:
+    out: list[tuple[str, str]] = []
+    position = 0
+    stripped = expression.rstrip()
+    while position < len(stripped):
+        match = _TOKEN.match(stripped, position)
+        assert match and match.end() > position, f"unsupported expression: {expression!r}"
+        kind = match.lastgroup
+        assert kind is not None
+        out.append((kind, match.group(kind)))
+        position = match.end()
+    return out
+
+
+def _evaluate(expression: str, context: dict[str, Any]) -> Any:
+    tokens = _tokens(expression)
+    index = 0
+
+    def peek() -> str | None:
+        return tokens[index][1] if index < len(tokens) else None
+
+    def take(expected: str | None = None) -> tuple[str, str]:
+        nonlocal index
+        token = tokens[index]
+        assert expected is None or token[1] == expected, (expected, token, expression)
+        index += 1
+        return token
+
+    def or_expr() -> Any:
+        value = and_expr()
+        while peek() == "||":
+            take()
+            right = and_expr()
+            value = value if _truthy(value) else right
+        return value
+
+    def and_expr() -> Any:
+        value = comparison()
+        while peek() == "&&":
+            take()
+            right = comparison()
+            value = right if _truthy(value) else value
+        return value
+
+    def comparison() -> Any:
+        value = unary()
+        if peek() in {"==", "!="}:
+            op = take()[1]
+            right = unary()
+            same = _equal(value, right)
+            return same if op == "==" else not same
+        return value
+
+    def unary() -> Any:
+        if peek() == "!":
+            take()
+            return not _truthy(unary())
+        return primary()
+
+    def primary() -> Any:
+        kind, text = take()
+        if text == "(":
+            value = or_expr()
+            take(")")
+            return value
+        if kind == "str":
+            return text[1:-1].replace("''", "'")
+        if kind == "num":
+            return float(text)
+        assert kind == "ident", (kind, text, expression)
+        if peek() == "(":
+            take("(")
+            args: list[Any] = []
+            while peek() != ")":
+                args.append(or_expr())
+                if peek() == ",":
+                    take(",")
+            take(")")
+            return _call(text, args, context)
+        if text in {"true", "false", "null"}:
+            return {"true": True, "false": False, "null": None}[text]
+        value: Any = context
+        for part in text.split("."):
+            value = value.get(part) if isinstance(value, dict) else None
+        return value
+
+    result = or_expr()
+    assert index == len(tokens), f"trailing tokens in {expression!r}"
+    return result
+
+
+def _call(name: str, args: list[Any], context: dict[str, Any]) -> Any:
+    if name == "always":
+        return True
+    # Step status functions read the job status so far (``job.status``):
+    # success until a step fails, cancelled once the run is cancelled.
+    status = context.get("job", {}).get("status", "success")
+    if name in {"success", "failure", "cancelled"}:
+        assert not args, name
+        return status == name
+    if name == "format":
+        text = str(args[0])
+        for number, arg in enumerate(args[1:]):
+            text = text.replace("{" + str(number) + "}", _render(arg))
+        return text
+    raise AssertionError(f"unsupported function {name}()")
+
+
+def _render(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _interpolate(template: Any, context: dict[str, Any]) -> str:
+    return re.sub(r"\$\{\{(.*?)\}\}", lambda m: _render(_evaluate(m.group(1), context)), str(template))
+
+
+def _condition(raw: Any, context: dict[str, Any]) -> bool:
+    text = str(raw).strip()
+    if text.startswith("${{") and text.endswith("}}"):
+        text = text[3:-2]
+    return _truthy(_evaluate(text, context))
+
+
+def test_expression_evaluator_follows_github_semantics() -> None:
+    ctx = {"github": {"event": {"action": "opened", "label": {"name": "Full-CI"}}}}
+    assert _evaluate("github.event.label.name == 'full-ci'", ctx) is True  # case-insensitive
+    assert _evaluate("github.event.missing == 'opened'", ctx) is False
+    assert _evaluate("github.event.missing != 'opened'", ctx) is True
+    assert _evaluate("false && 'x' || ''", ctx) == ""
+    assert _evaluate("true && 'x' || ''", ctx) == "x"
+    assert _evaluate("!(true && false)", ctx) is True
+    assert _interpolate("a-${{ 7 }}-${{ null }}", ctx) == "a-7-"
+    assert _evaluate("!cancelled() && success()", ctx) is True
+    assert _evaluate("!cancelled()", {"job": {"status": "failure"}}) is True
+    assert _evaluate("success()", {"job": {"status": "failure"}}) is False
+    assert _evaluate("!cancelled()", {"job": {"status": "cancelled"}}) is False
+
+
+# --- ci.yml job simulation -------------------------------------------------
+
+_FULL_TIER = {"docs_only": "false", "backend": "true", "frontend": "true", "shards": "[1]", "pytest_mode": "full"}
+
+
+def _changes_outputs(github: dict[str, Any]) -> dict[str, str]:
+    """A full-tier Changes result for this event; preflight comes from the classifier."""
+    return {**_FULL_TIER, "preflight": preflight_for(github["event_name"], _FULL_TIER)}
+
+
+def _github(event_name: str, event: dict[str, Any], ref: str = "refs/pull/7/merge") -> dict[str, Any]:
+    return {"workflow": "CI", "event_name": event_name, "event": event, "ref": ref}
+
+
+def _pr_event(action: str) -> dict[str, Any]:
+    return _github(
+        "pull_request",
+        {"action": action, "pull_request": {"number": 7, "head": {"sha": "a" * 40}, "labels": []}},
+    )
+
+
+_EVENTS = {
+    "opened": _pr_event("opened"),
+    "synchronize": _pr_event("synchronize"),
+    "reopened": _pr_event("reopened"),
+    "merge_group": _github(
+        "merge_group",
+        {"action": "checks_requested", "merge_group": {"head_sha": "b" * 40}},
+        ref="refs/heads/gh-readonly-queue/main/pr-7-" + "c" * 40,
+    ),
+    "schedule": _github("schedule", {"schedule": "30 3 * * *"}, ref="refs/heads/main"),
+    "workflow_dispatch": _github("workflow_dispatch", {}, ref="refs/heads/main"),
+}
+
+
+def _simulate(github: dict[str, Any]) -> tuple[dict[str, str], dict[str, str]]:
+    """Return (job id -> ran|skipped, job id -> evaluated check name) for ci.yml.
+
+    Follows GitHub's rule: a job whose `if` has no status function carries an
+    implicit success() and is skipped when any `needs` job did not succeed.
+    Every job that runs is assumed to succeed.
+    """
+    results: dict[str, str] = {}
+    names: dict[str, str] = {}
+    for job_id, job in _load("ci.yml")["jobs"].items():
+        needs = job.get("needs") or []
+        needs = [needs] if isinstance(needs, str) else needs
+        context = {
+            "github": github,
+            "matrix": {},
+            "needs": {
+                need: {
+                    "result": results[need],
+                    "outputs": _changes_outputs(github) if need == "changes" and results[need] == "ran" else {},
+                }
+                for need in needs
+            },
+        }
+        condition = job.get("if")
+        explicit_status = condition is not None and _STATUS_FUNCTIONS.search(str(condition))
+        if not explicit_status and any(results[need] != "ran" for need in needs):
+            ran = False
+        else:
+            ran = True if condition is None else _condition(condition, context)
+        results[job_id] = "ran" if ran else "skipped"
+        names[job_id] = _interpolate(job.get("name", job_id), context)
+    return results, names
+
+
+def _concurrency_group(github: dict[str, Any]) -> str:
+    return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
+
+
+def test_ci_triggers_on_code_events_only() -> None:
+    # AC-01: neither `edited` nor `labeled` may start CI on an unchanged SHA.
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
+
+
+def test_no_workflow_reruns_ci_on_a_label() -> None:
+    assert not (_WORKFLOWS / "full-ci-label.yml").exists()
+    for path in _WORKFLOWS.glob("*.yml"):
+        text = path.read_text(encoding="utf-8")
+        assert "gh run rerun" not in text, path.name
+        assert "label-noop" not in text, path.name
+
+
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_every_event_runs_every_tier_job_and_reports_ci_gate(event: str) -> None:
+    results, names = _simulate(_EVENTS[event])
+    # Every job runs on every event; preflight (#8750) is a fast-checks step.
+    assert {job for job, result in results.items() if result != "ran"} == set()
+    assert names["ci-gate"] == "CI Gate"
+    assert names["changes"] == "Changes"
+
+
+def test_pr_runs_share_one_group_per_pr_number() -> None:
+    # AC-05: a push cancels the in-flight run for the previous SHA of the PR.
+    groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened")}
+    assert groups == {"CI-pull_request-7"}
+    assert _concurrency_group(_EVENTS["merge_group"]).startswith(
+        "CI-merge_group-refs/heads/gh-readonly-queue/"
+    )
+
+
+def test_body_guard_moved_out_of_ci_into_pr_body_guard() -> None:
+    ci_text = (_WORKFLOWS / "ci.yml").read_text(encoding="utf-8")
+    assert "lint_pr_closing_references" not in ci_text
+
+    guard = _load("pr-body-guard.yml")
+    # S2: the guard still runs at push time (opened/synchronize/reopened) and
+    # now also on body edits.
+    assert {"opened", "edited", "synchronize", "reopened"} <= _pr_types(guard)
+    guard_text = (_WORKFLOWS / "pr-body-guard.yml").read_text(encoding="utf-8")
+    assert "lint_pr_closing_references.py --stdin" in guard_text
+    assert guard.get("permissions") == {"contents": "read"}
+
+
+def test_changes_job_reads_labels_for_pull_request_and_merge_group() -> None:
+    # S3 wiring: classify_changes.py reads PR labels via the API (needs
+    # pull-requests: read) and resolves merge-group PRs from the queue ref.
+    changes = _load("ci.yml")["jobs"]["changes"]
+    assert changes["permissions"]["pull-requests"] == "read"
+    env = next(step["env"] for step in changes["steps"] if step.get("id") == "classify")
+    assert env["HEAD_REF"] == "${{ github.event.merge_group.head_ref }}"
+    assert "github.event.merge_group.base_sha" in env["BASE"]
+
+
+def test_exactly_one_ci_gate_job_across_workflows() -> None:
+    carriers = []
+    for path in sorted(_WORKFLOWS.glob("*.yml")):
+        for job_id, job in (_load(path.name).get("jobs") or {}).items():
+            if "ci gate" in str(job.get("name", "")).casefold():
+                carriers.append((path.name, job_id))
+    assert carriers == [("ci.yml", "ci-gate")]
+    assert _load("ci.yml")["jobs"]["ci-gate"]["name"] == "CI Gate"
+
+
+def _ci_gate_job() -> dict:
+    return _load("ci.yml")["jobs"]["ci-gate"]
+
+
+def _gate_script() -> str:
+    steps = _ci_gate_job()["steps"]
+    assert len(steps) == 1
+    script = steps[0]["run"]
+    assert isinstance(script, str)
+    return script
+
+
+def test_ci_gate_runs_after_cancel() -> None:
+    # S1: a skipped required check is success on GitHub. The Gate must run
+    # after a concurrency cancel (`always()`) and fail in the step.
+    condition = str(_ci_gate_job()["if"])
+    assert condition == "always()"
+    assert _condition(condition, {"github": _EVENTS["synchronize"], "needs": {}}) is True
+    assert "required job was cancelled" in _gate_script()
+
+
+def _run_gate(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    with tempfile.TemporaryDirectory(dir=_REPO_ROOT, prefix="gate-gh-") as temp:
+        # The real gate queries this run attempt; replace only that transport
+        # so its shell logic is exercised against controlled matrix outcomes.
+        gh = Path(temp) / "gh"
+        gh.write_text(
+            "#!/bin/sh\n"
+            'if [ -n "${MOCK_PYTEST_JOB_LINES+x}" ]; then\n'
+            "  printf '%s\\n' \"$MOCK_PYTEST_JOB_LINES\"\n"
+            "  exit 0\n"
+            "fi\n"
+            "i=1\n"
+            'while [ "$i" -le "$SHARD_COUNT" ]; do\n'
+            "  printf 'pytest (%s)|success\\n' \"$i\"\n"
+            "  i=$((i+1))\n"
+            "done\n",
+            encoding="utf-8",
+        )
+        gh.chmod(0o755)
+        return subprocess.run(
+            ["bash", "-c", _gate_script()],
+            check=False,
+            capture_output=True,
+            text=True,
+            env={
+                **os.environ,
+                "PATH": f"{temp}:{os.environ['PATH']}",
+                "GITHUB_REPOSITORY": "owner/repo",
+                "GITHUB_RUN_ID": "123",
+                "GITHUB_RUN_ATTEMPT": "1",
+                **env,
+            },
+            timeout=30,
+        )
+
+
+# --- fast-checks (#8750 phase A.2) -------------------------------------------
+
+# Check step id -> (step-level timeout, the tier condition after `!cancelled()`).
+# Each timeout is the former job's timeout-minutes; each condition is the
+# former job's `if:` (plan-validate and TypeSafe triage had none).
+_FAST_CHECKS = {
+    "preflight": (8, "needs.changes.outputs.preflight == 'true'"),
+    "ruff": (5, "needs.changes.outputs.docs_only == 'false'"),
+    "plan_validate": (10, None),
+    "typesafe": (5, None),
+}
+_FAST_CHECK_SETUP_MINUTES = 7
+
+
+def _fast_checks_job() -> dict:
+    return _load("ci.yml")["jobs"]["fast-checks"]
+
+
+def _check_steps() -> dict[str, dict]:
+    return {step["id"]: step for step in _fast_checks_job()["steps"] if step.get("id") in _FAST_CHECKS}
+
+
+def test_fast_checks_replaces_the_short_check_jobs() -> None:
+    jobs = _load("ci.yml")["jobs"]
+    for removed in ("ruff", "preflight", "plan-validate", "typesafe-triage"):
+        assert removed not in jobs, removed
+    assert jobs["fast-checks"]["needs"] == ["changes"]
+    # Shards and the other lanes stay independent of fast-checks.
+    for job_id in ("pytest", "contracts", "frontend"):
+        assert jobs[job_id]["needs"] == ["changes"], job_id
+    assert "needs" not in jobs["secret-scan"]
+    assert sorted(_ci_gate_job()["needs"]) == sorted(
+        ["changes", "secret-scan", "fast-checks", "pytest", "needs-artifact-audit", "contracts", "frontend"]
+    )
+
+
+def test_fast_checks_runs_each_check_as_one_step_in_order() -> None:
+    steps = _fast_checks_job()["steps"]
+    ordered = [step["id"] for step in steps if step.get("id") in _FAST_CHECKS]
+    assert ordered == list(_FAST_CHECKS)  # preflight first
+    # Only check steps carry a timeout; setup steps share the job budget.
+    assert [step["id"] for step in steps if "timeout-minutes" in step] == ordered
+
+
+@pytest.mark.parametrize("check", sorted(_FAST_CHECKS))
+def test_fast_check_step_condition_timeout_and_output(check: str) -> None:
+    step = _check_steps()[check]
+    timeout, condition = _FAST_CHECKS[check]
+    expected = "!cancelled()" if condition is None else f"!cancelled() && {condition}"
+    assert step["if"] == "${{ " + expected + " }}"
+    assert step["timeout-minutes"] == timeout
+    assert _fast_checks_job()["outputs"][check] == "${{ steps." + check + ".outcome }}"
+
+
+def test_fast_checks_outputs_are_step_outcomes_only() -> None:
+    outputs = _fast_checks_job()["outputs"]
+    assert set(outputs) == set(_FAST_CHECKS)
+    assert "conclusion" not in yaml.safe_dump(outputs)
+
+
+def test_only_typesafe_is_advisory() -> None:
+    advisory = [
+        step.get("id") or step.get("name") for step in _fast_checks_job()["steps"] if step.get("continue-on-error")
+    ]
+    assert advisory == ["typesafe"]
+    assert _check_steps()["typesafe"]["continue-on-error"] is True
+
+
+def test_fast_checks_job_timeout_covers_every_step_budget() -> None:
+    budget = sum(timeout for timeout, _ in _FAST_CHECKS.values()) + _FAST_CHECK_SETUP_MINUTES
+    assert budget == 35
+    assert _fast_checks_job()["timeout-minutes"] == budget
+
+
+def _changes_for(event: str, tier: dict[str, str]) -> dict[str, str]:
+    return {**tier, "preflight": classify_changes.preflight_for(event, tier)}
+
+
+_TIERS = {
+    "full": classify_changes._full(4),
+    "docs": classify_changes._docs(),
+    "content": classify_changes._content(),
+}
+
+
+def _fast_check_runs(github: dict[str, Any], tier: dict[str, str], job_status: str) -> dict[str, bool]:
+    """Evaluate each fast-checks step `if` with GitHub's implicit success()."""
+    context = {
+        "github": github,
+        "job": {"status": job_status},
+        "needs": {"changes": {"result": "success", "outputs": _changes_for(github["event_name"], tier)}},
+    }
+    runs: dict[str, bool] = {}
+    for index, step in enumerate(_fast_checks_job()["steps"]):
+        condition = step.get("if")
+        key = step.get("id") or step.get("name") or f"step-{index}"
+        if condition is None:
+            runs[key] = job_status == "success"
+        elif _STATUS_FUNCTIONS.search(str(condition)):
+            runs[key] = _condition(condition, context)
+        else:
+            runs[key] = job_status == "success" and _condition(condition, context)
+    return runs
+
+
+@pytest.mark.parametrize("tier", sorted(_TIERS))
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_fast_check_steps_follow_their_original_conditions(event: str, tier: str) -> None:
+    github = _EVENTS[event]
+    changes = _changes_for(github["event_name"], _TIERS[tier])
+    runs = _fast_check_runs(github, _TIERS[tier], "success")
+    expected = {
+        "preflight": github["event_name"] == "pull_request" and tier == "full",
+        "ruff": changes["docs_only"] == "false",
+        "plan_validate": True,
+        "typesafe": True,
+    }
+    assert {check: runs[check] for check in _FAST_CHECKS} == expected
+    assert runs["preflight"] == (changes["preflight"] == "true")
+
+
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_a_failed_check_does_not_skip_the_later_checks(event: str) -> None:
+    # After a failed step the job status is `failure`: every applicable check
+    # still runs, while plain setup steps (implicit success()) do not.
+    github = _EVENTS[event]
+    healthy = _fast_check_runs(github, _TIERS["full"], "success")
+    after_failure = _fast_check_runs(github, _TIERS["full"], "failure")
+    assert {check: after_failure[check] for check in _FAST_CHECKS} == {check: healthy[check] for check in _FAST_CHECKS}
+    cancelled = _fast_check_runs(github, _TIERS["full"], "cancelled")
+    assert not any(cancelled[check] for check in _FAST_CHECKS)
+
+
+# --- CI Gate -----------------------------------------------------------------
+
+_GREEN = {
+    "DOCS_ONLY": "false",
+    "FRONTEND": "false",
+    "BACKEND": "true",
+    "PREFLIGHT_SCHEDULED": "true",
+    "CHANGES": "success",
+    "SECRET": "success",
+    "FAST_CHECKS": "success",
+    "FC_PREFLIGHT": "success",
+    "FC_RUFF": "success",
+    "FC_PLAN_VALIDATE": "success",
+    "FC_TYPESAFE": "success",
+    "PYTEST": "success",
+    "AUDIT": "success",
+    "SHARD_COUNT": "4",
+    "CONTRACTS": "success",
+    "FRONTEND_JOB": "skipped",
+}
+
+
+def test_ci_gate_passes_a_green_full_tier() -> None:
+    result = _run_gate(_GREEN)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "CI Gate green" in result.stdout
+    for check in _FAST_CHECKS:
+        assert f"fast-checks {check}" in result.stdout, check
+
+
+def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
+    result = _run_gate({**_GREEN, "PYTEST": "cancelled"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_fails_when_a_required_job_was_skipped() -> None:
+    result = _run_gate({**_GREEN, "SECRET": "skipped"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_fails_when_a_pytest_matrix_job_is_missing() -> None:
+    result = _run_gate({**_GREEN, "MOCK_PYTEST_JOB_LINES": "pytest (1)|success\npytest (2)|success"})
+    assert result.returncode != 0
+    assert "pytest matrix jobs differ" in result.stdout
+
+
+def test_ci_gate_fails_when_changes_was_cancelled() -> None:
+    result = _run_gate({**_GREEN, "CHANGES": "cancelled"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+_DOCS_TIER = {
+    **_GREEN,
+    "DOCS_ONLY": "true",
+    "PREFLIGHT_SCHEDULED": "false",
+    "FC_PREFLIGHT": "skipped",
+    "FC_RUFF": "skipped",
+    "CONTRACTS": "skipped",
+    "AUDIT": "skipped",
+    "SHARD_COUNT": "1",
+}
+
+
+def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip() -> None:
+    assert _run_gate(_DOCS_TIER).returncode == 0
+    cancelled = _run_gate({**_DOCS_TIER, "CONTRACTS": "cancelled"})
+    assert cancelled.returncode != 0
+    assert "cancelled" in cancelled.stdout
+
+
+_OUTCOMES = ("success", "failure", "cancelled", "skipped", "")
+
+
+def _gate_env(check: str, applies: bool, outcome: str) -> dict[str, str]:
+    env = dict(_GREEN)
+    if check == "preflight":
+        env["PREFLIGHT_SCHEDULED"] = "true" if applies else "false"
+        if not applies:
+            env["FC_PREFLIGHT"] = "skipped"
+    elif check == "ruff":
+        env["DOCS_ONLY"] = "false" if applies else "true"
+        if not applies:
+            env.update(FC_RUFF="skipped", CONTRACTS="skipped", AUDIT="skipped", SHARD_COUNT="1")
+    env["FC_" + check.upper()] = outcome
+    # A failed blocking step fails the job; any other outcome is tested with
+    # a successful job so the gate must reject it from the output alone.
+    env["FAST_CHECKS"] = "failure" if outcome == "failure" else "success"
+    return env
+
+
+_GATED_CASES = [
+    (check, applies, outcome)
+    for check, applies_options in (("preflight", (True, False)), ("ruff", (True, False)), ("plan_validate", (True,)))
+    for applies in applies_options
+    for outcome in _OUTCOMES
+]
+
+
+@pytest.mark.parametrize(("check", "applies", "outcome"), _GATED_CASES)
+def test_ci_gate_blocking_fast_check_rule(check: str, applies: bool, outcome: str) -> None:
+    # Condition applied → only `success` passes; not applied → only `skipped`.
+    gate = _run_gate(_gate_env(check, applies, outcome))
+    passes = outcome == ("success" if applies else "skipped")
+    assert (gate.returncode == 0) is passes, gate.stdout + gate.stderr
+    assert ("CI Gate green" in gate.stdout) is passes
+    if not passes:
+        assert f"fast-checks output '{check}' is missing" in gate.stdout or (
+            f"fast-checks step {check} concluded '{outcome}'" in gate.stdout
+        )
+
+
+@pytest.mark.parametrize("outcome", _OUTCOMES)
+def test_ci_gate_reports_typesafe_but_never_blocks_on_it(outcome: str) -> None:
+    gate = _run_gate({**_GREEN, "FC_TYPESAFE": outcome})
+    if outcome:
+        assert gate.returncode == 0, gate.stdout + gate.stderr
+        assert f"fast-checks typesafe (advisory): {outcome}" in gate.stdout
+    else:
+        # A missing output means the wiring broke, not that TypeSafe was red.
+        assert gate.returncode != 0
+        assert "fast-checks output 'typesafe' is missing" in gate.stdout
+
+
+@pytest.mark.parametrize("job_result", ["cancelled", "skipped", ""])
+def test_ci_gate_fails_closed_on_a_cancelled_skipped_or_missing_fast_checks_job(job_result: str) -> None:
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": job_result})
+    assert gate.returncode != 0
+    assert f"fast-checks concluded '{job_result}'" in gate.stdout
+    assert "CI Gate green" not in gate.stdout
+
+
+def test_ci_gate_fails_closed_when_every_output_is_missing() -> None:
+    # A job that concluded without setting its outputs (for example a broken
+    # outputs block) must not pass on its result alone.
+    missing = {key: "" for key in _GREEN if key.startswith("FC_")}
+    gate = _run_gate({**_GREEN, **missing})
+    assert gate.returncode != 0
+    for check in _FAST_CHECKS:
+        assert f"fast-checks output '{check}' is missing" in gate.stdout, check
+
+
+def test_ci_gate_fails_when_fast_checks_failed_outside_its_checks() -> None:
+    # Every check passed its rule, but a setup step (checkout, Python, the
+    # preflight install) failed the job.
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks failed outside its checks" in gate.stdout
+
+
+def test_ci_gate_does_not_blame_a_failed_job_on_the_advisory_step() -> None:
+    # A red TypeSafe step is continue-on-error, so it cannot fail the job; a
+    # failed job with a red TypeSafe step and green blocking checks is still
+    # a setup failure and stays red.
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure", "FC_TYPESAFE": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks failed outside its checks" in gate.stdout
+
+
+def test_ci_gate_reports_every_red_fast_check_in_one_run() -> None:
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure", "FC_PREFLIGHT": "failure", "FC_RUFF": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks step preflight concluded 'failure'" in gate.stdout
+    assert "fast-checks step ruff concluded 'failure'" in gate.stdout
+    assert "fast-checks plan_validate: success" in gate.stdout
+
+
+@pytest.mark.parametrize(("flag", "value"), [("PREFLIGHT_SCHEDULED", ""), ("DOCS_ONLY", ""), ("DOCS_ONLY", "maybe")])
+def test_ci_gate_fails_closed_on_an_unknown_tier_flag(flag: str, value: str) -> None:
+    gate = _run_gate({**_GREEN, flag: value})
+    assert gate.returncode != 0
+    assert "expected true or false" in gate.stdout
+
+
+def test_ci_gate_fast_checks_wiring() -> None:
+    env = _ci_gate_job()["steps"][0]["env"]
+    assert env["PREFLIGHT_SCHEDULED"] == "${{ needs.changes.outputs.preflight }}"
+    assert env["DOCS_ONLY"] == "${{ needs.changes.outputs.docs_only }}"
+    assert env["FAST_CHECKS"] == "${{ needs.fast-checks.result }}"
+    for check in _FAST_CHECKS:
+        assert env["FC_" + check.upper()] == "${{ needs.fast-checks.outputs." + check + " }}"
+    text = yaml.safe_dump(_ci_gate_job())
+    for removed in ("needs.ruff", "needs.preflight", "needs.plan-validate", "needs.typesafe-triage"):
+        assert removed not in text, removed
+
+
+def test_ci_gate_still_fails_when_changes_fails_without_a_preflight_output() -> None:
+    # A failed Changes job emits no outputs and skips fast-checks; the gate
+    # must fail on CHANGES first.
+    for changes in ("failure", "cancelled"):
+        gate = _run_gate(
+            {
+                **_GREEN,
+                "CHANGES": changes,
+                "PREFLIGHT_SCHEDULED": "",
+                "DOCS_ONLY": "",
+                "FAST_CHECKS": "skipped",
+                **{key: "" for key in _GREEN if key.startswith("FC_")},
+            }
+        )
+        assert gate.returncode != 0
+        assert "CI Gate green" not in gate.stdout

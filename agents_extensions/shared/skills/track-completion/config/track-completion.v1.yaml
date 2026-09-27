@@ -180,7 +180,7 @@ certification_identity_paths:
       - scripts/audit/checks/russicism_detection.py
       - scripts/audit/checks/prose_quality.py
       - scripts/pipeline/semantic_russianisms.py
-      - data/russianism-patterns-ua-gec.csv
+      - registry/russianism-patterns-ua-gec.csv
     checker_config: [scripts/audit/curriculum_qg_harness.py]
     policy: [scripts/audit/content_surface_gates.py]
     schema: [scripts/audit/qg_schema.py]

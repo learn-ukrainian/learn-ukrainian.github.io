@@ -6,11 +6,15 @@ import ast
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.api import release_snapshot
 
 _BOUNDED = frozenset({"run", "check_output", "check_call"})
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _API_ROOT = _REPO_ROOT / "scripts" / "api"
+
+pytestmark = pytest.mark.repo_wide
 
 
 def _subprocess_aliases(tree: ast.AST) -> dict[str, str | None]:

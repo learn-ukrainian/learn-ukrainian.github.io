@@ -20,6 +20,7 @@ RESOLUTIONS_MISSING = "resolutions_missing"
 RESOLUTIONS_INVALID = "resolutions_invalid"
 MDX_MISSING = "mdx_missing"
 UNIT_NOT_IN_PROVENANCE = "unit_not_in_provenance"
+RECEIPT_SPAN_ALIGNMENT_FAILED = "receipt_span_alignment_failed"
 RECORD_NOT_IN_OBSERVED = "record_not_in_observed"
 BYTE_DRIFT = "byte_drift"
 DIGEST_SCHEMA_INVALID = "digest_schema_invalid"
@@ -40,6 +41,7 @@ DESCRIPTIONS: dict[str, str] = {
     RESOLUTIONS_INVALID: "failure: lesson resolutions receipts file is invalid YAML or breaks schema",
     MDX_MISSING: "failure: lesson MDX file does not exist",
     UNIT_NOT_IN_PROVENANCE: "failure: token unit locator is not present in provenance spans",
+    RECEIPT_SPAN_ALIGNMENT_FAILED: "failure: receipt tokens of a unit do not align with the token sequence of its provenance spans",
     RECORD_NOT_IN_OBSERVED: "failure: token word record is not found in observed index records",
     BYTE_DRIFT: "failure: digest file on disk disagrees with recomputed bytes (--check)",
     DIGEST_SCHEMA_INVALID: "failure: generated digest breaks module-digest-v1 schema",

@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.wait_helpers import wait_for_pid_line
+
 ROOT = Path(__file__).resolve().parents[1]
 GUARDIAN = ROOT / "scripts/projects/open_model_data/phase3_cycle007_labeling_guardian.py"
 EXPECTED_TERMINAL = (
@@ -269,7 +271,7 @@ else:
         env={{**os.environ, "LOCK_FD": str(descriptor)}},
         pass_fds=(descriptor,),
     )
-    Path({str(child_pid)!r}).write_text(str(process.pid))
+    Path({str(child_pid)!r}).write_text(f"{{process.pid}}\\n")
     time.sleep(60)
 """,
         encoding="utf-8",
@@ -281,7 +283,7 @@ else:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    _wait_for(child_pid)
+    child = wait_for_pid_line(child_pid)
     first.kill()
     os.kill(int(controller_pid.read_text(encoding="utf-8")), signal.SIGKILL)
     first.wait(timeout=5)
@@ -290,7 +292,7 @@ else:
         assert replacement.returncode == 0
         assert json.loads(replacement.stdout)["failure_code"] == "active_worker"
     finally:
-        os.kill(int(child_pid.read_text(encoding="utf-8")), signal.SIGKILL)
+        os.kill(child, signal.SIGKILL)
 
 
 def test_real_controller_timeout_leaves_runner_lock_blocking_replacement(tmp_path: Path) -> None:
@@ -325,7 +327,7 @@ else:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
-    Path({str(child_pid)!r}).write_text(str(process.pid))
+    Path({str(child_pid)!r}).write_text(f"{{process.pid}}\\n")
     time.sleep(60)
 """,
         encoding="utf-8",
@@ -339,7 +341,7 @@ else:
     timed = _run_harness(timed_harness, "gemini")
     assert timed.returncode == 0, timed.stderr
     assert json.loads(timed.stdout)["failure_code"] == "controller_timeout"
-    _wait_for(child_pid)
+    child = wait_for_pid_line(child_pid)
     with pytest.raises(ProcessLookupError):
         os.kill(int(controller_pid.read_text(encoding="utf-8")), 0)
     try:
@@ -347,7 +349,7 @@ else:
         assert replacement.returncode == 0, replacement.stderr
         assert json.loads(replacement.stdout)["failure_code"] == "active_worker"
     finally:
-        os.kill(int(child_pid.read_text(encoding="utf-8")), signal.SIGKILL)
+        os.kill(child, signal.SIGKILL)
 
 
 def test_adjudicator_return_before_stage_seal_blocks_duplicate_call(tmp_path: Path) -> None:

@@ -142,7 +142,7 @@ if [[ -z "$RUNNER_PYTHON" ]]; then
   fi
 fi
 if [[ -z "$RUNNER_PYTHON" || ! -x "$RUNNER_PYTHON" ]]; then
-  echo "runner venv python not found (tried $REPO/.venv/bin/python and $CODE_ROOT/.venv/bin/python)" >&2
+  echo "runner venv interpreter not found (tried $REPO/.venv/bin/python and $CODE_ROOT/.venv/bin/python)" >&2
   exit 1
 fi
 if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
@@ -179,9 +179,14 @@ COMMON_ARGS=(
 if [[ "$TARGET" == "missing-translation" ]]; then
   COMMON_ARGS+=(--slugs-file "$SLUGS_FILE")
 fi
-if [[ -f "$KAIKKI_JSON" ]]; then
-  COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
+if [[ ! -f "$KAIKKI_JSON" ]]; then
+  echo "kaikki lookup not found: $KAIKKI_JSON" >&2
+  exit 1
 fi
+if [[ "$KAIKKI_JSON" == "$REPO/data/lexicon/kaikki_uk_lookup.json" ]]; then
+  "$RUNNER_PYTHON" -c 'from scripts.storage.paths import artifact_path; artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")'
+fi
+COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
 
 # Wrap in bash -c so we can tee stdout (the driver's one JSON summary print)
 # into its own artifact without fighting systemd-run's StandardOutput

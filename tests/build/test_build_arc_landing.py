@@ -157,6 +157,36 @@ def test_a_missing_file_never_yields_a_higher_state(root: gen.Roots) -> None:
     assert _states(root, arc) == {"a": "planned", "b": "plan_reviewed", "c": "plan_reviewed", "d": "planned"}
 
 
+def test_reviewed_state_trusts_the_file_when_no_findings_database_exists(root: gen.Roots) -> None:
+    """CI never has a findings database (``batch_state/`` is gitignored): the committed file is trusted."""
+    _plan(root, "reviewed", 1)
+    _review(root, "reviewed", "plan-review.yaml")
+    _lesson_built(root, "reviewed", 1)
+    _review(root, "reviewed", "module-verdict.yaml")
+
+    assert _states(root, _arc("reviewed")) == {"reviewed": "reviewed"}
+
+
+def test_reviewed_state_fails_on_a_stale_approve_when_a_findings_database_is_present(
+    root: gen.Roots, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The reviewer's scenario (#8774 r5/r6): a saved APPROVE a later database write has superseded."""
+    from scripts.review import findings_db, fixloop
+
+    _plan(root, "reviewed", 1)
+    _review(root, "reviewed", "plan-review.yaml")
+    _lesson_built(root, "reviewed", 1)
+    _review(root, "reviewed", "module-verdict.yaml")  # verdict: APPROVE, on file
+
+    db_file = findings_db.db_path(root.level, repo_root=root.repo)
+    db_file.parent.mkdir(parents=True, exist_ok=True)
+    db_file.touch()  # a findings database is present: this module's APPROVE must be fresh
+    monkeypatch.setattr(fixloop, "module_verdict_problems", lambda *a, **k: ["a fresh recomputation is HOLD"])
+
+    with pytest.raises(ValueError, match=r"reviewed.*stale"):
+        _states(root, _arc("reviewed"))
+
+
 def test_missing_state_directory_is_planned_not_an_error(root: gen.Roots) -> None:
     _plan(root, "alpha", 1)
     assert not root.state.exists()

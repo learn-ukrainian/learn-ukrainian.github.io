@@ -282,6 +282,49 @@ def test_dispatch_markers_pass_through_for_every_dispatch_provider() -> None:
             assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "kimi", provider
 
 
+def test_build_agent_env_keeps_only_the_dispatch_cap_plugin() -> None:
+    """#8645: the final CLI env keeps ci.pytest_dispatch_cap only inside a dispatch.
+
+    Other comma-separated plugin names are stripped. Without the dispatch
+    marker the variable is dropped, so an ambient PYTEST_PLUGINS cannot inject
+    a plugin into an ordinary agent spawn.
+    """
+    parent = {
+        "PATH": "/usr/bin",
+        "HOME": "/Users/example",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "impl-8645-b",
+        "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+    }
+    with patch.dict("os.environ", parent, clear=True):
+        kept = build_agent_env(provider="codex")
+
+    assert kept["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+    assert kept["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "impl-8645-b"
+
+    with patch.dict(
+        "os.environ",
+        {**parent, "PYTEST_PLUGINS": "already.loaded,ci.pytest_dispatch_cap,evil.inject"},
+        clear=True,
+    ):
+        stripped = build_agent_env(provider="claude")
+
+    assert stripped["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "PYTEST_PLUGINS": "ci.pytest_dispatch_cap,evil.inject",
+        },
+        clear=True,
+    ):
+        dropped = build_agent_env(provider="cursor")
+
+    assert "PYTEST_PLUGINS" not in dropped
+    assert "LEARN_UKRAINIAN_DISPATCH_TASK_ID" not in dropped
+
+
 def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:
     from agent_runtime.env_sanitize import usable_host_gh_config_dir
 

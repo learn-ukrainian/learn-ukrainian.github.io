@@ -9,6 +9,11 @@ effort: xhigh
 
 **Scope: A1, A2, B1, B2, C1, C2 only.** For seminar tracks (FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH), use `/plan-review-seminar`.
 
+This skill covers plans under `curriculum/l2-uk-en/plans/{track}/` and V7-built modules.
+Fresh-build v2 plans (`curriculum/l2-uk-en/lesson-plans/<level>/`) are reviewed under
+Contract 1 with the plan-review manifest (`scripts.build.fresh.cli plan-manifest`), not
+this skill.
+
 ## Parse Arguments
 
 The user provides one of these argument patterns:

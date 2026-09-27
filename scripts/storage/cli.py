@@ -80,6 +80,9 @@ def _format_human(payload: dict) -> str:
     lines.append(f"  is_local: {adb['is_local']}")
     lines.append(f"  refused_network: {adb['refused_network']}")
     lines.append(f"  reason: {adb['reason']}")
+    lines.append(f"  size_bytes: {adb.get('size_bytes')}")
+    lines.append(f"  journal_mode: {adb.get('journal_mode')}")
+    lines.append(f"  wal_bytes: {adb.get('wal_bytes')}")
     bulk = payload["bulk_root"]
     lines.append("bulk_root:")
     lines.append(f"  available: {bulk['available']}")

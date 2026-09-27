@@ -160,7 +160,10 @@ def base_plan() -> dict:
                 "word_target": 5,
                 "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
                 "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}],
-                "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."}],
+                "activities": [
+                    {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."},
+                    {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Review workbook quiz."},
+                ],
             },
         ],
     }
@@ -224,6 +227,20 @@ def prior_plan() -> dict:
             }
         ],
     }
+
+
+def fixture_arc_document(slug: str) -> str:
+    """An arc source shaped like docs/epics/fresh-build-a1-arc.md: prose sections around the section 3 table."""
+    return (
+        f"# fixture arc document for {slug}\n\n"
+        "## 2. Decisions\n\nD1 - fixture decision text.\n\n"
+        "## 3. Grammar at A1: system or chunk\n\n"
+        "| Item | Status at A1 | Where (position) | Standard |\n"
+        "| --- | --- | --- | --- |\n"
+        "| Fixture item one | system | 1-2 | fixture standard one |\n"
+        "| Fixture item two | chunk only | 2 | fixture standard two |\n\n"
+        "## 5. The positions\n\nPosition 1: fixture-only prose that is not the table.\n"
+    )
 
 
 def fixture_arc(plan: dict) -> dict:
@@ -318,7 +335,7 @@ def write_world(root: Path, plan: dict, pack: dict, words: dict, slug: str = SLU
     (plan_dir / f"{PRIOR_SLUG}.yaml").write_bytes(_dump(prior_plan()))
     doc_path = root / ARC_DOC_REL
     doc_path.parent.mkdir(parents=True, exist_ok=True)
-    doc_path.write_bytes(f"# fixture arc document for {slug}\n".encode())
+    doc_path.write_bytes(fixture_arc_document(slug).encode())
     arc = fixture_arc(plan)
     arc["source"]["sha256"] = hashlib.sha256(doc_path.read_bytes()).hexdigest()
     (plan_dir / "_arc.yaml").write_bytes(_dump(arc))
@@ -360,7 +377,10 @@ def _checkpoint_lesson(n: int = 1) -> dict:
         "word_target": 5,
         "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
         "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}],
-        "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checkpoint quiz."}],
+        "activities": [
+            {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checkpoint quiz."},
+            {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Checkpoint workbook quiz."},
+        ],
     }
 
 
@@ -385,7 +405,10 @@ def _teach_close_lesson(n: int, slug: str) -> dict:
             {"id": "s1", "kind": "practice", "evidence": ["T-002"], "practice": ["a1"]},
             {"id": "s2", "kind": "recap", "evidence": ["T-001"], "practice": []},
         ],
-        "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Final quiz."}],
+        "activities": [
+            {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Final quiz."},
+            {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Final workbook quiz."},
+        ],
     }
 
 
@@ -536,7 +559,10 @@ FAILING_CASES = [
                                 "practice": ["a1"],
                             }
                         ],
-                        "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz."}],
+                        "activities": [
+                            {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz."},
+                            {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Workbook quiz."},
+                        ],
                     },
                 )
                 or p["lessons"][2].__setitem__("n", 3)
@@ -1025,6 +1051,22 @@ def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> Non
     assert payload["waivers"] == []
 
 
+def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path: Path) -> None:
+    # Regression for review finding 4: the printed report must show
+    # plan_report per lesson, not only the module-level summary line.
+    report = run_case(tmp_path, VALID_CASES[0])
+    text = report.render_text()
+    assert "activity_report (plan stage) module:" in text
+    for lesson in report.activity_report["lessons"]:
+        assert f"activity_report (plan stage) lesson {lesson['n']}:" in text
+    lesson_1_line = next(
+        line for line in text.splitlines() if line.startswith("activity_report (plan stage) lesson 1:")
+    )
+    assert "workbook=1" in lesson_1_line
+    assert "inline=2" in lesson_1_line
+    assert "has_workbook=True" in lesson_1_line
+
+
 def test_failure_names_code_lesson_step_and_value(tmp_path: Path) -> None:
     report = run_case(tmp_path, case_by_name("introduced_twice"))
     outcome = report.failures[0]
@@ -1075,6 +1117,12 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_cross import produced_cross_codes
 
     produced |= produced_cross_codes(tmp_path / "cross")
+    from tests.curriculum.test_plan_validate_provisional import produced_provisional_codes
+
+    produced |= produced_provisional_codes(tmp_path / "provisional")
+    from tests.curriculum.validate.test_workbook_and_placement import produced_workbook_and_placement_codes
+
+    produced |= produced_workbook_and_placement_codes(tmp_path / "workbook-and-placement")
     assert produced == set(codes.DESCRIPTIONS)
 
 

@@ -30,7 +30,13 @@ State machine (file-defined; ``planned`` is the fallback and a missing file or
 * ``built`` — every lesson ``1..N`` of the plan (its numbers must be exactly ``1..N``; a
   plan that breaks that is an error, never ``built``) has ``<slug>/<n>.mdx`` and
   ``_state/<slug>/lesson-<n>.gates.yaml`` with ``passed: true``;
-* ``reviewed`` — ``_state/<slug>/module-verdict.yaml`` records ``verdict: APPROVE``.
+* ``reviewed`` — ``_state/<slug>/module-verdict.yaml`` records ``verdict: APPROVE``, and, when a
+  findings database is present (a local run — CI never has one, since ``batch_state/`` is
+  gitignored), a fresh recomputation (``scripts.review.fixloop.module_verdict_problems``) agrees
+  it is current; a stale ``APPROVE`` a later database write superseded fails this generator instead
+  of landing as ``reviewed`` (#8774 r6). CI has no database to check against, so there this
+  generator trusts the committed file: the landing it is checking was generated locally, where
+  this same freshness check already ran (see ``docs/epics/fresh-build-build-program.md`` §5 step 8).
 
 A position gets the highest state whose predicate holds when every lower
 predicate holds too.
@@ -169,13 +175,50 @@ def _approved(path: Path) -> bool:
     return doc is not None and doc.get("verdict") == "APPROVE"
 
 
+def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
+    """Whether ``module-verdict.yaml`` says APPROVE, trusted only when nothing can show it stale.
+
+    A local run has a findings database (``scripts.review.findings_db.db_path``): recompute the
+    verdict with ``scripts.review.fixloop.module_verdict_problems`` (the same recomputation
+    ``fixloop verdict --check`` runs) and raise instead of silently landing a stale ``APPROVE`` a
+    later database write superseded (round 6 review of #8774: this generator is what CI's
+    ``--check`` runs, and it used to trust the file with no freshness check at all). CI never has
+    that database — ``batch_state/`` is gitignored — so there the committed file is generated
+    locally, where this same check already ran, and CI trusts it as-is. The import of
+    ``scripts.review.fixloop`` is deferred to this branch so this module's own top-level imports
+    stay light enough for CI's minimal install (PyYAML + jsonschema; see the ``Plan Validate``
+    step of ``.github/workflows/ci.yml``) even though, as of #8774 r6, ``fixloop``'s own import
+    chain also only needs those two packages.
+    """
+    doc = _read_mapping(roots.state / slug / "module-verdict.yaml")
+    if doc is None or doc.get("verdict") != "APPROVE":
+        return False
+    from scripts.review import findings_db
+
+    db_file = findings_db.db_path(roots.level, repo_root=roots.repo)
+    if not db_file.is_file():
+        return True
+    from scripts.review import fixloop
+
+    conn = findings_db.connect(db_file)
+    try:
+        problems = fixloop.module_verdict_problems(
+            conn, roots.level, slug, root=roots.repo, params=findings_db.load_parameters()
+        )
+    finally:
+        conn.close()
+    if problems:
+        raise ValueError(f"{slug}: module-verdict.yaml says APPROVE but is stale: {'; '.join(problems)}")
+    return True
+
+
 def position_state(roots: Roots, slug: str, plan: dict[str, Any] | None, built: list[int]) -> str:
     """Highest state whose predicate holds with every lower predicate holding."""
     if plan is None or not _approved(roots.state / slug / "plan-review.yaml"):
         return "planned"
     if built != _lesson_numbers(plan):
         return "plan_reviewed"
-    if not _approved(roots.state / slug / "module-verdict.yaml"):
+    if not _module_verdict_reviewed(roots, slug):
         return "built"
     return "reviewed"
 

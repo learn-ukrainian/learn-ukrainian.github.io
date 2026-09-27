@@ -18,12 +18,31 @@ from scripts.fleet_comms.cold_start_board import (
     _probe_backlog_and_dead_letters,
     _probe_gh_pr_list,
     _probe_inbox,
+    _probe_orient_lean,
     build_cold_start_board,
     cap_data,
     compute_board_status,
     render_markdown_board,
     run_fail_open_probe,
 )
+
+
+@pytest.fixture(autouse=True)
+def _stub_monitor_orient_api():
+    """#8737: hermetic — no test contacts the live Monitor API on :8765.
+
+    Tests that exercise the orient probe patch urlopen with their own stub;
+    that inner patch wins over this autouse one.
+    """
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = b'{"generated_at": "2026-09-24T00:00:00Z", "issues": []}'
+    mock_resp.__enter__.return_value = mock_resp
+    mock_resp.__exit__.return_value = False
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=mock_resp,
+    ):
+        yield
 
 
 def _seed_legacy_broker(db: Path) -> None:
@@ -595,9 +614,132 @@ def test_orient_lean_requests_lean_true():
         "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
         return_value=mock_resp,
     ) as urlopen:
-        from scripts.fleet_comms.cold_start_board import _probe_orient_lean
-
         result = _probe_orient_lean()
         assert result.status == "ok"
         req = urlopen.call_args[0][0]
         assert req.full_url.endswith("/api/orient?lean=true")
+
+
+def _orient_response(payload: dict[str, Any]) -> MagicMock:
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = json.dumps(payload).encode("utf-8")
+    mock_resp.__enter__.return_value = mock_resp
+    mock_resp.__exit__.return_value = False
+    return mock_resp
+
+
+def test_orient_lean_projects_large_payload(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """#8737: a ~40KB orient payload is projected to a bounded summary."""
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    payload = {
+        "generated_at": "2026-09-24T00:00:00Z",
+        "issues": [
+            {
+                "number": 8700 + i,
+                "title": f"Issue {i} " + "t" * 200,
+                "state": "OPEN",
+                "body": "x" * 3000,
+                "comments": [{"body": "y" * 500}] * 5,
+            }
+            for i in range(10)
+        ],
+        "heavy_sections": {"blob": "z" * 40000},
+    }
+    raw_bytes = json.dumps(payload).encode("utf-8")
+    assert len(raw_bytes) > MAX_BOARD_BYTES
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=_orient_response(payload),
+    ):
+        probe = _probe_orient_lean()
+        assert probe.status == "ok"
+        assert probe.data["api_reachable"] is True
+        orient = probe.data["orient"]
+        assert orient["generated_at"] == "2026-09-24T00:00:00Z"
+        assert len(orient["issues"]) == 5
+        assert all(set(issue) == {"number", "title", "state"} for issue in orient["issues"])
+        assert all(len(issue["title"]) <= 80 for issue in orient["issues"])
+        assert "heavy_sections" not in orient
+        assert len(json.dumps(probe.data)) < 2000
+
+        board = build_cold_start_board(
+            agent="agy/cold-start-pr2-board",
+            root=tmp_path / "plane",
+            repo_root=tmp_path,
+        )
+
+    assert "_board_oversized_fallback" not in board
+    capsule_data = board["probes"]["capsule_session_env"]["data"]
+    assert isinstance(capsule_data["plane_mode"], str) and capsule_data["plane_mode"]
+    assert board["probes"]["orient_lean"]["status"] == "ok"
+    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
+
+
+def test_orient_lean_payload_without_issues_key() -> None:
+    """#8737 edge case: orient payload with no issues key still bounds fine."""
+    payload = {"generated_at": "2026-09-24T01:00:00Z", "other": "v" * 30000}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=_orient_response(payload),
+    ):
+        probe = _probe_orient_lean()
+
+    assert probe.status == "ok"
+    assert probe.data["api_reachable"] is True
+    orient = probe.data["orient"]
+    assert orient["generated_at"] == "2026-09-24T01:00:00Z"
+    assert orient["issues"] == []
+    assert "other" not in orient
+
+
+def test_board_sheds_bloated_optional_probe_before_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8737 review: a bloated optional probe is shed; load-bearing data survives."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    # Dict keys are not capped by cap_data, so this stays huge after cap steps.
+    huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+        return_value=ProbeResult(status="ok", elapsed_ms=1.0, data=huge_payload),
+    ):
+        board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+
+    assert board["_board_truncated"] is True
+    assert "_board_oversized_fallback" not in board
+    for name in ("plane_status", "inbox_check", "backlog_and_dead_letters", "capsule_session_env"):
+        assert board["probes"][name].get("data") is not None, name
+    # The bloated optional probe was shed to its minimal form.
+    assert "data" not in board["probes"]["gh_pr_list"]
+    assert board["probes"]["gh_pr_list"]["status"] == "ok"
+    # Shedding is selective and largest-first: the small optional
+    # bottleneck_slice probe keeps its data once the bloated gh_pr_list is
+    # shed, because no further shedding is needed to fit the cap.
+    assert board["probes"]["bottleneck_slice"].get("data") is not None
+    assert board["probes"]["bottleneck_slice"]["status"] == "ok"
+    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
+
+
+def test_board_oversized_fallback_when_load_bearing_probe_huge(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8737 review: shedding cannot shrink a huge load-bearing probe → fallback."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+        return_value=huge_payload,
+    ):
+        board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+
+    assert board["_board_truncated"] is True
+    assert board["_board_oversized_fallback"] is True
+    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES

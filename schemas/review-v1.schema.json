@@ -17,6 +17,38 @@
       "items": {"$ref": "#/$defs/finding"}
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "lesson"}}, "required": ["kind"]},
+      "then": {
+        "properties": {
+          "findings": {
+            "items": {
+              "properties": {
+                "locations": {"items": {"$ref": "#/$defs/location"}},
+                "scope": {"$ref": "#/$defs/scope"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"kind": {"const": "plan"}}, "required": ["kind"]},
+      "then": {
+        "properties": {
+          "findings": {
+            "items": {
+              "properties": {
+                "locations": {"items": {"$ref": "#/$defs/plan_location"}},
+                "scope": {"$ref": "#/$defs/plan_scope"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "token": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
@@ -108,6 +140,38 @@
         "activity": {"type": "string", "minLength": 1}
       }
     },
+    "plan_location": {
+      "description": "A quote inside one unit of the plan pinned by the manifest: a lesson (n), optionally one step or one activity of it, optionally a dotted field path inside that unit. A module-level field (title, subtitle, objectives) has no lesson and only field.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quote"],
+      "properties": {
+        "lesson": {"type": "integer", "minimum": 1},
+        "step": {"type": "string", "minLength": 1},
+        "activity": {"type": "string", "minLength": 1},
+        "field": {"$ref": "#/$defs/plan_field"},
+        "quote": {"type": "string", "minLength": 1}
+      },
+      "anyOf": [{"required": ["lesson"]}, {"required": ["field"]}],
+      "dependentRequired": {"step": ["lesson"], "activity": ["lesson"]},
+      "not": {"required": ["step", "activity"]}
+    },
+    "plan_scope": {
+      "description": "Where a plan absence finding looks: a lesson, optionally one step or one activity of it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lesson"],
+      "properties": {
+        "lesson": {"type": "integer", "minimum": 1},
+        "step": {"type": "string", "minLength": 1},
+        "activity": {"type": "string", "minLength": 1}
+      },
+      "not": {"required": ["step", "activity"]}
+    },
+    "plan_field": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_-]*(\\.([A-Za-z_][A-Za-z0-9_-]*|[0-9]+))*$"
+    },
     "finding": {
       "type": "object",
       "additionalProperties": false,
@@ -117,9 +181,9 @@
         "status": {"enum": ["active", "resolved", "persisting"]},
         "locations": {
           "type": "array",
-          "items": {"$ref": "#/$defs/location"}
+          "items": {"type": "object"}
         },
-        "scope": {"$ref": "#/$defs/scope"},
+        "scope": {"type": "object"},
         "dimension": {
           "enum": [
             "job",

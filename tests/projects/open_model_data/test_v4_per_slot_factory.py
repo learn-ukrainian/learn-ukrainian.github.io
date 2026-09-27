@@ -222,6 +222,7 @@ _NONZERO_COMPLETION_PATTERNS = (
 )
 
 
+@pytest.mark.repo_wide
 def test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator() -> None:
     """A static source guard: any test function that stubs a validator
     (``monkeypatch.setattr(..., "validate_receipt_independently", ...)``)

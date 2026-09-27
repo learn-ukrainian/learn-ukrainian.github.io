@@ -35,6 +35,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 from build.post_processors import REGISTRY, Violation, verify_mutation
 from build.post_processors._migrations import get_processor_callable
 
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
+
 
 class Fixture(NamedTuple):
     id: str

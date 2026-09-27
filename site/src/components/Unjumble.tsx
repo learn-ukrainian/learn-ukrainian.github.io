@@ -62,6 +62,11 @@ export interface UnjumbleQuestionProps {
    */
   hint?: string;
   /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -78,6 +83,7 @@ export function UnjumbleQuestion({
   words,
   answer,
   hint,
+  explanation,
   isUkrainian,
   wordsAreJumbled = false,
   onComplete,
@@ -299,6 +305,7 @@ export function UnjumbleQuestion({
           data-correct={isCorrect ? 'true' : 'false'}
         >
           {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
+          {explanation && <p className={styles.explanation} data-activity="explanation">{explanation}</p>}
         </div>
       )}
     </div>
@@ -326,6 +333,11 @@ interface UnjumbleItem {
    * @ukrainianText true
    */
   hint?: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface UnjumbleProps {
@@ -377,6 +389,7 @@ export default function Unjumble({ items, instruction, children, isUkrainian: ba
             words={item.words || item.jumbled || ''}
             answer={item.answer}
             hint={item.hint}
+            explanation={item.explanation}
             isUkrainian={isUkrainian}
           />
         )) : children}

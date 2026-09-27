@@ -26,6 +26,7 @@ from .dataclasses_ import (
     VariantComparisonData,
 )
 from .reading_links import reading_href_for
+from .unit_map import Edit, EditLog, LineEdits, LineSource
 from .utils import dump_json_for_jsx, escape_jsx
 
 # Ensure scripts/ is on sys.path for sibling imports
@@ -88,6 +89,29 @@ def yaml_activities_to_jsx(
     matched list position; structural fingerprints still suppress duplicate
     idless copies so they do not render in full.
     """
+    return '\n\n'.join(
+        mdx
+        for _activity_id_or_none, mdx in yaml_activity_mdx_parts(
+            activities,
+            is_ukrainian_forced,
+            inline_cross_ref_ids=inline_cross_ref_ids,
+            inline_cross_ref_positions=inline_cross_ref_positions,
+            inline_cross_ref_fingerprints=inline_cross_ref_fingerprints,
+            inline_cross_ref_section_titles=inline_cross_ref_section_titles,
+        )
+    )
+
+
+def yaml_activity_mdx_parts(
+    activities: list[Activity],
+    is_ukrainian_forced: bool = False,
+    inline_cross_ref_ids: set[str] | None = None,
+    inline_cross_ref_positions: set[int] | None = None,
+    inline_cross_ref_fingerprints: set[str] | None = None,
+    inline_cross_ref_section_titles: dict[str, str] | None = None,
+) -> list[tuple[str | None, str]]:
+    """The workbook tab's parts in order: `(activity id, component JSX)` for a full activity,
+    `(None, mdx)` for an inline cross-reference. `yaml_activities_to_jsx` joins them."""
     parser = ActivityParser()
     inline_ids = {
         str(activity_id).strip()
@@ -97,28 +121,30 @@ def yaml_activities_to_jsx(
     inline_positions = set(inline_cross_ref_positions or set())
     inline_fingerprints = set(inline_cross_ref_fingerprints or set())
     section_titles = inline_cross_ref_section_titles or {}
-    if not (inline_ids or inline_positions or inline_fingerprints):
-        return parser.to_mdx(activities, is_ukrainian_forced)
+    cross_referencing = bool(inline_ids or inline_positions or inline_fingerprints)
 
-    mdx_parts = []
+    parts: list[tuple[str | None, str]] = []
     for index, activity in enumerate(activities):
         activity_id = _activity_id(activity)
-        if index in inline_positions or activity_id in inline_ids:
-            mdx_parts.append(
-                _inline_activity_cross_ref_to_mdx(
-                    activity,
-                    section_titles.get(activity_id, ""),
-                    is_ukrainian_forced,
+        if cross_referencing and (index in inline_positions or activity_id in inline_ids):
+            parts.append(
+                (
+                    None,
+                    _inline_activity_cross_ref_to_mdx(
+                        activity,
+                        section_titles.get(activity_id, ""),
+                        is_ukrainian_forced,
+                    ),
                 )
             )
             continue
-        if activity_identity_key(activity) in inline_fingerprints:
+        if cross_referencing and activity_identity_key(activity) in inline_fingerprints:
             continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
         if not mdx:
             continue
-        mdx_parts.append(mdx)
-    return '\n\n'.join(mdx_parts)
+        parts.append((activity_id or None, mdx))
+    return parts
 
 
 def _inline_activity_cross_ref_to_mdx(
@@ -299,6 +325,13 @@ def _primary_reading_work_title(content: str) -> str:
 
 def convert_folk_content_blocks(content: str) -> str:
     """Convert folk text-layer directives to dedicated MDX components."""
+    log = EditLog(content, record=False)
+    edit_convert_folk_content_blocks(log)
+    return log.text
+
+
+def edit_convert_folk_content_blocks(log: EditLog) -> None:
+    """`convert_folk_content_blocks` on an `EditLog`: each directive block is one replacement edit."""
 
     def replace(match: re.Match[str]) -> str:
         block_type = match.group(1)
@@ -350,7 +383,7 @@ def convert_folk_content_blocks(content: str) -> str:
             "/>\n\n"
         )
 
-    return _FOLK_CONTENT_BLOCK_RE.sub(replace, content)
+    log.sub(_FOLK_CONTENT_BLOCK_RE, replace)
 
 
 # =============================================================================
@@ -411,16 +444,22 @@ def convert_bad_form_markers(content: str, strip_only: bool = False) -> str:
     Otherwise, converts to semantic strikethrough (<del>X</del>).
     Also strips any orphaned markers.
     """
+    log = EditLog(content, record=False)
+    edit_convert_bad_form_markers(log, strip_only)
+    return log.text
+
+
+def edit_convert_bad_form_markers(log: EditLog, strip_only: bool = False) -> None:
+    """`convert_bad_form_markers` on an `EditLog`: the marked form stays in place, markers are edits."""
     if strip_only:
         # Unwrap to bare form X
-        content = re.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'\1', content, flags=re.DOTALL)
+        log.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'\1', flags=re.DOTALL)
     else:
         # Convert to <del>X</del>
-        content = re.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'<del>\1</del>', content, flags=re.DOTALL)
+        log.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'<del>\1</del>', flags=re.DOTALL)
 
     # Strip any remaining orphaned/unpaired markers so they don't leak
-    content = re.sub(r'<!--\s*/?bad\s*-->', '', content)
-    return content
+    log.sub(r'<!--\s*/?bad\s*-->', '')
 
 
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
@@ -431,8 +470,22 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
     2. Lazy: [!type] (missing marker)
     3. Spaced: [!type] \\n\\n > content (blank lines before content)
     """
-    lines = content.split('\n')
-    result = []
+    log = EditLog(content, record=False)
+    edit_convert_callouts(log, is_ukrainian_forced)
+    return log.text
+
+
+def edit_convert_callouts(log: EditLog, is_ukrainian_forced: bool = False) -> None:
+    """`convert_callouts` on an `EditLog`.
+
+    Reported line by line: a callout header and the admonition fence lines are edits, a
+    blockquote content line keeps its bytes after the stripped `> ` prefix (a slice), a
+    lazy-format content line is kept whole, skipped blank lines are removed.
+    """
+    out = LineEdits(log.text, record=log.record)
+    lines = out.lines
+    # Content lines of the current callout: `(text, source)` in `LineEdits` terms.
+    callout_lines: list[tuple[str, LineSource]]
     i = 0
 
     while i < len(lines):
@@ -481,10 +534,10 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
                     # Match continuation: optional whitespace + > + optional space + content
                     cont_match = re.match(r'^\s*>(.*)', lines[i])
                     if cont_match:
-                        content_line = cont_match.group(1)
-                        if content_line.startswith(' '):
-                            content_line = content_line[1:]
-                        callout_lines.append(content_line)
+                        content_start = cont_match.start(1)
+                        if cont_match.group(1).startswith(' '):
+                            content_start += 1
+                        callout_lines.append(_line_slice(lines, i, content_start, len(lines[i])))
                         i += 1
                     elif not lines[i].strip():
                         # Peek at next line: if it has > and IS NOT a callout header, keep going
@@ -493,7 +546,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
                             next_is_bq = next_line.strip().startswith('>')
                             next_is_header = next_is_bq and re.match(r'^(\s*)[>\s]*\[![\w-]+\]', next_line)
                             if next_is_bq and not next_is_header:
-                                callout_lines.append('')
+                                callout_lines.append(_line_slice(lines, i, 0, 0))
                                 i += 1
                                 continue
                         break
@@ -510,29 +563,44 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
                         break
                     if re.match(r'^(\s*)[>\s]*\[\\?!([\w-]+)\]', curr_stripped):
                         break
-                    callout_lines.append(curr)
+                    callout_lines.append(_line_slice(lines, i, 0, len(curr)))
                     i += 1
 
             # Special handling for solution callouts
             if callout_type == 'solution':
-                result.append('<details className="solution-block">')
-                result.append(f'<summary>{title}</summary>')
-                result.append('')
-                result.extend(callout_lines)
-                result.append('')
-                result.append('</details>')
-                result.append('')
+                out.new('<details className="solution-block">')
+                out.new(f'<summary>{title}</summary>')
+                out.new('')
+                for text, source in callout_lines:
+                    out._append(text, source)
+                out.new('')
+                out.new('</details>')
+                out.new('')
             else:
                 # Output Site admonition
-                result.append(f':::{admon_type}[{title}]')
-                result.extend(callout_lines)
-                result.append(':::')
-                result.append('')
+                out.new(f':::{admon_type}[{title}]')
+                for text, source in callout_lines:
+                    out._append(text, source)
+                out.new(':::')
+                out.new('')
         else:
-            result.append(line)
+            out.keep(i)
             i += 1
 
-    return '\n'.join(result)
+    _apply_lines(log, out)
+
+
+def _line_slice(lines: list[str], index: int, start: int, end: int) -> tuple[str, LineSource]:
+    """Output line `lines[index][start:end]` with its `LineEdits` source."""
+    return lines[index][start:end], (index, [(start, 0, end - start)])
+
+
+def _apply_lines(log: EditLog, out: LineEdits) -> None:
+    """Advance `log` by a line-based transform's output."""
+    if log.record:
+        log.apply(out.edits(), out.text())
+    else:
+        log.text = out.text()
 
 
 def process_story_sections(content: str) -> str:
@@ -546,8 +614,15 @@ def process_story_sections(content: str) -> str:
     Note: Dialog lines (starting with em-dash) are left consecutive so that
     process_dialogues can wrap them in conversation containers.
     """
-    lines = content.split('\n')
-    result = []
+    log = EditLog(content, record=False)
+    edit_process_story_sections(log)
+    return log.text
+
+
+def edit_process_story_sections(log: EditLog) -> None:
+    """`process_story_sections` on an `EditLog`: every input line is kept, blank lines are insertions."""
+    out = LineEdits(log.text, record=log.record)
+    lines = out.lines
     i = 0
 
     # Pattern to detect story section headers
@@ -561,8 +636,8 @@ def process_story_sections(content: str) -> str:
 
         # Check if this is a story section header
         if story_header_pattern.match(stripped):
-            result.append(line)
-            result.append('')
+            out.keep(i)
+            out.new('')
             i += 1
 
             # Process lines until next header or end of content
@@ -576,12 +651,12 @@ def process_story_sections(content: str) -> str:
 
                 # Skip already-blank lines
                 if not current_stripped:
-                    result.append(current_line)
+                    out.keep(i)
                     i += 1
                     continue
 
                 # Add the line
-                result.append(current_line)
+                out.keep(i)
 
                 # Look ahead - if next line is non-blank content (not a header, not blank),
                 # add a blank line after current line UNLESS both lines are dialog lines or table rows
@@ -599,20 +674,28 @@ def process_story_sections(content: str) -> str:
                         and not (current_is_dialog and next_is_dialog)
                         and not (current_is_table and next_is_table)
                     ):
-                        result.append('')
+                        out.new('')
 
                 i += 1
         else:
-            result.append(line)
+            out.keep(i)
             i += 1
 
-    return '\n'.join(result)
+    _apply_lines(log, out)
 
 
 def process_dialogues(content: str) -> str:
     """Group consecutive V6/V7 dialogue blockquotes into DialogueBox components."""
-    lines = content.split('\n')
-    result = []
+    log = EditLog(content, record=False)
+    edit_process_dialogues(log)
+    return log.text
+
+
+def edit_process_dialogues(log: EditLog) -> None:
+    """`process_dialogues` on an `EditLog`: a grouped dialogue (and its title line) is replaced."""
+    out = LineEdits(log.text, record=log.record)
+    lines = out.lines
+    result = out.out
     i = 0
 
     # Track if we're inside a JSX component
@@ -652,16 +735,17 @@ def process_dialogues(content: str) -> str:
             if len(exchanges) >= 2:
                 title, title_index = _dialogue_title(result)
                 if title_index is not None:
-                    del result[title_index]
-                result.append(_dialogue_box_mdx(exchanges, title))
+                    out.delete(title_index)
+                out.new(_dialogue_box_mdx(exchanges, title))
             else:
                 # Single line - just keep as-is
-                result.extend(lines[start:i])
+                for index in range(start, i):
+                    out.keep(index)
         else:
-            result.append(line)
+            out.keep(i)
             i += 1
 
-    return '\n'.join(result)
+    _apply_lines(log, out)
 
 
 _DIALOGUE_LINE_RE = re.compile(
@@ -677,6 +761,13 @@ def _parse_dialogue_line(stripped_line: str) -> dict[str, str] | None:
     return {"speaker": match.group('speaker').strip(), "text": text}
 
 
+DIALOGUE_BOX_DEFAULT_TITLE = "Діалог"
+# The DialogueBox component line that carries the exchanges: a JSON payload (`json.dumps`,
+# compact separators) escaped for a single-quoted JS string literal and parsed by the page.
+DIALOGUE_BOX_PAYLOAD_PREFIX = "  exchanges={JSON.parse('"
+DIALOGUE_BOX_PAYLOAD_SUFFIX = "')}"
+
+
 def _dialogue_title(previous_lines: list[str]) -> tuple[str, int | None]:
     start = max(0, len(previous_lines) - 3)
     for index in range(len(previous_lines) - 1, start - 1, -1):
@@ -685,20 +776,31 @@ def _dialogue_title(previous_lines: list[str]) -> tuple[str, int | None]:
         match = re.match(r'^\*\*(Діалог\s+\d+\s+[\u2014-]\s+.+?)\*\*$', stripped)
         if match:
             return match.group(1), index
-    return "Діалог", None
+    return DIALOGUE_BOX_DEFAULT_TITLE, None
+
+
+DIALOGUE_BOX_CLOSING_LINE = "/>"
+
+
+def dialogue_box_header_lines(title: str) -> list[str]:
+    """The DialogueBox component's opening lines, before the exchanges payload line."""
+    safe_title = title.replace('"', '&quot;')
+    return ['<DialogueBox', '  client:only="react"', f'  title="{safe_title}"']
+
+
+def dialogue_box_jsx_lines(escaped_payload: str, title: str) -> list[str]:
+    """The DialogueBox component, line by line, around an already escaped exchanges payload."""
+    return [
+        *dialogue_box_header_lines(title),
+        f"{DIALOGUE_BOX_PAYLOAD_PREFIX}{escaped_payload}{DIALOGUE_BOX_PAYLOAD_SUFFIX}",
+        DIALOGUE_BOX_CLOSING_LINE,
+    ]
 
 
 def _dialogue_box_mdx(exchanges: list[dict[str, str]], title: str) -> str:
     payload = json.dumps(exchanges, ensure_ascii=False, separators=(',', ':'))
     payload = payload.replace('\\', '\\\\').replace("'", "\\'")
-    safe_title = title.replace('"', '&quot;')
-    return (
-        '<DialogueBox\n'
-        '  client:only="react"\n'
-        f'  title="{safe_title}"\n'
-        f"  exchanges={{JSON.parse('{payload}')}}\n"
-        '/>'
-    )
+    return '\n'.join(dialogue_box_jsx_lines(payload, title))
 
 
 def resolve_slug_links(content: str) -> str:
@@ -711,6 +813,13 @@ def resolve_slug_links(content: str) -> str:
         Input:  See [slug:the-cyrillic-code-i] for details.
         Output: See [The Cyrillic Code I](/a1/module-01) for details.
     """
+    log = EditLog(content, record=False)
+    edit_resolve_slug_links(log)
+    return log.text
+
+
+def edit_resolve_slug_links(log: EditLog) -> None:
+    """`resolve_slug_links` on an `EditLog`: each resolved link is one replacement edit."""
     def replace_slug(match):
         slug = match.group(1)
         try:
@@ -726,7 +835,7 @@ def resolve_slug_links(content: str) -> str:
             return match.group(0)
 
     # Match [slug:xxx] pattern
-    return re.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug, content)
+    log.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug)
 
 
 def normalize_mdx(text: str) -> str:
@@ -738,62 +847,88 @@ def normalize_mdx(text: str) -> str:
 
     Skips JSX blocks, fenced code blocks, URLs, and inline code to avoid corruption.
     """
-    lines = text.split('\n')
-    result = []
+    log = EditLog(text, record=False)
+    edit_normalize_mdx(log)
+    return log.text
+
+
+_EMPHASIS_SPLIT_RE = re.compile(r'(\[[^\]]*\]\([^)]*\)|`[^`]+`)')
+
+
+def edit_normalize_mdx(log: EditLog) -> None:
+    """`normalize_mdx` on an `EditLog`.
+
+    Every per-line fix is recorded on the line's own log (trailing whitespace, list markers
+    and emphasis markers are edits; list text and emphasized text stay in place), the
+    heading blank lines are insertions, and the fenced code blocks stashed while those
+    run are reported as replaced by their placeholder and back (a unit inside a fenced
+    code block is therefore lost by this transform; the renderer emits none).
+    """
+    out = LineEdits(log.text, record=log.record)
     in_code_fence = False
 
-    for line in lines:
+    for i, line in enumerate(out.lines):
         stripped = line.strip()
 
         # Track fenced code blocks
         if stripped.startswith('```'):
             in_code_fence = not in_code_fence
-            result.append(line.rstrip())
+            out.slice(i, 0, len(line.rstrip()))
             continue
 
         if in_code_fence:
-            result.append(line.rstrip())
+            out.slice(i, 0, len(line.rstrip()))
             continue
 
         # Skip JSX / import lines (only strip trailing whitespace)
         if (stripped.startswith(('<', '{', '/>', '</', 'import ')) or
                 'className=' in line):
-            result.append(line.rstrip())
+            out.slice(i, 0, len(line.rstrip()))
             continue
 
         # Skip table rows (pipes would cause false positives)
         if stripped.startswith('|'):
-            result.append(line.rstrip())
+            out.slice(i, 0, len(line.rstrip()))
             continue
 
+        line_log = EditLog(line, record=log.record)
+
         # MD009: strip trailing whitespace
-        line = line.rstrip()
+        line_log.replace(len(line.rstrip()), len(line), '')
 
         # MD004: * list marker -> - (including inside blockquotes)
-        line = re.sub(r'^(\s*(?:>\s*)*)\*(?= )', r'\1-', line)
+        line_log.sub(r'^(\s*(?:>\s*)*)\*(?= )', r'\1-')
 
         # MD030: normalize spaces after list markers to exactly 1
-        line = re.sub(r'^(\s*(?:>\s*)*(?:[-*+]|\d+\.))\s{2,}', r'\1 ', line)
+        line_log.sub(r'^(\s*(?:>\s*)*(?:[-*+]|\d+\.))\s{2,}', r'\1 ')
 
         # MD049/MD050: normalize emphasis markers
         # Split on code spans AND markdown link targets to preserve URLs and code
-        if '_' in line:
-            parts = re.split(r'(\[[^\]]*\]\([^)]*\)|`[^`]+`)', line)
+        if '_' in line_log.text:
+            edits: list[Edit] = []
             new_parts = []
-            for j, part in enumerate(parts):
+            offset = 0
+            for j, part in enumerate(_EMPHASIS_SPLIT_RE.split(line_log.text)):
                 if j % 2 == 1:  # inside link target or backticks - preserve
                     new_parts.append(part)
                 else:
+                    part_log = EditLog(part, record=log.record)
                     # MD050: __text__ -> **text**
-                    part = re.sub(r'(?<!\w)__(?!\s)(.+?)(?<!\s)__(?!\w)', r'**\1**', part)
+                    part_log.sub(r'(?<!\w)__(?!\s)(.+?)(?<!\s)__(?!\w)', r'**\1**')
                     # MD049: _text_ -> *text*
-                    part = re.sub(r'(?<!\w)_(?!\s)([^_]+?)(?<!\s)_(?!\w)', r'*\1*', part)
-                    new_parts.append(part)
-            line = ''.join(new_parts)
+                    part_log.sub(r'(?<!\w)_(?!\s)([^_]+?)(?<!\s)_(?!\w)', r'*\1*')
+                    if log.record:
+                        edits.extend(
+                            Edit(edit.start + offset, edit.end + offset, edit.replacement)
+                            for edit in part_log.edits()
+                        )
+                    new_parts.append(part_log.text)
+                offset += len(part)
+            line_log.apply(edits, ''.join(new_parts))
 
-        result.append(line)
+        out.edited(i, line_log)
 
-    text = '\n'.join(result)
+    _apply_lines(log, out)
 
     # MD022: blank lines around headings
     # Protect fenced code blocks from heading regex by temporarily replacing them
@@ -801,19 +936,17 @@ def normalize_mdx(text: str) -> str:
     def _stash_code_block(match):
         code_blocks.append(match.group(0))
         return f'\x00CODEBLOCK{len(code_blocks) - 1}\x00'
-    text = re.sub(r'```[^\n]*\n.*?```', _stash_code_block, text, flags=re.DOTALL)
+    log.sub(r'```[^\n]*\n.*?```', _stash_code_block, flags=re.DOTALL)
 
-    text = re.sub(r'(\S[^\n]*)\n(#{1,6} )', r'\1\n\n\2', text)
-    text = re.sub(r'(#{1,6} [^\n]+)\n(\S)', r'\1\n\n\2', text)
+    log.sub(r'(\S[^\n]*)\n(#{1,6} )', r'\1\n\n\2')
+    log.sub(r'(#{1,6} [^\n]+)\n(\S)', r'\1\n\n\2')
 
     # Restore code blocks
     for i, block in enumerate(code_blocks):
-        text = text.replace(f'\x00CODEBLOCK{i}\x00', block)
+        log.sub(re.escape(f'\x00CODEBLOCK{i}\x00'), lambda _match, block=block: block)
 
     # MD012: collapse 3+ consecutive newlines to 2 (max 1 blank line)
-    text = re.sub(r'\n{3,}', '\n\n', text)
+    log.sub(r'\n{3,}', '\n\n')
 
     # MD047: ensure single trailing newline
-    text = text.rstrip('\n') + '\n'
-
-    return text
+    log.replace(len(log.text.rstrip('\n')), len(log.text), '\n')

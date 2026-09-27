@@ -353,7 +353,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
         (
             "acpx-deepseek-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
-            "deepseek-v4-flash",
+            "deepseek-v4.1-flash",
         ),
     ],
 )
@@ -4417,6 +4417,9 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
             "agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
+        # This case checks the spawned environment, not retry delays. Keep
+        # the real fallback path while advancing past its visible wait.
+        patch("ai_llm.fallback.visible_sleep"),
     ):
         invoke(
             "gemini",

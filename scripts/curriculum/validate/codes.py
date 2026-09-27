@@ -87,6 +87,14 @@ TRUE_FALSE_NOT_POST_TEXT = "true_false_not_post_text"
 TRUE_FALSE_OVER_TEXT_COUNT = "true_false_over_text_count"
 TRUE_FALSE_RUN = "true_false_run"
 
+# --- workbook presence (issue #8889 r5 §A1) ---------------------------------
+WORKBOOK_ACTIVITY_MISSING = "workbook_activity_missing"
+
+# --- activity placement table (issue #8889 r5 §B2) --------------------------
+PLACEMENT_TABLE_UNAVAILABLE = "placement_table_unavailable"
+ACTIVITY_PLACEMENT_FORBIDDEN = "activity_placement_forbidden"
+ACTIVITY_PLACEMENT_NOT_ALLOWED = "activity_placement_not_allowed"
+
 # --- rule 4, cross-plan part: earlier plans and earlier positions ----------
 POSITION_CLAIMED_TWICE = "position_claimed_twice"
 PRIOR_PLAN_UNREADABLE = "prior_plan_unreadable"
@@ -136,6 +144,8 @@ LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED = "lesson_activity_minimums_not_calibrat
 ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY = "arc_has_no_structured_grammar_or_vocabulary"
 TITLE_QUANTITIES_NOT_PARSED = "title_quantities_not_parsed"
 INTRODUCED_EARLIER_UNVERIFIED = "introduced_earlier_unverified"
+PENDING_PROMOTION = "pending_promotion"
+PLACEMENT_LEVEL_NOT_COVERED = "placement_level_not_covered"
 
 DESCRIPTIONS = {
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
@@ -199,6 +209,10 @@ DESCRIPTIONS = {
     TRUE_FALSE_NOT_POST_TEXT: "failure (R-19): a true-false activity is outside the practice of a text-hosting step and outside consolidation of a lesson that has one",
     TRUE_FALSE_OVER_TEXT_COUNT: "failure (R-19): true-false activities in practice and consolidation together outnumber the lesson's text-hosting steps",
     TRUE_FALSE_RUN: "failure (R-19): two true-false activities are adjacent in consolidation",
+    WORKBOOK_ACTIVITY_MISSING: "failure (issue #8889 r5 §A1): a non-recap lesson has no placement: workbook activity",
+    PLACEMENT_TABLE_UNAVAILABLE: "failure (issue #8889 r5 §B2): scripts/curriculum/validate/placement_table.yaml is missing or malformed",
+    ACTIVITY_PLACEMENT_FORBIDDEN: "failure (issue #8889 r5 §B2): an activity's type is forbidden at this level by the generated placement table",
+    ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
     PRIOR_PLAN_UNREADABLE: "failure (rule 4): a sibling plan file cannot be read, so earlier introductions cannot be trusted",
@@ -233,6 +247,8 @@ DESCRIPTIONS = {
     ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY: "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
     TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
+    PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
+    PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
 NOTE_CODES = frozenset({CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW})
@@ -244,6 +260,8 @@ NOT_CHECKED_CODES = frozenset(
         ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
         TITLE_QUANTITIES_NOT_PARSED,
         INTRODUCED_EARLIER_UNVERIFIED,
+        PENDING_PROMOTION,
+        PLACEMENT_LEVEL_NOT_COVERED,
     }
 )
 

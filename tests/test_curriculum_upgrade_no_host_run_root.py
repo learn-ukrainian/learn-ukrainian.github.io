@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
 ROOT = Path(__file__).resolve().parents[1]
 

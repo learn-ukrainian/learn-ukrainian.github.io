@@ -58,8 +58,9 @@ def is_deepseek_first_party_forbidden_in_ci(provider: Any, model: Any) -> bool:
     if os.environ.get("PYTEST_CURRENT_TEST"):
         return False
     provider_text = normalize_route_part(provider).lower()
-    # "deepseek-direct" is the first-party api.deepseek.com provider id used by
-    # the OpenCode dispatch route (operator 2026-08-13); same China-egress rule.
+    # "deepseek" is the first-party api.deepseek.com provider id used by the
+    # OpenCode dispatch route (operator 2026-08-13; "deepseek-direct" was the
+    # pre-#8514 spelling kept for historical records); same China-egress rule.
     if provider_text in ("deepseek", "deepseek-direct"):
         return any(os.environ.get(v) for v in _CI_ENV_VARS)
     return False

@@ -26,6 +26,8 @@ ERROR_MISMATCH = "error_mismatch"
 STANDARD_MISMATCH = "standard_mismatch"
 WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
 OPEN_UNSUPPORTED = "open_unsupported"
+LEGACY_IDENTITY = "legacy_identity"
+SNAPSHOT_LIMIT = "snapshot_limit"
 
 DESCRIPTIONS = {
     INVALID_REQUEST: "failure: the request is invalid",
@@ -54,9 +56,15 @@ DESCRIPTIONS = {
     STANDARD_MISMATCH: "failure: standard text or file hash differs from source",
     WORDS_FIELD_FORBIDDEN: "failure: pack contains forbidden words field",
     OPEN_UNSUPPORTED: "open (failure under --strict): unsupported claim remains open",
+    LEGACY_IDENTITY: "warning (failure under --strict): built_with.sources_db is a file digest; rebuild for rows-v2",
+    SNAPSHOT_LIMIT: "failure: the pinned sources.db snapshot exceeded its WAL or free-disk budget",
 }
 
 EXCLUDING_MARKERS = frozenset({"alt", "arch", "bad", "dialect", "obsc", "slang", "subst", "vulg"})
+# VESUM encodes uncontracted poetic forms in the tag string, not form_markers.
+# Karaman 2018, Ukrainian language grade 10, §62 (sources MCP textbook chunk
+# 10-klas-ukrmova-karaman-2018_s0283): these forms are stylistically limited.
+EXCLUDING_TAGS = frozenset({"long"})
 
 
 def help_text() -> str:

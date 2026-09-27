@@ -78,6 +78,7 @@ repos:
       - id: end-of-file-fixer
         exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
       - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
         exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
 
   # --- Local hooks (project-specific) ---
@@ -270,6 +271,20 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit, pre-push]
+
+      - id: subprocess-timeout-guard
+        name: check subprocess calls for explicit timeout
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.ci.subprocess_timeout_guard
+        language: system
+        files: ^(scripts|tests)/.*\.py$
+        stages: [pre-commit]
+
+      - id: lint-test-assertions
+        name: check test assertions for stale pinned epic IDs
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.lint_test_assertions
+        language: system
+        files: ^tests/.*\.py$
+        stages: [pre-commit]
 
       # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
       # Cause: Dagger's cache_volume design accumulates pip wheels every

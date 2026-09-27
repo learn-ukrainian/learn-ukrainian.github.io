@@ -55,31 +55,27 @@ from scripts.lexicon import curated_ohoiko_ulp_repromote as promo
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_word
 
 DEFAULT_INVENTORY = _resolve_repo_path(
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 )
 DEFAULT_MANIFEST = _resolve_repo_path(PROJECT_ROOT / "site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = _resolve_repo_path(PROJECT_ROOT / "data/atlas.db")
 DEFAULT_BATCH_ID = "ohoiko-ulp-paired-split-legs-2026-08-12"
 SPACE_COLLAPSE_BATCH_ID = "ohoiko-ulp-ocr-space-collapse-2026-08-14"
 DEFAULT_SPACE_COLLAPSE_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml"
 )
 DEFAULT_SPACE_COLLAPSE_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-08-14-ohoiko-ulp-ocr-space-collapse-approve.yaml"
 )
-DEFAULT_SPACE_COLLAPSE_AUDIT = (
-    PROJECT_ROOT / "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse.jsonl"
-)
+DEFAULT_SPACE_COLLAPSE_AUDIT = PROJECT_ROOT / "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse.jsonl"
 DEFAULT_SPACE_COLLAPSE_MANUAL_REVIEW = (
-    PROJECT_ROOT
-    / "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse-manual-review.json"
+    PROJECT_ROOT / "registry/lexicon/recovery-audit/2026-08-14-ocr-space-collapse-manual-review.json"
 )
 TRAILING_PAREN_RE = re.compile(r"\s*\([^)]*\)\s*$")
 SPACE_RE = re.compile(r"\s+")
@@ -389,8 +385,7 @@ def _space_collapse_candidate(
     source_family = str(source_row.get("source_family") or "")
     if source_family not in OCR_SOURCE_FAMILIES:
         raise ValueError(
-            "OCR space-collapse recovery received a non-OCR source family: "
-            f"{source_family or '<missing>'}"
+            f"OCR space-collapse recovery received a non-OCR source family: {source_family or '<missing>'}"
         )
     return {
         "original_form": original,
@@ -707,9 +702,7 @@ def build_space_collapse_rows(
         source = audit["source"]
         source_gloss = str(source.get("gloss") or "").strip()
         if not source_gloss:
-            raise ValueError(
-                f"admitted OCR collapse has no source gloss: {audit['collapsed_form']!r}"
-            )
+            raise ValueError(f"admitted OCR collapse has no source gloss: {audit['collapsed_form']!r}")
         collapsed = str(audit["collapsed_form"])
         original = str(audit["original_form"])
         parent_locator = str(source.get("locator") or "ohoiko-ocr-space-collapse")
@@ -749,10 +742,7 @@ def write_space_collapse_inventory(
                     f"OCR space-collapse from {row['original_form']!r} to {row['lemma']!r}; "
                     "deterministic VESUM admission; #6370 guard; no invented lemma."
                 ),
-                "notes": (
-                    f"source_lemma={row['source_lemma']!r}; "
-                    "transformation=remove_internal_whitespace"
-                ),
+                "notes": (f"source_lemma={row['source_lemma']!r}; transformation=remove_internal_whitespace"),
             }
         )
     sources = []
@@ -852,25 +842,33 @@ def append_space_collapse_audit(
     path: Path,
 ) -> int:
     """Append unseen deterministic audit rows and return the number appended."""
+    if path == DEFAULT_SPACE_COLLAPSE_AUDIT:
+        path = artifact_path("lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-08-14-ocr-space-collapse.jsonl")
+    original = path.read_text(encoding="utf-8") if path.exists() else ""
     existing: set[tuple[str, str, str, str]] = set()
-    if path.exists():
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    if original:
+        for line_number, line in enumerate(original.splitlines(), start=1):
             if not line.strip():
                 continue
             try:
                 existing.add(_space_collapse_audit_key(json.loads(line)))
             except json.JSONDecodeError as exc:
                 raise ValueError(f"invalid space-collapse audit JSONL at line {line_number}") from exc
-    appended = 0
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as handle:
-        for row in rows:
-            key = _space_collapse_audit_key(row)
-            if key in existing:
-                continue
-            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
-            existing.add(key)
-            appended += 1
+    additions: list[str] = []
+    for row in rows:
+        key = _space_collapse_audit_key(row)
+        if key in existing:
+            continue
+        additions.append(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+        existing.add(key)
+    appended = len(additions)
+    if appended:
+
+        def write(staged: Path) -> None:
+            staged.parent.mkdir(parents=True, exist_ok=True)
+            staged.write_text(original + "".join(additions), encoding="utf-8")
+
+        write_artifact(path, "lexicon_recovery_snapshots", "scripts.lexicon.ohoiko_paired_headword_split", write)
     return appended
 
 
@@ -1031,7 +1029,11 @@ def analyze_all_curated_leftovers(
         in_atlas = _lemma_key(eff) in atlas_keys
         in_db = _lemma_key(eff) in db_keys if db_keys else in_atlas
         hits = bool(verify_word(eff) or [])
-        disp = f"hold(heritage_{cl})" if (is_ru or cl in HERITAGE_HOLD) else ("admit" if (hits and not in_atlas) else "hold")
+        disp = (
+            f"hold(heritage_{cl})"
+            if (is_ru or cl in HERITAGE_HOLD)
+            else ("admit" if (hits and not in_atlas) else "hold")
+        )
         leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
         row_item = {
             "bucket": "ulp_leftovers",
@@ -1083,17 +1085,25 @@ def analyze_all_curated_leftovers(
             if in_a:
                 leg_disps.append("already_in_atlas")
                 leg_disposition_counts["already_in_atlas"] = leg_disposition_counts.get("already_in_atlas", 0) + 1
-                leg_classifications.append({"leg": leg, "category": "already_in_atlas", "disposition": "already_in_atlas", "in_atlas": True})
+                leg_classifications.append(
+                    {"leg": leg, "category": "already_in_atlas", "disposition": "already_in_atlas", "in_atlas": True}
+                )
             elif not is_single_orthographic_word(leg):
                 leg_disps.append("multiword_after_split")
-                leg_disposition_counts["multiword_after_split"] = leg_disposition_counts.get("multiword_after_split", 0) + 1
-                leg_classifications.append({"leg": leg, "category": "ocr", "disposition": "multiword_after_split", "in_atlas": False})
+                leg_disposition_counts["multiword_after_split"] = (
+                    leg_disposition_counts.get("multiword_after_split", 0) + 1
+                )
+                leg_classifications.append(
+                    {"leg": leg, "category": "ocr", "disposition": "multiword_after_split", "in_atlas": False}
+                )
             else:
                 cat = classify_split_leg(leg)
                 if cat == "single_word_vesum_ok":
                     leg_disps.append("admit")
                     leg_disposition_counts["admit"] = leg_disposition_counts.get("admit", 0) + 1
-                    leg_classifications.append({"leg": leg, "category": "p1_admit", "disposition": "admit", "in_atlas": False})
+                    leg_classifications.append(
+                        {"leg": leg, "category": "p1_admit", "disposition": "admit", "in_atlas": False}
+                    )
                     promote_candidates.append(
                         {
                             "lemma": leg,
@@ -1301,13 +1311,19 @@ def classify_taught_candidate(
                             leg_cat = "heritage_hold"
                             leg_disp = "hold(single_word_vesum_ok_no_gloss)"
                             all_legs_in_atlas = False
-            leg_details.append({
-                "leg": leg,
-                "category": leg_cat,
-                "disposition": leg_disp,
-                "in_atlas": in_a,
-            })
-        disposition = "hold(already_in_atlas)" if all_legs_in_atlas else f"hold({', '.join(d['disposition'] for d in leg_details)})"
+            leg_details.append(
+                {
+                    "leg": leg,
+                    "category": leg_cat,
+                    "disposition": leg_disp,
+                    "in_atlas": in_a,
+                }
+            )
+        disposition = (
+            "hold(already_in_atlas)"
+            if all_legs_in_atlas
+            else f"hold({', '.join(d['disposition'] for d in leg_details)})"
+        )
         return {
             "key": key,
             "category": "pair_key",
@@ -1316,7 +1332,8 @@ def classify_taught_candidate(
             "leg_classifications": leg_details,
             "in_atlas": all_legs_in_atlas,
             "disposition": disposition,
-            "rationale": f"Paired comma headword with {len(eff_legs)} legs: " + ", ".join(f"{d['leg']} ({d['category']})" for d in leg_details),
+            "rationale": f"Paired comma headword with {len(eff_legs)} legs: "
+            + ", ".join(f"{d['leg']} ({d['category']})" for d in leg_details),
         }
 
     # 6. Single-word lemma evaluation (VESUM + heritage classification)
@@ -1345,7 +1362,9 @@ def classify_taught_candidate(
             "legs": [eff],
             "in_atlas": False,
             "disposition": f"hold(heritage_{cl})",
-            "rationale": f"Lemma {eff!r} is held under heritage policy: {cl}" + (", russianism" if is_ru else "") + (", russian_shadow" if has_shadow else ""),
+            "rationale": f"Lemma {eff!r} is held under heritage policy: {cl}"
+            + (", russianism" if is_ru else "")
+            + (", russian_shadow" if has_shadow else ""),
         }
 
     if _lemma_key(eff) in atlas_keys:
@@ -1492,9 +1511,7 @@ def analyze_taught_residual_census(
         )
         if not ulp_measure.get("error") and ulp_measure.get("total_curated_rows", 0) > 0:
             ulp_missing_lemmas = [
-                m
-                for s_data in ulp_measure.get("per_season", {}).values()
-                for m in s_data.get("missing_lemmas", [])
+                m for s_data in ulp_measure.get("per_season", {}).values() for m in s_data.get("missing_lemmas", [])
             ]
             ulp_cats: dict[str, int] = {}
             for m in ulp_missing_lemmas:
@@ -1524,9 +1541,7 @@ def analyze_taught_residual_census(
         computed_loc_filters.append("ulp-")
 
     all_computed_lemmas = {
-        str(r["lemma"])
-        for r in records
-        if any(filt in str(r.get("locator") or "") for filt in computed_loc_filters)
+        str(r["lemma"]) for r in records if any(filt in str(r.get("locator") or "") for filt in computed_loc_filters)
     }
     total_records = sum(u["records"] for u in taught_source_units.values())
     total_unique_keys = len(all_computed_lemmas)
@@ -1537,7 +1552,9 @@ def analyze_taught_residual_census(
         {
             "lemma": r["key"],
             "source": str(r.get("locator") or ""),
-            "source_unit": "ULP Season " + str(re.search(r"ulp-(\d)", str(r.get("locator") or "")).group(1)) if re.search(r"ulp-(\d)", str(r.get("locator") or "")) else "ULP",
+            "source_unit": "ULP Season " + str(re.search(r"ulp-(\d)", str(r.get("locator") or "")).group(1))
+            if re.search(r"ulp-(\d)", str(r.get("locator") or ""))
+            else "ULP",
             "category": "heritage_hold",
             "classification": "russianism",
             "disposition": r.get("disposition") or "hold(heritage_russianism)",
@@ -1593,60 +1610,64 @@ def format_taught_residual_markdown(census: Mapping[str, Any]) -> str:
         missing = unit_data.get("missing", 0)
         breakdown = unit_data.get("category_breakdown", {})
         breakdown_str = ", ".join(f"{cnt} `{cat}`" for cat, cnt in breakdown.items()) if breakdown else "none"
-        lines.append(
-            f"| `{unit_name}` | {unique:,} | {in_atlas:,} | **{missing}** | {breakdown_str} |"
-        )
+        lines.append(f"| `{unit_name}` | {unique:,} | {in_atlas:,} | **{missing}** | {breakdown_str} |")
 
-    lines.extend([
-        f"| **Total** | **{summary.get('total_taught_unique_keys', 0):,}** | **{summary.get('taught_present_in_atlas', 0):,}** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
-        "",
-        "---",
-        "",
-        "### 2. Candidate Classification (6 Standard Categories)",
-        "",
-        "| Category | Candidate Count | Disposition Summary |",
-        "| :--- | ---: | :--- |",
-        f"| `already_in_atlas` | {cats.get('already_in_atlas', 0)} | 31 trailing-comma verbs (`випити,` etc.) + 2 clean tokens (`ого!`, `ой!`) |",
-        f"| `pair_key` | {cats.get('pair_key', 0)} | 1000-words compound pair keys (`актор, акторка` etc.) |",
-        f"| `ocr` | {cats.get('ocr', 0)} | 1 Latin lookalike token (`тваринa` latin-a -> Cyrillic `тварина` in Atlas) |",
-        f"| `heritage_hold` | {cats.get('heritage_hold', 0)} | Russianisms in VESUM: `переключити` (ULP 4), `кримчанин` (ULP 6), `просвітитель` (ULP 6) |",
-        f"| `vesum_unrecognized` | {cats.get('vesum_unrecognized', 0)} | 0 unrecognized at candidate level |",
-        f"| `p1_admit` | **{summary.get('p1_admit_count', 0)}** | **0 P1-eligible admits** |",
-        f"| **Total Candidates** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
-        "",
-        "---",
-        "",
-        f"### 3. Leg-Level Classification for {cats.get('pair_key', 0)} `pair_key` Headwords ({sum(legs.values())} Legs)",
-        "",
-        "| Leg Category | Leg Count | Details |",
-        "| :--- | ---: | :--- |",
-        f"| `already_in_atlas` | {legs.get('already_in_atlas', 0)} | Canonical single-word legs present in Atlas |",
-        f"| `ocr` | {legs.get('ocr', 0)} | 15 space-collapse OCR multiword legs (`боя тися`, `бу ти`, etc.) + 1 English fragment |",
-        f"| `vesum_unrecognized` | {legs.get('vesum_unrecognized', 0)} | `поліцейський` (absent from standard VESUM) |",
-        f"| `heritage_hold` | {legs.get('heritage_hold', 0)} | 0 legs held independently |",
-        f"| `p1_admit` | **{legs.get('p1_admit', 0)}** | **0 P1 admits** |",
-        f"| **Total Legs** | **{sum(legs.values())}** | **0 admits** |",
-        "",
-        "---",
-        "",
-        "### 4. Heritage Holds (Documented)",
-        "",
-        "| Lemma | Source | Classification | Disposition |",
-        "| :--- | :--- | :--- | :--- |",
-    ])
+    lines.extend(
+        [
+            f"| **Total** | **{summary.get('total_taught_unique_keys', 0):,}** | **{summary.get('taught_present_in_atlas', 0):,}** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
+            "",
+            "---",
+            "",
+            "### 2. Candidate Classification (6 Standard Categories)",
+            "",
+            "| Category | Candidate Count | Disposition Summary |",
+            "| :--- | ---: | :--- |",
+            f"| `already_in_atlas` | {cats.get('already_in_atlas', 0)} | 31 trailing-comma verbs (`випити,` etc.) + 2 clean tokens (`ого!`, `ой!`) |",
+            f"| `pair_key` | {cats.get('pair_key', 0)} | 1000-words compound pair keys (`актор, акторка` etc.) |",
+            f"| `ocr` | {cats.get('ocr', 0)} | 1 Latin lookalike token (`тваринa` latin-a -> Cyrillic `тварина` in Atlas) |",
+            f"| `heritage_hold` | {cats.get('heritage_hold', 0)} | Russianisms in VESUM: `переключити` (ULP 4), `кримчанин` (ULP 6), `просвітитель` (ULP 6) |",
+            f"| `vesum_unrecognized` | {cats.get('vesum_unrecognized', 0)} | 0 unrecognized at candidate level |",
+            f"| `p1_admit` | **{summary.get('p1_admit_count', 0)}** | **0 P1-eligible admits** |",
+            f"| **Total Candidates** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
+            "",
+            "---",
+            "",
+            f"### 3. Leg-Level Classification for {cats.get('pair_key', 0)} `pair_key` Headwords ({sum(legs.values())} Legs)",
+            "",
+            "| Leg Category | Leg Count | Details |",
+            "| :--- | ---: | :--- |",
+            f"| `already_in_atlas` | {legs.get('already_in_atlas', 0)} | Canonical single-word legs present in Atlas |",
+            f"| `ocr` | {legs.get('ocr', 0)} | 15 space-collapse OCR multiword legs (`боя тися`, `бу ти`, etc.) + 1 English fragment |",
+            f"| `vesum_unrecognized` | {legs.get('vesum_unrecognized', 0)} | `поліцейський` (absent from standard VESUM) |",
+            f"| `heritage_hold` | {legs.get('heritage_hold', 0)} | 0 legs held independently |",
+            f"| `p1_admit` | **{legs.get('p1_admit', 0)}** | **0 P1 admits** |",
+            f"| **Total Legs** | **{sum(legs.values())}** | **0 admits** |",
+            "",
+            "---",
+            "",
+            "### 4. Heritage Holds (Documented)",
+            "",
+            "| Lemma | Source | Classification | Disposition |",
+            "| :--- | :--- | :--- | :--- |",
+        ]
+    )
     for h in holds:
-        lines.append(f"| `{h['lemma']}` | `{h.get('source', '')}` | {h.get('classification', '')} | `{h.get('disposition', '')}` |")
-    lines.extend([
-        "",
-        "**Policy Verification & Acceptance Invariants:**",
-        "- **Zero admits:** `p1_admit` is empty (0 candidates).",
-        f"- **Manifest pointer untouched:** `site/src/data/lexicon-manifest.json` sha256 `{str(census.get('manifest_pointer', 'dc1d73a434e2'))[:12]}` preserved.",
-        "- **No soup dumped:** 11k note tokens kept frozen in Unit C; 500-verb conjugation grids omitted.",
-        "- **Audit ledger:** committed to `data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json`.",
-        "- **Status:** #7550 stays OPEN for future curriculum/textbook slices (Unit C / non-goals).",
-        "",
-        "X-Agent: `agy/7782-live-totals`",
-    ])
+        lines.append(
+            f"| `{h['lemma']}` | `{h.get('source', '')}` | {h.get('classification', '')} | `{h.get('disposition', '')}` |"
+        )
+    lines.extend(
+        [
+            "",
+            "**Policy Verification & Acceptance Invariants:**",
+            "- **Zero admits:** `p1_admit` is empty (0 candidates).",
+            f"- **Manifest pointer untouched:** `site/src/data/lexicon-manifest.json` sha256 `{str(census.get('manifest_pointer', 'dc1d73a434e2'))[:12]}` preserved.",
+            "- **No soup dumped:** 11k note tokens kept frozen in Unit C; 500-verb conjugation grids omitted.",
+            "- **Audit ledger:** committed to `data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json`.",
+            "- **Status:** #7550 stays OPEN for future curriculum/textbook slices (Unit C / non-goals).",
+            "",
+            "X-Agent: `agy/7782-live-totals`",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -1691,14 +1712,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--inventory-out",
         type=Path,
-        default=PROJECT_ROOT
-        / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml",
+        default=PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml",
     )
     p.add_argument(
         "--decisions-out",
         type=Path,
-        default=PROJECT_ROOT
-        / "data/lexicon/source-inventory-review-decisions/"
+        default=PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
         "2026-08-12-ohoiko-ulp-paired-split-legs-approve.yaml",
     )
     p.add_argument("--space-collapse-inventory-out", type=Path, default=DEFAULT_SPACE_COLLAPSE_INVENTORY)
@@ -1734,12 +1753,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     payload: dict[str, Any] = {"residual": residual}
     analysis: dict[str, Any] | None = None
-    if args.analyze_paired or args.write_promote_artifacts or args.analyze_space_collapse or args.write_space_collapse_artifacts:
+    if (
+        args.analyze_paired
+        or args.write_promote_artifacts
+        or args.analyze_space_collapse
+        or args.write_space_collapse_artifacts
+    ):
         _entry_count, atlas_keys = atlas_lemma_keys(args.manifest)
         paired = residual["lemmas_by_category"].get("paired_headwords_comma") or []
-        rows_by_lemma = {
-            str(r["lemma"]): r for r in load_inventory_records(args.inventory)
-        }
+        rows_by_lemma = {str(r["lemma"]): r for r in load_inventory_records(args.inventory)}
         analysis = analyze_paired_splits(
             paired_lemmas=paired,
             atlas_keys=atlas_keys,
@@ -1785,9 +1807,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.analyze_space_collapse or args.write_space_collapse_artifacts:
         if analysis is None:
             raise AssertionError("paired analysis is required for space-collapse recovery")
-        rows_by_lemma = {
-            str(r["lemma"]): r for r in load_inventory_records(args.inventory)
-        }
+        rows_by_lemma = {str(r["lemma"]): r for r in load_inventory_records(args.inventory)}
         space_candidates = collect_space_collapse_candidates(
             residual=residual,
             paired_analysis=analysis,
@@ -1867,7 +1887,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(format_taught_residual_markdown(census))
         if args.out:
             args.out.parent.mkdir(parents=True, exist_ok=True)
-            args.out.write_text(json.dumps(census, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            write_artifact(
+                args.out,
+                "lexicon_recovery_snapshots",
+                "scripts.lexicon.ohoiko_paired_headword_split",
+                lambda staged: staged.write_text(
+                    json.dumps(census, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+                ),
+            )
             print(f"wrote {args.out}", flush=True)
             return 0
 
@@ -1907,7 +1934,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             "generated_from": "ohoiko_paired_headword_split",
             **payload,
         }
-        args.out.write_text(json.dumps(lean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        write_artifact(
+            args.out,
+            "lexicon_recovery_snapshots",
+            "scripts.lexicon.ohoiko_paired_headword_split",
+            lambda staged: staged.write_text(json.dumps(lean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"),
+        )
         print(f"wrote {args.out}", flush=True)
     return 0
 

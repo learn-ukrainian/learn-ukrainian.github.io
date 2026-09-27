@@ -248,7 +248,7 @@ Reviewer on Language dim: any hit = max 6.0/10.
 
 ## §7a Canonical anchors contract — decolonization-critical facts
 
-**Authority:** `data/canonical_anchors.yaml` (shared registry used by
+**Authority:** `registry/canonical_anchors.yaml` (shared registry used by
 both the module pipeline and the wiki compiler; loaded via
 `scripts/wiki/discipline.py::load_canonical_anchors`).
 

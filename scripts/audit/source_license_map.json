@@ -55,7 +55,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Іван_Франко",
-      "license_basis": "data/authors_rights.yaml lists Іван Франко death_year 1916; LICENSE-CONTENT.md marks Franko public domain."
+      "license_basis": "registry/authors_rights.yaml lists Іван Франко death_year 1916; LICENSE-CONTENT.md marks Franko public domain."
     },
     {
       "table": "literary_texts",
@@ -63,7 +63,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Іван_Котляревський",
-      "license_basis": "data/authors_rights.yaml lists Іван Котляревський death_year 1838; LICENSE-CONTENT.md marks pre-1924 literary sources public domain."
+      "license_basis": "registry/authors_rights.yaml lists Іван Котляревський death_year 1838; LICENSE-CONTENT.md marks pre-1924 literary sources public domain."
     },
     {
       "table": "literary_texts",

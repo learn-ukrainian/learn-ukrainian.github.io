@@ -26,6 +26,7 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -34,6 +35,10 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.storage.artifacts import write_artifact
+
 DEFAULT_OUT_DIR = PROJECT_ROOT / "data" / "lexicon" / "textbook-end-dictionaries"
 SCHEMA = "atlas-end-dictionary-inventory"
 SCHEMA_VERSION = 1
@@ -57,12 +62,8 @@ _TITLE_NOISE_RE = re.compile(
     r"орфографічний\s+словничок|словник\s+термінів).*$"
 )
 _BULLET_RE = re.compile(r"^[\s•·▪◦●○\t]+")
-_UK_LEMMA_RE = re.compile(
-    r"^[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*$"
-)
-_UK_TOKEN_RE = re.compile(
-    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*"
-)
+_UK_LEMMA_RE = re.compile(r"^[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*$")
+_UK_TOKEN_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*")
 _ACADEMIC_HEAD_RE = re.compile(
     r"^(?P<head>[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґʼ'’-]*)"
     r"(?:,\s*[^\.]{0,80})?"
@@ -114,9 +115,7 @@ _ABBREV_HEADS = frozenset(
     }
 )
 _COMBINING_ACUTE = "\u0301"
-_UKRMOVA_SOURCE_RE = re.compile(
-    r"(?i)(?:ukrmova|ukrajinska[-_]?mova|ukrajinska_mova)"
-)
+_UKRMOVA_SOURCE_RE = re.compile(r"(?i)(?:ukrmova|ukrajinska[-_]?mova|ukrajinska_mova)")
 
 # Title → layout kind. First match wins.
 _TITLE_KIND_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
@@ -427,11 +426,7 @@ def parse_gloss_emdash(text: str) -> list[tuple[str, str | None, str, bool]]:
         if not _EMDASH_SPLIT_RE.search(line):
             # Soft-wrap continuation of previous unfinished entry is rare at
             # line start; keep short leftovers only when previous needed glue.
-            buffer = (
-                line
-                if len(line) <= 40 and not line.endswith(".") and "словник" not in line.casefold()
-                else ""
-            )
+            buffer = line if len(line) <= 40 and not line.endswith(".") and "словник" not in line.casefold() else ""
             continue
         parts = _EMDASH_SPLIT_RE.split(line, maxsplit=1)
         if len(parts) != 2:
@@ -927,9 +922,11 @@ def write_inventory(payload: Mapping[str, Any], out_dir: Path) -> tuple[Path, Pa
     out_dir.mkdir(parents=True, exist_ok=True)
     inventory_path = out_dir / "inventory.json"
     sections_path = out_dir / "sections.json"
-    inventory_path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    write_artifact(
+        inventory_path,
+        "lexicon_end_dictionaries",
+        "scripts.practice_deck.end_dictionaries",
+        lambda staged: staged.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"),
     )
     summary = {
         "schema": SCHEMA,
@@ -939,17 +936,40 @@ def write_inventory(payload: Mapping[str, Any], out_dir: Path) -> tuple[Path, Pa
         "layoutResidual": payload.get("layoutResidual"),
         "sections": payload.get("sections"),
     }
-    sections_path.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    write_artifact(
+        sections_path,
+        "lexicon_end_dictionaries",
+        "scripts.practice_deck.end_dictionaries",
+        lambda staged: staged.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"),
     )
     return inventory_path, sections_path
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--sources-db", type=Path, default=None)
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    parser = argparse.ArgumentParser(
+        description="Extract textbook end-dictionary inventories from sources.db. Use this when refreshing Atlas practice coverage.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py --out-dir data/lexicon/textbook-end-dictionaries\n"
+            "Outputs: inventory.json and sections.json in --out-dir; declared artifacts publish through their manifest.\n"
+            "Exit codes: 0 = success; 1 = missing sources.db or extraction failure; 2 = invalid arguments.\n"
+            "Related: issue #8809 P2 and docs/practice/textbook-end-dictionaries.md."
+        ),
+    )
+    parser.add_argument(
+        "--sources-db",
+        type=Path,
+        default=None,
+        help="Input sources.db; default searches this checkout and its parents.",
+    )
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=DEFAULT_OUT_DIR,
+        help=f"Inventory output directory (default: {DEFAULT_OUT_DIR}).",
+    )
     args = parser.parse_args(argv)
     sources_db = resolve_sources_db(args.sources_db)
     if not sources_db.is_file():

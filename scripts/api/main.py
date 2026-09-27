@@ -35,6 +35,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import scripts.github_rest_cache as github_rest
 from scripts.common.release_layout import is_release_root
+from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
 
@@ -82,7 +83,6 @@ from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
-from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
@@ -538,20 +538,20 @@ def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
     return {"issues": issues}
 
 
-def _pr_check_timestamp(check: dict[str, Any]) -> datetime | None:
-    for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
-        parsed = _parse_iso_datetime(check.get(field))
-        if parsed is not None:
-            return parsed
-    return None
+def _idle_check_row_green(check: dict[str, Any]) -> bool:
+    status = str(check.get("status") or "").upper()
+    if status and status not in {"COMPLETED", "SUCCESS"}:
+        return False
+    outcome = str(check.get("conclusion") or check.get("state") or "").upper()
+    return outcome in IDLE_PR_SUCCESSFUL_CONCLUSIONS
 
 
 def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
-    """Return whether every latest non-advisory check for a PR is green.
+    """Return whether every surviving non-advisory check for a PR is green.
 
-    ``statusCheckRollup`` contains historical runs when a check has been
-    restarted. Grouping by context and selecting the newest timestamp avoids
-    resurrecting an old green run after a newer run went red or pending.
+    Historical runs collapse through :func:`group_collapsed_by_name`. A name
+    stays red or pending when any surviving row is: a later success in another
+    workflow does not hide an earlier failure, and a timestamp tie keeps both.
     Missing or malformed status data fails closed. Explicitly advisory checks
     follow the repository merge-hook convention and do not block eligibility.
     """
@@ -559,28 +559,16 @@ def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
     if not isinstance(rollup, list) or not rollup:
         return False
 
-    latest: dict[str, tuple[datetime, dict[str, Any]]] = {}
-    for raw in rollup:
-        if not isinstance(raw, dict):
-            return False
-        name = raw.get("name") or raw.get("context")
-        timestamp = _pr_check_timestamp(raw)
-        if not isinstance(name, str) or not name.strip() or timestamp is None:
-            return False
-        current = latest.get(name)
-        if current is None or timestamp >= current[0]:
-            latest[name] = (timestamp, raw)
+    named, other = group_collapsed_by_name(rollup)
+    if other or not named:
+        return False
 
     blocking_count = 0
-    for name, (_timestamp, check) in latest.items():
+    for name, rows in named.items():
         if IDLE_PR_ADVISORY_MARKER in name.casefold():
             continue
         blocking_count += 1
-        status = str(check.get("status") or "").upper()
-        if status and status not in {"COMPLETED", "SUCCESS"}:
-            return False
-        outcome = str(check.get("conclusion") or check.get("state") or "").upper()
-        if outcome not in IDLE_PR_SUCCESSFUL_CONCLUSIONS:
+        if any(not _idle_check_row_green(row) for row in rows):
             return False
 
     return blocking_count > 0
@@ -952,14 +940,27 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
         removed = sum(1 for r in results if r.action in ("removed", "preserved_then_removed"))
         skipped = sum(1 for r in results if r.action == "skipped")
         errors = sum(1 for r in results if r.action == "error")
+        # Report-only findings (#8663), e.g. an interrupted ``git worktree add``.
+        needs_attention = [
+            {"path": r.path, **{key: r.needs_attention.get(key) for key in ("kind", "command")}}
+            for r in results
+            if r.needs_attention is not None
+        ]
 
         _last_gc_sweep_summary = {
             "time": _isoformat_z(datetime.now(UTC)),
             "removed": removed,
             "skipped": skipped,
             "errors": errors,
+            "needs_attention": needs_attention,
         }
-        logger.info("worktree GC sweep: removed=%d, skipped=%d, errors=%d", removed, skipped, errors)
+        logger.info(
+            "worktree GC sweep: removed=%d, skipped=%d, errors=%d, needs_attention=%d",
+            removed,
+            skipped,
+            errors,
+            len(needs_attention),
+        )
     except Exception as exc:
         logger.exception("worktree GC sweep failed: %s", exc)
 
@@ -1862,7 +1863,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
     factory_app.include_router(gold_router, prefix="/api/gold")
     factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
-    factory_app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
     factory_app.include_router(build_events_router, prefix="/api/build/events")
     factory_app.include_router(images_router, prefix="/api/images")
     factory_app.include_router(issues_router, prefix="/api/issues", tags=["issues"])

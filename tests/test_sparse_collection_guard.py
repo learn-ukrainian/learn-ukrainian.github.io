@@ -17,24 +17,38 @@ Coverage is derived, not sampled: every test module whose module-level code
 sparse trees, unioned with the test modules changed by #8581 that reach the
 trees through helper calls the scan cannot see. Modules that read the trees
 only inside test bodies cannot break collection and are excluded to keep the
-guard fast.
+guard fast. The child collects their common parent directory once and ignores
+every other test file (``tests.sparse_collection_scope``). One pytest
+argument per module makes pytest re-scan that directory each time, which was
+the per-PR cost.
+
+A module-level ``skipped`` outcome only passes for a target and reason on the
+``_ALLOWED_SKIP_REASONS`` allow-list. An unlisted skip — a dependency import
+via ``pytest.importorskip``, or a module that catches an absent sparse tree
+and skips instead of failing — is exactly the failure class this guard
+exists to catch, so it fails the guard.
 """
 
 from __future__ import annotations
 
 import ast
 import errno
+import json
 import os
 import re
+import shutil
+import sqlite3
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
+from tests.sparse_collection_scope import OUTCOMES_FILE_ENV, SCOPE_FILE_ENV
 from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ABSENT_TREES = ("curriculum", "wiki", "data/projects", "data/lexicon")
@@ -116,55 +130,273 @@ def _collection_targets() -> list[str]:
     return sorted(targets)
 
 
+def _resolved_targets(targets: list[str]) -> list[Path]:
+    resolved: list[Path] = []
+    for target in targets:
+        path = Path(target)
+        if not path.is_absolute():
+            path = _REPO_ROOT / path
+        resolved.append(path.resolve())
+    missing = [str(path) for path in resolved if not path.is_file()]
+    assert not missing, f"collection targets no longer exist: {missing}"
+    return resolved
+
+
+def _collection_directory(resolved: list[Path]) -> Path:
+    """Narrowest directory that contains every target."""
+    common = Path(os.path.commonpath([str(path) for path in resolved]))
+    if common.is_file():
+        return common.parent
+    return common
+
+
+def _pytest_collection_arg(directory: Path, cwd: Path) -> str:
+    try:
+        relative = directory.resolve().relative_to(cwd.resolve())
+    except ValueError:
+        return directory.as_posix()
+    text = relative.as_posix()
+    return text or "."
+
+
 def collect_with_absent_trees(
     targets: list[str],
     *,
     cwd: Path | None = None,
     repo_root: Path | None = None,
-) -> subprocess.CompletedProcess[str]:
+    extra_env: dict[str, str] | None = None,
+) -> tuple[subprocess.CompletedProcess[str], dict[str, dict[str, str | None]]]:
     """Run ``pytest --collect-only`` in a child that cannot see the sparse trees.
 
     The audit plugin is named on the command line and imported only by the
     child. This process does not import it, so the hook stays inactive here.
+    The same child loads ``tests.sparse_collection_scope`` and collects the
+    targets' common parent once, ignoring every test module outside ``targets``.
+    Eager-read failures still abort that collection. The child writes each
+    target's outcome (``collected``, ``skipped``, or ``failed``, plus the
+    skip reason when applicable) beside the scope file; both are removed
+    before this returns. ``extra_env`` is merged into the child's
+    environment, e.g. to redirect ``connect_sources_db()`` at a scratch
+    database via ``LU_SOURCES_DB`` without touching the repository tree.
     """
     work = cwd or _REPO_ROOT
     root = Path(os.path.abspath(repo_root or _REPO_ROOT))
+    resolved = _resolved_targets(targets)
+    directory = _collection_directory(resolved)
     env = os.environ.copy()
     env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
     env[REPO_ROOT_ENV] = str(root)
+    # The child runs in an isolated scratch cwd and loads its own audit plugin.
+    # The dispatch parent's plugin is not importable there.
+    env.pop("PYTEST_PLUGINS", None)
     prior = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
-    return subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            *targets,
-            "--collect-only",
-            "-q",
-            "--tb=line",
-            "-o",
-            "addopts=",
-            "-p",
-            "no:cacheprovider",
-            "-p",
-            "tests.sparse_collection_audit",
-        ],
-        cwd=work,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=100,
-    )
+    scratch = tempfile.mkdtemp(prefix="sparse-collection-")
+    scope_path = os.path.join(scratch, "scope.txt")
+    outcomes_path = os.path.join(scratch, "outcomes.json")
+    Path(scope_path).write_text("\n".join(path.as_posix() for path in resolved) + "\n", encoding="utf-8")
+    env[SCOPE_FILE_ENV] = scope_path
+    env[OUTCOMES_FILE_ENV] = outcomes_path
+    if extra_env:
+        env.update(extra_env)
+    try:
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                _pytest_collection_arg(directory, work),
+                "--collect-only",
+                "-q",
+                "--tb=line",
+                "-o",
+                "addopts=",
+                "-p",
+                "no:cacheprovider",
+                "-p",
+                "tests.sparse_collection_scope",
+                "-p",
+                "tests.sparse_collection_audit",
+            ],
+            cwd=work,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=100,
+        )
+        return completed, _read_collection_outcomes(outcomes_path)
+    finally:
+        shutil.rmtree(scratch)
 
 
-def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
-    completed = collect_with_absent_trees(_collection_targets())
+def _read_collection_outcomes(path: str) -> dict[str, dict[str, str | None]]:
+    file = Path(path)
+    try:
+        text = file.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    if not text.strip():
+        return {}
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return {
+        str(key): {"status": str(value.get("status")), "reason": value.get("reason")}
+        for key, value in data.items()
+        if isinstance(value, dict)
+    }
+
+
+# Module-level skips this guard accepts as a passing outcome, keyed by the
+# repo-relative target path the skip must come from. The value is a stable
+# substring of the skip reason — not the whole message, which may drift
+# (line numbers, environment specifics). Any other module-level skip means a
+# missing dependency or an absent sparse tree was silently swallowed, which
+# is the failure class this guard exists to catch, so it fails the guard.
+_ALLOWED_SKIP_REASONS: dict[str, str] = {
+    "tests/test_citation_resolution_invariant.py": "sources.db not populated",
+}
+
+
+def _assert_targets_reported(
+    completed: subprocess.CompletedProcess[str],
+    outcomes: dict[str, dict[str, str | None]],
+    targets: list[str],
+) -> None:
+    """Collection succeeded, and every target was collected or an allow-listed skip."""
     output = completed.stdout + completed.stderr
     assert completed.returncode == 0, output
     assert "errors during collection" not in output
     assert "Interrupted:" not in output
+    resolved = _resolved_targets(targets)
+    failed = [
+        target
+        for target, path in zip(targets, resolved, strict=True)
+        if outcomes.get(path.as_posix(), {}).get("status") == "failed"
+    ]
+    assert not failed, f"collection failed: {failed}\n{output[-2000:]}"
+    unexpected = [
+        f"{target}={outcomes.get(path.as_posix(), {}).get('status')!r}"
+        for target, path in zip(targets, resolved, strict=True)
+        if outcomes.get(path.as_posix(), {}).get("status") not in {"collected", "skipped"}
+    ]
+    assert not unexpected, f"collection outcomes: {unexpected}\n{output[-2000:]}"
+    unallowed_skips = []
+    for target, path in zip(targets, resolved, strict=True):
+        entry = outcomes.get(path.as_posix(), {})
+        if entry.get("status") != "skipped":
+            continue
+        reason = str(entry.get("reason") or "")
+        allowed_reason = _ALLOWED_SKIP_REASONS.get(target)
+        if allowed_reason is None or allowed_reason not in reason:
+            unallowed_skips.append(f"{target}: {reason!r}")
+    assert not unallowed_skips, f"unallowed module-level skip: {unallowed_skips}\n{output[-2000:]}"
+
+
+def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
+    targets = _collection_targets()
+    completed, outcomes = collect_with_absent_trees(targets)
+    _assert_targets_reported(completed, outcomes, targets)
+
+
+def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:
+    """A module-level skip is ``skipped``, is allow-listed, and the guard still passes.
+
+    CI has no populated ``sources.db``, so
+    ``tests/test_citation_resolution_invariant.py`` skips at import.
+    ``--collect-only -q`` then prints no node id for it. This worktree
+    otherwise falls back to the main checkout's database, which would
+    collect the module; ``LU_SOURCES_DB`` points the child only at an
+    unpopulated scratch database under ``tmp_path`` so the same skip fires
+    without writing into the repository tree. The collected directory is the
+    citation module's own parent (``tests/``), so the companion that keeps
+    the exit code at 0 (a skip-only collection exits 5) must already live
+    there too: reusing a small, stable, unrelated test file stands in for a
+    companion without writing into a read-only checkout.
+    """
+    scratch_db = tmp_path / "sources.db"
+    connection = sqlite3.connect(scratch_db)
+    connection.execute("CREATE TABLE sparse_guard_empty (id INTEGER)")
+    connection.commit()
+    connection.close()
+    assert scratch_db.stat().st_size > 0
+
+    citation = "tests/test_citation_resolution_invariant.py"
+    companion = "tests/test_scripts_import_root.py"
+    targets = [citation, companion]
+    completed, outcomes = collect_with_absent_trees(
+        targets,
+        extra_env={"LU_SOURCES_DB": str(scratch_db)},
+    )
+    _assert_targets_reported(completed, outcomes, targets)
+    citation_outcome = outcomes[(_REPO_ROOT / citation).resolve().as_posix()]
+    assert citation_outcome["status"] == "skipped"
+    assert "sources.db not populated" in str(citation_outcome["reason"])
+    assert outcomes[(_REPO_ROOT / companion).resolve().as_posix()]["status"] == "collected"
+
+
+def test_unallowed_module_skip_fails_the_collection_guard(tmp_path: Path) -> None:
+    """A module-level skip outside the allow-list does not pass the guard.
+
+    ``tests/test_citation_resolution_invariant.py`` is the one allow-listed
+    skip. Any other reason — a missing dependency via
+    ``pytest.importorskip``, or a module that catches an absent sparse tree
+    and skips instead of failing — is the failure class this guard exists
+    to catch, so it must fail the guard even though pytest itself reports
+    a clean, zero-error collection.
+    """
+    module = _write_module(
+        tmp_path / "unallowed-skip",
+        "test_unallowed_skip.py",
+        "import pytest\n"
+        "pytest.skip('tree absent', allow_module_level=True)\n"
+        "\n"
+        "def test_never_runs() -> None:\n"
+        "    pass\n",
+    )
+    # A companion module keeps the child's exit code at 0 (a skip-only
+    # collection exits 5), so the unallowed-skip check — not the exit-code
+    # check — is what fails the guard.
+    companion = _write_module(
+        tmp_path / "unallowed-skip",
+        "test_companion_collects.py",
+        "def test_companion_collects() -> None:\n    pass\n",
+    )
+    targets = [str(module), str(companion)]
+    completed, outcomes = collect_with_absent_trees(
+        targets,
+        cwd=module.parent,
+        repo_root=tmp_path,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert outcomes[module.resolve().as_posix()]["status"] == "skipped"
+    with pytest.raises(AssertionError, match="unallowed module-level skip"):
+        _assert_targets_reported(completed, outcomes, targets)
+
+
+def test_import_error_fails_the_collection_guard(tmp_path: Path) -> None:
+    """An import-time raise is ``failed``, so the guard does not pass."""
+    module = _write_module(
+        tmp_path / "import-error",
+        "test_import_error.py",
+        "raise RuntimeError('import boom')\n"
+        "\n"
+        "def test_import_error() -> None:\n"
+        "    pass\n",
+    )
+    targets = [str(module)]
+    completed, outcomes = collect_with_absent_trees(
+        targets,
+        cwd=module.parent,
+        repo_root=tmp_path,
+    )
+    assert outcomes[module.resolve().as_posix()]["status"] == "failed"
+    with pytest.raises(AssertionError):
+        _assert_targets_reported(completed, outcomes, targets)
 
 
 def _existing_curriculum_file(repo: Path) -> Path | None:
@@ -213,7 +445,7 @@ def _assert_eager_collection_fails(
     repo_root: Path,
     cwd: Path | None = None,
 ) -> None:
-    completed = collect_with_absent_trees(
+    completed, _outcomes = collect_with_absent_trees(
         [str(module) for module in modules],
         cwd=cwd or modules[0].parent,
         repo_root=repo_root,

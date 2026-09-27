@@ -70,11 +70,11 @@ Any of these may own a cold-start / drive-board loop. Pins live in
 overhead; it is the named harness / infra / devops alternate, never a concurrent co-owner. Drift
 lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
-| Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
+| Seat | Default (loop) | Escalate (deep) | Cross-family CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6-astra` @ high** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
-| **codex** | `gpt-6-sol` @ high | **`gpt-6-astra` @ high** | yes (`review-pr --reviewer codex`) |
-| **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6-astra` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Fable explicit) |
+| **codex** | `gpt-6-sol` @ high | **`gpt-6-astra` @ high** | yes (`ask-codex --type review`) |
+| **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`ask-grok --type review`) |
 | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | no until #5555 — still *requests* CF |
 | **cursor** | `auto` @ high (allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-6-astra` @ high** | no — formal CF requires attested `resolved_model` |
 
@@ -139,17 +139,20 @@ Near-cap and open-circuit buckets receive no automatic work.
 Practical seats @ **high** — not Sol/Fable on routine PRs:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
-  --initiator codex/orchestrator \
-  --author-model gpt-6-sol --author-family openai \
-  --review-profile code --risk high
+# Direct ask-* cross-family review (replaces removed review-pr):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+  --type review --pr <N> --task-id review-<N> < prompt.md
+
+# Headless dispatch equivalent:
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex --mode read-only --worktree --branch <branch> \
+  --task-id review-<N> --prompt-file prompt.md
 
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
-  --initiator codex/orchestrator \
-  --author-model gpt-6-sol --author-family openai \
-  --reviewer claude --model claude-fable-5 --effort high \
-  --override-reason "operator-requested Fable dissent"
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent claude --mode read-only --worktree --branch <branch> \
+  --task-id review-<N> --model claude-fable-5 --effort high \
+  --prompt-file prompt.md
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light

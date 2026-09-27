@@ -129,6 +129,50 @@ def test_pr_check_state_status_context_keeps_latest_started_at():
     assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
 
 
+def test_pr_check_state_status_context_failure_then_success_on_updated_at_is_passing():
+    rollup = [
+        {
+            "context": "ci/circleci",
+            "state": "FAILURE",
+            "createdAt": "2026-09-19T02:40:00Z",
+            "updatedAt": "2026-09-19T02:49:59Z",
+        },
+        {
+            "context": "ci/circleci",
+            "state": "SUCCESS",
+            "createdAt": "2026-09-19T02:50:00Z",
+            "updatedAt": "2026-09-19T02:50:11Z",
+        },
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
+def test_pr_check_state_status_context_success_then_failure_on_updated_at_is_failing():
+    rollup = [
+        {
+            "context": "ci/circleci",
+            "state": "SUCCESS",
+            "createdAt": "2026-09-19T02:40:00Z",
+            "updatedAt": "2026-09-19T02:49:59Z",
+        },
+        {
+            "context": "ci/circleci",
+            "state": "FAILURE",
+            "createdAt": "2026-09-19T02:50:00Z",
+            "updatedAt": "2026-09-19T02:50:11Z",
+        },
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_status_context_falls_back_to_created_at():
+    rollup = [
+        {"context": "ci/circleci", "state": "FAILURE", "createdAt": "2026-09-19T02:49:59Z"},
+        {"context": "ci/circleci", "state": "SUCCESS", "createdAt": "2026-09-19T02:50:11Z"},
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
 def test_pr_check_state_timestamp_tie_keeps_both():
     rollup = [
         _check("Ruff", "CANCELLED", "2026-09-19T02:50:11Z"),

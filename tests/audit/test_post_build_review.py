@@ -611,11 +611,23 @@ def bilash_packet() -> dict:
 
 @pytest.fixture(scope="module")
 def malyshko_exact_only_packet(tmp_path_factory: pytest.TempPathFactory) -> dict:
+    # These consumers exercise exact-only vocabulary handling. The Bilash
+    # fixture above keeps the audit subprocess boundary covered end to end.
+    def audit_runner(argv: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        script = Path(argv[1]).name
+        if script == "track_deterministic_audit.py":
+            payload: object = {"findings": [], "skipped": []}
+        elif script == "module_size_policy_audit.py":
+            payload = [{"status": "pass"}]
+        else:
+            raise AssertionError(f"unexpected audit script: {script}")
+        return subprocess.CompletedProcess(argv, 0, json.dumps(payload), "")
+
     empty_checkout = tmp_path_factory.mktemp("main-without-vesum")
     mp = pytest.MonkeyPatch()
     mp.setattr(pbr, "main_checkout_root", lambda _repo_root: empty_checkout)
     try:
-        packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+        packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer(), runner=audit_runner)
     finally:
         mp.undo()
     rows = packet["vocabulary_surface_candidates"]["lemmas"]
@@ -1400,6 +1412,7 @@ def test_prompt_carries_every_legacy_canary_issue_class() -> None:
     assert all(issue_id in prompt for issue_id in issue_ids)
 
 
+@pytest.mark.repo_wide
 def test_prompt_versions_match_track_policy() -> None:
     policy = pbr.load_track_policy()
     marker = f"Semantic prompt version: `{policy['semantic_prompt_version']}`"

@@ -60,7 +60,7 @@ def resolve_data_path(rel_path: str) -> Path:
 DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v06_ulif_phraseology"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v06_ulif_phraseology"
 
 SCHEMA_EVAL_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_ulif_phraseology_eval_record.schema.json"
 SCHEMA_RECEIPT_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_ulif_phraseology_release_receipt.schema.json"
@@ -2520,7 +2520,7 @@ def generate_dpo_dataset(
     calques: list[CalquePair],
     units: list[PhraseologyUnit] | None = None,
     synonyms: list[SynonymGroup] | None = None,
-    output_dir: Path = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo"),
+    output_dir: Path = DEFAULT_OUTPUT_DIR / "dpo",
     target_count: int | None = None,
     shards_count: int | None = None,
     pairs_per_shard: int = 500,
@@ -3098,8 +3098,18 @@ def generate_release_receipt(
     sft_dir: Path | None = None,
     dpo_dir: Path | None = None,
     git_commit: str | None = None,
+    output_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Generate cryptographic release receipt validated against SCHEMA_RECEIPT_PATH."""
+    output_dir = output_dir or output_path.parent
+
+    def receipt_path(path: Path) -> str:
+        resolved_path = path.resolve()
+        try:
+            return resolved_path.relative_to(PROJECT_ROOT.resolve()).as_posix()
+        except ValueError:
+            return resolved_path.as_posix()
+
     if not git_commit or git_commit == "git_commit_head":
         try:
             git_commit = subprocess.check_output(
@@ -3159,8 +3169,8 @@ def generate_release_receipt(
         "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
         "git_commit": git_commit,
         "evaluation_benchmark": {
-            "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
-            "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
+            "directory_path": receipt_path(output_dir / "eval"),
+            "manifest_file": receipt_path(output_dir / "eval" / "manifest_eval.json"),
             "manifest_sha256": eval_meta["manifest_sha256"] if "manifest_sha256" in eval_meta else hashlib.sha256(eval_meta["manifest_file"].encode()).hexdigest(),
             "shards_count": eval_meta["shards_count"],
             "total_cases": eval_meta["total_cases"],
@@ -3170,8 +3180,8 @@ def generate_release_receipt(
             "held_out_authors": eval_meta["held_out_authors"],
         },
         "sft_training_dataset": {
-            "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
-            "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
+            "directory_path": receipt_path(output_dir / "sft"),
+            "manifest_file": receipt_path(output_dir / "sft" / "manifest_sft.json"),
             "manifest_sha256": sft_manifest_sha256,
             "shards_count": sft_shards_count,
             "total_trajectories": total_sft_trajectories,
@@ -3179,8 +3189,8 @@ def generate_release_receipt(
             "task_distribution": sft_task_dist,
         },
         "dpo_preference_dataset": {
-            "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
-            "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
+            "directory_path": receipt_path(output_dir / "dpo"),
+            "manifest_file": receipt_path(output_dir / "dpo" / "manifest_dpo.json"),
             "manifest_sha256": dpo_manifest_sha256,
             "shards_count": dpo_shards_count,
             "total_pairs": total_dpo_pairs,
@@ -3437,6 +3447,7 @@ def run_pipeline(
             sft_dir=sft_dir,
             dpo_dir=dpo_dir,
             git_commit=git_commit,
+            output_dir=output_dir,
         )
 
 

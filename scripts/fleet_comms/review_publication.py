@@ -12,10 +12,8 @@ This module is intentionally pure and dry-run-first:
 * derive a stable idempotency key from ``(repository, pr, head_sha, gate_kind)``
 * plan publication (comment body + status state) without calling GitHub
 
-Live GitHub mutation is **not** performed here. The existing bridge command
-``publish-review-verdict`` remains the temporary poster; full
-``publish-review-verdict --review-id`` cutover waits for PR-F formal-jobs table
-writers and must not become the default until those land.
+Live GitHub mutation is **not** performed here (the former bridge command
+``publish-review-verdict`` was removed in #8520).
 """
 
 from __future__ import annotations

@@ -48,7 +48,8 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 | Code change >5 LOC, mechanical / pattern / fixtures | Dispatch — 3:3:3 split: codex (`--agent codex --mode danger --worktree --base main`), claude-headless (architectural / cross-file), gemini (tests, schema migrations, docs-near-code). NOT gemini for: cross-file refactor, security/concurrency, GH-auth, mass mechanical |
 | Wiki/content writing | `delegate.py dispatch --agent gemini` (Gemini sub, unmetered) |
 | Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model <formal CF pin from model-assignment.md> --effort xhigh` (headless, separate billing) |
-| Q&A or single-shot review without need to commit | `ab ask-codex` / `ab ask-agy` (Flash default; Pro only for deep — current ids in `model-assignment.md` § Gemini) |
+| Q&A without need to commit | `ab ask-codex` / `ab ask-agy` (advisory only; current ids in `model-assignment.md` § Gemini) |
+| Single-shot code review without need to commit | `ab ask-codex` or another non-Gemini seat. Gemini reviews Ukrainian only, never code (operator 2026-09-25). Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
 | Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
 | Status check on running dispatches | Monitor API curl, never inline file scans |
 | Memory / rules / Claude-owned text | Me, inline. Claude's brain = Claude's job. Never deflect to user. |

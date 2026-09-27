@@ -23,6 +23,7 @@ from scripts.lexicon.ohoiko_paired_headword_split import (
     split_paired_headword,
     strip_trailing_parentheticals,
 )
+from scripts.storage.paths import artifact_path
 
 
 def test_split_basic_gender_pair() -> None:
@@ -462,31 +463,35 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
 def test_measure_curated_ohoiko_lists_with_dummy_files(tmp_path: Path) -> None:
     dummy_manifest = tmp_path / "manifest.json"
     dummy_manifest.write_text(
-        json.dumps({
-            "entries": [
-                {"lemma": "актор"},
-                {"lemma": "акторка"},
-                {"lemma": "випити"},
-            ]
-        }),
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "актор"},
+                    {"lemma": "акторка"},
+                    {"lemma": "випити"},
+                ]
+            }
+        ),
         encoding="utf-8",
     )
 
     dummy_inv = tmp_path / "inventory.yaml"
     dummy_inv.write_text(
-        yaml.safe_dump({
-            "sources": [
-                {
-                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
-                    "source_family": "ohoiko",
-                    "headwords": [
-                        {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
-                        {"lemma": "акторка", "locator": "ohoiko-1000-words entry 2"},
-                        {"lemma": "випити,", "locator": "ohoiko-500-verbs entry 1"},
-                    ],
-                }
-            ]
-        }),
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+                        "source_family": "ohoiko",
+                        "headwords": [
+                            {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
+                            {"lemma": "акторка", "locator": "ohoiko-1000-words entry 2"},
+                            {"lemma": "випити,", "locator": "ohoiko-500-verbs entry 1"},
+                        ],
+                    }
+                ]
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -505,46 +510,48 @@ def test_measure_curated_ohoiko_lists_with_dummy_files(tmp_path: Path) -> None:
     assert measured["ohoiko-500-verbs"]["missing"] == 1
 
 
-def test_taught_residual_census_fails_if_source_files_change(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Census totals must be computed live from source files, not hardcoded literals."""
     monkeypatch.setattr(paired_split, "verify_word", lambda *args, **kwargs: [])
     monkeypatch.setattr(paired_split, "classify_split_leg", lambda leg: "single_word_vesum_absent")
 
     dummy_manifest = tmp_path / "manifest.json"
     dummy_manifest.write_text(
-        json.dumps({
-            "entries": [
-                {"lemma": "актор"},
-                {"lemma": "випити"},
-            ]
-        }),
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "актор"},
+                    {"lemma": "випити"},
+                ]
+            }
+        ),
         encoding="utf-8",
     )
 
     # Modified inventory with only 3 records and omitting 500-verbs
     dummy_inv = tmp_path / "inventory.yaml"
     dummy_inv.write_text(
-        yaml.safe_dump({
-            "sources": [
-                {
-                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
-                    "source_family": "ohoiko",
-                    "headwords": [
-                        {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
-                        {"lemma": "невідомеслово", "locator": "ohoiko-1000-words entry 2"},
-                    ],
-                },
-                {
-                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
-                    "source_family": "ulp",
-                    "headwords": [
-                        {"lemma": "актор", "locator": "ulp-1-00-lesson-notes lesson 1"},
-                    ],
-                },
-            ]
-        }),
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+                        "source_family": "ohoiko",
+                        "headwords": [
+                            {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
+                            {"lemma": "невідомеслово", "locator": "ohoiko-1000-words entry 2"},
+                        ],
+                    },
+                    {
+                        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+                        "source_family": "ulp",
+                        "headwords": [
+                            {"lemma": "актор", "locator": "ulp-1-00-lesson-notes lesson 1"},
+                        ],
+                    },
+                ]
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -567,12 +574,14 @@ def test_taught_residual_census_fails_if_source_files_change(
     assert summary["total_taught_unique_keys"] == 2
 
 
+@pytest.mark.needs_artifact(
+    "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
+)
 def test_taught_residual_census_artifact_file_integrity() -> None:
-    artifact_path = paired_split.PROJECT_ROOT / "data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
-    if not artifact_path.exists():
-        pytest.skip("census artifact not yet created")
-
-    data = json.loads(artifact_path.read_text(encoding="utf-8"))
+    census_path = artifact_path(
+        "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
+    )
+    data = json.loads(census_path.read_text(encoding="utf-8"))
     assert data["schema"] == "atlas-7550-taught-residual-census.v1"
     summary = data["summary"]
     source_units = data["taught_source_units"]
@@ -652,9 +661,24 @@ def test_format_taught_residual_markdown() -> None:
             },
             "p1_admit_count": 0,
             "heritage_holds": [
-                {"lemma": "переключити", "source": "ulp-4", "classification": "russianism", "disposition": "hold(heritage_russianism)"},
-                {"lemma": "кримчанин", "source": "ulp-6", "classification": "russianism", "disposition": "hold(heritage_russianism)"},
-                {"lemma": "просвітитель", "source": "ulp-6", "classification": "russianism", "disposition": "hold(heritage_russianism)"},
+                {
+                    "lemma": "переключити",
+                    "source": "ulp-4",
+                    "classification": "russianism",
+                    "disposition": "hold(heritage_russianism)",
+                },
+                {
+                    "lemma": "кримчанин",
+                    "source": "ulp-6",
+                    "classification": "russianism",
+                    "disposition": "hold(heritage_russianism)",
+                },
+                {
+                    "lemma": "просвітитель",
+                    "source": "ulp-6",
+                    "classification": "russianism",
+                    "disposition": "hold(heritage_russianism)",
+                },
             ],
         },
     }

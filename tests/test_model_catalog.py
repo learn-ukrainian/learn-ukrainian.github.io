@@ -31,10 +31,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-09-23"
-    assert catalog_age_days(catalog, as_of=date(2026, 9, 23)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 22))
-    assert catalog_is_stale(catalog, as_of=date(2026, 10, 24))
+    assert catalog["reviewed_on"] == "2026-09-24"
+    assert catalog_age_days(catalog, as_of=date(2026, 9, 24)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 23))
+    assert catalog_is_stale(catalog, as_of=date(2026, 10, 25))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -62,7 +62,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "kimi-k3-max",
         "glm-5.3",
         "deepseek-v4-pro",
-        "deepseek-v4-flash",
+        "deepseek-v4.1-flash",
         "poolside/laguna-s-2.1",
         "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
@@ -136,28 +136,43 @@ def test_glm_is_absent_from_automatic_review_ladders() -> None:
 
 def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priority() -> None:
     catalog = load_model_catalog()
-    flash = catalog["models"]["deepseek-v4-flash"]
-    candidate = catalog["review_candidates"]["deepseek-v4-flash"]
+    flash = catalog["models"]["deepseek-v4.1-flash"]
+    candidate = catalog["review_candidates"]["deepseek-v4.1-flash"]
+
+    legacy = catalog["models"]["deepseek-v4-flash"]
+    assert legacy["lifecycle"] == "retired"
+    assert legacy["transports"] == []
+    assert flash["tier"] == legacy["tier"]
+    assert model_aliases()["deepseek-v4-flash-legacy"] == "deepseek-v4-flash"
+    assert "deepseek-v4-flash" not in catalog["review_candidates"]
+    assert flash["lifecycle"] == "active"
+    assert flash["provider_alias"] == "deepseek/deepseek-flash"
+    assert flash["provider_alias_expected_name"] == "DeepSeek V4.1 Flash"
+    assert "models.json" in flash["provider_alias_drift_check"]
 
     assert flash["tier"] == "frontier_practical"
     assert {"frontend_agentic_coding", "strong_code_review"} <= set(flash["roles"])
     assert "not_critical_authority" in flash["weaknesses"]
     assert "https://arena.ai/leaderboard/code" in flash["sources"]
     assert candidate["transport"] == "opencode"
+    assert candidate["route"] == "deepseek"
+    endpoint = catalog["review_scheduler"]["endpoints"]["deepseek"]
+    assert endpoint["quota_bucket"] == "deepseek"
+    assert endpoint["credential_bucket"] == "deepseek"
     assert candidate["invocation"].endswith(
-        "opencode run --model deepseek-direct/deepseek-v4-flash --variant high"
+        "opencode run --model deepseek/deepseek-flash --variant high"
     )
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
     assert "glm-5.3" not in practical
-    assert practical.index("claude-sonnet-5") < practical.index("deepseek-v4-flash")
+    assert practical.index("claude-sonnet-5") < practical.index("deepseek-v4.1-flash")
     # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
     # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
-    assert "deepseek-v4-flash" in practical
+    assert "deepseek-v4.1-flash" in practical
     assert "deepseek-v4-pro" not in practical
 
     critical = [rung[0] for rung in catalog["review_ladders"]["critical"] if len(rung) == 1]
-    assert "deepseek-v4-flash" in critical
+    assert "deepseek-v4.1-flash" in critical
     assert "deepseek-v4-pro" not in critical
     # Pro is an active hard-implement seat (complex multi-file, hard lookup) —
     # not the default, not a routine review rung (operator GO 2026-08-13, canary #6703).
@@ -168,7 +183,7 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     pro_candidate = catalog["review_candidates"]["deepseek-v4-pro"]
     assert pro_candidate["transport"] == "opencode"
     assert pro_candidate["invocation"].endswith(
-        "opencode run --model deepseek-direct/deepseek-v4-pro --variant high"
+        "opencode run --model deepseek/deepseek-v4-pro --variant high"
     )
 
 
@@ -199,14 +214,34 @@ def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
     validate_kimi_alias_consumers()
 
 
-def test_generic_model_aliases_resolve_k3_256k_and_kimicc_endpoint_lists_it() -> None:
-    """The transport-agnostic alias map must resolve every Kimi alias, including 256k."""
+def test_generic_model_aliases_resolve_k3_256k_but_kimicc_does_not_route_it() -> None:
+    """k3-256k stays a native alias. The coding endpoint rejects it, so kimicc omits it (#8745)."""
     aliases = model_aliases()
     assert aliases["kimi-code/k3-256k"] == "kimi-code/k3-256k"
     assert aliases["k3-256k"] == "kimi-code/k3-256k"
     assert aliases["kimi-k3-256k"] == "kimi-code/k3-256k"
     endpoints = load_model_catalog()["review_scheduler"]["endpoints"]
-    assert "kimi-code/k3-256k" in endpoints["kimicc"]["models"]
+    assert "kimi-code/k3-256k" not in endpoints["kimicc"]["models"]
+    assert endpoints["kimicc"]["models"][0] == "kimi-code/k3"
+
+
+def test_every_kimicc_routable_alias_has_coding_model_id() -> None:
+    catalog = load_model_catalog()
+    endpoint_ids = catalog["review_scheduler"]["endpoints"]["kimicc"]["models"]
+    aliases = kimi_model_aliases(catalog)
+    assert endpoint_ids
+    seen: set[str] = set()
+    for model_id in endpoint_ids:
+        coding_model_id = catalog["models"][model_id]["kimi_routes"]["coding_model_id"]
+        assert isinstance(coding_model_id, str) and coding_model_id.strip()
+        for alias, owner in aliases.items():
+            if owner != model_id:
+                continue
+            seen.add(alias)
+            _, route = resolve_kimi_model(alias, catalog)
+            assert isinstance(route["coding_model_id"], str) and route["coding_model_id"].strip()
+    assert "k3-256k" not in seen
+    assert "k3" in seen
 
 
 def test_glm_model_aliases_and_consumer_lint() -> None:
@@ -421,7 +456,26 @@ def test_bridge_only_reviewers_expose_executable_invocations():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["pool"]["invocation"].endswith("ask-pool")
     assert candidates["glm-5.3"]["invocation"].endswith("ask-glm")
-    assert candidates["gemini-3.1-pro"]["health_keys"] == ["gemini"]
+
+
+def test_gemini_remains_available_for_ukrainian_but_not_code_review():
+    catalog = load_model_catalog()
+    assert catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] == "active"
+    assert catalog["orchestrator_seats"]["agy"]["model_id"] == "gemini-3.8-flash-high"
+    assert all(
+        not candidate["model_id"].startswith("gemini-")
+        for candidate in catalog["review_candidates"].values()
+    )
+
+
+def test_catalog_refuses_gemini_code_review_candidate():
+    broken = deepcopy(load_model_catalog())
+    broken["review_candidates"]["google_review"] = {
+        **broken["review_candidates"]["openai_frontier"],
+        "model_id": "gemini-3.8-flash-high",
+    }
+    with pytest.raises(ModelCatalogError, match="Gemini reviews Ukrainian only, never code"):
+        validate_catalog(broken)
 
 
 def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():

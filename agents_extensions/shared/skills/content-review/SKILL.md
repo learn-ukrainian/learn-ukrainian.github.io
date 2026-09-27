@@ -7,6 +7,11 @@ effort: xhigh
 
 # Content Review: $ARGUMENTS
 
+This skill covers plans under `curriculum/l2-uk-en/plans/{track}/` and V7-built modules.
+Fresh-build lessons are reviewed under Contract 2
+(`docs/epics/fresh-build-review-contracts.md`) — the `lesson-review` skill (WP 24)
+replaces this skill for them once it exists.
+
 ## Parse Arguments
 
 The user provides one of these argument patterns:

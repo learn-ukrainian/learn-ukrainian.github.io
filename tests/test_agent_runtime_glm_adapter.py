@@ -124,6 +124,16 @@ def test_glm_adapter_ci_refusal_guard(tmp_path, monkeypatch):
         monkeypatch.delenv(var, raising=False)
 
 
+def test_glm_ci_refusal_names_the_variable_never_its_value(tmp_path, monkeypatch):
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    sentinel = "https://ci.example.invalid/secret-token-8652"
+    monkeypatch.setenv("JENKINS_URL", sentinel)
+    with pytest.raises(GlmEgressForbiddenError, match="JENKINS_URL") as refused:
+        _build("Should fail in CI", tmp_path)
+    assert sentinel not in str(refused.value)
+
+
 def test_glm_ci_guard_mutation_check(tmp_path, monkeypatch):
     """Mutation check: disabling guard allows execution in CI, restoring it blocks."""
     monkeypatch.setenv("CI", "true")
@@ -229,7 +239,7 @@ def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
 
     # Write initial state file as cmd_dispatch does
@@ -273,7 +283,7 @@ def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
 
     # Write initial state file as cmd_dispatch does

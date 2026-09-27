@@ -41,7 +41,7 @@ approval (Fable, Astra; Kimi consult non-UA design/coding; roster may change); a
 presentation or dispatch, substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map,
 independent held-out evaluation, stop/residual policy, and completion terms; live-routed
 critics re-review material drift. Prompt review is not exact-head implementation or
-cross-family PR review; engine proof is not product completion · **DoD (ready=delivered):** e2e outcome + driver merges after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
+cross-family PR review; engine proof is not product completion · **simplest adequate solution** (adjust code to data; proportionate review; stopping rule after two rounds) · **DoD (ready=delivered):** e2e outcome + driver merges after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
 
 ---
 
@@ -65,8 +65,8 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 | Topic | Doc |
 | --- | --- |
-| **V7 design + corpus (READ FIRST before any module / writer-prompt work)** | [`v7-design-and-corpus.md`](docs/best-practices/v7-design-and-corpus.md) |
-| **A1 / curriculum-upgrade operating rules (binding scars — READ before `--upgrade`)** | [`a1-upgrade-operating-rules.md`](docs/epics/a1-upgrade-operating-rules.md) |
+| **V7 design + corpus (READ FIRST before V7 module / writer-prompt work; the core A1–B2 rebuild uses the fresh-build docs)** | [`v7-design-and-corpus.md`](docs/best-practices/v7-design-and-corpus.md) |
+| **Core fresh lesson-based build (READ FIRST for A1–B2 core plans, packs, engine, reviews)** | [`fresh-build-build-program.md`](docs/epics/fresh-build-build-program.md) |
 | **ULP presentation pattern (READ before any A1/A2 build — Anna Ohoiko's 7 practices + S1→S6 progression)** | [`ulp-presentation-pattern.md`](docs/best-practices/ulp-presentation-pattern.md) |
 | Prompt engineering | [`prompt-engineering.md`](docs/best-practices/prompt-engineering.md) |
 | Context engineering | [`context-engineering.md`](docs/best-practices/context-engineering.md) |
@@ -96,7 +96,8 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
 - **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml` — source of truth for module ordering and slug mapping
-- **Build pipeline**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree [--writer {claude-tools|gemini-tools|codex-tools}]`
+- **Build pipeline (V7 tracks)**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree [--writer {claude-tools|gemini-tools|codex-tools}]`
+- **Core fresh build engine**: `.venv/bin/python -m scripts.build.fresh.cli {render-prompt|preflight|write|build|...}` — see [`fresh-build-build-program.md`](docs/epics/fresh-build-build-program.md)
 - **Decision journal**: [`docs/decisions/`](docs/decisions/) — architectural decisions with expiry dates. Check: `.venv/bin/python scripts/check_decisions.py`
 
 ---
