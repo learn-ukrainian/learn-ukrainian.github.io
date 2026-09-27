@@ -1,0 +1,104 @@
+request_schema: 1
+module: a1/sounds-letters-and-hello
+texts:
+  - id: T-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}
+    span: {first_words: 'Мовні звуки: голосні та приголосні', last_words: 'Вимов приголосні звуки в словах — назвах'}
+    supports: 'Hear and say the initial sound before naming vowel and consonant classes; primer printed page 13.'
+  - id: T-002
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w001}
+    span: {first_words: 'The basic informal “Hi!” in Ukrainian is:', last_words: 'close family, and people we work with without any'}
+    supports: 'Adult L2 informal greeting chunk and its familiar-peer use; learned by ear without parsing; ULP Season 1 lesson 1.'
+  - id: T-003
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w001}
+    span: {first_words: 'Добрий день! — Hello!', last_words: 'In Ukrainian, formal greetings depend on the time'}
+    supports: 'Adult L2 formal greeting chunk for any time of day, not adjective or case analysis; ULP Season 1 lesson 2.'
+  - id: T-004
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0005_w003}
+    span: {first_words: 'Here are the three piece of advice I gave during', last_words: 'the sound between і and у. Say iii and try to'}
+    supports: 'Adult L2 И sound and comparison with І for English speakers; ULP Season 1 lesson 5 trainer.'
+  - id: T-005
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0010_w001}
+    span: {first_words: 'Here is my story about', last_words: 'My mom is also a teacher. A literature teacher.'}
+    supports: 'ULP review shape: first-person Ukrainian story aligned with English, then questions.'
+  - id: T-006
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0028}
+    span: {first_words: 'Бачу А, а.', last_words: 'Чую [а].'}
+    supports: 'Primer printed page 30: А letter and its heard sound; see before read.'
+  - id: T-007
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0032}
+    span: {first_words: 'Бачу О, о.', last_words: 'Чую [о].'}
+    supports: 'Primer printed page 34: О after А.'
+  - id: T-008
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036}
+    span: {first_words: 'Бачу У, у.', last_words: 'Чую [у].'}
+    supports: 'Primer printed page 38: У after О.'
+  - id: T-009
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0040}
+    span: {first_words: 'Бачу И, и.', last_words: 'Чую [и].'}
+    supports: 'Primer printed page 42: И after У, with heard sound before written symbol.'
+  - id: T-010
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044}
+    span: {first_words: 'Бачу М, м (ем).', last_words: 'Чую [м].'}
+    supports: 'Primer printed page 46: first consonant М and sound-letter correspondence.'
+  - id: T-011
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048}
+    span: {first_words: 'Бачу І, і.', last_words: 'Чую [і].'}
+    supports: 'Primer printed page 50: І after М; contrast with previously heard И.'
+  - id: T-012
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0052}
+    span: {first_words: 'Бачу Н, н (ен).', last_words: "Чую [н], [н' ]."}
+    supports: 'Primer printed page 54: Н and first CV and VC tables.'
+  - id: T-013
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0056}
+    span: {first_words: 'Бачу В, в (ве).', last_words: 'Чую [в].'}
+    supports: 'Primer printed page 58: В after Н; adult Latin-shape interference is checked against this sound.'
+  - id: T-014
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060}
+    span: {first_words: 'Бачу Л, л (ел).', last_words: "Чую [л], [л' ]."}
+    supports: 'Primer printed page 62: Л after В, CV and VC tables.'
+  - id: T-015
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064}
+    span: {first_words: 'Бачу С, с (ес).', last_words: "Чую [с], [с' ]."}
+    supports: 'Primer printed page 66: С after Л; sound mapping and short syllables.'
+  - id: T-016
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068}
+    span: {first_words: 'Бачу К, к (ка).', last_words: 'Чую [к].'}
+    supports: 'Primer printed page 70: К after С; syllables become short connected text.'
+  - id: T-017
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0072}
+    span: {first_words: 'Бачу П, п (пе).', last_words: 'Чую [п].'}
+    supports: 'Primer printed page 74: П after К; CV/VC reading and a short exchange.'
+  - id: T-018
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0080}
+    span: {first_words: 'Бачу Р, р (ер).', last_words: "Чую [р], [р']."}
+    supports: 'Primer printed page 82: Р after П; adult Latin-shape interference is checked against this sound.'
+exercises:
+  - id: X-001
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
+    span: {first_words: 'Here is the practice exercise from the podcast.', last_words: '3         Ра́да тебе́ ба́чити!'}
+    pattern: 'Hear a greeting prompt and give the matching spoken response before reading it.'
+  - id: X-002
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}
+    span: {first_words: 'Вимов перший звук у словах — назвах предметів.', last_words: 'Який це звук? Голосний звук позначаємо так: [•].'}
+    pattern: 'Say and identify the first sound before choosing its sound class.'
+  - id: X-003
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044}
+    span: {first_words: "ма\nмо\nму\nми", last_words: "ам\nом\nум\nим"}
+    pattern: 'Read and copy a consonant-vowel table followed by a vowel-consonant table.'
+  - id: X-004
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
+    span: {first_words: 'Відшукай «загублений» склад у словах', last_words: 'со- __ ма-, -ва, -ла'}
+    pattern: 'Pick a missing syllable from a bounded list to complete a known word.'
+  - id: X-005
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
+    span: {first_words: 'Перепиши в зошит.', last_words: 'Панас ловив лини.'}
+    pattern: 'Copy printed model words or short lines into a notebook; the fresh lesson uses only its own taught-letter models.'
+videos:
+  - {id: V-001, url: 'https://www.youtube.com/watch?v=FUF9Za-1bzY', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the informal greeting in lesson 1.'}
+  - {id: V-002, url: 'https://www.youtube.com/watch?v=GMcB5rsb3HM', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the formal greeting in lesson 1.'}
+  - {id: V-003, url: 'https://www.youtube.com/watch?v=5J9ZaM3-rrI', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation trainer for И in lesson 3.'}
+standard:
+  - {id: S-001, lines: '351-353'}
+  - {id: S-002, lines: '357-359'}
+  - {id: S-003, lines: '430-432'}

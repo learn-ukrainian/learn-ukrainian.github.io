@@ -509,3 +509,122 @@
   id: W-073
   lemma: саме
   pos: part
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 310865
+    source: vesum
+  id: W-074
+  lemma: привіт
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 98319
+    source: vesum
+  id: W-075
+  lemma: добрий
+  pos: adj
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 92026
+    source: vesum
+  id: W-076
+  lemma: день
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 142144
+    source: vesum
+  id: W-077
+  lemma: звук
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 188840
+    source: vesum
+  id: W-078
+  lemma: літера
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 80479
+    source: vesum
+  id: W-079
+  lemma: голосний
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 311385
+    source: vesum
+  id: W-080
+  lemma: приголосний
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 195009
+    source: vesum
+  id: W-081
+  lemma: мама
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 193985
+    source: vesum
+  id: W-082
+  lemma: малина
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 363135
+    source: vesum
+  id: W-083
+  lemma: слива
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 347859
+    source: vesum
+  id: W-084
+  lemma: рука
+  pos: noun
+- allocated_at_build: dbd74ec879718a0fb7e9fbb245f420822406a80c220d1e5f0ea8a652d80f331e
+  entry:
+    entry_id: 336721
+    source: vesum
+  id: W-085
+  lemma: ріка
+  pos: noun
+- allocated_at_build: 469964afb22308b23909f83ce4fa10e754c886b6c6880d6c406d2161f049cf28
+  entry:
+    entry_id: 422476
+    source: vesum
+  id: W-086
+  lemma: чути
+  pos: verb
+- allocated_at_build: 469964afb22308b23909f83ce4fa10e754c886b6c6880d6c406d2161f049cf28
+  entry:
+    entry_id: 18381
+    source: vesum
+  id: W-087
+  lemma: бачити
+  pos: verb
+- allocated_at_build: 469964afb22308b23909f83ce4fa10e754c886b6c6880d6c406d2161f049cf28
+  entry:
+    entry_id: 420694
+    source: vesum
+  id: W-088
+  lemma: читати
+  pos: verb
+- allocated_at_build: 469964afb22308b23909f83ce4fa10e754c886b6c6880d6c406d2161f049cf28
+  entry:
+    entry_id: 275878
+    source: vesum
+  id: W-089
+  lemma: писати
+  pos: verb
+- allocated_at_build: 469964afb22308b23909f83ce4fa10e754c886b6c6880d6c406d2161f049cf28
+  entry:
+    entry_id: 288290
+    source: vesum
+  id: W-090
+  lemma: повторення
+  pos: noun

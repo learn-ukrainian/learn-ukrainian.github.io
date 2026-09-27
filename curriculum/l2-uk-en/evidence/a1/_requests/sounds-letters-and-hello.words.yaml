@@ -1,0 +1,20 @@
+request_schema: 1
+level: a1
+words:
+  - {lemma: привіт, pos: noun, want: W-074, note: 'Greeting formula learned by ear, informal; ULP S1 lesson 1.'}
+  - {lemma: добрий, pos: adj, want: W-075, note: 'Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson 2.'}
+  - {lemma: день, pos: noun, want: W-076, note: 'Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.'}
+  - {lemma: звук, pos: noun, entry: {source: vesum, entry_id: 142144}, want: W-077, note: 'Linguistic sound sense, VESUM comment у музиці, лінгвістиці; primer part 1 p. 13.'}
+  - {lemma: літера, pos: noun, want: W-078, note: 'Written letter, contrasted with heard sound; primer part 1 pp. 30–82.'}
+  - {lemma: голосний, pos: noun, entry: {source: vesum, entry_id: 80479}, want: W-079, note: 'Vowel as a sound category, not the adjective; primer part 1 p. 13.'}
+  - {lemma: приголосний, pos: noun, entry: {source: vesum, entry_id: 311385}, want: W-080, note: 'Consonant as a sound category, not the adjective; primer part 1 p. 13.'}
+  - {lemma: мама, pos: noun, want: W-081, note: 'First decodable CVCV word on primer letter pages.'}
+  - {lemma: малина, pos: noun, want: W-082, note: 'Decodable word from primer reading practice.'}
+  - {lemma: слива, pos: noun, want: W-083, note: 'Decodable word from primer reading practice.'}
+  - {lemma: рука, pos: noun, want: W-084, note: 'Decodable word using the final letter group.'}
+  - {lemma: ріка, pos: noun, want: W-085, note: 'Decodable word using the final letter group.'}
+  - {lemma: чути, pos: verb, want: W-086, note: 'Hear: primer sound-first teacher verb; lexical action only, no conjugation system.'}
+  - {lemma: бачити, pos: verb, want: W-087, note: 'See: primer contrasts seeing a letter and hearing a sound; lexical action only.'}
+  - {lemma: читати, pos: verb, want: W-088, note: 'Read: primer reading instruction; lexical action only.'}
+  - {lemma: писати, pos: verb, want: W-089, note: 'Write and copy: primer workbook action; lexical action only.'}
+  - {lemma: повторення, pos: noun, want: W-090, note: 'Recap title and task label, from ULP S1 lesson 10 review pattern.'}
