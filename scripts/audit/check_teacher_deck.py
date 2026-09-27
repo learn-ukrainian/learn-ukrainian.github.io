@@ -2,8 +2,9 @@
 """Independent structural checker for the built teacher-table deck (#8843).
 
 This script deliberately re-implements every rule it checks (table extraction,
-key normalisation, entry ids, the overlapping-English rule) with the standard
-library only.  It must never import the generator
+key normalisation, entry ids, the source-derived verb aspect from VESUM and
+checked ULIF entries, the learner-facing English, the overlapping-English rule)
+with the standard library only.  It must never import the generator
 (``scripts/lexicon/teacher_deck_shard.py``), the table sync, or the CEFR
 exporter: a shared bug would otherwise pass its own check.
 """
@@ -41,6 +42,16 @@ UK_TOKEN = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А
 EN_TOKEN = re.compile(r"[\w'’-]+|/")
 LATIN = re.compile(r"[A-Za-z]")
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "‘": "'", "`": "'", "´": "'", "′": "'"})
+TEACHER_IMPF = re.compile(r"\((?:impf|imperf|ipf)\.?\)", re.IGNORECASE)
+TEACHER_PERF = re.compile(r"\((?:perf|pf)\.?\)", re.IGNORECASE)
+TEACHER_MARKER = re.compile(r"\s*\((?:impf|imperf|ipf|perf|pf)\.?\)", re.IGNORECASE)
+ULIF_VERB_LABELS = {
+    "дієслово недоконаного виду": "imperf",
+    "дієслово доконаного виду": "perf",
+    "дієслово недоконаного і доконаного виду": "dual",
+}
+EN_ASPECT_LABEL = {"imperf": "impf.", "perf": "pf.", "dual": "impf./pf."}
+CLASSIFY_ANSWER = {"imperf": "imperfective", "perf": "perfective"}
 
 
 # ----------------------------------------------------------------------------- own rules
@@ -80,16 +91,145 @@ def meanings_overlap(left: list[tuple[str, ...]], right: list[tuple[str, ...]]) 
     return any(a == b or _inside(a, b) or _inside(b, a) for a in left for b in right)
 
 
-def own_overlaps(entries: list[dict[str, Any]]) -> dict[str, set[str]]:
+def own_overlaps(
+    entries: list[dict[str, Any]], aspects: dict[str, str | None]
+) -> tuple[dict[str, set[str]], dict[str, set[str]]]:
+    """(overlaps, aspect partners): an overlapping pair with identical normalised English
+    and source-derived aspects imperf vs perf is a partner pair, not an overlap."""
+
     parts = {entry["entryId"]: meaning_parts(entry["en"]) for entry in entries}
     ids = sorted(parts)
     result: dict[str, set[str]] = {entry_id: set() for entry_id in ids}
+    partners: dict[str, set[str]] = {entry_id: set() for entry_id in ids}
     for index, left in enumerate(ids):
         for right in ids[index + 1 :]:
             if meanings_overlap(parts[left], parts[right]):
-                result[left].add(right)
-                result[right].add(left)
-    return result
+                split = {aspects.get(left), aspects.get(right)} == {"imperf", "perf"} and set(parts[left]) == set(
+                    parts[right]
+                )
+                bucket = partners if split else result
+                bucket[left].add(right)
+                bucket[right].add(left)
+    return result, partners
+
+
+# ----------------------------------------------------------------------------- own aspect rule
+
+
+class AspectLookup:
+    """Own read-only lemma lookup: VESUM ``forms_all`` tags and checked ULIF labels."""
+
+    def __init__(self, vesum: sqlite3.Connection, sources: sqlite3.Connection) -> None:
+        self.vesum = vesum
+        self.sources = sources
+        self.cache: dict[str, tuple[set[str], bool, set[str], bool]] = {}
+
+    def lemma(self, word: str) -> tuple[set[str], bool, set[str], bool]:
+        if word not in self.cache:
+            v_aspects: set[str] = set()
+            v_other = False
+            for pos, tags in self.vesum.execute("SELECT pos, tags FROM forms_all WHERE lemma = ?", (word,)):
+                if pos == "verb":
+                    v_aspects |= {part for part in tags.split(":") if part in ("imperf", "perf")}
+                else:
+                    v_other = True
+            u_aspects: set[str] = set()
+            u_other = False
+            for (label,) in self.sources.execute(
+                "SELECT grammatical_label FROM ulif_dictua_entries WHERE normalized_query = ? AND homonym_checked = 1 "
+                "AND status = 'ok'",
+                (word,),
+            ):
+                if label in ULIF_VERB_LABELS:
+                    u_aspects.add(ULIF_VERB_LABELS[label])
+                elif label:
+                    u_other = True
+            self.cache[word] = (v_aspects, v_other, u_aspects, u_other)
+        return self.cache[word]
+
+
+def teacher_markers(english: str) -> set[str]:
+    found = set()
+    if TEACHER_IMPF.search(english):
+        found.add("imperf")
+    if TEACHER_PERF.search(english):
+        found.add("perf")
+    return found
+
+
+def teacher_says_verb(english: str) -> bool:
+    pieces = [piece.strip().lower() for piece in re.split(r"[;,]", english) if piece.strip()]
+    return bool(teacher_markers(english)) or (bool(pieces) and all(piece.startswith("to ") for piece in pieces))
+
+
+def decide_aspect(vesum: set[str], ulif: set[str]) -> tuple[str, str]:
+    """VESUM gives a biaspectual verb as two lemmas, like two homographs; ULIF's dual label decides."""
+
+    def one(values: set[str]) -> str | None:
+        return None if not values else (min(values) if len(values) == 1 else "both")
+
+    v, u = one(vesum), one(ulif)
+    if v is not None and u is not None:
+        if v == u and v != "both":
+            return v, "agree"
+        if (v, u) == ("both", "dual"):
+            return "dual", "agree"
+        return ("unknown", "homograph") if (v, u) == ("both", "both") else ("unknown", "conflict")
+    if v is not None:
+        return ("unknown" if v == "both" else v), "vesum-only"
+    if u is not None:
+        return ("unknown" if u == "both" else u), "ulif-only"
+    return "unknown", "none"
+
+
+def own_aspect(entry: dict[str, Any], lookup: AspectLookup) -> dict[str, Any] | None:
+    english = str(entry.get("teacherEn") or "")
+    says_verb = teacher_says_verb(english)
+    words = [norm_key(token) for token in UK_TOKEN.findall(entry["key"])] if entry["multiword"] else [entry["key"]]
+    head = None
+    for word in words:
+        v_aspects, v_other, u_aspects, u_other = lookup.lemma(word)
+        if (v_aspects or u_aspects) and (says_verb or not (v_other or u_other)):
+            head = word
+            break
+    if head is None:
+        if not says_verb:
+            return None
+        if not entry["multiword"]:
+            v_aspects, v_other, u_aspects, u_other = lookup.lemma(entry["key"])
+            if v_other or u_other:
+                return None
+        value, basis, v_aspects, u_aspects = "unknown", "none", set(), set()
+    else:
+        v_aspects, _v_other, u_aspects, _u_other = lookup.lemma(head)
+        value, basis = decide_aspect(v_aspects, u_aspects)
+    markers = teacher_markers(english)
+    agrees = None
+    if markers and value in ("imperf", "perf"):
+        agrees = markers == {value}
+    elif markers and value == "dual":
+        agrees = True
+    return {
+        "value": value,
+        "basis": basis,
+        "lemma": head,
+        "vesum": sorted(v_aspects),
+        "ulif": sorted(u_aspects),
+        "teacherMarker": "+".join(sorted(markers)) or None,
+        "markerAgrees": agrees,
+    }
+
+
+def own_display(teacher_en: str, value: str | None) -> str:
+    text = teacher_en
+    if TEACHER_MARKER.search(teacher_en):
+        kept: list[str] = []
+        for piece in TEACHER_MARKER.sub("", teacher_en).split(";"):
+            piece = " ".join(piece.split())
+            if piece and piece.lower() not in [k.lower() for k in kept]:
+                kept.append(piece)
+        text = "; ".join(kept)
+    return f"{text} ({EN_ASPECT_LABEL[value]})" if value in EN_ASPECT_LABEL else text
 
 
 def extract_table(docx: Path, heading: str) -> tuple[str, list[tuple[int, str, str]]]:
@@ -204,8 +344,10 @@ def check_source_table(
         for _n, _uk, en in group:
             if en and en.casefold() not in {m.casefold() for m in meanings}:
                 meanings.append(en)
-        if entry["en"] != "; ".join(meanings):
-            report.fail(f"{entry['entryId']}: English {entry['en']!r} != table meanings {meanings!r}")
+        if entry.get("teacherEn") != "; ".join(meanings):
+            report.fail(
+                f"{entry['entryId']}: teacher English {entry.get('teacherEn')!r} != table meanings {meanings!r}"
+            )
         if entry["sourceRows"] != [n for n, _uk, _en in group]:
             report.fail(f"{entry['entryId']}: source rows differ from the table")
         if entry["uk"] != group[0][1]:
@@ -217,7 +359,35 @@ def check_source_table(
     return {"rows": len(rows), "sourceKeys": len(source_keys), "merges": merges}
 
 
-def check_entries(deck: dict[str, Any], frozen: dict[str, Any], overlaps: dict[str, set[str]], report: Report) -> None:
+def check_aspects(
+    deck: dict[str, Any], lookup: AspectLookup | None, report: Report
+) -> dict[str, dict[str, Any] | None]:
+    """Own source-derived aspect per entry (or the declared one when no databases were
+    given), checked against the deck's ``aspect`` record and learner-facing ``en``."""
+
+    aspects: dict[str, dict[str, Any] | None] = {}
+    for entry in deck["entries"]:
+        declared = entry.get("aspect")
+        expected = own_aspect(entry, lookup) if lookup is not None else declared
+        aspects[entry["entryId"]] = expected
+        if lookup is not None and declared != expected:
+            report.fail(f"{entry['entryId']}: aspect {declared!r} != sources {expected!r}")
+        value = (expected or {}).get("value")
+        if entry.get("en") != own_display(str(entry.get("teacherEn") or ""), value):
+            report.fail(
+                f"{entry['entryId']}: English {entry.get('en')!r} is not the teacher's English with markers "
+                f"replaced by the source aspect ({value})"
+            )
+    return aspects
+
+
+def check_entries(
+    deck: dict[str, Any],
+    frozen: dict[str, Any],
+    overlaps: dict[str, set[str]],
+    partners: dict[str, set[str]],
+    report: Report,
+) -> None:
     entries = deck["entries"]
     by_id = {entry["entryId"]: entry for entry in entries}
     if len(by_id) != len(entries):
@@ -247,6 +417,8 @@ def check_entries(deck: dict[str, Any], frozen: dict[str, Any], overlaps: dict[s
             report.fail(f"{entry_id}: missing recognition card")
         if set(entry.get("conflicts", [])) != overlaps.get(entry_id, set()):
             report.fail(f"{entry_id}: conflicts list differs from the overlapping-English rule")
+        if set(entry.get("aspectPartners", [])) != partners.get(entry_id, set()):
+            report.fail(f"{entry_id}: aspect partners differ from the source-aspect rule")
         if cards.get("production") is not None and overlaps.get(entry_id):
             report.fail(
                 f"{entry_id}: EN->UK production card although its English overlaps {sorted(overlaps[entry_id])[:3]}"
@@ -303,6 +475,7 @@ def check_cloze(
     deck: dict[str, Any],
     cloze: dict[str, Any],
     overlaps: dict[str, set[str]],
+    partners: dict[str, set[str]],
     report: Report,
     vesum: sqlite3.Connection | None,
     sources: sqlite3.Connection | None,
@@ -339,7 +512,8 @@ def check_cloze(
             if option.get("kind") == "answer":
                 continue
             other_id = option.get("entryId")
-            if other_id == entry["entryId"] or other_id in overlaps.get(entry["entryId"], set()):
+            same_meaning = overlaps.get(entry["entryId"], set()) | partners.get(entry["entryId"], set())
+            if other_id == entry["entryId"] or other_id in same_meaning:
                 report.fail(f"{cloze_id}: distractor {option.get('label')!r} shares the answer's meaning")
             if other_id not in by_id:
                 report.fail(f"{cloze_id}: distractor is not a deck entry")
@@ -404,7 +578,21 @@ def _sentence_in_source(
     return bool(row) and restored in _dehyphenate(row[0])
 
 
-def check_grammar(deck: dict[str, Any], report: Report) -> None:
+def check_grammar(
+    deck: dict[str, Any], aspects: dict[str, dict[str, Any] | None], coverage: dict[str, Any] | None, report: Report
+) -> None:
+    for item in deck.get("classify", []):
+        value = (aspects.get(item.get("entryId")) or {}).get("value")
+        for one in item.get("sets", []):
+            if one.get("setId") == "aspect" and one.get("answer") != CLASSIFY_ANSWER.get(value):
+                report.fail(
+                    f"{item.get('classifyId')}: aspect answer {one.get('answer')!r} but the sources say {value}"
+                )
+    for row in ((coverage or {}).get("residuals") or {}).get("identityConflicts", []):
+        if not str(row.get("reason", "")).startswith(("homograph:", "part of speech: VESUM/ULIF")):
+            report.fail(
+                f"{row.get('entryId')}: identity conflict not grounded in the Atlas/sources: {row.get('reason')!r}"
+            )
     items_by_id: dict[str, dict[str, Any]] = {}
     for array, id_field in GRAMMAR_ARRAYS.items():
         for item in deck.get(array, []):
@@ -464,7 +652,23 @@ def matrix(deck: dict[str, Any]) -> dict[str, dict[str, int]]:
     return table
 
 
-def residuals(deck: dict[str, Any], coverage: dict[str, Any] | None, overlaps: dict[str, set[str]]) -> dict[str, list]:
+def aspect_counts(deck: dict[str, Any], aspects: dict[str, dict[str, Any] | None]) -> dict[str, dict[str, int]]:
+    counts: dict[str, dict[str, int]] = {"single": {}, "multiword": {}}
+    for entry in deck["entries"]:
+        aspect = aspects.get(entry["entryId"])
+        if aspect:
+            cell = f"{aspect['basis']}:{aspect['value']}"
+            shape = counts["multiword" if entry["multiword"] else "single"]
+            shape[cell] = shape.get(cell, 0) + 1
+    return {shape: dict(sorted(cells.items())) for shape, cells in counts.items()}
+
+
+def residuals(
+    deck: dict[str, Any],
+    coverage: dict[str, Any] | None,
+    overlaps: dict[str, set[str]],
+    aspects: dict[str, dict[str, Any] | None],
+) -> dict[str, list]:
     by_id = {entry["entryId"]: entry for entry in deck["entries"]}
     reasons: dict[str, dict[str, str]] = {}
     for name, rows in ((coverage or {}).get("residuals") or {}).items():
@@ -477,6 +681,8 @@ def residuals(deck: dict[str, Any], coverage: dict[str, Any] | None, overlaps: d
         "productionOmitted": [],
         "refusedGroups": [],
         "noCloze": [],
+        "aspectUnknown": [],
+        "aspectMarkerDisagreements": [],
     }
     for entry_id, entry in by_id.items():
         atlas = entry.get("atlas")
@@ -498,6 +704,16 @@ def residuals(deck: dict[str, Any], coverage: dict[str, Any] | None, overlaps: d
             out["refusedGroups"].append((entry["uk"], "production choice: no unambiguous group"))
         if not cards.get("cloze"):
             out["noCloze"].append((entry["uk"], reasons.get("noCloze", {}).get(entry_id, "")))
+        aspect = aspects.get(entry_id)
+        if aspect:
+            evidence = (
+                f"{entry.get('teacherEn')!r}: sources {aspect['value']} ({aspect['basis']}; VESUM "
+                f"{'/'.join(aspect['vesum']) or '-'}, ULIF {'/'.join(aspect['ulif']) or '-'}; lemma {aspect['lemma']})"
+            )
+            if aspect["value"] == "unknown":
+                out["aspectUnknown"].append((entry["uk"], evidence))
+            if aspect["markerAgrees"] is False:
+                out["aspectMarkerDisagreements"].append((entry["uk"], evidence))
     return out
 
 
@@ -523,22 +739,31 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         report.fail(f"frozen key list has {len(frozen.get('keys', []))} keys, expected {args.expect_keys}")
     if args.docx:
         summary["table"] = check_source_table(deck, frozen, extract_table(args.docx, args.heading), report)
-    overlaps = own_overlaps(deck["entries"])
-    check_entries(deck, frozen, overlaps, report)
     vesum = sqlite3.connect(f"file:{args.vesum_db.resolve()}?mode=ro", uri=True) if args.vesum_db else None
     sources = sqlite3.connect(f"file:{args.sources_db.resolve()}?mode=ro", uri=True) if args.sources_db else None
     try:
-        check_cloze(deck, cloze, overlaps, report, vesum, sources)
+        lookup = AspectLookup(vesum, sources) if vesum is not None and sources is not None else None
+        aspects = check_aspects(deck, lookup, report)
+        values = {entry_id: (aspect or {}).get("value") for entry_id, aspect in aspects.items()}
+        overlaps, partners = own_overlaps(deck["entries"], values)
+        check_entries(deck, frozen, overlaps, partners, report)
+        check_cloze(deck, cloze, overlaps, partners, report, vesum, sources)
     finally:
         for conn in (vesum, sources):
             if conn is not None:
                 conn.close()
-    check_grammar(deck, report)
+    check_grammar(deck, aspects, coverage, report)
     summary["entries"] = len(deck["entries"])
     summary["frozenKeys"] = len(frozen.get("keys", []))
     summary["cloze"] = len(cloze.get("cloze", []))
+    summary["aspectVerified"] = lookup is not None
+    summary["aspect"] = aspect_counts(deck, aspects)
     summary["matrix"] = matrix(deck)
-    summary["residuals"] = residuals(deck, coverage, overlaps)
+    summary["entriesByShape"] = {
+        "single": sum(1 for entry in deck["entries"] if not entry["multiword"]),
+        "multiword": sum(1 for entry in deck["entries"] if entry["multiword"]),
+    }
+    summary["residuals"] = residuals(deck, coverage, overlaps, aspects)
     return report, summary
 
 
@@ -559,6 +784,19 @@ def render(report: Report, summary: dict[str, Any], limit: int | None) -> str:
         )
     lines.append(
         f"entries: {summary['entries']} (frozen source keys: {summary['frozenKeys']}); cloze items: {summary['cloze']}"
+    )
+    for shape, cells in summary["aspect"].items():
+        lines.append(
+            f"verb aspect ({shape}{'' if summary['aspectVerified'] else ', declared — not re-derived'}): "
+            + (", ".join(f"{cell} {n}" for cell, n in cells.items()) or "none")
+        )
+    without = {
+        shape: summary["entriesByShape"][shape] - summary["matrix"]["production-flashcard"][shape]
+        for shape in ("single", "multiword")
+    }
+    lines.append(
+        f"entries without an EN->UK card: {sum(without.values())} "
+        f"({without['single']} single-word, {without['multiword']} multiword)"
     )
     lines.append(f"{'mode':<24}{'single':>8}{'multiword':>11}")
     for mode, counts in summary["matrix"].items():

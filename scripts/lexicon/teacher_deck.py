@@ -182,14 +182,23 @@ def previous_published_set(out_dir: Path, pointer_path: Path, repo: str) -> tupl
     return {}, "none (first sync)"
 
 
+def _aspect_value(entry: dict[str, Any]) -> str | None:
+    aspect = entry.get("aspect")
+    return aspect.get("value") if isinstance(aspect, dict) else None
+
+
 def entry_delta(previous: list[dict[str, Any]], current: list[dict[str, Any]]) -> dict[str, list[str]]:
     before = {str(entry["entryId"]): entry for entry in previous}
     after = {str(entry["entryId"]): entry for entry in current}
     changed = []
     for entry_id in sorted(before.keys() & after.keys(), key=lambda key: after[key]["firstSeen"]):
         old, new = before[entry_id], after[entry_id]
+        old_view = {"uk": old.get("uk"), "en": old.get("teacherEn", old.get("en")), "aspect": _aspect_value(old)}
+        new_view = {"uk": new["uk"], "en": new["teacherEn"], "aspect": _aspect_value(new)}
         notes = [
-            f"{field}: {old[field]!r} -> {new[field]!r}" for field in ("uk", "en") if old.get(field) != new.get(field)
+            f"{field}: {old_view[field]!r} -> {new_view[field]!r}"
+            for field in new_view
+            if old_view[field] != new_view[field]
         ]
         if notes:
             changed.append(f"{new['uk']}: " + "; ".join(notes))
@@ -221,6 +230,44 @@ def _public_lesson_sentences(cloze_bytes: bytes | None) -> set[str]:
         for item in json.loads(cloze_bytes).get("cloze", [])
         if item.get("source") == "teacher-lesson"
     }
+
+
+def aspect_summary(entries: list[dict[str, Any]], counts: dict[str, Any]) -> list[str]:
+    """Source-derived verb aspect: the teacher's marker set, counts by basis, and every
+    entry whose marker disagrees with the sources or whose aspect stays unknown."""
+
+    markers: dict[str, int] = {}
+    for entry in entries:
+        for marker in shard.ASPECT_MARKER_RE.findall(str(entry["teacherEn"])):
+            markers[marker.strip()] = markers.get(marker.strip(), 0) + 1
+    lines = [
+        "teacher aspect markers in the English (stripped, never the authority): "
+        + (", ".join(f"{marker} x{n}" for marker, n in sorted(markers.items())) or "none")
+    ]
+    for shape, table in counts["verbAspect"].items():
+        cells = "; ".join(
+            f"{basis}: " + ", ".join(f"{v} {n}" for v, n in values.items()) for basis, values in table.items()
+        )
+        lines.append(f"verb aspect ({shape}): {cells or 'none'}")
+    lines.append(
+        "EN->UK production cards: "
+        + ", ".join(f"{n} {shape}" for shape, n in counts["entriesByMode"]["production-flashcard"].items())
+        + f"; entries without: "
+        f"{counts['withoutProduction']}; entries with an aspect partner (not an overlap): {counts['aspectPartnerEntries']}"
+    )
+    for title, keep in (
+        ("teacher marker disagrees with the sources", lambda a: a["markerAgrees"] is False),
+        ("aspect unknown", lambda a: a["value"] == "unknown"),
+    ):
+        rows = [entry for entry in entries if entry.get("aspect") and keep(entry["aspect"])]
+        lines.append(f"{title}: {len(rows)}")
+        lines.extend(
+            f"  {entry['uk']} = {entry['teacherEn']} | sources {entry['aspect']['value']} ({entry['aspect']['basis']}; "
+            f"VESUM {'/'.join(entry['aspect']['vesum']) or '-'}, ULIF {'/'.join(entry['aspect']['ulif']) or '-'}"
+            f"{', lemma ' + entry['aspect']['lemma'] if entry['multiword'] and entry['aspect']['lemma'] else ''})"
+            for entry in rows
+        )
+    return lines
 
 
 def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> str:
@@ -303,6 +350,9 @@ def refresh(args: argparse.Namespace) -> int:
     frozen = frozen_keys_payload(docx_sha, build, args.heading)
     files = shard.render_published_set(deck_build, frozen)
 
+    review = shard.lesson_sentence_review(deck_build, args.vesum_db)
+    local_files = {**files, shard.REVIEW_FILE: shard.render_json(review, list_keys=("sentences",))}
+
     check_dir = out_dir.with_name(f".{out_dir.name}.check")
     if check_dir.exists():
         shutil.rmtree(check_dir)
@@ -315,7 +365,7 @@ def refresh(args: argparse.Namespace) -> int:
         shutil.rmtree(check_dir, ignore_errors=True)
 
     previous_public = _public_lesson_sentences(previous_files.get(shard.CLOZE_FILE))
-    replaced = replace_published_set(files, out_dir)
+    replaced = replace_published_set(local_files, out_dir)
     write_site_data(lemma_keys, site_data_path=args.table_deck, allow_shrink=True)
     args.frozen_keys.parent.mkdir(parents=True, exist_ok=True)
     args.frozen_keys.write_bytes(files[shard.FROZEN_KEYS_FILE])
@@ -352,6 +402,13 @@ def refresh(args: argparse.Namespace) -> int:
         "(scan for names/private details before --publish; NEW marks sentences not built before)"
     )
     lines.extend(f"  {'NEW ' if row in new_public else ''}[{row['lesson']}] {row['sentence']}" for row in public)
+    flagged = review["counts"]["flaggedSentences"]
+    lines.append(
+        f"lesson-sentence review: {review['counts']['sentences']} sentences -> {out_dir / shard.REVIEW_FILE} "
+        "(local only, never published); sentences flagged: "
+        + ", ".join(f"{flag} {flagged[flag]}" for flag in shard.REVIEW_FLAGS)
+    )
+    lines.extend(aspect_summary(deck_build.deck["entries"], counts))
     lines.append(checker_output.rstrip())
     if args.publish:
         pointer, action = publish(files, args.pointer, args.repo)
@@ -409,10 +466,12 @@ def _parser() -> argparse.ArgumentParser:
         epilog=examples
         + """Outputs: writes lessons into --sources-db (private-teacher-lessons-a rows only); replaces --out-dir
   (manifest.json, frozen-keys.json, practice-deck.teacher.json, practice-cloze.teacher.json, coverage.json);
-  rewrites --table-deck and --frozen-keys. --publish uploads lexicon-teacher-deck-<version>.json.gz to the
-  GitHub release `atlas-teacher-deck` (skipped when that version already exists and is identical) and
+  rewrites --table-deck and --frozen-keys. Also writes --out-dir/lesson-sentence-review.json (local only, never
+  packaged): every teacher-lesson cloze sentence with proper-noun / VESUM-unknown / digits-or-contact flags.
+  --publish uploads lexicon-teacher-deck-<version>.json.gz to the GitHub release `atlas-teacher-deck` (skipped when that version already exists and is identical) and
   rewrites --pointer. Prints the document and input versions, added/removed/changed entries, merges, every
-  teacher-lesson sentence that becomes public, and the independent checker's matrix and residual lists.
+  teacher-lesson sentence that becomes public with the review flag counts, the teacher's aspect markers and the
+  source-derived verb aspect counts, and the independent checker's matrix and residual lists.
 Exit codes: 0 success or no-op; 1 validation/checker failure or refused shrink (nothing replaced);
   2 unreadable inputs or failed download/upload.
 Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_deck.py; #8843.

@@ -94,11 +94,77 @@ def test_overlap_is_equality_or_whole_word_containment() -> None:
     assert shard.parts_overlap(["break"], ["break down"])
     assert not shard.parts_overlap(["cat"], ["catalogue"])
     entries = [
-        {"entryId": "a", "en": "To read (impf)"},
-        {"entryId": "b", "en": "To read (perf)"},
+        {"entryId": "a", "en": "To read (impf.)"},
+        {"entryId": "b", "en": "To read (pf.)"},
         {"entryId": "c", "en": "Cat"},
     ]
-    assert shard.overlap_graph(entries) == {"a": ["b"], "b": ["a"], "c": []}
+    overlaps, partners = shard.overlap_graph(entries)
+    assert overlaps == {"a": ["b"], "b": ["a"], "c": []}
+    assert partners == {"a": [], "b": [], "c": []}
+
+
+def test_source_aspects_that_differ_split_an_otherwise_identical_pair() -> None:
+    entries = [
+        {"entryId": "a", "en": "To wipe (impf.)"},
+        {"entryId": "b", "en": "To wipe (pf.)"},
+        {"entryId": "c", "en": "To wipe off (pf.)"},
+        {"entryId": "d", "en": "To marry off (impf./pf.)"},
+        {"entryId": "e", "en": "To marry off (pf.)"},
+    ]
+    aspects = {"a": "imperf", "b": "perf", "c": "perf", "d": "dual", "e": "perf"}
+    overlaps, partners = shard.overlap_graph(entries, aspects)
+    assert partners["a"] == ["b"] and partners["b"] == ["a"]
+    # Containment is not "otherwise identical", and dual never splits.
+    assert overlaps["a"] == ["c"] and overlaps["b"] == ["c"]
+    assert overlaps["d"] == ["e"]
+    assert checker.own_overlaps(entries, aspects) == (
+        {key: set(value) for key, value in overlaps.items()},
+        {key: set(value) for key, value in partners.items()},
+    )
+
+
+def _evidence(vesum: set[str], ulif: set[str]) -> shard.LemmaEvidence:
+    return shard.LemmaEvidence(frozenset(vesum), False, frozenset(ulif), False)
+
+
+@pytest.mark.parametrize(
+    ("vesum", "ulif", "expected"),
+    [
+        ({"imperf"}, {"imperf"}, ("imperf", "agree")),
+        ({"perf"}, set(), ("perf", "vesum-only")),
+        (set(), {"perf"}, ("perf", "ulif-only")),
+        ({"imperf", "perf"}, {"dual"}, ("dual", "agree")),
+        (set(), {"dual"}, ("dual", "ulif-only")),
+        ({"imperf"}, {"perf"}, ("unknown", "conflict")),
+        ({"imperf", "perf"}, {"perf"}, ("unknown", "conflict")),
+        ({"imperf", "perf"}, {"imperf", "perf"}, ("unknown", "homograph")),
+        ({"imperf", "perf"}, set(), ("unknown", "vesum-only")),
+        (set(), set(), ("unknown", "none")),
+    ],
+)
+def test_aspect_comes_from_vesum_and_checked_ulif(vesum: set[str], ulif: set[str], expected: tuple[str, str]) -> None:
+    assert shard.resolve_aspect(_evidence(vesum, ulif)) == expected
+    assert checker.decide_aspect(vesum, ulif) == expected
+
+
+@pytest.mark.parametrize(
+    ("teacher", "aspect", "shown"),
+    [
+        ("To wipe (impf)", "perf", "To wipe (pf.)"),
+        ("To implement (perf); to introduce", "imperf", "To implement; to introduce (impf.)"),
+        (
+            "To pour solids / serve food (impf); To pour solids / serve food (perf)",
+            "dual",
+            "To pour solids / serve food (impf./pf.)",
+        ),
+        ("To explode (impf)", "unknown", "To explode"),
+        ("To bribe (idiom) (impf)", "imperf", "To bribe (idiom) (impf.)"),
+        ("Cat", None, "Cat"),
+    ],
+)
+def test_teacher_markers_are_replaced_by_the_source_label(teacher: str, aspect: str | None, shown: str) -> None:
+    assert shard.display_english(teacher, aspect) == shown
+    assert checker.own_display(teacher, aspect) == shown
 
 
 @pytest.mark.parametrize(
@@ -163,10 +229,16 @@ TABLE = [
     ("Чорна кава", "Black coffee"),
     ("Свіжий хліб", "Fresh bread"),
     ("Теплий дім", "Warm home"),
+    ("Писати", "To write (perf)"),  # the sources say imperfective: marker contradicted
+    ("Женити", "To marry off (impf)"),  # ULIF: biaspectual
+    ("Оженити", "To marry off (perf)"),
+    ("Випробування", "Challenge / Trial"),  # a real overlap with Кинути виклик
+    ("Кинути виклик", "To challenge"),
 ]
 LESSONS = [
     ("01.09.2025", ["The cat is sleeping on the table.", "Кіт спить на столі."]),
     ("08.09.2025", ["I drink green tea every morning.", "Я п'ю зелений чай щоранку."]),
+    ("15.09.2025", ["Olena bought a cat on 12 May.", "Олена купила кота 12 травня."]),
 ]
 TEXTBOOK = "Собака лежить біля будинку. Наш собака лежить на траві."
 VESUM_FORMS = [
@@ -189,6 +261,23 @@ VESUM_FORMS = [
     ("спить", "спати", "verb", "verb:imperf:pres:s:3"),
     ("лежить", "лежати", "verb", "verb:imperf:pres:s:3"),
     ("п'ю", "пити", "verb", "verb:imperf:pres:s:1"),
+    ("писати", "писати", "verb", "verb:imperf:inf"),
+    ("женити", "женити", "verb", "verb:imperf:inf"),
+    ("женити", "женити", "verb", "verb:perf:inf"),
+    ("оженити", "оженити", "verb", "verb:perf:inf"),
+    ("випробування", "випробування", "noun", "noun:inanim:n:v_naz"),
+    ("кинути", "кинути", "verb", "verb:perf:inf"),
+    ("виклик", "виклик", "noun", "noun:inanim:m:v_naz"),
+    ("Олена", "Олена", "noun", "noun:anim:f:v_naz:prop:fname"),
+]
+# Checked ULIF entries (homonym_checked, label); the unchecked row must be ignored.
+ULIF_ENTRIES = [
+    ("читати", 1, "дієслово доконаного виду", 0),
+    ("прочитати", 1, "дієслово доконаного виду", 1),
+    ("писати", 1, "дієслово недоконаного виду", 1),
+    ("женити", 1, "дієслово недоконаного і доконаного виду", 1),
+    ("оженити", 1, "дієслово доконаного виду", 1),
+    ("випробування", 1, "іменник середнього роду", 1),
 ]
 ATLAS = {
     "кіт": ("noun", ["cat"], None),
@@ -197,6 +286,7 @@ ATLAS = {
     "стіл": ("noun", ["table", "desk"], None),
     "вікно": ("noun", ["window"], "вікно́"),
     "читати": ("verb", ["to read"], "чита́ти"),
+    "писати": ("verb", ["to write"], "писа́ти"),
     "зелений чай": ("phrase", ["green tea"], None),
 }
 
@@ -239,10 +329,20 @@ def world(tmp_path: Path) -> dict[str, Path]:
             "INSERT INTO textbooks (chunk_id, title, text, source_file) VALUES (?, ?, ?, ?)",
             ("5-klas-test_s0001", "Сторінка 1", TEXTBOOK, "5-klas-test"),
         )
+        conn.execute(
+            "CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, normalized_query TEXT, homonym_index INTEGER, "
+            "grammatical_label TEXT, homonym_checked INTEGER, status TEXT)"
+        )
+        conn.executemany(
+            "INSERT INTO ulif_dictua_entries (normalized_query, homonym_index, grammatical_label, homonym_checked, "
+            "status) VALUES (?, ?, ?, ?, 'ok')",
+            ULIF_ENTRIES,
+        )
     vesum = tmp_path / "vesum.db"
     with sqlite3.connect(vesum) as conn:
-        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
-        conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", VESUM_FORMS)
+        conn.execute("CREATE TABLE forms_all (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.execute("CREATE VIEW forms AS SELECT word_form, lemma, tags, pos FROM forms_all")
+        conn.executemany("INSERT INTO forms_all VALUES (?, ?, ?, ?)", VESUM_FORMS)
         conn.execute("CREATE TABLE vesum_build_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
         conn.execute("INSERT INTO vesum_build_metadata VALUES ('schema_version', 'fixture')")
     atlas = tmp_path / "atlas.db"
@@ -327,24 +427,47 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
 ) -> None:
     assert _refresh(world) == 0
     first_output = capsys.readouterr().out
-    assert "table: 12 rows, 12 distinct source keys, 11 entries, 1 merged" in first_output
+    assert "table: 17 rows, 17 distinct source keys, 16 entries, 1 merged" in first_output
     assert "teacher deck check: PASS" in first_output
     assert "[2025-09-01] Кіт спить на столі." in first_output
+    assert "teacher aspect markers in the English (stripped, never the authority): (impf) x2, (perf) x3" in first_output
 
     deck = json.loads((world["out"] / shard.DECK_FILE).read_text(encoding="utf-8"))
     cloze = json.loads((world["out"] / shard.CLOZE_FILE).read_text(encoding="utf-8"))
     entries = {entry["key"]: entry for entry in deck["entries"]}
     assert entries["кіт"]["en"] == "Cat" and entries["кіт"]["sourceRows"] == [1, 9]
-    # Aspect partners share "read": no EN->UK prompt for either.
-    assert entries["читати"]["cards"]["production"] is None
-    assert entries["прочитати"]["cards"]["production"] is None
+    # An aspect pair split by the sources: the same English, each with an EN->UK card
+    # whose prompt shows the source label (читати: VESUM only; the unchecked ULIF row is ignored).
+    read, read_pf = entries["читати"], entries["прочитати"]
+    assert (read["aspect"]["value"], read["aspect"]["basis"]) == ("imperf", "vesum-only")
+    assert (read_pf["aspect"]["value"], read_pf["aspect"]["basis"]) == ("perf", "agree")
+    assert read["aspectPartners"] == [read_pf["entryId"]] and read["conflicts"] == []
+    assert read["cards"]["production"]["choice"]["prompt"] == "To read (impf.)"
+    assert read_pf["cards"]["production"]["choice"]["prompt"] == "To read (pf.)"
+    assert read["teacherEn"] == "To read (impf)"
+    # The teacher's (perf) is contradicted by VESUM and ULIF: label from the sources,
+    # disagreement recorded, grammar modes kept.
+    write = entries["писати"]
+    assert write["en"] == "To write (impf.)"
+    assert write["aspect"]["markerAgrees"] is False and write["atlas"]["identityConflict"] is False
+    assert write["cards"]["grammar"]["items"] == [{"mode": "stress", "id": f"{write['entryId']}:stress"}]
+    # Dual aspect (ULIF) still overlaps its perfective partner: no EN->UK card for either.
+    marry = entries["женити"]
+    assert (marry["aspect"]["value"], marry["en"]) == ("dual", "To marry off (impf./pf.)")
+    assert marry["cards"]["production"] is None and entries["оженити"]["cards"]["production"] is None
+    # A real overlap stays an overlap.
+    assert entries["кинути виклик"]["aspect"]["lemma"] == "кинути"
+    assert entries["випробування"]["conflicts"] == [entries["кинути виклик"]["entryId"]]
+    assert entries["випробування"]["cards"]["production"] is None
     assert entries["вікно"]["cards"]["production"]["cardId"] == f"{entries['вікно']['entryId']}:production"
+    coverage = json.loads((world["out"] / shard.COVERAGE_FILE).read_text(encoding="utf-8"))
+    assert [row["uk"] for row in coverage["residuals"]["aspectMarkerDisagreements"]] == ["Писати"]
     by_entry = {}
     for item in cloze["cloze"]:
         by_entry.setdefault(item["entryId"], []).append(item)
     cat_items = by_entry[entries["кіт"]["entryId"]]
-    assert cat_items[0]["source"] == "teacher-lesson"
-    assert cat_items[0]["clozeEn"] == "The cat is sleeping on the table."
+    assert [item["source"] for item in cat_items] == ["teacher-lesson", "teacher-lesson"]
+    assert cat_items[1]["clozeEn"] == "The cat is sleeping on the table."
     tea = by_entry[entries["зелений чай"]["entryId"]][0]
     assert tea["form"] == "зелений чай" and tea["sentence"] == "Я п'ю ___ щоранку."
     dog = by_entry[entries["собака"]["entryId"]][0]
@@ -359,13 +482,31 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
     code, report = _check(world["out"], world)
     assert code == 0, report
     assert "teacher deck check: PASS" in report
+    assert "entries without an EN->UK card: 4 (3 single-word, 1 multiword)" in report
+
+    review = json.loads((world["out"] / shard.REVIEW_FILE).read_text(encoding="utf-8"))
+    assert shard.REVIEW_FILE not in teacher_deck.PACKAGE_FILES
+    # One row per teacher-lesson cloze item (Кіт спить на столі. serves кіт and стіл);
+    # the fixture VESUM lacks most function words, so every sentence has unknown tokens.
+    assert review["counts"] == {
+        "sentences": 4,
+        "flaggedSentences": {"proper_noun_tokens": 1, "vesum_unknown_tokens": 4, "digits_or_contact": 1},
+    }
+    olena = next(row for row in review["sentences"] if row["sentence"].startswith("Олена"))
+    assert olena["lessonDate"] == "2025-09-15" and olena["entry"] == "Кіт"
+    assert olena["flags"] == {
+        "proper_noun_tokens": [{"token": "Олена", "reasons": ["vesum:fname", "vesum:prop"]}],
+        "vesum_unknown_tokens": ["купила", "травня"],
+        "digits_or_contact": [{"kind": "digits", "text": "12"}],
+    }
+    assert "sentences flagged: proper_noun_tokens 1, vesum_unknown_tokens 4, digits_or_contact 1" in first_output
 
     before = _hashes(world)
     assert _refresh(world) == 0
     second_output = capsys.readouterr().out
     assert "no-op: artifacts unchanged" in second_output
     assert "publish: skipped (pointer NOT updated)" in second_output
-    assert "inserted 0, unchanged 2" in second_output
+    assert "inserted 0, unchanged 3" in second_output
     assert _hashes(world) == before
 
 
@@ -386,7 +527,7 @@ def test_refresh_reports_meaning_changes_and_keeps_order_keys(
     assert order["стіл"] == 4 and order["лампа"] == max(order.values())
 
 
-def _plant(world: dict[str, Path], tmp_path: Path, name: str, mutate) -> tuple[int, str]:
+def _plant(world: dict[str, Path], tmp_path: Path, name: str, mutate, *, with_sources: bool = False) -> tuple[int, str]:
     planted = tmp_path / "planted"
     shutil.copytree(world["out"], planted)
     payload = json.loads((planted / name).read_text(encoding="utf-8"))
@@ -398,7 +539,7 @@ def _plant(world: dict[str, Path], tmp_path: Path, name: str, mutate) -> tuple[i
         if record["path"] == name:
             record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
     (planted / shard.MANIFEST_FILE).write_text(json.dumps(manifest), encoding="utf-8")
-    return _check(planted)
+    return _check(planted, world if with_sources else None)
 
 
 def test_checker_fails_when_an_answer_is_missing_from_its_options(world: dict[str, Path], tmp_path: Path) -> None:
@@ -417,7 +558,32 @@ def test_checker_fails_on_an_en_uk_prompt_with_an_overlapping_meaning(world: dic
     assert _refresh(world) == 0
 
     def add_production(deck: dict) -> None:
-        entry = next(entry for entry in deck["entries"] if entry["key"] == "читати")
+        entry = next(entry for entry in deck["entries"] if entry["key"] == "випробування")
+        entry["cards"]["production"] = {"cardId": f"{entry['entryId']}:production", "choice": None}
+
+    code, report = _plant(world, tmp_path, shard.DECK_FILE, add_production)
+    assert code == 1 and "EN->UK production card although its English overlaps" in report
+
+
+def test_checker_rederives_aspect_and_rejects_the_teacher_marker_as_authority(
+    world: dict[str, Path], tmp_path: Path
+) -> None:
+    assert _refresh(world) == 0
+
+    def trust_teacher(deck: dict) -> None:
+        entry = next(entry for entry in deck["entries"] if entry["key"] == "писати")
+        entry["aspect"].update(value="perf", markerAgrees=True)
+        entry["en"] = "To write (pf.)"
+
+    code, report = _plant(world, tmp_path, shard.DECK_FILE, trust_teacher, with_sources=True)
+    assert code == 1 and "aspect {" in report and "!= sources" in report
+
+
+def test_checker_fails_on_an_en_uk_card_for_a_dual_aspect_overlap(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+
+    def add_production(deck: dict) -> None:
+        entry = next(entry for entry in deck["entries"] if entry["key"] == "женити")
         entry["cards"]["production"] = {"cardId": f"{entry['entryId']}:production", "choice": None}
 
     code, report = _plant(world, tmp_path, shard.DECK_FILE, add_production)
@@ -443,7 +609,7 @@ def test_checker_table_comparison_catches_a_changed_meaning(world: dict[str, Pat
     assert _refresh(world) == 0
 
     def change_meaning(deck: dict) -> None:
-        deck["entries"][0]["en"] = "Kitten"
+        deck["entries"][0]["teacherEn"] = "Kitten"
 
     planted = tmp_path / "meaning"
     shutil.copytree(world["out"], planted)
@@ -461,18 +627,38 @@ def test_checker_matrix_and_residual_lists(world: dict[str, Path]) -> None:
         deck_dir=world["out"],
         docx=world["docx"],
         heading=HEADING,
-        expect_keys=12,
+        expect_keys=17,
         vesum_db=world["vesum"],
         sources_db=world["sources"],
     )
     report, summary = checker.run(args)
     assert report.errors == []
-    assert summary["matrix"]["recognition-flashcard"] == {"single": 7, "multiword": 4}
-    assert summary["matrix"]["production-flashcard"] == {"single": 5, "multiword": 4}
+    assert summary["matrix"]["recognition-flashcard"] == {"single": 11, "multiword": 5}
+    assert summary["matrix"]["production-flashcard"] == {"single": 8, "multiword": 4}
     assert summary["matrix"]["stress"]["multiword"] == 0
+    assert summary["aspect"] == {
+        "single": {"agree:dual": 1, "agree:imperf": 1, "agree:perf": 2, "vesum-only:imperf": 1},
+        "multiword": {"vesum-only:perf": 1},
+    }
     residuals = summary["residuals"]
-    assert {uk for uk, _reason in residuals["productionOmitted"]} == {"Читати", "Прочитати"}
-    assert {uk for uk, _reason in residuals["noAtlas"]} == {"Прочитати", "Чорна кава", "Свіжий хліб", "Теплий дім"}
+    assert {uk for uk, _reason in residuals["productionOmitted"]} == {
+        "Женити",
+        "Оженити",
+        "Випробування",
+        "Кинути виклик",
+    }
+    assert {uk for uk, _reason in residuals["noAtlas"]} == {
+        "Прочитати",
+        "Чорна кава",
+        "Свіжий хліб",
+        "Теплий дім",
+        "Женити",
+        "Оженити",
+        "Випробування",
+        "Кинути виклик",
+    }
+    assert [uk for uk, _reason in residuals["aspectMarkerDisagreements"]] == ["Писати"]
+    assert residuals["aspectUnknown"] == []
     assert residuals["refusedGroups"] == []
 
 

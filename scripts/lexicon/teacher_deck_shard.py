@@ -42,7 +42,6 @@ from scripts.audit.generate_practice_deck import (
     _stress_payload,
     _synonym_option,
     _valid_synonym_distractors,
-    _vesum_aspect_by_lemma,
     build_synonym_verdict_sets,
     read_synonym_verdicts,
 )
@@ -103,6 +102,17 @@ ENGLISH_STOPWORDS = frozenset(
 # fmt: on
 IMPF_MARKER_RE = re.compile(r"\((?:impf|imperf|ipf)\.?\)", re.IGNORECASE)
 PERF_MARKER_RE = re.compile(r"\((?:perf|pf)\.?\)", re.IGNORECASE)
+ASPECT_MARKER_RE = re.compile(r"\s*\((?:impf|imperf|ipf|perf|pf)\.?\)", re.IGNORECASE)
+# Verb aspect comes from VESUM (forms_all tags) and checked ULIF entries, never
+# from the teacher's markers. ``dual`` = biaspectual (ULIF "недоконаного і доконаного виду").
+ULIF_ASPECT_LABELS = {
+    "дієслово недоконаного виду": "imperf",
+    "дієслово доконаного виду": "perf",
+    "дієслово недоконаного і доконаного виду": "dual",
+}
+ASPECT_LABELS_EN = {"imperf": "impf.", "perf": "pf.", "dual": "impf./pf."}
+ASPECT_BASES = ("agree", "vesum-only", "ulif-only", "conflict", "homograph", "none")
+CLASSIFY_ASPECT = {"imperf": "imperfective", "perf": "perfective"}
 ENGLISH_TOKEN_RE = re.compile(r"[\w'’-]+|/")
 CYRILLIC_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]")
 SENTENCE_END = (".", "!", "?", "…")
@@ -162,9 +172,20 @@ def parts_overlap(left: Sequence[str], right: Sequence[str]) -> bool:
     return False
 
 
-def overlap_graph(entries: Sequence[dict[str, Any]]) -> dict[str, list[str]]:
-    """Entry id -> sorted ids of entries whose English meaning overlaps."""
+def aspect_split(left: Sequence[str], right: Sequence[str], left_aspect: str | None, right_aspect: str | None) -> bool:
+    """Spec: entries whose normalised English is otherwise identical are told apart
+    by a source-derived aspect difference (imperf vs perf) shown in the prompt."""
 
+    return {left_aspect, right_aspect} == {"imperf", "perf"} and set(left) == set(right)
+
+
+def overlap_graph(
+    entries: Sequence[dict[str, Any]], aspects: dict[str, str | None] | None = None
+) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+    """Entry id -> sorted ids of entries whose English meaning overlaps, and entry
+    id -> sorted aspect partners (same English, imperf vs perf: not an overlap)."""
+
+    aspects = aspects or {}
     parts = {str(entry["entryId"]): english_parts(str(entry["en"])) for entry in entries}
     by_token: dict[str, set[str]] = {}
     for entry_id, entry_parts in parts.items():
@@ -173,16 +194,28 @@ def overlap_graph(entries: Sequence[dict[str, Any]]) -> dict[str, list[str]]:
                 if token != "/":
                     by_token.setdefault(token, set()).add(entry_id)
     graph: dict[str, set[str]] = {entry_id: set() for entry_id in parts}
+    partners: dict[str, set[str]] = {entry_id: set() for entry_id in parts}
     for entry_id, entry_parts in parts.items():
         candidates: set[str] = set()
         for part in entry_parts:
             for token in set(_word_seq(part)):
                 candidates |= by_token.get(token, set())
         for other in candidates:
-            if other != entry_id and other not in graph[entry_id] and parts_overlap(entry_parts, parts[other]):
-                graph[entry_id].add(other)
-                graph[other].add(entry_id)
-    return {entry_id: sorted(others) for entry_id, others in graph.items()}
+            if other == entry_id or other in graph[entry_id] or other in partners[entry_id]:
+                continue
+            if not parts_overlap(entry_parts, parts[other]):
+                continue
+            target = (
+                partners
+                if aspect_split(entry_parts, parts[other], aspects.get(entry_id), aspects.get(other))
+                else graph
+            )
+            target[entry_id].add(other)
+            target[other].add(entry_id)
+    return (
+        {entry_id: sorted(others) for entry_id, others in graph.items()},
+        {entry_id: sorted(others) for entry_id, others in partners.items()},
+    )
 
 
 def content_words(text: str) -> set[str]:
@@ -193,6 +226,8 @@ def content_words(text: str) -> set[str]:
 
 
 def teacher_aspect(english: str) -> set[str]:
+    """The teacher's own aspect markers — reported against the sources, never used as the aspect."""
+
     aspects: set[str] = set()
     if IMPF_MARKER_RE.search(english):
         aspects.add("imperf")
@@ -208,10 +243,26 @@ def teacher_implies_verb(english: str) -> bool:
     return bool(raw_parts) and all(part.startswith("to ") for part in raw_parts)
 
 
-def _entry_class(entry: dict[str, Any], atlas_pos: str | None) -> str:
-    """Distractor grouping class: Atlas POS for single words, teacher English for phrases."""
+def display_english(teacher_en: str, aspect: str | None) -> str:
+    """Learner-facing English: the teacher's aspect markers are stripped (a meaning
+    that becomes a duplicate is dropped) and the source-derived label appended."""
 
-    teacher_class = "verb" if teacher_implies_verb(str(entry["en"])) else "other"
+    text = teacher_en
+    if ASPECT_MARKER_RE.search(teacher_en):
+        parts: list[str] = []
+        for raw in ASPECT_MARKER_RE.sub("", teacher_en).split(";"):
+            part = " ".join(raw.split())
+            if part and part.casefold() not in {kept.casefold() for kept in parts}:
+                parts.append(part)
+        text = "; ".join(parts)
+    label = ASPECT_LABELS_EN.get(aspect or "")
+    return f"{text} ({label})" if label else text
+
+
+def _entry_class(entry: dict[str, Any], atlas_pos: str | None) -> str:
+    """Distractor grouping class: Atlas POS for single words, source-derived verbness otherwise."""
+
+    teacher_class = "verb" if entry.get("aspect") is not None else "other"
     if entry["multiword"]:
         return f"phrase-{teacher_class}"
     bucket = _option_pos_bucket(atlas_pos) if atlas_pos else ""
@@ -352,6 +403,145 @@ class FormAnalyzer:
 def core_tag(tags: str) -> tuple[str, ...]:
     parts = tags.split(":")
     return (parts[0], *sorted(part for part in parts[1:] if part in CORE_TAG_PARTS))
+
+
+# --------------------------------------------------------------------------- aspect (VESUM + checked ULIF)
+
+
+@dataclass(frozen=True)
+class LemmaEvidence:
+    """What the two sources say about one lemma spelling."""
+
+    vesum: frozenset[str]  # aspects on VESUM verb lemmas with this spelling ⊆ {imperf, perf}
+    vesum_other_pos: bool  # VESUM also has a non-verb lemma with this spelling
+    ulif: frozenset[str]  # aspects of checked ULIF verb entries ⊆ {imperf, perf, dual}
+    ulif_other_pos: bool  # a checked ULIF entry with a non-verb label
+
+    @property
+    def verb(self) -> bool:
+        return bool(self.vesum or self.ulif)
+
+    @property
+    def other_pos(self) -> bool:
+        return self.vesum_other_pos or self.ulif_other_pos
+
+
+class AspectSources:
+    """Read-only lemma lookups in VESUM ``forms_all`` and checked ULIF entries."""
+
+    def __init__(self, vesum_db: Path, sources_db: Path) -> None:
+        self._vesum = _ro_connect(vesum_db)
+        self._sources = _ro_connect(sources_db)
+        self._cache: dict[str, LemmaEvidence] = {}
+        self.ulif_rows: set[tuple[str, int, str]] = set()
+
+    def close(self) -> None:
+        self._vesum.close()
+        self._sources.close()
+
+    def evidence(self, lemma: str) -> LemmaEvidence:
+        cached = self._cache.get(lemma)
+        if cached is not None:
+            return cached
+        vesum: set[str] = set()
+        vesum_other = False
+        for row in self._vesum.execute("SELECT DISTINCT pos, tags FROM forms_all WHERE lemma = ?", (lemma,)):
+            if row["pos"] == "verb":
+                vesum.update(part for part in str(row["tags"]).split(":") if part in {"imperf", "perf"})
+            else:
+                vesum_other = True
+        ulif: set[str] = set()
+        ulif_other = False
+        for row in self._sources.execute(
+            "SELECT homonym_index, grammatical_label FROM ulif_dictua_entries "
+            "WHERE normalized_query = ? AND homonym_checked = 1 AND status = 'ok' ORDER BY homonym_index",
+            (lemma,),
+        ):
+            label = str(row["grammatical_label"])
+            if label in ULIF_ASPECT_LABELS:
+                ulif.add(ULIF_ASPECT_LABELS[label])
+                self.ulif_rows.add((lemma, int(row["homonym_index"]), label))
+            elif label:
+                ulif_other = True
+        found = LemmaEvidence(frozenset(vesum), vesum_other, frozenset(ulif), ulif_other)
+        self._cache[lemma] = found
+        return found
+
+
+def _one_source(values: frozenset[str]) -> str | None:
+    if not values:
+        return None
+    return next(iter(values)) if len(values) == 1 else "both"
+
+
+def resolve_aspect(evidence: LemmaEvidence) -> tuple[str, str]:
+    """(aspect, basis). VESUM lists a biaspectual verb as two lemmas (imperf + perf),
+    exactly like two homograph verbs, so only ULIF's dual label tells them apart."""
+
+    vesum, ulif = _one_source(evidence.vesum), _one_source(evidence.ulif)
+    if vesum and ulif:
+        if vesum == ulif and vesum in {"imperf", "perf"}:
+            return vesum, "agree"
+        if vesum == "both" and ulif == "dual":
+            return "dual", "agree"
+        if vesum == "both" and ulif == "both":
+            return "unknown", "homograph"
+        return "unknown", "conflict"
+    if vesum:
+        return (vesum, "vesum-only") if vesum != "both" else ("unknown", "vesum-only")
+    if ulif:
+        return (ulif, "ulif-only") if ulif != "both" else ("unknown", "ulif-only")
+    return "unknown", "none"
+
+
+def _is_verb_lemma(evidence: LemmaEvidence, teacher_says_verb: bool) -> bool:
+    # A spelling that is also a noun/adjective lemma (мати "mother" / "to have")
+    # is read as the verb only when the teacher's English is a verb meaning.
+    return evidence.verb and (teacher_says_verb or not evidence.other_pos)
+
+
+def entry_aspect(entry: dict[str, Any], sources: AspectSources) -> dict[str, Any] | None:
+    """Source-derived aspect record of a verb entry; ``None`` for non-verb entries.
+
+    Single words look up the key. A phrase looks up its first token that the
+    sources know as a verb lemma (its governing verb, e.g. ``вийти`` in ``Вийти з ладу``).
+    """
+
+    teacher_en = str(entry["teacherEn"])
+    says_verb = teacher_implies_verb(teacher_en)
+    lemma: str | None = None
+    evidence: LemmaEvidence | None = None
+    if entry["multiword"]:
+        for token in UK_TOKEN_RE.findall(str(entry["key"])):
+            candidate = _canonical(token)
+            found = sources.evidence(candidate)
+            if _is_verb_lemma(found, says_verb):
+                lemma, evidence = candidate, found
+                break
+        if lemma is None and not says_verb:
+            return None
+    else:
+        found = sources.evidence(str(entry["key"]))
+        if _is_verb_lemma(found, says_verb):
+            lemma, evidence = str(entry["key"]), found
+        elif not (says_verb and not found.verb and not found.other_pos):
+            return None
+    aspect, basis = resolve_aspect(evidence) if evidence else ("unknown", "none")
+    marker = teacher_aspect(teacher_en)
+    agrees: bool | None = None
+    if marker and aspect in {"imperf", "perf"}:
+        agrees = marker == {aspect}
+    elif marker and aspect == "dual":
+        agrees = True
+    return {
+        "value": aspect,
+        "basis": basis,
+        "lemma": lemma,
+        "vesum": sorted(evidence.vesum) if evidence else [],
+        "ulif": sorted(evidence.ulif) if evidence else [],
+        "teacherMarker": "+".join(sorted(marker)) or None,
+        "markerAgrees": agrees,
+    }
 
 
 # --------------------------------------------------------------------------- sentences
@@ -555,6 +745,13 @@ class DeckContext:
     atlas: dict[str, dict[str, Any] | None]
     classes: dict[str, str]
     related: dict[str, set[str]] = field(default_factory=dict)  # Atlas synonym/antonym lemmas
+    partners: dict[str, list[str]] = field(default_factory=dict)  # aspect partners (same English)
+
+    def same_meaning(self, entry_id: str) -> set[str]:
+        """Entries a distractor must never come from: overlaps, aspect partners (both
+        forms may fit one sentence), and the entry itself."""
+
+        return set(self.overlaps.get(entry_id, [])) | set(self.partners.get(entry_id, [])) | {entry_id}
 
 
 def _single_distractors(
@@ -568,7 +765,7 @@ def _single_distractors(
     entry_id = str(target.entry["entryId"])
     wanted = frozenset(core_tag(tag) for tag in tags)
     answer_forms = analyzer.canonical_forms(target.lemma or "")
-    blocked = set(ctx.overlaps.get(entry_id, [])) | {entry_id}
+    blocked = ctx.same_meaning(entry_id)
     related = ctx.related.get(entry_id, set())
     candidates: list[tuple[str, str]] = []
     for other in ctx.entries:
@@ -586,7 +783,7 @@ def _single_distractors(
 
 def _phrase_distractors(target: ClozeTarget, answer_form: str, ctx: DeckContext, seed: str) -> list[dict[str, str]]:
     entry_id = str(target.entry["entryId"])
-    blocked = set(ctx.overlaps.get(entry_id, [])) | {entry_id}
+    blocked = ctx.same_meaning(entry_id)
     wanted_class = ctx.classes[entry_id]
     candidates: list[tuple[str, str]] = []
     for other in ctx.entries:
@@ -884,28 +1081,35 @@ def _grammar_lexeme(lexeme: dict[str, Any]) -> dict[str, Any]:
     return gated
 
 
-def identity_conflict(entry: dict[str, Any], articles: list[dict[str, Any]], analyzer: FormAnalyzer) -> str | None:
+def identity_conflict(entry: dict[str, Any], articles: list[dict[str, Any]]) -> str | None:
+    """Grammar identity is unsafe when the key names several Atlas articles, or when
+    the sources know the single word as a verb but its Atlas article is not a verb.
+    The teacher's aspect markers never create a conflict (they are only reported)."""
+
     if len(articles) > 1:
         return f"homograph: {len(articles)} Atlas articles share the key ({', '.join(str(a['url_slug']) for a in articles)})"
     if entry["multiword"]:
         return None  # multiword entries never get grammar modes, so no grammar identity to protect
     article = articles[0]
-    english = str(entry["en"])
-    wanted = teacher_aspect(english)
+    aspect = entry.get("aspect")
     bucket = _option_pos_bucket(article.get("pos"))
-    if wanted and bucket and bucket != "verb":
-        return f"part of speech: teacher marks a verb aspect, Atlas article is '{article.get('pos')}'"
-    if len(wanted) == 1:
-        aspects = {
-            part
-            for row in analyzer.analyses(str(entry["key"]))
-            if row["pos"] == "verb" and _canonical(row["lemma"]) == entry["key"]
-            for part in row["tags"].split(":")
-            if part in {"perf", "imperf"}
-        }
-        if aspects and not wanted & aspects:
-            return f"aspect: teacher marks {sorted(wanted)[0]}, VESUM has {'/'.join(sorted(aspects))}"
+    if aspect is not None and aspect["lemma"] and bucket and bucket != "verb":
+        return f"part of speech: VESUM/ULIF know the key as a verb, Atlas article is '{article.get('pos')}'"
     return None
+
+
+def _source_aspect_classify(items: list[dict[str, Any]], aspect: str | None) -> list[dict[str, Any]]:
+    """Keep an aspect classify set only when it matches the source-derived aspect."""
+
+    wanted = CLASSIFY_ASPECT.get(aspect or "")
+    kept: list[dict[str, Any]] = []
+    for item in items:
+        item["sets"] = [
+            one for one in item["sets"] if one.get("setId") != "aspect" or (wanted and one.get("answer") == wanted)
+        ]
+        if item["sets"]:
+            kept.append(item)
+    return kept
 
 
 def build_grammar(
@@ -935,15 +1139,16 @@ def build_grammar(
         modes["stress"].append(
             tag({"lemmaId": gated["lemmaId"], "lemma": gated["lemma"], **stress}, "stressId", "stress")
         )
-    aspect = _vesum_aspect_by_lemma([gated["lemmaPlain"]], verifier).get(gated["lemmaPlain"])
-    for item in _build_classify_items(article, gated, vesum_aspect=aspect):
+    aspect = (entry.get("aspect") or {}).get("value")
+    classify = _build_classify_items(article, gated, vesum_aspect=CLASSIFY_ASPECT.get(aspect or ""))
+    for item in _source_aspect_classify(classify, aspect):
         modes["classify"].append(tag(item, "classifyId", "classify"))
     for index, item in enumerate(_build_paradigm_items(gated)):
         modes["paradigm"].append(tag(item, "paradigmId", f"paradigm:{index}"))
     if sense["usable"]:
         approved, _rejected = verdicts
         plain = _plain(str(gated["lemma"]))
-        blocked_ids = set(ctx.overlaps.get(entry_id, [])) | {entry_id}
+        blocked_ids = ctx.same_meaning(entry_id)
         related = ctx.related.get(entry_id, set())
         pool = [
             candidate
@@ -1017,6 +1222,16 @@ def _deck_version(*payloads: dict[str, Any]) -> str:
     return "teacher-v1-" + digest.hexdigest()[:16]
 
 
+def _with_source_aspect(entry: dict[str, Any], sources: AspectSources) -> dict[str, Any]:
+    """Keep the teacher's English as ``teacherEn``; ``en`` becomes the learner-facing
+    English with the teacher's markers replaced by the source-derived aspect label."""
+
+    derived = {**entry, "teacherEn": str(entry["en"])}
+    derived["aspect"] = entry_aspect(derived, sources)
+    derived["en"] = display_english(derived["teacherEn"], (derived["aspect"] or {}).get("value"))
+    return derived
+
+
 def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs) -> TeacherDeckBuild:
     atlas_by_key, atlas_metadata = read_atlas_articles(inputs.atlas_db)
     verifier = RealVesumVerifier(inputs.vesum_db)
@@ -1025,8 +1240,16 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
     approved, rejected, _a2 = build_synonym_verdict_sets(verdict_payload)
     verdicts = (approved - rejected, rejected)
 
+    aspect_sources = AspectSources(inputs.vesum_db, inputs.sources_db)
+    try:
+        entries = [_with_source_aspect(entry, aspect_sources) for entry in entries]
+        ulif_aspect_rows = sorted(aspect_sources.ulif_rows)
+    finally:
+        aspect_sources.close()
     by_id = {str(entry["entryId"]): entry for entry in entries}
-    overlaps = overlap_graph(entries)
+    overlaps, partners = overlap_graph(
+        entries, {str(entry["entryId"]): (entry["aspect"] or {}).get("value") for entry in entries}
+    )
     atlas: dict[str, dict[str, Any] | None] = {}
     senses: dict[str, dict[str, Any]] = {}
     residual_no_atlas: list[dict[str, Any]] = []
@@ -1041,7 +1264,7 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
             atlas[entry_id] = None
             residual_no_atlas.append({"entryId": entry_id, "uk": entry["uk"], "reason": "no public Atlas article"})
             continue
-        conflict = identity_conflict(entry, articles, analyzer)
+        conflict = identity_conflict(entry, articles)
         article = articles[0]
         if conflict and len(articles) > 1:
             atlas[entry_id] = None
@@ -1079,7 +1302,7 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
             related[entry_id] = {
                 _plain(item) for section in ("synonyms", "antonyms") for item in _section_items(article, section)
             }
-    ctx = DeckContext(entries, by_id, overlaps, atlas, classes, related)
+    ctx = DeckContext(entries, by_id, overlaps, atlas, classes, related, partners)
 
     lexemes: dict[str, dict[str, Any]] = {}
     for entry_id, article in atlas.items():
@@ -1187,6 +1410,8 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
                 "key": entry["key"],
                 "uk": entry["uk"],
                 "en": entry["en"],
+                "teacherEn": entry["teacherEn"],
+                "aspect": entry["aspect"],
                 "firstSeen": entry["firstSeen"],
                 "multiword": entry["multiword"],
                 "sourceRows": entry["sourceRows"],
@@ -1201,6 +1426,7 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
                     "identityConflict": entry_id in conflicts,
                 },
                 "conflicts": overlaps[entry_id],
+                "aspectPartners": partners[entry_id],
                 "matching": True,
                 "cards": cards,
             }
@@ -1252,6 +1478,16 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
             ],
             "senseReview": sense_review,
             "glossDifferences": gloss_differences,
+            "aspectUnknown": [
+                {"entryId": str(entry["entryId"]), "uk": entry["uk"], "en": entry["teacherEn"], **entry["aspect"]}
+                for entry in entries
+                if entry["aspect"] and entry["aspect"]["value"] == "unknown"
+            ],
+            "aspectMarkerDisagreements": [
+                {"entryId": str(entry["entryId"]), "uk": entry["uk"], "en": entry["teacherEn"], **entry["aspect"]}
+                for entry in entries
+                if entry["aspect"] and entry["aspect"]["markerAgrees"] is False
+            ],
         },
     }
     input_versions = {
@@ -1270,6 +1506,10 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
             "textbookSentencesSha256": _sha256_lines(sorted(textbook_used)),
         },
         "vesum": _vesum_metadata(inputs.vesum_db),
+        "ulifAspect": {
+            "checkedVerbRows": len(ulif_aspect_rows),
+            "checkedVerbRowsSha256": _sha256_lines("\x1f".join(map(str, row)) for row in ulif_aspect_rows),
+        },
         "synonymVerdictsSha256": hashlib.sha256(inputs.synonym_verdicts.read_bytes()).hexdigest(),
     }
     return TeacherDeckBuild(deck, cloze, coverage, input_versions, public_lessons)
@@ -1324,11 +1564,22 @@ def mode_counts(deck: dict[str, Any], cloze: dict[str, Any]) -> dict[str, Any]:
         }
         for name in names
     }
+    aspect: dict[str, dict[str, dict[str, int]]] = {}
+    for shape, group in by_shape.items():
+        table: dict[str, dict[str, int]] = {}
+        for entry in group:
+            if entry.get("aspect"):
+                cell = table.setdefault(entry["aspect"]["basis"], {})
+                cell[entry["aspect"]["value"]] = cell.get(entry["aspect"]["value"], 0) + 1
+        aspect[shape] = {basis: dict(sorted(table[basis].items())) for basis in ASPECT_BASES if basis in table}
     return {
         "entries": len(entries),
         "singleWord": len(by_shape["single"]),
         "multiword": len(by_shape["multiword"]),
         "atlasJoined": sum(1 for entry in entries if entry["atlas"]),
+        "withoutProduction": sum(1 for entry in entries if not entry["cards"]["production"]),
+        "aspectPartnerEntries": sum(1 for entry in entries if entry.get("aspectPartners")),
+        "verbAspect": aspect,
         "entriesByMode": matrix,
         "items": {
             "cloze": len(cloze["cloze"]),
@@ -1460,6 +1711,85 @@ def render_published_set(
     }
     files[MANIFEST_FILE] = render_json(manifest)
     return files
+
+
+# --------------------------------------------------------------------------- lesson-sentence risk report
+
+REVIEW_FILE = "lesson-sentence-review.json"
+REVIEW_SCHEMA = "teacher-lesson-sentence-review"
+REVIEW_FLAGS = ("proper_noun_tokens", "vesum_unknown_tokens", "digits_or_contact")
+PROPER_NAME_TAGS = frozenset({"prop", "fname", "lname", "pname"})  # VESUM: pname = patronymic
+CONTACT_PATTERNS = (
+    ("email", re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")),
+    ("url", re.compile(r"(?:https?://|www\.)\S+|\b[\w-]+\.(?:com|net|org|ua|info|io|me)\b", re.IGNORECASE)),
+    ("phone", re.compile(r"\+?\d[\d\s().-]{5,}\d")),
+    ("digits", re.compile(r"\d+")),
+)
+
+
+def _contact_hits(sentence: str) -> list[dict[str, str]]:
+    hits: list[dict[str, str]] = []
+    taken: list[tuple[int, int]] = []
+    for kind, pattern in CONTACT_PATTERNS:
+        for match in pattern.finditer(sentence):
+            if any(start <= match.start() and match.end() <= end for start, end in taken):
+                continue
+            taken.append(match.span())
+            hits.append({"kind": kind, "text": match.group()})
+    return hits
+
+
+def lesson_sentence_flags(sentence: str, analyzer: FormAnalyzer) -> dict[str, list[Any]]:
+    """Deterministic privacy/language-review flags for one teacher-lesson sentence."""
+
+    proper: list[dict[str, Any]] = []
+    unknown: list[str] = []
+    for index, match in enumerate(UK_TOKEN_RE.finditer(sentence)):
+        token = match.group()
+        rows = analyzer.analyses(token)
+        reasons: list[str] = []
+        if index > 0 and token[:1].isupper():
+            reasons.append("capitalised-not-sentence-start")
+        tags = sorted({part for row in rows for part in row["tags"].split(":") if part in PROPER_NAME_TAGS})
+        reasons.extend(f"vesum:{tag}" for tag in tags)
+        if reasons:
+            proper.append({"token": token, "reasons": reasons})
+        if not rows:
+            unknown.append(token)
+    return {"proper_noun_tokens": proper, "vesum_unknown_tokens": unknown, "digits_or_contact": _contact_hits(sentence)}
+
+
+def lesson_sentence_review(build: TeacherDeckBuild, vesum_db: Path) -> dict[str, Any]:
+    """Every teacher-lesson cloze sentence with its flags (local review artifact, never published)."""
+
+    analyzer = FormAnalyzer(vesum_db)
+    analyzer.prefetch(token for row in build.public_lesson_sentences for token in _tokens(row["sentence"]))
+    by_id = {str(entry["entryId"]): entry for entry in build.deck["entries"]}
+    sentences = []
+    for row in build.public_lesson_sentences:
+        flags = lesson_sentence_flags(row["sentence"], analyzer)
+        sentences.append(
+            {
+                "clozeId": row["clozeId"],
+                "entryId": row["entryId"],
+                "entry": by_id[row["entryId"]]["uk"],
+                "lessonDate": row["lesson"],
+                "sentence": row["sentence"],
+                "flags": flags,
+            }
+        )
+    counts = {flag: sum(1 for row in sentences if row["flags"][flag]) for flag in REVIEW_FLAGS}
+    return {
+        "schema": REVIEW_SCHEMA,
+        "schemaVersion": SCHEMA_VERSION,
+        "deckVersion": build.deck["deckVersion"],
+        "note": (
+            "Local review artifact, never published. Lesson logs may hold the learner's own attempts: "
+            "flags are deterministic hints for the language review and the privacy scan, nothing is removed."
+        ),
+        "counts": {"sentences": len(sentences), "flaggedSentences": counts},
+        "sentences": sentences,
+    }
 
 
 def default_inputs() -> TeacherDeckInputs:

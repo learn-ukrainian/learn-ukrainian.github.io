@@ -43,6 +43,15 @@ Unchanged inputs give byte-identical files (`no-op: artifacts unchanged`).
 | `practice-cloze.teacher.json` | `atlas-practice-teacher-cloze` | yes | cloze items (`cloze[]`, `PracticeClozeItem`-compatible) |
 | `coverage.json` | `atlas-practice-teacher-coverage` | no | eligibility counts and residual lists with reasons |
 
+The refresh also writes `lesson-sentence-review.json` (`teacher-lesson-sentence-review`) next to these
+files. It is a local review artifact only — never in the manifest, the package or the release: one row
+per teacher-lesson cloze item (cloze id, entry, sentence, lesson date) with deterministic flags —
+`proper_noun_tokens` (capitalised tokens not at the sentence start, and tokens VESUM tags
+`prop`/`fname`/`lname`/`pname`), `vesum_unknown_tokens` (tokens unknown to VESUM's normative `forms`
+view, so forms marked `bad`/`obsc`/`subst` count as unknown) and `digits_or_contact` (digits, emails,
+phone- or URL-like strings). Lesson logs can hold the learner's own attempts; the language review and
+the privacy scan decide, nothing is removed automatically. The refresh prints the counts per flag.
+
 The first sync assigns `firstSeen`; later refreshes read the previous deck from the local set or,
 on a fresh machine, from the published asset. `npm run hydrate` runs
 `site/scripts/hydrate-teacher-deck.mjs`, which downloads the pinned package, verifies the gzip and
@@ -63,12 +72,16 @@ to `'`, whitespace collapsed, case-folded. Capitalisation variants of one word a
 | --- | --- |
 | `entryId` | `tt-` + first 12 hex of SHA-256(normalised key). Never depends on row position or English. |
 | `key` | normalised key (also the Atlas join key) |
-| `uk`, `en` | Ukrainian as written in the earliest row; the teacher's English — all distinct meanings of merged rows joined with `; ` |
+| `uk` | Ukrainian as written in the earliest row |
+| `teacherEn` | the teacher's English verbatim — all distinct meanings of merged rows joined with `; ` |
+| `en` | learner-facing English: `teacherEn` with the teacher's aspect markers removed (a meaning that becomes a duplicate is dropped) and, for a verb with a known aspect, the source label appended: `(impf.)`, `(pf.)` or `(impf./pf.)` |
+| `aspect` | `null` for non-verb entries, else `{value, basis, lemma, vesum, ulif, teacherMarker, markerAgrees}` (rule below) |
 | `firstSeen` | integer order key, newest = highest. Carried forward from the previous published deck; new keys get `max + 1, +2, …` in row order. First sync: the earliest row number. |
 | `sourceRows`, `sourceKeys` | table rows (1-based data rows) and exact spellings merged into the entry |
 | `multiword` | the Ukrainian contains whitespace |
 | `atlas` | `null` (no public article or homograph) or `{slug, pos, senseRule, senseIndex, identityConflict}` |
 | `conflicts` | ids of entries whose English overlaps (rule below); never grouped with this entry |
+| `aspectPartners` | ids of entries with otherwise identical English and the opposite source aspect; not an overlap, but never a cloze or synonym distractor (both forms can fit one sentence) |
 | `matching` | may take part in a matching round (group it only with entries not in `conflicts`) |
 | `cards` | the card identity contract below |
 
@@ -80,9 +93,9 @@ Presentations are views of the same card and update that card's state.
 | Card | Present when | Presentations |
 | --- | --- | --- |
 | `recognition` | always | UK→EN flashcard (`uk` → `en`); UK→EN meaning choice `cards.recognition.choice` (may be `null` = refused group) |
-| `production` | the entry's English overlaps no other entry | EN→UK flashcard (attempt before reveal); EN→UK choice `cards.production.choice` |
+| `production` | the entry's English overlaps no other entry (aspect partners are not overlaps) | EN→UK flashcard (attempt before reveal, prompt `en` with its aspect label); EN→UK choice `cards.production.choice` |
 | `cloze` | ≥1 cloze item | `cards.cloze.clozeIds` → items in the cloze file (≤3, teacher sentences first; rotate) |
-| `grammar` | single-word, Atlas-joined, no identity conflict, and data present | `cards.grammar.items[] = {mode, id}`; `mode` ∈ `stress`, `paradigm`, `classify`, `synonym`, `antonym`; `id` resolves in the deck's `stress[]`, `paradigm[]`, `classify[]` or `synonym[]` array (`synonym[]` holds both polarities) |
+| `grammar` | single-word, Atlas-joined, no identity conflict, and data present; a `classify` aspect set only when it equals the source aspect | `cards.grammar.items[] = {mode, id}`; `mode` ∈ `stress`, `paradigm`, `classify`, `synonym`, `antonym`; `id` resolves in the deck's `stress[]`, `paradigm[]`, `classify[]` or `synonym[]` array (`synonym[]` holds both polarities) |
 
 Choice items: `{choiceId, direction: "uk-en"|"en-uk", prompt, options[4]: {entryId, label, kind}}`
 with exactly one `kind: "answer"`. Options are unique, never equal the prompt, and never include
@@ -99,21 +112,38 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
 
 ## Rules
 
-- **Overlapping English.** Split `en` on `;` and `,`; lower-case; drop parenthetical text, a
-  leading `to ` and the articles a/an/the; collapse spaces. Two entries overlap when a part of one
-  equals, or is contained as whole words in, a part of the other. Aspect partners marked only by
-  `(impf)`/`(perf)` therefore overlap and get no EN→UK prompt.
+- **Verb aspect comes from the sources, never from the teacher's markers** (operator 2026-09-27).
+  Lookups: VESUM `forms_all` rows whose `lemma` is the word (verb rows give `imperf`/`perf` tags) and
+  `sources.db` `ulif_dictua_entries` rows with `homonym_checked = 1` (`дієслово недоконаного виду` =
+  imperf, `дієслово доконаного виду` = perf, `дієслово недоконаного і доконаного виду` = dual). A
+  single-word entry looks up its key; a phrase looks up its first token the sources know as a verb
+  lemma (its governing verb, `aspect.lemma`). A spelling that is also a non-verb lemma counts as the
+  verb only when the teacher's English is a verb meaning (all meanings start with `to ` or carry a
+  marker); a verb meaning no source knows gets `unknown` (basis `none`). Resolution (`basis`): both
+  sources name the same aspect → `agree`; only one source knows the lemma → `vesum-only` /
+  `ulif-only`; they disagree → `unknown` (`conflict`). VESUM lists a biaspectual verb as two lemmas
+  (imperf + perf), exactly like two homograph verbs, so VESUM imperf+perf with ULIF dual → `dual`
+  (`agree`); with ULIF naming both aspects on separate homonyms → `unknown` (`homograph`); VESUM
+  imperf+perf alone → `unknown`. `markerAgrees` compares the teacher's `(impf)`/`(perf)` with the
+  result (`null` when there is no marker or the aspect is unknown); a disagreement is only reported
+  (`aspectMarkerDisagreements`), it never stops the entry or drops its grammar modes.
+- **Overlapping English.** Split `en` on `;` and `,`; lower-case; drop parenthetical text (so the
+  aspect label), a leading `to ` and the articles a/an/the; collapse spaces. Two entries overlap when
+  a part of one equals, or is contained as whole words in, a part of the other — except when their
+  normalised parts are identical and their source aspects are imperf vs perf: those are aspect
+  partners, and each gets an EN→UK card whose prompt shows its label. Pairs with a `dual`/`unknown`
+  aspect or a merely contained meaning still overlap.
 - **Atlas senses** are the article's `enrichment.translation.en` glosses. One sense: usable. Several:
   usable only if exactly one shares a content word with the teacher's English. Otherwise synonym /
   antonym items and textbook cloze are withheld and the entry is listed in `senseReview`.
-- **Identity conflict** (no grammar modes): more than one public article for the key, or, for a
-  single-word entry, a teacher aspect marker that contradicts the Atlas POS or the VESUM aspect.
+- **Identity conflict** (no grammar modes): more than one public article for the key, or a single
+  word the sources know as a verb whose Atlas article is not a verb.
 - **Cloze.** Teacher-lesson sentences are compatible by provenance; textbook sentences need a
   usable Atlas sense. A single word is blanked only where every VESUM reading of the token belongs
   to the entry's lemma; a multiword entry only where the whole phrase occurs verbatim. Distractors
   are other deck entries of the same class with a VESUM form that fills every grammatical slot of
-  the answer form, never an entry with overlapping English or an Atlas synonym/antonym of the
-  answer; the choice is seeded from the entry id.
+  the answer form, never an entry with overlapping English, an aspect partner or an Atlas
+  synonym/antonym of the answer; the choice is seeded from the entry id.
 - **Synonym/antonym** items come only from approved pairs in
   `registry/lexicon/synonym_pair_verdicts.yaml` whose other lemma is a public Atlas article.
 
@@ -124,6 +154,9 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
   --docx "/path/to/master.docx" --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db
 ```
 
-It re-extracts the table and re-implements normalisation, ids and the overlap rule, then
-enforces the rules above and prints the eligibility matrix and the residual lists (no Atlas
-entry, identity conflicts, overlap-omitted EN→UK prompts, refused groups, no-cloze entries).
+It re-extracts the table and re-implements normalisation, ids, the VESUM/ULIF aspect lookup (with
+`--vesum-db` and `--sources-db`; otherwise the declared aspect is used and the output says so), the
+learner-facing English and the overlap rule, then enforces the rules above and prints the aspect
+counts, the number of entries without an EN→UK card, the eligibility matrix and the residual lists
+(no Atlas entry, identity conflicts, overlap-omitted EN→UK prompts, refused groups, no-cloze
+entries, unknown aspects, teacher markers that disagree with the sources).
