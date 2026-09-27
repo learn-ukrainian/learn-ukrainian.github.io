@@ -203,6 +203,34 @@ def test_kaikki_exact_readonly_and_alignment(tmp_path):
     assert sources.aligned_kaikki_gloss(result.raw["synthetic-absent"], "noun", True) == (None, "kaikki_absent")
 
 
+@pytest.mark.parametrize(
+    "gloss",
+    [
+        "(bad", "bad)", "[bad", "bad]", "(bad]", "[bad)",
+        "“bad", "bad”", '"bad',
+        ")bad", "]bad", "”bad", ",bad", ";bad", ".bad",
+        "мною",
+        # Copied from Kaikki side-db-v1 content_sha256
+        # 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5.
+        "“under”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)",
+        "“over”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)",
+        "“in front of”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)",
+    ],
+)
+def test_kaikki_refuses_each_malformed_gloss(gloss):
+    payload = {"pos": ["prep"], "glosses": [gloss]}
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
+
+
+def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
+    payload = {"pos": ["prep"], "glosses": ["under", "bad)"]}
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
+    payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (
+        'under (a roof); beneath "something" [figurative]', None
+    )
+
+
 def test_missing_kaikki_fails_closed_with_named_code(tmp_path):
     with sources.Sources(kaikki_db=tmp_path / "missing.sqlite") as api:
         with pytest.raises(FileNotFoundError, match=codes.SOURCE_UNAVAILABLE):

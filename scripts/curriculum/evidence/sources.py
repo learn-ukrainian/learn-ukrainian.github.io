@@ -17,6 +17,7 @@ import re
 import shutil
 import sqlite3
 import time
+import unicodedata
 import urllib.error
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
@@ -152,6 +153,34 @@ def _kaikki_path() -> Path:
     return resolve_main_root(REPO_ROOT) / "data/lexicon/side/kaikki.sqlite"
 
 
+def _well_formed_kaikki_gloss(gloss: str) -> bool:
+    """Refuse source fragments and usage notes before copying an English gloss."""
+    if gloss.lstrip().startswith((")", "]", "”", ",", ";", ".")):
+        return False
+    brackets: list[str] = []
+    curly_open = False
+    straight_quotes = 0
+    for char in gloss:
+        if "CYRILLIC" in unicodedata.name(char, ""):
+            return False
+        if char in "([":
+            brackets.append(char)
+        elif char in ")]":
+            if not brackets or brackets.pop() != {")": "(", "]": "["}[char]:
+                return False
+        elif char == "“":
+            if curly_open:
+                return False
+            curly_open = True
+        elif char == "”":
+            if not curly_open:
+                return False
+            curly_open = False
+        elif char == '"':
+            straight_quotes += 1
+    return not brackets and not curly_open and straight_quotes % 2 == 0
+
+
 def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
     """Only a single source POS can align with a VESUM store record."""
     if payload is None:
@@ -169,6 +198,8 @@ def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) ->
     glosses = payload.get("glosses")
     if not isinstance(glosses, list) or not glosses or not all(isinstance(g, str) and g for g in glosses):
         return None, "kaikki_no_gloss"
+    if not all(_well_formed_kaikki_gloss(gloss) for gloss in glosses):
+        return None, "kaikki_malformed"
     return "; ".join(glosses), None
 
 

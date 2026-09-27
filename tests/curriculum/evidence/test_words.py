@@ -1123,3 +1123,15 @@ def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_so
     assert "gloss_ref" not in second["store"]["words"][0]
     assert second["store"]["built_with"]["kaikki_content_sha256"] == "f" * 64
     assert second["store"]["built_with"]["kaikki_attribution"] == sources.KAIKKI_ATTRIBUTION
+
+    with sqlite3.connect(side) as conn:
+        conn.execute(
+            "UPDATE kaikki SET payload = ? WHERE lemma_key = ?",
+            (json.dumps({"pos": ["noun"], "glosses": ["first copied sense", "bad)"]}), "synthetic"),
+        )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
+        third = words.build_words("a1", request, evidence_dir=tmp_path / "third", sources_instance=api)
+    word = third["store"]["words"][0]
+    assert "gloss_en" not in word
+    assert "gloss_source" not in word
+    assert third["unglossed"] == [{"lemma": "synthetic", "pos": "noun", "reason": "kaikki_malformed"}]
