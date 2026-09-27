@@ -3268,6 +3268,13 @@ function LexiconPracticeIsland({
   const poolFilter = useCallback(
     (candidate: PracticeSelection) => {
       if (!sessionPoolAllowsCandidate(candidate, sessionPoolConstraints)) return false;
+      // #8713: 'antonym'/'homonym' index modes have no dedicated renderer and fall
+      // through to the same word<->meaning surface as 'choice' (isMeaningChoiceSurface),
+      // but unlike 'choice' their index list is never filtered to MC-eligible lemmas
+      // upstream. Apply the same eligibility rule the Choice tile already applies so
+      // Mixed never lands on a card `orderedChoiceOptions` can't build (the "No cards
+      // available" dead end).
+      if (isMeaningChoiceSurface(candidate) && !isMeaningMcEligible(candidate.lemma)) return false;
       // A weak-area focus session narrows the pool to items matching the tapped
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;

@@ -5258,6 +5258,101 @@ describe('LexiconPractice', () => {
       expect(feedback).toHaveTextContent('Неправильно. «книга» = book.');
     });
 
+    /**
+     * #8713: 'antonym'/'homonym' index modes have no dedicated renderer and fall
+     * through to the word<->meaning surface (isMeaningChoiceSurface), but their index
+     * list — unlike 'choice' — was never filtered to MC-eligible lemmas. Mixed could
+     * rank an ineligible antonym/homonym candidate first and render `orderedChoiceOptions`
+     * `[]`, landing on "No cards available for multiple choice right now" with no way
+     * forward. `knyha`/`robota`/`misto`/`shkola` stay in `deck.lexemes` (unfiltered by
+     * index.modes) purely as the eligible distractor pool `meaningDistractors` needs;
+     * only `knyha` (mode 'choice') and the ineligible fixture are actually selectable.
+     * CEFR is set so the ineligible candidate's `levelBias` (0, matches deck.level)
+     * beats the eligible 'choice' candidate's (matches nothing else about ranking —
+     * urgency and the mode-balance penalty already tie for a fresh, empty-history pool
+     * of exactly two modes) — pre-fix this deterministically wins the very first pick.
+     */
+    function mixedEligibilityDeck(deadMode: 'antonym' | 'homonym'): PracticeDeckData {
+      const base = sampleDeck();
+      const ineligible = lexeme(
+        'stuck-choice-surface',
+        'тихий',
+        'quiet',
+        { nominative: 'тихий', accusative: 'тихий', locative: 'тихому' },
+        { cefr: 'A1', meaningMcEligible: false },
+      );
+      return {
+        ...base,
+        level: 'A1',
+        lexemes: [...base.lexemes, ineligible],
+        index: [
+          ...base.index.map((item) => ({
+            ...item,
+            modes: item.lemmaId === 'knyha' ? (['choice'] as PracticeMode[]) : [],
+            cefr: 'C1',
+            hasCloze: false,
+            clozeIds: [],
+          })),
+          {
+            lemmaId: ineligible.lemmaId,
+            lemma: ineligible.lemma,
+            cefr: 'A1',
+            modes: [deadMode] as PracticeMode[],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: base.index.length,
+          },
+        ],
+        cloze: [],
+      };
+    }
+
+    test.each(['antonym', 'homonym'] as const)(
+      'Mixed never lands on "No cards available" when an MC-ineligible %s candidate ranks first (#8713)',
+      async (deadMode) => {
+        render(
+          <LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} autoStart initialMode="mixed" />,
+        );
+
+        await screen.findByTestId('practice-choice');
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+      },
+    );
+
+    test.each(['antonym', 'homonym'] as const)(
+      'a persisted %s stuck-Mixed session restores to a playable session, not the same dead end (#8713)',
+      async (deadMode) => {
+        writePracticeSessionSnapshot('mixed', {
+          sessionSeed: 12345,
+          history: [],
+          budget: 20,
+          completed: 3,
+          modeFilter: 'mixed',
+          level: 'A1',
+          deckId: 'all',
+          dateSeed: dateSeed(new Date()),
+          startedAt: Date.now(),
+          plannedTotal: 8,
+        });
+
+        // Resuming re-enters ensureDeck (needDrills for 'mixed'), which fetches this
+        // level's drill shards even though `initialDeck` already seeded the session —
+        // mock it so that fetch resolves instead of hitting the real network.
+        const { fn } = mockShardFetch({ A1: 0 });
+        vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+        const user = userEvent.setup();
+        render(<LexiconPractice initialDeck={mixedEligibilityDeck(deadMode)} />);
+
+        await user.click(await screen.findByTestId('practice-start-session'));
+
+        await screen.findByTestId('practice-choice');
+        expect(screen.queryByTestId('practice-choice-empty')).not.toBeInTheDocument();
+
+        localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+      },
+    );
+
     test('synonym mode: wrong pick teaches the prompt ↔ correct-option pair, not the word↔gloss pair (#6816)', async () => {
       // Before this fix, mode==='synonym' skipped choiceFeedbackFor (mode !== 'choice'/
       // 'antonym'/'homonym') AND classifyFeedbackFor (selection.classify unset) — handleChoice
