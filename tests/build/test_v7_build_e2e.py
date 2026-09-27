@@ -59,6 +59,11 @@ def test_v7_build_dry_run_emits_module_start() -> None:
     assert events[0]["event"] == "module_start"
     assert events[0]["level"] == "a1"
     assert events[0]["slug"] == "my-morning"
+    # A dry run with --worktree creates no worktree or branch (#8890): full
+    # branch/worktree state parity is proven in an isolated temporary
+    # repository (tests/build/test_v7_build_dry_run_worktree.py), which does
+    # not race with concurrent dispatch agents touching this shared checkout.
+    assert "No build worktree created — a dry run writes nothing (#8890)." in result.stdout
 
 
 def test_v7_build_dry_run_accepts_writer_alias() -> None:
