@@ -1231,6 +1231,63 @@ def test_stale_staging_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: 
     assert alive.exists(), "another live exporter's staging tree must not be touched"
 
 
+# ---------------------------------------------------------------------------
+# Heap peaks of work that touches the filesystem are traced in a fresh interpreter
+# (#8997). In-process, the peak also counts process-global tables that happen to
+# grow inside the window: pathlib interns every path component, and once earlier
+# tests (or the modules a CI shard collects) have filled CPython's interned-string
+# table, the next new name resizes it. In CI shard 1 that resize added 7.7 MB to
+# one ``--verify`` window: an allocation that follows test order, not the payload.
+# ---------------------------------------------------------------------------
+
+_TRACED_SCRIPT = """
+import gc, json, sys, tracemalloc
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.atlas import export_runtime_shards as ex
+kind, args = sys.argv[2], json.loads(sys.argv[3])
+out = Path(args["out"])
+if kind == "export":
+    run = lambda: ex.export_runtime_shards(db_path=Path(args["db"]), out_dir=out, **args["kwargs"])
+elif kind == "verify":
+    run = lambda: ex.verify_tree(out, "atlas")
+else:
+    from tests.test_export_runtime_shards import _shared_key_alias_index
+    index, _records = _shared_key_alias_index(args["rows"], terminal=args["terminal"])
+    del _records
+    def open_object(relative):
+        path = out / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path.open("wb")
+    run = lambda: ex.build_search_family_shards(
+        index, family="aliases", data_version="v-test", schema=ex.SEARCH_ALIAS_SCHEMA,
+        open_object=open_object, **args["kwargs"],
+    )
+# One-time, corpus-independent setup is not the measured work's memory.
+ex.check_stored_gzip_runtime()
+ex._json_backend()
+gc.collect()
+tracemalloc.start()
+try:
+    run()
+    error = None
+except ex.ExportError as exc:
+    error = str(exc)
+print(json.dumps({"error": error, "peak": tracemalloc.get_traced_memory()[1]}))
+"""
+
+
+def _traced_in_fresh_interpreter(kind: str, **args) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one ``export``/``verify``/``aliases`` run."""
+    result = subprocess.run(
+        [sys.executable, "-c", _TRACED_SCRIPT, str(ROOT), kind, json.dumps(args, default=str)],
+        cwd=ROOT, capture_output=True, text=True, check=False, timeout=120,
+    )
+    assert result.returncode == 0, (kind, result.returncode, result.stderr)
+    measured = json.loads(result.stdout.splitlines()[-1])
+    return measured["error"], measured["peak"]
+
+
 def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
     """Peak Python heap stays a small fraction of the payload volume being exported."""
     db = _make_source_db(tmp_path / "big.db", records=240, filler_chars=60_000, seed=5)
@@ -1238,12 +1295,10 @@ def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
         len(row[0]) for row in sqlite3.connect(db).execute("SELECT payload_json FROM article_payloads")
     )
     assert payload_bytes > 14_000_000
-    tracemalloc.start()
-    try:
-        _export(db, tmp_path / "out", compression_level=1, entry_max_gzip_bytes=150_000)
-        _, peak = tracemalloc.get_traced_memory()
-    finally:
-        tracemalloc.stop()
+    kwargs = {"include_decks": False, "deck_dir": None, "verify": True, "compression_level": 1,
+              "entry_max_gzip_bytes": 150_000}
+    error, peak = _traced_in_fresh_interpreter("export", db=db, out=tmp_path / "out", kwargs=kwargs)
+    assert error is None
     assert peak < payload_bytes * 0.25, f"peak {peak} vs payload {payload_bytes}"
 
 
@@ -1752,15 +1807,9 @@ def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
     db = _make_source_db(tmp_path / "gloss.db", records=700, filler_chars=1, gloss_chars=20_000)
     glosses = sum(len(r[0] or "") for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
     assert glosses > 10_000_000
-    tracemalloc.start()
-    try:
-        export_runtime_shards(
-            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1,
-            verify=True,
-        )
-        _, peak = tracemalloc.get_traced_memory()
-    finally:
-        tracemalloc.stop()
+    kwargs = {"include_decks": False, "deck_dir": None, "compression_level": 1, "verify": True}
+    error, peak = _traced_in_fresh_interpreter("export", db=db, out=tmp_path / "out", kwargs=kwargs)
+    assert error is None
     assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"
 
 
@@ -1798,29 +1847,10 @@ def _search_shard_raw(schema: str, prefix: str, records: list[dict], *, terminal
     )
 
 
-def _build_aliases_traced(index: SearchFamilyIndex, out: Path, *, level: int) -> tuple[str | None, int]:
+def _build_aliases_traced(rows: int, out: Path, *, terminal: bool, level: int) -> tuple[str | None, int]:
     """(ExportError text or None, traced heap peak) of one search-family build into ``out``."""
-
-    def open_object(relative: str):
-        path = out / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        return path.open("wb")
-
-    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary: not the bucket's memory
-    gc.collect()
-    tracemalloc.start()
-    try:
-        try:
-            exporter.build_search_family_shards(
-                index, family="aliases", data_version="v-test", max_gzip_bytes=_SHARED_KEY_CAP,
-                compression_level=level, schema=exporter.SEARCH_ALIAS_SCHEMA, open_object=open_object,
-            )
-            error = None
-        except ExportError as exc:
-            error = str(exc)
-        return error, tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
+    kwargs = {"max_gzip_bytes": _SHARED_KEY_CAP, "compression_level": level}
+    return _traced_in_fresh_interpreter("aliases", rows=rows, terminal=terminal, out=out, kwargs=kwargs)
 
 
 @pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
@@ -1831,12 +1861,12 @@ def test_uncapped_search_bucket_is_exact_and_heap_does_not_grow_with_it(
     peaks: dict[int, int] = {}
     bodies: dict[int, int] = {}
     for rows in (250, 1_000):
-        index, records = _shared_key_alias_index(rows, terminal=terminal)
+        _index, records = _shared_key_alias_index(rows, terminal=terminal)
         raw = _search_shard_raw(exporter.SEARCH_ALIAS_SCHEMA, "a", records, terminal=terminal)
         expected = gzip_bytes(raw, compression_level=level)
         assert len(expected) > 20 * _SHARED_KEY_CAP
         out = tmp_path / f"rows{rows}"
-        error, peaks[rows] = _build_aliases_traced(index, out, level=level)
+        error, peaks[rows] = _build_aliases_traced(rows, out, terminal=terminal, level=level)
         bodies[rows] = len(raw)
         if terminal:
             assert error is None
@@ -1880,31 +1910,15 @@ def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: i
 
 def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
     """(ExportError text or None, traced heap peak) of one full export *with* ``--verify``."""
-    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary
-    gc.collect()
-    tracemalloc.start()
-    try:
-        try:
-            export_runtime_shards(
-                db_path=db, out_dir=out, include_decks=False, deck_dir=None, compression_level=level,
-                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP, verify=True,
-            )
-            error = None
-        except ExportError as exc:
-            error = str(exc)
-        return error, tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
+    kwargs = {"include_decks": False, "deck_dir": None, "compression_level": level,
+              "entry_max_gzip_bytes": 65_536, "search_max_gzip_bytes": _SHARED_KEY_CAP, "verify": True}
+    return _traced_in_fresh_interpreter("export", db=db, out=out, kwargs=kwargs)
 
 
 def _verify_traced(out: Path) -> int:
-    gc.collect()
-    tracemalloc.start()
-    try:
-        verify_tree(out, "atlas")
-        return tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
+    error, peak = _traced_in_fresh_interpreter("verify", out=out)
+    assert error is None
+    return peak
 
 
 @pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
