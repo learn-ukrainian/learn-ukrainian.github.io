@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-01-21" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,10 +116,10 @@
   <header class="hero">
     <div class="title-block">
       <h1>RFC-001: Nine-Phase Module Workflow</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+      <div class="sub">Migrated from Markdown on 2026-01-21</div>
     </div>
     <div class="meta">
-      <div>Source: RFC-001-nine-phase-workflow.md</div>
+      <div>Source: docs/proposals/RFC-001-nine-phase-workflow.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
@@ -143,15 +143,52 @@
 <hr />
 <h2>Problem Statement</h2>
 <h3>Current State</h3>
-<p>| File | Lines | Purpose |
-|------|-------|---------|
-| stage-1-skeleton.md | 160 | Create meta |
-| stage-2-content.md | 296 | Write prose |
-| stage-3-activities.md | 858 | Create activities |
-| stage-4-review-fix.md | 868 | Validate EVERYTHING |
-| module-stage-<em>.md | 808 | Command wrappers |
-| review-content</em>.md | 2,879 | Quality checks |
-| <strong>TOTAL</strong> | <strong>~6,400</strong> | |</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Lines</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stage-1-skeleton.md</td>
+<td>160</td>
+<td>Create meta</td>
+</tr>
+<tr>
+<td>stage-2-content.md</td>
+<td>296</td>
+<td>Write prose</td>
+</tr>
+<tr>
+<td>stage-3-activities.md</td>
+<td>858</td>
+<td>Create activities</td>
+</tr>
+<tr>
+<td>stage-4-review-fix.md</td>
+<td>868</td>
+<td>Validate EVERYTHING</td>
+</tr>
+<tr>
+<td>module-stage-*.md</td>
+<td>808</td>
+<td>Command wrappers</td>
+</tr>
+<tr>
+<td>review-content*.md</td>
+<td>2,879</td>
+<td>Quality checks</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>~6,400</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h3>Core Issues</h3>
 <ol>
 <li>
@@ -195,17 +232,72 @@
 └─────────────────┘     └─────────────────┘
 </code></pre>
 <h3>Phase Descriptions</h3>
-<p>| Phase | Creates | Reads | Validates |
-|-------|---------|-------|-----------|
-| <strong>1. module-meta</strong> | <code>meta/{slug}.yaml</code> | Curriculum plan, outline | - |
-| <strong>2. module-meta-qa</strong> | - | meta.yaml | Required fields, word targets, objectives, activity hints |
-| <strong>3. module-lesson</strong> | <code>{slug}.md</code> | meta.yaml (LOCKED) | - |
-| <strong>4. module-lesson-qa</strong> | - | meta.yaml, {slug}.md | Word count, sections, richness, naturalness, no AI contamination |
-| <strong>5. module-act</strong> | <code>activities/{slug}.yaml</code> | meta + content (LOCKED) | - |
-| <strong>6. module-act-qa</strong> | - | All above | Schema, counts, density, types, format rules |
-| <strong>7. module-integrate</strong> | MDX | All above (LOCKED) | Cross-file alignment, MDX generation |
-| <strong>8. module-vocab</strong> | <code>vocabulary/{slug}.yaml</code> | All files | - |
-| <strong>9. module-vocab-qa</strong> | - | All files | Schema, counts, integration, uniqueness |</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Creates</th>
+<th>Reads</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. module-meta</strong></td>
+<td><code>meta/{slug}.yaml</code></td>
+<td>Curriculum plan, outline</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>2. module-meta-qa</strong></td>
+<td>-</td>
+<td>meta.yaml</td>
+<td>Required fields, word targets, objectives, activity hints</td>
+</tr>
+<tr>
+<td><strong>3. module-lesson</strong></td>
+<td><code>{slug}.md</code></td>
+<td>meta.yaml (LOCKED)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>4. module-lesson-qa</strong></td>
+<td>-</td>
+<td>meta.yaml, {slug}.md</td>
+<td>Word count, sections, richness, naturalness, no AI contamination</td>
+</tr>
+<tr>
+<td><strong>5. module-act</strong></td>
+<td><code>activities/{slug}.yaml</code></td>
+<td>meta + content (LOCKED)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>6. module-act-qa</strong></td>
+<td>-</td>
+<td>All above</td>
+<td>Schema, counts, density, types, format rules</td>
+</tr>
+<tr>
+<td><strong>7. module-integrate</strong></td>
+<td>MDX</td>
+<td>All above (LOCKED)</td>
+<td>Cross-file alignment, MDX generation</td>
+</tr>
+<tr>
+<td><strong>8. module-vocab</strong></td>
+<td><code>vocabulary/{slug}.yaml</code></td>
+<td>All files</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>9. module-vocab-qa</strong></td>
+<td>-</td>
+<td>All files</td>
+<td>Schema, counts, integration, uniqueness</td>
+</tr>
+</tbody>
+</table>
 <h3>Locking Mechanism</h3>
 <p><strong>Implementation:</strong> Instruction-based, not tooling-based.</p>
 <p>Each phase prompt explicitly states:</p>
@@ -285,14 +377,47 @@ sources:
 </code></pre>
 <h3>Phase 2: module-meta-qa</h3>
 <p><strong>Validates:</strong></p>
-<p>| Check | Source | Pass Criteria |
-|-------|--------|---------------|
-| Required fields | schema | All present |
-| word_target | config.py | Within level range (B2: 1000-1500) |
-| objectives | manual | Use measurable verbs (describe, explain, analyze, compare) |
-| content_outline | check_outline_compliance | Each section has word_target |
-| activity_hints | check_seminar_meta_requirements | Match pedagogy for module type |
-| sources | manual | At least 2 listed |</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Source</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Required fields</td>
+<td>schema</td>
+<td>All present</td>
+</tr>
+<tr>
+<td>word_target</td>
+<td>config.py</td>
+<td>Within level range (B2: 1000-1500)</td>
+</tr>
+<tr>
+<td>objectives</td>
+<td>manual</td>
+<td>Use measurable verbs (describe, explain, analyze, compare)</td>
+</tr>
+<tr>
+<td>content_outline</td>
+<td>check_outline_compliance</td>
+<td>Each section has word_target</td>
+</tr>
+<tr>
+<td>activity_hints</td>
+<td>check_seminar_meta_requirements</td>
+<td>Match pedagogy for module type</td>
+</tr>
+<tr>
+<td>sources</td>
+<td>manual</td>
+<td>At least 2 listed</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Output:</strong> PASS or list of violations with fix instructions.</p>
 <h3>Phase 3: module-lesson</h3>
 <p><strong>Creates:</strong> <code>{slug}.md</code></p>
@@ -307,20 +432,77 @@ sources:
 <p><strong>Output:</strong> Markdown prose following template structure.</p>
 <h3>Phase 4: module-lesson-qa</h3>
 <p><strong>Validates:</strong></p>
-<p>| Check | Source | Pass Criteria |
-|-------|--------|---------------|
-| Word count | evaluate_word_count | Within 10% of target |
-| Sections | check_outline_compliance | Match meta.content_outline |
-| Cultural callouts | evaluate_engagement | Present for cultural/history modules |
-| Russianisms | check_content_quality | None detected |
-| AI contamination | AI_CONTAMINATION_PATTERNS | None detected |
-| Political errors | validate_tone | No &quot;The Ukraine&quot;, &quot;Kiev&quot; |
-| Richness | evaluate_richness | Score ≥ 7/10 |
-| Naturalness | evaluate_naturalness | Score ≥ 8/10 |
-| Markdown | check_markdown_format | Valid structure |
-| Section order | check_section_order | Matches template |
-| Forbidden patterns | check_content_quality | None present |
-| State standard | check_state_standard_compliance | Compliant |</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Source</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Word count</td>
+<td>evaluate_word_count</td>
+<td>Within 10% of target</td>
+</tr>
+<tr>
+<td>Sections</td>
+<td>check_outline_compliance</td>
+<td>Match meta.content_outline</td>
+</tr>
+<tr>
+<td>Cultural callouts</td>
+<td>evaluate_engagement</td>
+<td>Present for cultural/history modules</td>
+</tr>
+<tr>
+<td>Russianisms</td>
+<td>check_content_quality</td>
+<td>None detected</td>
+</tr>
+<tr>
+<td>AI contamination</td>
+<td>AI_CONTAMINATION_PATTERNS</td>
+<td>None detected</td>
+</tr>
+<tr>
+<td>Political errors</td>
+<td>validate_tone</td>
+<td>No &quot;The Ukraine&quot;, &quot;Kiev&quot;</td>
+</tr>
+<tr>
+<td>Richness</td>
+<td>evaluate_richness</td>
+<td>Score ≥ 7/10</td>
+</tr>
+<tr>
+<td>Naturalness</td>
+<td>evaluate_naturalness</td>
+<td>Score ≥ 8/10</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>check_markdown_format</td>
+<td>Valid structure</td>
+</tr>
+<tr>
+<td>Section order</td>
+<td>check_section_order</td>
+<td>Matches template</td>
+</tr>
+<tr>
+<td>Forbidden patterns</td>
+<td>check_content_quality</td>
+<td>None present</td>
+</tr>
+<tr>
+<td>State standard</td>
+<td>check_state_standard_compliance</td>
+<td>Compliant</td>
+</tr>
+</tbody>
+</table>
 <p><strong>NOT validated here (no activities yet):</strong></p>
 <ul>
 <li>Activity counts</li>
@@ -339,22 +521,87 @@ sources:
 </ul>
 <h3>Phase 6: module-act-qa</h3>
 <p><strong>Validates:</strong></p>
-<p>| Check | Source | Pass Criteria |
-|-------|--------|---------------|
-| YAML schema | check_activity_yaml_schema | Valid |
-| Activity count | evaluate_activity_count | Meets minimum |
-| Item density | evaluate_density | Per guidelines |
-| Type variety | evaluate_unique_types | Required types present |
-| Priority types | evaluate_priority_types | Level-appropriate |
-| mark-the-words | check_mark_the_words_format | Correct format |
-| error-correction | check_error_correction_format | Correct format |
-| cloze syntax | check_cloze_syntax_errors | Valid |
-| unjumble | check_unjumble_word_match | Words match |
-| reading-analysis | check_seminar_reading_pairing | Properly linked |
-| external URLs | check_external_resources | Valid and accessible |
-| naturalness | evaluate_naturalness | Score ≥ 7/10 |
-| English hints | check_english_hints_in_activities | None in B2+ |
-| morpheme patterns | check_morpheme_patterns | Valid |</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Source</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YAML schema</td>
+<td>check_activity_yaml_schema</td>
+<td>Valid</td>
+</tr>
+<tr>
+<td>Activity count</td>
+<td>evaluate_activity_count</td>
+<td>Meets minimum</td>
+</tr>
+<tr>
+<td>Item density</td>
+<td>evaluate_density</td>
+<td>Per guidelines</td>
+</tr>
+<tr>
+<td>Type variety</td>
+<td>evaluate_unique_types</td>
+<td>Required types present</td>
+</tr>
+<tr>
+<td>Priority types</td>
+<td>evaluate_priority_types</td>
+<td>Level-appropriate</td>
+</tr>
+<tr>
+<td>mark-the-words</td>
+<td>check_mark_the_words_format</td>
+<td>Correct format</td>
+</tr>
+<tr>
+<td>error-correction</td>
+<td>check_error_correction_format</td>
+<td>Correct format</td>
+</tr>
+<tr>
+<td>cloze syntax</td>
+<td>check_cloze_syntax_errors</td>
+<td>Valid</td>
+</tr>
+<tr>
+<td>unjumble</td>
+<td>check_unjumble_word_match</td>
+<td>Words match</td>
+</tr>
+<tr>
+<td>reading-analysis</td>
+<td>check_seminar_reading_pairing</td>
+<td>Properly linked</td>
+</tr>
+<tr>
+<td>external URLs</td>
+<td>check_external_resources</td>
+<td>Valid and accessible</td>
+</tr>
+<tr>
+<td>naturalness</td>
+<td>evaluate_naturalness</td>
+<td>Score ≥ 7/10</td>
+</tr>
+<tr>
+<td>English hints</td>
+<td>check_english_hints_in_activities</td>
+<td>None in B2+</td>
+</tr>
+<tr>
+<td>morpheme patterns</td>
+<td>check_morpheme_patterns</td>
+<td>Valid</td>
+</tr>
+</tbody>
+</table>
 <h3>Phase 7: module-integrate</h3>
 <blockquote>
 <p><strong>CRITICAL:</strong> This phase deploys the module to the website. Activities and content are LOCKED at this point. Vocabulary enrichment happens after deployment, allowing batch processing across modules.</p>
@@ -362,13 +609,36 @@ sources:
 <p><strong>Creates:</strong> MDX for Docusaurus</p>
 <p><strong>Input:</strong> meta.yaml, {slug}.md, activities.yaml (all LOCKED)</p>
 <p><strong>Validates:</strong></p>
-<p>| Check | Description |
-|-------|-------------|
-| Meta-content alignment | content_outline headings match {slug}.md sections |
-| Meta-activities alignment | activity_hints types present in activities.yaml |
-| Content-activities alignment | Activities reference content appropriately |
-| File completeness | All 3 files exist and are non-empty |
-| MDX generation | <code>npm run pipeline</code> succeeds |</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Meta-content alignment</td>
+<td>content_outline headings match {slug}.md sections</td>
+</tr>
+<tr>
+<td>Meta-activities alignment</td>
+<td>activity_hints types present in activities.yaml</td>
+</tr>
+<tr>
+<td>Content-activities alignment</td>
+<td>Activities reference content appropriately</td>
+</tr>
+<tr>
+<td>File completeness</td>
+<td>All 3 files exist and are non-empty</td>
+</tr>
+<tr>
+<td>MDX generation</td>
+<td><code>npm run pipeline</code> succeeds</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Output:</strong> PASS (deployed to website) or FAIL with specific alignment issues.</p>
 <h3>Phase 8: module-vocab</h3>
 <p><strong>Creates:</strong> <code>vocabulary/{slug}.yaml</code></p>
@@ -388,40 +658,140 @@ sources:
 <p><strong>Note:</strong> Vocabulary extraction can be done in batch across multiple modules since it happens after deployment. This allows working on modules out of sequence.</p>
 <h3>Phase 9: module-vocab-qa</h3>
 <p><strong>Validates:</strong></p>
-<p>| Check | Source | Pass Criteria |
-|-------|--------|---------------|
-| Schema | vocabulary schema | Valid structure |
-| Count | evaluate_vocab | Within range for level |
-| Integration | check_vocabulary_integration | Words appear in content or activities |
-| Uniqueness | cumulative DB check | Words are NEW to level |
-| IPA format | format check | Valid IPA |
-| Duplicates | script | None |</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Source</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema</td>
+<td>vocabulary schema</td>
+<td>Valid structure</td>
+</tr>
+<tr>
+<td>Count</td>
+<td>evaluate_vocab</td>
+<td>Within range for level</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>check_vocabulary_integration</td>
+<td>Words appear in content or activities</td>
+</tr>
+<tr>
+<td>Uniqueness</td>
+<td>cumulative DB check</td>
+<td>Words are NEW to level</td>
+</tr>
+<tr>
+<td>IPA format</td>
+<td>format check</td>
+<td>Valid IPA</td>
+</tr>
+<tr>
+<td>Duplicates</td>
+<td>script</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Output:</strong> PASS (vocabulary complete) or FAIL with specific issues.</p>
 <hr />
 <h2>Check Distribution</h2>
 <h3>From Current stage-4-review-fix.md</h3>
-<p>| Current Location | New Phase |
-|------------------|-----------|
-| Required metadata validation | module-meta-qa |
-| Word count checks | module-lesson-qa |
-| Outline compliance | module-lesson-qa |
-| Content quality (Russianisms, AI) | module-lesson-qa |
-| Richness/naturalness | module-lesson-qa |
-| Activity schema | module-act-qa |
-| Activity counts/density | module-act-qa |
-| Activity format checks | module-act-qa |
-| Cross-file alignment | module-integrate |
-| Vocabulary schema | module-vocab-qa |
-| Vocabulary integration | module-vocab-qa |</p>
+<table>
+<thead>
+<tr>
+<th>Current Location</th>
+<th>New Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Required metadata validation</td>
+<td>module-meta-qa</td>
+</tr>
+<tr>
+<td>Word count checks</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>Outline compliance</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>Content quality (Russianisms, AI)</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>Richness/naturalness</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>Activity schema</td>
+<td>module-act-qa</td>
+</tr>
+<tr>
+<td>Activity counts/density</td>
+<td>module-act-qa</td>
+</tr>
+<tr>
+<td>Activity format checks</td>
+<td>module-act-qa</td>
+</tr>
+<tr>
+<td>Cross-file alignment</td>
+<td>module-integrate</td>
+</tr>
+<tr>
+<td>Vocabulary schema</td>
+<td>module-vocab-qa</td>
+</tr>
+<tr>
+<td>Vocabulary integration</td>
+<td>module-vocab-qa</td>
+</tr>
+</tbody>
+</table>
 <h3>From review-content.md</h3>
-<p>| Current Section | New Phase |
-|-----------------|-----------|
-| §0 Template compliance | module-meta-qa + module-lesson-qa |
-| §1-§6 Quality scores | module-lesson-qa |
-| §7 Word salad check | module-lesson-qa |
-| §8a-§8g Activity checks | module-act-qa |
-| §9 Red flags | module-lesson-qa + module-act-qa |
-| §10-§15 Richness checks | module-lesson-qa |</p>
+<table>
+<thead>
+<tr>
+<th>Current Section</th>
+<th>New Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>§0 Template compliance</td>
+<td>module-meta-qa + module-lesson-qa</td>
+</tr>
+<tr>
+<td>§1-§6 Quality scores</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>§7 Word salad check</td>
+<td>module-lesson-qa</td>
+</tr>
+<tr>
+<td>§8a-§8g Activity checks</td>
+<td>module-act-qa</td>
+</tr>
+<tr>
+<td>§9 Red flags</td>
+<td>module-lesson-qa + module-act-qa</td>
+</tr>
+<tr>
+<td>§10-§15 Richness checks</td>
+<td>module-lesson-qa</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>Implementation Plan</h2>
 <h3>File Changes</h3>
@@ -459,24 +829,97 @@ sources:
         └── vocab_validation.py # Extract vocab-specific checks
 </code></pre>
 <h3>Task Breakdown</h3>
-<p>| Task | Effort | Dependency |
-|------|--------|------------|
-| Create phase directory structure | S | - |
-| Write module-meta phase prompt | M | - |
-| Write module-meta-qa phase prompt | M | module-meta |
-| Write module-lesson phase prompt | M | - |
-| Write module-lesson-qa phase prompt | L | module-lesson |
-| Write module-act phase prompt | M | - |
-| Write module-act-qa phase prompt | L | module-act |
-| Write module-vocab phase prompt | M | - |
-| Write module-vocab-qa phase prompt | M | module-vocab |
-| Write module-integrate phase prompt | M | All above |
-| Create 9 command wrappers | S | All prompts |
-| Add --phase flag to audit_module.py | M | - |
-| Extract check modules | L | --phase flag |
-| Test on 3 hist modules | L | All above |
-| Document new workflow | M | Testing complete |
-| Update CLAUDE.md | S | Documentation |</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Effort</th>
+<th>Dependency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create phase directory structure</td>
+<td>S</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Write module-meta phase prompt</td>
+<td>M</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Write module-meta-qa phase prompt</td>
+<td>M</td>
+<td>module-meta</td>
+</tr>
+<tr>
+<td>Write module-lesson phase prompt</td>
+<td>M</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Write module-lesson-qa phase prompt</td>
+<td>L</td>
+<td>module-lesson</td>
+</tr>
+<tr>
+<td>Write module-act phase prompt</td>
+<td>M</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Write module-act-qa phase prompt</td>
+<td>L</td>
+<td>module-act</td>
+</tr>
+<tr>
+<td>Write module-vocab phase prompt</td>
+<td>M</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Write module-vocab-qa phase prompt</td>
+<td>M</td>
+<td>module-vocab</td>
+</tr>
+<tr>
+<td>Write module-integrate phase prompt</td>
+<td>M</td>
+<td>All above</td>
+</tr>
+<tr>
+<td>Create 9 command wrappers</td>
+<td>S</td>
+<td>All prompts</td>
+</tr>
+<tr>
+<td>Add --phase flag to audit_module.py</td>
+<td>M</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Extract check modules</td>
+<td>L</td>
+<td>--phase flag</td>
+</tr>
+<tr>
+<td>Test on 3 hist modules</td>
+<td>L</td>
+<td>All above</td>
+</tr>
+<tr>
+<td>Document new workflow</td>
+<td>M</td>
+<td>Testing complete</td>
+</tr>
+<tr>
+<td>Update CLAUDE.md</td>
+<td>S</td>
+<td>Documentation</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Effort key:</strong> S = Small (&lt; 1 hour), M = Medium (1-3 hours), L = Large (3+ hours)</p>
 <hr />
 <h2>Migration Plan</h2>
@@ -537,12 +980,32 @@ sources:
 <hr />
 <h2>Success Criteria</h2>
 <h3>Quantitative</h3>
-<p>| Metric | Target |
-|--------|--------|
-| Prompt size (each phase) | &lt; 200 lines |
-| First-pass audit rate | &gt; 70% (vs current ~40%) |
-| Meta modification attempts | 0 (locked phases) |
-| Average revisions per module | &lt; 3 (vs current ~5) |</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prompt size (each phase)</td>
+<td>&lt; 200 lines</td>
+</tr>
+<tr>
+<td>First-pass audit rate</td>
+<td>&gt; 70% (vs current ~40%)</td>
+</tr>
+<tr>
+<td>Meta modification attempts</td>
+<td>0 (locked phases)</td>
+</tr>
+<tr>
+<td>Average revisions per module</td>
+<td>&lt; 3 (vs current ~5)</td>
+</tr>
+</tbody>
+</table>
 <h3>Qualitative</h3>
 <ul>
 <li>Agents read and follow complete phase prompts</li>
@@ -552,12 +1015,42 @@ sources:
 </ul>
 <hr />
 <h2>Risks and Mitigations</h2>
-<p>| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| More overhead for simple modules | Medium | Low | Only apply to content-heavy tracks |
-| Prompt duplication across phases | Medium | Medium | Shared reference docs, not inline content |
-| Phase locking feels restrictive | Low | Medium | Clear escalation path for genuine blockers |
-| Integration phase catches many issues | Medium | High | Strong QA in earlier phases |</p>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>More overhead for simple modules</td>
+<td>Medium</td>
+<td>Low</td>
+<td>Only apply to content-heavy tracks</td>
+</tr>
+<tr>
+<td>Prompt duplication across phases</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Shared reference docs, not inline content</td>
+</tr>
+<tr>
+<td>Phase locking feels restrictive</td>
+<td>Low</td>
+<td>Medium</td>
+<td>Clear escalation path for genuine blockers</td>
+</tr>
+<tr>
+<td>Integration phase catches many issues</td>
+<td>Medium</td>
+<td>High</td>
+<td>Strong QA in earlier phases</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>Design Decisions</h2>
 <ol>
@@ -577,15 +1070,44 @@ sources:
 <p>See <code>docs/dev/PHASE-WORKFLOW-ANALYSIS.md</code> for the complete mapping of all 42 current checks to the proposed 9 phases.</p>
 <hr />
 <h2>Changelog</h2>
-<p>| Date | Change |
-|------|--------|
-| 2026-01-21 | Initial draft |
-| 2026-01-21 | Add Phase Rewind Protocol (Gemini feedback) |
-| 2026-01-21 | Decide: no orchestrator command for now (Gemini feedback) |
-| 2026-01-21 | Emphasize Phase 9 as critical addition (Gemini feedback) |
-| 2026-01-21 | Update migration: all levels will migrate, not just tracks |
-| 2026-01-24 | Reorder phases: integrate at 7, vocab at 8-9 (enables batch vocab after deploy) |
-| 2026-01-24 | Status: Draft → Implemented |</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Initial draft</td>
+</tr>
+<tr>
+<td>2026-01-21</td>
+<td>Add Phase Rewind Protocol (Gemini feedback)</td>
+</tr>
+<tr>
+<td>2026-01-21</td>
+<td>Decide: no orchestrator command for now (Gemini feedback)</td>
+</tr>
+<tr>
+<td>2026-01-21</td>
+<td>Emphasize Phase 9 as critical addition (Gemini feedback)</td>
+</tr>
+<tr>
+<td>2026-01-21</td>
+<td>Update migration: all levels will migrate, not just tracks</td>
+</tr>
+<tr>
+<td>2026-01-24</td>
+<td>Reorder phases: integrate at 7, vocab at 8-9 (enables batch vocab after deploy)</td>
+</tr>
+<tr>
+<td>2026-01-24</td>
+<td>Status: Draft → Implemented</td>
+</tr>
+</tbody>
+</table>
 
   </main>
 </div>

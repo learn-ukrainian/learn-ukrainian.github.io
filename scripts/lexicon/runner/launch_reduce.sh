@@ -48,7 +48,7 @@ if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run 
     --repo "$REPO" \
     --work-dir "$WORK_DIR" \
     --network-cache "$WORK_DIR/network-cache.sqlite" \
-    --cohort "$REPO/data/lexicon/cohort-20k-20260717.txt" \
+    --cohort "$REPO/registry/lexicon/cohort-20k-20260717.txt" \
     --require-memory-cap \
     "${EXTRA_ARGS[@]}" >> "$LOG" 2>&1 &
   wrapper_pid=$!
@@ -76,7 +76,7 @@ nohup /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \
   --repo "$REPO" \
   --work-dir "$WORK_DIR" \
   --network-cache "$WORK_DIR/network-cache.sqlite" \
-  --cohort "$REPO/data/lexicon/cohort-20k-20260717.txt" \
+  --cohort "$REPO/registry/lexicon/cohort-20k-20260717.txt" \
   --require-memory-cap \
   "${EXTRA_ARGS[@]}" >> "$LOG" 2>&1 &
 printf '%s\n' "$!" > "$PID_FILE"

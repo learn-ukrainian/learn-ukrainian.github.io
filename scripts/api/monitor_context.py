@@ -274,6 +274,7 @@ def _roots(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
+    textbooks_dir: Path,
 ) -> MonitorRoots:
     image_dir = project_root / "data" / "textbook_images"
     return MonitorRoots(
@@ -289,7 +290,7 @@ def _roots(
         pid_dir=project_root / ".mcp" / "servers" / "message-broker" / "pids",
         effective_roots=_effective_roots(project_root),
         images_dir=image_dir,
-        textbooks_dir=project_root / "data" / "textbooks",
+        textbooks_dir=textbooks_dir,
         sources_db_path=project_root / "data" / "sources.db",
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
@@ -324,12 +325,11 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     )
 
     images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
-    textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
     annotations_file = images_dir / "image_text_pairs.jsonl"
     session_store = SessionStreamStore(session_database)
     image_store = ImageStore(
         images_dir=images_dir,
-        textbooks_dir=textbooks_dir,
+        textbooks_dir=roots.textbooks_dir,
         annotations_file=annotations_file,
         project_root=roots.project_root,
     )
@@ -362,6 +362,7 @@ def _build_context(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
+    textbooks_dir: Path,
     fixture: bool,
 ) -> MonitorContext:
     root = project_root.resolve() if fixture else None
@@ -374,6 +375,7 @@ def _build_context(
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         backup_dir=backup_dir,
+        textbooks_dir=textbooks_dir,
     )
     context = MonitorContext(roots=roots, stores=MonitorStores(), root=root)
     return replace(context, stores=_stores(context, fixture=fixture))
@@ -389,6 +391,7 @@ def _cached_production_context(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
+    textbooks_dir: Path,
 ) -> MonitorContext:
     return _build_context(
         project_root=project_root,
@@ -399,6 +402,7 @@ def _cached_production_context(
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         backup_dir=backup_dir,
+        textbooks_dir=textbooks_dir,
         fixture=False,
     )
 
@@ -416,6 +420,7 @@ def production_context() -> MonitorContext:
         Path(config.MESSAGE_DB),
         default_database_path(live_repo_root),
         Path(os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))),
+        Path(config.TEXTBOOKS_DIR),
     )
 
 
@@ -436,6 +441,7 @@ def fixture_context(root: os.PathLike[str] | str) -> MonitorContext:
         message_db_path=fixture_root / ".mcp" / "servers" / "message-broker" / "messages.db",
         session_streams_db_path=fixture_root / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
         backup_dir=fixture_root / "data" / "backups",
+        textbooks_dir=fixture_root / "data" / "textbooks",
         fixture=True,
     )
 

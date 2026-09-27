@@ -35,6 +35,7 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,
     has_mojibake_marker,
@@ -109,17 +110,8 @@ ULIF_DICTUA_MIGRATE_MESSAGE = (
     "run `python -m scripts.wiki.sources_db --migrate` on this database"
 )
 
-# DictUA is a live ASP.NET source.  The source DB stores the parsed material
-# and its exact HTML separately: keeping only the parsed JSON made cache rows
-# impossible to audit or re-parse after a parser upgrade.
+# DictUA's parsed material stays here; exact HTTP bodies live in the raw cache.
 ULIF_DICTUA_SCHEMA = """
-CREATE TABLE IF NOT EXISTS ulif_dictua_raw_responses (
-    response_sha256 TEXT PRIMARY KEY,
-    body BLOB NOT NULL,
-    content_type TEXT NOT NULL DEFAULT 'text/html; charset=utf-8',
-    stored_at TEXT NOT NULL DEFAULT ''
-);
-
 CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
     id INTEGER PRIMARY KEY,
     entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
@@ -523,20 +515,9 @@ def resolve_ulif_dictua_raw_response(
     db_path: str | Path | None = None,
 ) -> bytes | None:
     """Resolve a ``sha256:<digest>`` raw-response reference from the cache."""
-    digest = raw_response_ref.removeprefix("sha256:")
-    if len(digest) != 64:
-        return None
-    conn = _ulif_dictua_conn(db_path)
-    if conn is None:
-        return None
-    try:
-        row = conn.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (digest,),
-        ).fetchone()
-        return bytes(row["body"]) if row else None
-    finally:
-        conn.close()
+    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    cache = ulif_raw_cache.cache_path(path) if path != PROJECT_ROOT / "data/sources.db" else ulif_raw_cache.cache_path()
+    return ulif_raw_cache.resolve_ref(raw_response_ref, path=cache)
 
 
 def store_ulif_dictua_entry(
@@ -562,9 +543,9 @@ def store_ulif_dictua_entry(
     Transient failures are intentionally never persisted: a network outage is
     not evidence that a Ukrainian word does not exist.
 
-    Pass ``conn`` to join a caller's open transaction: this function then does
-    not commit or close. Without ``conn``, behaviour is unchanged (own
-    connection, commit, close).
+    Pass ``conn`` to join a caller's parsed-entry transaction: this function
+    then does not commit or close that connection. Raw bodies and the manifest
+    always commit independently to the cache before the entry is written.
     """
     if status == "transient_error":
         return None
@@ -586,30 +567,24 @@ def store_ulif_dictua_entry(
     conn.row_factory = sqlite3.Row
     try:
         raw_refs: dict[str, str] = {}
+        source_path = Path(db_path) if db_path is not None else Path(
+            conn.execute("PRAGMA database_list").fetchone()[2]
+        )
+        raw_cache_path = (
+            ulif_raw_cache.cache_path()
+            if source_path == PROJECT_ROOT / "data/sources.db"
+            else ulif_raw_cache.cache_path(source_path)
+        )
         for kind, response in sorted(raw_responses.items()):
-            if kind not in ULIF_DICTUA_SECTION_KINDS:
-                continue
             body = response.encode("utf-8") if isinstance(response, str) else response
             digest = hashlib.sha256(body).hexdigest()
-            conn.execute(
-                """
-                INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                    (response_sha256, body, stored_at)
-                VALUES (?, ?, ?)
-                """,
-                (digest, body, retrieved_at),
-            )
+            ulif_raw_cache.put(digest, body, stored_at=retrieved_at, path=raw_cache_path)
             raw_refs[kind] = f"sha256:{digest}"
 
         manifest = json.dumps(raw_refs, ensure_ascii=False, sort_keys=True).encode("utf-8")
         response_sha256 = hashlib.sha256(manifest).hexdigest()
-        conn.execute(
-            """
-            INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                (response_sha256, body, content_type, stored_at)
-            VALUES (?, ?, 'application/json', ?)
-            """,
-            (response_sha256, manifest, retrieved_at),
+        ulif_raw_cache.put(
+            response_sha256, manifest, "application/json", retrieved_at, path=raw_cache_path
         )
         raw_response_ref = f"sha256:{response_sha256}"
         stored_content_sha256 = content_sha256 or response_sha256
@@ -701,13 +676,7 @@ def extract_ulif_dictua_snapshot(
     conn: sqlite3.Connection | None = None
     try:
         conn = _open_conn(path)
-        raw_rows = list(conn.execute(
-            """
-            SELECT response_sha256, body, content_type, stored_at
-            FROM ulif_dictua_raw_responses
-            ORDER BY response_sha256
-            """
-        ))
+        raw_rows: list[tuple] = []  # Cache is independent of the sources.db rebuild.
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
         if "homonym_index" in columns and "sense_gloss" in columns:
             entry_sql = """
@@ -756,17 +725,17 @@ def restore_ulif_dictua_snapshot(
     entry_rows: list[tuple],
     section_rows: list[tuple],
 ) -> None:
-    """Restore DictUA cache rows in foreign-key-safe dependency order."""
+    """Restore parsed rows after verifying their independently stored raw refs."""
     ensure_ulif_dictua_schema(conn)
-    if raw_rows:
-        conn.executemany(
-            """
-            INSERT OR IGNORE INTO ulif_dictua_raw_responses
-                (response_sha256, body, content_type, stored_at)
-            VALUES (?, ?, ?, ?)
-            """,
-            raw_rows,
-        )
+    source_path = Path(conn.execute("PRAGMA database_list").fetchone()[2])
+    raw_cache_path = ulif_raw_cache.cache_path(source_path)
+    for sha, body, content_type, stored_at in raw_rows:
+        ulif_raw_cache.put(sha, body, content_type, stored_at, path=raw_cache_path)
+    for entry in entry_rows:
+        # The raw reference precedes the retrieved_at column in every supported width.
+        ref = str(entry[-5])
+        if ref and ulif_raw_cache.resolve_ref(ref, path=raw_cache_path) is None:
+            raise ValueError(f"Missing ULIF raw response: {ref}")
     if entry_rows:
         width = len(entry_rows[0])
         if width == 14:

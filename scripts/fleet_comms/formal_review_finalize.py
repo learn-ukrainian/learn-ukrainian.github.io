@@ -1,14 +1,14 @@
 """PR-F/G glue: create formal job + accept sealed verdict (+ optional publish).
 
-Closes the gap between ``review-pr`` (ask-only) and Sol milestone 2:
+Closes the gap between review asks and Sol milestone 2 (sealed review-pr was removed in #8520):
 
 1. Resolve immutable PR head via ``gh``
 2. Create (or reuse) formal job for ``(repo, pr, head, gate)``
 3. ``accept_sealed_verdict`` with full provenance in the sealed payload
 4. Optionally ``publish_sealed_verdict`` (``--review-id`` path)
 
-Does **not** invoke reviewers, create sealed worktrees, or cut over ``review-pr``
-defaults. Operators/orchestrators call this after a review reply is in hand.
+Does **not** invoke reviewers or create sealed worktrees (sealed review-pr was removed in #8520).
+Operators/orchestrators call this after a review reply is in hand.
 """
 
 from __future__ import annotations

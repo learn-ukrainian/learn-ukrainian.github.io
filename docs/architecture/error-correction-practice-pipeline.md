@@ -62,7 +62,7 @@ To address this, the pipeline bifurcates sentence harvesting into two strictly i
   - Contrastive tables and exercise pairs from `textbooks`.
   - `ua_gec_errors` (8,937 annotated sentences with error/correction annotations).
   - `style_guide` (Antonenko-Davydovych *«Як ми говоримо»*).
-  - `data/russianism-patterns-ua-gec.csv`.
+  - `registry/russianism-patterns-ua-gec.csv`.
 - **Target Schema**: Maps directly to the frontend `ErrorCorrectionItemProps`:
   ```typescript
   export interface ErrorCorrectionItemProps {

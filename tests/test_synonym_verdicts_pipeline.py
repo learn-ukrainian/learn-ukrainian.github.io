@@ -27,7 +27,7 @@ from scripts.lexicon.build_synonym_verdicts_yaml import main as run_converter
 from scripts.lexicon.verify_synonym_pairs import main as run_verify_script
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SYNONYM_VERDICTS_YAML = REPO_ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
+SYNONYM_VERDICTS_YAML = REPO_ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
 
 FIXTURES = Path("tests/fixtures")
 MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
@@ -35,31 +35,20 @@ ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
 
 
-def make_mock_manifest_entry(lemma: str, url_slug: str, gloss: str, synonyms: list[str] | None = None) -> dict[str, Any]:
+def make_mock_manifest_entry(
+    lemma: str, url_slug: str, gloss: str, synonyms: list[str] | None = None
+) -> dict[str, Any]:
     entry = {
         "lemma": lemma,
         "url_slug": url_slug,
         "gloss": gloss,
         "pos": "noun",
         "primary_source": "course_vocab",
-        "course_usage": [
-            {
-                "track": "b1",
-                "slug": "some-slug"
-            }
-        ],
-        "enrichment": {
-            "cefr": {
-                "level": "B1"
-            }
-        }
+        "course_usage": [{"track": "b1", "slug": "some-slug"}],
+        "enrichment": {"cefr": {"level": "B1"}},
     }
     if synonyms:
-        entry["sections"] = {
-            "synonyms": {
-                "items": synonyms
-            }
-        }
+        entry["sections"] = {"synonyms": {"items": synonyms}}
     return entry
 
 
@@ -127,7 +116,7 @@ def test_converter_round_trip(tmp_path: Path) -> None:
                 "attest_sources": ["synonyms", "wiktionary"],
                 "llm_verdict": "approve",
                 "llm_reason": "Very close meanings.",
-                "emit": True
+                "emit": True,
             },
             {
                 "a": "абстрактний",
@@ -136,7 +125,7 @@ def test_converter_round_trip(tmp_path: Path) -> None:
                 "attest_sources": [],
                 "llm_verdict": "reject",
                 "llm_reason": "Not synonyms. Abstract vs general.",
-                "emit": False
+                "emit": False,
             },
             # Duplicate rejected pair
             {
@@ -146,8 +135,8 @@ def test_converter_round_trip(tmp_path: Path) -> None:
                 "attest_sources": [],
                 "llm_verdict": "reject",
                 "llm_reason": "Different words.",
-                "emit": False
-            }
+                "emit": False,
+            },
         ]
     }
 
@@ -189,7 +178,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
-        make_mock_manifest_entry("звук", "zvuk", "sound")
+        make_mock_manifest_entry("звук", "zvuk", "sound"),
     ]
 
     allowlist = ReviewedSourceAllowlist.from_payload([])
@@ -199,18 +188,13 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         "термін": [{"lemma": "термін", "pos": "noun"}],
         "мова": [{"lemma": "мова", "pos": "noun"}],
         "книга": [{"lemma": "книга", "pos": "noun"}],
-        "звук": [{"lemma": "звук", "pos": "noun"}]
+        "звук": [{"lemma": "звук", "pos": "noun"}],
     }
     verifier = JsonVesumVerifier(vesum_mock_payload)
 
     # CASE 1: Missing verdicts file (fail-closed)
     shards_missing = build_practice_shards(
-        mock_manifest,
-        allowlist,
-        verifier,
-        cloze_sources=None,
-        config=BuildConfig(target=10),
-        synonym_verdicts=None
+        mock_manifest, allowlist, verifier, cloze_sources=None, config=BuildConfig(target=10), synonym_verdicts=None
     )
     captured = capsys.readouterr()
     # Check that a WARN was printed and no synonym items were emitted
@@ -218,17 +202,14 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
     assert shards_missing["B1"]["synonym"]["synonym"] == []
 
     # CASE 2: Empty/unverdicted synonym_verdicts dict
-    empty_verdicts = {
-        "approved": [],
-        "rejected": []
-    }
+    empty_verdicts = {"approved": [], "rejected": []}
     shards_unverdicted = build_practice_shards(
         mock_manifest,
         allowlist,
         verifier,
         cloze_sources=None,
         config=BuildConfig(target=10),
-        synonym_verdicts=empty_verdicts
+        synonym_verdicts=empty_verdicts,
     )
     assert shards_unverdicted["B1"]["synonym"]["synonym"] == []
     captured = capsys.readouterr()
@@ -236,15 +217,8 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
 
     # CASE 3: Approved verdict
     approved_verdicts = {
-        "approved": [
-            {
-                "a": "слово",
-                "b": "термін",
-                "polarity": "synonym",
-                "sources": ["synonyms"]
-            }
-        ],
-        "rejected": []
+        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym", "sources": ["synonyms"]}],
+        "rejected": [],
     }
     shards_approved = build_practice_shards(
         mock_manifest,
@@ -252,7 +226,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         verifier,
         cloze_sources=None,
         config=BuildConfig(target=10),
-        synonym_verdicts=approved_verdicts
+        synonym_verdicts=approved_verdicts,
     )
     # The synonym item should be emitted!
     b1_synonyms = shards_approved["B1"]["synonym"]["synonym"]
@@ -263,14 +237,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
     # CASE 4: Rejected verdict
     rejected_verdicts = {
         "approved": [],
-        "rejected": [
-            {
-                "a": "слово",
-                "b": "термін",
-                "polarity": "synonym",
-                "reason": "Not true synonyms."
-            }
-        ]
+        "rejected": [{"a": "слово", "b": "термін", "polarity": "synonym", "reason": "Not true synonyms."}],
     }
     shards_rejected = build_practice_shards(
         mock_manifest,
@@ -278,7 +245,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         verifier,
         cloze_sources=None,
         config=BuildConfig(target=10),
-        synonym_verdicts=rejected_verdicts
+        synonym_verdicts=rejected_verdicts,
     )
     assert shards_rejected["B1"]["synonym"]["synonym"] == []
 
@@ -295,7 +262,7 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
             make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
             make_mock_manifest_entry("мова", "mova", "language"),
             make_mock_manifest_entry("книга", "knyha", "book"),
-            make_mock_manifest_entry("звук", "zvuk", "sound")
+            make_mock_manifest_entry("звук", "zvuk", "sound"),
         ]
     }
     manifest_path.write_text(json.dumps(mock_manifest, ensure_ascii=False), encoding="utf-8")
@@ -322,9 +289,7 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
 
 def test_synonym_verdict_a2_exception_requires_curator() -> None:
     assert "curator" in " ".join(
-        validate_synonym_verdict_record(
-            {"a": "друг", "b": "товариш", "polarity": "synonym", "a2Exception": True}
-        )
+        validate_synonym_verdict_record({"a": "друг", "b": "товариш", "polarity": "synonym", "a2Exception": True})
     )
 
 
@@ -402,9 +367,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
         ("парк", "park"),
     ]
     manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
-    verifier = JsonVesumVerifier(
-        {lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words}
-    )
+    verifier = JsonVesumVerifier({lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words})
     verdicts = {
         "approved": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
         "rejected": [],
@@ -436,9 +399,7 @@ def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
         ("парк", "park"),
     ]
     manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
-    verifier = JsonVesumVerifier(
-        {lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words}
-    )
+    verifier = JsonVesumVerifier({lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words})
     verdicts = {
         "approved": [],
         "rejected": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
@@ -466,10 +427,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
         make_mock_manifest_entry("сад", "sad", "garden"),
     ]
     verifier = JsonVesumVerifier(
-        {
-            lemma: [{"lemma": lemma, "pos": "noun"}]
-            for lemma in ("кіт", "кицька", "пес", "миша", "риба", "сад")
-        }
+        {lemma: [{"lemma": lemma, "pos": "noun"}] for lemma in ("кіт", "кицька", "пес", "миша", "риба", "сад")}
     )
     shards = build_practice_shards(
         manifest,
@@ -483,8 +441,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
         },
     )
     shards["B1"]["classify"]["classify"] = [
-        {"classifyId": f"fixture-{index}", "lemmaId": "сад", "evidence": "x" * 10_000}
-        for index in range(20)
+        {"classifyId": f"fixture-{index}", "lemmaId": "сад", "evidence": "x" * 10_000} for index in range(20)
     ]
 
     apply_size_budgets(shards, raw_limit=100_000, gzip_limit=100_000)
@@ -492,9 +449,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
     a1_index = shards["A1"]["index"]["items"]
     tagged = {item["lemma"] for item in a1_index if "synonym" in item["modes"]}
     assert tagged == set()
-    assert {
-        item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]
-    } == {"kit", "kytska"}
+    assert {item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]} == {"kit", "kytska"}
     assert len(shards["B1"]["classify"]["classify"]) < 20
 
 
@@ -730,7 +685,15 @@ def test_nominate_a2_cli_reports_without_state_mutation(
     manifest_path = tmp_path / "manifest.json"
     vesum_path = tmp_path / "vesum.json"
     verdicts_path = tmp_path / "verdicts.yaml"
+    end_dictionary = tmp_path / "end-dictionary-inventory.json"
     out_dir = tmp_path / "out"
+
+    end_dictionary.write_text(
+        json.dumps(
+            {"schema": "atlas-end-dictionary-inventory", "entries": [], "counts": {"sections": 0, "entries": 0}}
+        ),
+        encoding="utf-8",
+    )
 
     manifest_path.write_text(
         json.dumps({"entries": _a2_synonym_fixture_manifest()}, ensure_ascii=False),
@@ -764,6 +727,8 @@ def test_nominate_a2_cli_reports_without_state_mutation(
             str(vesum_path),
             "--synonym-verdicts",
             str(verdicts_path),
+            "--end-dictionary-inventory",
+            str(end_dictionary),
             "--out-dir",
             str(out_dir),
             "--nominate-a2",
@@ -805,9 +770,7 @@ def test_real_synonym_verdicts_yaml_is_well_formed() -> None:
         assert item["b"] == item["b"].casefold(), f"leg not plain-cased: {item['b']}"
         assert item.get("sources"), f"approved pair missing citation source(s): {key}"
 
-    rejected_keys = {
-        (*sorted((item["a"], item["b"])), item["polarity"]) for item in rejected
-    }
+    rejected_keys = {(*sorted((item["a"], item["b"])), item["polarity"]) for item in rejected}
     overlap = approved_keys & rejected_keys
     assert not overlap, f"pairs adjudicated both ways: {overlap}"
 

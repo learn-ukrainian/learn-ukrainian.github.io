@@ -81,7 +81,7 @@ YOUTUBE_RECORD_FIELDS = (
     "subtitles",
 )
 YOUTUBE_DISCOVERY_DIR = PROJECT_ROOT / "data" / "youtube_discovery"
-YOUTUBE_PATTERN_PATH = YOUTUBE_DISCOVERY_DIR / "patterns.yaml"
+YOUTUBE_PATTERN_PATH = PROJECT_ROOT / "registry" / "youtube_discovery" / "patterns.yaml"
 
 
 @dataclass(frozen=True)
@@ -835,7 +835,7 @@ def fetch_youtube_subtitles(
 
 
 def load_title_pattern_set(pattern_set: str, patterns_path: Path = YOUTUBE_PATTERN_PATH) -> list[re.Pattern[str]]:
-    """Load compiled title regexes from data/youtube_discovery/patterns.yaml."""
+    """Load compiled title regexes from registry/youtube_discovery/patterns.yaml."""
     data = yaml.safe_load(patterns_path.read_text(encoding="utf-8")) or {}
     raw_sets = data.get("pattern_sets", {})
     raw_patterns = raw_sets.get(pattern_set)

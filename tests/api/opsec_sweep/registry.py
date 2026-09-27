@@ -33,18 +33,16 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 273
+FROZEN_HTTP_OPERATION_COUNT = 272
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "9621597917b2cff664d143d150cdd4f8c0283a0406a56c04abf9c9140d270a2a"
+FROZEN_DENOMINATOR_SHA256 = "c9e9ff2f8eb3e0c6f0c6c0ec27176ea9ad35b452e54745424a9999a6c6228322"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
 # subprocess seams, and invalid synthetic identifiers. Read records must not
 # silently bless a server error: an exercised 5xx needs a route-specific
 # record reason and explicit expected status.
-DOCUMENTED_EXERCISE_STATUSES = frozenset(
-    {200, 400, 401, 403, 404, 409, 410, 422, 500, 503}
-)
+DOCUMENTED_EXERCISE_STATUSES = frozenset({200, 400, 401, 403, 404, 409, 410, 422, 500, 503})
 FIXTURE_EMPTY_ROUTE_KEYS = frozenset(
     {
         "GET /api/images/textbooks",
@@ -256,9 +254,7 @@ def openapi_operations(app: Any) -> tuple[Operation, ...]:
     return tuple(sorted(operations))
 
 
-def denominator_digest(
-    http_operations: Iterable[Operation], websocket_routes: Iterable[Operation]
-) -> str:
+def denominator_digest(http_operations: Iterable[Operation], websocket_routes: Iterable[Operation]) -> str:
     lines = [operation.key for operation in sorted(http_operations)]
     lines.extend(f"WS {operation.path_template}" for operation in sorted(websocket_routes))
     return hashlib.sha256("\n".join(lines).encode("utf-8")).hexdigest()
@@ -409,13 +405,12 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             expected_statuses=(),
         )
 
-    path_values = {match.group("name"): _path_value(match.group("name")) for match in _PATH_PARAM_RE.finditer(operation.path_template)}
+    path_values = {
+        match.group("name"): _path_value(match.group("name"))
+        for match in _PATH_PARAM_RE.finditer(operation.path_template)
+    }
     operation_spec = openapi_by_key.get(operation.key, {})
-    statuses = tuple(
-        int(status)
-        for status in operation_spec.get("responses", {})
-        if str(status).isdigit()
-    )
+    statuses = tuple(int(status) for status in operation_spec.get("responses", {}) if str(status).isdigit())
     statuses = tuple(sorted(set(statuses) | DOCUMENTED_EXERCISE_STATUSES))
     explicit_5xx_reason = EXERCISED_READ_5XX_REASONS.get(operation.key)
     if explicit_5xx_reason is None:
@@ -473,7 +468,9 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
     if operation.method in MUTATION_METHODS:
         return _mutation_record(operation, path_values, statuses)
 
-    classification: RouteClass = "read-side-effect" if operation.path_template == "/api/session-streams/v1/drift" else "read"
+    classification: RouteClass = (
+        "read-side-effect" if operation.path_template == "/api/session-streams/v1/drift" else "read"
+    )
     return ExerciseRecord(
         method=operation.method,
         path_template=operation.path_template,
@@ -516,9 +513,7 @@ def refusal_records(record: ExerciseRecord) -> tuple[ExerciseRecord, ...]:
     )
 
 
-def _mutation_record(
-    operation: Operation, path_values: Mapping[str, str], statuses: tuple[int, ...]
-) -> ExerciseRecord:
+def _mutation_record(operation: Operation, path_values: Mapping[str, str], statuses: tuple[int, ...]) -> ExerciseRecord:
     recipe = RECIPES.get(operation.key)
     skip = MUTATION_SKIPS.get(operation.key)
     assert recipe is None or skip is None, f"mutation has both a recipe and a skip: {operation.key}"

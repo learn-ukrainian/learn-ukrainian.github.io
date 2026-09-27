@@ -153,8 +153,8 @@ def test_adverb_deck_json_export_and_file_parity(tmp_path: Path):
     assert len(payload["categories"]) == 15
     assert len(payload["cards"]) == 75
 
-    committed_path = Path(__file__).resolve().parents[1] / "data/practice/adverb_mechanics_deck.json"
-    assert committed_path.exists(), "Committed data/practice/adverb_mechanics_deck.json does not exist"
+    committed_path = Path(__file__).resolve().parents[1] / "registry/practice/adverb_mechanics_deck.json"
+    assert committed_path.exists(), "Committed registry/practice/adverb_mechanics_deck.json does not exist"
 
     with open(committed_path, encoding="utf-8") as f:
         committed_data = json.load(f)

@@ -20,6 +20,7 @@ from pathlib import Path
 CONTENT_PATH_PREFIXES = (
     "curriculum/",
     "data/",
+    "registry/",
     "site/src/content/",
     "site/src/data/",
     "site/src/lib/lexicon/curated-heteronyms.ts",

@@ -7,6 +7,7 @@ import json
 import re
 import sqlite3
 import statistics
+import sys
 import warnings
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -22,6 +23,11 @@ from .config import PROJECT_ROOT
 from .embedding_manifest import DEFAULT_MANIFEST_DB, EmbeddingManifest, reserve_corpus_shard
 from .quality_gate import _check_citation_registry
 from .sources_db import search_style_guide
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.storage.artifacts import write_artifact
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_REPORT_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "ukrainian_wiki_a1_ingest_report.md"
@@ -972,7 +978,14 @@ def write_ingest_report(
                 )
             lines.append("")
 
-    report_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")
+    report = "\n".join(lines).strip() + "\n"
+    # A report saved to a published artifact path (corpus_audit_snapshots) must go through `publish` (#8809 P1).
+    write_artifact(
+        report_path,
+        "corpus_audit_snapshots",
+        "scripts/wiki/ukrainian_wiki_corpus.py",
+        lambda dest: dest.write_text(report, encoding="utf-8"),
+    )
     return report_path
 
 

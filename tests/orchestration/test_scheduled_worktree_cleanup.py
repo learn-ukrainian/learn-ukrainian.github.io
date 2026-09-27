@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 import time
 from dataclasses import replace
 from pathlib import Path
@@ -1370,9 +1371,10 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_base))
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_base))
 
-    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, create_review_temp_root
+    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, _write_review_temp_root_marker
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_base)
+    root = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=tmp_base))
+    _write_review_temp_root_marker(root, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = 999999

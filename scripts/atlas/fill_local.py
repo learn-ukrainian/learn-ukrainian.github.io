@@ -42,7 +42,7 @@ from scripts.lexicon import enrich_manifest
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB
-DEFAULT_KAIKKI_LOOKUP = enrich_manifest.KAIKKI_LOOKUP
+DEFAULT_KAIKKI_LOOKUP = None
 
 PHASE = "local"
 UNCOVERED_PHASE = "uncovered"
@@ -345,7 +345,7 @@ def _phase1_offline_env() -> Iterator[None]:
 def fill_local(
     db_path: Path = DEFAULT_DB,
     sources_db_path: Path = DEFAULT_SOURCES_DB,
-    kaikki_lookup_path: Path = DEFAULT_KAIKKI_LOOKUP,
+    kaikki_lookup_path: Path | None = DEFAULT_KAIKKI_LOOKUP,
     *,
     slug: str | None = None,
     refresh: bool = False,
@@ -389,19 +389,15 @@ def _pointer_relation_maps(
         "antonym": enrich_manifest._definition_antonym_relations_by_headword(
             sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
         ),
-        "homonym": enrich_manifest._homonym_relations_by_headword(
-            sources_conn, cohort_manifest
-        ),
-        "paronym": enrich_manifest._paronym_relations_by_headword(
-            sources_conn, cohort_manifest
-        ),
+        "homonym": enrich_manifest._homonym_relations_by_headword(sources_conn, cohort_manifest),
+        "paronym": enrich_manifest._paronym_relations_by_headword(sources_conn, cohort_manifest),
     }
 
 
 def _fill_local(
     db_path: Path = DEFAULT_DB,
     sources_db_path: Path = DEFAULT_SOURCES_DB,
-    kaikki_lookup_path: Path = DEFAULT_KAIKKI_LOOKUP,
+    kaikki_lookup_path: Path | None = DEFAULT_KAIKKI_LOOKUP,
     *,
     slug: str | None = None,
     refresh: bool = False,
@@ -422,9 +418,7 @@ def _fill_local(
         # cohort-wide reciprocity. Sealed full-cohort maps remain the #5230 path.
         cohort_manifest = _cohort_manifest(articles)
         enrich_manifest._prepare_cefr_estimates(sources_conn, cohort_manifest)
-        pointer_maps = _pointer_relation_maps(
-            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
-        )
+        pointer_maps = _pointer_relation_maps(sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags)
 
         filled_at = _iso_now()
         inserted = 0
@@ -506,7 +500,7 @@ def parse_args() -> argparse.Namespace:
         "--kaikki-lookup",
         type=Path,
         default=DEFAULT_KAIKKI_LOOKUP,
-        help="Path to data/lexicon/kaikki_uk_lookup.json.",
+        help="Hydrated Kaikki artifact path (data/lexicon/kaikki_uk_lookup.json).",
     )
     parser.add_argument("--slug", help="Fill one atlas article slug.")
     parser.add_argument("--refresh", action="store_true", help="Replace existing rows for sections produced now.")

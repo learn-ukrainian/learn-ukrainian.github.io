@@ -185,8 +185,8 @@ describe('function-words', () => {
     const { resolve } = await import('node:path');
 
     const candidates = [
-      resolve(process.cwd(), 'data/practice/function_words_deck.json'),
-      resolve(process.cwd(), '../data/practice/function_words_deck.json'),
+      resolve(process.cwd(), 'registry/practice/function_words_deck.json'),
+      resolve(process.cwd(), '../registry/practice/function_words_deck.json'),
     ];
     const deckPath = candidates.find((p) => existsSync(p));
     expect(deckPath).toBeDefined();

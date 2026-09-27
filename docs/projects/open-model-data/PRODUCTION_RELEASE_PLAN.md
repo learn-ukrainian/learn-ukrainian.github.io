@@ -1,5 +1,8 @@
 # ULDR Open Model Data: Iterative Engineering Roadmap (v0.2 -> v1.0)
 
+> [!WARNING]
+> **Withdrawn 2026-09-25: this Hugging Face model is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
+
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423)
 > **Active Iterations:** [#8054](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8054) (v0.2 Baseline), [#8102](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8102) (v0.3 Dialects), [#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103) (v0.4a Kyivan Rus & Church Slavonic), [#8105](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8105) (v0.4b Middle Ukrainian Baroque)
 > **Consensus Panel:** Gemini (Yellow Team / Alignment), Codex GPT-6.0 Astra (Red Team / Verification), Claude Fable (Blue Team / Architecture)
@@ -120,7 +123,7 @@ To eliminate data leakage and ensure held-out metrics measure genuine generaliza
 ## 5. Architectural References
 
 - Canonical Diglossia Model: [`docs/research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md`](../../research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md)
-- Denominator Contract: [`data/historical_language_corpus_denominator.yaml`](../../../data/historical_language_corpus_denominator.yaml)
+- Denominator Contract: [`registry/historical_language_corpus_denominator.yaml`](../../../registry/historical_language_corpus_denominator.yaml)
 - Dialect Protection Suite: [`docs/projects/open-model-data/PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md`](./PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md)
 - Held-Out Evaluation Suite ($N = 1,000$ cases): `data/projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl`
 - Protection Suite ($N = 600$ cases): `data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl`

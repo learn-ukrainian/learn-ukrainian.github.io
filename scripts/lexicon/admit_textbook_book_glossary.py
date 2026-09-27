@@ -28,7 +28,7 @@ Run from the repository root::
       --book-id bukvar-zaharijchuk-grade1-2025 \\
       --title "Захарійчук М. Українська мова. Буквар. 1 клас, 2025" \\
       --subject bukvar \\
-      --out data/lexicon/source-inventory/grade-01/bukvar-zaharijchuk-grade1-2025-glossary.yaml \\
+      --out registry/lexicon/source-inventory/grade-01/bukvar-zaharijchuk-grade1-2025-glossary.yaml \\
       --report
 """
 

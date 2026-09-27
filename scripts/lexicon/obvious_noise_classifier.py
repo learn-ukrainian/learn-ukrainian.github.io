@@ -218,7 +218,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         out_path = (
             PROJECT_ROOT
-            / "data/lexicon/source-inventory-review-decisions/2026-07-14-curriculum-intake-bulk-reject-R1.yaml"
+            / "registry/lexicon/source-inventory-review-decisions/2026-07-14-curriculum-intake-bulk-reject-R1.yaml"
         )
         out_path.parent.mkdir(parents=True, exist_ok=True)
         with out_path.open("w", encoding="utf-8") as fh:

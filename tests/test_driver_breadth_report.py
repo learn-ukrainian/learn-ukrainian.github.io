@@ -6,6 +6,8 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from scripts.fleet.driver_breadth_report import (
     _parse_ts,
     _tier_for,
@@ -290,6 +292,54 @@ def test_enforce_fails_dishonest_idle_disposition(tmp_path: Path, capsys) -> Non
     assert payload["idle_settle"]["settle_events_dishonest"] == 1
 
 
+@pytest.mark.parametrize(
+    ("recorded_at", "expected_code", "expected_count"),
+    [
+        ("stale", 0, 0),
+        ("recent", 2, 1),
+        (None, 2, 1),
+        ("invalid", 2, 1),
+    ],
+)
+def test_enforce_windows_idle_dispositions(
+    tmp_path: Path, capsys, recorded_at: str | None, expected_code: int, expected_count: int
+) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    now = datetime.now(UTC)
+    timestamps = {
+        "stale": (now - timedelta(hours=25)).isoformat(),
+        "recent": (now - timedelta(hours=1)).isoformat(),
+        "invalid": "not-a-timestamp",
+    }
+    event = {"outcome": "disposed", "disposition_honest": False}
+    if recorded_at is not None:
+        event["recorded_at"] = timestamps[recorded_at]
+    store = tmp_path / "idle.jsonl"
+    store.write_text(json.dumps(event) + "\n", encoding="utf-8")
+
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--since-hours",
+            "24",
+            "--enforce",
+            "--json",
+            "--idle-store",
+            str(store),
+        ]
+    )
+    assert code == expected_code
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["breadth_floor_ok"] is True
+    assert payload["idle_settle"]["event_count"] == expected_count
+    assert payload["idle_settle"]["settle_events_dishonest"] == expected_count
+
+
 def test_enforce_passes_honest_disposition_despite_idle_seconds(tmp_path: Path, capsys) -> None:
     """Authorized idle is not a failure; huge opportunity-seconds must not trip --enforce."""
     tasks_dir = tmp_path / "tasks"
@@ -429,3 +479,11 @@ def test_load_tasks_reads_archived_records(tmp_path: Path) -> None:
     )
     tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(days=30))
     assert sorted(task["task_id"] for task in tasks) == ["hot", "old"]
+
+
+@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
+def test_rejects_non_positive_since_hours(value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as excinfo:
+        main(["--tasks-dir", str(tmp_path), "--since-hours", value])
+    assert excinfo.value.code == 2
+    assert "--since-hours" in capsys.readouterr().err

@@ -535,7 +535,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Textbook image catalog, page rendering, annotations, stats, cleanup, and reload.",
-        "data/textbook_images/**, data/textbooks/**, and annotation JSONL.",
+        "data/textbook_images/**, bulk-root textbooks/** (storage topology), and annotation JSONL.",
         "Lazy in-memory image index; PDF pool and page-render LRU cache; /reload resets the index.",
         ("image-explorer.html",),
         "Complements /api/sources image search.",
@@ -624,18 +624,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "No route cache in the endpoint; /api/orient may cache the governance section for 120s.",
         ("orient.html", "agents"),
         "Aggregate counterpart to /api/decisions detail endpoints.",
-        "low",
-        "keep",
-    ),
-    RouteContract(
-        "/api/hermes-cron/latest",
-        "exact",
-        "http",
-        "Latest nightly sweep audit results and insights.",
-        "batch_state/hermes_cron/latest.json and latest.md.",
-        "No route cache; reads from the latest generated nightly audit artifacts.",
-        ("agents", "docs"),
-        "None.",
         "low",
         "keep",
     ),
@@ -1377,8 +1365,6 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
 )
 
 router = APIRouter(tags=["contracts"])
-
-
 
 
 def contracts_for_route(path: str, kind: ContractKind = "http") -> list[RouteContract]:

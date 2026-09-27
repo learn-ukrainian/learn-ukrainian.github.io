@@ -30,11 +30,13 @@ from typing import Any
 
 import yaml
 
+from scripts.storage.paths import REGISTRY_ROOT
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_DB = ROOT / "data" / "atlas.db"
-DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
-DEFAULT_CURATED_ALIASES = ROOT / "data" / "lexicon" / "curated_aliases.yaml"
+DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"
+DEFAULT_CURATED_ALIASES = REGISTRY_ROOT / "lexicon/curated_aliases.yaml"
 
 ARTICLE_ENTRY_TYPES = {
     "lemma",
@@ -166,11 +168,42 @@ CREATE VIRTUAL TABLE IF NOT EXISTS articles_fts USING fts5(
 _STRESS_RE = re.compile("[́̀]")
 _APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'"})
 _TRANSLIT = {
-    "а": "a", "б": "b", "в": "v", "г": "h", "ґ": "g", "д": "d", "е": "e", "є": "ie",
-    "ж": "zh", "з": "z", "и": "y", "і": "i", "ї": "i", "й": "i", "к": "k", "л": "l",
-    "м": "m", "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
-    "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch", "ь": "",
-    "ю": "iu", "я": "ia", "'": "", "ʼ": "", " ": "-",
+    "а": "a",
+    "б": "b",
+    "в": "v",
+    "г": "h",
+    "ґ": "g",
+    "д": "d",
+    "е": "e",
+    "є": "ie",
+    "ж": "zh",
+    "з": "z",
+    "и": "y",
+    "і": "i",
+    "ї": "i",
+    "й": "i",
+    "к": "k",
+    "л": "l",
+    "м": "m",
+    "н": "n",
+    "о": "o",
+    "п": "p",
+    "р": "r",
+    "с": "s",
+    "т": "t",
+    "у": "u",
+    "ф": "f",
+    "х": "kh",
+    "ц": "ts",
+    "ч": "ch",
+    "ш": "sh",
+    "щ": "shch",
+    "ь": "",
+    "ю": "iu",
+    "я": "ia",
+    "'": "",
+    "ʼ": "",
+    " ": "-",
 }
 
 
@@ -259,9 +292,7 @@ def _relation_targets_by_lemma(cur: sqlite3.Cursor) -> dict[str, tuple[str, ...]
     emitted alias.
     """
     targets: dict[str, set[str]] = {}
-    for alias, target_slug in cur.execute(
-        "SELECT alias, target_slug FROM aliases WHERE visibility = 'public'"
-    ):
+    for alias, target_slug in cur.execute("SELECT alias, target_slug FROM aliases WHERE visibility = 'public'"):
         targets.setdefault(_relation_lemma_key(str(alias)), set()).add(str(target_slug))
     for lemma, slug in cur.execute(
         """SELECT lemma, slug FROM articles
@@ -428,9 +459,20 @@ def migrate_manifest(
                (slug, display_head, lemma, entry_type, pos, gloss, review_state,
                 visibility, cefr, heritage_classification, created_at, updated_at)
                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (slug, display_head, lemma, etype, e.get("pos"), e.get("gloss"),
-             "approved", visibility, cefr_val, heritage_cls,
-             e.get("created_at"), e.get("updated_at")),
+            (
+                slug,
+                display_head,
+                lemma,
+                etype,
+                e.get("pos"),
+                e.get("gloss"),
+                "approved",
+                visibility,
+                cefr_val,
+                heritage_cls,
+                e.get("created_at"),
+                e.get("updated_at"),
+            ),
         )
         counts["articles"] += 1
 
@@ -444,8 +486,7 @@ def migrate_manifest(
                 continue
             cur.execute(
                 "INSERT INTO article_provenance(slug, source_family, source_locator, extraction_mode) VALUES (?,?,?,?)",
-                (slug, p.get("source_family"), p.get("source_locator") or p.get("locator"),
-                 p.get("extraction_mode")),
+                (slug, p.get("source_family"), p.get("source_locator") or p.get("locator"), p.get("extraction_mode")),
             )
             counts["provenance"] += 1
 
@@ -537,7 +578,9 @@ def validate_alias_targets(db_path: Path) -> dict[str, int]:
             conn.execute("SELECT COUNT(DISTINCT target_slug) FROM aliases WHERE visibility='public'").fetchone()[0]
         ),
         "approved_public_articles": int(
-            conn.execute("SELECT COUNT(*) FROM articles WHERE review_state='approved' AND visibility='public'").fetchone()[0]
+            conn.execute(
+                "SELECT COUNT(*) FROM articles WHERE review_state='approved' AND visibility='public'"
+            ).fetchone()[0]
         ),
         "failures": len(failures),
     }

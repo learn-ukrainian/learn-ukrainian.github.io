@@ -14,17 +14,24 @@ import json
 import logging
 import re
 import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from navsi200_catalog import PRIORITY_TOPICS, load_catalog
+
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
 
 logger = logging.getLogger(__name__)
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_CATALOG_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-catalog.json"
+DEFAULT_CATALOG_PATH = PROJECT_ROOT / "registry" / "corpus_audit" / "navsi200-catalog.json"
 DEFAULT_LEDGER_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-captions-ledger.json"
 DEFAULT_CAPTIONS_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-captions"
 
@@ -343,10 +350,15 @@ def save_caption_ledger(ledger: dict[str, Any], path: Path | str | None = None) 
         Path of written ledger file.
     """
     target = Path(path) if path else DEFAULT_LEDGER_PATH
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", encoding="utf-8") as f:
-        json.dump(ledger, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+
+    def _write(dest: Path) -> None:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        with dest.open("w", encoding="utf-8") as f:
+            json.dump(ledger, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+    # The default ledger is an untracked published artifact (#8809 P1): only `publish` writes it.
+    write_artifact(target, "corpus_audit_snapshots", "scripts/navsi200_captions.py", _write)
     return target
 
 
@@ -359,7 +371,7 @@ def load_caption_ledger(path: Path | str | None = None) -> dict[str, Any]:
     Returns:
         Parsed ledger dictionary.
     """
-    target = Path(path) if path else DEFAULT_LEDGER_PATH
+    target = Path(path) if path else artifact_path("corpus_audit_snapshots", "corpus_audit/navsi200-captions-ledger.json")
     if not target.exists():
         raise FileNotFoundError(f"Ledger file not found: {target}")
     with target.open("r", encoding="utf-8") as f:
@@ -384,7 +396,7 @@ Exit codes: 0 on success; nonzero on invalid arguments or processing errors.
 Related: scripts/navsi200_catalog.py; #4705.
 """,
     )
-    parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG_PATH, help="Catalog JSON path (default: data/corpus_audit/navsi200-catalog.json)")
+    parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG_PATH, help="Catalog JSON path (default: registry/corpus_audit/navsi200-catalog.json)")
     parser.add_argument("--output", type=Path, default=DEFAULT_LEDGER_PATH, help="Output ledger JSON path (default: data/corpus_audit/navsi200-captions-ledger.json)")
     parser.add_argument("--captions-dir", type=Path, default=DEFAULT_CAPTIONS_DIR, help="Raw captions directory (default: data/native-reviewer-lessons/navsi200-captions)")
     parser.add_argument("--max-workers", type=int, default=8, help="Max worker threads (default: 8; example: 4)")

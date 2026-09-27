@@ -15,7 +15,7 @@ Two failure classes this module addresses:
    or Soviet-residual forms into Ukrainian-language output (e.g.
    «блакитний-жовтий» for the flag instead of the canonical
    «синьо-жовтий»). These are known, finite, and high-stakes — the
-   registry at `data/canonical_anchors.yaml` lists them. Writers must
+   registry at `registry/canonical_anchors.yaml` lists them. Writers must
    use the canonical form verbatim; reviewers must REJECT any article
    containing a forbidden pattern; mechanical validators can either
    strip-and-flag or block-and-surface.
@@ -54,7 +54,7 @@ import yaml
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
 #: Path to the shared anchors registry. Both wiki + module pipelines use this.
-CANONICAL_ANCHORS_PATH = _REPO_ROOT / "data" / "canonical_anchors.yaml"
+CANONICAL_ANCHORS_PATH = _REPO_ROOT / "registry" / "canonical_anchors.yaml"
 
 #: Regex for finding short-form citation IDs like [S12] in article prose.
 #: Matches [S1], [S23], [S456]; does NOT match [S1a], [S], [Sabc].

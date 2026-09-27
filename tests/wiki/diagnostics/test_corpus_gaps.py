@@ -7,6 +7,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 _project_root = os.path.dirname(
@@ -402,3 +403,80 @@ def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
     for model in ("gpt-5.5", "unknown", ""):
         with pytest.raises(ValueError, match="requires gpt-6-sol"):
             audit.run_codex_concept_extraction("fixture", model=model)
+
+
+@pytest.mark.needs_artifact("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
+def test_load_coverage_map_resolves_the_published_artifact() -> None:
+    coverage_map = audit.load_coverage_map()
+    assert coverage_map["metadata"]["article_count"] == len(coverage_map["articles"])
+    assert audit.classify_gap_categories(coverage_map)
+
+
+def test_load_coverage_map_reads_explicit_paths_directly(tmp_path: Path) -> None:
+    explicit = tmp_path / "coverage_map.json"
+    explicit.write_text('{"articles": [], "metadata": {}}', encoding="utf-8")
+    assert audit.load_coverage_map(explicit) == {"articles": [], "metadata": {}}
+    assert audit.load_coverage_map(tmp_path / "missing.json") == {}
+
+
+def test_load_coverage_map_fails_closed_when_the_published_map_is_absent(tmp_path: Path, monkeypatch) -> None:
+    from scripts.storage import paths
+
+    repo = tmp_path / "repo"
+    (repo / "registry/artifacts").mkdir(parents=True)
+    manifest = Path(__file__).resolve().parents[3] / "registry/artifacts/corpus_audit_snapshots.manifest.json"
+    (repo / "registry/artifacts/corpus_audit_snapshots.manifest.json").write_bytes(manifest.read_bytes())
+    monkeypatch.setattr(audit, "artifact_path", lambda group, rel: paths.artifact_path(group, rel, repo=repo))
+    with pytest.raises(paths.MissingArtifactError, match="artifacts hydrate --group corpus_audit_snapshots"):
+        audit.load_coverage_map()
+    with pytest.raises(paths.MissingArtifactError):
+        audit.load_coverage_map(Path(audit.COVERAGE_MAP_PATH.relative_to(audit.PROJECT_ROOT)).resolve())
+
+
+def test_load_coverage_map_reads_the_present_published_map(tmp_path: Path, monkeypatch) -> None:
+    import hashlib
+    import json
+    import subprocess
+
+    from scripts.storage import paths
+
+    repo = tmp_path / "repo"
+    (repo / "registry/artifacts").mkdir(parents=True)
+    (repo / "data/corpus_audit").mkdir(parents=True)
+    subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=30)
+    payload = b'{"articles": [], "metadata": {"article_count": 0}}'
+    (repo / "data/corpus_audit/coverage_map.json").write_bytes(payload)
+    manifest_file = Path(__file__).resolve().parents[3] / "registry/artifacts/corpus_audit_snapshots.manifest.json"
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    entry = next(item for item in manifest["entries"] if item["path"] == "data/corpus_audit/coverage_map.json")
+    digest = hashlib.sha256(payload).hexdigest()
+    entry.update(sha256=digest, store=digest, size=len(payload))
+    manifest["entries"] = [entry]
+    (repo / "registry/artifacts/corpus_audit_snapshots.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
+    monkeypatch.setattr(audit, "artifact_path", lambda group, rel: paths.artifact_path(group, rel, repo=repo))
+    assert audit.load_coverage_map() == {"articles": [], "metadata": {"article_count": 0}}
+
+
+@pytest.mark.parametrize("module_name", ["classify", "report"])
+def test_default_cli_writes_nothing_when_the_published_map_is_absent(tmp_path: Path, monkeypatch, module_name: str) -> None:
+    import importlib
+
+    from scripts.storage import paths
+
+    module = importlib.import_module(f"wiki.diagnostics.corpus_gaps.{module_name}")
+    output = tmp_path / "out.md"
+
+    def missing(group: str, rel: str) -> Path:
+        raise paths.MissingArtifactError(group, rel, "hydrate")
+
+    monkeypatch.setattr(audit, "artifact_path", missing)
+    argv = [module_name, "--output", str(output)]
+    if module_name == "report":
+        articles = tmp_path / "article_concepts.json"
+        articles.write_text("{}", encoding="utf-8")
+        argv += ["--article-concepts", str(articles)]
+    monkeypatch.setattr(sys, "argv", argv)
+    with pytest.raises(paths.MissingArtifactError):
+        module.main()
+    assert not output.exists()

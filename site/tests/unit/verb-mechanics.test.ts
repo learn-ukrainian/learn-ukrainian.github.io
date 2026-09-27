@@ -167,7 +167,7 @@ describe('verb-mechanics', () => {
   });
 
   it('validates the pre-compiled practice deck file', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/verb_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/verb_mechanics_deck.json');
     expect(existsSync(deckPath)).toBe(true);
 
     const raw = readFileSync(deckPath, 'utf-8');
@@ -190,7 +190,7 @@ describe('verb-mechanics', () => {
   });
 
   it('provides specific non-ablaut feedback for suffixation and aspectual distractors', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/verb_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/verb_mechanics_deck.json');
     const payload = JSON.parse(readFileSync(deckPath, 'utf-8'));
 
     const chytatyCard = payload.cards.find(
@@ -217,7 +217,7 @@ describe('verb-mechanics', () => {
   });
 
   it('provides specific feedback for gerund distractors without unrelated generic guidance', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/verb_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/verb_mechanics_deck.json');
     const payload = JSON.parse(readFileSync(deckPath, 'utf-8'));
 
     const prochytavshyCard = payload.cards.find(

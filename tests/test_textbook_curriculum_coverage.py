@@ -11,8 +11,8 @@ import yaml
 from scripts.projects.open_model_data import textbook_curriculum_coverage as coverage
 
 ROOT = Path(__file__).resolve().parents[1]
-DENOMINATOR = ROOT / "data" / "textbook_curriculum_denominator.yaml"
-UNIVERSITY_DENOMINATOR = ROOT / "data" / "university_corpus_denominator.yaml"
+DENOMINATOR = ROOT / "registry" / "textbook_curriculum_denominator.yaml"
+UNIVERSITY_DENOMINATOR = ROOT / "registry" / "university_corpus_denominator.yaml"
 
 
 def _cell(

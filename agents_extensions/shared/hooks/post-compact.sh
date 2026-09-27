@@ -148,7 +148,7 @@ KEY REMINDERS:
   - Word targets are MINIMUMS (check config.py)
   - Edit agents_extensions/shared/, not .claude/ directly
   - .venv/bin/python only
-  - Pre-commit: ruff + /simplify + Gemini review
+  - Pre-commit: ruff + /simplify + cross-family code review (non-Gemini seat)
   - Read audit/ and review/ files before fixing modules
   - MEMORY: ~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory/MEMORY.md"
 

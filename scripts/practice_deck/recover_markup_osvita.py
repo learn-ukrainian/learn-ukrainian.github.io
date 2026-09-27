@@ -10,7 +10,7 @@ Operator recipe (network scan + deck rebuild)::
 
     .venv/bin/python scripts/practice_deck/recover_markup_osvita.py \\
       --scan-from 200 --scan-to 500 \\
-      --merge-overlay data/practice/zno-markup-overlay.json
+      --merge-overlay registry/practice/zno-markup-overlay.json
     .venv/bin/python scripts/practice_deck/zno.py
 
 Only HTML-derived ranges that match ``zno_tasks.options_json`` exactly are

@@ -2,7 +2,7 @@
 """Generate the VESUM inflection→lemma alias map for the Word Atlas (#2882).
 
 OFFLINE, build-time-once. Runs VESUM over the current manifest's surface forms and emits a
-COMMITTED static map (`data/lexicon/vesum_inflection_aliases.json`) that `build_data_manifest`
+COMMITTED static map (`registry/lexicon/vesum_inflection_aliases.json`) that `build_data_manifest`
 loads — exactly like the hand-curated `VESUM_CANONICAL_HEADS`, just auto-generated. Keeping the
 map static makes the build deterministic and CI-safe (no live VESUM / vesum.db at build time).
 
@@ -34,7 +34,7 @@ from scripts.lexicon.build_data_manifest import (
 )
 from scripts.verification.vesum import verify_word
 
-ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicon" / "vesum_inflection_aliases.json"
+ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "registry" / "lexicon" / "vesum_inflection_aliases.json"
 
 # Lexicalized functional forms KEPT as standalone Atlas pages — their high-frequency use is a
 # fixed expression / interjection / particle whose meaning is NOT reducible to "inflection of
@@ -42,11 +42,18 @@ ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicon" / "ves
 # "maybe" it is a particle, semantically distinct from могти "to be able". (Ordinary conjugations
 # like люблю→любити / їмо→їсти are NOT here — those fold correctly.) Per user call 2026-06-15.
 _KEEP_STANDALONE_FORMS = {
-    "дякую", "прошу", "може", "будь", "будьте", "вітаю",
+    "дякую",
+    "прошу",
+    "може",
+    "будь",
+    "будьте",
+    "вітаю",
     # tranche 2: politeness interjections taught as fixed expressions (like дякую), not as
     # the bare imperative of their verb. Per user direction "fully lemma-key but keep the
     # true interjections standalone" (2026-06-16).
-    "вибачте", "пробачте", "перепрошую",
+    "вибачте",
+    "пробачте",
+    "перепрошую",
 }
 
 # Curated homograph resolutions (#2882, 2026-06-16). Forms VESUM maps to >1 lemma are NEVER
@@ -57,14 +64,38 @@ _KEEP_STANDALONE_FORMS = {
 # the form (guarded in build_alias_map — a safety net against typos/drift). Forms left OUT stay
 # standalone: `цьому` (це vs цей — genuinely ambiguous demonstrative, codex-flagged).
 _CURATED_HOMOGRAPHS = {
-    "буду": "бути", "біле": "білий", "говори": "говорити", "голубці": "голубець",
-    "гори": "гора", "гривні": "гривня", "друга": "друг", "другові": "друг",
-    "друзі": "друг", "жести": "жест", "жив": "жити", "зустрінемося": "зустрітися",
-    "йому": "він", "кому": "хто", "молочне": "молочний", "новому": "новий",
-    "нікому": "ніхто", "пане": "пан", "поясніть": "пояснити", "ранку": "ранок",
-    "сині": "синій", "сьома": "сьомий", "ходжу": "ходити", "хоче": "хотіти",
-    "хочемо": "хотіти", "хочете": "хотіти", "хочеш": "хотіти", "хочу": "хотіти",
-    "хочуть": "хотіти", "яка": "який", "яку": "який", "їм": "їсти",
+    "буду": "бути",
+    "біле": "білий",
+    "говори": "говорити",
+    "голубці": "голубець",
+    "гори": "гора",
+    "гривні": "гривня",
+    "друга": "друг",
+    "другові": "друг",
+    "друзі": "друг",
+    "жести": "жест",
+    "жив": "жити",
+    "зустрінемося": "зустрітися",
+    "йому": "він",
+    "кому": "хто",
+    "молочне": "молочний",
+    "новому": "новий",
+    "нікому": "ніхто",
+    "пане": "пан",
+    "поясніть": "пояснити",
+    "ранку": "ранок",
+    "сині": "синій",
+    "сьома": "сьомий",
+    "ходжу": "ходити",
+    "хоче": "хотіти",
+    "хочемо": "хотіти",
+    "хочете": "хотіти",
+    "хочеш": "хотіти",
+    "хочу": "хотіти",
+    "хочуть": "хотіти",
+    "яка": "який",
+    "яку": "який",
+    "їм": "їсти",
 }
 
 

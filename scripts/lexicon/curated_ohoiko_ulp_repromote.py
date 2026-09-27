@@ -54,14 +54,9 @@ from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skele
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
 
-DEFAULT_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
-)
+DEFAULT_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 DEFAULT_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
-    "2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml"
 )
 DEFAULT_CANDIDATES = Path("/tmp/atlas-ohoiko-ulp-curated-candidates.json")
 DEFAULT_PLAN = Path("/tmp/atlas-ohoiko-ulp-curated-plan.json")
@@ -275,8 +270,7 @@ def write_inventory(rows: Sequence[Mapping[str, Any]], path: Path) -> Path:
             "gloss": row["gloss"],
             "locator": row["locator"],
             "context": (
-                f"Curated {family} inventory ({row['extraction_mode']}); "
-                "auto-approve policy — no AI linguistic review."
+                f"Curated {family} inventory ({row['extraction_mode']}); auto-approve policy — no AI linguistic review."
             ),
         }
         by_family.setdefault(family, []).append(item)
@@ -322,10 +316,7 @@ def write_decisions(rows: Sequence[Mapping[str, Any]], path: Path, *, inventory_
                 "decision": "approve_for_publish",
                 "approved_pos": row["pos"],
                 "approved_gloss": row["gloss"],
-                "sense_note": (
-                    f"curated {family} auto-approve "
-                    f"({row['extraction_mode']}); no AI review"
-                ),
+                "sense_note": (f"curated {family} auto-approve ({row['extraction_mode']}); no AI review"),
                 "source_inventory": {
                     "key": key,
                     "path": inventory_rel,
@@ -377,9 +368,9 @@ def build_candidates(inventory_path: Path, out: Path) -> Path:
             ip = str(pp.get("inventory_path") or "")
             if not ip.startswith("data/"):
                 if "data/lexicon/source-inventory/" in ip:
-                    pp["inventory_path"] = "data/lexicon/source-inventory/" + ip.split(
-                        "data/lexicon/source-inventory/"
-                    )[-1]
+                    pp["inventory_path"] = (
+                        "data/lexicon/source-inventory/" + ip.split("data/lexicon/source-inventory/")[-1]
+                    )
                 else:
                     pp["inventory_path"] = INV_REL
             prov.append(pp)
@@ -432,9 +423,7 @@ def apply_plan(
 
     def delta_self_check(path: Path) -> int:
         data = json.loads(path.read_text(encoding="utf-8"))
-        entries = {
-            _lemma_key(str(e.get("lemma") or "")): e for e in data["entries"] if isinstance(e, dict)
-        }
+        entries = {_lemma_key(str(e.get("lemma") or "")): e for e in data["entries"] if isinstance(e, dict)}
         failures: list[str] = []
         for lemma in promoted:
             entry = entries.get(_lemma_key(lemma))

@@ -24,6 +24,9 @@ from navsi200_captions import (
 )
 from navsi200_catalog import load_catalog
 
+# The captions ledger is an untracked artifact (#8809 P1); these tests validate the real produced file.
+CAPTIONS_LEDGER = pytest.mark.needs_artifact("corpus_audit_snapshots", "corpus_audit/navsi200-captions-ledger.json")
+
 
 class TestNavsi200CaptionsLedger:
     """Verification suite for navsi200-captions-ledger.json and associated utilities."""
@@ -36,10 +39,12 @@ class TestNavsi200CaptionsLedger:
     def catalog(self) -> dict:
         return load_catalog()
 
+    @CAPTIONS_LEDGER
     def test_ledger_file_exists(self) -> None:
         assert DEFAULT_LEDGER_PATH.exists(), f"Ledger file not found at {DEFAULT_LEDGER_PATH}"
         assert DEFAULT_LEDGER_PATH.stat().st_size > 1000
 
+    @CAPTIONS_LEDGER
     def test_ledger_metadata_shape(self, ledger: dict) -> None:
         assert ledger.get("version") == 1
         assert ledger.get("caption_lang") == "uk"
@@ -49,12 +54,14 @@ class TestNavsi200CaptionsLedger:
         assert isinstance(ledger.get("entries"), list)
         assert len(ledger["lessons"]) == len(ledger["entries"])
 
+    @CAPTIONS_LEDGER
     def test_privacy_no_teacher_names_in_ledger(self) -> None:
         raw_text = DEFAULT_LEDGER_PATH.read_text(encoding="utf-8").lower()
         forbidden_names = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]
         for name in forbidden_names:
             assert name not in raw_text, f"Privacy violation: found teacher name '{name}' in committed ledger"
 
+    @CAPTIONS_LEDGER
     def test_privacy_no_verbatim_captions_in_ledger(self, ledger: dict) -> None:
         for entry in ledger["lessons"]:
             assert "transcript" not in entry, "Verbatim transcript key found in ledger entry"
@@ -62,6 +69,7 @@ class TestNavsi200CaptionsLedger:
             assert "text" not in entry, "Verbatim text key found in ledger entry"
             assert "raw_captions" not in entry, "Raw captions key found in ledger entry"
 
+    @CAPTIONS_LEDGER
     def test_lessons_shape_and_types(self, ledger: dict) -> None:
         yt_id_pattern = re.compile(r"^[a-zA-Z0-9_\-]{11}$")
         sha256_pattern = re.compile(r"^[a-f0-9]{64}$")
@@ -104,6 +112,7 @@ class TestNavsi200CaptionsLedger:
 
             assert isinstance(entry.get("is_priority"), bool)
 
+    @CAPTIONS_LEDGER
     def test_priority_ordering_in_ledger(self, ledger: dict) -> None:
         lessons = ledger["lessons"]
         priority_indices = [i for i, entry in enumerate(lessons) if entry["is_priority"]]
@@ -115,6 +124,7 @@ class TestNavsi200CaptionsLedger:
             "Priority lessons must all appear before non-priority lessons in the coverage ledger"
         )
 
+    @CAPTIONS_LEDGER
     def test_all_catalog_videos_accounted_for(self, ledger: dict, catalog: dict) -> None:
         catalog_video_ids = {l["video_id"] for l in catalog["lessons"]}
         ledger_video_ids = {l["video_id"] for l in ledger["lessons"]}
@@ -124,6 +134,7 @@ class TestNavsi200CaptionsLedger:
             f"missing={catalog_video_ids - ledger_video_ids}, extra={ledger_video_ids - catalog_video_ids}"
         )
 
+    @CAPTIONS_LEDGER
     def test_summary_consistency(self, ledger: dict) -> None:
         summary = ledger["summary"]
         lessons = ledger["lessons"]

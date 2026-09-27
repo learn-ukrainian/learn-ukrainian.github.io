@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -14,11 +15,37 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_audit_entropy as entropy
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
+_GIT_TIMEOUT_SECONDS = 30
+
+
+def _git_env(repo: Path) -> dict[str, str]:
+    """Environment that isolates ``git`` from leaked global/system configuration."""
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    home = repo.parent / "_git-home"
+    home.mkdir(exist_ok=True)
+    env["HOME"] = str(home)
+    env["GIT_CONFIG_NOSYSTEM"] = "1"
+    env["GIT_CONFIG_GLOBAL"] = "/dev/null"
+    return env
+
 
 def _git(repo: Path, *args: str) -> str:
-    return subprocess.run(
-        ["git", "-C", str(repo), *args], check=True, stdout=subprocess.PIPE, text=True, timeout=30,
-    ).stdout.strip()
+    command = ["git", "-C", str(repo), *args]
+    completed = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+        env=_git_env(repo),
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(
+            f"git command failed: {' '.join(command)}\n"
+            f"exit code: {completed.returncode}\n"
+            f"stdout:\n{completed.stdout}\n"
+            f"stderr:\n{completed.stderr}"
+        )
+    return completed.stdout.strip()
 
 
 def _commit(repo: Path, message: str) -> str:
@@ -33,6 +60,8 @@ def _repo(tmp_path: Path) -> tuple[Path, str, bytes]:
     _git(repo, "init", "--initial-branch=main")
     _git(repo, "config", "user.email", "entropy@example.test")
     _git(repo, "config", "user.name", "Entropy Test")
+    _git(repo, "config", "commit.gpgsign", "false")
+    _git(repo, "config", "core.hooksPath", "/dev/null")
     (repo / "README").write_text("initial\n", encoding="utf-8")
     _commit(repo, "initial")
     artifact = b'{"sampler":"fixed-v1"}\n'
@@ -81,7 +110,9 @@ def _add_commitment(repo: Path, commitment: dict[str, object]) -> tuple[str, str
     return path, hashlib.sha256(payload).hexdigest(), _commit(repo, "commit auditor nonce hash")
 
 
-def _receipt(path: str, commitment_sha256: str, commitment_commit: str, *, nonce: str = "c" * 64) -> dict[str, str | bool]:
+def _receipt(
+    path: str, commitment_sha256: str, commitment_commit: str, *, nonce: str = "c" * 64
+) -> dict[str, str | bool]:
     return {
         "schema_version": entropy.SCHEMA_VERSION,
         "text_free": True,

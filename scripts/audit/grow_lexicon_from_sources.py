@@ -4,7 +4,7 @@
 Run from repository root:
 
     .venv/bin/python -m scripts.lexicon.grow_lexicon_from_sources \
-        --inventory data/lexicon/source-inventory/ulp.yaml \
+        --inventory registry/lexicon/source-inventory/ulp.yaml \
         --out data/lexicon/grow_candidates.json \
         --report
 """

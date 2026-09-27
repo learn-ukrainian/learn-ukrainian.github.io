@@ -14,9 +14,7 @@ from scripts.audit.source_inventory_intake import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-POS_BALANCED_SAMPLE = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
-)
+POS_BALANCED_SAMPLE = PROJECT_ROOT / "registry/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
 VOCABULARY_WORD_LOCATOR_RE = re.compile(r"^vocabulary\[(\d+)\]\.items\[(\d+)\]\.word$")
 REQUIRED_POS_BUCKETS = {
     "noun",
@@ -110,8 +108,7 @@ def test_flat_inventory_dedupes_stressed_variants_and_merges_provenance(tmp_path
 def test_flat_inventory_accepts_utf8_bom(tmp_path) -> None:
     inventory = tmp_path / "headwords.csv"
     inventory.write_text(
-        "\ufefflemma,source_family,extraction_mode\n"
-        "авто,ulp,curated_headword\n",
+        "\ufefflemma,source_family,extraction_mode\nавто,ulp,curated_headword\n",
         encoding="utf-8",
     )
 
@@ -124,8 +121,7 @@ def test_flat_inventory_accepts_utf8_bom(tmp_path) -> None:
 def test_inventory_rejects_unknown_fields(tmp_path) -> None:
     inventory = tmp_path / "bad.csv"
     inventory.write_text(
-        "lemma,source_family,extraction_mode,source_titel\n"
-        "авто,ulp,curated_headword,typo\n",
+        "lemma,source_family,extraction_mode,source_titel\nавто,ulp,curated_headword,typo\n",
         encoding="utf-8",
     )
 
@@ -184,13 +180,9 @@ def test_inventory_rejects_conflicting_gloss_after_canonicalization(tmp_path) ->
 
 
 def test_committed_source_inventory_files_are_valid() -> None:
-    inventory_dir = PROJECT_ROOT / "data" / "lexicon" / "source-inventory"
+    inventory_dir = PROJECT_ROOT / "registry" / "lexicon" / "source-inventory"
     supported_suffixes = {".csv", ".tsv", ".jsonl", ".json", ".yaml", ".yml"}
-    inventory_paths = sorted(
-        path
-        for path in inventory_dir.iterdir()
-        if path.suffix.lower() in supported_suffixes
-    )
+    inventory_paths = sorted(path for path in inventory_dir.iterdir() if path.suffix.lower() in supported_suffixes)
 
     assert inventory_paths
 
@@ -202,16 +194,12 @@ def test_committed_source_inventory_files_are_valid() -> None:
     assert candidates
     assert len(records) >= 100
     assert len(candidates) >= 100
-    assert {"curriculum", "ohoiko", "teacher_lesson", "textbook"} <= {
-        record.source_family for record in records
-    }
+    assert {"curriculum", "ohoiko", "teacher_lesson", "textbook"} <= {record.source_family for record in records}
 
     for candidate in candidates:
         assert candidate.source_provenance
         for provenance in candidate.source_provenance:
-            assert provenance["inventory_path"].startswith(
-                "data/lexicon/source-inventory/"
-            )
+            assert provenance["inventory_path"].startswith("data/lexicon/source-inventory/")
             assert provenance.get("source_id")
             assert provenance.get("source_title")
 
@@ -235,22 +223,15 @@ def test_pos_balanced_sample_has_required_pos_buckets_and_source_fields() -> Non
         assert record.context
 
         if source_path not in source_payloads:
-            source_payloads[source_path] = yaml.safe_load(
-                source_file.read_text(encoding="utf-8")
-            )
+            source_payloads[source_path] = yaml.safe_load(source_file.read_text(encoding="utf-8"))
         locator_match = VOCABULARY_WORD_LOCATOR_RE.fullmatch(record.source_locator)
         assert locator_match
         category_index, item_index = (int(part) for part in locator_match.groups())
-        source_word = source_payloads[source_path]["vocabulary"][category_index][
-            "items"
-        ][item_index]["word"]
+        source_word = source_payloads[source_path]["vocabulary"][category_index]["items"][item_index]["word"]
         assert f'word: "{source_word}"' in record.context
 
         provenance = record.provenance_payload()
-        assert (
-            provenance["inventory_path"]
-            == "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
-        )
+        assert provenance["inventory_path"] == "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
         assert provenance["source_path"]
         assert provenance["source_locator"]
         assert provenance["context"]

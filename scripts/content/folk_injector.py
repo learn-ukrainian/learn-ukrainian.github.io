@@ -1,7 +1,7 @@
 """Folk Micro-Genres Injector.
 
 Loads folk material (загадки, скоромовки, прислів'я, приказки, лічилки, мирилки)
-from data/folk_micro_genres.yaml and filters by level + module themes.
+from registry/folk_micro_genres.yaml and filters by level + module themes.
 
 Injected into content and activities prompts via {FOLK_MATERIAL} placeholder,
 similar to how {LEXICAL_SANDBOX} works.
@@ -17,7 +17,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-DATA_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "folk_micro_genres.yaml"
+DATA_FILE = Path(__file__).resolve().parent.parent.parent / "registry" / "folk_micro_genres.yaml"
 
 # Map CEFR levels to allowed difficulty tags
 LEVEL_DIFFICULTIES: dict[str, set[str]] = {

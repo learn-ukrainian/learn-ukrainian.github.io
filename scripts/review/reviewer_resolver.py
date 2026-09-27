@@ -17,8 +17,8 @@ versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 ``_catalog_ladder``). **Policy changes to ladder order or formal CF seats are
 YAML edits** — this module must not hard-code a second ladder. As of the
 fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
-(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Terra, Sonnet 5,
-Gemini Flash, Grok native + Cursor-explicit ``grok-4.7`` fallback, …).
+(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Sol, Sonnet 5,
+Grok native + Cursor-explicit ``grok-4.7`` fallback, …).
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -37,7 +37,7 @@ from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, loa
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
-_SEALED_REVIEW_EXECUTABLE = "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
+_SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
 
 # --- family resolution -------------------------------------------------------
 
@@ -198,8 +198,6 @@ OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
 SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
-GEMINI_3_7_FLASH = REVIEW_CANDIDATES["gemini-3.7-flash"]
-GEMINI_3_6_FLASH = REVIEW_CANDIDATES["gemini-3.6-flash"]
 KIMI_K3 = REVIEW_CANDIDATES["kimi-k3"]
 DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
 DEEPSEEK_V4_1_FLASH = REVIEW_CANDIDATES["deepseek-v4.1-flash"]
@@ -399,7 +397,7 @@ class CandidateResult:
 
     @property
     def sealed_executable(self) -> str:
-        """Canonical review-pr execution boundary that invokes the participant."""
+        """Canonical sealed execution boundary that invokes the participant."""
         endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
         return str(endpoint.get("sealed_executable", ""))
 
@@ -470,7 +468,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         if candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
         if candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
-            return "candidate is not bound to the sealed review-pr ACP executable"
+            return "candidate is not bound to the sealed ACP executable"
         if candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
         if ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
@@ -564,6 +562,23 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+
+    # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
+    # hard gate even for injected ladders and explicitly pinned candidates.
+    if candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy":
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason="operator 2026-09-25: Gemini reviews Ukrainian only, never code — model-assignment.md",
+            health=health,
+        )
 
     retired_target = _retired_alias_target(candidate)
     if retired_target is not None and inputs.pinned_candidate != candidate.name:

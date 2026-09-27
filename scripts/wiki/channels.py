@@ -9,7 +9,9 @@ import yaml
 
 from .config import PROJECT_ROOT
 
-CHANNELS_PATH = PROJECT_ROOT / "data" / "external_articles" / "channels.yaml"
+# The channel registry is tracked; the scraped JSONL corpus it describes is untracked local data.
+CHANNELS_PATH = PROJECT_ROOT / "registry" / "external_articles" / "channels.yaml"
+EXTERNAL_CORPUS_DIR = PROJECT_ROOT / "data" / "external_articles"
 
 REGISTER_TAGS = {"spoken", "scripted", "interview", "mixed"}
 DECOLONIZATION_TAGS = {"strong", "moderate", "none", "neutral"}

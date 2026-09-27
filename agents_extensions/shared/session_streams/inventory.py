@@ -32,11 +32,6 @@ HANDOFF_PATH_OVERRIDES: dict[str, tuple[str, ...]] = {
         ".claude/curriculum-upgrade-epic/INTERIM-DRIVER-HANDOFF.md",
         "docs/session-state/current.claude-curriculum-upgrade.md",
     ),
-    "epic:7995": (
-        ".claude/a1-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md",
-        ".claude/a1-upgrade-epic/INTERIM-DRIVER-HANDOFF.md",
-        "docs/session-state/current.claude-a1-upgrade.md",
-    ),
     "epic:6943": (
         ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md",
         ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
@@ -82,7 +77,6 @@ _STREAM_NAME_TO_CLAUDE_DIR: dict[str, str] = {
     "seminars-bio": "bio",
     "corpus-channels": "bio",
     "core-quality": "core",
-    "eval-harness": "harness",
     "benchmark-2156": "harness",
     "seminars-cross": "folk",
 }

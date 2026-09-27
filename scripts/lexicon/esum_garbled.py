@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-CURATED_GARBLED_ESUM_PATH = ROOT / "data" / "lexicon" / "esum_garbled_etymologies.json"
+CURATED_GARBLED_ESUM_PATH = ROOT / "registry" / "lexicon" / "esum_garbled_etymologies.json"
 
 MOJIBAKE_MARKERS = (
     "Зпоц",
@@ -43,10 +43,7 @@ def lookup_key(value: str) -> str:
 @lru_cache(maxsize=1)
 def load_garbled_esum_entries() -> dict[str, dict[str, Any]]:
     """Load curated garbled ЕСУМ entries keyed by normalized lemma."""
-    try:
-        payload = json.loads(CURATED_GARBLED_ESUM_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    payload = json.loads(CURATED_GARBLED_ESUM_PATH.read_text(encoding="utf-8"))
     entries = payload.get("entries", [])
     if not isinstance(entries, list):
         return {}

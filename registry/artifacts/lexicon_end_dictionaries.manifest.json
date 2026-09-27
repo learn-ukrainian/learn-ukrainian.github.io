@@ -1,0 +1,34 @@
+{
+  "entries": [
+    {
+      "git_blob": "8b8e5aeec5450851bbd69d5397f3dc3a093c8763",
+      "migrated_at": "2026-09-26T12:57:22.578377+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427354102005238,
+      "path": "data/lexicon/textbook-end-dictionaries/inventory.json",
+      "pre_untrack_sha256": "0e01e2f8b2cb21642e26779b6a8708f68e0bc6236521e95fed54994bf1d485dd",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "0e01e2f8b2cb21642e26779b6a8708f68e0bc6236521e95fed54994bf1d485dd",
+      "size": 486294,
+      "store": "0e01e2f8b2cb21642e26779b6a8708f68e0bc6236521e95fed54994bf1d485dd"
+    },
+    {
+      "git_blob": "461d9d26fbf93a88bbcff65f45f828b50a260b1c",
+      "migrated_at": "2026-09-26T12:57:22.636788+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427354102005238,
+      "path": "data/lexicon/textbook-end-dictionaries/sections.json",
+      "pre_untrack_sha256": "7944b002d8610429bb4889a785deeb4650a1a0a6b41f0ead458e29c7a1d43b9f",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "7944b002d8610429bb4889a785deeb4650a1a0a6b41f0ead458e29c7a1d43b9f",
+      "size": 10598,
+      "store": "7944b002d8610429bb4889a785deeb4650a1a0a6b41f0ead458e29c7a1d43b9f"
+    }
+  ],
+  "group": "lexicon_end_dictionaries",
+  "schema": 1
+}

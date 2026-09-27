@@ -237,3 +237,18 @@ def test_sources_manifest_hashes_target_tables_and_external_template(tmp_path: P
     assert "sqlite://data/sources.db#literary_fts" in manifest
     assert "sqlite://data/sources.db#dictionary_indexes" in manifest
     assert any(key.endswith("/v6-write.md") for key in manifest)
+
+
+def test_pravopys_fallback_resolves_through_the_artifact_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    assert module_memory.find_pravopys_files(tmp_path) == []  # absent artifact: nothing to fingerprint
+    (tmp_path / "data/raw").mkdir(parents=True)
+    (tmp_path / "data/raw/pravopys.html").write_text("<html></html>", encoding="utf-8")
+    calls: list[tuple[str, str, Path]] = []
+
+    def fake_artifact_path(group: str, rel: str, *, repo: Path) -> Path:
+        calls.append((group, rel, repo))
+        return repo / "data" / rel
+
+    monkeypatch.setattr(module_memory, "artifact_path", fake_artifact_path)
+    assert module_memory.find_pravopys_files(tmp_path) == [tmp_path / "data/raw/pravopys.html"]
+    assert calls == [("raw_source", "raw/pravopys.html", tmp_path)]

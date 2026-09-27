@@ -24,10 +24,11 @@ from uuid import uuid4
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
-for path in (str(PROJECT_ROOT), str(SCRIPTS_DIR)):
-    with suppress(ValueError):
-        sys.path.remove(path)
-sys.path[:0] = [str(PROJECT_ROOT), str(SCRIPTS_DIR)]
+if __name__ == "__main__":
+    for path in (str(PROJECT_ROOT), str(SCRIPTS_DIR)):
+        with suppress(ValueError):
+            sys.path.remove(path)
+    sys.path[:0] = [str(PROJECT_ROOT), str(SCRIPTS_DIR)]
 
 from scripts.audit import layerb_shadow, llm_qg_shadow_store, llm_reviewer_dispatch, qg_workflow
 from scripts.audit.content_surface_gates import policy_for_level

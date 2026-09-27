@@ -18,19 +18,26 @@ from typing import Any
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
 from wiki.config import TRACK_WRITE_DOMAIN
 from wiki.diagnostics.retrieval_playback import normalize_text
 from wiki.sources_db import SOURCES_DB_PATH
 
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+# Untracked working files and the published coverage map (#8809 P1: artifact group corpus_audit_snapshots).
 OUTPUT_DIR = PROJECT_ROOT / "data" / "corpus_audit"
 ARTICLE_CONCEPTS_PATH = OUTPUT_DIR / "article_concepts.json"
 COVERAGE_MAP_PATH = OUTPUT_DIR / "coverage_map.json"
-GAP_CATEGORIES_PATH = OUTPUT_DIR / "gap_categories.md"
-INGESTION_ROADMAP_PATH = OUTPUT_DIR / "ingestion_roadmap.md"
-DRAFT_TICKETS_DIR = OUTPUT_DIR / "draft_tickets"
+# Human-reviewed deliverables are tracked under registry/.
+REGISTRY_OUTPUT_DIR = PROJECT_ROOT / "registry" / "corpus_audit"
+GAP_CATEGORIES_PATH = REGISTRY_OUTPUT_DIR / "gap_categories.md"
+INGESTION_ROADMAP_PATH = REGISTRY_OUTPUT_DIR / "ingestion_roadmap.md"
+DRAFT_TICKETS_DIR = REGISTRY_OUTPUT_DIR / "draft_tickets"
 A1_REPORT_PATH = PROJECT_ROOT / "docs" / "architecture" / "corpus-coverage-map-a1.md"
 
 DEFAULT_TRACKS = ("a1", "a2", "b1")
@@ -540,6 +547,18 @@ def load_json(path: Path) -> dict[str, Any]:
         return {}
     data = json.loads(path.read_text(encoding="utf-8"))
     return data if isinstance(data, dict) else {}
+
+
+def load_coverage_map(path: Path = COVERAGE_MAP_PATH) -> dict[str, Any]:
+    """Load a coverage map.
+
+    The default path is a published artifact: it is always verified against its manifest, and an absent or
+    mismatched file raises ``MissingArtifactError`` (with the hydrate command) instead of yielding an empty map.
+    An explicit user-supplied path is read directly, and a missing one yields ``{}``.
+    """
+    if Path(path).resolve() == COVERAGE_MAP_PATH.resolve():
+        path = artifact_path("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
+    return load_json(path)
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -1465,7 +1484,13 @@ def run_audit(
     roadmap = build_roadmap(categories)
     ticket_paths = write_draft_tickets(categories, roadmap)
 
-    write_json(COVERAGE_MAP_PATH, coverage_map)
+    write_artifact(
+        COVERAGE_MAP_PATH,
+        "corpus_audit_snapshots",
+        "scripts/wiki/diagnostics/corpus_gaps/audit.py",
+        lambda dest: write_json(dest, coverage_map),
+    )
+    GAP_CATEGORIES_PATH.parent.mkdir(parents=True, exist_ok=True)
     GAP_CATEGORIES_PATH.write_text(render_gap_categories_markdown(coverage_map, categories), encoding="utf-8")
     INGESTION_ROADMAP_PATH.write_text(render_roadmap_markdown(roadmap), encoding="utf-8")
 

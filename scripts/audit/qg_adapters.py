@@ -21,7 +21,7 @@ from scripts.audit.curriculum_qg_harness import scan_curriculum_module
 from scripts.pipeline.semantic_russianisms import scan_plan_for_russianisms
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-UA_GEC_GOLD_PATH = PROJECT_ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+UA_GEC_GOLD_PATH = PROJECT_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 
 _LEGACY_DIMENSION_ALIASES = {
     "tone_register": "tone",

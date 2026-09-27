@@ -393,11 +393,11 @@ def _load_local_data(track: str, slug: str) -> list[dict]:
 
 
 def _load_folk_micro_genres(slug: str) -> list[dict]:
-    """Load folk micro-genre examples from data/folk_micro_genres.yaml.
+    """Load folk micro-genre examples from registry/folk_micro_genres.yaml.
 
     Matches slug keywords to genre categories in the YAML.
     """
-    yaml_path = PROJECT_ROOT / "data" / "folk_micro_genres.yaml"
+    yaml_path = PROJECT_ROOT / "registry" / "folk_micro_genres.yaml"
     if not yaml_path.exists():
         return []
 

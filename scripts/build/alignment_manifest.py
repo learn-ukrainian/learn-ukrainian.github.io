@@ -52,7 +52,7 @@ def _static_default_attr(name: str) -> Any:
     if name == "SOURCES_DB_PATH":
         return _default_project_root() / "data" / "sources.db"
     if name == "CANONICAL_ANCHORS_PATH":
-        return _default_project_root() / "data" / "canonical_anchors.yaml"
+        return _default_project_root() / "registry" / "canonical_anchors.yaml"
     if name == "DECISIONS_PATH":
         return _default_project_root() / "docs" / "decisions" / "decisions.yaml"
     if name == "PHASE_TEMPLATES_ROOT":
@@ -106,7 +106,7 @@ def _resolve_attr(name: str) -> Any:
     if name == "SOURCES_DB_PATH":
         return _resolve_attr("PROJECT_ROOT") / "data" / "sources.db"
     if name == "CANONICAL_ANCHORS_PATH":
-        return _resolve_attr("PROJECT_ROOT") / "data" / "canonical_anchors.yaml"
+        return _resolve_attr("PROJECT_ROOT") / "registry" / "canonical_anchors.yaml"
     if name == "DECISIONS_PATH":
         return _resolve_attr("PROJECT_ROOT") / "docs" / "decisions" / "decisions.yaml"
     if name == "PHASE_TEMPLATES_ROOT":

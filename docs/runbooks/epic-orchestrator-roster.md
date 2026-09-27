@@ -26,8 +26,9 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
-| **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` |
-| **a1-upgrade** (#7995 content rollout; blocked on #7994 Phase 1 landing, selector remains mintable) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic a1-upgrade` |
+| **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` (slot `grok-core`; file handoff `.claude/curriculum-upgrade-epic/`) |
+| **a1-upgrade** (#7995 closed 2026-09-24) | Retired selector; no driver launch | — |
+| **eval-harness** (#4913 closed 2026-09-24) | Retired selector; route new infra work through `infra` | — |
 | **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |
 | **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
@@ -219,7 +220,7 @@ teaches the message-plane and cross-family review loop.
   files still carry continuity, not competing message or lease authority.
   `dual_write` is a compatibility soak/rollback mode, not normal operation.
 - Sealed formal CF (`review-pr`, `publish-review-verdict`, `lu-review-*` trees)
-  is **retired — do not use**. Use a qualified native toolful cross-family
+  is **retired — do not use** (removed in #8520). Use a qualified native toolful cross-family
   reviewer and post its verdict and findings on the PR at the exact head SHA,
   following the [local-code-review workflow](../../agents_extensions/shared/skills/local-code-review/SKILL.md).
 - Plane, retention, and review-eligibility changes remain infra/harness actions

@@ -6,7 +6,7 @@ Approved layout for bulk sources, active SQLite, and agent-safe fallbacks.
 
 | Role | Location | Notes |
 | --- | --- | --- |
-| Active SQLite | Repository `data/sources.db` | **Always local.** Never open from SMB/network FS. Sources MCP reads this file only. |
+| Active SQLite | Repository `data/sources.db` | **Always on a local filesystem.** On the Linux service host, repository `data/` moves to the attached volume at the same path; never open from SMB/network FS. Sources MCP reads this file only. |
 | Bulk raw sources (primary) | Windows NTFS share **UkrainianData** → `raw-sources/learn-ukrainian-data` | Full materialized mirror. Mac mounts as `/Volumes/UkrainianData/…` when available. |
 | Bulk raw sources (fallback) | Google Drive File Provider `My Drive/Projects/learn-ukrainian-data` | On-demand retrieval when SMB is absent. |
 | Mac working set | Git repo + active DBs + small shards | Keep hot runtime artifacts local. |
@@ -15,6 +15,39 @@ Approved layout for bulk sources, active SQLite, and agent-safe fallbacks.
 **Marker-valid bulk root:** top-level directories `literary_texts/` and
 `textbook_chunks/` must both exist. Ambiguous multi-match roots are treated as
 unavailable (no guessing).
+
+## Linux repository data volume (#8804)
+
+The migration window moves the entire repository `data/` tree to a 40 GB
+Hetzner Cloud Volume and bind-mounts it back at `<repo>/data`. Application paths
+stay the same, and SQLite remains on a local filesystem. The Mac and hosts
+before migration have no `/etc/learn-ukrainian/data-volume.uuid` file.
+
+Before writing the UUID marker, make `/etc/learn-ukrainian` searchable by the
+service user (for example, mode 0755 or membership in its access group) and
+make the marker readable by that user. An unreadable marker or parent refuses
+service starts with exit 78. After the volume and bind mount are verified, the
+driver restarts the four listener services; a guard refusal does not retry
+automatically. Restart any timer service that failed before the mount as well.
+
+Once the UUID file exists, `scripts/storage/data_volume_guard.sh` checks the
+UUID reported by `findmnt -no UUID,SOURCE -T <repo>/data`. It exits 78 if the
+mount is absent, unreadable, or from a different volume. `services.sh`
+checks before `start`, `restart`, and `fix` on both systemd and direct-process
+paths; `status` prints the observed `data: volume <uuid>` or
+`data: root disk` (and `data: unknown` if mount identity cannot be read).
+The ten systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
+each original `ExecStart` with the same guard and set
+`RestartPreventExitStatus=78`. This covers four loopback listeners and all
+six timer-triggered services, including backup and retention, without changing
+the timer files. Preview
+the rendered `/etc/systemd/user/` files with
+`<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
+the driver runs `--apply` from the primary checkout during the migration window,
+then reloads the user manager. `--apply` refuses dispatch worktrees. The
+installer does not mount, move data, reload, or start services. The reporter
+drop-in uses the resolved primary checkout for its guard, command, and working
+directory.
 
 ## Agent / developer commands (Mac)
 
@@ -95,6 +128,38 @@ an accident of whichever ingest last touched the file (#8527):
   fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
 - **Never** run a long-lived read transaction against a DELETE-mode `sources.db` while
   the walk runs, and never switch the live file back to DELETE mode.
+
+## Bulk consumers and the old `data/` links (#8803)
+
+`data/textbooks` and `data/vesum` are no longer tracked symlinks. Both paths
+stay gitignored, and no consumer reads bulk data through them:
+
+- **Textbook PDFs** are read from `textbooks/` under the resolved bulk root
+  (`scripts/wiki/config.py` `TEXTBOOK_PDFS_DIR`).
+- **Custody-access archive locators** (`gdrive:learn-ukrainian-data/<rel>` and
+  `gdrive:<rel>`; a bare `<rel>` too) resolve to `<rel>` under the bulk root and
+  nowhere else — there is no repository-relative search root. Absolute locators
+  and any locator whose symlink-resolved path leaves the bulk root fail closed
+  with an error naming the locator kind. When no marker-valid root resolves, the
+  source is reported as unmounted.
+- **VESUM release-asset cache**: `scripts/rag/build_vesum_shadow.py` downloads
+  the public, SHA-pinned `dict_uk` asset into `data/vesum/` unless you pass
+  `--asset` or `--cache-dir`. This is a gitignored download cache, not bulk data.
+  - **The legacy link goes away on pull, where it is unchanged.** `data/vesum`
+    used to be a tracked symlink. Once this change lands, `git pull` deletes it
+    from clones where the link is unmodified, because upstream no longer tracks
+    it. If git refuses (`git pull --ff-only` stops because the link was changed
+    locally), the link stays. Remove it yourself with `rm data/vesum` (this
+    deletes the link only; never `rm -r` through it) and pull again. Do this
+    before running the VESUM builder. The default then resolves to a plain,
+    gitignored directory that the builder creates on demand.
+  - **Do not recreate a symlink there.** `data/vesum` must stay a plain
+    directory; a host that wants the cache elsewhere passes `--cache-dir`,
+    which overrides the location.
+  - **The parser default is frozen.** The default lives in
+    `scripts/rag/vesum_reingest.py`, whose SHA-256 is pinned by
+    `scripts/config/vesum_source.lock.json` and the frozen ua-eval
+    v0.1.0/v0.1.1 release chain, so the `data/vesum` default is not changed.
 
 ## Outage posture
 

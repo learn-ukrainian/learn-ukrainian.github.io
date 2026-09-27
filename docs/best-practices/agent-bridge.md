@@ -99,8 +99,8 @@ Current adapter policy for discussion calls:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "full form with --to options" --to agy,codex
 .venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "reply" --parent MESSAGE_ID
 
-# Multi-agent discussion (B.4)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,agy,codex --max-rounds 2
+# Multi-agent discussion (B.4). Agy joins only with --review-profile ukrainian.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,codex --max-rounds 2
 ```
 
 ## Desktop Participation
@@ -167,68 +167,42 @@ brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR> [--reviewer auto|codex|claude|glm|grok] [--model MODEL]`
-is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
+Exact-head cross-family review through `ask-<lane> --type review` (headless dispatch via
+`scripts/delegate.py dispatch --agent <reviewer> --mode read-only --worktree --branch <branch>`)
+is the **canonical formal PR review entry** (sealed `review-pr` and `publish-review-verdict`
+were removed in #8520):
 
 - **Pointer-only** prompt (PR URL + checklist + mandatory read-only contract).
 - Hard size caps — refuse fat pasted diffs/inventory YAML.
-- Default `--reviewer auto` uses the deterministic suitability-first scheduler;
-  no provider is an unconditional default.
+- An independent cross-family reviewer outside the author's model family must be selected.
 - A reviewer alias selects its practical default. Add a formally eligible
   same-route model plus `--override-reason` for an exceptional operator pin,
   for example `--reviewer claude --model claude-fable-5` or
   `--reviewer codex --model gpt-5.6-sol`.
-- `agy` and `kimi` remain recognized request identities but fail closed until
-  their catalog endpoints satisfy sealed-review eligibility. GLM-5.3 is
+- `kimi` remains a recognized request identity but fails closed until its catalog endpoint satisfies sealed-review eligibility. `agy` is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
   **LOCAL-ONLY** / China egress and requires the matching egress policy.
 - `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.
 
 Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
 body over 4 KiB or attach evidence over 64 KiB to an `ask-*` review job; the
-bridge rejects it and points to `review-pr <N>`. Prefer a PR target over a
-manual review ask.
+bridge rejects it. Prefer exact-head cross-family review through `ask-<lane> --type review`
+(headless dispatch) over a manual review ask (sealed `review-pr` was removed in #8520).
 
 **Phase 5 steer (warn-not-reject, #5486):** if an `ask-* --review` payload looks
 like a **formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal
-wording) and has **no** sealed `review_pr` / `review_branch` target, the bridge
+wording) and has **no** named PR target or head SHA, the bridge
 prints a **warning** and still delivers the ask — rejecting after the agent
-already wrote a formal review wastes work when the agent did not know to use
-`review-pr`. Prefer `review-pr <N>` then `publish-review-verdict` for new work.
+already wrote a formal review wastes work (sealed `review-pr` and `publish-review-verdict` were removed in #8520; the direct `ask-<lane> --type review` round is the formal path).
 **Size caps remain fail-closed** for oversized bodies/attachments. Silence the
 steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
-**Phase 4 residual (#5485):** migrate runbooks and dispatch briefs that still say
-`ask-agy --review` / `ask-codex --review` for PR gates to `review-pr` +
-`publish-review-verdict`. `scripts/audit/llm_reviewer_dispatch.py` content-review
-routes remain `ask-* --review` (module QG, not PR CF).
-
-After a reviewer writes canonical `code-review-findings.v1` JSON, publish it
-with exactly one PR comment. The publisher retains the overall explanation and
-every finding; it derives the gate verdict from the canonical evidence rather
-than treating a detached verdict line as proof:
-
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
-  --pr 5458 --findings-json /tmp/review-findings.json \
-  --model gpt-5.6-terra --family openai --harness codex
-```
-
-The comment keeps `VERDICT`, the PR head SHA, and reviewer provenance, then
-renders the explanation and each finding's priority, path/line, description,
-rationale, smallest fix, and sources. A verdict with no explanation and no
-findings is marked **NO EVIDENCE SUPPLIED** in the published comment. If a
-review is too large for GitHub, the publisher retains the overall explanation,
-truncates findings last, and names the full structured record. The command
-prints a ≤2 KiB status summary; use `--dry-run` to verify the payload locally.
-
-For a sealed `APPROVED` verdict, the publisher re-reads the live PR head before
-it publishes `fleet/cross-family-review=success`. A head change invalidates the
-review publication and requires review evidence for the new head.
-
-`--verdict-file` remains a legacy escape hatch, but its published comment
-explicitly says that no review evidence was supplied. It is not equivalent to
-a canonical review.
+**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
+(operator 2026-09-25): a missing `--review-profile` is refused, `code` is
+refused, and Ukrainian content review must pass `--review-profile ukrainian`.
+`scripts/audit/llm_reviewer_dispatch.py` content-review routes remain
+`ask-* --review` (module QG, not PR CF), with that Ukrainian profile on the
+AGY factual route.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode
@@ -237,7 +211,7 @@ effort override is passed, then builds a review prompt from either
 `gh pr view` plus `gh pr diff` or the target file/directory contents.
 Use **three-dot** evidence only (`gh pr diff`, `gh pr view --json files`,
 or merge-base…HEAD) — never two-dot `base-tip..HEAD` against a moved base
-(#5802). Prefer `review-pr` for ordinary formal CF review.
+(#5802). Prefer exact-head cross-family review through `ask-<lane> --type review` (headless dispatch) for ordinary formal CF review (sealed `review-pr` and `publish-review-verdict` were removed in #8520).
 
 ### Worktree cleanup (post-merge painpoint)
 
@@ -317,8 +291,8 @@ and you have another way to detect parked sessions.
 | Sustained discussion on a topic | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` to a channel |
 | Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
-| Formal PR review (CF gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>` |
-| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ...` |
+| Formal PR review (CF gate) | Direct `ask-<lane> --type review` (headless dispatch; sealed `review-pr` removed in #8520) |
+| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to` a non-Gemini seat |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 
 ## The hygiene rule
@@ -328,10 +302,12 @@ agent.** Per channel conventions:
 
 1. Write code → stage with `git add`
 2. `git diff --cached > /tmp/diff.txt`
-3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to agy`
+3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to codex`
 4. Apply feedback or argue back in writing
 5. Commit only after the review is CLEAN or BLOCKING is resolved
-6. Commit message includes `Reviewed-By: AGY Gemini 3.1 Pro (High) (task-id)` trailer
+6. Commit message includes `Reviewed-By: <non-Gemini reviewer> (task-id)` trailer
+
+Gemini reviews Ukrainian only, never code (operator 2026-09-25). A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Code review uses a non-Gemini seat.
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.

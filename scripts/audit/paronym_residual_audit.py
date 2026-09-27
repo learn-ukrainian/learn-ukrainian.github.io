@@ -32,6 +32,7 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_pair,
 )
 from scripts.audit.lexeme_filter import is_lexeme_entry, practice_ineligibility_reason
+from scripts.storage.paths import REGISTRY_ROOT
 
 
 def _entry_lookup(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -148,7 +149,7 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--atlas-db", type=Path, default=Path("data/atlas.db"))
-    parser.add_argument("--paronym-pairs", type=Path, default=Path("data/lexicon/paronym_pairs.yaml"))
+    parser.add_argument("--paronym-pairs", type=Path, default=REGISTRY_ROOT / "lexicon/paronym_pairs.yaml")
     parser.add_argument("--vesum-db", type=Path, required=True)
     parser.add_argument("--out", type=Path, default=None, help="Write full per-pair JSON here")
     args = parser.parse_args(argv)

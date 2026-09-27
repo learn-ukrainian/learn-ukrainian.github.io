@@ -201,8 +201,8 @@ def test_export_and_committed_deck_parity(tmp_path: Path):
     assert data["card_count"] == len(cards)
     assert len(data["cards"]) == len(cards)
 
-    repo_deck_path = Path("data/practice/verb_mechanics_deck.json")
-    assert repo_deck_path.exists(), "Committed deck file data/practice/verb_mechanics_deck.json must exist"
+    repo_deck_path = Path("registry/practice/verb_mechanics_deck.json")
+    assert repo_deck_path.exists(), "Committed deck file registry/practice/verb_mechanics_deck.json must exist"
 
     with open(repo_deck_path, encoding="utf-8") as f:
         committed_data = json.load(f)

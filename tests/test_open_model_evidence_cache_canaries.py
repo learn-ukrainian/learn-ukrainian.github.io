@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.lexicon import ulif_raw_cache
 from scripts.projects.open_model_data import evidence_cache_canaries as canaries
 
 
@@ -14,13 +15,12 @@ def _database(path: Path, *, mutated_entry_shape: bool = False) -> Path:
     connection = sqlite3.connect(path)
     extra = ", unexpected TEXT" if mutated_entry_shape else ""
     connection.execute(
-        "CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, normalized_query TEXT NOT NULL, canonical_headword TEXT NOT NULL DEFAULT '', raw_response_ref TEXT NOT NULL DEFAULT '', retrieved_at TEXT NOT NULL DEFAULT '', response_sha256 TEXT NOT NULL DEFAULT '', parser_version TEXT NOT NULL DEFAULT '', status TEXT NOT NULL" + extra + ")"
+        "CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, normalized_query TEXT NOT NULL, canonical_headword TEXT NOT NULL DEFAULT '', raw_response_ref TEXT NOT NULL DEFAULT '', retrieved_at TEXT NOT NULL DEFAULT '', response_sha256 TEXT NOT NULL DEFAULT '', parser_version TEXT NOT NULL DEFAULT '', status TEXT NOT NULL"
+        + extra
+        + ")"
     )
     connection.execute(
         "CREATE TABLE ulif_dictua_sections (id INTEGER PRIMARY KEY, entry_id INTEGER NOT NULL, kind TEXT NOT NULL, source_order INTEGER NOT NULL, sense_or_group_id TEXT NOT NULL DEFAULT '', payload_json TEXT NOT NULL)"
-    )
-    connection.execute(
-        "CREATE TABLE ulif_dictua_raw_responses (response_sha256 TEXT PRIMARY KEY, body BLOB NOT NULL, content_type TEXT NOT NULL DEFAULT 'text/html', stored_at TEXT NOT NULL DEFAULT '')"
     )
     body = b"<html><headword>robota</headword></html>"
     body_hash = canaries.sha256_bytes(body)
@@ -29,10 +29,7 @@ def _database(path: Path, *, mutated_entry_shape: bool = False) -> Path:
         f"INSERT INTO ulif_dictua_entries({columns}) VALUES (?,?,?,?,?,?,?)",
         ("робота", "робота", f"sha256:{body_hash}", "fixture", body_hash, "fixture-v1", "ok"),
     )
-    connection.execute(
-        "INSERT INTO ulif_dictua_raw_responses(response_sha256,body) VALUES (?,?)",
-        (body_hash, body),
-    )
+    ulif_raw_cache.put(body_hash, body, path=ulif_raw_cache.cache_path(path))
     connection.execute(
         "INSERT INTO ulif_dictua_sections(entry_id,kind,source_order,sense_or_group_id,payload_json) VALUES (1,'synonyms',0,'synonyms:1','{}')"
     )
@@ -68,7 +65,7 @@ def test_parser_shape_mutation_fails_closed(tmp_path: Path) -> None:
 
 def test_raw_response_mutation_fails_closed(tmp_path: Path) -> None:
     database = _database(tmp_path / "mutated-raw.db")
-    connection = sqlite3.connect(database)
+    connection = ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(database))
     connection.execute("UPDATE ulif_dictua_raw_responses SET body = X'00'")
     connection.commit()
     connection.close()

@@ -34,6 +34,9 @@ from pathlib import Path
 
 import yaml
 
+# C parser, same safe-load guarantees; parsing ~350 vocabulary files dominated the build.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -44,7 +47,7 @@ from scripts.lexicon.manifest_io import _write_atomic
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "data" / "lexicon" / "vesum_inflection_aliases.json"
+VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "registry" / "lexicon" / "vesum_inflection_aliases.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
@@ -179,13 +182,10 @@ def _load_vesum_inflection_aliases() -> dict[str, str]:
     """Load the committed VESUM inflection→lemma alias map: ``form_key -> target lemma``.
 
     Generated offline by ``scripts.lexicon.generate_vesum_aliases`` and committed, so the
-    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing/garbled file
-    yields no aliases — the build degrades to curated-only normalization.
+    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing or garbled
+    registry file must fail the build instead of silently dropping aliases.
     """
-    try:
-        payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
     aliases = payload.get("aliases") if isinstance(payload, dict) else None
     if not isinstance(aliases, dict):
         return {}
@@ -201,7 +201,7 @@ VESUM_INFLECTION_ALIASES_BY_KEY = _load_vesum_inflection_aliases()
 
 def _course_module_numbers() -> dict[tuple[str, str], int]:
     """Return curriculum-indexed module numbers keyed by ``(track, slug)``."""
-    manifest = yaml.safe_load(CURRICULUM_MANIFEST.read_text(encoding="utf-8")) or {}
+    manifest = yaml.load(CURRICULUM_MANIFEST.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or {}
     levels = manifest.get("levels") or {}
     module_numbers: dict[tuple[str, str], int] = {}
     if not isinstance(levels, dict):
@@ -255,7 +255,7 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
     path = CURRICULUM_ROOT / str(module["track"]) / str(module["slug"]) / "vocabulary.yaml"
     if not path.exists():
         return []
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or []
     out: list[dict] = []
     for entry in raw:
         if not isinstance(entry, dict):

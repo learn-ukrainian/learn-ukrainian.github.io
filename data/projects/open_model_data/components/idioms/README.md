@@ -4,6 +4,8 @@
 **Issue:** [#8330](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8330)
 **Status:** Active Development
 
+Generated phraseology files are local-only while the [#8140 release hold](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8140) stands.
+
 ## Purpose
 Curates authentic Ukrainian idioms and phraseologisms sourced directly from:
 1. Complete ULIF phraseological dictionary walks (`data/sources.db`).

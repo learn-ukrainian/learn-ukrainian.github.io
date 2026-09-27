@@ -10,10 +10,16 @@ corpus. This proves build behavior for one human excerpt, not corpus release.
 """
 from __future__ import annotations
 
+import contextlib
+import copy
+import io
 import json
 import subprocess
 import sys
+from collections import defaultdict
+from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -22,6 +28,82 @@ from tests.test_open_model_view_exporter import source_payload, source_record, w
 
 HUMAN_TEXT = "Садок вишневий коло хати,\nХрущі над вишнями гудуть,"
 SOURCE_URL = "https://uk.wikisource.org/w/index.php?title=Садок_вишневий...&oldid=712203"
+
+
+def _input_token(path: Path) -> tuple[str, int, int]:
+    resolved = Path(path).resolve()
+    stat = resolved.stat()
+    return (str(resolved), stat.st_mtime_ns, stat.st_size)
+
+
+def _copy_exclusion_registry(
+    registry: exporter.EvaluationExclusionRegistry,
+) -> exporter.EvaluationExclusionRegistry:
+    # Container-level copy of a fully built registry. Every leaf is immutable
+    # (str, int, frozenset), so this isolates the cached object exactly like
+    # copy.deepcopy would, at a fraction of the cost.
+    return exporter.EvaluationExclusionRegistry(
+        exact_hashes=set(registry.exact_hashes),
+        near_texts=list(registry.near_texts),
+        near_shingles=list(registry.near_shingles),
+        shingle_index=defaultdict(set, {key: set(value) for key, value in registry.shingle_index.items()}),
+        character_index=defaultdict(set, {key: set(value) for key, value in registry.character_index.items()}),
+        artifacts=copy.deepcopy(registry.artifacts),
+    )
+
+
+_EXCLUSION_REGISTRY_CACHE: dict[tuple, exporter.EvaluationExclusionRegistry] = {}
+_SCHEMA_BUNDLE_CACHE: dict[tuple, tuple[dict[Path, dict[str, Any]], Any]] = {}
+
+
+@pytest.fixture(autouse=True)
+def _cache_parsed_evaluation_inputs(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Share parsed evaluation inputs that are identical across tests.
+
+    Every export rebuilds the exclusion registry (~1-2s) and the schema
+    bundle from the same immutable repo artifacts. Cache them keyed on the
+    exact input paths plus each file's (mtime_ns, size), and hand each
+    caller an isolated copy. A miss (e.g. a test-written artifact with a
+    unique tmp_path) always calls through to the real function.
+    """
+    real_build_exclusion_registry = exporter.build_exclusion_registry
+    real_schema_bundle = exporter.schema_bundle
+
+    def cached_build_exclusion_registry(
+        *,
+        v011_manifest: Path,
+        v02_packet: Path,
+        extra_artifacts: Sequence[Path] = (),
+    ) -> exporter.EvaluationExclusionRegistry:
+        try:
+            key = (
+                _input_token(v011_manifest),
+                _input_token(v02_packet),
+                tuple(_input_token(path) for path in extra_artifacts),
+                tuple(_input_token(path) for path in exporter.DEFAULT_EVALUATION_ARTIFACTS),
+            )
+        except OSError:
+            return real_build_exclusion_registry(
+                v011_manifest=v011_manifest,
+                v02_packet=v02_packet,
+                extra_artifacts=extra_artifacts,
+            )
+        if key not in _EXCLUSION_REGISTRY_CACHE:
+            _EXCLUSION_REGISTRY_CACHE[key] = real_build_exclusion_registry(
+                v011_manifest=v011_manifest,
+                v02_packet=v02_packet,
+                extra_artifacts=extra_artifacts,
+            )
+        return _copy_exclusion_registry(_EXCLUSION_REGISTRY_CACHE[key])
+
+    def cached_schema_bundle() -> tuple[dict[Path, dict[str, Any]], Any]:
+        key = tuple(_input_token(path) for path in exporter.ALL_SCHEMA_PATHS)
+        if key not in _SCHEMA_BUNDLE_CACHE:
+            _SCHEMA_BUNDLE_CACHE[key] = real_schema_bundle()
+        return copy.deepcopy(_SCHEMA_BUNDLE_CACHE[key])
+
+    monkeypatch.setattr(exporter, "build_exclusion_registry", cached_build_exclusion_registry)
+    monkeypatch.setattr(exporter, "schema_bundle", cached_schema_bundle)
 
 
 def prepare_inputs(directory: Path):
@@ -37,34 +119,65 @@ def prepare_inputs(directory: Path):
     return record, payload
 
 
-def run_export(directory: Path, record, payload, operation="local_learning"):
+def invoke_cli(args: list[str]) -> tuple[int, str, str]:
+    """Run the exporter CLI in-process with subprocess-equivalent results.
+
+    ``main()`` returns the success code and prints the receipt to stdout;
+    failures reach ``argparse`` exit paths that raise ``SystemExit`` after
+    writing the error to stderr.
+    """
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+        try:
+            returncode = exporter.main(args)
+        except SystemExit as exc:
+            returncode = exc.code if isinstance(exc.code, int) else 1
+    return returncode, stdout.getvalue(), stderr.getvalue()
+
+
+def run_export(directory: Path, record, payload, operation="local_learning", use_subprocess=False):
     write_jsonl(directory / "sources.jsonl", [record])
     write_jsonl(directory / "payloads.jsonl", [payload])
-    result = subprocess.run([
-        sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+    args = [
         "continued-pretraining", "--source-records", str(directory / "sources.jsonl"),
         "--payloads", str(directory / "payloads.jsonl"), "--origin", payload["origin"],
         "--representation-view", "faithful_literary", "--operation", operation,
         "--output", str(directory / "output.jsonl"),
         "--receipt-output", str(directory / "receipt.json"),
-    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
-    assert result.returncode == 0, result.stderr
-    return json.loads(result.stdout)
+    ]
+    if use_subprocess:
+        result = subprocess.run([
+            sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+            *args,
+        ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
+        returncode, stdout, stderr = result.returncode, result.stdout, result.stderr
+    else:
+        returncode, stdout, stderr = invoke_cli(args)
+    assert returncode == 0, stderr
+    return json.loads(stdout)
 
 
-def materialize_input(directory: Path, record, payload):
+def materialize_input(directory: Path, record, payload, use_subprocess=False):
     write_jsonl(directory / "sources.jsonl", [record])
     (directory / "source.txt").write_bytes(payload["text"].encode("utf-8"))
     metadata = {key: value for key, value in payload.items() if key not in {"text", "text_sha256"}}
     (directory / "reviewed.json").write_text(json.dumps(metadata), encoding="utf-8")
-    result = subprocess.run([
-        sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+    args = [
         "materialize-human-source", "--source-records", str(directory / "sources.jsonl"),
         "--reviewed-payload", str(directory / "reviewed.json"),
         "--source-text", str(directory / "source.txt"), "--output", str(directory / "materialized.jsonl"),
-    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
-    assert result.returncode == 0, result.stderr
-    receipt = json.loads(result.stdout)
+    ]
+    if use_subprocess:
+        result = subprocess.run([
+            sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+            *args,
+        ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
+        returncode, stdout, stderr = result.returncode, result.stdout, result.stderr
+    else:
+        returncode, stdout, stderr = invoke_cli(args)
+    assert returncode == 0, stderr
+    receipt = json.loads(stdout)
     assert receipt["payloads_written"] == 1
     materialized = json.loads((directory / "materialized.jsonl").read_text())
     assert materialized == payload
@@ -74,9 +187,11 @@ def materialize_input(directory: Path, record, payload):
 def test_human_source_reaches_local_output_and_reproduces(tmp_path):
     first_dir, second_dir = tmp_path / "first", tmp_path / "second"
     record, payload = prepare_inputs(first_dir)
-    first = run_export(first_dir, record, materialize_input(first_dir, record, payload))
+    first = run_export(first_dir, record, materialize_input(first_dir, record, payload, use_subprocess=True),
+                       use_subprocess=True)
     prepare_inputs(second_dir)
-    second = run_export(second_dir, record, materialize_input(second_dir, record, payload))
+    second = run_export(second_dir, record, materialize_input(second_dir, record, payload, use_subprocess=True),
+                        use_subprocess=True)
     assert first == second
     assert first["output"]["records"] == 1
     assert first["counts"]["model_training_eligible_records"] == 1

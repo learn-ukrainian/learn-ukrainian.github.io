@@ -18,6 +18,7 @@ These tests lock in the safety behavior:
 """
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import sqlite3
 import sys
@@ -25,6 +26,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+
+from scripts.lexicon import ulif_raw_cache
 
 pytestmark = pytest.mark.reads_content
 
@@ -82,14 +85,14 @@ def _make_populated_db(path: Path, *, with_wiki: bool = False) -> None:
 
 def _add_ulif_dictua_cache(path: Path) -> None:
     """Add a minimal valid official DictUA cache to an existing legacy DB."""
+    from scripts.lexicon import ulif_raw_cache
     from wiki import sources_db as sdb
 
     conn = sqlite3.connect(str(path))
     sdb.ensure_ulif_dictua_schema(conn)
-    conn.execute(
-        "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
-        ("a" * 64, b"<html>cached</html>", "text/html", "2026-07-15T00:00:00+00:00"),
-    )
+    body = b"<html>cached</html>"
+    digest = hashlib.sha256(body).hexdigest()
+    ulif_raw_cache.put(digest, body, "text/html", "2026-07-15T00:00:00+00:00", path=ulif_raw_cache.cache_path(path))
     conn.execute(
         """
         INSERT INTO ulif_dictua_entries
@@ -98,8 +101,8 @@ def _add_ulif_dictua_cache(path: Path) -> None:
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
-            7, "привіт", "привіт", f"sha256:{'a' * 64}",
-            "2026-07-15T00:00:00+00:00", "a" * 64, "ulif-dictua-v1", "ok",
+            7, "привіт", "привіт", f"sha256:{digest}",
+            "2026-07-15T00:00:00+00:00", digest, "ulif-dictua-v1", "ok",
         ),
     )
     conn.execute(
@@ -456,6 +459,7 @@ class TestWikipediaPreservation:
         p = tmp_path / "populated.db"
         _make_populated_db(p)
         _add_ulif_dictua_cache(p)
+        digest = hashlib.sha256(b"<html>cached</html>").hexdigest()
 
         with patch.object(bs, "_ingest_jsonl", return_value=0):
             empty_gd = tmp_path / "empty_gd"
@@ -470,7 +474,8 @@ class TestWikipediaPreservation:
 
         conn = sqlite3.connect(str(p))
         try:
-            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 1
+            assert conn.execute("SELECT 1 FROM sqlite_master WHERE name='ulif_dictua_raw_responses'").fetchone() is None
+            assert ulif_raw_cache.get(digest, path=ulif_raw_cache.cache_path(p)) == b"<html>cached</html>"
             entry = conn.execute(
                 "SELECT id, normalized_query, status FROM ulif_dictua_entries"
             ).fetchone()

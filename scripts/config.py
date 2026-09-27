@@ -49,7 +49,8 @@ DELEGATE_WORKTREE_ADD_MAX_S = 900.0
 # needed full-suite `-n auto` runs. Tune from the per-worker `peak_rss_mib`
 # and the `admission` snapshot each task record now carries.
 # Live write workers (spawning/running, pid alive) at which a new one is refused.
-DISPATCH_MAX_LIVE_WRITE_WORKERS = 5
+# Raised to 6 by operator decision 2026-09-26 (5 workers left 12.4 GB MemAvailable; worker peak RSS median 0.4 GB, p90 3.1 GB).
+DISPATCH_MAX_LIVE_WRITE_WORKERS = 6
 # /proc/meminfo MemAvailable floor, in GiB.
 DISPATCH_MIN_MEM_AVAILABLE_GIB = 3.5
 # 1-minute load average divided by os.cpu_count(); refused above this.

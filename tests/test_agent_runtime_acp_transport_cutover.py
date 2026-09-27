@@ -123,6 +123,13 @@ def test_inter_agent_refuses_unsupported_or_bridge_without_legacy_fallback(tmp_p
     with pytest.raises(runner.InterAgentTransportError, match="unavailable"):
         runner.invoke_inter_agent("grok", "prompt", **kwargs)
 
+    # The refusal names the variable, never its value (#8652).
+    sentinel = "env-value-sentinel-8652"
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", sentinel)
+    with pytest.raises(runner.InterAgentTransportError, match="LU_ACPX_TRANSPORT") as refused:
+        runner.invoke_inter_agent("grok", "prompt", **kwargs)
+    assert sentinel not in str(refused.value)
+
     assert calls == []
 
 

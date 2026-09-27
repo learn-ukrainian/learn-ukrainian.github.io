@@ -132,6 +132,9 @@ def collect_with_absent_trees(
     env = os.environ.copy()
     env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
     env[REPO_ROOT_ENV] = str(root)
+    # The child runs in an isolated scratch cwd and loads its own audit plugin.
+    # The dispatch parent's plugin is not importable there.
+    env.pop("PYTEST_PLUGINS", None)
     prior = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
     return subprocess.run(

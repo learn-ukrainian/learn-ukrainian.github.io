@@ -139,7 +139,7 @@ def test_ask_grok_build_parser_accepts_first_class_args():
 def test_ask_grok_build_review_flag_runs_as_normal_ask(monkeypatch):
     # Direct one-round review regime (operator order 2026-08-06): review=True is
     # a normal ask, never a sealed-path refusal. Mutation guard: re-adding the
-    # formal_review_requires_review_pr_acp_sealed_snapshot raise fails this test.
+    # formal_review_requires_sealed_snapshot raise fails this test.
     from scripts.ai_agent_bridge import _acp_compat
 
     sentinel = object()

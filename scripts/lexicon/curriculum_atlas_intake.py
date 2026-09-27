@@ -88,6 +88,7 @@ def default_english_lookup(lemma: str, *, project_root: Path = PROJECT_ROOT) -> 
     trans_map = load_english_translation_dict(db_path)
     return trans_map.get(_lemma_key(lemma))
 
+
 SOURCE_PATTERNS: tuple[tuple[SourceKind, str, str], ...] = (
     ("module", "*/*/module.md", "module_markdown_token"),
     ("activity", "*/*/activities.yaml", "activity_token"),
@@ -351,7 +352,7 @@ def load_existing_ledger_keys(*, project_root: Path = PROJECT_ROOT) -> set[str]:
 
     root = project_root.resolve()
     keys: set[str] = set()
-    for path in sorted((root / "data" / "lexicon" / "source-inventory-review-decisions").glob("*.yaml")):
+    for path in sorted((root / "registry" / "lexicon" / "source-inventory-review-decisions").glob("*.yaml")):
         if "ohoiko-corpus-intake-batch-" in path.name:
             continue
         payload = load_yaml_mapping(path, label="source decision ledger")
@@ -478,19 +479,14 @@ def assert_ledger_inventory_destination(
         output_path = inventory_out.resolve().relative_to(project_root.resolve()).as_posix()
     except ValueError as exc:
         raise CurriculumIntakeError(
-            "--ledger-out requires --inventory-out inside the project root "
-            "so source-ledger metadata remains portable"
+            "--ledger-out requires --inventory-out inside the project root so source-ledger metadata remains portable"
         ) from exc
     inventory_prefix = "data/lexicon/source-inventory/"
     if not output_path.startswith(inventory_prefix):
-        raise CurriculumIntakeError(
-            "--ledger-out requires --inventory-out inside "
-            "data/lexicon/source-inventory"
-        )
+        raise CurriculumIntakeError("--ledger-out requires --inventory-out inside data/lexicon/source-inventory")
     if inventory_path != output_path:
         raise CurriculumIntakeError(
-            "--ledger-out requires --inventory-path to equal the project-relative "
-            f"--inventory-out path ({output_path})"
+            f"--ledger-out requires --inventory-path to equal the project-relative --inventory-out path ({output_path})"
         )
 
 
@@ -617,12 +613,18 @@ def _capitalize_form(form: str) -> str:
 
 
 def resolve_forms(forms: Sequence[str], *, vesum_lookup: VesumLookup | None) -> dict[str, VesumResolution]:
-    matches_by_form = lemmatize_forms(forms) if vesum_lookup is None else lemmatize_forms(forms, vesum_lookup=vesum_lookup)
+    matches_by_form = (
+        lemmatize_forms(forms) if vesum_lookup is None else lemmatize_forms(forms, vesum_lookup=vesum_lookup)
+    )
     unresolved_forms = [form for form in forms if not matches_by_form.get(form)]
     if unresolved_forms:
         cap_candidates = [_capitalize_form(f) for f in unresolved_forms if _capitalize_form(f) != f]
         if cap_candidates:
-            cap_matches = lemmatize_forms(cap_candidates) if vesum_lookup is None else lemmatize_forms(cap_candidates, vesum_lookup=vesum_lookup)
+            cap_matches = (
+                lemmatize_forms(cap_candidates)
+                if vesum_lookup is None
+                else lemmatize_forms(cap_candidates, vesum_lookup=vesum_lookup)
+            )
             for cap_form, matches in cap_matches.items():
                 if matches:
                     lower_form = cap_form.lower()
@@ -683,9 +685,7 @@ def build_candidates(
         inventory_path=inventory_path,
     )
     for key, grouped_occurrences in unresolved.items():
-        forms = tuple(
-            sorted({occurrence.form for occurrence in grouped_occurrences}, key=stable_lemma_sort_key)
-        )
+        forms = tuple(sorted({occurrence.form for occurrence in grouped_occurrences}, key=stable_lemma_sort_key))
         headword = forms[0]
         heritage: Mapping[str, Any] | None = None
         try:
@@ -784,11 +784,7 @@ def merge_candidate_collisions(candidates: Sequence[IntakeCandidate]) -> list[In
                 classification=classification,
                 reasons=tuple(sorted(reasons)),
                 heritage_status=next(
-                    (
-                        candidate.heritage_status
-                        for candidate in group
-                        if candidate.heritage_status is not None
-                    ),
+                    (candidate.heritage_status for candidate in group if candidate.heritage_status is not None),
                     None,
                 ),
             )
@@ -838,7 +834,11 @@ def build_resolved_candidates(
     english_lookup: EnglishLookup | None = None,
     inventory_path: str,
 ) -> list[IntakeCandidate]:
-    drafts: list[tuple[str, str, tuple[str, ...], str | None, str | None, bool, tuple[str, ...], tuple[SourceInventoryRecord, ...]]] = []
+    drafts: list[
+        tuple[
+            str, str, tuple[str, ...], str | None, str | None, bool, tuple[str, ...], tuple[SourceInventoryRecord, ...]
+        ]
+    ] = []
     for key, occurrences in grouped.items():
         forms = tuple(sorted({occurrence.form for occurrence in occurrences}, key=stable_lemma_sort_key))
         lemma = resolutions[forms[0]].lemma

@@ -22,10 +22,11 @@ if str(REPO_ROOT) not in sys.path:
 import yaml
 
 from scripts.audit.generate_practice_deck import _clean_text, _plain, read_atlas_db
+from scripts.storage.paths import REGISTRY_ROOT
 from scripts.verification.vesum import verify_word
 
-PARONYM_YAML = REPO_ROOT / "data/lexicon/paronym_pairs.yaml"
-HOMONYM_YAML = REPO_ROOT / "data/lexicon/homonym_pairs.yaml"
+PARONYM_YAML = REGISTRY_ROOT / "lexicon/paronym_pairs.yaml"
+HOMONYM_YAML = REGISTRY_ROOT / "lexicon/homonym_pairs.yaml"
 ATLAS_DB = REPO_ROOT / "data/atlas.db"
 
 # 62 Authoritative Paronym pairs with 2 congruent frames each
