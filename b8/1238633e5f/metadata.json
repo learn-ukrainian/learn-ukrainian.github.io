@@ -3,7 +3,7 @@
   "checkpoint_id": "b81238633e5f",
   "strategy": "manual-commit",
   "branch": "codex/impl-claude-reviewer-tools",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
     "docs/agent-runtime-guide.md",
     "scripts/agent_runtime/adapters/claude.py",
@@ -18,13 +18,20 @@
       "compact_transcript": "/b8/1238633e5f/0/transcript.jsonl",
       "content_hash": "/b8/1238633e5f/0/content_hash.txt",
       "prompt": "/b8/1238633e5f/0/prompt.txt"
+    },
+    {
+      "metadata": "/b8/1238633e5f/1/metadata.json",
+      "transcript": "/b8/1238633e5f/1/full.jsonl",
+      "compact_transcript": "/b8/1238633e5f/1/transcript.jsonl",
+      "content_hash": "/b8/1238633e5f/1/content_hash.txt",
+      "prompt": "/b8/1238633e5f/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 56,
-    "cache_creation_tokens": 104185,
-    "cache_read_tokens": 2063083,
-    "output_tokens": 30496,
-    "api_call_count": 28
+    "input_tokens": 74,
+    "cache_creation_tokens": 161682,
+    "cache_read_tokens": 2614684,
+    "output_tokens": 36004,
+    "api_call_count": 37
   }
 }
