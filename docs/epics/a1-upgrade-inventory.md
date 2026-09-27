@@ -1,5 +1,10 @@
 # A1 upgrade inventory and engine plan
 
+**Superseded (2026-09-21).** `--upgrade` is abandoned for A1–B2
+([`fresh-build-requirements.md`](fresh-build-requirements.md) §1). Kept as history and
+for its scars; do not follow it for new work. Current plan:
+[`fresh-build-build-program.md`](fresh-build-build-program.md).
+
 **Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md)
 (epics #7994 / #7995). Load that file first.
 

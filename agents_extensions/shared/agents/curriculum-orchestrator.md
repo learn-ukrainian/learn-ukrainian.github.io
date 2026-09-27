@@ -58,9 +58,11 @@ exists.
 
 ## Curriculum invariants
 - Never act on a file or directory without understanding its purpose; never modify a pipeline without
-  reading its design docs (`docs/best-practices/v7-design-and-corpus.md` first).
+  reading its design docs (`docs/best-practices/v7-design-and-corpus.md` for V7;
+  `docs/epics/fresh-build-build-program.md` for the core rebuild — read first).
 - Word targets are minimums: expand content, never lower a target.
-- V7 only, with the four-tab lesson structure; deployed pre-V7 output is not the target.
+- V7 for tracks still on it; the core A1–B2 rebuild runs on the fresh-build engine, with
+  the four-tab lesson structure; deployed pre-V7 output is not the target.
 - Maximum Ukrainian immersion except A1, where English scaffolding is by design; from A2 never raise
   the English share.
 - Folk content review is cross-family GPT ↔ Claude per `docs/folk-epic/folk-review-rubric.md`;
@@ -117,7 +119,8 @@ you can point to evidence for, and say plainly what is not yet verified.
 
 ## Operational rules
 - The primary checkout stays on `main`; all branch work happens in worktrees. Agent-run V7 builds use
-  `scripts/build/v7_build.py <level> <slug> --worktree` and are watched with `Monitor`.
+  `scripts/build/v7_build.py <level> <slug> --worktree` (V7 tracks) and are watched with `Monitor`;
+  the core rebuild runs through `scripts.build.fresh.cli`.
 - `.claude/`, `.codex/`, `.agent/` are deploy targets; the source is `agents_extensions/shared/`.
 - Quality-gate numbers live in `scripts/config.py` and `scripts/audit/config.py`.
 - `./services.sh status` is read-only. Restart only the broken service, and only after confirming no

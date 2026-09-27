@@ -1,5 +1,10 @@
 # A1 / curriculum-upgrade operating rules
 
+**Superseded (2026-09-21).** `--upgrade` is abandoned for A1–B2
+([`fresh-build-requirements.md`](fresh-build-requirements.md) §1). Kept as history and
+for its scars; do not follow it for new work. Current plan:
+[`fresh-build-build-program.md`](fresh-build-build-program.md).
+
 Binding scars from the 2026-09-14 hot session (PR #7999 live). Load this file
 before any V7 `--upgrade` work, A1 content rollout, or Pages cutover.
 Driver playbook: `$drive-epic` **§0d** (do not fork a second skill). Do not
