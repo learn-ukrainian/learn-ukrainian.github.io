@@ -63,7 +63,7 @@ def resolve_data_path(rel_path: str) -> Path:
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined"
-DEFAULT_GOLD_FILE = REPO_ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+DEFAULT_GOLD_FILE = REPO_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 DEFAULT_SCHEMA_FILE = (
     REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_decolonization_mined_candidates.schema.json"
 )

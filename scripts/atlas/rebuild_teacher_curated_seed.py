@@ -22,6 +22,7 @@ from pathlib import Path
 import yaml
 
 from scripts.atlas.teacher_vesum_attest import DEFAULT_VESUM_DB, VesumAttestation, attest_lemmas
+from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_SCHEMA = "teacher-curated-seed-recovery-v1"
@@ -148,9 +149,7 @@ def drive_counts(path: Path) -> dict[str, object]:
         return {"available": False, "files": 0, "suffixes": {}, "candidate_teacher_tables": 0}
     files = sorted(item for item in path.rglob("*") if item.is_file())
     suffixes = Counter(item.suffix.lower() or "[none]" for item in files)
-    candidate_tables = sum(
-        "teacher" in item.name.casefold() or "curated" in item.name.casefold() for item in files
-    )
+    candidate_tables = sum("teacher" in item.name.casefold() or "curated" in item.name.casefold() for item in files)
     return {
         "available": True,
         "files": len(files),
@@ -398,8 +397,7 @@ def refresh_rights_ledger(
             vesum_db=vesum_db,
         )
         vesum_attestations = {
-            row.get("seedRow"): attestation
-            for row, attestation in zip(attestation_rows, attestations, strict=True)
+            row.get("seedRow"): attestation for row, attestation in zip(attestation_rows, attestations, strict=True)
         }
 
     refreshed_seed: list[dict[str, object]] = []
@@ -475,9 +473,7 @@ def refresh_rights_ledger(
             "rights_private_local": sum(row["rights"]["status"] == PRIVATE_LOCAL for row in refreshed_seed),
             "practice_admitted": sum(row["admission"]["practice"] is True for row in refreshed_seed),
             "quarantined_missing_document_locator": admission_modes["quarantined_missing_document_locator"],
-            "quarantined_unreviewed_sentence_status": admission_modes[
-                "quarantined_unreviewed_sentence_status"
-            ],
+            "quarantined_unreviewed_sentence_status": admission_modes["quarantined_unreviewed_sentence_status"],
         }
         manifest["rights_admission_policy"] = {
             "redistribution": "operator GO required before redistributable may become true",
@@ -625,9 +621,9 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Also retain VESUM evidence for existing candidate rows needed by local no-route Practice admission.",
     )
-    parser.add_argument("--source-inventory-root", type=Path, default=ROOT / "data/lexicon/source-inventory")
+    parser.add_argument("--source-inventory-root", type=Path, default=REGISTRY_ROOT / "lexicon/source-inventory")
     parser.add_argument(
-        "--decision-root", type=Path, default=ROOT / "data/lexicon/source-inventory-review-decisions"
+        "--decision-root", type=Path, default=REGISTRY_ROOT / "lexicon/source-inventory-review-decisions"
     )
     parser.add_argument("--cloze-path", type=Path, default=ROOT / "site/src/data/lexicon-teacher-cloze.json")
     parser.add_argument("--drive-source-root", type=Path)

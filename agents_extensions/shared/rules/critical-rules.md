@@ -15,6 +15,7 @@
 
 ### 4. External LLM Access
 Gemini-family work goes through the AGY lane (`ab ask-agy`, `delegate.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
+Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
 **NEVER** reduce content or change `word_target` to match short content. Expand the content instead.

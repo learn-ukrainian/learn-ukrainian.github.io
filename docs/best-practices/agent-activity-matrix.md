@@ -18,7 +18,7 @@ Each cell carries:
 - **Known weakness** — failure mode we've observed.
 - **Known strength** — what they do uniquely well.
 
-**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. Example: Opus 4.8 may be the *best* adversarial reviewer, while Pool is primary for a low-risk review and Gemini 3.8 Flash High for a medium-risk review (3.1 Pro only on explicit request, operator 2026-09-22). The machine-enforced ladder is `scripts/config/model_catalog.yaml`.
+**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. For code review, follow `model-assignment.md` Code review row and the machine-enforced ladder in `scripts/config/model_catalog.yaml`.
 
 ---
 
@@ -28,7 +28,7 @@ Each cell carries:
 | --- | --- | --- | --- | --- |
 | **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Fable 5.1 handles advisor turns and Ukrainian-specific linguistic judgment; Sonnet handles routine Claude-lane work. |
 | **Codex** ⭐ | GPT-6 Sol (coding and review @ high), Luna (routine bounded work and scout @ high), Astra (hard advisory @ high) | Native Codex CLI | Metered | Sol handles advanced coding and adversarial review; Luna handles bounded routine implementation and scouting; Astra is reserved for hard consequential advisory judgment. |
-| **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian work and well-defined implementation/review tasks to Flash with a complete one-unit brief and acceptance criteria. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
+| **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
 | **DeepSeek** | **`deepseek-v4.1-flash`** @ high = everyday (frontier-practical code/infra). **`deepseek-v4-pro`** @ high = **hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) | Review/research: `opencode run --model deepseek/deepseek-flash --variant high` (native Entire capture). Tool-heavy: `delegate.py --agent deepseek --model deepseek-v4.1-flash` (default; `--model deepseek-v4-pro` for hard tasks). Pro never default. | Cheap / often idle paid balance | **CODE + infra CF volume.** Prefer when Codex/Claude hot. Not language/folk/authority. First-party only (`openrouter/deepseek/*` refused). |
 | **Grok** | **Grok 4.7** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | *Grok Bot (not a seat)* | Cursor/xAI cloud teammate (`app/cursor`) — **external QA observer only** | Not `delegate.py`; no registry adapter; never `--agent grok-bot` | — | Files labeled GitHub issues/comments for drivers to consume. See [`docs/runbooks/grok-bot-qa-observer.md`](../runbooks/grok-bot-qa-observer.md). |
@@ -64,7 +64,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
   - **grok-4.\* / hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
 - **Where "next work" comes from:** the active track handoff's NEXT-ACTIONS, open GH issues, and the build/review queue. If nothing genuinely fits a free lane, log it and leave it idle — do **not** manufacture busywork (quality > utilization).
-- **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (**DeepSeek Flash** / Pool / AGY / GLM) review before it ships. "Keep the lane busy" never lowers the bar.
+- **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (**DeepSeek Flash** / Pool / GLM) code review before it ships; Ukrainian review follows LANGUAGE-LANES. See `model-assignment.md` Code review row. "Keep the lane busy" never lowers the bar.
 
 ---
 
@@ -202,7 +202,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-07-17 | `scripts/config/model_catalog.yaml` | Resolve by risk. Critical/high starts with the frontier-authority peer tier; medium starts with the strong peer tier; low starts with Pool/Gemini Flash. |
+| **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-09-25 | `scripts/config/model_catalog.yaml` | Resolve by risk and follow `model-assignment.md` Code review row; Gemini is excluded. |
 | Current practical seat | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Frontier-practical frontend/code lane: OpenCode high for Entire-aware review, Hermes high for rich tool execution; not critical authority. |
 | Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 

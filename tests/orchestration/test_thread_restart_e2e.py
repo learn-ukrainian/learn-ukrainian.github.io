@@ -24,6 +24,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -141,6 +142,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
                 "scripts/lib/profile_resolver.sh",
                 "scripts/lib/session_supervisor.sh",
                 "scripts/config/issue_streams.yaml",
+                "scripts/config/launcher_stream_aliases.tsv",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
                 # Deploy status breadcrumbs (PR #5814 r6): deploy_prompts.sh now
@@ -176,6 +178,8 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         watcher.parent.mkdir(parents=True, exist_ok=True)
         watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
         watcher.chmod(0o755)
+        # Driver launches check their handoff slot against the real roster (#8303).
+        copy_slot_registry(primary)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
     # A raw .venv symlink would run the REAL codex transport probe (live model

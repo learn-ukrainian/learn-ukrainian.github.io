@@ -41,14 +41,23 @@ def word_in_text(word: str, text: str) -> bool:
     words = re.findall(r"[a-zа-яєіїґ'-]+", t_clean)
     return w_plain in words
 
+
 def load_slovnyk_cache(lemma: str) -> dict[str, Any] | None:
     """Read a pre-existing slovnyk.me cache row, gated to the current schema (#6524)."""
     return _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify synonym pairs from manifest")
-    parser.add_argument("--manifest", type=Path, default=Path("site/src/data/lexicon-manifest.json"), help="Path to manifest JSON")
-    parser.add_argument("--verdicts", type=Path, default=Path("data/lexicon/synonym_pair_verdicts.yaml"), help="Path to verdicts YAML")
+    parser.add_argument(
+        "--manifest", type=Path, default=Path("site/src/data/lexicon-manifest.json"), help="Path to manifest JSON"
+    )
+    parser.add_argument(
+        "--verdicts",
+        type=Path,
+        default=Path("registry/lexicon/synonym_pair_verdicts.yaml"),
+        help="Path to verdicts YAML",
+    )
     parser.add_argument("--out", type=Path, required=True, help="Path to write new pairs JSONL")
     args = parser.parse_args()
 
@@ -125,14 +134,16 @@ def main() -> int:
                 key = (a_plain, b_plain, polarity)
                 if key not in seen_pair_keys:
                     seen_pair_keys.add(key)
-                    candidate_pairs.append({
-                        "a": a_orig,
-                        "b": b_orig,
-                        "a_plain": a_plain,
-                        "b_plain": b_plain,
-                        "polarity": polarity,
-                        "key": key
-                    })
+                    candidate_pairs.append(
+                        {
+                            "a": a_orig,
+                            "b": b_orig,
+                            "a_plain": a_plain,
+                            "b_plain": b_plain,
+                            "polarity": polarity,
+                            "key": key,
+                        }
+                    )
 
     # Filter out already adjudicated pairs
     new_pairs = [p for p in candidate_pairs if p["key"] not in adjudicated_keys]
@@ -237,7 +248,7 @@ def main() -> int:
                 "b": b_orig,
                 "polarity": polarity,
                 "attested": attested,
-                "attest_sources": sorted(list(attest_sources))
+                "attest_sources": sorted(list(attest_sources)),
             }
 
             # Print to stdout
@@ -247,6 +258,7 @@ def main() -> int:
 
     print("Done!")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

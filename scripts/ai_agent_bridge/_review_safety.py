@@ -267,9 +267,7 @@ def assert_formal_review_ask_payload(
     if not formal_review:
         return False
 
-    warn_pr_cf_review_prefer_review_pr(
-        content, formal_review=True, has_target=has_target
-    )
+    warn_pr_cf_review_prefer_review_pr(content, formal_review=True, has_target=has_target)
 
     content_size = len(content.encode("utf-8"))
     if content_size > MAX_REVIEW_REQUEST_BYTES:
@@ -331,7 +329,7 @@ def warn_pr_cf_review_prefer_review_pr(
 ) -> None:
     """Warn when a PR CF review ask omits its target (warn-not-reject, #5486).
 
-    Sealed review-pr is retired (operator 2026-08-07): the direct
+    Sealed review-pr was removed in #8520: the direct
     `ask-LANE --type review` round IS the formal path now, so this no longer
     steers to a separate command — it only requires the review to name its
     exact target (PR head SHA). Rejecting after a model already generated a
@@ -346,7 +344,7 @@ def warn_pr_cf_review_prefer_review_pr(
         print(
             "warning: formal CF PR review via ask-* without a named target — "
             "the direct `ask-LANE - --type review` round is the formal path "
-            "(sealed review-pr retired 2026-08-07); include the PR head SHA in "
+            "(sealed review-pr retired; removed in #8520); include the PR head SHA in "
             "the body and post the verdict on the PR. This ask is allowed so "
             "work is not discarded (warn-not-reject). "
             "Silence with BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1.",

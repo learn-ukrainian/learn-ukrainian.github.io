@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_OVERLAY = ROOT / "data" / "practice" / "zno-markup-overlay.json"
+DEFAULT_OVERLAY = ROOT / "registry" / "practice" / "zno-markup-overlay.json"
 
 # Reviewable predicates — exact wording from live corpus audit (2026-08-12).
 _OPTION_MARK_PATTERNS: tuple[re.Pattern[str], ...] = (

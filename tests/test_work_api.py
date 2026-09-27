@@ -767,6 +767,8 @@ def test_streams_loader_derives_public_membership_and_strips_private_index():
             "multi_homed": [],
             "pending_native_link": [],
             "ok": True,
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {
                 "6001": {
                     "epics": [6900],
@@ -818,6 +820,8 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
             ],
             "pending_native_link": [],
             "ok": True,
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {
                 "6001": {
                     "epics": [6900],
@@ -893,6 +897,54 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
     assert by_id[_wid(6001)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert by_id[_wid(6004)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert "bogus-stream" not in json.dumps(projection)
+
+
+def test_streams_default_loader_drops_membership_from_incomplete_or_unflagged_audit(monkeypatch):
+    """An incomplete or pre-flag audit keeps ``ok`` visible and publishes no membership map."""
+    from scripts.orchestration import issue_stream_audit as audit
+    from scripts.work.sources_public import fetch_streams_projection
+
+    incomplete = {
+        "generated_at": 1,
+        "open_total": 2,
+        "ok": False,
+        "streams": {"infra-harness": [10]},
+        "orphans": [],
+        "multi_homed": [],
+        "pending_native_link": [],
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "effective_membership": {
+            "500": {
+                "epics": [10],
+                "streams": ["infra-harness"],
+                "via": "body",
+                "unique_stream": True,
+            }
+        },
+        "open_issue_numbers": [10, 500],
+        "open_stream_membership": {"500": ["infra-harness"]},
+    }
+    monkeypatch.setattr(audit, "read_cache", lambda max_age_s: incomplete)
+    monkeypatch.setattr(audit, "read_refresh_state", audit._default_refresh_state)
+
+    section = fetch_streams_projection()
+    assert section.payload["ok"] is False
+    assert "open_stream_membership" not in section.payload
+    assert "effective_membership" not in section.payload
+    assert "500" not in json.dumps(section.payload)
+
+    unflagged = {
+        key: value
+        for key, value in incomplete.items()
+        if key not in {"membership_complete", "incomplete_nodes", "warnings"}
+    }
+    unflagged["ok"] = True
+    monkeypatch.setattr(audit, "read_cache", lambda max_age_s: unflagged)
+    unflagged_section = fetch_streams_projection()
+    assert "open_stream_membership" not in unflagged_section.payload
+    assert "500" not in json.dumps(unflagged_section.payload)
 
 
 # ---------------------------------------------------------------------------
@@ -1000,26 +1052,112 @@ def test_next_pending_native_without_membership_is_named_in_digest(monkeypatch):
 
 
 def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
-    """#6984: drivers type SESSION_EPIC area names ('infra'); unambiguous aliases work."""
-    _patch_known_streams(monkeypatch)
+    """Launcher selectors select the same stream in /next, including harness."""
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
     _warm_next_cache()
 
-    response = client.get("/api/work/v1/next?stream=infra")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert data["stream"] == "infra-harness"
-    assert data["requested_stream"] == "infra"
-    assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+    aliases = {
+        "infra": "infra-harness",
+        "harness": "infra-harness",
+        "infra.fleet-comms": "infra-harness",
+        "infra.devops": "devops",
+        "infra.monitor": "monitor",
+        "ops-api": "monitor",
+        "ops.api": "monitor",
+        "operator-api": "monitor",
+        "atlas": "atlas-practice",
+        "practice": "atlas-practice",
+        "practice-hub": "atlas-practice",
+        "atlas.practice": "atlas-practice",
+        "hramatka.lessons": "hramatka",
+        "folk": "seminars-folk",
+        "bio": "seminars-bio",
+        "corpus": "corpus-channels",
+    }
+    for selector, expected_stream in aliases.items():
+        response = client.get(f"/api/work/v1/next?stream={selector}")
+        assert response.status_code == 200, (selector, response.text)
+        data = response.json()
+        assert data["stream"] == expected_stream, selector
+        assert data["requested_stream"] == selector
+        if expected_stream == "infra-harness":
+            assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+
+    # Generic infra.<registry-key> selectors are launcher-mintable too.
+    for key in load_registry():
+        response = client.get(f"/api/work/v1/next?stream=infra.{key}")
+        assert response.status_code == 200, (key, response.text)
+        assert response.json()["stream"] == key
+        assert response.json()["requested_stream"] == f"infra.{key}"
 
     # Canonical names still pass through without a requested_stream echo.
     canonical = client.get("/api/work/v1/next?stream=infra-harness")
     assert canonical.status_code == 200
     assert "requested_stream" not in canonical.json()
 
+    # curriculum-upgrade is a registry key (the alias row points at that same key).
+    upgrade = client.get("/api/work/v1/next?stream=curriculum-upgrade")
+    assert upgrade.status_code == 200, upgrade.text
+    assert upgrade.json()["stream"] == "curriculum-upgrade"
+    assert "requested_stream" not in upgrade.json()
+
     # Unknown selectors still fail closed with the valid stream list.
     bad = client.get("/api/work/v1/next?stream=not-a-stream")
     assert bad.status_code == 400
     assert bad.json()["error"] == "unknown_stream"
+
+
+def test_next_rejects_retired_benchmark_alias_and_keeps_live_alias(monkeypatch):
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
+    _warm_next_cache()
+
+    for selector in ("benchmark-2156", "epic:4639"):
+        retired = client.get(f"/api/work/v1/next?stream={selector}")
+        assert retired.status_code == 400
+        assert retired.json()["error"] == "unknown_stream"
+        assert retired.json()["valid_streams"] == list(load_registry())
+
+    live = client.get("/api/work/v1/next?stream=infra")
+    assert live.status_code == 200, live.text
+    assert live.json()["stream"] == "infra-harness"
+
+    live_corpus = client.get("/api/work/v1/next?stream=epic:4706")
+    assert live_corpus.status_code == 200, live_corpus.text
+    assert live_corpus.json()["stream"] == "corpus-channels"
+
+
+@pytest.mark.parametrize("alias_file_state", ["missing", "malformed"])
+def test_next_diagnoses_broken_launcher_alias_file(monkeypatch, tmp_path, request, caplog, alias_file_state):
+    from scripts.orchestration import launcher_aliases
+
+    alias_file = tmp_path / "launcher_stream_aliases.tsv"
+    if alias_file_state == "malformed":
+        alias_file.write_text("infra\ttoo-few-fields\n", encoding="utf-8")
+    monkeypatch.setattr(launcher_aliases, "ALIASES_PATH", alias_file)
+    launcher_aliases.load_launcher_aliases.cache_clear()
+    request.addfinalizer(launcher_aliases.load_launcher_aliases.cache_clear)
+    _patch_known_streams(monkeypatch)
+
+    response = client.get("/api/work/v1/next?stream=infra")
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["error"] == "unknown_stream"
+    assert body["valid_streams"] == NEXT_STREAMS
+    assert "launcher_stream_aliases.tsv" in body["diagnostic"]
+    assert caplog.records
+    warning = next(record for record in caplog.records if record.levelname == "WARNING")
+    assert "launcher_stream_aliases.tsv" in warning.message
+    if alias_file_state == "missing":
+        assert "FileNotFoundError" in body["diagnostic"]
+        assert "No such file" in warning.message
+    else:
+        assert "ValueError" in body["diagnostic"]
+        assert "invalid launcher alias row 1" in warning.message
 
 
 def test_next_successful_background_refresh_resets_age(monkeypatch):
@@ -1194,9 +1332,13 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
     monkeypatch.setattr(work_router, "NEXT_MAX_STALE_S", 1.0)
     for name in (
-        "preload_all", "install_signal_logging", "ensure_broker_db_ready",
-        "seed_manifest_inventory", "warm_projection_cache",
-        "start_periodic_refresh", "stop_periodic_refresh",
+        "preload_all",
+        "install_signal_logging",
+        "ensure_broker_db_ready",
+        "seed_manifest_inventory",
+        "warm_projection_cache",
+        "start_periodic_refresh",
+        "stop_periodic_refresh",
     ):
         monkeypatch.setattr(api_main, name, Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())

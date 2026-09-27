@@ -1,0 +1,62 @@
+{
+  "entries": [
+    {
+      "git_blob": "a4ca1539b9fd2084349a861b4fce652dbc23a4d2",
+      "migrated_at": "2026-09-25T19:37:45.461207+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790365014739718818,
+      "path": "data/corpus_audit/coverage_map.json",
+      "pre_untrack_sha256": "ccc0946cea32a657a628402e59e77661f1873daa256c16df963969af4e8e0396",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "ccc0946cea32a657a628402e59e77661f1873daa256c16df963969af4e8e0396",
+      "size": 254528,
+      "store": "ccc0946cea32a657a628402e59e77661f1873daa256c16df963969af4e8e0396"
+    },
+    {
+      "git_blob": "56f995b19593dea8bdc97849adb68738c38c5722",
+      "migrated_at": "2026-09-25T19:37:45.501105+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790365014740552900,
+      "path": "data/corpus_audit/navsi200-asr-bakeoff-ledger.json",
+      "pre_untrack_sha256": "227715668df7e20237699a8f02fd3db2e5872c0678aeae41c424a9574874dab6",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "227715668df7e20237699a8f02fd3db2e5872c0678aeae41c424a9574874dab6",
+      "size": 74281,
+      "store": "227715668df7e20237699a8f02fd3db2e5872c0678aeae41c424a9574874dab6"
+    },
+    {
+      "git_blob": "1797b54ec0511311f9f26d8caac12b1969118119",
+      "migrated_at": "2026-09-25T19:37:45.541600+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790365014740552900,
+      "path": "data/corpus_audit/navsi200-captions-ledger.json",
+      "pre_untrack_sha256": "7c72b9c8c776d890bf37a919f335c228197c77b3bef3fa41764ad77f15109bdb",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "7c72b9c8c776d890bf37a919f335c228197c77b3bef3fa41764ad77f15109bdb",
+      "size": 120282,
+      "store": "7c72b9c8c776d890bf37a919f335c228197c77b3bef3fa41764ad77f15109bdb"
+    },
+    {
+      "git_blob": "987e35026546c6867759db3d4340bd00680c88a6",
+      "migrated_at": "2026-09-25T19:37:45.584419+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790365014741408664,
+      "path": "data/corpus_audit/ukrainian_wiki_a2_ingest_report.md",
+      "pre_untrack_sha256": "053c1b23f1894a87e4e551986a0aaf513e73adaf14971aa18b87d920a5125140",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "053c1b23f1894a87e4e551986a0aaf513e73adaf14971aa18b87d920a5125140",
+      "size": 10688,
+      "store": "053c1b23f1894a87e4e551986a0aaf513e73adaf14971aa18b87d920a5125140"
+    }
+  ],
+  "group": "corpus_audit_snapshots",
+  "schema": 1
+}

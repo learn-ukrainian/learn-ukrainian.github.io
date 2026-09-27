@@ -31,6 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.curriculum.evidence.lock import atomic_write
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -79,10 +80,28 @@ class LedgerHashStaleLastLine(LedgerError):
     """The sidecar matches the ledger minus its last complete line (crash recovery state)."""
 
 
+_UNSAFE_ENTRY = "a ledger file is a symlink, not a regular file, or not owned by the current user"
+
+
+def _open_entry(path: Path, flags: int, mode: int = 0o600) -> int:
+    """Open one ledger-side file through ``safe_open_below`` (no symlink, never blocks on a FIFO, ours).
+
+    ``FileNotFoundError`` propagates (a missing entry or parent is not unsafe); an entry that is not a
+    regular file we own raises ``LedgerError`` with fixed wording that never names the path.
+    """
+    dir_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        return safe_open_below(dir_fd, path.name, flags, mode)
+    except UnsafeEntryError:
+        raise LedgerError(_UNSAFE_ENTRY) from None
+    finally:
+        os.close(dir_fd)
+
+
 @contextmanager
 def _flock_path(lock_path: Path):
     lock_path.parent.mkdir(parents=True, exist_ok=True)
-    fd = os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_APPEND, 0o600)
+    fd = _open_entry(lock_path, os.O_CREAT | os.O_RDWR | os.O_APPEND)
     try:
         os.fchmod(fd, 0o600)
     except BaseException:
@@ -94,6 +113,16 @@ def _flock_path(lock_path: Path):
             yield
         finally:
             fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+
+def _read_entry(path: Path) -> bytes | None:
+    """The bytes of a ledger-side file, or ``None`` when it does not exist."""
+    try:
+        fd = _open_entry(path, os.O_RDONLY)
+    except FileNotFoundError:
+        return None
+    with os.fdopen(fd, "rb") as handle:
+        return handle.read()
 
 
 def _token(value: str) -> bool:
@@ -130,17 +159,18 @@ def _read_verified(path: Path, *, allow_missing: bool = False) -> bytes:
     LedgerHashStaleLastLine if the hash matches the ledger minus its last complete line.
     """
     path = Path(path)
-    if not path.exists():
+    content = _read_entry(path)
+    if content is None:
         if _sidecar(path).exists():
             raise LedgerError(f"sidecar without ledger: {path}")
         if allow_missing:
             return b""
         raise LedgerError(f"ledger missing: {path}")
-    content = path.read_bytes()
     side = _sidecar(path)
-    if not side.is_file():
+    recorded_bytes = _read_entry(side)
+    if recorded_bytes is None:
         raise LedgerError(f"ledger sidecar missing: {side}")
-    recorded = side.read_text(encoding="ascii")
+    recorded = recorded_bytes.decode("ascii")
     expected_digest = _digest(content) + "\n"
     if recorded != expected_digest:
         if content.endswith(b"\n"):

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-DEFAULT_CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "corpus_audit" / "navsi200-catalog.json"
+DEFAULT_CATALOG_PATH = Path(__file__).resolve().parent.parent / "registry" / "corpus_audit" / "navsi200-catalog.json"
 
 PRIORITY_TOPICS = (
     "пароніми",
@@ -21,7 +21,7 @@ def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
 
     Args:
         path: Optional path to the catalog JSON file. Defaults to
-            `data/corpus_audit/navsi200-catalog.json`.
+            `registry/corpus_audit/navsi200-catalog.json`.
 
     Returns:
         Dictionary containing catalog metadata, topic indices, and lesson entries.

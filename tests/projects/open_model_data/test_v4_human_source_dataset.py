@@ -6,6 +6,7 @@ import hashlib
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import jsonschema
 import pytest
@@ -28,6 +29,42 @@ DATASET_DIR = Path("data/projects/open_model_data/dataset")
 MANIFEST_PATH = DATASET_DIR / "v4_human_source_dataset_manifest_v1.json"
 RECEIPT_PATH = DATASET_DIR / "v4_human_source_dataset_receipt_v1.json"
 RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
+
+_ORIGINAL_JSONSCHEMA_VALIDATE = jsonschema.validate
+_COMPILED_VALIDATORS: dict[int, tuple[Any, Any]] = {}
+
+
+def _validate_reusing_compiled_schema(instance: Any, schema: Any, cls: Any = None, *args: Any, **kwargs: Any) -> None:
+    """jsonschema.validate equivalent that compiles each schema object once.
+
+    jsonschema.validate() re-runs check_schema() (full Draft 2020-12 metaschema
+    validation, ~48 ms) on every call; build_dataset calls it per record, so one
+    build spends ~68 s re-validating an identical immutable schema object 1419
+    times. Here each distinct schema object is still metaschema-checked once via
+    the official path, and per-instance validation really runs on every call.
+    """
+    if cls is not None or args or kwargs:
+        _ORIGINAL_JSONSCHEMA_VALIDATE(instance, schema, cls, *args, **kwargs)
+        return
+    cached = _COMPILED_VALIDATORS.get(id(schema))
+    if cached is None or cached[0] is not schema:
+        validator_cls = jsonschema.validators.validator_for(schema)
+        validator_cls.check_schema(schema)
+        validator = validator_cls(schema)
+        _COMPILED_VALIDATORS[id(schema)] = (schema, validator)
+    else:
+        validator = cached[1]
+    validator.validate(instance)
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _reuse_compiled_jsonschema_validators() -> Any:
+    original = jsonschema.validate
+    jsonschema.validate = _validate_reusing_compiled_schema
+    try:
+        yield
+    finally:
+        jsonschema.validate = original
 
 
 def test_schema_contracts_valid() -> None:

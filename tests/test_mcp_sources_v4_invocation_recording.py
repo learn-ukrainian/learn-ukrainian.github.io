@@ -26,10 +26,9 @@ from psycopg.conninfo import make_conninfo
 
 # Shared test-only PostgreSQL setup; the product is an installed dependency.
 sys.path.insert(0, str(Path(__file__).parent / "projects/open_model_data"))
-import test_v4_operation_lifecycle
 from test_v4_operation_lifecycle import claim, role_connection
 
-pytest_plugins = ("test_v4_operation_lifecycle",)
+pytest_plugins = ("_v4_shared_runtime_fixtures",)
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 TYPED_IDENTIFIER = "vesum:" + "a" * 64
@@ -62,16 +61,6 @@ def isolated_plane(tmp_path, monkeypatch, pg_cluster):
     monkeypatch.setattr(sources_transport, "credential_path", lambda: credential)
     pg_cluster.execute("DELETE FROM v4_sources_invocations")
     return pg_cluster
-
-
-@pytest.fixture
-def prepared(pg_cluster, monkeypatch, tmp_path):
-    delegate = getattr(
-        test_v4_operation_lifecycle.prepared,
-        "__wrapped__",
-        test_v4_operation_lifecycle.prepared,
-    )
-    return delegate(pg_cluster, monkeypatch, tmp_path)
 
 
 def _stub_handler(server_module: Any, monkeypatch: pytest.MonkeyPatch, *, typed: dict[str, Any] | None = TYPED_SUPPORTED, text: str = "книга — FOUND") -> list[dict[str, Any]]:

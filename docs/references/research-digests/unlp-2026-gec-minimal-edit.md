@@ -54,6 +54,5 @@ field — deterministic and replayable. Useful for any sentence-level correction
 ## Adoption boundary (do not overclaim)
 
 **Deferred.** The research is documented, but no dedicated stream-owned implementation
-issue and no validated prompt/code consumer exist yet. A child issue under the
-eval-harness stream epic #4913 must be created before adoption; #4913 is itself the
-stream epic, not a child implementation issue for this work.
+issue and no validated prompt/code consumer exist yet. Create an issue under the current
+owning stream before adoption; eval-harness #4913 is closed.

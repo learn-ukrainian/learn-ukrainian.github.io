@@ -24,12 +24,12 @@ cd ../learn-ukrainian-wt-817
 # make changes, commit, push
 git push -u origin fix/817-fix-v4-terminology
 
-# 3. Create PR (enables code review agent, Gemini review, /simplify)
+# 3. Create PR after exact-head cross-family CF review (see model-assignment.md)
 gh pr create --title "fix: v4 terminology in logs (#817)"
 
 # 4. Get reviews on the PR
 # - Code review agent reviews automatically
-# - Gemini adversarial review via ai_agent_bridge
+# - Cross-family code review follows model-assignment.md Code review row
 # - /simplify for code quality
 
 # 5. Merge when approved

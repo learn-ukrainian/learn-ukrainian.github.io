@@ -17,7 +17,7 @@ headword intake is the local abetka material:
 Those modules contain public YouTube pronunciation-video metadata and explicit
 `key_word` rows. The matching inventory is:
 
-- `data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml`
+- `registry/lexicon/source-inventory/ohoiko-abetka-keywords.yaml`
 
 Current committed coverage is complete for that source: 4 abetka modules, 33
 `key_word` rows, and 33 Ohoiko source-inventory headwords.

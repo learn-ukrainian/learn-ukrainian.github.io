@@ -36,10 +36,11 @@ from scripts.lexicon.relation_pairs import (
     is_exact_vesum_lemma,
     normalize_relation_word,
 )
+from scripts.storage.paths import artifact_path
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_CANDIDATES_DIR = ROOT / "data" / "lexicon"
-DEFAULT_SYNONYM_VERDICTS = DEFAULT_CANDIDATES_DIR / "synonym_pair_verdicts.yaml"
+DEFAULT_SYNONYM_VERDICTS = ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
 SYNONYM_VERDICTS_SOURCE = "synonym_verdicts"
 _CURATED_SOURCE_MARKERS = (
     "wikipedia",
@@ -252,7 +253,19 @@ def _iter_candidates(
     summary: LoadSummary,
     heritage: RelationHeritageLookup | None,
 ):
-    for path in sorted(candidates_dir.glob("*_candidates_*.json")):
+    candidate_paths = (
+        [
+            artifact_path("lexicon_candidates", f"lexicon/{name}")
+            for name in (
+                "paronym_candidates_grinchyshyn.json",
+                "paronym_candidates_ukrmova.json",
+                "relation_candidates_miyklas.json",
+            )
+        ]
+        if candidates_dir.resolve() == DEFAULT_CANDIDATES_DIR.resolve()
+        else sorted(candidates_dir.glob("*_candidates_*.json"))
+    )
+    for path in candidate_paths:
         if path.name in _EXCLUDED_CANDIDATE_FILENAMES:
             continue
         root, records = _candidate_records(path)

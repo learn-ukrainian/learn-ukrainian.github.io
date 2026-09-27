@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from scripts.common.bridge_paths import configured_bridge_db_path
+from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
@@ -37,6 +38,10 @@ MESSAGE_DB = configured_bridge_db_path(PROJECT_ROOT)
 
 # Dashboards directory (for static file serving)
 DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
+
+# Textbook PDFs live under the resolved bulk raw-source root, never a
+# repository symlink (#8803; docs/runbooks/storage-topology.md).
+TEXTBOOKS_DIR = TEXTBOOK_PDFS_DIR
 
 _KNOWN_LEVEL_NAMES = {
     "a1": "A1 - Beginner",
@@ -123,7 +128,7 @@ LEVELS = load_levels()
 SEMINAR_TRACK_IDS = load_seminar_track_ids()
 
 # Batch state directory
-BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
+BATCH_STATE_DIR = Path(os.environ.get("LEARN_UKRAINIAN_BATCH_STATE_DIR", PROJECT_ROOT / "batch_state"))
 
 # Server settings
 API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only

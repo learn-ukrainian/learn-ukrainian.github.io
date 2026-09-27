@@ -27,6 +27,7 @@ from scripts.orchestration.fleet_taxonomy import (
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+_LAUNCHER_ALIASES = _REPO_ROOT / "scripts" / "config" / "launcher_stream_aliases.tsv"
 
 
 def _infra_harness_stream_id() -> str:
@@ -65,7 +66,7 @@ def test_resolve_area_canonical_ids() -> None:
 
     harness = resolve_area("harness")
     assert harness.id == "harness"
-    assert "eval-harness" in harness.aliases
+    assert "corpus-channels" in harness.aliases
 
     devops = resolve_area("devops")
     assert devops.id == "devops"
@@ -84,8 +85,8 @@ def test_resolve_area_aliases() -> None:
     area1 = resolve_area("infra-harness")
     assert area1.id == "infra"
 
-    # eval-harness -> harness
-    area2 = resolve_area("eval-harness")
+    # corpus-channels -> harness
+    area2 = resolve_area("corpus-channels")
     assert area2.id == "harness"
 
     # atlas-practice -> atlas
@@ -109,7 +110,7 @@ def test_resolve_area_by_epic_number() -> None:
     devops = resolve_area(5703)
     assert devops.id == "devops"
 
-    harness = resolve_area(4913)
+    harness = resolve_area(4706)
     assert harness.id == "harness"
 
     # string epic lookup
@@ -121,11 +122,8 @@ def test_resolve_area_by_epic_number() -> None:
     assert resolve_area(6321).id == "open-model-data"
 
 
-@pytest.mark.parametrize(
-    ("stream", "epic"),
-    [("curriculum-upgrade", 7994), ("a1-upgrade", 7995)],
-)
-def test_upgrade_streams_share_core_area_but_isolate_handoffs(stream: str, epic: int) -> None:
+def test_curriculum_upgrade_stream_has_isolated_handoffs() -> None:
+    stream, epic = "curriculum-upgrade", 7994
     assert resolve_area(stream).id == "core"
     assert resolve_area(epic).id == "core"
     candidates = _handoff_candidates_for(stream, epic)
@@ -160,7 +158,8 @@ def test_list_valid_names() -> None:
     assert "infra" in names
     assert "infra-harness" in names
     assert "harness" in names
-    assert "eval-harness" in names
+    assert "eval-harness" not in names
+    assert "a1-upgrade" not in names
     assert "devops" in names
     assert "monitor" in names
     assert "open-model-data" in names
@@ -214,8 +213,7 @@ def test_inventory_session_streams_wiring() -> None:
         ("seminars-folk", "folk", "epic:2836"),
         ("bio", "bio", "epic:4431"),
         ("seminars-bio", "bio", "epic:4431"),
-        ("curriculum-upgrade", "curriculum-upgrade", "epic:7994"),
-        ("a1-upgrade", "a1-upgrade", "epic:7995"),
+        ("curriculum-upgrade", "core", "epic:7994"),
         ("core-quality", "core-quality", "epic:4274"),
         ("corpus", "corpus", "epic:4706"),
         ("corpus-channels", "corpus", "epic:4706"),
@@ -274,6 +272,26 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
     )
     assert result.returncode != 0, f"Expected non-zero returncode for unknown selector '{unknown_selector}'"
     assert result.stdout.strip() == ""
+
+
+def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path: Path) -> None:
+    """A missing alias map must reject `atlas`, not resolve it as a raw registry key."""
+    lib = tmp_path / "scripts" / "lib"
+    lib.mkdir(parents=True)
+    shutil.copy2(_HANDOFF_IDENTITY_SH, lib / "handoff_identity.sh")
+    config = tmp_path / "scripts" / "config"
+    config.mkdir()
+    shutil.copy2(_ISSUE_STREAMS, config / "issue_streams.yaml")
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; launcher_selector_resolve atlas', "bash", str(lib / "handoff_identity.sh")],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
+    assert "launcher alias map missing or malformed" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -361,11 +379,17 @@ def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
-    ("session_epic", "expected_mode", "expected_token"),
+    ("session_epic", "expected_mode", "expected_token", "handoff_path"),
     [
-        ("hramatka", "valid", "ASSIGNED EPIC: hramatka.epic"),
-        ("invalid_selector_xyz", "unknown", "ERROR: unknown SESSION_EPIC 'invalid_selector_xyz'"),
-        ("", "empty", "NO EPIC ASSIGNED (launcher had no --epic flag)"),
+        ("hramatka", "valid", "ASSIGNED EPIC: hramatka.epic", ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md"),
+        (
+            "curriculum-upgrade",
+            "valid",
+            "ASSIGNED EPIC: curriculum-upgrade.epic",
+            ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md",
+        ),
+        ("invalid_selector_xyz", "unknown", "ERROR: unknown SESSION_EPIC 'invalid_selector_xyz'", ""),
+        ("", "empty", "NO EPIC ASSIGNED (launcher had no --epic flag)", ""),
     ],
 )
 def test_session_setup_hook_epic_validation_contract(
@@ -373,6 +397,7 @@ def test_session_setup_hook_epic_validation_contract(
     session_epic: str,
     expected_mode: str,
     expected_token: str,
+    handoff_path: str,
 ) -> None:
     """Verify SessionStart hook validates SESSION_EPIC against launcher_selector_resolve."""
     import json
@@ -392,6 +417,7 @@ def test_session_setup_hook_epic_validation_contract(
     registry = project_dir / "scripts" / "config" / "issue_streams.yaml"
     registry.parent.mkdir(parents=True)
     shutil.copy2(_ISSUE_STREAMS, registry)
+    shutil.copy2(_LAUNCHER_ALIASES, registry.with_name("launcher_stream_aliases.tsv"))
 
     env = {
         "CLAUDE_PROJECT_DIR": str(project_dir),
@@ -406,9 +432,7 @@ def test_session_setup_hook_epic_validation_contract(
         "CLAUDE_PROFILE_RESOLVER_PYTHON": sys.executable,
         "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
         "CLAUDE_SESSION_RECORD_PYTHON": sys.executable,
-        "SESSION_BOUNDED_RUNNER": str(
-            _REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"
-        ),
+        "SESSION_BOUNDED_RUNNER": str(_REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
     }
@@ -432,16 +456,14 @@ def test_session_setup_hook_epic_validation_contract(
     try:
         data = json.loads(result.stdout)
     except json.JSONDecodeError as exc:
-        pytest.fail(
-            f"SessionStart hook stdout was not JSON ({exc}); "
-            f"stdout={result.stdout!r} stderr={result.stderr!r}"
-        )
+        pytest.fail(f"SessionStart hook stdout was not JSON ({exc}); stdout={result.stdout!r} stderr={result.stderr!r}")
     context = data.get("hookSpecificOutput", {}).get("additionalContext", "")
 
     assert expected_token in context
 
     if expected_mode == "valid":
-        assert ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+        assert handoff_path in context
+        assert "core-epic/CLAUDE-DRIVER-HANDOFF.md" not in context
         assert "ERROR: unknown SESSION_EPIC" not in context
     elif expected_mode == "unknown":
         assert "Valid lane selectors:" in context

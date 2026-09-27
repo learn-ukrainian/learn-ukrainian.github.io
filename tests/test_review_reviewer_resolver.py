@@ -345,7 +345,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     assert resolution.selected.health == "degraded"
 
 
-def test_real_gemini_lane_outage_excludes_agy_candidates():
+def test_gemini_lane_outage_does_not_create_code_review_route():
     snapshot = {
         "agents": {
             "gemini": {"status": "unknown", "health": {"healthy": False}},
@@ -354,9 +354,38 @@ def test_real_gemini_lane_outage_excludes_agy_candidates():
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5"
-    gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
-    assert gemini.health == "unhealthy"
-    assert gemini.status == "excluded"
+    assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
+
+
+def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
+    injected = replace(
+        SONNET_5,
+        name="injected-gemini",
+        concrete_model="gemini-3.8-flash-high",
+        family="google",
+        route="agy",
+        transport="agy",
+    )
+    inputs = ResolverInputs(author_model="codex", risk="medium")
+    result = evaluate_candidate(injected, inputs)
+    assert result.status == "excluded"
+    assert "operator 2026-09-25" in result.reason
+    resolution = resolve_reviewer(inputs, ladder=((injected,),))
+    assert resolution.selected is None
+    assert resolution.trace[0].status == "excluded"
+    assert "Gemini reviews Ukrainian only, never code" in resolution.trace[0].reason
+    monkeypatch.setitem(REVIEW_CANDIDATES, injected.name, injected)
+    pinned = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            pinned_candidate=injected.name,
+            pressure_override_reason="explicit regression pin",
+        ),
+        ladder=((injected,),),
+    )
+    assert pinned.selected is None
+    assert "hard eligibility gate" in pinned.fail_closed_reason
 
 
 def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed():
@@ -944,7 +973,7 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected is not None
     assert selected.participant == "codex"
     assert selected.adapter_transport == "acp"
-    assert selected.sealed_executable == "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
+    assert selected.sealed_executable == "agent_runtime.runner:invoke_inter_agent"
     assert selected.quota_bucket == "codex"
     assert selected.credential_bucket == "codex"
     assert selected.quota_limit == selected.credential_limit == 1
@@ -981,16 +1010,15 @@ def test_critical_ladder_keeps_authority_before_practical():
 def test_practical_ladder_starts_with_sol_then_opus_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:6]] == [
+        assert [rung[0].name for rung in ladder[:5]] == [
             "openai_frontier",
             "claude-opus-5-5",
             "claude-opus-5-5-cursor-fallback",
             "claude-sonnet-5",
-            "gemini-3.8-flash",
             "grok-4.7",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[6][0].name == "grok-4.7-cursor-fallback"
+        assert ladder[5][0].name == "grok-4.7-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -1060,3 +1088,29 @@ def test_actual_catalog_resolver_imports_and_selects_approved_codex_model():
     result = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium"))
     assert result.selected is not None
     assert result.selected.concrete_model == "gpt-6-sol"
+
+
+def test_sealed_executable_catalog_and_resolver_parity():
+    import dataclasses
+
+    from scripts.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
+
+    assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
+    for name, candidate in REVIEW_CANDIDATES.items():
+        if candidate.formal_review_eligible:
+            assert candidate.sealed_executable == _SEALED_REVIEW_EXECUTABLE, (
+                f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
+            )
+            # Normal inputs pass sealed_executable hard exclusion
+            inputs = ResolverInputs(
+                author_model="gemini",
+                risk="medium",
+                formal_review=True,
+                review_profile="code",
+            )
+            reason = _hard_exclusion_reason(candidate, inputs)
+            assert reason != "candidate is not bound to the sealed ACP executable"
+
+            # Tampered executable is rejected
+            mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
+            assert _hard_exclusion_reason(mismatched, inputs) == "candidate is not bound to the sealed ACP executable"

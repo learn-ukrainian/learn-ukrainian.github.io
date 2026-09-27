@@ -83,7 +83,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     git(root, "add", ".")
     git(root, "commit", "-m", "base")
     monkeypatch.setattr(delegate, "_REPO_ROOT", root.resolve())
-    monkeypatch.setattr(delegate, "_TASKS_DIR", root.resolve() / "batch_state" / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(root.resolve() / "batch_state" / "tasks"))
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "locks")
     return root.resolve()
 
@@ -201,7 +201,7 @@ def test_reservation_recorded_before_git_and_a_leftover_is_reported_not_removed(
 
 
 def test_failure_record_never_overwrites_another_runs_live_record(repo: Path) -> None:
-    delegate._TASKS_DIR.mkdir(parents=True)
+    delegate.tasks_dir().mkdir(parents=True)
     other = {
         "task_id": "shared",
         "run_nonce": "another-run",

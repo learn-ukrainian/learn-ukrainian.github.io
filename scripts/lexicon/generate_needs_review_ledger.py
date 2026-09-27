@@ -48,7 +48,7 @@ from scripts.lexicon.triage_needs_review import (
 
 DEFAULT_CANDIDATES = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 DEFAULT_TRIAGE = PROJECT_ROOT / "data" / "lexicon" / "needs-review-triage.json"
-DEFAULT_DECISIONS_DIR = PROJECT_ROOT / "data" / "lexicon" / "source-inventory-review-decisions"
+DEFAULT_DECISIONS_DIR = PROJECT_ROOT / "registry" / "lexicon" / "source-inventory-review-decisions"
 BATCH_SLUG = "grow-needs-review-batch-01"
 
 
@@ -301,7 +301,7 @@ def build_parser() -> argparse.ArgumentParser:
             "    --triage data/lexicon/needs-review-triage.json\n"
             "\n"
             "Outputs (only with --write):\n"
-            "  data/lexicon/source-inventory-review-decisions/"
+            "  registry/lexicon/source-inventory-review-decisions/"
             "<date>-grow-needs-review-batch-01.yaml\n"
             "\n"
             "Exit codes:\n"
@@ -332,7 +332,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Output YAML path (default: "
-            "data/lexicon/source-inventory-review-decisions/<UTC-date>-"
+            "registry/lexicon/source-inventory-review-decisions/<UTC-date>-"
             f"{BATCH_SLUG}.yaml)"
         ),
     )

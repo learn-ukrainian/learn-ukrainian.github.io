@@ -29,7 +29,7 @@ _GIB = 1024**3
 @pytest.fixture
 def tasks_dir(tmp_path, monkeypatch):
     tasks = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
     for name in (
         "_resolve_dirty_primary_checkout_error",
@@ -238,7 +238,7 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-live")) == 0
 
     assert len(spawned) == 1
-    assert "🚦 dispatch admission: admitted — live write workers 0/5" in capsys.readouterr().err
+    assert "🚦 dispatch admission: admitted — live write workers 0/6" in capsys.readouterr().err
     state = delegate._read_state(delegate._state_path("adm-live"))
     assert state is not None
     assert state["admission"]["admitted"] is True
@@ -499,7 +499,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     _running_record(tasks, "busy", pid=515151)
     dead = _running_record(tasks, "gone", pid=424242)
     monkeypatch.setattr(dispatch_admission, "process_alive", lambda pid: pid == 515151)
-    monkeypatch.setattr(capacity_pick, "_TASKS_DIR", tasks)
+    monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(
         usage,
@@ -509,7 +510,7 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/5, "
+        "admission (write dispatch): would admit now | live write workers 1/6, "
         "MemAvailable 64.0 GiB (floor 3.5 GiB), load 0.00 per CPU (limit 1.50); "
         "1 record(s) dead pid, not counted: gone"
     )

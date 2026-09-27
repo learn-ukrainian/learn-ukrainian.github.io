@@ -3,9 +3,10 @@
 `scripts/backup-data.sh` creates encrypted, versioned restic snapshots of the
 project's recovery-critical local state through an rclone remote. It does not
 write through the Google Drive Desktop mount, overwrite the previous backup,
-prune snapshots, or restore directly over live project data.
+or restore directly over live project data. Snapshot pruning exists only as
+the operator-approved weekly `retention` command described below.
 
-Every snapshot contains these roots, in priority order:
+Every completed backup run contains these roots, in priority order:
 
 - every `.claude/*-epic/` directory, including driver plans and handoffs;
 - `.agent/`, including local agent recovery state and session-stream databases;
@@ -25,21 +26,36 @@ restic rclone path with that final directory name.
 
 ## Safety model
 
-- `init`, `backup`, and `restore` are previews unless `--execute` is explicit.
-- A backup executes from a private copy-on-write staging tree outside the
-  checkout.
-- Staging capacity is checked against every selected recovery tree, SQLite
-  snapshot overhead, and a 2 GiB reserve before an execute path starts.
+- `init`, `backup`, `retention`, and `restore` are previews unless `--execute`
+  is explicit.
+- On macOS, a backup executes from a private copy-on-write staging tree outside
+  the checkout. The staging capacity check covers selected recovery trees,
+  SQLite overhead, and a 2 GiB reserve.
 - On macOS, source and staging must be on the same volume before APFS
   copy-on-write staging; a cross-volume staging location fails closed.
-- On Linux filesystems without reflink support, only a bounded source tree of
-  at most 64 MiB may fall back to a normal copy; larger trees fail closed.
-- Every `*.db`, `*.sqlite`, and `*.sqlite3` under the selected roots (including
-  `.agent/`) is rebuilt
-  in staging with SQLite's online backup command and must pass
-  `PRAGMA quick_check` before upload.
-- SQLite WAL/SHM sidecars for `*.db`, `*.sqlite`, and `*.sqlite3` databases,
+- On Linux, restic reads non-database files directly from the live recovery
+  roots. SQLite databases are backed up one at a time with SQLite's online
+  `.backup` command, checked with `PRAGMA integrity_check`, uploaded, and
+  removed from private staging before the next database. Before each database,
+  the script checks staging free space against its DB plus WAL size and a 2 GiB
+  reserve. No reflink or full-tree copy is required, so peak extra disk is
+  about the largest single database, never the sum. Non-database files can
+  change while restic reads them; coordinate writers for application-level
+  consistency and inspect recovery-critical manifests during a restore drill.
+- On Linux, `LU_BACKUP_TMPDIR` may point at the designated staging parent
+  `<project>/data/.backup-staging` (the value the backup systemd unit sets).
+  That keeps staging on the same filesystem as `data/`, so staging follows
+  `data/` onto a future dedicated volume and the free-space preflight measures
+  the data filesystem. The directory is gitignored and excluded from every
+  scan and restic phase; any other staging location inside the checkout still
+  fails closed.
+- Every `*.db` and `*.sqlite*` under selected roots (including `.agent/`)
+  is rebuilt with SQLite's online backup command.
+- SQLite WAL/SHM/journal sidecars for selected databases,
   plus `__pycache__`, `.DS_Store`, and retired `qdrant/` data, are excluded.
+- Scoped `*-home/` directories in `batch_state/` and `home/` directories in
+  `batch_state/review-receipts/` are excluded. Review homes are ephemeral and
+  may contain credential links. Absolute symlinks elsewhere still stop backup.
 - The legacy `data/textbooks` and `data/vesum` symlinks are excluded only when
   they resolve inside the old Drive backup. Other absolute or escaping
   symlinks stop the backup.
@@ -47,9 +63,20 @@ restic rclone path with that final directory name.
   below it, and unsupported special files, stop the backup before restic runs.
 - Restore accepts only an absolute empty or nonexistent directory outside the
   project, cloud mounts, and the legacy backup.
-- There is intentionally no `forget`, `prune`, or snapshot-delete command.
+- The only snapshot deletion is `retention [--execute]`. It lists this backup
+  family's snapshots (`--tag "$BACKUP_TAG"`), groups them into runs by the
+  `lu-run-<id>` tag each snapshot carries, applies
+  `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` to completed runs (those
+  whose receipt snapshot exists), and forgets by explicit snapshot ID only the
+  snapshots of runs outside the keep set. A retained receipt therefore never
+  loses a snapshot it references, and a partial newer run can never displace
+  one: runs newer than the newest completed run are always kept. `prune` runs
+  as a separate explicit step. Other snapshot families in the same repository
+  are never selected. It is a preview unless `--execute` is supplied and is
+  scheduled weekly, not on every backup.
 - Restic commits snapshots atomically. A failed upload does not replace an
-  earlier recovery point.
+  earlier recovery point. On Linux, a final receipt snapshot marks the run
+  complete; `restore latest` selects only completed runs.
 
 Restic documents the [rclone backend][restic-rclone], [backup dry runs][restic-backup],
 [restore dry runs][restic-restore], and [repository integrity checks][restic-check].
@@ -138,18 +165,22 @@ First run the non-mutating preview:
 ```
 
 Review the selected root list, byte/file counts, excluded legacy symlinks,
-known missing paths, and the restic change list. Then create the snapshot:
+known missing paths, SQLite list, and the restic change list. The Linux preview
+shows the live non-database selection; it does not stage databases. Then create
+the backup:
 
 ```bash
 ./scripts/backup-data.sh backup --execute
 ```
 
-The execute path checks repository metadata after the snapshot. It does not
-prune old versions. Normal exits and handled interruptions clean the private
-staging directory and local operation lock. After a power loss, inspect any
-stale path reported by the next run before removing it.
+The execute path checks repository metadata after the snapshots. It does not
+prune old versions. A per-user `flock` under `XDG_RUNTIME_DIR` (or `/run/user/$UID`,
+then `/tmp`) serializes backup, retention, init, and restore execution. It waits
+up to one hour; a timeout fails visibly. The kernel releases the lock after a
+crash, and the next lock holder clears stale private staging before running.
+The `flock` command is required on the backup host.
 
-Each successful snapshot contains `BACKUP-RECEIPT.json` with:
+Each successful run contains `BACKUP-RECEIPT.json` with:
 
 - UTC creation time, stable host label, Git SHA, and receipt preparation status;
 - the selected root labels with file and byte counts;
@@ -157,12 +188,15 @@ Each successful snapshot contains `BACKUP-RECEIPT.json` with:
 - the count of untracked non-ignored files not included (normally zero);
 - exclusions, known missing paths, and the restore command.
 
-Path counts are calculated after exclusions are removed from the private
-staging tree, so they describe recoverable snapshot files rather than raw
-source-tree contents.
+On macOS, path counts are calculated from the staged tree after exclusions.
+On Linux, they are calculated from the live source inventory after exclusions;
+concurrent non-database writes can change the actual uploaded byte counts.
 
-The receipt intentionally records only top-level recovery labels, not private
-inner path names. The remote repository itself is encrypted. The final process
+The Linux receipt also lists each database's relative path and snapshot ID,
+the live-file snapshot ID, and an optional patch snapshot ID. All parts share
+one run ID, and the final receipt snapshot is tagged `lu-part-complete`.
+`restore latest` uses that completed receipt to reassemble the tree. The
+remote repository itself is encrypted. The final process
 exit code belongs to the operator log: an in-snapshot file cannot truthfully
 contain the outcome of the repository check that runs after the snapshot is
 committed.
@@ -171,7 +205,10 @@ When `data/lexicon/runner-mirror/` exists, a successful `backup --execute`
 also writes its local `RESTIC-GATE-RECEIPT.json` **after** the repository
 check. This is distinct from the in-snapshot `BACKUP-RECEIPT.json`: it binds
 each current runner-mirror `manifest.json` checksum to the completed restic
-snapshot so the pre-wipe gate works without credentials or network access.
+snapshot so the pre-wipe gate works without credentials or network access. On
+Linux, the script compares the runner-mirror file list and SHA-256 hashes in
+the live-file snapshot with the live mirror before writing that local gate
+receipt.
 See [the Atlas runner durability runbook](atlas-20k-runner-durability.md) for
 the required snapshot → backup → gate → wipe order.
 
@@ -204,12 +241,14 @@ mkdir -p /absolute/path/to/recovery-parent
 ```
 
 The restored tree contains `.claude/`, `.agent/`, `batch_state/`, `data/`, and the JSON
-receipt. Validate the receipt and databases before any live import:
+receipt. `restore --execute` checks `PRAGMA integrity_check` on every restored
+database and fails if any check is not `ok`. Inspect the receipt and expected
+data before any live import:
 
 ```bash
 jq . /absolute/path/to/recovery-parent/restore-test/BACKUP-RECEIPT.json
 sqlite3 /absolute/path/to/recovery-parent/restore-test/data/sources.db \
-  'PRAGMA quick_check;'
+  'PRAGMA integrity_check;'
 find /absolute/path/to/recovery-parent/restore-test/data -type f | wc -l
 ```
 
@@ -260,8 +299,9 @@ Drive backup, or another directory containing files.
   from committed configuration and release artifacts.
 - `_quarantine/`: incident evidence remains separately managed.
 - `data/qdrant/`: retired and rebuildable under ADR-005/006.
-- SQLite WAL/SHM sidecars for `*.db`, `*.sqlite`, and `*.sqlite3`: transient
+- SQLite WAL/SHM/journal sidecars for selected databases: transient
   state incorporated into each staged online database backup.
+- Ephemeral scoped homes in `batch_state/`, including review-receipt homes.
 - `data/textbooks` and `data/vesum` when they are legacy Drive symlinks. Their
   targets remain in the legacy backup until a separate migration is planned.
 
@@ -270,12 +310,38 @@ symlink is a hard failure rather than a silent omission or recursive copy.
 
 ## Scheduling
 
-The script is suitable for launchd or cron after the one-time environment is
-available to that process. `backup --execute` returns nonzero for missing
-critical roots, unsafe symlinks, uncovered untracked files, corrupt SQLite
-databases, failed uploads, or failed repository checks. Send stdout and stderr
-to an operator-controlled log outside the repository and alert on every
-nonzero exit.
+On the data host, the systemd **user** units in `packaging/systemd/`
+(`learn-ukrainian-backup.service` + `.timer`, and
+`learn-ukrainian-backup-retention.service` + `.timer`) run the backup daily at
+03:30 UTC (`Persistent=true`, 15-minute randomized delay) and the
+operator-approved retention policy weekly. Install them from the primary
+checkout (preview by default; writes only with `--apply`):
 
-Do not schedule retention or pruning until an operator approves a policy and
-multiple restore drills have succeeded.
+```bash
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD"
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
+```
+
+The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
+Validation errors name the variable and condition without its value. The
+scheduled wrapper replaces the configured repository value (with or without
+the `rclone:` prefix) and password-file path in backup and retention output
+before sending it to the journal. `scripts/orchestration/run_scheduled_backup.sh`
+writes `batch_state/backups/last-run.json` on success and on failure (UTC
+start/end, exit status, restic run id, snapshot count, bytes added). A failed
+run exits non-zero, and so does a failed log capture or a failed
+`last-run.json` write, so `systemctl --user list-timers` and
+`journalctl --user -u learn-ukrainian-backup.service` show it; there is no
+separate alerting system.
+If systemd times out or kills the wrapper, `last-run.json` may still show the
+previous run; use its timestamp together with the unit status.
+
+Elsewhere, the script remains suitable for launchd or cron after the one-time
+environment is available to that process. `backup --execute` returns nonzero
+for missing critical roots, unsafe symlinks, uncovered untracked files,
+corrupt SQLite databases, failed uploads, or failed repository checks. Send
+stdout and stderr to an operator-controlled log outside the repository and
+alert on every nonzero exit.
+
+Schedule retention only through the weekly `retention` command above; do not
+add ad-hoc `restic forget` or prune invocations.

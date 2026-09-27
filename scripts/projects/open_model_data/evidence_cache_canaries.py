@@ -8,12 +8,18 @@ import hashlib
 import json
 import os
 import sqlite3
+import sys
 import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.lexicon import ulif_raw_cache
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "data/projects/open_model_data/contracts/correction_protection_adapter_receipt_v1.schema.json"
@@ -80,11 +86,8 @@ def audit_database(database: Path, *, logical_path: str = "data/sources.db") -> 
     connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     try:
-        tables = {
-            str(row[0])
-            for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        }
-        required = {"ulif_dictua_entries", "ulif_dictua_sections", "ulif_dictua_raw_responses"}
+        tables = {str(row[0]) for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        required = {"ulif_dictua_entries", "ulif_dictua_sections"}
         require(required <= tables, "ULIF cache tables are unavailable")
         entry_columns = table_columns(connection, "ulif_dictua_entries")
         section_columns = table_columns(connection, "ulif_dictua_sections")
@@ -102,13 +105,11 @@ def audit_database(database: Path, *, logical_path: str = "data/sources.db") -> 
         raw_verified = 0
         for row in entries:
             response_sha256 = str(row["response_sha256"])
-            raw = connection.execute(
-                "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-                (response_sha256,),
-            ).fetchone()
-            require(raw is not None, f"missing ULIF raw response: {response_sha256}")
-            body = bytes(raw["body"])
-            require(sha256_bytes(body) == response_sha256, f"ULIF raw response hash mismatch: {response_sha256}")
+            try:
+                body = ulif_raw_cache.get(response_sha256, path=ulif_raw_cache.cache_path(database))
+            except (ValueError, sqlite3.Error, OSError) as exc:
+                raise AdapterError(str(exc)) from exc
+            require(body is not None, f"missing ULIF raw response: {response_sha256}")
             require(str(row["raw_response_ref"]) == f"sha256:{response_sha256}", "ULIF raw response ref mismatch")
             raw_verified += 1
             status = str(row["status"])
@@ -121,7 +122,9 @@ def audit_database(database: Path, *, logical_path: str = "data/sources.db") -> 
         slovnyk_present = "slovnyk_me_entries" in tables
         if slovnyk_present:
             slovnyk_columns = set(table_columns(connection, "slovnyk_me_entries"))
-            require({"dictionary_identity", "locator"} <= slovnyk_columns, "slovnyk cache lacks named dictionary identity")
+            require(
+                {"dictionary_identity", "locator"} <= slovnyk_columns, "slovnyk cache lacks named dictionary identity"
+            )
             invalid = connection.execute(
                 "SELECT COUNT(*) FROM slovnyk_me_entries WHERE dictionary_identity = '' OR locator NOT LIKE 'https://slovnyk.me/dict/%'"
             ).fetchone()[0]
@@ -145,9 +148,21 @@ def audit_database(database: Path, *, logical_path: str = "data/sources.db") -> 
                 "by_section_kind": dict(sorted(section_kinds.items())),
                 "raw_response_hashes_verified": raw_verified,
                 "parser_change_canaries": [
-                    {"id": "ulif-entry-table-exact-shape", "passed": True, "failure_mode": "unknown column or removed field fails closed"},
-                    {"id": "ulif-raw-response-hash", "passed": True, "failure_mode": "body/ref/hash mismatch fails closed"},
-                    {"id": "ulif-status-and-section-consistency", "passed": True, "failure_mode": "unknown status/kind or inconsistent sections fail closed"},
+                    {
+                        "id": "ulif-entry-table-exact-shape",
+                        "passed": True,
+                        "failure_mode": "unknown column or removed field fails closed",
+                    },
+                    {
+                        "id": "ulif-raw-response-hash",
+                        "passed": True,
+                        "failure_mode": "body/ref/hash mismatch fails closed",
+                    },
+                    {
+                        "id": "ulif-status-and-section-consistency",
+                        "passed": True,
+                        "failure_mode": "unknown status/kind or inconsistent sections fail closed",
+                    },
                 ],
             },
             "slovnyk_me": {

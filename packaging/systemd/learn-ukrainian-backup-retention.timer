@@ -1,0 +1,12 @@
+[Unit]
+Description=Learn Ukrainian weekly backup retention timer
+
+[Timer]
+# Runs after the Sunday 03:30 UTC backup (plus its jitter and run time).
+OnCalendar=Sun *-*-* 05:15:00 UTC
+Persistent=true
+RandomizedDelaySec=15min
+Unit=learn-ukrainian-backup-retention.service
+
+[Install]
+WantedBy=timers.target

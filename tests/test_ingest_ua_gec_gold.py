@@ -165,7 +165,7 @@ def test_fixture_round_trip_preserves_attribution_tags_spans_and_schema(tmp_path
 
 
 def test_committed_fixture_preserves_tags_spans_and_attribution() -> None:
-    fixture_path = Path(__file__).resolve().parents[1] / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+    fixture_path = Path(__file__).resolve().parents[1] / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
     fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
 
     assert fixture["attribution"]["dataset"] == "UA-GEC"

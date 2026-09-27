@@ -445,6 +445,14 @@ post-#1427 `ukrainian_wiki` table and the post-#1555 chunker policy.
   --to /absolute/path/to/empty-recovery-directory \
   --execute
 
+# 2b) Restore needs free space: the script measures the restore size first
+#     and refuses (writing nothing) if the target filesystem has less than
+#     size + LU_BACKUP_RESTORE_MARGIN_PERCENT (default 10). To restore just one
+#     file or directory of the run (e.g. one database), add --path:
+./scripts/backup-data.sh restore latest \
+  --to /absolute/path/to/empty-recovery-directory \
+  --path data/sources.db --execute
+
 # 3) Verify the staged database. Row counts should be non-trivial.
 sqlite3 /absolute/path/to/empty-recovery-directory/data/sources.db "
   PRAGMA quick_check;
@@ -553,10 +561,16 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 
 ### Services (`./services.sh`)
 
-Canonical process manager for the three long-running local services. It owns
-PID/lock/port bookkeeping — **always use it instead of ad-hoc `npm run dev`,
-`astro preview`, or `nohup`**, which create port drift (4322/4323…) and orphan
-servers.
+On Linux, `services.sh` controls the loaded systemd user units for `sources`,
+`api`, `work`, and `astro`, clears project-owned stray listeners, and reads logs
+from the journal. If the user bus is unavailable, it refuses to launch an
+unsupervised copy even when no unit file is found. The existing `monitor-pull`
+timer restarts the api unit every five minutes after a pull. Never restart
+`learn-ukrainian-loopback.target`:
+its dependencies start all four services. On systems without these units,
+`services.sh` retains its direct or launchd process management. Always use it
+instead of ad-hoc `npm run dev`, `astro preview`, or `nohup`, which create port
+drift and orphan servers.
 
 | Service | Port | What it is |
 | --- | --- | --- |
@@ -693,10 +707,10 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
   --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
 
 # 3) Set-diff the triage lemmas against every lemma already approved in
-#    data/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
+#    registry/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
 #    not just the last batch) to get the new delta only, then hand-review and write:
-#      - data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
-#      - data/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
+#      - registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
+#      - registry/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
 #    Both commit the source-shape SHA-256 from step 1 in their notes for traceability.
 
 # 4) Record the checksum in the intake journal's audit trail (append-only; never
@@ -707,7 +721,7 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 
 # 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
-  --curated-inventory data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
+  --curated-inventory registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
   --vesum-db /tmp/vesum-shadow.db --apply --write --report
 
 # 6) Fold every approved lemma that already has an Atlas route (not just the newly
@@ -794,7 +808,7 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 
 | Check | Refused when | Default |
 | --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 5 |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 6 |
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 3.5 GiB |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
 
@@ -812,6 +826,26 @@ decision as its last line (JSON key `admission`). Write task records keep the `a
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
+
+**Worker isolation (#8645 part C):** the detached worker runs in the user slice
+`lu-dispatch.slice` (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`) via
+`systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
+is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
+arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
+is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+Fallback is the supported path when no user manager is reachable, linger is off, cgroup
+v2 memory is not delegated, or the slice is missing or does not have those limits:
+dispatch prints one warning and uses plain `Popen`. The same fallback is used when
+`systemd-run` exits before the worker writes its start marker, and when the startup
+window ends while `/proc/<pid>` still shows `systemd-run` (the worker never exec'd):
+that process is stopped and plain `Popen` is used. If the process image is already
+the worker, that process is kept and not relaunched. If the start marker arrives only
+as the process is stopped, or `/proc` cannot be read, the task is marked failed and
+is not started again. `LU_DISPATCH_ISOLATION=fallback` forces that path. Install steps
+and the linger/cgroup prerequisites are in
+`packaging/systemd/README.md`. When the slice is active, the admission line adds its
+current memory use against `MemoryMax`. An inactive or missing slice is left off the
+line. `peak_rss_mib` is unchanged.
 
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
@@ -1168,7 +1202,7 @@ hash.
 Curates the small tracked UA-GEC fixture for the #2156 eval harness. It reads
 the local ignored `data/sources.db` table `ua_gec_errors`, recovers sentence
 context/spans from the local `data/ua-gec` clone, maps tags through
-`scripts/audit/qg_schema.py`, and writes `data/ua-gec-gold/ua-gec-gold.json`
+`scripts/audit/qg_schema.py`, and writes `registry/ua-gec-gold/ua-gec-gold.json`
 with top-level CC-BY-4.0 attribution and per-row `build_ua_gec_finding` output.
 
 Run the dry-run first; it prints candidate totals, per-tag/source-language
@@ -1542,7 +1576,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
-| Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
+| Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
 | Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
@@ -1557,7 +1591,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   and initiator/quota telemetry land. Do not add new provider launch logic
   there. `ask-gemini` is retired; AGY is the Gemini-family route.
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
-- **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
+- **`discuss` is not formal review.** Use direct `ask-* --type review` + PR comment for CF (sealed `review-pr` / `publish-review-verdict` removed in #8520).
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
 - ACPX is the structured transport for supported bounded 2-to-4-seat panels;
   rollback is feature-flag off + native runtime. It is
@@ -1620,10 +1654,16 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
-# AGY — Gemini-family adversarial review
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Adversarial review for #NNN. Read {path}." \
+# AGY — Ukrainian content review (Gemini reviews Ukrainian only, never code)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
+  --review \
+  --review-profile ukrainian \
   --to-model gemini-3.1-pro-high
+
+# Codex — code / adversarial review
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN
 
 # Codex — quick question
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Review posted on #1177. Please read and respond." \
@@ -1643,8 +1683,8 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 AGY examples:
 
 ```bash
-# Default: AGY bridge call
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Review #NNN." \
+# Default: AGY bridge call (not a code review)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick check of the greeting in curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --to-model gemini-3.1-pro-high
 
@@ -1769,4 +1809,4 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ### Dispatch settle (Luna handoff)
 
-`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `driver_breadth_report --enforce` fails MISSING/DISHONEST idle dispositions (never raw idle seconds) after the #6998 telemetry trust window.
+`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).

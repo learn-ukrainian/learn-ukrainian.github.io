@@ -115,7 +115,7 @@ sources:
       Theory pages readable via WebFetch without auth.
       Exercise content behind Мій+ premium — not needed (we generate own exercises).
     coverage: Grammar rules, phonetics, morphology, syntax (Grades 5-11)
-    index: data/miyklas/grammar_index.yaml
+    index: registry/miyklas/grammar_index.yaml
     query_function: miyklas_match
 
   # ── Reference sources ─────────────────────────────────────────

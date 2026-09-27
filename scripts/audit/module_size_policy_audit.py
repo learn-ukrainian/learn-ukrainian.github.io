@@ -23,6 +23,9 @@ from typing import Any
 
 import yaml
 
+# C parser, same safe-load guarantees: the pure-Python loader dominated slug selection over hundreds of plan files.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 CODE_ROOT = Path(__file__).resolve().parents[2]
 if str(CODE_ROOT) not in sys.path:
     sys.path.insert(0, str(CODE_ROOT))
@@ -575,7 +578,7 @@ def word_count(path: Path) -> int:
 
 
 def read_yaml(path: Path) -> dict[str, Any]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER)
     return data if isinstance(data, dict) else {}
 
 

@@ -52,7 +52,7 @@ or dictionary authority. Any match against a forbidden pattern = REJECT
 verdict, cite the exact matched text, and emit a `<fixes>` block
 replacing the forbidden form with the canonical one. These are not
 style preferences — they're contractual anchors. See
-`data/canonical_anchors.yaml` for the full registry.
+`registry/canonical_anchors.yaml` for the full registry.
 
 {CANONICAL_ANCHORS_REVIEWER}
 

@@ -148,20 +148,34 @@ The most common failure mode at scale is **wiki-plan drift**: wiki says one thin
 
 ---
 
-## AC-4 — Adversarial review (AGY) before PR
+## AC-4 — Adversarial review before PR
 
-Spawn AGY via the bridge:
+Two rows. Infra and rubric drift are code review. Vocabulary stays with AGY.
+
+| Row | What | Seat |
+| --- | --- | --- |
+| Code review | (1) wiki fixes that open new gaps, (2) lifecycle field names colliding with the plan schema, (3) checklist categories the latest audit would have caught, (4) this rubric drifting from what was applied | Non-Gemini code-review seat (`ask-codex` / `ask-claude` `--type review`) |
+| Ukrainian factual | (5) hallucinated vocab not verifiable in VESUM | AGY, `--review-profile ukrainian` only |
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
-  "Adversarial review of #<N> review-and-lock for <slug> wiki + plan. \
-   Read the diff. Look for: \
-   (1) wiki fixes that introduce NEW gaps while closing documented ones, \
-   (2) lifecycle field naming colliding with existing plan schema fields, \
-   (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
-   (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
-   (5) hallucinated vocab not verifiable in VESUM." \
-  --task-id <N>-review --to-model gemini-3.8-flash-high
+# Code review — non-Gemini seat
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+  --task-id <N>-review --type review <<'EOF'
+Adversarial review of #<N> review-and-lock for <slug> wiki + plan.
+Read the diff. Look for:
+(1) wiki fixes that introduce NEW gaps while closing documented ones,
+(2) lifecycle field naming colliding with existing plan schema fields,
+(3) plan-review checklist missing categories that the latest systemic audit would have caught,
+(4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step).
+EOF
+
+# VESUM / vocabulary — AGY, Ukrainian profile required
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+  --task-id <N>-vesum --review --review-profile ukrainian \
+  --to-model gemini-3.8-flash-high <<'EOF'
+Check hallucinated vocab in the <slug> wiki + plan diff.
+Every new right-column token must be verifiable in VESUM.
+EOF
 ```
 
 Address findings. If non-trivial, a second round is expected — don't short-circuit.
@@ -211,7 +225,7 @@ This section shows the template applied step-for-step. If anything in the rubric
 - Wiki "Типові помилки L2" table → plan new fill-in activity (7 of 8 pairs; `приймати замовлення` left implicit because the plan doesn't use the verb `приймати` for orders anywhere) ✓
 - Wiki uses `кав'ярня`, plan uses `кафе`. Both standard. Added `кав'ярня` to plan's `recommended` vocab as near-synonym with writer-note. ✓
 
-### AC-4 (Gemini)
+### AC-4 (code review + VESUM)
 
 See PR #1412 body for the Gemini round(s) and what was addressed.
 
