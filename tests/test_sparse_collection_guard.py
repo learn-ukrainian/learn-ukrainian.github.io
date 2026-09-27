@@ -27,8 +27,11 @@ from __future__ import annotations
 
 import ast
 import errno
+import json
 import os
 import re
+import shutil
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -36,7 +39,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.sparse_collection_scope import SCOPE_FILE_ENV
+from tests.sparse_collection_scope import OUTCOMES_FILE_ENV, SCOPE_FILE_ENV
 from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
@@ -155,14 +158,16 @@ def collect_with_absent_trees(
     *,
     cwd: Path | None = None,
     repo_root: Path | None = None,
-) -> subprocess.CompletedProcess[str]:
+) -> tuple[subprocess.CompletedProcess[str], dict[str, str]]:
     """Run ``pytest --collect-only`` in a child that cannot see the sparse trees.
 
     The audit plugin is named on the command line and imported only by the
     child. This process does not import it, so the hook stays inactive here.
     The same child loads ``tests.sparse_collection_scope`` and collects the
     targets' common parent once, ignoring every test module outside ``targets``.
-    Eager-read failures still abort that collection.
+    Eager-read failures still abort that collection. The child writes each
+    target's outcome (``collected``, ``skipped``, or ``failed``) beside the
+    scope file; both are removed before this returns.
     """
     work = cwd or _REPO_ROOT
     root = Path(os.path.abspath(repo_root or _REPO_ROOT))
@@ -176,55 +181,152 @@ def collect_with_absent_trees(
     env.pop("PYTEST_PLUGINS", None)
     prior = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        prefix="sparse-collection-scope-",
-        suffix=".txt",
-        delete=False,
-    ) as scope_file:
-        scope_file.write("\n".join(path.as_posix() for path in resolved) + "\n")
-        scope_file.flush()
-        env[SCOPE_FILE_ENV] = scope_file.name
-        try:
-            return subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "pytest",
-                    _pytest_collection_arg(directory, work),
-                    "--collect-only",
-                    "-q",
-                    "--tb=line",
-                    "-o",
-                    "addopts=",
-                    "-p",
-                    "no:cacheprovider",
-                    "-p",
-                    "tests.sparse_collection_scope",
-                    "-p",
-                    "tests.sparse_collection_audit",
-                ],
-                cwd=work,
-                env=env,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=100,
-            )
-        finally:
-            os.unlink(scope_file.name)
+    scratch = tempfile.mkdtemp(prefix="sparse-collection-")
+    scope_path = os.path.join(scratch, "scope.txt")
+    outcomes_path = os.path.join(scratch, "outcomes.json")
+    Path(scope_path).write_text("\n".join(path.as_posix() for path in resolved) + "\n", encoding="utf-8")
+    env[SCOPE_FILE_ENV] = scope_path
+    env[OUTCOMES_FILE_ENV] = outcomes_path
+    try:
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                _pytest_collection_arg(directory, work),
+                "--collect-only",
+                "-q",
+                "--tb=line",
+                "-o",
+                "addopts=",
+                "-p",
+                "no:cacheprovider",
+                "-p",
+                "tests.sparse_collection_scope",
+                "-p",
+                "tests.sparse_collection_audit",
+            ],
+            cwd=work,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=100,
+        )
+        return completed, _read_collection_outcomes(outcomes_path)
+    finally:
+        shutil.rmtree(scratch)
 
 
-def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
-    targets = _collection_targets()
-    completed = collect_with_absent_trees(targets)
+def _read_collection_outcomes(path: str) -> dict[str, str]:
+    file = Path(path)
+    try:
+        text = file.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    if not text.strip():
+        return {}
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return {str(key): str(value) for key, value in data.items()}
+
+
+def _assert_targets_reported(
+    completed: subprocess.CompletedProcess[str],
+    outcomes: dict[str, str],
+    targets: list[str],
+) -> None:
+    """Collection succeeded, and every target was collected or skipped."""
     output = completed.stdout + completed.stderr
     assert completed.returncode == 0, output
     assert "errors during collection" not in output
     assert "Interrupted:" not in output
-    missing = [target for target in targets if target not in output]
-    assert not missing, f"collection did not report targets: {missing}\n{output[-2000:]}"
+    resolved = _resolved_targets(targets)
+    failed = [
+        target
+        for target, path in zip(targets, resolved, strict=True)
+        if outcomes.get(path.as_posix()) == "failed"
+    ]
+    assert not failed, f"collection failed: {failed}\n{output[-2000:]}"
+    unexpected = [
+        f"{target}={outcomes.get(path.as_posix())!r}"
+        for target, path in zip(targets, resolved, strict=True)
+        if outcomes.get(path.as_posix()) not in {"collected", "skipped"}
+    ]
+    assert not unexpected, f"collection outcomes: {unexpected}\n{output[-2000:]}"
+
+
+def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
+    targets = _collection_targets()
+    completed, outcomes = collect_with_absent_trees(targets)
+    _assert_targets_reported(completed, outcomes, targets)
+
+
+def test_citation_module_skip_is_a_reported_outcome() -> None:
+    """A module-level skip is ``skipped``, and the guard still passes.
+
+    CI has no populated ``sources.db``, so
+    ``tests/test_citation_resolution_invariant.py`` skips at import.
+    ``--collect-only -q`` then prints no node id for it. This worktree
+    otherwise falls back to the main checkout's database, which would
+    collect the module; an empty database planted for this child only
+    makes the same skip fire. A companion test keeps the exit code at 0
+    (a skip-only collection exits 5).
+    """
+    db_path = _REPO_ROOT / "data" / "sources.db"
+    if db_path.exists():
+        pytest.fail(f"refusing to replace existing {db_path}")
+    created = False
+    try:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        # A bare connect leaves a 0-byte file, and the resolver treats that as
+        # missing and falls back to the main checkout's populated database.
+        connection = sqlite3.connect(db_path)
+        connection.execute("CREATE TABLE sparse_guard_empty (id INTEGER)")
+        connection.commit()
+        connection.close()
+        created = True
+        assert db_path.stat().st_size > 0
+        with tempfile.TemporaryDirectory(dir=_REPO_ROOT / "tests", prefix="_sparse_guard_outcome_") as raw:
+            companion = Path(raw) / "test_companion_collects.py"
+            companion.write_text(
+                "def test_companion_collects() -> None:\n    pass\n",
+                encoding="utf-8",
+            )
+            citation = "tests/test_citation_resolution_invariant.py"
+            targets = [citation, companion.relative_to(_REPO_ROOT).as_posix()]
+            completed, outcomes = collect_with_absent_trees(targets)
+            _assert_targets_reported(completed, outcomes, targets)
+            assert outcomes[(_REPO_ROOT / citation).resolve().as_posix()] == "skipped"
+            assert outcomes[companion.resolve().as_posix()] == "collected"
+    finally:
+        if created:
+            db_path.unlink(missing_ok=True)
+
+
+def test_import_error_fails_the_collection_guard(tmp_path: Path) -> None:
+    """An import-time raise is ``failed``, so the guard does not pass."""
+    module = _write_module(
+        tmp_path / "import-error",
+        "test_import_error.py",
+        "raise RuntimeError('import boom')\n"
+        "\n"
+        "def test_import_error() -> None:\n"
+        "    pass\n",
+    )
+    targets = [str(module)]
+    completed, outcomes = collect_with_absent_trees(
+        targets,
+        cwd=module.parent,
+        repo_root=tmp_path,
+    )
+    assert outcomes[module.resolve().as_posix()] == "failed"
+    with pytest.raises(AssertionError):
+        _assert_targets_reported(completed, outcomes, targets)
 
 
 def _existing_curriculum_file(repo: Path) -> Path | None:
@@ -273,7 +375,7 @@ def _assert_eager_collection_fails(
     repo_root: Path,
     cwd: Path | None = None,
 ) -> None:
-    completed = collect_with_absent_trees(
+    completed, _outcomes = collect_with_absent_trees(
         [str(module) for module in modules],
         cwd=cwd or modules[0].parent,
         repo_root=repo_root,
