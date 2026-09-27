@@ -426,6 +426,54 @@ def test_a_competing_identical_retry_that_loses_the_database_race_leaves_the_sav
         assert row["outcome"] == "refuted" and row["decided_by"] == "the-competing-seat"  # the winner's
 
 
+def test_the_call_that_created_the_saved_reply_and_then_lost_the_database_race_leaves_it_intact(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The opposite ordering from the reproduction above (#8774 r7).
+
+    Here no reply is saved yet, so this call's own ``_save_exclusive`` is the one that creates
+    ``saved`` (``created`` is True). A competing recorder with a byte-identical reply then wins
+    ``record_settle_outcome`` before this call's own write reaches the database, so this call's
+    write raises ``SettleAlreadyDecided``. Because ``created`` is True for this call, cleanup that
+    keys off ``created`` alone unlinks the file the winner's decision relies on — the file is the
+    reply of record regardless of which of the two identical-bytes calls happened to create it.
+    """
+    reply = world.reply("refuted", _evidence(world))
+    reply_path = world.root / "seat-reply.yaml"
+    reply_path.write_bytes(reply)
+    saved = world.root / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module" / f"settle-{world.item_id}.reply.yaml"
+    assert not saved.exists()  # this call's own _save_exclusive will be the one to create it
+
+    real_record_outcome = db.record_settle_outcome
+
+    def competing_write_lands_first(
+        conn: Any, item_id: int, outcome: str, receipts: list[str], decided_by: str, **kwargs: Any
+    ) -> None:
+        with db.connect(world.db_path) as other_conn:  # the competing recorder's own connection, committing first
+            real_record_outcome(other_conn, item_id, outcome, receipts, "the-competing-seat", **kwargs)
+        real_record_outcome(conn, item_id, outcome, receipts, decided_by, **kwargs)
+
+    monkeypatch.setattr(settle.db, "record_settle_outcome", competing_write_lands_first)
+
+    with pytest.raises(db.SettleAlreadyDecided):
+        settle.record(
+            reply_path,
+            manifest_path=world.manifest,
+            ledger_path=world.own_ledger,
+            db_path=world.db_path,
+            decided_by="language-seat",
+            repo_root=world.root,
+        )
+
+    assert saved.exists(), "the cleanup deleted the reply this call created, which the winner's decision relies on"
+    assert saved.read_bytes() == reply
+    with db.connect(world.db_path) as conn:
+        row = conn.execute(
+            "SELECT outcome, decided_by FROM settle_items WHERE item_id = ?", (world.item_id,)
+        ).fetchone()
+        assert row["outcome"] == "refuted" and row["decided_by"] == "the-competing-seat"  # the winner's
+
+
 def test_record_retries_after_an_interruption_between_the_save_and_the_outcome(world: World) -> None:
     reply = world.reply("refuted", _evidence(world))
     reply_path = world.root / "seat-reply.yaml"

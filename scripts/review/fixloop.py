@@ -1061,7 +1061,8 @@ def module_verdict_problems(
     Read-only: it never writes (not the verdict file, not a projection). This is what ``fixloop
     verdict --check`` runs, and what a module build wires in before it lands the module: a stale
     ``APPROVE`` a later database write superseded fails here instead of reaching
-    ``build_arc_landing.py``, which trusts the file directly and does not recompute it.
+    ``build_arc_landing.py``, which calls this function itself (when a local findings database
+    exists) rather than trusting the file directly.
     """
     root = Path(root).resolve()
     path = state_dir(root, level, slug) / MODULE_VERDICT_NAME
