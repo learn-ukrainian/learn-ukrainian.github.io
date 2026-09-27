@@ -27,8 +27,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from agent_runtime.adapters.acpx import AcpxAdapter
 from agent_runtime.errors import RateLimitedError
-from agent_runtime.result import Result
+from agent_runtime.result import ParseResult, Result
 from agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
 
 from scripts.ai_agent_bridge import _acp_compat, _cli
@@ -138,6 +139,43 @@ def _typed_failure_result(participant: str, *, failure_code: str, excerpt: str) 
         effort="high",
         usage_record={"failure_code": failure_code},
         transport_outcome="error",
+    )
+
+
+def _result_from_acpx_parse(participant: str, parsed: ParseResult) -> Result:
+    """The ask-facing shape of one acpx parse: flags come from the parser."""
+    failure_code = parsed.failure_code
+    return Result(
+        ok=parsed.ok,
+        agent=participant,
+        model=f"{participant}-model",
+        mode="read-only",
+        response=parsed.response,
+        stderr_excerpt=parsed.stderr_excerpt,
+        duration_s=0.5,
+        session_id=parsed.session_id,
+        rate_limited=parsed.rate_limited,
+        stalled=False,
+        returncode=0 if parsed.ok else 1,
+        effort="high",
+        usage_record={} if not failure_code else {"failure_code": failure_code},
+        transport_outcome="rate_limited" if parsed.rate_limited else "error",
+    )
+
+
+def _parse_recorded_acp_error(data: object, *, message: str) -> ParseResult:
+    stdout = json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "error": {"code": -32603, "message": message, "data": data},
+        }
+    )
+    return AcpxAdapter().parse_response(
+        stdout=f"{stdout}\n",
+        stderr="",
+        returncode=1,
+        output_file=None,
     )
 
 
@@ -303,6 +341,84 @@ def test_typed_capacity_failure_substitutes_once_to_mapped_seat_and_records_it(
     failed_receipt = json.loads(authority.finished[0]["result"])
     assert failed_receipt["failure_code"] == "rate_limited"
     assert failed_receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
+
+
+def test_acpx_recorded_rate_limit_payload_substitutes_once(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A recorded provider rate-limit payload substitutes once, on ACP only.
+
+    The first seat's result is the acpx parser's reading of a Codex
+    ``codexErrorInfo: usageLimitExceeded`` error. The harness refuses
+    bridge, provider, and headless execution.
+    """
+    parsed = _parse_recorded_acp_error(
+        {
+            "acpxCode": "RUNTIME",
+            "origin": "acp",
+            "message": "turn failed",
+            "codexErrorInfo": "usageLimitExceeded",
+        },
+        message="Internal error: provider rejected the turn",
+    )
+    assert parsed.rate_limited is True
+    assert parsed.failure_code == "rate_limited"
+
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {
+            "codex": _result_from_acpx_parse("codex", parsed),
+            "cursor": _ok_result("cursor", "cursor answer"),
+        },
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-acpx-payload", source="claude")
+
+    assert result.ok is True
+    assert result.response == "cursor answer"
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
+    assert "ACP substitution: codex -> cursor (reason: rate_limited)" in capsys.readouterr().err
+    assert authority.finished[0]["failure"] == {
+        "phase": "provider",
+        "code": "rate_limited",
+        "retryable": True,
+    }
+    failed_receipt = json.loads(authority.finished[0]["result"])
+    assert failed_receipt["failure_code"] == "rate_limited"
+    assert failed_receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
+    assert len(authority.enqueued) == 2
+
+
+def test_acpx_text_only_429_payload_does_not_substitute(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Quota wording and a bare 429 in error.data are not a typed field."""
+    parsed = _parse_recorded_acp_error(
+        "HTTP 429",
+        message="provider quota exhausted",
+    )
+    assert parsed.rate_limited is False
+    assert parsed.failure_code != "rate_limited"
+
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": _result_from_acpx_parse("codex", parsed), "cursor": _ok_result("cursor")},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-acpx-text")
+
+    assert result.ok is False
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
+    assert getattr(result, "seat_substitution", None) is None
+    assert "ACP substitution" not in capsys.readouterr().err
 
 
 def test_quota_substitution_drops_explicit_model_and_effort_overrides(

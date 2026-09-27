@@ -735,6 +735,70 @@ _MISSING_STOP_REASON = object()
 # request. The prompt can still complete with a valid stopReason.
 ACPX_EXIT_PERMISSION_DENIED = 5
 
+# Typed rate-limit fields on the ACP JSON-RPC error payload (#8865).
+# Message text is never consulted. acpx itself has no rate-limit output
+# code; it only adds a free-text hint, which this parser ignores.
+#
+# Mapped, from the provider's own error object (merged into ``error.data``
+# by acpx ``buildErrorObject``):
+# - claude: ``data.errorKind == "rate_limit"``
+#   (@agentclientprotocol/claude-agent-acp ``errorKindData``;
+#   SDKAssistantMessageError includes ``rate_limit``)
+# - codex: ``data.codexErrorInfo`` is ``usageLimitExceeded`` or
+#   ``rateLimitExceeded``, or a structured value whose first entry has
+#   numeric ``httpStatusCode == 429``
+#   (@agentclientprotocol/codex-acp ``createTurnErrorData`` /
+#   ``getHttpStatusCode``; acpx does not advertise JetBrains AIR session
+#   failures, so the legacy error-object path is the one that arrives)
+#
+# Unmapped — the ACP error payload acpx forwards has no typed rate-limit
+# field, so these stay generic transport failures (owner: claude-infra):
+# - kimi, kimicc: ``provider.rate_limit`` stays inside the turn and the
+#   prompt resolves ``stopReason: end_turn``; only auth becomes an error
+# - cursor: connect enums (RATE_LIMITED and siblings) are not copied into
+#   JSON-RPC ``error.data``; the SDK wraps the message as ``details`` text
+# - agy: the text-only agent rejects with an ``Error`` string, no typed data
+# - glm, gemma, deepseek (opencode acp): ``error.data.errorName`` is the
+#   message-error name; a 429 is ``APIError`` and ``statusCode`` is not
+#   forwarded, so the name is not rate-limit-specific
+# - grok: internal kinds such as ``rate_limited`` are not a proven field
+#   on the JSON-RPC error object
+# - pool: no installed agent schema exposes a typed field
+_CLAUDE_RATE_LIMIT_ERROR_KIND = "rate_limit"
+_CODEX_RATE_LIMIT_ERROR_INFO = frozenset({"usageLimitExceeded", "rateLimitExceeded"})
+
+
+def _codex_structured_http_status(info: Mapping[str, Any]) -> int | None:
+    """Return the HTTP status codex-acp reads from a structured ``codexErrorInfo``.
+
+    ``getHttpStatusCode`` inspects only the first object value's numeric
+    ``httpStatusCode``. A boolean is not a status.
+    """
+    if not info:
+        return None
+    details = next(iter(info.values()))
+    if not isinstance(details, dict):
+        return None
+    status = details.get("httpStatusCode")
+    if isinstance(status, bool) or not isinstance(status, int):
+        return None
+    return status
+
+
+def _acp_error_is_rate_limited(error: Mapping[str, Any]) -> bool:
+    """True when ``error`` carries a mapped provider's typed rate-limit field."""
+    data = error.get("data")
+    if not isinstance(data, dict):
+        return False
+    if data.get("errorKind") == _CLAUDE_RATE_LIMIT_ERROR_KIND:
+        return True
+    info = data.get("codexErrorInfo")
+    if isinstance(info, str):
+        return info in _CODEX_RATE_LIMIT_ERROR_INFO
+    if isinstance(info, dict):
+        return _codex_structured_http_status(info) == 429
+    return False
+
 
 def _is_jsonrpc_id(value: object) -> bool:
     """JSON-RPC request ids are string | number; JSON ``true``/``false`` are not."""
@@ -2157,10 +2221,14 @@ class AcpxAdapter:
                     "PERMISSION_PROMPT_UNAVAILABLE": "acp_permission_unavailable",
                     "TIMEOUT": "timeout",
                 }.get(label, "transport_error")
+            rate_limited = _acp_error_is_rate_limited(final_error)
+            if rate_limited:
+                failure_code = "rate_limited"
             return self._closed(
                 f"acpx {label}: {message}",
                 stderr,
                 failure_code=failure_code,
+                rate_limited=rate_limited,
             )
 
         if final_stop_reason is _MISSING_STOP_REASON:
@@ -2245,6 +2313,7 @@ class AcpxAdapter:
         stderr: str,
         *,
         failure_code: str = "result_invalid",
+        rate_limited: bool = False,
     ) -> ParseResult:
         """Build a fail-closed ``ParseResult`` with a bounded stderr excerpt."""
         tail = (stderr or "").strip()
@@ -2253,7 +2322,7 @@ class AcpxAdapter:
             ok=False,
             response="",
             stderr_excerpt=excerpt[:500],
-            rate_limited=False,
+            rate_limited=rate_limited,
             session_id=None,
             tokens=None,
             tool_calls=[],
