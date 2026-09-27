@@ -33,7 +33,7 @@ import re
 import shlex
 import sys
 
-SEPARATORS = {"&&", "||", ";", "\n"}
+SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
@@ -152,19 +152,80 @@ def _collapse_shell_line_continuations(command: str) -> str:
 
 def _tokenize(command: str) -> list[str]:
     try:
+        executable = _strip_shell_comments(
+            _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
+        )
+        protected, parameters = _protect_parameters(executable)
         lexer = shlex.shlex(
-            _strip_shell_comments(
-                _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
-            ),
+            protected,
             posix=False,
-            punctuation_chars="();{}&|<>\n",
+            punctuation_chars="();&|<>\n",
         )
         lexer.whitespace_split = True
         lexer.whitespace = " \t"
         lexer.commenters = ""
-        return list(lexer)
+        return [_restore_parameters(token, parameters) for token in lexer]
     except ValueError:
         return ["__UNDECIDABLE_SECRET_COMMAND__"]
+
+
+def _protect_parameters(command: str) -> tuple[str, dict[str, str]]:
+    """Keep complete Bash ${...} words intact while shlex splits operators."""
+    substitutions = {start: end for start, end, _ in _substitution_spans(command)}
+    parameters: dict[str, str] = {}
+    out: list[str] = []
+    quote = ""
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            i += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        if quote != "'" and command.startswith("${", i):
+            depth = 1
+            inner_quote = ""
+            end = i + 2
+            while end < len(command) and depth:
+                current = command[end]
+                if current == "\\" and inner_quote != "'":
+                    end += 2
+                    continue
+                if current == "'" and inner_quote != '"':
+                    inner_quote = "" if inner_quote else "'"
+                elif current == '"' and inner_quote != "'":
+                    inner_quote = "" if inner_quote else '"'
+                elif inner_quote != "'" and end in substitutions:
+                    end = substitutions[end]
+                    continue
+                elif not inner_quote and command.startswith("${", end):
+                    depth += 1
+                    end += 2
+                    continue
+                elif not inner_quote and current == "}":
+                    depth -= 1
+                end += 1
+            if not depth:
+                marker = f"\ue000{len(parameters)}\ue001"
+                while marker in command:
+                    marker += "\ue002"
+                parameters[marker] = command[i:end]
+                out.append(marker)
+                i = end
+                continue
+        out.append(char)
+        i += 1
+    return "".join(out), parameters
+
+
+def _restore_parameters(token: str, parameters: dict[str, str]) -> str:
+    for marker, value in parameters.items():
+        token = token.replace(marker, value)
+    return token
 
 
 def _strip_quotes(token: str) -> str:
@@ -287,6 +348,30 @@ def _substitution_fragments(line: str) -> list[str]:
     return [line[start:end] for start, end, _ in _substitution_spans(line, heredoc=True)]
 
 
+def _is_command_brace(token: str, segment: list[str]) -> bool:
+    """Bash treats a separate brace as syntax only at command position."""
+    if token not in {"{", "}"}:
+        return False
+    if not segment:
+        return True
+    if token == "}":
+        return False
+    if len(segment) == 1 and segment[0] in {"then", "else", "do", "!"}:
+        return True
+    if len(segment) == 2:
+        name, suffix = segment
+        return bool(
+            (suffix == "()" and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name))
+            or (name == "function" and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", suffix))
+        )
+    return bool(
+        len(segment) == 3
+        and segment[0] == "function"
+        and segment[2] == "()"
+        and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", segment[1])
+    )
+
+
 def _pipelines(command: str) -> list[list[list[str]]]:
     """Return command pipelines, split quote-aware on `|`, `&&`, `||`, and `;`."""
     tokens = _tokenize(command)
@@ -310,7 +395,7 @@ def _pipelines(command: str) -> list[list[list[str]]]:
     for token in tokens:
         if token == "|":
             flush_segment()
-        elif token in SEPARATORS or token in {"(", ")", "{", "}", ";;"}:
+        elif token in SEPARATORS or token in {"(", ")", ";;"} or _is_command_brace(token, segment):
             flush_pipeline()
         else:
             segment.append(token)
@@ -437,7 +522,14 @@ def _is_secret_var_name(name: str) -> bool:
 def _expanded_secret_var(arg: str, copied: set[str] | None = None, named: dict[str, str] | None = None) -> str | None:
     if _is_single_quoted(arg):
         return None
-    for match in _VAR_REF_RE.finditer(arg):
+    # Check each dollar position: an outer default such as ${x:-${GH_TOKEN}}
+    # otherwise consumes the inner reference before finditer can see it.
+    for index, char in enumerate(arg):
+        if char != "$":
+            continue
+        match = _VAR_REF_RE.match(arg, index)
+        if match is None:
+            continue
         indirect = match.group("indirect")
         if indirect:
             target = (named or {}).get(indirect, "")

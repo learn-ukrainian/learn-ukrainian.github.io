@@ -152,6 +152,47 @@ def test_issue_8896_review_round_three_secret_shapes_block(monkeypatch, command)
     assert _run(monkeypatch, command) == 2
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo ${GH_TOKEN}",
+        "printf %s ${GH_TOKEN}",
+        "echo ${x#y}; cat .env",
+        "echo a & { cat .env; }",
+        "echo ${GH_TOKEN:-x}",
+        "name=GH_TOKEN; echo ${!name}",
+        "echo ${x:-${GH_TOKEN}}",
+        'echo ${x:-$(printf %s "$GH_TOKEN")}',
+    ],
+)
+def test_issue_8896_unquoted_parameter_expansions_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo a{b,c}",
+        "find . -name '*.py' -exec wc -l {} \\;",
+        "echo }",
+        "echo {}",
+        "{ echo a; echo b; } > /tmp/x",
+        "f() { echo ok; }; f",
+        "echo a & { echo b; }",
+    ],
+)
+def test_issue_8896_literal_and_command_braces_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_8896_parameter_expansion_stays_one_word():
+    assert guard._tokenize('echo ${x:-$(printf %s "${GH_TOKEN:-x}")}') == [
+        "echo",
+        '${x:-$(printf %s "${GH_TOKEN:-x}")}',
+    ]
+    assert guard._tokenize("echo ${x#y}; cat .env") == ["echo", "${x#y}", ";", "cat", ".env"]
+
+
 def test_issue_8896_secret_recursion_limit_blocks(monkeypatch):
     command = "cat .env"
     for _ in range(12):
