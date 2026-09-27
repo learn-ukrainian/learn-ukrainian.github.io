@@ -10,7 +10,11 @@ You are a sanctioned language seat with the sources tools and a receipt-recordin
 
 ## Procedure
 
+{% if manifest.disputed_spans_text[:16] == "- absence: true\n" %}
+1. Read the scoped unit below. The dispute is about something missing from that unit, not about a quoted construction. The original reviewer's failed searches and their recorded outcomes are below.
+{% else %}
 1. Read the disputed construction in its quoted context and identify the sense actually used. If the same quote occurs more than once, compare every numbered context with the finding's location; if that still leaves the sense ambiguous, return `unresolved`. The original reviewer's failed searches and their recorded outcomes are below.
+{% endif %}
 2. Broaden the search to the lemma and the construction. Search style-guide prose through `search_text` with `source_file` set. Search UA-GEC and fetch the sentence context of a relevant result. Query live GRAC where available and Pravopys. Record unavailable results as unavailable, never as an empty search.
 3. Search for counterevidence as hard as for support. A corpus or error pair about a different construction does not establish this finding. A matching, unmarked VESUM analysis in this sense cannot be flagged on preference alone unless Pravopys or the style guide marks it. No unfamiliar word is called a Russianism without the heritage check.
 4. State your judgment in the reply. For `refuted`, explain why a cited source attests this construction **in this sense**. For `supported_defect`, identify positive evidence of the norm that the construction departs from. For `source_conflict`, cite two different authorities and send it to the operator. For `unresolved`, cite the complete broadened search record and send it to the operator. Do not change learner content yourself.
@@ -39,9 +43,17 @@ broadened_searches: []
 
 {{ manifest.finding_text | fence("yaml") }}
 
+{% if manifest.disputed_spans_text[:16] == "- absence: true\n" %}
+## Scoped Unit (Data)
+
+The dispute is about something missing from this unit.
+
+{{ manifest.disputed_spans_text | fence("yaml") }}
+{% else %}
 ## Disputed Span In Context (Data)
 
 {{ manifest.disputed_spans_text | fence("yaml") }}
+{% endif %}
 
 ## Original Reviewer's Searches And Outcomes (Data)
 

@@ -83,7 +83,16 @@ class World:
         ).encode()
 
 
-def _world(root: Path, document: Path, manifest_hash: str, *, quote: str = "construction") -> World:
+def _world(
+    root: Path,
+    document: Path,
+    manifest_hash: str,
+    *,
+    quote: str = "construction",
+    scope: dict[str, Any] | None = None,
+    lesson_n: int | None = 2,
+    kind: str | None = None,
+) -> World:
     database = root / "findings.sqlite"
     prior = root / "prior.jsonl"
     ledger.create_empty_ledger(prior)
@@ -107,19 +116,21 @@ def _world(root: Path, document: Path, manifest_hash: str, *, quote: str = "cons
         "sub_dimension": "calque",
         "severity": "MINOR",
         "claim": "This construction may not fit the intended sense.",
-        "locations": [{"tab": "urok", "quote": quote}],
+        "locations": [] if scope is not None else [{"tab": "urok", "quote": quote}],
         "unsupported_by_source": {"searches": [{"receipt": prior_id, "outcome": "no_hits"}]},
     }
+    if scope is not None:
+        finding["scope"] = scope
     with db.connect(database) as conn, db.transaction(conn):
         db.insert_attempt(
             conn,
             {
                 "review_id": "original-R",
                 "attempt_id": "original-A",
-                "kind": "lesson",
+                "kind": kind or ("plan" if lesson_n is None else "lesson"),
                 "level": "a1",
                 "slug": "fixture-module",
-                "lesson_n": 2,
+                "lesson_n": lesson_n,
                 "manifest_sha256": manifest_hash,
                 "reviewer_model": "fixture",
                 "reviewer_family": "fixture",
@@ -136,7 +147,7 @@ def _world(root: Path, document: Path, manifest_hash: str, *, quote: str = "cons
             kind="unsupported_by_source",
             level="a1",
             slug="fixture-module",
-            lesson_n=2,
+            lesson_n=lesson_n,
             manifest_sha256=manifest_hash,
             opened_at="2026-09-25T00:00:00+00:00",
         )
@@ -606,3 +617,273 @@ def test_no_cyrillic_typed_in_new_code_template_or_fixture() -> None:
     root = Path(__file__).resolve().parents[2]
     for path in (root / "scripts/review/settle.py", root / "scripts/review/prompts/settle.md.j2", Path(__file__)):
         assert re.search(r"[\u0400-\u04ff]", path.read_text(encoding="utf-8")) is None, path
+
+
+# A lesson page: two activities inside Exercises, and the neighbouring Lesson and Vocabulary tabs.
+_LESSON = (
+    '<Tabs syncKey="module-tab">\n'
+    '<TabItem label="Lesson">\n'
+    "ONLY THE LESSON TAB\n"
+    "</TabItem>\n"
+    '<TabItem label="Activities">\n'
+    '<span id="a1"></span>\n'
+    "\n"
+    "### First activity\n"
+    "\n"
+    "ONLY ACTIVITY A1\n"
+    "\n"
+    '<span id="a2"></span>\n'
+    "\n"
+    "### Second activity\n"
+    "\n"
+    "ONLY ACTIVITY A2\n"
+    "</TabItem>\n"
+    '<TabItem label="Vocabulary">\n'
+    "ONLY THE VOCABULARY TAB\n"
+    "</TabItem>\n"
+    "</Tabs>\n"
+)
+_ACTIVITY_A1 = '<span id="a1"></span>\n\n### First activity\n\nONLY ACTIVITY A1\n\n'
+_PLAN = """\
+lessons:
+  - n: 1
+    title: Lesson one
+    steps:
+      - id: s1
+        teach: first step only
+      - id: s2
+        teach: second step only
+    activities:
+      - id: a1
+        focus: first activity
+      - id: a2
+        focus: second activity
+  - n: 2
+    title: Lesson two
+    steps:
+      - id: s1
+        teach: other lesson step
+"""
+_LESSON_ONE = "\n".join(
+    [
+        "1",
+        "Lesson one",
+        "s1",
+        "first step only",
+        "s2",
+        "second step only",
+        "a1",
+        "first activity",
+        "a2",
+        "second activity",
+    ]
+)
+_QUOTED_STEP = (
+    "Read the disputed construction in its quoted context and identify the sense actually used. "
+    "If the same quote occurs more than once, compare every numbered context with the finding's location; "
+    "if that still leaves the sense ambiguous, return `unresolved`."
+)
+_ABSENCE_STEP = "Read the scoped unit below. The dispute is about something missing from that unit, not about a quoted construction."
+_ABSENCE_LINE = "The dispute is about something missing from this unit."
+
+
+def _prepared_spans(world: World) -> list[dict[str, Any]]:
+    manifest = yaml.safe_load(world.manifest.read_text(encoding="utf-8"))
+    loaded = yaml.safe_load(manifest["disputed_spans_text"])
+    assert isinstance(loaded, list)
+    return loaded
+
+
+def test_a_lesson_absence_scoped_to_a_tab_is_that_tab_alone() -> None:
+    spans = settle._context(_LESSON, {"locations": [], "scope": {"tab": "urok"}})
+    assert spans == [{"absence": True, "locator": {"tab": "urok"}, "context": "\nONLY THE LESSON TAB\n"}]
+    assert "ONLY ACTIVITY A1" not in spans[0]["context"]
+    assert "ONLY THE VOCABULARY TAB" not in spans[0]["context"]
+
+    workbook = settle._context(_LESSON, {"locations": [], "scope": {"tab": "vpravy"}})
+    assert "ONLY ACTIVITY A1" in workbook[0]["context"]
+    assert "ONLY ACTIVITY A2" in workbook[0]["context"]
+    assert "ONLY THE LESSON TAB" not in workbook[0]["context"]
+    assert "ONLY THE VOCABULARY TAB" not in workbook[0]["context"]
+
+
+def test_engine_tab_labels_resolve_to_the_same_tab() -> None:
+    lesson = "\u0423\u0440\u043e\u043a"
+    workbook = "\u0417\u043e\u0448\u0438\u0442"
+    document = (
+        f'<TabItem label="{lesson} \u2014 Lesson">\nONLY THE LESSON TAB\n</TabItem>\n'
+        f'<TabItem label="{workbook}">\nONLY THE WORKBOOK\n</TabItem>\n'
+    )
+    lesson_span = settle._context(document, {"locations": [], "scope": {"tab": "urok"}})
+    workbook_span = settle._context(document, {"locations": [], "scope": {"tab": "vpravy"}})
+    assert lesson_span[0]["context"] == "\nONLY THE LESSON TAB\n"
+    assert "ONLY THE WORKBOOK" not in lesson_span[0]["context"]
+    assert workbook_span[0]["context"] == "\nONLY THE WORKBOOK\n"
+    assert "ONLY THE LESSON TAB" not in workbook_span[0]["context"]
+
+
+def test_a_lesson_absence_scoped_to_an_activity_is_that_block_alone() -> None:
+    spans = settle._context(_LESSON, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
+    assert spans == [
+        {
+            "absence": True,
+            "locator": {"tab": "vpravy", "activity": "a1"},
+            "context": _ACTIVITY_A1,
+        }
+    ]
+    assert "ONLY ACTIVITY A2" not in spans[0]["context"]
+    assert "### Second activity" not in spans[0]["context"]
+    assert "ONLY THE LESSON TAB" not in spans[0]["context"]
+
+    headed = '<TabItem label="vpravy">\n### a1\n\nONLY HEADING A1\n\n### a2\n\nONLY HEADING A2\n</TabItem>\n'
+    by_heading = settle._context(headed, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
+    assert by_heading[0]["context"] == "### a1\n\nONLY HEADING A1\n\n"
+    assert "ONLY HEADING A2" not in by_heading[0]["context"]
+
+
+def test_a_plan_absence_is_that_plan_unit_alone() -> None:
+    cases = [
+        (
+            {"lesson": 1, "step": "s1"},
+            "s1\nfirst step only",
+            ("second step only", "first activity", "other lesson step"),
+        ),
+        ({"lesson": 1, "activity": "a1"}, "a1\nfirst activity", ("second activity", "first step only", "Lesson two")),
+        ({"lesson": 1}, _LESSON_ONE, ("Lesson two", "other lesson step")),
+    ]
+    for scope, expected, excluded in cases:
+        spans = settle._context(_PLAN, {"locations": [], "scope": scope})
+        assert spans == [{"absence": True, "locator": scope, "context": expected}], scope
+        assert all(text not in spans[0]["context"] for text in excluded), scope
+
+
+def test_an_absence_without_a_resolvable_scope_fails_closed() -> None:
+    for finding in (
+        {"locations": []},
+        {"locations": [], "scope": {}},
+        {"locations": [], "scope": {"lesson": 1, "step": "s1", "activity": "a1"}},
+        {"locations": [], "scope": {"tab": ""}},
+    ):
+        with pytest.raises(settle.SettleError, match="finding has no quoted disputed span"):
+            settle._context(_PLAN, finding)
+
+
+@pytest.mark.parametrize(
+    "document,scope",
+    [
+        (_LESSON, {"tab": "no-such-tab"}),
+        (_LESSON, {"tab": "urok", "activity": "a1"}),
+        (_LESSON, {"tab": "vpravy", "activity": "a404"}),
+        (_PLAN, {"lesson": 9}),
+        (_PLAN, {"lesson": 1, "step": "s404"}),
+        (_PLAN, {"lesson": 1, "activity": "a404"}),
+        (_PLAN, {"tab": "urok"}),
+    ],
+)
+def test_a_scope_that_names_a_missing_unit_fails_closed(document: str, scope: dict[str, Any]) -> None:
+    with pytest.raises(settle.SettleError, match="scope names a unit absent from the document"):
+        settle._context(document, {"locations": [], "scope": scope})
+
+
+def test_two_tabs_with_one_key_fail_closed() -> None:
+    document = '<TabItem label="urok">\nONE\n</TabItem>\n<TabItem label="Lesson">\nTWO\n</TabItem>\n'
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": {"tab": "urok"}})
+
+
+def test_rendered_settle_prompt_for_an_absence_item_shows_the_scoped_unit(tmp_path: Path) -> None:
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(_LESSON, encoding="utf-8")
+    module_list = tmp_path / "curriculum/l2-uk-en/curriculum.yaml"
+    module_list.parent.mkdir(parents=True)
+    module_list.write_text(
+        yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": ["fixture-module"]}}}), encoding="utf-8"
+    )
+    world = _world(tmp_path, document, "b" * 64, scope={"tab": "vpravy", "activity": "a1"})
+    assert _prepared_spans(world) == [
+        {"absence": True, "locator": {"tab": "vpravy", "activity": "a1"}, "context": _ACTIVITY_A1}
+    ]
+    prompt = world.prompt.read_text(encoding="utf-8")
+    assert _ABSENCE_STEP in prompt
+    assert _ABSENCE_LINE in prompt
+    assert "## Scoped Unit (Data)" in prompt
+    assert "ONLY ACTIVITY A1" in prompt
+    assert "ONLY ACTIVITY A2" not in prompt
+    assert "ONLY THE LESSON TAB" not in prompt
+    assert "ONLY THE VOCABULARY TAB" not in prompt
+    assert _QUOTED_STEP not in prompt
+    assert "## Disputed Span In Context (Data)" not in prompt
+    assert "\n2. Broaden the search to the lemma and the construction." in prompt
+    sidecar = world.prompt.with_name(world.prompt.name + ".sha256")
+    checked = check_prompt(prompt, world.manifest, repo_root=tmp_path, recorded_sha256=sidecar.read_text().strip())
+    assert checked.passed, checked.errors
+
+
+def test_prepare_scopes_a_plan_absence_finding_to_that_plan_unit(tmp_path: Path) -> None:
+    document = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
+    document.parent.mkdir(parents=True)
+    document.write_text(_PLAN, encoding="utf-8")
+    world = _world(tmp_path, document, "c" * 64, scope={"lesson": 1, "step": "s1"}, lesson_n=None)
+    assert _prepared_spans(world) == [
+        {"absence": True, "locator": {"lesson": 1, "step": "s1"}, "context": "s1\nfirst step only"}
+    ]
+    prompt = world.prompt.read_text(encoding="utf-8")
+    assert "first step only" in prompt
+    assert "second step only" not in prompt
+    assert "other lesson step" not in prompt
+    assert _ABSENCE_LINE in prompt
+
+
+def test_the_quoted_span_and_its_prompt_stay_unchanged(world: World) -> None:
+    spans = settle._context(_LESSON, {"locations": [{"tab": "urok", "quote": "ONLY THE LESSON TAB"}]})
+    assert set(spans[0]) == {"quote", "context", "location", "occurrence"}
+    assert spans[0]["quote"] == "ONLY THE LESSON TAB" and spans[0]["occurrence"] == 1
+    assert spans[0]["location"] == '{"tab": "urok", "quote": "ONLY THE LESSON TAB"}'
+    prepared = _prepared_spans(world)
+    assert prepared[0]["quote"] == "construction" and "absence" not in prepared[0]
+    prompt = world.prompt.read_text(encoding="utf-8")
+    assert _QUOTED_STEP in prompt
+    assert "## Disputed Span In Context (Data)" in prompt
+    assert _ABSENCE_STEP not in prompt
+    assert _ABSENCE_LINE not in prompt
+    assert "## Scoped Unit (Data)" not in prompt
+    assert "\n2. Broaden the search to the lemma and the construction." in prompt
+
+
+def test_search_text_source_label_names_the_file(world: World) -> None:
+    textbook = "4-klas-ukrayinska-mova-zaharijchuk-2021-1"
+    guide = "antonenko-davydovych-yak-my-hovorymo"
+    assert settle.SOURCES["search_text"] == "style_guide"
+    assert settle._source({"tool": "search_text", "arguments": {"source_file": textbook}}) == f"search_text:{textbook}"
+    assert settle._source({"tool": "search_text", "arguments": {"source_file": guide}}) == f"search_text:{guide}"
+    assert settle._source({"tool": "search_text", "arguments": {}}) is None
+    assert settle._source({"tool": "search_style_guide", "arguments": {"source_file": guide}}) == "style_guide"
+    different = [
+        {
+            "receipt": world.call("search_text", "Textbook page.", arguments={"source_file": textbook}),
+            "quote": "Textbook page.",
+        },
+        {
+            "receipt": world.call("search_text", "Style guide page.", arguments={"source_file": guide}),
+            "quote": "Style guide page.",
+        },
+    ]
+    assert (
+        settle.validate_reply(world.reply("source_conflict", different), world.manifest.read_bytes(), world.own_ledger)[
+            0
+        ]
+        == "source_conflict"
+    )
+    same_file = [
+        {
+            "receipt": world.call("search_text", "First page.", arguments={"source_file": textbook}),
+            "quote": "First page.",
+        },
+        {
+            "receipt": world.call("search_text", "Second page.", arguments={"source_file": textbook}),
+            "quote": "Second page.",
+        },
+    ]
+    with pytest.raises(settle.SettleError, match="two different sources"):
+        settle.validate_reply(world.reply("source_conflict", same_file), world.manifest.read_bytes(), world.own_ledger)

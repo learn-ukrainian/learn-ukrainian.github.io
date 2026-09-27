@@ -1,9 +1,10 @@
 """Prepare and record the one bounded settle attempt for an unsupported finding.
 
-The language seat judges whether a quoted source attests the disputed construction
-in its sense. This module checks only identity, receipt provenance and return shape.
-The prompt is rendered by ``scripts.review.prompts.render`` from this task's own
-manifest, and the outcome is written through ``findings_db.record_settle_outcome``.
+The language seat judges one finding the sources did not settle: a quoted construction
+in its sense, or an absence (something the finding says is missing from a scoped unit
+of the lesson or the plan). This module checks only identity, receipt provenance and
+return shape. The prompt is rendered by ``scripts.review.prompts.render`` from this
+task's own manifest, and the outcome is written through ``findings_db.record_settle_outcome``.
 """
 
 from __future__ import annotations
@@ -25,10 +26,47 @@ from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts import ledger
+from scripts.review.validate.validate import _MISSING, _leaf_texts, _plan_unit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TREE = "curriculum/l2-uk-en"
 TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
+_TAB_ITEM = re.compile(r"<TabItem\b([^>]*)>(.*?)</TabItem>", re.DOTALL)
+_TAB_LABEL = re.compile(r'\blabel="([^"]*)"')
+_ACTIVITY_SPAN = re.compile(r'<span id="([^"]+)"></span>')
+_ACTIVITY_HEADING = re.compile(r"(?m)^###[ \t]+([^\n]+?)\s*$")
+_DASH = "\u2014"  # the em dash generate_mdx puts between a tab's Ukrainian and English labels
+_NO_SCOPE = "finding has no quoted disputed span"
+_ABSENT_UNIT = "scope names a unit absent from the document"
+_AMBIGUOUS_UNIT = "scope names more than one unit in the document"
+
+
+def _tab_by_label() -> dict[str, str]:
+    """Engine tab labels (``scripts/generate_mdx/core.py``) to the review scope's ASCII key.
+
+    A1 prints the Ukrainian label, an em dash, and the English label. A Ukrainian-only page
+    prints the Ukrainian label, and the a2.2 workbook tab uses its own Ukrainian label.
+    The ASCII key itself is accepted so a fixture can name the tab without a display label.
+    """
+    ukrainian = {
+        "urok": "\u0423\u0440\u043e\u043a",
+        "slovnyk": "\u0421\u043b\u043e\u0432\u043d\u0438\u043a",
+        "vpravy": "\u0412\u043f\u0440\u0430\u0432\u0438",
+        "resursy": "\u0420\u0435\u0441\u0443\u0440\u0441\u0438",
+    }
+    english = {"urok": "Lesson", "slovnyk": "Vocabulary", "vpravy": "Activities", "resursy": "Resources"}
+    labels = {key: key for key in ukrainian}
+    for key, uk in ukrainian.items():
+        labels[english[key]] = key
+        labels[uk] = key
+        labels[f"{uk} {_DASH} {english[key]}"] = key
+    workbook = "\u0417\u043e\u0448\u0438\u0442"
+    labels[workbook] = "vpravy"
+    labels[f"{workbook} {_DASH} Activities"] = "vpravy"
+    return labels
+
+
+_TAB_BY_LABEL = _tab_by_label()
 
 # Distinct authorities, rather than distinct calls, are required for a conflict.
 # Ambiguous signal tools have no authority here and cannot establish a conflict.
@@ -120,9 +158,12 @@ def _original_finding(conn: Any, item: Any) -> dict[str, Any]:
     return finding
 
 
-def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
+def _quoted_spans(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
     spans: list[dict[str, Any]] = []
-    for location in finding.get("locations", []):
+    locations = finding.get("locations", [])
+    if not isinstance(locations, list):
+        return spans
+    for location in locations:
         quote = location.get("quote") if isinstance(location, dict) else None
         if not isinstance(quote, str) or not quote:
             continue
@@ -139,9 +180,128 @@ def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
                     "occurrence": occurrence,
                 }
             )
-    if not spans:
-        raise SettleError("finding has no quoted disputed span")
     return spans
+
+
+def _is_lesson_scope(scope: Any) -> bool:
+    """A lesson absence scope: a tab, optionally one activity inside that tab."""
+    if not isinstance(scope, dict) or "tab" not in scope or set(scope) - {"tab", "activity"}:
+        return False
+    tab = scope.get("tab")
+    if not isinstance(tab, str) or not tab:
+        return False
+    activity = scope.get("activity")
+    return "activity" not in scope or (isinstance(activity, str) and bool(activity))
+
+
+def _is_plan_scope(scope: Any) -> bool:
+    """A plan absence scope: one lesson, optionally one step or one activity of it."""
+    if not isinstance(scope, dict) or "lesson" not in scope or set(scope) - {"lesson", "step", "activity"}:
+        return False
+    if "step" in scope and "activity" in scope:
+        return False
+    lesson = scope["lesson"]
+    if isinstance(lesson, bool) or not isinstance(lesson, int) or lesson < 1:
+        return False
+    return all(isinstance(scope[key], str) and scope[key] for key in ("step", "activity") if key in scope)
+
+
+def _require_one(texts: list[str]) -> str:
+    if not texts:
+        raise SettleError(_ABSENT_UNIT)
+    if len(texts) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    return texts[0]
+
+
+def _tab_bodies(document: str) -> dict[str, list[str]]:
+    """Each tab key's inner text, in document order, exactly as it stands between the tags."""
+    found: dict[str, list[str]] = {}
+    for attrs, body in _TAB_ITEM.findall(document):
+        label = _TAB_LABEL.search(attrs)
+        if label is None:
+            continue
+        key = _TAB_BY_LABEL.get(label.group(1))
+        if key is not None:
+            found.setdefault(key, []).append(body)
+    return found
+
+
+def _activity_blocks(body: str) -> list[tuple[str | None, str | None, str]]:
+    """Activity blocks in one tab: ``(span id, heading, exact slice)``.
+
+    A block starts at an anchor ``<span id="..."></span>`` or, when that anchor does not
+    own it, at a ``###`` heading. The anchor owns the heading that follows it with only
+    whitespace between, which is how the page renderer writes an anchored activity.
+    The slice runs up to the next block and no further.
+    """
+    spans = list(_ACTIVITY_SPAN.finditer(body))
+    headings = list(_ACTIVITY_HEADING.finditer(body))
+    owned: dict[int, re.Match[str]] = {}
+    taken: set[int] = set()
+    for index, span in enumerate(spans):
+        following = spans[index + 1].start() if index + 1 < len(spans) else len(body)
+        for heading in headings:
+            if span.end() <= heading.start() < following and not body[span.end() : heading.start()].strip():
+                owned[span.start()] = heading
+                taken.add(heading.start())
+                break
+    starts: list[tuple[int, str | None, str | None]] = []
+    for span in spans:
+        heading = owned.get(span.start())
+        starts.append((span.start(), span.group(1), heading.group(1).strip() if heading else None))
+    starts.extend(
+        (heading.start(), None, heading.group(1).strip()) for heading in headings if heading.start() not in taken
+    )
+    starts.sort(key=lambda item: item[0])
+    blocks: list[tuple[str | None, str | None, str]] = []
+    for index, (start, span_id, heading) in enumerate(starts):
+        end = starts[index + 1][0] if index + 1 < len(starts) else len(body)
+        blocks.append((span_id, heading, body[start:end]))
+    return blocks
+
+
+def _lesson_unit(document: str, scope: dict[str, Any]) -> str:
+    body = _require_one(_tab_bodies(document).get(scope["tab"], []))
+    activity = scope.get("activity")
+    if not isinstance(activity, str):
+        return body
+    matched = [text for span_id, heading, text in _activity_blocks(body) if span_id == activity or heading == activity]
+    return _require_one(matched)
+
+
+def _plan_unit_text(document: str, scope: dict[str, Any]) -> str:
+    """The plan unit's scalar values, one per line, the same text the review validator checks."""
+    try:
+        plan = yaml.safe_load(document)
+    except yaml.YAMLError as exc:
+        raise SettleError(_ABSENT_UNIT) from exc
+    if not isinstance(plan, dict):
+        raise SettleError(_ABSENT_UNIT)
+    unit = _plan_unit(plan, scope)
+    if unit is _MISSING:
+        raise SettleError(_ABSENT_UNIT)
+    return "\n".join(_leaf_texts(unit))
+
+
+def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
+    """Quoted windows, or one absence context for a scope the document actually contains.
+
+    A quoted location keeps the window around each occurrence. An absence finding has no
+    quote: a lesson scope is one tab (or one activity block inside it), and a plan scope
+    is one lesson, step or activity of the plan. Anything else fails closed.
+    """
+    quoted = _quoted_spans(document, finding)
+    if quoted:
+        return quoted
+    scope = finding.get("scope")
+    if _is_lesson_scope(scope):
+        text = _lesson_unit(document, scope)
+    elif _is_plan_scope(scope):
+        text = _plan_unit_text(document, scope)
+    else:
+        raise SettleError(_NO_SCOPE)
+    return [{"absence": True, "locator": dict(scope), "context": text}]
 
 
 def _prior_searches(
@@ -253,10 +413,16 @@ _UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _u
 
 
 def _source(entry: dict[str, Any]) -> str | None:
+    """The authority a hit receipt counts as, or None when the call names none.
+
+    ``search_text`` stays ``style_guide`` in ``SOURCES`` (the authority table). Its label
+    names the tool and the ``source_file`` argument, because that call searches textbooks
+    and the style-guide prose through the same tool.
+    """
     authority = SOURCES.get(entry.get("tool"))
     if authority == "style_guide" and entry.get("tool") == "search_text":
         source_file = entry.get("arguments", {}).get("source_file")
-        return f"style_guide:{source_file}" if isinstance(source_file, str) and source_file else None
+        return f"search_text:{source_file}" if isinstance(source_file, str) and source_file else None
     return authority
 
 
