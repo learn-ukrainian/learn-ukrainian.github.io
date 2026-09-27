@@ -401,6 +401,8 @@ skip-set audit runs as a parallel required job, so its collection and runtime
 checks do not extend shard 1's pytest path.
 Manual `workflow_dispatch` shard trials use a run-specific concurrency group;
 pull-request cancellation and merge-group sequencing retain their existing keys.
+Pytest jobs retain full checkout history because reviewer parity tests load
+historical source with `git show`.
 
 **Committed snapshot refresh procedure.** After a complete full merge-queue CI
 run, download each shard's uploaded `pytest-junit-shard-N` artifact and run:
