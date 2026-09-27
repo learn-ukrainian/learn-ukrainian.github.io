@@ -126,6 +126,7 @@ LESSON_LOCATIONS: _Table = {
     "inputs.learner_state": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.learner-state\\.yaml",
     "inputs.lessons_lock": lambda m, e: f"{m.state}/lessons\\.lock\\.yaml",
     "inputs.lesson": lambda m, e: f"{m.pages}/{m.lesson}\\.mdx",
+    "inputs.provenance": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.provenance\\.yaml",
     # No ``inputs.activity_data[]`` entry on purpose: the engine emits no data imports today (activity data
     # is inline component props), so any such pin is refused (``pin_activity_data_unsupported``). When the
     # engine does emit them, add a positive per-module location rule here (see

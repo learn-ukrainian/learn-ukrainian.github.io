@@ -116,6 +116,7 @@ def _cache_immutable_shipped_templates():
         Path.read_bytes = original_bytes  # type: ignore[method-assign]
         prompt_render.template_sources = original_sources
 
+
 EXPECTED_RULE_SNIPPET = (
     "when expected is present it is one contiguous substring copied character for character "
     "from the stored result of one named receipt the finding cites — the tool output the seat received, "
@@ -1214,8 +1215,29 @@ def test_rule_a_a_pin_at_a_location_the_contract_does_not_list_is_refused(tmp_pa
 
 def test_rule_a_a_manifest_kind_without_a_table_is_refused_until_its_worker_adds_one(tmp_path, monkeypatch):
     _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    doc["kind"] = "unregistered"
+    count = len(list(manifest.pinned_entries(doc)))
+    refusals = pin_refusals(doc, tmp_path)
+    assert len(refusals) == count
+    assert all(
+        refusal.code == eligibility.PIN_LOCATION_NOT_ALLOWED
+        and refusal.reason == "the contract lists no inputs for kind 'unregistered'"
+        for refusal in refusals
+    )
+    _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_LOCATION_NOT_ALLOWED, count=count)
+
+
+def test_a_lesson_manifest_that_claims_to_be_settle_is_refused_pin_by_pin(tmp_path, monkeypatch):
+    # settle has a table, so a lesson manifest that only changes its kind is the per-pin refusal.
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     doc["kind"] = "settle"
     count = len(list(manifest.pinned_entries(doc)))
+    refusals = pin_refusals(doc, tmp_path)
+    assert len(refusals) == count
+    assert all(
+        refusal.code == eligibility.PIN_LOCATION_NOT_ALLOWED and "input for this manifest kind" in refusal.reason
+        for refusal in refusals
+    )
     _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_LOCATION_NOT_ALLOWED, count=count)
 
 
@@ -1442,7 +1464,7 @@ def test_the_activity_set_is_derived_with_the_engines_own_import_reader(tmp_path
     assert _refusal_codes(doc, tmp_path) == [] and len(calls) == 1
 
 
-@pytest.mark.parametrize("missing", ["lessons_lock", "decisions"])
+@pytest.mark.parametrize("missing", ["lessons_lock", "decisions", "provenance"])
 def test_a_required_input_the_lesson_manifest_omits_is_refused_by_the_schema(tmp_path, monkeypatch, missing):
     _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     assert missing in doc["inputs"] and _refusal_codes(doc, tmp_path) == []

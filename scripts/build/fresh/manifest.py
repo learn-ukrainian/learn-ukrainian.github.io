@@ -2,7 +2,7 @@
 
 The manifest names every file a reviewer receives, each with its sha256: the
 plan, the evidence pack and word store (verified against their locks before they
-are recorded), the built lesson and its activity data, the gate report, the style
+are recorded), the built lesson and its activity data, its provenance, the gate report, the style
 card, the decisions record, the module digest, the materialized planned learner
 state and the built lessons 1..N-1 (``upstream_lessons``).
 
@@ -407,6 +407,7 @@ def write_manifest(
             "learner_state": state_input,
             "lessons_lock": _input(lock_path, root),
             "lesson": lesson_input,
+            "provenance": _input(state_dir / f"lesson-{n}.provenance.yaml", root),
             "activity_data": [_input(path, root) for path in _activity_imports(page, root)],
             "gate_report": _input(gate_path, root),
             "style_card": _input(card_path, root),
