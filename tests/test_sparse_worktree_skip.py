@@ -46,7 +46,7 @@ def test_sparse_on_skips_open_model_data_when_projects_absent() -> None:
     assert "--sparse-include data/projects" in reason
 
 
-def test_sparse_on_skips_lexicon_readers_when_lexicon_absent() -> None:
+def test_sparse_on_keeps_moved_lexicon_readers_when_old_tree_absent() -> None:
     reason = _conftest().sparse_missing_tree_skip_reason(
         "tests/lexicon/test_manifest.py",
         sparse_enabled=True,
@@ -62,8 +62,7 @@ def test_sparse_on_skips_lexicon_readers_when_lexicon_absent() -> None:
         missing_trees=frozenset({"data/lexicon"}),
         item_name="test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates",
     )
-    assert live is not None
-    assert "--sparse-include data/lexicon" in live
+    assert live is None
 
     unrelated = _conftest().sparse_missing_tree_skip_reason(
         "tests/test_generate_practice_deck.py",
@@ -93,7 +92,7 @@ def test_sparse_on_skips_top_level_open_model_readers() -> None:
     assert untouched is None
 
 
-def test_sparse_on_skips_source_inventory_readers() -> None:
+def test_sparse_on_keeps_moved_source_inventory_readers() -> None:
     conftest = _conftest()
     decisions = conftest.sparse_missing_tree_skip_reason(
         "tests/test_source_inventory_review_decisions.py",
@@ -101,8 +100,7 @@ def test_sparse_on_skips_source_inventory_readers() -> None:
         missing_trees=frozenset({"data/lexicon"}),
         item_name="test_committed_first_source_inventory_review_batch_validates",
     )
-    assert decisions is not None
-    assert "--sparse-include data/lexicon" in decisions
+    assert decisions is None
 
     sample = conftest.sparse_missing_tree_skip_reason(
         "tests/test_source_inventory_intake.py",
@@ -110,7 +108,7 @@ def test_sparse_on_skips_source_inventory_readers() -> None:
         missing_trees=frozenset({"data/lexicon"}),
         item_name="test_pos_balanced_sample_has_required_pos_buckets_and_source_fields",
     )
-    assert sample is not None
+    assert sample is None
 
     candidates = conftest.sparse_missing_tree_skip_reason(
         "tests/test_source_inventory_review_candidates.py",
@@ -118,7 +116,7 @@ def test_sparse_on_skips_source_inventory_readers() -> None:
         missing_trees=frozenset({"data/lexicon"}),
         item_name="test_review_candidates_use_committed_inventories_and_keep_provenance",
     )
-    assert candidates is not None
+    assert candidates is None
 
     defaults = conftest.sparse_missing_tree_skip_reason(
         "tests/test_source_inventory_review_candidates.py",
@@ -126,7 +124,7 @@ def test_sparse_on_skips_source_inventory_readers() -> None:
         missing_trees=frozenset({"data/lexicon"}),
         item_name="test_review_workflow_defaults_outside_repo",
     )
-    assert defaults is not None
+    assert defaults is None
 
 
 def test_sparse_marker_skips_only_the_marked_test() -> None:

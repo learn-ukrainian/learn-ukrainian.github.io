@@ -24,12 +24,10 @@ from scripts.lexicon.promote_teacher_lesson_intake import (
 )
 
 DELTA_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml"
 )
 DELTA_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-09-02-teacher-lesson-delta-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-09-02-teacher-lesson-delta-approve.yaml"
 )
 DELTA_SOURCE_SHAPE_SHA256 = "a3349f88c6a7a97682544d61ae6ddee9545a7103eec73479b8ac9f344d1b4320"
 # Full delta: high_frequency_missing (2433) + post_boundary_table_missing (228) +
@@ -61,7 +59,7 @@ def test_default_full_decisions_is_a_committed_repository_file() -> None:
     relative_path = DEFAULT_FULL_DECISIONS.relative_to(PROJECT_ROOT)
 
     assert relative_path == (
-        Path("data")
+        Path("registry")
         / "lexicon"
         / "source-inventory-review-decisions"
         / "2026-07-23-alona-full-document-intake.yaml"
@@ -97,8 +95,7 @@ def test_private_teacher_lesson_delta_decisions_validate_as_practice_only(source
     assert payload["source_queue"]["total_queue_rows"] == DELTA_HEADWORD_COUNT
     assert payload["source_queue"]["approved_in_queue"] == DELTA_HEADWORD_COUNT
     assert all(
-        row["surface_admission"] == {"practice": True, "cloze": False, "daily": False}
-        for row in payload["decisions"]
+        row["surface_admission"] == {"practice": True, "cloze": False, "daily": False} for row in payload["decisions"]
     )
 
 
@@ -175,9 +172,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
         "dictionary_or_manifest_gloss_fallbacks": 0,
         "sum11_attested_canonical_lemmas": 0,
     }
-    monkeypatch.setattr(
-        promote_module, "_build_rows", lambda *a, **kw: (candidates, decisions, report)
-    )
+    monkeypatch.setattr(promote_module, "_build_rows", lambda *a, **kw: (candidates, decisions, report))
 
     # Route every stateful path under tmp_path; never touch the real journal/lock.
     intake_dir = tmp_path / "intake"
@@ -218,9 +213,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(promote_module.enrich_module, "_sum11_has_flag_columns", lambda conn: False)
 
     manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(
-        json.dumps({"entries": [], "stats": {}}, ensure_ascii=False), encoding="utf-8"
-    )
+    manifest_path.write_text(json.dumps({"entries": [], "stats": {}}, ensure_ascii=False), encoding="utf-8")
     fingerprint_path = tmp_path / "manifest.fingerprint.json"
     sources_db_path = tmp_path / "sources.db"
     sqlite3.connect(sources_db_path).close()
@@ -347,10 +340,7 @@ def _write_decisions_ledger(path: Path, lemmas: list[str]) -> None:
     payload = {
         "version": 1,
         "kind": "atlas_source_inventory_review_decisions",
-        "decisions": [
-            {"lemma": lemma, "decision": "approve_for_publish", "approved_pos": "noun"}
-            for lemma in lemmas
-        ],
+        "decisions": [{"lemma": lemma, "decision": "approve_for_publish", "approved_pos": "noun"} for lemma in lemmas],
     }
     path.write_text(yaml.safe_dump(payload, allow_unicode=True), encoding="utf-8")
 

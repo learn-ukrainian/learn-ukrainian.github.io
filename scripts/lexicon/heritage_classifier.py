@@ -29,7 +29,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "registry" / "lt_replacements.json"
-HERITAGE_PAIRS_YAML = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
+HERITAGE_PAIRS_YAML = ROOT / "registry" / "lexicon" / "heritage_pairs.yaml"
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _ACUTE_RE = re.compile("[\u0301\u0300]")
@@ -205,9 +205,7 @@ def _classify(
         surface=surface,
         vesum_db_path=vesum_db_path,
     )
-    has_modern_vesum = bool(vesum) and not (
-        vesum_archaism and not vesum_archaism["has_modern"]
-    )
+    has_modern_vesum = bool(vesum) and not (vesum_archaism and not vesum_archaism["has_modern"])
 
     curated_calque = _lookup_curated_calque(
         term,
@@ -224,16 +222,24 @@ def _classify(
         if curated_calque.get("rationaleUk") or curated_calque.get("noteUk"):
             built_calque_warning["noteUk"] = curated_calque.get("rationaleUk") or curated_calque.get("noteUk")
         if curated_calque.get("calqueSense") or curated_calque.get("calque_sense"):
-            built_calque_warning["calque_sense"] = curated_calque.get("calqueSense") or curated_calque.get("calque_sense")
+            built_calque_warning["calque_sense"] = curated_calque.get("calqueSense") or curated_calque.get(
+                "calque_sense"
+            )
         if curated_calque.get("authenticSense") or curated_calque.get("authentic_sense"):
-            built_calque_warning["authentic_sense"] = curated_calque.get("authenticSense") or curated_calque.get("authentic_sense")
+            built_calque_warning["authentic_sense"] = curated_calque.get("authenticSense") or curated_calque.get(
+                "authentic_sense"
+            )
         if curated_calque.get("citations"):
             built_calque_warning["citations"] = list(curated_calque["citations"])
 
-    russianism = None if curated_calque else _russianism_status(
-        term,
-        russian_shadow=russian_shadow,
-        vesum_attested=bool(vesum),
+    russianism = (
+        None
+        if curated_calque
+        else _russianism_status(
+            term,
+            russian_shadow=russian_shadow,
+            vesum_attested=bool(vesum),
+        )
     )
 
     attestations: list[dict[str, Any]] = []
@@ -243,11 +249,7 @@ def _classify(
         has_standard_hit = any(hit["classification"] == "standard" for hit in auth_hits)
         for hit in auth_hits:
             candidate = str(hit["classification"])
-            if (
-                candidate == "standard"
-                and vesum_archaism
-                and not vesum_archaism["has_modern"]
-            ):
+            if candidate == "standard" and vesum_archaism and not vesum_archaism["has_modern"]:
                 candidate = "authentic-archaism"
             if candidate == "standard":
                 continue
@@ -276,9 +278,7 @@ def _classify(
             for hit in _standard_dictionary_attestations(conn, term):
                 attestations.append(hit["attestation"])
                 classification = _prefer_classification(classification, "standard")
-                sovietization_risk = max(
-                    sovietization_risk, int(hit.get("sovietization_risk") or 0)
-                )
+                sovietization_risk = max(sovietization_risk, int(hit.get("sovietization_risk") or 0))
 
     if surface and russianism and term in _KNOWN_STANDARD_ALTERNATIVES:
         return russianism
@@ -415,9 +415,7 @@ def compute_warning_severity(
     ):
         return "russianism_red"
 
-    if classification in _TREASURED_CLASSIFICATIONS or (
-        classification == "standard" and positive_attestation
-    ):
+    if classification in _TREASURED_CLASSIFICATIONS or (classification == "standard" and positive_attestation):
         return "treasured"
 
     if max_sovietization_risk > 0:
@@ -659,9 +657,8 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
 
                         curator_existing = str(existing.get("curator") or "")
                         curator_new = str(p.get("curator") or "")
-                        prefer_existing = (
-                            existing.get("source") == "calque_corrections"
-                            or (not curator_existing.startswith("script:") and curator_new.startswith("script:"))
+                        prefer_existing = existing.get("source") == "calque_corrections" or (
+                            not curator_existing.startswith("script:") and curator_new.startswith("script:")
                         )
 
                         merged = dict(existing if prefer_existing else entry)
@@ -780,11 +777,7 @@ def _vesum_archaism_attestation(
     try:
         from scripts.verification.vesum import verify_lemma, verify_word
 
-        rows = (
-            verify_word(term, db_path=vesum_db_path)
-            if surface
-            else verify_lemma(term, db_path=vesum_db_path)
-        )
+        rows = verify_word(term, db_path=vesum_db_path) if surface else verify_lemma(term, db_path=vesum_db_path)
         if not rows and not surface:
             rows = verify_word(term, db_path=vesum_db_path)
     except Exception:
@@ -802,8 +795,7 @@ def _vesum_archaism_attestation(
             "source": "VESUM",
             "ref": term,
             "detail": (
-                "archaic tag in VESUM"
-                f" ({len(archaic_rows)}/{len(rows)} forms; sample tags={sample.get('tags')})"
+                f"archaic tag in VESUM ({len(archaic_rows)}/{len(rows)} forms; sample tags={sample.get('tags')})"
             ),
         },
     }
@@ -951,13 +943,7 @@ def _search_heritage_attestations(
 
 
 def _heritage_hit_text(hit: dict[str, Any]) -> str:
-    return str(
-        hit.get("text")
-        or hit.get("definition")
-        or hit.get("etymology_text")
-        or hit.get("snippet")
-        or ""
-    )
+    return str(hit.get("text") or hit.get("definition") or hit.get("etymology_text") or hit.get("snippet") or "")
 
 
 def _heritage_source_id(hit: dict[str, Any]) -> str:
@@ -1483,7 +1469,7 @@ def _fts_phrase_query(text: str) -> str:
 
 
 def _normalize_quote(text: object) -> str:
-    return _SPACE_RE.sub(" ", _normalize_word(str(text))).strip(" .,;:!?«»\"“”")
+    return _SPACE_RE.sub(" ", _normalize_word(str(text))).strip(' .,;:!?«»"“”')
 
 
 def _snippet_around(text: str, term: str, *, radius: int = 90) -> str:

@@ -47,7 +47,7 @@ from scripts.lexicon.manifest_io import _write_atomic
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "data" / "lexicon" / "vesum_inflection_aliases.json"
+VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "registry" / "lexicon" / "vesum_inflection_aliases.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
@@ -182,13 +182,10 @@ def _load_vesum_inflection_aliases() -> dict[str, str]:
     """Load the committed VESUM inflection→lemma alias map: ``form_key -> target lemma``.
 
     Generated offline by ``scripts.lexicon.generate_vesum_aliases`` and committed, so the
-    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing/garbled file
-    yields no aliases — the build degrades to curated-only normalization.
+    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing or garbled
+    registry file must fail the build instead of silently dropping aliases.
     """
-    try:
-        payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
     aliases = payload.get("aliases") if isinstance(payload, dict) else None
     if not isinstance(aliases, dict):
         return {}

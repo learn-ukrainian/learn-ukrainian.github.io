@@ -71,10 +71,7 @@ class DictUAClient:
         # Headers stay on the client so argparse / in-process tests can
         # construct it without importing ``requests``.
         self.headers = {
-            "User-Agent": (
-                "learn-ukrainian-atlas/1.0 "
-                "(noncommercial educational ULIF per-lemma fetch; issue #5230)"
-            )
+            "User-Agent": ("learn-ukrainian-atlas/1.0 (noncommercial educational ULIF per-lemma fetch; issue #5230)")
         }
 
     def _http_session(self) -> Any:
@@ -108,9 +105,7 @@ class DictUAClient:
         self._wait_turn()
         requests = _requests()
         try:
-            response = self._http_session().request(
-                method, ULIF_URL, timeout=self.timeout_seconds, **kwargs
-            )
+            response = self._http_session().request(method, ULIF_URL, timeout=self.timeout_seconds, **kwargs)
         except requests.RequestException as exc:
             raise RetryableFetch("network_error", COOLDOWN_SECONDS) from exc
         finally:
@@ -243,19 +238,27 @@ def _event(name: str, **fields: Any) -> None:
 
 
 def _next_lemma(ledger: Any, run_id: str) -> str | None:
-    row = ledger._require().execute(  # coordinator-only query: no worker gets this ledger
-        "SELECT unit_id FROM work_units WHERE run_id = ? AND phase = ? "
-        "AND state IN ('pending', 'retry_scheduled') ORDER BY unit_id LIMIT 1",
-        (run_id, PHASE),
-    ).fetchone()
+    row = (
+        ledger._require()
+        .execute(  # coordinator-only query: no worker gets this ledger
+            "SELECT unit_id FROM work_units WHERE run_id = ? AND phase = ? "
+            "AND state IN ('pending', 'retry_scheduled') ORDER BY unit_id LIMIT 1",
+            (run_id, PHASE),
+        )
+        .fetchone()
+    )
     return None if row is None else str(row["unit_id"])
 
 
 def _counts(ledger: Any, run_id: str) -> dict[str, int]:
-    rows = ledger._require().execute(
-        "SELECT state, COUNT(*) AS n FROM work_units WHERE run_id = ? AND phase = ? GROUP BY state",
-        (run_id, PHASE),
-    ).fetchall()
+    rows = (
+        ledger._require()
+        .execute(
+            "SELECT state, COUNT(*) AS n FROM work_units WHERE run_id = ? AND phase = ? GROUP BY state",
+            (run_id, PHASE),
+        )
+        .fetchall()
+    )
     return {str(row["state"]): int(row["n"]) for row in rows}
 
 
@@ -411,9 +414,10 @@ def _run(args: argparse.Namespace) -> int:
     )
     client = DictUAClient(delay_seconds=POLITENESS_DELAY_SECONDS, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
 
-    with Ledger(work_dir / "ledger.sqlite", lease_ttl_seconds=LEASE_TTL_SECONDS) as ledger, NetworkCache(
-        work_dir / "network-cache.sqlite", lease_ttl_seconds=LEASE_TTL_SECONDS
-    ) as cache:
+    with (
+        Ledger(work_dir / "ledger.sqlite", lease_ttl_seconds=LEASE_TTL_SECONDS) as ledger,
+        NetworkCache(work_dir / "network-cache.sqlite", lease_ttl_seconds=LEASE_TTL_SECONDS) as cache,
+    ):
         existing = ledger.find_incomplete_by_fingerprint(fingerprint)
         if existing:
             resumed = ledger.resume_run(existing, fingerprint)
@@ -430,7 +434,14 @@ def _run(args: argparse.Namespace) -> int:
         ledger.set_phase(run_id, PHASE, "running")
         for lemma in lemmas:
             ledger.register_work_unit(run_id, lemma, unit_kind="lemma", phase=PHASE)
-        _event("run_ready", lifecycle=lifecycle, run_id=run_id, fingerprint=fingerprint, memory_enforcement=enforcement, counts=_counts(ledger, run_id))
+        _event(
+            "run_ready",
+            lifecycle=lifecycle,
+            run_id=run_id,
+            fingerprint=fingerprint,
+            memory_enforcement=enforcement,
+            counts=_counts(ledger, run_id),
+        )
 
         processed = 0
         while True:
@@ -458,7 +469,9 @@ def _run(args: argparse.Namespace) -> int:
                 lemma_id=lemma,
                 method="POST",
                 url=ULIF_URL,
-                request_body=json.dumps({"adapter": ADAPTER_VERSION, "lemma": lemma}, ensure_ascii=False, sort_keys=True).encode("utf-8"),
+                request_body=json.dumps(
+                    {"adapter": ADAPTER_VERSION, "lemma": lemma}, ensure_ascii=False, sort_keys=True
+                ).encode("utf-8"),
                 response_affecting_headers={"user-agent": client.headers["User-Agent"]},
                 request_meta={"logical_request": "ulif_dictua_lookup"},
             )
@@ -471,27 +484,56 @@ def _run(args: argparse.Namespace) -> int:
             outcome = _process_lookup(cache, item, client)
             if outcome.status in {"done", "cache_hit_parsed"}:
                 committed = ledger.commit_result(
-                    run_id, lemma, ledger.owner_id, claim.lease_generation, "done", result_hash=outcome.result_hash, phase=PHASE
+                    run_id,
+                    lemma,
+                    ledger.owner_id,
+                    claim.lease_generation,
+                    "done",
+                    result_hash=outcome.result_hash,
+                    phase=PHASE,
                 )
             elif outcome.status == "retry_scheduled":
                 deadline = cache.host_cooldown_active(HOST) or (time.time() + COOLDOWN_SECONDS)
                 if outcome.error_code == "http_429":
                     committed = ledger.handle_http_429(
-                        run_id, lemma, ledger.owner_id, claim.lease_generation, host=HOST, next_allowed_at=deadline, phase=PHASE
+                        run_id,
+                        lemma,
+                        ledger.owner_id,
+                        claim.lease_generation,
+                        host=HOST,
+                        next_allowed_at=deadline,
+                        phase=PHASE,
                     )
                 else:
                     ledger.set_host_cooldown(HOST, deadline)
                     committed = ledger.commit_result(
-                        run_id, lemma, ledger.owner_id, claim.lease_generation, "retry_scheduled", error_code=outcome.error_code, phase=PHASE
+                        run_id,
+                        lemma,
+                        ledger.owner_id,
+                        claim.lease_generation,
+                        "retry_scheduled",
+                        error_code=outcome.error_code,
+                        phase=PHASE,
                     )
             else:
                 committed = ledger.commit_result(
-                    run_id, lemma, ledger.owner_id, claim.lease_generation, "failed_terminal", error_code=outcome.error_code, phase=PHASE
+                    run_id,
+                    lemma,
+                    ledger.owner_id,
+                    claim.lease_generation,
+                    "failed_terminal",
+                    error_code=outcome.error_code,
+                    phase=PHASE,
                 )
             processed += 1
             _event(
-                "lemma_processed", run_id=run_id, lemma=lemma, outcome=outcome.status,
-                error_code=outcome.error_code, committed=committed.status.value, counts=_counts(ledger, run_id),
+                "lemma_processed",
+                run_id=run_id,
+                lemma=lemma,
+                outcome=outcome.status,
+                error_code=outcome.error_code,
+                committed=committed.status.value,
+                counts=_counts(ledger, run_id),
             )
             if args.max_lemmas is not None and processed >= args.max_lemmas:
                 _event("invocation_limit_reached", run_id=run_id, processed=processed, counts=_counts(ledger, run_id))
@@ -510,7 +552,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--cohort",
         type=Path,
-        default=Path("data/lexicon/cohort-20k-20260717.txt"),
+        default=Path("registry/lexicon/cohort-20k-20260717.txt"),
     )
     parser.add_argument("--max-lemmas", type=int, default=None)
     args = parser.parse_args(argv)

@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "enrich_offline_20k.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 MAX_FIXTURE_LEMMAS = 50
@@ -123,7 +124,9 @@ def test_dry_run_missing_candidate_reports_not_ok(tmp_path: Path) -> None:
         "--candidate",
         str(tmp_path / "missing-candidate.json"),
         "--sources-db",
-        str(FIXTURE / "sources_slice.sqlite") if (FIXTURE / "sources_slice.sqlite").is_file() else str(tmp_path / "no-sources"),
+        str(FIXTURE / "sources_slice.sqlite")
+        if (FIXTURE / "sources_slice.sqlite").is_file()
+        else str(tmp_path / "no-sources"),
         "--kaikki-json",
         str(tmp_path / "no-kaikki.json"),
     )

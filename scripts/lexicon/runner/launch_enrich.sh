@@ -65,6 +65,9 @@ if [[ ! -f "$KAIKKI_JSON" ]]; then
   echo "kaikki lookup not found: $KAIKKI_JSON" >&2
   exit 1
 fi
+if [[ "$KAIKKI_JSON" == "$REPO/data/lexicon/kaikki_uk_lookup.json" ]]; then
+  "$REPO/.venv/bin/python" -m scripts.storage.artifacts verify --group lexicon_kaikki
+fi
 
 EXTRA_ARGS=("$@")
 

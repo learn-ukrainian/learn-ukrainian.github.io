@@ -45,6 +45,7 @@ from scripts.lexicon.content_lexicon_reconciler import (
     strip_mdx_to_prose,
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.storage.paths import REGISTRY_ROOT
 from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 WORKFLOW_ID = "atlas_source_census.v1"
@@ -54,11 +55,11 @@ DEFAULT_TEXTBOOK_PDF_ROOT = TEXTBOOK_PDFS_DIR
 DEFAULT_TEXTBOOK_JSONL_ROOT = PROJECT_ROOT / "data" / "textbook_chunks"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_OHOIKO_PRIVATE_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "ohoiko-june-a1-book" / "notes"
-DEFAULT_OHOIKO_INVENTORIES = (PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "ohoiko-abetka-keywords.yaml",)
+DEFAULT_OHOIKO_INVENTORIES = (REGISTRY_ROOT / "lexicon" / "source-inventory" / "ohoiko-abetka-keywords.yaml",)
 DEFAULT_TEXTBOOK_INVENTORIES = (
-    PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "bolshakova-bukvar-keywords.yaml",
-    PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "vashulenko-grade3-headwords.yaml",
-    PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "vashulenko-grade3-family-numerals.yaml",
+    REGISTRY_ROOT / "lexicon" / "source-inventory" / "bolshakova-bukvar-keywords.yaml",
+    REGISTRY_ROOT / "lexicon" / "source-inventory" / "vashulenko-grade3-headwords.yaml",
+    REGISTRY_ROOT / "lexicon" / "source-inventory" / "vashulenko-grade3-family-numerals.yaml",
 )
 
 DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS: float = 30.0

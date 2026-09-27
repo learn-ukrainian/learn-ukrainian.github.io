@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.assess_kaikki_fillability import is_clean_lemma, normalize_stress
+from scripts.storage.artifacts import write_artifact
 
 DEFAULT_KAIKKI = Path.home() / ".cache" / "learn-ukrainian-kaikki" / "kaikki-uk.jsonl"
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
@@ -133,11 +134,7 @@ def _is_grammatical_form(clause: str) -> bool:
 
 
 def _is_meta_clause(clause: str) -> bool:
-    return bool(
-        _META_CLAUSE_RE.match(clause)
-        or _FORM_OF_RE.search(clause)
-        or _is_grammatical_form(clause)
-    )
+    return bool(_META_CLAUSE_RE.match(clause) or _FORM_OF_RE.search(clause) or _is_grammatical_form(clause))
 
 
 _LEADING_QUALIFIER_RE = re.compile(r"^\([^)]+\)\s+(.+)$")
@@ -268,8 +265,11 @@ def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def write_lookup(lookup: dict[str, dict[str, Any]], output: Path) -> None:
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(lookup, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    def write(staged: Path) -> None:
+        staged.parent.mkdir(parents=True, exist_ok=True)
+        staged.write_text(json.dumps(lookup, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+    write_artifact(output, "lexicon_kaikki", "scripts.lexicon.build_kaikki_lookup", write)
     print(f"wrote {output}: {output.stat().st_size} bytes")
 
 

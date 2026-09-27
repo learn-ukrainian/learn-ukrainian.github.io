@@ -57,6 +57,12 @@ def _empty_sources_db(tmp_path: Path) -> Path:
     return path
 
 
+def _empty_kaikki_lookup(tmp_path: Path) -> Path:
+    path = tmp_path / "kaikki.json"
+    path.write_text("{}\n", encoding="utf-8")
+    return path
+
+
 def _rows(db_path: Path) -> dict[tuple[str, str], sqlite3.Row]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
@@ -97,7 +103,7 @@ def test_section_mapping_writes_local_rows_and_honest_uncovered(tmp_path, monkey
 
     monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
 
-    result = fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json")
+    result = fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))
     rows = _rows(db_path)
 
     assert result.considered == 3
@@ -127,9 +133,9 @@ def test_idempotent_rerun_skips_existing_sections(tmp_path, monkeypatch):
 
     monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
 
-    first = fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json")
+    first = fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))
     first_count = len(_rows(db_path))
-    second = fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json")
+    second = fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))
     second_count = len(_rows(db_path))
 
     assert first.inserted > 0
@@ -149,7 +155,7 @@ def test_refresh_replaces_existing_section_payload(tmp_path, monkeypatch):
 
     monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
 
-    fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json", slug="прапор", refresh=True)
+    fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path), slug="прапор", refresh=True)
     rows = _rows(db_path)
 
     assert json.loads(rows[("прапор", "meaning")]["payload_json"]) == {
@@ -184,7 +190,7 @@ def test_phase1_offline_guard_blocks_slovnyk_wikipedia_and_grac_network(tmp_path
 
     monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
 
-    fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json", slug="бігти")
+    fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path), slug="бігти")
     assert os.environ["LEXICON_SLOVNYK_OFFLINE"] == "0"
 
 
@@ -231,7 +237,7 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
     monkeypatch.setattr(enrich_manifest, "_vesum_word_analyses", lambda word: ((word, "noun"),))
 
     try:
-        fill_local.fill_local(db_path, sources_db_path, tmp_path / "missing-kaikki.json")
+        fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))
     finally:
         enrich_manifest._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
         enrich_manifest._CEFR_ESTIMATE_LEVEL_BY_KEY.update(previous_cefr)
@@ -240,9 +246,7 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
     assert len(seen) == 20
     # Non-PULS lemmas (indices 10+) get estimated CEFR after prepare.
     estimated = [
-        row
-        for row in seen
-        if row["cefr"] and row["cefr"].get("source") == enrich_manifest._CEFR_ESTIMATED_SOURCE
+        row for row in seen if row["cefr"] and row["cefr"].get("source") == enrich_manifest._CEFR_ESTIMATED_SOURCE
     ]
     assert len(estimated) == 10
     assert sum(1 for row in seen if row["cefr"]) == 20
@@ -250,12 +254,7 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
     # Antonym pairs are one-way in fixtures; closed maps add reciprocal edges.
     antonym_rows_with_edges = [row for row in seen if row["ant"]]
     assert antonym_rows_with_edges
-    reciprocal_ants = [
-        rel
-        for row in seen
-        for rel in row["ant"]
-        if rel.get("direction") == "reciprocal"
-    ]
+    reciprocal_ants = [rel for row in seen for rel in row["ant"] if rel.get("direction") == "reciprocal"]
     assert reciprocal_ants
 
     # Synonym pairs are bidirectional; closed maps still pass non-empty lists.

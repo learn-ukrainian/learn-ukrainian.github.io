@@ -8,7 +8,7 @@ corpus carrier sentence:
     2. Normalize/dedupe (error, correct) pairs; drop empty or annotation-span
        artifacts (stray quote marks).
     3. Prefer (a) pairs whose ``correct`` form is already covered by an
-       existing ``data/lexicon/heritage_pairs.yaml`` pair — these extend that
+       existing ``registry/lexicon/heritage_pairs.yaml`` pair — these extend that
        pair's ``frames``; (b) multiword calques next; (c) the rest, when
        ``correct`` resolves *exactly* (case/diacritic-insensitive) to a
        public practice-eligible Atlas lemma — these become new pairs.
@@ -18,7 +18,7 @@ corpus carrier sentence:
        Ukrainian script, no pre-existing blank/OCR artifacts).
     5. Corrupt it: substitute ``correct`` → ``error`` for the wrong-answer
        option; blank ``correct`` → ``___`` for ``sentence_with_slot``.
-    6. Emit an *additive* overlay (``data/lexicon/heritage_pairs.wave1-calque.yaml``)
+    6. Emit an *additive* overlay (``registry/lexicon/heritage_pairs.wave1-calque.yaml``)
        that ``generate_practice_deck.read_heritage_pairs`` merges into the
        curated set at build time — the hand-curated 90-pair file is never
        edited. A pair or frame that cannot find a carrier is never invented;
@@ -47,13 +47,14 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.audit.generate_practice_deck import _plain, read_atlas_db
 from scripts.audit.lexeme_filter import is_practice_eligible
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words as _vesum_verify_words
 
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"
 DEFAULT_VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
-DEFAULT_HERITAGE_PAIRS = PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
-DEFAULT_OVERLAY_OUT = PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.yaml"
+DEFAULT_HERITAGE_PAIRS = PROJECT_ROOT / "registry" / "lexicon" / "heritage_pairs.yaml"
+DEFAULT_OVERLAY_OUT = PROJECT_ROOT / "registry" / "lexicon" / "heritage_pairs.wave1-calque.yaml"
 DEFAULT_RESIDUAL_JSON = PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.residual.json"
 DEFAULT_RESIDUAL_REPORT = PROJECT_ROOT / "docs" / "practice" / "heritage-calque-wave1-residual.md"
 
@@ -115,9 +116,7 @@ def load_gec_calque_pairs(sources_db: Path) -> list[GecPair]:
     """Load, normalize, and dedupe UA-GEC ``F/Calque`` (error, correct) pairs."""
     con = sqlite3.connect(sources_db)
     try:
-        rows = con.execute(
-            "SELECT error, correct, doc_id FROM ua_gec_errors WHERE error_type = 'F/Calque'"
-        ).fetchall()
+        rows = con.execute("SELECT error, correct, doc_id FROM ua_gec_errors WHERE error_type = 'F/Calque'").fetchall()
     finally:
         con.close()
 
@@ -514,9 +513,7 @@ def run_wave(
                 stats.capped_skipped.append({"error": row.error, "correct": row.correct, "reason": "global_cap"})
                 continue
             if is_ambiguous_single_token(row.correct, vesum_db, ambiguity_cache):
-                stats.homonym_ambiguous.append(
-                    {"error": row.error, "correct": row.correct, "route": "extend_existing"}
-                )
+                stats.homonym_ambiguous.append({"error": row.error, "correct": row.correct, "route": "extend_existing"})
                 continue
             slug = owning_pair.get("nativeSlug")
             overlay = by_native_slug.get(slug)
@@ -536,9 +533,7 @@ def run_wave(
                     {"error": row.error, "correct": row.correct, "route": "extend_existing", "nativeSlug": slug}
                 )
                 continue
-            carrier = find_carrier_sentence(
-                con, row.correct, row.error, exclude_sentences=used_sentences[slug]
-            )
+            carrier = find_carrier_sentence(con, row.correct, row.error, exclude_sentences=used_sentences[slug])
             if carrier is None:
                 stats.residual_no_carrier.append(
                     {"error": row.error, "correct": row.correct, "route": "extend_existing", "nativeSlug": slug}
@@ -559,9 +554,7 @@ def run_wave(
             native_lemma = native_entry.get("lemma") or ""
             if is_ambiguous_single_token(native_lemma, vesum_db, ambiguity_cache):
                 for row in rows:
-                    stats.homonym_ambiguous.append(
-                        {"error": row.error, "correct": row.correct, "route": "new_pair"}
-                    )
+                    stats.homonym_ambiguous.append({"error": row.error, "correct": row.correct, "route": "new_pair"})
                 continue
             new_pair = build_new_pair(native_entry, rows)
             rows_sorted = sorted(rows, key=lambda r: (-r.count, r.error))
@@ -575,15 +568,23 @@ def run_wave(
                         )
                     else:
                         stats.per_pair_capped.append(
-                            {"error": row.error, "correct": row.correct, "route": "new_pair", "nativeSlug": new_pair["nativeSlug"]}
+                            {
+                                "error": row.error,
+                                "correct": row.correct,
+                                "route": "new_pair",
+                                "nativeSlug": new_pair["nativeSlug"],
+                            }
                         )
                     continue
-                carrier = find_carrier_sentence(
-                    con, row.correct, row.error, exclude_sentences=new_pair_sentences
-                )
+                carrier = find_carrier_sentence(con, row.correct, row.error, exclude_sentences=new_pair_sentences)
                 if carrier is None:
                     stats.residual_no_carrier.append(
-                        {"error": row.error, "correct": row.correct, "route": "new_pair", "nativeSlug": new_pair["nativeSlug"]}
+                        {
+                            "error": row.error,
+                            "correct": row.correct,
+                            "route": "new_pair",
+                            "nativeSlug": new_pair["nativeSlug"],
+                        }
                     )
                     continue
                 new_pair["frames"].append(build_frame((row.error, row.correct), carrier, row.count, row.doc_ids))
@@ -649,7 +650,12 @@ def write_residual_json(path: Path, stats: WaveStats) -> None:
         "per_pair_capped": stats.per_pair_capped,
         "homonym_ambiguous": stats.homonym_ambiguous,
     }
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_artifact(
+        path,
+        "lexicon_candidates",
+        "scripts.lexicon.heritage_calque_wave",
+        lambda staged: staged.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"),
+    )
 
 
 def write_residual_report(path: Path, stats: WaveStats) -> None:
@@ -660,13 +666,12 @@ def write_residual_report(path: Path, stats: WaveStats) -> None:
         "Generated by `scripts/lexicon/heritage_calque_wave.py`. Every count below is "
         "tool-backed against `data/sources.db` (`ua_gec_errors` where `error_type='F/Calque'`) "
         "and `data/atlas.db` at the run that produced "
-        "`data/lexicon/heritage_pairs.wave1-calque.yaml`.",
+        "`registry/lexicon/heritage_pairs.wave1-calque.yaml`.",
         "",
         "## Pipeline counts",
         "",
         f"- UA-GEC `F/Calque` raw rows: {stats.total_raw_rows}",
-        f"- Unique (error, correct) pairs after normalize/dedupe/quote-artifact drop: "
-        f"{stats.unique_clean_pairs}",
+        f"- Unique (error, correct) pairs after normalize/dedupe/quote-artifact drop: {stats.unique_clean_pairs}",
         f"- Routed to extend an existing curated pair (correct matches an existing "
         f"pair's corrections/nativeLemma): {stats.routed_extend_existing}",
         f"- Routed to a new pair (correct exact-matches a public practice-eligible Atlas "
@@ -705,8 +710,8 @@ def write_residual_report(path: Path, stats: WaveStats) -> None:
         "## Excluded — cross-POS homonym risk",
         "",
         f"- {len(stats.homonym_ambiguous)} routable rows were excluded because `correct` VESUM-"
-        "resolves to more than one distinct lemma (e.g. `збіг` the noun \"coincidence\" vs `збіг` "
-        "the masculine past tense of `збігти` \"ran off\"). A carrier sentence is matched by "
+        'resolves to more than one distinct lemma (e.g. `збіг` the noun "coincidence" vs `збіг` '
+        'the masculine past tense of `збігти` "ran off"). A carrier sentence is matched by '
         "literal string only, so an ambiguous token risks landing the fill-slot on the wrong "
         "sense; these are dropped rather than guessed at.",
         "",

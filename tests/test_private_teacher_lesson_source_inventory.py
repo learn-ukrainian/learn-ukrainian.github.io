@@ -17,107 +17,77 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SCRUBBED_PERSONAL_NAME_MARKERS = ("alona", "альона", "алёна")
 PUBLIC_TEACHER_CLOZE_ASSET = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 PRIVATE_TEACHER_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
 )
 PRIVATE_TEACHER_ROWS_39_58_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"
 )
 PRIVATE_TEACHER_ROWS_59_78_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"
 )
 PRIVATE_TEACHER_ROWS_79_98_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml"
 )
 PRIVATE_TEACHER_ROWS_99_118_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml"
 )
 PRIVATE_TEACHER_ROWS_119_138_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml"
 )
 PRIVATE_TEACHER_ROWS_139_158_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml"
 )
 PRIVATE_TEACHER_ROWS_159_178_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml"
 )
 PRIVATE_TEACHER_ROWS_179_198_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml"
 )
 PRIVATE_TEACHER_ROWS_199_218_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/"
-    "private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml"
 )
 PRIVATE_TEACHER_FIRST_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-02-first-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_SECOND_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-second-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_THIRD_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-third-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_FOURTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-fourth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_FIFTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-fifth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_SIXTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-sixth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_SEVENTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-seventh-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_EIGHTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-eighth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_NINTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-ninth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_TENTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-tenth-approved-teacher-lesson-ledger-batch.yaml"
 )
 PRIVATE_TEACHER_ELEVENTH_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-03-eleventh-approved-teacher-lesson-ledger-batch.yaml"
 )
 
@@ -128,9 +98,7 @@ def test_private_teacher_inventory_is_privacy_safe_review_metadata() -> None:
     assert len(records) == 40
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-seed"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-seed"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -161,9 +129,7 @@ def test_private_teacher_rows_39_58_inventory_is_pending_review_metadata() -> No
     assert len(records) == 23
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-39-58"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-39-58"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -190,9 +156,7 @@ def test_private_teacher_rows_59_78_inventory_is_pending_review_metadata() -> No
     assert len(records) == 21
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-59-78"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-59-78"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -220,9 +184,7 @@ def test_private_teacher_rows_79_98_inventory_is_pending_review_metadata() -> No
     assert len(records) == 21
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-79-98"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-79-98"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -252,9 +214,7 @@ def test_private_teacher_rows_99_118_inventory_is_pending_review_metadata() -> N
     assert len(records) == 20
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-99-118"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-99-118"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -286,9 +246,7 @@ def test_private_teacher_rows_119_138_inventory_is_pending_review_metadata() -> 
     assert len(records) == 22
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-119-138"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-119-138"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -317,9 +275,7 @@ def test_private_teacher_rows_139_158_inventory_is_pending_review_metadata() -> 
     assert len(records) == 20
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-139-158"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-139-158"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -352,9 +308,7 @@ def test_private_teacher_rows_159_178_inventory_is_pending_review_metadata() -> 
     assert len(records) == 20
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-159-178"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-159-178"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -387,9 +341,7 @@ def test_private_teacher_rows_179_198_inventory_is_pending_review_metadata() -> 
     assert len(records) == 21
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-179-198"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-179-198"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -408,9 +360,7 @@ def test_private_teacher_rows_179_198_inventory_is_pending_review_metadata() -> 
     assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
     assert all("surface_admission" not in record.provenance_payload() for record in records)
 
-    inventory_text = PRIVATE_TEACHER_ROWS_179_198_INVENTORY.read_text(
-        encoding="utf-8"
-    )
+    inventory_text = PRIVATE_TEACHER_ROWS_179_198_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
     assert all(marker not in inventory_text.casefold() for marker in SCRUBBED_PERSONAL_NAME_MARKERS)
     assert "native-reviewer-lessons" not in inventory_text
@@ -425,9 +375,7 @@ def test_private_teacher_rows_199_218_inventory_is_pending_review_metadata() -> 
     assert len(records) == 20
     assert {record.source_family for record in records} == {"teacher_lesson"}
     assert {record.extraction_mode for record in records} == {"curated_headword"}
-    assert {record.source_id for record in records} == {
-        "private-teacher-lesson-vocabulary-table-1-rows-199-218"
-    }
+    assert {record.source_id for record in records} == {"private-teacher-lesson-vocabulary-table-1-rows-199-218"}
     assert all(record.source_path is None for record in records)
     assert all(record.source_url is None for record in records)
     assert all(record.source_title for record in records)
@@ -447,9 +395,7 @@ def test_private_teacher_rows_199_218_inventory_is_pending_review_metadata() -> 
     assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
     assert all("surface_admission" not in record.provenance_payload() for record in records)
 
-    inventory_text = PRIVATE_TEACHER_ROWS_199_218_INVENTORY.read_text(
-        encoding="utf-8"
-    )
+    inventory_text = PRIVATE_TEACHER_ROWS_199_218_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
     assert all(marker not in inventory_text.casefold() for marker in SCRUBBED_PERSONAL_NAME_MARKERS)
     assert "native-reviewer-lessons" not in inventory_text
@@ -466,10 +412,7 @@ def test_private_teacher_first_decision_ledger_stays_review_only() -> None:
     }
     assert payload["source_queue"]["promotion_batch_size"] == 20
     assert payload["production_outputs_updated"] == []
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_FIRST_LEDGER.read_text(encoding="utf-8")
@@ -489,10 +432,7 @@ def test_private_teacher_second_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "вирубати"
     assert payload["decisions"][-1]["lemma"] == "цілодобово"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_SECOND_LEDGER.read_text(encoding="utf-8")
@@ -513,14 +453,10 @@ def test_private_teacher_third_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "правила дорожнього руху"
     assert payload["decisions"][-1]["lemma"] == "витримати"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-39-58"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-39-58"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_THIRD_LEDGER.read_text(encoding="utf-8")
@@ -541,14 +477,10 @@ def test_private_teacher_fourth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "мікрохвильова піч"
     assert payload["decisions"][-1]["lemma"] == "німий"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-59-78"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-59-78"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_FOURTH_LEDGER.read_text(encoding="utf-8")
@@ -569,14 +501,10 @@ def test_private_teacher_fifth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "безпорадний"
     assert payload["decisions"][-1]["lemma"] == "стукати"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-79-98"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-79-98"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_FIFTH_LEDGER.read_text(encoding="utf-8")
@@ -597,14 +525,10 @@ def test_private_teacher_sixth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "постукати"
     assert payload["decisions"][-1]["lemma"] == "втручатися"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-99-118"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-99-118"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_SIXTH_LEDGER.read_text(encoding="utf-8")
@@ -627,14 +551,10 @@ def test_private_teacher_seventh_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "втрутитися"
     assert payload["decisions"][-1]["lemma"] == "підозріло"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-119-138"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-119-138"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
 
@@ -652,14 +572,10 @@ def test_private_teacher_eighth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "хвалити"
     assert payload["decisions"][-1]["lemma"] == "публікувати"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-139-158"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-139-158"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_EIGHTH_LEDGER.read_text(encoding="utf-8")
@@ -682,14 +598,10 @@ def test_private_teacher_ninth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "опублікувати"
     assert payload["decisions"][-1]["lemma"] == "виставити"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-159-178"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-159-178"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_NINTH_LEDGER.read_text(encoding="utf-8")
@@ -712,14 +624,10 @@ def test_private_teacher_tenth_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "виставляти"
     assert payload["decisions"][-1]["lemma"] == "кролик"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-179-198"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-179-198"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_TENTH_LEDGER.read_text(encoding="utf-8")
@@ -743,14 +651,10 @@ def test_private_teacher_eleventh_decision_ledger_stays_review_only() -> None:
     assert payload["production_outputs_updated"] == []
     assert payload["decisions"][0]["lemma"] == "злива"
     assert payload["decisions"][-1]["lemma"] == "чайний сервіз"
-    assert all(
-        row["source_inventory"]["source_family"] == "teacher_lesson"
-        for row in payload["decisions"]
-    )
-    assert {
-        row["source_inventory"]["source_id"]
-        for row in payload["decisions"]
-    } == {"private-teacher-lesson-vocabulary-table-1-rows-199-218"}
+    assert all(row["source_inventory"]["source_family"] == "teacher_lesson" for row in payload["decisions"])
+    assert {row["source_inventory"]["source_id"] for row in payload["decisions"]} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-199-218"
+    }
     assert all("surface_admission" not in row for row in payload["decisions"])
 
     ledger_text = PRIVATE_TEACHER_ELEVENTH_LEDGER.read_text(encoding="utf-8")
@@ -773,10 +677,7 @@ def test_private_teacher_decision_ledgers_cover_seed_without_live_surfaces() -> 
     ledger_keys = set()
     for ledger in (PRIVATE_TEACHER_FIRST_LEDGER, PRIVATE_TEACHER_SECOND_LEDGER):
         payload = yaml.safe_load(ledger.read_text(encoding="utf-8"))
-        ledger_keys.update(
-            row["source_inventory"]["key"]
-            for row in payload["decisions"]
-        )
+        ledger_keys.update(row["source_inventory"]["key"] for row in payload["decisions"])
 
     assert ledger_keys == inventory_keys
 
@@ -789,20 +690,14 @@ def test_private_teacher_rows_59_78_decision_ledger_covers_pending_seed() -> Non
     inventory_keys = {
         decisions.source_inventory_key(
             lemma=record.lemma,
-            inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"
-            ),
+            inventory_path=("data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"),
             locator=record.source_locator,
         )
         for record in records
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_FOURTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -815,20 +710,14 @@ def test_private_teacher_rows_39_58_decision_ledger_covers_pending_seed() -> Non
     inventory_keys = {
         decisions.source_inventory_key(
             lemma=record.lemma,
-            inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"
-            ),
+            inventory_path=("data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"),
             locator=record.source_locator,
         )
         for record in records
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_THIRD_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -841,20 +730,14 @@ def test_private_teacher_rows_79_98_decision_ledger_covers_pending_seed() -> Non
     inventory_keys = {
         decisions.source_inventory_key(
             lemma=record.lemma,
-            inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml"
-            ),
+            inventory_path=("data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml"),
             locator=record.source_locator,
         )
         for record in records
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_FIFTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -867,20 +750,14 @@ def test_private_teacher_rows_99_118_decision_ledger_covers_pending_seed() -> No
     inventory_keys = {
         decisions.source_inventory_key(
             lemma=record.lemma,
-            inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml"
-            ),
+            inventory_path=("data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml"),
             locator=record.source_locator,
         )
         for record in records
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_SIXTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -894,8 +771,7 @@ def test_private_teacher_rows_119_138_decision_ledger_covers_pending_seed() -> N
         decisions.source_inventory_key(
             lemma=record.lemma,
             inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml"
+                "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml"
             ),
             locator=record.source_locator,
         )
@@ -903,10 +779,7 @@ def test_private_teacher_rows_119_138_decision_ledger_covers_pending_seed() -> N
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_SEVENTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -920,8 +793,7 @@ def test_private_teacher_rows_139_158_decision_ledger_covers_pending_seed() -> N
         decisions.source_inventory_key(
             lemma=record.lemma,
             inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml"
+                "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml"
             ),
             locator=record.source_locator,
         )
@@ -929,10 +801,7 @@ def test_private_teacher_rows_139_158_decision_ledger_covers_pending_seed() -> N
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_EIGHTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -946,8 +815,7 @@ def test_private_teacher_rows_159_178_decision_ledger_covers_pending_seed() -> N
         decisions.source_inventory_key(
             lemma=record.lemma,
             inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml"
+                "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml"
             ),
             locator=record.source_locator,
         )
@@ -955,10 +823,7 @@ def test_private_teacher_rows_159_178_decision_ledger_covers_pending_seed() -> N
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_NINTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -972,8 +837,7 @@ def test_private_teacher_rows_179_198_decision_ledger_covers_pending_seed() -> N
         decisions.source_inventory_key(
             lemma=record.lemma,
             inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml"
+                "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml"
             ),
             locator=record.source_locator,
         )
@@ -981,10 +845,7 @@ def test_private_teacher_rows_179_198_decision_ledger_covers_pending_seed() -> N
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_TENTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 
@@ -998,8 +859,7 @@ def test_private_teacher_rows_199_218_decision_ledger_covers_pending_seed() -> N
         decisions.source_inventory_key(
             lemma=record.lemma,
             inventory_path=(
-                "data/lexicon/source-inventory/"
-                "private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml"
+                "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-199-218.yaml"
             ),
             locator=record.source_locator,
         )
@@ -1007,10 +867,7 @@ def test_private_teacher_rows_199_218_decision_ledger_covers_pending_seed() -> N
     }
 
     payload = yaml.safe_load(PRIVATE_TEACHER_ELEVENTH_LEDGER.read_text(encoding="utf-8"))
-    ledger_keys = {
-        row["source_inventory"]["key"]
-        for row in payload["decisions"]
-    }
+    ledger_keys = {row["source_inventory"]["key"] for row in payload["decisions"]}
 
     assert ledger_keys == inventory_keys
 

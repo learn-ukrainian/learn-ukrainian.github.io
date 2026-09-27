@@ -31,7 +31,7 @@ from scripts.lexicon.enrich_manifest import (
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, build_fingerprint, write_fingerprint
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, write_manifest
 
-DEFAULT_WORKSHEET = PROJECT_ROOT / "data" / "lexicon" / "anchor_curation_worksheet.yaml"
+DEFAULT_WORKSHEET = PROJECT_ROOT / "registry" / "lexicon" / "anchor_curation_worksheet.yaml"
 ANCHOR_SOURCE = "anchor_curation_worksheet (#5133)"
 AGY_EN_SOURCE = "agy_en_proposal"
 AGY_EN_WORKSHEET_LABEL = "agy_en_proposal (Gemini; not a dictionary)"
@@ -55,9 +55,7 @@ class ApplyResult:
     fingerprint_written: bool
 
 
-def apply_anchor_worksheet(
-    manifest: dict[str, Any], worksheet: Mapping[str, Any]
-) -> ApplyResult:
+def apply_anchor_worksheet(manifest: dict[str, Any], worksheet: Mapping[str, Any]) -> ApplyResult:
     """Add approved worksheet anchors to entries that lack any English anchor."""
     entries = manifest.get("entries")
     if not isinstance(entries, list):
@@ -134,9 +132,7 @@ def apply_from_paths(
     }
     write_manifest(manifest_path, manifest)
     write_fingerprint(fingerprint_path, root=PROJECT_ROOT)
-    return ApplyResult(
-        **{**result.__dict__, "manifest_written": True, "fingerprint_written": True}
-    )
+    return ApplyResult(**{**result.__dict__, "manifest_written": True, "fingerprint_written": True})
 
 
 def format_result(result: ApplyResult) -> str:
@@ -164,14 +160,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet data/lexicon/agy_en_slice51_worksheet.yaml
-  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet data/lexicon/agy_en_slice51_worksheet.yaml --manifest /tmp/manifest.json
+  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet registry/lexicon/agy_en_slice51_worksheet.yaml
+  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet registry/lexicon/agy_en_slice51_worksheet.yaml --manifest /tmp/manifest.json
 
 Outputs:
   Dry-run prints an auditable summary and keeps all changes in memory. --write updates the manifest and fingerprint sidecar.
 Exit codes:
   0 means the worksheet was validated and processed; 1 or higher means loading or application failed.
-Related: data/lexicon/anchor_curation_worksheet.yaml and issue #6876.
+Related: registry/lexicon/anchor_curation_worksheet.yaml and issue #6876.
 """,
     )
     parser.add_argument(

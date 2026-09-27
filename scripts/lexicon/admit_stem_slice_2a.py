@@ -43,6 +43,8 @@ from scripts.lexicon.enrich_manifest import (
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path, load_manifest
 
 DEFAULT_CANDIDATES_PATH = PROJECT_ROOT / "data/lexicon/stem_slice_2a_candidates.json"
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
@@ -71,9 +73,7 @@ _POS_MAP = {
 EXCLUDED_LEMMAS = {"кг", "км", "коп", "мм", "см", "найдовший", "починаючи"}
 
 
-def load_vetted_stem_candidates(
-    candidates_path: Path, manifest_keys: set[str]
-) -> list[dict[str, Any]]:
+def load_vetted_stem_candidates(candidates_path: Path, manifest_keys: set[str]) -> list[dict[str, Any]]:
     raw = json.loads(candidates_path.read_text(encoding="utf-8"))
     vetted: list[dict[str, Any]] = []
 
@@ -119,10 +119,7 @@ def load_vetted_stem_candidates(
         pos_raw = str(item.get("pos") or "noun").strip().lower()
         pos = _POS_MAP.get(pos_raw, "noun")
 
-        source_url = str(
-            vts.get("source_url")
-            or f"https://slovnyk.me/dict/vts/{urllib.parse.quote(lemma)}"
-        )
+        source_url = str(vts.get("source_url") or f"https://slovnyk.me/dict/vts/{urllib.parse.quote(lemma)}")
 
         vetted.append(
             {
@@ -206,9 +203,7 @@ def build_atlas_entry(cand: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def update_source_inventory_glossaries(
-    vetted: list[dict[str, Any]], dry_run: bool = False
-) -> int:
+def update_source_inventory_glossaries(vetted: list[dict[str, Any]], dry_run: bool = False) -> int:
     by_book: dict[str, list[dict[str, Any]]] = {}
     for cand in vetted:
         book = cand["source_book"]
@@ -216,18 +211,17 @@ def update_source_inventory_glossaries(
             by_book.setdefault(book, []).append(cand)
 
     updated_books = 0
+    headword_entries = load_manifest("lexicon_headword_candidates")["entries"]
     for book_id, cands in by_book.items():
-        found_paths = list(
-            (PROJECT_ROOT / "data/lexicon/source-inventory").glob(
-                f"grade-*/*{book_id}*.yaml"
-            )
-        )
+        registry_root = PROJECT_ROOT / "registry/lexicon/source-inventory"
+        a_paths = [
+            artifact_path("lexicon_headword_candidates", entry["path"][5:])
+            for entry in headword_entries
+            if book_id in Path(entry["path"]).name
+        ]
+        found_paths = a_paths + list(registry_root.glob(f"grade-*/*{book_id}*.yaml"))
         if not found_paths:
-            found_paths = list(
-                (PROJECT_ROOT / "data/lexicon/source-inventory").glob(
-                    f"*{book_id}*.yaml"
-                )
-            )
+            found_paths = list(registry_root.glob(f"*{book_id}*.yaml"))
         if not found_paths:
             continue
 
@@ -296,15 +290,16 @@ def update_source_inventory_glossaries(
         if modified:
             updated_books += 1
             if not dry_run:
-                path.write_text(
-                    yaml.safe_dump(
-                        data,
-                        allow_unicode=True,
-                        sort_keys=False,
-                        default_flow_style=False,
-                        width=1000,
+                write_artifact(
+                    path,
+                    "lexicon_headword_candidates",
+                    "scripts.lexicon.admit_stem_slice_2a",
+                    lambda staged, payload=data: staged.write_text(
+                        yaml.safe_dump(
+                            payload, allow_unicode=True, sort_keys=False, default_flow_style=False, width=1000
+                        ),
+                        encoding="utf-8",
                     ),
-                    encoding="utf-8",
                 )
 
     return updated_books
@@ -322,6 +317,8 @@ def admit_slice_2a(
     print(f"Current manifest entries: {len(entries)}")
 
     print(f"Loading vetted candidates from {candidates_path}...")
+    if candidates_path == DEFAULT_CANDIDATES_PATH:
+        candidates_path = artifact_path("lexicon_candidates", "lexicon/stem_slice_2a_candidates.json")
     vetted = load_vetted_stem_candidates(candidates_path, manifest_keys)
     print(f"Vetted STEM candidates ready for admission: {len(vetted)}")
     if not vetted:

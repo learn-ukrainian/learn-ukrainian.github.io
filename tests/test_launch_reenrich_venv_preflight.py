@@ -14,6 +14,7 @@ so no systemd or SSH side effect is possible: on a host without systemctl the
 launcher falls through to its nohup path, and the stub python exits 0
 immediately when invoked as the "driver".
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -31,13 +32,7 @@ LOCAL_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_clas
 # deps) and succeeds otherwise so the launcher's own resolution order is the
 # only variable under test.
 _STUB_OK = "#!/bin/bash\nexit 0\n"
-_STUB_BROKEN = (
-    "#!/bin/bash\n"
-    'for a in "$@"; do\n'
-    '  if [[ "$a" == *"import yaml"* ]]; then exit 1; fi\n'
-    "done\n"
-    "exit 0\n"
-)
+_STUB_BROKEN = '#!/bin/bash\nfor a in "$@"; do\n  if [[ "$a" == *"import yaml"* ]]; then exit 1; fi\ndone\nexit 0\n'
 
 
 def _build_fixture(tmp_path: Path, *, repo_stub: str | None, code_stub: str | None = None) -> dict[str, str]:
@@ -58,6 +53,9 @@ def _build_fixture(tmp_path: Path, *, repo_stub: str | None, code_stub: str | No
 
     (repo / "data").mkdir(parents=True)
     (repo / "data" / "sources.db").write_bytes(b"stub")
+    kaikki = repo / "data" / "lexicon" / "kaikki_uk_lookup.json"
+    kaikki.parent.mkdir(parents=True)
+    kaikki.write_text("{}\n", encoding="utf-8")
 
     work.mkdir(parents=True)
     (work / "class-b-no-en.json").write_text("[]\n", encoding="utf-8")
@@ -108,7 +106,7 @@ def test_fails_closed_when_no_runner_venv_exists(tmp_path: Path) -> None:
     env = _build_fixture(tmp_path, repo_stub=None)
     proc = _run_launcher(env)
     assert proc.returncode == 1, proc.stdout + proc.stderr
-    assert "runner venv python not found" in proc.stderr
+    assert "runner venv interpreter not found" in proc.stderr
     assert "pid=" not in proc.stdout
 
 
@@ -152,7 +150,7 @@ def test_launcher_invokes_resolved_runner_python() -> None:
     not a hardcoded $REPO/.venv path that could diverge from the check."""
     source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
     assert 'printf \'%q \' "$RUNNER_PYTHON" "$DRIVER"' in source
-    assert 'import yaml, jsonschema' in source
+    assert "import yaml, jsonschema" in source
 
 
 def test_launcher_wrapped_command_has_pipefail() -> None:

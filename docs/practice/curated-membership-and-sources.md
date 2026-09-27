@@ -40,8 +40,8 @@ Practice is multi-mode. **Cloze is only one surface.** Coverage work must unlock
 | Stress | No | stress form (atlas / VESUM / stress dict) |
 | Classify | No | POS / semantic buckets from atlas |
 | Paradigm | No | morphology paradigm + VESUM verification |
-| Synonym | No | reviewed pairs (`data/lexicon/synonym_pair_verdicts.yaml`) |
-| Heritage | No | `data/lexicon/heritage_pairs.yaml` |
+| Synonym | No | reviewed pairs (`registry/lexicon/synonym_pair_verdicts.yaml`) |
+| Heritage | No | `registry/lexicon/heritage_pairs.yaml` |
 | Paronym | No | reviewed paronym sets in deck |
 | **Cloze** | **Yes** | Public / rights-clear sentences only (§4) |
 
