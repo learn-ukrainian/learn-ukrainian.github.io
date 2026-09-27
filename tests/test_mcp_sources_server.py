@@ -153,6 +153,15 @@ class TestUlifHandlers:
         query.assert_called_once_with("відсутнє")
         assert result[0].text == "No ULIF paradigm found for: 'відсутнє'"
 
+    def test_query_ulif_without_sections_unavailable_is_not_no_result(self, server_module):
+        """A DictUA outage must not render as 'No ULIF paradigm found' (#9005)."""
+        unavailable = {"status": "unavailable", "word": "великий"}
+        with patch("rag.source_query.ulif_paradigm", return_value=unavailable):
+            result = _run(server_module.handle_query_ulif({"word": "великий"}))
+
+        assert "unavailable" in result[0].text
+        assert "No ULIF paradigm found" not in result[0].text
+
     def test_query_ulif_renders_structured_source_metadata(self, server_module):
         expected = {
             "source_id": "ulif_dictua",
@@ -283,6 +292,106 @@ class TestUlifHandlers:
         assert tool.input_schema["required"] == ["word"]
         assert "pos" in tool.input_schema["properties"]
         assert "tags" in tool.input_schema["properties"]
+
+
+class TestLiveSourceUnavailable:
+    """An outage (Cloudflare/network/HTTP failure) must never render as a
+    false negative ('no entry'/'not found') — see #9005."""
+
+    def test_slovnyk_me_unavailable_is_not_rendered_as_no_entry(self, server_module):
+        unavailable = {
+            "status": "unavailable",
+            "word": "хата",
+            "dict": "vts",
+            "url": "https://slovnyk.me/dict/vts/хата",
+            "challenge": True,
+            "http_status": 403,
+        }
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=unavailable):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "хата", "dict": "vts"}))
+        text = result[0].text
+        assert "unavailable" in text
+        assert "No entry found" not in text
+        assert "HTTP 403" in text
+        assert "Cloudflare challenge detected" in text
+
+    def test_slovnyk_me_not_found_still_renders_no_entry(self, server_module):
+        not_found = {"status": "not_found", "word": "жжжнемає", "dict": "vts", "url": "https://slovnyk.me/dict/vts/жжжнемає"}
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=not_found):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "жжжнемає", "dict": "vts"}))
+        assert "No entry found" in result[0].text
+
+    def test_r2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
+        from rag.source_query import R2ULookupStatus
+
+        with patch(
+            "rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.SOURCE_UNAVAILABLE, []),
+        ):
+            result = _run(server_module.handle_query_r2u({"word": "привет"}))
+        assert "unavailable" in result[0].text
+        assert "No r2u translation found" not in result[0].text
+
+    def test_r2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import R2ULookupStatus
+
+        with patch(
+            "rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_r2u({"word": "жжжнемає"}))
+        assert "No r2u translation found" in result[0].text
+
+    def test_e2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.SOURCE_UNAVAILABLE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "house"}))
+        assert "unavailable" in result[0].text
+        assert "No e2u translation found" not in result[0].text
+
+    def test_e2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "zzznotaword"}))
+        assert "No e2u translation found" in result[0].text
+
+    def test_grac_concordance_unavailable_is_not_rendered_as_no_results(self, server_module):
+        with patch("rag.source_query.grac_concordance", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "concordance"})
+            )
+        assert "unavailable" in result[0].text
+        assert "No concordance results" not in result[0].text
+
+    def test_grac_concordance_not_found_still_renders_no_results(self, server_module):
+        with patch("rag.source_query.grac_concordance", return_value=[]):
+            result = _run(
+                server_module.handle_query_grac({"query": "zzznotaword", "mode": "concordance"})
+            )
+        assert "No concordance results" in result[0].text
+
+    def test_grac_collocations_unavailable_is_not_rendered_as_no_results(self, server_module):
+        with patch("rag.source_query.grac_collocations", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "collocations"})
+            )
+        assert "unavailable" in result[0].text
+        assert "No collocations found" not in result[0].text
+
+    def test_grac_frequency_unavailable_is_not_rendered_as_zero_freq(self, server_module):
+        with patch("rag.source_query.grac_frequency", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "frequency"})
+            )
+        assert "unavailable" in result[0].text
 
 
 class TestCallToolDispatch:

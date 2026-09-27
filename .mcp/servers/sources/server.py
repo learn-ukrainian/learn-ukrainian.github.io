@@ -2883,10 +2883,16 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         grac_lemma_frequency,
     )
 
+    grac_unavailable_text = (
+        f"GRAC (uacorpus.org) is unavailable for '{query}' (network error or "
+        "HTTP failure). Treat as unknown, not a negative — do not cite this "
+        "as a zero-frequency or no-results finding."
+    )
+
     if mode == "frequency":
         result = await asyncio.to_thread(grac_frequency, query)
-        if not result:
-            return [TextContent(type="text", text=f"GRAC query failed for: '{query}'")]
+        if result is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         return [TextContent(type="text", text=(
             f"**{result['word']}**: frequency = {result['freq']:,}, "
             f"relative = {result['rel_freq']:.2f} per million"
@@ -2894,8 +2900,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     elif mode == "lemma_forms":
         result = await asyncio.to_thread(grac_lemma_frequency, query)
-        if not result:
-            return [TextContent(type="text", text=f"GRAC lemma query failed for: '{query}'")]
+        if result is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         lines = [f"Lemma '{result['lemma']}' — total frequency: {result['total_freq']:,}\n"]
         for form in result["forms"][:limit]:
             lines.append(f"- {form['word']}: {form['freq']:,} ({form['pct']:.1f}%)")
@@ -2903,6 +2909,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     elif mode == "concordance":
         results = await asyncio.to_thread(grac_concordance, query, limit)
+        if results is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         if not results:
             return [TextContent(type="text", text=f"No concordance results for: '{query}'")]
         lines = [f"Concordance for '{query}' — {len(results)} lines\n"]
@@ -2912,6 +2920,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     else:  # collocations
         results = await asyncio.to_thread(grac_collocations, query, limit=limit)
+        if results is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         if not results:
             return [TextContent(type="text", text=f"No collocations found for: '{query}'")]
         lines = [f"Collocations for '{query}' — {len(results)} results\n"]
@@ -2964,6 +2974,15 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
                     + (f" {detail}" if detail else "")
                 )
             return [TextContent(type="text", text="\n".join(lines))]
+        if isinstance(result, dict) and result.get("status") == "unavailable":
+            return [TextContent(
+                type="text",
+                text=(
+                    f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
+                    "error or HTTP failure). Treat as unknown, not a negative — do not cite "
+                    "this as 'no paradigm'."
+                ),
+            )]
         if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
@@ -3026,8 +3045,18 @@ async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
 async def handle_query_r2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
-    from rag.source_query import r2u_translate
-    results = await asyncio.to_thread(r2u_translate, word)
+    from rag.source_query import R2ULookupStatus, r2u_translate_with_status
+    status, results = await asyncio.to_thread(r2u_translate_with_status, word)
+
+    if status == R2ULookupStatus.SOURCE_UNAVAILABLE:
+        return [TextContent(
+            type="text",
+            text=(
+                f"r2u.org.ua is unavailable for '{word}' (network error or HTTP "
+                "failure). Treat as unknown, not a negative — do not cite this "
+                "as 'no translation'."
+            ),
+        )]
 
     if not results:
         return [TextContent(type="text", text=f"No r2u translation found for: '{word}'")]
@@ -3041,8 +3070,18 @@ async def handle_query_r2u(args: dict) -> list[TextContent]:
 async def handle_query_e2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
-    from rag.source_query import e2u_translate
-    results = await asyncio.to_thread(e2u_translate, word)
+    from rag.source_query import E2ULookupStatus, e2u_translate_with_status
+    status, results = await asyncio.to_thread(e2u_translate_with_status, word)
+
+    if status == E2ULookupStatus.SOURCE_UNAVAILABLE:
+        return [TextContent(
+            type="text",
+            text=(
+                f"e2u.org.ua is unavailable for '{word}' (network error or HTTP "
+                "failure). Treat as unknown, not a negative — do not cite this "
+                "as 'no translation'."
+            ),
+        )]
 
     if not results:
         return [TextContent(type="text", text=f"No e2u translation found for: '{word}'")]
@@ -3132,8 +3171,35 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
         )]
 
     result = await asyncio.to_thread(slovnyk_me_lookup, word, canonical_slug)
+    status = result.get("status", "found") if isinstance(result, dict) else "not_found"
 
-    if not result:
+    if status == "unavailable":
+        detail_bits = []
+        if result.get("challenge"):
+            detail_bits.append("Cloudflare challenge detected")
+        if result.get("http_status") is not None:
+            detail_bits.append(f"HTTP {result['http_status']}")
+        if result.get("reason") and not result.get("challenge"):
+            detail_bits.append(result["reason"])
+        detail = f" ({'; '.join(detail_bits)})" if detail_bits else ""
+        payload = {
+            "status": "unavailable",
+            "word": word,
+            "dict": canonical_slug,
+            "http_status": result.get("http_status"),
+            "challenge": bool(result.get("challenge")),
+        }
+        return [TextContent(
+            type="text",
+            text=(
+                f"slovnyk.me/{canonical_slug} ({SLOVNYK_ME_DICTS[canonical_slug]}) is "
+                f"unavailable for '{word}'{detail}. Treat as unknown, not a negative — "
+                "do not cite this as 'no entry'.\n"
+                f"{json.dumps(payload, ensure_ascii=False)}"
+            ),
+        )]
+
+    if status != "found" or "text" not in result:
         return [TextContent(
             type="text",
             text=(

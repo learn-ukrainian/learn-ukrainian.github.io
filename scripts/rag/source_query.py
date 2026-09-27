@@ -396,10 +396,12 @@ def grac_lemma_frequency(lemma: str) -> dict[str, Any] | None:
         return None
 
 
-def grac_concordance(query: str, limit: int = 10) -> list[dict[str, str]]:
+def grac_concordance(query: str, limit: int = 10) -> list[dict[str, str]] | None:
     """Get concordance lines (KWIC) from GRAC for a simple query.
 
-    Returns list of {left, kwic, right} dicts.
+    Returns list of {left, kwic, right} dicts, an empty list for a genuine
+    zero-hit query, or None if GRAC could not be reached (network error or
+    HTTP failure) — callers must not treat None as "no concordance lines".
     """
     params = {
         "corpname": GRAC_CORPUS,
@@ -421,12 +423,12 @@ def grac_concordance(query: str, limit: int = 10) -> list[dict[str, str]]:
             results.append({"left": left.strip(), "kwic": kwic.strip(), "right": right.strip()})
         return results
     except requests.RequestException:
-        return []
+        return None
 
 
 def grac_collocations(
     lemma: str, window: int = 5, limit: int = 20, sort: str = "t"
-) -> list[dict[str, Any]]:
+) -> list[dict[str, Any]] | None:
     """Get collocations for a lemma from GRAC.
 
     Args:
@@ -435,7 +437,9 @@ def grac_collocations(
         limit: max collocates to return
         sort: sort function — 't' (t-score), 'm' (MI), 'd' (logDice)
 
-    Returns list of {word, freq, score} dicts.
+    Returns list of {word, freq, score} dicts, an empty list for a genuine
+    zero-hit query, or None if GRAC could not be reached (network error or
+    HTTP failure) — callers must not treat None as "no collocations".
     """
     cql = f'[lemma="{lemma}"]'
     params = {
@@ -463,7 +467,7 @@ def grac_collocations(
             for item in items
         ]
     except requests.RequestException:
-        return []
+        return None
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -921,10 +925,17 @@ def query_ulif_phraseology(word: str) -> dict[str, object]:
 
 
 def ulif_paradigm(word: str) -> dict[str, Any] | None:
-    """Backward-compatible ``{'word', 'rows'}`` ULIF paradigm lookup."""
+    """Backward-compatible ``{'word', 'rows'}`` ULIF paradigm lookup.
+
+    Returns None for a real not_found/parse_error. A transient network or
+    HTTP failure returns ``{'status': 'unavailable', 'word': word}`` instead,
+    so callers never mistake a DictUA outage for "no paradigm".
+    """
     result = query_ulif(word, ("paradigm",))
     if result.get("status") == "ambiguous":
         return result
+    if result.get("status") == "transient_error":
+        return {"status": "unavailable", "word": word}
     sections = result.get("sections")
     paradigm = sections.get("paradigm") if isinstance(sections, dict) else None
     if result["status"] not in {"ok", "parse_error"} or not isinstance(paradigm, dict):
@@ -1015,6 +1026,47 @@ def r2u_translate(russian_word: str) -> list[dict[str, str]]:
 E2U_BASE = "https://e2u.org.ua"
 
 
+class E2ULookupStatus(enum.StrEnum):
+    FOUND = "found"
+    NOT_FOUND_WITHIN_VERIFIED_COVERAGE = "not_found_within_verified_coverage"
+    SOURCE_UNAVAILABLE = "source_unavailable"
+
+
+def e2u_translate_with_status(
+    english_word: str,
+    exact: bool = True,
+    headers: dict[str, str] | None = None,
+) -> tuple[E2ULookupStatus, list[dict[str, str]]]:
+    """Look up English→Ukrainian translation on e2u.org.ua with network vs absence disambiguation.
+
+    Uses the /s endpoint (?w=word). Differentiates SOURCE_UNAVAILABLE (network
+    timeout / HTTP error) from NOT_FOUND_WITHIN_VERIFIED_COVERAGE. Never
+    treats network errors as missing word proof.
+    """
+    try:
+        kwargs: dict[str, Any] = {}
+        if headers:
+            kwargs["headers"] = headers
+        r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20, **kwargs)
+        if r.status_code == 404:
+            return E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
+        r.raise_for_status()
+        entries = _parse_dict_entries(r.text)
+        if exact:
+            lower = english_word.lower()
+            # Exact headword matches first, then startswith matches
+            exact_matches = [e for e in entries if e["headword"].lower() == lower]
+            prefix_matches = [e for e in entries
+                              if e["headword"].lower().startswith(lower)
+                              and e["headword"].lower() != lower]
+            entries = exact_matches + prefix_matches
+        if not entries:
+            return E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
+        return E2ULookupStatus.FOUND, entries
+    except requests.RequestException:
+        return E2ULookupStatus.SOURCE_UNAVAILABLE, []
+
+
 def e2u_translate(
     english_word: str,
     exact: bool = True,
@@ -1030,27 +1082,12 @@ def e2u_translate(
         exact: If True, only return entries whose headword starts with the
                search word (filters out compound-word noise).
         headers: Optional HTTP headers for the request.
+
+    Note: For strict disambiguation of network timeouts vs absence, use
+    e2u_translate_with_status().
     """
-    try:
-        kwargs: dict[str, Any] = {}
-        if headers:
-            kwargs["headers"] = headers
-        r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20, **kwargs)
-        if r.status_code == 404:
-            return []
-        r.raise_for_status()
-        entries = _parse_dict_entries(r.text)
-        if exact:
-            lower = english_word.lower()
-            # Exact headword matches first, then startswith matches
-            exact_matches = [e for e in entries if e["headword"].lower() == lower]
-            prefix_matches = [e for e in entries
-                              if e["headword"].lower().startswith(lower)
-                              and e["headword"].lower() != lower]
-            entries = exact_matches + prefix_matches
-        return entries
-    except requests.RequestException:
-        return []
+    _status, entries = e2u_translate_with_status(english_word, exact=exact, headers=headers)
+    return entries
 
 
 def e2u_reverse(ukrainian_word: str) -> str:
@@ -1413,11 +1450,64 @@ def query_sum20(word: str, *, db_path: str | None = None) -> list[dict[str, Any]
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 
+# Telltale strings on a Cloudflare interstitial (JS challenge / rate-limit /
+# "Attention Required" block page). These never appear on a real slovnyk.me
+# dictionary article, so a match at these HTTP statuses is a reliable signal
+# that the response is an outage page, not real content.
+_CLOUDFLARE_CHALLENGE_STATUS_CODES = (403, 429, 503)
+_CLOUDFLARE_CHALLENGE_MARKERS = (
+    "just a moment",
+    "checking your browser",
+    "cf-browser-verification",
+    "cf_chl_",
+    "cf-chl-",
+    "cloudflare ray id",
+    "attention required! | cloudflare",
+    "enable javascript and cookies to continue",
+)
 
-def slovnyk_me_lookup(word: str, dict_slug: str = "vts") -> dict[str, Any] | None:
+
+def _is_cloudflare_challenge(status_code: int, text: str) -> bool:
+    """Detect a Cloudflare challenge/block page rather than a real article."""
+    if status_code not in _CLOUDFLARE_CHALLENGE_STATUS_CODES:
+        return False
+    lowered = text[:4000].lower()
+    return any(marker in lowered for marker in _CLOUDFLARE_CHALLENGE_MARKERS)
+
+
+def _slovnyk_me_unavailable(
+    word: str,
+    dict_slug: str,
+    url: str | None = None,
+    *,
+    http_status: int | None = None,
+    challenge: bool = False,
+    reason: str | None = None,
+) -> dict[str, Any]:
+    """Build a structured 'unavailable' result — never mistakable for not_found."""
+    result: dict[str, Any] = {
+        "status": "unavailable",
+        "word": word,
+        "dict": dict_slug,
+        "url": url,
+        "challenge": challenge,
+    }
+    if http_status is not None:
+        result["http_status"] = http_status
+    if reason is not None:
+        result["reason"] = reason
+    return result
+
+
+def slovnyk_me_lookup(word: str, dict_slug: str = "vts") -> dict[str, Any]:
     """Look up a word on slovnyk.me in the named dictionary.
 
-    Returns dict with keys: word, dict, url, text (entry body) or None on failure.
+    Always returns a dict with a "status" key:
+      - "found": word, dict, dict_label, url, text (entry body)
+      - "not_found": a real 404, or a parsed page with no entry body
+      - "unavailable": network error, non-404 HTTP failure, a detected
+        Cloudflare challenge, or an unparseable page (no <h1> at all) —
+        this is an outage, never evidence that the word has no entry.
 
     URL pattern: /dict/{dict_slug}/{url-encoded-word}. Direct entry pages,
     not search-results.
@@ -1430,52 +1520,64 @@ def slovnyk_me_lookup(word: str, dict_slug: str = "vts") -> dict[str, Any] | Non
     """
     canonical_slug = resolve_slovnyk_me_dict_slug(dict_slug)
     if canonical_slug not in SLOVNYK_ME_DICTS:
-        return None
+        return {"status": "not_found", "word": word, "dict": dict_slug, "reason": "unknown_dict_slug"}
 
     url = f"{SLOVNYK_ME_BASE}/dict/{canonical_slug}/{quote(word)}"
     try:
         r = _get(url, timeout=20)
-        if r.status_code == 404:
-            return None
+    except requests.RequestException as exc:
+        return _slovnyk_me_unavailable(word, canonical_slug, url, reason=type(exc).__name__)
+
+    if r.status_code == 404:
+        return {"status": "not_found", "word": word, "dict": canonical_slug, "url": url}
+
+    if _is_cloudflare_challenge(r.status_code, r.text):
+        return _slovnyk_me_unavailable(word, canonical_slug, url, http_status=r.status_code, challenge=True)
+
+    try:
         r.raise_for_status()
-
-        # slovnyk.me uses h1-h3 + body text — no specific entry classes.
-        # Strategy: strip HTML tags, normalize whitespace, return the
-        # window between the <h1> headword and the next major separator.
-        html = r.text
-
-        # Naive but effective: pull text between the first h1 and the
-        # first <footer>/<nav>/<aside> block.
-        body_start = html.find("<h1")
-        if body_start == -1:
-            return None
-
-        # Cut everything before the first content heading
-        body = html[body_start:]
-
-        # Drop after first navigation/footer/aside
-        for stop in ("<footer", "<nav", "<aside", "<!-- end-entry"):
-            stop_idx = body.find(stop)
-            if stop_idx > 0:
-                body = body[:stop_idx]
-                break
-
-        # Strip HTML
-        text = re.sub(r"<[^>]+>", " ", body)
-        text = re.sub(r"\s+", " ", text).strip()
-
-        if not text:
-            return None
-
-        return {
-            "word": word,
-            "dict": canonical_slug,
-            "dict_label": SLOVNYK_ME_DICTS[canonical_slug],
-            "url": url,
-            "text": text,
-        }
     except requests.RequestException:
-        return None
+        return _slovnyk_me_unavailable(word, canonical_slug, url, http_status=r.status_code)
+
+    # slovnyk.me uses h1-h3 + body text — no specific entry classes.
+    # Strategy: strip HTML tags, normalize whitespace, return the
+    # window between the <h1> headword and the next major separator.
+    html = r.text
+
+    # Naive but effective: pull text between the first h1 and the
+    # first <footer>/<nav>/<aside> block.
+    body_start = html.find("<h1")
+    if body_start == -1:
+        # A 200 response with no <h1> at all is not a parseable article —
+        # more likely an interstitial or a page-shape change than a real
+        # empty entry, so this fails open to "unavailable", not "not_found".
+        return _slovnyk_me_unavailable(word, canonical_slug, url, http_status=r.status_code, reason="unparseable_page")
+
+    # Cut everything before the first content heading
+    body = html[body_start:]
+
+    # Drop after first navigation/footer/aside
+    for stop in ("<footer", "<nav", "<aside", "<!-- end-entry"):
+        stop_idx = body.find(stop)
+        if stop_idx > 0:
+            body = body[:stop_idx]
+            break
+
+    # Strip HTML
+    text = re.sub(r"<[^>]+>", " ", body)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    if not text:
+        return {"status": "not_found", "word": word, "dict": canonical_slug, "url": url}
+
+    return {
+        "status": "found",
+        "word": word,
+        "dict": canonical_slug,
+        "dict_label": SLOVNYK_ME_DICTS[canonical_slug],
+        "url": url,
+        "text": text,
+    }
 
 
 # ══════════════════════════════════════════════════════════════════
