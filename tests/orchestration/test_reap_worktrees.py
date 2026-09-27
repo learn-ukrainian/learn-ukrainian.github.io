@@ -22,6 +22,7 @@ from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_pr
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
+_REPO_TEMPLATE: Path | None = None
 
 
 def git_env() -> dict[str, str]:
@@ -45,7 +46,7 @@ def git(cwd: Path, *args: str) -> str:
     return (proc.stdout or "").strip()
 
 
-def init_repo(tmp_path: Path, name: str = "repo") -> Path:
+def _build_repo(tmp_path: Path, name: str = "repo") -> Path:
     repo = tmp_path / name
     remote = tmp_path / ("origin.git" if name == "repo" else f"{name}-origin.git")
     git(tmp_path, "init", "--bare", str(remote))
@@ -58,6 +59,27 @@ def init_repo(tmp_path: Path, name: str = "repo") -> Path:
     git(repo, "commit", "-m", "base")
     git(repo, "remote", "add", "origin", str(remote))
     git(repo, "push", "-u", "origin", "main")
+    return repo
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _repo_template(tmp_path_factory: pytest.TempPathFactory):
+    """Bootstrap Git once per worker; test repos still have independent objects and refs."""
+    global _REPO_TEMPLATE
+    template_root = tmp_path_factory.mktemp("reaper-repo-template")
+    _build_repo(template_root)
+    _REPO_TEMPLATE = template_root
+    yield
+    _REPO_TEMPLATE = None
+
+
+def init_repo(tmp_path: Path, name: str = "repo") -> Path:
+    assert _REPO_TEMPLATE is not None
+    repo = tmp_path / name
+    remote = tmp_path / ("origin.git" if name == "repo" else f"{name}-origin.git")
+    shutil.copytree(_REPO_TEMPLATE / "repo", repo)
+    shutil.copytree(_REPO_TEMPLATE / "origin.git", remote)
+    git(repo, "remote", "set-url", "origin", str(remote))
     return repo
 
 
@@ -1285,7 +1307,8 @@ def test_merged_pr_origin_gone_extra_unpushed_commit_needs_attention(
 
 
 def test_merged_pr_origin_gone_squash_equivalent_tip_is_reaped(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
     branch = "codex/squash-only"
@@ -1317,7 +1340,8 @@ def test_merged_pr_origin_gone_squash_equivalent_tip_is_reaped(
 
 
 def test_merged_pr_origin_gone_pr_head_tip_is_reaped(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
     branch = "codex/pr-head-tip"
@@ -1336,7 +1360,8 @@ def test_merged_pr_origin_gone_pr_head_tip_is_reaped(
 
 
 def test_merged_pr_origin_gone_fetch_failure_needs_attention(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
     branch = "codex/missing-pr-ref"
@@ -2070,9 +2095,7 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
         monkeypatch,
         {
             "codex/exact-head": [{"number": 31, "state": "MERGED", "headRefOid": exact_head}],
-            "codex/ancestor-head": [
-                {"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}
-            ],
+            "codex/ancestor-head": [{"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}],
         },
     )
 
@@ -2352,14 +2375,16 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
     calls = _patch_gh_transports(
         monkeypatch,
         rest=_gh_stdout(
-            json.dumps([
-                {
-                    "number": 8536,
-                    "state": "closed",
-                    "merged_at": "2026-09-22T10:00:00Z",
-                    "head": {"sha": "rest-sha"},
-                }
-            ])
+            json.dumps(
+                [
+                    {
+                        "number": 8536,
+                        "state": "closed",
+                        "merged_at": "2026-09-22T10:00:00Z",
+                        "head": {"sha": "rest-sha"},
+                    }
+                ]
+            )
         ),
         graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
     )
@@ -2403,9 +2428,7 @@ def test_query_pr_states_fails_closed_when_both_transports_fail(monkeypatch) -> 
 def test_query_pr_by_number_rest_first_with_graphql_fallback(monkeypatch) -> None:
     calls = _patch_gh_transports(
         monkeypatch,
-        rest=_gh_stdout(
-            json.dumps({"number": 99, "state": "open", "merged_at": None, "head": {"sha": "n-sha"}})
-        ),
+        rest=_gh_stdout(json.dumps({"number": 99, "state": "open", "merged_at": None, "head": {"sha": "n-sha"}})),
         graphql=_gh_stdout("graphql down", returncode=1),
     )
 
@@ -2665,12 +2688,29 @@ def test_classify_preservation_canonical_classes() -> None:
     assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "primary checkout", None)) == "primary"
 
     # active_dispatch
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active dispatch task-id=t1", None)) == "active_dispatch"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active worker lease task-id=t1", None)) == "active_dispatch"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active rollover lease thread1", None)) == "active_dispatch"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active write claim task-id=t1", None)) == "active_dispatch"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active reap reservation", None)) == "active_dispatch"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "live process cwd=/foo", None)) == "active_dispatch"
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active dispatch task-id=t1", None))
+        == "active_dispatch"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active worker lease task-id=t1", None))
+        == "active_dispatch"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active rollover lease thread1", None))
+        == "active_dispatch"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active write claim task-id=t1", None))
+        == "active_dispatch"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active reap reservation", None))
+        == "active_dispatch"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "live process cwd=/foo", None)) == "active_dispatch"
+    )
 
     # open_pr
     assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "open PR #42", False)) == "open_pr"
@@ -2679,20 +2719,40 @@ def test_classify_preservation_canonical_classes() -> None:
     assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "dirty worktree", True)) == "dirty"
 
     # detached_unknown
-    assert rw.classify_preservation(rw.ReapResult("p", None, "skipped", "detached HEAD unknown", None)) == "detached_unknown"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "PR guard unavailable; timeout", False)) == "detached_unknown"
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", None, "skipped", "detached HEAD unknown", None))
+        == "detached_unknown"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "PR guard unavailable; timeout", False))
+        == "detached_unknown"
+    )
 
     # permission_error
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "error", "some reason", False, error="permission denied")) == "permission_error"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "permission denied removing worktree: foo", False)) == "permission_error"
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "error", "some reason", False, error="permission denied"))
+        == "permission_error"
+    )
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "permission denied removing worktree: foo", False))
+        == "permission_error"
+    )
 
     # foreign
     assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "outside repo .worktrees/", None)) == "foreign"
-    assert rw.classify_preservation(rw.ReapResult("p", None, "skipped", "target path is not a registered git worktree", None)) == "foreign"
+    assert (
+        rw.classify_preservation(
+            rw.ReapResult("p", None, "skipped", "target path is not a registered git worktree", None)
+        )
+        == "foreign"
+    )
 
     # unmerged
     assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "unpushed_head", False)) == "unmerged"
-    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "no reap condition matched; not merged", False)) == "unmerged"
+    assert (
+        rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "no reap condition matched; not merged", False))
+        == "unmerged"
+    )
 
 
 def test_primary_checkout_is_always_preserved_and_classified_primary(tmp_path: Path) -> None:
@@ -2735,10 +2795,12 @@ def _write_rollover_lease(repo: Path, replacement: dict[str, Any], *, cleanup_re
     rollover_dir = repo / ".agent" / "thread-rollovers" / "thread_1" / "cycle_1"
     rollover_dir.mkdir(parents=True, exist_ok=True)
     (rollover_dir / "lease.json").write_text(
-        json.dumps({
-            "cleanup": {"old_automation_ready_to_delete": cleanup_ready},
-            "replacement": replacement,
-        }),
+        json.dumps(
+            {
+                "cleanup": {"old_automation_ready_to_delete": cleanup_ready},
+                "replacement": replacement,
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -2767,9 +2829,7 @@ def test_active_rollover_lease_reconciliation(tmp_path: Path, monkeypatch: pytes
     assert worktree.exists()
 
 
-def test_rollover_lease_does_not_protect_sibling_at_same_sha(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_rollover_lease_does_not_protect_sibling_at_same_sha(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A packet that names worktree A protects only A: a sibling worktree at
     the same HEAD SHA (every fresh worktree branched from the same commit) is
     not protected (#8536)."""
@@ -2805,9 +2865,7 @@ def test_rollover_lease_does_not_protect_sibling_at_same_sha(
     assert not sibling.exists()
 
 
-def test_rollover_lease_without_recorded_path_does_not_protect(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_rollover_lease_without_recorded_path_does_not_protect(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Legacy packets record only ``source_checkout.full_head``. A bare SHA
     match must never protect a worktree (#8536)."""
     repo = init_repo(tmp_path)
@@ -2827,9 +2885,7 @@ def test_rollover_lease_without_recorded_path_does_not_protect(
     assert not worktree.exists()
 
 
-def test_rollover_lease_cleanup_ready_does_not_protect(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_rollover_lease_cleanup_ready_does_not_protect(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/rollover-done")
     head_sha = git(worktree, "rev-parse", "HEAD")
@@ -2996,9 +3052,7 @@ def test_write_claims_query_error_fails_closed_without_empty_skip(
     assert worktree.exists()
 
 
-def test_open_pr_worktree_counted_as_open_pr_not_unmerged(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_open_pr_worktree_counted_as_open_pr_not_unmerged(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/feature-open")
     (worktree / "code.py").write_text("# code\n", encoding="utf-8")
@@ -3021,9 +3075,7 @@ def test_open_pr_worktree_counted_as_open_pr_not_unmerged(
     assert counts["by_preservation_class"]["unmerged"] == 0
 
 
-def test_missing_requested_repository_fails_closed_nonzero(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_missing_requested_repository_fails_closed_nonzero(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     missing_repo = tmp_path / "does_not_exist"
     rc = rw.main(["--repo-root", str(missing_repo)])
     assert rc == 2
@@ -3179,9 +3231,7 @@ def test_select_orphaned_sandboxes_preserves_young_writers_and_owned_processes(t
         age_s=150_000,
         workspace_mtime=now - 10_000,
     )
-    other = rw.SandboxProcess(
-        pid=14, ppid=1, comm="node", cwd=worktrees, age_s=90000, workspace_mtime=0
-    )
+    other = rw.SandboxProcess(pid=14, ppid=1, comm="node", cwd=worktrees, age_s=90000, workspace_mtime=0)
     outside = rw.SandboxProcess(
         pid=15,
         ppid=1,
@@ -3233,23 +3283,22 @@ def test_merged_review_worktree_with_unmerged_head_is_retained(
     )
     assert not rw._origin_branch_present(worktree, branch)
     assert not rw._is_ancestor_of_origin_main(worktree)
-    assert rw._qualifying_reason(
-        repo_root=repo,
-        info=info,
-        pr_state=rw.PullRequestState(number=8154, state="MERGED", head_sha=pr_head),
-        build_age_hours=6.0,
-        now=time.time(),
-        merged_pr_only=merged_pr_only,
-    ) is None
-
-
-def test_merged_review_worktree_on_main_is_reapable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = init_repo(tmp_path)
-    info = rw.WorktreeInfo(
-        path=repo, branch="codex/review-8154-astra", head="abc", detached=False
+    assert (
+        rw._qualifying_reason(
+            repo_root=repo,
+            info=info,
+            pr_state=rw.PullRequestState(number=8154, state="MERGED", head_sha=pr_head),
+            build_age_hours=6.0,
+            now=time.time(),
+            merged_pr_only=merged_pr_only,
+        )
+        is None
     )
+
+
+def test_merged_review_worktree_on_main_is_reapable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(path=repo, branch="codex/review-8154-astra", head="abc", detached=False)
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
     monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
@@ -3264,13 +3313,9 @@ def test_merged_review_worktree_on_main_is_reapable(
     assert reason == "PR #8154 MERGED; review HEAD is on origin/main"
 
 
-def test_open_review_worktree_is_not_reapable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_open_review_worktree_is_not_reapable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
-    info = rw.WorktreeInfo(
-        path=repo, branch="codex/review-8154-astra", head="abc", detached=False
-    )
+    info = rw.WorktreeInfo(path=repo, branch="codex/review-8154-astra", head="abc", detached=False)
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
     monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_origin_branch_present", lambda _path, _branch: True)
@@ -3307,8 +3352,6 @@ def test_detached_review_queries_pr_number_from_path(
     assert queried == [8154]
     assert result.action == "would_remove"
     assert result.reason == "PR #8154 MERGED; review HEAD is on origin/main"
-
-
 
 
 @pytest.mark.parametrize("gh_outage", [False, True])
@@ -3393,9 +3436,7 @@ def test_read_sandbox_processes_scans_only_orphans_under_worktrees(
         entry.mkdir()
         (entry / "comm").write_text("codex-linux-sandbox\n", encoding="utf-8")
         fields = ["S", str(ppid), *(["0"] * 18)]
-        (entry / "stat").write_text(
-            f"{pid} (codex-linux-sandbox) {' '.join(fields)}\n", encoding="utf-8"
-        )
+        (entry / "stat").write_text(f"{pid} (codex-linux-sandbox) {' '.join(fields)}\n", encoding="utf-8")
         (entry / "cwd").symlink_to(cwd)
     scanned: list[Path] = []
 
@@ -3783,10 +3824,7 @@ def test_dispatch_husk_removal_and_skip_are_journaled(
 
     rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
 
-    rows = [
-        json.loads(line)
-        for line in reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8").splitlines()
-    ]
+    rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8").splitlines()]
     old_rows = [row for row in rows if row.get("path") == str(old_husk)]
     assert {row["event"] for row in old_rows} >= {"plan", "reap"}
     assert any(row.get("action") == "removed" for row in old_rows)
@@ -3938,9 +3976,7 @@ def test_dispatch_husk_is_removed_when_a_relative_gitdir_entry_points_elsewhere(
     elsewhere = repo / "elsewhere-wt"
     admin = repo / ".git" / "worktrees" / "elsewhere-wt"
     admin.mkdir(parents=True)
-    (admin / "gitdir").write_text(
-        f"{os.path.relpath(elsewhere / '.git', admin)}\n", encoding="utf-8"
-    )
+    (admin / "gitdir").write_text(f"{os.path.relpath(elsewhere / '.git', admin)}\n", encoding="utf-8")
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
 
@@ -4402,9 +4438,7 @@ def test_qualified_reap_skips_when_the_region_deadline_expires(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = status ]; then exec sleep 5; fi\n'
-        f'exec "{real_git}" "$@"\n',
+        f'#!/bin/sh\nif [ -e "{hang_marker}" ] && [ "$1" = status ]; then exec sleep 5; fi\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
@@ -4491,9 +4525,7 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        "#!/bin/sh\n"
-        'if [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\n'
-        f'exec "{real_git}" "$@"\n',
+        f'#!/bin/sh\nif [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)

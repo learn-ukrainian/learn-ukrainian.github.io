@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sqlite3
 import threading
 from pathlib import Path
@@ -29,7 +30,7 @@ from scripts.review.validate import codes
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
 from tests.review.test_r1_schema_ledger import LESSON_CHECKS, PLAN_CHECKS, _dump, _record, _review
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("without_disk_sync")]
 
 LEVEL, SLUG = "a1", "fixture-module"
 PROSE = "lesson prose alpha"
@@ -39,21 +40,29 @@ ITEM = "alpha-item-text"
 class World:
     """A tmp repository with a three-lesson module, its manifests, dispatch records and a database."""
 
-    def __init__(self, root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def __init__(self, root: Path, monkeypatch: pytest.MonkeyPatch, *, seed: Path | None = None) -> None:
         self.root = root
         monkeypatch.setattr(fresh_manifest, "planned_state", lambda *a, **kw: _fake_state({"a": 1}))
-        _, _, self.plan_dir, self.evidence_dir, self.state_dir, self.page_dir = _fixture(root)
+        if seed is None:
+            _, _, self.plan_dir, self.evidence_dir, self.state_dir, self.page_dir = _fixture(root)
+        else:
+            shutil.copytree(seed, root, dirs_exist_ok=True)
+            self.plan_dir = root / "curriculum/l2-uk-en/lesson-plans/a1"
+            self.evidence_dir = root / "curriculum/l2-uk-en/evidence/a1"
+            self.state_dir = self.evidence_dir / "_state" / SLUG
+            self.page_dir = root / "site/src/content/docs/a1" / SLUG
         self.tasks_dir = root / "batch_state" / "tasks"
-        self.tasks_dir.mkdir(parents=True)
+        self.tasks_dir.mkdir(parents=True, exist_ok=True)
         self.db = root / "batch_state" / "review-findings" / f"{LEVEL}.sqlite"
         self.ledgers = root / "batch_state" / "review-receipts"
         self.out = root / "out"
-        self.out.mkdir()
+        self.out.mkdir(exist_ok=True)
         self.counter = 0
-        self.write_manifests()
-        for n in (1, 2, 3):
-            self.writer(n)
-        self.task("review-claude", "claude", "claude-sonnet-5")
+        if seed is None:
+            self.write_manifests()
+            for n in (1, 2, 3):
+                self.writer(n)
+            self.task("review-claude", "claude", "claude-sonnet-5")
 
     # --- inputs -------------------------------------------------------------------------
     def write_manifests(self, ns: tuple[int, ...] = (1, 2, 3)) -> None:
@@ -255,8 +264,8 @@ def unsupported(fid: str = "F-01", **overrides: Any) -> dict[str, Any]:
 
 
 @pytest.fixture
-def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> World:
-    return World(tmp_path, monkeypatch)
+def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, review_world_template: Path) -> World:
+    return World(tmp_path, monkeypatch, seed=review_world_template)
 
 
 # --- acceptance and the files it writes -----------------------------------------------------
