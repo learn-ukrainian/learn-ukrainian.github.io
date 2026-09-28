@@ -44,9 +44,23 @@ def main_checkout_root(repo_root: Path) -> Path:
     return common_git_dir.parent
 
 
-def _lexical_absolute(path: Path) -> Path:
-    """Absolute path with ``.`` and ``..`` collapsed, without resolving symlinks."""
-    return Path(os.path.normpath(os.fspath(path.absolute())))
+def _resolve_parent_directories(path: Path) -> Path:
+    """Resolve symlinks in ``path``'s parent directories; keep its final component.
+
+    Venv entrypoints are symlinks to the base toolchain binary. Resolving the
+    file itself drops ``.venv``. A parent such as ``venv-alias -> other/.venv``
+    still has to count, so ``os.path.realpath`` is applied only to the directory
+    that contains the final component.
+    """
+    text = os.fspath(path)
+    if not os.path.isabs(text):
+        text = os.path.join(os.getcwd(), text)
+    name = os.path.basename(text)
+    try:
+        parent = os.path.realpath(os.path.dirname(text))
+    except OSError:
+        parent = os.path.normpath(os.path.dirname(text))
+    return Path(parent) / name
 
 
 def _venv_python(checkout: Path) -> Path:
@@ -69,14 +83,16 @@ def _venv_checkout_of(interpreter: Path) -> Path | None:
     """Checkout that owns ``interpreter`` when it is that checkout's venv entrypoint.
 
     Any direct child of ``<checkout>/.venv/bin`` counts: ``python``, ``python3``,
-    versioned ``python3.N``, and every other executable there. Each symlink hop
-    is checked the same way, so a link that resolves into that directory counts
-    even when the link's own path does not. The entrypoint is recognized before
-    the hop is followed, so ``python3.12`` still counts when it points at a
-    toolchain binary outside the venv. A toolchain interpreter such as
-    ``hostedtoolcache/.../bin/python`` does not.
+    versioned ``python3.N``, and every other executable there. Parent directories
+    are resolved first, so ``venv-alias/bin/python3.12`` counts when ``venv-alias``
+    points at ``other/.venv``. Each file-symlink hop is checked the same way, so
+    a link that resolves into that directory counts even when the link's own path
+    does not. The entrypoint is recognized before that hop is followed, so
+    ``python3.12`` still counts when it points at a toolchain binary outside the
+    venv. A toolchain interpreter such as ``hostedtoolcache/.../bin/python``
+    does not.
     """
-    candidate = _lexical_absolute(interpreter)
+    candidate = _resolve_parent_directories(interpreter)
     seen: set[Path] = set()
     for _ in range(_MAX_SYMLINK_HOPS + 1):
         if candidate in seen:
@@ -84,7 +100,7 @@ def _venv_checkout_of(interpreter: Path) -> Path | None:
         seen.add(candidate)
         owner = _venv_bin_checkout(candidate)
         if owner is not None:
-            return owner
+            return _resolve_parent_directories(owner)
         if not candidate.is_symlink():
             return None
         try:
@@ -93,7 +109,7 @@ def _venv_checkout_of(interpreter: Path) -> Path | None:
             return None
         if not target.is_absolute():
             target = candidate.parent / target
-        candidate = _lexical_absolute(target)
+        candidate = _resolve_parent_directories(target)
     return None
 
 
@@ -113,11 +129,14 @@ def project_interpreter(root: Path | None = None) -> Path:
        also has a ``.venv``.
     2. Otherwise that checkout's own ``.venv/bin/python`` when the file exists.
     3. Otherwise ``sys.executable``. This is the CI case: the runner has no
-       project ``.venv``. ``sys.executable`` is refused only when it lives in
-       some other checkout's ``.venv/bin`` — any entrypoint there, including
-       ``python3.N`` and a symlink that resolves into that directory. A
-       foreign project interpreter must not be returned for a checkout that
-       asked for its own.
+       project ``.venv``. ``sys.executable`` is refused only when its parent
+       directory resolves into some other checkout's ``.venv/bin`` — any
+       entrypoint there, including ``python3.N``, a file symlink that resolves
+       into that directory, and a directory symlink such as
+       ``venv-alias -> other/.venv``. The final executable symlink is not
+       resolved: ``python3.N`` points at the toolchain binary, and following it
+       would drop ``.venv``. A foreign project interpreter must not be returned
+       for a checkout that asked for its own.
     """
     repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
@@ -130,7 +149,10 @@ def project_interpreter(root: Path | None = None) -> Path:
     current = Path(sys.executable)
     owner = _venv_checkout_of(current)
     if owner is not None:
-        allowed = {_lexical_absolute(repo), _lexical_absolute(primary_root)}
+        allowed = {
+            _resolve_parent_directories(repo),
+            _resolve_parent_directories(primary_root),
+        }
         if owner not in allowed:
             raise FileNotFoundError(
                 "project interpreter not found: "

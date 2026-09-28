@@ -250,6 +250,27 @@ def test_project_interpreter_rejects_a_symlink_that_resolves_into_another_checko
         project_interpreter(Path("/no-such-checkout"))
 
 
+def test_project_interpreter_rejects_an_alias_directory_of_another_checkouts_venv(tmp_path, monkeypatch):
+    """``venv-alias -> other/.venv`` still names that foreign interpreter.
+
+    The entrypoint's own components are ``venv-alias/bin``, not ``.venv/bin``.
+    ``python3.12`` is a symlink to the toolchain, so resolving the file itself
+    would drop ``.venv``. Only the parent directory is resolved.
+    """
+    foreign_root = tmp_path / "other-checkout"
+    _symlink_venv_python(foreign_root, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("other-checkout") / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    assert executable.parent.parent.name != ".venv"
+    assert Path(os.path.realpath(executable.parent)) == (foreign_root / ".venv" / "bin").resolve()
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
 def test_project_interpreter_accepts_running_python3_12_of_the_requested_checkout(tmp_path, monkeypatch):
     """The requested checkout's own versioned entrypoint is accepted."""
     requested = tmp_path / "requested"
@@ -279,6 +300,43 @@ def test_project_interpreter_accepts_a_symlink_into_the_requested_checkouts_venv
     monkeypatch.setattr(sys, "executable", str(alias))
 
     assert project_interpreter(requested) == alias
+
+
+def test_project_interpreter_accepts_an_alias_directory_of_the_requested_checkouts_venv(tmp_path, monkeypatch):
+    """A directory symlink onto the requested checkout's ``.venv`` is accepted.
+
+    The checkout path is compared after the same parent-directory resolution,
+    so a symlink in that checkout's parent still matches.
+    """
+    real_parent = tmp_path / "real-parent"
+    linked_parent = tmp_path / "linked-parent"
+    real_parent.mkdir()
+    linked_parent.symlink_to(real_parent)
+    requested = linked_parent / "requested"
+    _symlink_venv_python(requested, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("linked-parent") / "requested" / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    assert executable.parent.parent.name != ".venv"
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(requested) == executable
+
+
+def test_project_interpreter_accepts_an_alias_directory_of_the_primary_checkout(tmp_path, monkeypatch):
+    """A linked worktree may run through a directory symlink onto the primary ``.venv``."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    _symlink_venv_python(primary, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("primary") / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(worktree) == executable
 
 
 def test_project_interpreter_accepts_hosted_python3_12(tmp_path, monkeypatch):
