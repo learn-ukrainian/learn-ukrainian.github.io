@@ -195,16 +195,14 @@ def test_since_window_boundary_filtering() -> None:
     push_report = report.events["push"]
     # Run 101 (created at 05:00) is before 08:00 cutoff; runs 102 and 103 must be retained
     assert push_report.runs_count == 2
-    assert push_report.wall_clock_minutes["n"] == 2
-    assert push_report.wall_clock_all_minutes["n"] == 2
+    # Without jobs there is no stable completion timestamp; updated_at can move on reruns.
+    assert push_report.wall_clock_minutes["n"] == 0
+    assert push_report.wall_clock_all_minutes["n"] == 0
 
 
 def test_extract_pr_number() -> None:
     """Test extracting PR numbers from branch names."""
-    assert (
-        extract_pr_number("gh-readonly-queue/main/pr-7170-0224500326cbe490cd890784f67741ca1d8ef65b")
-        == 7170
-    )
+    assert extract_pr_number("gh-readonly-queue/main/pr-7170-0224500326cbe490cd890784f67741ca1d8ef65b") == 7170
     assert extract_pr_number("issue/7139-monitor-dual-host-slice") == 7139
     assert extract_pr_number("pull/6863") == 6863
     assert extract_pr_number("pr-4811") == 4811
@@ -233,13 +231,13 @@ def test_analyze_timings_on_recorded_fixture() -> None:
     mg = report.events["merge_group"]
     assert mg.runs_count == 5
     assert mg.wall_clock_minutes["n"] == 3
-    assert mg.wall_clock_minutes["avg"] == 15.4
-    assert mg.wall_clock_minutes["median"] == 15.7
-    assert mg.wall_clock_minutes["max"] == 18.9
+    assert mg.wall_clock_minutes["avg"] == 13.0
+    assert mg.wall_clock_minutes["median"] == 13.0
+    assert mg.wall_clock_minutes["max"] == 15.0
     assert mg.wall_clock_all_minutes["n"] == 5
-    assert mg.wall_clock_all_minutes["avg"] == 13.4
-    assert mg.wall_clock_all_minutes["median"] == 11.7
-    assert mg.wall_clock_all_minutes["max"] == 18.9
+    assert mg.wall_clock_all_minutes["avg"] == 12.0
+    assert mg.wall_clock_all_minutes["median"] == 11.1
+    assert mg.wall_clock_all_minutes["max"] == 15.0
 
     job_names = {j.name for j in mg.jobs}
     assert "Contracts (schema, MDX, atlas, BIO)" in job_names
@@ -390,7 +388,7 @@ def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch
 
     def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
         captured_paths.append(path)
-        return {"workflow_runs": []}
+        return {"workflow_runs": [{"id": 1}]}
 
     monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
 
@@ -499,7 +497,7 @@ def test_fetch_run_jobs_pagination(monkeypatch: pytest.MonkeyPatch) -> None:
         if page_num == 2:
             return {
                 "total_count": 125,
-                "jobs": [{"id": 100 + i, "name": f"job-{100+i}", "status": "completed"} for i in range(25)],
+                "jobs": [{"id": 100 + i, "name": f"job-{100 + i}", "status": "completed"} for i in range(25)],
             }
         return {"total_count": 125, "jobs": []}
 
@@ -582,7 +580,181 @@ def test_gh_api_get_json_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setattr(subprocess, "run", fake_subprocess_run)
 
-    with pytest.raises(
-        RuntimeError, match="Failed to parse JSON response from gh api repos/owner/repo/test"
-    ):
+    with pytest.raises(RuntimeError, match="Failed to parse JSON response from gh api repos/owner/repo/test"):
         gh_api_get("repos/owner/repo/test")
+
+
+def test_empty_workflow_page_retries_then_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = 0
+
+    def empty_page(_path: str, **_kwargs: Any) -> dict[str, Any]:
+        nonlocal calls
+        calls += 1
+        return {"total_count": 80, "workflow_runs": []}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", empty_page)
+    with pytest.raises(RuntimeError, match="stayed empty after 3 attempts despite total_count=80"):
+        fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")
+    assert calls == 3
+
+    assert main(["--since", "2026-09-27T11:00", "--event", "merge_group"]) == 1
+    assert calls == 6
+
+
+def test_empty_workflow_page_recovers(monkeypatch: pytest.MonkeyPatch) -> None:
+    pages = iter(
+        [
+            {"total_count": 1, "workflow_runs": []},
+            {"total_count": 1, "workflow_runs": [{"id": 1, "created_at": "2026-09-28T00:00:00Z"}]},
+        ]
+    )
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", lambda *_a, **_kw: next(pages))
+    runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")
+    assert [run["id"] for run in runs] == [1]
+
+
+def test_zero_total_count_transient_also_recovers(monkeypatch: pytest.MonkeyPatch) -> None:
+    pages = iter(
+        [
+            {"total_count": 0, "workflow_runs": []},
+            {"total_count": 1, "workflow_runs": [{"id": 1, "created_at": "2026-09-28T00:00:00Z"}]},
+        ]
+    )
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", lambda *_a, **_kw: next(pages))
+    assert len(fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")) == 1
+
+
+def test_zero_run_fixture_exits_nonzero(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    fixture = tmp_path / "empty.json"
+    fixture.write_text('{"workflow_runs": [], "jobs_by_run_id": {}}', encoding="utf-8")
+    assert main(["--fixture", str(fixture), "--event", "merge_group"]) == 1
+    assert "no completed workflow runs" in capsys.readouterr().err
+
+
+def test_program_metrics_and_first_attempt_wall() -> None:
+    run = {
+        "id": 1,
+        "event": "merge_group",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-09-28T00:00:00Z",
+        "updated_at": "2026-09-29T00:00:00Z",
+        "head_branch": "gh-readonly-queue/main/pr-1-aabbcc",
+    }
+
+    def job(job_id: int, name: str, start: int, finish: int, step: tuple[int, int] | None = None) -> dict[str, Any]:
+        return {
+            "id": job_id,
+            "name": name,
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-09-28T00:00:00Z",
+            "started_at": f"2026-09-28T00:{start:02}:00Z",
+            "completed_at": f"2026-09-28T00:{finish:02}:00Z",
+            "steps": (
+                [
+                    {
+                        "name": "Run pytest",
+                        "started_at": f"2026-09-28T00:{step[0]:02}:00Z",
+                        "completed_at": f"2026-09-28T00:{step[1]:02}:00Z",
+                    }
+                ]
+                if step
+                else []
+            ),
+        }
+
+    jobs = [
+        job(10, "Changes", 1, 2),
+        job(11, "pytest (1)", 2, 8, (4, 7)),
+        job(12, "pytest (2)", 3, 10, (5, 9)),
+        job(13, "CI Gate", 10, 11),
+        {**job(14, "CI Gate", 20, 25), "run_attempt": 2},
+    ]
+    report = analyze_timings(
+        [run],
+        {"1": jobs},
+        event_filter="merge_group",
+        classifier_log_fetcher=lambda _job_id: "files=0 docs_only=false pytest_mode=full shard_count=2",
+    )
+    event = report.events["merge_group"]
+    assert event.wall_clock_minutes["median"] == 11.0
+    assert event.wall_clock_all_minutes["max"] == 11.0
+    metrics = event.program_metrics
+    assert metrics is not None
+    assert metrics["job_queue_wait_minutes"]["n"] == 4
+    assert metrics["pytest_queue_wait_minutes"]["n"] == 2
+    assert metrics["pytest_step_minutes"]["n"] == 2
+    assert metrics["pytest_setup_minutes"]["median"] == 3.0
+    assert metrics["jobs_per_run"]["median"] == 4.0
+    assert metrics["shard_spread_minutes"]["median"] == 1.0
+    assert metrics["slowest_to_mean_shard"]["median"] == 1.1
+    assert metrics["tier_counts"] == {"full": 1}
+    assert metrics["tier_shares_percent"] == {"full": 100.0}
+    assert metrics["label_forced_full_proxy"]["count"] == 1
+    assert metrics["label_forced_full_proxy"]["share_percent"] == 100.0
+    assert "### CI Program Metrics" in render_markdown(report)
+
+
+def test_limit_is_per_event_after_grouping() -> None:
+    runs = [
+        {
+            "id": i,
+            "event": event,
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": f"2026-09-28T00:0{i}:00Z",
+        }
+        for i, event in enumerate(["pull_request", "merge_group", "pull_request", "merge_group"], 1)
+    ]
+    report = analyze_timings(runs, {}, event_filter="all", limit=1)
+    assert report.events["pull_request"].runs_count == 1
+    assert report.events["merge_group"].runs_count == 1
+
+
+def test_cli_all_limit_fetches_each_event_separately(monkeypatch: pytest.MonkeyPatch) -> None:
+    paths: list[str] = []
+
+    def fake_api(path: str, **_kwargs: Any) -> dict[str, Any]:
+        paths.append(path)
+        if "/jobs?" in path:
+            return {"jobs": [], "total_count": 0}
+        event = next(ev for ev in ("pull_request", "merge_group", "push") if f"event={ev}" in path)
+        return {
+            "total_count": 1,
+            "workflow_runs": [
+                {"id": len(paths), "event": event, "status": "completed", "created_at": "2026-09-28T00:00:00Z"}
+            ],
+        }
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_api)
+    assert main(["--event", "all", "--limit", "1", "--json"]) == 0
+    run_paths = [path for path in paths if "/workflows/" in path]
+    assert len(run_paths) == 3
+    assert all(
+        f"event={event}" in path for event, path in zip(("pull_request", "merge_group", "push"), run_paths, strict=True)
+    )
+
+
+def test_pr_rerun_to_green_is_a_labeled_proxy() -> None:
+    run = {
+        "id": 9,
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 2,
+        "created_at": "2026-09-28T00:00:00Z",
+    }
+    first_gate = {
+        "name": "CI Gate",
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-09-28T00:09:00Z",
+        "completed_at": "2026-09-28T00:10:00Z",
+    }
+    report = analyze_timings([run], {"9": [first_gate]}, event_filter="pull_request")
+    event = report.events["pull_request"]
+    assert event.wall_clock_minutes["n"] == 0
+    assert event.program_metrics is not None
+    assert event.program_metrics["pr_rerun_to_green_proxy"]["count"] == 1
