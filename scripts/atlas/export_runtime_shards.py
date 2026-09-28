@@ -53,6 +53,7 @@ if __package__ is None or __package__ == "":
 
 from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for_hash
 from scripts.etymology.transliterate import transliterate
+from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
 
 SCHEMA_VERSION = 1
 ENTRY_SHARD_SCHEMA = "atlas-entry-shard"
@@ -498,6 +499,8 @@ class EntryReplay:
         entry = json.loads(row["payload_json"])
         if not isinstance(entry, dict):
             raise ExportError(f"payload_json for {row['slug']!r} is not an object")
+        if cites_soviet_dictionary_outside_context(entry):
+            raise ExportError(f"СУМ-11 citation outside soviet_colonization_context for {row['slug']!r}")
         # Authoritative entry_type from articles (SSOT). form_of routes → null.
         entry["entry_type"] = row["entry_type"]
         _assert_cefr_consistent(row["slug"], row["cefr"], entry)

@@ -78,6 +78,20 @@ def test_migration_shapes_and_gates(tmp_path):
     conn.close()
 
 
+def test_migration_rejects_soviet_citation_before_replacing_database(tmp_path):
+    manifest = _manifest(tmp_path)
+    db = tmp_path / "atlas.db"
+    db.write_bytes(b"existing database")
+    entries = json.loads(manifest.read_text(encoding="utf-8"))
+    entries["entries"][0]["sections"] = {
+        "synonyms": {"items": ["стяг"], "source": "СУМ-11"}
+    }
+    manifest.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="СУМ-11 citation outside"):
+        atlas_db.migrate_manifest(manifest, db)
+    assert db.read_bytes() == b"existing database"
+
+
 def test_alias_helpers():
     assert atlas_db.unstressed("ро́звідка") == "розвідка"
     assert atlas_db.transliterate("розвідка") == "rozvidka"

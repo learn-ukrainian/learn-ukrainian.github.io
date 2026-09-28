@@ -192,7 +192,16 @@ def _soviet_cited_entries() -> list[dict[str, Any]]:
 
 def test_soviet_cited_rows_are_recomputed_or_deleted(tmp_path, monkeypatch):
     """#8990: a stored row citing СУМ-11 is never kept as existing, even without --refresh."""
-    db_path = _build_atlas_db(tmp_path, _soviet_cited_entries())
+    entries = _soviet_cited_entries()
+    legacy_sections = {entry["url_slug"]: entry.pop("sections") for entry in entries}
+    db_path = _build_atlas_db(tmp_path, entries)
+    with sqlite3.connect(db_path) as conn:
+        for slug, sections in legacy_sections.items():
+            for section, payload in sections.items():
+                conn.execute(
+                    "INSERT INTO enrichment(slug, section, payload_json, source) VALUES (?, ?, ?, ?)",
+                    (slug, section, json.dumps(payload, ensure_ascii=False), payload["source"]),
+                )
     assert ("абрикос", "synonyms") in _rows(db_path)
     assert ("великий", "antonyms") in _rows(db_path)
 

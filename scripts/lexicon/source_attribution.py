@@ -35,6 +35,19 @@ def cites_soviet_dictionary(payload: object) -> bool:
     return bool(SOVIET_DICTIONARY_CITATION_RE.search(json.dumps(payload, ensure_ascii=False, default=str)))
 
 
+def cites_soviet_dictionary_outside_context(payload: object) -> bool:
+    """Reject a learner citation while retaining explicit occupation context."""
+    if isinstance(payload, dict):
+        return any(
+            cites_soviet_dictionary_outside_context(value)
+            for key, value in payload.items()
+            if key != "soviet_colonization_context"
+        )
+    if isinstance(payload, (list, tuple)):
+        return any(cites_soviet_dictionary_outside_context(value) for value in payload)
+    return isinstance(payload, str) and bool(SOVIET_DICTIONARY_CITATION_RE.search(payload))
+
+
 SLOVNYK_DICT_PATH_RE = re.compile(
     r"https?://(?:www\.)?slovnyk\.me/dict/(?P<slug>[^/]+)/(?P<word>[^/?#]+)",
     re.IGNORECASE,

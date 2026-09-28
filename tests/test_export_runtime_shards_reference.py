@@ -66,6 +66,23 @@ def test_replay_records_and_search_rows_match_reference_loaders(edge_db: Path, f
             conn.close()
 
 
+def test_export_rejects_legacy_soviet_citation_in_learner_card(tmp_path: Path) -> None:
+    conn = sqlite3.connect(_make_source_db(tmp_path / "legacy.db"))
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
+    assert row is not None
+    payload = json.loads(row[1])
+    payload["sections"] = {"synonyms": {"items": ["слово"], "source": "СУМ-11"}}
+    conn.execute(
+        "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
+        (json.dumps(payload, ensure_ascii=False), row[0]),
+    )
+    conn.commit()
+    with pytest.raises(ExportError, match="СУМ-11 citation outside"):
+        EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
+    conn.close()
+
+
 def test_search_alias_dedup_keeps_reference_survivors(edge_db: Path) -> None:
     conn = open_readonly_db(edge_db)
     try:

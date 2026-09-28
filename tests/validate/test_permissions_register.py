@@ -35,6 +35,7 @@ REQUIRED_SOURCES = {
     "textbooks",
     "teacher_materials",
     "sum11",
+    "synonyms_dictionary",
     "ua_gec",
     "ukrajinet",
     "wiktionary",

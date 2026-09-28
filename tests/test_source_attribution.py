@@ -20,6 +20,7 @@ from scripts.lexicon.source_attribution import (
     WIKIDATA_LABEL,
     academic_label_for_slug,
     apply_entry_attribution,
+    cites_soviet_dictionary_outside_context,
     join_academic_source_labels,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
@@ -29,6 +30,15 @@ from scripts.lexicon.source_attribution import (
     remap_mirror_source_string,
 )
 from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
+
+
+def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
+    assert not cites_soviet_dictionary_outside_context(
+        {"heritage_status": {"soviet_colonization_context": {"source": "СУМ-11"}}}
+    )
+    assert cites_soviet_dictionary_outside_context(
+        {"sections": {"synonyms": {"source": "СУМ-20 + СУМ-11", "items": ["абрикоса"]}}}
+    )
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:

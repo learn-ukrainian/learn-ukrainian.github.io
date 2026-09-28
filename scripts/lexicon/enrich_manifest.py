@@ -110,7 +110,7 @@ from scripts.lexicon.source_attribution import (
     VTS_SHORT_LABEL,
     WIKIDATA_LABEL,
     attach_official_url,
-    cites_soviet_dictionary,
+    cites_soviet_dictionary_outside_context,
     join_academic_source_labels,
     normalize_academic_label,
     remap_url_list,
@@ -8047,7 +8047,9 @@ def enrich_entry(
     published_sections = existing_sections if isinstance(existing_sections, dict) else {}
     # A published section that cites Soviet-era evidence is never a preserve baseline
     # (#8990, rule #M-6): the recompute wins, or the section stays held when it cannot run.
-    soviet_withheld = {name for name, section in published_sections.items() if cites_soviet_dictionary(section)}
+    soviet_withheld = {
+        name for name, section in published_sections.items() if cites_soviet_dictionary_outside_context(section)
+    }
     baseline_sections = {name: section for name, section in published_sections.items() if name not in soviet_withheld}
     # mphdict synonym groups are a local primary source.  A missing database is
     # the only did-not-run state; a present database with no matching set is an
