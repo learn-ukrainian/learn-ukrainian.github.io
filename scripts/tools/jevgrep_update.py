@@ -2,21 +2,25 @@
 """Keep the host's jevgrep CLI at npm ``latest`` and sync its user-level skill (#9134).
 
 Run by ``learn-ukrainian-jevgrep-update.timer`` from the primary checkout. It
-resolves ``latest`` (or ``JEVGREP_HOLD_VERSION``) from the public npm registry
-to an exact version and checks the supply-chain guards on that metadata. It
-then downloads the tarball named by the same metadata, verifies its sha512
-against ``dist.integrity``, and installs that local file into its own version
-prefix. The staged ``jg`` and both skill texts are checked before
-``~/.local/bin/jg`` is switched atomically; any later failure restores the
-previous link and skill files without a download. Child output is never
-recorded: the state log, ``--json`` and the journal carry exit codes and fixed
-failure classifications only. Stdlib only.
+holds an exclusive lock for the whole run, then rebuilds both skill copies from
+the active package so any earlier CLI/skill mismatch heals. It resolves
+``latest`` (or ``JEVGREP_HOLD_VERSION``) from the public npm registry to an
+exact version and checks the supply-chain guards on that metadata. It then
+downloads the tarball named by the same metadata (no redirects, size-capped),
+verifies its sha512 against ``dist.integrity``, and installs that local file
+into its own version prefix with npm configuration isolated from the host. The
+staged ``jg`` and both skill texts are checked before ``~/.local/bin/jg`` is
+switched atomically; any later failure restores the previous link and skill
+files without a download. Child output is never recorded: the state log,
+``--json`` and the journal carry exit codes and fixed failure classifications
+only. Stdlib only.
 """
 
 from __future__ import annotations
 
 import argparse
 import base64
+import fcntl
 import hashlib
 import json
 import os
@@ -25,6 +29,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Callable, Mapping
@@ -47,33 +52,37 @@ SKILL_TARGETS_REL = (
 BIN_LINK_REL = Path(".local/bin/jg")
 PREFIX_ROOT_REL = Path(".local/share/learn-ukrainian/jevgrep")
 STATE_LOG_REL = Path(".local/state/learn-ukrainian/jevgrep-update.jsonl")
+LOCK_REL = Path(".local/state/learn-ukrainian/jevgrep-update.lock")
 PACKAGE_REL = Path("node_modules/@dzhng/jevgrep")
 UPSTREAM_SKILL_REL = Path("dist/skills/jevgrep/SKILL.md")
 FORBIDDEN_SCRIPTS = ("preinstall", "install", "postinstall")
 VERSION_RE = re.compile(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?")
 KEEP_PREFIXES = 2
+MAX_METADATA_BYTES = 8 * 1024 * 1024
 MAX_TARBALL_BYTES = 64 * 1024 * 1024
 INSTALL_TIMEOUT_S = 900
 DOCTOR_TIMEOUT_S = 180
 VERSION_TIMEOUT_S = 30
 
-Runner = Callable[[list[str], int], subprocess.CompletedProcess[str]]
+Runner = Callable[..., subprocess.CompletedProcess[str]]
 
 
 class StepFailed(Exception):
     """A step failed; ``args[0]`` is a fixed classification, never child output."""
 
 
-def _run(cmd: list[str], timeout: int) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=timeout)
+def _run(cmd: list[str], timeout: int, env: Mapping[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=timeout, env=env)
 
 
-def _fetch_packument() -> dict[str, Any]:
-    request = urllib.request.Request(
-        REGISTRY_URL, headers={"Accept": "application/json", "User-Agent": "learn-ukrainian-jevgrep-update"}
-    )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+class _RefuseRedirect(urllib.request.HTTPRedirectHandler):
+    """Every 30x is an error: registry traffic never follows a redirect."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(req.full_url, code, "redirect refused", headers, fp)
+
+
+_OPENER = urllib.request.build_opener(_RefuseRedirect)
 
 
 def is_registry_url(url: object) -> bool:
@@ -83,19 +92,39 @@ def is_registry_url(url: object) -> bool:
     return parts.scheme == "https" and parts.hostname == REGISTRY_HOST and parts.port is None
 
 
-def _download(url: str, dest: Path) -> None:
+def _fetch(url: str, limit: int, sink: Callable[[bytes], object], *, accept: str, timeout: int) -> None:
+    """Stream ``url`` into ``sink``: public registry over HTTPS only, no redirects, at most ``limit`` bytes."""
     if not is_registry_url(url):
-        raise OSError("tarball url is not on the public registry")
-    request = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian-jevgrep-update"})
-    with urllib.request.urlopen(request, timeout=120) as response, dest.open("wb") as handle:
+        raise OSError("url is not on the public registry")
+    request = urllib.request.Request(url, headers={"Accept": accept, "User-Agent": "learn-ukrainian-jevgrep-update"})
+    with _OPENER.open(request, timeout=timeout) as response:
         if not is_registry_url(response.geturl()):
-            raise OSError("tarball download left the public registry")
+            raise OSError("response left the public registry")
         total = 0
         while chunk := response.read(1 << 16):
             total += len(chunk)
-            if total > MAX_TARBALL_BYTES:
-                raise OSError("tarball exceeds size cap")
-            handle.write(chunk)
+            if total > limit:
+                raise OSError("response exceeds size cap")
+            sink(chunk)
+
+
+def _fetch_packument() -> dict[str, Any]:
+    body = bytearray()
+    _fetch(REGISTRY_URL, MAX_METADATA_BYTES, body.extend, accept="application/json", timeout=30)
+    return json.loads(body)
+
+
+def _download(url: str, dest: Path) -> None:
+    with dest.open("wb") as handle:
+        _fetch(url, MAX_TARBALL_BYTES, handle.write, accept="application/octet-stream", timeout=120)
+
+
+def npm_env(environ: Mapping[str, str], empty_config: Path) -> dict[str, str]:
+    """The caller's environment without any npm setting; user and global config point at an empty file."""
+    env = {key: value for key, value in environ.items() if not key.lower().startswith("npm_config_")}
+    env["NPM_CONFIG_USERCONFIG"] = str(empty_config)
+    env["NPM_CONFIG_GLOBALCONFIG"] = str(empty_config)
+    return env
 
 
 def _utc_now() -> str:
@@ -122,10 +151,10 @@ class Run:
     exit_codes: dict[str, int] = field(default_factory=dict)
     skill_sha256: str | None = None
 
-    def call(self, step: str, cmd: list[str], timeout: int) -> tuple[int, str]:
+    def call(self, step: str, cmd: list[str], timeout: int, env: Mapping[str, str] | None = None) -> tuple[int, str]:
         """Run a child; record its exit code under ``step``; return code and stdout for parsing only."""
         try:
-            result = self.deps.run(cmd, timeout)
+            result = self.deps.run(cmd, timeout, env=env)
             code, stdout = result.returncode, result.stdout or ""
         except OSError:
             code, stdout = 127, ""
@@ -268,7 +297,7 @@ def write_skills(home: Path, content: str) -> None:
                 else:
                     _atomic_write(target, old)
         except OSError:
-            raise StepFailed("skill_write_failed; skill_restore_failed") from exc
+            raise StepFailed("skill_restore_failed") from exc
         raise StepFailed("skill_write_failed") from exc
 
 
@@ -313,8 +342,12 @@ def _prefix_in(root: Path, link_target: str | None, link: Path) -> Path | None:
     return None
 
 
-def prune_prefixes(root: Path, keep: set[Path]) -> None:
-    """Remove every version prefix under ``root`` except ``keep`` (the active and previous one)."""
+def prune_prefixes(root: Path, link: Path, previous: str | None) -> None:
+    """Remove every version prefix under ``root`` except the one ``link`` points into now and ``previous``."""
+    active = _prefix_in(root, os.readlink(link) if link.is_symlink() else None, link)
+    if active is None:
+        return
+    keep = {active} | ({kept} if (kept := _prefix_in(root, previous, link)) else set())
     for child in root.iterdir():
         if child not in keep and child.is_dir() and not child.is_symlink():
             shutil.rmtree(child, ignore_errors=True)
@@ -331,18 +364,21 @@ def stage(run: Run, meta: Mapping[str, Any], version: str, prefix: Path) -> tupl
             raise StepFailed("tarball_download_failed") from exc
         if _sha512_b64(tarball) != _sri_sha512(dist["integrity"]):
             raise StepFailed("tarball_integrity_mismatch")
+        empty_config = Path(tmp) / "empty.npmrc"
+        empty_config.touch()
         install = [
             "npm",
             "install",
             "--prefix",
             str(prefix),
             "--ignore-scripts",
+            "--no-package-lock",
             "--no-audit",
             "--no-fund",
             f"--registry={REGISTRY_BASE}",
             str(tarball),
         ]
-        code, _ = run.call("npm_install", install, INSTALL_TIMEOUT_S)
+        code, _ = run.call("npm_install", install, INSTALL_TIMEOUT_S, env=npm_env(run.deps.environ, empty_config))
         if code != 0:
             raise StepFailed("npm_install_failed")
     package = prefix / PACKAGE_REL
@@ -379,10 +415,13 @@ def install(run: Run, meta: Mapping[str, Any], current: str | None, version: str
         run.verify("switched", link, version)
         write_skills(home, skill.content)
     except (StepFailed, OSError) as exc:
-        run.failures.append(exc.args[0] if isinstance(exc, StepFailed) else "switch_failed")
+        label = exc.args[0] if isinstance(exc, StepFailed) else "switch_failed"
+        run.failures.append(label)
+        if label == "skill_restore_failed":
+            run.skill_sha256 = None
         return rollback(run, link, previous, current, prefix)
     run.skill_sha256 = skill.upstream_sha256
-    prune_prefixes(root, {prefix} | ({kept} if (kept := _prefix_in(root, previous, link)) else set()))
+    prune_prefixes(root, link, previous)
     return "ok"
 
 
@@ -406,21 +445,18 @@ def rollback(run: Run, link: Path, previous: str | None, current: str | None, pr
     return "rolled_back"
 
 
-def sync_active_skill(run: Run, version: str) -> str:
-    """Rewrite both skill copies from the active package; return the upstream sha256."""
+def sync_active_skill(run: Run, version: str) -> None:
+    """Rewrite both skill copies from the active package (the one ``~/.local/bin/jg`` resolves into)."""
     package = _package_of(run.deps.home / BIN_LINK_REL)
     if package is None:
         raise StepFailed("active_package_not_found")
     skill = build_skill(run.deps, package, version)
     write_skills(run.deps.home, skill.content)
-    return skill.upstream_sha256
+    run.skill_sha256 = skill.upstream_sha256
 
 
-def update(deps: Deps, *, dry_run: bool = False) -> tuple[int, dict[str, Any]]:
-    run = Run(deps)
-    link = deps.home / BIN_LINK_REL
-    current = run.version_of("current_version", link) if link.exists() else None
-    record: dict[str, Any] = {
+def _record(deps: Deps, run: Run, current: str | None) -> dict[str, Any]:
+    return {
         "time": deps.now(),
         "current": current,
         "target": None,
@@ -430,8 +466,37 @@ def update(deps: Deps, *, dry_run: bool = False) -> tuple[int, dict[str, Any]]:
         "detail": None,
         "exit_codes": run.exit_codes,
     }
+
+
+def update(deps: Deps, *, dry_run: bool = False) -> tuple[int, dict[str, Any]]:
+    """Run once under an exclusive lock; a run that finds the lock held does nothing and exits 0."""
+    lock_path = deps.home / LOCK_REL
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            record = _record(deps, Run(deps), None)
+            record.update(action="locked", result="skipped")
+            if dry_run:
+                record["dry_run"] = True
+            return 0, record
+        return _update_locked(deps, dry_run=dry_run)
+
+
+def _update_locked(deps: Deps, *, dry_run: bool) -> tuple[int, dict[str, Any]]:
+    run = Run(deps)
+    link = deps.home / BIN_LINK_REL
+    current = run.version_of("current_version", link) if link.exists() else None
+    record = _record(deps, run, current)
     if dry_run:
         record["dry_run"] = True
+    elif current is not None:
+        # Self-heal: whatever an earlier run left behind, the skills now match the active CLI.
+        try:
+            sync_active_skill(run, current)
+        except StepFailed as exc:
+            run.failures.append(exc.args[0])
     try:
         packument = deps.fetch_packument()
     except (OSError, ValueError):
@@ -461,18 +526,10 @@ def update(deps: Deps, *, dry_run: bool = False) -> tuple[int, dict[str, Any]]:
             except StepFailed as exc:
                 record["result"] = "failed"
                 run.failures.append(exc.args[0])
-            if record["result"] == "ok":
-                record["upstream_skill_sha256"] = run.skill_sha256
 
-    if not dry_run and record["upstream_skill_sha256"] is None:
-        active = run.version_of("active_version", link) if link.exists() else None
-        if active is None:
-            run.failures.append("jg_not_installed_skill_not_synced")
-        else:
-            try:
-                record["upstream_skill_sha256"] = sync_active_skill(run, active)
-            except StepFailed as exc:
-                run.failures.append(exc.args[0])
+    if not dry_run and not link.exists():
+        run.failures.append("jg_not_installed_skill_not_synced")
+    record["upstream_skill_sha256"] = run.skill_sha256
     record["detail"] = "; ".join(run.failures) or None
     exit_code = 0 if record["result"] in {"ok", "dry_run"} and not run.failures else 1
     if dry_run:
@@ -498,21 +555,28 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/tools/jevgrep_update.py\n"
             f"  {HOLD_ENV}=0.4.4 .venv/bin/python scripts/tools/jevgrep_update.py   # pin temporarily\n"
             "\n"
-            f"Guards: metadata comes from https://{REGISTRY_HOST}/. The target release must carry npm\n"
+            f"Guards: metadata and tarball come from https://{REGISTRY_HOST}/ only, with no redirects\n"
+            "and size caps (8 MiB metadata, 64 MiB tarball). The target release must carry npm\n"
             "provenance attestations, have no preinstall/install/postinstall script, declare bin.jg,\n"
             f"and name a tarball on {REGISTRY_HOST} with a sha512 dist.integrity. That tarball is\n"
-            "downloaded, checked against dist.integrity and installed from the local file with\n"
-            f"--ignore-scripts --registry={REGISTRY_BASE} into its own prefix. The staged `jg --version`\n"
+            "checked against dist.integrity and installed from the local file into its own prefix with\n"
+            f"--ignore-scripts --no-package-lock --registry={REGISTRY_BASE}; npm runs with no inherited\n"
+            "npm_config_* variables and empty user and global config files. The staged `jg --version`\n"
             "and `jg doctor` must pass and its upstream skill file must exist before ~/.local/bin/jg is\n"
             "switched; a failed switch or skill write restores the previous link and skill files.\n"
+            "Every non-dry run first rebuilds both skill copies from the active package, so a failed\n"
+            "skill restore (label skill_restore_failed) heals on the next run.\n"
             "\n"
             f"Outputs: ~/{PREFIX_ROOT_REL}/<version>-*/ (the active and previous prefixes are kept);\n"
             f"~/{BIN_LINK_REL} symlink; ~/.claude/skills/jevgrep/SKILL.md and\n"
             "~/.agents/skills/jevgrep/SKILL.md (tracked overlay + installed upstream skill body);\n"
             f"one JSON line appended to ~/{STATE_LOG_REL}. Records hold exit codes and fixed\n"
-            "failure classifications only, never child output. --dry-run writes nothing.\n"
-            "Exit codes: 0 up to date or updated and synced; 1 guard, download, install, verify,\n"
-            "registry or sync failure (the previous version stays active); 2 invalid arguments.\n"
+            f"failure classifications only, never child output. Every run holds ~/{LOCK_REL};\n"
+            "a run that finds it held reports action=locked, changes nothing and exits 0.\n"
+            "--dry-run writes nothing but the lock file.\n"
+            "Exit codes: 0 up to date, updated and synced, or locked out by a running update; 1 guard,\n"
+            "download, install, verify, registry or sync failure (the previous version stays active);\n"
+            "2 invalid arguments.\n"
             "Related: agents_extensions/shared/skills/jevgrep/UPSTREAM.md, "
             "packaging/systemd/learn-ukrainian-jevgrep-update.{service,timer}, issue #9134."
         ),

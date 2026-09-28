@@ -16,26 +16,39 @@ development. There is no exact pin and no vendored upstream body in this repo.
 - The tracked `SKILL.md` holds only our frontmatter, the Project Overlay and a
   short Usage section.
 - `scripts/tools/jevgrep_update.py`, run every 6 hours by
-  `learn-ukrainian-jevgrep-update.timer`, reads `https://registry.npmjs.org/`
-  and resolves `latest` to an exact version. It installs that version only when
-  the release has npm provenance attestations, has no
-  `preinstall`/`install`/`postinstall` script, declares `bin.jg`, and names a
-  `registry.npmjs.org` tarball with a sha512 `dist.integrity`.
-- It downloads that tarball, checks it against `dist.integrity`, and installs the
-  local file with `--ignore-scripts --registry=https://registry.npmjs.org/` into
-  its own prefix under `~/.local/share/learn-ukrainian/jevgrep/`. The staged
-  `jg --version` must match and the staged `jg doctor` must pass. The staged
-  package's upstream skill file must also exist. Only then does it switch the
-  `~/.local/bin/jg` symlink atomically. If the switched `jg` fails its checks or
-  a skill write fails, the previous link and skill files come back without a
-  download, and `jg --version` and `jg doctor` are checked again. The active and
-  previous prefixes are kept. The first run treats the older `npm -g` install
-  in `~/.local/lib/node_modules/@dzhng/jevgrep` as the previous version and
-  leaves it in place.
-- Every run rewrites `~/.claude/skills/jevgrep/SKILL.md` and
-  `~/.agents/skills/jevgrep/SKILL.md` as the tracked `SKILL.md` plus the
-  upstream skill body of the active package, so agents read upstream text that
-  matches the active CLI. The overlay wins over the appended text.
+  `learn-ukrainian-jevgrep-update.timer`, holds an exclusive lock on
+  `~/.local/state/learn-ukrainian/jevgrep-update.lock` for the whole run. A run
+  that finds the lock held reports `action: locked`, changes nothing and exits 0.
+- It reads `https://registry.npmjs.org/` and resolves `latest` to an exact
+  version. It installs that version only when the release has npm provenance
+  attestations, has no `preinstall`/`install`/`postinstall` script, declares
+  `bin.jg`, and names a `registry.npmjs.org` tarball with a sha512
+  `dist.integrity`. Metadata and tarball requests follow no redirects, must end
+  on `registry.npmjs.org` over HTTPS, and are capped at 8 MiB and 64 MiB.
+- It checks the tarball against `dist.integrity` and installs the local file
+  with `--ignore-scripts --no-package-lock --registry=https://registry.npmjs.org/`
+  into its own prefix under `~/.local/share/learn-ukrainian/jevgrep/`. npm runs
+  without any inherited `npm_config_*` variable, and its user and global config
+  files are an empty temp file, so no host setting (scoped registries included)
+  can route a dependency elsewhere. The staged `jg --version` must match and the
+  staged `jg doctor` must pass. The staged package's upstream skill file must
+  also exist. Only then does it switch the `~/.local/bin/jg` symlink atomically.
+  If the switched `jg` fails its checks or a skill write fails, the previous
+  link and skill files come back without a download, and `jg --version` and
+  `jg doctor` are checked again. After a switch, pruning re-reads the link and
+  keeps the active and previous prefixes. The first run treats the older
+  `npm -g` install in `~/.local/lib/node_modules/@dzhng/jevgrep` as the previous
+  version and leaves it in place.
+- Every run except `--dry-run` first rewrites `~/.claude/skills/jevgrep/SKILL.md`
+  and `~/.agents/skills/jevgrep/SKILL.md` from the package that `~/.local/bin/jg`
+  resolves to: the tracked `SKILL.md` plus that package's upstream skill body.
+  The overlay wins over the appended text. A successful update then writes the
+  new version's text.
+- **Residual:** if a skill write fails and restoring the old text also fails,
+  the run exits 1 with `skill_restore_failed`, and one skill copy can describe a
+  different version from the active CLI. The next run heals this with its first
+  step, so the mismatch lasts at most one timer interval (6 hours) unless the
+  driver runs the updater by hand sooner.
 - Each run appends one JSON line to
   `~/.local/state/learn-ukrainian/jevgrep-update.jsonl` (versions, action,
   result, child exit codes, fixed failure classifications, sha256 of the

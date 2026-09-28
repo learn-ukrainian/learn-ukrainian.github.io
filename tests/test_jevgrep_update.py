@@ -6,12 +6,18 @@ Every subprocess, registry and download call is injected: no network, no npm, te
 from __future__ import annotations
 
 import base64
+import email.message
+import fcntl
 import hashlib
+import io
 import json
 import os
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.request
+import urllib.response
 from pathlib import Path
 from typing import Any
 
@@ -88,6 +94,8 @@ class FakeHost:
         self.link_doctor_fails = link_doctor_fails
         self.no_skill = no_skill
         self.calls: list[list[str]] = []
+        self.npm_envs: list[dict[str, str]] = []
+        self.npm_config_texts: list[str] = []
         self.downloads: list[str] = []
         home.mkdir(parents=True, exist_ok=True)
         if installed:
@@ -115,9 +123,13 @@ class FakeHost:
     def _leak(self, cmd: list[str], code: int, stdout: str = "") -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess(cmd, code, f"{stdout}{SECRET}\n", f"token={SECRET}\n")
 
-    def run(self, cmd: list[str], timeout: int) -> subprocess.CompletedProcess[str]:
+    def run(self, cmd: list[str], timeout: int, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
         self.calls.append(cmd)
         if cmd[:2] == ["npm", "install"]:
+            assert env is not None
+            self.npm_envs.append(env)
+            for key in ("NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG"):
+                self.npm_config_texts.append(Path(env[key]).read_text(encoding="utf-8"))
             prefix = Path(cmd[cmd.index("--prefix") + 1])
             version = json.loads(Path(cmd[-1]).read_bytes())["version"]
             if version in self.npm_fails:
@@ -196,7 +208,13 @@ def test_newer_release_installs_verified_tarball_into_version_prefix_and_switche
     prefix = Path(install[3])
     assert prefix.parent == home / updater.PREFIX_ROOT_REL and prefix.name.startswith("0.5.0-")
     assert install[:3] == ["npm", "install", "--prefix"]
-    assert install[4:8] == ["--ignore-scripts", "--no-audit", "--no-fund", "--registry=https://registry.npmjs.org/"]
+    assert install[4:9] == [
+        "--ignore-scripts",
+        "--no-package-lock",
+        "--no-audit",
+        "--no-fund",
+        "--registry=https://registry.npmjs.org/",
+    ]
     assert install[-1].endswith("jevgrep-0.5.0.tgz")
     staged = prefix / updater.PACKAGE_REL / "dist/bin/index.js"
     assert [str(staged), "doctor"] in host.calls
@@ -347,6 +365,45 @@ def test_write_skills_restores_the_copy_already_written(home: Path, monkeypatch:
     assert first.read_text() == "old\n" and second.read_text() == "old\n"
 
 
+def test_failed_skill_restore_is_reported_and_healed_by_the_next_run(
+    home: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    host = FakeHost(home)
+    first, second = _skill_paths(home)
+    real_write = updater._atomic_write
+    new_written = False
+
+    def broken_disk(target: Path, content: str) -> None:
+        nonlocal new_written
+        if new_written or (target == second and "0.5.0" in content):
+            raise OSError("disk full")
+        real_write(target, content)
+        new_written = "0.5.0" in content
+
+    monkeypatch.setattr(updater, "_atomic_write", broken_disk)
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert "skill_restore_failed" in record["detail"] and record["upstream_skill_sha256"] is None
+    assert host.active_version() == "0.4.4"
+    assert "@dzhng/jevgrep 0.5.0," in first.read_text(encoding="utf-8"), "the mismatch this test heals"
+
+    monkeypatch.setattr(updater, "_atomic_write", real_write)
+    code, record = updater.update(_deps(host, _packument("0.4.4")))
+    assert code == 0 and record["action"] == "none"
+    assert host.active_version() == "0.4.4"
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_every_run_first_resyncs_skills_from_the_active_package(home: Path) -> None:
+    host = FakeHost(home, link_doctor_fails=frozenset({"0.5.0"}))
+    for path in _skill_paths(home):
+        path.parent.mkdir(parents=True)
+        path.write_text("stale skill from another version\n", encoding="utf-8")
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1 and record["result"] == "rolled_back"
+    _assert_skills_at(home, "0.4.4")
+
+
 def test_upgrades_keep_only_active_and_previous_prefix(home: Path) -> None:
     host = FakeHost(home)
     for version in ("0.5.0", "0.6.0", "0.7.0"):
@@ -355,6 +412,35 @@ def test_upgrades_keep_only_active_and_previous_prefix(home: Path) -> None:
     assert _prefixes(home) == ["0.6.0", "0.7.0"]
     assert host.active_version() == "0.7.0"
     assert host.legacy.is_dir()
+
+
+def test_prune_rereads_the_active_link_and_keeps_active_and_previous(tmp_path: Path) -> None:
+    root = tmp_path / "prefixes"
+    for name in ("a", "b", "c"):
+        (root / name / "bin").mkdir(parents=True)
+    link = tmp_path / "jg"
+    os.symlink(str(root / "c/bin"), link)
+    updater.prune_prefixes(root, link, str(root / "a/bin"))
+    assert sorted(child.name for child in root.iterdir()) == ["a", "c"]
+    link.unlink()
+    updater.prune_prefixes(root, link, None)
+    assert sorted(child.name for child in root.iterdir()) == ["a", "c"], "no active link: prune nothing"
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_run_while_lock_is_held_does_nothing(home: Path, dry_run: bool) -> None:
+    host = FakeHost(home)
+    lock_path = home / updater.LOCK_REL
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a") as held:
+        before = {path: path.read_bytes() for path in home.rglob("*") if path.is_file()}
+        fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        code, record = updater.update(_deps(host, _packument("0.5.0")), dry_run=dry_run)
+    assert code == 0
+    assert (record["action"], record["result"]) == ("locked", "skipped")
+    assert host.calls == [] and host.downloads == []
+    assert {path: path.read_bytes() for path in home.rglob("*") if path.is_file()} == before
+    assert os.readlink(host.link) == LEGACY_LINK
 
 
 @pytest.mark.parametrize(
@@ -415,7 +501,7 @@ def test_writes_only_prefixes_link_skills_and_state_log(home: Path) -> None:
         path.relative_to(home) for path in before
     }
     outside_prefixes = {rel for rel in new if not rel.is_relative_to(updater.PREFIX_ROOT_REL)}
-    assert outside_prefixes == {*updater.SKILL_TARGETS_REL, updater.STATE_LOG_REL}
+    assert outside_prefixes == {*updater.SKILL_TARGETS_REL, updater.STATE_LOG_REL, updater.LOCK_REL}
     assert not list((home / updater.PREFIX_ROOT_REL).glob(".download-*"))
 
 
@@ -426,7 +512,9 @@ def test_dry_run_neither_downloads_installs_nor_writes(home: Path, capsys: pytes
     record = json.loads(capsys.readouterr().out)
     assert (record["action"], record["result"], record["dry_run"]) == ("install", "dry_run", True)
     assert host.installs() == [] and host.downloads == []
-    assert sorted(home.rglob("*")) == before
+    lock = home / updater.LOCK_REL
+    assert set(home.rglob("*")) - set(before) == {lock, lock.parent, lock.parent.parent}
+    assert (home / updater.LOCK_REL).read_bytes() == b""
 
 
 def test_registry_failure_keeps_current_and_still_syncs(home: Path) -> None:
@@ -458,7 +546,86 @@ def test_download_refuses_non_registry_urls(tmp_path: Path) -> None:
     for url in ("https://mirror.example/jevgrep.tgz", "http://registry.npmjs.org/x.tgz"):
         with pytest.raises(OSError):
             updater._download(url, tmp_path / "t.tgz")
-    assert not (tmp_path / "t.tgz").exists()
+
+
+class _FakeRegistry(urllib.request.HTTPSHandler):
+    """Answers every HTTPS request locally with one fixed status, Location and body."""
+
+    def __init__(self, status: int, body: bytes = b"{}") -> None:
+        super().__init__()
+        self.status = status
+        self.body = body
+
+    def https_open(self, req: urllib.request.Request) -> urllib.response.addinfourl:
+        headers = email.message.Message()
+        headers["Location"] = "https://registry.npmjs.org/elsewhere"
+        response = urllib.response.addinfourl(io.BytesIO(self.body), headers, req.full_url, code=self.status)
+        response.msg = "fake"
+        return response
+
+
+def test_module_opener_follows_no_redirect() -> None:
+    redirectors = [h for h in updater._OPENER.handlers if isinstance(h, urllib.request.HTTPRedirectHandler)]
+    assert redirectors and all(isinstance(h, updater._RefuseRedirect) for h in redirectors)
+
+
+@pytest.mark.parametrize("status", [301, 302, 303, 307, 308])
+def test_redirects_are_refused_for_metadata_and_tarball(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status: int
+) -> None:
+    monkeypatch.setattr(updater, "_OPENER", urllib.request.build_opener(updater._RefuseRedirect, _FakeRegistry(status)))
+    with pytest.raises(urllib.error.HTTPError, match="redirect refused"):
+        updater._fetch_packument()
+    with pytest.raises(urllib.error.HTTPError, match="redirect refused"):
+        updater._download("https://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-0.5.0.tgz", tmp_path / "t.tgz")
+
+
+def test_size_caps_apply_to_metadata_and_tarball(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    assert (updater.MAX_METADATA_BYTES, updater.MAX_TARBALL_BYTES) == (8 * 1024 * 1024, 64 * 1024 * 1024)
+    monkeypatch.setattr(
+        updater, "_OPENER", urllib.request.build_opener(updater._RefuseRedirect, _FakeRegistry(200, b"x" * 11))
+    )
+    monkeypatch.setattr(updater, "MAX_METADATA_BYTES", 10)
+    monkeypatch.setattr(updater, "MAX_TARBALL_BYTES", 10)
+    with pytest.raises(OSError, match="size cap"):
+        updater._fetch_packument()
+    with pytest.raises(OSError, match="size cap"):
+        updater._download("https://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-0.5.0.tgz", tmp_path / "t.tgz")
+
+
+def test_redirected_registry_is_a_registry_failure(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(updater, "_OPENER", urllib.request.build_opener(updater._RefuseRedirect, _FakeRegistry(302)))
+    host = FakeHost(home)
+    deps = _deps(host, {})
+    deps.fetch_packument = updater._fetch_packument
+    code, record = updater.update(deps)
+    assert code == 1 and record["detail"] == "registry_unreachable" and host.installs() == []
+
+
+def test_npm_runs_with_isolated_config(home: Path) -> None:
+    host = FakeHost(home)
+    evil = "https://evil.example/"
+    (home / ".npmrc").write_text(f"@dzhng:registry={evil}\nregistry={evil}\n", encoding="utf-8")
+    environ = {
+        "PATH": "/usr/bin",
+        "HOME": str(home),
+        "npm_config_@dzhng:registry": evil,
+        "NPM_CONFIG_REGISTRY": evil,
+        "npm_config_userconfig": str(home / ".npmrc"),
+        "Npm_Config_GlobalConfig": str(home / ".npmrc"),
+    }
+    code, record = updater.update(_deps(host, _packument("0.5.0"), environ))
+    assert code == 0, record
+    [install], [env] = host.installs(), host.npm_envs
+    assert "--no-package-lock" in install and "--ignore-scripts" in install
+    assert f"--registry={updater.REGISTRY_BASE}" in install
+    assert not any("evil" in arg for arg in install)
+    assert not any("evil" in value for value in env.values())
+    npm_keys = {key for key in env if key.lower().startswith("npm_config_")}
+    assert npm_keys == {"NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG"}
+    assert Path(env["NPM_CONFIG_USERCONFIG"]) != home / ".npmrc"
+    assert host.npm_config_texts == ["", ""]
+    assert env["PATH"] == "/usr/bin"
 
 
 def test_help_meets_cli_standard() -> None:
