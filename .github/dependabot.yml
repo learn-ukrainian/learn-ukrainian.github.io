@@ -64,23 +64,15 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
-    # pydantic-core is pinned EXACTLY by pydantic (pydantic==2.13.5 requires
-    # pydantic-core==2.46.5): a standalone bump of either fails deterministically
-    # at import (`SystemError: ... pydantic-core ... incompatible ... requires
-    # 2.46.5`). #9033 bumped only pydantic and left pydantic-core behind
-    # (manual fix: #9045) because the two were never grouped, so Dependabot
-    # opened them as separate PRs. Group them so a compatible pair lands in
-    # one PR instead of relying on an `ignore` that blocks pydantic-core from
-    # moving at all. Closed PR: #2540. Incomplete bump: #9033, #9045.
-    groups:
-      pydantic:
-        patterns:
-          - "pydantic"
-          - "pydantic-core"
     # Block constrained transitive bumps that requirements-lock.txt (a flat,
     # fully-pinned lock) lets Dependabot propose past their parent's pin,
     # producing structurally un-mergeable PRs. See issue #2716.
     ignore:
+      # pydantic pins pydantic-core exactly. Dependabot groups do not guarantee
+      # an atomic pair update, so block standalone core bumps. The install-
+      # integrity check tracked in #9061 must catch mismatched pins on pydantic bumps.
+      # Closed PR: #2540. Incomplete bump: #9033, #9045.
+      - dependency-name: "pydantic-core"
       # pypdfium2 is exact-pinned by pdftext AND surya-ocr (both require
       # pypdfium2==4.30.0). A standalone bump (e.g. 4.30.0->5.9.0, #3359) breaks
       # the OCR/PDF stack; it moves only via a pdftext/surya-ocr bump. Full block.
