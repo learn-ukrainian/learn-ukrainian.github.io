@@ -11,7 +11,9 @@ launcher_adapter_preflight() {
     # Catalog-backed alias resolution (review finding on #5958 r3): the native
     # kimi CLI rejects bare aliases like "k3" ("not configured in config.toml");
     # resolve every alias to the configured native model id before exec.
-    if ! LC_MODEL="$("${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
+    local py
+    py="$(launcher_project_python)" || exit 3
+    if ! LC_MODEL="$("$py" "$LC_ROOT/scripts/review/model_catalog.py" \
         --resolve-kimi-model "$LC_MODEL" --format native)"; then
       launcher_error "unknown --model '$LC_MODEL' (use k3-256k, k3, k2.7, k2.7-highspeed)."
       exit 2

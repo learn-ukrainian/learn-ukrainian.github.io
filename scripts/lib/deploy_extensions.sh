@@ -18,37 +18,12 @@
 # Load-bearing tests: scripts/audit/test_deploy_extensions.sh (wrapped by
 # tests/test_deploy_extensions.py in the required pytest gate).
 
-# Resolve the project interpreter for the deploy-status helper: the checkout's
-# own .venv, else the primary checkout's (dispatch worktrees carry no .venv by
-# design; the primary is found via git's common dir, as in glmcc_route_python
-# and fleet_comms_resolve_python). Prints the interpreter path on success. On
-# failure prints "project interpreter not found: <paths tried>" to stderr and
-# returns 1 — never a silent fall back to a system python3.
-# Kept in this file (not sourced) because fixtures copy this helper alone.
-_deploy_status_python() {
-    local root="$1"
-    local tried="$root/.venv/bin/python"
-    local git_common primary_python
-
-    if [ -x "$tried" ]; then
-        printf '%s\n' "$tried"
-        return 0
-    fi
-    git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR \
-        git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-    if [ -n "$git_common" ]; then
-        primary_python="$(dirname "$git_common")/.venv/bin/python"
-        if [ "$primary_python" != "$tried" ]; then
-            tried="$tried, $primary_python"
-        fi
-        if [ -x "$primary_python" ]; then
-            printf '%s\n' "$primary_python"
-            return 0
-        fi
-    fi
-    echo "Error: project interpreter not found: $tried" >&2
-    return 1
-}
+# The deploy-status helper runs under the project interpreter resolved by
+# scripts/lib/project_interpreter.sh (primary checkout's .venv; never trusts a
+# worktree-controlled gitfile — #9118). Failure prints "project interpreter
+# not found: <paths tried>" and is never a silent fall back to system python3.
+# shellcheck source=scripts/lib/project_interpreter.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/project_interpreter.sh"
 
 deploy_agent_extensions() {
     local project_dir="$1"
@@ -91,7 +66,7 @@ deploy_agent_extensions() {
     # resolver prints its own "project interpreter not found" line. The helper
     # exits 1 only when it refuses the .agent root (its stderr says why); any
     # other non-zero exit is a crash or usage error.
-    status_python="$(_deploy_status_python "$helper_project_root")" || status_python=""
+    status_python="$(project_interpreter_resolve "$helper_project_root")" || status_python=""
 
     if [ "$exit_code" -eq 0 ]; then
         if [ -z "$status_python" ]; then

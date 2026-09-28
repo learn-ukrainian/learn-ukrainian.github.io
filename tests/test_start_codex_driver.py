@@ -38,6 +38,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         "scripts/config/context_profiles.yaml",
         "scripts/lib/context_profiles.py",
         "scripts/lib/deploy_extensions.sh",
+        "scripts/lib/project_interpreter.sh",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/launcher_stream_aliases.tsv",
