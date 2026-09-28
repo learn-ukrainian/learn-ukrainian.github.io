@@ -119,6 +119,6 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
     )
     assert installer.main() == 0
     files = list(destination.glob("*.service.d/data-volume.conf"))
-    assert len(files) == 12
+    assert len(files) == 11
     assert all("@REPO_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
     assert all("@PYTHON@" not in file.read_text(encoding="utf-8") for file in files)

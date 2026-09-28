@@ -315,7 +315,7 @@ Older `current.md` rows are HTML-only. Backfill is OPTIONAL — only worth it if
   yet, run `jg "<question>" <narrow subdir> --max-source-bytes 24000` first and
   read its excerpts before broad `rg`/`find`/file-by-file reading; known exact
   symbols or paths use `rg`/`git grep`.
-- **Never install:** the host timer keeps `jg` at npm `latest`; agents never
+- **Never install:** the infra driver keeps `jg` at npm `latest`; agents never
   install or upgrade it and never run `jg auth`. If `jg` fails, say so and continue.
 - **Egress:** search only this repository with a narrow public code/doc root; never
   `.`, the repository root, `data/`, `.worktrees/`, `batch_state/` or secrets.

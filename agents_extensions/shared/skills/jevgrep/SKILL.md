@@ -21,8 +21,8 @@ upstream: https://github.com/dzhng/jevgrep
 
 This overlay wins over any upstream text below it. The upstream Setup steps
 `npm install --global @dzhng/jevgrep@latest` and asking for or running
-`jg auth` are forbidden for agents: the host timer installs `jg`, and the
-operator authenticates it. Provenance and host setup: `UPSTREAM.md` next to
+`jg auth` are forbidden for agents: the infra driver installs `jg` on the
+host, and the operator authenticates it. Provenance and host setup: `UPSTREAM.md` next to
 this file; issue #9134.
 
 1. **Required use.** When you must find where behaviour lives in code you have
@@ -32,8 +32,9 @@ this file; issue #9134.
    or path, use `rg`, `git grep` or a direct read instead. Ask one question per
    concern; do not loop through re-phrasings.
 2. **Host-managed CLI; never install.** The host keeps `@dzhng/jevgrep` at npm
-   `latest` through `learn-ukrainian-jevgrep-update.timer` (`~/.local/bin/jg`).
-   Agents never run `npm install` or upgrade it, and never run `jg auth`. If `jg`
+   `latest`; the infra driver installs each new release (exact version,
+   `--ignore-scripts`) until the auto-updater (#9146) lands. Agents never run
+   `npm install` or upgrade it, and never run `jg auth`. If `jg`
    is missing, unauthenticated, or `jg doctor` fails, say so in your report and
    continue with ordinary tools. Never block the task and never ask for keys.
 3. **What may be sent.** Search only the repository your task works in, with a

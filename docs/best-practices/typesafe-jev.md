@@ -240,12 +240,14 @@ question and prints those files plus verbatim excerpts. It builds no index.
   --max-source-bytes 24000` before broad `rg`/file-by-file reading. Known exact
   symbols or paths still go to `rg` / `git grep`. Never use a root of `.` or the
   repository root, and never use `jg` output as evidence for Ukrainian language facts.
-- **Host auto-update to `latest`:** operator decision 2026-09-28. The
-  `learn-ukrainian-jevgrep-update.timer` runs `scripts/tools/jevgrep_update.py`
-  every 6 hours. It installs a new release only with npm provenance and no install
-  scripts, verifies `jg --version` and `jg doctor`, rolls back on failure, and
-  rewrites the user-level skill copies as the tracked overlay plus the installed
-  upstream skill text. `JEVGREP_HOLD_VERSION` pins temporarily.
+- **Host tracks `latest`:** operator decision 2026-09-28. Until the auto-updater
+  lands (#9146), the infra driver installs each new release by hand: check
+  provenance with `npm view @dzhng/jevgrep@<version> dist.attestations`, run
+  `npm install -g --ignore-scripts @dzhng/jevgrep@<version>` with the exact
+  version, verify `jg --version` and `jg doctor`, then write the tracked skill
+  plus the package's `dist/skills/jevgrep/SKILL.md` body to
+  `~/.claude/skills/jevgrep/SKILL.md` and `~/.agents/skills/jevgrep/SKILL.md`.
+  Full procedure: the skill's `UPSTREAM.md`.
 - **Auth is operator-only:** the operator runs `jg auth` once per host. Agents
   never run `jg auth` and never install or upgrade `jg`; if it is missing or
   failing they say so and continue with ordinary tools.
