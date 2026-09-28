@@ -24,3 +24,7 @@ words:
   - {lemma: Вова, pos: noun, entry: {source: vesum, entry_id: 63779}, want: W-094, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
   - {lemma: Ава, pos: noun, entry: {source: vesum, entry_id: 617}, want: W-095, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
   - {lemma: так, pos: part, entry: {source: vesum, entry_id: 381084}, want: W-096, note: 'Affirmative particle for polar questions in recap, paired with W-062 ні; PULS A1.'}
+  - {lemma: коса, pos: noun, entry: {source: vesum, entry_id: 176043}, want: W-097, note: 'Decodable noun with letter K from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}
+  - {lemma: Павлик, pos: noun, entry: {source: vesum, entry_id: 259619}, want: W-098, note: 'Decodable personal name with letters P and K from primer page 76 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0072); taught letters only.'}
+  - {lemma: Поліна, pos: noun, entry: {source: vesum, entry_id: 294525}, want: W-099, note: 'Decodable personal name with letter P from primer pages 76 and 81 (chunks 1-klas-bukvar-zaharijchuk-2025-1_s0072 and s0077); taught letters only.'}
+  - {lemma: Панас, pos: noun, entry: {source: vesum, entry_id: 260777}, want: W-100, note: 'Decodable personal name with letter P from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}

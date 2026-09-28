@@ -77,6 +77,14 @@ texts:
     source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058}
     span: {first_words: 'Прочитай імена дітей.', last_words: 'Іван Вова Ніна Нонна'}
     supports: 'Primer printed page 60: decodable personal names using taught letters.'
+  - id: T-020
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w001}
+    span: {first_words: 'Our dialogue is happening at the готе́ль — hotel,', last_words: 'between a receptionist and a guest.'}
+    supports: 'Adult L2 formal greeting dialogue setting between a receptionist and a guest; ULP Season 1 lesson 2.'
+  - id: T-021
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
+    span: {first_words: 'Here is the most common way to say goodbye in', last_words: 'a formal situation (to your colleague, teacher, or in'}
+    supports: 'Adult L2 formal social situation (colleague, teacher); ULP Season 1 lesson 2.'
 exercises:
   - id: X-001
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}

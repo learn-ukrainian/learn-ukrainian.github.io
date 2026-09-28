@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 5d237ca9deada72850a8b71d2e097b7469509a0d
+  mcp_commit: 465f9435992fb54e6dd69ffa9d6759eb283b230e
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: b864f002740733f9c97a1ec03e2a83b800b3f015d716a4716c85d0616d953a3e
+  sources_db: 169f97c6b3c428efbaf4ee523a4e373285efde04ef65888baa144e859a49b306
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -480,6 +480,36 @@ texts:
     row_sha256: e635252ed2329a8b5e60594a9fd48b953ebdd1bf8e4d1b8ac9a8194815fa1712
     section_id: 13009
   supports: 'Primer printed page 60: decodable personal names using taught letters.'
+- id: T-020
+  quote: 'Our dialogue is happening at the готе́ль — hotel,                It means “good, nice, kind”.
+
+    between a receptionist and a guest.'
+  sha256: af6cd872e97ae3bb77141774dbb67f329b5c67ce4195f63ac7d63e406d3fe2a8
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0002_w001
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702
+    section_id: null
+  supports: Adult L2 formal greeting dialogue setting between a receptionist and a guest; ULP Season 1 lesson 2.
+- id: T-021
+  quote: 'Here is the most common way to say goodbye in
+
+    a formal situation (to your colleague, teacher, or in'
+  sha256: 1706f81d451de21b4e82ab036fd91402776f547dd9c51a5051ae79eb8370e711
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0002_w002
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
+    section_id: null
+  supports: Adult L2 formal social situation (colleague, teacher); ULP Season 1 lesson 2.
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:

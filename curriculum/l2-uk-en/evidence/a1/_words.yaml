@@ -1,7 +1,7 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 5d237ca9deada72850a8b71d2e097b7469509a0d
+  mcp_commit: 465f9435992fb54e6dd69ffa9d6759eb283b230e
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: a46d6d55af83016f467b8eb2f7f6b69a62de06a1a3b501a8c5ae42e42794a1f3
@@ -7419,6 +7419,711 @@ words:
   lemma: так
   note: Affirmative particle for polar questions in recap, paired with W-062 ні; PULS A1.
   pos: part
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 176043
+    source: vesum
+  forms:
+  - form: косі
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: косі́
+      unstressed_form: косі
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́сі
+      unstressed_form: косі
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    stress_source: pending
+    tags: noun:inanim:f:v_dav
+    unresolvable_by_tags: true
+  - form: косо
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ко́со
+    tags: noun:inanim:f:v_kly
+  - form: косі
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Loc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: косі́
+      unstressed_form: косі
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Loc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́сі
+      unstressed_form: косі
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    stress_source: pending
+    tags: noun:inanim:f:v_mis
+    unresolvable_by_tags: true
+  - form: коса
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Nom
+      - upos=NOUN
+      stressed_form: ко́са
+      unstressed_form: коса
+      vesum: &id001
+        lemma: коса
+        pos: noun
+        tags: noun:inanim:f:v_naz
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: коса́
+      unstressed_form: коса
+      vesum: *id001
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:inanim:f:v_naz
+  - form: косою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: косо́ю
+    tags: noun:inanim:f:v_oru
+  - form: коси
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: коси́
+    tags: noun:inanim:f:v_rod
+  - form: косу
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́су
+      unstressed_form: косу
+      vesum: &id002
+        lemma: коса
+        pos: noun
+        tags: noun:inanim:f:v_zna
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́су́
+      unstressed_form: косу
+      vesum: *id002
+      vowel_index: 1
+      vowel_indices:
+      - 1
+      - 3
+    stress_source: pending
+    tags: noun:inanim:f:v_zna
+    unresolvable_by_tags: true
+  - form: косам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ко́сам
+    tags: noun:inanim:p:v_dav
+  - form: коси
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum:
+        lemma: косити
+        pos: verb
+        tags: verb:imperf:impr:s:2
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:inanim:p:v_kly
+  - form: косах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ко́сах
+    tags: noun:inanim:p:v_mis
+  - form: коси
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum:
+        lemma: косити
+        pos: verb
+        tags: verb:imperf:impr:s:2
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:inanim:p:v_naz
+  - form: косами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ко́сами
+    tags: noun:inanim:p:v_oru
+  - form: кіс
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: кіс
+    tags: noun:inanim:p:v_rod
+  - form: коси
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: ко́си
+      unstressed_form: коси
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: коси́
+      unstressed_form: коси
+      vesum:
+        lemma: косити
+        pos: verb
+        tags: verb:imperf:impr:s:2
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:inanim:p:v_zna
+  id: W-097
+  lemma: коса
+  note: Decodable noun with letter K from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 259619
+    source: vesum
+  forms:
+  - form: Павликові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликові
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Павлику
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влику
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Павлику
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влику
+    tags: noun:anim:m:v_kly:prop:fname
+  - form: Павликові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликові
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Павлику
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влику
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Павлик
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влик
+    tags: noun:anim:m:v_naz:prop:fname
+  - form: Павликом
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликом
+    tags: noun:anim:m:v_oru:prop:fname
+  - form: Павлика
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влика
+    tags: noun:anim:m:v_rod:prop:fname
+  - form: Павлика
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влика
+    tags: noun:anim:m:v_zna:prop:fname
+  - form: Павликам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Павлики
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влики
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Павликах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Павлика́х
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Павлики
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́влики
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Павликами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Павликів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликів
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Павликів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Па́вликів
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-098
+  lemma: Павлик
+  note: Decodable personal name with letters P and K from primer page 76 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0072); taught
+    letters only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 294525
+    source: vesum
+  forms:
+  - form: Поліні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ні
+    tags: noun:anim:f:v_dav:prop:fname
+  - form: Поліно
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́но
+    tags: noun:anim:f:v_kly:prop:fname
+  - form: Поліні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ні
+    tags: noun:anim:f:v_mis:prop:fname
+  - form: Поліна
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́на
+    tags: noun:anim:f:v_naz:prop:fname
+  - form: Поліною
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ною
+    tags: noun:anim:f:v_oru:prop:fname
+  - form: Поліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ни
+    tags: noun:anim:f:v_rod:prop:fname
+  - form: Поліну
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ну
+    tags: noun:anim:f:v_zna:prop:fname
+  - form: Полінам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́нам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Поліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ни
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Полінах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́нах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Поліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́ни
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Полінами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́нами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Полін
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́н
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Полін
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Полі́н
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-099
+  lemma: Поліна
+  note: Decodable personal name with letter P from primer pages 76 and 81 (chunks 1-klas-bukvar-zaharijchuk-2025-1_s0072 and
+    s0077); taught letters only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 260777
+    source: vesum
+  forms:
+  - form: Панасові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сові
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Панасу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́су
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Панасе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́се
+    tags: noun:anim:m:v_kly:prop:fname
+  - form: Панасові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сові
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Панасу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́су
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Панасі
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сі
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Панас
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́с
+    tags: noun:anim:m:v_naz:prop:fname
+  - form: Панасом
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сом
+    tags: noun:anim:m:v_oru:prop:fname
+  - form: Панаса
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́са
+    tags: noun:anim:m:v_rod:prop:fname
+  - form: Панаса
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́са
+    tags: noun:anim:m:v_zna:prop:fname
+  - form: Панасам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Панаси
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́си
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Панасах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Панаси
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́си
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Панасами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Панасів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сів
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Панасів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Пана́сів
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-100
+  lemma: Панас
+  note: Decodable personal name with letter P from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters
+    only.
+  pos: noun
   shadow:
     russian_shadow: false
     score: 0.0

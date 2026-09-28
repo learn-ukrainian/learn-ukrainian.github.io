@@ -670,3 +670,31 @@
   id: W-096
   lemma: так
   pos: part
+- allocated_at_build: 2e28f2505163404e682e2bb3de56ec5ae69c381c234fa0307040620cd274dcee
+  entry:
+    entry_id: 176043
+    source: vesum
+  id: W-097
+  lemma: коса
+  pos: noun
+- allocated_at_build: 2e28f2505163404e682e2bb3de56ec5ae69c381c234fa0307040620cd274dcee
+  entry:
+    entry_id: 259619
+    source: vesum
+  id: W-098
+  lemma: Павлик
+  pos: noun
+- allocated_at_build: 2e28f2505163404e682e2bb3de56ec5ae69c381c234fa0307040620cd274dcee
+  entry:
+    entry_id: 294525
+    source: vesum
+  id: W-099
+  lemma: Поліна
+  pos: noun
+- allocated_at_build: 2e28f2505163404e682e2bb3de56ec5ae69c381c234fa0307040620cd274dcee
+  entry:
+    entry_id: 260777
+    source: vesum
+  id: W-100
+  lemma: Панас
+  pos: noun
