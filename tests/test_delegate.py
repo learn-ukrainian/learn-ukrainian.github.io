@@ -2126,8 +2126,7 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, caps
     rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True))
     assert rc == 2
     captured = capsys.readouterr()
-    assert f"already {status}" in captured.err
-    assert "no escape for live tasks" in captured.err
+    assert f"prior status {status!r} must be terminal" in captured.err
     assert delegate._read_state(path) == original
     assert result_path.read_text(encoding="utf-8") == f"live {status} receipt\n"
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json")) == []
@@ -2143,6 +2142,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     original = {
         "task_id": "force-new-task",
         "status": "done",
+        "initiator": "owner",
         "pid": None,
         "receipt": "keep-this-attestation",
         "result_file": str(result_path),
@@ -2151,7 +2151,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     result_path.write_text("completed receipt evidence\n", encoding="utf-8")
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
-        rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True))
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True, initiator="owner"))
 
     assert rc == 0
     archived_json = list(tmp_tasks_dir.glob("force-new-task.*.archived.json"))
@@ -2191,14 +2191,77 @@ def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, caps
 
 def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_dir):
     archived = delegate._archived_state_path("archived-task")
-    delegate._write_state_atomic(archived, {"task_id": "archived-task", "status": "done", "keep": True})
+    delegate._write_state_atomic(
+        archived, {"task_id": "archived-task", "status": "done", "initiator": "owner", "keep": True}
+    )
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
-        rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task", force_new=True))
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task", force_new=True, initiator="owner"))
 
     assert rc == 0
     assert delegate._read_state(archived)["keep"] is True
     assert delegate._read_state(delegate._state_path("archived-task"))["status"] == "spawning"
+
+
+def test_read_only_worker_cannot_dispatch(tmp_tasks_dir, monkeypatch, capsys):
+    delegate._write_state_atomic(
+        delegate._state_path("review-parent"),
+        {"task_id": "review-parent", "mode": "read-only", "status": "running"},
+    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "review-parent")
+    with patch("delegate.subprocess.Popen", side_effect=AssertionError("must not spawn")):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("nested-review"))
+    assert rc == 2
+    assert "read-only or unavailable parent task record" in capsys.readouterr().err
+    assert not delegate._state_path("nested-review").exists()
+
+
+@pytest.mark.parametrize("status", ["running", "spawning"])
+def test_force_new_refuses_dead_nonterminal_record(tmp_tasks_dir, capsys, status):
+    task_id = "occupied-task"
+    path = delegate._state_path(task_id)
+    original = {"task_id": task_id, "status": status, "initiator": "owner", "pid": 999_999_997}
+    delegate._write_state_atomic(path, original)
+    with patch("delegate.subprocess.Popen", side_effect=AssertionError("must not spawn")):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True, initiator="owner"))
+    assert rc == 2
+    assert "must be terminal" in capsys.readouterr().err
+    assert delegate._read_state(path) == original
+    assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json"))
+
+
+@pytest.mark.parametrize("prior_initiator", ["other-owner", "unknown", None])
+def test_force_new_refuses_foreign_terminal_record(tmp_tasks_dir, capsys, prior_initiator):
+    task_id = "foreign-task"
+    path = delegate._state_path(task_id)
+    result = path.with_suffix(".result")
+    original = {"task_id": task_id, "status": "done", "initiator": prior_initiator}
+    delegate._write_state_atomic(path, original)
+    result.write_text("original result\n", encoding="utf-8")
+    with patch("delegate.subprocess.Popen", side_effect=AssertionError("must not spawn")):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True, initiator="owner"))
+    assert rc == 2
+    assert "must match a known caller" in capsys.readouterr().err
+    assert delegate._read_state(path) == original
+    assert result.read_text(encoding="utf-8") == "original result\n"
+    assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.*"))
+
+
+def test_force_new_refuses_foreign_archived_owner_even_with_owned_hot_record(tmp_tasks_dir, capsys):
+    task_id = "mixed-history"
+    hot_path = delegate._state_path(task_id)
+    archived_path = delegate._archived_state_path(task_id)
+    hot = {"task_id": task_id, "status": "done", "initiator": "owner"}
+    archived = {"task_id": task_id, "status": "done", "initiator": "other-owner"}
+    delegate._write_state_atomic(hot_path, hot)
+    delegate._write_state_atomic(archived_path, archived)
+    with patch("delegate.subprocess.Popen", side_effect=AssertionError("must not spawn")):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True, initiator="owner"))
+    assert rc == 2
+    assert "must match a known caller" in capsys.readouterr().err
+    assert delegate._read_state(hot_path) == hot
+    assert delegate._read_state(archived_path) == archived
+    assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json"))
 
 
 def test_status_and_wait_fall_back_to_archived_record(tmp_tasks_dir, capsys):

@@ -4723,6 +4723,25 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     return entries, None
 
 
+def _read_only_task_record_snapshot(task_id: str) -> tuple[dict[str, str] | None, str | None]:
+    """Fingerprint other tasks' hot records, including files ignored by Git.
+
+    Git porcelain reports only ``!!`` for an existing ignored result, so an
+    overwrite is otherwise invisible to the checkout snapshot. Keep the same
+    path/value shape so the existing read-only diff and failure path applies.
+    """
+    own_stem = _state_path(task_id).stem
+    snapshot: dict[str, str] = {}
+    try:
+        for path in tasks_dir().iterdir():
+            if path.suffix not in {".json", ".result"} or path.stem == own_stem or not path.is_file():
+                continue
+            snapshot[f"batch_state/tasks/{path.name}"] = f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+    except OSError as exc:
+        return None, f"task record snapshot failed: {type(exc).__name__}: {exc}"
+    return snapshot, None
+
+
 # Harness-owned Entire residue under the checkout (ADR-018 capture). These paths
 # are gitignored and appear in the read-only snapshot because the guard includes
 # ignored files (#4840). Treating them as task mutations false-fails healthy
@@ -7272,7 +7291,9 @@ def _run_worker(
     cwd = Path(cwd_str)
     read_only_checkout_pre: dict[str, str] | None = None
     read_only_checkout_post: dict[str, str] | None = None
+    task_records_pre: dict[str, str] | None = None
     read_only_snapshot_error: str | None = None
+    task_records_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
     read_only_ignored_mutation_paths: list[str] = []
     # Set only after digest.json is on disk. Phase files stay until the
@@ -7280,6 +7301,10 @@ def _run_worker(
     clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+        task_records_snapshot_error = task_records_error
+        if read_only_snapshot_error is None:
+            read_only_snapshot_error = task_records_error
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
         state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
         _write_state_atomic(state_path, state)
@@ -7604,6 +7629,11 @@ def _run_worker(
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            task_records_post, task_records_error = _read_only_task_record_snapshot(task_id)
+            if task_records_snapshot_error is None:
+                task_records_snapshot_error = task_records_error
+            if post_snapshot_error is None:
+                post_snapshot_error = task_records_error
             _write_read_only_snapshot_sidecar(task_id, "post", read_only_checkout_post)
             if read_only_snapshot_error is None and post_snapshot_error is not None:
                 read_only_snapshot_error = post_snapshot_error
@@ -7616,6 +7646,10 @@ def _run_worker(
                 read_only_mutation_paths = _read_only_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
+                )
+            if task_records_pre is not None and task_records_post is not None:
+                read_only_mutation_paths = sorted(
+                    set(read_only_mutation_paths) | set(_read_only_mutation_paths(task_records_pre, task_records_post))
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
@@ -7634,7 +7668,7 @@ def _run_worker(
                 final_state.pop("read_only_checkout_pre", None)
                 final_state.pop("read_only_checkout_post", None)
                 clean_snapshots_to_discard = snapshot_dir
-            if read_only_mutation_paths:
+            if read_only_mutation_paths or task_records_snapshot_error:
                 final_status = "failed"
                 ok_outcome = False
 
@@ -7837,6 +7871,8 @@ def _run_worker(
             # stderr) behind the mutation list. The paths stay independently
             # queryable via ``read_only_mutation_paths`` either way.
             last_error = f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
+        if task_records_snapshot_error:
+            last_error = f"{last_error}; {task_records_snapshot_error}" if last_error else task_records_snapshot_error
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
 
@@ -8473,6 +8509,17 @@ def _dispatch(
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
 
+    caller_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
+    if caller_task_id:
+        caller_state = _read_state(_state_path(caller_task_id))
+        if caller_state is None or caller_state.get("mode") not in _WRITE_CAPABLE_MODES:
+            print(
+                f"❌ dispatch refused from task {caller_task_id!r}: "
+                "read-only or unavailable parent task record cannot start a dispatch.",
+                file=sys.stderr,
+            )
+            return 2
+
     try:
         attribution = resolve_invocation_attribution(
             explicit=getattr(args, "initiator", None),
@@ -8786,10 +8833,8 @@ def _dispatch(
     # silently overwrote batch_state/tasks/<id>.json + .result and
     # destroyed receipt evidence. Must run BEFORE ownership admission
     # so a rejected duplicate cannot DELETE/replace live write claims
-    # (#5643 CF F001). --force-new archives first; it never clobbers.
-    # --force-new has no escape for a live running/spawning pid: archiving
-    # that record and spawning again is the duplicate-worker race the
-    # pre-#6980 guard refused with no override (#6981 F1 / #5643 CF F001).
+    # (#5643 CF F001). --force-new archives only the caller's terminal
+    # record; a dead pid does not make a nonterminal record safe to replace.
     existing = _read_state(state_path)
     record_exists = state_path.exists()
     result_exists = _result_path(task_id).exists()
@@ -8809,28 +8854,34 @@ def _dispatch(
             print(
                 f"❌ task_id {task_id!r} is already {status}{pid_part}. "
                 "Dispatch refuses to reuse a task-id in any state. "
-                "Use a unique --task-id, or pass --force-new to archive "
-                "the prior record+result first.",
+                "Use a unique --task-id; --force-new can archive only "
+                "the caller's own terminal record+result.",
                 file=sys.stderr,
             )
             return 2
-        status = existing.get("status") if existing else None
-        pid = existing.get("pid") if existing else None
-        live_pid = False
-        if status in ("running", "spawning") and not isinstance(pid, bool):
-            try:
-                live_pid = isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
-            except (TypeError, ValueError):
-                live_pid = False
-        if live_pid:
-            print(
-                f"❌ task_id {task_id!r} is already {status} (pid={pid}) "
-                "and that process is still alive. --force-new has no escape "
-                "for live tasks; refusing to archive a live worker and spawn "
-                "a duplicate.",
-                file=sys.stderr,
-            )
-            return 2
+        prior_records = []
+        if record_exists:
+            prior_records.append(existing)
+        if archived_exists:
+            prior_records.append(_read_state(archived_path))
+        if not prior_records:
+            prior_records.append(None)  # Orphan result: ownership is unknown.
+        for prior in prior_records:
+            prior_status = prior.get("status") if prior else None
+            prior_initiator = prior.get("initiator") if prior else None
+            if (
+                prior_status not in _RUNTIME_TMP_TERMINAL_STATUSES
+                or prior_initiator in (None, "unknown")
+                or prior_initiator != attribution.initiator
+            ):
+                print(
+                    f"❌ task_id {task_id!r} cannot be reused with --force-new: "
+                    f"prior status {prior_status!r} must be terminal and prior initiator "
+                    f"{prior_initiator!r} must match a known caller {attribution.initiator!r}. "
+                    "The prior record and result were not archived.",
+                    file=sys.stderr,
+                )
+                return 2
         try:
             archived = _archive_task_artifacts(task_id)
         except OSError as exc:
@@ -11548,8 +11599,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Reuse an existing --task-id by first archiving the prior record "
             "and result alongside (never clobber). Required when the task "
-            "record already exists in a non-live state (#6980). Refuses when "
-            "a running/spawning record still has a live pid (#6981 F1)."
+            "record is terminal and has the caller's initiator (#9075). "
+            "Refuses nonterminal or foreign records even when their pid is dead."
         ),
     )
     d.add_argument(

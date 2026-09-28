@@ -178,6 +178,39 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
 
 
+@pytest.mark.parametrize("suffix", [".result", ".json"])
+def test_read_only_worker_fails_after_overwriting_another_task_record(suffix, tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_id = "review-task"
+    own_path = delegate._state_path(own_id)
+    delegate._write_state_atomic(own_path, {"task_id": own_id, "cwd": str(checkout)})
+    foreign_path = tmp_tasks_dir / f"impl-task{suffix}"
+    foreign_path.write_text("original\n", encoding="utf-8")
+
+    def overwrite_foreign_record(*_args, **_kwargs):
+        foreign_path.write_text("replaced\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=overwrite_foreign_record):
+        rc = delegate._run_worker(
+            task_id=own_id,
+            agent="grok",
+            prompt="Review the change.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(own_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"batch_state/tasks/{foreign_path.name}"]
+    assert f"batch_state/tasks/{foreign_path.name}" in state["last_error"]
+
+
 def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(tmp_path, monkeypatch):
     """#7147: renaming a tracked file INTO ``.worktrees/`` keeps the source.
 
