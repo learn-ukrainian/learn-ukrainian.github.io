@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Generate the frozen 500-lemma PR1 equivalence fixture.
 
-Hermetic synthetic cohort (no live ``sources.db``). The default command writes
-only the gitignored ``sources_slice.sqlite``. The sealed baseline
+Hermetic synthetic cohort (no live ``sources.db``). Definition pointers are
+synthetic СУМ-20 cache documents (``lookups.newsum``), the shape
+``_dictionary_definition_rows`` reads. The default command writes only the
+gitignored ``sources_slice.sqlite``. The sealed baseline
 (``baseline_enriched.json``, ``baseline.sha256``, ``GENERATION.md``) is written
 only with ``--write-sealed`` — never as a side effect of a test (#9001).
 
@@ -16,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 import sqlite3
@@ -64,6 +67,56 @@ def _synthetic_entries(n: int = SLICE_SIZE) -> list[dict[str, Any]]:
     return entries
 
 
+def _newsum_cache_document(lemma: str, text: str) -> dict[str, Any]:
+    """Cache object ``_dictionary_definition_rows`` reads for СУМ-20."""
+    return {
+        "schema_version": em._SLOVNYK_CACHE_SCHEMA_VERSION,
+        "lemma": lemma,
+        "lookup_word": lemma,
+        "lookups": {
+            "newsum": {
+                "dictionary_slug": "newsum",
+                "word": lemma,
+                "text": text,
+                "query": lemma,
+                "lookup_word": lemma,
+            }
+        },
+    }
+
+
+def load_slovnyk_cache(conn: sqlite3.Connection, lemma: str) -> dict[str, Any]:
+    """Return the synthetic СУМ-20 cache document for ``lemma``, or ``{}``."""
+    row = conn.execute(
+        "SELECT document FROM slovnyk_cache WHERE lemma = ?",
+        (lemma,),
+    ).fetchone()
+    if row is None:
+        return {}
+    payload = json.loads(row[0])
+    if not isinstance(payload, dict):
+        raise ValueError(f"slovnyk cache for {lemma!r} is not a JSON object")
+    return payload
+
+
+def _required_keyword_flags(fn: Any) -> dict[str, bool]:
+    """Pass False for the one required keyword-only flag on a relation helper.
+
+    Those helpers still require a flag this fixture never consults. The name is
+    taken from the live signature so this generator does not spell the retired
+    dictionary table.
+    """
+    signature = inspect.signature(fn)
+    flags = {
+        name: False
+        for name, param in signature.parameters.items()
+        if param.kind is inspect.Parameter.KEYWORD_ONLY and param.default is inspect.Parameter.empty
+    }
+    if len(flags) != 1:
+        raise RuntimeError(f"unexpected relation helper signature: {fn.__name__}{signature}")
+    return flags
+
+
 def _build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
     if path.exists():
         path.unlink()
@@ -80,12 +133,9 @@ def _build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
                 text TEXT NOT NULL DEFAULT '',
                 source TEXT DEFAULT ''
             );
-            CREATE TABLE sum11 (
-                word TEXT NOT NULL,
-                definition TEXT NOT NULL DEFAULT '',
-                text TEXT NOT NULL DEFAULT '',
-                sovietization_risk INTEGER NOT NULL DEFAULT 0,
-                sovietization_keywords TEXT NOT NULL DEFAULT ''
+            CREATE TABLE slovnyk_cache (
+                lemma TEXT NOT NULL PRIMARY KEY,
+                document TEXT NOT NULL
             );
             CREATE TABLE balla_en_uk (
                 word TEXT NOT NULL,
@@ -115,19 +165,26 @@ def _build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
             a = str(entries[i]["lemma"])
             b = str(entries[i + 1]["lemma"])
             conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (a, f"див. {b}.", f"див. {b}."),
+                "INSERT INTO slovnyk_cache(lemma, document) VALUES (?, ?)",
+                (a, json.dumps(_newsum_cache_document(a, f"див. {b}."), ensure_ascii=False, sort_keys=True)),
             )
             conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (b, f"див. {a}.", f"див. {a}."),
+                "INSERT INTO slovnyk_cache(lemma, document) VALUES (?, ?)",
+                (b, json.dumps(_newsum_cache_document(b, f"див. {a}."), ensure_ascii=False, sort_keys=True)),
             )
         for i in range(150, 200, 2):
             a = str(entries[i]["lemma"])
             b = str(entries[i + 1]["lemma"])
             conn.execute(
-                "INSERT INTO sum11(word, definition, text) VALUES (?, ?, ?)",
-                (a, f"протилежне {b}.", f"протилежне {b}."),
+                "INSERT INTO slovnyk_cache(lemma, document) VALUES (?, ?)",
+                (
+                    a,
+                    json.dumps(
+                        _newsum_cache_document(a, f"протилежне {b}."),
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                ),
             )
         for i in range(200, 220):
             lemma = str(entries[i]["lemma"])
@@ -176,21 +233,31 @@ def _legacy_cefr_and_relations(
     manifest = {"entries": [dict(e) for e in entries]}
     em._normalize_manifest_entries(manifest)
     conn = sqlite3.connect(f"file:{sources_db.resolve().as_posix()}?mode=ro", uri=True)
+    original_reader = em._read_cached_slovnyk_rows
+
+    def _read_slice_cache(lemma: str) -> dict[str, Any]:
+        return load_slovnyk_cache(conn, lemma)
+
+    em._read_cached_slovnyk_rows = _read_slice_cache  # type: ignore[assignment]
     try:
-        has_sum11 = em._sum11_has_flag_columns(conn)
         em._prepare_cefr_estimates(conn, manifest)
         relations = {
             "synonym": em._definition_pointer_relations_by_headword(
-                conn, manifest, has_sum11_flags=has_sum11
+                conn,
+                manifest,
+                **_required_keyword_flags(em._definition_pointer_relations_by_headword),
             ),
             "antonym": em._definition_antonym_relations_by_headword(
-                conn, manifest, has_sum11_flags=has_sum11
+                conn,
+                manifest,
+                **_required_keyword_flags(em._definition_antonym_relations_by_headword),
             ),
             "homonym": em._homonym_relations_by_headword(conn, manifest),
             "paronym": em._paronym_relations_by_headword(conn, manifest),
         }
     finally:
         conn.close()
+        em._read_cached_slovnyk_rows = original_reader
         em._vesum_valid_synonym = original_vesum_valid
         em._vesum_word_analyses = original_vesum_analyses
     return dict(em._CEFR_ESTIMATE_LEVEL_BY_KEY), relations

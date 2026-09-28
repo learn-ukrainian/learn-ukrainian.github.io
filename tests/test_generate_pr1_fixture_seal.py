@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import os
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -75,6 +77,20 @@ def test_default_command_does_not_rewrite_sealed_files(tmp_path: Path, monkeypat
         assert (fixture_dir / name).read_bytes() == body
     assert (fixture_dir / gen.SOURCES_SLICE_NAME).is_file()
     assert "LEXICON_SLOVNYK_OFFLINE" not in os.environ
+    conn = sqlite3.connect(fixture_dir / gen.SOURCES_SLICE_NAME)
+    try:
+        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        assert "slovnyk_cache" in tables
+        assert "sum11" not in tables
+        # 50 reciprocal synonym pairs (100 documents) + 25 one-way antonym sources.
+        assert conn.execute("SELECT COUNT(*) FROM slovnyk_cache").fetchone()[0] == 125
+        document = json.loads(conn.execute("SELECT document FROM slovnyk_cache LIMIT 1").fetchone()[0])
+        newsum = document["lookups"]["newsum"]
+        assert newsum["word"]
+        assert newsum["text"]
+        assert "source_url" not in newsum
+    finally:
+        conn.close()
 
 
 def test_write_sealed_is_explicit_and_restores_offline_env(

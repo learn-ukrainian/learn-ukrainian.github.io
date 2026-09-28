@@ -11,6 +11,7 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as em
 from scripts.lexicon.runner.contracts import ChunkSpec, ChunkState, ErrorCode, OomSplitChildren
+from scripts.lexicon.runner.generate_pr1_fixture import load_slovnyk_cache
 from scripts.lexicon.runner.memory import (
     require_hard_cap_protection,
     run_startup_self_test,
@@ -339,6 +340,11 @@ def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:
         _try_set_rlimit_as(resource.RLIM_INFINITY)
 
 
+def _cache_from_slice(conn: sqlite3.Connection, lemma: str) -> dict:
+    """СУМ-20 cache document stored in the temp sources slice."""
+    return load_slovnyk_cache(conn, lemma)
+
+
 def test_relation_closure_matches_legacy_by_headword(
     tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -347,19 +353,29 @@ def test_relation_closure_matches_legacy_by_headword(
 
     conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
     try:
-        has_sum11 = em._sum11_has_flag_columns(conn)
+        monkeypatch.setattr(
+            em,
+            "_read_cached_slovnyk_rows",
+            lambda lemma: _cache_from_slice(conn, lemma),
+        )
         manifest = {"entries": entries}
-        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
-        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
+        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=False)
+        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=False)
         headwords = em._manifest_headwords(manifest)
         extract_and_close_relations(
             entries=entries,
             extractors={
                 "synonym": lambda entry: em._definition_pointer_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
             },
             headwords=headwords,
@@ -375,6 +391,10 @@ def test_relation_closure_matches_legacy_by_headword(
     closed_ant = load_closed_relations_by_headword(tmp_path / "rel.sqlite", kind="antonym")
     assert closed_syn == legacy_syn
     assert closed_ant == legacy_ant
+    assert len(closed_syn) == 100
+    assert sum(len(edges) for edges in closed_syn.values()) == 200
+    assert len(closed_ant) == 50
+    assert sum(len(edges) for edges in closed_ant.values()) == 50
 
 
 def test_500_lemma_equivalence_cefr_and_relations(
@@ -416,16 +436,21 @@ def test_500_lemma_equivalence_cefr_and_relations(
             > 0
         )
 
-        has_sum11 = em._sum11_has_flag_columns(conn)
         headwords = em._manifest_headwords({"entries": entries})
         extract_and_close_relations(
             entries=entries,
             extractors={
                 "synonym": lambda entry: em._definition_pointer_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "homonym": lambda entry: em._homonym_relations(conn, str(entry.get("lemma") or "")),
                 "paronym": lambda entry: em._paronym_relations(conn, str(entry.get("lemma") or "")),
