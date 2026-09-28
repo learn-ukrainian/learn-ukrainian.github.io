@@ -82,7 +82,7 @@ The core lesson checks are evaluated and recorded in the checks object as clean 
 
 5. `evidence_use`: Faithful use of evidence. Pinned quotes used in their sense, not bent to fit.
 
-6. `english`: English support. Glosses and translations are accurate; English appears only where the immersion rule allows; nothing is explained through Russian or Slavic comparison — Ukrainian on its own terms.
+6. `english`: English support. Glosses and translations are accurate; English appears only where the immersion rule allows. Every sentence is in one language, Ukrainian or English, never a mix (operator direction 2026-09-27; writer contract §6): an English sentence may quote a Ukrainian item in a quoted-term span only when the sentence is about that item (the form, word or construction taught, or a term introduced with its gloss); a span standing where the sentence needs the English word for the thing named is a mixed sentence even though it is marked, and a finding. Nothing is explained through Russian or Slavic comparison — Ukrainian on its own terms.
 
 7. `fact`: Culture and fact. Any statement about Ukraine, its history or customs is true and sourced.
 
@@ -138,8 +138,8 @@ review_schema: 1
 taxonomy: 1
 kind: lesson
 attempt:
-  review_id: "<review_id>"
-  attempt_id: "<attempt_id>"
+  review_id: "{{ review_id }}"
+  attempt_id: "{{ attempt_id }}"
   manifest_sha256: "{{ manifest_sha256 }}"
   previous_attempt_id: null
 reviewer:
@@ -188,6 +188,9 @@ The planned learner state, immersion rule, gate report, style card and any built
 
 ### Built Lesson (Tabs: urok, slovnyk, vpravy, resursy)
 {{ lesson_content | fence("mdx") }}
+
+### Lesson Provenance
+{{ provenance_text | fence("yaml") }}
 
 {% for act in activity_data_files %}
 ### Activity Data: `{{ act.path }}`

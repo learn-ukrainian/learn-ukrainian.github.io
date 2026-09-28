@@ -5,7 +5,7 @@ sources inside a message body and verifies the cited headword exists
 in the corresponding source corpus. Sources fall into two tiers:
 
   - **DB-verified** (flag on absent headword): Антоненко-Давидович,
-    Грінченко 1907, СУМ-11, ЕСУМ. These all have a deterministic local
+    Грінченко 1907, ЕСУМ. These have a deterministic local
     lookup in ``data/sources.db``.
   - **Detection-only / soft-skip** (citation counted, never flagged):
     Правопис 2019, VESUM, Шевельов, Вихованець, Пономарів. These have
@@ -14,6 +14,8 @@ in the corresponding source corpus. Sources fall into two tiers:
     flag or stall posts; VESUM has its own DB but no exposed string-
     presence query in ``wiki.sources_db``; the rest are author
     references with no machine-readable corpus indexed.
+  - **Disallowed verification evidence**: СУМ-11 citations are detected and
+    annotated even when a headword is present in its Soviet-era corpus.
 
 If verification fails, the body is annotated with a
 ``<!-- CITATION-UNVERIFIED ... -->`` marker — annotate-mode by design,
@@ -359,9 +361,11 @@ def _verify_hrinchenko(citation: Citation) -> VerificationResult:
 
 
 def _verify_sum11(citation: Citation) -> VerificationResult:
-    db = _try_load_sources_db()
-    lookup = db.search_definitions if db is not None else None
-    return _verify_via_lookup(citation, lookup=lookup, source_label="СУМ-11")
+    return VerificationResult(
+        citation,
+        verified=False,
+        detail="sovietized_source_not_authority",
+    )
 
 
 def _verify_esum(citation: Citation) -> VerificationResult:

@@ -133,6 +133,97 @@ MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
 FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
+#: A fenced YAML block (```yaml … ```), where every return template prints its schema (#8996).
+#: Any fence length: pinned data is wrapped in a fence longer than its longest backtick run (``data_fence``).
+YAML_FENCE = re.compile(r"(?ms)^ {0,3}(?P<fence>`{3,})ya?ml[ \t]*\n(?P<body>.*?)^ {0,3}(?P=fence)[ \t]*$")
+#: Top-level keys that mark a fenced block as a return schema: a review (plan, lesson, re-review) names its
+#: ids under ``attempt``; a settle names them at the top level.
+RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema")
+#: A plain (unfenced) ``attempt`` key line and its indented continuation — the fallback for a prompt that has
+#: no fenced return schema (a hand-written or custom prompt).
+ATTEMPT_ENTRY = re.compile(r"""(?m)^["']?attempt["']?[ \t]*:[^\n]*\n?(?:^[ \t]+\S[^\n]*\n?)*""")
+#: Any mention of an id key. ``previous_attempt_id`` names an earlier attempt and is not one of this
+#: attempt's ids.
+ID_KEY_MENTION = re.compile(r"(?<![A-Za-z0-9_])(?:review_id|attempt_id)(?![A-Za-z0-9_])")
+
+
+class AttemptIdsUnreadableError(ValueError):
+    """A prompt names ``review_id``/``attempt_id`` but they cannot be read unambiguously (#8996)."""
+
+
+def _ids_from(mapping: object, where: str) -> tuple[str, str]:
+    if not isinstance(mapping, dict):
+        raise AttemptIdsUnreadableError(f"{where} is not a mapping")
+    ids: list[str] = []
+    for key in ("review_id", "attempt_id"):
+        value = mapping.get(key)
+        if value is None or isinstance(value, (dict, list)) or not str(value).strip():
+            raise AttemptIdsUnreadableError(f"{where} has no readable {key}")
+        ids.append(str(value))
+    return ids[0], ids[1]
+
+
+def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
+    """Every fenced YAML block that is a return schema, each parsed as a whole YAML document.
+
+    Parsing the whole block — not a line pattern — reads every YAML spelling (explicit ``? key`` entries,
+    flow or block style, any quoting, uniform indentation). A block that names a schema key but is not valid
+    YAML is refused, never skipped. A rendered prompt has exactly one (a re-review pins only the earlier
+    attempt's checks and findings, not its return schema); a prompt with several is judged in
+    ``parse_attempt_ids``.
+    """
+    schemas: list[dict[str, Any]] = []
+    for fence in YAML_FENCE.finditer(prompt_text):
+        body = fence.group("body")
+        try:
+            loaded = yaml.safe_load(body)
+        except yaml.YAMLError as err:
+            if any(key in body for key in RETURN_SCHEMA_KEYS):
+                raise AttemptIdsUnreadableError(f"a fenced return schema is not valid YAML: {err}") from err
+            continue
+        if isinstance(loaded, dict) and any(key in loaded for key in RETURN_SCHEMA_KEYS):
+            schemas.append(loaded)
+    return schemas
+
+
+def _schema_ids(schema: dict[str, Any]) -> tuple[str, str]:
+    if "review_schema" in schema:
+        return _ids_from(schema.get("attempt"), "the return schema's attempt block")
+    return _ids_from(schema, "the settle return schema")
+
+
+def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
+    """The ``review_id``/``attempt_id`` a rendered prompt tells its seat to echo, or ``(None, None)``.
+
+    The ids come from the prompt's fenced return schema: under ``attempt`` for a review return (plan, lesson,
+    re-review), at the top level for a settle return. Several return schemas must all name the same ids. A prompt with no fenced return schema falls back to a
+    plain ``attempt`` entry. ``(None, None)`` means the prompt mentions neither id key anywhere. In every
+    other case the ids must be read, or ``AttemptIdsUnreadableError`` is raised: an id the guard cannot read
+    must never count as "no id to compare".
+    """
+    schemas = _return_schemas(prompt_text)
+    if schemas:
+        found = {_schema_ids(schema) for schema in schemas}
+        if len(found) > 1:
+            # Two return schemas naming different ids: the guard cannot know which one the seat will echo.
+            raise AttemptIdsUnreadableError(
+                "the prompt has several return schemas naming different ids: "
+                + "; ".join(f"{r}/{a}" for r, a in sorted(found))
+            )
+        return found.pop()
+    entry = ATTEMPT_ENTRY.search(prompt_text)
+    if entry is not None:
+        try:
+            loaded = yaml.safe_load(entry.group(0))
+        except yaml.YAMLError as err:
+            raise AttemptIdsUnreadableError(f"the prompt's attempt entry is not valid YAML: {err}") from err
+        return _ids_from(loaded.get("attempt") if isinstance(loaded, dict) else None, "the prompt's attempt entry")
+    if ID_KEY_MENTION.search(prompt_text):
+        raise AttemptIdsUnreadableError(
+            "the prompt mentions review_id/attempt_id outside any readable return schema or attempt entry"
+        )
+    return None, None
+
 
 @dataclass(frozen=True)
 class RenderedPromptCheckResult:
@@ -344,8 +435,16 @@ def check_prompt(
     recorded_sha256: str | None = None,
     template_sha256: dict[str, str] | None = None,
     prompts_dir: Path | None = None,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
 ) -> RenderedPromptCheckResult:
-    """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates."""
+    """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates.
+
+    ``review_id``/``attempt_id`` (#8996), when given, are the ids this attempt is expected to carry; a
+    prompt whose own ``attempt:`` block names different ids fails with a named error. When not given, the
+    exact re-render uses whatever the prompt's own attempt block names (or none, for a template that prints
+    none), so the re-render can still match a prompt rendered for real dispatch ids.
+    """
     root = (repo_root or REPO_ROOT).resolve()
     errors: list[str] = []
     verifier_reads: list[str] = []
@@ -379,11 +478,37 @@ def check_prompt(
     verified = _verify_manifest_inputs(manifest_doc, root, errors)
     if errors:
         return result()
+
+    # 2b. The prompt's own attempt block (#8996), if it prints one, must agree with the ids this attempt
+    # is expected to carry; a mismatch is refused by name rather than surfacing as an opaque render diff.
+    try:
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(rendered_prompt)
+    except AttemptIdsUnreadableError as err:
+        errors.append(f"attempt_ids_unreadable: {err}")
+        prompt_review_id = prompt_attempt_id = None
+    if review_id is not None and prompt_review_id is not None and review_id != prompt_review_id:
+        errors.append(
+            f"review_id_mismatch: the prompt's attempt.review_id is {prompt_review_id!r}, expected {review_id!r}"
+        )
+    if attempt_id is not None and prompt_attempt_id is not None and attempt_id != prompt_attempt_id:
+        errors.append(
+            f"attempt_id_mismatch: the prompt's attempt.attempt_id is {prompt_attempt_id!r}, expected {attempt_id!r}"
+        )
+    effective_review_id = review_id if review_id is not None else prompt_review_id
+    effective_attempt_id = attempt_id if attempt_id is not None else prompt_attempt_id
+
     # 3. Exact render: the same render.py path, the same manifest, byte for byte
     used_text: str | None = None
     used_templates: dict[Path, str] = {}
     try:
-        rendering = render(manifest_source, template_name, repo_root=root, prompts_dir=prompts_dir)
+        rendering = render(
+            manifest_source,
+            template_name,
+            repo_root=root,
+            prompts_dir=prompts_dir,
+            review_id=effective_review_id,
+            attempt_id=effective_attempt_id,
+        )
     except RenderError as err:
         errors.append(f"render_failed: {type(err).__name__}: {err}")
     else:
@@ -443,6 +568,24 @@ def main(argv: list[str] | None = None) -> int:
         "--files-read",
         default=None,
         help="Path to files_read sidecar (default: <prompt_file>.files_read.json)",
+    )
+    parser.add_argument(
+        "--review-id",
+        default=None,
+        help=(
+            "This attempt's expected review id (#8996); a prompt whose attempt block names a different one "
+            "fails with review_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
+            "Example: --review-id rev-20260922-001"
+        ),
+    )
+    parser.add_argument(
+        "--attempt-id",
+        default=None,
+        help=(
+            "This attempt's expected attempt id (#8996); a prompt whose attempt block names a different one "
+            "fails with attempt_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
+            "Example: --attempt-id claude-att-1"
+        ),
     )
     args = parser.parse_args(argv)
 
@@ -505,6 +648,8 @@ def main(argv: list[str] | None = None) -> int:
         files_read=files_read_list,
         recorded_sha256=recorded,
         template_sha256=sidecar.get("template_sha256"),
+        review_id=args.review_id,
+        attempt_id=args.attempt_id,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 

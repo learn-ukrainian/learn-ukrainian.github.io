@@ -56,6 +56,21 @@ def _val(cmd: list[str], flag: str) -> str:
     return cmd[cmd.index(flag) + 1]
 
 
+def _without_guard_agent(cmd: list[str]) -> list[str]:
+    """Drop the per-invocation guard agent pair so argv snapshots stay stable."""
+    stripped: list[str] = []
+    skip_next = False
+    for item in cmd:
+        if skip_next:
+            skip_next = False
+            continue
+        if item == "--agent":
+            skip_next = True
+            continue
+        stripped.append(item)
+    return stripped
+
+
 def test_basic_headless_invocation(tmp_path):
     plan = _build("Fix the bug in foo.py", tmp_path)
     assert plan.cmd[0] == FAKE_GROK
@@ -70,7 +85,7 @@ def test_basic_headless_invocation(tmp_path):
 def test_mode_permission_mapping(tmp_path):
     for mode, perm in [
         ("read-only", "auto"),
-        ("workspace-write", "auto"),
+        ("workspace-write", "bypassPermissions"),
         ("danger", "bypassPermissions"),
     ]:
         plan = _build("do x", tmp_path, mode=mode)
@@ -152,9 +167,12 @@ def test_exact_argv_per_mode(tmp_path):
         "search_replace",
     ]
 
-    # workspace-write: auto, always-approve, no default deny rules
+    # workspace-write: bypassPermissions, always-approve, no default deny rules.
+    # auto would leave yolo off and the classifier would refuse git push (#8965).
+    # The fleet guard agent is asserted in test_grok_reviewer_tools.
     ww_plan = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.7", effort="high")
-    assert ww_plan.cmd == [
+    assert "--agent" in ww_plan.cmd
+    assert _without_guard_agent(ww_plan.cmd) == [
         FAKE_GROK,
         "-p",
         "edit code",
@@ -162,7 +180,7 @@ def test_exact_argv_per_mode(tmp_path):
         "json",
         "--no-alt-screen",
         "--permission-mode",
-        "auto",
+        "bypassPermissions",
         "--cwd",
         str(tmp_path),
         "--always-approve",
@@ -172,9 +190,10 @@ def test_exact_argv_per_mode(tmp_path):
         "high",
     ]
 
-    # danger: bypassPermissions, always-approve, no default deny rules
+    # danger: bypassPermissions, always-approve, fleet guards, no default deny rules
     danger_plan = _build("danger task", tmp_path, mode="danger", model="grok-4.7", effort="high")
-    assert danger_plan.cmd == [
+    assert "--agent" in danger_plan.cmd
+    assert _without_guard_agent(danger_plan.cmd) == [
         FAKE_GROK,
         "-p",
         "danger task",

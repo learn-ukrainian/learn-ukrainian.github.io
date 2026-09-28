@@ -4135,13 +4135,11 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
     assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
         ("малий", "СУМ-20", "протилежне"),
         ("малий", "ВТС", "прот."),
-        ("малий", "СУМ-11", "протилежне"),
     ]
     assert all(row["gate"] == {"vesum": "both valid"} for row in relations)
     assert [row.get("source_url") for row in relations] == [
         "https://example.invalid/sum20/velykyi",
         "https://example.invalid/vts/velykyi",
-        None,
     ]
 
     _patch_synonym_vesum(monkeypatch, {"малий"})
@@ -4171,7 +4169,12 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
 
 def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monkeypatch) -> None:
     _patch_synonym_vesum(monkeypatch, {"великий", "малий"})
-    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_read_cached_slovnyk_rows",
+        lambda lemma: {"lookups": {"newsum": {"word": lemma, "text": "ВЕЛИ́КИЙ, а, е. протилежне малий."}}}
+        if lemma == "великий" else {},
+    )
     conn = _conn()
     conn.execute(
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
@@ -4242,11 +4245,20 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
         [(lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.") for lemma, antonym in pairs.items()],
     )
+    assert all(
+        _definition_antonym_relations(conn, lemma, has_sum11_flags=True, cache={}) == []
+        for lemma in pairs
+    )
 
     before_counts = {lemma: 0 for lemma in pairs}
     after_items = {
         lemma: [
-            relation["item"] for relation in _definition_antonym_relations(conn, lemma, has_sum11_flags=True, cache={})
+            relation["item"] for relation in _definition_antonym_relations(
+                conn,
+                lemma,
+                has_sum11_flags=True,
+                cache={"lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}},
+            )
         ]
         for lemma in pairs
     }
@@ -4302,24 +4314,29 @@ def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatc
         ),
     )
     _patch_synonym_vesum(monkeypatch, {"коса"})
+    cache = {"lookups": {"newsum": {
+        "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+    }}}
 
-    relations = _homonym_relations(conn, "коса", cache={})
+    assert _homonym_relations(conn, "коса", cache={}) == []  # СУМ-11 alone cannot verify a relation.
+    relations = _homonym_relations(conn, "коса", cache=cache)
 
-    assert relations == [
+    assert [{key: value for key, value in relation.items() if key != "source_url"} for relation in relations] == [
         {
             "word": "коса",
             "homonym_no": 2,
             "gloss": "Сільськогосподарське знаряддя для косіння трави.",
             "pos": "іменник, жін. р.",
-            "source": "СУМ-11",
+            "source": "СУМ-20",
             "pattern": "numbered homonym headword",
             "vein": 1,
             "gate": {"vesum": "valid lemma"},
         }
     ]
+    assert relations[0]["source_url"].startswith("https://services.ulif.org.ua/expl/#/word/")
 
     _patch_synonym_vesum(monkeypatch, set())
-    assert _homonym_relations(conn, "коса", cache={}) == []
+    assert _homonym_relations(conn, "коса", cache=cache) == []
 
     _patch_synonym_vesum(monkeypatch, {"коса"})
     conn.execute(
@@ -4327,12 +4344,18 @@ def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatc
         ("коса", "КОСА́¹, и, ж. Заплетене волосся."),
     )
     # A malformed source row must not supplement a complete, dictionary-numbered set.
-    assert _homonym_relations(conn, "коса", cache={}) == relations
+    assert _homonym_relations(conn, "коса", cache=cache) == relations
 
 
 def test_homonym_relations_precompute_by_manifest_headword(monkeypatch) -> None:
     _patch_synonym_vesum(monkeypatch, {"коса"})
-    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_read_cached_slovnyk_rows",
+        lambda lemma: {"lookups": {"newsum": {
+            "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+        }}} if lemma == "коса" else {},
+    )
     conn = _conn()
     conn.execute(
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
@@ -4368,10 +4391,7 @@ def test_homonym_relations_choose_the_most_complete_numbered_source(monkeypatch)
 
     relations = _homonym_relations(conn, "коса", cache=cache)
 
-    assert [(item["source"], item["homonym_no"]) for item in relations] == [
-        ("СУМ-11", 2),
-        ("СУМ-11", 3),
-    ]
+    assert [(item["source"], item["homonym_no"]) for item in relations] == [("СУМ-20", 2)]
 
 
 def test_homonym_relation_merge_preserves_gloss_schema_and_source_urls() -> None:
@@ -4773,7 +4793,13 @@ def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
 
     before_counts = {lemma: 0 for lemma in fixtures}
     after_numbers = {
-        lemma: [relation["homonym_no"] for relation in _homonym_relations(conn, lemma, cache={})] for lemma in fixtures
+        lemma: [
+            relation["homonym_no"]
+            for relation in _homonym_relations(
+                conn, lemma, cache={"lookups": {"newsum": {"text": definition}}}
+            )
+        ]
+        for lemma, (definition, _numbers) in fixtures.items()
     }
 
     assert before_counts == {lemma: 0 for lemma in fixtures}
@@ -4963,13 +4989,21 @@ def test_definition_pointer_relations_keep_each_dictionary_provenance(monkeypatc
 
 def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypatch) -> None:
     _patch_synonym_vesum(monkeypatch, {"кафе", "кав'ярня"})
-    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_read_cached_slovnyk_rows",
+        lambda lemma: {"lookups": {"newsum": {
+            "word": "кафе", "text": "КАФЕ́, невідм., с. Те саме, що кав'ярня."
+        }}} if lemma == "кафе" else {},
+    )
     conn = _conn()
     conn.execute(
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
         ("кафе", "КАФЕ́, невідм., с. Те саме, що кав'ярня."),
     )
     manifest = {"entries": [{"lemma": "кафе"}, {"lemma": "кав'ярня"}]}
+
+    assert _definition_pointer_relations(conn, "кафе", has_sum11_flags=True, cache={}) == []
 
     relations = _definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=True)
 
@@ -5126,6 +5160,8 @@ def test_sum11_definition_card_resolves_cross_reference_one_level(monkeypatch) -
     conn = _sum11_conn({"заховати": "заховати див. заховувати", "заховувати": target_def})
     card = _sum11_definition_card(conn, "заховати", has_sum11_flags=True)
     assert card is not None
+    assert card["verification_authority"] is False
+    assert "лише контраст" in card["note"]
     # Verbatim target body, prefixed with the honest aspect+cross-ref provenance note.
     assert card["definitions"] == [f"(докон. до заховувати / див. заховувати) {target_def}"]
     assert card["cross_reference"] == {"raw": "заховати див. заховувати", "target": "заховувати"}

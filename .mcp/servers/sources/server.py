@@ -74,6 +74,11 @@ server: Server
 # Under approval_policy=never that call is cancelled instead of run.
 # Every sources tool is a lookup: it does not mutate the checkout.
 _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
+SUM11_AUTHORITY_NOTICE = (
+    "Soviet-occupation СУМ-11 (1970–1980) is for Sovietization contrast only; "
+    "NEVER use it for meaning, stress, part of speech, or word validity. "
+    "Use query_sum20 / ВТС / query_ulif / VESUM / Грінченко."
+)
 
 
 def _tool(**kwargs: Any) -> Tool:
@@ -97,8 +102,8 @@ COMPLETENESS_NOTES = {
         "if discusses=false here, Tier 2 escalation may still find it."
     ),
     "sum11": (
-        "СУМ-11: 127K entries; Soviet-era political/ideological coverage "
-        "flagged via sovietization_risk metadata."
+        "СУМ-11: contrast only, verification_authority=false; "
+        "Soviet-era political/ideological coverage flagged via sovietization_risk metadata."
     ),
     "grinchenko_1907": "Грінченко 1907: 67K entries; lexicographic snapshot circa 1907, NOT etymology.",
     "esum": "ЕСУМ: etymological dictionary; coverage skewed toward inherited vocabulary.",
@@ -377,8 +382,10 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="verify_source_attribution",
             description=(
-                "Verify whether a named authoritative source discusses a given claim/topic/headword. "
-                "Returns boolean verdict + supporting evidence chunks with provenance. "
+                "Check whether a named source discusses a given claim/topic/headword. "
+                "The `sum11` option is Sovietization contrast only and always returns "
+                "verification_authority=false and discusses=false; contrast_match reports a historical match. "
+                "Other sources return boolean verdict + supporting evidence chunks with provenance. "
                 "Use INSTEAD of dispatching sub-agents or composing multiple search tools manually."
             ),
             inputSchema={
@@ -433,7 +440,8 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Vet up to 500 Ukrainian vocabulary items in one compact report. "
                 "Batches VESUM validity, PULS CEFR lookup, and Russian-shadow "
-                "suspicion checks; optionally includes the best СУМ-11 gloss. "
+                "suspicion checks; optional СУМ-11 text is contrast only, "
+                "verification_authority=false, never a verified gloss. "
                 "A Russian-shadow result is a suspicion signal, not a verdict."
             ),
             inputSchema={
@@ -447,7 +455,7 @@ async def list_tools() -> list[Tool]:
                     "include_definitions": {
                         "type": "boolean",
                         "default": False,
-                        "description": "Include the best available one-line СУМ-11 gloss for each word.",
+                        "description": "Include a СУМ-11 contrast-only excerpt, never a verified gloss.",
                     },
                 },
                 "required": ["words"],
@@ -917,7 +925,10 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="search_definitions",
             description=(
-                "Search СУМ-11 — Ukrainian explanatory dictionary from 1970–1980. "
+                "Soviet-occupation СУМ-11 (1970–1980) — for Sovietization contrast only; "
+                "NEVER a source for meaning, stress, part of speech or word validity; "
+                "use query_sum20 / ВТС / query_ulif / VESUM / Грінченко. "
+                "Search its historical entries with verification_authority=false. "
                 "Coverage: 127,069 of canonical 127K entries (~100% indexed). "
                 "**Systematic exclusion: proper nouns** — toponyms (Київ, Львів, "
                 "Дніпро, Сибір) and personal names (Шевченко) are NOT covered; "
@@ -1012,8 +1023,8 @@ async def list_tools() -> list[Tool]:
                 "Ukrainian lexicography. Quality audit pending under EPIC #1657 "
                 "Tier 3. Use for vocabulary variety and rough synonym/antonym "
                 "discovery, but **DO NOT cite as authoritative**: cross-validate "
-                "against `search_definitions` (СУМ-11) or `search_grinchenko_1907` "
-                "(Грінченко) before treating a synonym as established Ukrainian. "
+                "against `query_sum20` (СУМ-20), ВТС, or `search_grinchenko_1907` "
+                "(Грінченко for historical usage) before treating a synonym as established Ukrainian. "
                 "The 3,360-synset version cited in older docs is the 2023 paper's "
                 "initial release; current production is the auto-MT-expanded set."
             ),
@@ -1087,7 +1098,7 @@ async def list_tools() -> list[Tool]:
                 "СУМ-20. Per-query live fetch with citation, no bulk crawl, "
                 "no DB caching.\n\n"
                 "Available `dict` values:\n"
-                "- `sum` — СУМ-11 (Sovietized, 1970–80) — fallback only\n"
+                "- `sum` — СУМ-11 (Sovietized, 1970–80) — contrast only; never verification\n"
                 "- `davydov` (`antonenko` alias) — Antonenko-Davydovych «Як ми говоримо»\n"
                 "- `synonyms_karavansky` (`karavansky` alias) — Karavansky synonyms\n"
                 "- `franko` — dictionary from Ivan Franko's works\n"
@@ -1129,7 +1140,8 @@ async def list_tools() -> list[Tool]:
                 "when a prompt needs a supported regional dictionary specifically. "
                 "Dictionaries already indexed locally "
                 "(СУМ-11, Грінченко, Антоненко-Давидович, phraseology, EN→UK) "
-                "are blocked here; use their canonical tools. For heritage-defense "
+                "are blocked here; use their canonical tools for their permitted roles. "
+                "СУМ-11 is contrast only. For heritage-defense "
                 "decisions, prefer `search_heritage`."
             ),
             inputSchema={
@@ -1437,13 +1449,20 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
         keywords = {word for word in claim.lower().split() if len(word) >= 3}
         hits = await asyncio.to_thread(sdb.search_literary, keywords, limit)
     elif source == "heritage":
-        hits = await asyncio.to_thread(sdb.search_heritage, claim, limit, include_live_slovnyk=True)
+        heritage_outages: list[dict] = []
+        hits = await asyncio.to_thread(
+            sdb.search_heritage, claim, limit, include_live_slovnyk=True, outages=heritage_outages
+        )
+        if heritage_outages:
+            completeness_note = _slovnyk_outage_note(heritage_outages)
     elif source == "wikipedia":
         try:
             wiki_result = await handle_query_wikipedia({"query": claim, "mode": "search", "limit": limit})
             wiki_text = wiki_result[0].text if wiki_result else ""
             hits = _parse_wikipedia_search_hits(wiki_text)
-            if not hits and not _looks_like_wikipedia_search_response(wiki_text):
+            if wiki_text.startswith(WIKIPEDIA_UNAVAILABLE_PREFIX):
+                completeness_note = f"Wikipedia unavailable; not a negative result: {wiki_text}"
+            elif not hits and not _looks_like_wikipedia_search_response(wiki_text):
                 completeness_note = "Wikipedia returned unexpected response format"
         except requests.RequestException as exc:
             hits = []
@@ -1466,12 +1485,21 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
         _attribution_evidence(hit, confidence)
         for hit, confidence in scored[:limit]
     ]
+    if source == "sum11":
+        evidence = [
+            {**item, "verification_authority": False, "notice": SUM11_AUTHORITY_NOTICE}
+            for item in evidence
+        ]
     payload: dict[str, Any] = {
-        "discusses": any(confidence >= 0.85 for _, confidence in scored),
+        "discusses": source != "sum11" and any(confidence >= 0.85 for _, confidence in scored),
         "source": source,
         "evidence_count": len(evidence),
         "evidence": evidence,
     }
+    if source == "sum11":
+        payload["verification_authority"] = False
+        payload["notice"] = SUM11_AUTHORITY_NOTICE
+        payload["contrast_match"] = any(confidence >= 0.85 for _, confidence in scored)
     if completeness_note:
         payload["completeness_note"] = completeness_note
     elif source in COMPLETENESS_NOTES:
@@ -2297,6 +2325,8 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     )
 
     lines = []
+    if include_definitions:
+        lines.append(f"verification_authority: false (СУМ-11 excerpts only). {SUM11_AUTHORITY_NOTICE}")
     if len(submitted_words) > len(words):
         lines.append(
             f"Note: received {len(submitted_words)} words; processed the first 500 (hard cap)."
@@ -2315,7 +2345,10 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
         if include_definitions:
             definition_hit = (definition_results.get(lookup_term) or [{}])[0]
             gloss = definition_hit.get("definition") or "not found"
-            fields.append(f"Gloss: {_compact_vocabulary_value(gloss, max_chars=240)}")
+            fields.append(
+                "СУМ-11 contrast excerpt (verification_authority: false): "
+                f"{_compact_vocabulary_value(gloss, max_chars=240)}"
+            )
         lines.append("- " + " | ".join(fields))
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -2681,21 +2714,43 @@ def _format_wikipedia_extract_page(
     return f"{header}\n\n{article[offset:end]}"
 
 
+WIKIPEDIA_UNAVAILABLE_PREFIX = "Wikipedia UNAVAILABLE"
+
+
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:
+    """Wikipedia lookup; an outage is reported as unavailable and never cached as a miss (#9005)."""
+    from rag.source_query import WikipediaUnavailableError
+
+    try:
+        return await _query_wikipedia(args)
+    except WikipediaUnavailableError as exc:
+        return [
+            TextContent(
+                type="text",
+                text=f"{WIKIPEDIA_UNAVAILABLE_PREFIX} for: '{args.get('query', '')}' ({exc}) — Wikipedia could "
+                "not be reached; this is not a negative result and was not cached (#9005).",
+            )
+        ]
+
+
+async def _query_wikipedia(args: dict) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
     limit = args.get("limit", 5)
     section_idx = args.get("section")
     force_refresh = args.get("force_refresh", False)
 
-    from rag.source_query import (
-        wikipedia_extract,
-        wikipedia_search,
-        wikipedia_section_text,
-        wikipedia_sections,
-        wikipedia_summary,
-    )
+    from functools import partial
+
+    from rag import source_query as _sq
     from rag.wiki_cache import WikiCache
+
+    # Every live fetch raises on an outage, so no negative-cache write below can record one (#9005).
+    wikipedia_extract = partial(_sq.wikipedia_extract, raise_unavailable=True)
+    wikipedia_search = partial(_sq.wikipedia_search, raise_unavailable=True)
+    wikipedia_section_text = partial(_sq.wikipedia_section_text, raise_unavailable=True)
+    wikipedia_sections = partial(_sq.wikipedia_sections, raise_unavailable=True)
+    wikipedia_summary = partial(_sq.wikipedia_summary, raise_unavailable=True)
 
     cache = WikiCache()
 
@@ -2857,10 +2912,16 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         grac_lemma_frequency,
     )
 
+    grac_unavailable_text = (
+        f"GRAC (uacorpus.org) is unavailable for '{query}' (network error or "
+        "HTTP failure). Treat as unknown, not a negative — do not cite this "
+        "as a zero-frequency or no-results finding."
+    )
+
     if mode == "frequency":
         result = await asyncio.to_thread(grac_frequency, query)
-        if not result:
-            return [TextContent(type="text", text=f"GRAC query failed for: '{query}'")]
+        if result is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         return [TextContent(type="text", text=(
             f"**{result['word']}**: frequency = {result['freq']:,}, "
             f"relative = {result['rel_freq']:.2f} per million"
@@ -2868,8 +2929,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     elif mode == "lemma_forms":
         result = await asyncio.to_thread(grac_lemma_frequency, query)
-        if not result:
-            return [TextContent(type="text", text=f"GRAC lemma query failed for: '{query}'")]
+        if result is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         lines = [f"Lemma '{result['lemma']}' — total frequency: {result['total_freq']:,}\n"]
         for form in result["forms"][:limit]:
             lines.append(f"- {form['word']}: {form['freq']:,} ({form['pct']:.1f}%)")
@@ -2877,6 +2938,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     elif mode == "concordance":
         results = await asyncio.to_thread(grac_concordance, query, limit)
+        if results is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         if not results:
             return [TextContent(type="text", text=f"No concordance results for: '{query}'")]
         lines = [f"Concordance for '{query}' — {len(results)} lines\n"]
@@ -2886,6 +2949,8 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
     else:  # collocations
         results = await asyncio.to_thread(grac_collocations, query, limit=limit)
+        if results is None:
+            return [TextContent(type="text", text=grac_unavailable_text)]
         if not results:
             return [TextContent(type="text", text=f"No collocations found for: '{query}'")]
         lines = [f"Collocations for '{query}' — {len(results)} results\n"]
@@ -2938,6 +3003,15 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
                     + (f" {detail}" if detail else "")
                 )
             return [TextContent(type="text", text="\n".join(lines))]
+        if isinstance(result, dict) and result.get("status") == "unavailable":
+            return [TextContent(
+                type="text",
+                text=(
+                    f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
+                    "error or HTTP failure). Treat as unknown, not a negative — do not cite "
+                    "this as 'no paradigm'."
+                ),
+            )]
         if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
@@ -3000,8 +3074,18 @@ async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
 async def handle_query_r2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
-    from rag.source_query import r2u_translate
-    results = await asyncio.to_thread(r2u_translate, word)
+    from rag.source_query import R2ULookupStatus, r2u_translate_with_status
+    status, results = await asyncio.to_thread(r2u_translate_with_status, word)
+
+    if status == R2ULookupStatus.SOURCE_UNAVAILABLE:
+        return [TextContent(
+            type="text",
+            text=(
+                f"r2u.org.ua is unavailable for '{word}' (network error or HTTP "
+                "failure). Treat as unknown, not a negative — do not cite this "
+                "as 'no translation'."
+            ),
+        )]
 
     if not results:
         return [TextContent(type="text", text=f"No r2u translation found for: '{word}'")]
@@ -3015,8 +3099,18 @@ async def handle_query_r2u(args: dict) -> list[TextContent]:
 async def handle_query_e2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
-    from rag.source_query import e2u_translate
-    results = await asyncio.to_thread(e2u_translate, word)
+    from rag.source_query import E2ULookupStatus, e2u_translate_with_status
+    status, results = await asyncio.to_thread(e2u_translate_with_status, word)
+
+    if status == E2ULookupStatus.SOURCE_UNAVAILABLE:
+        return [TextContent(
+            type="text",
+            text=(
+                f"e2u.org.ua is unavailable for '{word}' (network error or HTTP "
+                "failure). Treat as unknown, not a negative — do not cite this "
+                "as 'no translation'."
+            ),
+        )]
 
     if not results:
         return [TextContent(type="text", text=f"No e2u translation found for: '{word}'")]
@@ -3106,8 +3200,35 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
         )]
 
     result = await asyncio.to_thread(slovnyk_me_lookup, word, canonical_slug)
+    status = result.get("status", "found") if isinstance(result, dict) else "not_found"
 
-    if not result:
+    if status == "unavailable":
+        detail_bits = []
+        if result.get("challenge"):
+            detail_bits.append("Cloudflare challenge detected")
+        if result.get("http_status") is not None:
+            detail_bits.append(f"HTTP {result['http_status']}")
+        if result.get("reason") and not result.get("challenge"):
+            detail_bits.append(result["reason"])
+        detail = f" ({'; '.join(detail_bits)})" if detail_bits else ""
+        payload = {
+            "status": "unavailable",
+            "word": word,
+            "dict": canonical_slug,
+            "http_status": result.get("http_status"),
+            "challenge": bool(result.get("challenge")),
+        }
+        return [TextContent(
+            type="text",
+            text=(
+                f"slovnyk.me/{canonical_slug} ({SLOVNYK_ME_DICTS[canonical_slug]}) is "
+                f"unavailable for '{word}'{detail}. Treat as unknown, not a negative — "
+                "do not cite this as 'no entry'.\n"
+                f"{json.dumps(payload, ensure_ascii=False)}"
+            ),
+        )]
+
+    if status != "found" or "text" not in result:
         return [TextContent(
             type="text",
             text=(
@@ -3116,10 +3237,15 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
             ),
         )]
 
+    notice = (
+        f"verification_authority: false. {SUM11_AUTHORITY_NOTICE}\n"
+        if canonical_slug == "sum" else ""
+    )
     return [TextContent(
         type="text",
         text=(
             f"**{result['dict_label']} — entry for '{word}'**\n"
+            f"{notice}"
             f"**URL**: {result['url']}\n"
             f"**Source**: slovnyk.me (per-query live fetch, © Slovnyk.me)\n\n"
             f"{result['text'][:3000]}"
@@ -3147,9 +3273,24 @@ async def handle_query_pravopys(args: dict):
 
     # Check if topic is a number
     if topic.strip().isdigit():
-        result = await asyncio.to_thread(pravopys_section, int(topic.strip()))
+        result = await asyncio.to_thread(pravopys_section, int(topic.strip()), report_unavailable=True)
     else:
-        result = await asyncio.to_thread(pravopys_lookup, topic)
+        result = await asyncio.to_thread(pravopys_lookup, topic, report_unavailable=True)
+
+    if isinstance(result, dict) and result.get("status") == "unavailable":
+        prose = (
+            f"Pravopys UNAVAILABLE for: '{topic}' (section {result.get('section')}, {result.get('reason')}) — "
+            "the site could not be reached; this is not a negative result (#9005)."
+        )
+        envelope = build_search_envelope(
+            tool="query_pravopys",
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            status="error",
+            error_code="source_unavailable",
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     if not result:
         prose = f"No pravopys section found for: '{topic}'"
@@ -3239,14 +3380,24 @@ async def handle_dict_search(args: dict, collection: str, label: str):
 
     if not hits:
         prose = f"No results in {label} for: \"{query}\""
+        if collection == "sum11":
+            prose = f"{SUM11_AUTHORITY_NOTICE}\n{prose}"
         envelope = build_search_envelope(
             tool=tool_name, query=query_obj, hits=[], summary_prose=prose
         )
         return [TextContent(type="text", text=prose)], envelope
 
     lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
+    if collection == "sum11":
+        lines.append(f"verification_authority: false. {SUM11_AUTHORITY_NOTICE}\n")
+        hits = [
+            {**hit, "verification_authority": False, "notice": SUM11_AUTHORITY_NOTICE}
+            for hit in hits
+        ]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
+        if collection == "sum11":
+            lines.append(f"- verification_authority: false. {SUM11_AUTHORITY_NOTICE}")
         word = hit.get("word", hit.get("words", ""))
         if word:
             lines.append(f"- **Headword**: {word}")
@@ -3268,7 +3419,8 @@ async def handle_dict_search(args: dict, collection: str, label: str):
             )
         definition = hit.get("definition", hit.get("definitions", ""))
         if definition:
-            lines.append(f"- **Definition**: {_quote_balanced_clip(str(definition), 500)}")
+            field = "Contrast excerpt" if collection == "sum11" else "Definition"
+            lines.append(f"- **{field}**: {_quote_balanced_clip(str(definition), 500)}")
         text = hit.get("text", "")
         if text and text != definition:
             lines.append(f"- **Text**: {_quote_balanced_clip(text, 500)}")
@@ -3279,6 +3431,15 @@ async def handle_dict_search(args: dict, collection: str, label: str):
         tool=tool_name, query=query_obj, hits=list(hits), summary_prose=prose
     )
     return [TextContent(type="text", text=prose)], envelope
+
+
+def _slovnyk_outage_note(outages: list[dict]) -> str:
+    """One line naming the failed live slovnyk.me lookups (#9005)."""
+    failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
+    return (
+        f"slovnyk.me unavailable for {len(failed)} live lookup(s): {', '.join(failed)}. "
+        "An unavailable source is not a negative result (#9005)."
+    )
 
 
 async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
@@ -3292,17 +3453,28 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
 
     from wiki import sources_db as sdb
 
-    hits = await asyncio.to_thread(
-        sdb.search_slovnyk_me,
+    hits, outages = await asyncio.to_thread(
+        sdb.search_slovnyk_me_with_status,
         query,
         limit,
         dictionaries,
         live=live,
     )
+    outage_note = _slovnyk_outage_note(outages) if outages else ""
     if not hits:
+        if outages:
+            return [
+                TextContent(
+                    type="text",
+                    text=f"slovnyk.me UNAVAILABLE for: \"{query}\" — no result could be confirmed "
+                    f"or ruled out.\n{outage_note}",
+                )
+            ]
         return [TextContent(type="text", text=f"No slovnyk.me results for: \"{query}\"")]
 
     lines = [f"Found {len(hits)} slovnyk.me result(s) for: \"{query}\"\n"]
+    if outage_note:
+        lines.append(f"Partial results: {outage_note}\n")
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Headword**: {hit.get('word', '')}")
@@ -3340,16 +3512,29 @@ async def handle_search_heritage(args: dict) -> list[TextContent]:
 
     from wiki import sources_db as sdb
 
+    outages: list[dict] = []
     hits = await asyncio.to_thread(
         sdb.search_heritage,
         query,
         limit,
         include_live_slovnyk=include_live_slovnyk,
+        outages=outages,
     )
+    outage_note = _slovnyk_outage_note(outages) if outages else ""
     if not hits:
+        if outages:
+            return [
+                TextContent(
+                    type="text",
+                    text=f"Heritage evidence UNAVAILABLE for: \"{query}\" — no offline row matched and the "
+                    f"live slovnyk.me lookup failed.\n{outage_note}",
+                )
+            ]
         return [TextContent(type="text", text=f"No heritage evidence found for: \"{query}\"")]
 
     lines = [f"Found {len(hits)} heritage evidence row(s) for: \"{query}\"\n"]
+    if outage_note:
+        lines.append(f"Partial results: {outage_note}\n")
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Evidence {i}")
         lines.append(f"- **Source family**: {hit.get('source_family', '')}")

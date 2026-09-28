@@ -12733,6 +12733,13 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_branch"] is not None
 
 
+#: A --review-attempt prompt must print the ids its seat echoes (#8996); these match rev-test / att-test.
+_MATCHING_ATTEMPT_PROMPT = (
+    "### Return Schema Template:\n```yaml\nreview_schema: 1\nkind: lesson\nattempt:\n"
+    '  review_id: "rev-test"\n  attempt_id: "att-test"\n```\n'
+)
+
+
 def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
@@ -12769,6 +12776,7 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
                 agent="claude",
                 task_id="review-marked",
                 mode="read-only",
+                prompt=_MATCHING_ATTEMPT_PROMPT,
                 cwd=str(dispatch_wt),
                 review_attempt=str(manifest),
                 review_id="rev-test",
@@ -12780,6 +12788,131 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     state = delegate._read_state(delegate._state_path("review-marked"))
     assert state["worktree_disallow_reuse"] is True
     assert "worktree_review_attempt_only" not in state
+    # #9022: the task record binds itself to its review attempt for the recorder
+    assert state["review_attempt"] == {
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
+    }
+
+
+@pytest.mark.parametrize(
+    "attempt_lines",
+    [
+        ['  review_id: "rev-other"', '  attempt_id: "att-other"'],
+        ["  review_id: 'rev-other'", "  attempt_id: 'att-other'"],
+        ["  review_id: rev-other", "  attempt_id: att-other"],
+    ],
+    ids=["double-quoted", "single-quoted", "unquoted"],
+)
+def test_review_attempt_refuses_a_prompt_whose_attempt_ids_differ_from_the_dispatch_ids(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, attempt_lines
+):
+    """#8996: a prompt whose own attempt block names different ids than --review-id/--attempt-id would let a
+    seat's return validate against the wrong receipt ledger; the dispatch must refuse before any side effect
+    (no worktree, no task record), not merely log a warning."""
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-mismatch",
+                mode="read-only",
+                prompt=(
+                    "Kind: lesson\n"
+                    "attempt:\n"
+                    + "".join(f"{line}\n" for line in attempt_lines)
+                    + '  manifest_sha256: "'
+                    + ("ab" * 32)
+                    + '"\n'
+                    "  previous_attempt_id: null\n"
+                ),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "prompt_attempt_ids_mismatch" in err
+    assert "rev-other" in err and "rev-test" in err
+    assert "att-other" in err and "att-test" in err
+    assert delegate._read_state(delegate._state_path("review-mismatch")) is None
+
+
+def test_review_attempt_refuses_a_prompt_whose_attempt_ids_cannot_be_read(tmp_tasks_dir, tmp_path, capsys):
+    """#8996: an attempt entry without a readable attempt_id is refused, never treated as "nothing to compare"."""
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-unreadable",
+                mode="read-only",
+                prompt="Kind: lesson\nattempt:\n  review_id: rev-test\n  previous_attempt_id: null\n",
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    assert "prompt_attempt_ids_unreadable" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("review-unreadable")) is None
+
+
+@pytest.mark.parametrize(
+    "prompt",
+    [
+        # Codex r2: an explicit-key entry and a uniformly indented mapping, both valid YAML.
+        "```yaml\nreview_schema: 1\n? attempt\n: {review_id: rev-other, attempt_id: att-other}\n```\n",
+        "```yaml\n  review_schema: 1\n  attempt:\n    review_id: rev-other\n    attempt_id: att-other\n```\n",
+    ],
+    ids=["explicit-key", "indented"],
+)
+def test_review_attempt_refuses_mismatched_ids_in_any_yaml_spelling(tmp_tasks_dir, tmp_path, capsys, prompt):
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-spelling",
+                mode="read-only",
+                prompt=prompt,
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    assert "prompt_attempt_ids_mismatch" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("review-spelling")) is None
+
+
+def test_review_attempt_refuses_a_prompt_that_prints_no_ids(tmp_tasks_dir, tmp_path, capsys):
+    """#8996: a seat whose prompt names no ids can only guess them; the dispatch refuses."""
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-noids",
+                mode="read-only",
+                prompt="Review this lesson.",
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    assert "prompt_attempt_ids_missing" in capsys.readouterr().err
 
 
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -12792,6 +12925,7 @@ def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_
             agent="claude",
             task_id="review-local",
             mode="read-only",
+            prompt=_MATCHING_ATTEMPT_PROMPT,
             review_attempt=str(manifest),
             review_id="rev-test",
             attempt_id="att-test",

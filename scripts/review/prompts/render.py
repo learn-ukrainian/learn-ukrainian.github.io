@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
@@ -28,7 +29,7 @@ from jinja2 import DictLoader, StrictUndefined
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 from scripts.build.fresh.cli import _load_cited_records
-from scripts.build.fresh.manifest import learner_state_sha256, pinned_entries
+from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts import REVIEW_TOOLS
 
@@ -46,6 +47,7 @@ REQUIRED_PINS: dict[str, tuple[str, ...]] = {
         "inputs.words_lock",
         "inputs.learner_state",
         "inputs.lesson",
+        "inputs.provenance",
         "inputs.gate_report",
         "inputs.style_card",
         "module_digest",
@@ -67,6 +69,13 @@ REQUIRED_PINS: dict[str, tuple[str, ...]] = {
         "inputs.pack_verify_report",
     ),
 }
+
+#: Shipped templates whose return schema prints an ``attempt`` block naming this attempt's
+#: ``review_id``/``attempt_id`` (#8996): rendering one of these for dispatch requires both, since the
+#: validator matches ledger records by what the seat echoes back in that block, not by a guess.
+TEMPLATES_REQUIRING_ATTEMPT_IDS: frozenset[str] = frozenset(
+    {"plan-review.md.j2", "lesson-review.md.j2", "lesson-rereview.md.j2"}
+)
 
 
 class RenderError(Exception):
@@ -99,6 +108,10 @@ class LearnerStateMismatchError(RenderError):
 
 class TemplateReadError(RenderError):
     """A template could not be served from the fixed set of ``*.md.j2`` files (or tried to read another file)."""
+
+
+class MissingAttemptIdsError(RenderError):
+    """``review_id``/``attempt_id`` are required to render a dispatchable prompt's attempt block (#8996)."""
 
 
 class PinIneligibleError(RenderError):
@@ -354,6 +367,7 @@ def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[st
     context.update(_cited_records_context(reader, [entry]))
     context.update(_learner_state_context(reader, manifest))
     context["lesson_content"] = reader.pin_text("inputs.lesson")
+    context["provenance_text"] = reader.pin_text("inputs.provenance")
     context["activity_data_files"] = [
         {"path": item["path"], "content": reader.read_text(item["path"])}
         for item in manifest["inputs"].get("activity_data", [])
@@ -406,7 +420,14 @@ def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str,
     return context
 
 
-def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: ManifestReader) -> dict[str, Any]:
+def _build_context(
+    manifest: dict[str, Any],
+    manifest_sha256: str,
+    reader: ManifestReader,
+    *,
+    review_id: str | None,
+    attempt_id: str | None,
+) -> dict[str, Any]:
     kind = manifest.get("kind")
     missing = [location for location in REQUIRED_PINS.get(str(kind), ()) if not reader.has(location)]
     if missing:
@@ -415,6 +436,8 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         "manifest": manifest,
         "manifest_sha256": manifest_sha256,
         "review_tools": sorted(REVIEW_TOOLS),
+        "review_id": review_id,
+        "attempt_id": attempt_id,
     }
     if kind == "lesson":
         context.update(_lesson_context(reader, manifest))
@@ -425,7 +448,15 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
 
 #: Context entries that come from the manifest itself, not from the content of a pinned file.
 MANIFEST_CONTEXT_KEYS = frozenset(
-    {"manifest", "manifest_sha256", "review_tools", "learner_state_sha256", "previous_attempt_id"}
+    {
+        "manifest",
+        "manifest_sha256",
+        "review_tools",
+        "learner_state_sha256",
+        "previous_attempt_id",
+        "review_id",
+        "attempt_id",
+    }
 )
 #: What stands for pinned content in the template-only render.
 SENTINEL = "PINNED-DATUM"
@@ -471,12 +502,19 @@ def render(
     *,
     repo_root: Path | None = None,
     prompts_dir: Path | None = None,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
 ) -> Rendering:
     """Render a reviewer prompt from the manifest's pins alone.
 
     The manifest must match its schema and every pin must be eligible (``eligibility.pin_refusals``), then each
     file is read only through its pin and only when its bytes hash to the pinned sha256. Templates come only
     from the fixed ``*.md.j2`` set of the prompts directory, each recorded with its sha256.
+
+    ``review_id``/``attempt_id`` (#8996) are this dispatch's identifiers, echoed into the ``attempt`` block a
+    return template prints (``TEMPLATES_REQUIRING_ATTEMPT_IDS``) so the validator can match the seat's return
+    against its own receipt ledger instead of a guess. Rendering one of those templates without both, or with
+    either not a valid attempt token, is refused by name before anything is read.
     """
     root = (repo_root or REPO_ROOT).resolve()
     p_dir = (prompts_dir or PROMPTS_DIR).resolve()
@@ -500,6 +538,16 @@ def render(
     reader = ManifestReader(manifest_doc, repo_root=root)
     resolved_template = resolve_template_name(manifest_doc, template_name)
 
+    if resolved_template in TEMPLATES_REQUIRING_ATTEMPT_IDS:
+        if not review_id or not attempt_id:
+            raise MissingAttemptIdsError(
+                f"{resolved_template} prints an attempt block naming review_id and attempt_id for dispatch; "
+                "both are required (pass --review-id/--attempt-id, or review_id=/attempt_id= to render())"
+            )
+        for name, value in (("review_id", review_id), ("attempt_id", attempt_id)):
+            if not ATTEMPT_TOKEN.fullmatch(value):
+                raise MissingAttemptIdsError(f"{name} is not a valid attempt token: {value!r}")
+
     loader = _RecordingLoader(sources)
     env = ImmutableSandboxedEnvironment(
         loader=loader,
@@ -522,7 +570,7 @@ def render(
     except jinja2.TemplateSyntaxError as exc:
         raise TemplateReadError(f"template {resolved_template} does not parse: {exc}") from exc
 
-    context = _build_context(manifest_doc, manifest_sha256, reader)
+    context = _build_context(manifest_doc, manifest_sha256, reader, review_id=review_id, attempt_id=attempt_id)
     try:
         rendered = tmpl.render(**context)
         template_text = tmpl.render(**sentinel_context(context))
@@ -554,13 +602,22 @@ def render_prompt(
     repo_root: Path | None = None,
     output_path: Path | None = None,
     prompts_dir: Path | None = None,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
 ) -> tuple[str, str, list[Path]]:
     """Render a reviewer prompt from manifest inputs and write prompt sha256 beside it.
 
     Returns:
         tuple[rendered_prompt, prompt_sha256, files_read]
     """
-    rendering = render(manifest_source, template_name, repo_root=repo_root, prompts_dir=prompts_dir)
+    rendering = render(
+        manifest_source,
+        template_name,
+        repo_root=repo_root,
+        prompts_dir=prompts_dir,
+        review_id=review_id,
+        attempt_id=attempt_id,
+    )
     rendered, prompt_sha256, root = rendering.prompt, rendering.prompt_sha256, rendering.root
 
     if output_path is not None:
@@ -587,17 +644,41 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--template", "-t", default=None, help="Template name (default inferred)")
     parser.add_argument("--output", "-o", default=None, help="Output prompt path")
     parser.add_argument("--repo-root", default=None, help="Repository root path")
+    parser.add_argument(
+        "--review-id",
+        default=None,
+        help=(
+            "This attempt's review id (#8996), printed in the attempt block of a plan/lesson/re-review "
+            "template so the validator can match the seat's return to its receipt ledger. Required for those "
+            "kinds; refused by name if missing. Default: None. Example: --review-id rev-20260922-001"
+        ),
+    )
+    parser.add_argument(
+        "--attempt-id",
+        default=None,
+        help=(
+            "This attempt's attempt id (#8996), printed beside --review-id in the same attempt block. "
+            "Required together with --review-id for plan/lesson/re-review templates. "
+            "Default: None. Example: --attempt-id claude-att-1"
+        ),
+    )
     args = parser.parse_args(argv)
 
     root = Path(args.repo_root) if args.repo_root else REPO_ROOT
     out = Path(args.output) if args.output else None
 
-    rendered, prompt_sha256, _ = render_prompt(
-        args.manifest,
-        template_name=args.template,
-        repo_root=root,
-        output_path=out,
-    )
+    try:
+        rendered, prompt_sha256, _ = render_prompt(
+            args.manifest,
+            template_name=args.template,
+            repo_root=root,
+            output_path=out,
+            review_id=args.review_id,
+            attempt_id=args.attempt_id,
+        )
+    except RenderError as exc:
+        print(f"FAIL: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
 
     if out:
         print(f"Prompt written: {out} ({prompt_sha256})")
@@ -607,6 +688,4 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    import sys
-
     sys.exit(main())

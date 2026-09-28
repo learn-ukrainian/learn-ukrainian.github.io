@@ -359,11 +359,15 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     routing_snapshot = None
     if args.routing_snapshot_file:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))
+    state = _load_state(args.state_file)
+    target = _target_from_dict(state["target"]) if state.get("target") is not None else None
     inputs = ResolverInputs(
         author_model=args.author_model,
         review_profile=args.review_profile,
         risk=args.risk,
         domain=args.domain,
+        changed_paths=target.changed_paths if target else (),
+        language_lane=args.language_lane,
         required_capabilities=frozenset(args.required_capability or []),
         data_egress_policy=args.data_egress_policy,
         isolation_required=args.isolation_required,
@@ -389,7 +393,6 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     # Persist the durable receipt: drivers downstream expect the resolution on
     # disk, not just on stdout. Merge with any prior state (a state file does
     # not need to exist yet — resolve-reviewer is a valid first step).
-    state = _load_state(args.state_file)
     state["resolved_reviewer"] = payload
     _save_state(args.state_file, state)
     print(json.dumps(payload, indent=2))
@@ -773,6 +776,14 @@ def _build_parser() -> argparse.ArgumentParser:
             "An unambiguous per-seat adapter or reviewer hook infers that seat. "
             "An ambiguous path (shared acpx.py, base.py, guard-reviewer-publish.py) "
             "fails closed unless --subject-seat or --subject-family is also set."
+        ),
+    )
+    p_reviewer.add_argument(
+        "--language-lane",
+        action="store_true",
+        help=(
+            "Mark Ukrainian language, culture, or heritage work outside known paths. "
+            "Default: false. Example: use for an off-tree Ukrainian culture change."
         ),
     )
     p_reviewer.set_defaults(func=_cmd_resolve_reviewer)

@@ -38,12 +38,11 @@ def test_dialect_heritage_forms_are_not_blocked_by_russian_shadow() -> None:
         assert surface_status["attestations"]
 
 
-def test_pereklychka_is_attested_standard_despite_vesum_gap() -> None:
+def test_sum11_only_entry_is_not_standard_attestation() -> None:
     status = classify_surface_form("перекличка", db_path=DB, vesum_db_path=VESUM_DB)
 
-    assert status["classification"] in {"standard", "borrowing"}
-    assert status["is_russianism"] is False
-    assert any(attestation["source"] == "sum11" for attestation in status["attestations"])
+    assert status["classification"] != "standard"
+    assert all(attestation["source"] != "sum11" for attestation in status["attestations"])
 
 
 def test_slash_separated_atlas_lemmas_merge_variant_attestations() -> None:

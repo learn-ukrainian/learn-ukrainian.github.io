@@ -363,8 +363,27 @@ pytest, and read-only `git`/`gh` commands without interactive approval.
 Edit/Write/NotebookEdit and common
 Git/GitHub mutation commands are denied. `discussion_readonly` and
 `review_isolation` retain their separate tool profiles. `workspace-write`
-keeps the existing default permission behavior; `danger` uses
-`--dangerously-skip-permissions`.
+passes `--permission-mode dontAsk` and allows Bash, Read, Edit, Write,
+Grep, Glob, LS, WebFetch, and WebSearch. NotebookEdit is omitted because
+the primary-checkout PreToolUse matcher covers Bash and
+`Write|Edit|MultiEdit`. Each server in the worker checkout's `.mcp.json`
+(the dispatch cwd) adds one `mcp__<server>__*` allow rule. An explicit
+`mcp_config_path` is read instead of that file. A missing file grants no
+MCP tools. A present file that cannot be read or parsed, or a server name
+that cannot be written into `--allowedTools`, fails the dispatch. An
+explicit `allowed_tools` value stays the only allow list. Headless
+`claude -p` otherwise starts in manual mode and denies every tool that
+would prompt. `dontAsk` is the documented non-interactive mode
+(`claude --help` on the installed Claude Code): pre-approved tools run,
+and anything that would prompt is denied, so the session does not wait.
+`acceptEdits` still prompts for shell and network. `auto` can refuse a
+legitimate worker action. `bypassPermissions` is not used for this mode.
+It still runs hooks, but it approves every tool with no allow list.
+`danger`'s `--dangerously-skip-permissions` stays on the danger argv
+alone. An allow glob of `mcp__*` does not grant MCP tools, so each
+configured server is named. The tracked PreToolUse guards still load via
+`--settings`, including under `dontAsk`; a hook that exits 2 blocks the
+call. `--bare` is what skips hooks.
 
 Without the opt-in, read-only calls retain the prior Claude CLI permissions.
 This covers content quality reviews and tool-less bakeoff calls. Outside sealed
@@ -396,8 +415,8 @@ on as the guard.
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
-blocks all tool calls outright. The adapter maps `workspace-write` to
-`auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
+blocks all tool calls outright. The adapter maps `workspace-write` and `danger`
+to `bypassPermissions --always-approve`, and
 ordinary `read-only` to `auto` with `--deny` on the native write
 permission prefixes (`Write`, `Edit`) and `Bash` unless reviewer tools are
 opted in. The built-in ID
@@ -418,6 +437,20 @@ ordinary Git push rewrite used by Claude. Code the reviewer runs (Python,
 scripts, HTTP) can still publish using host credentials: it can override its
 Git config to push or call GitHub APIs directly. The deny rules, publish hook,
 and push rewrite stop ordinary command forms only.
+
+On Grok 1.0.41 an explicit `--permission-mode auto` wins over `--always-approve`
+and leaves `yolo_mode` false. The auto classifier then refuses `git push`
+before the command runs, including a write worker's push of its own branch
+(#8965). `workspace-write` and `danger` use `bypassPermissions` so that
+classifier is not the session mode. Both also install the tracked fleet
+PreToolUse guards from `agents_extensions/shared/settings.json` (primary-checkout
+write, secret-print, merge, and the other worker hooks) through
+`scripts/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
+agent. That agent does not load `guard-reviewer-publish.py` and does not set
+the read-only Git push rewrite. The read-only reviewer opt-in keeps its publish
+hook and push rewrite on `auto`. Matchers for the write worker also name the
+Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
+`hashline_edit`, which the Claude matcher aliases do not all cover.
 
 ## Weak-driver trail isolation (P5)
 

@@ -39,7 +39,7 @@ You MUST use these tools to verify claims — never rely on training memory for 
 | `mcp__sources__verify_word` / `verify_lemma` / `verify_words` | Any claim about a word's existence, POS, gender, or inflection in standard Ukrainian |
 | `mcp__sources__query_pravopys` | Any orthography claim (Правопис 2019) |
 | `mcp__sources__search_style_guide` | Any claim about calques, Russianisms, or "correct" Ukrainian usage (Антоненко-Давидович) |
-| `mcp__sources__search_definitions` | Ukrainian definitions (СУМ-11) for semantic claims |
+| `mcp__sources__query_sum20` / `query_slovnyk_me(dict="vts")` | Modern Ukrainian definitions for semantic claims; if neither returns an entry, leave the claim unverified |
 | `mcp__sources__search_grinchenko_1907` | Historical usage / pre-Soviet attestation (Грінченко 1907) |
 | `mcp__sources__search_literary` | Claims about Ukrainian literary works — chronicles, poetry, primary sources |
 | `mcp__sources__search_text` | Pedagogical/curricular claims cross-referenceable to Ukrainian textbooks (Grades 1-11) |

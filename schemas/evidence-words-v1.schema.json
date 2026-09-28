@@ -28,6 +28,16 @@
   ],
   "additionalProperties": false,
   "$defs": {
+    "gloss_ref": {
+      "type": "object",
+      "properties": {
+        "table": {"const": "dmklinger_uk_en"},
+        "id": {"type": "integer", "minimum": 1},
+        "row_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "required": ["table", "id"],
+      "additionalProperties": false
+    },
     "vesum": {
       "type": "object",
       "properties": {
@@ -438,6 +448,13 @@
           "type": "string",
           "pattern": "^[0-9a-f]{40}$"
         },
+        "kaikki_content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kaikki_attribution": {
+          "const": "Wiktionary via Kaikki.org, CC BY-SA 3.0"
+        },
         "sources_db": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
@@ -646,25 +663,13 @@
           "minLength": 1
         },
         "gloss_source": {
-          "type": "object",
-          "properties": {
-            "table": {
-              "const": "dmklinger_uk_en"
-            },
-            "id": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "row_sha256": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
-            }
-          },
-          "required": [
-            "table",
-            "id"
-          ],
-          "additionalProperties": false
+          "oneOf": [
+            {"enum": ["dmklinger_uk_en", "kaikki_wiktionary"]},
+            {"$ref": "#/$defs/gloss_ref"}
+          ]
+        },
+        "gloss_ref": {
+          "$ref": "#/$defs/gloss_ref"
         },
         "sense_gloss": {
           "type": "string"
@@ -746,6 +751,13 @@
         ]
       },
       "allOf": [
+        {
+          "if": {
+            "properties": {"gloss_source": {"const": "dmklinger_uk_en"}},
+            "required": ["gloss_source"]
+          },
+          "then": {"required": ["gloss_ref"]}
+        },
         {
           "if": {
             "properties": {
