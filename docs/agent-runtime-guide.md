@@ -452,6 +452,22 @@ hook and push rewrite on `auto`. Matchers for the write worker also name the
 Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
 `hashline_edit`, which the Claude matcher aliases do not all cover.
 
+`hashline_edit` belongs to Grok's hashline file bundle
+(`hashline_read`, `hashline_edit`, `hashline_grep`). That bundle replaces the
+standard bundle (`read_file`, `search_replace`, `grep`); one session does not
+offer both. The selector is `[toolset] file_toolset = "hashline"` in the
+active Grok home's `config.toml`. A `GROK_CONFIG` overlay of the same key does
+not select it: a headless `grok` process given
+`GROK_CONFIG={"toolset":{"file_toolset":"hashline"}}` still offered
+`search_replace` and not `hashline_edit`. Delegate's env sanitizer also drops
+`GROK_CONFIG` and `GROK_HOME` — neither name is on the Grok allowlist, and the
+adapter does not add them to `env_overrides` — but that drop is not why the
+overlay stays on the standard bundle. The overlay already fails when it is
+handed straight to the `grok` process. A live hashline session uses a
+temporary `GROK_HOME` whose `config.toml` sets `file_toolset`. The
+write-worker matcher still names `hashline_edit`, and the primary-checkout
+guard blocks that tool the same way it blocks `search_replace`.
+
 Issue #9008 keeps `danger` on the same argv as `workspace-write`:
 `bypassPermissions`, `--always-approve`, and the `lu-write-worker` agent.
 Claude loads the fleet PreToolUse guards for both write modes. Its
