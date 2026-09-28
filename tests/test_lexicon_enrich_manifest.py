@@ -5343,7 +5343,7 @@ def test_offline_gate_did_not_run_preserves_section_byte_identical(monkeypatch) 
 
 def test_offline_gate_never_preserves_soviet_cited_section(monkeypatch) -> None:
     """#8990: a published section citing СУМ-11 is not a preserve baseline; its
-    unconfirmed items are retracted (recorded as a gate rejection), never kept."""
+    unconfirmed items are retracted but the replacement gate remains unverified."""
     existing = {"items": ["джерело", "живець"], "source": "СУМ-11: Те саме, що → живець"}
     entry = _run_synonyms_gate(
         monkeypatch,
@@ -5353,7 +5353,7 @@ def test_offline_gate_never_preserves_soviet_cited_section(monkeypatch) -> None:
         existing_synonyms=existing,
     )
     assert "synonyms" not in entry.get("sections", {})
-    assert entry["gate_provenance"]["synonyms"] == GATE_REJECTED
+    assert entry["gate_provenance"]["synonyms"] == manifest_io.SOURCE_WITHDRAWN_UNVERIFIED
 
 
 def test_cites_soviet_dictionary_detects_label_variants() -> None:

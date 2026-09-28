@@ -21,8 +21,6 @@ SCOPES = (
     ":(glob)agents_extensions/shared/rules/**",
     ":(glob)site/src/lib/lexicon/**",
     ":(glob)scripts/lexicon/**",
-    ":(exclude,glob)scripts/lexicon/*heteronym*",  # #8964 owns these files.
-    ":(exclude)scripts/lexicon/sum20_lookup.py",  # #8964 owns this helper.
     ":(exclude,glob)curriculum/**/_archive/**",
     ":(exclude)scripts/data/stress_overrides.yaml",  # Owned by the separate gloss-source branch.
 )
@@ -71,6 +69,15 @@ RULE_CONTEXT_LINES = {
 
 # Exact reviewed lines in scripts/lexicon: occupation contrast and exclusion only.
 LEXICON_CONTEXT_LINES = {
+    'scripts/lexicon/audit_sum11_relations.py': frozenset({
+        '"""Reproduce the read-only #8990 stored СУМ-11 relation and source audit."""',
+        'if not isinstance(section, dict) or "СУМ-11" not in json.dumps(section, ensure_ascii=False):',
+        'matches = [source for source in source_list if isinstance(source, str) and "СУМ-11" in source]',
+        '_write_tsv(out_dir / "sum11-held-relations.tsv", held)',
+        '_write_tsv(out_dir / "sum11-confirmed-relations.tsv", confirmed)',
+        'with (out_dir / "sum11-held-sources.tsv").open("w", encoding="utf-8", newline="") as stream:',
+        'parser.add_argument("--audit-doc", type=Path, default=ROOT / "docs" / "lexicon" / "sum11-reference-audit.md")',
+    }),
     'scripts/lexicon/admit_fmu_boosters.py': frozenset({
         'and zero Soviet СУМ-11 usage.',
     }),
@@ -178,6 +185,11 @@ CONTEXT_ONLY_FILES = {
 TEMPORARY_EXCEPTIONS = {
     "site/src/lib/lexicon/curated-heteronyms.ts": "#8964: re-source the generated heteronym dataset.",
     "scripts/lexicon/enrich_heteronyms.py": "#8964: replace SUM-11 heteronym enrichment inputs.",
+    "scripts/lexicon/sum20_lookup.py": "#8964: replace SUM-11 contrast lookup inputs.",
+    **{
+        f"scripts/lexicon/curated_heteronyms_batch{suffix}.py": "#8964: re-source curated heteronym inputs."
+        for suffix in ("", *(str(n) for n in range(2, 14)))
+    },
 }
 
 
@@ -193,7 +205,7 @@ def _is_exempt(path: str, source_line: str) -> bool:
     return source_line.strip() in RULE_CONTEXT_LINES.get(path, frozenset())
 
 
-def _source_references(revision: str | None = None) -> list[str]:
+def _source_references(revision: str | None = None, *, root: Path = ROOT) -> list[str]:
     cmd = [
         "git", "grep", "-n", "-I", "-i", "-E",
         "-e", r"(СУМ|SUM)[-‐‑‒–— ]?11|search_definitions",
@@ -201,7 +213,7 @@ def _source_references(revision: str | None = None) -> list[str]:
     if revision:
         cmd.append(revision)
     cmd.extend(("--", *SCOPES))
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False, timeout=30)
+    result = subprocess.run(cmd, cwd=root, capture_output=True, text=True, check=False, timeout=30)
     assert result.returncode in (0, 1), result.stderr
     references = []
     for line in result.stdout.splitlines():
@@ -224,8 +236,27 @@ def test_temporary_exceptions_are_limited_to_issue_8964() -> None:
     assert set(TEMPORARY_EXCEPTIONS) == {
         "site/src/lib/lexicon/curated-heteronyms.ts",
         "scripts/lexicon/enrich_heteronyms.py",
+        "scripts/lexicon/sum20_lookup.py",
+        "scripts/lexicon/curated_heteronyms_batch.py",
+        "scripts/lexicon/curated_heteronyms_batch2.py",
+        "scripts/lexicon/curated_heteronyms_batch3.py",
+        "scripts/lexicon/curated_heteronyms_batch4.py",
+        "scripts/lexicon/curated_heteronyms_batch5.py",
+        "scripts/lexicon/curated_heteronyms_batch6.py",
+        "scripts/lexicon/curated_heteronyms_batch7.py",
+        "scripts/lexicon/curated_heteronyms_batch8.py",
+        "scripts/lexicon/curated_heteronyms_batch9.py",
+        "scripts/lexicon/curated_heteronyms_batch10.py",
+        "scripts/lexicon/curated_heteronyms_batch11.py",
+        "scripts/lexicon/curated_heteronyms_batch12.py",
+        "scripts/lexicon/curated_heteronyms_batch13.py",
     }
     assert all("#8964" in reason for reason in TEMPORARY_EXCEPTIONS.values())
+    tracked = subprocess.run(
+        ["git", "ls-files", "--", *TEMPORARY_EXCEPTIONS], cwd=ROOT,
+        capture_output=True, text=True, check=True, timeout=30,
+    ).stdout.splitlines()
+    assert set(tracked) == set(TEMPORARY_EXCEPTIONS)
 
 
 def test_approved_contrast_only_line_is_exempt() -> None:
@@ -256,13 +287,15 @@ def test_approved_line_matches_regardless_of_surrounding_whitespace() -> None:
     assert _is_exempt(path, "  " + approved + "  ")
 
 
-def test_new_lexicon_verification_use_fails_scanner(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert ":(glob)scripts/lexicon/**" in SCOPES
-    citation = 'scripts/lexicon/new_verifier.py:7:definition = search_definitions(word)'
-
-    def fake_grep(cmd: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
-        assert ":(glob)scripts/lexicon/**" in cmd
-        return subprocess.CompletedProcess(cmd, 0, citation + "\n", "")
-
-    monkeypatch.setattr(subprocess, "run", fake_grep)
-    assert _source_references() == [citation]
+def test_new_lexicon_verification_use_fails_scanner(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    lexicon = tmp_path / "scripts" / "lexicon"
+    lexicon.mkdir(parents=True)
+    for name in ("new_verifier.py", "x_heteronym_verify.py"):
+        (lexicon / name).write_text("definition = search_definitions(word)\n", encoding="utf-8")
+    subprocess.run(["git", "add", "scripts/lexicon"], cwd=tmp_path, check=True, timeout=30)
+    references = _source_references(root=tmp_path)
+    assert len(references) == 2
+    assert {line.split(":", 1)[0] for line in references} == {
+        "scripts/lexicon/new_verifier.py", "scripts/lexicon/x_heteronym_verify.py"
+    }

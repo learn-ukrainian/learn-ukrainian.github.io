@@ -2,44 +2,28 @@
 
 from __future__ import annotations
 
-import json
-import sqlite3
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
 from scripts.atlas.export_runtime_shards import export_runtime_shards
-from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+from tests.fixtures.atlas.build_runtime_shards_fixture import sanitized_fixture_db
 
 FIXTURE_DB_PATH = Path(__file__).resolve().parent / "fixtures" / "atlas" / "runtime_shards_fixture.db"
 
 
 @pytest.fixture(scope="module")
-def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
     assert FIXTURE_DB_PATH.is_file(), f"missing fixture DB: {FIXTURE_DB_PATH}"
     # The historical snapshot predates #M-6. Keep the transport fixture while
     # withholding old learner sections that cite the Soviet dictionary.
     destination = tmp_path_factory.mktemp("runtime-shards-source") / "source.db"
-    source = sqlite3.connect(f"file:{FIXTURE_DB_PATH}?mode=ro", uri=True)
-    with sqlite3.connect(destination) as target:
-        source.backup(target)
-        for slug, raw in target.execute("SELECT slug, payload_json FROM article_payloads"):
-            payload = json.loads(raw)
-            for bucket in ("sections", "enrichment"):
-                sections = payload.get(bucket)
-                if isinstance(sections, dict):
-                    payload[bucket] = {
-                        key: value for key, value in sections.items()
-                        if not cites_soviet_dictionary_outside_context(value)
-                    }
-            if cites_soviet_dictionary_outside_context(payload):
-                raise AssertionError(f"historical fixture has unclassified citation: {slug}")
-            target.execute(
-                "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
-                (json.dumps(payload, ensure_ascii=False), slug),
-            )
-    source.close()
-    return destination
+    try:
+        yield sanitized_fixture_db(FIXTURE_DB_PATH, destination)
+    finally:
+        for path in (destination, Path(f"{destination}-wal"), Path(f"{destination}-shm")):
+            path.unlink(missing_ok=True)
 
 
 @pytest.fixture(scope="module")

@@ -39,15 +39,15 @@ the leaks were elsewhere — curated inventory gloss-fill scripts still read
   словник (ВТС, `vts`). These are the only two sources that may produce a
   public `definition_cards` entry, an inventory `gloss`, or any other
   learner-facing Ukrainian meaning text on an Atlas page.
-- **СУМ-11 is banned on Atlas pages**, full stop — including as an inventory
+- **СУМ-11 is banned as Atlas verification evidence** — including as an inventory
   gloss-fill fallback when curated source pipelines (Ohoiko, ULP, textbook
   mining) build headword inventories. A `sum11` SQL query must never feed a
-  public `gloss`, `definition_cards` entry, or learner-facing text. The
+  public `gloss`, `definition_cards` entry, or modern meaning text. The
   offline `sum11` table and its sovietization-risk tooling
   (`scripts/audit/sum11_sovietization_scan.py`, the MCP `search_definitions`
-  research tool, `_sum11_definition_card` as an internal xref helper) may
-  still exist for research/xref use — they must never be wired into a public
-  card builder or gloss-fill path again.
+  research tool) may still exist for occupation analysis. A public citation is
+  allowed only in a direct `soviet_colonization_context` object with its explicit
+  `red_flag: true` marker; it must never feed a modern card or gloss-fill path.
 - **If СУМ-20 has no row** (volumes 17–20, С–Я, are not yet published), fall
   back to **ВТС only**. Never fall back to СУМ-11, even when it is the only
   source with a matching headword — an unfilled gloss is preferable to a

@@ -82,7 +82,7 @@ handlers; `runner/side_db.py` was the additional Kaikki reader it exposed.
 - Physical K output: `curated_textbook_jsonl_repromote.py` now defaults to its
   existing registry inventory; `INV_REL` remains a provenance identifier.
   K joins in `build_data_manifest.py`, `esum_garbled.py`,
-  `generate_vesum_aliases.py`, `anchor_curation_evidence.py`,
+  `generate_vesum_aliases.py`,
   `apply_anchor_worksheet.py`, `atlas_intake_core.py`,
   `curriculum_atlas_intake.py`, `ohoiko_atlas_intake.py`, and
   `atlas_source_census.py` already target `registry/`. The first two K readers

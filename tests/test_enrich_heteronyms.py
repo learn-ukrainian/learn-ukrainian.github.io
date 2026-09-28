@@ -7,6 +7,19 @@ import sqlite3
 from pathlib import Path
 
 from scripts.lexicon import enrich_heteronyms
+from scripts.lexicon.sum20_lookup import lookup_sum11_colonization_context
+
+
+def test_colonization_context_builder_sets_explicit_citation_marker(tmp_path: Path) -> None:
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT, text TEXT, "
+                     "sovietization_risk INTEGER, sovietization_keywords TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES (?, ?, ?, ?, ?)", ("тест", "fixture", "", 0, ""))
+    context = lookup_sum11_colonization_context("тест", db)
+    assert context is not None
+    assert context["red_flag"] is True
+    assert context["sovietization_risk"] == 0
 
 
 def test_curated_heteronyms_structure():

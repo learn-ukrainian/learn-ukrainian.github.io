@@ -97,7 +97,10 @@ def test_migration_rejects_unmarked_contrast_citation(tmp_path):
     db = tmp_path / "atlas.db"
     db.write_bytes(b"existing database")
     entries = json.loads(manifest.read_text(encoding="utf-8"))
-    entries["entries"][0]["soviet_colonization_context"] = {"source": "СУМ-11"}
+    entries["entries"][0]["soviet_colonization_context"] = {
+        "source": "СУМ-11", "sovietization_risk": 1
+    }
+    entries["entries"][0]["red_flag"] = True
     manifest.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
     with pytest.raises(ValueError, match="russification marker"):
         atlas_db.migrate_manifest(manifest, db)

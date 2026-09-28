@@ -26,8 +26,11 @@ MIRROR_URL_PATTERN = re.compile(
     re.IGNORECASE,
 )
 # Soviet-era СУМ-11 is contrast-only (rule #M-6): published evidence citing it is
-# never carried forward into a rebuilt section or a filled Atlas row.
-SOVIET_DICTIONARY_CITATION_RE = re.compile(r"(?:СУМ|SUM)[-‐‑‒–— ]?11", re.IGNORECASE)
+# permitted only in a marked occupation-context citation, never as modern evidence.
+SOVIET_DICTIONARY_CITATION_RE = re.compile(
+    r"(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|Словник української мови\s*\(1970[–-]1980\)",
+    re.IGNORECASE,
+)
 
 
 def cites_soviet_dictionary(payload: object) -> bool:
@@ -36,20 +39,40 @@ def cites_soviet_dictionary(payload: object) -> bool:
 
 
 def cites_soviet_dictionary_outside_context(payload: object) -> bool:
-    """Reject a learner citation while retaining explicit occupation context."""
+    """Only the entry's direct contrast citation may cite the Soviet dictionary."""
+    return _cites_outside_context(payload, path=())
+
+
+_CONTEXT_PATHS = frozenset({
+    ("soviet_colonization_context",),
+    ("heritage_status", "soviet_colonization_context"),
+    ("heteronyms", "[]", "soviet_colonization_context"),
+})
+
+
+def _cites_outside_context(payload: object, *, path: tuple[str, ...]) -> bool:
     if isinstance(payload, dict):
         return any(
-            cites_soviet_dictionary_outside_context(value)
+            _cites_outside_context(value, path=(*path, key))
             for key, value in payload.items()
-            if key != "soviet_colonization_context"
+            if not ((*path, key) in _CONTEXT_PATHS and isinstance(value, dict))
         )
     if isinstance(payload, (list, tuple)):
-        return any(cites_soviet_dictionary_outside_context(value) for value in payload)
+        return any(_cites_outside_context(value, path=(*path, "[]")) for value in payload)
     return isinstance(payload, str) and bool(SOVIET_DICTIONARY_CITATION_RE.search(payload))
 
 
-# Same tokens the #9127 register probe used on published section JSON.
-RUSSIFICATION_MARKER_RE = re.compile(r"russif|русиф|русизм|sovietiz|red_flag", re.IGNORECASE)
+def _contrast_contexts(payload: object) -> list[dict]:
+    if not isinstance(payload, dict):
+        return []
+    candidates = [payload.get("soviet_colonization_context")]
+    heritage = payload.get("heritage_status")
+    if isinstance(heritage, dict):
+        candidates.append(heritage.get("soviet_colonization_context"))
+    for item in payload.get("heteronyms") or []:
+        if isinstance(item, dict):
+            candidates.append(item.get("soviet_colonization_context"))
+    return [context for context in candidates if isinstance(context, dict)]
 
 
 def soviet_citation_learner_violation(payload: object) -> str | None:
@@ -61,9 +84,8 @@ def soviet_citation_learner_violation(payload: object) -> str | None:
     """
     if cites_soviet_dictionary_outside_context(payload):
         return "outside soviet_colonization_context"
-    if cites_soviet_dictionary(payload) and not RUSSIFICATION_MARKER_RE.search(
-        json.dumps(payload, ensure_ascii=False, default=str)
-    ):
+    contexts = [context for context in _contrast_contexts(payload) if cites_soviet_dictionary(context)]
+    if contexts and any(context.get("red_flag") is not True for context in contexts):
         return "missing russification marker"
     return None
 

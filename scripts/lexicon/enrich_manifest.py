@@ -88,6 +88,7 @@ from scripts.lexicon.manifest_io import (
     GATE_ANNOTATIONS_CARRIED,
     GATE_REJECTED,
     GATE_SKIPPED_OFFLINE,
+    SOURCE_WITHDRAWN_UNVERIFIED,
 )
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
@@ -8076,8 +8077,8 @@ def enrich_entry(
     def _apply_section(name: str, new_section: dict[str, Any] | None, *, gate_ran: bool) -> None:
         resolved, outcome = _resolve_gated_section(new_section, baseline_sections.get(name), gate_ran=gate_ran)
         if name in soviet_withheld and _section_loses_items(published_sections[name], resolved):
-            # Items resting on withheld Soviet-era evidence are retracted, not regressed.
-            outcome = GATE_REJECTED
+            # Withdrawal is mandatory, but an unavailable replacement gate did not verify it.
+            outcome = GATE_REJECTED if gate_ran else SOURCE_WITHDRAWN_UNVERIFIED
         if resolved:
             sections[name] = resolved
         if outcome:

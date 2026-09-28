@@ -234,6 +234,7 @@ def lookup_sum11_colonization_context(lemma: str, db_path: Path | str | None = N
 
         return {
             "source": "СУМ-11 (1970–1980)",
+            "red_flag": True,  # Explicit contrast warning, independent of the risk score.
             "definition": defn[:400].strip(),
             "sovietization_risk": risk,
             "keywords": keywords,

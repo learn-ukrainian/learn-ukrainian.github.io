@@ -36,7 +36,7 @@ from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
 def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
     marked = {
         "heritage_status": {
-            "soviet_colonization_context": {"source": "СУМ-11", "sovietization_risk": 0}
+            "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True, "sovietization_risk": 0}
         }
     }
     unmarked = {"heritage_status": {"soviet_colonization_context": {"source": "СУМ-11"}}}
@@ -48,6 +48,47 @@ def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
     assert soviet_citation_learner_violation(unmarked) == "missing russification marker"
     assert soviet_citation_learner_violation(synonym) == "outside soviet_colonization_context"
     assert soviet_citation_learner_violation({"sections": {"synonyms": {"source": "СУМ-20"}}}) is None
+
+
+def test_soviet_marker_must_be_explicit_on_each_direct_contrast_citation() -> None:
+    for unrelated in (
+        {"lemma": "русифікація"},
+        {"definition": "russif red_flag"},
+        {"sovietization_risk": 2},
+        {"red_flag": True},
+    ):
+        card = {**unrelated, "soviet_colonization_context": {"source": "СУМ-11", "sovietization_risk": 0}}
+        assert soviet_citation_learner_violation(card) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": "true"}
+    }) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True},
+        "heteronyms": [{"soviet_colonization_context": {"source": "SUM_11"}}],
+    }) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "heteronyms": [{"soviet_colonization_context": {"source": "СУМ-11", "red_flag": True}}]
+    }) is None
+
+
+def test_nested_contrast_key_does_not_exempt_a_section_citation() -> None:
+    card = {"sections": {"synonyms": {"items": ["стяг"], "soviet_colonization_context": {
+        "source": "СУМ-11", "red_flag": True
+    }}}}
+    assert cites_soviet_dictionary_outside_context(card)
+    assert soviet_citation_learner_violation(card) == "outside soviet_colonization_context"
+
+
+def test_contrast_citation_requires_an_object() -> None:
+    for context in ("СУМ-11", ["СУМ-11"]):
+        assert soviet_citation_learner_violation({"soviet_colonization_context": context}) == (
+            "outside soviet_colonization_context"
+        )
+
+
+def test_soviet_label_variants_are_citations() -> None:
+    for label in ("SUM_11", "Словник української мови (1970–1980)", "https://sum.in.ua/s/word"):
+        assert soviet_citation_learner_violation({"source": label}) == "outside soviet_colonization_context"
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:

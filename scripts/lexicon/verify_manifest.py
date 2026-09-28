@@ -49,7 +49,8 @@ DEFAULT_SHRINK_ALLOWLIST = ROOT / "scripts" / "lexicon" / "shrink_allowlist.yaml
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.manifest_io import GATE_REJECTED, load_manifest
+from scripts.lexicon.manifest_io import GATE_REJECTED, SOURCE_WITHDRAWN_UNVERIFIED, load_manifest
+from scripts.lexicon.source_attribution import cites_soviet_dictionary
 
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
 # Keep MINIMAL (see module docstring) — only tokens with zero defensible sense
@@ -166,6 +167,8 @@ def shrink_regressions(
 
       * the entry's ``gate_provenance`` records the gate ran and retracted (``rejected``
         — a quality win, e.g. WordNet auto-translation junk), or
+      * a Soviet-dictionary-cited baseline section was withdrawn as
+        ``source-withdrawn-unverified`` (replacement source gate did not run), or
       * the ``(lemma, section)`` pair is on the explicit curated allowlist.
 
     An unexplained regression is the offline gate-did-not-run strip/shrink bug and
@@ -191,6 +194,8 @@ def shrink_regressions(
                 continue
             if provenance.get(name) == GATE_REJECTED:
                 continue  # gate ran and retracted — quality win (#5077 design pt 4)
+            if provenance.get(name) == SOURCE_WITHDRAWN_UNVERIFIED and cites_soviet_dictionary(base_sec):
+                continue  # disallowed evidence withdrawn; replacement remains unverified
             if (lemma, name) in allowlist:
                 continue  # curated intended retraction
             regressions.append((lemma, name, base_n, _section_item_count(cur_sections.get(name))))

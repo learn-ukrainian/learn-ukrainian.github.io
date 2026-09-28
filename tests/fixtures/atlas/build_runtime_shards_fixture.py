@@ -27,6 +27,7 @@ lemma≠lemmaId) live beside this DB under ``practice_decks/`` — see
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import shutil
@@ -43,6 +44,7 @@ from scripts.atlas.export_runtime_shards import (
     load_entry_records,
     open_readonly_db,
 )
+from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
 
 SRC_CANDIDATES: list[Path] = []
 if os.environ.get("ATLAS_SRC_DB"):
@@ -364,6 +366,29 @@ def build() -> Path:
     return DST
 
 
+def sanitized_fixture_db(source: Path, destination: Path) -> Path:
+    """Make the historical fixture exportable without its legacy Soviet citations."""
+    with contextlib.closing(sqlite3.connect(f"file:{source.resolve()}?mode=ro", uri=True)) as reader:
+        reader.execute("VACUUM INTO ?", (str(destination),))
+    with contextlib.closing(sqlite3.connect(destination)) as target, target:
+        for slug, raw in target.execute("SELECT slug, payload_json FROM article_payloads"):
+            payload = json.loads(raw)
+            for bucket in ("sections", "enrichment"):
+                sections = payload.get(bucket)
+                if isinstance(sections, dict):
+                    payload[bucket] = {
+                        key: value for key, value in sections.items()
+                        if not cites_soviet_dictionary_outside_context(value)
+                    }
+            if cites_soviet_dictionary_outside_context(payload):
+                raise ValueError(f"historical fixture has unclassified citation: {slug}")
+            target.execute(
+                "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
+                (json.dumps(payload, ensure_ascii=False), slug),
+            )
+    return destination
+
+
 def emit_tree(*, db_path: Path | None = None, dest: Path | None = None) -> Path:
     """Export the hermetic fixture DB into the committed ``runtime-tree/``.
 
@@ -379,13 +404,15 @@ def emit_tree(*, db_path: Path | None = None, dest: Path | None = None) -> Path:
     out.mkdir(parents=True)
     # No decks: fixture practice indexes cover practiceLevels resolver tests in
     # pytest; the committed tree is entry + search only (still small).
-    report = export_runtime_shards(
-        db_path=source,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
+    with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as temp_dir:
+        sanitized = sanitized_fixture_db(source, Path(temp_dir) / "source.db")
+        report = export_runtime_shards(
+            db_path=sanitized,
+            out_dir=out,
+            include_decks=False,
+            deck_dir=None,
+            verify=True,
+        )
     current = out / "atlas" / "current.json"
     if not current.is_file():
         raise SystemExit(f"emit-tree failed: missing {current}")

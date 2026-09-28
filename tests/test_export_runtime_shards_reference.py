@@ -89,7 +89,10 @@ def test_export_rejects_unmarked_contrast_citation(tmp_path: Path) -> None:
     row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
     assert row is not None
     payload = json.loads(row[1])
-    payload["soviet_colonization_context"] = {"source": "СУМ-11", "definition": "historical contrast"}
+    payload["soviet_colonization_context"] = {
+        "source": "СУМ-11", "definition": "historical contrast", "sovietization_risk": 1
+    }
+    payload["red_flag"] = True  # An unrelated field cannot mark the cited context.
     conn.execute(
         "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
         (json.dumps(payload, ensure_ascii=False), row[0]),
@@ -108,6 +111,7 @@ def test_export_accepts_marked_contrast_citation(tmp_path: Path) -> None:
     payload = json.loads(row[1])
     payload["soviet_colonization_context"] = {
         "source": "СУМ-11",
+        "red_flag": True,
         "sovietization_risk": 1,
         "definition": "historical contrast",
     }
