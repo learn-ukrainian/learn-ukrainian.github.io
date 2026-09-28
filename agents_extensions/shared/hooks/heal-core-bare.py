@@ -16,6 +16,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+_PROJECT_DIR = Path(__file__).resolve().parents[3]
+if str(_PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_DIR))
+from scripts.common.repo_root import project_interpreter
+
 
 def _read_payload() -> dict:
     try:
@@ -45,11 +50,14 @@ def main() -> int:
     if not command or not _is_git_command(command):
         return 0
 
-    project_dir = Path(__file__).resolve().parents[3]
+    project_dir = _PROJECT_DIR
     script = project_dir / "scripts" / "audit" / "check_core_bare.py"
-    python_bin = project_dir / ".venv" / "bin" / "python"
+    try:
+        python_bin = project_interpreter()
+    except FileNotFoundError:
+        return 0
 
-    if script.exists() and python_bin.exists():
+    if script.exists() and python_bin.is_file():
         subprocess.run(
             [str(python_bin), str(script), "--repo", str(project_dir), "--fix", "-q"],
             check=False,

@@ -37,6 +37,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
 from scripts.review.evidence import (
     OUTCOME_LINE_MISMATCH,
@@ -1099,10 +1100,11 @@ class ProvisionedReviewWorktree:
             raise ReviewWorktreeError("sealed_acp_roots_missing")
         from scripts.review.isolation import _stage_sealed_read_mcp
 
-        python_bin = _REPO_ROOT / ".venv" / "bin" / "python"
-        if not python_bin.is_file() and sys.executable.endswith("/.venv/bin/python"):
-            python_bin = Path(sys.executable)
-        if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
+        try:
+            python_bin = project_interpreter()
+        except FileNotFoundError as exc:
+            raise ReviewWorktreeError(f"sealed_acp_python_missing:{exc}") from exc
+        if not os.access(python_bin, os.X_OK):
             raise ReviewWorktreeError(f"sealed_acp_python_missing:{python_bin}")
         helper = self.exec_root / "sealed-read-mcp.py"
         if not helper.exists():

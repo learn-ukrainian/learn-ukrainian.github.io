@@ -407,9 +407,17 @@ rejects failures and reports with less than 90% of the committed file coverage,
 and ignores runs older than seven days. It uploads one immutable duration file
 for every shard of this CI run. An unavailable, incomplete, or stale source
 selects `scripts/ci/pytest-file-durations.json` and logs why. Selected runs use
-the committed file directly. CI Gate checks the exact number and successful
-conclusion of pytest matrix jobs through the current run-attempt API; a missing
-or unexpectedly skipped shard fails the required gate. The `needs_artifact`
+the committed file directly. CI Gate checks pytest shard completeness from
+`needs` data alone, never a jobs-API re-listing (#8967: querying
+`/actions/runs/{id}/attempts/{attempt}/jobs` right after `needs` resolved
+sometimes returned an incomplete page — 10/10 shards green, Gate saw 6 and
+failed). `needs.pytest.result` is GitHub's own aggregate over every matrix
+instance from `fromJSON(needs.changes.outputs.shards)`, computed at
+needs-resolution time, so it is success only when every shard concluded
+success; the gate also cross-checks `needs.changes.outputs.shard_count`
+against the length of that same `shards` array (both written by one
+`classify_changes` call) so the two can never silently drift. A missing,
+failed, or unexpectedly skipped shard still fails the required gate. The `needs_artifact`
 skip-set audit runs as a parallel required job, so its collection and runtime
 checks do not extend shard 1's pytest path.
 Manual `workflow_dispatch` shard trials use a run-specific concurrency group;

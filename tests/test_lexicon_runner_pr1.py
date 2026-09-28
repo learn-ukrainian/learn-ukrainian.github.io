@@ -316,8 +316,9 @@ def test_runner_spawns_use_primary_project_interpreter(
     """Self-test and worker spawns use the primary checkout interpreter.
 
     A primary checkout uses its own ``.venv/bin/python``. A linked worktree
-    uses that same primary interpreter, not a worktree-local virtualenv.
-    ``sys.executable`` is only a fallback when it is a project interpreter.
+    uses that same primary interpreter even when the worktree has a local
+    virtualenv. When neither checkout has a ``.venv``, ``sys.executable``
+    is accepted unless it lives in some other checkout's ``.venv``.
     """
     import inspect
 
@@ -352,23 +353,24 @@ def test_runner_spawns_use_primary_project_interpreter(
 
     bare = tmp_path / "bare"
     bare.mkdir()
-    fallback = tmp_path / "running" / ".venv" / "bin" / "python"
-    fallback.parent.mkdir(parents=True)
-    fallback.write_text("", encoding="utf-8")
-    monkeypatch.setattr(memory_mod.sys, "executable", str(fallback))
-    assert memory_mod.project_interpreter(bare) == fallback
-
-    monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
+    foreign = tmp_path / "running" / ".venv" / "bin" / "python"
+    foreign.parent.mkdir(parents=True)
+    foreign.write_text("", encoding="utf-8")
+    monkeypatch.setattr(memory_mod.sys, "executable", str(foreign))
     with pytest.raises(FileNotFoundError, match="project interpreter not found"):
         memory_mod.project_interpreter(bare)
+
+    monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
+    assert memory_mod.project_interpreter(bare) == Path("/usr/bin/python3")
 
 
 def test_import_succeeds_when_project_interpreter_resolution_would_fail() -> None:
     """Importing memory and worker does not resolve the project interpreter.
 
     A fresh interpreter hides every ``.venv/bin/python`` and points
-    ``sys.executable`` at a non-project binary. Import still succeeds.
-    The spawn paths raise the same ``FileNotFoundError`` when they resolve.
+    ``sys.executable`` at another checkout's ``.venv/bin/python``. Import
+    still succeeds. The spawn paths raise the same ``FileNotFoundError``
+    when they resolve.
     """
     import subprocess
     import sys
@@ -381,7 +383,7 @@ def test_import_succeeds_when_project_interpreter_resolution_would_fail() -> Non
         import tempfile
         from pathlib import Path
 
-        sys.executable = "/usr/bin/python3"
+        sys.executable = "/tmp/foreign-checkout/.venv/bin/python"
         real_is_file = Path.is_file
 
         def hide_project_venv(self: Path) -> bool:

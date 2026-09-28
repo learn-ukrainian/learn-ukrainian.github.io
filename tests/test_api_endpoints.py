@@ -65,11 +65,20 @@ class TestHealthEndpoint:
         assert data["codexbar"]["cache_ttl_s"] == 720.0
 
     def test_health_respects_lu_monitor_host_id(self, monkeypatch):
-        monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+        monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
         data = client.get("/api/health").json()
-        assert data["instance"]["host"] == "host-job"
+        assert data["instance"]["host"] == "host-explicit"
         assert "serving_mode" in data["instance"]
         assert "checkout_sha" in data["instance"]
+
+    @pytest.mark.parametrize("non_opaque_host_id", ["teacher.example.org", "host-job"])
+    def test_health_never_echoes_a_non_opaque_lu_monitor_host_id(self, monkeypatch, non_opaque_host_id):
+        # A real host name (a live FQDN) or a retired batch-host role
+        # (RETIRED_HOST_IDS) must never leave /api/health verbatim, unlike a
+        # freshly minted opaque id, which dashboards are designed to show.
+        monkeypatch.setenv("LU_MONITOR_HOST_ID", non_opaque_host_id)
+        data = client.get("/api/health").json()
+        assert data["instance"]["host"] == "local"
 
     def test_version_matches_app(self):
         data = client.get("/api/health").json()

@@ -47,11 +47,26 @@ from batch_gemini_config import (
     PRO_TRACKS,
     PROJECT_ROOT,
     SEMINAR_TRACKS,
-    VENV_PYTHON,
     get_module_paths,
     get_track_config,
     slug_for_num,
 )
+
+
+def _venv_python() -> str:
+    """Project interpreter for a spawn. Resolved on use so importing this module stays side-effect free."""
+    from batch_gemini_config import VENV_PYTHON
+
+    return VENV_PYTHON
+
+
+def __getattr__(name: str) -> str:
+    """Keep ``from pipeline.core import VENV_PYTHON`` working without resolving it at import."""
+    if name != "VENV_PYTHON":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = _venv_python()
+    globals()["VENV_PYTHON"] = value
+    return value
 
 # ============================================================================
 # 3. ModuleContext Dataclass
@@ -184,7 +199,7 @@ MAX_FIX_ITERATIONS = 3
 
 def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> subprocess.CompletedProcess:
     """Run a script via .venv/bin/python with cwd=PROJECT_ROOT."""
-    cmd = [VENV_PYTHON, *args]
+    cmd = [_venv_python(), *args]
     return subprocess.run(
         cmd, cwd=str(PROJECT_ROOT), capture_output=capture,
         text=True, timeout=timeout,

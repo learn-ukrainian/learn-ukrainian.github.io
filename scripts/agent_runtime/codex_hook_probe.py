@@ -15,13 +15,18 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PROJECT_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from scripts.common.repo_root import project_interpreter
+
+PROJECT_PYTHON = project_interpreter()
 DEFAULT_TIMEOUT_SECONDS = 180
 TEMP_PARENT = Path("/private/tmp") if Path("/private/tmp").is_dir() else Path(tempfile.gettempdir())
 
