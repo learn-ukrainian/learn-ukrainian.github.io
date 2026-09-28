@@ -108,7 +108,7 @@ jobs:
           fi
           # `--key` is a prefix match; require the exact key. The list can lag
           # the save by a moment, so retry before failing.
-          for attempt in 1 2 3 4 5 6; do
+          for _ in 1 2 3 4 5 6; do
             found="$(gh cache list --ref refs/heads/main --key "${UV_CACHE_KEY}" --json key --jq '.[].key' | grep -Fx -- "${UV_CACHE_KEY}" || true)"
             if [ -n "${found}" ]; then
               echo "refs/heads/main holds ${UV_CACHE_KEY}"
