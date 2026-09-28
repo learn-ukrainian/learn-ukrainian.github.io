@@ -16,6 +16,8 @@ import csv
 import re
 from pathlib import Path
 
+import pytest
+
 MARKER = "data/projects/open_model_data/"
 REVIEW_PREFIX = "components/decolonization/reviews/"
 RESOLVERS = frozenset({"resolve_open_model_path", "_bound_path", "_physical_k_path", "source_asset"})
@@ -264,6 +266,7 @@ def _production_sources() -> list[Path]:
     return found
 
 
+@pytest.mark.repo_wide
 def test_k_path_literals_are_resolved_or_allowlisted() -> None:
     """Production K literals go through the resolver, or an explicit allowlist."""
     violations: list[str] = []

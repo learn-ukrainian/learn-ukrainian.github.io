@@ -92,6 +92,10 @@ def dpo_records(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
     return records
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_production_release_files_exist(archive_payload: ArtifactSet) -> None:
     """Verify all 6 SFT shards, 3 DPO shards, receipt, and detached SHA exist."""
     assert DEFAULT_OUTPUT_DIR.exists(), f"Release dir {DEFAULT_OUTPUT_DIR} does not exist"
@@ -118,6 +122,10 @@ def test_production_receipt_schema_valid(receipt_data: dict[str, Any]) -> None:
     assert not errors, f"Receipt schema validation errors: {[e.message for e in errors]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_production_receipt_hashes_match(receipt_data: dict[str, Any], archive_payload: ArtifactSet) -> None:
     """Verify detached sha256 matches receipt and shard digests match on-disk files."""
     receipt_path = REGISTRY_OUTPUT_DIR / "production_release_receipt.json"
@@ -145,6 +153,10 @@ def test_production_receipt_hashes_match(receipt_data: dict[str, Any], archive_p
         file_path = DEFAULT_OUTPUT_DIR / "dpo" / fname
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_sft_shards_exact_quotas_and_distribution(sft_records: list[dict[str, Any]]) -> None:
     """Verify exact 6,000 SFT trajectories, 70/30 CORRECT/PRESERVE split, and format distribution."""
     assert len(sft_records) == TOTAL_SFT_QUOTA, f"Expected {TOTAL_SFT_QUOTA} SFT records, got {len(sft_records)}"
@@ -171,6 +183,10 @@ def test_sft_shards_exact_quotas_and_distribution(sft_records: list[dict[str, An
         assert fmt_counts[fmt] == expected, f"Format {fmt} expected {expected}, got {fmt_counts[fmt]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_sft_shards_schema_valid(sft_records: list[dict[str, Any]]) -> None:
     """Validate all SFT records against v1_decolonization_trajectory.schema.json."""
     assert TRAJECTORY_SCHEMA_PATH.exists(), f"Trajectory schema missing: {TRAJECTORY_SCHEMA_PATH}"
@@ -187,6 +203,10 @@ def test_sft_shards_schema_valid(sft_records: list[dict[str, Any]]) -> None:
             )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_dpo_shards_exact_quotas_and_properties(dpo_records: list[dict[str, Any]]) -> None:
     """Verify exact 3,000 DPO pairs, 2,100 anti-Soviet + 900 anti-hyperpurist, and length matching."""
     assert len(dpo_records) == TOTAL_DPO_QUOTA, f"Expected {TOTAL_DPO_QUOTA} DPO records, got {len(dpo_records)}"
@@ -232,6 +252,10 @@ def test_dpo_shards_exact_quotas_and_properties(dpo_records: list[dict[str, Any]
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_dpo_shards_schema_valid(dpo_records: list[dict[str, Any]]) -> None:
     """Validate DPO records against v1_decolonization_dpo_pair.schema.json."""
     assert DPO_PAIR_SCHEMA_PATH.exists(), f"DPO pair schema missing: {DPO_PAIR_SCHEMA_PATH}"
@@ -245,6 +269,10 @@ def test_dpo_shards_schema_valid(dpo_records: list[dict[str, Any]]) -> None:
             assert not errors, f"DPO pair {r.get('pair_id', idx)} failed schema: {[e.message for e in errors]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_partition_firewall_zero_leakage(
     sft_records: list[dict[str, Any]],
     dpo_records: list[dict[str, Any]],
@@ -365,6 +393,10 @@ def test_no_private_host_paths_opsec(receipt_data: dict[str, Any]) -> None:
     assert_no_private_host_paths(receipt_data, "production_release_receipt.json")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_verify_only_cli_execution() -> None:
     """Run production shards assembly in --verify-only mode and verify exit 0."""
     script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_production_shards_assembly.py"
@@ -380,6 +412,10 @@ def test_verify_only_cli_execution() -> None:
     assert "[✓] --verify-only checks passed 100% cleanly!" in res.stdout
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
 def test_tamper_detection_on_corrupted_shard(tmp_path: Path, archive_payload: ArtifactSet) -> None:
     """Verify that tampering with an SFT shard or receipt triggers a verification failure."""
     test_release_dir = tmp_path / "uldr_v1_production"

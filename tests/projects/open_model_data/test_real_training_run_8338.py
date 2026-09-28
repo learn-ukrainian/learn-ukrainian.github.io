@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import jsonschema
+import pytest
 from safetensors import safe_open
 
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -18,6 +19,10 @@ CANARY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "canary"
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/run_output/adapter/adapter_model.safetensors",
+)
 def test_adapter_safetensors_layer_count() -> None:
     """Verify saved adapter belongs to named model with 24 layers, not 4 layers (#8338)."""
     adapter_path = STUDY_DIR / "run_output" / "adapter" / "adapter_model.safetensors"
@@ -67,6 +72,10 @@ def test_pilot_canary_receipt_marked_not_reliable() -> None:
     assert "8338" in receipt["reliability_assessment"]["notes"]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/run_output/training_run_manifest.json",
+)
 def test_training_run_manifest_integrity() -> None:
     """Verify training run manifest records real parameters, fingerprints, and loss reduction."""
     manifest_path = STUDY_DIR / "run_output" / "training_run_manifest.json"
@@ -88,6 +97,10 @@ def test_training_run_manifest_integrity() -> None:
     assert fp["protection_sha256"] == "67070c44fcb3efeed5d394e0b598b95a5e5f2c8c984a0b3065c3c0f4e8c36af7"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/real_training_run_scorecard.json",
+)
 def test_scorecard_and_plain_verdict() -> None:
     """Verify before/after scorecard exists with plain answer on whether training helped."""
     scorecard_md = DOCS_DIR / "REAL_TRAINING_RUN_SCORECARD_8338.md"
@@ -109,6 +122,10 @@ def test_scorecard_and_plain_verdict() -> None:
     assert data["protection_600_results"]["trained"]["regional_dialect_preservation_rate"] == 0.0033
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/uldr_v1_acceptance_audit.json",
+)
 def test_acceptance_audit_preflight() -> None:
     """Verify preflight acceptance audit is recorded and captures expected dataset failures."""
     audit_path = STUDY_DIR / "uldr_v1_acceptance_audit.json"

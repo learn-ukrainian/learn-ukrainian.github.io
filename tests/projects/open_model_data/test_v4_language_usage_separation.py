@@ -143,6 +143,10 @@ def test_analyze_span_language_usage_damaged_or_excluded() -> None:
     assert res["consumer_views"]["modern_view"]["training_eligible"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed when receipt hashes are tampered."""
     tampered_out = tmp_path / "out"
@@ -161,6 +165,10 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path)
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if private host paths appear in receipts."""
     tampered_out = tmp_path / "out"
@@ -187,6 +195,10 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if a loss mask span extends beyond the span boundary."""
     tampered_out = tmp_path / "out"
@@ -220,11 +232,19 @@ def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Current committed language usage artifacts pass verify() cleanly."""
     lang_sep.verify(CONFIG_PATH)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"

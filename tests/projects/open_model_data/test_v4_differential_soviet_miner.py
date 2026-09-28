@@ -380,6 +380,10 @@ def test_differential_receipt_manifest_and_invariants(receipt_schema: dict) -> N
     validate_no_private_host_paths(manifest)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/soviet_candidates/differential_soviet_candidates.jsonl",
+)
 def test_miner_cli_verify_only() -> None:
     """Execute v4_differential_soviet_miner.py --verify-only with mandatory subprocess timeout."""
     script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_differential_soviet_miner.py"
@@ -394,6 +398,10 @@ def test_miner_cli_verify_only() -> None:
     assert "verified clean" in res.stdout
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/soviet_candidates/differential_soviet_candidates.jsonl",
+)
 def test_miner_cli_verify_only_fails_on_manifest_tampering(tmp_path: Path) -> None:
     """Ensure --verify-only fails if the manifest file is missing or has a hash mismatch."""
     import shutil

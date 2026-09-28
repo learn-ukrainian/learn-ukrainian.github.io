@@ -130,6 +130,10 @@ def receipt() -> dict[str, Any]:
     return json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_release_files_exist_and_sha_integrity(archive_payload: ArtifactSet) -> None:
     """Test 1: Release artifacts exist and cryptographic SHA-256 hashes match."""
     for file_path, sha_path in [
@@ -180,6 +184,10 @@ def test_release_receipt_schema(receipt_schema: dict[str, Any], receipt: dict[st
     assert receipt["sft_training_dataset"]["total_trajectories"] == 10000
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_eval_benchmark_stratification(eval_schema: dict[str, Any], eval_cases: list[dict[str, Any]]) -> None:
     """Test 3: Evaluation benchmark stratification and case counts."""
     validator = jsonschema.Draft202012Validator(eval_schema)
@@ -200,6 +208,10 @@ def test_eval_benchmark_stratification(eval_schema: dict[str, Any], eval_cases: 
     assert mixed_rate >= 0.30, f"Expected mixed error coverage >= 30%, got {mixed_rate * 100:.1f}%"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_zero_train_eval_leakage_firewall(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -254,6 +266,10 @@ def test_zero_train_eval_leakage_firewall(
         assert "рѣшън" not in q_norm, "F5a-r3 regression: 'рѣшън' leaked into training query"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/sft/sft_shard_001_of_030.jsonl",
+)
 def test_sft_dataset_volume_and_schema(
     trajectory_schema: dict[str, Any],
     sft_trajectories: list[dict[str, Any]],
@@ -328,6 +344,10 @@ def test_proto_ukrainian_vernacular_feature_detection() -> None:
     assert "verb_3rd_person_t" in feats4
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_editorial_and_translation_purge(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -366,12 +386,20 @@ def test_tokenizer_historical_graphemes() -> None:
         assert HISTORICAL_CYRILLIC_RE.search(char)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_modern_literary_replay_buffer(sft_trajectories: list[dict[str, Any]]) -> None:
     """Test 11: Control 8 - Calibrated modern literary replay buffer contains exactly 200 samples."""
     replay_samples = [t for t in sft_trajectories if t.get("is_calque_or_russianism") is True]
     assert len(replay_samples) == 200, f"Expected exactly 200 replay buffer samples, found {len(replay_samples)}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_eval_suite_metrics_and_prediction_scoring(eval_cases: list[dict[str, Any]]) -> None:
     """Test 12: Ground truth validation and candidate prediction scoring."""
     # 1. Benchmark ground-truth validation passes with high accuracy
@@ -415,6 +443,10 @@ def test_eval_suite_metrics_and_prediction_scoring(eval_cases: list[dict[str, An
     assert trunc_metrics["accuracy"] < 0.70
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+)
 def test_editorial_and_commentary_purge(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],

@@ -241,6 +241,10 @@ def test_eval_suite_generation_and_schema() -> None:
     assert correct_count == 2
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_zero_train_eval_leakage_firewall(mock_vesum_db: Path) -> None:
     """Verify that no held-out eval sentences leak into training trajectories."""
     mock_eval_chunk = MiddleUkrainianChunk(
@@ -435,6 +439,10 @@ def test_evaluator_strictness_and_rejection() -> None:
     assert res["mixed_error_correction_rate"] == 1.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_balance_and_interleaving(mock_vesum_db: Path) -> None:
     """Verify that build_sft_dataset generates a strict 50/50 balance of PRESERVE/CORRECT rows."""
     mock_chunks = [
@@ -489,6 +497,10 @@ def test_sft_dataset_balance_and_interleaving(mock_vesum_db: Path) -> None:
                 assert alt["register_tier"] in valid_registers
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
     """Verify that replay buffer loads dialect preservation and modern literary anti-calque rows without medieval v0.4a."""
     trajectories = load_replay_buffer(mock_vesum_db, quota=20)
@@ -513,6 +525,10 @@ def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
             assert "modern_literary_replay" in att.get("tags", [])
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
 def test_release_dataset_disk_invariants(archive_payload: ArtifactSet) -> None:
     """Verify on-disk release artifacts strictly meet all quota, balance, and file-size invariants."""
     release_dir = DEFAULT_RELEASE_DIR
@@ -554,6 +570,10 @@ def test_release_dataset_disk_invariants(archive_payload: ArtifactSet) -> None:
     assert sft_correct == 5000
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
 def test_no_editorial_apparatus_in_released_artifacts(archive_payload: ArtifactSet) -> None:
     """Verify no editorial commentaries, modern studies, or academic prefaces exist in released files."""
     release_dir = DEFAULT_RELEASE_DIR
@@ -590,6 +610,10 @@ def test_no_editorial_apparatus_in_released_artifacts(archive_payload: ArtifactS
                 assert snip not in hist.casefold(), f"Editorial snippet '{snip}' found in {shard.name} row {i}: {hist}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
 def test_vesum_attestation_consistency_in_released_artifacts(archive_payload: ArtifactSet) -> None:
     """Verify that is_standard_attested strictly equals (vesum_forms_count > 0) across all SFT rows."""
     for shard in _shard_paths():
@@ -630,6 +654,10 @@ def test_release_receipt_schema_validation() -> None:
         assert receipt["evaluation_metrics"]["regression_against_v02_pct"] is None
 
 
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
 def test_regression_velychkovsky_and_mytsyk_commentary_excluded(archive_payload: ArtifactSet) -> None:
     """Verify that specific Round 3, Round 4, and Round 5 commentary leaks (Velychkovsky, Mytsyk, Khanenko, Zinoviyiv) are excluded."""
     release_dir = DEFAULT_RELEASE_DIR

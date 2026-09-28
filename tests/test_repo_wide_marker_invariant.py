@@ -57,34 +57,36 @@ _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 # Whole-tree scanners over tests/, scripts/, agents_extensions/ (or a stable
 # subtree of them) that carry the marker at module scope.
-KNOWN_REPO_WIDE_MODULES = frozenset({
-    "tests/ai_agent_bridge/test_module_identity.py",
-    "tests/api/test_api_subprocess_timeout.py",
-    "tests/api/test_import_pinning.py",
-    "tests/orchestration/test_thread_restart_e2e.py",
-    "tests/orchestration/test_worktree_removal_invariant.py",
-    "tests/test_agent_fleet_tooling_guardrails.py",
-    "tests/test_ask_opencode.py",
-    "tests/test_curriculum_upgrade_no_host_run_root.py",
-    "tests/test_cyrillic_roundtrip_invariant.py",
-    "tests/test_fleet_routing_open_model_data_import_guard.py",
-    "tests/test_hooks_executable.py",
-    "tests/test_lint_fleet_roster.py",
-    "tests/test_lint_prompts.py",
-    "tests/test_lint_test_assertions.py",
-    "tests/test_no_rewrite_contract.py",
-    "tests/test_post_processor_mutation_invariant.py",
-    "tests/test_public_tree_no_baked_host_run_root.py",
-    "tests/test_pytest_plugins_not_test_modules.py",
-    "tests/test_reads_content_marker_invariant.py",
-    "tests/test_session_identity_env_isolation.py",
-    "tests/test_session_state_retired.py",
-    "tests/test_sparse_collection_guard.py",
-    "tests/test_subprocess_timeout_guard.py",
-    "tests/test_sum11_source_guard.py",
-    "tests/test_threshold_source_of_truth.py",
-    "tests/test_work_privacy.py",
-})
+KNOWN_REPO_WIDE_MODULES = frozenset(
+    {
+        "tests/ai_agent_bridge/test_module_identity.py",
+        "tests/api/test_api_subprocess_timeout.py",
+        "tests/api/test_import_pinning.py",
+        "tests/orchestration/test_thread_restart_e2e.py",
+        "tests/orchestration/test_worktree_removal_invariant.py",
+        "tests/test_agent_fleet_tooling_guardrails.py",
+        "tests/test_ask_opencode.py",
+        "tests/test_curriculum_upgrade_no_host_run_root.py",
+        "tests/test_cyrillic_roundtrip_invariant.py",
+        "tests/test_fleet_routing_open_model_data_import_guard.py",
+        "tests/test_hooks_executable.py",
+        "tests/test_lint_fleet_roster.py",
+        "tests/test_lint_prompts.py",
+        "tests/test_lint_test_assertions.py",
+        "tests/test_no_rewrite_contract.py",
+        "tests/test_post_processor_mutation_invariant.py",
+        "tests/test_public_tree_no_baked_host_run_root.py",
+        "tests/test_pytest_plugins_not_test_modules.py",
+        "tests/test_reads_content_marker_invariant.py",
+        "tests/test_session_identity_env_isolation.py",
+        "tests/test_session_state_retired.py",
+        "tests/test_sparse_collection_guard.py",
+        "tests/test_subprocess_timeout_guard.py",
+        "tests/test_sum11_source_guard.py",
+        "tests/test_threshold_source_of_truth.py",
+        "tests/test_work_privacy.py",
+    }
+)
 
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
@@ -169,29 +171,28 @@ NOT_REPO_WIDE = {
         "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
         "any change already forces the full tier."
     ),
+    "tests/test_open_model_phase3_school_context_negative_recovery.py::test_schema_and_committed_receipt_validate": (
+        "Runs `git ls-files --stage` on one registry receipt to assert mode 100644. "
+        "That path is a single tracked file, not a repository tree scan."
+    ),
     "tests/test_ci_pr_triggers.py::test_no_workflow_reruns_ci_on_a_label": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
-        "already forces the full tier."
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_ci_pr_triggers.py::test_exactly_one_ci_gate_job_across_workflows": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
-        "already forces the full tier."
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_dashboards.py::TestDashboardInventory.test_expected_dashboards_exist": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
-        "already forces the full tier."
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
     ),
     "tests/test_dashboards.py::TestApiEndpoints.test_fetch_calls_in_html": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
-        "already forces the full tier."
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
     ),
     "tests/test_layerb_candidates.py::test_ci_differential_replays_all_unit_fixtures_at_pinned_base_values": (
         "Scans tests/fixtures/qg_bakeoff; fixture files are not test modules, so any change "
         "already forces the full tier."
     ),
     "tests/test_monitor_route_contracts.py::test_every_dashboard_html_file_has_page_contract": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
-        "already forces the full tier."
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
     ),
     "tests/test_monitor_ui_contracts.py::test_all_playground_pages_use_single_monitor_shell": (
         "Scans dashboards/*.html; dashboards/ changes already force the full tier, and the "
@@ -207,8 +208,7 @@ NOT_REPO_WIDE = {
         "already forces the full tier."
     ),
     "tests/test_paths_filter_fail_open.py::test_workflows_only_consume_valid_action_outputs": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
-        "already forces the full tier."
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
         "Reads the site/src/content/docs content tree as a content reader; the module "
@@ -227,8 +227,7 @@ NOT_REPO_WIDE = {
         "shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_dispatch_xdist_cap.py::test_ci_workflows_do_not_set_the_dispatch_marker": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
-        "already forces the full tier."
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_site_links.py::TestInternalLinks.test_no_broken_cross_references": (
         "Reads the site/src/content/docs content tree through a per-track variable; that "
@@ -251,56 +250,61 @@ NOT_REPO_WIDE = {
         "any change already forces the full tier."
     ),
     "tests/test_workflow_head_concurrency.py::test_merge_group_workflows_do_not_unconditionally_cancel": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
-        "already forces the full tier."
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
 }
 
 # Repository-root path constants. A walk rooted at one of these (or a join into
 # tests/scripts/agents_extensions) is repo-wide, not a temp fixture. The
 # ``*_ROOT`` suffix and ``Path(__file__).parents[n]`` cover the inline forms.
-_REPO_ROOT_CONSTANTS = frozenset({
-    "REPO",
-    "ROOT",
-    "PROJECT_ROOT",
-    "PROJECT_DIR",
-    "REPO_ROOT",
-    "_REPO_ROOT",
-    "TESTS_ROOT",
-    "_TESTS_ROOT",
-    "SCRIPTS_ROOT",
-    "_SCRIPTS_ROOT",
-    "SCRIPTS_DIR",
-    "_API_ROOT",
-    "DOCS_ROOT",
-    "_DOCS_ROOT",
-    "SRC_ROOT",
-    "SOURCE_ROOT",
-    "CURRICULUM_ROOT",
-    "CURRICULUM_DIR",
-})
+_REPO_ROOT_CONSTANTS = frozenset(
+    {
+        "REPO",
+        "ROOT",
+        "PROJECT_ROOT",
+        "PROJECT_DIR",
+        "REPO_ROOT",
+        "_REPO_ROOT",
+        "TESTS_ROOT",
+        "_TESTS_ROOT",
+        "SCRIPTS_ROOT",
+        "_SCRIPTS_ROOT",
+        "SCRIPTS_DIR",
+        "_API_ROOT",
+        "DOCS_ROOT",
+        "_DOCS_ROOT",
+        "SRC_ROOT",
+        "SOURCE_ROOT",
+        "CURRICULUM_ROOT",
+        "CURRICULUM_DIR",
+    }
+)
 
 # Whole-tree linter helpers: calling one is a repo scan even without a glob.
-_KNOWN_SCANNER_CALLS = frozenset({
-    "find_stale_pinned_assertions",
-    "scan_scripts",
-    "timeout_less_calls",
-    "timeout_less_calls_from_source",
-    "_inplace_manifest_writers",
-    "production_sites",
-    "_iter_surface_python_files",
-    "lint_fleet_roster",
-    "lint_agent_skills",
-    "lint_model_catalog",
-})
+_KNOWN_SCANNER_CALLS = frozenset(
+    {
+        "find_stale_pinned_assertions",
+        "scan_scripts",
+        "timeout_less_calls",
+        "timeout_less_calls_from_source",
+        "_inplace_manifest_writers",
+        "production_sites",
+        "_iter_surface_python_files",
+        "lint_fleet_roster",
+        "lint_agent_skills",
+        "lint_model_catalog",
+    }
+)
 
-_SUBPROCESS_CALLS = frozenset({
-    "subprocess.run",
-    "subprocess.check_output",
-    "subprocess.check_call",
-    "subprocess.call",
-    "subprocess.Popen",
-})
+_SUBPROCESS_CALLS = frozenset(
+    {
+        "subprocess.run",
+        "subprocess.check_output",
+        "subprocess.check_call",
+        "subprocess.call",
+        "subprocess.Popen",
+    }
+)
 
 _GIT_TREE_TOKENS = frozenset({"ls-files", "ls-tree"})
 
@@ -505,7 +509,9 @@ def _module_marked(tree: ast.Module) -> bool:
     return False
 
 
-def _top_level_functions(tree: ast.Module) -> dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]]:
+def _top_level_functions(
+    tree: ast.Module,
+) -> dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]]:
     found: dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]] = {}
     for node in tree.body:
         if isinstance(node, ast.ClassDef):
@@ -610,14 +616,8 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
 def test_known_repo_wide_modules_carry_the_marker() -> None:
     missing = [module for module in sorted(KNOWN_REPO_WIDE_MODULES) if not (_REPO_ROOT / module).is_file()]
     assert not missing, f"known repo-wide modules no longer exist: {missing}"
-    unmarked = [
-        module
-        for module in sorted(KNOWN_REPO_WIDE_MODULES)
-        if not _module_marked(_parse(_REPO_ROOT / module))
-    ]
-    assert not unmarked, (
-        "known repo-wide modules lost their module-level repo_wide marker:\n" + "\n".join(unmarked)
-    )
+    unmarked = [module for module in sorted(KNOWN_REPO_WIDE_MODULES) if not _module_marked(_parse(_REPO_ROOT / module))]
+    assert not unmarked, "known repo-wide modules lost their module-level repo_wide marker:\n" + "\n".join(unmarked)
 
 
 def test_known_repo_wide_functions_carry_the_marker() -> None:

@@ -247,6 +247,10 @@ def test_valid_freeze_reports_integrity_only(tmp_path: Path) -> None:
     assert "status" not in result
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_committed_freeze_integrity() -> None:
     result = verifier.validate(verifier.DEFAULT_EVIDENCE_DIR, repo_root=verifier.ROOT)
 

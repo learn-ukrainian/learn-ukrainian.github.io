@@ -72,6 +72,10 @@ def receipt_schema() -> dict[str, Any]:
     return json.loads(RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_suite_file_and_sha256_integrity() -> None:
     """Verify partition file exists, matches SHA-256 manifest, and is non-empty."""
     assert SUITE_PATH.exists()
@@ -83,6 +87,10 @@ def test_suite_file_and_sha256_integrity() -> None:
     assert actual_sha == recorded_sha, f"SHA-256 drift! Actual: {actual_sha}, Recorded: {recorded_sha}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_suite_receipt_and_schema_validation(receipt_schema: dict[str, Any]) -> None:
     """Verify release receipt exists, conforms to Draft 2020-12 schema, and matches suite facts."""
     assert RECEIPT_PATH.exists()
@@ -118,6 +126,10 @@ def test_suite_receipt_and_schema_validation(receipt_schema: dict[str, Any]) -> 
     assert file_info["sha256"] == actual_sha
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_every_record_validates_against_record_schema(
     suite_cases: list[dict[str, Any]], record_schema: dict[str, Any]
 ) -> None:
@@ -131,6 +143,10 @@ def test_every_record_validates_against_record_schema(
             pytest.fail(f"Record {idx} ({case.get('eval_id')}) failed schema: {e.message}")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_suite_exact_strata_and_subgroup_distribution(suite_cases: list[dict[str, Any]]) -> None:
     """Verify precise distribution across strata, subgroups, and action types."""
     assert len(suite_cases) == 600
@@ -170,6 +186,10 @@ def test_suite_exact_strata_and_subgroup_distribution(suite_cases: list[dict[str
     assert subgroup_counts["colonial_surzhyk_control"] == 100
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_target_terms_present_and_unambiguous(suite_cases: list[dict[str, Any]]) -> None:
     """Verify target terms are embedded inside the corresponding sentence text."""
     for c in suite_cases:
@@ -182,6 +202,10 @@ def test_target_terms_present_and_unambiguous(suite_cases: list[dict[str, Any]])
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_anti_surzhyk_invariant_boundary_defense(suite_cases: list[dict[str, Any]]) -> None:
     """Verify the strategic boundary: dialect words are never labeled Surzhyk and Surzhyk is never labeled PRESERVE."""
     for c in suite_cases:
@@ -220,6 +244,10 @@ def test_clopper_pearson_lower_and_upper_mathematics() -> None:
     assert ub_300_0 < 0.01
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_evaluator_perfect_model_execution(suite_cases: list[dict[str, Any]]) -> None:
     """Verify evaluator approves a compliant model preserving dialects and eliminating Surzhyk."""
     perfect_preds = generate_mock_predictions(suite_cases, "perfect")
@@ -267,6 +295,10 @@ def test_evaluator_perfect_model_execution(suite_cases: list[dict[str, Any]]) ->
     assert "100 / 100" in report
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_evaluator_catches_over_standardization(suite_cases: list[dict[str, Any]]) -> None:
     """Verify evaluator rejects a model that aggressively over-standardizes regional dialects."""
     failing_preds = generate_mock_predictions(suite_cases, "failing_over_standardization")
@@ -286,6 +318,10 @@ def test_evaluator_catches_over_standardization(suite_cases: list[dict[str, Any]
     assert "FAILED" in report
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_evaluator_catches_surzhyk_normalization(suite_cases: list[dict[str, Any]]) -> None:
     """Verify evaluator catches and fails a model that normalizes Surzhyk as acceptable dialect."""
     failing_preds = generate_mock_predictions(suite_cases, "failing_surzhyk_normalization")
@@ -305,6 +341,10 @@ def test_evaluator_catches_surzhyk_normalization(suite_cases: list[dict[str, Any
     assert "FAILED" in report
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_lemko_stratum_uses_attested_authors_and_rejects_false_stems(
     suite_cases: list[dict[str, Any]],
 ) -> None:
@@ -446,6 +486,10 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict[str, Any]]) -> None:
     """Old East Slavic rows must be diplomatic excerpts of the named monument."""
     oes = [c for c in suite_cases if c["subgroup"] == "old_east_slavic"]
@@ -485,6 +529,10 @@ def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict
         assert "яременк" not in work
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_surzhyk_controls_are_curated_calques_only(suite_cases: list[dict[str, Any]]) -> None:
     """Anti-Surzhyk N=100 is allowlisted calques, not standard UA or style-guide metalanguage."""
     surz = [c for c in suite_cases if c["subgroup"] == "colonial_surzhyk_control"]
@@ -496,6 +544,10 @@ def test_surzhyk_controls_are_curated_calques_only(suite_cases: list[dict[str, A
         assert target in SURZHYK_TARGET_ALLOWLIST
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_evaluator_requires_target_token_not_heritage_keywords(suite_cases: list[dict[str, Any]]) -> None:
     """PRESERVE fails when the model drops the target but keeps 'зберігаємо' / 'діалект'."""
     preserve_case = next(c for c in suite_cases if c["case_type"] == "PRESERVE")
@@ -509,6 +561,10 @@ def test_evaluator_requires_target_token_not_heritage_keywords(suite_cases: list
     assert "unauthorized_standardization" in (res.failure_reason or "")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_evaluator_detects_malformed_thought_tags(suite_cases: list[dict[str, Any]]) -> None:
     """Verify unclosed <thought> tags or empty responses are flagged as corruptions."""
     sample_case = suite_cases[0]  # PRESERVE dialect case

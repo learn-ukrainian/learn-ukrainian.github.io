@@ -102,12 +102,20 @@ def test_tombstone_exists_in_archived_uldr_v1() -> None:
 
 
 def test_active_correction_protection_intact() -> None:
-    """Verify that correction_protection_v1 is intact in release/."""
+    """Registry half of correction_protection_v1 stays readable without artifacts."""
     assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
+    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
+
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
+def test_active_correction_protection_cases_artifact_present() -> None:
+    """The cases payload is an artifact; skip cleanly when it is not hydrated."""
     assert artifact_path(
         "open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl"
     ).is_file()
-    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
 
 
 def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

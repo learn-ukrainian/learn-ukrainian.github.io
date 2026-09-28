@@ -113,6 +113,10 @@ def test_validation_rejects_training_admission_and_personal_paths() -> None:
         inventory.validate_records([unsafe], schema)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_committed_summary_matches_ledger_hash() -> None:
     ledger = resolve_open_model_path("data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl")
     summary_path = resolve_open_model_path("data/projects/open_model_data/inventory/aggregate_summary_v1.json")

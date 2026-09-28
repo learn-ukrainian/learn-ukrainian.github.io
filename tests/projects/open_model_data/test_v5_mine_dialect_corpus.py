@@ -145,6 +145,10 @@ def vesum_db_fixture(tmp_path: Path) -> Path:
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_release_files_and_sha256_integrity() -> None:
     """Verify all release artifacts exist and match their SHA-256 manifest files."""
     for data_file, sha_file in [
@@ -169,6 +173,10 @@ def test_release_files_and_sha256_integrity() -> None:
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_release_receipt_schema_and_facts(
     release_receipt: dict[str, Any],
     receipt_schema: dict[str, Any],
@@ -216,6 +224,10 @@ def test_release_receipt_schema_and_facts(
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_evaluation_benchmark_schema_validation(
     eval_cases: list[dict[str, Any]],
     eval_schema: dict[str, Any],
@@ -227,6 +239,10 @@ def test_evaluation_benchmark_schema_validation(
         assert not errors, f"Validation errors on record {idx} ({case.get('eval_id')}): {[e.message for e in errors]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_evaluation_benchmark_stratification_quotas(eval_cases: list[dict[str, Any]]) -> None:
     """Verify multi-zone quota thresholds: Southwestern >= 600, Northern >= 400, Southeastern >= 500."""
     total = len(eval_cases)
@@ -254,6 +270,10 @@ def test_evaluation_benchmark_stratification_quotas(eval_cases: list[dict[str, A
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_anti_copying_mixed_error_coverage(eval_cases: list[dict[str, Any]]) -> None:
     """Verify mixed-error coverage >= 30% across the benchmark and within every macro zone."""
     total = len(eval_cases)
@@ -268,6 +288,10 @@ def test_anti_copying_mixed_error_coverage(eval_cases: list[dict[str, Any]]) -> 
         assert pct >= 0.25, f"Macro zone {mz} mixed error percentage too low: {pct:.2%}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_anti_copying_case_properties(eval_cases: list[dict[str, Any]]) -> None:
     """Verify invariants for PRESERVE and CORRECT_MIXED test cases."""
     for c in eval_cases:
@@ -297,6 +321,10 @@ def test_anti_copying_case_properties(eval_cases: list[dict[str, Any]]) -> None:
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_strict_zero_train_eval_leakage_firewall(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -496,6 +524,10 @@ def test_strict_zero_train_eval_leakage_firewall(
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_schema_validation(
     sft_trajectories: list[dict[str, Any]],
     trajectory_schema: dict[str, Any],
@@ -509,6 +541,10 @@ def test_sft_dataset_schema_validation(
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_quotas_and_unique_ids(sft_trajectories: list[dict[str, Any]]) -> None:
     """Verify SFT dataset size >= 500, trajectory IDs uniqueness, and replay buffer size >= 100."""
     total = len(sft_trajectories)
@@ -524,6 +560,10 @@ def test_sft_dataset_quotas_and_unique_ids(sft_trajectories: list[dict[str, Any]
     assert len(replay_trajs) >= 100, f"Expected >= 100 modern literary replay trajectories, got {len(replay_trajs)}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
@@ -576,6 +616,10 @@ def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_bilodid_quarantine_enforced(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -600,6 +644,10 @@ def test_bilodid_quarantine_enforced(
             assert needle not in resp, f"Banned authority needle '{needle}' in SFT response {t['trajectory_id']}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_sentence_integrity_and_no_dictionary_glosses(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that evaluation sentences are genuine quotations without unclosed parentheses or dictionary glosses."""
     for c in eval_cases:
@@ -625,6 +673,10 @@ def test_sentence_integrity_and_no_dictionary_glosses(eval_cases: list[dict[str,
 # ==============================================================================
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that golden predictions achieve 100% accuracy and clear the gate across all 4 zones."""
     results = evaluate_multizone_benchmark(eval_cases)
@@ -641,6 +693,10 @@ def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]
         assert metrics["clopper_pearson_lower"] >= 0.98
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_probe_destructive_rejection(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that destructive/truncated outputs (e.g. marker + replacement only) are strictly rejected."""
     # Probe supplies only truncated marker plus replacement, deleting the rest of the sentence
@@ -681,6 +737,10 @@ def test_multizone_evaluation_fail_closed_on_empty_zone() -> None:
     assert results["southwestern"]["gate_cleared"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_rejects_punctuation_corruption(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that mutating punctuation in expected outputs is strictly rejected across all zones."""
     # Add a comma after the first word of every expected output
@@ -1175,6 +1235,10 @@ def test_find_attested_synonym_rejects_descriptive_and_crossref(vesum_db_fixture
     assert res_hazdynya[0] == "господарка"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_standard_headwords_with_nested_idioms_excluded(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1194,6 +1258,10 @@ def test_standard_headwords_with_nested_idioms_excluded(
         assert banned_substring not in t["query"].casefold()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_synonyms_strictly_bound_to_quotation_sense(
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
@@ -1211,6 +1279,10 @@ def test_sft_synonyms_strictly_bound_to_quotation_sense(
             assert "компрес" not in lemmas, f"Incorrect cross-sense synonym 'компрес' in {lemmas}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_dialect_variant_headers_exclude_standard_quotations(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1240,6 +1312,10 @@ def test_dialect_variant_headers_exclude_standard_quotations(
             )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_sub_sense_boundary_and_synonym_binding(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],

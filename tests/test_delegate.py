@@ -8209,7 +8209,7 @@ def test_normalize_sparse_include_dedupes_and_strips():
 def test_normalize_sparse_include_rejects_nested_and_unknown():
     import pytest
 
-    with pytest.raises(ValueError, match="top-level"):
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
         delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
     with pytest.raises(ValueError, match="not a default-excluded"):
         delegate._normalize_sparse_include(["scripts"])

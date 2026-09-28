@@ -111,6 +111,7 @@ Issue: #1184, #7230.
 from __future__ import annotations
 
 import argparse
+import ast
 import contextlib
 import functools
 import hashlib
@@ -5948,8 +5949,70 @@ def _sparse_reinclude_prefix_matches(path: str, prefix: str) -> bool:
     return prefix.endswith("_") and path.startswith(prefix)
 
 
+def _assignment_mentions_marker(module_path: Path, name: str, markers: tuple[str, ...]) -> bool:
+    """True when ``name = ...`` in ``module_path`` embeds a marker string."""
+    try:
+        source = module_path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except (OSError, SyntaxError, UnicodeError):
+        return False
+    for stmt in tree.body:
+        targets: list[ast.expr] = []
+        value: ast.expr | None = None
+        if isinstance(stmt, ast.Assign):
+            targets = list(stmt.targets)
+            value = stmt.value
+        elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+            targets = [stmt.target]
+            value = stmt.value
+        if value is None:
+            continue
+        if any(isinstance(target, ast.Name) and target.id == name for target in targets):
+            rendered = ast.unparse(value)
+            if any(marker in rendered for marker in markers):
+                return True
+    return False
+
+
+def _imported_binding_mentions_marker(text: str, markers: tuple[str, ...]) -> bool:
+    """True when the file uses an imported name whose value embeds a marker.
+
+    Content-gated sparse stems used to require the literal ``data/projects``
+    in the owned file. Readers that reach the tree through an imported path
+    constant (``foundry.DEFAULT_V011_MANIFEST``) still need that tree.
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return False
+    imported: dict[str, tuple[str, str]] = {}
+    for stmt in tree.body:
+        if isinstance(stmt, ast.ImportFrom) and stmt.module and stmt.level == 0:
+            for alias in stmt.names:
+                if alias.name == "*":
+                    continue
+                imported[alias.asname or alias.name] = (stmt.module, alias.name)
+    needed: set[tuple[str, str]] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.value.id)
+            if binding is None:
+                continue
+            module, imported_name = binding
+            needed.add((f"{module}.{imported_name}", node.attr))
+        elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.id)
+            if binding is not None:
+                needed.add(binding)
+    for dotted, attr in needed:
+        module_path = _REPO_ROOT / Path(*dotted.split(".")).with_suffix(".py")
+        if module_path.is_file() and _assignment_mentions_marker(module_path, attr, markers):
+            return True
+    return False
+
+
 def _reinclude_file_confirms(path: str, prefix: str) -> bool:
-    """Content-gated stems must mention the tree in the owned file."""
+    """Content-gated stems must read the tree, directly or via an import."""
     markers = _SPARSE_REINCLUDE_CONTENT_MARKERS.get(prefix)
     if not markers:
         return True
@@ -5958,7 +6021,9 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
         text = file_path.read_text(encoding="utf-8")
     except OSError:
         return False
-    return any(marker in text for marker in markers)
+    if any(marker in text for marker in markers):
+        return True
+    return _imported_binding_mentions_marker(text, markers)
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:

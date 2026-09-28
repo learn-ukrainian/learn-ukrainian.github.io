@@ -149,6 +149,10 @@ def test_evaluate_span_fidelity_excludes_ocr() -> None:
     assert any(f["type"] == "ocr_extraction_detected" for f in findings)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path) -> None:
     """verify() detects when index_sha256 or quarantine_report_sha256 in receipt is tampered."""
     tampered_out = tmp_path / "out"
@@ -183,6 +187,10 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path)
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_root: Path) -> None:
     """verify() rejects records where quarantined or damaged spans claim training_eligible=True."""
     tampered_out = tmp_path / "out"
@@ -223,6 +231,10 @@ def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_r
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_non_consecutive_sequence_order(tmp_path: Path, repo_root: Path) -> None:
     """verify() rejects records with gaps or reordering in reconstruction sequence_order (EXTRACT-4)."""
     tampered_out = tmp_path / "out"
@@ -258,6 +270,10 @@ def test_verify_detects_non_consecutive_sequence_order(tmp_path: Path, repo_root
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if private host paths are found in receipt or quarantine report."""
     tampered_out = tmp_path / "out"
@@ -293,11 +309,19 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Current committed extraction artifacts pass verify() cleanly."""
     extraction.verify(CONFIG_PATH)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"

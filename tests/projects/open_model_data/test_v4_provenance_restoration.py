@@ -178,6 +178,10 @@ def test_committed_config_validates_against_contract() -> None:
     assert not list(validator.iter_errors(json.loads(CONFIG.read_text())))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+)
 def test_committed_artifacts_are_schema_valid_and_snapshot_bound() -> None:
     """PROV-4 on committed evidence: structure, hashes, binding; full verify runs in build tests."""
     schema = json.loads(CONTRACT.read_text())

@@ -74,6 +74,10 @@ def test_work_family_partitioning_disjointness() -> None:
         assert partition_map[f] in ("training", "development", "heldout_evaluation")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_deduplication_excludes_duplicate_spans(tmp_path: Path) -> None:
     """Duplicate spans must be detected and excluded from builder training (SPLIT-2)."""
     # Read first line from real index
@@ -87,6 +91,10 @@ def test_deduplication_excludes_duplicate_spans(tmp_path: Path) -> None:
     assert item1["deduplication"]["dedup_action"] == "retained"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_cross_boundary_firewall_zero_leakage() -> None:
     """Zero work families may cross between training, development, and heldout evaluation (SPLIT-4)."""
     real_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -113,6 +121,10 @@ def test_cross_boundary_firewall_zero_leakage() -> None:
     assert len(dev_fams & eval_fams) == 0, "Dev and eval partitions leak related works!"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
     """Verification must fail if any work family crosses split boundaries (SPLIT-4)."""
     repo_root = Path.cwd()
@@ -160,6 +172,10 @@ def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
     """Verification must fail if receipt SHA-256 digest or ID does not match index."""
     repo_root = Path.cwd()
@@ -184,6 +200,10 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
     """Verification must fail if receipt contains forbidden private host paths."""
     repo_root = Path.cwd()
@@ -210,6 +230,10 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Build and verify must execute cleanly against repository artifacts."""
     res_build = split_mod.build(CONFIG_PATH)

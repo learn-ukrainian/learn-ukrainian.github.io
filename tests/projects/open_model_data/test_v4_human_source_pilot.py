@@ -66,6 +66,10 @@ def test_pilot_strata_denominator_and_residual_accounting() -> None:
     assert acct["abstained_development_spans"] == 245
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_pilot_reproducibility_from_frozen_code(tmp_path: Path) -> None:
     """A separate invocation must reproduce exact cryptographic digests (PILOT-4)."""
     repo = Path.cwd()
@@ -75,6 +79,10 @@ def test_pilot_reproducibility_from_frozen_code(tmp_path: Path) -> None:
     assert res1["records_sha256"] == res2["records_sha256"]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
+)
 def test_verify_detects_tampered_records_or_receipt(tmp_path: Path) -> None:
     """Verification must fail if any digest is tampered."""
     repo_root = Path.cwd()
@@ -99,6 +107,10 @@ def test_verify_detects_tampered_records_or_receipt(tmp_path: Path) -> None:
         pilot_mod.verify(MANIFEST_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
     """Verification must fail if receipt contains forbidden private host paths."""
     repo_root = Path.cwd()
@@ -125,6 +137,10 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
         pilot_mod.verify(MANIFEST_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Build and verify must execute cleanly against repository artifacts."""
     res_build = pilot_mod.build(MANIFEST_PATH)

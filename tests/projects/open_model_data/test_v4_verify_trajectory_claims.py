@@ -146,6 +146,10 @@ def test_seed_trajectories_full_verification_suite(tmp_path: Path, receipt_schem
     assert receipt["invariants"]["no_private_host_paths"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl",
+)
 def test_verify_only_mode() -> None:
     """Verify that --verify-only succeeds on clean committed outputs."""
     receipt = run_claim_verifier(
@@ -161,6 +165,10 @@ def test_verify_only_mode() -> None:
     assert receipt["invariants"]["pass_rate_100_percent"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl",
+)
 def test_verify_only_hash_tamper_fails(tmp_path: Path) -> None:
     """Tampering with verified output file must cause --verify-only to fail-closed."""
     inp = tmp_path / "input.jsonl"
@@ -577,6 +585,10 @@ def test_hard_rejection_preserve_fabricated_suppression(mock_dbs: tuple[Path, Pa
     assert any("falsely claims historical suppression" in str(r) for r in rej_data[0]["rejection_reasons"])
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/trajectories/verified_trajectories.jsonl",
+)
 def test_opsec_no_private_host_paths() -> None:
     """Verify that committed verifier artifacts contain no private local machine paths or raw IPs."""
     assert DEFAULT_RECEIPT_OUTPUT.is_file(), f"Missing receipt: {DEFAULT_RECEIPT_OUTPUT}"

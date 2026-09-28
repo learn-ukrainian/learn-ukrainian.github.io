@@ -167,6 +167,10 @@ def test_missing_report_records_unmounted_archive_and_owner() -> None:
     assert "literary-non-ocr" in proceed["permitted_cohort_ids"]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_index_records_pass_schema_and_have_no_corpus_text() -> None:
     index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
     schema = json.loads(ITEM_SCHEMA.read_text(encoding="utf-8"))
@@ -379,6 +383,10 @@ def test_discrepant_database_chunks_fail_closed(tmp_path: Path) -> None:
     assert missing["reason"] == "database_content_does_not_match_lineage_chunk_evidence"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: Path, repo_root: Path) -> None:
     """Finding 3: Verify must reject contradictory index records and recompute/reject forged receipt summaries."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -432,6 +440,10 @@ def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: P
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=out_dir)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_hash_tampering(tmp_path: Path, repo_root: Path) -> None:
     # Copy receipt to tmp_path and tamper with config hash
     receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
@@ -455,6 +467,10 @@ def test_verify_detects_hash_tampering(tmp_path: Path, repo_root: Path) -> None:
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -500,6 +516,10 @@ def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root:
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -541,6 +561,10 @@ def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> Non
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -582,6 +606,10 @@ def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> 
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -623,6 +651,10 @@ def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -664,6 +696,10 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_missing_provenance_index(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -761,6 +797,10 @@ def test_is_private_or_absolute_host_path() -> None:
     assert custody._is_private_or_absolute_host_path("path=foo/home/bar.txt")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     "bad_path",
     [
@@ -814,6 +854,10 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     "bad_evidence_ref",
     [
@@ -866,6 +910,10 @@ def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("field_path", "bad_val"),
     [
@@ -921,6 +969,10 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: Path, repo_root: Path) -> None:
     valid_out = tmp_path / "out"
     custody_dir = valid_out / "data/projects/open_model_data/custody"
@@ -1099,6 +1151,10 @@ def test_input_root_takes_precedence_over_cwd(tmp_path: Path) -> None:
     assert resolved == custom_prov
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_cohort_id_mismatch_in_summary(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -1328,6 +1384,10 @@ def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Pat
         custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path, repo_root: Path) -> None:
     """Codex finding r3980769771: Blocked record with status=CONFIRMED_NATIVE and lineage_mode=unknown must fail."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -1378,6 +1438,10 @@ def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path,
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_path: Path, repo_root: Path) -> None:
     """Validate that any mismatch between lineage status and mode is rejected by verify."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -1459,6 +1523,10 @@ def test_bounded_custody_reader_rejects_non_positive_batch_size(tmp_path: Path) 
         reader.read_source_stream("tbl", "f1", batch_size=-10)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(tmp_path: Path, repo_root: Path) -> None:
     """Receipt summary must count all textbooks with unmounted host archives as missing_on_host (122)."""
     receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
@@ -1487,6 +1555,10 @@ def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(t
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("meta_key", "tampered_val", "expected_err"),
     [
@@ -1533,6 +1605,10 @@ def test_verify_detects_tampered_missing_report_metadata(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_tampered_missing_report_items(tmp_path: Path, repo_root: Path) -> None:
     """Missing report items must strictly match derived missing items from the access index (ACCESS-4)."""
     tampered_out = tmp_path / "out"
@@ -1722,6 +1798,10 @@ def test_cohort_spec_and_reader_reject_unapproved_table_names_and_sql_injection(
         reader.read_source_stream("literary_texts WHERE 1=1 --", "dummy")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path, repo_root: Path) -> None:
     """Missing report verification detects duplicate source IDs and omitted items."""
     tampered_out = tmp_path / "out"
@@ -1757,6 +1837,10 @@ def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("mutation_key", "mutation_val"),
     [
@@ -1805,6 +1889,10 @@ def test_verify_detects_tampered_progression_decision(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_tampered_primary_store_in_index(tmp_path: Path, repo_root: Path) -> None:
     """Index record with tampered primary_store (e.g. SQL injection suffix) is rejected by verify()."""
     tampered_out = tmp_path / "out"
@@ -1896,6 +1984,10 @@ def test_validate_cohort_spec_and_lineage_reject_non_ocr_excluded_modes(tmp_path
             custody.check_chunk_file_lineage(tmp_path / "dummy.jsonl", excluded_modes=[bad_mode])
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+)
 def test_validate_and_resolve_paths_preserves_cwd_fallback(tmp_path: Path, repo_root: Path) -> None:
     """When an input is not present under input_root, validate_and_resolve_paths falls back to cwd."""
     out_dir = tmp_path / "out"
@@ -2492,6 +2584,10 @@ def test_verify_detects_mismatched_custody_status_or_host_reachable(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_index_header_tampering_and_corpus_leakage(tmp_path: Path, repo_root: Path) -> None:
     """verify() strictly validates index header schema and rejects unexpected keys or leaked text (Finding 3)."""
     tampered_out = tmp_path / "out"
@@ -2573,6 +2669,10 @@ def test_precompute_table_source_metrics_filters_selected_sources(tmp_path: Path
     conn.close()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_handles_stub_database_with_missing_tables(tmp_path: Path, repo_root: Path) -> None:
     """verify() treats stub databases lacking required tables as unprovisioned when require_database=False,
     and raises CustodyAccessError mentioning missing tables when require_database=True.

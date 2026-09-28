@@ -160,12 +160,19 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     synthetic_a5["bindings"]["a2_source_operation_admission"]["sha256"] = a4.sha256_text(json.dumps(resolved_a2))
     synthetic_a5["bindings"]["a4_deterministic_extraction"]["sha256"] = a4.sha256_text(json.dumps(synthetic_a4))
 
-    shutil.copytree(ROOT / "data/projects/open_model_data", tmp_path / "data/projects/open_model_data")
+    # A bytes are untracked. A checkout without them still has the K receipts
+    # this chain reads; copy the artifact tree only when it is hydrated.
+    artifact_src = ROOT / "data/projects/open_model_data"
+    artifact_dest = tmp_path / "data/projects/open_model_data"
+    if artifact_src.is_dir():
+        shutil.copytree(artifact_src, artifact_dest)
+    else:
+        artifact_dest.mkdir(parents=True, exist_ok=True)
     # This isolated root emulates the package's frozen logical resource names.
     # The live checkout keeps its K files solely under registry/.
     shutil.copytree(
         REGISTRY_OPEN_MODEL_DATA_DIR,
-        tmp_path / "data/projects/open_model_data",
+        artifact_dest,
         dirs_exist_ok=True,
     )
     admission_dir = tmp_path / "data/projects/open_model_data/admission"

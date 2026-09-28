@@ -62,6 +62,10 @@ def test_schema_valid() -> None:
     jsonschema.Draft202012Validator.check_schema(schema_data)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_delivery1_stream_loader_and_partition_views() -> None:
     """Verify stream loader and exact partition filtering (DELIVERY-1)."""
     assert RECORDS_PATH.is_file(), f"Missing records: {RECORDS_PATH}"
@@ -176,6 +180,10 @@ def test_delivery5_custody_and_zero_host_paths() -> None:
         pytest.fail("Expected ValueError was not raised")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_clean_pass() -> None:
     """Verify delivery verification passes on intact deliverables."""
     assert verify_delivery(Path.cwd(), DELIVERY_RECEIPT_PATH) is True
@@ -220,6 +228,10 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     assert verify_delivery(Path.cwd(), tampered_receipt4) is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     """Verify delivery verification detects tampered or leaked deliverable documents."""
     import shutil
@@ -303,6 +315,10 @@ def test_assert_file_no_private_host_paths(tmp_path: Path) -> None:
     assert "Prohibited host path detected at leaked.txt:1" in str(excinfo.value)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_path: Path) -> None:
     """Verify delivery verification rejects absolute paths, directory traversal, and out-of-repo files."""
     import shutil
@@ -568,6 +584,10 @@ def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple
     return fake_repo, fake_receipt
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_schema_violating_record(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject records violating schema contract (Finding 1)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -588,6 +608,10 @@ def test_verify_delivery_rejects_schema_violating_record(tmp_path: Path) -> None
         build_delivery_receipt(fake_repo, tmp_path / "out_receipt.json")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_duplicate_record_id_or_span_sha(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject duplicate records or span hashes (Finding 3)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -651,6 +675,10 @@ def test_cache_refreshes_on_index_change(tmp_path: Path) -> None:
     assert len(masks2["2222" * 16]) == 1
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+)
 def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(tmp_path: Path) -> None:
     """Verify that verify_delivery rejects contradictory study receipt verdict or summary metrics (Finding 3987604428)."""
     fake_repo = tmp_path / "repo_study"
@@ -717,6 +745,10 @@ def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(t
     assert verify_delivery(fake_repo, test_rcpt3) is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject tampered or missing JSONL header (Finding 3987604443)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -749,6 +781,10 @@ def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Pa
         build_delivery_receipt(repo3, tmp_path / "out3.json")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: Path) -> None:
     """Verify delivery passes when sources.db lacks literary_texts table (e.g. CI runner)."""
     # Create mock repo

@@ -118,6 +118,10 @@ def test_gate6_tone_calibration_respectful_pedagogy() -> None:
     assert miner.verify_respectful_tone(respectful_phrase, pejorative_words)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
+)
 def test_eval_benchmark_disk_invariants_and_schema() -> None:
     """Validate held-out negative control eval benchmark against schema contract."""
     eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
@@ -142,6 +146,10 @@ def test_eval_benchmark_disk_invariants_and_schema() -> None:
     assert len({rec["document_id"] for rec in (json.loads(line) for line in eval_file.open(encoding="utf-8"))}) >= 40
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
+)
 def test_zero_train_eval_leakage_firewall() -> None:
     """Enforce strict 0% train/eval leakage between held-out eval and SFT shards."""
     eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
@@ -167,6 +175,10 @@ def test_zero_train_eval_leakage_firewall() -> None:
     assert leaks == 0, f"Found {leaks} train/eval leakage instances!"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_sft_shards_disk_invariants_and_manifest() -> None:
     """Verify SFT manifest, shard sizes <= 2,000 KB, SHA-256 integrity, ID uniqueness, and zero markup."""
     manifest_path = SFT_MANIFEST
@@ -2014,6 +2026,10 @@ def test_hermetic_isolation_synthetic_run(tmp_path: Path) -> None:
     assert manifest["total_trajectories"] == 100
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_f1_zero_synthetic_duplication_and_no_id_renaming() -> None:
     """Verify zero duplicate IDs, zero _{seq} renamings, and zero .synth_ fallbacks in shards."""
     sft_files = sorted(glob.glob(str(RELEASE_DIR / "sft" / "sft_shard_*.jsonl")))
@@ -2066,6 +2082,10 @@ def test_f5_ua_gec_test_split_firewall(tmp_path: Path) -> None:
     assert "тестовій сесії" not in [it["source_sentence"] for it in items]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
+)
 def test_f7_genre_stratification_exact_50_docs() -> None:
     """Verify held-out negative control eval benchmark covers exact 50 docs across all 9 genres."""
     eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
@@ -2083,6 +2103,10 @@ def test_f7_genre_stratification_exact_50_docs() -> None:
     assert genres == {"A", "B", "C", "D", "E", "F", "G", "H", "I"}, f"Incomplete genres: {genres}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_f10_participle_sharding_distribution() -> None:
     """Verify 45 participle trajectories exist and are distributed across shards."""
     sft_files = sorted(glob.glob(str(RELEASE_DIR / "sft" / "sft_shard_*.jsonl")))

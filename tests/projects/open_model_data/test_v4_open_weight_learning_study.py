@@ -83,6 +83,10 @@ def test_train2_hypotheses_and_pre_registration() -> None:
     assert hyp["max_historical_regression_pct"] <= 1.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_train3_optimization_and_comparisons() -> None:
     """Verify execution of baseline, faithful, and modern masked conditions across all seeds (TRAIN-3)."""
     assert RUNS_PATH.is_file(), f"Missing runs: {RUNS_PATH}"
@@ -112,6 +116,10 @@ def test_train3_optimization_and_comparisons() -> None:
         assert len(r["reproducibility"]["execution_digest"]) == 64
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+)
 def test_train4_metrics_uncertainty_and_preservation() -> None:
     """Verify perplexity improvement, historical preservation, and zero catastrophic forgetting (TRAIN-4)."""
     assert RECEIPT_PATH.is_file(), f"Missing receipt: {RECEIPT_PATH}"
@@ -133,11 +141,19 @@ def test_train4_metrics_uncertainty_and_preservation() -> None:
     assert receipt["residuals"]["operator_excluded_strata"] == OPERATOR_EXCLUDED_RESIDUALS
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_train5_reproducibility_and_verification() -> None:
     """Verify that verify_study passes and fails on tampered receipts (TRAIN-5)."""
     assert verify_study(Path.cwd(), RECIPE_PATH, RUNS_PATH, RECEIPT_PATH) is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+)
 def test_privacy_host_paths_clean() -> None:
     """Verify zero private host paths exist in any study artifact."""
     recipe = json.loads(RECIPE_PATH.read_text(encoding="utf-8"))
@@ -249,6 +265,10 @@ def _managed(repo: Path) -> tuple[Path, Path, Path]:
     return repo / study._RECIPE, repo / "data" / study._RUNS, repo / "data" / study._RECEIPT
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_managed_prepare_changed_repeated_and_run_verify(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path, changed_recipe=True)
     recipe, runs, receipt = _managed(repo)
@@ -269,6 +289,10 @@ def test_managed_prepare_changed_repeated_and_run_verify(tmp_path: Path) -> None
     assert paths.artifact_set(study._GROUP, repo=repo).artifacts[study._RUNS] == runs.read_bytes()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_managed_unchanged_prepare_direct_run_and_stale_recipe(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     recipe, runs, receipt = _managed(repo)
@@ -283,6 +307,10 @@ def test_managed_unchanged_prepare_direct_run_and_stale_recipe(tmp_path: Path) -
         study.run_study(repo, recipe, runs, receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_managed_publish_failure_preserves_prior_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _fixture_repo(tmp_path, changed_recipe=True)
     recipe, runs, receipt = _managed(repo)
@@ -299,6 +327,10 @@ def test_managed_publish_failure_preserves_prior_state(tmp_path: Path, monkeypat
     assert (repo / f"registry/artifacts/{study._GROUP}.manifest.json").read_bytes() == manifest
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_companion_only_prepare_rejects_changed_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _fixture_repo(tmp_path, changed_recipe=True)
     recipe, runs, receipt = _managed(repo)
@@ -318,6 +350,10 @@ def test_companion_only_prepare_rejects_changed_manifest(tmp_path: Path, monkeyp
     assert tuple(path.read_bytes() for path in (recipe, runs, receipt)) == before
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_managed_cli_explicit_paths(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path, changed_recipe=True)
     recipe, runs, receipt = _managed(repo)
@@ -345,6 +381,10 @@ def test_managed_cli_explicit_paths(tmp_path: Path) -> None:
         assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_managed_verify_missing_member_requires_hydrate(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     recipe, runs, receipt = _managed(repo)
@@ -353,6 +393,10 @@ def test_managed_verify_missing_member_requires_hydrate(tmp_path: Path) -> None:
         study.verify_study(repo, recipe, runs, receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+)
 def test_external_paths_remain_writable(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     external = tmp_path / "export"

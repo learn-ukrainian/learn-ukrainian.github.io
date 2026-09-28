@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -92,6 +93,10 @@ def test_a2_source_operation_schema_and_v4_control_binding() -> None:
     assert _errors(changed)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_a2_source_operation_bindings_match_the_exact_inventory_inputs() -> None:
     receipt = _receipt()
 

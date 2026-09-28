@@ -128,6 +128,10 @@ def _current_input(key: str) -> Path:
     return ROOT / key
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -> None:
     inputs = audit.default_inputs()
     tracked = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
@@ -167,6 +171,10 @@ def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -
     assert first.read_bytes() == second.read_bytes()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> None:
     inputs = audit.default_inputs()
     policy = json.loads(inputs.capability_policy.read_text(encoding="utf-8"))
@@ -179,6 +187,10 @@ def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> N
         audit.build_receipt(replace(inputs, capability_policy=changed_policy))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 @pytest.mark.parametrize(
     "name",
     [
@@ -227,6 +239,10 @@ def test_planted_mutations_are_rejected(name: str) -> None:
         audit.validate_receipt(receipt, inputs.schema, inputs)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_cli_writes_and_verifies_existing_receipt(tmp_path: Path) -> None:
     target = tmp_path / "receipt.json"
 

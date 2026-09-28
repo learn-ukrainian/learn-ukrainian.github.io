@@ -116,6 +116,10 @@ def _with_current_vspu_chain(monkeypatch: pytest.MonkeyPatch) -> dict:
     return receipt
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_build_is_deterministic_text_free_and_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
     first = _build(monkeypatch)
     second = readiness.build_readiness(
@@ -174,6 +178,10 @@ def test_build_is_deterministic_text_free_and_fail_closed(monkeypatch: pytest.Mo
     assert "source_text" not in readiness.canonical_json(first)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 @pytest.mark.parametrize(
     ("path", "value"),
     [
@@ -201,6 +209,10 @@ def test_validator_rejects_completion_or_authority_overclaims(
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_body_hash_drift(monkeypatch: pytest.MonkeyPatch) -> None:
     receipt = _build(monkeypatch)
     receipt["receipt_sha256"] = SHA_A
@@ -209,6 +221,10 @@ def test_validator_rejects_body_hash_drift(monkeypatch: pytest.MonkeyPatch) -> N
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_historical_evidence_spine_binding_drift(monkeypatch: pytest.MonkeyPatch) -> None:
     receipt = _build(monkeypatch)
     receipt["bindings"]["historical_evidence_spine_v2_file_sha256"] = SHA_A
@@ -218,6 +234,10 @@ def test_validator_rejects_historical_evidence_spine_binding_drift(monkeypatch: 
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_preserves_historical_v1_receipts_without_adapter_binding(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -228,6 +248,10 @@ def test_validator_preserves_historical_v1_receipts_without_adapter_binding(
     assert readiness.validate_readiness(receipt) == receipt
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_optional_saint_sophia_receipt_binds_without_opening_other_gates(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -261,6 +285,10 @@ def test_optional_saint_sophia_receipt_binds_without_opening_other_gates(
     assert receipt["bindings"]["saint_sophia_reconciliation_receipt_sha256"] == SHA_A
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_optional_saint_sophia_receipt_allows_distinct_pre_and_post_database_hashes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -292,6 +320,10 @@ def test_optional_saint_sophia_receipt_allows_distinct_pre_and_post_database_has
     assert receipt["bindings"]["sources_database_sha256"] == post_sha
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_vspu_receipt_extends_sophia_and_ua_context_chain_without_opening_gates(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -378,6 +410,10 @@ def test_vspu_receipt_extends_sophia_and_ua_context_chain_without_opening_gates(
     assert receipt["gates"]["phase4_blocked"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_vspu_chain_requires_sophia_even_when_predecessor_hash_aligns(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -416,6 +452,10 @@ def test_vspu_chain_requires_sophia_even_when_predecessor_hash_aligns(
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 @pytest.mark.parametrize(
     "mutation",
     ["partial_binding", "readiness_without_binding", "denominator_without_binding"],
@@ -470,6 +510,10 @@ def test_vspu_validator_rejects_resealed_authority_escalation(tmp_path: Path) ->
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_fabricated_saint_sophia_binding_in_vspu_chain(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -516,6 +560,10 @@ def test_validator_rejects_fabricated_saint_sophia_binding_in_vspu_chain(
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_university_to_saint_sophia_boundary_drift(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -536,6 +584,10 @@ def test_validator_rejects_university_to_saint_sophia_boundary_drift(
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_saint_sophia_to_vspu_boundary_drift(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -556,6 +608,10 @@ def test_validator_rejects_saint_sophia_to_vspu_boundary_drift(
         readiness.validate_readiness(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validator_rejects_saint_sophia_readiness_without_matching_bindings(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -683,6 +739,10 @@ def test_saint_sophia_receipt_rejects_nonprivate_mode(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_build_rejects_incomplete_canary(monkeypatch: pytest.MonkeyPatch) -> None:
     _stub_external_receipts(monkeypatch)
     monkeypatch.setattr(
@@ -704,6 +764,10 @@ def test_build_rejects_incomplete_canary(monkeypatch: pytest.MonkeyPatch) -> Non
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_main_writes_private_canonical_receipt(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
