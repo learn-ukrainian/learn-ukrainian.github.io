@@ -566,6 +566,8 @@ def test_ci_gate_passes_a_green_full_tier() -> None:
         (["tests/test_example.py"], "false"),
         ([".github/workflows/ci.yml"], "true"),
         (["tests/test_example.py", "site/src/components/X.astro"], "true"),
+        (["site/src/components/X.astro"], "true"),
+        (["packages/activity-kit/src/card.ts"], "true"),
     ],
 )
 def test_queue_full_tier_requires_pytest_and_frontend_when_applicable(

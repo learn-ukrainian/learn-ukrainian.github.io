@@ -366,12 +366,34 @@ class ClassifierTests(unittest.TestCase):
         self.assert_content(
             self.classify(["site/src/content/docs/a1/module/1.mdx"], event="merge_group")
         )
-        self.assert_frontend_only(
-            self.classify(["site/src/components/X.astro"], event="merge_group")
+        for path in ("site/src/components/X.astro", "packages/activity-kit/src/index.ts"):
+            with self.subTest(path=path):
+                self.assert_full(self.classify([path], event="merge_group"), frontend="true")
+
+    def test_merge_group_frontend_only_keeps_denominator(self):
+        tier = scope.classify_tier(
+            ["packages/activity-kit/src/index.ts"],
+            event="merge_group",
+            labels=[],
+            shard_count=4,
+            denominator=["site/"],
+            tree_paths=frozenset(),
         )
-        self.assert_frontend_only(
-            self.classify(["packages/activity-kit/src/index.ts"], event="merge_group")
-        )
+        self.assert_full(tier, frontend="false")
+
+    def test_merge_group_direct_python_test_read_docs_run_full(self):
+        for path in (
+            "docs/epics/fresh-build-a1-arc.md",
+            "docs/ACTIVITY-YAML-REFERENCE.md",
+            "docs/best-practices/activity-pedagogy.md",
+            "docs/runbooks/agent-seat-onboarding.md",
+            "docs/runbooks/storage-topology.md",
+            "docs/research/bio/example.md",
+            "docs/l2-uk-direct/textbook-reading-notes/example.md",
+        ):
+            with self.subTest(path=path):
+                self.assert_docs(self.classify([path]))
+                self.assert_full(self.classify([path], event="merge_group"))
 
     def test_merge_group_mixed_frontend_and_code_runs_full_with_frontend(self):
         self.assert_full(

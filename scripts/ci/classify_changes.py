@@ -45,6 +45,23 @@ _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 _QUEUE_CODE_SUFFIXES = (".py", ".js", ".jsx", ".ts", ".tsx", ".sh")
+# Docs that unmarked Python tests read directly. The docs lane runs only
+# docs_skills, repo_wide, and (for curriculum/wiki edits) reads_content tests.
+_QUEUE_TEST_READ_DOC_PATHS = frozenset({
+    "docs/ACTIVITY-YAML-REFERENCE.md",  # tests/test_batch_fix_mode.py
+    "docs/SCRIPTS.md",  # tests/test_research_registry_p6.py
+    "docs/best-practices/activity-pedagogy.md",  # tests/test_config_tables.py
+    "docs/best-practices/fleet-role-scorecard.md",  # tests/test_luna_max_routing_contract.py
+    "docs/best-practices/fleet-shared-doctrine.md",  # tests/test_luna_max_routing_contract.py
+    "docs/runbooks/agent-seat-onboarding.md",  # tests/test_driver_work_api_onboarding.py
+    "docs/runbooks/storage-topology.md",  # tests/test_storage_resolver.py
+})
+_QUEUE_TEST_READ_DOC_PREFIXES = (
+    "docs/epics/fresh-build-",  # tests/curriculum/arc/test_arc*.py
+    "docs/l2-uk-direct/textbook-reading-notes/",  # tests/test_textbook_source_inventory_scope.py
+    "docs/projects/open-model-data/",  # tests/projects/open_model_data/test_real_training_run_8338.py
+    "docs/research/bio/",  # tests/test_lint_bio_dossier_xref.py
+)
 
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
 # the full tier on both events and is excluded from the docs exemption; the
@@ -412,8 +429,9 @@ def classify_tier(
 
     ``full`` runs every required Python test except ``slow`` and
     ``atlas_release``; those markers run only nightly. On ``merge_group``,
-    docs-only, content-only, and frontend-only changes retain their #8437
-    classes. Every other path set, including uncertain paths, runs ``full``.
+    docs-only and content-only changes retain their #8437 classes except
+    directly test-read docs. Frontend-only changes run ``full`` while keeping
+    their existing Frontend-job denominator. Other paths run ``full``.
     """
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
@@ -429,10 +447,20 @@ def classify_tier(
         _norm(path).endswith((".py", ".sh")) for path in paths
     ):
         return _full(shard_count, frontend="true" if frontend else "false")
-    # #8437: docs, content, and frontend-only changes keep their path classes
-    # on both events. Frontend continues to follow its existing denominator.
+    # Python tests also read site/ and activity-kit files. The queue must run
+    # them even when the PR uses the frontend-only fast path (#9073).
     if all(is_pure_frontend_path(path) for path in paths):
+        if event == "merge_group":
+            return _full(shard_count, frontend="true" if frontend else "false")
         return _frontend_only()
+    # These docs are read by Python tests outside the docs-lane markers. Keep
+    # the #8437 docs class for other paths, but test these inputs as code.
+    if event == "merge_group" and any(
+        _norm(path) in _QUEUE_TEST_READ_DOC_PATHS
+        or _norm(path).startswith(_QUEUE_TEST_READ_DOC_PREFIXES)
+        for path in paths
+    ):
+        return _full(shard_count, frontend="true" if frontend else "false")
     # The broad curriculum/wiki docs/content exemptions can include code files
     # outside the known code-imported set. They also need the queue's full gate.
     if event == "merge_group" and any(

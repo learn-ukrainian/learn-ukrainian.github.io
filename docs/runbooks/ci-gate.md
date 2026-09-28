@@ -51,14 +51,31 @@ events then differ deliberately:
   that used to fall to full because `frontend` was true (PR #8384). A PR
   touching only `curriculum/**`/`wiki/**` keeps the docs fast path.
 - **merge_group**: each queue entry uses its own changed paths (ALLGREEN).
-  Docs-only, content-only, and frontend-only changes keep their #8437 classes.
-  Any other change, including Python source, tests, workflows, dependencies,
-  mixed classes, and uncertain paths, runs `full` before reaching `main`.
+  Docs-only and content-only changes keep their #8437 classes, except directly
+  test-read docs listed in the classifier. Frontend-only changes run the full
+  required Python tier because Python tests read `site/` and
+  `packages/activity-kit/` files. Any other change, including Python source,
+  tests, workflows, dependencies, mixed classes, and uncertain paths, runs
+  `full` before reaching `main`.
   Code files under broad curriculum/wiki docs roots, and Python or shell files
   under frontend roots, also run `full` even if they previously entered a
   narrower class.
   Frontend still follows its existing path denominator; `full` does not
   automatically turn on the Frontend job. Lookup failures resolve to `full`.
+
+| Changed-path class | `pull_request` Python tier | `merge_group` Python tier | Frontend job |
+| --- | --- | --- | --- |
+| Docs-only | `docs` | `docs` (directly test-read docs: `full`) | off |
+| Content-only learner pages | `content` | `content` | on |
+| Curriculum/wiki without learner pages | `docs` | `docs` | off |
+| Frontend-only `site/` or `packages/activity-kit/` | none | `full` | on when in denominator |
+| Code, mixed, or uncertain | selected or `full` | `full` | existing denominator |
+
+The docs lane runs marked `docs_skills` and `repo_wide` tests, plus
+`reads_content` for curriculum/wiki edits. The content lane runs marked
+`reads_content` tests. Directly test-read docs without those lane markers
+(including the fresh-build arc sources, activity pedagogy, and the agent seat
+runbook) run `full` on the queue. Their PR path class remains `docs`.
 
 The content class emits `pytest_mode=content`: one shard running
 `-m 'reads_content and not slow and not atlas_release'` (same filters and

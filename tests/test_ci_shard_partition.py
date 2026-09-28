@@ -601,6 +601,19 @@ def test_frontend_only_change_skips_python_shards() -> None:
     assert result["pytest_mode"] == "frontend"
     assert json.loads(result["shards"]) == []
 
+    queue = classify(
+        ["site/src/pages/index.astro", "packages/activity-kit/src/card.ts"],
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=["site/", "packages/activity-kit/"],
+        tree_paths=frozenset(),
+    )
+    assert queue["frontend"] == "true"
+    assert queue["backend"] == "true"
+    assert queue["pytest_mode"] == "full"
+    assert json.loads(queue["shards"]) == [1, 2, 3, 4]
+
 
 def test_backend_only_merge_group_skips_frontend() -> None:
     from scripts.ci.classify_changes import classify
@@ -613,9 +626,10 @@ def test_backend_only_merge_group_skips_frontend() -> None:
         denominator=["site/"],
         tree_paths=frozenset({"tests/test_x.py"}),
     )
-    assert result["pytest_mode"] == "selected"
+    assert result["pytest_mode"] == "full"
     assert result["frontend"] == "false"
     assert result["backend"] == "true"
+    assert json.loads(result["shards"]) == [1, 2, 3, 4]
 
 
 def test_learner_docs_still_run_content_lane_and_frontend() -> None:
