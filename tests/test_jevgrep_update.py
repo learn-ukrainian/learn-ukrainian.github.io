@@ -1,11 +1,14 @@
 """Host updater for the jevgrep CLI and its user-level skill (#9134).
 
-Every subprocess and registry call is injected: no network, no npm, temp HOME.
+Every subprocess, registry and download call is injected: no network, no npm, temp HOME.
 """
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -18,10 +21,32 @@ from scripts.tools import jevgrep_update as updater
 
 REPO = Path(__file__).resolve().parents[1]
 OVERLAY = (REPO / updater.OVERLAY_REL).read_text(encoding="utf-8")
+LEGACY_LINK = "../lib/node_modules/@dzhng/jevgrep/dist/bin/index.js"
+SECRET = "npm_FAKEtoken0123456789SECRET"
 
 
-def _meta(*, attestations: bool = True, scripts: dict[str, str] | None = None, bin_jg: bool = True) -> dict[str, Any]:
-    dist: dict[str, Any] = {"tarball": "https://example.invalid/t.tgz"}
+def _tarball_bytes(version: str) -> bytes:
+    return json.dumps({"version": version}).encode("utf-8")
+
+
+def _sri(data: bytes) -> str:
+    return "sha512-" + base64.b64encode(hashlib.sha512(data).digest()).decode("ascii")
+
+
+def _meta(
+    version: str,
+    *,
+    attestations: bool = True,
+    scripts: dict[str, str] | None = None,
+    bin_jg: bool = True,
+    tarball: str | None = None,
+    integrity: str | None = "auto",
+) -> dict[str, Any]:
+    dist: dict[str, Any] = {"tarball": tarball or f"https://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-{version}.tgz"}
+    if integrity == "auto":
+        dist["integrity"] = _sri(_tarball_bytes(version))
+    elif integrity is not None:
+        dist["integrity"] = integrity
     if attestations:
         dist["attestations"] = {"provenance": {"predicateType": "https://slsa.dev/provenance/v1"}}
     return {
@@ -32,61 +57,106 @@ def _meta(*, attestations: bool = True, scripts: dict[str, str] | None = None, b
 
 
 def _packument(latest: str, overrides: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
-    versions = {"0.4.4": _meta(), latest: _meta(), **(overrides or {})}
-    return {"dist-tags": {"latest": latest}, "versions": versions}
+    versions = {v: _meta(v) for v in ("0.4.4", "0.5.0", "0.6.0", "0.7.0", latest)}
+    return {"dist-tags": {"latest": latest}, "versions": {**versions, **(overrides or {})}}
+
+
+def _package_version(binary: Path) -> str | None:
+    for parent in binary.resolve().parents:
+        if (parent / "package.json").is_file():
+            return json.loads((parent / "package.json").read_text())["version"]
+    return None
 
 
 class FakeHost:
-    """A fake `jg` + `npm` whose installs rewrite a fake package directory."""
+    """A fake npm + jg over a real temp HOME. Every child also prints a fake credential."""
 
-    def __init__(self, root: Path, installed: str | None = "0.4.4", doctor_fails: frozenset[str] = frozenset()):
-        self.package = root / "npm" / "lib" / "node_modules" / "@dzhng" / "jevgrep"
-        self.installed = installed
+    def __init__(
+        self,
+        home: Path,
+        installed: str | None = "0.4.4",
+        *,
+        npm_fails: frozenset[str] = frozenset(),
+        doctor_fails: frozenset[str] = frozenset(),
+        link_doctor_fails: frozenset[str] = frozenset(),
+        no_skill: frozenset[str] = frozenset(),
+    ):
+        self.home = home
+        self.link = home / updater.BIN_LINK_REL
+        self.npm_fails = npm_fails
         self.doctor_fails = doctor_fails
+        self.link_doctor_fails = link_doctor_fails
+        self.no_skill = no_skill
         self.calls: list[list[str]] = []
+        self.downloads: list[str] = []
+        home.mkdir(parents=True, exist_ok=True)
         if installed:
-            self._materialize(installed)
+            self.legacy = home / ".local/lib/node_modules/@dzhng/jevgrep"
+            self._materialize(self.legacy, installed)
+            self.link.parent.mkdir(parents=True, exist_ok=True)
+            os.symlink(LEGACY_LINK, self.link)
 
-    def upstream(self, version: str) -> str:
+    @staticmethod
+    def upstream(version: str) -> str:
         return f"---\nname: jevgrep\ndescription: upstream\n---\n\n# Jevgrep\n\nUpstream body for {version}.\n"
 
-    def _materialize(self, version: str) -> None:
-        (self.package / "dist/skills/jevgrep").mkdir(parents=True, exist_ok=True)
-        (self.package / "package.json").write_text(json.dumps({"name": updater.PACKAGE, "version": version}))
-        (self.package / updater.UPSTREAM_SKILL_REL).write_text(self.upstream(version), encoding="utf-8")
+    def _materialize(self, package: Path, version: str) -> None:
+        (package / "dist/bin").mkdir(parents=True, exist_ok=True)
+        (package / "package.json").write_text(json.dumps({"name": updater.PACKAGE, "version": version}))
+        (package / "dist/bin/index.js").write_text("#!/usr/bin/env node\n")
+        if version not in self.no_skill:
+            (package / "dist/skills/jevgrep").mkdir(parents=True, exist_ok=True)
+            (package / updater.UPSTREAM_SKILL_REL).write_text(self.upstream(version), encoding="utf-8")
+
+    def download(self, url: str, dest: Path) -> None:
+        self.downloads.append(url)
+        dest.write_bytes(_tarball_bytes(url.rsplit("jevgrep-", 1)[1].removesuffix(".tgz")))
+
+    def _leak(self, cmd: list[str], code: int, stdout: str = "") -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(cmd, code, f"{stdout}{SECRET}\n", f"token={SECRET}\n")
 
     def run(self, cmd: list[str], timeout: int) -> subprocess.CompletedProcess[str]:
         self.calls.append(cmd)
-        if cmd == ["jg", "--version"]:
-            if self.installed is None:
-                raise FileNotFoundError("jg")
-            return subprocess.CompletedProcess(cmd, 0, f"{self.installed}\n", "")
-        if cmd == ["jg", "doctor"]:
-            code = 1 if self.installed in self.doctor_fails else 0
-            return subprocess.CompletedProcess(cmd, code, "", "doctor failed" if code else "")
         if cmd[:2] == ["npm", "install"]:
-            version = cmd[-1].rsplit("@", 1)[1]
-            self.installed = version
-            self._materialize(version)
-            return subprocess.CompletedProcess(cmd, 0, "", "")
+            prefix = Path(cmd[cmd.index("--prefix") + 1])
+            version = json.loads(Path(cmd[-1]).read_bytes())["version"]
+            if version in self.npm_fails:
+                return self._leak(cmd, 1)
+            self._materialize(prefix / updater.PACKAGE_REL, version)
+            return self._leak(cmd, 0)
+        binary = Path(cmd[0])
+        if not binary.exists():
+            raise FileNotFoundError(cmd[0])
+        version = _package_version(binary)
+        if cmd[1:] == ["--version"]:
+            return self._leak(cmd, 0, f"{version} ")
+        if cmd[1:] == ["doctor"]:
+            fails = version in self.doctor_fails or (cmd[0] == str(self.link) and version in self.link_doctor_fails)
+            return self._leak(cmd, 1 if fails else 0)
         raise AssertionError(f"unexpected command {cmd}")
 
     def installs(self) -> list[list[str]]:
         return [cmd for cmd in self.calls if cmd[:2] == ["npm", "install"]]
 
+    def active_version(self) -> str | None:
+        return _package_version(self.link) if self.link.exists() else None
 
-def _deps(tmp_path: Path, host: FakeHost, packument: dict[str, Any], environ: dict[str, str] | None = None):
-    home = tmp_path / "home"
-    home.mkdir(exist_ok=True)
+
+def _deps(host: FakeHost, packument: dict[str, Any], environ: dict[str, str] | None = None) -> updater.Deps:
     return updater.Deps(
-        home=home,
+        home=host.home,
         run=host.run,
         fetch_packument=lambda: packument,
-        package_dir=lambda: host.package if host.installed else None,
+        download=host.download,
         repo_root=REPO,
         environ=environ or {},
         now=lambda: "2026-09-28T00:00:00+00:00",
     )
+
+
+@pytest.fixture
+def home(tmp_path: Path) -> Path:
+    return tmp_path / "home"
 
 
 def _skill_paths(home: Path) -> list[Path]:
@@ -97,137 +167,271 @@ def _log(home: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in (home / updater.STATE_LOG_REL).read_text().splitlines()]
 
 
-def test_up_to_date_skips_install_and_syncs_skill(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.4.4"))
-    code, record = updater.update(deps)
+def _prefixes(home: Path) -> list[str]:
+    root = home / updater.PREFIX_ROOT_REL
+    return sorted(child.name.split("-", 1)[0] for child in root.iterdir()) if root.is_dir() else []
+
+
+def _assert_skills_at(home: Path, version: str) -> None:
+    for path in _skill_paths(home):
+        assert f"auto-synced from @dzhng/jevgrep {version}," in path.read_text(encoding="utf-8")
+
+
+def test_up_to_date_skips_install_and_syncs_skill(home: Path) -> None:
+    host = FakeHost(home)
+    code, record = updater.update(_deps(host, _packument("0.4.4")))
     assert code == 0
-    assert host.installs() == []
+    assert host.installs() == [] and host.downloads == []
     assert record["action"] == "none" and record["result"] == "ok"
-    for path in _skill_paths(deps.home):
-        assert "Upstream body for 0.4.4." in path.read_text(encoding="utf-8")
-    assert _log(deps.home)[0]["upstream_skill_sha256"] == record["upstream_skill_sha256"]
+    _assert_skills_at(home, "0.4.4")
+    assert _log(home)[0]["upstream_skill_sha256"] == record["upstream_skill_sha256"]
 
 
-def test_newer_release_installs_exact_version_verifies_and_syncs(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0"))
-    code, record = updater.update(deps)
-    assert code == 0
-    assert host.installs() == [
-        ["npm", "install", "-g", "--ignore-scripts", "--no-audit", "--no-fund", "@dzhng/jevgrep@0.5.0"]
-    ]
-    assert ["jg", "doctor"] in host.calls
+def test_newer_release_installs_verified_tarball_into_version_prefix_and_switches(home: Path) -> None:
+    host = FakeHost(home)
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 0, record
+    assert host.downloads == ["https://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-0.5.0.tgz"]
+    [install] = host.installs()
+    prefix = Path(install[3])
+    assert prefix.parent == home / updater.PREFIX_ROOT_REL and prefix.name.startswith("0.5.0-")
+    assert install[:3] == ["npm", "install", "--prefix"]
+    assert install[4:8] == ["--ignore-scripts", "--no-audit", "--no-fund", "--registry=https://registry.npmjs.org/"]
+    assert install[-1].endswith("jevgrep-0.5.0.tgz")
+    staged = prefix / updater.PACKAGE_REL / "dist/bin/index.js"
+    assert [str(staged), "doctor"] in host.calls
+    assert host.calls.index([str(staged), "doctor"]) < host.calls.index([str(host.link), "doctor"])
+    assert os.readlink(host.link) == str(staged)
+    assert host.legacy.is_dir(), "the legacy npm -g install is never deleted"
     assert (record["current"], record["target"], record["action"], record["result"]) == (
         "0.4.4",
         "0.5.0",
         "install",
         "ok",
     )
-    for path in _skill_paths(deps.home):
+    assert record["exit_codes"]["npm_install"] == 0 and record["exit_codes"]["switched_doctor"] == 0
+    for path in _skill_paths(home):
         text = path.read_text(encoding="utf-8")
-        assert "auto-synced from @dzhng/jevgrep 0.5.0" in text
-        assert "Upstream body for 0.5.0." in text
+        assert "auto-synced from @dzhng/jevgrep 0.5.0" in text and "Upstream body for 0.5.0." in text
 
 
-def test_missing_attestations_blocks_install(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0", {"0.5.0": _meta(attestations=False)}))
-    code, record = updater.update(deps)
+def test_first_install_without_jg_creates_link(home: Path) -> None:
+    host = FakeHost(home, installed=None)
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 0 and record["current"] is None and record["result"] == "ok"
+    assert host.active_version() == "0.5.0"
+    _assert_skills_at(home, "0.5.0")
+
+
+@pytest.mark.parametrize(
+    ("meta", "reason"),
+    [
+        (_meta("0.5.0", attestations=False), "attestations"),
+        (_meta("0.5.0", bin_jg=False), "bin.jg"),
+        ({**_meta("0.5.0"), "hasInstallScript": True}, "hasInstallScript"),
+        (_meta("0.5.0", tarball="https://mirror.example/jevgrep-0.5.0.tgz"), "dist.tarball"),
+        (_meta("0.5.0", tarball="http://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-0.5.0.tgz"), "dist.tarball"),
+        (_meta("0.5.0", integrity=None), "sha512"),
+        (_meta("0.5.0", integrity="sha1-abc"), "sha512"),
+    ],
+)
+def test_guard_blocks_install(home: Path, meta: dict[str, Any], reason: str) -> None:
+    host = FakeHost(home)
+    code, record = updater.update(_deps(host, _packument("0.5.0", {"0.5.0": meta})))
     assert code == 1
-    assert host.installs() == []
-    assert record["action"] == "blocked"
-    assert "attestations" in record["detail"]
-    assert host.installed == "0.4.4"
+    assert host.installs() == [] and host.downloads == []
+    assert record["action"] == "blocked" and reason in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
 
 
 @pytest.mark.parametrize("script", ["preinstall", "install", "postinstall"])
-def test_install_script_blocks_install(tmp_path: Path, script: str) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0", {"0.5.0": _meta(scripts={script: "node x.js"})}))
-    code, record = updater.update(deps)
+def test_install_script_blocks_install(home: Path, script: str) -> None:
+    host = FakeHost(home)
+    meta = _meta("0.5.0", scripts={script: "node x.js"})
+    code, record = updater.update(_deps(host, _packument("0.5.0", {"0.5.0": meta})))
     assert code == 1
     assert host.installs() == []
     assert script in record["detail"]
 
 
-def test_missing_bin_blocks_install(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0", {"0.5.0": _meta(bin_jg=False)}))
-    code, record = updater.update(deps)
+def test_integrity_mismatch_never_installs(home: Path) -> None:
+    host = FakeHost(home)
+    meta = _meta("0.5.0", integrity=_sri(b"other bytes"))
+    code, record = updater.update(_deps(host, _packument("0.5.0", {"0.5.0": meta})))
     assert code == 1
-    assert host.installs() == []
-    assert "bin.jg" in record["detail"]
+    assert host.downloads and host.installs() == []
+    assert record["result"] == "failed" and "tarball_integrity_mismatch" in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
+    assert _prefixes(home) == []
 
 
-def test_doctor_failure_rolls_back_to_previous_version(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path, doctor_fails=frozenset({"0.5.0"}))
-    deps = _deps(tmp_path, host, _packument("0.5.0"))
-    code, record = updater.update(deps)
+def test_staged_doctor_failure_never_switches(home: Path) -> None:
+    host = FakeHost(home, doctor_fails=frozenset({"0.5.0"}))
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
     assert code == 1
-    assert [cmd[-1] for cmd in host.installs()] == ["@dzhng/jevgrep@0.5.0", "@dzhng/jevgrep@0.4.4"]
-    assert host.installed == "0.4.4"
+    assert record["result"] == "failed" and "staged_doctor_failed" in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
+    assert [str(host.link), "doctor"] not in host.calls
+    assert _prefixes(home) == []
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_missing_upstream_skill_never_switches(home: Path) -> None:
+    host = FakeHost(home, no_skill=frozenset({"0.5.0"}))
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert "upstream_skill_missing" in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_post_switch_failure_restores_previous_link_without_download(home: Path) -> None:
+    host = FakeHost(home, link_doctor_fails=frozenset({"0.5.0"}))
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
     assert record["result"] == "rolled_back"
-    assert "jg doctor" in record["detail"]
-    for path in _skill_paths(deps.home):
-        assert "auto-synced from @dzhng/jevgrep 0.4.4" in path.read_text(encoding="utf-8")
+    assert "switched_doctor_failed" in record["detail"]
+    assert len(host.downloads) == 1 and len(host.installs()) == 1
+    assert os.readlink(host.link) == LEGACY_LINK
+    assert record["exit_codes"]["rollback_version"] == 0 and record["exit_codes"]["rollback_doctor"] == 0
+    assert _prefixes(home) == []
+    _assert_skills_at(home, "0.4.4")
 
 
-def test_hold_version_overrides_latest(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    packument = _packument("0.6.0", {"0.5.0": _meta()})
-    deps = _deps(tmp_path, host, packument, {"JEVGREP_HOLD_VERSION": "0.5.0"})
-    code, record = updater.update(deps)
+def test_rollback_that_does_not_pass_doctor_is_reported(home: Path) -> None:
+    host = FakeHost(home, link_doctor_fails=frozenset({"0.5.0", "0.4.4"}))
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert record["result"] == "rollback_failed"
+    assert "rollback_doctor_failed" in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
+
+
+def test_skill_write_failure_after_switch_rolls_back_cli_and_skill(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    host = FakeHost(home)
+    for path in _skill_paths(home):
+        path.parent.mkdir(parents=True)
+        path.write_text("previous skill\n", encoding="utf-8")
+    real_write = updater._atomic_write
+
+    def flaky(target: Path, content: str) -> None:
+        if target == home / updater.SKILL_TARGETS_REL[1] and "0.5.0" in content:
+            raise OSError("disk full")
+        real_write(target, content)
+
+    monkeypatch.setattr(updater, "_atomic_write", flaky)
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert record["result"] == "rolled_back" and "skill_write_failed" in record["detail"]
+    assert os.readlink(host.link) == LEGACY_LINK
+    for path in _skill_paths(home):
+        assert "0.5.0" not in path.read_text(encoding="utf-8")
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_write_skills_restores_the_copy_already_written(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    first, second = _skill_paths(home)
+    for path in (first, second):
+        path.parent.mkdir(parents=True)
+        path.write_text("old\n", encoding="utf-8")
+    real_write = updater._atomic_write
+
+    def flaky(target: Path, content: str) -> None:
+        if target == second and content == "new\n":
+            raise OSError("disk full")
+        real_write(target, content)
+
+    monkeypatch.setattr(updater, "_atomic_write", flaky)
+    with pytest.raises(updater.StepFailed, match=r"^skill_write_failed$"):
+        updater.write_skills(home, "new\n")
+    assert first.read_text() == "old\n" and second.read_text() == "old\n"
+
+
+def test_upgrades_keep_only_active_and_previous_prefix(home: Path) -> None:
+    host = FakeHost(home)
+    for version in ("0.5.0", "0.6.0", "0.7.0"):
+        code, record = updater.update(_deps(host, _packument(version)))
+        assert code == 0 and record["result"] == "ok", record
+    assert _prefixes(home) == ["0.6.0", "0.7.0"]
+    assert host.active_version() == "0.7.0"
+    assert host.legacy.is_dir()
+
+
+@pytest.mark.parametrize(
+    "host_kwargs",
+    [
+        {"npm_fails": frozenset({"0.5.0"})},
+        {"doctor_fails": frozenset({"0.5.0"})},
+        {"link_doctor_fails": frozenset({"0.5.0", "0.4.4"})},
+        {},
+    ],
+)
+def test_child_output_never_reaches_records(
+    home: Path, capsys: pytest.CaptureFixture[str], host_kwargs: dict[str, frozenset[str]]
+) -> None:
+    host = FakeHost(home, **host_kwargs)
+    for argv in (["--json"], []):
+        updater.main(argv, _deps(host, _packument("0.5.0")))
+    captured = capsys.readouterr()
+    assert SECRET not in captured.out + captured.err
+    assert SECRET not in (home / updater.STATE_LOG_REL).read_text(encoding="utf-8")
+
+
+def test_hold_version_overrides_latest(home: Path) -> None:
+    host = FakeHost(home)
+    code, record = updater.update(_deps(host, _packument("0.6.0"), {"JEVGREP_HOLD_VERSION": "0.5.0"}))
     assert code == 0
-    assert [cmd[-1] for cmd in host.installs()] == ["@dzhng/jevgrep@0.5.0"]
-    assert record["target"] == "0.5.0"
+    assert host.downloads == ["https://registry.npmjs.org/@dzhng/jevgrep/-/jevgrep-0.5.0.tgz"]
+    assert record["target"] == "0.5.0" and host.active_version() == "0.5.0"
 
 
-def test_hold_version_must_be_exact(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0"), {"JEVGREP_HOLD_VERSION": "latest"})
-    code, record = updater.update(deps)
+def test_hold_version_must_be_exact(home: Path) -> None:
+    host = FakeHost(home)
+    code, record = updater.update(_deps(host, _packument("0.5.0"), {"JEVGREP_HOLD_VERSION": "latest"}))
     assert code == 1
     assert host.installs() == []
-    assert record["action"] == "resolve"
+    assert record["action"] == "resolve" and record["detail"] == "invalid_target"
 
 
-def test_synced_file_is_overlay_marker_and_upstream_body(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.4.4"))
-    updater.update(deps)
+def test_synced_file_is_overlay_marker_and_upstream_body(home: Path) -> None:
+    host = FakeHost(home)
+    updater.update(_deps(host, _packument("0.4.4")))
     expected = (
         OVERLAY
         + "\n## Upstream skill (auto-synced from @dzhng/jevgrep 0.4.4, overlay above wins)\n"
         + "\n# Jevgrep\n\nUpstream body for 0.4.4.\n"
     )
-    for path in _skill_paths(deps.home):
+    for path in _skill_paths(home):
         assert path.read_text(encoding="utf-8") == expected
         assert path.stat().st_mode & 0o777 == 0o644
     assert "description: upstream" not in expected
 
 
-def test_writes_nothing_outside_skill_paths_and_state_log(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0"))
-    updater.update(deps)
-    written = {path.relative_to(deps.home) for path in deps.home.rglob("*") if path.is_file()}
-    assert written == {*updater.SKILL_TARGETS_REL, updater.STATE_LOG_REL}
+def test_writes_only_prefixes_link_skills_and_state_log(home: Path) -> None:
+    host = FakeHost(home)
+    before = {path for path in home.rglob("*") if path.is_file() and not path.is_symlink()}
+    updater.update(_deps(host, _packument("0.5.0")))
+    new = {path.relative_to(home) for path in home.rglob("*") if path.is_file() and not path.is_symlink()} - {
+        path.relative_to(home) for path in before
+    }
+    outside_prefixes = {rel for rel in new if not rel.is_relative_to(updater.PREFIX_ROOT_REL)}
+    assert outside_prefixes == {*updater.SKILL_TARGETS_REL, updater.STATE_LOG_REL}
+    assert not list((home / updater.PREFIX_ROOT_REL).glob(".download-*"))
 
 
-def test_dry_run_neither_installs_nor_writes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, _packument("0.5.0"))
-    assert updater.main(["--dry-run", "--json"], deps) == 0
+def test_dry_run_neither_downloads_installs_nor_writes(home: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    host = FakeHost(home)
+    before = sorted(home.rglob("*"))
+    assert updater.main(["--dry-run", "--json"], _deps(host, _packument("0.5.0"))) == 0
     record = json.loads(capsys.readouterr().out)
     assert (record["action"], record["result"], record["dry_run"]) == ("install", "dry_run", True)
-    assert host.installs() == []
-    assert list(deps.home.rglob("*")) == []
+    assert host.installs() == [] and host.downloads == []
+    assert sorted(home.rglob("*")) == before
 
 
-def test_registry_failure_keeps_current_and_still_syncs(tmp_path: Path) -> None:
-    host = FakeHost(tmp_path)
-    deps = _deps(tmp_path, host, {})
+def test_registry_failure_keeps_current_and_still_syncs(home: Path) -> None:
+    host = FakeHost(home)
+    deps = _deps(host, {})
 
     def offline() -> dict[str, Any]:
         raise OSError("network unreachable")
@@ -236,8 +440,25 @@ def test_registry_failure_keeps_current_and_still_syncs(tmp_path: Path) -> None:
     code, record = updater.update(deps)
     assert code == 1
     assert host.installs() == []
-    assert "network unreachable" in record["detail"]
-    assert all(path.is_file() for path in _skill_paths(deps.home))
+    assert record["detail"] == "registry_unreachable"
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_regular_file_at_bin_path_is_not_replaced(home: Path) -> None:
+    host = FakeHost(home, installed=None)
+    host.link.parent.mkdir(parents=True)
+    host.link.write_text("#!/bin/sh\n")
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert "bin_not_symlink" in record["detail"] and host.installs() == []
+    assert host.link.read_text() == "#!/bin/sh\n"
+
+
+def test_download_refuses_non_registry_urls(tmp_path: Path) -> None:
+    for url in ("https://mirror.example/jevgrep.tgz", "http://registry.npmjs.org/x.tgz"):
+        with pytest.raises(OSError):
+            updater._download(url, tmp_path / "t.tgz")
+    assert not (tmp_path / "t.tgz").exists()
 
 
 def test_help_meets_cli_standard() -> None:
