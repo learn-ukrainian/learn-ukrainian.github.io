@@ -245,6 +245,13 @@ jobs:
         id: ruff
         if: ${{ !cancelled() && needs.changes.outputs.docs_only == 'false' }}
         timeout-minutes: 5
+        # `ruff check` lints (unused imports, style rules); it does not check
+        # formatting — `ruff format --check` is a separate subcommand this
+        # step never runs, and neither does .pre-commit-config.yaml. A file
+        # can pass this step and still drift from `ruff format` (#8795 found
+        # tests/conftest.py this way). Not added here: `ruff format --check`
+        # currently flags ~2050 files repo-wide, so adopting it needs its own
+        # reformat pass, not a silent gate flip on this line.
         run: |
           set -euo pipefail
           python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"

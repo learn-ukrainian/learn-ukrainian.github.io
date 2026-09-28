@@ -5014,6 +5014,15 @@ def _build_worker_env(
     if _dispatch_cap_plugin not in _pytest_plugins:
         _pytest_plugins.append(_dispatch_cap_plugin)
     worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
+    # #8795: "ci.pytest_dispatch_cap" only resolves via pyproject.toml's
+    # `pythonpath = ["scripts"]`, which is rootdir-relative and inactive for a
+    # pytest process started elsewhere (e.g. a test's own `pytester` subprocess
+    # in a temp dir). PYTHONPATH is an interpreter-level env var, so it makes
+    # the import resolve regardless of that nested pytest's rootdir.
+    _worker_scripts_dir = str((worktree_path if worktree_path is not None else _REPO_ROOT) / "scripts")
+    _worker_pythonpath = [part for part in worker_env.get("PYTHONPATH", "").split(os.pathsep) if part]
+    if _worker_scripts_dir not in _worker_pythonpath:
+        worker_env["PYTHONPATH"] = os.pathsep.join([_worker_scripts_dir, *_worker_pythonpath])
     _inject_gh_token_for_agent(worker_env, dispatch_agent)
     _scrub_unusable_gh_config_dir(worker_env)
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"

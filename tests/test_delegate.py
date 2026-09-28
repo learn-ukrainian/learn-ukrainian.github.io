@@ -6592,6 +6592,68 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
     assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
 
 
+def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_tasks_dir, monkeypatch):
+    """#8795: PYTHONPATH must carry the cap plugin's real scripts dir.
+
+    ``ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
+    rootdir-relative ``pythonpath = ["scripts"]``, which is inactive for a
+    pytest process started elsewhere (e.g. a nested ``pytester`` subprocess
+    from a temp dir). PYTHONPATH is interpreter-level, so it must point at an
+    absolute, real ``scripts`` directory regardless of the worker's own cwd.
+    """
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24683
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.delenv("PYTEST_PLUGINS", raising=False)
+    monkeypatch.delenv("PYTHONPATH", raising=False)
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="dispatch-marker-pythonpath",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    scripts_dir = Path(env["PYTHONPATH"])
+    assert scripts_dir.is_absolute()
+    assert (scripts_dir / "ci" / "pytest_dispatch_cap.py").is_file()
+
+    monkeypatch.setenv("PYTHONPATH", "/some/other/path")
+    args.task_id = "dispatch-marker-pythonpath-append"
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    entries = recorded["env"]["PYTHONPATH"].split(os.pathsep)
+    assert entries[0] == str(scripts_dir)
+    assert "/some/other/path" in entries
+
+
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
     import argparse
 
