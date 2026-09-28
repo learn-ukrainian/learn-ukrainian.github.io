@@ -42,13 +42,16 @@ def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
 
 def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     # #9095: merge_group restores only a cache saved on the default branch.
-    # setup-uv matches the requirements-lock.txt key exactly, and save-cache
-    # `auto` does not write on merge_group. The warm workflow is that writer.
+    # setup-uv matches the requirements-lock.txt key exactly. Since #9101 only
+    # refs/heads/main saves, so PR runs stop writing ~447 MiB private entries.
+    # The warm workflow is the writer.
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     pytest_steps = workflow["jobs"]["pytest"]["steps"]
     action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
     uv = next(step for step in action["runs"]["steps"] if step.get("name") == "Set up uv")
-    assert uv["with"]["save-cache"] == "auto"
+    assert uv["with"]["save-cache"] == "${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}"
+    assert uv["id"] == "setup-uv"
+    assert action["outputs"]["uv-cache-key"]["value"] == "${{ steps.setup-uv.outputs.cache-key }}"
     assert uv["with"]["enable-cache"] is True
     assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
     assert uv["with"].get("prune-cache", False) is False
@@ -89,7 +92,37 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     )
     assert setup["uses"] == ci_setup["uses"]
     assert setup["with"] == {"python-version-file": ".python-version"}
-    assert any(step.get("uses") == "./.github/actions/python-ci-env" for step in job["steps"])
+    ci_env = next(step for step in job["steps"] if step.get("uses") == "./.github/actions/python-ci-env")
+    assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
+
+
+def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
+    # #9101: after the save (setup-uv's post step, so a later job) main must
+    # hold the exact key for the current lock, or the run goes red.
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    verify = warm["jobs"]["verify"]
+    assert verify["needs"] == "warm"
+    assert verify["permissions"] == {"actions": "read"}
+    assert verify["env"]["UV_CACHE_KEY"] == "${{ needs.warm.outputs.uv-cache-key }}"
+    script = verify["steps"][0]["run"]
+    assert "gh cache list --ref refs/heads/main --key" in script
+    assert "grep -Fx" in script
+    assert "exit 1" in script
+    assert "gh cache delete" not in script
+
+
+def test_every_uv_cache_action_is_pinned_to_a_full_sha() -> None:
+    action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    steps = action["runs"]["steps"] + [
+        step for job in warm["jobs"].values() for step in job["steps"]
+    ]
+    for step in steps:
+        uses = step.get("uses")
+        if uses is None or uses.startswith("./"):
+            continue
+        revision = uses.split("@")[1]
+        assert len(revision) == 40 and all(c in "0123456789abcdef" for c in revision), uses
 
 
 def test_ci_retry_settings_cover_uv_and_pip() -> None:

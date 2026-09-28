@@ -4,14 +4,19 @@ name: Warm uv cache
 # merge_group runs can install offline (#9095).
 #
 # setup-uv keys the cache on requirements-lock.txt and restores only that
-# exact key. save-cache `auto` never saves on merge_group, and a cache saved
-# for a pull_request ref is invisible to every other ref. The only writer
-# that lands on main inside ci.yml is the nightly schedule, so a lockfile
-# change leaves the merge queue on PyPI until the next night. This workflow
-# is the writer for that key: every lock change pushes to main, and the
-# 04:30 UTC run repopulates the entry if that push missed or the cache was
+# exact key. The python-ci-env action saves only on refs/heads/main (#9101),
+# because a cache saved for a pull_request ref is invisible to every other
+# ref and ~447 MiB each pushed the repository past GitHub's 10 GB limit. The
+# only writer that lands on main inside ci.yml is the nightly schedule, so a
+# lockfile change leaves the merge queue on PyPI until the next night. This
+# workflow is the writer for that key: every lock change pushes to main, and
+# the 04:30 UTC run repopulates the entry if that push missed or the cache was
 # evicted. It does not run on pull_request or merge_group (those cannot
 # publish a cache other refs can read, and would spend a runner slot per PR).
+#
+# The `verify` job fails the run when main has no entry for the current lock
+# after the save, so a missing or evicted entry is a red run, not a silent
+# fall back to PyPI.
 
 on:
   push:
@@ -48,6 +53,8 @@ jobs:
     name: Warm uv cache
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      uv-cache-key: ${{ steps.python-ci-env.outputs.uv-cache-key }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -60,4 +67,40 @@ jobs:
       # .python-version, requirements-lock.txt) and the cached wheels match
       # the install the shards restore.
       - name: Python CI environment
+        id: python-ci-env
         uses: ./.github/actions/python-ci-env
+
+  verify:
+    name: Verify main uv cache entry
+    # setup-uv saves in its post step, which runs after every step of `warm`,
+    # so the entry can only be checked from a later job.
+    needs: warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      UV_CACHE_KEY: ${{ needs.warm.outputs.uv-cache-key }}
+    steps:
+      - name: Require the main uv cache entry for the current lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${UV_CACHE_KEY}" ]; then
+            echo "::error title=uv cache key unknown::setup-uv did not report a cache key, so main's entry cannot be checked."
+            exit 1
+          fi
+          # `--key` is a prefix match; require the exact key. The list can lag
+          # the save by a moment, so retry before failing.
+          for attempt in 1 2 3 4 5 6; do
+            found="$(gh cache list --ref refs/heads/main --key "${UV_CACHE_KEY}" --json key --jq '.[].key' | grep -Fx -- "${UV_CACHE_KEY}" || true)"
+            if [ -n "${found}" ]; then
+              echo "refs/heads/main holds ${UV_CACHE_KEY}"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error title=main uv cache entry missing::refs/heads/main has no Actions cache with key ${UV_CACHE_KEY}. pull_request and merge_group runs will install from PyPI again (#9095). Check the repository cache total with 'gh cache list' (10 GB limit, LRU eviction) and rerun this workflow (#9101)."
+          exit 1
