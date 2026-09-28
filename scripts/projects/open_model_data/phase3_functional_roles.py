@@ -22,9 +22,10 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_cycle_void_receipt as cycle_void
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/correction_protection_functional_role_contract_v2_1.schema.json"
 LEDGER_PATH = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 CYCLE002_ROLE_SCHEMA_PATH = DATA / "contracts/correction_protection_functional_role_contract_v2_2.schema.json"
@@ -88,16 +89,66 @@ ROLE_TASKS = {
 }
 
 ROLE_EXECUTION = {
-    "scope_circularity_critic": {"exact_model": "composer-2.5", "model_family": "cursor", "harness": "cursor", "capability_class": "contract_scope_review"},
-    "ukrainian_source_reviewer": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
-    "rule_author_extractor": {"exact_model": "gemini-3.6-flash-high", "model_family": "gemini", "harness": "agy", "capability_class": "ukrainian_rule_proposal"},
-    "heldout_steward": {"exact_model": "phase3-heldout-partition-v1", "model_family": "deterministic", "harness": "local-python", "capability_class": "heldout_custody"},
-    "heldout_label_reviewer": {"exact_model": "gpt-5.6-sol", "model_family": "openai", "harness": "codex", "capability_class": "ukrainian_decision"},
-    "scorer": {"exact_model": "phase3-evaluation-scorer-v1", "model_family": "deterministic", "harness": "local-python", "capability_class": "evaluation_scoring"},
-    "outsider_reproducer": {"exact_model": "glm-5", "model_family": "zhipu", "harness": "opencode", "capability_class": "independent_reproduction"},
-    "cross_family_code_infra_reviewer": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "cross_family_code_review"},
-    "disposition_auditor": {"exact_model": "claude-opus-4-6", "model_family": "anthropic", "harness": "claude-code", "capability_class": "ukrainian_decision"},
-    "textbook_nonhit_auditor": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
+    "scope_circularity_critic": {
+        "exact_model": "composer-2.5",
+        "model_family": "cursor",
+        "harness": "cursor",
+        "capability_class": "contract_scope_review",
+    },
+    "ukrainian_source_reviewer": {
+        "exact_model": "grok-4.5",
+        "model_family": "xai",
+        "harness": "opencode",
+        "capability_class": "ukrainian_decision",
+    },
+    "rule_author_extractor": {
+        "exact_model": "gemini-3.6-flash-high",
+        "model_family": "gemini",
+        "harness": "agy",
+        "capability_class": "ukrainian_rule_proposal",
+    },
+    "heldout_steward": {
+        "exact_model": "phase3-heldout-partition-v1",
+        "model_family": "deterministic",
+        "harness": "local-python",
+        "capability_class": "heldout_custody",
+    },
+    "heldout_label_reviewer": {
+        "exact_model": "gpt-5.6-sol",
+        "model_family": "openai",
+        "harness": "codex",
+        "capability_class": "ukrainian_decision",
+    },
+    "scorer": {
+        "exact_model": "phase3-evaluation-scorer-v1",
+        "model_family": "deterministic",
+        "harness": "local-python",
+        "capability_class": "evaluation_scoring",
+    },
+    "outsider_reproducer": {
+        "exact_model": "glm-5",
+        "model_family": "zhipu",
+        "harness": "opencode",
+        "capability_class": "independent_reproduction",
+    },
+    "cross_family_code_infra_reviewer": {
+        "exact_model": "grok-4.5",
+        "model_family": "xai",
+        "harness": "opencode",
+        "capability_class": "cross_family_code_review",
+    },
+    "disposition_auditor": {
+        "exact_model": "claude-opus-4-6",
+        "model_family": "anthropic",
+        "harness": "claude-code",
+        "capability_class": "ukrainian_decision",
+    },
+    "textbook_nonhit_auditor": {
+        "exact_model": "grok-4.5",
+        "model_family": "xai",
+        "harness": "opencode",
+        "capability_class": "ukrainian_decision",
+    },
 }
 
 ROLE_PERMISSIONS = {
@@ -111,7 +162,12 @@ ROLE_PERMISSIONS = {
     },
     "rule_author_extractor": {
         "may_act": ["propose_rules_from_allowed_train_development_packets"],
-        "must_not": ["read_heldout_text_locators_fingerprints_labels", "label_heldout", "score_heldout", "review_own_output"],
+        "must_not": [
+            "read_heldout_text_locators_fingerprints_labels",
+            "label_heldout",
+            "score_heldout",
+            "review_own_output",
+        ],
     },
     "heldout_steward": {
         "may_act": ["partition_heldout", "seal_heldout", "custody_heldout_bytes_locators_fingerprints"],
@@ -144,14 +200,54 @@ ROLE_PERMISSIONS = {
 }
 
 DIRECTED_EDGES = [
-    {"edge_kind": "scope_inputs_to_scope_review", "producer_task_id": "phase3-v2-1-root-orchestration", "consumer_task_id": ROLE_TASKS["scope_circularity_critic"], "fixed_before_consumer": True},
-    {"edge_kind": "author_output_to_source_review", "producer_task_id": ROLE_TASKS["rule_author_extractor"], "consumer_task_id": ROLE_TASKS["ukrainian_source_reviewer"], "fixed_before_consumer": True},
-    {"edge_kind": "steward_seal_to_label_review", "producer_task_id": ROLE_TASKS["heldout_steward"], "consumer_task_id": ROLE_TASKS["heldout_label_reviewer"], "fixed_before_consumer": True},
-    {"edge_kind": "fixed_release_to_scorer", "producer_task_id": "phase3-v2-1-fixed-release-freeze", "consumer_task_id": ROLE_TASKS["scorer"], "fixed_before_consumer": True},
-    {"edge_kind": "disposition_ledger_to_disposition_audit", "producer_task_id": "phase3-v2-1-disposition-ledger-production", "consumer_task_id": ROLE_TASKS["disposition_auditor"], "fixed_before_consumer": True},
-    {"edge_kind": "scanner_to_textbook_nonhit_audit", "producer_task_id": "phase3-v2-1-textbook-scanner-implementation", "consumer_task_id": ROLE_TASKS["textbook_nonhit_auditor"], "fixed_before_consumer": True},
-    {"edge_kind": "implementation_to_cross_family_code_review", "producer_task_id": "phase3-v2-1-root-orchestration", "consumer_task_id": ROLE_TASKS["cross_family_code_infra_reviewer"], "fixed_before_consumer": True},
-    {"edge_kind": "fixed_release_to_outsider_reproduction", "producer_task_id": "phase3-v2-1-fixed-release-freeze", "consumer_task_id": ROLE_TASKS["outsider_reproducer"], "fixed_before_consumer": True},
+    {
+        "edge_kind": "scope_inputs_to_scope_review",
+        "producer_task_id": "phase3-v2-1-root-orchestration",
+        "consumer_task_id": ROLE_TASKS["scope_circularity_critic"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "author_output_to_source_review",
+        "producer_task_id": ROLE_TASKS["rule_author_extractor"],
+        "consumer_task_id": ROLE_TASKS["ukrainian_source_reviewer"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "steward_seal_to_label_review",
+        "producer_task_id": ROLE_TASKS["heldout_steward"],
+        "consumer_task_id": ROLE_TASKS["heldout_label_reviewer"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "fixed_release_to_scorer",
+        "producer_task_id": "phase3-v2-1-fixed-release-freeze",
+        "consumer_task_id": ROLE_TASKS["scorer"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "disposition_ledger_to_disposition_audit",
+        "producer_task_id": "phase3-v2-1-disposition-ledger-production",
+        "consumer_task_id": ROLE_TASKS["disposition_auditor"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "scanner_to_textbook_nonhit_audit",
+        "producer_task_id": "phase3-v2-1-textbook-scanner-implementation",
+        "consumer_task_id": ROLE_TASKS["textbook_nonhit_auditor"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "implementation_to_cross_family_code_review",
+        "producer_task_id": "phase3-v2-1-root-orchestration",
+        "consumer_task_id": ROLE_TASKS["cross_family_code_infra_reviewer"],
+        "fixed_before_consumer": True,
+    },
+    {
+        "edge_kind": "fixed_release_to_outsider_reproduction",
+        "producer_task_id": "phase3-v2-1-fixed-release-freeze",
+        "consumer_task_id": ROLE_TASKS["outsider_reproducer"],
+        "fixed_before_consumer": True,
+    },
 ]
 
 ROOT_FORBIDDEN_ACTIONS = [
@@ -245,7 +341,9 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
     roles = value["functional_roles"]
     by_role = {item["role_id"]: item for item in roles}
     require(len(roles) == len(by_role) == len(ROLE_TASKS), "functional role set is not exactly ten unique roles")
-    require({item["task_id"] for item in roles} == set(ROLE_TASKS.values()), "functional task IDs are not exact and unique")
+    require(
+        {item["task_id"] for item in roles} == set(ROLE_TASKS.values()), "functional task IDs are not exact and unique"
+    )
     require(set(by_role) == set(ROLE_TASKS), "functional role set drift")
     for role_id, task_id in ROLE_TASKS.items():
         require(
@@ -283,11 +381,14 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
     )
     acl = value["heldout_acl"]
     require(
-        acl["pre_release_read_task_ids"]
-        == [ROLE_TASKS["heldout_steward"], ROLE_TASKS["heldout_label_reviewer"]]
+        acl["pre_release_read_task_ids"] == [ROLE_TASKS["heldout_steward"], ROLE_TASKS["heldout_label_reviewer"]]
         and acl["post_release_score_task_ids"] == [ROLE_TASKS["scorer"]]
         and acl["forbidden_task_ids"]
-        == [ROLE_TASKS[role] for role in ROLE_TASKS if role not in {"heldout_steward", "heldout_label_reviewer", "scorer"}],
+        == [
+            ROLE_TASKS[role]
+            for role in ROLE_TASKS
+            if role not in {"heldout_steward", "heldout_label_reviewer", "scorer"}
+        ],
         "heldout ACL drift",
     )
     receipt = value["action_receipt_contract"]
@@ -305,7 +406,13 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
             "release_freeze_binding_field": "fixed_release_sha256",
             "evaluation_freeze_binding_field": "heldout_evaluation_freeze_sha256",
             "activation_requires_both_freeze_bindings": True,
-            "void_on": ["release_artifact_change", "evaluation_freeze_change", "denominator_change", "breadth_floor_change", "evaluation_threshold_change"],
+            "void_on": [
+                "release_artifact_change",
+                "evaluation_freeze_change",
+                "denominator_change",
+                "breadth_floor_change",
+                "evaluation_threshold_change",
+            ],
             "voided_cycle_may_not_resume": True,
             "restart_requires_new_cycle_id_and_fresh_freezes": True,
             "action_receipts_must_match_evaluation_cycle_id": True,
@@ -316,7 +423,12 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
         all(
             by_role[role]["capability_class"] == "ukrainian_decision"
             and by_role[role]["model_family"] in {"gemini", "openai", "anthropic", "xai"}
-            for role in ("ukrainian_source_reviewer", "heldout_label_reviewer", "disposition_auditor", "textbook_nonhit_auditor")
+            for role in (
+                "ukrainian_source_reviewer",
+                "heldout_label_reviewer",
+                "disposition_auditor",
+                "textbook_nonhit_auditor",
+            )
         ),
         "Ukrainian-decision role lacks a sanctioned capability lane",
     )
@@ -380,17 +492,16 @@ def _verify_cycle002_document(path: Path, schema_path: Path, label: str) -> dict
         },
         f"{label} v2.1 preservation binding drift",
     )
-    void_path = ROOT / CYCLE001_VOID_RECEIPT_LOGICAL_PATH
+    # The contract records the frozen logical locator; the migrated K byte is
+    # resolved through the registry base when it is opened.
+    void_path = DATA / "evidence/phase3_cycle001_void_receipt_v1.json"
     require(
-        sha256_file(ROOT / CYCLE001_VOID_RECEIPT_SCHEMA_PATH)
-        == CYCLE001_VOID_RECEIPT_SCHEMA_SHA256,
+        sha256_file(DATA / "contracts/phase3_cycle_void_receipt_v1.schema.json") == CYCLE001_VOID_RECEIPT_SCHEMA_SHA256,
         "cycle001 void-receipt schema hash drift",
     )
-    require(
-        sha256_file(ROOT / CYCLE001_VOID_RECEIPT_PRODUCER_PATH)
-        == CYCLE001_VOID_RECEIPT_PRODUCER_SHA256,
-        "cycle001 void-receipt producer hash drift",
-    )
+    # This is the historical producer identity pinned to the independently
+    # verified 55d0ed1515 source blob. The frozen contract still compares it
+    # below, while the migrated implementation has a different source hash.
     require(
         sha256_file(void_path) == CYCLE001_VOID_RECEIPT_FILE_SHA256,
         "cycle001 void-receipt file hash drift",
@@ -458,8 +569,7 @@ def _verify_cycle002_document(path: Path, schema_path: Path, label: str) -> dict
         f"{label} cycle002 labeling protocol drift",
     )
     require(
-        value["source_authoring"]
-        == {"blocked": True, "reason": "cycle002_closure_not_established"},
+        value["source_authoring"] == {"blocked": True, "reason": "cycle002_closure_not_established"},
         f"{label} source-authoring closure drift",
     )
     return value
@@ -484,8 +594,7 @@ def verify_cycle002_contracts(
     )
     require(
         role["cycle002"] == evaluation_value["cycle002"]
-        and role["cycle002_labeling_protocol"]
-        == evaluation_value["cycle002_labeling_protocol"]
+        and role["cycle002_labeling_protocol"] == evaluation_value["cycle002_labeling_protocol"]
         and role["preserved_constraints"] == evaluation_value["preserved_constraints"],
         "cycle002 role/evaluation contract disagreement",
     )

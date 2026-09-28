@@ -28,6 +28,7 @@ import os
 import re
 import sqlite3
 import sys
+import tempfile
 import unicodedata
 from collections import defaultdict
 from dataclasses import asdict, dataclass
@@ -44,6 +45,8 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 
 from scripts.projects.open_model_data.paths import assert_not_archived_path
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import write_artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
@@ -80,13 +83,75 @@ def resolve_data_path(rel_path: str) -> Path:
     return REPO_ROOT / rel_path
 
 
-DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-DEFAULT_RELEASE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v03_dialect"
+DEFAULT_CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
+_RELEASE_GROUP = "open_model_release_payload"
+_DIALECT_RELEASE_REL = "projects/open_model_data/release/uldr_v03_dialect"
+_DIALECT_PAYLOADS = (
+    "dialect_corpus_expanded_1500.jsonl",
+    "sft_dialect_protection_500.jsonl",
+)
+_DIALECT_COMPANIONS = (
+    "dialect_corpus_expanded_1500.sha256",
+    "sft_dialect_protection_500.sha256",
+    "release_receipt.json",
+    "release_receipt.json.sha256",
+)
 DEFAULT_SOURCES_DB = REPO_ROOT / "data" / "sources.db"
 DEFAULT_VESUM_DB = REPO_ROOT / "data" / "vesum.db"
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_evaluation_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_release_receipt.schema.json"
 TRAJECTORY_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
+
+
+def _default_release_dir(repo: Path = REPO_ROOT) -> Path:
+    return storage_paths.artifact_path(
+        _RELEASE_GROUP,
+        f"{_DIALECT_RELEASE_REL}/{_DIALECT_PAYLOADS[0]}",
+        repo=repo,
+    ).parent
+
+
+def _managed_release_dir(output_dir: Path, repo: Path = REPO_ROOT) -> Path | None:
+    lexical = Path(os.path.abspath(output_dir))
+    resolved = output_dir.resolve()
+    managed_roots = (repo / "data/projects/open_model_data", repo / "registry/projects/open_model_data")
+    if not any(lexical.is_relative_to(root) or resolved.is_relative_to(root) for root in managed_roots):
+        return None
+    canonical = _default_release_dir(repo)
+    if lexical != resolved and (lexical == canonical or resolved == canonical):
+        raise ValueError(f"managed dialect output reached through a symlink: {output_dir}")
+    if lexical == canonical:
+        return canonical
+    raise ValueError(f"unsupported managed dialect output directory: {output_dir}")
+
+
+def _publish_dialect_stage(stage: Path, repo: Path = REPO_ROOT) -> None:
+    snapshot = storage_paths.artifact_set(_RELEASE_GROUP, repo=repo)
+    prior = {entry["path"][5:]: entry["sha256"] for entry in snapshot.manifest["entries"]}
+    prefix = f"{_DIALECT_RELEASE_REL}/"
+    writes = {
+        prefix + name: (lambda target, source=stage / name: target.write_bytes(source.read_bytes()))
+        for name in _DIALECT_PAYLOADS
+    }
+    companions = {
+        f"registry/{prefix}{name}": (
+            storage_paths.hash_file(repo / f"registry/{prefix}{name}")
+            if (repo / f"registry/{prefix}{name}").is_file()
+            else None,
+            lambda target, source=stage / name: target.write_bytes(source.read_bytes()),
+        )
+        for name in _DIALECT_COMPANIONS
+    }
+    write_artifact_set(
+        repo,
+        _RELEASE_GROUP,
+        "v5_mine_dialect_corpus.py",
+        writes,
+        expected_hashes={rel: prior.get(rel) for rel in writes},
+        expected_members=set(prior),
+        companions=companions,
+    )
+
 
 V02_BASELINE_SUITE_PATH = (
     REPO_ROOT
@@ -197,7 +262,12 @@ AUTHORS_MAP = {
         "Котл.": ("southeastern_slobozhan", "Полтавщина", "Іван Котляревський", "Твори"),
         "Номис": ("southeastern_slobozhan", "Полтавщина (Лубенщина)", "Матвій Номис", "Приказки та прислів'я"),
         "Головко": ("southeastern_slobozhan", "Полтавщина", "Андрій Головко", "Твори"),
-        "Харьк.": ("southeastern_slobozhan", "Слобожанщина (Харківський повіт)", "Слобідські народні записи", "Матеріали"),
+        "Харьк.": (
+            "southeastern_slobozhan",
+            "Слобожанщина (Харківський повіт)",
+            "Слобідські народні записи",
+            "Матеріали",
+        ),
         "Лебед.": ("southeastern_slobozhan", "Слобожанщина (Лебединщина)", "Слобідські народні записи", "Матеріали"),
     },
     "southeastern_steppe": {
@@ -216,7 +286,12 @@ AUTHORS_MAP = {
         "Эварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
         "Еварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
         "Яворн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
-        "Екатериносл.": ("southeastern_steppe", "Степова Україна (Катеринославщина)", "Степові народні записи", "Матеріали"),
+        "Екатериносл.": (
+            "southeastern_steppe",
+            "Степова Україна (Катеринославщина)",
+            "Степові народні записи",
+            "Матеріали",
+        ),
         "Херсон.": ("southeastern_steppe", "Степова Україна (Херсонщина)", "Степові народні записи", "Матеріали"),
     },
 }
@@ -366,7 +441,7 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
                         continue
 
                     sz, mz, bkt, locality, author_name, work = matched
-                    prefix = sub_sec[:m.start()].rstrip(" .")
+                    prefix = sub_sec[: m.start()].rstrip(" .")
                     sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
                     if not sents:
                         continue
@@ -419,7 +494,7 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
                     m = re.search(re.escape(cit_needle) + r"(?:\s*[IІVХXLCDM]+)?(?:\s*\d+)?\b", defn)
                     if not m:
                         continue
-                    prefix = defn[:m.start()].rstrip(" .")
+                    prefix = defn[: m.start()].rstrip(" .")
                     sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
                     if not sents:
                         continue
@@ -465,8 +540,16 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
 
 
 ARABIC_TO_ROMAN = {
-    "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
-    "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
+    "1": "I",
+    "2": "II",
+    "3": "III",
+    "4": "IV",
+    "5": "V",
+    "6": "VI",
+    "7": "VII",
+    "8": "VIII",
+    "9": "IX",
+    "10": "X",
 }
 
 
@@ -544,7 +627,10 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
         (r"\b(?:Володимир\s+Шухевич|В\.\s*Шухевич|Шухевич|Шух\b\.?)", "Шух."),
         (r"\b(?:Павло\s+Чубинський|П\.\s*Чубинський|Чубинський|Чуб\b\.?)", "Чуб."),
         (r"\b(?:Іван\s+Котляревський|І\.\s*Котляревський|Котляревський|Котл\b\.?)", "Котл."),
-        (r"\b(?:Григорій\s+Квітка-Основ[\'’ʼ]?яненко|Г\.\s*Квітка-Основ[\'’ʼ]?яненко|Квітка-Основ[\'’ʼ]?яненко|Кв\.-Осн\b\.?|Квітка\b)", "Кв.-Осн."),
+        (
+            r"\b(?:Григорій\s+Квітка-Основ[\'’ʼ]?яненко|Г\.\s*Квітка-Основ[\'’ʼ]?яненко|Квітка-Основ[\'’ʼ]?яненко|Кв\.-Осн\b\.?|Квітка\b)",
+            "Кв.-Осн.",
+        ),
         (r"\b(?:Григір\s+Тютюнник|Гр\.\s*Тютюнник|Тютюнник|Тют\b\.?)", "Тют."),
         (r"\b(?:Юрій\s+Яновський|Ю\.\s*Яновський|Яновський|Ю\.\s*Янов\b\.?|Янов\b\.?)", "Янов."),
         (r"\b(?:Іван\s+Манжура|І\.\s*Манжура|Манжура|Манжур\b|Манж\b\.?)", "Манж."),
@@ -582,7 +668,7 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
     m_vol = re.search(r"\b([IVXLCDM]+)\b", s)
     if m_vol:
         vol = m_vol.group(1)
-        author_prefix = s[:m_vol.start()].rstrip(" ,")
+        author_prefix = s[: m_vol.start()].rstrip(" ,")
         s = f"{author_prefix} {vol}".replace(", ", " ").strip()
     else:
         # Strip trailing page numbers from year-based citations without volume (e.g. "Черемш., Тв., 1960, 107" -> "Черемш., Тв., 1960")
@@ -642,12 +728,15 @@ def partition_candidates_by_lemma(
         else:
             sft_works.add(w_id)
 
-    eval_candidates: list[MinedSentence] = [c for c in candidates if canonical_source_work(c.citation, c.collector) in eval_works]
+    eval_candidates: list[MinedSentence] = [
+        c for c in candidates if canonical_source_work(c.citation, c.collector) in eval_works
+    ]
     eval_lemmas = {c.word.casefold() for c in eval_candidates}
 
     # SFT pool consists exclusively of sentences from sft_works whose lemmas NEVER appear in eval
     sft_candidates: list[MinedSentence] = [
-        c for c in candidates
+        c
+        for c in candidates
         if canonical_source_work(c.citation, c.collector) in sft_works and c.word.casefold() not in eval_lemmas
     ]
 
@@ -675,7 +764,9 @@ def build_evaluation_benchmark(
 
     for bkt, quota in quotas.items():
         if len(bucketed[bkt]) < quota:
-            raise ValueError(f"Insufficient non-leaking candidates for {bkt}: found {len(bucketed[bkt])}, required {quota}")
+            raise ValueError(
+                f"Insufficient non-leaking candidates for {bkt}: found {len(bucketed[bkt])}, required {quota}"
+            )
 
     eval_cases: list[dict[str, Any]] = []
     case_idx = 1
@@ -688,7 +779,7 @@ def build_evaluation_benchmark(
             case_idx += 1
 
             # Approximately 33% mixed-error cases across each zone
-            is_mixed = (idx % 3 == 0)
+            is_mixed = idx % 3 == 0
 
             if not is_mixed:
                 # Pure PRESERVE case
@@ -827,8 +918,25 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
         r"(?:діал\.|зах\.)\s+([А-ЯЄІЇҐа-яіїєґ\']+)\s*(?:[.;]|\(див\.)",
     ]
     banned = {
-        "те", "саме", "що", "як", "який", "яка", "яке", "які", "хто", "при", "для",
-        "вид", "рід", "знач", "пор", "див", "уживається", "порівн", "відповідник"
+        "те",
+        "саме",
+        "що",
+        "як",
+        "який",
+        "яка",
+        "яке",
+        "які",
+        "хто",
+        "при",
+        "для",
+        "вид",
+        "рід",
+        "знач",
+        "пор",
+        "див",
+        "уживається",
+        "порівн",
+        "відповідник",
     }
 
     try:
@@ -913,7 +1021,7 @@ def build_sft_dialect_dataset(
         cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (item.word,))
         row = cur_ves.fetchone()
         dialect_forms_cnt = row[0] if row else 0
-        is_dial_attested = (dialect_forms_cnt > 0)
+        is_dial_attested = dialect_forms_cnt > 0
 
         traj_hash = hashlib.sha256(f"sft_dial_{item.sentence}_{idx}_{item.word}".encode()).hexdigest()[:16]
         traj_id = f"traj.decolonize.{traj_hash}"
@@ -1126,7 +1234,7 @@ def evaluate_multizone_benchmark(
             stem = marker[: max(3, len(marker) - 2)].casefold()
 
             if pred is not None:
-                stem_preserved = (stem in pred.casefold())
+                stem_preserved = stem in pred.casefold()
                 norm_pred = normalize_for_eval(pred)
 
                 if c["case_type"] == "PRESERVE":
@@ -1140,10 +1248,10 @@ def evaluate_multizone_benchmark(
                     mixed_total += 1
                     replacement = c.get("expected_replacement")
                     target = c.get("target_term")
-                    rep_ok = (replacement is not None and replacement.casefold() in pred.casefold())
+                    rep_ok = replacement is not None and replacement.casefold() in pred.casefold()
                     err_removed = True
                     if c.get("injected_error_type") == "colonial_calque" and target:
-                        err_removed = (target.casefold() not in pred.casefold())
+                        err_removed = target.casefold() not in pred.casefold()
                     # Must match expected full output (not just a truncated marker/replacement)
                     norm_expected = normalize_for_eval(c["expected_output"])
                     if stem_preserved and rep_ok and err_removed and (norm_pred == norm_expected):
@@ -1163,7 +1271,7 @@ def evaluate_multizone_benchmark(
         cp_lower = exact_clopper_pearson_lower(passed, total, alpha=0.05)
         # Gate cleared ONLY IF total satisfies required quota and error rate <= 1.0% (accuracy >= 99.0%)
         min_quota = ZONE_MINIMUM_QUOTAS.get(zone_key, 250)
-        gate_cleared = (total >= min_quota and err_rate <= 0.010)
+        gate_cleared = total >= min_quota and err_rate <= 0.010
 
         results[zone_key] = ZoneMetrics(
             zone_name=zone_key,
@@ -1230,11 +1338,33 @@ def verify_modern_literary_regression(
 def execute_mining_and_release(
     db_path: Path = DEFAULT_SOURCES_DB,
     vesum_db: Path = DEFAULT_VESUM_DB,
-    output_dir: Path = DEFAULT_RELEASE_DIR,
+    output_dir: Path | None = None,
     replay_quota: int = 0,
     replay_shards_dir: Path | None = None,
+    *,
+    _managed_logical_dir: Path | None = None,
+    _repo: Path = REPO_ROOT,
 ) -> dict[str, Any]:
     """Execute full mining pipeline, lemma partitioning, schema validation, and artifact delivery."""
+    if output_dir is None:
+        output_dir = _default_release_dir(_repo)
+    if _managed_logical_dir is None:
+        managed = _managed_release_dir(output_dir, _repo)
+        if managed is not None:
+            with tempfile.TemporaryDirectory(prefix="dialect-release-stage-") as temporary:
+                stage = Path(temporary)
+                receipt = execute_mining_and_release(
+                    db_path=db_path,
+                    vesum_db=vesum_db,
+                    output_dir=stage,
+                    replay_quota=replay_quota,
+                    replay_shards_dir=replay_shards_dir,
+                    _managed_logical_dir=managed,
+                    _repo=_repo,
+                )
+                _publish_dialect_stage(stage, _repo)
+            return receipt
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Mining authentic dialect candidates from {db_path}...")
@@ -1285,14 +1415,18 @@ def execute_mining_and_release(
     eval_lines = [json.dumps(c, ensure_ascii=False) for c in eval_cases]
     eval_file.write_text("\n".join(eval_lines) + "\n", encoding="utf-8")
     eval_sha = hashlib.sha256(eval_file.read_bytes()).hexdigest()
-    (output_dir / "dialect_corpus_expanded_1500.sha256").write_text(f"{eval_sha}  dialect_corpus_expanded_1500.jsonl\n", encoding="utf-8")
+    (output_dir / "dialect_corpus_expanded_1500.sha256").write_text(
+        f"{eval_sha}  dialect_corpus_expanded_1500.jsonl\n", encoding="utf-8"
+    )
 
     # Write SFT trajectories JSONL
     sft_file = output_dir / "sft_dialect_protection_500.jsonl"
     sft_lines = [json.dumps(t, ensure_ascii=False) for t in sft_trajectories]
     sft_file.write_text("\n".join(sft_lines) + "\n", encoding="utf-8")
     sft_sha = hashlib.sha256(sft_file.read_bytes()).hexdigest()
-    (output_dir / "sft_dialect_protection_500.sha256").write_text(f"{sft_sha}  sft_dialect_protection_500.jsonl\n", encoding="utf-8")
+    (output_dir / "sft_dialect_protection_500.sha256").write_text(
+        f"{sft_sha}  sft_dialect_protection_500.jsonl\n", encoding="utf-8"
+    )
 
     # Calculate zone counts
     macro_counts = defaultdict(int)
@@ -1308,12 +1442,12 @@ def execute_mining_and_release(
             mixed_count += 1
 
     try:
-        eval_file_rel = str(eval_file.relative_to(REPO_ROOT))
+        eval_file_rel = str(((_managed_logical_dir or output_dir) / eval_file.name).relative_to(_repo))
     except ValueError:
         eval_file_rel = str(eval_file)
 
     try:
-        sft_file_rel = str(sft_file.relative_to(REPO_ROOT))
+        sft_file_rel = str(((_managed_logical_dir or output_dir) / sft_file.name).relative_to(_repo))
     except ValueError:
         sft_file_rel = str(sft_file)
 
@@ -1367,24 +1501,39 @@ def execute_mining_and_release(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Phase 5.6: Dialect Corpus Mining, SFT Defense Trajectories & Multi-Zone Evaluation")
+    parser = argparse.ArgumentParser(
+        description="Phase 5.6: Dialect Corpus Mining, SFT Defense Trajectories & Multi-Zone Evaluation"
+    )
     parser.add_argument("--db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_RELEASE_DIR, help="Output directory for release artifacts")
-    parser.add_argument("--replay-quota", type=int, default=0, help="Quota for verified anti-calque replay trajectories (default: 0)")
-    parser.add_argument("--replay-shards-dir", type=Path, default=None, help="Directory containing non-archived verified replay JSONL shards")
+    parser.add_argument("--output-dir", type=Path, default=None, help="Output directory for release artifacts")
+    parser.add_argument(
+        "--replay-quota", type=int, default=0, help="Quota for verified anti-calque replay trajectories (default: 0)"
+    )
+    parser.add_argument(
+        "--replay-shards-dir",
+        type=Path,
+        default=None,
+        help="Directory containing non-archived verified replay JSONL shards",
+    )
     parser.add_argument("--evaluate", action="store_true", help="Run multi-zone benchmark evaluation")
-    parser.add_argument("--predictions", type=Path, default=None, help="Path to JSONL file containing model predictions to evaluate")
+    parser.add_argument(
+        "--predictions", type=Path, default=None, help="Path to JSONL file containing model predictions to evaluate"
+    )
     args = parser.parse_args()
 
+    if args.evaluate and args.predictions is not None and not args.predictions.exists():
+        raise FileNotFoundError(f"Predictions file not found: {args.predictions}")
+    output_dir = args.output_dir if args.output_dir is not None else _default_release_dir()
+
     if args.evaluate:
-        eval_path = args.output_dir / "dialect_corpus_expanded_1500.jsonl"
+        eval_path = output_dir / "dialect_corpus_expanded_1500.jsonl"
         if not eval_path.exists():
             print(f"Evaluation benchmark not found at {eval_path}. Running mining first...")
             execute_mining_and_release(
                 args.db,
                 args.vesum_db,
-                args.output_dir,
+                output_dir,
                 replay_quota=args.replay_quota,
                 replay_shards_dir=args.replay_shards_dir,
             )
@@ -1393,8 +1542,6 @@ def main() -> None:
 
         preds = None
         if args.predictions is not None:
-            if not args.predictions.exists():
-                raise FileNotFoundError(f"Predictions file not found: {args.predictions}")
             preds = {}
             for line in args.predictions.read_text(encoding="utf-8").splitlines():
                 if line.strip():
@@ -1410,8 +1557,8 @@ def main() -> None:
         for zone, metrics in results.items():
             print(f"\nZone: {zone}")
             print(f"  Total Cases: {metrics['total_cases']}")
-            print(f"  Accuracy:    {metrics['accuracy']*100:.2f}% (Error Rate: {metrics['error_rate']*100:.2f}%)")
-            print(f"  CP 95% LCL:  {metrics['clopper_pearson_lower']*100:.2f}%")
+            print(f"  Accuracy:    {metrics['accuracy'] * 100:.2f}% (Error Rate: {metrics['error_rate'] * 100:.2f}%)")
+            print(f"  CP 95% LCL:  {metrics['clopper_pearson_lower'] * 100:.2f}%")
             print(f"  Clean Pass:  {metrics['preserve_clean_passed']}/{metrics['preserve_clean_total']}")
             print(f"  Mixed Pass:  {metrics['mixed_error_passed']}/{metrics['mixed_error_total']}")
             print(f"  Gate Status: {'PASSED' if metrics['gate_cleared'] else 'FAILED'}")
@@ -1422,7 +1569,7 @@ def main() -> None:
         execute_mining_and_release(
             args.db,
             args.vesum_db,
-            args.output_dir,
+            output_dir,
             replay_quota=args.replay_quota,
             replay_shards_dir=args.replay_shards_dir,
         )

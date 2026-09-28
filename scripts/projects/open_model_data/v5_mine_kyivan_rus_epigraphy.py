@@ -50,6 +50,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
@@ -93,15 +94,9 @@ def resolve_data_path(rel_path: str) -> Path:
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_RELEASE_DIR = (
-    REPO_ROOT
-    / "data"
-    / "projects"
-    / "open_model_data"
-    / "archive"
-    / "quarantined_historical"
-    / "uldr_v04a_kyivan_rus"
+    REPO_ROOT / "data" / "projects" / "open_model_data" / "archive" / "quarantined_historical" / "uldr_v04a_kyivan_rus"
 )
-DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+DEFAULT_CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
 
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_kyivan_rus_epigraphic_eval_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_kyivan_rus_release_receipt.schema.json"
@@ -1073,7 +1068,17 @@ def get_git_commit(repo_root: Path) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Phase 5.7: Kyivan Rus Epigraphy & Diglossia Mining Engine")
+    parser = argparse.ArgumentParser(
+        description="Kyivan Rus epigraphy mining. Regeneration is deferred to P3b (#8809).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py --help\n"
+            "Outputs: none; generation refuses before writing.\n"
+            "Exit codes: 0 for help, nonzero for deferred generation.\n"
+            "Related: issue #8809 P3b historical producer support."
+        ),
+    )
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to data/sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to data/vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_RELEASE_DIR, help="Output release directory")
@@ -1083,6 +1088,8 @@ def main() -> None:
     parser.add_argument("--git-commit", type=str, default=None, help="Explicit git commit SHA for provenance receipt")
     parser.add_argument("--seed", type=int, default=42, help="Deterministic random seed")
     args = parser.parse_args()
+
+    refuse_historical_regeneration("v5_mine_kyivan_rus_epigraphy.py")
 
     print("=== Phase 5.7: Kyivan Rus Epigraphy & Diglossia Mining Engine (v0.4a) ===")
     print(f"Sources DB: {args.sources_db}")

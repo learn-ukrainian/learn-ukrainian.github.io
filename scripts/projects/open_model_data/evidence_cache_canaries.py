@@ -22,7 +22,7 @@ if __package__ in {None, ""}:
 from scripts.lexicon import ulif_raw_cache
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/correction_protection_adapter_receipt_v1.schema.json"
+SCHEMA = ROOT / "registry/projects/open_model_data/contracts/correction_protection_adapter_receipt_v1.schema.json"
 EXPECTED_ULIF_ENTRY_COLUMNS = (
     "id",
     "normalized_query",

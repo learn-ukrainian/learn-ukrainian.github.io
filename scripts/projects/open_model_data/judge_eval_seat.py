@@ -24,10 +24,14 @@ sys.path.insert(0, str(REPO_ROOT))
 from scripts.projects.open_model_data.audit_assistant_quality import (
     audit_definitional_alignment,
 )
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
     get_vesum_cursor,
     is_definitional_for_concept,
 )
+
+CLAUDE_VERDICTS = resolve_open_model_path(RELEASE_DIR / "eval_claude_verdicts.json")
+SEAT_JUDGMENT = resolve_open_model_path(RELEASE_DIR / "EVAL_INDEPENDENT_SEAT_JUDGMENT.md")
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +146,7 @@ def main() -> int:
     # Connect to VESUM for regex audit
     cur = get_vesum_cursor()
 
-    cache_file = RELEASE_DIR / "eval_claude_verdicts.json"
+    cache_file = CLAUDE_VERDICTS
     claude_verdicts: dict[str, dict] = {}
     if cache_file.exists():
         logger.info("Loading cached Claude verdicts from %s", cache_file)
@@ -189,7 +193,7 @@ def main() -> int:
         claude_verdict = claude_info.get("verdict", "UNKNOWN").upper()
         claude_reason = claude_info.get("reason", "")
 
-        agreed = (regex_verdict == claude_verdict)
+        agreed = regex_verdict == claude_verdict
         item_res = {
             "eval_id": eid,
             "concept": concept,
@@ -224,9 +228,13 @@ def main() -> int:
     ]
 
     if not disagreements:
-        report_lines.append("✅ **Zero disagreements.** Claude and the regex audit agreed on 100% of the eval records.\n")
+        report_lines.append(
+            "✅ **Zero disagreements.** Claude and the regex audit agreed on 100% of the eval records.\n"
+        )
     else:
-        report_lines.append("| Eval ID | Concept | Subject | Regex Verdict | Claude Verdict | Claude Reasoning | Snippet |")
+        report_lines.append(
+            "| Eval ID | Concept | Subject | Regex Verdict | Claude Verdict | Claude Reasoning | Snippet |"
+        )
         report_lines.append("|---|---|---|---|---|---|---|")
         for d in disagreements:
             snip_esc = d["snippet"].replace("|", "\\|")
@@ -244,13 +252,15 @@ def main() -> int:
             f"| {i} | `{r['eval_id']}` | **{r['concept']}** | {r['subject']} | `{r['regex_verdict']}` | `{r['claude_verdict']}` | {agr_icon} | {r['claude_reason']} |"
         )
 
-    out_path = RELEASE_DIR / "EVAL_INDEPENDENT_SEAT_JUDGMENT.md"
+    out_path = SEAT_JUDGMENT
     out_path.write_text("\n".join(report_lines) + "\n", encoding="utf-8")
     logger.info("Wrote independent seat report to %s", out_path)
 
     print("\n================ INDEPENDENT SEAT JUDGMENT SUMMARY ================")
     print(f"Total Eval Records: {len(all_records)}")
-    print(f"Agreements:         {len(all_records) - len(disagreements)} ({((len(all_records) - len(disagreements)) / len(all_records) * 100):.1f}%)")
+    print(
+        f"Agreements:         {len(all_records) - len(disagreements)} ({((len(all_records) - len(disagreements)) / len(all_records) * 100):.1f}%)"
+    )
     print(f"Disagreements:      {len(disagreements)}")
     print(f"Claude YES:         {sum(1 for r in results_table if r['claude_verdict'] == 'YES')}")
     print(f"Claude NO:          {sum(1 for r in results_table if r['claude_verdict'] == 'NO')}")

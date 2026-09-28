@@ -9,47 +9,92 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data.paths import (
-    ARCHIVE_DIR,
-    ARCHIVED_ULDR_V1_DIR,
-    COMPONENTS_DIR,
+    ARTIFACT_ARCHIVE_DIR,
+    ARTIFACT_ARCHIVED_ULDR_V1_DIR,
+    ARTIFACT_COMPONENTS_DIR,
+    ARTIFACT_CORRECTION_PROTECTION_DIR,
+    ARTIFACT_OPEN_MODEL_DATA_DIR,
+    ARTIFACT_RELEASE_DIR,
     CONTRACTS_DIR,
-    CORRECTION_PROTECTION_DIR,
-    DECOLONIZATION_DIR,
-    DIALECTS_DIR,
-    GRAMMAR_DIR,
-    IDIOMS_DIR,
-    OPEN_MODEL_DATA_DIR,
-    QUARANTINED_HISTORICAL_DIR,
-    RELEASE_DIR,
+    REGISTRY_ARCHIVE_DIR,
+    REGISTRY_ARCHIVED_ULDR_V1_DIR,
+    REGISTRY_COMPONENTS_DIR,
+    REGISTRY_CORRECTION_PROTECTION_DIR,
+    REGISTRY_DECOLONIZATION_DIR,
+    REGISTRY_DIALECTS_DIR,
+    REGISTRY_GRAMMAR_DIR,
+    REGISTRY_IDIOMS_DIR,
+    REGISTRY_OPEN_MODEL_DATA_DIR,
+    REGISTRY_QUARANTINED_HISTORICAL_DIR,
+    REGISTRY_RELEASE_DIR,
+    REGISTRY_TEXTBOOKS_DIR,
     REPO_ROOT,
-    TEXTBOOKS_DIR,
     ensure_component_directories,
+    resolve_open_model_path,
 )
+from scripts.storage.paths import artifact_path
 
 
 def test_paths_relative_hierarchy() -> None:
     """Verify that all paths have the expected parent-child relationships."""
-    assert OPEN_MODEL_DATA_DIR == REPO_ROOT / "data" / "projects" / "open_model_data"
-    assert COMPONENTS_DIR == OPEN_MODEL_DATA_DIR / "components"
-    assert DECOLONIZATION_DIR == COMPONENTS_DIR / "decolonization"
-    assert IDIOMS_DIR == COMPONENTS_DIR / "idioms"
-    assert GRAMMAR_DIR == COMPONENTS_DIR / "grammar"
-    assert TEXTBOOKS_DIR == COMPONENTS_DIR / "textbooks"
-    assert DIALECTS_DIR == COMPONENTS_DIR / "dialects"
+    assert REGISTRY_OPEN_MODEL_DATA_DIR == REPO_ROOT / "registry" / "projects" / "open_model_data"
+    assert ARTIFACT_OPEN_MODEL_DATA_DIR == REPO_ROOT / "data" / "projects" / "open_model_data"
+    for registry, artifact in (
+        (REGISTRY_COMPONENTS_DIR, ARTIFACT_COMPONENTS_DIR),
+        (REGISTRY_RELEASE_DIR, ARTIFACT_RELEASE_DIR),
+        (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR),
+    ):
+        assert registry.parent == REGISTRY_OPEN_MODEL_DATA_DIR
+        assert artifact.parent == ARTIFACT_OPEN_MODEL_DATA_DIR
+    assert REGISTRY_DECOLONIZATION_DIR == REGISTRY_COMPONENTS_DIR / "decolonization"
+    assert REGISTRY_IDIOMS_DIR == REGISTRY_COMPONENTS_DIR / "idioms"
+    assert REGISTRY_GRAMMAR_DIR == REGISTRY_COMPONENTS_DIR / "grammar"
+    assert REGISTRY_TEXTBOOKS_DIR == REGISTRY_COMPONENTS_DIR / "textbooks"
+    assert REGISTRY_DIALECTS_DIR == REGISTRY_COMPONENTS_DIR / "dialects"
+    assert REGISTRY_CORRECTION_PROTECTION_DIR == REGISTRY_RELEASE_DIR / "correction_protection_v1"
+    assert ARTIFACT_CORRECTION_PROTECTION_DIR == ARTIFACT_RELEASE_DIR / "correction_protection_v1"
+    assert REGISTRY_ARCHIVED_ULDR_V1_DIR == REGISTRY_ARCHIVE_DIR / "uldr_v1_production"
+    assert ARTIFACT_ARCHIVED_ULDR_V1_DIR == ARTIFACT_ARCHIVE_DIR / "uldr_v1_production"
+    assert REGISTRY_QUARANTINED_HISTORICAL_DIR == REGISTRY_ARCHIVE_DIR / "quarantined_historical"
+    assert CONTRACTS_DIR == REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 
-    assert RELEASE_DIR == OPEN_MODEL_DATA_DIR / "release"
-    assert CORRECTION_PROTECTION_DIR == RELEASE_DIR / "correction_protection_v1"
 
-    assert ARCHIVE_DIR == OPEN_MODEL_DATA_DIR / "archive"
-    assert ARCHIVED_ULDR_V1_DIR == ARCHIVE_DIR / "uldr_v1_production"
-    assert QUARANTINED_HISTORICAL_DIR == ARCHIVE_DIR / "quarantined_historical"
+def test_resolve_open_model_path_follows_classification(tmp_path: Path) -> None:
+    """K members resolve under registry; A members stay under data."""
+    receipt = "data/projects/open_model_data/canary/pilot_canary_receipt.json"
+    dataset = "data/projects/open_model_data/canary/pilot_canary_train_200.jsonl"
+    assert resolve_open_model_path(receipt) == REGISTRY_OPEN_MODEL_DATA_DIR / "canary/pilot_canary_receipt.json"
+    assert resolve_open_model_path(dataset) == ARTIFACT_OPEN_MODEL_DATA_DIR / "canary/pilot_canary_train_200.jsonl"
+    assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
+    moved = resolve_open_model_path(
+        REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/source_work_locator_index_v1.compact.jsonl"
+    )
+    assert moved == ARTIFACT_OPEN_MODEL_DATA_DIR / "evidence/source_work_locator_index_v1.compact.jsonl"
+    fixture_receipt = resolve_open_model_path(receipt, repo=tmp_path)
+    assert fixture_receipt == tmp_path / "registry/projects/open_model_data/canary/pilot_canary_receipt.json"
+    assert resolve_open_model_path("data/sources.db", repo=tmp_path) == tmp_path / "data/sources.db"
+    mixed = resolve_open_model_path("data/projects/open_model_data/canary", repo=tmp_path)
+    assert mixed == tmp_path / "data/projects/open_model_data/canary"
+    decolonization = resolve_open_model_path("data/projects/open_model_data/components/decolonization", repo=tmp_path)
+    assert decolonization == tmp_path / "data/projects/open_model_data/components/decolonization"
 
-    assert CONTRACTS_DIR == OPEN_MODEL_DATA_DIR / "contracts"
+
+def test_resolve_open_model_path_rejects_unclassified_file(tmp_path: Path) -> None:
+    """A file absent from the classification table fails; directory prefixes still resolve."""
+    missing = "data/projects/open_model_data/inventory/not_in_classification_table.json"
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(missing)
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(missing, repo=tmp_path)
+    absolute = tmp_path / missing
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(absolute)
+    assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
 
 
 def test_tombstone_exists_in_archived_uldr_v1() -> None:
     """Verify that uldr_v1_production carries its tombstone."""
-    tombstone = ARCHIVED_ULDR_V1_DIR / "TOMBSTONE.md"
+    tombstone = REGISTRY_ARCHIVED_ULDR_V1_DIR / "TOMBSTONE.md"
     assert tombstone.is_file()
     content = tombstone.read_text(encoding="utf-8")
     assert "TOMBSTONE" in content
@@ -57,10 +102,20 @@ def test_tombstone_exists_in_archived_uldr_v1() -> None:
 
 
 def test_active_correction_protection_intact() -> None:
-    """Verify that correction_protection_v1 is intact in release/."""
-    assert CORRECTION_PROTECTION_DIR.is_dir()
-    assert (CORRECTION_PROTECTION_DIR / "cases.jsonl").is_file()
-    assert (CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
+    """Registry half of correction_protection_v1 stays readable without artifacts."""
+    assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
+    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
+
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
+def test_active_correction_protection_cases_artifact_present() -> None:
+    """The cases payload is an artifact; skip cleanly when it is not hydrated."""
+    assert artifact_path(
+        "open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl"
+    ).is_file()
 
 
 def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -68,12 +123,11 @@ def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.Monkey
     import scripts.projects.open_model_data.paths as paths_mod
 
     test_components = tmp_path / "components"
-    monkeypatch.setattr(paths_mod, "COMPONENTS_DIR", test_components)
-    monkeypatch.setattr(paths_mod, "DECOLONIZATION_DIR", test_components / "decolonization")
-    monkeypatch.setattr(paths_mod, "IDIOMS_DIR", test_components / "idioms")
-    monkeypatch.setattr(paths_mod, "GRAMMAR_DIR", test_components / "grammar")
-    monkeypatch.setattr(paths_mod, "TEXTBOOKS_DIR", test_components / "textbooks")
-    monkeypatch.setattr(paths_mod, "DIALECTS_DIR", test_components / "dialects")
+    monkeypatch.setattr(paths_mod, "REGISTRY_DECOLONIZATION_DIR", test_components / "decolonization")
+    monkeypatch.setattr(paths_mod, "REGISTRY_IDIOMS_DIR", test_components / "idioms")
+    monkeypatch.setattr(paths_mod, "REGISTRY_GRAMMAR_DIR", test_components / "grammar")
+    monkeypatch.setattr(paths_mod, "REGISTRY_TEXTBOOKS_DIR", test_components / "textbooks")
+    monkeypatch.setattr(paths_mod, "REGISTRY_DIALECTS_DIR", test_components / "dialects")
 
     ensure_component_directories()
 
@@ -91,22 +145,22 @@ def test_is_archived_or_quarantined_path() -> None:
         is_archived_or_quarantined_path,
     )
 
-    assert is_archived_or_quarantined_path(ARCHIVE_DIR) is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR) is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft") is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
-    assert is_archived_or_quarantined_path(QUARANTINED_HISTORICAL_DIR) is True
+    for archive in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR):
+        assert is_archived_or_quarantined_path(archive) is True
+    assert is_archived_or_quarantined_path(REGISTRY_ARCHIVED_ULDR_V1_DIR) is True
+    assert is_archived_or_quarantined_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
+    assert is_archived_or_quarantined_path(REGISTRY_QUARANTINED_HISTORICAL_DIR) is True
 
-    assert is_archived_or_quarantined_path(RELEASE_DIR) is False
-    assert is_archived_or_quarantined_path(CORRECTION_PROTECTION_DIR) is False
-    assert is_archived_or_quarantined_path(COMPONENTS_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_RELEASE_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_CORRECTION_PROTECTION_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_COMPONENTS_DIR) is False
     assert is_archived_or_quarantined_path(None) is False
 
     with pytest.raises(ValueError, match="Prohibited"):
-        assert_not_archived_path(ARCHIVED_ULDR_V1_DIR / "sft", context="test")
+        assert_not_archived_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft", context="test")
 
     # Should not raise
-    assert_not_archived_path(CORRECTION_PROTECTION_DIR, context="test")
+    assert_not_archived_path(REGISTRY_CORRECTION_PROTECTION_DIR, context="test")
     assert_not_archived_path(None, context="test")
 
 
@@ -131,7 +185,7 @@ def test_dialect_builder_refuses_archive_replay(isolated_vesum_db: Path) -> None
             vesum_db=isolated_vesum_db,
             sft_dialect_quota=0,
             replay_quota=10,
-            replay_shards_dir=ARCHIVED_ULDR_V1_DIR / "sft",
+            replay_shards_dir=ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft",
         )
 
 
@@ -242,10 +296,7 @@ def test_execute_mining_and_release_receipt_generation_derived_counts(
 
     # Case 1: Default execution (replay_quota = 0 -> 500 dialect, 0 replay)
     out_dir_1 = tmp_path / "out1"
-    mock_sft_1 = [
-        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
-        for i in range(500)
-    ]
+    mock_sft_1 = [{"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False} for i in range(500)]
     monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_1)
 
     receipt_1 = mdc.execute_mining_and_release(
@@ -271,12 +322,8 @@ def test_execute_mining_and_release_receipt_generation_derived_counts(
 
     # Case 2: Mixed execution with replay (e.g. 450 dialect, 50 replay)
     out_dir_2 = tmp_path / "out2"
-    mock_sft_2 = [
-        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
-        for i in range(450)
-    ] + [
-        {"trajectory_id": f"traj.replay.{i}", "is_calque_or_russianism": True}
-        for i in range(50)
+    mock_sft_2 = [{"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False} for i in range(450)] + [
+        {"trajectory_id": f"traj.replay.{i}", "is_calque_or_russianism": True} for i in range(50)
     ]
     monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_2)
 

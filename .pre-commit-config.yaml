@@ -73,10 +73,15 @@ repos:
       - id: check-added-large-files
         name: block accidentally large files
         args: [--maxkb=2000]
-        exclude: ^data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors$
+        # The P3 CI capture is prefix-packed and still 2273KB. It is the phase
+        # record, not an accidental blob. The 2000KB cap still applies to
+        # everything else.
+        exclude: ^(?:data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors|registry/artifacts/test-baseline\.p3\.json)$
       - id: check-merge-conflict
       - id: end-of-file-fixer
-        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
+        # The exact frozen K blob lacks a trailing newline; its classified
+        # bytes must survive the P3 migration unchanged.
+        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/|registry/projects/open_model_data/admission/phase3_vspu_post_ingest_audit_v1\.json$)
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
         exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)

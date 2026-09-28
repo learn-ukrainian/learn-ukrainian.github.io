@@ -17,14 +17,16 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_source_custody_access as custody
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 
 ROOT = Path(__file__).resolve().parents[2]
-CONFIG_PATH = Path("data/projects/open_model_data/custody/v4_source_custody_access_config_v1.json")
-CONFIG_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
-ITEM_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
-MISSING_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
-RECEIPT_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
+REGISTRY_CUSTODY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "custody"
+CONFIG_PATH = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_config_v1.json"
+CONFIG_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
+ITEM_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
+MISSING_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
+RECEIPT_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
 
 
 @pytest.fixture
@@ -130,7 +132,7 @@ def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monk
 
 
 def test_first_eligible_cohort_100_percent_accessible() -> None:
-    receipt_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_path = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     first_cohort = receipt["summary"]["first_eligible_cohort"]
 
@@ -145,7 +147,7 @@ def test_first_eligible_cohort_100_percent_accessible() -> None:
 
 
 def test_missing_report_records_unmounted_archive_and_owner() -> None:
-    missing_path = Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json")
+    missing_path = REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json"
     report = json.loads(missing_path.read_text(encoding="utf-8"))
 
     assert report["schema_version"] == "v4_source_custody_missing_report_v1"
@@ -165,6 +167,10 @@ def test_missing_report_records_unmounted_archive_and_owner() -> None:
     assert "literary-non-ocr" in proceed["permitted_cohort_ids"]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_index_records_pass_schema_and_have_no_corpus_text() -> None:
     index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
     schema = json.loads(ITEM_SCHEMA.read_text(encoding="utf-8"))
@@ -377,6 +383,10 @@ def test_discrepant_database_chunks_fail_closed(tmp_path: Path) -> None:
     assert missing["reason"] == "database_content_does_not_match_lineage_chunk_evidence"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: Path, repo_root: Path) -> None:
     """Finding 3: Verify must reject contradictory index records and recompute/reject forged receipt summaries."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -399,11 +409,13 @@ def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: P
         "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
     )
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        (custody_orig / "v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
     # Re-hash index into receipt to isolate semantic/schema rejection from simple hash mismatch
-    receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_data = json.loads(
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
+    )
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
     receipt_data["receipt_id"] = custody._make_receipt_id(
         receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
@@ -418,7 +430,9 @@ def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: P
     (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_bytes(
         (custody_orig / "v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
-    receipt_forged = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_forged = json.loads(
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
+    )
     receipt_forged["summary"]["accessible_sources_count"] += 999
     (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_forged), encoding="utf-8")
 
@@ -426,9 +440,13 @@ def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: P
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=out_dir)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_hash_tampering(tmp_path: Path, repo_root: Path) -> None:
     # Copy receipt to tmp_path and tamper with config hash
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_data["config_sha256"] = "0" * 64
 
@@ -441,7 +459,7 @@ def test_verify_detects_hash_tampering(tmp_path: Path, repo_root: Path) -> None:
         Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
 
@@ -449,6 +467,10 @@ def test_verify_detects_hash_tampering(tmp_path: Path, repo_root: Path) -> None:
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -458,10 +480,10 @@ def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root:
         Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
     # Test 1: Forged receipt_id
@@ -494,6 +516,10 @@ def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root:
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -515,10 +541,10 @@ def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> Non
     )
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
@@ -535,6 +561,10 @@ def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> Non
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -556,10 +586,10 @@ def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> 
     )
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
@@ -576,6 +606,10 @@ def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> 
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -597,10 +631,10 @@ def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path
     )
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
@@ -617,6 +651,10 @@ def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -638,10 +676,10 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
     )
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
@@ -658,6 +696,10 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_missing_provenance_index(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -682,10 +724,10 @@ def test_verify_detects_missing_provenance_index(tmp_path: Path, repo_root: Path
     )
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["config_sha256"] = expected_config_sha
@@ -755,6 +797,10 @@ def test_is_private_or_absolute_host_path() -> None:
     assert custody._is_private_or_absolute_host_path("path=foo/home/bar.txt")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     "bad_path",
     [
@@ -778,10 +824,10 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
     records = [json.loads(line) for line in index_lines[1:]]
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
     # Test private/absolute host path insertion in custody_resolution archive_store
@@ -808,6 +854,10 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     "bad_evidence_ref",
     [
@@ -830,10 +880,10 @@ def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root
     records = [json.loads(line) for line in index_lines[1:]]
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
     # Test private/absolute host path insertion in lineage evidence_ref
@@ -860,6 +910,10 @@ def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("field_path", "bad_val"),
     [
@@ -886,9 +940,7 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
     )
 
     missing_data = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
     target = missing_data
     for k in field_path[:-1]:
@@ -898,7 +950,7 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
@@ -917,6 +969,10 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: Path, repo_root: Path) -> None:
     valid_out = tmp_path / "out"
     custody_dir = valid_out / "data/projects/open_model_data/custody"
@@ -941,16 +997,14 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
     idx_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     missing_data = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
     missing_data["scope"] = prose
 
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data, indent=2) + "\n", encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_updated = copy.deepcopy(receipt_data)
     receipt_updated["config_sha256"] = custody.sha256_file(test_cfg_path)
@@ -1097,6 +1151,10 @@ def test_input_root_takes_precedence_over_cwd(tmp_path: Path) -> None:
     assert resolved == custom_prov
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_cohort_id_mismatch_in_summary(tmp_path: Path, repo_root: Path) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
@@ -1106,10 +1164,10 @@ def test_verify_detects_cohort_id_mismatch_in_summary(tmp_path: Path, repo_root:
         Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
     # Tamper first_eligible_cohort cohort_id
@@ -1326,6 +1384,10 @@ def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Pat
         custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path, repo_root: Path) -> None:
     """Codex finding r3980769771: Blocked record with status=CONFIRMED_NATIVE and lineage_mode=unknown must fail."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -1354,11 +1416,13 @@ def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path,
         "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
     )
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        (custody_orig / "v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
     # Re-hash index and update receipt summary counts to test semantic rejection
-    receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_data = json.loads(
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
+    )
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
     receipt_data["receipt_id"] = custody._make_receipt_id(
         receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
@@ -1374,6 +1438,10 @@ def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path,
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_path: Path, repo_root: Path) -> None:
     """Validate that any mismatch between lineage status and mode is rejected by verify."""
     custody_orig = Path("data/projects/open_model_data/custody")
@@ -1396,9 +1464,11 @@ def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_p
         "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
     )
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        (custody_orig / "v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
-    receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_data = json.loads(
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
+    )
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
     receipt_data["receipt_id"] = custody._make_receipt_id(
         receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
@@ -1453,9 +1523,13 @@ def test_bounded_custody_reader_rejects_non_positive_batch_size(tmp_path: Path) 
         reader.read_source_stream("tbl", "f1", batch_size=-10)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(tmp_path: Path, repo_root: Path) -> None:
     """Receipt summary must count all textbooks with unmounted host archives as missing_on_host (122)."""
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     assert receipt_data["summary"]["textbook_cohort"]["missing_on_host"] == 122
 
@@ -1467,7 +1541,7 @@ def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(t
         Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
     # Tamper missing_on_host back to 60 (only counting not-permitted) and verify rejection
@@ -1481,6 +1555,10 @@ def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(t
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("meta_key", "tampered_val", "expected_err"),
     [
@@ -1505,14 +1583,12 @@ def test_verify_detects_tampered_missing_report_metadata(
 
     missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
     missing_data = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
     missing_data[meta_key] = tampered_val
     missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
@@ -1529,6 +1605,10 @@ def test_verify_detects_tampered_missing_report_metadata(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_tampered_missing_report_items(tmp_path: Path, repo_root: Path) -> None:
     """Missing report items must strictly match derived missing items from the access index (ACCESS-4)."""
     tampered_out = tmp_path / "out"
@@ -1540,11 +1620,9 @@ def test_verify_detects_tampered_missing_report_items(tmp_path: Path, repo_root:
     )
 
     orig_missing = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
     # Case 1: Dropping an item (count mismatch)
@@ -1611,7 +1689,7 @@ def test_receipt_id_includes_missing_report_sha256() -> None:
     id2 = custody._make_receipt_id("cfg_hash", "idx_hash", "missing_hash_2")
     assert id1 != id2
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     expected_id = custody._make_receipt_id(
         receipt_data["config_sha256"],
@@ -1720,6 +1798,10 @@ def test_cohort_spec_and_reader_reject_unapproved_table_names_and_sql_injection(
         reader.read_source_stream("literary_texts WHERE 1=1 --", "dummy")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path, repo_root: Path) -> None:
     """Missing report verification detects duplicate source IDs and omitted items."""
     tampered_out = tmp_path / "out"
@@ -1731,9 +1813,7 @@ def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path
     )
 
     orig_missing = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
 
     # Duplicate an entry while keeping list length identical (replaces entry 1 with copy of entry 0)
@@ -1742,7 +1822,7 @@ def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path
     dup_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     dup_path.write_text(json.dumps(dup_missing), encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_dup = copy.deepcopy(receipt_data)
     receipt_dup["missing_report_sha256"] = custody.sha256_file(dup_path)
@@ -1757,6 +1837,10 @@ def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 @pytest.mark.parametrize(
     ("mutation_key", "mutation_val"),
     [
@@ -1778,16 +1862,14 @@ def test_verify_detects_tampered_progression_decision(
     )
 
     missing_data = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
     missing_data["accessible_eligible_sources_permitted_to_proceed"][mutation_key] = mutation_val
 
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
@@ -1807,6 +1889,10 @@ def test_verify_detects_tampered_progression_decision(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_tampered_primary_store_in_index(tmp_path: Path, repo_root: Path) -> None:
     """Index record with tampered primary_store (e.g. SQL injection suffix) is rejected by verify()."""
     tampered_out = tmp_path / "out"
@@ -1824,10 +1910,10 @@ def test_verify_detects_tampered_primary_store_in_index(tmp_path: Path, repo_roo
     idx_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
@@ -1898,6 +1984,10 @@ def test_validate_cohort_spec_and_lineage_reject_non_ocr_excluded_modes(tmp_path
             custody.check_chunk_file_lineage(tmp_path / "dummy.jsonl", excluded_modes=[bad_mode])
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+)
 def test_validate_and_resolve_paths_preserves_cwd_fallback(tmp_path: Path, repo_root: Path) -> None:
     """When an input is not present under input_root, validate_and_resolve_paths falls back to cwd."""
     out_dir = tmp_path / "out"
@@ -2121,9 +2211,7 @@ def test_verify_detects_unmounted_textbook_tampered_as_accessible(
     )
 
     orig_missing = json.loads(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8")
     )
     missing_tampered = copy.deepcopy(orig_missing)
     missing_tampered["missing_inputs"] = [
@@ -2132,7 +2220,7 @@ def test_verify_detects_unmounted_textbook_tampered_as_accessible(
     missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_tampered), encoding="utf-8")
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
@@ -2293,10 +2381,10 @@ def test_verify_detects_tampered_database_stream_metrics(
     idx_path.write_text("\n".join(lines_rec) + "\n", encoding="utf-8")
 
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
@@ -2364,10 +2452,10 @@ def test_verify_detects_unpermitted_source_in_database(
     idx_path.write_text("\n".join(lines_unperm) + "\n", encoding="utf-8")
 
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
@@ -2416,13 +2504,11 @@ def test_verify_detects_chunk_file_missing_for_permitted_textbook(
     idx_path.write_text("\n".join(orig_lines) + "\n", encoding="utf-8")
 
     missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
-    missing_path.write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
-    )
+    missing_path.write_bytes((REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes())
 
     idx_hash = custody.sha256_file(idx_path)
     missing_hash = custody.sha256_file(missing_path)
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["config_sha256"] = cfg_hash
@@ -2478,10 +2564,10 @@ def test_verify_detects_mismatched_custody_status_or_host_reachable(
     idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
 
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
@@ -2498,6 +2584,10 @@ def test_verify_detects_mismatched_custody_status_or_host_reachable(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_detects_index_header_tampering_and_corpus_leakage(tmp_path: Path, repo_root: Path) -> None:
     """verify() strictly validates index header schema and rejects unexpected keys or leaked text (Finding 3)."""
     tampered_out = tmp_path / "out"
@@ -2516,10 +2606,10 @@ def test_verify_detects_index_header_tampering_and_corpus_leakage(tmp_path: Path
     idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
 
     (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json").read_bytes()
     )
 
-    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_orig = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
@@ -2579,6 +2669,10 @@ def test_precompute_table_source_metrics_filters_selected_sources(tmp_path: Path
     conn.close()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
 def test_verify_handles_stub_database_with_missing_tables(tmp_path: Path, repo_root: Path) -> None:
     """verify() treats stub databases lacking required tables as unprovisioned when require_database=False,
     and raises CustodyAccessError mentioning missing tables when require_database=True.
@@ -2601,7 +2695,8 @@ def test_verify_handles_stub_database_with_missing_tables(tmp_path: Path, repo_r
         "v4_source_custody_missing_report_v1.json",
         "v4_source_custody_access_receipt_v1.json",
     ):
-        (tgt_custody / fname).write_bytes((Path("data/projects/open_model_data/custody") / fname).read_bytes())
+        source_dir = Path("data/projects/open_model_data/custody") if fname.endswith(".jsonl") else REGISTRY_CUSTODY_DIR
+        (tgt_custody / fname).write_bytes((source_dir / fname).read_bytes())
 
     # 3. When require_database=False (unprovisioned CI with stub database on disk),
     # verify() detects missing tables, leaves db_conn=None, and passes without error.

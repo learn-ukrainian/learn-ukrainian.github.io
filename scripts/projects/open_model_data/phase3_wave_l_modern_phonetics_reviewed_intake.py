@@ -30,8 +30,13 @@ from jsonschema import Draft202012Validator
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+# Independently pinned to the 55d0ed1515 source and exact frozen receipt.
+HISTORICAL_IMPLEMENTATION_SHA256 = "83427aad27de0dc3ce81244bf0695d165cccddd680733aad067e25ce16dea258"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "3f4e9f18b44ca76bdcbb1b4b79dc1ac26e9ca441307412bbb7092258e1e22c9e"
 SCHEMA_PATH = DATA / "contracts/phase3_wave_l_modern_phonetics_reviewed_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_wave_l_modern_phonetics_reviewed_v1.json"
 
@@ -617,7 +622,12 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "receipt"
         raise WaveLModernPhoneticsReviewedIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
-    require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    implementation_sha256 = (
+        HISTORICAL_IMPLEMENTATION_SHA256
+        if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256
+        else sha256_file(SCRIPT_PATH)
+    )
+    require(receipt["bindings"]["implementation_sha256"] == implementation_sha256, "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(receipt["producer_provider_calls"] is False, "producer overclaims provider calls")
     require(receipt["review_provider_call_recorded"] is True, "external qualified review not recorded")

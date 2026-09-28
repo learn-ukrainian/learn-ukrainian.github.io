@@ -24,6 +24,36 @@ from typing import Any
 
 import jsonschema
 
+from scripts.storage.artifacts import write_artifact_set
+from scripts.storage.paths import artifact_set
+
+_DELIVERY_RECEIPT = "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+
+
+def _publish_delivery_receipt(repo_root: Path, output: Path, content: bytes) -> None:
+    registry = repo_root / "registry/projects/open_model_data"
+    resolved = output.resolve()
+    if resolved != repo_root / _DELIVERY_RECEIPT:
+        if output.absolute().is_relative_to(registry) or resolved.is_relative_to(registry):
+            raise ValueError(f"unbound managed delivery receipt: {output}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(content)
+        return
+    snapshot = artifact_set("open_model_other_indexes", repo=repo_root)
+    expected = snapshot.manifest["set_descriptor"]["companions"][_DELIVERY_RECEIPT]
+    digest = hashlib.sha256((json.dumps(snapshot.manifest, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
+    write_artifact_set(
+        repo_root,
+        "open_model_other_indexes",
+        "v4_reproduce_deliverables",
+        {},
+        expected_hashes={},
+        expected_members={entry["path"][5:] for entry in snapshot.manifest["entries"]},
+        companions={_DELIVERY_RECEIPT: (expected, lambda staged: staged.write_bytes(content))},
+        expected_manifest=digest,
+    )
+
+
 DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MAX_FILE_SIZE_BYTES = 2000 * 1024  # 2000 KB pre-commit ceiling
 
@@ -228,12 +258,16 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
 
 
 def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
-    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    schema_path = (
+        repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    )
     if not schema_path.is_file():
         script_root = Path(__file__).resolve().parents[3]
         for p in [repo_root, Path.cwd(), script_root]:
             for parent in [p, *p.parents]:
-                cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                cand = (
+                    parent / "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                )
                 if cand.is_file():
                     schema_path = cand
                     break
@@ -499,11 +533,15 @@ def build_delivery_receipt(
     receipt_out: Path,
 ) -> dict[str, Any]:
     """Reproduce deliverables and emit delivery receipt (DELIVERY-1..6)."""
-    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    dataset_manifest_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    )
     dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
-    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    dataset_receipt_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    )
     lang_index_path = repo_root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
-    study_recipe_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+    study_recipe_path = repo_root / "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
     study_runs_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
     study_receipt_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json"
 
@@ -722,13 +760,12 @@ def build_delivery_receipt(
 
     assert_no_private_host_paths(delivery_data)
     receipt_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
+        repo_root / "registry/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
     )
     receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=delivery_data, schema=receipt_schema)
 
-    receipt_out.parent.mkdir(parents=True, exist_ok=True)
-    receipt_out.write_text(json.dumps(delivery_data, indent=2) + "\n", encoding="utf-8")
+    _publish_delivery_receipt(repo_root, receipt_out, (json.dumps(delivery_data, indent=2) + "\n").encode())
 
     return delivery_data
 
@@ -746,7 +783,7 @@ def verify_delivery(
         assert_no_private_host_paths(receipt_data)
 
         receipt_schema_path = (
-            repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
+            repo_root / "registry/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
         )
         receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
         jsonschema.validate(instance=receipt_data, schema=receipt_schema)
@@ -792,9 +829,13 @@ def verify_delivery(
         resolved_docs[doc_key] = doc_path
 
     # Check and rehash dataset deliverables
-    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    dataset_manifest_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    )
     dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
-    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    dataset_receipt_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    )
     lang_index_path = repo_root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
 
     for p in [dataset_manifest_path, dataset_records_path, dataset_receipt_path, lang_index_path]:
@@ -812,7 +853,7 @@ def verify_delivery(
         return False
 
     # Check and rehash learning study deliverables
-    study_recipe_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+    study_recipe_path = repo_root / "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
     study_runs_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
     study_receipt_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json"
 
@@ -830,7 +871,11 @@ def verify_delivery(
 
     verify_study = _get_verify_study()
 
-    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+    try:
+        study_ok = verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path)
+    except ValueError:
+        return False
+    if not study_ok:
         return False
 
     # Validate runs against study receipt
@@ -980,7 +1025,7 @@ def main() -> int:
     parser.add_argument(
         "--receipt",
         type=Path,
-        default=Path("data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"),
+        default=Path(_DELIVERY_RECEIPT),
     )
 
     args = parser.parse_args()

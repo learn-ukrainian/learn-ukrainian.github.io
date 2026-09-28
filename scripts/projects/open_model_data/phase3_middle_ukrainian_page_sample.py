@@ -32,7 +32,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import ca
 ROOT = Path(__file__).resolve().parents[3]
 RENDERER_PATH = ROOT / "scripts/projects/open_model_data/phase3_middle_ukrainian_page_sample_render.js"
 RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/phase3_middle_ukrainian_page_sample_receipt_v1.schema.json"
+    ROOT / "registry/projects/open_model_data/contracts/phase3_middle_ukrainian_page_sample_receipt_v1.schema.json"
 )
 
 SCHEMA_VERSION = "phase3_middle_ukrainian_page_sample_receipt_v1"

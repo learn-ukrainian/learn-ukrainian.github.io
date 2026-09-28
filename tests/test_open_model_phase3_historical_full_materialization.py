@@ -13,19 +13,13 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_historical_full_materialization as full
 from scripts.projects.open_model_data import phase3_historical_materialization as base
 from scripts.projects.open_model_data import phase3_historical_representation as historical
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-GATE_PATH = (
-    ROOT
-    / "data/projects/open_model_data/admission/phase3_historical_full_materialization_gate_v1.json"
-)
-GATE_SCHEMA_PATH = (
-    ROOT
-    / "data/projects/open_model_data/contracts/phase3_historical_full_materialization_gate_v1.schema.json"
-)
+GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_full_materialization_gate_v1.json"
+GATE_SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_historical_full_materialization_gate_v1.schema.json"
 RECEIPT_SCHEMA_PATH = (
-    ROOT
-    / "data/projects/open_model_data/contracts/phase3_historical_full_materialization_receipt_v1.schema.json"
+    REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_historical_full_materialization_receipt_v1.schema.json"
 )
 
 UD_FIXTURE = """# newdoc = uk__fixture__1413
@@ -168,9 +162,9 @@ def test_tracked_gate_is_exact_reproducible_and_fail_closed() -> None:
 @pytest.mark.parametrize(
     "binding_name",
     [
-        "CANARY_MATERIALIZER_SHA256",
-        "HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256",
-        "LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256",
+        "CURRENT_MATERIALIZER_SHA256",
+        "CURRENT_HISTORICAL_REPRESENTATION_SHA256",
+        "CURRENT_LINGUISTIC_REPRESENTATION_SHA256",
         "PERIODIZATION_FREEZE_SHA256",
         "HISTORICAL_REPRESENTATION_SCHEMA_SHA256",
         "LINGUISTIC_REPRESENTATION_SCHEMA_SHA256",
@@ -229,13 +223,7 @@ def test_full_run_is_byte_deterministic(tmp_path: Path) -> None:
                 receipt_output=output / full.RECEIPT_FILENAME,
             )
         )
-        hashes.append(
-            {
-                path.name: base.file_sha256(path)
-                for path in output.iterdir()
-                if path.is_file()
-            }
-        )
+        hashes.append({path.name: base.file_sha256(path) for path in output.iterdir() if path.is_file()})
     assert receipts[0] == receipts[1]
     assert hashes[0] == hashes[1]
 

@@ -21,10 +21,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_SCHEMA = (
-    ROOT
-    / "data/projects/open_model_data/inventory/existing_asset_inventory_v1.schema.json"
+DEFAULT_SCHEMA = resolve_open_model_path(
+    "data/projects/open_model_data/inventory/existing_asset_inventory_v1.schema.json"
 )
 DEFAULT_OUTPUT_DIR = ROOT / "data/projects/open_model_data/inventory"
 LEDGER_NAME = "recovery_ledger_v1.jsonl"
@@ -95,9 +96,7 @@ FOLK_RECOVERY_COMMITS = {
     "kalendarna-obriadovist-zvychai": "cd46eb9e829ba5e3f40723c62db85fa4b6546e5f",
     "koliadky-shchedrivky": "cd46eb9e829ba5e3f40723c62db85fa4b6546e5f",
     "narodna-kultura-yak-systema": "cd46eb9e829ba5e3f40723c62db85fa4b6546e5f",
-    "narodni-viruvannia-mifolohiia-demonolohiia": (
-        "5f9d1697b83e234466f8c61a5ac014d5c6cc4c1e"
-    ),
+    "narodni-viruvannia-mifolohiia-demonolohiia": ("5f9d1697b83e234466f8c61a5ac014d5c6cc4c1e"),
     "zamovliannia-zaklynannia-prymovky": "5f9d1697b83e234466f8c61a5ac014d5c6cc4c1e",
 }
 ARCHIVED_PLANS_WITHOUT_MODULE_EVIDENCE = (
@@ -388,15 +387,10 @@ def _db_record(
             excluded_pending_review=True,
             internal_rag_reference=not evaluation_only,
             provenance_investigation=True,
-            redistribution_investigation=(
-                not evaluation_only
-                and data_boundary == "public_or_external_source"
-            ),
+            redistribution_investigation=(not evaluation_only and data_boundary == "public_or_external_source"),
         ),
         evidence_refs=(f"sqlite:sources.db#{table}",),
-        limitations=(
-            "Rights and per-source provenance are not normalized to source-record-v1.",
-        ),
+        limitations=("Rights and per-source provenance are not normalized to source-record-v1.",),
         details=details,
     )
 
@@ -414,25 +408,19 @@ def collect_database_records(
         )
         literary_coverage["periods"] = count_map(
             connection,
-            "SELECT language_period, COUNT(*) FROM literary_texts "
-            "GROUP BY language_period",
+            "SELECT language_period, COUNT(*) FROM literary_texts GROUP BY language_period",
         )
         literary_details = {
             "distinct_works": int(
-                connection.execute(
-                    "SELECT COUNT(DISTINCT work_id) FROM literary_texts"
-                ).fetchone()[0]
+                connection.execute("SELECT COUNT(DISTINCT work_id) FROM literary_texts").fetchone()[0]
             ),
             "rows_with_source_url": int(
                 connection.execute(
-                    "SELECT COUNT(*) FROM literary_texts "
-                    "WHERE COALESCE(source_url, '') <> ''"
+                    "SELECT COUNT(*) FROM literary_texts WHERE COALESCE(source_url, '') <> ''"
                 ).fetchone()[0]
             ),
             "source_groups": int(
-                connection.execute(
-                    "SELECT COUNT(DISTINCT source_file) FROM literary_texts"
-                ).fetchone()[0]
+                connection.execute("SELECT COUNT(DISTINCT source_file) FROM literary_texts").fetchone()[0]
             ),
         }
         records.append(
@@ -539,8 +527,7 @@ def collect_database_records(
         external_coverage = empty_coverage()
         external_coverage["registers"] = count_map(
             connection,
-            "SELECT register_tag, COUNT(*) FROM external_articles "
-            "GROUP BY register_tag",
+            "SELECT register_tag, COUNT(*) FROM external_articles GROUP BY register_tag",
         )
         records.append(
             _db_record(
@@ -580,11 +567,7 @@ def collect_database_records(
                 origin_class="unknown_origin",
                 data_boundary="project_internal",
                 coverage=wiki_coverage,
-                details={
-                    "reason_for_unknown_origin": (
-                        "Per-article author/model lineage was not reconstructed."
-                    )
-                },
+                details={"reason_for_unknown_origin": ("Per-article author/model lineage was not reconstructed.")},
             )
         )
 
@@ -617,9 +600,7 @@ def collect_database_records(
                         redistribution_investigation=True,
                     ),
                     evidence_refs=(f"sqlite:sources.db#{table}",),
-                    limitations=(
-                        "Counts are rows, not deduplicated lexemes or training tokens.",
-                    ),
+                    limitations=("Counts are rows, not deduplicated lexemes or training tokens.",),
                     details={"raw_locator_present": bool(raw_ref)},
                 )
             )
@@ -690,14 +671,8 @@ def collect_database_records(
 
     with connect_read_only(vesum_database) as connection:
         forms = row_count(connection, "forms")
-        lemmas = int(
-            connection.execute("SELECT COUNT(DISTINCT lemma) FROM forms").fetchone()[0]
-        )
-        word_forms = int(
-            connection.execute(
-                "SELECT COUNT(DISTINCT word_form) FROM forms"
-            ).fetchone()[0]
-        )
+        lemmas = int(connection.execute("SELECT COUNT(DISTINCT lemma) FROM forms").fetchone()[0])
+        word_forms = int(connection.execute("SELECT COUNT(DISTINCT word_form) FROM forms").fetchone()[0])
     records.append(
         make_record(
             asset_id="lexicon.vesum",
@@ -759,8 +734,7 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
                 ),
                 evidence_refs=(f"curriculum/l2-uk-en/{track}/",),
                 limitations=(
-                    "Operator-classified AI-generated direct Ukrainian; per-module "
-                    "generation lineage is incomplete.",
+                    "Operator-classified AI-generated direct Ukrainian; per-module generation lineage is incomplete.",
                 ),
             )
         )
@@ -830,21 +804,13 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
                 provenance_investigation=True,
             ),
             evidence_refs=("curriculum/l2-uk-en/bio/",),
-            limitations=(
-                "Writer/model lineage and the operator-reported unsatisfactory subset "
-                "are unresolved.",
-            ),
+            limitations=("Writer/model lineage and the operator-reported unsatisfactory subset are unresolved.",),
         )
     )
 
-    pedagogy_path = (
-        repo_root
-        / "data/datasets/hramatka_uk_pedagogy_v1/hramatka_uk_pedagogy_v1.jsonl"
-    )
+    pedagogy_path = repo_root / "data/datasets/hramatka_uk_pedagogy_v1/hramatka_uk_pedagogy_v1.jsonl"
     pedagogy_rows = [
-        json.loads(line)
-        for line in pedagogy_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        json.loads(line) for line in pedagogy_path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
     records.append(
         make_record(
@@ -880,23 +846,19 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
             ),
             details={
                 "model_seats": sorted({str(row.get("model_seat")) for row in pedagogy_rows}),
-                "quality_tiers": sorted(
-                    {str(row.get("quality_tier")) for row in pedagogy_rows}
-                ),
+                "quality_tiers": sorted({str(row.get("quality_tier")) for row in pedagogy_rows}),
             },
         )
     )
 
     heldout = json.loads(
-        (repo_root / "data/projects/ua_eval_harness/heldout_manifest_v1.json").read_text(
-            encoding="utf-8"
-        )
+        (repo_root / "data/projects/ua_eval_harness/heldout_manifest_v1.json").read_text(encoding="utf-8")
     )
     eval_rows = sum(
         1
-        for line in (
-            repo_root / "data/projects/ua_eval_harness/evalset_v1.jsonl"
-        ).read_text(encoding="utf-8").splitlines()
+        for line in (repo_root / "data/projects/ua_eval_harness/evalset_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
         if line.strip()
     )
     records.append(
@@ -952,9 +914,7 @@ def screen_unreachable_commits(
 ) -> dict[str, Any]:
     """Path-screen every unreachable commit without reading file bodies."""
     commit_ids = sorted(
-        line.split()[2]
-        for line in fsck_output.splitlines()
-        if re.match(r"unreachable commit [0-9a-f]+$", line)
+        line.split()[2] for line in fsck_output.splitlines() if re.match(r"unreachable commit [0-9a-f]+$", line)
     )
     scoped_hits: list[dict[str, Any]] = []
     for commit_id in commit_ids:
@@ -968,13 +928,7 @@ def screen_unreachable_commits(
             "-r",
             commit_id,
         ).splitlines()
-        scoped_paths = sorted(
-            {
-                path
-                for path in paths
-                if path.startswith(SCOPED_RECOVERY_PREFIXES)
-            }
-        )
+        scoped_paths = sorted({path for path in paths if path.startswith(SCOPED_RECOVERY_PREFIXES)})
         if scoped_paths:
             scoped_hits.append({"commit": commit_id, "paths": scoped_paths})
     return {
@@ -988,17 +942,10 @@ def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
     tracked = _run_git(repo_root, "ls-files").splitlines()
     archive_counts = {
         "archive": sum(path.startswith("archive/") for path in tracked),
-        "curriculum_archive": sum(
-            path.startswith("curriculum/l2-uk-en/_archive/") for path in tracked
-        ),
-        "folk_archived_plans": sum(
-            path.startswith("curriculum/l2-uk-en/plans/folk/_archive/")
-            for path in tracked
-        ),
+        "curriculum_archive": sum(path.startswith("curriculum/l2-uk-en/_archive/") for path in tracked),
+        "folk_archived_plans": sum(path.startswith("curriculum/l2-uk-en/plans/folk/_archive/") for path in tracked),
     }
-    weight_candidates = [
-        path for path in tracked if path.lower().endswith(WEIGHT_SUFFIXES)
-    ]
+    weight_candidates = [path for path in tracked if path.lower().endswith(WEIGHT_SUFFIXES)]
     records = [
         make_record(
             asset_id="git.tracked_archives",
@@ -1084,8 +1031,7 @@ def collect_git_records(repo_root: Path) -> list[dict[str, Any]]:
             ),
             evidence_refs=("curriculum/l2-uk-en/plans/folk/_archive/",),
             limitations=(
-                "No module.md evidence was found in Git; this does not prove the "
-                "modules never existed outside Git.",
+                "No module.md evidence was found in Git; this does not prove the modules never existed outside Git.",
             ),
             details={"plan_slugs": list(ARCHIVED_PLANS_WITHOUT_MODULE_EVIDENCE)},
         )
@@ -1152,26 +1098,16 @@ def collect_drive_records(
 ) -> list[dict[str, Any]]:
     literary_raw = _source_stems(drive_root / "literary_texts", "*.jsonl")
     literary_db = {
-        Path(str(row[0])).stem
-        for row in connection.execute("SELECT DISTINCT source_file FROM literary_texts")
+        Path(str(row[0])).stem for row in connection.execute("SELECT DISTINCT source_file FROM literary_texts")
     }
     textbook_raw = _source_stems(drive_root / "textbook_chunks", "**/*.jsonl")
-    textbook_db = {
-        Path(str(row[0])).stem
-        for row in connection.execute("SELECT DISTINCT source_file FROM textbooks")
-    }
+    textbook_db = {Path(str(row[0])).stem for row in connection.execute("SELECT DISTINCT source_file FROM textbooks")}
     private_present = {
-        source_id
-        for source_id, relative in PRIVATE_RAW_PATHS.items()
-        if (drive_root / relative).is_file()
+        source_id for source_id, relative in PRIVATE_RAW_PATHS.items() if (drive_root / relative).is_file()
     }
     public_chunk_db = textbook_db - set(PRIVATE_TEXTBOOK_SOURCES)
     db_only_public = sorted(public_chunk_db - textbook_raw)
-    deferred = sorted(
-        path.name
-        for path in (drive_root / "textbooks/_deferred_scans").glob("*.pdf")
-        if path.is_file()
-    )
+    deferred = sorted(path.name for path in (drive_root / "textbooks/_deferred_scans").glob("*.pdf") if path.is_file())
     topology = {
         name: sum(1 for path in (drive_root / name).rglob("*") if path.is_file())
         for name in (
@@ -1249,8 +1185,7 @@ def collect_drive_records(
                 "sqlite:sources.db#literary_texts",
             ),
             limitations=(
-                "Filename-stem reconciliation only; per-file JSONL line equality and "
-                "content hashes were not measured.",
+                "Filename-stem reconciliation only; per-file JSONL line equality and content hashes were not measured.",
             ),
             details={
                 "database_source_groups": len(literary_db),
@@ -1290,9 +1225,7 @@ def collect_drive_records(
                 "gdrive:learn-ukrainian-data/private_curriculum",
                 "sqlite:sources.db#textbooks",
             ),
-            limitations=(
-                "Per-file JSONL line equality and content hashes were not measured."
-            ),
+            limitations=("Per-file JSONL line equality and content hashes were not measured."),
             details={
                 "database_only_or_raw_chunk_unresolved": db_only_public,
                 "database_source_groups": len(textbook_db),
@@ -1336,11 +1269,7 @@ def collect_drive_records(
             lifecycle_states=("raw_but_uningested", "unknown_or_potentially_lost"),
             measurement_scope="metadata_only",
             metrics={
-                "files": sum(
-                    1
-                    for path in (drive_root / "raw/orphan-ocr").glob("*")
-                    if path.is_file()
-                ),
+                "files": sum(1 for path in (drive_root / "raw/orphan-ocr").glob("*") if path.is_file()),
                 "unit_label": "orphan_text_files",
             },
             coverage=empty_coverage(),
@@ -1412,31 +1341,20 @@ def aggregate_summary(
         by_origin[origin] += 0
     for boundary in DATA_BOUNDARIES:
         by_boundary[boundary] += 0
-    by_lifecycle = Counter(
-        state for record in records for state in record["lifecycle_states"]
-    )
+    by_lifecycle = Counter(state for record in records for state in record["lifecycle_states"])
     distinct = [record for record in records if record["measurement_scope"] == "distinct_content"]
 
     def metric_totals(group: Sequence[dict[str, Any]]) -> dict[str, Any]:
         numeric = ("characters", "lexical_words", "whitespace_tokens")
-        totals: dict[str, Any] = {
-            key: sum(int(record["metrics"].get(key, 0)) for record in group)
-            for key in numeric
-        }
+        totals: dict[str, Any] = {key: sum(int(record["metrics"].get(key, 0)) for record in group) for key in numeric}
         units: Counter[str] = Counter()
         for record in group:
-            units[record["metrics"]["unit_label"]] += int(
-                record["metrics"].get("content_units", 0)
-            )
+            units[record["metrics"]["unit_label"]] += int(record["metrics"].get("content_units", 0))
         totals["content_units_by_unit_label"] = dict(sorted(units.items()))
         return totals
 
     eligibility_views = {
-        key: sorted(
-            record["asset_id"]
-            for record in records
-            if record["eligibility"].get(key, False)
-        )
+        key: sorted(record["asset_id"] for record in records if record["eligibility"].get(key, False))
         for key in ELIGIBILITY_KEYS
     }
     return {
@@ -1448,15 +1366,11 @@ def aggregate_summary(
         },
         "distinct_content_totals": {
             "by_data_boundary": {
-                boundary: metric_totals(
-                    [record for record in distinct if record["data_boundary"] == boundary]
-                )
+                boundary: metric_totals([record for record in distinct if record["data_boundary"] == boundary])
                 for boundary in sorted({record["data_boundary"] for record in distinct})
             },
             "by_origin_class": {
-                origin: metric_totals(
-                    [record for record in distinct if record["origin_class"] == origin]
-                )
+                origin: metric_totals([record for record in distinct if record["origin_class"] == origin])
                 for origin in sorted({record["origin_class"] for record in distinct})
             },
         },
@@ -1470,9 +1384,7 @@ def aggregate_summary(
         },
         "repo_head": repo_head,
         "safety_assertions": {
-            "potential_training_admission_assets": len(
-                eligibility_views["potential_training_admission"]
-            ),
+            "potential_training_admission_assets": len(eligibility_views["potential_training_admission"]),
             "redistribution_cleared_assets": 0,
             "source_record_v1_admissions": 0,
         },
@@ -1484,11 +1396,7 @@ def aggregate_summary(
 
 def load_fixture_records(path: Path) -> list[dict[str, Any]]:
     if path.suffix == ".jsonl":
-        return [
-            json.loads(line)
-            for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, list):
         raise ValueError("fixture JSON must contain a list of ledger records")
@@ -1526,9 +1434,7 @@ def write_inventory(
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Build or fixture-check the existing Ukrainian asset inventory."
-    )
+    parser = argparse.ArgumentParser(description="Build or fixture-check the existing Ukrainian asset inventory.")
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--snapshot-date", required=True)

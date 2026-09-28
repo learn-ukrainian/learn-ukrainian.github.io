@@ -35,6 +35,8 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 
 def resolve_data_path(rel_path: str) -> Path:
     """Resolve a relative data path, falling back to git common dir for gitignored files."""
@@ -62,8 +64,12 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v06_ulif_phraseology"
 
-SCHEMA_EVAL_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_ulif_phraseology_eval_record.schema.json"
-SCHEMA_RECEIPT_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_ulif_phraseology_release_receipt.schema.json"
+SCHEMA_EVAL_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_ulif_phraseology_eval_record.schema.json"
+)
+SCHEMA_RECEIPT_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_ulif_phraseology_release_receipt.schema.json"
+)
 
 # Strict held-out classical authors with word boundaries and exact inflection suffixes (capital letter required).
 # Does NOT match lowercase common nouns like «гончар» (potter) or «стельмах» (cartwright), nor surnames like «Гончаренко».
@@ -1113,7 +1119,9 @@ def clean_raw_html_and_tags(text: str) -> str:
     text = re.sub(r"≤[^≥]*:≥:?\s*", "", text)
     text = re.sub(r"≤[^≥]+≥:\s*", "", text)
     # Strip editorial pronoun explanations (e.g. 'йому ≤сину≥' -> 'йому', 'Вони ≤шведи≥' -> 'Вони')
-    text = re.sub(r"\b(він|вона|воно|вони|його|йому|їй|їх|їм|ним|нею|ними|себе|собі)\s+≤[^≥]+≥", r"\1", text, flags=re.IGNORECASE)
+    text = re.sub(
+        r"\b(він|вона|воно|вони|його|йому|їй|їх|їм|ним|нею|ними|себе|собі)\s+≤[^≥]+≥", r"\1", text, flags=re.IGNORECASE
+    )
     # Preserve inner text of other ≤word≥ markup (characters, emphasis)
     text = re.sub(r"≤([^≥]+)≥", r"\1", text)
     text = re.sub(r"[≤≥\{\}\[\]]", "", text)
@@ -1127,7 +1135,7 @@ def extract_quote_for_author(text: str, author_name: str) -> str | None:
     clean_t = clean_stress_marks(text)
     pattern = re.compile(rf"\({re.escape(author_name)}\)")
     for m in pattern.finditer(clean_t):
-        prefix = clean_t[:m.start()]
+        prefix = clean_t[: m.start()]
         boundaries = [prefix.rfind(";"), prefix.rfind(")")]
         m_dot = list(re.finditer(r"\.\s+(?=[А-ЯІЇЄҐ—–-])", prefix))
         if m_dot:
@@ -1164,7 +1172,11 @@ def verify_phrase_in_vesum(phrase: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return True
     tokens = [t.lower() for t in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", phrase) if len(t) > 2]
     # Filter common prepositions / particles
-    content_tokens = [t for t in tokens if t not in {"під", "над", "перед", "через", "після", "для", "про", "без", "при", "між", "що", "щоб", "аби"}]
+    content_tokens = [
+        t
+        for t in tokens
+        if t not in {"під", "над", "перед", "через", "після", "для", "про", "без", "при", "між", "що", "щоб", "аби"}
+    ]
     if not content_tokens:
         return True
     for t in content_tokens:
@@ -1175,22 +1187,184 @@ def verify_phrase_in_vesum(phrase: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
 
 STOP_WORDS: set[str] = {
-    "в", "у", "на", "з", "зі", "із", "по", "за", "до", "від", "під", "над",
-    "перед", "через", "для", "про", "без", "при", "між", "поміж", "серед", "проти", "крізь",
-    "що", "як", "не", "чи", "та", "і", "й", "але", "або", "це", "же", "ж", "би", "б",
-    "хай", "нехай", "аби", "то", "от", "ось", "аж", "ба", "хоч", "ні", "ані",
-    "ніби", "наче", "немов", "немовби", "мов", "мовби", "нібито", "буцім", "начебто",
-    "там", "тут", "вже", "ще", "так", "теж", "дуже", "тоді", "тепер", "зараз", "скрізь", "всюди",
-    "я", "ти", "він", "вона", "воно", "вони", "ми", "ви", "мене", "мені", "мною", "тебе",
-    "тобі", "тобою", "його", "йому", "ним", "ньому", "її", "їй", "нею", "нього", "неї",
-    "них", "ними", "нас", "нам", "нами", "вас", "вам", "вами", "їх", "їм", "себе", "собі", "собою",
-    "хто", "кого", "кому", "ким", "чим", "чий", "чия", "чиє", "чиї", "чиїх", "чиїм",
-    "який", "яка", "яке", "які", "якого", "якій", "яким", "яких",
-    "цей", "ця", "ці", "цього", "цій", "цим", "цих", "той", "те", "ті", "того", "тій", "тим", "тих",
-    "такий", "така", "таке", "такі", "такого", "такій", "таким", "таких", "такому",
-    "де", "куди", "звідки", "коли", "чому", "тому",
-    "свій", "своя", "своє", "свої", "свого", "своїй", "своїм", "своїх", "мій", "твій", "наш", "ваш", "їхній",
-    "бути", "був", "була", "було", "були", "буде", "будуть", "буду", "будеш", "будемо", "будете", "бувши",
+    "в",
+    "у",
+    "на",
+    "з",
+    "зі",
+    "із",
+    "по",
+    "за",
+    "до",
+    "від",
+    "під",
+    "над",
+    "перед",
+    "через",
+    "для",
+    "про",
+    "без",
+    "при",
+    "між",
+    "поміж",
+    "серед",
+    "проти",
+    "крізь",
+    "що",
+    "як",
+    "не",
+    "чи",
+    "та",
+    "і",
+    "й",
+    "але",
+    "або",
+    "це",
+    "же",
+    "ж",
+    "би",
+    "б",
+    "хай",
+    "нехай",
+    "аби",
+    "то",
+    "от",
+    "ось",
+    "аж",
+    "ба",
+    "хоч",
+    "ні",
+    "ані",
+    "ніби",
+    "наче",
+    "немов",
+    "немовби",
+    "мов",
+    "мовби",
+    "нібито",
+    "буцім",
+    "начебто",
+    "там",
+    "тут",
+    "вже",
+    "ще",
+    "так",
+    "теж",
+    "дуже",
+    "тоді",
+    "тепер",
+    "зараз",
+    "скрізь",
+    "всюди",
+    "я",
+    "ти",
+    "він",
+    "вона",
+    "воно",
+    "вони",
+    "ми",
+    "ви",
+    "мене",
+    "мені",
+    "мною",
+    "тебе",
+    "тобі",
+    "тобою",
+    "його",
+    "йому",
+    "ним",
+    "ньому",
+    "її",
+    "їй",
+    "нею",
+    "нього",
+    "неї",
+    "них",
+    "ними",
+    "нас",
+    "нам",
+    "нами",
+    "вас",
+    "вам",
+    "вами",
+    "їх",
+    "їм",
+    "себе",
+    "собі",
+    "собою",
+    "хто",
+    "кого",
+    "кому",
+    "ким",
+    "чим",
+    "чий",
+    "чия",
+    "чиє",
+    "чиї",
+    "чиїх",
+    "чиїм",
+    "який",
+    "яка",
+    "яке",
+    "які",
+    "якого",
+    "якій",
+    "яким",
+    "яких",
+    "цей",
+    "ця",
+    "ці",
+    "цього",
+    "цій",
+    "цим",
+    "цих",
+    "той",
+    "те",
+    "ті",
+    "того",
+    "тій",
+    "тим",
+    "тих",
+    "такий",
+    "така",
+    "таке",
+    "такі",
+    "такого",
+    "такій",
+    "таким",
+    "таких",
+    "такому",
+    "де",
+    "куди",
+    "звідки",
+    "коли",
+    "чому",
+    "тому",
+    "свій",
+    "своя",
+    "своє",
+    "свої",
+    "свого",
+    "своїй",
+    "своїм",
+    "своїх",
+    "мій",
+    "твій",
+    "наш",
+    "ваш",
+    "їхній",
+    "бути",
+    "був",
+    "була",
+    "було",
+    "були",
+    "буде",
+    "будуть",
+    "буду",
+    "будеш",
+    "будемо",
+    "будете",
+    "бувши",
 }
 
 
@@ -1215,24 +1389,84 @@ AUTHOR_PATTERN = re.compile(
 author_pattern = AUTHOR_PATTERN
 
 EXCLUDED_AUTHOR_KEYWORDS = {
-    "присл", "приказк", "казк", "пісн", "творч", "газет", "журнал", "мовленн", "вип", "том", "нар."
+    "присл",
+    "приказк",
+    "казк",
+    "пісн",
+    "творч",
+    "газет",
+    "журнал",
+    "мовленн",
+    "вип",
+    "том",
+    "нар.",
 }
 
 DUMMY_PRONOUNS = [
-    "хто-небудь", "кому-небудь", "у кого-небудь", "кого-небудь", "чим-небудь", "що-небудь", "ким-небудь", "чиє-небудь"
+    "хто-небудь",
+    "кому-небудь",
+    "у кого-небудь",
+    "кого-небудь",
+    "чим-небудь",
+    "що-небудь",
+    "ким-небудь",
+    "чиє-небудь",
 ]
 
 DUMMY_STARTS = (
-    "хто-небудь", "кому-небудь", "у кого-небудь", "кого-небудь", "ким-небудь", "чим-небудь", "що-небудь", "чиє-небудь",
-    "хтось", "комусь", "когось", "кимсь", "чимсь", "щось"
+    "хто-небудь",
+    "кому-небудь",
+    "у кого-небудь",
+    "кого-небудь",
+    "ким-небудь",
+    "чим-небудь",
+    "що-небудь",
+    "чиє-небудь",
+    "хтось",
+    "комусь",
+    "когось",
+    "кимсь",
+    "чимсь",
+    "щось",
 )
 
 PRONOUN_TOKENS: set[str] = {
-    "я", "мене", "мені", "мною", "ти", "тебе", "тобі", "тобою",
-    "він", "вона", "воно", "вони", "його", "йому", "ним", "ньому",
-    "її", "їй", "нею", "нього", "неї", "них", "ними",
-    "ми", "нас", "нам", "нами", "ви", "вас", "вам", "вами", "їх", "їм",
-    "себе", "собі", "собою",
+    "я",
+    "мене",
+    "мені",
+    "мною",
+    "ти",
+    "тебе",
+    "тобі",
+    "тобою",
+    "він",
+    "вона",
+    "воно",
+    "вони",
+    "його",
+    "йому",
+    "ним",
+    "ньому",
+    "її",
+    "їй",
+    "нею",
+    "нього",
+    "неї",
+    "них",
+    "ними",
+    "ми",
+    "нас",
+    "нам",
+    "нами",
+    "ви",
+    "вас",
+    "вам",
+    "вами",
+    "їх",
+    "їм",
+    "себе",
+    "собі",
+    "собою",
 }
 
 SPEECH_VERB_RE = re.compile(
@@ -1246,14 +1480,13 @@ SPEECH_VERB_RE = re.compile(
 
 SPLICE_PUNCTUATION_RE = re.compile(
     r"(?:…|\.{2,})[?!]?\s*[,;:]"  # ellipsis followed by comma, semicolon, or colon (e.g. '..,', '…;', '…,')
-    r"|…[?!]?\s*\."                # Unicode ellipsis followed by a dot (e.g. '?… .', '… .', '….')
-    r"|\.\s+\."                    # lone dot or ellipsis followed by space and dot (e.g. '. .', '.. .')
-    r"|\.{4,}"                     # 4 or more dots in a row (e.g. '....')
-    r"|\s+\.\s+[-—–]"             # stray dot-dash (e.g. ' . —', ' . -')
+    r"|…[?!]?\s*\."  # Unicode ellipsis followed by a dot (e.g. '?… .', '… .', '….')
+    r"|\.\s+\."  # lone dot or ellipsis followed by space and dot (e.g. '. .', '.. .')
+    r"|\.{4,}"  # 4 or more dots in a row (e.g. '....')
+    r"|\s+\.\s+[-—–]"  # stray dot-dash (e.g. ' . —', ' . -')
 )
 
 SPACE_BEFORE_PUNCT_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ\d]\s+[.,;:?!](?:\s|$)")
-
 
 
 def is_headword_header(s: str, word: str) -> bool:
@@ -1269,11 +1502,42 @@ def is_headword_header(s: str, word: str) -> bool:
 
 
 LABEL_TOKENS: set[str] = {
-    "перев", "жарт", "вульг", "згруб", "запереч", "зневажл", "розм", "книжн",
-    "поет", "нар.-поет", "фольк", "безос", "лайл", "діал", "грубо", "грубе", "рідко",
-    "підсил", "також", "переважно", "додатка", "дієсл", "імен", "прикм", "присл",
-    "знач", "виг", "вставн", "част", "спол", "прийм", "академ", "перен", "образн",
-    "фам", "ірон",
+    "перев",
+    "жарт",
+    "вульг",
+    "згруб",
+    "запереч",
+    "зневажл",
+    "розм",
+    "книжн",
+    "поет",
+    "нар.-поет",
+    "фольк",
+    "безос",
+    "лайл",
+    "діал",
+    "грубо",
+    "грубе",
+    "рідко",
+    "підсил",
+    "також",
+    "переважно",
+    "додатка",
+    "дієсл",
+    "імен",
+    "прикм",
+    "присл",
+    "знач",
+    "виг",
+    "вставн",
+    "част",
+    "спол",
+    "прийм",
+    "академ",
+    "перен",
+    "образн",
+    "фам",
+    "ірон",
 }
 
 
@@ -1332,7 +1596,7 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     if not m_first_auth:
         return None
 
-    prefix_first = clean_d[:m_first_auth.start()].strip()
+    prefix_first = clean_d[: m_first_auth.start()].strip()
     prefix_first = re.sub(r"(\b[а-яіїєґ]+\.)([А-ЯІЇЄҐ])", r"\1 \2", prefix_first)
     prefix_first = re.sub(r"\bі т\.\s*ін\.", "і_т_ін.", prefix_first)
     prefix_first = re.sub(r"\bі под\.", "і_под.", prefix_first)
@@ -1340,16 +1604,21 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
 
     m_sense = re.search(r"(?:\b1\.\s*)", prefix_first)
     if m_sense:
-        after_sense = prefix_first[m_sense.end():].strip()
-        m_val = re.match(r"^(?:зі сл\..*?\.\s*|(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим)[^.]*?\.\s*)", after_sense)
-        body = after_sense[m_val.end():].strip() if m_val else after_sense
+        after_sense = prefix_first[m_sense.end() :].strip()
+        m_val = re.match(
+            r"^(?:зі сл\..*?\.\s*|(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим)[^.]*?\.\s*)", after_sense
+        )
+        body = after_sense[m_val.end() :].strip() if m_val else after_sense
     else:
-        m_header = re.search(r"(?:\b(?:і без додатка|без додатка)\.|\b(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл)\.)\s*", prefix_first)
+        m_header = re.search(
+            r"(?:\b(?:і без додатка|без додатка)\.|\b(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл)\.)\s*",
+            prefix_first,
+        )
         if m_header:
-            body = prefix_first[m_header.end():].strip()
+            body = prefix_first[m_header.end() :].strip()
         else:
             m_dot = re.search(r"\.\s+(?=[А-ЯІЇЄҐ])", prefix_first)
-            body = prefix_first[m_dot.end():].strip() if m_dot else prefix_first
+            body = prefix_first[m_dot.end() :].strip() if m_dot else prefix_first
 
     parts = [s.strip() for s in re.split(r"(?<=[.!?])\s+(?=[А-ЯІЇЄҐ—–-])", body) if s.strip()]
     if not parts:
@@ -1369,7 +1638,9 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     defn = re.sub(r"^(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим|чиє|чию)[^.]*?\.\s*", "", defn).strip()
     defn = re.sub(r"^(?:перев\.|також|переважно)[^.]*?\.\s*", "", defn).strip()
     defn = re.sub(r"^(?:зі сл\.|і без додатка|без додатка)\.?\s*", "", defn).strip()
-    defn = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе)\.\s*", "", defn).strip()
+    defn = re.sub(
+        r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе)\.\s*", "", defn
+    ).strip()
     defn = re.sub(r"^[,\s:;—–-]+", "", defn).strip()
     defn = defn.replace("і_т_ін.", "і т.ін.").replace("і_под.", "і под.").strip()
 
@@ -1406,7 +1677,7 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         if any(kw in auth.lower() for kw in EXCLUDED_AUTHOR_KEYWORDS) or auth.startswith("З "):
             continue
 
-        pref = clean_d[:m.start()]
+        pref = clean_d[: m.start()]
         prev_end = all_authors[i - 1].end() if i > 0 else 0
         last_semi = pref.rfind(";")
         d_idx = pref.find(raw_defn_stripped)
@@ -1456,7 +1727,6 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         register=reg,
         is_held_out=is_held,
     )
-
 
 
 def ukrainian_stem(word: str) -> str:
@@ -1510,7 +1780,9 @@ def get_word_lemma_or_stem(word: str, cur_ves: sqlite3.Cursor | None, cache: dic
 
 def get_phrase_lemmas(phrase: str, cur_ves: sqlite3.Cursor | None, cache: dict[str, str]) -> set[str]:
     """Tokenize a phrase, filter stop words, and extract set of lemmas/stems."""
-    words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", phrase) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+    words = [
+        w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", phrase) if len(w) >= 3 and w.lower() not in STOP_WORDS
+    ]
     return {get_word_lemma_or_stem(w, cur_ves, cache) for w in words}
 
 
@@ -1518,7 +1790,7 @@ def sanitize_calque_string(s: str) -> str:
     """Clean quotes, brackets, and extraneous punctuation from calque and authentic expressions."""
     s = clean_stress_marks(s)
     s = s.replace("’", "'").replace("`", "'")
-    s = re.sub(r'[\"«»“”„:;,.!?–—]+', " ", s)
+    s = re.sub(r"[\"«»“”„:;,.!?–—]+", " ", s)
     s = re.sub(r"(?<![а-яіїєґА-ЯІЇЄҐ'])[']|['](?![а-яіїєґА-ЯІЇЄҐ'])", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
@@ -1570,7 +1842,10 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
             # Reject known typos / corruptions / noisy student annotations (Finding 4)
             err_lower = err_c.lower()
             corr_lower = corr_c.lower()
-            if any(bad in err_lower or bad in corr_lower for bad in ["обуруд", "доктор", "майорівськ", "закритилас", "обертом", "чорт знає", "чорт вас"]):
+            if any(
+                bad in err_lower or bad in corr_lower
+                for bad in ["обуруд", "доктор", "майорівськ", "закритилас", "обертом", "чорт знає", "чорт вас"]
+            ):
                 continue
             # Disallow overlap with held-out curated or canonical
             if err_lower in disallowed_terms or corr_lower in disallowed_terms:
@@ -1741,7 +2016,9 @@ def generate_evaluation_benchmark(
 
         eval_id = f"eval_ulif_phras_{hashlib.sha256(f'calque_{i}_{c.calque}'.encode()).hexdigest()[:8]}"
         q_label = "росіянізму" if c.error_type == "F/Calque" else "порушення лексичної сполучуваності"
-        query = f"Поясніть, чому вираз «{c.calque}» вважається помилковим ({q_label}), та наведіть нормативний відповідник."
+        query = (
+            f"Поясніть, чому вираз «{c.calque}» вважається помилковим ({q_label}), та наведіть нормативний відповідник."
+        )
         r_steps = [
             f"1. Аналіз помилки: Слововживання «{c.calque}» є типовим прикладом {q_label}.",
             f"2. Лінгвістичне обґрунтування: {c.mechanism}",
@@ -1877,7 +2154,7 @@ def generate_evaluation_benchmark(
     max_shard_size_kb = 0.0
 
     for s_idx in range(shards_count):
-        shard_file_name = f"eval_shard_{s_idx+1:03d}_of_{shards_count:03d}.jsonl"
+        shard_file_name = f"eval_shard_{s_idx + 1:03d}_of_{shards_count:03d}.jsonl"
         shard_path = output_dir / shard_file_name
         start_i = s_idx * cases_per_shard
         end_i = len(eval_records) if s_idx == shards_count - 1 else (s_idx + 1) * cases_per_shard
@@ -1895,13 +2172,15 @@ def generate_evaluation_benchmark(
         if size_kb > max_shard_size_kb:
             max_shard_size_kb = size_kb
 
-        manifest_shards.append({
-            "shard_id": s_idx + 1,
-            "shard_file": shard_file_name,
-            "cases_count": len(shard_records),
-            "size_kb": size_kb,
-            "sha256": shard_hasher.hexdigest(),
-        })
+        manifest_shards.append(
+            {
+                "shard_id": s_idx + 1,
+                "shard_file": shard_file_name,
+                "cases_count": len(shard_records),
+                "size_kb": size_kb,
+                "sha256": shard_hasher.hexdigest(),
+            }
+        )
 
     manifest_data = {
         "dataset_name": "uldr_v06_ulif_phraseology_eval",
@@ -1919,7 +2198,12 @@ def generate_evaluation_benchmark(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     manifest_path.with_suffix(".json.sha256").write_text(f"{manifest_sha256}  manifest_eval.json\n", encoding="utf-8")
 
-    logger.info("Wrote %d held-out eval cases across %d shards (max size: %.2f KB)", len(eval_records), shards_count, max_shard_size_kb)
+    logger.info(
+        "Wrote %d held-out eval cases across %d shards (max size: %.2f KB)",
+        len(eval_records),
+        shards_count,
+        max_shard_size_kb,
+    )
     return manifest_data, manifest_sha256, dict(category_counts), sorted(list(HELD_OUT_AUTHORS_DISPLAY))
 
 
@@ -2141,7 +2425,12 @@ def synthesize_sft_trajectory(
         if cur_ves:
             verify_phrase_in_vesum(unit.idiom, cur_ves)
 
-        if unit.definition.startswith(",") or unit.definition.startswith(":") or ": , " in unit.definition or is_label_fragment(unit.definition):
+        if (
+            unit.definition.startswith(",")
+            or unit.definition.startswith(":")
+            or ": , " in unit.definition
+            or is_label_fragment(unit.definition)
+        ):
             raise ValueError(f"Corrupted definition in unit '{unit.idiom}': '{unit.definition}'")
 
         query_templates = [
@@ -2416,23 +2705,31 @@ def generate_sft_dataset(
     if target_count is None:
         logger.info("Generating authentic 1-record-per-item SFT trajectories...")
         for u in units:
-            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["idiom_interpretation_literary"] += 1
 
         for cp in calques:
-            traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["anti_calque_decolonization"] += 1
 
         for sg in synonyms:
-            traj = synthesize_sft_trajectory(None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["synonymic_nuance_and_register"] += 1
 
         if dialogue_units:
             for i, du in enumerate(dialogue_units):
-                traj = synthesize_sft_trajectory(du, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
+                traj = synthesize_sft_trajectory(
+                    du, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves
+                )
                 trajectories.append(traj)
                 task_counts["contextual_dialogue_usage"] += 1
     else:
@@ -2443,25 +2740,33 @@ def generate_sft_dataset(
 
         for i in range(target_literary):
             u = units[i % len(units)]
-            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["idiom_interpretation_literary"] += 1
 
         for i in range(target_synonyms):
             sg = synonyms[i % len(synonyms)]
-            traj = synthesize_sft_trajectory(None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["synonymic_nuance_and_register"] += 1
 
         for i in range(target_dialogue):
             u = dialogue_units[i % len(dialogue_units)] if dialogue_units else units[i % len(units)]
-            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["contextual_dialogue_usage"] += 1
 
         for i in range(target_anti_calque):
             cp = calques[i % len(calques)]
-            traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
+            traj = synthesize_sft_trajectory(
+                None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves
+            )
             trajectories.append(traj)
             task_counts["anti_calque_decolonization"] += 1
 
@@ -2473,7 +2778,7 @@ def generate_sft_dataset(
     max_shard_size_kb = 0.0
 
     for s_idx in range(shards_count):
-        shard_file_name = f"sft_shard_{s_idx+1:03d}_of_{shards_count:03d}.jsonl"
+        shard_file_name = f"sft_shard_{s_idx + 1:03d}_of_{shards_count:03d}.jsonl"
         shard_path = output_dir / shard_file_name
         start_i = s_idx * trajectories_per_shard
         end_i = min(actual_count, (s_idx + 1) * trajectories_per_shard)
@@ -2491,13 +2796,15 @@ def generate_sft_dataset(
         if size_kb > max_shard_size_kb:
             max_shard_size_kb = size_kb
 
-        manifest_shards.append({
-            "shard_id": s_idx + 1,
-            "shard_file": shard_file_name,
-            "trajectories_count": len(shard_trajs),
-            "size_kb": size_kb,
-            "sha256": shard_hasher.hexdigest(),
-        })
+        manifest_shards.append(
+            {
+                "shard_id": s_idx + 1,
+                "shard_file": shard_file_name,
+                "trajectories_count": len(shard_trajs),
+                "size_kb": size_kb,
+                "sha256": shard_hasher.hexdigest(),
+            }
+        )
 
     manifest_data = {
         "dataset_name": "uldr_v06_ulif_phraseology_sft",
@@ -2512,7 +2819,9 @@ def generate_sft_dataset(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     manifest_path.with_suffix(".json.sha256").write_text(f"{manifest_sha256}  manifest_sft.json\n", encoding="utf-8")
 
-    logger.info("Wrote %d SFT trajectories across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb)
+    logger.info(
+        "Wrote %d SFT trajectories across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb
+    )
     return manifest_data, manifest_sha256, dict(task_counts)
 
 
@@ -2667,7 +2976,7 @@ def generate_dpo_dataset(
     max_shard_size_kb = 0.0
 
     for s_idx in range(shards_count):
-        shard_file_name = f"dpo_shard_{s_idx+1:03d}_of_{shards_count:03d}.jsonl"
+        shard_file_name = f"dpo_shard_{s_idx + 1:03d}_of_{shards_count:03d}.jsonl"
         shard_path = output_dir / shard_file_name
         start_i = s_idx * pairs_per_shard
         end_i = min(actual_count, (s_idx + 1) * pairs_per_shard)
@@ -2685,13 +2994,15 @@ def generate_dpo_dataset(
         if size_kb > max_shard_size_kb:
             max_shard_size_kb = size_kb
 
-        manifest_shards.append({
-            "shard_id": s_idx + 1,
-            "shard_file": shard_file_name,
-            "pairs_count": len(shard_pairs),
-            "size_kb": size_kb,
-            "sha256": shard_hasher.hexdigest(),
-        })
+        manifest_shards.append(
+            {
+                "shard_id": s_idx + 1,
+                "shard_file": shard_file_name,
+                "pairs_count": len(shard_pairs),
+                "size_kb": size_kb,
+                "sha256": shard_hasher.hexdigest(),
+            }
+        )
 
     manifest_data = {
         "dataset_name": "uldr_v06_ulif_phraseology_dpo",
@@ -2706,7 +3017,9 @@ def generate_dpo_dataset(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     manifest_path.with_suffix(".json.sha256").write_text(f"{manifest_sha256}  manifest_dpo.json\n", encoding="utf-8")
 
-    logger.info("Wrote %d DPO pairs across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb)
+    logger.info(
+        "Wrote %d DPO pairs across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb
+    )
     return manifest_data, manifest_sha256, dict(flaw_dist)
 
 
@@ -2777,13 +3090,19 @@ def audit_zero_train_eval_leakage(
                     for field in [t_p, c_p]:
                         if not field:
                             continue
-                        f_words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", field) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+                        f_words = [
+                            w.lower()
+                            for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", field)
+                            if len(w) >= 3 and w.lower() not in STOP_WORDS
+                        ]
                         f_lemmas = {get_word_lemma_or_stem(w, cur_ves, cache) for w in f_words}
                         for s in f_lemmas:
                             if s in stem_to_eval:
                                 for orig_p, target_stems, _k in stem_to_eval[s]:
                                     if target_stems.issubset(f_lemmas):
-                                        leaked_findings.append(f"{shard_path.name}:{line_no} inflected variant leak of '{orig_p}' in field '{field}'")
+                                        leaked_findings.append(
+                                            f"{shard_path.name}:{line_no} inflected variant leak of '{orig_p}' in field '{field}'"
+                                        )
                                         break
 
                     text_to_check = row.get("final_response") or (row.get("chosen", "") + " " + row.get("rejected", ""))
@@ -2792,7 +3111,11 @@ def audit_zero_train_eval_leakage(
                         seg = (seg_tuple[0] or seg_tuple[1]).strip()
                         if len(seg) < 8:
                             continue
-                        words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", seg) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+                        words = [
+                            w.lower()
+                            for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", seg)
+                            if len(w) >= 3 and w.lower() not in STOP_WORDS
+                        ]
                         if len(words) < 2:
                             continue
                         lemmas = [get_word_lemma_or_stem(w, cur_ves, cache) for w in words]
@@ -2822,7 +3145,9 @@ def audit_zero_train_eval_leakage(
                                 break
 
     if leaked_findings:
-        err_msg = f"0% Train/Eval Leakage Firewall Violated! Found {len(leaked_findings)} leaks:\n" + "\n".join(leaked_findings[:10])
+        err_msg = f"0% Train/Eval Leakage Firewall Violated! Found {len(leaked_findings)} leaks:\n" + "\n".join(
+            leaked_findings[:10]
+        )
         logger.error(err_msg)
         raise AssertionError(err_msg)
 
@@ -2866,11 +3191,15 @@ def verify_receipt_invariants(
         cat = rec.get("eval_category", "")
         if cit and cat in ("authentic_idiom_usage", "figurative_reasoning"):
             if SPEECH_VERB_RE.search(cit):
-                raise AssertionError(f"Orphaned speech verb before punctuation in eval record {rec.get('eval_id')}: «{cit}»")
+                raise AssertionError(
+                    f"Orphaned speech verb before punctuation in eval record {rec.get('eval_id')}: «{cit}»"
+                )
             t_idiom = rec.get("target_idiom", "")
             t_stems = get_content_stems(t_idiom)
             if t_stems and not any(st in cit.lower() for st in t_stems):
-                raise AssertionError(f"Target idiom stem not found in eval citation {rec.get('eval_id')}: '{t_idiom}' vs «{cit}»")
+                raise AssertionError(
+                    f"Target idiom stem not found in eval citation {rec.get('eval_id')}: '{t_idiom}' vs «{cit}»"
+                )
 
     # 1. Verify VESUM attestation across all unique content tokens in the dataset
     if cur_ves:
@@ -2962,20 +3291,44 @@ def verify_receipt_invariants(
                     raise AssertionError(f"Row {shard_path.name}:{line_no} missing valid <thought> tag (>= 30 chars)")
                 th_text = m_th.group(1).lower()
                 linguistic_keywords = [
-                    "семантич", "стилістич", "образн", "валентн", "норматив", "питом",
-                    "аналізую", "деколонізац", "регістр", "диференціац", "лексикографічн",
-                    "прагматич", "прагматик", "помилк", "редагуван", "інтерференц", "етимолог",
-                    "морфем", "кальк", "слововживан", "досліджую", "зіставля",
+                    "семантич",
+                    "стилістич",
+                    "образн",
+                    "валентн",
+                    "норматив",
+                    "питом",
+                    "аналізую",
+                    "деколонізац",
+                    "регістр",
+                    "диференціац",
+                    "лексикографічн",
+                    "прагматич",
+                    "прагматик",
+                    "помилк",
+                    "редагуван",
+                    "інтерференц",
+                    "етимолог",
+                    "морфем",
+                    "кальк",
+                    "слововживан",
+                    "досліджую",
+                    "зіставля",
                 ]
                 if not any(k in th_text for k in linguistic_keywords):
-                    raise AssertionError(f"Row {shard_path.name}:{line_no} <thought> tag lacks semantic/stylistic/normative reasoning")
+                    raise AssertionError(
+                        f"Row {shard_path.name}:{line_no} <thought> tag lacks semantic/stylistic/normative reasoning"
+                    )
                 thought_tags_count += 1
 
                 # Grounding check: verify literary idioms against frazeolohichnyi (Finding 1)
                 if row.get("task_type") == "idiom_interpretation_literary":
                     total_literary_tasks += 1
                     target_p = row.get("target_phrase", "").strip().lower()
-                    if target_p in known_fraz_idioms or any(target_p.startswith(ki) for ki in known_fraz_idioms) or any(ki.startswith(target_p) for ki in known_fraz_idioms):
+                    if (
+                        target_p in known_fraz_idioms
+                        or any(target_p.startswith(ki) for ki in known_fraz_idioms)
+                        or any(ki.startswith(target_p) for ki in known_fraz_idioms)
+                    ):
                         literary_grounded_count += 1
                     else:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
@@ -2984,7 +3337,9 @@ def verify_receipt_invariants(
                     quotes = re.findall(r"«([^»]+)»", resp)
                     for q in quotes:
                         if SPEECH_VERB_RE.search(q):
-                            raise AssertionError(f"Orphaned speech verb before punctuation in {shard_path.name}:{line_no}: «{q}»")
+                            raise AssertionError(
+                                f"Orphaned speech verb before punctuation in {shard_path.name}:{line_no}: «{q}»"
+                            )
                         if " . —" in q or " . -" in q:
                             raise AssertionError(f"Stray dot-dash punctuation in {shard_path.name}:{line_no}: «{q}»")
                         if re.search(r"\.\.\s*[,;:]", q) or re.search(r"\.\.\s+\.", q) or ".. ." in q:
@@ -2993,17 +3348,30 @@ def verify_receipt_invariants(
                     if p_stems and quotes:
                         cit_quote = quotes[-1]
                         if not any(st in cit_quote.lower() for st in p_stems):
-                            raise AssertionError(f"Target idiom stem not found in citation quote in {shard_path.name}:{line_no}: '{target_p}' vs «{cit_quote}»")
+                            raise AssertionError(
+                                f"Target idiom stem not found in citation quote in {shard_path.name}:{line_no}: '{target_p}' vs «{cit_quote}»"
+                            )
 
                     # Corpus-wide definition invariants (CF R10 Finding 2)
                     if ": , " in resp:
-                        raise AssertionError(f"Orphaned label ': , ' found in SFT response in {shard_path.name}:{line_no}")
-                    if re.search(r"(?:позначає|тлумачиться як|значення полягає у такому|значення|використовують для|виражає):\s*[,;:]", resp):
-                        raise AssertionError(f"Definition starting with punctuation found in SFT response in {shard_path.name}:{line_no}")
+                        raise AssertionError(
+                            f"Orphaned label ': , ' found in SFT response in {shard_path.name}:{line_no}"
+                        )
+                    if re.search(
+                        r"(?:позначає|тлумачиться як|значення полягає у такому|значення|використовують для|виражає):\s*[,;:]",
+                        resp,
+                    ):
+                        raise AssertionError(
+                            f"Definition starting with punctuation found in SFT response in {shard_path.name}:{line_no}"
+                        )
                     if re.search(r"семантичне ядро вислову передає:\s*[,;:]", resp, re.IGNORECASE):
-                        raise AssertionError(f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}")
+                        raise AssertionError(
+                            f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}"
+                        )
                     if re.search(r"тлумачення за академічними джерелами:\s*[,;:]", resp, re.IGNORECASE):
-                        raise AssertionError(f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}")
+                        raise AssertionError(
+                            f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}"
+                        )
 
                 # Calque firewall: check if calque is affirmed as correct (Finding 3)
                 for cq, pats in calque_patterns:
@@ -3011,7 +3379,9 @@ def verify_receipt_invariants(
                         for p in pats:
                             if p.search(resp):
                                 calque_violations_count += 1
-                                raise AssertionError(f"Russian calque '{cq}' affirmed/recommended in {shard_path.name}:{line_no}")
+                                raise AssertionError(
+                                    f"Russian calque '{cq}' affirmed/recommended in {shard_path.name}:{line_no}"
+                                )
 
                 # For anti-calque tasks, verify that the target calque is removed from the edited sentence
                 if row.get("task_type") == "anti_calque_decolonization":
@@ -3021,7 +3391,9 @@ def verify_receipt_invariants(
                         p_edited = re.compile(rf"відредаговане речення:\*\*\n«[^»\n]*{cq_pat}[^»\n]*»", re.IGNORECASE)
                         if p_edited.search(resp):
                             calque_violations_count += 1
-                            raise AssertionError(f"Target calque '{target_cq}' not removed from edited sentence in {shard_path.name}:{line_no}")
+                            raise AssertionError(
+                                f"Target calque '{target_cq}' not removed from edited sentence in {shard_path.name}:{line_no}"
+                            )
 
     # Assert that thought_tags_count matches 100% of total_sft_trajectories
     assert thought_tags_count == total_sft_trajectories, (
@@ -3051,17 +3423,25 @@ def verify_receipt_invariants(
                         for p in pats:
                             if p.search(chosen):
                                 calque_violations_count += 1
-                                raise AssertionError(f"Russian calque '{cq}' affirmed in DPO chosen {shard_path.name}:{line_no}")
+                                raise AssertionError(
+                                    f"Russian calque '{cq}' affirmed in DPO chosen {shard_path.name}:{line_no}"
+                                )
 
     # 5. Programmatic checks and dynamic invariant computation (Finding 2)
-    vesum_morphology_verified = bool(total_eval_tokens > 0 and (vesum_attested_tokens / total_eval_tokens) >= 0.98) if cur_ves else True
-    classical_literary_citations_grounded = bool(total_literary_tasks > 0 and literary_grounded_count == total_literary_tasks)
+    vesum_morphology_verified = (
+        bool(total_eval_tokens > 0 and (vesum_attested_tokens / total_eval_tokens) >= 0.98) if cur_ves else True
+    )
+    classical_literary_citations_grounded = bool(
+        total_literary_tasks > 0 and literary_grounded_count == total_literary_tasks
+    )
     thought_tag_semantic_reasoning = bool(total_sft_trajectories > 0 and thought_tags_count == total_sft_trajectories)
     zero_russian_syntactic_calques = bool(calque_violations_count == 0)
     zero_train_eval_leakage = True
 
     if not classical_literary_citations_grounded:
-        raise AssertionError(f"Classical literary citations grounding invariant failed: {literary_grounded_count}/{total_literary_tasks}. First unattested: {unattested_literary[:5]}")
+        raise AssertionError(
+            f"Classical literary citations grounding invariant failed: {literary_grounded_count}/{total_literary_tasks}. First unattested: {unattested_literary[:5]}"
+        )
     if not vesum_morphology_verified:
         raise AssertionError(f"VESUM attestation invariant failed: {vesum_attested_tokens}/{total_eval_tokens}")
     if not thought_tag_semantic_reasoning:
@@ -3171,7 +3551,9 @@ def generate_release_receipt(
         "evaluation_benchmark": {
             "directory_path": receipt_path(output_dir / "eval"),
             "manifest_file": receipt_path(output_dir / "eval" / "manifest_eval.json"),
-            "manifest_sha256": eval_meta["manifest_sha256"] if "manifest_sha256" in eval_meta else hashlib.sha256(eval_meta["manifest_file"].encode()).hexdigest(),
+            "manifest_sha256": eval_meta["manifest_sha256"]
+            if "manifest_sha256" in eval_meta
+            else hashlib.sha256(eval_meta["manifest_file"].encode()).hexdigest(),
             "shards_count": eval_meta["shards_count"],
             "total_cases": eval_meta["total_cases"],
             "max_shard_size_kb": eval_meta["max_shard_size_kb"],
@@ -3257,7 +3639,9 @@ def run_pipeline(
     all_calques = CANONICAL_CALQUE_PAIRS + uagec_calques
 
     # 3. Partition held-out evaluation vs. training
-    canonical_terms = {cp.authentic.strip().lower() for cp in CANONICAL_CALQUE_PAIRS} | {cp.calque.strip().lower() for cp in CANONICAL_CALQUE_PAIRS}
+    canonical_terms = {cp.authentic.strip().lower() for cp in CANONICAL_CALQUE_PAIRS} | {
+        cp.calque.strip().lower() for cp in CANONICAL_CALQUE_PAIRS
+    }
     eval_calques = HELD_OUT_CURATED_CALQUE_PAIRS
     train_calques = [c for c in all_calques if not c.is_held_out]
 
@@ -3270,7 +3654,10 @@ def run_pipeline(
 
     logger.info(
         "Partitioning: %d held-out units; %d held-out curated calques, %d train calques; %d train synonyms",
-        len(eval_units), len(eval_calques), len(train_calques), len(train_synonyms)
+        len(eval_units),
+        len(eval_calques),
+        len(train_calques),
+        len(train_synonyms),
     )
 
     target_eval = 20 if sample_only else 1500
@@ -3301,7 +3688,9 @@ def run_pipeline(
 
     # Strict target phrase firewall: NO target idiom or calque from eval can ever appear in train!
     eval_target_phrases = {r["target_idiom"].strip().lower() for r in eval_records if r.get("target_idiom")}
-    eval_calque_phrases = {r["calqued_counterpart"].strip().lower() for r in eval_records if r.get("calqued_counterpart")}
+    eval_calque_phrases = {
+        r["calqued_counterpart"].strip().lower() for r in eval_records if r.get("calqued_counterpart")
+    }
     disallowed_in_train = eval_target_phrases | eval_calque_phrases
 
     # Extract multiword stem sets from eval targets to filter training pool (Finding 7)
@@ -3321,7 +3710,9 @@ def run_pipeline(
     def has_candidate_leak(text: str) -> bool:
         if not text:
             return False
-        words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", text) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+        words = [
+            w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", text) if len(w) >= 3 and w.lower() not in STOP_WORDS
+        ]
         if len(words) < 2:
             return False
         lemmas = [get_word_lemma_or_stem(w, cur_ves, lemma_cache) for w in words]
@@ -3348,7 +3739,8 @@ def run_pipeline(
         return False
 
     train_calques = [
-        c for c in train_calques
+        c
+        for c in train_calques
         if c.authentic.strip().lower() not in disallowed_in_train
         and c.calque.strip().lower() not in disallowed_in_train
         and not has_candidate_leak(c.authentic)
@@ -3358,7 +3750,8 @@ def run_pipeline(
 
     # Clean frazeolohichnyi pool for literary interpretation (100% grounded against frazeolohichnyi)
     clean_fraz_pool = [
-        u for u in fraz_units
+        u
+        for u in fraz_units
         if not u.is_held_out
         and u.idiom.strip().lower() not in disallowed_in_train
         and u.idiom.strip().lower() not in canonical_terms
@@ -3458,7 +3851,9 @@ def main() -> None:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Release directory")
     parser.add_argument("--sample-only", action="store_true", help="Generate small sample dataset for smoke testing")
-    parser.add_argument("--git-commit", type=str, default=None, help="Explicit repository commit hash for release receipt")
+    parser.add_argument(
+        "--git-commit", type=str, default=None, help="Explicit repository commit hash for release receipt"
+    )
     args = parser.parse_args()
 
     logger.info("Starting Phase 6.2 ULIF Phraseology Mining Engine")

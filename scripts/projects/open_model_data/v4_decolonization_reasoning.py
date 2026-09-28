@@ -24,6 +24,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -48,7 +50,7 @@ def resolve_data_path(rel_path: str) -> Path:
     return local_p
 
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 MAX_SHARD_BYTES: int = 1_800_000

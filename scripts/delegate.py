@@ -111,6 +111,7 @@ Issue: #1184, #7230.
 from __future__ import annotations
 
 import argparse
+import ast
 import contextlib
 import functools
 import hashlib
@@ -5947,7 +5948,9 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # Default cone sparse-checkout exclusions for dispatch worktrees.
 # Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
 # of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
-# data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
+# data/lexicon/ 277MB. The migrated open-model registry payload tree is also
+# excluded independently from registry/ so registry/lexicon remains available.
+# Dropping these trees leaves a default dispatch under
 # 450MB (re-measured 2026-09-25: 287MB). Opt back in with --sparse-include
 # or --full-checkout. wiki/ is still a top-level tree
 # (`git ls-tree -d HEAD wiki`), so it stays excluded.
@@ -5975,6 +5978,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "wiki",
         "data/projects",
         "data/lexicon",
+        "registry/projects",
     }
 )
 _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
@@ -6027,8 +6031,70 @@ def _sparse_reinclude_prefix_matches(path: str, prefix: str) -> bool:
     return prefix.endswith("_") and path.startswith(prefix)
 
 
+def _assignment_mentions_marker(module_path: Path, name: str, markers: tuple[str, ...]) -> bool:
+    """True when ``name = ...`` in ``module_path`` embeds a marker string."""
+    try:
+        source = module_path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except (OSError, SyntaxError, UnicodeError):
+        return False
+    for stmt in tree.body:
+        targets: list[ast.expr] = []
+        value: ast.expr | None = None
+        if isinstance(stmt, ast.Assign):
+            targets = list(stmt.targets)
+            value = stmt.value
+        elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+            targets = [stmt.target]
+            value = stmt.value
+        if value is None:
+            continue
+        if any(isinstance(target, ast.Name) and target.id == name for target in targets):
+            rendered = ast.unparse(value)
+            if any(marker in rendered for marker in markers):
+                return True
+    return False
+
+
+def _imported_binding_mentions_marker(text: str, markers: tuple[str, ...]) -> bool:
+    """True when the file uses an imported name whose value embeds a marker.
+
+    Content-gated sparse stems used to require the literal ``data/projects``
+    in the owned file. Readers that reach the tree through an imported path
+    constant (``foundry.DEFAULT_V011_MANIFEST``) still need that tree.
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return False
+    imported: dict[str, tuple[str, str]] = {}
+    for stmt in tree.body:
+        if isinstance(stmt, ast.ImportFrom) and stmt.module and stmt.level == 0:
+            for alias in stmt.names:
+                if alias.name == "*":
+                    continue
+                imported[alias.asname or alias.name] = (stmt.module, alias.name)
+    needed: set[tuple[str, str]] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.value.id)
+            if binding is None:
+                continue
+            module, imported_name = binding
+            needed.add((f"{module}.{imported_name}", node.attr))
+        elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.id)
+            if binding is not None:
+                needed.add(binding)
+    for dotted, attr in needed:
+        module_path = _REPO_ROOT / Path(*dotted.split(".")).with_suffix(".py")
+        if module_path.is_file() and _assignment_mentions_marker(module_path, attr, markers):
+            return True
+    return False
+
+
 def _reinclude_file_confirms(path: str, prefix: str) -> bool:
-    """Content-gated stems must mention the tree in the owned file."""
+    """Content-gated stems must read the tree, directly or via an import."""
     markers = _SPARSE_REINCLUDE_CONTENT_MARKERS.get(prefix)
     if not markers:
         return True
@@ -6037,15 +6103,18 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
         text = file_path.read_text(encoding="utf-8")
     except OSError:
         return False
-    return any(marker in text for marker in markers)
+    if any(marker in text for marker in markers):
+        return True
+    return _imported_binding_mentions_marker(text, markers)
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
     """Normalize --sparse-include values to unique default-excluded trees.
 
     Fail closed: explicit values must be names in the default exclusion set
-    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``). Other
-    nested paths and unknown names raise :class:`ValueError`.
+    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``,
+    ``registry/projects``). Other nested paths and unknown names raise
+    :class:`ValueError`.
     """
     if not raw:
         return ()
@@ -6057,14 +6126,14 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
         if not name or name in {".", ".."} or name.startswith("../") or "/../" in f"/{name}/":
             raise ValueError(
                 f"--sparse-include {item!r} is empty or invalid; "
-                "pass a default-excluded tree such as 'curriculum', 'wiki', or 'data/projects'"
+                "pass a default-excluded tree such as 'curriculum', 'wiki', 'data/projects', "
+                "or 'registry/projects'"
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
             if "/" in name:
-                top = name.split("/", 1)[0]
                 raise ValueError(
                     f"--sparse-include {item!r} must name a default-excluded tree "
-                    f"(top-level example: {top!r}; nested exclusions: data/projects, data/lexicon). "
+                    "(nested exclusions: data/projects, data/lexicon, registry/projects). "
                     f"Allowed: {allowed}"
                 )
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
@@ -6169,30 +6238,33 @@ def _dispatch_sparse_cone_dirs(
     top_dirs: Sequence[str],
     data_children: Sequence[str],
     exclude: Collection[str],
+    registry_children: Sequence[str] = (),
 ) -> tuple[list[str], list[str]]:
     """Build a cone include list that drops excluded dirs at directory level.
 
-    Nested exclusions (``data/projects``) are expressed by listing the other
-    ``data/*`` children instead of the parent ``data`` directory. Cone mode
-    then keeps files that sit directly in ``data/``.
+    Nested exclusions (``data/projects``, ``data/lexicon``, and
+    ``registry/projects``) are expressed by listing the sibling directories
+    instead of their parent. Cone mode then keeps files directly in each
+    parent and preserves the other sibling trees.
     """
     exclude_set = set(exclude)
+    nested_children = {"data": data_children, "registry": registry_children}
     cone: list[str] = []
     excluded: list[str] = []
     for name in top_dirs:
-        if name != "data":
+        if name not in nested_children:
             if name in exclude_set:
                 excluded.append(name)
             else:
                 cone.append(name)
             continue
-        if "data" in exclude_set:
-            excluded.append("data")
+        if name in exclude_set:
+            excluded.append(name)
             continue
-        children = list(data_children)
+        children = list(nested_children[name])
         dropped = [child for child in children if child in exclude_set]
         if not dropped:
-            cone.append("data")
+            cone.append(name)
             continue
         for child in children:
             if child in exclude_set:
@@ -6211,7 +6283,9 @@ def _apply_dispatch_sparse_checkout(
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
+    (~633MB), ``data/lexicon/`` (~277MB), and ``registry/projects/``. The
+    latter is excluded as a nested tree so ``registry/lexicon/`` stays
+    available. When ``curriculum`` stays
     excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
     directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
     and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
@@ -6262,7 +6336,8 @@ def _apply_dispatch_sparse_checkout(
     exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
     all_dirs = _list_worktree_top_dirs(worktree_path)
     data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
-    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
+    registry_children = _list_worktree_dirs(worktree_path, "registry/") if "registry" in all_dirs else []
+    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude, registry_children)
     manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
     if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
         included.append(manifest_cone)
@@ -11685,7 +11760,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
             "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
-            "data/projects/ (633MB), and data/lexicon/ (277MB), leaving a default "
+            "data/projects/ (633MB), data/lexicon/ (277MB), and registry/projects/ "
+            "while retaining registry/lexicon/, leaving a default "
             "worktree under 450MB. Use this when the task needs the entire tree."
         ),
     )
@@ -11696,8 +11772,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="DIR",
         help=(
             "Keep a tree that default sparse-checkout would exclude "
-            "(curriculum, wiki, data/projects, data/lexicon). Repeatable. "
-            "Example: --sparse-include data/projects, or --sparse-include curriculum "
+            "(curriculum, wiki, data/projects, data/lexicon, registry/projects). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include registry/projects "
             "for module content. Owned paths under those trees are included automatically."
         ),
     )

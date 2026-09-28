@@ -31,12 +31,13 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 import numpy as np
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
     MinHashDedup,
 )
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_stem_controls_receipt.schema.json"
@@ -301,7 +302,6 @@ ENTITY_TYPE_UKRAINIAN: dict[str, str] = {
     "rahuvaty_underspecified": "невизначений контекст слова «рахувати»",
     "vidnoshennia_underspecified": "невизначений контекст слова «відношення»",
 }
-
 
 
 @dataclass(frozen=True, slots=True)
@@ -736,7 +736,6 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
                 register=register,
             )
     return None
-
 
 
 def ocr_sanity_check(text: str) -> CleanlinessResult:

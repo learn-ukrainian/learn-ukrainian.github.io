@@ -5109,7 +5109,8 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
 
     assert rc == 0
     assert mock_invoke.call_args.kwargs["tool_config"] == {
-        "max_budget_usd": 0.5, "reviewer_tools": True,
+        "max_budget_usd": 0.5,
+        "reviewer_tools": True,
     }
     state = delegate._read_state(state_path)
     assert state is not None
@@ -6313,16 +6314,18 @@ def _make_run_stub(
             return subprocess.CompletedProcess(cmd, rc, "", "")
         if cmd[:2] == ["git", "ls-tree"]:
             # Default dirs for sparse-checkout tests / ensure_worktree.
-            # ``data/`` is listed separately so nested exclusions can drop
-            # data/projects and data/lexicon while keeping sibling data dirs.
+            # ``data/`` and ``registry/`` are listed separately so nested
+            # exclusions can drop their project trees while keeping siblings.
             # The curriculum manifest cone exists so a default worktree keeps
             # curriculum/l2-uk-en/curriculum.yaml without the rest of the tree.
             if cmd[-1:] == ["data/"]:
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            elif cmd[-1:] == ["registry/"]:
+                listing = "registry/artifacts\nregistry/lexicon\nregistry/projects\n"
             elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
                 listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
-                listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
+                listing = "curriculum\ndata\ndocs\nregistry\nscripts\nsite\ntests\nwiki\n"
             return subprocess.CompletedProcess(cmd, 0, listing, "")
         if cmd[:2] == ["git", "sparse-checkout"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
@@ -8228,11 +8231,19 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     assert "wiki" not in set_calls[0]
     assert "data/projects" not in set_calls[0]
     assert "data/lexicon" not in set_calls[0]
+    assert "registry/projects" not in set_calls[0]
+    assert "registry/lexicon" in set_calls[0]
     assert "data/raw" in set_calls[0]
     assert "--cone" in set_calls[0]
     assert "scripts" in set_calls[0]
     assert telemetry["sparse"] is not None
-    assert telemetry["sparse"]["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
+    assert telemetry["sparse"]["excluded"] == [
+        "curriculum",
+        "data/lexicon",
+        "data/projects",
+        "registry/projects",
+        "wiki",
+    ]
     assert telemetry["local_venv"] == {"present": False, "kind": None, "path": None}
 
 
@@ -8286,16 +8297,17 @@ def test_normalize_sparse_include_dedupes_and_strips():
         "curriculum",
         "wiki",
     )
-    assert delegate._normalize_sparse_include(["data/projects/", " data/lexicon "]) == (
+    assert delegate._normalize_sparse_include(["data/projects/", " data/lexicon ", "registry/projects"]) == (
         "data/projects",
         "data/lexicon",
+        "registry/projects",
     )
 
 
 def test_normalize_sparse_include_rejects_nested_and_unknown():
     import pytest
 
-    with pytest.raises(ValueError, match="top-level"):
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
         delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
     with pytest.raises(ValueError, match="not a default-excluded"):
         delegate._normalize_sparse_include(["scripts"])
@@ -8331,6 +8343,10 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["tests/projects/open_model_data/test_mine.py"],
     ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["registry/projects/open_model_data/grammar/grammar_rules.json"],
+    ) == ("registry/projects",)
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
@@ -8444,13 +8460,15 @@ def test_augment_prompt_mentions_sparse_exclusions():
         Path("/tmp/wt"),
         sparse_telemetry={
             "full_checkout": False,
-            "excluded": ["curriculum", "data/projects", "wiki"],
+            "excluded": ["curriculum", "data/projects", "registry/projects", "wiki"],
         },
     )
     assert "curriculum" in text
     assert "wiki" in text
     assert "data/projects" in text
     assert "git sparse-checkout add data/projects" in text
+    assert "registry/projects" in text
+    assert "git sparse-checkout add registry/projects" in text
     assert "git sparse-checkout add curriculum" in text
     assert "re-dispatch" not in text
     assert "sparse" in text.lower() or "Sparse" in text
@@ -10161,6 +10179,10 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
         d.mkdir(parents=True)
         (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
     (primary / "data" / "readme.txt").write_text("data-root\n", encoding="utf-8")
+    for name in ("artifacts", "lexicon", "projects"):
+        d = primary / "registry" / name
+        d.mkdir(parents=True)
+        (d / "f.txt").write_text(f"registry-{name}\n", encoding="utf-8")
     (primary / "README.md").write_text("root\n", encoding="utf-8")
     git("add", ".")
     git("commit", "-m", "init")
@@ -10171,11 +10193,20 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
 
     meta = delegate._apply_dispatch_sparse_checkout(worktree)
     assert meta["applied"] is True
-    assert meta["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
+    assert meta["excluded"] == [
+        "curriculum",
+        "data/lexicon",
+        "data/projects",
+        "registry/projects",
+        "wiki",
+    ]
     assert not (worktree / "curriculum").exists()
     assert not (worktree / "wiki").exists()
     assert not (worktree / "data" / "projects").exists()
     assert not (worktree / "data" / "lexicon").exists()
+    assert not (worktree / "registry" / "projects").exists()
+    assert (worktree / "registry" / "artifacts" / "f.txt").is_file()
+    assert (worktree / "registry" / "lexicon" / "f.txt").is_file()
     assert (worktree / "data" / "raw" / "f.txt").is_file()
     assert (worktree / "data" / "readme.txt").is_file()
     assert (worktree / "scripts" / "f.txt").is_file()
@@ -10185,10 +10216,14 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (primary / "wiki" / "f.txt").is_file()
     assert (primary / "data" / "projects" / "f.txt").is_file()
 
-    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum", "data/projects"))
+    meta2 = delegate._apply_dispatch_sparse_checkout(
+        worktree,
+        sparse_include=("curriculum", "data/projects", "registry/projects"),
+    )
     assert meta2["excluded"] == ["data/lexicon", "wiki"]
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "data" / "projects" / "f.txt").is_file()
+    assert (worktree / "registry" / "projects" / "f.txt").is_file()
     assert not (worktree / "data" / "lexicon").exists()
     assert not (worktree / "wiki").exists()
 
@@ -10198,6 +10233,60 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (worktree / "wiki" / "f.txt").is_file()
     assert (worktree / "data" / "projects" / "f.txt").is_file()
     assert (worktree / "data" / "lexicon" / "f.txt").is_file()
+
+
+def test_apply_dispatch_sparse_checkout_excludes_registry_projects_real_git(tmp_path):
+    """Registry P3 exclusion keeps sibling registry trees in cone mode."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    clean_env = {
+        key: value
+        for key, value in os.environ.items()
+        if key
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+            timeout=30,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    for name in ("artifacts", "lexicon", "projects"):
+        tree = primary / "registry" / name
+        tree.mkdir(parents=True)
+        (tree / "f.txt").write_text(f"registry-{name}\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+
+    assert "registry/projects" in meta["excluded"]
+    assert not (worktree / "registry" / "projects").exists()
+    assert (worktree / "registry" / "artifacts" / "f.txt").is_file()
+    assert (worktree / "registry" / "lexicon" / "f.txt").is_file()
 
 
 def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):

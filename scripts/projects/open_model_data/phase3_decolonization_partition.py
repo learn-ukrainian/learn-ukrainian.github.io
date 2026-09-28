@@ -24,6 +24,7 @@ import math
 import re
 import sqlite3
 import sys
+import tempfile
 import unicodedata
 from collections import defaultdict
 from collections.abc import Sequence
@@ -37,17 +38,13 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
+
 DEFAULT_SOURCES_DB = REPO_ROOT / "data" / "sources.db"
 DEFAULT_VESUM_DB = REPO_ROOT / "data" / "vesum.db"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "partitions"
-DEFAULT_SCHEMA_PATH = (
-    REPO_ROOT
-    / "data"
-    / "projects"
-    / "open_model_data"
-    / "contracts"
-    / "v1_decolonization_partition_manifest.schema.json"
-)
+DEFAULT_SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/v1_decolonization_partition_manifest.schema.json"
 
 WORD_RE = re.compile(r"[\w'-]+", re.UNICODE)
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
@@ -888,6 +885,24 @@ class DecolonizationPartitionFirewall:
 
 def verify_manifest(output_dir: Path = DEFAULT_OUTPUT_DIR) -> bool:
     """Verify partition integrity, hashes, and schema conformance."""
+    if output_dir.resolve() == DEFAULT_OUTPUT_DIR.resolve():
+        snapshot = artifact_set("open_model_other_indexes")
+        with tempfile.TemporaryDirectory(prefix="p3-partition-verify-") as stage_name:
+            stage = Path(stage_name)
+            for name in (
+                "decolonization_partition_manifest.json",
+                "train_source_custody.json",
+                "minhash_dedup_summary.json",
+            ):
+                (stage / name).write_bytes(
+                    snapshot.companions[f"registry/projects/open_model_data/decolonization/partitions/{name}"]
+                )
+            (stage / "heldout_evaluation_suite_1000.jsonl").write_bytes(
+                snapshot.artifacts[
+                    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+                ]
+            )
+            return verify_manifest(stage)
     manifest_file = output_dir / "decolonization_partition_manifest.json"
     if not manifest_file.is_file():
         print(f"ERROR: Manifest missing at {manifest_file}", file=sys.stderr)
