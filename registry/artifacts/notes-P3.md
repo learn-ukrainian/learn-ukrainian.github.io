@@ -273,8 +273,32 @@ The two failures are `test_decolonization_component_8340.py` textbook lookups
 (`decol_syn_032`, `decol_lex_003`). `git diff 55d0ed1515` does not change the
 `textbooks_fts` query or the missing-evidence error in
 `query_source_evidence`, so they are the same `sources.db` misses already
-recorded against that base. The full project suite, the consumer-check
-column, and Decision H semantic equivalence remain open at this checkpoint.
+recorded against that base. The full `tests/projects/open_model_data` run on the routing commit, including
+the general-assistant module, reported `3 failed, 2347 passed, 17 skipped`.
+Two failures are the `sources.db` lookups above. The third was
+`test_synthetic_pipeline_hermetic_run` opening
+`v1_general_assistant_eval_record.schema.json` under `data/`; that schema
+read now uses `resolve_open_model_path()`, and the isolated rerun passed.
+`consumers-P3.tsv` still has blank checks.
+
+## Decision H frozen-contract semantics
+
+For every source in `.pytest-tmp/source-pin-report.tsv` whose current bytes
+differ from base `55d0ed1515` (63 identities, 72 contracts), `git rev-parse`
+of `HEAD:registry/projects/open_model_data/<rel>` equals
+`55d0ed1515:data/projects/open_model_data/<rel>`. Result:
+`contract blob mismatches 0`. The frozen contract documents are the
+pre-migration blobs, so their semantics are unchanged. Two further identities
+in that table have identical source bytes. The code diffs are path routing,
+formatting, publication through the existing companion or standalone-K
+routes, and historical provenance pins. One current-file pin,
+`EXPECTED_CHRONOLOGY_V1_IMPLEMENTATION_SHA256` in
+`phase3_historical_document_chronology_source_dates.py`, moved from the base
+hash of `phase3_historical_document_chronology.py` (`67ae42be05f8`) to that
+file's current hash (`ee7721a822eb`). The spine contract does not embed
+either value.
+
+The consumer-check column remains open at this checkpoint.
 
 ## Unresolved P3a gates at this checkpoint
 
