@@ -15,6 +15,20 @@ HOOKS_ROOT = REPO_ROOT / "agents_extensions" / "shared" / "hooks"
 SETTINGS = REPO_ROOT / "agents_extensions" / "shared" / "settings.json"
 
 
+def test_shell_shlex_importers_do_not_write_bytecode() -> None:
+    """Guards must disable bytecode before importing the sibling helper (#9108)."""
+    importers = sorted(HOOKS_ROOT.glob("*.py"))
+    found = False
+    for path in importers:
+        text = path.read_text(encoding="utf-8")
+        marker = "from shell_shlex import"
+        if marker not in text:
+            continue
+        found = True
+        assert text.index("sys.dont_write_bytecode = True") < text.index(marker), path.name
+    assert found
+
+
 def _bash_python_hooks() -> tuple[str, ...]:
     settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
     names = {

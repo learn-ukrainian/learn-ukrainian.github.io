@@ -254,6 +254,10 @@ NOT_REPO_WIDE = {
     "tests/test_workflow_head_concurrency.py::test_merge_group_workflows_do_not_unconditionally_cancel": (
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
+    "tests/test_shared_hooks_deploy_depth.py::test_shell_shlex_importers_do_not_write_bytecode": (
+        "Globs only agents_extensions/shared/hooks/*.py to check that shell_shlex "
+        "is imported after dont_write_bytecode. It does not scan the repository tree."
+    ),
 }
 
 # These deploy tests copy only named source paths into isolated temporary
@@ -297,6 +301,8 @@ NOT_REPO_WIDE.update({
         "test_agent_overlay_write_stays_in_held_directory_after_root_swap",
         "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
         "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
+        "test_bytecode_cache_is_not_an_orphan_and_is_not_declared",
+        "test_pyc_named_symlink_is_deployed",
     )
 })
 

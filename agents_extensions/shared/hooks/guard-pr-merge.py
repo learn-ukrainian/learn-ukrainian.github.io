@@ -50,6 +50,8 @@ from datetime import datetime, timezone
 from typing import NamedTuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Don't write __pycache__ next to deployed hooks (#9108).
+sys.dont_write_bytecode = True
 try:
     from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
 except ImportError as exc:
