@@ -21,6 +21,10 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+# The cards, generator and schemas live under docs/ and schemas/, outside any
+# import-mapped test selection, so the whole module must run in the repo_wide tier.
+pytestmark = pytest.mark.repo_wide
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMAS = REPO_ROOT / "schemas"
 SCHEMA = SCHEMAS / "word-card-v1.schema.json"
