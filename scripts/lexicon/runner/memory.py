@@ -40,6 +40,10 @@ def _is_project_venv_python(path: Path) -> bool:
 def project_interpreter(root: Path | None = None) -> Path:
     """Interpreter for memory self-tests and capped workers.
 
+    Called when a spawn needs the interpreter, not while this module is
+    imported. Import therefore succeeds when no project interpreter can be
+    found; this function raises ``FileNotFoundError`` at the call.
+
     ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
     git directory and returns that primary checkout. Its ``.venv/bin/python``
     is the project interpreter. A dispatch worktree has no local virtualenv,
@@ -59,9 +63,6 @@ def project_interpreter(root: Path | None = None) -> Path:
         f"{primary} does not exist and sys.executable ({current}) "
         "is not a project .venv/bin/python"
     )
-
-
-VENV_PYTHON = project_interpreter()
 
 
 @dataclass(frozen=True, slots=True)
@@ -179,6 +180,7 @@ def run_startup_self_test(
     timeout_s: float = 30.0,
 ) -> EnforcementProof:
     """Prove the configured limit is enforced in a disposable child process."""
+    interpreter = project_interpreter()
     if test_max_bytes is None:
         rss = current_rss_bytes() or (64 * 1024 * 1024)
         test_max_bytes = max(rss + 64 * 1024 * 1024, 128 * 1024 * 1024)
@@ -188,7 +190,7 @@ def run_startup_self_test(
         result_path = Path(tmp) / "self_test.json"
         proc = subprocess.run(
             [
-                str(VENV_PYTHON),
+                str(interpreter),
                 "-m",
                 "scripts.lexicon.runner.memory",
                 "--self-test-child",

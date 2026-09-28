@@ -327,10 +327,11 @@ def test_runner_spawns_use_primary_project_interpreter(
 
     live = main_checkout_root(memory_mod.ROOT) / ".venv" / "bin" / "python"
     assert live.is_file()
-    assert live == memory_mod.VENV_PYTHON
-    assert live == worker_mod.VENV_PYTHON
+    assert live == memory_mod.project_interpreter()
     for fn in (memory_mod.run_startup_self_test, worker_mod.run_capped_worker):
-        assert "sys.executable" not in inspect.getsource(fn)
+        source = inspect.getsource(fn)
+        assert "sys.executable" not in source
+        assert "project_interpreter()" in source
 
     primary = tmp_path / "primary"
     (primary / ".git").mkdir(parents=True)
@@ -360,6 +361,80 @@ def test_runner_spawns_use_primary_project_interpreter(
     monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
     with pytest.raises(FileNotFoundError, match="project interpreter not found"):
         memory_mod.project_interpreter(bare)
+
+
+def test_import_succeeds_when_project_interpreter_resolution_would_fail() -> None:
+    """Importing memory and worker does not resolve the project interpreter.
+
+    A fresh interpreter hides every ``.venv/bin/python`` and points
+    ``sys.executable`` at a non-project binary. Import still succeeds.
+    The spawn paths raise the same ``FileNotFoundError`` when they resolve.
+    """
+    import subprocess
+    import sys
+    import textwrap
+
+    repo = Path(__file__).resolve().parents[1]
+    script = textwrap.dedent(
+        """\
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        sys.executable = "/usr/bin/python3"
+        real_is_file = Path.is_file
+
+        def hide_project_venv(self: Path) -> bool:
+            if self.parts[-3:] == (".venv", "bin", "python"):
+                return False
+            return real_is_file(self)
+
+        Path.is_file = hide_project_venv
+
+        import scripts.lexicon.runner.memory as memory
+        import scripts.lexicon.runner.worker as worker
+
+        try:
+            memory.project_interpreter()
+        except FileNotFoundError as exc:
+            message = str(exc)
+        else:
+            raise SystemExit("project_interpreter() did not fail")
+        if "project interpreter not found" not in message:
+            raise SystemExit(message)
+
+        try:
+            memory.run_startup_self_test(test_max_bytes=1024)
+        except FileNotFoundError as exc:
+            spawn_message = str(exc)
+        else:
+            raise SystemExit("run_startup_self_test did not fail")
+        if "project interpreter not found" not in spawn_message:
+            raise SystemExit(spawn_message)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            try:
+                worker.run_capped_worker(
+                    {"chunk_id": "import-probe", "job": "enrich"},
+                    result_path=Path(tmp) / "result.json",
+                )
+            except FileNotFoundError as exc:
+                worker_message = str(exc)
+            else:
+                raise SystemExit("run_capped_worker did not fail")
+        if "project interpreter not found" not in worker_message:
+            raise SystemExit(worker_message)
+        """
+    )
+    completed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert completed.returncode == 0, completed.stderr + completed.stdout
 
 
 def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:
