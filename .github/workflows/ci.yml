@@ -914,8 +914,6 @@ jobs:
     needs: [changes, secret-scan, fast-checks, pytest, needs-artifact-audit, contracts, frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    permissions:
-      actions: read
     steps:
       - name: Require event jobs
         env:
@@ -934,7 +932,7 @@ jobs:
           PYTEST: ${{ needs.pytest.result }}
           AUDIT: ${{ needs['needs-artifact-audit'].result }}
           SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}
-          GH_TOKEN: ${{ github.token }}
+          SHARDS: ${{ needs.changes.outputs.shards }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
         run: |
@@ -1017,21 +1015,33 @@ jobs:
             skip_ok "$PYTEST"
             skip_ok "$AUDIT"
           else
+            # `needs.pytest.result` (checked by `ok` below) is GitHub's own
+            # aggregate over every matrix job instance it created from
+            # `fromJSON(needs.changes.outputs.shards)`: success only if every
+            # instance concluded success, computed at needs-resolution time —
+            # not a re-query subject to eventual consistency. The old check
+            # re-listed jobs through the run-attempt jobs API right after
+            # `needs` resolved and sometimes saw an incomplete page (#8967:
+            # 10/10 shards green, Gate read back 6). Cross-check shard_count
+            # against the shards array Changes emitted alongside it (both
+            # written by one classify_changes call) so a future drift between
+            # the two still fails closed, with no API call in the loop.
             ok "$PYTEST"
             if [ "$DOCS_ONLY" = false ]; then ok "$AUDIT"; else skip_ok "$AUDIT"; fi
             case "$SHARD_COUNT" in
               ''|*[!0-9]*) echo "::error::invalid shard count '$SHARD_COUNT'"; exit 1 ;;
             esac
             [ "$SHARD_COUNT" -gt 0 ] || { echo "::error::zero pytest shards"; exit 1; }
-            expected_jobs=$(for i in $(seq 1 "$SHARD_COUNT"); do echo "pytest ($i)|success"; done | sort)
-            actual_jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}/jobs?per_page=100" \
-              --jq '.jobs[] | select(.name | startswith("pytest (")) | "\(.name)|\(.conclusion)"' | sort)
-            if [ "$actual_jobs" != "$expected_jobs" ]; then
-              echo "::error::pytest matrix jobs differ from Changes.shard_count=$SHARD_COUNT"
-              echo "actual pytest jobs: $actual_jobs"
+            shards_len=$(printf '%s' "$SHARDS" | jq 'length' 2>/dev/null) || {
+              echo "::error::Changes.shards is not valid JSON: $SHARDS"
+              exit 1
+            }
+            if [ "$shards_len" != "$SHARD_COUNT" ]; then
+              echo "::error::Changes.shards has $shards_len entries but shard_count=$SHARD_COUNT"
+              echo "shards: $SHARDS"
               exit 1
             fi
-            echo "pytest matrix jobs: $SHARD_COUNT successful"
+            echo "pytest matrix jobs: $SHARD_COUNT shards, needs.pytest.result=success"
           fi
           if [ "$DOCS_ONLY" = true ]; then
             skip_ok "$CONTRACTS"
