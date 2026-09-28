@@ -26,10 +26,13 @@ A4 and A5 themselves are not rebuilt from scratch here.
 
 from __future__ import annotations
 
+import atexit
 import copy
 import functools
 import json
+import os
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -145,11 +148,51 @@ def assigned_manifest(resolved_stratum: str) -> dict[str, Any]:
     return manifest
 
 
+_SESSION_CHAIN_BASE: Path | None = None
+
+
+def _get_session_chain_base() -> Path:
+    global _SESSION_CHAIN_BASE
+    if _SESSION_CHAIN_BASE is None:
+        base = Path(tempfile.mkdtemp(prefix="v4-synthetic-chain-base-"))
+        atexit.register(shutil.rmtree, base, ignore_errors=True)
+
+        scripts_base = base / "scripts/projects/open_model_data"
+        shutil.copytree(ROOT / "scripts/projects/open_model_data", scripts_base)
+        from learn_ukrainian_v4_runtime import resources
+
+        spec = json.loads(resources.read_bytes("provenance/v1/bindings.json"))
+        for receipt in spec["receipts"]:
+            for binding in receipt["bindings"].values():
+                if binding["path"].startswith("scripts/"):
+                    p = base / binding["path"]
+                    p.write_bytes(resources.read_bytes("provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"))
+                    p.chmod(0o600)
+
+        data_base = base / "data/projects/open_model_data"
+        shutil.copytree(REGISTRY_OPEN_MODEL_DATA_DIR, data_base)
+        art_src = (ROOT / "data/projects/open_model_data").resolve()
+        if art_src.is_dir():
+            for root_dir, _dirs, files in os.walk(art_src):
+                rel = Path(root_dir).relative_to(art_src)
+                target_dir = data_base / rel
+                target_dir.mkdir(parents=True, exist_ok=True)
+                for f in files:
+                    src_f = Path(root_dir) / f
+                    tgt_f = target_dir / f
+                    if not tgt_f.exists():
+                        tgt_f.symlink_to(src_f.resolve())
+
+        _SESSION_CHAIN_BASE = base
+    return _SESSION_CHAIN_BASE
+
+
 def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path:
     """Writes a full, self-consistent ``data/`` + ``scripts/`` tree under
     ``tmp_path`` with ``resolved_stratum`` prerequisite-eligible and every
     other stratum exactly as blocked as real production today. Returns
     ``tmp_path`` for chaining into ``a6.build_receipt(root=...)`` etc."""
+    base = _get_session_chain_base()
     resolved_a2 = resolved_a2_receipt(resolved_stratum)
     manifest = assigned_manifest(resolved_stratum)
 
@@ -160,40 +203,39 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     synthetic_a5["bindings"]["a2_source_operation_admission"]["sha256"] = a4.sha256_text(json.dumps(resolved_a2))
     synthetic_a5["bindings"]["a4_deterministic_extraction"]["sha256"] = a4.sha256_text(json.dumps(synthetic_a4))
 
-    # A bytes are untracked. A checkout without them still has the K receipts
-    # this chain reads; copy the artifact tree only when it is hydrated.
-    artifact_src = ROOT / "data/projects/open_model_data"
+    data_base = base / "data/projects/open_model_data"
     artifact_dest = tmp_path / "data/projects/open_model_data"
-    if artifact_src.is_dir():
-        shutil.copytree(artifact_src, artifact_dest)
-    else:
-        artifact_dest.mkdir(parents=True, exist_ok=True)
-    # This isolated root emulates the package's frozen logical resource names.
-    # The live checkout keeps its K files solely under registry/.
-    shutil.copytree(
-        REGISTRY_OPEN_MODEL_DATA_DIR,
-        artifact_dest,
-        dirs_exist_ok=True,
-    )
-    admission_dir = tmp_path / "data/projects/open_model_data/admission"
+    artifact_dest.mkdir(parents=True, exist_ok=True)
+
+    for child in data_base.iterdir():
+        if child.name == "admission":
+            continue
+        elif child.name == "contracts":
+            dest_contracts = artifact_dest / "contracts"
+            dest_contracts.mkdir(parents=True, exist_ok=True)
+            for f in child.iterdir():
+                if f.is_file():
+                    os.link(f, dest_contracts / f.name)
+        elif child.is_dir():
+            target = artifact_dest / child.name
+            target.symlink_to(child)
+
+    shutil.copytree(REGISTRY_OPEN_MODEL_DATA_DIR / "admission", artifact_dest / "admission", dirs_exist_ok=True)
+    admission_dir = artifact_dest / "admission"
     (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(resolved_a2))
     (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(synthetic_a4))
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(synthetic_a5))
     (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest))
-    shutil.copytree(
-        ROOT / "scripts/projects/open_model_data", tmp_path / "scripts/projects/open_model_data", dirs_exist_ok=True
-    )
-    # Hash original implementation bytes in this synthetic legacy repository.
-    # Test imports execute the package; these mode-0600 fixture files are not loaded.
-    from learn_ukrainian_v4_runtime import resources
 
-    spec = json.loads(resources.read_bytes("provenance/v1/bindings.json"))
-    for receipt in spec["receipts"]:
-        for binding in receipt["bindings"].values():
-            if binding["path"].startswith("scripts/"):
-                path = tmp_path / binding["path"]
-                path.write_bytes(resources.read_bytes("provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"))
-                path.chmod(0o600)
+    scripts_base = base / "scripts/projects/open_model_data"
+    dest_scripts = tmp_path / "scripts/projects/open_model_data"
+    dest_scripts.mkdir(parents=True, exist_ok=True)
+    for f in scripts_base.iterdir():
+        if f.is_file():
+            os.link(f, dest_scripts / f.name)
+        elif f.is_dir():
+            (dest_scripts / f.name).symlink_to(f, target_is_directory=True)
+
     return tmp_path
 
 
