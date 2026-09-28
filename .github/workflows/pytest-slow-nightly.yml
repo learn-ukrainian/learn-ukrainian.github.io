@@ -16,13 +16,17 @@ concurrency:
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   pytest-slow:
     name: Pytest slow (nightly)
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    # Job-scoped (zizmor excessive-permissions): only this job files/updates
+    # the failure-tracking issue.
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
