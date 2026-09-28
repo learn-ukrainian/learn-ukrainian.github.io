@@ -22,16 +22,23 @@ source `private-teacher-lessons-a`; unchanged lessons are skipped, a changed sou
 as one unit), syncs the table, builds the deck and cloze, runs the generator gate and the
 independent checker. `--publish` is refused (exit 1, nothing replaced or uploaded) while any served
 teacher-lesson sentence has no record in the review ledger; run without it to write the review queue.
+With `--publish` the independent checker also runs in publication mode (`--publication`): it derives
+every served lesson sentence from the built cloze file itself and fails on any without a `kept` record.
 With `--publish` it then creates the GitHub release `atlas-teacher-deck` if it
 does not exist yet and uploads the set as `lexicon-teacher-deck-<deckVersion>.json.gz` (an existing
 identical version is verified, not re-uploaded). Only when every step succeeded does it write its
-outputs, all together or not at all: the local published set directory (`data/lexicon/teacher-deck/`,
-untracked) is swapped in one step, then the committed `site/src/data/lexicon-teacher-table-deck.json`,
+outputs as one generation, all together or not at all: the local published set directory
+(`data/lexicon/teacher-deck/`, untracked), the committed `site/src/data/lexicon-teacher-table-deck.json`,
 `site/src/data/lexicon-teacher-deck-frozen-keys.json` and, with `--publish`, the pointer
-`site/src/data/lexicon-teacher-deck.pointer.json` are replaced from staged copies. A failure at any of
-these steps restores every file already replaced and the old local set (the review ledger is written
-only by `record-review`). A failed checker, build or upload leaves every one of them untouched (a versioned
-asset uploaded before a later failure is harmless: nothing points to it). The generated shard and cloze are never
+`site/src/data/lexicon-teacher-deck.pointer.json`. A journal (`data/lexicon/.teacher-deck.journal`,
+`pending`) naming every target is written first; the new files are staged, the old ones kept as
+`.<name>.previous`, the directory is swapped and each file replaced; marking the journal `committed`
+is the single commit point, after which the backups and the journal are removed. A raised error rolls
+back through the journal at once; a killed process leaves the journal behind, and the next refresh
+starts by restoring the complete previous generation (`pending`) or finishing the cleanup
+(`committed`) — never a new deck with an old pointer. The review ledger is written only by
+`record-review`. A failed checker, build or upload leaves every output untouched (a versioned asset
+uploaded before a later failure is harmless: nothing points to it). The generated shard and cloze are never
 committed: they exceed the repository's 2,000 KB file limit, and the lesson sentences must be scanned
 by a person before anything is published. It prints the document and input versions,
 added/removed/changed entries (including meaning changes), merges, every teacher-lesson sentence
@@ -96,10 +103,10 @@ The first sync assigns `firstSeen`; later refreshes read the previous deck from 
 on a fresh machine, from the published asset. `npm run hydrate` runs
 `site/scripts/hydrate-teacher-deck.mjs`, which downloads the pinned package, verifies the gzip and
 package hashes and every served file (present, SHA-256, schema and version, `deckVersion`,
-compressed-size budget), then writes it to `site/public/lexicon/`. **Before the first publish** there
-is no pointer: `npm run hydrate` and `npm run verify:artifacts` log
-`teacher deck: skipped — no pointer at …` and continue (hydrate also removes stale served copies).
-Once a pointer is committed they fail closed: `verify:artifacts` checks the pointer itself (asset URL
+compressed-size budget), then writes it to `site/public/lexicon/`. The pointer is required: without
+it `npm run hydrate` and `npm run verify:artifacts` fail with `teacher deck pointer missing: …` and the
+publish command, so the site never builds without the teacher deck. Both fail closed:
+`verify:artifacts` checks the pointer itself (asset URL
 = the pinned release asset for its `deck_version`, SHA-256 digests, served-file schemas and versions,
 the cloze file record, recorded gzip size within budget) and hydrate additionally re-verifies the
 downloaded package and every served file.
@@ -198,7 +205,7 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
 ```bash
 .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir data/lexicon/teacher-deck \
   --docx "/path/to/master.docx" --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db \
-  --atlas-db data/atlas.db --withheld site/src/data/lexicon-teacher-deck-withheld.json
+  --atlas-db data/atlas.db --withheld site/src/data/lexicon-teacher-deck-withheld.json --publication
 ```
 
 It re-extracts the table and re-implements normalisation, ids, the VESUM/ULIF aspect lookup (with
@@ -208,7 +215,8 @@ mechanical sense rule (including "textbook sentences only with a usable sense") 
 conflicts; with `--vesum-db` the same-slot distractor rule (every single-word distractor is a VESUM
 form of its own entry filling every slot of the blank's form, never a form of the answer); the
 lesson-sentence fragment rules; and with `--withheld` that no withheld sentence is served and that the
-ledger carries hashes only. It then enforces the rules above and prints the aspect
+ledger carries hashes only; with `--publication` (needs `--withheld`; `refresh --publish` passes it)
+also that every served teacher-lesson sentence has a `kept` record. It then enforces the rules above and prints the aspect
 counts, the number of entries without an EN→UK card, the eligibility matrix and the residual lists
 (no Atlas entry, identity conflicts, overlap-omitted EN→UK prompts, refused groups, no-cloze
 entries, unknown aspects, teacher markers that disagree with the sources).

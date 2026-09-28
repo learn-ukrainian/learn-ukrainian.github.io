@@ -295,6 +295,7 @@ def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> 
         str(args.withheld),
         "--limit",
         "20",
+        *(["--publication"] if args.publish else []),
     ]
     # The checker re-reads the DOCX and queries VESUM/sources.db for every cloze item.
     result = subprocess.run(command, capture_output=True, text=True, check=False, timeout=1800)
@@ -305,127 +306,139 @@ def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> 
     return result.stdout
 
 
-class PublishedSetSwap:
-    """A swapped-in local published set whose old copy is kept until the run commits."""
-
-    def __init__(self, out_dir: Path, backup: Path | None) -> None:
-        self.out_dir = out_dir
-        self.backup = backup  # the old set (None: there was none)
-
-    def finish(self) -> None:
-        if self.backup is not None:
-            shutil.rmtree(self.backup)
-
-    def undo(self) -> None:
-        shutil.rmtree(self.out_dir)
-        if self.backup is not None:
-            self.backup.rename(self.out_dir)
+GENERATION_JOURNAL = "teacher-deck-generation-journal"
 
 
-def swap_published_set(files: dict[str, bytes], out_dir: Path) -> PublishedSetSwap | None:
-    """Swap the whole directory at once, keeping the old set as ``.<name>.previous``
-    until ``finish()`` or ``undo()``; return None when nothing changed.
-
-    If the second rename fails the old set is moved back, so *out_dir* is never lost.
-    A ``.previous`` left behind by an interrupted run is restored (or, when the new set
-    is in place, discarded) before anything else.
-    """
-
-    staging = out_dir.with_name(f".{out_dir.name}.next")
-    backup = out_dir.with_name(f".{out_dir.name}.previous")
-    if backup.exists():
-        if out_dir.exists():
-            shutil.rmtree(backup)
-        else:
-            backup.rename(out_dir)
-    unchanged = out_dir.exists() and {path.name for path in out_dir.iterdir()} == set(files)
-    if unchanged and all((out_dir / name).read_bytes() == data for name, data in files.items()):
-        return None
-    if staging.exists():
-        shutil.rmtree(staging)
-    staging.mkdir(parents=True)
-    for name, data in files.items():
-        (staging / name).write_bytes(data)
-    had_previous = out_dir.exists()
-    if had_previous:
-        out_dir.rename(backup)
-    try:
-        staging.rename(out_dir)
-    except OSError:
-        if had_previous:
-            backup.rename(out_dir)
-        shutil.rmtree(staging, ignore_errors=True)
-        raise
-    return PublishedSetSwap(out_dir, backup if had_previous else None)
-
-
-def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
-    """Swap the whole directory at once; return False when nothing changed."""
-
-    swap = swap_published_set(files, out_dir)
-    if swap is None:
-        return False
-    swap.finish()
-    return True
+def _sibling(path: Path, role: str) -> Path:
+    return path.with_name(f".{path.name}.{role}")
 
 
 def _json_bytes(payload: dict[str, Any]) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
-def _restore_file(target: Path, original: bytes | None) -> None:
-    if original is None:
-        target.unlink(missing_ok=True)
-        return
-    temp = target.with_name(f".{target.name}.previous")
-    temp.write_bytes(original)
-    temp.replace(target)
+def _write_journal(journal: Path, record: dict[str, Any]) -> None:
+    temp = _sibling(journal, "tmp")
+    temp.write_bytes(_json_bytes(record))
+    temp.replace(journal)
+
+
+def _settle(record: dict[str, Any]) -> None:
+    """Bring every path a generation journal names to one complete generation: the
+    previous one while the journal is ``pending``, the new one once it is ``committed``;
+    then drop the staged copies and backups. Idempotent, so an interrupted recovery is
+    simply run again."""
+
+    committed = record["state"] == "committed"
+    for row in record["files"]:
+        target = Path(row["target"])
+        backup = _sibling(target, "previous")
+        if not committed:
+            if row["existed"] and backup.exists():
+                backup.replace(target)
+            elif not row["existed"]:
+                target.unlink(missing_ok=True)
+        backup.unlink(missing_ok=True)
+        _sibling(target, "next").unlink(missing_ok=True)
+    out_dir = Path(record["outDir"])
+    backup = _sibling(out_dir, "previous")
+    if not committed and backup.exists():
+        if out_dir.exists():
+            shutil.rmtree(out_dir)
+        backup.rename(out_dir)
+    elif not committed and not record["outDirExisted"] and out_dir.exists():
+        shutil.rmtree(out_dir)
+    elif backup.exists():
+        shutil.rmtree(backup)
+    staging = _sibling(out_dir, "next")
+    if staging.exists():
+        shutil.rmtree(staging)
+
+
+def recover_generation(out_dir: Path) -> str | None:
+    """Finish a commit that a killed process left half-way; None when there was none.
+
+    A ``pending`` journal restores the complete previous generation (local set, table
+    deck, frozen keys, pointer) before any backup is discarded; a ``committed`` one only
+    finishes discarding the backups."""
+
+    journal = _sibling(out_dir, "journal")
+    _sibling(journal, "tmp").unlink(missing_ok=True)  # a journal write that never landed
+    if not journal.exists():
+        return None
+    record = json.loads(journal.read_bytes())
+    _settle(record)
+    journal.unlink()
+    if record["state"] == "committed":
+        return "recovered an interrupted run: its committed set stays; leftover backups removed"
+    return "recovered an interrupted run: the previous published set was restored"
+
+
+def _unchanged(local_files: dict[str, bytes], out_dir: Path, committed: dict[Path, bytes]) -> bool:
+    if not out_dir.is_dir() or {path.name for path in out_dir.iterdir()} != set(local_files):
+        return False
+    return all((out_dir / name).read_bytes() == data for name, data in local_files.items()) and all(
+        target.exists() and target.read_bytes() == data for target, data in committed.items()
+    )
 
 
 def commit_outputs(local_files: dict[str, bytes], out_dir: Path, committed: dict[Path, bytes]) -> bool:
-    """Write the run's outputs only after every step (checker, publish) succeeded,
-    all together or not at all.
+    """Write the run's outputs only after every step (checker, publish) succeeded, as
+    one generation: all of them or none. Return False when nothing changed.
 
-    Committed files (table deck, frozen keys, pointer) are staged next to their targets
-    and their current bytes kept; the local set is swapped (its old copy kept); then each
-    staged file replaces its target (``os.replace``). A failure at any step undoes every
-    step already taken: replaced files get their old bytes back (or are removed when they
-    did not exist) and the old local set is swapped back. Only then are the backups
-    discarded. (A killed process can still stop mid-way; the committed files then show in
-    ``git status``.)
+    A journal next to *out_dir* is written first (``pending``, naming every target).
+    Then the new files are staged (``.<name>.next``), each existing committed file is
+    hard-linked as ``.<name>.previous``, the local set directory is swapped (the old one
+    kept as ``.<name>.previous``) and each staged file replaces its target. Marking the
+    journal ``committed`` is the single commit point; only then are the backups removed
+    and the journal deleted. A raised exception rolls back through the same journal
+    here; a killed process is rolled back (or, past the commit point, finished) by
+    ``recover_generation`` at the start of the next refresh.
     """
 
-    originals = {target: target.read_bytes() if target.exists() else None for target in committed}
-    staged: list[tuple[Path, Path]] = []
-    replaced: list[Path] = []
-    swap: PublishedSetSwap | None = None
+    if _unchanged(local_files, out_dir, committed):
+        return False
+    journal = _sibling(out_dir, "journal")
+    record = {
+        "schema": GENERATION_JOURNAL,
+        "state": "pending",
+        "outDir": str(out_dir.resolve()),
+        "outDirExisted": out_dir.exists(),
+        "files": [{"target": str(target.resolve()), "existed": target.exists()} for target in committed],
+    }
+    out_dir.parent.mkdir(parents=True, exist_ok=True)
+    _write_journal(journal, record)
     try:
+        staging = _sibling(out_dir, "next")
+        staging.mkdir()
+        for name, data in local_files.items():
+            (staging / name).write_bytes(data)
         for target, data in committed.items():
             target.parent.mkdir(parents=True, exist_ok=True)
-            temp = target.with_name(f".{target.name}.next")
-            temp.write_bytes(data)
-            staged.append((temp, target))
-        swap = swap_published_set(local_files, out_dir)
-        for temp, target in staged:
-            temp.replace(target)
-            replaced.append(target)
+            _sibling(target, "next").write_bytes(data)
+            if target.exists():
+                _sibling(target, "previous").hardlink_to(target)
+        if out_dir.exists():
+            out_dir.rename(_sibling(out_dir, "previous"))
+        staging.rename(out_dir)
+        for target in committed:
+            _sibling(target, "next").replace(target)
+        _write_journal(journal, {**record, "state": "committed"})
     except BaseException:
-        for target in reversed(replaced):
-            _restore_file(target, originals[target])
-        if swap is not None:
-            swap.undo()
-        for temp, _target in staged:
-            temp.unlink(missing_ok=True)
+        _settle(record)
+        journal.unlink()
         raise
-    if swap is None:
-        return False
-    swap.finish()
+    _settle({**record, "state": "committed"})
+    journal.unlink()
     return True
 
 
 def refresh(args: argparse.Namespace) -> int:
     out_dir: Path = args.out_dir
     lines: list[str] = []
+    recovered = recover_generation(out_dir)
+    if recovered:
+        lines.append(recovered)
     docx_sha, rows = extract_teacher_rows(args.docx, args.heading)
     if not args.skip_ingest:
         lines.append(ingest(args.docx, args.sources_db))
@@ -504,7 +517,7 @@ def refresh(args: argparse.Namespace) -> int:
         f"({sum(1 for m in build.merges if m['differentEnglish'])} with different English)",
         f"previous deck: {previous_basis}",
         f"deck version: {deck_build.deck['deckVersion']} "
-        f"({'local published set replaced' if replaced else 'no-op: artifacts unchanged'}; {out_dir})",
+        f"({'published set replaced' if replaced else 'no-op: artifacts unchanged'}; {out_dir})",
         f"entries: {counts['entries']} ({counts['singleWord']} single-word, {counts['multiword']} multiword, "
         f"{counts['atlasJoined']} joined to the Atlas)",
         f"items: {json.dumps(counts['items'])}",
@@ -692,6 +705,8 @@ def _parser() -> argparse.ArgumentParser:
   rewrites --pointer. Prints the document and input versions, added/removed/changed entries, merges, every
   teacher-lesson sentence that becomes public with the review flag counts, the teacher's aspect markers and the
   source-derived verb aspect counts, and the independent checker's matrix and residual lists.
+  All outputs are replaced as one journaled generation: a run killed mid-write is rolled back (or finished,
+  past its commit point) at the start of the next refresh.
 Exit codes: 0 success or no-op; 1 validation/checker failure, refused shrink, or --publish refused while a served
   lesson sentence has no review record (nothing replaced);
   2 unreadable inputs or failed download/upload.

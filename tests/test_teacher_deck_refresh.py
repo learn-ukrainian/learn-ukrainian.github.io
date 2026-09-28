@@ -8,6 +8,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -456,8 +457,8 @@ def _refresh(world: dict[str, Path], *extra: str) -> int:
     )
 
 
-def _check(deck_dir: Path, world: dict[str, Path] | None = None) -> tuple[int, str]:
-    args = ["--deck-dir", str(deck_dir)]
+def _check(deck_dir: Path, world: dict[str, Path] | None = None, *extra: str) -> tuple[int, str]:
+    args = ["--deck-dir", str(deck_dir), *extra]
     if world:
         args += ["--docx", str(world["docx"]), "--vesum-db", str(world["vesum"]), "--sources-db", str(world["sources"])]
         args += ["--atlas-db", str(world["atlas"]), "--withheld", str(world["withheld"])]
@@ -865,29 +866,173 @@ def test_a_failed_publish_changes_nothing_committed_facing(
     assert leftovers == []
 
 
-def test_replace_published_set_restores_the_old_set_when_the_swap_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+# Every filesystem mutation the commit and the recovery make (the kill points below).
+FS_STEPS = (
+    (Path, "write_bytes"),
+    (Path, "mkdir"),
+    (Path, "rename"),
+    (Path, "replace"),
+    (Path, "unlink"),
+    (Path, "hardlink_to"),
+    (shutil, "rmtree"),
+)
+KILLED = 137
+
+
+def _generation(tmp_path: Path, tag: str, *, pointer: bool) -> tuple[dict[str, bytes], dict[Path, bytes]]:
+    site = tmp_path / "site"
+    committed = {site / "table-deck.json": f"{tag}-table".encode(), site / "frozen-keys.json": f"{tag}-keys".encode()}
+    if pointer:
+        committed[site / "pointer.json"] = f"{tag}-pointer".encode()
+    local = {"deck.json": f"{tag}-deck".encode(), "cloze.json": f"{tag}-cloze".encode()}
+    if tag == "new":
+        local["coverage.json"] = b"new-coverage"
+    return local, committed
+
+
+def _snapshot(root: Path) -> dict[str, bytes | None]:
+    """Every file (bytes) and directory (None) under *root*, so leftovers of any kind show."""
+
+    return {str(path.relative_to(root)): path.read_bytes() if path.is_file() else None for path in root.rglob("*")}
+
+
+def _restore_snapshot(root: Path, snapshot: dict[str, bytes | None]) -> None:
+    for path in root.iterdir():
+        shutil.rmtree(path) if path.is_dir() else path.unlink()
+    for name, data in sorted(snapshot.items()):
+        if data is None:
+            (root / name).mkdir(parents=True, exist_ok=True)
+        else:
+            (root / name).parent.mkdir(parents=True, exist_ok=True)
+            (root / name).write_bytes(data)
+
+
+def _in_child(action, kill) -> tuple[int, str]:
+    """Run *action* in a forked child whose filesystem steps first ask ``kill(step, name,
+    args)``; a True answer ends the child with ``os._exit`` — no ``except``, ``finally``
+    or cleanup runs, so the parent sees exactly what a killed process leaves on disk.
+    Returns the exit code and the child's step count when it ran to the end."""
+
+    read, write = os.pipe()
+    pid = os.fork()
+    if pid == 0:  # pragma: no cover - child
+        os.close(read)
+        steps = [0]
+        for owner, name in FS_STEPS:
+            real = getattr(owner, name)
+
+            def step(*args, _real=real, _name=name, **kwargs):
+                if kill(steps[0], _name, args):
+                    os._exit(KILLED)
+                steps[0] += 1
+                return _real(*args, **kwargs)
+
+            setattr(owner, name, step)
+        try:
+            action()
+            os.write(write, str(steps[0]).encode())
+            os._exit(0)
+        except BaseException:
+            os._exit(1)
+    os.close(write)
+    with os.fdopen(read) as pipe:
+        done = pipe.read()
+    _, status = os.waitpid(pid, 0)
+    return os.waitstatus_to_exitcode(status), done
+
+
+def _run_killed_at(kill_at: int | None, action) -> int:
+    """Kill *action* just before its *kill_at*-th filesystem step (None: run it to the
+    end and return how many steps it took)."""
+
+    code, done = _in_child(action, lambda step, _name, _args: step == kill_at)
+    assert code == (0 if kill_at is None else KILLED), (kill_at, code)
+    return int(done) if kill_at is None else kill_at
+
+
+def test_a_killed_commit_is_recovered_to_one_complete_generation(tmp_path: Path) -> None:
+    """Kill the commit before each of its filesystem steps (and the recovery before each
+    of its own): the next run always finds the whole previous generation or the whole
+    new one — never a new deck with an old pointer — and no leftovers."""
+
     out = tmp_path / "deck"
-    teacher_deck.replace_published_set({"a.json": b"old"}, out)
-    real_rename = Path.rename
+    old_local, old_committed = _generation(tmp_path, "old", pointer=False)
+    new_local, new_committed = _generation(tmp_path, "new", pointer=True)
 
-    def rename(self: Path, target: Path) -> Path:
-        if self.name == ".deck.next":
-            raise OSError("disk full")
-        return real_rename(self, target)
+    def reset() -> None:
+        for path in tmp_path.iterdir():
+            shutil.rmtree(path) if path.is_dir() else path.unlink()
+        assert teacher_deck.commit_outputs(old_local, out, old_committed) is True
 
-    monkeypatch.setattr(Path, "rename", rename)
-    with pytest.raises(OSError, match="disk full"):
-        teacher_deck.replace_published_set({"a.json": b"new"}, out)
-    assert (out / "a.json").read_bytes() == b"old"
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["deck"]
+    reset()
+    old = _snapshot(tmp_path)
+    assert teacher_deck.commit_outputs(new_local, out, new_committed) is True
+    new = _snapshot(tmp_path)
+    assert set(new) == {"deck", "deck/deck.json", "deck/cloze.json", "deck/coverage.json", "site",
+                        "site/table-deck.json", "site/frozen-keys.json", "site/pointer.json"}  # fmt: skip
+    reset()
+    total = _run_killed_at(None, lambda: teacher_deck.commit_outputs(new_local, out, new_committed))
+    assert _snapshot(tmp_path) == new
 
-    # An interrupted run that left only `.previous` behind is recovered first.
-    monkeypatch.setattr(Path, "rename", real_rename)
-    out.rename(tmp_path / ".deck.previous")
-    assert teacher_deck.replace_published_set({"a.json": b"old"}, out) is False
-    assert (out / "a.json").read_bytes() == b"old" and not (tmp_path / ".deck.previous").exists()
+    outcomes: list[str] = []
+    for kill_at in range(total):
+        reset()
+        _run_killed_at(kill_at, lambda: teacher_deck.commit_outputs(new_local, out, new_committed))
+        killed_state = _snapshot(tmp_path)
+        journal = tmp_path / ".deck.journal"
+        if journal.exists():
+            # The recovery itself is killed before each of its steps, then run again.
+            recovery_steps = _run_killed_at(None, lambda: teacher_deck.recover_generation(out))
+            for recovery_kill in range(recovery_steps):
+                _restore_snapshot(tmp_path, killed_state)
+                _run_killed_at(recovery_kill, lambda: teacher_deck.recover_generation(out))
+                teacher_deck.recover_generation(out)
+                assert _snapshot(tmp_path) in (old, new), (kill_at, recovery_kill)
+            _restore_snapshot(tmp_path, killed_state)
+        teacher_deck.recover_generation(out)
+        state = _snapshot(tmp_path)
+        assert state in (old, new), f"mixed set after a kill before step {kill_at}: {sorted(state)}"
+        outcomes.append("new" if state == new else "old")
+        # The next refresh then commits the new generation cleanly.
+        assert teacher_deck.commit_outputs(new_local, out, new_committed) is (state == old)
+        assert _snapshot(tmp_path) == new
+    # Before the commit point every kill restores the old set; after it, the new set stays.
+    first_new = outcomes.index("new")
+    assert first_new > 0 and outcomes == ["old"] * first_new + ["new"] * (total - first_new)
+
+
+def test_a_refresh_after_a_killed_publish_restores_the_previous_set_first(
+    world: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    FakeGh(monkeypatch)
+    _review_all(world, tmp_path / "scratch1")
+    assert _refresh(world, "--publish") == 0
+    before = _committed(world)
+    _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
+    _review_all(world, tmp_path / "scratch2")
+
+    # Kill the publishing refresh right after the local set was swapped in: a new deck
+    # beside the old table deck, frozen keys and pointer, and a pending journal.
+    def at_table_deck(_step: int, name: str, args: tuple) -> bool:
+        return name == "replace" and args[0].name == ".table-deck.json.next"
+
+    code, _ = _in_child(lambda: _refresh(world, "--publish", "--skip-ingest"), at_table_deck)
+    assert code == KILLED
+    journal = world["out"].with_name(".deck.journal")
+    assert journal.exists() and json.loads(journal.read_text(encoding="utf-8"))["state"] == "pending"
+    assert _committed(world)["pointer.json"] == before["pointer.json"]
+    assert (world["out"] / shard.DECK_FILE).read_bytes() != before[shard.DECK_FILE]  # the mixed set on disk
+
+    capsys.readouterr()
+    teacher_deck.recover_generation(world["out"])
+    assert _committed(world) == before and not journal.exists()
+    assert sorted(path.name for path in tmp_path.iterdir() if path.name.startswith(".")) == []
+
+    # A refresh starts with the same recovery, then commits the new generation whole.
+    assert _refresh(world, "--publish", "--skip-ingest") == 0
+    after = _committed(world)
+    changed = {name for name in {*before, *after} if before.get(name) != after.get(name)}
+    assert {"table-deck.json", "frozen-keys.json", "pointer.json", shard.DECK_FILE, shard.CLOZE_FILE} <= changed
 
 
 @pytest.mark.parametrize("failing", ["deck", "table-deck.json", "frozen-keys.json", "pointer.json"])
@@ -1020,12 +1165,73 @@ def test_withheld_and_fragment_sentences_are_never_selected_and_a_replacement_is
     ]
     assert review["counts"]["servedLessonItems"] == 4
     code, report = _check(world["out"], world)
-    assert code == 0, report
+    assert code == 0, report  # a local build may serve unreviewed sentences: they are the review queue
+    # Publication mode derives every served lesson sentence itself and needs a kept record for each.
+    code, report = _check(world["out"], world, "--publication")
+    unreviewed = re.findall(r"ERROR (\S+): serves a teacher-lesson sentence with no language-review record", report)
+    assert code == 1 and len(unreviewed) == 3, report
+    assert set(unreviewed) == {row["clozeId"] for row in review["sentences"]}
 
 
 def entries_by_key(world: dict[str, Path]) -> dict[str, dict]:
     deck = json.loads((world["out"] / shard.DECK_FILE).read_text(encoding="utf-8"))
     return {entry["key"]: entry for entry in deck["entries"]}
+
+
+def test_publication_check_passes_only_when_every_served_lesson_sentence_is_kept(
+    world: dict[str, Path], tmp_path: Path
+) -> None:
+    _review_all(world, tmp_path / "scratch")
+    assert _refresh(world) == 0
+    code, report = _check(world["out"], world, "--publication")
+    assert code == 0 and "(publication: every served lesson sentence kept)" in report, report
+
+    # One served sentence loses its kept record: the publication check fails on it alone.
+    ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
+    dropped = ledger["kept"].pop(0)["sentenceSha256"]
+    world["withheld"].write_text(json.dumps(ledger), encoding="utf-8")
+    cloze = json.loads((world["out"] / shard.CLOZE_FILE).read_text(encoding="utf-8"))
+    expected = {
+        item["clozeId"]
+        for item in cloze["cloze"]
+        if item["source"] == "teacher-lesson"
+        and shard.sentence_sha256(item["sentence"].replace(shard.BLANK, item["form"], 1)) == dropped
+    }
+    code, report = _check(world["out"], world, "--publication")
+    unreviewed = re.findall(r"ERROR (\S+): serves a teacher-lesson sentence with no language-review record", report)
+    assert code == 1 and expected and set(unreviewed) == expected, report
+
+    # A withheld sentence that is still served fails as withheld, in either mode.
+    _write_ledger(world["withheld"], {"Я п'ю зелений чай щоранку.": "ERR"})
+    code, report = _check(world["out"], world, "--publication")
+    assert code == 1 and "serves a sentence the language review withheld (ERR)" in report
+
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/audit/check_teacher_deck.py"), "--deck-dir", str(world["out"]),
+         "--publication"],
+        capture_output=True, text=True, check=False, timeout=60,
+    )  # fmt: skip
+    assert result.returncode == 2 and "--publication needs --withheld" in result.stderr
+
+
+def test_publish_runs_the_checker_in_publication_mode(
+    world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The independent checker refuses a publish even when the generator's own review
+    gate is wrong (here: forced to report an empty queue)."""
+
+    fake = FakeGh(monkeypatch)
+    real_review = shard.lesson_sentence_review
+
+    def empty_queue(build, vesum_db):
+        review = real_review(build, vesum_db)
+        return {**review, "sentences": [], "counts": {**review["counts"], "sentences": 0, "distinctSentences": 0}}
+
+    monkeypatch.setattr(shard, "lesson_sentence_review", empty_queue)
+    assert _refresh(world, "--publish") == 1
+    err = capsys.readouterr().err
+    assert "independent checker failed" in err and "no language-review record" in err
+    assert fake.calls == [] and not world["pointer"].exists() and not world["out"].exists()
 
 
 def test_checker_fails_when_a_withheld_sentence_is_served(world: dict[str, Path]) -> None:

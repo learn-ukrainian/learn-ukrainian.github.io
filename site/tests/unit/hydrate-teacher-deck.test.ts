@@ -112,7 +112,6 @@ describe('teacher deck build gate (#8843)', () => {
     await expect(hydrateTeacherDeck({ pointerPath, targetDir })).resolves.toEqual({
       version: 'teacher-v1-test',
       downloaded: true,
-      skipped: false,
     });
     expect(JSON.parse(readFileSync(join(targetDir, 'practice-cloze.teacher.json'), 'utf8')).cloze).toEqual([]);
     await expect(hydrateTeacherDeck({ pointerPath, targetDir })).resolves.toMatchObject({ downloaded: false });
@@ -132,17 +131,12 @@ describe('teacher deck build gate (#8843)', () => {
     expect(existsSync(join(targetDir, 'practice-deck.teacher.json'))).toBe(false);
   });
 
-  test('skips with a log line before the first publish and drops stale served copies', async () => {
-    const targetDir = tempDir();
-    writeFileSync(join(targetDir, 'practice-deck.teacher.json'), '{"stale":true}');
+  test('fails the build when no pointer is committed, naming the publish command', async () => {
     const fetchMock = stubDownload(Buffer.alloc(0));
-    const log = vi.fn();
 
-    await expect(
-      hydrateTeacherDeck({ pointerPath: join(tempDir(), 'none.json'), targetDir, log }),
-    ).resolves.toEqual({ version: null, downloaded: false, skipped: true });
-    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^teacher deck: skipped — no pointer at .*none\.json/));
-    expect(existsSync(join(targetDir, 'practice-deck.teacher.json'))).toBe(false);
+    await expect(hydrateTeacherDeck({ pointerPath: join(tempDir(), 'none.json'), targetDir: tempDir() })).rejects.toThrow(
+      /^teacher deck pointer missing: .*none\.json .*scripts\.lexicon\.teacher_deck refresh .*--publish/,
+    );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -180,18 +174,15 @@ describe('teacher deck build gate (#8843)', () => {
 });
 
 describe('teacher deck committed-artifact check (#8843)', () => {
-  test('skips with a log line while no pointer is committed', () => {
-    const log = vi.fn();
-    expect(verifyTeacherDeckPointer({ pointerPath: join(tempDir(), 'none.json'), log })).toEqual({ skipped: true });
-    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^teacher deck: skipped — no pointer at /));
+  test('fails closed while no pointer is committed, naming the publish command', () => {
+    expect(() => verifyTeacherDeckPointer({ pointerPath: join(tempDir(), 'none.json') })).toThrow(
+      /^teacher deck pointer missing: .*none\.json .*scripts\.lexicon\.teacher_deck refresh .*--publish/,
+    );
   });
 
   test('accepts a well-formed pointer', () => {
     const { pointer } = fixture();
-    expect(verifyTeacherDeckPointer({ pointerPath: writePointer(pointer), log: vi.fn() })).toEqual({
-      skipped: false,
-      version: 'teacher-v1-test',
-    });
+    expect(verifyTeacherDeckPointer({ pointerPath: writePointer(pointer) })).toEqual({ version: 'teacher-v1-test' });
   });
 
   test.each([
@@ -228,7 +219,7 @@ describe('teacher deck committed-artifact check (#8843)', () => {
     ],
   ])('fails closed on a wrong %s', (_label, mutate, message) => {
     const pointerPath = writePointer(mutate(fixture().pointer));
-    expect(() => verifyTeacherDeckPointer({ pointerPath, log: vi.fn() })).toThrow(message);
+    expect(() => verifyTeacherDeckPointer({ pointerPath })).toThrow(message);
     expect(() => validatePointer(mutate(fixture().pointer))).toThrow(message);
   });
 });

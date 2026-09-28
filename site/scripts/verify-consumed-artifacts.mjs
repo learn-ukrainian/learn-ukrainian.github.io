@@ -80,7 +80,7 @@ function main() {
   const pointer = parseJson('site/src/data/lexicon-manifest.pointer.json');
   const fingerprint = parseJson('site/src/data/lexicon-manifest.fingerprint.json');
   assertPointerFresh(pointer, fingerprint);
-  // Optional until the first publish (skips with a log line); fail-closed once pinned.
+  // Required: the site never builds without the published teacher deck (#8843).
   try {
     verifyTeacherDeckPointer({ pointerPath: resolve(repoRoot, 'site/src/data/lexicon-teacher-deck.pointer.json') });
   } catch (error) {

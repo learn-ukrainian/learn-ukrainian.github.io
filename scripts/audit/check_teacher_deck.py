@@ -445,8 +445,8 @@ def article_senses(article: dict[str, Any]) -> list[str]:
     return [" ".join(item.split()) for item in english if isinstance(item, str) and item.strip()]
 
 
-def load_ledger(path: Path, report: Report) -> dict[str, str]:
-    """Withheld sentence digests -> code; the ledger must carry hashes, never sentence text."""
+def load_ledger(path: Path, report: Report) -> tuple[dict[str, str], set[str]]:
+    """Withheld sentence digests -> code, and kept digests; the ledger must carry hashes, never text."""
 
     payload = json.loads(path.read_text(encoding="utf-8"))
     if (payload.get("schema"), payload.get("schemaVersion")) != LEDGER_SCHEMA:
@@ -467,7 +467,7 @@ def load_ledger(path: Path, report: Report) -> dict[str, str]:
         report.fail("review ledger: a record is not a SHA-256 digest")
     if kept & set(withheld):
         report.fail("review ledger: a sentence is both kept and withheld")
-    return withheld
+    return withheld, kept
 
 
 def extract_table(docx: Path, heading: str) -> tuple[str, list[tuple[int, str, str]]]:
@@ -780,7 +780,11 @@ def check_cloze(
     sources: sqlite3.Connection | None,
     senses: dict[str, tuple[str, int | None]] | None = None,
     withheld: dict[str, str] | None = None,
+    kept: set[str] | None = None,
 ) -> dict[str, Any]:
+    """Check every cloze item; with *kept* (publication mode) every served teacher-lesson
+    sentence must also have a kept review record."""
+
     by_id = {entry["entryId"]: entry for entry in deck["entries"]}
     per_entry: dict[str, list[dict[str, Any]]] = {}
     seen_ids: set[str] = set()
@@ -826,6 +830,8 @@ def check_cloze(
             report.fail(f"{cloze_id}: serves a sentence the language review withheld ({withheld[digest]})")
         if item.get("source") == "teacher-lesson":
             lesson_digests.add(digest)
+            if kept is not None and digest not in kept and digest not in (withheld or {}):
+                report.fail(f"{cloze_id}: serves a teacher-lesson sentence with no language-review record")
             shape = fragment_shape(restored)
             if shape:
                 report.fail(f"{cloze_id}: teacher-lesson sentence is worksheet debris ({shape})")
@@ -1107,7 +1113,8 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         report.fail(f"frozen key list has {len(frozen.get('keys', []))} keys, expected {args.expect_keys}")
     if args.docx:
         summary["table"] = check_source_table(deck, frozen, extract_table(args.docx, args.heading), report)
-    withheld = load_ledger(args.withheld, report) if getattr(args, "withheld", None) else None
+    withheld, kept = load_ledger(args.withheld, report) if getattr(args, "withheld", None) else (None, set())
+    required_kept = kept if getattr(args, "publication", False) else None
     vesum = _read_only(args.vesum_db)
     sources = _read_only(args.sources_db)
     atlas = _read_only(getattr(args, "atlas_db", None))
@@ -1118,13 +1125,16 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         overlaps, partners = own_overlaps(deck["entries"], values)
         check_entries(deck, frozen, overlaps, partners, report)
         senses = check_atlas(deck, coverage, atlas_articles(atlas), aspects, report) if atlas is not None else None
-        summary["lesson"] = check_cloze(deck, cloze, overlaps, partners, report, vesum, sources, senses, withheld)
+        summary["lesson"] = check_cloze(
+            deck, cloze, overlaps, partners, report, vesum, sources, senses, withheld, required_kept
+        )
     finally:
         for conn in (vesum, sources, atlas):
             if conn is not None:
                 conn.close()
     summary["atlasVerified"] = atlas is not None
     summary["withheldVerified"] = withheld is not None
+    summary["reviewRequired"] = required_kept is not None
     check_grammar(deck, aspects, coverage, report)
     summary["entries"] = len(deck["entries"])
     summary["frozenKeys"] = len(frozen.get("keys", []))
@@ -1161,7 +1171,8 @@ def render(report: Report, summary: dict[str, Any], limit: int | None) -> str:
     lines.append(
         f"teacher-lesson cloze: {summary['lesson']['lessonItems']} items, {summary['lesson']['lessonSentences']} "
         f"distinct sentences; fragment rules re-checked; withheld ledger "
-        f"{'re-checked' if summary['withheldVerified'] else 'not given'}; Atlas join, sense rule and identity "
+        f"{'re-checked' if summary['withheldVerified'] else 'not given'}"
+        f"{' (publication: every served lesson sentence kept)' if summary['reviewRequired'] else ''}; Atlas join, sense rule and identity "
         f"conflicts {'re-derived' if summary['atlasVerified'] else 'not re-derived (no --atlas-db)'}"
     )
     for shape, cells in summary["aspect"].items():
@@ -1200,7 +1211,7 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir data/lexicon/teacher-deck
   .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir /tmp/deck --docx /private/master.docx \\
       --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db --atlas-db data/atlas.db \\
-      --withheld site/src/data/lexicon-teacher-deck-withheld.json
+      --withheld site/src/data/lexicon-teacher-deck-withheld.json --publication
 Outputs: PASS/FAIL, errors, the eligibility matrix and residual lists on stdout;
   --json writes the same as JSON. Read-only: databases open with mode=ro.
 Exit codes: 0 PASS; 1 structural errors; 2 unreadable inputs.
@@ -1230,10 +1241,18 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/lexicon/teacher_deck.p
         help="Language-review ledger; fails when a withheld sentence is served (default: skip).",
     )
     parser.add_argument(
+        "--publication",
+        action="store_true",
+        help="Publication mode (needs --withheld): every served teacher-lesson sentence needs a kept record "
+        "(default: unreviewed sentences allowed, as in the review queue).",
+    )
+    parser.add_argument(
         "--limit", type=int, default=0, help="Max listed errors/residual rows per list; 0 = all (default 0)."
     )
     parser.add_argument("--json", type=Path, help="Optional JSON report path (default: none).")
     args = parser.parse_args(argv)
+    if args.publication and args.withheld is None:
+        parser.error("--publication needs --withheld")
     try:
         report, summary = run(args)
     except (OSError, ValueError, KeyError, zipfile.BadZipFile, sqlite3.Error) as exc:

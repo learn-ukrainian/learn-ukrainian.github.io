@@ -8,14 +8,11 @@
  * every file the pointer marks as published (SHA-256, schema and schema version,
  * deck version, compressed-size budget) and writes it to `public/lexicon/`, where
  * the practice page fetches it only when the teacher deck is selected. Any missing
- * or mismatching piece fails the build instead of a silent 404.
- *
- * Before the first publish there is no pointer: hydration and the committed-artifact
- * check then skip the teacher deck with an explicit log line (and remove stale
- * served copies). Once a pointer exists, everything it pins is enforced.
+ * or mismatching piece fails the build instead of a silent 404 — including a missing
+ * pointer: the site never builds without the teacher deck.
  */
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { gunzipSync, gzipSync } from 'node:zlib';
@@ -53,10 +50,6 @@ function sha256(data) {
   return createHash('sha256').update(data).digest('hex');
 }
 
-export function skipLine(pointerPath) {
-  return `teacher deck: skipped — no pointer at ${pointerPath} (the deck has not been published yet). ${RECOVERY}`;
-}
-
 /** Structural check of a committed pointer (no download): asset, hashes, schemas, cloze file, budgets. */
 export function validatePointer(pointer) {
   for (const key of ['asset_url', 'deck_version', 'gz_sha256', 'package_sha256', 'package_bytes', 'files']) {
@@ -86,21 +79,14 @@ export function validatePointer(pointer) {
 
 export function readPointer(pointerPath = DEFAULT_POINTER) {
   if (!existsSync(pointerPath)) {
-    throw new Error(`teacher deck pointer missing: ${pointerPath}. ${RECOVERY}`);
+    throw new Error(`teacher deck pointer missing: ${pointerPath} (the deck has not been published). ${RECOVERY}`);
   }
   return validatePointer(JSON.parse(readFileSync(pointerPath, 'utf8')));
 }
 
-/**
- * Committed-artifact check (`npm run verify:artifacts`): skip with a log line while
- * the deck is unpublished; otherwise the pointer must pass `validatePointer`.
- */
-export function verifyTeacherDeckPointer({ pointerPath = DEFAULT_POINTER, log = console.log } = {}) {
-  if (!existsSync(pointerPath)) {
-    log(skipLine(pointerPath));
-    return { skipped: true };
-  }
-  return { skipped: false, version: readPointer(pointerPath).deck_version };
+/** Committed-artifact check (`npm run verify:artifacts`): the pointer must exist and pass `validatePointer`. */
+export function verifyTeacherDeckPointer({ pointerPath = DEFAULT_POINTER } = {}) {
+  return { version: readPointer(pointerPath).deck_version };
 }
 
 function servedRecords(pointer) {
@@ -170,32 +156,20 @@ function alreadyServed(pointer, targetDir) {
   });
 }
 
-export async function hydrateTeacherDeck({
-  pointerPath = DEFAULT_POINTER,
-  targetDir = DEFAULT_TARGET,
-  log = console.log,
-} = {}) {
-  if (!existsSync(pointerPath)) {
-    // Unpublished deck: nothing to serve, and never an unverified leftover copy.
-    for (const name of Object.keys(SERVED_FILES)) rmSync(resolve(targetDir, name), { force: true });
-    log(skipLine(pointerPath));
-    return { version: null, downloaded: false, skipped: true };
-  }
+export async function hydrateTeacherDeck({ pointerPath = DEFAULT_POINTER, targetDir = DEFAULT_TARGET } = {}) {
   const pointer = readPointer(pointerPath);
-  if (alreadyServed(pointer, targetDir)) return { version: pointer.deck_version, downloaded: false, skipped: false };
+  if (alreadyServed(pointer, targetDir)) return { version: pointer.deck_version, downloaded: false };
   const gzBytes = await downloadGzip(pointer);
   const files = parseTeacherPackage(gunzipSync(gzBytes), pointer);
   mkdirSync(targetDir, { recursive: true });
   for (const [name, data] of files) writeFileSync(resolve(targetDir, name), data);
-  return { version: pointer.deck_version, downloaded: true, skipped: false };
+  return { version: pointer.deck_version, downloaded: true };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   hydrateTeacherDeck()
-    .then(({ version, downloaded, skipped }) => {
-      if (!skipped) {
-        console.log(`✓ teacher deck ${version} ${downloaded ? 'hydrated' : 'already hydrated'} -> public/lexicon`);
-      }
+    .then(({ version, downloaded }) => {
+      console.log(`✓ teacher deck ${version} ${downloaded ? 'hydrated' : 'already hydrated'} -> public/lexicon`);
     })
     .catch((error) => {
       console.error(`Failed to hydrate the teacher deck: ${error instanceof Error ? error.message : error}`);
