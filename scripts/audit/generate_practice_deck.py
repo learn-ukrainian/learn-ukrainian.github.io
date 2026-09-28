@@ -2477,34 +2477,6 @@ def _explicit_aspect_category(labels: list[str]) -> str | None:
     return next(iter(aspects)) if len(aspects) == 1 else None
 
 
-def _aspect_category(labels: list[str]) -> str | None:
-    """Classify aspect from VESUM/Atlas evidence before a documented fallback.
-
-    VESUM ``perf``/``imperf`` tags and their decoded Atlas labels are explicit
-    aspect evidence, so they win over tense.  Tense is only a legacy fallback:
-    an untagged verb with both present and future labels is imperfective because
-    imperfectives have analytic future forms; a future-only untagged verb is
-    treated as perfective.  Contradictory explicit tags are left unclassified.
-    """
-    explicit = _explicit_aspect_category(labels)
-    if explicit:
-        return explicit
-    if any(
-        pattern.search(label)
-        for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
-        for label in labels
-        for pattern in patterns
-    ):
-        return None
-    has_present = any("теперішній" in label for label in labels)
-    has_future = any("майбутній" in label for label in labels)
-    if has_present:
-        return "imperfective"
-    if has_future:
-        return "perfective"
-    return None
-
-
 def _vesum_aspect_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, str]:
     """Read explicit aspect from VESUM tags for exact verb lemmas in batches.
 
@@ -4847,9 +4819,11 @@ def validate_imperative_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
-# A word keeps its apostrophes (', ’, ʼ), so «m'ясо» with a Latin m is one
-# mixed-script word rather than a Latin «m» beside a Cyrillic «ясо».
-_CYRILLIC_LATIN_TOKEN = re.compile(r"[^\W\d_]+(?:['’ʼ][^\W\d_]+)*", re.UNICODE)
+# A word keeps its apostrophes (', ’, ʼ) and combining marks such as the
+# stress accent U+0301, so «m'ясо» and «м'я́co» are each one mixed-script word
+# rather than a Latin fragment beside a Cyrillic one.
+_WORD_LETTER = r"[^\W\d_][\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]*"
+_CYRILLIC_LATIN_TOKEN = re.compile(rf"(?:{_WORD_LETTER})+(?:['’ʼ](?:{_WORD_LETTER})+)*", re.UNICODE)
 
 
 def _mixed_script_tokens(text: str) -> list[str]:

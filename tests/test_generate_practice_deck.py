@@ -17,7 +17,6 @@ from scripts.audit.generate_practice_deck import (
     RealVesumVerifier,
     ReviewedSourceAllowlist,
     VesumLemmaEvidence,
-    _aspect_category,
     _build_antonym_items,
     _build_classify_items,
     _build_cloze_items,
@@ -909,27 +908,49 @@ def test_neuter_a_ya_nouns_can_reach_fourth_declension() -> None:
     assert _declension_category(entry, ["ім. сер."], paradigm) == "declension-4"
 
 
+VERB_EVIDENCE = VesumLemmaEvidence(frozenset({"verb"}))
+
+
+def _verb_classify_sets(
+    lemma: str, labels: list[str], vesum_aspect: str | None, residuals: list[dict[str, str]] | None = None
+) -> dict[str, str]:
+    entry = {
+        "lemma": lemma,
+        "pos": "verb",
+        "enrichment": {"morphology": {"pos": "verb", "forms": [{"label": label} for label in labels]}},
+    }
+    lexeme = {"lemmaId": lemma, "lemma": lemma, "cefr": "A2"}
+    items = _build_classify_items(
+        entry, lexeme, vesum_aspect=vesum_aspect, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals
+    )
+    return {s["setId"]: s["answer"] for item in items for s in item["sets"]}
+
+
 @pytest.mark.parametrize(
-    ("lemma", "labels", "expected"),
+    ("lemma", "labels", "vesum_aspect"),
     [
         ("писати", ["verb:imperf:pres"], "imperfective"),
         ("написати", ["verb:perf:futr"], "perfective"),
+        ("писати", ["недок."], "imperfective"),
+        ("написати", ["док."], "perfective"),
+        ("написати", ["доконаний", "теперішній"], "perfective"),
     ],
 )
-def test_aspect_category_reads_explicit_vesum_tags(lemma: str, labels: list[str], expected: str) -> None:
-    assert _aspect_category(labels) == expected, lemma
+def test_classify_keys_aspect_when_explicit_labels_agree_with_vesum(
+    lemma: str, labels: list[str], vesum_aspect: str
+) -> None:
+    """Explicit VESUM tags and Ukrainian abbreviations agree with VESUM; a tense label never overrides them."""
+    assert _verb_classify_sets(lemma, labels, vesum_aspect)["aspect"] == vesum_aspect
 
 
-def test_aspect_category_reads_ukrainian_abbreviated_labels() -> None:
-    assert _aspect_category(["недок."]) == "imperfective"
-    assert _aspect_category(["док."]) == "perfective"
+@pytest.mark.parametrize(("labels", "vesum_aspect"), [(["недок."], "perfective"), (["док."], "imperfective")])
+def test_classify_withholds_aspect_when_an_abbreviated_label_contradicts_vesum(
+    labels: list[str], vesum_aspect: str
+) -> None:
+    residuals: list[dict[str, str]] = []
 
-
-def test_aspect_category_explicit_tag_wins_over_tense_proxy() -> None:
-    assert _aspect_category(["доконаний", "теперішній"]) == "perfective"
-
-
-VERB_EVIDENCE = VesumLemmaEvidence(frozenset({"verb"}))
+    assert "aspect" not in _verb_classify_sets("писати", labels, vesum_aspect, residuals)
+    assert [residual["reason"] for residual in residuals] == ["conflicting_explicit_aspect"]
 
 
 def test_classify_withholds_aspect_when_enrichment_disagrees_with_vesum() -> None:
@@ -977,8 +998,12 @@ def test_classify_keys_no_aspect_without_vesum_verb_evidence() -> None:
     assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect", "unbound_verb_reading"]
 
 
-def test_aspect_category_uses_imperfective_fallback_for_present_and_future() -> None:
-    assert _aspect_category(["теперішній", "майбутній"]) == "imperfective"
+def test_classify_keys_no_aspect_from_present_and_future_tense_labels() -> None:
+    """Tense is no aspect evidence: without a VESUM aspect the emitted item has no aspect set."""
+    residuals: list[dict[str, str]] = []
+
+    assert _verb_classify_sets("писати", ["теперішній", "майбутній"], None, residuals) == {"pos": "verb"}
+    assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect"]
 
 
 def test_vesum_aspect_lookup_uses_only_an_unambiguous_exact_verb_lemma() -> None:

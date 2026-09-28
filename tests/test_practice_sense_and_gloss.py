@@ -446,6 +446,21 @@ def test_deck_text_gate_rejects_a_mixed_script_word_split_by_an_apostrophe(word:
     ]
 
 
+@pytest.mark.parametrize("apostrophe", ["'", "’", "ʼ"])
+def test_homoglyph_gate_reads_a_stressed_word_as_one_word(apostrophe: str) -> None:
+    """Review (#8715): the stress mark split «м'я́co» into «м'я́» plus a Latin «co», so it passed."""
+    stressed = f"м{apostrophe}я\u0301co"
+    planted = _deck(heritage={"heritage": [{"options": [{"label": f"{stressed}, cafe\u0301"}]}]})
+
+    assert generate_practice_deck.validate_deck_text(planted) == [
+        f"heritage.B2.heritage[0].options[0].label: mixed Cyrillic/Latin word {stressed!r}"
+    ]
+    assert generate_practice_deck._repair_homoglyphs(f"{stressed}, cafe\u0301") == (
+        f"м{apostrophe}я\u0301со, cafe\u0301"
+    )
+    assert generate_practice_deck.validate_deck_text(generate_practice_deck._repair_deck_homoglyphs(planted)) == []
+
+
 def test_shard_build_repairs_homoglyphs_and_fails_on_an_unrepairable_one() -> None:
     def build(gloss: str) -> dict[str, dict[str, dict[str, Any]]]:
         return build_practice_shards(
