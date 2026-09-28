@@ -40,10 +40,16 @@ from lexeme_filter import (
     practice_ineligibility_reason,
 )
 from practice_linguistic import (
+    IDENTITY_RULE_IDS,
+    LEXICAL_INSERTION_RULE_ID,
     check_cloze_item,
+    check_inventory_prompt_level,
     check_stress_item,
+    check_unique_answer_evidence,
+    identity_blank_case,
     index_from_generator_candidates,
 )
+from practice_linguistic import plain as linguistic_plain
 
 from scripts.lexicon.curated_membership import (
     apply_membership,
@@ -1017,6 +1023,17 @@ def _cefr_level(entry: dict[str, Any]) -> str | None:
     return None
 
 
+def _lemma_levels(entries: list[dict[str, Any]]) -> dict[str, str]:
+    """Map every levelled Atlas lemma to its lowest CEFR level (prompt level fit, #8724)."""
+    levels: dict[str, str] = {}
+    for entry in entries:
+        lemma = linguistic_plain(str(entry.get("lemma") or ""))
+        level = _cefr_level(entry)
+        if lemma and level and (lemma not in levels or CEFR_RANK[level] < CEFR_RANK[levels[lemma]]):
+            levels[lemma] = level
+    return levels
+
+
 def _ipa(entry: dict[str, Any]) -> str | None:
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, dict):
@@ -1334,6 +1351,10 @@ def _case_form(
 
 
 def _case_rule_payload(rule_id: str, lemma: str, form: str) -> dict[str, str] | None:
+    if rule_id == LEXICAL_INSERTION_RULE_ID:
+        # The answer is the dictionary spelling, but the slot's case is not
+        # decidable from it: name no case, trigger label, or feedback (#8726).
+        return {"ruleId": rule_id, "trigger": "lexical insertion"}
     rule = CASE_RULES.get(rule_id)
     if not rule:
         return None
@@ -1713,7 +1734,7 @@ def _make_no_pair_options(
         isinstance(provenance, dict)
         and provenance.get("status") == "sentence_inventory"
         and isinstance(case_rule, dict)
-        and case_rule.get("ruleId") == "nominative_identification"
+        and case_rule.get("ruleId") in IDENTITY_RULE_IDS
         and _plain(str(cloze.get("form") or "")) == _plain(str(cloze.get("lemma") or ""))
     )
     if is_inventory_identity:
@@ -1784,6 +1805,10 @@ def _make_no_pair_options(
                     option_pos,
                 )
             )
+        if not cloze.get("blankCase"):
+            # A case-free insertion names no case anywhere in its payload.
+            for option in options:
+                option.pop("case", None)
         rng.shuffle(options)
         return options
 
@@ -1832,7 +1857,7 @@ def _make_options(
     # distractor.  Use four distinct roots instead of constructing an invalid
     # option set that validation must discard.
     rule_id = cloze.get("caseRule", {}).get("ruleId") if isinstance(cloze.get("caseRule"), dict) else None
-    force_no_pair = rule_id == "nominative_identification"
+    force_no_pair = rule_id in IDENTITY_RULE_IDS
     strategy = "no-pair" if force_no_pair else _option_strategy_for_level(answer["cefr"], rng)
     options = (
         _make_no_pair_options(cloze, answer, lexemes, rng)
@@ -2106,7 +2131,10 @@ def _build_cloze_items(
     *,
     source_index: Any | None = None,
     creation_review: CreationReview | None = None,
+    withheld: list[dict[str, str]] | None = None,
+    lemma_levels: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
+    """Build a lexeme's cloze cards; ``lemma_levels`` enables the prompt level-fit gate."""
     items: list[dict[str, Any]] = []
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     for index, candidate in enumerate(cloze_rows):
@@ -2141,8 +2169,20 @@ def _build_cloze_items(
                 # The inventory is a source-backed example asset.  An exact
                 # dictionary form is an identity cloze, not an inferred case
                 # exercise; this remains valid for verbs, adverbs, proper
-                # nouns, and syncretic noun forms.
-                rule_id = "nominative_identification"
+                # nouns, and syncretic noun forms.  It names the nominative
+                # only when the sentence proves it; otherwise it is a
+                # case-free insertion (#8726: «до узбіччя» is genitive).
+                identity_case = identity_blank_case(
+                    _clean_text(candidate.get("sentence")) or "",
+                    curated_form,
+                    lexeme["lemmaPlain"],
+                    verifier,
+                )
+                if identity_case == "nominative":
+                    rule_id = "nominative_identification"
+                else:
+                    case_name = None
+                    rule_id = LEXICAL_INSERTION_RULE_ID
             else:
                 # Future inventory rows may carry an inflected target form.
                 # Use it only when VESUM gives one case/number and the
@@ -2166,12 +2206,13 @@ def _build_cloze_items(
             continue
         if rule_id == "nominative_identification" and (case_name != "nominative" or number != "singular"):
             continue
-        form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
+        form = curated_form or (_case_form(lexeme["paradigm"], case_name, number) if case_name else None)
         if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
             continue
         inventory_identity = inventory_candidate and _plain(form) == lexeme["lemmaPlain"]
-        if not inventory_identity and not _verify_discriminative_form(
-            lexeme["lemmaPlain"], lexeme.get("pos"), form, case_name, verifier
+        if not inventory_identity and not (
+            case_name
+            and _verify_discriminative_form(lexeme["lemmaPlain"], lexeme.get("pos"), form, case_name, verifier)
         ):
             continue
         sentence = _clean_text(candidate.get("sentence"))
@@ -2203,7 +2244,7 @@ def _build_cloze_items(
             "lemmaId": lexeme["lemmaId"],
             "sentenceFrameId": sentence_frame_id,
             "sentence": sentence,
-            "blankCase": case_name,
+            **({"blankCase": case_name} if case_name else {}),
             "form": form,
             "number": number,
             "lemma": lexeme["lemma"],
@@ -2231,7 +2272,24 @@ def _build_cloze_items(
             # Agreement already enforced above via _cloze_blank_context_agrees.
             check_agreement=False,
         )
+        if lemma_levels is not None:
+            linguistic_findings.extend(
+                check_inventory_prompt_level(item, lexeme["cefr"], lemma_levels, verifier, item_id=cloze_id)
+            )
         if linguistic_findings:
+            if withheld is not None:
+                withheld.extend(
+                    {
+                        "clozeId": cloze_id,
+                        "lemma": lexeme["lemma"],
+                        "level": lexeme["cefr"],
+                        "mechanism": "lexical" if rule_id == LEXICAL_INSERTION_RULE_ID else "case-labelled",
+                        "rule": finding.rule_id,
+                        "reason": finding.message,
+                        "sentence": sentence,
+                    }
+                    for finding in linguistic_findings
+                )
             continue
         items.append(item)
     return items
@@ -5252,6 +5310,7 @@ def build_practice_shards(
     aspect_residuals: list[dict[str, str]] | None = None,
     pos_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
+    cloze_withheld: list[dict[str, str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     if isinstance(cloze_sources, BuildConfig) and config is None:
@@ -5346,6 +5405,7 @@ def build_practice_shards(
         target = cloze_by_lemma_id if key_type == "lemmaId" else cloze_by_lemma
         target.setdefault(key_value, []).append(row)
     cloze_source_index = index_from_generator_candidates(cloze_sources)
+    cloze_lemma_levels = _lemma_levels(entries)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
@@ -5371,11 +5431,33 @@ def build_practice_shards(
             deck_version,
             source_index=cloze_source_index,
             creation_review=creation_review,
+            withheld=cloze_withheld,
+            lemma_levels=cloze_lemma_levels,
         )
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)
             option_errors = validate_option_set(item)
             if option_errors:
+                continue
+            uniqueness_findings = check_unique_answer_evidence(item, verifier, item_id=item["clozeId"])
+            if uniqueness_findings:
+                if cloze_withheld is not None:
+                    cloze_withheld.extend(
+                        {
+                            "clozeId": item["clozeId"],
+                            "lemma": lexeme["lemma"],
+                            "level": lexeme["cefr"],
+                            "mechanism": (
+                                "lexical"
+                                if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID
+                                else "case-labelled"
+                            ),
+                            "rule": finding.rule_id,
+                            "reason": finding.message,
+                            "sentence": item["sentence"],
+                        }
+                        for finding in uniqueness_findings
+                    )
                 continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
@@ -6857,6 +6939,40 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
     path.write_bytes(_json_bytes(payload))
 
 
+def write_cloze_withheld_report(
+    path: Path,
+    withheld: list[dict[str, str]],
+    shards: dict[str, dict[str, dict[str, Any]]],
+) -> None:
+    """Write distinct candidate exclusions and emitted counts by mechanism."""
+    by_level_rule = Counter((row["level"], row["rule"]) for row in withheld)
+    excluded = {(row["level"], row["mechanism"], row["clozeId"]) for row in withheld}
+    withheld_counts = Counter((level, mechanism) for level, mechanism, _ in excluded)
+    admitted_counts = Counter(
+        (level, "lexical" if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID else "case-labelled")
+        for level, level_shards in shards.items()
+        for item in level_shards["cloze"]["cloze"]
+    )
+    payload = {
+        "schema": "atlas-practice-cloze-withheld-v1",
+        "count": len(withheld),
+        "byLevelRule": {f"{level}:{rule}": count for (level, rule), count in sorted(by_level_rule.items())},
+        "byLevelMechanism": {
+            level: {
+                mechanism: {
+                    "admitted": admitted_counts[level, mechanism],
+                    "withheld": withheld_counts[level, mechanism],
+                }
+                for mechanism in ("case-labelled", "converted-form", "lexical")
+            }
+            for level in shards
+        },
+        "items": sorted(withheld, key=lambda row: (row["level"], row["rule"], row["clozeId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
 def write_pos_residual_report(path: Path, residuals: list[dict[str, str]]) -> None:
     """Write named source-gate reasons for withheld A2--C1 POS cards."""
     payload = {
@@ -7019,6 +7135,11 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
     )
     parser.add_argument(
+        "--cloze-withheld-report",
+        type=Path,
+        help="Write cloze candidates withheld by the linguistic/prompt-context gates, with reasons.",
+    )
+    parser.add_argument(
         "--pos-residual-report",
         type=Path,
         help="Write named A2-C1 lexemes with no POS set (default: none; e.g. batch_state/pos-residuals.json).",
@@ -7119,6 +7240,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_enabled=not args.disable_cloze,
     )
     aspect_residuals: list[dict[str, str]] = []
+    cloze_withheld: list[dict[str, str]] = []
     pos_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
@@ -7133,6 +7255,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
+        cloze_withheld=cloze_withheld,
         pos_residuals=pos_residuals,
     )
     if end_payload is not None:
@@ -7185,6 +7308,9 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
+    if args.cloze_withheld_report:
+        write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld, shards)
+        print(f"cloze withheld {len(cloze_withheld)} findings -> {args.cloze_withheld_report}")
     if args.aspect_residual_report or args.pos_residual_report:
         emitted_lemma_ids = _emitted_lemma_ids(shards)
         if args.aspect_residual_report:

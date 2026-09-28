@@ -6336,6 +6336,50 @@ describe('LexiconPractice', () => {
       expect(container.textContent).toContain('Контекст з документа');
     });
 
+    test('case-free lexical_insertion cloze names no case or dictionary form in any feedback (#8726)', async () => {
+      const base = sampleDeck();
+      const insertion: PracticeClozeItem = {
+        clozeId: 'lexical_insertion_card',
+        lemmaId: 'knyha',
+        sentenceFrameId: 'lexical_insertion_frame',
+        sentence: 'Це _____.',
+        form: 'книга',
+        lemma: 'книга',
+        caseRule: { ruleId: 'lexical_insertion', trigger: 'lexical insertion' },
+        options: [
+          { optionId: 'li_ans', lemmaId: 'knyha', label: 'книга', kind: 'answer' },
+          { optionId: 'li_d1', lemmaId: 'misto', label: 'місто', kind: 'decoy-lemma' },
+          { optionId: 'li_d2', lemmaId: 'shkola', label: 'школа', kind: 'decoy-lemma' },
+          { optionId: 'li_d3', lemmaId: 'oselia', label: 'оселя', kind: 'decoy-lemma' },
+        ],
+      };
+      const initialDeck: PracticeDeckData = {
+        ...base,
+        cloze: [insertion],
+        index: base.index.map((entry) => ({
+          ...entry,
+          clozeIds: entry.lemmaId === 'knyha' ? ['lexical_insertion_card'] : [],
+        })),
+      };
+      const caseWording = /словникова форма|dictionary form|називний|nominative|відмінку/;
+
+      const user = userEvent.setup();
+      const first = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
+      await user.click(first.container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!);
+      expect(first.container.textContent).not.toMatch(/не пройшли перевірку|failed validation/);
+      await user.type(screen.getByRole('textbox'), 'книга{Enter}');
+      expect(first.container.textContent).toContain('✓ книга');
+      expect(first.container.textContent).not.toMatch(caseWording);
+      expect(first.container.textContent).not.toContain('undefined');
+      first.unmount();
+
+      const second = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
+      await user.click(second.container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!);
+      await user.type(screen.getByRole('textbox'), 'школа{Enter}');
+      expect(second.container.textContent).toContain('✗ Не те слово');
+      expect(second.container.textContent).not.toMatch(caseWording);
+    });
+
     test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {
       // 'робота' carries 3 practice modes (flashcards/matching/choice, no cloze) in
       // sampleDeck() — a deterministic "new" count for a single-lemma custom deck,
