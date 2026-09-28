@@ -468,10 +468,11 @@ models:
     notes: >-
       Use for well-scoped everyday work, bug fixes, and polished English reports,
       runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review.
-      Route security-sensitive code (hooks/guards, launchers, credential or secret
+      Route authoring of security-sensitive code (hooks/guards, launchers, credential or secret
       handling, dispatch admission, sandbox/permission logic) to Opus 5.5 or
       Codex Sol. Ukrainian curriculum content stays with sanctioned language
-      lanes; use Fable 5.1 for the Claude lane.
+      lanes; use Fable 5.1 for the Claude lane. This security weakness is advisory
+      for review ladders until resolver enforcement in #9125.
     sources:
       - https://platform.claude.com/docs/en/models/sonnet-5-5/overview
       - https://www.anthropic.com/claude-sonnet-5-5
