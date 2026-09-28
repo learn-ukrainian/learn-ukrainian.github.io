@@ -20,6 +20,10 @@ permissions:
   contents: read
 
 env:
+  UV_HTTP_RETRIES: '6'
+  UV_HTTP_TIMEOUT: '60'
+  PIP_RETRIES: '6'
+  PIP_TIMEOUT: '60'
   # Full-tier default; workflow_dispatch may override it for shard measurements.
   # Selected/docs modes emit shard_count=1 from Changes; plan-files reads
   # needs.changes.outputs.shard_count (not this env alone) so selected never
@@ -202,8 +206,12 @@ jobs:
           # Same install as the pytest shards.
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
+            echo 'uv cache incomplete; retrying installation from the index'
+            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          fi
           .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python scripts/audit/check_ci_dependencies.py
           .venv/bin/python packages/v4-runtime/build_assets.py
       - name: Hydrate Atlas lexicon manifest
         if: needs.changes.outputs.preflight == 'true'
@@ -382,8 +390,12 @@ jobs:
           # blow the 15m budget.
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
+            echo 'uv cache incomplete; retrying installation from the index'
+            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          fi
           .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python scripts/audit/check_ci_dependencies.py
           .venv/bin/python packages/v4-runtime/build_assets.py
       - run: npm ci --ignore-scripts
       - name: Hydrate Atlas lexicon manifest
@@ -580,8 +592,12 @@ jobs:
           python -m venv .venv
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
+            echo 'uv cache incomplete; retrying installation from the index'
+            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          fi
           .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python scripts/audit/check_ci_dependencies.py
           .venv/bin/python packages/v4-runtime/build_assets.py
       - name: Hydrate Atlas lexicon manifest
         run: |
