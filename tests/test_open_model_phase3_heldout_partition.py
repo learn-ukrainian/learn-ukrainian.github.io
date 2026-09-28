@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
-from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR, resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_heldout_partition_bundle_v1.schema.json"
@@ -295,7 +295,10 @@ def _build_fixture_root(tmp_path: Path) -> Path:
         },
     }
     _write(
-        root / "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
+        resolve_open_model_path(
+            "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
+            repo=root,
+        ),
         known_answers,
     )
     return root

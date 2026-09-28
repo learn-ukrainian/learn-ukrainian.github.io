@@ -402,7 +402,17 @@ is not a classification-table row. Mixed directory prefixes, including
 globs, and packaged v4-runtime resource names stay the pre-migration
 `data/` string. `tests/projects/open_model_data/test_k_path_literal_guard.py`
 fails if a new production literal names a K path outside that allowlist or
-outside the resolver. No A file and no P3 manifest changed.
+outside the resolver. The held-out fixture reads the known-answer file from
+the resolved registry path. Live predecessor hashes for
+`admit_existing_corpus.py` and `phase3_heldout_partition.py` match the
+current bytes; the frozen historical pins are unchanged. No A file and no
+P3 manifest changed.
+
+On this head, top-level `tests/test_open_model_*.py` printed `2159 passed,
+13 skipped`. `tests/projects/open_model_data` printed `2 failed, 2352
+passed, 17 skipped`. The two failures are the #9023 decolonization ids.
+`artifacts verify --group` exited 0 for archive 80, component 17, evidence
+10, other 49, release 233, and study 23.
 
 ## Unresolved P3a gates at this checkpoint
 

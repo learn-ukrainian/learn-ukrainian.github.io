@@ -160,7 +160,7 @@ ENGINE_PATHS = frozenset(
 MIGRATED_ENGINE_SOURCE_SHA256 = {
     "scripts/projects/open_model_data/phase3_heldout_partition.py": (
         "af0f544405a29055943d538b7e13f69983397ddac5562dea2ce156f06e924e77",
-        "6d9aee9f35608732edf006ebd38aed30ff7d9c0c7b374a4d0472953b1c2d64a3",
+        "af99c2d154e48510dfbc0f80135acd6efcca754cce5147522e7d9988f5bb59e9",
     ),
     "scripts/projects/open_model_data/phase3_rule_author_packets.py": (
         "d07538485af2456a47177df164ca5d266ef52203849188e506595ecb17d8a9b3",

@@ -63,7 +63,7 @@ PINS = {
 # Check the current migrated implementations independently before emitting
 # those historical identities; neither identity is read from the receipt.
 CURRENT_PREDECESSOR_SHA256 = {
-    CORPUS_ADMISSION_VALIDATOR_PATH: "91b84a605402db5b4d218f7930d6e6b7892369f62c5a5eaae90b681b551814cd",
+    CORPUS_ADMISSION_VALIDATOR_PATH: "c681e133b3f411e534c175052481aa93528542ca828d8ee44ee83a624496ffec",
     EXPORT_ADMISSION_GATE_PATH: "595682b993a8ea11abb1b33a47c2be34a0816ef15a8c0e8d2aacf4674b566a2d",
 }
 CASE_ROLES = (
