@@ -131,7 +131,7 @@ when expected is present it is one contiguous substring copied character for cha
 Lesson locations:
 Tab identifiers in locations and scopes are the engine's ASCII keys: `urok`, `slovnyk`, `vpravy`, `resursy`.
 `locations: [{ tab: "urok", activity: "a1", item: 0, quote: "..." }]`
-Inside vpravy, specify activity and item index (0-indexed). The quote must occur verbatim inside that unit in the pinned lesson bytes.
+Inside vpravy, specify activity and item index (0-indexed). The quote must occur inside that unit of the pinned lesson (the rules below say how it is compared).
 For an absence finding, provide `locations: []` and a `scope` (`{ tab: "urok" }` or `{ tab: "vpravy", activity: "a1" }`).
 
 Evidence branches:
@@ -148,7 +148,7 @@ Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
 A return that breaks any of these is recorded as REJECTED and the attempt is spent, however good the review is. Check the finished return against every line before answering:
 
 - The return is one YAML mapping.
-- The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`.
+- The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`. The one field you do not fill is `reviewer.prompt_sha256`: keep the return template's line `prompt_sha256: "<prompt_sha256>"` exactly as printed (the placeholder, in quotes); the recorder replaces it with the attested prompt hash before validation.
 - `kind` is `lesson`, the kind of the manifest this prompt was rendered from.
 - `attempt.manifest_sha256` is exactly the Manifest SHA256 printed at the top of this prompt.
 - Each finding `id` is used once.
@@ -161,15 +161,15 @@ A return that breaks any of these is recorded as REJECTED and the attempt is spe
 - Each finding carries exactly one evidence branch (`evidence`, `unsupported_by_source` or `source_conflict`), never two and never none.
 - An `unsupported_by_source` finding has severity MINOR; MAJOR and BLOCKER are rejected for it.
 - `unsupported_by_source` lists at least one search.
-- Each search `outcome` is what the stored result of its receipt shows: `no_hits` only for a successful call with zero hits, `hits_but_no_support` only for one with hits, `unavailable` or `error` only for a call the ledger records as such.
-- Every cited receipt is in this attempt's ledger; only a finding with `status: resolved` or `status: persisting` may cite a receipt from the previous attempt's ledger.
+- Each search `outcome` is what the stored status and result of its receipt show: `error` only for a call whose record or result is an error, `unavailable` only for a call that succeeded but reports its source unavailable, `no_hits` only for a successful, available call with zero hits, and `hits_but_no_support` only for a successful call with at least one hit.
+- Every receipt a finding cites (its `evidence` receipt, both sides of a `source_conflict`, each search of `unsupported_by_source`) is in this attempt's ledger, issued for this review, attempt and manifest; only a finding with `status: resolved` or `status: persisting` may instead cite a receipt from the previous attempt's ledger (the attempt named by `attempt.previous_attempt_id`), and a finding with `status: active` may not.
 - A receipt cited as `evidence`, or on either side of a `source_conflict`, has `status: ok` and comes from a tool in the review tool list above.
-- `expected`, when present, is a substring of the stored result of a receipt the finding cites (the `expected` rule above).
-- Every location `quote` is non-empty text.
-- Every named tab, activity and item exists in the lesson.
-- Every location `quote` occurs verbatim inside the named unit (tab, activity and item).
+- `expected`, when present, is a substring of the stored result of at least one receipt the finding cites (the `expected` rule above).
+- Every location `quote` has visible text: it is not empty, and not only whitespace or stress marks.
+- The tab, activity and item a location names match a unit of the lesson together (the tab, plus the activity and item when named); a scope's `tab` is a tab of the lesson and its `activity`, when supplied, is an activity of the lesson.
+- Every location `quote` occurs inside the text of the units its location names (a location that names only a tab covers the whole tab). The comparison folds Unicode to NFC and drops combining acute and grave accents (stress marks) on both sides before matching; case, spacing and punctuation are not normalised, so copy the characters as the text has them.
 - A location in `vpravy` names both `activity` and `item`.
-- A finding with `locations: []` (an absence finding) carries a `scope` naming a `tab` (and an `activity` inside `vpravy`); a finding with locations carries no `scope`.
+- A finding with `locations: []` (an absence finding) carries a `scope` with a `tab` (`urok`, `slovnyk`, `vpravy` or `resursy`); in `vpravy` too it is the `tab` that is required, and an `activity` is optional and is checked only when supplied. A finding with locations carries no `scope`.
 
 ### Return Schema Template:
 ```yaml
