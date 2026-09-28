@@ -4788,9 +4788,9 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
-# ``.claude/hooks/``) must still fail a read-only task. Exempt an exact
-# subpath later if a genuine runtime false-positive appears. Tracked
-# files under these names still fail via porcelain status.
+# ``.claude/hooks/``) must still fail a read-only task in its own worktree.
+# The shared primary checkout has narrow exceptions below (#9094).
+# Tracked files under these names still fail via porcelain status.
 _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
     {
         ".agent",
@@ -4804,6 +4804,12 @@ _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
         "batch_state",
     }
 )
+# The primary checkout is shared with the driver and other live processes.
+# Their ignored state cannot be attributed to a read-only worker by two Git
+# status snapshots. Keep this exception primary-only: a dispatch worktree is
+# the worker's own checkout, so these same paths remain observable there.
+# Tracked files are never exempt, even under these directories (#9094).
+_READ_ONLY_PRIMARY_SHARED_STATE_PREFIXES = (".claude/infra-epic/briefs", ".venv")
 _READ_ONLY_RUNTIME_STATE_SUFFIXES = (
     ".db-journal",
     ".db-shm",
@@ -4923,9 +4929,20 @@ def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
     return state[:2] in _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES
 
 
-def _is_read_only_runtime_state_exemption(path: str, *, before_state: str | None, after_state: str | None) -> bool:
+def _is_read_only_runtime_state_exemption(
+    path: str,
+    *,
+    before_state: str | None,
+    after_state: str | None,
+    shared_primary: bool = False,
+) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
-    if not _is_read_only_runtime_state_path(path):
+    normalized = _normalize_read_only_relpath(path)
+    primary_shared_state = shared_primary and any(
+        normalized == prefix or normalized.startswith(f"{prefix}/")
+        for prefix in _READ_ONLY_PRIMARY_SHARED_STATE_PREFIXES
+    )
+    if not (_is_read_only_runtime_state_path(path) or primary_shared_state):
         return False
     return _is_read_only_untracked_or_ignored_status(before_state) and _is_read_only_untracked_or_ignored_status(
         after_state
@@ -4950,7 +4967,9 @@ def _is_read_only_ignored_mutation(*, before_state: str | None, after_state: str
     return _is_read_only_ignored_status(before_state)
 
 
-def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
+def _read_only_ignored_mutation_paths(
+    before: dict[str, str], after: dict[str, str], *, shared_primary: bool = False
+) -> list[str]:
     """Return changed ignored paths the guard deliberately tolerates as noise.
 
     Diagnostic companion to :func:`_read_only_mutation_paths` (#8516): an
@@ -4958,6 +4977,8 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
     exactly the ignored deltas that were ALSO recognized as harness/runtime
     state — the build-noise class a read-only dispatch legitimately cannot
     own (``.pytest_cache/``, ``batch_state/``, ``.entire/`` telemetry, …).
+    On the shared primary checkout, it also records ignored driver and
+    shared-environment paths excluded from the failure gate (#9094).
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -4972,12 +4993,15 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
             path,
             before_state=before.get(path),
             after_state=after.get(path),
+            shared_primary=shared_primary,
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
     )
 
 
-def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
+def _read_only_mutation_paths(
+    before: dict[str, str], after: dict[str, str], *, shared_primary: bool = False
+) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     A changed path is exempt only when it is recognized harness/runtime noise
@@ -4994,7 +5018,10 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
     (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
     as diagnostic-only "ignored mutations" while the task settled ``done``.
     Now any other new, modified, or deleted path — tracked, untracked, or
-    ignored — fails the task and is named.
+    ignored — fails the task and is named. The shared primary checkout also
+    exempts non-tracked driver briefs under ``.claude/infra-epic/briefs/``
+    and shared ``.venv/`` state because concurrent processes write there;
+    dispatch worktrees do not (#9094).
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -5005,6 +5032,7 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
             path,
             before_state=before.get(path),
             after_state=after.get(path),
+            shared_primary=shared_primary,
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
     )
@@ -7660,13 +7688,16 @@ def _run_worker(
                 read_only_snapshot_error = post_snapshot_error
             final_state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
             if read_only_checkout_pre is not None and read_only_checkout_post is not None:
+                shared_primary = _load_worktree_containment().is_primary_checkout(cwd)
                 read_only_ignored_mutation_paths = _read_only_ignored_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
+                    shared_primary=shared_primary,
                 )
                 read_only_mutation_paths = _read_only_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
+                    shared_primary=shared_primary,
                 )
             if task_records_pre is not None and task_records_post is not None:
                 read_only_mutation_paths = sorted(
