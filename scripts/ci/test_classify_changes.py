@@ -263,7 +263,7 @@ class ClassifierTests(unittest.TestCase):
                 )
             with self.subTest(event=event, case="docs-only"):
                 self.assert_docs(
-                    self.classify(["docs/runbooks/ci-gate.md"], event=event),
+                    self.classify(["docs/guide.md"], event=event),
                     reads_content="false",
                 )
         # A curriculum path mixed with a docs/ path is still docs with the flag.
@@ -390,6 +390,17 @@ class ClassifierTests(unittest.TestCase):
             "docs/runbooks/storage-topology.md",
             "docs/research/bio/example.md",
             "docs/l2-uk-direct/textbook-reading-notes/example.md",
+            "docs/audits/2026-09-11-uldr-program-audit.md",
+            "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md",
+            "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md",
+            "docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
+            "docs/eval/human-eval-rubric.md",
+            "docs/resources/EXTERNAL_RESOURCES_SCHEMA.md",
+            "docs/runbooks/background-session-tasks.md",
+            "docs/runbooks/codex-hooks.md",
+            "docs/runbooks/cursor-driver.md",
+            "docs/runbooks/word-atlas-source-inventory-review-candidates.md",
+            "docs/style-cards/b2.md",
         ):
             with self.subTest(path=path):
                 self.assert_docs(self.classify([path]))

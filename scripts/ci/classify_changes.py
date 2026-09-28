@@ -45,22 +45,59 @@ _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 _QUEUE_CODE_SUFFIXES = (".py", ".js", ".jsx", ".ts", ".tsx", ".sh")
-# Docs that unmarked Python tests read directly. The docs lane runs only
-# docs_skills, repo_wide, and (for curriculum/wiki edits) reads_content tests.
+# Docs referenced by unmarked Python test modules. The source scan is
+# conservative, so a harmless literal may also force full queue CI. The docs
+# lane runs only docs_skills, repo_wide, and (for curriculum/wiki edits)
+# reads_content tests.
 _QUEUE_TEST_READ_DOC_PATHS = frozenset({
     "docs/ACTIVITY-YAML-REFERENCE.md",  # tests/test_batch_fix_mode.py
+    "docs/MONITOR-API.md",
     "docs/SCRIPTS.md",  # tests/test_research_registry_p6.py
+    "docs/agent-runtime-guide.md",
+    "docs/audits/2026-09-11-uldr-program-audit.md",
+    "docs/best-practices/agent-cooperation.md",
     "docs/best-practices/activity-pedagogy.md",  # tests/test_config_tables.py
+    "docs/best-practices/code-quality.md",
     "docs/best-practices/fleet-role-scorecard.md",  # tests/test_luna_max_routing_contract.py
     "docs/best-practices/fleet-shared-doctrine.md",  # tests/test_luna_max_routing_contract.py
+    "docs/best-practices/module-content-quality.md",
+    "docs/best-practices/ulp-presentation-pattern.md",
+    "docs/bug-autopsies/secret-leakage.md",
+    "docs/decisions/ADR-019-work-control-plane.md",
+    "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md",
+    "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md",
+    "docs/eval/human-eval-rubric.md",
+    "docs/folk-epic/seminar-quality-gate-design.md",
+    "docs/lesson-contract.md",
+    "docs/monitor-api/work.md",
+    "docs/projects/qg-quality-gate/fixture-rights-replace-list.md",
+    "docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
+    "docs/references/research-digests/unlp-2026-cefr-assessment.md",
+    "docs/research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md",
+    "docs/resources/EXTERNAL_RESOURCES_SCHEMA.md",
+    "docs/review-protocol.md",
     "docs/runbooks/agent-seat-onboarding.md",  # tests/test_driver_work_api_onboarding.py
+    "docs/runbooks/background-session-tasks.md",
+    "docs/runbooks/ci-gate.md",
+    "docs/runbooks/codex-hooks.md",
+    "docs/runbooks/cursor-driver.md",
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "docs/runbooks/epic-stream-handoff.md",
+    "docs/runbooks/fleet-comms-open-gaps.md",
+    "docs/runbooks/grok-bot-qa-observer.md",
     "docs/runbooks/storage-topology.md",  # tests/test_storage_resolver.py
+    "docs/runbooks/word-atlas-source-inventory-review-candidates.md",
+    "docs/session-state/codex-orchestrator-handoff.md",
+    "docs/session-state/current.claude.md",
+    "docs/session-state/current.orchestrator.md",
 })
 _QUEUE_TEST_READ_DOC_PREFIXES = (
     "docs/epics/fresh-build-",  # tests/curriculum/arc/test_arc*.py
     "docs/l2-uk-direct/textbook-reading-notes/",  # tests/test_textbook_source_inventory_scope.py
     "docs/projects/open-model-data/",  # tests/projects/open_model_data/test_real_training_run_8338.py
+    "docs/projects/ukrainian-data-foundry-evidence/",  # tests/projects/open_model_data/test_v4_reproduce_deliverables.py
     "docs/research/bio/",  # tests/test_lint_bio_dossier_xref.py
+    "docs/style-cards/",  # tests/build/test_fresh_style_cards.py
 )
 
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
