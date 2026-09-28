@@ -96,6 +96,8 @@ class WorkerResult:
     message: str = ""
     # systemd_scope, cgroup_v2, rlimit_as, or none — the cap that actually ran (#9143).
     memory_mechanism: str = ""
+    # Scope-local memory.events oom_kill count, when the reaper could record it.
+    oom_kill: int | None = None
 
 
 @dataclass(frozen=True, slots=True)

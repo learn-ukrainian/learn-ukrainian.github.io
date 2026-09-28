@@ -14,6 +14,7 @@ from typing import Any
 
 from scripts.lexicon.runner.contracts import ErrorCode, WorkerResult
 from scripts.lexicon.runner.memory import (
+    BoundedTimeoutExpired,
     MemoryPolicy,
     apply_worker_memory_limit,
     classify_oom_exit,
@@ -22,7 +23,6 @@ from scripts.lexicon.runner.memory import (
     project_interpreter,
     run_bounded_command,
     self_cgroup_relative,
-    systemd_user_scope_available,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -53,13 +53,13 @@ def _stderr_exit_probe(payload: dict[str, Any]) -> None:
     raise SystemExit(int(payload.get("exit_code") or 1))
 
 
-def _worker_main(payload: dict[str, Any], result_path: str) -> None:
+def _worker_main(payload: dict[str, Any], result_path: str, *, scope_capped: bool = False) -> None:
     """Child entry: apply memory limit, then run the requested job."""
     policy = MemoryPolicy(
         high_bytes=int(payload.get("memory_high_bytes") or MemoryPolicy().high_bytes),
         max_bytes=int(payload.get("memory_max_bytes") or MemoryPolicy().max_bytes),
     )
-    kind = apply_worker_memory_limit(policy)
+    kind = apply_worker_memory_limit(policy, scope_capped=scope_capped)
     job = str(payload.get("job") or "enrich")
     chunk_id = str(payload.get("chunk_id") or "")
     if job in _PROBE_ONLY_JOBS and not _probe_jobs_enabled():
@@ -189,16 +189,15 @@ def run_capped_worker(
             cwd=str(ROOT),
             timeout_s=timeout_s,
         )
-    except subprocess.TimeoutExpired:
+    except BoundedTimeoutExpired as exc:
         if payload_path.exists():
             payload_path.unlink()
-        launch = "systemd_scope" if systemd_user_scope_available() else "rlimit_as"
         return WorkerResult(
             chunk_id=str(payload.get("chunk_id") or ""),
             outcome="failed_terminal",
             error_code="worker_timeout",
             message="worker timed out",
-            memory_mechanism=launch,
+            memory_mechanism=exc.memory_mechanism,
         )
     if payload_path.exists():
         payload_path.unlink()
@@ -215,16 +214,21 @@ def run_capped_worker(
             peak_rss_bytes=data.get("peak_rss_bytes"),
             message=str(data.get("message") or ""),
             memory_mechanism=mechanism,
+            oom_kill=bounded.oom_kill,
         )
 
     mechanism = observed_memory_mechanism(bounded.mechanism, "")
-    if classify_oom_exit(completed.returncode, oom_kill=bounded.oom_kill):
+    if classify_oom_exit(
+        completed.returncode, oom_kill=bounded.oom_kill,
+        require_oom_record=bounded.mechanism == "systemd_scope",
+    ):
         return WorkerResult(
             chunk_id=str(payload.get("chunk_id") or ""),
             outcome="failed_terminal",
             error_code=ErrorCode.FAILED_OOM.value,
             message=f"OS terminated worker (returncode={completed.returncode})",
             memory_mechanism=mechanism,
+            oom_kill=bounded.oom_kill,
         )
     return WorkerResult(
         chunk_id=str(payload.get("chunk_id") or ""),
@@ -232,6 +236,7 @@ def run_capped_worker(
         error_code="worker_crash",
         message=_worker_crash_message(completed),
         memory_mechanism=mechanism,
+        oom_kill=bounded.oom_kill,
     )
 
 
@@ -247,11 +252,11 @@ def _worker_crash_message(completed: subprocess.CompletedProcess[str]) -> str:
 def worker_cli(argv: list[str] | None = None) -> int:
     """``python -m scripts.lexicon.runner.worker <payload.json> <result.json>``."""
     args = argv if argv is not None else sys.argv[1:]
-    if len(args) != 2:
+    if len(args) not in (2, 3) or (len(args) == 3 and args[2] != "--scope-capped"):
         print("usage: worker <payload.json> <result.json>", file=sys.stderr)
         return 2
     payload = json.loads(Path(args[0]).read_text(encoding="utf-8"))
-    _worker_main(payload, args[1])
+    _worker_main(payload, args[1], scope_capped=len(args) == 3)
     return 0
 
 

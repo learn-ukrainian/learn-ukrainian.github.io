@@ -6,24 +6,21 @@ Polling is telemetry only. Limits are enforced by the OS:
   (the last ``*.slice`` in ``/proc/self/cgroup`` below the user manager; a
   dispatch worker passes ``lu-dispatch.slice``). That worker scope is a
   sibling of the caller's scope inside the caller's slice, so it stays in
-  the slice's accounting and limit. ``memory.high`` / ``memory.max`` are
-  written only after ``cgroup.procs`` lists that worker alone and
-  ``cgroup.stat`` reports ``nr_descendants == 0``. A shared cgroup, or one
-  with a child cgroup, is never written; the worker falls back to
-  ``RLIMIT_AS``. ``MemorySwapMax=0`` is set on the scope because
+  the slice's accounting and limit. Systemd sets the dedicated scope's
+  ``MemoryHigh`` and ``MemoryMax``; the worker never writes cgroup files.
+  If a scope cannot be created, the child uses ``RLIMIT_AS``.
+  ``MemorySwapMax=0`` is set on the scope because
   ``memory.max`` alone is absorbed by swap. The scope is stopped in a
   ``finally`` on normal exit, exceptions, and ``KeyboardInterrupt``.
   ``--slice`` is omitted when the caller's cgroup has no ``user@`` segment.
-  A cgroup OOM is ``memory.events`` ``oom_kill`` (read while the scope
-  still exists, before it is stopped) or ``MemoryError``. When that file
-  cannot be read, only SIGKILL (returncode -9 or 137) counts. An external
-  SIGKILL with ``oom_kill == 0`` is not OOM, and stopping the scope
-  (SIGTERM, -15) is not OOM.
+  The in-scope shell records ``memory.events`` ``oom_kill`` before exit.
+  A scope SIGKILL counts as OOM only when that count is positive; an
+  external scope kill cannot masquerade as OOM when the shell is killed too.
 - Other POSIX: ``RLIMIT_AS`` set in the child before importing the engine.
 
-Whether ``systemd-run --user --scope`` works is probed once per process
-(``/bin/true``) and cached. A worker's stderr is never treated as a failed
-scope start, so a worker that prints ``Failed to connect`` and exits 1 runs
+Whether ``systemd-run --user --scope`` works is probed with the worker's
+exact scope properties (running ``/bin/true``). A worker's stderr is never
+treated as a failed scope start, so one that prints ``Failed to connect`` runs
 once. The mechanism that ran (``systemd_scope``, ``cgroup_v2``,
 ``rlimit_as``, or ``none``) is logged and stored on the worker result.
 
@@ -57,7 +54,6 @@ MemoryMechanism = Literal["systemd_scope", "cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
 _LOG = logging.getLogger(__name__)
-_systemd_scope_ok: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -82,6 +78,14 @@ class BoundedCommandResult:
     mechanism: MemoryMechanism
     # ``None`` when the scope's ``memory.events`` could not be read.
     oom_kill: int | None = None
+
+
+class BoundedTimeoutExpired(subprocess.TimeoutExpired):
+    """A timeout carrying the mechanism selected for the actual launch."""
+
+    def __init__(self, exc: subprocess.TimeoutExpired, mechanism: MemoryMechanism) -> None:
+        super().__init__(exc.cmd, exc.timeout, output=exc.output, stderr=exc.stderr)
+        self.memory_mechanism = mechanism
 
 
 def _log_mechanism(mechanism: str, unit: str | None) -> None:
@@ -150,14 +154,11 @@ def _try_set_rlimit_as(max_bytes: int) -> None:
     resource.setrlimit(resource.RLIMIT_AS, (new_soft, new_hard))
 
 
-def apply_worker_memory_limit(policy: MemoryPolicy) -> EnforcementKind:
-    """Apply the best available hard limit in the current (child) process."""
-    if sys.platform.startswith("linux") and _apply_cgroup_v2(policy):
-        return "cgroup_v2"
-    # The scope reaper shares this cgroup, so the exclusive-cgroup write is
-    # refused. The scope already has MemoryMax; RLIMIT_AS would turn that
-    # SIGKILL into MemoryError and hide oom_kill.
-    if os.environ.get("LEXICON_OOM_EVENTS_FILE"):
+def apply_worker_memory_limit(policy: MemoryPolicy, *, scope_capped: bool = False) -> EnforcementKind:
+    """Use the enclosing scope's cap, or set ``RLIMIT_AS`` in a plain child."""
+    # The scope's MemoryMax is already active. RLIMIT_AS would turn its
+    # SIGKILL into MemoryError and hide the kernel's oom_kill evidence.
+    if scope_capped:
         return "cgroup_v2"
     try:
         _try_set_rlimit_as(policy.max_bytes)
@@ -210,90 +211,6 @@ def caller_slice_name() -> str | None:
     return slice_name_from_cgroup_relative(relative)
 
 
-def _self_cgroup_dir() -> Path | None:
-    """Return this process's cgroup v2 directory, or None when it cannot be read."""
-    relative = self_cgroup_relative()
-    if not relative:
-        return None
-    return Path("/sys/fs/cgroup") / relative.lstrip("/")
-
-
-def _cgroup_procs_exclusive(cgroup_dir: Path, worker_pid: int) -> bool:
-    """True when ``cgroup.procs`` lists ``worker_pid`` and no other process."""
-    if worker_pid <= 0:
-        return False
-    try:
-        text = (cgroup_dir / "cgroup.procs").read_text(encoding="utf-8")
-    except OSError:
-        return False
-    pids: set[int] = set()
-    for line in text.splitlines():
-        stripped = line.strip()
-        if not stripped:
-            continue
-        try:
-            pids.add(int(stripped))
-        except ValueError:
-            return False
-    return pids == {worker_pid}
-
-
-def _cgroup_has_no_descendants(cgroup_dir: Path) -> bool:
-    """True only when ``cgroup.stat`` says ``nr_descendants`` is 0.
-
-    ``memory.max`` applies to the whole subtree. A missing or unreadable
-    stat file is not proof of an empty subtree, so the write is refused.
-    """
-    try:
-        text = (cgroup_dir / "cgroup.stat").read_text(encoding="utf-8")
-    except OSError:
-        return False
-    for line in text.splitlines():
-        key, _, value = line.strip().partition(" ")
-        if key != "nr_descendants":
-            continue
-        try:
-            return int(value) == 0
-        except ValueError:
-            return False
-    return False
-
-
-def _try_apply_cgroup_limit(cgroup_dir: Path, policy: MemoryPolicy, worker_pid: int) -> bool:
-    """Write ``memory.high`` / ``memory.max`` only for an exclusive leaf cgroup.
-
-    The ``cgroup.procs`` read and the write are not atomic. That is safe
-    here: the worker scope contains only this process, and the plain
-    fallback always shares the parent's cgroup, so the guard refuses and
-    no write happens. A shared cgroup, or one with descendant cgroups, is
-    left unchanged. Callers fall back to ``RLIMIT_AS``.
-    """
-    if not _cgroup_procs_exclusive(cgroup_dir, worker_pid):
-        return False
-    if not _cgroup_has_no_descendants(cgroup_dir):
-        return False
-    high_path = cgroup_dir / "memory.high"
-    max_path = cgroup_dir / "memory.max"
-    if not os.access(max_path, os.W_OK):
-        return False
-    try:
-        with high_path.open("w", encoding="utf-8") as handle:
-            handle.write(str(policy.high_bytes))
-        with max_path.open("w", encoding="utf-8") as handle:
-            handle.write(str(policy.max_bytes))
-    except OSError:
-        return False
-    return True
-
-
-def _apply_cgroup_v2(policy: MemoryPolicy) -> bool:
-    """Best-effort exclusive-cgroup write. Shared cgroups are not modified."""
-    cgroup_dir = _self_cgroup_dir()
-    if cgroup_dir is None:
-        return False
-    return _try_apply_cgroup_limit(cgroup_dir, policy, os.getpid())
-
-
 def _user_systemd_environ() -> dict[str, str] | None:
     """Return an environment that can talk to the user systemd bus.
 
@@ -313,47 +230,44 @@ def _user_systemd_environ() -> dict[str, str] | None:
     return env
 
 
-def _probe_systemd_user_scope() -> bool:
-    """True when a transient user scope can be created in the caller's slice."""
+def _probe_systemd_user_scope(policy: MemoryPolicy, timeout_s: float | None) -> bool | None:
+    """Return whether ``OOMPolicy`` works, or None if no capped scope launches."""
     env = _user_systemd_environ()
     if env is None:
-        return False
-    argv = ["systemd-run", "--user", "--scope", "-q", "--collect"]
+        return None
     slice_name = caller_slice_name()
-    if slice_name:
-        argv.append(f"--slice={slice_name}")
-    argv.extend(["--", "/bin/true"])
-    try:
-        proc = subprocess.run(
-            argv,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=15,
-            check=False,
+    for use_oom_policy in (True, False):
+        argv = _scope_argv(
+            ["/bin/true"], policy, f"lexicon-probe-{os.getpid()}-{uuid.uuid4().hex[:8]}",
+            slice_name, timeout_s=timeout_s, use_oom_policy=use_oom_policy,
         )
-    except (OSError, subprocess.TimeoutExpired):
-        return False
-    return proc.returncode == 0
+        try:
+            proc = subprocess.run(
+                argv,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=15,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if proc.returncode == 0:
+            return use_oom_policy
+    return None
 
 
-def systemd_user_scope_available() -> bool:
-    """Whether ``systemd-run --user --scope`` works. Cached for this process.
-
-    The probe runs ``/bin/true`` once. Later worker stderr is never used to
-    decide that a scope failed to start.
-    """
-    global _systemd_scope_ok
-    if _systemd_scope_ok is None:
-        _systemd_scope_ok = _probe_systemd_user_scope()
-    return _systemd_scope_ok
+def systemd_user_scope_available(
+    policy: MemoryPolicy | None = None, timeout_s: float | None = None
+) -> bool:
+    """Whether a scope accepts the exact cap properties for this launch."""
+    return _probe_systemd_user_scope(policy or MemoryPolicy(), timeout_s) is not None
 
 
 # Records ``oom_kill`` after the worker exits and before this process leaves
 # the scope. The scope cgroup is removed once its last process exits, which
 # is before the parent reaches ``_stop_user_scope``, so the parent cannot
-# read ``memory.events`` itself. A missing file means "unreadable": callers
-# fall back to the returncode rule.
+# read ``memory.events`` itself. A missing record is not OOM proof for a scope.
 _SCOPE_REAP_SCRIPT = """\
 "$@"
 rc=$?
@@ -390,42 +304,6 @@ def _read_recorded_oom_kill(path: Path) -> int | None:
     return value
 
 
-def _parse_oom_kill(text: str) -> int | None:
-    for line in text.splitlines():
-        key, _, value = line.strip().partition(" ")
-        if key != "oom_kill":
-            continue
-        try:
-            parsed = int(value)
-        except ValueError:
-            return None
-        return parsed if parsed >= 0 else None
-    return None
-
-
-def _scope_memory_events_oom_kill(unit: str, env: dict[str, str]) -> int | None:
-    """Read ``oom_kill`` from a still-loaded scope. None when it is gone."""
-    try:
-        proc = subprocess.run(
-            ["systemctl", "--user", "show", "-p", "ControlGroup", "--value", f"{unit}.scope"],
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    relative = proc.stdout.strip()
-    if proc.returncode != 0 or not relative.startswith("/"):
-        return None
-    try:
-        text = (Path("/sys/fs/cgroup") / relative.lstrip("/") / "memory.events").read_text(encoding="utf-8")
-    except OSError:
-        return None
-    return _parse_oom_kill(text)
-
-
 def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
     try:
         subprocess.run(
@@ -440,15 +318,17 @@ def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
         return
 
 
-def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str | None) -> list[str]:
+def _scope_argv(
+    cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str | None,
+    *, timeout_s: float | None = None, use_oom_policy: bool = True,
+) -> list[str]:
     """``systemd-run --scope`` argv. ``--scope`` execs ``cmd`` in place after ``--``.
 
     ``--slice`` places the scope in the caller's slice, as a sibling of the
     caller's own scope. ``MemorySwapMax=0`` is required for the cap to
     SIGKILL: with swap left at ``max``, anonymous allocations are swapped
-    and ``memory.max`` never fires. ``OOMPolicy=kill`` overrides the user
-    manager default ``stop``, which would SIGTERM the scope and look like
-    a normal stop instead of an OOM.
+    and ``memory.max`` never fires. ``OOMPolicy=continue`` keeps the reaper
+    alive long enough to record ``oom_kill`` after the worker is killed.
     """
     argv = [
         "systemd-run",
@@ -469,12 +349,13 @@ def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str
             f"MemoryHigh={policy.high_bytes}",
             "-p",
             "MemorySwapMax=0",
-            "-p",
-            "OOMPolicy=kill",
-            "--",
-            *cmd,
         ]
     )
+    if use_oom_policy:
+        argv.extend(["-p", "OOMPolicy=continue"])
+    if timeout_s is not None:
+        argv.extend(["-p", f"RuntimeMaxSec={timeout_s}s"])
+    argv.extend(["--", *cmd])
     return argv
 
 
@@ -487,13 +368,13 @@ def run_bounded_command(
 ) -> BoundedCommandResult:
     """Run ``cmd`` in a sibling scope, or as a plain child when that is unavailable.
 
-    Availability comes from :func:`systemd_user_scope_available`, not from
-    the worker's stderr. The scope is stopped in a ``finally`` so a normal
+    Availability comes from a scope probe using the launch properties, not
+    from the worker's stderr. The scope is stopped in a ``finally`` so a normal
     exit, an exception, and ``KeyboardInterrupt`` all reap it. The plain
-    child still calls :func:`apply_worker_memory_limit`, which refuses to
-    write a shared cgroup and uses ``RLIMIT_AS``.
+    child calls :func:`apply_worker_memory_limit` with ``RLIMIT_AS``.
     """
-    scope_env = _user_systemd_environ() if systemd_user_scope_available() else None
+    use_oom_policy = _probe_systemd_user_scope(policy, timeout_s)
+    scope_env = _user_systemd_environ() if use_oom_policy is not None else None
     if scope_env is not None:
         unit = f"lexicon-cap-{os.getpid()}-{uuid.uuid4().hex[:8]}"
         slice_name = caller_slice_name()
@@ -506,7 +387,10 @@ def run_bounded_command(
         launch_env["LEXICON_OOM_EVENTS_FILE"] = str(oom_file)
         try:
             proc = subprocess.run(
-                _scope_argv(_scope_reap_argv(cmd), policy, unit, slice_name),
+                _scope_argv(
+                    _scope_reap_argv([*cmd, "--scope-capped"]), policy, unit, slice_name,
+                    timeout_s=timeout_s, use_oom_policy=use_oom_policy,
+                ),
                 cwd=cwd,
                 env=launch_env,
                 capture_output=True,
@@ -514,14 +398,12 @@ def run_bounded_command(
                 timeout=timeout_s,
                 check=False,
             )
-            # Prefer the in-scope record. If the scope was killed before it
-            # could write the file, try the live cgroup once more, still
-            # before ``_stop_user_scope`` removes whatever remains.
             oom_kill = _read_recorded_oom_kill(oom_file)
-            if oom_kill is None:
-                oom_kill = _scope_memory_events_oom_kill(unit, scope_env)
         except FileNotFoundError:
             proc = None
+        except subprocess.TimeoutExpired as exc:
+            _log_mechanism("systemd_scope", unit)
+            raise BoundedTimeoutExpired(exc, "systemd_scope") from exc
         except Exception:
             _log_mechanism("systemd_scope", unit)
             raise
@@ -531,18 +413,21 @@ def run_bounded_command(
         if proc is not None:
             _log_mechanism("systemd_scope", unit)
             return BoundedCommandResult(completed=proc, mechanism="systemd_scope", oom_kill=oom_kill)
+    plain_env = os.environ.copy()
+    plain_env.pop("LEXICON_OOM_EVENTS_FILE", None)
     try:
         plain = subprocess.run(
             cmd,
             cwd=cwd,
+            env=plain_env,
             capture_output=True,
             text=True,
             timeout=timeout_s,
             check=False,
         )
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as exc:
         _log_mechanism("rlimit_as", None)
-        raise
+        raise BoundedTimeoutExpired(exc, "rlimit_as") from exc
     _log_mechanism("rlimit_as", None)
     return BoundedCommandResult(completed=plain, mechanism="rlimit_as")
 
@@ -560,9 +445,11 @@ def _allocate_until_breach(target_bytes: int) -> None:
         allocated += chunk
 
 
-def _self_test_child_main(max_bytes: int, result_path: str) -> int:
+def _self_test_child_main(max_bytes: int, result_path: str, *, scope_capped: bool = False) -> int:
     """Entry for ``python -m scripts.lexicon.runner.memory --self-test-child``."""
-    kind = apply_worker_memory_limit(MemoryPolicy(high_bytes=max_bytes, max_bytes=max_bytes))
+    kind = apply_worker_memory_limit(
+        MemoryPolicy(high_bytes=max_bytes, max_bytes=max_bytes), scope_capped=scope_capped
+    )
     payload: dict[str, object]
     if kind == "none":
         payload = {"kind": "none", "enforced": False, "detail": "no enforcement mechanism available"}
@@ -624,10 +511,13 @@ def run_startup_self_test(
                 detail=str(data.get("detail") or ""),
                 max_bytes=test_max_bytes,
             )
-        # No result file. Kind follows the mechanism that ran. Only SIGKILL
-        # (returncode -9 or 137) counts as an enforced OOM.
+        # No result file. Kind follows the mechanism that ran. A scope needs
+        # an oom_kill record; a plain child can use the SIGKILL fallback.
         kind = _proof_kind(bounded.mechanism, None)
-        if classify_oom_exit(proc.returncode, oom_kill=bounded.oom_kill) and kind != "none":
+        if classify_oom_exit(
+            proc.returncode, oom_kill=bounded.oom_kill,
+            require_oom_record=bounded.mechanism == "systemd_scope",
+        ) and kind != "none":
             return EnforcementProof(
                 kind=kind,
                 enforced=True,
@@ -657,18 +547,22 @@ def classify_oom_exit(
     *,
     memory_error: bool = False,
     oom_kill: int | None = None,
+    require_oom_record: bool = False,
 ) -> bool:
     """Return True when a worker exit should be classified as OOM.
 
     A readable ``oom_kill`` count decides: only a cgroup OOM kill counts, so
-    an external SIGKILL (``oom_kill == 0``) does not. When the count could
-    not be read, only SIGKILL counts: returncode ``-9`` or ``137`` (128+9).
+    an external SIGKILL (``oom_kill == 0``) does not. For a scope, an
+    unreadable count is not OOM evidence. A plain child can use SIGKILL
+    (returncode ``-9`` or ``137``) when no count is available.
     ``-15`` is SIGTERM from stopping the scope and is not an OOM.
     """
     if memory_error:
         return True
     if oom_kill is not None:
         return oom_kill > 0
+    if require_oom_record:
+        return False
     if exitcode is None:
         return False
     return exitcode in {-9, 137}
@@ -707,8 +601,10 @@ def current_rss_bytes() -> int | None:
 
 def main(argv: list[str] | None = None) -> int:
     args = argv if argv is not None else sys.argv[1:]
-    if len(args) == 3 and args[0] == "--self-test-child":
-        return _self_test_child_main(int(args[1]), args[2])
+    if len(args) in (3, 4) and args[0] == "--self-test-child":
+        if len(args) == 4 and args[3] != "--scope-capped":
+            return 2
+        return _self_test_child_main(int(args[1]), args[2], scope_capped=len(args) == 4)
     print("usage: python -m scripts.lexicon.runner.memory --self-test-child MAX RESULT", file=sys.stderr)
     return 2
 
