@@ -5447,7 +5447,11 @@ def build_practice_shards(
                             "clozeId": item["clozeId"],
                             "lemma": lexeme["lemma"],
                             "level": lexeme["cefr"],
-                            "mechanism": "case-labelled",
+                            "mechanism": (
+                                "lexical"
+                                if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID
+                                else "case-labelled"
+                            ),
                             "rule": finding.rule_id,
                             "reason": finding.message,
                             "sentence": item["sentence"],

@@ -5087,11 +5087,31 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
     Decoys are the live cards' (твій, який, ваш; книга, місто, школа).
     """
 
+    glosses = {
+        "її": "her",
+        "твій": "your",
+        "який": "which",
+        "ваш": "your formal",
+        "автобус": "bus",
+        "книга": "book",
+        "місто": "city",
+        "школа": "school",
+        "середа": "Wednesday",
+        "новий": "new",
+        "село": "village",
+        "хотіти": "to want",
+        "приїхати": "to arrive",
+        "зрозуміло": "understandably",
+        "прямий": "straight",
+        "висота": "height",
+        "ребро": "edge",
+    }
+
     def entry(lemma: str, pos: str, level: str) -> dict[str, object]:
         return {
             "lemma": lemma,
             "url_slug": lemma,
-            "gloss": lemma,
+            "gloss": glosses[lemma],
             "pos": pos,
             "primary_source": "course_vocab",
             "course_usage": [{"track": level.lower(), "slug": lemma}],
@@ -5220,6 +5240,11 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
         ("її:inventory:1", "cloze_unique_answer_evidence", "A1", "no_unique_answer_evidence"),
         ("автобус:inventory:2", "cloze_unique_answer_evidence", "A1", "no_unique_answer_evidence"),
     }
+    assert {
+        row["mechanism"]
+        for row in withheld
+        if row["clozeId"] == "село:inventory:3" and row["rule"] == "cloze_unique_answer_evidence"
+    } == {"lexical"}
 
 
 def test_cloze_withheld_report_counts_distinct_items_by_mechanism(tmp_path: Path) -> None:

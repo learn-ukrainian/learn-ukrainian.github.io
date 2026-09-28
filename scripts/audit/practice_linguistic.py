@@ -868,7 +868,20 @@ def inventory_prompt_defect(
     """
     if sentence.count("«") != sentence.count("»") or sentence.count("\"") % 2:
         return "unbalanced_quotes"
-    if sentence.count("“") + sentence.count("„") != sentence.count("”"):
+    curly_quotes: list[str] = []
+    for char in sentence:
+        if char == "„":
+            curly_quotes.append(char)
+        elif char == "“":
+            if curly_quotes and curly_quotes[-1] == "„":
+                curly_quotes.pop()
+            else:
+                curly_quotes.append(char)
+        elif char == "”":
+            if not curly_quotes:
+                return "unbalanced_quotes"
+            curly_quotes.pop()
+    if curly_quotes:
         return "unbalanced_quotes"
     if _DRILL_NOTATION_RE.search(sentence):
         return "drill_notation"

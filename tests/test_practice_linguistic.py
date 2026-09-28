@@ -580,6 +580,12 @@ def test_review_r4_corrupt_inventory_frames_are_rejected() -> None:
         ]
 
 
+@pytest.mark.parametrize("closing_quote", ["“", "”"])
+def test_inventory_prompt_accepts_low_opening_quote_with_either_closer(closing_quote: str) -> None:
+    sentence = f"Він сказав: „Привіт{closing_quote} і пішов ___."
+    assert inventory_prompt_defect(sentence, "додому", "додому", _verifier()) != "unbalanced_quotes"
+
+
 @pytest.mark.parametrize(
     ("cloze_id", "sentence", "form", "decoy", "form_tags", "decoy_tags"),
     [
