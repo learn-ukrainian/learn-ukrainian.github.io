@@ -157,13 +157,25 @@ _PLACEHOLDER_LINE = re.compile(r"""^(?P<key>[ \t]+prompt_sha256:[ \t]*)(?P<q>["'
 HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
-def dispatch_prompt_sha256(task_id: str, tasks_dir: Path) -> str | None:
-    """The sha256 of the prompt the dispatch was given, from its record, or ``None`` when it holds none."""
+def dispatch_prompt_sha256(
+    task_id: str, tasks_dir: Path, *, review_id: str, attempt_id: str, manifest_sha256: str
+) -> str | None:
+    """The sha256 of the prompt a dispatch was given, only from the task bound to this review attempt.
+
+    The dispatch record must name this ``review_id``, ``attempt_id`` and manifest hash in its ``review_attempt``
+    block (written by ``delegate.py`` at dispatch; an attempt id is never reused, #8517), so the record of another
+    seat, or a record without that block, supplies nothing.
+    """
     try:
         task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    value = task.get("prompt_sha256") if isinstance(task, dict) else None
+    if not isinstance(task, dict):
+        return None
+    bound = task.get("review_attempt")
+    if bound != {"review_id": review_id, "attempt_id": attempt_id, "manifest_sha256": manifest_sha256}:
+        return None
+    value = task.get("prompt_sha256")
     return value if isinstance(value, str) and HEX64.fullmatch(value) else None
 
 
@@ -426,7 +438,9 @@ def record_return(
     tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
     identity = resolve_reviewer_identity(task_id, tasks_root)
     if failure is None:
-        sent = dispatch_prompt_sha256(task_id, tasks_root)
+        sent = dispatch_prompt_sha256(
+            task_id, tasks_root, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha
+        )
         if sent is not None and sent == rendered_prompt_sha256(manifest_path, root, review_id, attempt_id):
             data = attest_prompt_sha256(data, sent)
     params = findings_db.load_parameters()

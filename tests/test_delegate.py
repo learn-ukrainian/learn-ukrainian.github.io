@@ -12699,6 +12699,12 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     state = delegate._read_state(delegate._state_path("review-marked"))
     assert state["worktree_disallow_reuse"] is True
     assert "worktree_review_attempt_only" not in state
+    # #9022: the task record binds itself to its review attempt for the recorder
+    assert state["review_attempt"] == {
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
+    }
 
 
 @pytest.mark.parametrize(

@@ -1680,11 +1680,51 @@ def _rendered(world: World, made: dict[str, Any]) -> str:
     return sha
 
 
+def _bound(world: World, made: dict[str, Any], **override: str) -> dict[str, str]:
+    """The ``review_attempt`` block delegate.py writes into a --review-attempt dispatch record (#9022)."""
+    manifest_sha = hashlib.sha256(world.manifest(made["n"]).read_bytes()).hexdigest()
+    return {
+        "review_id": made["review_id"],
+        "attempt_id": made["attempt_id"],
+        "manifest_sha256": manifest_sha,
+        **override,
+    }
+
+
+def test_another_tasks_record_never_attests_this_return(world: World) -> None:
+    """Codex r2: a record holding the right render hash but bound to another attempt (or to none) supplies nothing."""
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task(
+        "review-other",
+        "claude",
+        "claude-sonnet-5",
+        prompt_sha256=sent,
+        review_attempt=_bound(world, made, attempt_id="attempt-other"),
+    )
+    world.task("review-unbound", "claude", "claude-sonnet-5", prompt_sha256=sent)
+    for task_id in ("review-other", "review-unbound"):
+        assert (
+            record.dispatch_prompt_sha256(
+                task_id,
+                world.tasks_dir,
+                review_id=made["review_id"],
+                attempt_id=made["attempt_id"],
+                manifest_sha256=_bound(world, made)["manifest_sha256"],
+            )
+            is None
+        )
+    _with_placeholder_prompt_sha(made)
+    outcome = world.record(made, task_id="review-other")
+    assert not outcome.accepted
+    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+
+
 def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_record(world: World) -> None:
     """#9022: a seat cannot hash its own prompt; the dispatch hash is attested when it equals this attempt's render."""
     made = world.make_return(2)
     sent = _rendered(world, made)
-    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
     _with_placeholder_prompt_sha(made)
     outcome = world.record(made, task_id="review-attested")
     assert outcome.accepted, outcome.rejection_codes
@@ -1697,7 +1737,7 @@ def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_r
 def test_a_dispatch_hash_that_is_not_this_attempts_render_is_never_attested(world: World) -> None:
     """A wrong or stale task record (its prompt is not this manifest rendered with these ids) supplies nothing."""
     made = world.make_return(2)
-    world.task("review-stale", "claude", "claude-sonnet-5", prompt_sha256="ab" * 32)
+    world.task("review-stale", "claude", "claude-sonnet-5", prompt_sha256="ab" * 32, review_attempt=_bound(world, made))
     _with_placeholder_prompt_sha(made)
     outcome = world.record(made, task_id="review-stale")
     assert not outcome.accepted
