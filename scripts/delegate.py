@@ -6663,6 +6663,32 @@ def _augment_prompt_with_worktree(
             '`DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. '
             "This line is optional — its absence never fails the dispatch.\n"
         )
+    # #9057: every worktree dispatch carries one test-scope rule. Write modes
+    # run only the tests for files they changed, including importers of a
+    # changed shared helper; review modes cite CI. The PR's own CI, and the
+    # merge queue on the merged tree, are the full-suite proof — a dispatch
+    # `gh workflow run` does not satisfy the PR's required check.
+    if mode in _WRITE_CAPABLE_MODES:
+        test_scope = (
+            "\n[test scope]\n"
+            "Run only the tests that cover the files you changed, including tests of "
+            "code that imports a changed shared helper, and name those test files explicitly.\n"
+            "Never collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`); "
+            "never `-n auto` or `-n` above 2.\n"
+            "Run tests in the foreground and wait for them "
+            "(never end the turn while a test runs in the background).\n"
+            "The full suite runs in the PR's CI (and again in the merge queue on the merged "
+            "tree) — that is the proof; do not trigger extra full runs. "
+            "Use `gh workflow run ci.yml --ref <branch>` only when the brief explicitly asks "
+            "for it (a branch with no PR yet, a baseline capture, or diagnosis).\n"
+        )
+    else:
+        test_scope = (
+            "\n[test scope]\n"
+            "Do not re-run test suites that the PR's CI runs. Review the diff.\n"
+            "Run at most the specific tests that reproduce a finding you are checking.\n"
+            "Cite CI run ids for suite results.\n"
+        )
     return (
         "[delegate worktree]\n"
         f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
@@ -6680,7 +6706,7 @@ def _augment_prompt_with_worktree(
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
-        f"{sparse_note}{delivery_note}\n"
+        f"{sparse_note}{test_scope}{delivery_note}\n"
         f"{prompt}"
     )
 
