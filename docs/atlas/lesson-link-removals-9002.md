@@ -2,6 +2,8 @@
 
 Original committed denominator: **9,237** links at `83929341df`. Current branch: **8,999 kept**, **238 removed**. This is the coverage residual for a follow-up Atlas sense or translation issue. A withheld link leaves the card readable; restore one only after confirming the article sense.
 
+**Residual:** The `варіантність` and `веснянка` removals for `folk/narodna-kultura-yak-systema.mdx` are not applied because its promote-quality score is stale since plan commit `b3fcf519`. Apply them when the folk lane regenerates or rescores the lesson.
+
 | Word | Lesson | Atlas article | Reason |
 | --- | --- | --- | --- |
 | листівка | `a1-v1/checkpoint-communication.mdx` | `/lexicon/листівка/` | No shared English sense term |
@@ -165,8 +167,8 @@ Original committed denominator: **9,237** links at `83929341df`. Current branch:
 | варіантність | `folk/narodna-kukhnia-obriadova-yizha.mdx` | `/lexicon/варіантність/` | No shared English sense term |
 | обробка | `folk/narodna-kultura-ta-vysoka-kultura-mistky.mdx` | `/lexicon/обробка/` | No shared English sense term |
 | побутування | `folk/narodna-kultura-ta-vysoka-kultura-mistky.mdx` | `/lexicon/побутування/` | No shared English sense term |
-| варіантність | `folk/narodna-kultura-yak-systema.mdx` | `/lexicon/варіантність/` | No shared English sense term |
-| веснянка | `folk/narodna-kultura-yak-systema.mdx` | `/lexicon/веснянка/` | No shared English sense term |
+| варіантність | `folk/narodna-kultura-yak-systema.mdx` | `/lexicon/варіантність/` | Not applied: stale promote-quality score; see residual above |
+| веснянка | `folk/narodna-kultura-yak-systema.mdx` | `/lexicon/веснянка/` | Not applied: stale promote-quality score; see residual above |
 | стрій | `folk/narodna-vyshyvka-rushnyk-strii.mdx` | `/lexicon/стрій/` | No shared English sense term |
 | поділ | `folk/narodna-vyshyvka-rushnyk-strii.mdx` | `/lexicon/поділ/` | No shared English sense term |
 | низь | `folk/narodna-vyshyvka-rushnyk-strii.mdx` | `/lexicon/низь/` | Article has no English sense confirming this gloss |
