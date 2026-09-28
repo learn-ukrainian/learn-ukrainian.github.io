@@ -89,8 +89,8 @@ def test_large_prompt_api_fail_fast_does_not_create_temp_file(tmp_path, monkeypa
     monkeypatch.setenv("GEMINI_AUTH_MODE", "api")
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
-    temp_dir = Path(tempfile.gettempdir())
-    before = set(temp_dir.glob("learn-ukrainian-gemini-prompt-*"))
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
 
     with pytest.raises(RuntimeError, match="GEMINI_AUTH_MODE=api"):
         GeminiAdapter().build_invocation(
@@ -103,8 +103,7 @@ def test_large_prompt_api_fail_fast_does_not_create_temp_file(tmp_path, monkeypa
             tool_config=None,
         )
 
-    after = set(temp_dir.glob("learn-ukrainian-gemini-prompt-*"))
-    assert after == before
+    assert not list(tmp_path.glob("learn-ukrainian-gemini-prompt-*"))
 
 
 def test_mcp_server_names_present_with_stdin_prompt_workaround(tmp_path):
