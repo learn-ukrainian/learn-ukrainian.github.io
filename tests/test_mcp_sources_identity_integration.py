@@ -12,12 +12,18 @@ the wire or in the log — without touching an external network.
 Skipped when ``data/sources.db``/``data/vesum.db`` are not present locally
 (same gating ``TestIntegrationSmoke`` in test_mcp_sources_server.py uses) —
 this dispatch worktree's sparse checkout does not carry them.
+
+Like ``test_mcp_sources_privacy_logging.py``, this file redirects the
+server's log writes to a per-module tmp dir via ``LU_MCP_SOURCES_LOG_DIR``
+(#8960) so the real HTTP round trip here never touches the shared checkout's
+``logs/mcp-sources-requests.jsonl``.
 """
 
 from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import socket
 import threading
 import time
@@ -33,7 +39,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SERVER_PATH = REPO_ROOT / ".mcp" / "servers" / "sources" / "server.py"
 SOURCES_DB = REPO_ROOT / "data" / "sources.db"
 VESUM_DB = REPO_ROOT / "data" / "vesum.db"
-LOG_PATH = REPO_ROOT / "logs" / "mcp-sources-requests.jsonl"
 
 pytestmark = pytest.mark.skipif(
     not (SOURCES_DB.exists() and VESUM_DB.exists()),
@@ -56,7 +61,22 @@ def _free_port() -> int:
 
 
 @pytest.fixture(scope="module")
-def sources_http_url():
+def log_path(tmp_path_factory: pytest.TempPathFactory):
+    """Redirect the server's log writes to a tmp dir for this module only."""
+    log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
+    previous = os.environ.get("LU_MCP_SOURCES_LOG_DIR")
+    os.environ["LU_MCP_SOURCES_LOG_DIR"] = str(log_dir)
+    try:
+        yield log_dir / "mcp-sources-requests.jsonl"
+    finally:
+        if previous is None:
+            os.environ.pop("LU_MCP_SOURCES_LOG_DIR", None)
+        else:
+            os.environ["LU_MCP_SOURCES_LOG_DIR"] = previous
+
+
+@pytest.fixture(scope="module")
+def sources_http_url(log_path: Path):
     module = _load_sources_server()
     port = _free_port()
     app = module.create_http_app()
@@ -117,11 +137,11 @@ def test_real_client_verify_words_round_trip_is_harmless_and_public(real_client)
     assert "слово" in result
 
 
-def test_real_endpoint_logs_hash_only_never_argument_values_or_response_text(real_client):
+def test_real_endpoint_logs_hash_only_never_argument_values_or_response_text(real_client, log_path: Path):
     private_marker = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ"
-    offset = LOG_PATH.stat().st_size if LOG_PATH.exists() else 0
+    offset = log_path.stat().st_size if log_path.exists() else 0
     real_client.check_russian_shadow(private_marker)
-    with open(LOG_PATH, "rb") as handle:
+    with open(log_path, "rb") as handle:
         handle.seek(offset)
         new_bytes = handle.read()
     lines = [line for line in new_bytes.decode("utf-8").splitlines() if line.strip()]
