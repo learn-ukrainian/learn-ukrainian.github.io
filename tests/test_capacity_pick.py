@@ -42,10 +42,16 @@ def _fixture_budget() -> dict:
             "grok": {"status": "cool", "burn_pct_7d": 20.0, "remaining_pct": 80.0},
             "glm": {"status": "cool", "burn_pct_7d": 12.0, "remaining_pct": 88.0},
         },
-        "api_accounts": {"deepseek": {
-            "probe_state": "ok", "freshness": "fresh", "age_s": 0,
-            "currency": "USD", "total_balance": 30.0, "is_available": True,
-        }},
+        "api_accounts": {
+            "deepseek": {
+                "probe_state": "ok",
+                "freshness": "fresh",
+                "age_s": 0,
+                "currency": "USD",
+                "total_balance": 30.0,
+                "is_available": True,
+            }
+        },
         "in_flight": {"cursor": 0, "codex": 1},
         "recommendation": {
             "primary_agent_for_code": "cursor",
@@ -54,6 +60,37 @@ def _fixture_budget() -> dict:
         },
         "diagnostics": {"records_loaded": 4, "stale": False},
     }
+
+
+def test_on_pace_band_is_not_avoid_but_real_deficit_is():
+    budget = _fixture_budget()
+    budget["agents"]["grok"] = {
+        "status": "warm",
+        "burn_pct_7d": 41.5,
+        "remaining_pct": 58.5,
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 1.5,
+            "weekly_expected_pct": 40.0,
+            "pace_summary": "On pace",
+        },
+    }
+    budget["agents"]["kimi"] = {
+        "status": "warm",
+        "burn_pct_7d": 25.0,
+        "remaining_pct": 75.0,
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 12.0,
+            "weekly_expected_pct": 13.0,
+            "pace_summary": "won't last",
+        },
+    }
+    rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget)}
+    assert rows["grok"]["avoid"] is False
+    assert "deficit" not in rows["grok"]["notes"]
+    assert rows["kimi"]["avoid"] is True
+    assert "deficit" in rows["kimi"]["notes"]
 
 
 def test_lane_rows_mark_avoid():
@@ -200,11 +237,18 @@ def test_main_strict_no_cool(monkeypatch, capsys):
     assert "no cool/warm lane" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("change", [
-    {"total_balance": 0}, {"is_available": False}, {"total_balance": 4.99},
-    {"probe_state": "NEED_PROBE"}, {"freshness": "unavailable"},
-    {"freshness": "stale_last_good"}, {"age_s": 601},
-])
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"total_balance": 0},
+        {"is_available": False},
+        {"total_balance": 4.99},
+        {"probe_state": "NEED_PROBE"},
+        {"freshness": "unavailable"},
+        {"freshness": "stale_last_good"},
+        {"age_s": 601},
+    ],
+)
 def test_prepaid_deepseek_avoid(change):
     budget = _fixture_budget()
     budget["api_accounts"]["deepseek"].update(change)

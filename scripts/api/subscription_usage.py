@@ -43,6 +43,8 @@ PACE_TOLERANCE_PCT = 10.0
 # CodexBar hides pace until enough of the window has elapsed (docs/ui.md).
 PACE_MIN_EXPECTED_PCT_SESSION = 3.0
 PACE_MIN_EXPECTED_PCT_WEEKLY = 1.0
+# CodexBar UsagePace.stage: |delta| <= 2 is on_track ("On pace").
+ON_PACE_BAND_PCT = 2.0
 SESSION_WINDOW_MAX_MINUTES = 300
 HEADROOM_DELTA_PCT = -15.0
 HEADROOM_SPEED_MULTIPLIER = 1.5
@@ -237,9 +239,7 @@ def _codexbar_cache_ttl_s() -> float:
 
 def _codexbar_refresh_interval_s() -> float:
     """Background scheduler period. Defaults to the same 12-minute TTL."""
-    return _env_positive_float(
-        "CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S
-    )
+    return _env_positive_float("CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S)
 
 
 def _cursor_cache_ttl_s() -> float:
@@ -300,8 +300,11 @@ def refresh_provider_usage_data(
     refreshed: dict[str, dict[str, Any]] = {}
     with ThreadPoolExecutor(max_workers=len(unique_providers)) as executor:
         futures = {
-            provider: (executor.submit(_refresh_cursor_usage_live) if provider == "cursor"
-                       else executor.submit(fetch_provider_usage, provider, timeout_s=timeout_s))
+            provider: (
+                executor.submit(_refresh_cursor_usage_live)
+                if provider == "cursor"
+                else executor.submit(fetch_provider_usage, provider, timeout_s=timeout_s)
+            )
             for provider in unique_providers
         }
         for provider, future in futures.items():
@@ -598,9 +601,7 @@ def _load_openrouter_management_api_key() -> str | None:
     env = os.environ.get("OPENROUTER_MANAGEMENT_API_KEY", "").strip()
     if env:
         return env
-    return _load_opencode_provider_key("openrouter-management") or _load_named_secret_file(
-        "openrouter-management.key"
-    )
+    return _load_opencode_provider_key("openrouter-management") or _load_named_secret_file("openrouter-management.key")
 
 
 def _load_deepseek_api_key() -> str | None:
@@ -831,21 +832,27 @@ def _probe_api_account_live(provider: str, *, timeout_s: float | None = None) ->
         timeout_s = _codexbar_refresh_timeout_s()
     probe = _API_ACCOUNT_PROBES.get(provider)
     if probe is None:
-        empty = _empty_openrouter_account("NEED_PROBE") if provider == "openrouter" else _empty_deepseek_account("NEED_PROBE")
+        empty = (
+            _empty_openrouter_account("NEED_PROBE")
+            if provider == "openrouter"
+            else _empty_deepseek_account("NEED_PROBE")
+        )
         empty["auth_error"] = f"No prepaid API probe for {provider}"
         return empty
     try:
         return probe(timeout_s=timeout_s)
     except Exception as exc:
-        empty = _empty_openrouter_account("NEED_PROBE") if provider == "openrouter" else _empty_deepseek_account("NEED_PROBE")
+        empty = (
+            _empty_openrouter_account("NEED_PROBE")
+            if provider == "openrouter"
+            else _empty_deepseek_account("NEED_PROBE")
+        )
         empty["fetched_at"] = datetime.now(UTC).isoformat().replace("+00:00", "Z")
         empty["auth_error"] = f"API account probe failed: {exc}"
         return empty
 
 
-def refresh_api_account_data(
-    providers: Iterable[str], *, timeout_s: float | None = None
-) -> dict[str, dict[str, Any]]:
+def refresh_api_account_data(providers: Iterable[str], *, timeout_s: float | None = None) -> dict[str, dict[str, Any]]:
     """Synchronously refresh prepaid API account snapshots for explicit callers."""
     if timeout_s is None:
         timeout_s = _codexbar_refresh_timeout_s()
@@ -896,8 +903,7 @@ def _api_account_snapshot(provider: str) -> dict[str, Any]:
     if cached is not None and _api_account_is_cacheable(cached[0]) and not failure:
         val, age = cached
         partial_expired = (
-            val.get("balance_probe_state") in {"NEED_KEY", "NEED_PROBE"}
-            and age >= API_ACCOUNT_FAILURE_TTL_S
+            val.get("balance_probe_state") in {"NEED_KEY", "NEED_PROBE"} and age >= API_ACCOUNT_FAILURE_TTL_S
         )
         if not partial_expired:
             return _with_api_account_observation_metadata(val, freshness="fresh", age_s=age)
@@ -905,18 +911,24 @@ def _api_account_snapshot(provider: str) -> dict[str, Any]:
     if good:
         observed, val = good
         result = _with_api_account_observation_metadata(
-            val, freshness="stale_last_good", age_s=time.monotonic() - observed,
+            val,
+            freshness="stale_last_good",
+            age_s=time.monotonic() - observed,
         )
     else:
-        val = failure[1] if failure else (
-            _empty_openrouter_account() if provider == "openrouter" else _empty_deepseek_account()
+        val = (
+            failure[1]
+            if failure
+            else (_empty_openrouter_account() if provider == "openrouter" else _empty_deepseek_account())
         )
         result = _with_api_account_observation_metadata(val, freshness="unavailable", age_s=None)
     if failure:
-        result.update({
-            "failure_kind": failure[1].get("probe_state"),
-            "last_failure_at": failure[1].get("fetched_at"),
-        })
+        result.update(
+            {
+                "failure_kind": failure[1].get("probe_state"),
+                "last_failure_at": failure[1].get("fetched_at"),
+            }
+        )
     return result
 
 
@@ -926,8 +938,12 @@ def get_api_account_data(provider: str) -> dict[str, Any]:
     failure = _api_account_last_failure.get(provider)
     retry_due = not failure or time.monotonic() - failure[0] >= API_ACCOUNT_FAILURE_TTL_S
     needs_retry = failure or result.get("balance_probe_state") in {"NEED_KEY", "NEED_PROBE"}
-    if (result["freshness"] != "fresh" and retry_due
-            and (needs_retry or not _scheduler_is_running()) and _on_demand_refresh_enabled()):
+    if (
+        result["freshness"] != "fresh"
+        and retry_due
+        and (needs_retry or not _scheduler_is_running())
+        and _on_demand_refresh_enabled()
+    ):
         trigger_api_account_background_refresh()
     return result
 
@@ -1472,7 +1488,9 @@ def _probe_glm_native(*, timeout_s: float) -> dict[str, Any]:
         token_limits.append(
             (
                 minutes,
-                _window_from_used_pct(float(used), window_minutes=minutes, resets_at=resets if isinstance(resets, str) else None),
+                _window_from_used_pct(
+                    float(used), window_minutes=minutes, resets_at=resets if isinstance(resets, str) else None
+                ),
             )
         )
     token_limits.sort(key=lambda pair: pair[0])
@@ -1636,8 +1654,61 @@ def pace_is_visible(pace: dict[str, Any] | None, *, kind: str = "weekly") -> boo
     """CodexBar hides pace until enough of the window has elapsed to be meaningful."""
     if pace is None:
         return False
+    expected = pace.get("expected_pct")
+    if isinstance(expected, bool) or not isinstance(expected, (int, float)):
+        return False
     minimum = PACE_MIN_EXPECTED_PCT_SESSION if kind == "session" else PACE_MIN_EXPECTED_PCT_WEEKLY
-    return bool(pace["expected_pct"] >= minimum)
+    return bool(expected >= minimum)
+
+
+def _pace_number(pace: dict[str, Any], *keys: str) -> float | None:
+    for key in keys:
+        if key not in pace:
+            continue
+        value = pace.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        return float(value)
+    return None
+
+
+def pace_is_deficit(pace: dict[str, Any] | None, *, kind: str = "weekly") -> bool | None:
+    """Whether a pace reading is a routing deficit.
+
+    ``None`` when the pace is missing or not visible (too early in the window).
+    Otherwise ``True`` only when the lane is projected to run out before reset
+    and the delta is outside the on-pace band (``|delta| <= 2`` is on pace).
+
+    Accepts a :func:`compute_usage_pace` result or a routing ``codexbar`` record
+    (``weekly_pace_delta_pct`` / ``weekly_expected_pct`` / ``will_last_to_reset``).
+    Does not change the raw delta or the display summary.
+    """
+    if not isinstance(pace, dict):
+        return None
+    expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+    delta = _pace_number(pace, "delta_pct", "weekly_pace_delta_pct", "deltaPercent")
+    if "will_last_to_reset" in pace:
+        will_last = pace.get("will_last_to_reset")
+    elif "willLastToReset" in pace:
+        will_last = pace.get("willLastToReset")
+    else:
+        will_last = None
+    if will_last is not None and not isinstance(will_last, bool):
+        will_last = bool(will_last)
+
+    if expected is not None:
+        if not pace_is_visible({"expected_pct": expected}, kind=kind):
+            return None
+    elif delta is None and will_last is None:
+        return None
+
+    if delta is not None and abs(delta) <= ON_PACE_BAND_PCT:
+        return False
+    if will_last is False and delta is not None and delta > ON_PACE_BAND_PCT:
+        return True
+    if will_last is True:
+        return False
+    return None
 
 
 def _pace_duration_text(seconds: float) -> str:
@@ -1918,8 +1989,14 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     weekly_pace = pace.get("secondary") if isinstance(pace, dict) else None
 
     weekly_pace_delta_pct = None
+    weekly_expected_pct = None
     will_last_to_reset = None
     pace_summary = None
+
+    def _pace_window_kind(minutes: int | None) -> str:
+        if minutes is not None and int(minutes) <= SESSION_WINDOW_MAX_MINUTES:
+            return "session"
+        return "weekly"
 
     if isinstance(weekly_pace, dict):
         weekly_pace_delta_pct = weekly_pace.get("deltaPercent")
@@ -1928,7 +2005,37 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         will_last_to_reset = weekly_pace.get("willLastToReset")
         if will_last_to_reset is not None:
             will_last_to_reset = bool(will_last_to_reset)
+        # Display text stays whatever CodexBar sent, including early in the window.
         pace_summary = weekly_pace.get("summary")
+        expected_raw = weekly_pace.get("expectedUsedPercent")
+        if isinstance(expected_raw, (int, float)) and not isinstance(expected_raw, bool):
+            weekly_expected_pct = float(expected_raw)
+        payload_minutes = None
+        if weekly_win and weekly_win.get("windowMinutes") is not None:
+            payload_minutes = int(weekly_win["windowMinutes"])
+        elif lane == "cursor" and cursor_provider_windows:
+            payload_minutes = cursor_provider_windows["auto"].get("window_minutes")
+            if payload_minutes is not None:
+                payload_minutes = int(payload_minutes)
+        pace_kind = _pace_window_kind(payload_minutes)
+        visibility_pace = None
+        if weekly_expected_pct is not None:
+            visibility_pace = {
+                "expected_pct": weekly_expected_pct,
+                "delta_pct": weekly_pace_delta_pct,
+                "will_last_to_reset": will_last_to_reset,
+            }
+        else:
+            # Payload omitted expected percent. Recompute so a very early
+            # willLastToReset still follows the same visibility floor.
+            pace_used = primary_used_pct if lane == "cursor" else weekly_used_pct
+            if weekly_resets_at and pace_used is not None:
+                win_mins = payload_minutes if payload_minutes is not None else WEEKLY_WINDOW_MINUTES
+                visibility_pace = compute_usage_pace(pace_used, weekly_resets_at, window_minutes=win_mins)
+                if visibility_pace is not None and weekly_expected_pct is None:
+                    weekly_expected_pct = visibility_pace["expected_pct"]
+        if visibility_pace is not None and not pace_is_visible(visibility_pace, kind=pace_kind):
+            will_last_to_reset = None
     else:
         # Fallback: derive pace from the shared CodexBar-style rate-projection formula.
         pace_used = primary_used_pct if lane == "cursor" else weekly_used_pct
@@ -1947,9 +2054,11 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             computed_pace = compute_usage_pace(pace_used, weekly_resets_at, window_minutes=win_mins)
             if computed_pace is not None:
                 weekly_pace_delta_pct = computed_pace["delta_pct"]
-                will_last_to_reset = computed_pace["will_last_to_reset"]
-                pace_kind = "session" if win_mins <= SESSION_WINDOW_MAX_MINUTES else "weekly"
+                weekly_expected_pct = computed_pace["expected_pct"]
+                pace_kind = _pace_window_kind(win_mins)
+                # Raw delta stays. The routing bool is unknown until the pace is visible.
                 if pace_is_visible(computed_pace, kind=pace_kind):
+                    will_last_to_reset = computed_pace["will_last_to_reset"]
                     pace_summary = format_usage_pace_summary(computed_pace, kind=pace_kind)
 
     def _window_block(
@@ -1982,9 +2091,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "weekly_used_pct": weekly_used_pct,
         "weekly_remaining_pct": _remaining_pct(weekly_used_pct),
         "windows": {
-            "primary": _window_block(
-                named_primary or primary_win, primary_used_pct, label=labels.get("primary")
-            ),
+            "primary": _window_block(named_primary or primary_win, primary_used_pct, label=labels.get("primary")),
             "secondary": _window_block(
                 named_secondary or (auto_win if lane == "cursor" else weekly_win),
                 secondary_used_pct,
@@ -1996,6 +2103,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "monthly_used_usd": monthly_used_usd,
         "weekly_resets_at": weekly_resets_at,
         "weekly_pace_delta_pct": weekly_pace_delta_pct,
+        "weekly_expected_pct": weekly_expected_pct,
         "will_last_to_reset": will_last_to_reset,
         "pace_summary": pace_summary,
         # Same key shape as _normalize_provider_error so consumers can use
@@ -2053,6 +2161,7 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
         "monthly_used_usd": None,
         "weekly_resets_at": None,
         "weekly_pace_delta_pct": None,
+        "weekly_expected_pct": None,
         "will_last_to_reset": None,
         "pace_summary": None,
         "source": "native_probe",
@@ -2102,9 +2211,7 @@ def _run_all_refreshes() -> None:
         _refresh_in_flight.release()
 
 
-SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(
-    p for p in SUBSCRIPTION_PROVIDERS if p != "cursor"
-)
+SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(p for p in SUBSCRIPTION_PROVIDERS if p != "cursor")
 
 
 def _scheduler_is_running() -> bool:
@@ -2231,8 +2338,14 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
             }
         return {"trend": None, "delta_auto_pct": None, "samples": 1}
     prev, cur = rows[-2], rows[-1]
-    prev_auto = prev.get("auto_used_pct") if isinstance(prev.get("auto_used_pct"), (int, float)) else prev.get("weekly_used_pct")
-    cur_auto = cur.get("auto_used_pct") if isinstance(cur.get("auto_used_pct"), (int, float)) else cur.get("weekly_used_pct")
+    prev_auto = (
+        prev.get("auto_used_pct")
+        if isinstance(prev.get("auto_used_pct"), (int, float))
+        else prev.get("weekly_used_pct")
+    )
+    cur_auto = (
+        cur.get("auto_used_pct") if isinstance(cur.get("auto_used_pct"), (int, float)) else cur.get("weekly_used_pct")
+    )
     if not isinstance(cur_auto, (int, float)):
         return {"trend": None, "delta_auto_pct": None, "samples": len(rows)}
     delta = float(cur_auto) - float(prev_auto or 0.0)
@@ -2362,9 +2475,7 @@ def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
     if cached is not None:
         val, age = cached
         stale_need_login = (
-            isinstance(val, dict)
-            and val.get("probe_state") == "NEED_LOGIN"
-            and age >= _cursor_need_login_cache_ttl_s()
+            isinstance(val, dict) and val.get("probe_state") == "NEED_LOGIN" and age >= _cursor_need_login_cache_ttl_s()
         )
         if _cursor_probe_is_cacheable(val) and not stale_need_login:
             return _with_cursor_observation_metadata(
@@ -2501,6 +2612,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "monthly_used_usd": None,
         "weekly_resets_at": None,
         "weekly_pace_delta_pct": None,
+        "weekly_expected_pct": None,
         "will_last_to_reset": None,
         "pace_summary": None,
         "source": "native_probe",

@@ -22,6 +22,7 @@ from scripts.api.subscription_usage import (
     compute_weekly_pace_delta_pct,
     format_usage_pace_summary,
     lane_is_under_weekly_pace,
+    pace_is_deficit,
     pace_is_visible,
 )
 
@@ -258,21 +259,13 @@ def test_deficit_signal_states():
     raw_claude = json.loads(CLAUDE_FIXTURE)[0]
     res_claude = _normalize_provider_data("claude", raw_claude)
 
-    # Simulate routing budget calculation state mapping
     def get_status(cb_data):
-        weekly_used = cb_data["weekly_used_pct"]
-        is_in_deficit = (
-            (cb_data.get("will_last_to_reset") is False)
-            or (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0)
-            or (weekly_used >= 90.0)
-        )
-        if weekly_used >= 90.0:
-            return "near_cap"
-        elif is_in_deficit:
-            return "hot"
-        elif weekly_used < 50.0:
-            return "cool"
-        return "warm"
+        pace = {
+            "delta_pct": cb_data.get("weekly_pace_delta_pct"),
+            "will_last_to_reset": cb_data.get("will_last_to_reset"),
+            "expected_pct": cb_data.get("weekly_expected_pct"),
+        }
+        return state_router._status_from_weekly_used(cb_data["weekly_used_pct"], pace)
 
     assert get_status(res_claude) == "hot"
 
@@ -346,11 +339,15 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
-    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
-        "source": "agent_runtime_jsonl",
-        "agent": agent,
-        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
-    })
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **kwargs: {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+        },
+    )
     monkeypatch.setattr(
         state_router,
         "get_cursor_lane_usage",
@@ -466,11 +463,15 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
     monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: dict(cursor_row))
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
-    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
-        "source": "agent_runtime_jsonl",
-        "agent": agent,
-        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
-    })
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **kwargs: {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+        },
+    )
     monkeypatch.setattr(
         state_router,
         "persist_provider_snapshot",
@@ -553,8 +554,6 @@ KIMI_ERROR_FIXTURE = """[
     }
   }
 ]"""
-
-
 
 
 def test_normalize_kimi_healthy_shape():
@@ -648,11 +647,24 @@ def test_native_probe_unavailable_missing_credentials(monkeypatch):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
         path=Path("fixture-meta.json"),
-        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
-        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
-        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
-        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
-        used_default_rate=False, cost_usd_est=500.0,
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent="codex",
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=now.isoformat(),
+        mtime=now,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=500.0,
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
@@ -683,11 +695,24 @@ def test_codexbar_unavailable_timeout(monkeypatch):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
         path=Path("fixture-meta.json"),
-        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
-        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
-        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
-        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
-        used_default_rate=False, cost_usd_est=500.0,
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent="codex",
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=now.isoformat(),
+        mtime=now,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=500.0,
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
@@ -718,11 +743,24 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
         path=Path("fixture-meta.json"),
-        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
-        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
-        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
-        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
-        used_default_rate=False, cost_usd_est=500.0,
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent="codex",
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=now.isoformat(),
+        mtime=now,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=500.0,
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
@@ -752,11 +790,24 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
         path=Path("fixture-meta.json"),
-        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
-        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
-        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
-        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
-        used_default_rate=False, cost_usd_est=500.0,
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent="codex",
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=now.isoformat(),
+        mtime=now,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=500.0,
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
@@ -785,11 +836,24 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
         path=Path("fixture-meta.json"),
-        level="a1", slug="fixture", phase="write", agent="codex", model="fixture-model",
-        model_source="stored", ok=True, timestamp=now.isoformat(), mtime=now,
-        prompt_chars=1, response_chars=1, prompt_tokens_est=1, response_tokens_est=1,
-        prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
-        used_default_rate=False, cost_usd_est=500.0,
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent="codex",
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=now.isoformat(),
+        mtime=now,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=500.0,
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
@@ -805,6 +869,7 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
 def test_dashboard_routing_html_renders_unavailable_explicitly():
     """Prove dashboards/routing.html renders 'unknown' non-numeric display, not 0.0% or 0-width bar."""
     import subprocess
+
     script = """
     const fs = require('fs');
     const html = fs.readFileSync('dashboards/routing.html', 'utf8');
@@ -1031,7 +1096,13 @@ def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
             "probe_state": "healthy",
             "login_state": "authenticated",
             "provider_windows": {
-                "auto": {"window": "monthly", "label": "Auto", "used_pct": 12.0, "remaining_pct": 88.0, "resets_at": None},
+                "auto": {
+                    "window": "monthly",
+                    "label": "Auto",
+                    "used_pct": 12.0,
+                    "remaining_pct": 88.0,
+                    "resets_at": None,
+                },
                 "api": {"window": "monthly", "label": "API", "used_pct": 5.0, "remaining_pct": 95.0, "resets_at": None},
             },
             "fetched_at": "2026-08-26T12:00:00Z",
@@ -1129,10 +1200,7 @@ def test_default_refresh_timeout_floor_matches_real_cli_latency(monkeypatch):
     latency, not a hang), which painted a healthy lane as capacity-unavailable
     — the routing-budget false-red this dispatch fixes."""
     monkeypatch.delenv("CODEXBAR_REFRESH_TIMEOUT_S", raising=False)
-    assert (
-        codexbar_usage_mod._codexbar_refresh_timeout_s()
-        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
-    )
+    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
     # Comfortable margin above the live-measured ~17s worst case.
     assert codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S >= 20.0
 
@@ -1145,16 +1213,10 @@ def test_refresh_timeout_env_override(monkeypatch):
     # Malformed or non-positive overrides fall back to the safe default
     # rather than passing a bad value to subprocess.run(timeout=...).
     monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "not-a-number")
-    assert (
-        codexbar_usage_mod._codexbar_refresh_timeout_s()
-        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
-    )
+    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
 
     monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "-5")
-    assert (
-        codexbar_usage_mod._codexbar_refresh_timeout_s()
-        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
-    )
+    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
 
 
 def test_refresh_provider_usage_data_defaults_to_realistic_timeout(monkeypatch):
@@ -1371,7 +1433,9 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
     (tmp_path / "api_usage").mkdir(exist_ok=True)
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: {"lane": p, "weekly_used_pct": None})
-    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: {"lane": "cursor", "probe_state": "NEED_PROBE"})
+    monkeypatch.setattr(
+        state_router, "get_cursor_lane_usage", lambda **kwargs: {"lane": "cursor", "probe_state": "NEED_PROBE"}
+    )
     monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *args, **kwargs: {"windows": {}})
     monkeypatch.setattr(state_router, "summarize_lane_runtime", lambda *args, **kwargs: {"headroom_blocked": False})
 
@@ -1914,24 +1978,27 @@ def test_management_key_loaders_and_balance(monkeypatch, tmp_path):
     monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "env-fixture")
     assert mod._load_openrouter_management_api_key() == "env-fixture"
     monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
+
     def http(method, url, **kwargs):
         if url.endswith("/credits"):
             assert kwargs["headers"]["Authorization"] == "Bearer env-fixture"
             return 200, {"data": {"total_credits": 100, "total_usage": 100}}, None
         return 200, {"data": {"limit_remaining": 70}}, None
+
     monkeypatch.setattr(mod, "_http_json_request", http)
     result = mod._probe_openrouter_native(timeout_s=1)
     assert result["account_remaining_usd"] == 0
     assert result["balance_probe_state"] == "ok"
 
 
-
 def test_cursor_explicit_refresh_is_blocking(monkeypatch):
     mod = subscription_usage_mod
     calls = []
+
     def refresh():
         calls.append("blocking")
         return {"weekly_used_pct": 20, "freshness": "fresh"}
+
     monkeypatch.setattr(mod, "_refresh_cursor_usage_live", refresh)
     monkeypatch.setattr(mod, "get_cursor_lane_usage", lambda: (_ for _ in ()).throw(AssertionError("cache-only")))
     monkeypatch.setattr(mod, "_record_probe_result", lambda *a: True)
@@ -1955,8 +2022,10 @@ def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
     mod = subscription_usage_mod
     monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
     monkeypatch.setattr(mod, "_load_openrouter_management_api_key", lambda: "management-fixture")
+
     def http(method, url, **kwargs):
         return (200, {"data": {"limit_remaining": 100}}, None) if url.endswith("/key") else (503, None, "unavailable")
+
     monkeypatch.setattr(mod, "_http_json_request", http)
     result = mod._probe_openrouter_native(timeout_s=1)
     assert result["probe_state"] == "NEED_PROBE"
@@ -2061,6 +2130,103 @@ def test_compute_usage_pace_returns_none_for_unparseable_resets_at():
     now = datetime(2026, 1, 1, tzinfo=UTC)
     assert compute_usage_pace(10.0, "not-a-date", window_minutes=10080, now=now) is None
     assert compute_usage_pace(10.0, None, window_minutes=10080, now=now) is None
+
+
+def _weekly_resets_after(now: datetime, elapsed_fraction: float) -> str:
+    remaining = timedelta(minutes=10080) * (1.0 - elapsed_fraction)
+    return (now + remaining).isoformat().replace("+00:00", "Z")
+
+
+def test_pace_is_deficit_four_routing_cases():
+    """Issue #9040 verify: early window, real deficit, on-pace band, near_cap."""
+    now = datetime(2026, 9, 28, 7, 51, tzinfo=UTC)
+
+    early = compute_usage_pace(1.0, _weekly_resets_after(now, 52 / 10080), now=now)
+    assert early is not None
+    assert not pace_is_visible(early, kind="weekly")
+    assert pace_is_deficit(early) is None
+    assert round(early["delta_pct"], 2) == 0.48
+    assert state_router._status_from_weekly_used(1.0, early) == "cool"
+
+    raw_early = {
+        "provider": "claude",
+        "source": "web",
+        "pace": {
+            "secondary": {
+                "expectedUsedPercent": early["expected_pct"],
+                "deltaPercent": early["delta_pct"],
+                "willLastToReset": False,
+                "summary": "0% in deficit | Expected 1% used | Runs out in 6d",
+            }
+        },
+        "usage": {
+            "primary": {"windowMinutes": 300, "usedPercent": 0, "resetsAt": _weekly_resets_after(now, 0.5)},
+            "secondary": {
+                "windowMinutes": 10080,
+                "usedPercent": 1,
+                "resetsAt": _weekly_resets_after(now, 52 / 10080),
+            },
+        },
+    }
+    normalized_early = _normalize_provider_data("claude", raw_early)
+    assert normalized_early["weekly_pace_delta_pct"] == early["delta_pct"]
+    assert normalized_early["pace_summary"] == "0% in deficit | Expected 1% used | Runs out in 6d"
+    assert normalized_early["will_last_to_reset"] is None
+    assert state_router._status_from_weekly_used(1.0, normalized_early) == "cool"
+
+    halfway = compute_usage_pace(60.0, _weekly_resets_after(now, 0.30), now=now)
+    assert halfway is not None
+    assert pace_is_deficit(halfway) is True
+    assert halfway["will_last_to_reset"] is False
+    assert state_router._status_from_weekly_used(60.0, halfway) == "hot"
+
+    on_pace = compute_usage_pace(41.5, _weekly_resets_after(now, 0.40), now=now)
+    assert on_pace is not None
+    assert abs(on_pace["delta_pct"] - 1.5) < 0.05
+    assert on_pace["will_last_to_reset"] is False
+    assert pace_is_visible(on_pace, kind="weekly")
+    assert pace_is_deficit(on_pace) is False
+    assert state_router._status_from_weekly_used(41.5, on_pace) == "cool"
+
+    near_cap_pace = compute_usage_pace(92.0, _weekly_resets_after(now, 0.50), now=now)
+    assert state_router._status_from_weekly_used(92.0, near_cap_pace) == "near_cap"
+    assert (
+        state_router._status_from_weekly_used(
+            92.0, {"delta_pct": -10.0, "will_last_to_reset": True, "expected_pct": 50.0}
+        )
+        == "near_cap"
+    )
+
+
+def test_computed_fallback_hides_will_last_until_pace_is_visible(monkeypatch):
+    """1% used 52 minutes after reset: raw delta kept, will_last is not False."""
+    frozen = datetime(2026, 9, 28, 7, 51, tzinfo=UTC)
+    resets = _weekly_resets_after(frozen, 52 / 10080)
+    raw = {
+        "provider": "claude",
+        "source": "web",
+        "usage": {
+            "primary": {
+                "windowMinutes": 300,
+                "resetsAt": (frozen + timedelta(hours=4)).isoformat().replace("+00:00", "Z"),
+                "usedPercent": 0,
+            },
+            "secondary": {"windowMinutes": 10080, "resetsAt": resets, "usedPercent": 1},
+        },
+    }
+    real = subscription_usage_mod.compute_usage_pace
+
+    def _paced(used_pct, resets_at, *, window_minutes=None, now=None):
+        return real(used_pct, resets_at, window_minutes=window_minutes, now=now or frozen)
+
+    monkeypatch.setattr(subscription_usage_mod, "compute_usage_pace", _paced)
+    res = _normalize_provider_data("claude", raw)
+    assert res["weekly_pace_delta_pct"] is not None
+    assert abs(res["weekly_pace_delta_pct"] - 0.484) < 0.01
+    assert res["will_last_to_reset"] is None
+    assert res["pace_summary"] is None
+    assert pace_is_deficit(res) is None
+    assert state_router._status_from_weekly_used(res["weekly_used_pct"], res) == "cool"
 
 
 def test_pace_is_visible_hides_below_minimum_expected_pct():
@@ -2214,13 +2380,9 @@ def test_compute_usage_pace_rejects_expired_and_out_of_window():
     from scripts.api.subscription_usage import compute_usage_pace
 
     now = datetime(2026, 9, 15, 12, 0, 0, tzinfo=UTC)
+    assert compute_usage_pace(25.0, (now - timedelta(seconds=1)).isoformat(), window_minutes=300, now=now) is None
     assert (
-        compute_usage_pace(25.0, (now - timedelta(seconds=1)).isoformat(), window_minutes=300, now=now)
-        is None
-    )
-    assert (
-        compute_usage_pace(25.0, (now + timedelta(seconds=301 * 60)).isoformat(), window_minutes=300, now=now)
-        is None
+        compute_usage_pace(25.0, (now + timedelta(seconds=301 * 60)).isoformat(), window_minutes=300, now=now) is None
     )
     ok = compute_usage_pace(25.0, (now + timedelta(seconds=150 * 60)).isoformat(), window_minutes=300, now=now)
     assert ok is not None

@@ -144,6 +144,7 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.scratch import (
@@ -10038,12 +10039,33 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         if lane_l == exclude:
             continue
         status = _budget_lane_status(lane_l, info)
-        will_last = _budget_will_last_to_reset(info)
-        if status in {"hot", "near_cap"} or will_last is False:
+        cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
+        if status in {"hot", "near_cap"} or pace_is_deficit(cb) is True:
             continue
         if status in {"cool", "warm"}:
             cool.append(lane_l)
     return sorted(cool)
+
+
+def _budget_pace(agent_info: dict[str, Any]) -> dict[str, Any] | None:
+    cb = agent_info.get("codexbar")
+    return cb if isinstance(cb, dict) else None
+
+
+def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
+    runtime = agent_info.get("runtime")
+    return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
+
+
+def _pace_expected_pct(pace: dict[str, Any] | None) -> float | None:
+    if not isinstance(pace, dict):
+        return None
+    for key in ("expected_pct", "weekly_expected_pct", "expectedUsedPercent"):
+        value = pace.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        return float(value)
+    return None
 
 
 def _budget_needs_hard_capacity_action(
@@ -10052,16 +10074,36 @@ def _budget_needs_hard_capacity_action(
     will_last: bool | None,
     is_stale: bool,
     records_loaded: int,
+    pace: dict[str, Any] | None = None,
+    headroom_blocked: bool = False,
 ) -> tuple[bool, str]:
-    """Return (needs_action, reason) for near_cap / hot / CodexBar deficit."""
+    """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
+
+    ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
+    hot label is the early-window or on-pace false positive: a pace reading is
+    present and :func:`pace_is_deficit` is not true, and runtime headroom did
+    not set the hot label. A bare ``will_last`` with no pace record still
+    counts only when no pace dict was supplied.
+    """
     if is_stale:
         return False, ""
     # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
     if status == "near_cap" and records_loaded > 0:
         return True, "near_cap (>90% on FRESH snapshot)"
+    if status == "hot" and headroom_blocked:
+        return True, "status=hot"
+    deficit = pace_is_deficit(pace) if pace else None
+    expected = _pace_expected_pct(pace)
+    hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
+    # Hot that the pace rule does not support is the freshly-reset / on-pace
+    # false positive. Runtime headroom hot was returned above.
+    if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
+        return False, ""
+    if deficit is True:
+        return True, "codexbar will_last_to_reset=False (deficit)"
     if status == "hot":
         return True, "status=hot"
-    if will_last is False:
+    if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"
     return False, ""
 
@@ -10391,8 +10433,9 @@ def _resolve_agent_with_budget_guard(
                 print(f"Rationale: {rec['rationale']}", file=sys.stderr)
 
     agent_info = agents.get(requested, {}) or {}
-    status = _budget_lane_status(requested, agent_info if isinstance(agent_info, dict) else {})
-    will_last = _budget_will_last_to_reset(agent_info if isinstance(agent_info, dict) else {})
+    agent_dict = agent_info if isinstance(agent_info, dict) else {}
+    status = _budget_lane_status(requested, agent_dict)
+    will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT)
     reserve_relaxes = (
         requested == "codex"
@@ -10423,6 +10466,8 @@ def _resolve_agent_with_budget_guard(
             will_last=will_last,
             is_stale=is_stale,
             records_loaded=records_loaded,
+            pace=_budget_pace(agent_dict),
+            headroom_blocked=_budget_headroom_blocked(agent_dict),
         )
     )
     if not needs_action:
@@ -10503,9 +10548,9 @@ def _language_lane_substitute(
     origin = origin_agent or requested
     while True:
         info = agents.get(seat, {}) or {}
-        status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
-        will_last = _budget_will_last_to_reset(info if isinstance(info, dict) else {})
         info_dict = info if isinstance(info, dict) else {}
+        status = _budget_lane_status(seat, info_dict)
+        will_last = _budget_will_last_to_reset(info_dict)
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
@@ -10519,6 +10564,8 @@ def _language_lane_substitute(
                 will_last=will_last,
                 is_stale=is_stale,
                 records_loaded=records_loaded,
+                pace=_budget_pace(info_dict),
+                headroom_blocked=_budget_headroom_blocked(info_dict),
             )
         )
         if not needs:

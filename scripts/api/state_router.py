@@ -84,7 +84,11 @@ from .config import LEVELS
 from .lane_health import compute_lane_health
 from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
-from .subscription_usage import _api_account_cache_ttl_s
+from .subscription_usage import (
+    _api_account_cache_ttl_s,
+    compute_usage_pace,
+    pace_is_deficit,
+)
 
 try:
     from agent_runtime.usage import summarize_fleet_burn, summarize_lane_runtime
@@ -183,6 +187,7 @@ def _fleet_burn_has_activity(fleet_burn: dict[str, Any] | None) -> bool:
         if isinstance(counts, dict) and int(counts.get("total") or 0) > 0:
             return True
     return False
+
 
 router = APIRouter(tags=["state"])
 
@@ -880,11 +885,16 @@ def _runtime_usage_records_7d(*, usage_dir: Path | None = None) -> int | None:
         return None
 
 
-def _status_from_weekly_used(weekly_used: float, weekly_pace_delta_pct: float | None) -> str:
-    is_in_deficit = (weekly_pace_delta_pct is not None and weekly_pace_delta_pct > 0) or weekly_used >= 90.0
+def _status_from_weekly_used(weekly_used: float, pace: dict[str, Any] | None) -> str:
+    """Map weekly used-percent to a routing status.
+
+    ``near_cap`` stays at >= 90% used. Below that, ``hot`` is only a pace
+    deficit (:func:`pace_is_deficit`): visible, projected to run out before
+    reset, and outside the on-pace band.
+    """
     if weekly_used >= 90.0:
         return "near_cap"
-    if is_in_deficit:
+    if pace_is_deficit(pace) is True:
         return "hot"
     if weekly_used < 50.0:
         return "cool"
@@ -918,7 +928,10 @@ def _overlay_notebook_lane_usage(
             resets_at,
             now=current_time,
         )
-        cb_status = _status_from_weekly_used(weekly_used, weekly_pace_delta_pct)
+        # Status uses the visibility + on-pace rule. The stored delta stays the
+        # clamp-style number (unchanged when the window is open).
+        pace = compute_usage_pace(weekly_used, resets_at, now=current_time)
+        cb_status = _status_from_weekly_used(weekly_used, pace)
         agents[lane]["notebook_report"] = {
             "source": "notebook-report",
             "age_s": freshest.age_s,
@@ -965,8 +978,11 @@ def _api_account_remaining_usd(lane: str, account: dict[str, Any]) -> float | No
         # Both funding balance and key cap constrain spend; a funded key cannot
         # override an empty account (and a funded account cannot override its cap).
         values = [account.get(key) for key in ("limit_remaining_usd", "account_remaining_usd")]
-        known = [float(value) for value in values if isinstance(value, (int, float))
-                 and not isinstance(value, bool) and math.isfinite(value)]
+        known = [
+            float(value)
+            for value in values
+            if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+        ]
         return min(known) if known else None
     if lane == "deepseek" and str(account.get("currency") or "").upper() == "USD":
         total = account.get("total_balance")
@@ -976,13 +992,20 @@ def _api_account_remaining_usd(lane: str, account: dict[str, Any]) -> float | No
 
 
 def _api_lane_status_from_account(
-    lane: str, account: dict[str, Any], budgets: dict[str, Any] | None = None,
+    lane: str,
+    account: dict[str, Any],
+    budgets: dict[str, Any] | None = None,
 ) -> str:
     probe_state = str(account.get("probe_state") or "").upper()
     age = account.get("age_s")
-    if (probe_state != "OK" or account.get("freshness") != "fresh"
-            or not isinstance(age, (int, float)) or isinstance(age, bool)
-            or not math.isfinite(age) or not 0 <= age < _api_account_cache_ttl_s()):
+    if (
+        probe_state != "OK"
+        or account.get("freshness") != "fresh"
+        or not isinstance(age, (int, float))
+        or isinstance(age, bool)
+        or not math.isfinite(age)
+        or not 0 <= age < _api_account_cache_ttl_s()
+    ):
         return "unknown"
     if lane == "deepseek" and account.get("is_available") is False:
         return "near_cap"
@@ -1073,9 +1096,7 @@ def _compute_dispatch_routing_budget(
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
     resolved_batch_state = (
-        batch_state_dir
-        if batch_state_dir is not None
-        else (Path(__file__).resolve().parents[2] / "batch_state")
+        batch_state_dir if batch_state_dir is not None else (Path(__file__).resolve().parents[2] / "batch_state")
     )
     usage_dir = resolved_batch_state / "api_usage"
     runtime_records_7d = _runtime_usage_records_7d(usage_dir=usage_dir)
@@ -1086,9 +1107,7 @@ def _compute_dispatch_routing_budget(
     nb_max_age_s: float | None = None
 
     health_records = {}
-    resolved_tasks_dir = (
-        tasks_dir if tasks_dir is not None else (resolved_batch_state / "tasks")
-    )
+    resolved_tasks_dir = tasks_dir if tasks_dir is not None else (resolved_batch_state / "tasks")
     try:
         health_records = compute_lane_health(
             resolved_tasks_dir,
@@ -1324,9 +1343,9 @@ def _compute_dispatch_routing_budget(
             agents[lane]["age_s"] = cb_data.get("age_s")
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
                 agents[lane]["probe_state"] = "NEED_LOGIN"
-            cb_freshness[lane] = str(cb_data.get("freshness") or (
-                "stale_last_good" if cb_data.get("stale") else "fresh"
-            ))
+            cb_freshness[lane] = str(
+                cb_data.get("freshness") or ("stale_last_good" if cb_data.get("stale") else "fresh")
+            )
 
         if lane == "cursor" and isinstance(cb_data, dict):
             agents[lane]["login_state"] = cb_data.get("login_state")
@@ -1357,16 +1376,10 @@ def _compute_dispatch_routing_budget(
             cb_sourced_any = True
             weekly_used = capacity_used
 
-            # Determine status using deficit signal
-            is_in_deficit = (
-                (cb_data.get("will_last_to_reset") is False)
-                or (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0)
-                or (weekly_used >= 90.0)
-            )
-
+            # near_cap (>= 90%) is unchanged. Below that, hot requires pace_is_deficit.
             if weekly_used >= 90.0:
                 cb_status = "near_cap"
-            elif is_in_deficit:
+            elif pace_is_deficit(cb_data) is True:
                 cb_status = "hot"
             elif weekly_used < 50.0:
                 cb_status = "cool"
@@ -1398,6 +1411,7 @@ def _compute_dispatch_routing_budget(
                 "monthly_used_usd": cb_data.get("monthly_used_usd"),
                 "weekly_resets_at": cb_data.get("weekly_resets_at"),
                 "weekly_pace_delta_pct": cb_data.get("weekly_pace_delta_pct"),
+                "weekly_expected_pct": cb_data.get("weekly_expected_pct"),
                 "will_last_to_reset": cb_data.get("will_last_to_reset"),
                 "pace_summary": cb_data.get("pace_summary"),
                 "trend": cb_data.get("trend"),
@@ -1442,7 +1456,9 @@ def _compute_dispatch_routing_budget(
                 agent_config = budgets.get(lane) if isinstance(budgets.get(lane), dict) else {}
                 cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
                 agents[lane]["burn_pct_7d"] = weekly_used
-                agents[lane]["status"] = cb_data.get("status") if lane == "cursor" and cb_data.get("status") else cb_status
+                agents[lane]["status"] = (
+                    cb_data.get("status") if lane == "cursor" and cb_data.get("status") else cb_status
+                )
                 agents[lane]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * cap) if cap else None
                 agents[lane]["remaining_pct"] = 100.0 - weekly_used
                 if cb_data.get("weekly_resets_at"):
@@ -1483,6 +1499,7 @@ def _compute_dispatch_routing_budget(
                 "monthly_used_usd": None,
                 "weekly_resets_at": None,
                 "weekly_pace_delta_pct": None,
+                "weekly_expected_pct": None,
                 "will_last_to_reset": None,
                 "pace_summary": None,
                 "stale": cb_data.get("stale", False) if isinstance(cb_data, dict) else False,
@@ -1610,10 +1627,8 @@ def _compute_dispatch_routing_budget(
         if lane in agents:
             cb = agents[lane].get("codexbar")
             if cb:
-                is_in_deficit = (
-                    (cb.get("will_last_to_reset") is False)
-                    or (cb.get("weekly_pace_delta_pct") is not None and cb.get("weekly_pace_delta_pct") > 0)
-                    or (cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0)
+                is_in_deficit = pace_is_deficit(cb) is True or (
+                    cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0
                 )
                 pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"
             else:
@@ -1635,14 +1650,15 @@ def _compute_dispatch_routing_budget(
                     if lane == "cursor":
                         auto_pct = cb.get("secondary_used_pct")
                         api_pct = cb.get("tertiary_used_pct")
-                        provider_windows = cb.get("provider_windows") if isinstance(cb.get("provider_windows"), dict) else {}
+                        provider_windows = (
+                            cb.get("provider_windows") if isinstance(cb.get("provider_windows"), dict) else {}
+                        )
                         if isinstance(provider_windows.get("auto"), dict):
                             auto_pct = provider_windows["auto"].get("used_pct", auto_pct)
                         if isinstance(provider_windows.get("api"), dict):
                             api_pct = provider_windows["api"].get("used_pct", api_pct)
-                        short_bit = (
-                            f"Auto {auto_pct:.0f}% used"
-                            + (f", API {api_pct:.0f}%" if api_pct is not None else "")
+                        short_bit = f"Auto {auto_pct:.0f}% used" + (
+                            f", API {api_pct:.0f}%" if api_pct is not None else ""
                         )
                     elif primary_mins is None or int(primary_mins) <= 300:
                         # Claude/Codex primary is the ≤5h window; mocks may omit minutes.
@@ -1855,7 +1871,9 @@ def compute_routing_budget(
 
     dispatch_codex = budget["agents"].get("codex")
     reserve_relaxes_codex = codex_is_threatened(dispatch_codex) and codex_reset_reserve_eligible(
-        budget.get("reset_reserve", {}), dispatch_codex, now=now,
+        budget.get("reset_reserve", {}),
+        dispatch_codex,
+        now=now,
         snapshot_stale=budget.get("diagnostics", {}).get("stale", False),
     )
     health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
