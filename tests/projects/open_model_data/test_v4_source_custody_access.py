@@ -30,6 +30,7 @@ CONFIG_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_cust
 ITEM_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
 MISSING_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
 RECEIPT_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
+SYNTHETIC_PROVENANCE = Path(__file__).parent / "fixtures/v4_source_custody_provenance.jsonl"
 
 
 _SYNTHETIC_CUSTODY_DIR: Path | None = None
@@ -44,34 +45,7 @@ def _get_synthetic_custody_dir() -> Path:
         in_root = base / "in"
         prov_dir = in_root / "data/projects/open_model_data/provenance"
         prov_dir.mkdir(parents=True)
-        prov_orig = (
-            ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
-        ).read_text(encoding="utf-8").splitlines()
-        prov_header = prov_orig[0]
-        prov_records = [json.loads(line) for line in prov_orig[1:]]
-
-        lit_prov = next(r for r in prov_records if r["source_id"] == "source.literary.0020599cfcaf15e887bdb73c")
-        tb_prov = next(
-            r for r in prov_records if r["source_id"] == "source.public_textbooks.00cebc897bb7feab776c42a8"
-        )
-        tb_blocked_prov = next(
-            r for r in prov_records if r["source_id"] == "source.public_textbooks.07604d78ce2a01cae6661e9b"
-        )
-        tb_blocked_prov2 = next(
-            r for r in prov_records if r["source_id"] == "source.public_textbooks.0ff382f420fb306c56f0c9c4"
-        )
-
-        (prov_dir / "v4_provenance_restoration_index_v1.jsonl").write_text(
-            "\n".join([
-                prov_header,
-                json.dumps(lit_prov),
-                json.dumps(tb_prov),
-                json.dumps(tb_blocked_prov),
-                json.dumps(tb_blocked_prov2),
-            ])
-            + "\n",
-            encoding="utf-8",
-        )
+        shutil.copyfile(SYNTHETIC_PROVENANCE, prov_dir / "v4_provenance_restoration_index_v1.jsonl")
         (prov_dir / "v4_provenance_restoration_receipt_v1.json").write_bytes(
             (REGISTRY_OPEN_MODEL_DATA_DIR / "provenance/v4_provenance_restoration_receipt_v1.json").read_bytes()
         )
