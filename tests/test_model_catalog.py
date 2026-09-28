@@ -89,15 +89,20 @@ def test_fallback_sonnet_candidate_cannot_reenter_automatic_ladder():
         validate_catalog(broken)
 
 
-def test_sonnet_5_5_document_authoring_and_security_boundary():
+def test_sonnet_5_5_english_authoring_and_routing_boundaries():
     catalog = load_model_catalog()
     sonnet = catalog["models"]["claude-sonnet-5-5"]
+    strengths = set(sonnet["strengths"])
     assert "document_authoring" in sonnet["roles"]
-    assert {"polished_documents_slides_spreadsheets", "design_eye"} <= set(sonnet["strengths"])
-    assert {"weaker_than_opus_on_complex_open_ended_work", "not_for_security_sensitive_code"} <= set(
-        sonnet["weaknesses"]
-    )
+    assert {"polished_english_documents_slides_spreadsheets", "design_eye"} <= strengths
+    assert {
+        "weaker_than_opus_on_complex_open_ended_work",
+        "not_for_security_sensitive_code",
+        "not_for_ukrainian_curriculum_content",
+    } <= set(sonnet["weaknesses"])
     assert "security_review" not in sonnet["roles"]
+    assert "polished_documents_slides_spreadsheets" not in strengths
+    assert all(route in sonnet["notes"] for route in ("English", "Opus 5.5", "Codex Sol", "Fable 5.1"))
     validate_catalog(catalog)
 
 

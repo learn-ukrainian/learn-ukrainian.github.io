@@ -92,7 +92,10 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 - **Ukrainian-specific linguistic judgment**: Mandate **`claude-fable-5-1` (Fable 5.1)** whenever Ukrainian language norms and pedagogy are evaluated.
 - **Advisor and designated authority**: **`claude-fable-5-1` (Fable 5.1)** for advisor turns, advisor panels, and the critical review ladder. That seat holds the approval boundary. The orchestrator seat does not confer it.
 - **Everyday routine infrastructure and standard non-linguistic coding**:
-  Use **`claude-sonnet-5-5` (Sonnet 5.5)** to preserve frontier rate limits and execution speed.
+  Use **`claude-sonnet-5-5` (Sonnet 5.5)** for well-scoped non-security work to preserve
+  frontier rate limits and execution speed. Route security-sensitive code (hooks/guards,
+  launchers, credentials/secrets, dispatch admission, sandbox/permissions) to
+  **Opus 5.5 or Codex Sol**.
 - **Polished written deliverables in English**: Use **Sonnet 5.5** for reports, runbooks, write-ups,
   PR/issue prose, decks, spreadsheets, and design review of pages or artifacts. Ukrainian curriculum
   content stays with sanctioned language lanes; use **Fable 5.1** for Claude-lane Ukrainian work.
@@ -141,7 +144,9 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     2026-09-27), confirmed or reversed by the measured writer selection in the
     pilot (#8425); Gemini's Ukrainian strength above is used for Ukrainian review.
 
-*Everyday routine PRs use practical seats (`sonnet` / Sol @ `high`).
+*Everyday routine non-security PRs use practical seats (`sonnet` / Sol @ `high`);
+security-sensitive code goes to Opus 5.5 or Codex Sol, and Ukrainian curriculum
+content stays with sanctioned language lanes (Fable 5.1 for Claude).
 Astra @ `high` is the advisory role.*
 
 **Three-role boundary (operator directive 2026-07-31):** advisory consultation is
@@ -504,7 +509,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | --- | --- | --- |
 | **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; first pick for mechanical + ordinary infra/code implement when fit allows. Do not pass `auto` | not formal CF identity; not language seats; not advisor/authority; `concurrency_limit: 1` |
 | **deepseek** (`deepseek-v4.1-flash` default) | code/infra CF volume, tool-heavy implement (OpenCode first-party default), PR diffs | Pro @ high = hard implement only (complex multi-file, hard lookup — 2026-08-13); not language/folk; not critical authority |
-| **claude** (Sonnet routine; Fable summoned only) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
+| **claude** (Sonnet for well-scoped non-security routine work and polished English deliverables; Opus for security-sensitive code; Fable for Ukrainian curriculum) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
 | **glm / Z.AI** (`glm-5.3-flash` workhorse; `glm-5.3` explicit) | deep security + large-context coherence audits; **Flash default** for ordinary code/infra (LOCAL-ONLY) | **LOCAL-ONLY** China egress; never CI/sensitive; prefer Flash API workhorse; `--model glm-5.3` for Coding Plan coherence |

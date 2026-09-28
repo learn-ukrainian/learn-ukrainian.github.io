@@ -463,8 +463,15 @@ models:
     lifecycle: active
     roles: [implementation, agentic_coding, strong_review, document_authoring]
     transports: [native_claude, cursor]
-    strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task, polished_documents_slides_spreadsheets, design_eye]
-    weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured, not_for_security_sensitive_code]
+    strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task, polished_english_documents_slides_spreadsheets, design_eye]
+    weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured, not_for_security_sensitive_code, not_for_ukrainian_curriculum_content]
+    notes: >-
+      Use for well-scoped everyday work, bug fixes, and polished English reports,
+      runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review.
+      Route security-sensitive code (hooks/guards, launchers, credential or secret
+      handling, dispatch admission, sandbox/permission logic) to Opus 5.5 or
+      Codex Sol. Ukrainian curriculum content stays with sanctioned language
+      lanes; use Fable 5.1 for the Claude lane.
     sources:
       - https://platform.claude.com/docs/en/models/sonnet-5-5/overview
       - https://www.anthropic.com/claude-sonnet-5-5
