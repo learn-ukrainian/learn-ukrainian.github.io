@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 import sqlite3
+import subprocess
 from collections import defaultdict
 from pathlib import Path
 
@@ -15,7 +16,20 @@ from scripts.lexicon.enrich_manifest import _antonyms_ulif, _section_item_key, _
 from scripts.verification import vesum
 
 ROOT = Path(__file__).resolve().parents[2]
-PRIMARY_DATA = ROOT.parent.parent.parent.parent / "data" if ".worktrees" in ROOT.parts else ROOT / "data"
+
+
+def primary_data_dir(repo_root: Path) -> Path:
+    common_dir = subprocess.run(
+        ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout.strip()
+    return Path(common_dir).resolve().parent / "data"
+
+
+PRIMARY_DATA = primary_data_dir(ROOT)
 SEARCH_RUN = "ULIF DictUA exact headword relation; VESUM lemma gate"
 COUNT_START = "<!-- audit-counts:start -->"
 COUNT_END = "<!-- audit-counts:end -->"

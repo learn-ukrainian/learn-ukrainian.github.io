@@ -39,7 +39,7 @@
       },
       {
         "path": "scripts/lexicon/audit_sum11_relations.py",
-        "sha256": "0b5cb748052aceee5b03695566963df85093bff70e45cbc36052a3c769c5e703"
+        "sha256": "084b7048f03902420df123729a159fb7724184103b575a17fde9469ccb8316c4"
       },
       {
         "path": "scripts/lexicon/backfill_course_usage.py",
@@ -347,7 +347,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "482ebcefa7b5c9e228e04ca8534e32e9487e8a7d37ee598c477370bb80c1ff30"
+        "sha256": "6003df2094b593b1849bbf8051004a072192b3b930d00338f7a28442e36e1500"
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",

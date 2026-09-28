@@ -28,7 +28,8 @@ MIRROR_URL_PATTERN = re.compile(
 # Soviet-era СУМ-11 is contrast-only (rule #M-6): published evidence citing it is
 # permitted only in a marked occupation-context citation, never as modern evidence.
 SOVIET_DICTIONARY_CITATION_RE = re.compile(
-    r"(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|Словник української мови\s*\(1970[–-]1980\)",
+    r"(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|slovnyk\.me/dict/sum/"
+    r"|Словник української мови\s*(?:\(1970[–-]1980\)|:\s*[Вв]\s+11\s+томах)",
     re.IGNORECASE,
 )
 

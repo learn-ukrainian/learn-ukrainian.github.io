@@ -87,7 +87,13 @@ def test_contrast_citation_requires_an_object() -> None:
 
 
 def test_soviet_label_variants_are_citations() -> None:
-    for label in ("SUM_11", "Словник української мови (1970–1980)", "https://sum.in.ua/s/word"):
+    for label in (
+        "SUM_11",
+        "Словник української мови (1970–1980)",
+        "Словник української мови: В 11 томах",
+        "https://sum.in.ua/s/word",
+        "https://slovnyk.me/dict/sum/word",
+    ):
         assert soviet_citation_learner_violation({"source": label}) == "outside soviet_colonization_context"
 
 

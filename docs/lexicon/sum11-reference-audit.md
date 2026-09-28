@@ -1,6 +1,10 @@
 # СУМ-11 references in lexicon scripts (#8990)
 
-Denominator: `git grep -I -i -n -E '(СУМ|SUM)[-‐‑‒–— ]?11|search_definitions|sum11' -- scripts/lexicon`, excluding the exact #8964 heteronym files and `sum20_lookup.py`. Audited after the WIP removal. Every remaining match is contrast/exclusion code or documentation; none verifies a lemma, sense, relation, stress, or gloss.
+## Not covered by this change
+
+[#8964](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8964) owns `site/src/lib/lexicon/curated-heteronyms.ts`, which has 569 `soviet_colonization_context` blocks without a `red_flag` and cites СУМ-11 as an example and synonym source outside any context. The site bundles that file directly, so the Atlas migration and runtime export gate do not check this path. #8964 also owns `scripts/lexicon/enrich_heteronyms.py:751`, which still runs `SELECT word, definition FROM sum11`. Readers outside `scripts/lexicon` belong to [#9147](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9147). The operator rule allowing СУМ-11 only as red-flagged contrast is not fully met until #8964 and #9147 land. This change does not close #8990.
+
+Denominator: `git grep -I -i -n -E '(СУМ|SUM)[-‐‑‒–— ]?11|search_definitions|sum11' -- scripts/lexicon`, excluding the exact #8964 heteronym files and `sum20_lookup.py`. Audited after the WIP removal. The classified matches within this denominator are contrast/exclusion code or documentation; they do not verify a lemma, sense, relation, stress, or gloss.
 
 Counts: verification **0**, contrast **74**, dead **0**. The WIP removed verification consumers including `anchor_curation_evidence.py` and the `sum11` headword fallback, plus uncalled `_synonyms_from_sum11`.
 
