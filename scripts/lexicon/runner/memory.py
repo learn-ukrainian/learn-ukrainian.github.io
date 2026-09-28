@@ -22,14 +22,47 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
+from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
-VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
+
+
+def _is_project_venv_python(path: Path) -> bool:
+    """True when ``path`` is a checkout's ``.venv/bin/python`` entrypoint."""
+    return path.parts[-3:] == (".venv", "bin", "python")
+
+
+def project_interpreter(root: Path | None = None) -> Path:
+    """Interpreter for memory self-tests and capped workers.
+
+    Called when a spawn needs the interpreter, not while this module is
+    imported. Import therefore succeeds when no project interpreter can be
+    found; this function raises ``FileNotFoundError`` at the call.
+
+    ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
+    git directory and returns that primary checkout. Its ``.venv/bin/python``
+    is the project interpreter. A dispatch worktree has no local virtualenv,
+    so the worktree path is not a candidate. When the primary file is missing,
+    ``sys.executable`` is accepted only when it is itself a project
+    ``.venv/bin/python``. Otherwise this raises ``FileNotFoundError``.
+    """
+    repo = ROOT if root is None else root
+    primary = main_checkout_root(repo) / ".venv" / "bin" / "python"
+    if primary.is_file():
+        return primary
+    current = Path(sys.executable)
+    if current.is_file() and _is_project_venv_python(current):
+        return current
+    raise FileNotFoundError(
+        "project interpreter not found: "
+        f"{primary} does not exist and sys.executable ({current}) "
+        "is not a project .venv/bin/python"
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -147,6 +180,7 @@ def run_startup_self_test(
     timeout_s: float = 30.0,
 ) -> EnforcementProof:
     """Prove the configured limit is enforced in a disposable child process."""
+    interpreter = project_interpreter()
     if test_max_bytes is None:
         rss = current_rss_bytes() or (64 * 1024 * 1024)
         test_max_bytes = max(rss + 64 * 1024 * 1024, 128 * 1024 * 1024)
@@ -156,7 +190,7 @@ def run_startup_self_test(
         result_path = Path(tmp) / "self_test.json"
         proc = subprocess.run(
             [
-                str(VENV_PYTHON),
+                str(interpreter),
                 "-m",
                 "scripts.lexicon.runner.memory",
                 "--self-test-child",
@@ -224,7 +258,7 @@ def current_rss_bytes() -> int | None:
             libc = ctypes.CDLL(libc_name, use_errno=True)
 
             class Rusage(ctypes.Structure):
-                _fields_ = [
+                _fields_: ClassVar[list[tuple[str, type]]] = [
                     ("ru_utime", ctypes.c_int64 * 2),
                     ("ru_stime", ctypes.c_int64 * 2),
                     ("ru_maxrss", ctypes.c_int64),
