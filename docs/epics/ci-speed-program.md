@@ -1,4 +1,4 @@
-# CI program — plan v2.1
+# CI program — plan v2.2
 
 > Epic **#8875** (parent: infra stream epic #6943). Written by the infra driver (Claude), 2026-09-28, from the read-only
 > audit `audit-ci-program-v2` (186 `ci.yml` runs, 2026-09-27T11:02Z–2026-09-28T09:01Z; scratch data and scripts in
@@ -14,9 +14,10 @@ Agents and the operator get CI feedback that is **fast, trustworthy, and paid fo
 - a code PR's CI answer arrives in minutes, not tens of minutes;
 - a green PR is never ejected from the merge queue by a flaky test or an infrastructure hiccup;
 - a red run says *what* failed without downloading artifacts;
-- each change runs the full suite exactly twice, both on GitHub's runners and both required: once for the PR and once
-  in the merge queue on the merged tree. Workers and reviewers do not re-run it on the VPS (operator, 2026-09-28:
-  "running the same test in parallel is so stupid").
+- each change is tested on GitHub's runners at two required stages: the PR runs its classified tier (full, or a
+  narrower path-selected tier once #9066/#8872 ship), and the merge queue runs the full required Python tier on the
+  merged tree for every code change (D4). Workers and reviewers do not re-run suites on the VPS (operator,
+  2026-09-28: "running the same test in parallel is so stupid").
 
 Non-goals: the V7/fresh-build curriculum pipeline, separate repositories, self-hosted runners (public repo — GitHub
 advises against them), paid larger runners, weakening the merge queue, the nightly run, or CI Gate as the single
@@ -67,25 +68,33 @@ landed the same day, so the two effects are not separable. **What now dominates*
   docs-only, content-only and frontend-only changes keep their #8437 classes. "Full" means everything except the `slow`
   and `atlas_release` markers, which run only nightly. This reverses the part of operator decision #8437 that gave
   `merge_group` the same path classes as PRs. It is the standard merge-queue pattern and what makes any PR-side
-  selection safe. Cost: a genuine failure caught only by the queue costs one ejection cycle (~10 min), which the
+  selection safe. **Frontend-only exception (panel split, resolved by the driver):** Codex asked that frontend-only
+  code also run the full Python tier in the queue; Fable and Grok kept the #8437 class. The driver keeps the exception,
+  because a frontend-only change by definition touches no path any Python test reads — the classifier already routes
+  declared site inputs that tests read into the Python tier — and forcing ~75 runner-minutes on every site PR would
+  undo D1. The exception is re-opened if a queue-only escape (§2) is ever traced to a frontend-only classification. Cost: a genuine failure caught only by the queue costs one ejection cycle (~10 min), which the
   drive-epic skill already treats as same-hour work, and is measured as queue-only escapes (§2).
 - **D1 — Retire the blanket `full-ci` habit (#9066; after #9073 and #9057).** Remove the drive-epic rule that labels
   every PR touching `tests/`; the label stays for the rare change the classifier cannot see. `full-ci` stops forcing
   the Frontend job unless site paths changed.
-- **D2 — Flake control (#9067).** A quarantine registry (node id, fix issue, owner, expiry ≤ 30 days, one renewal);
-  `pytest-rerunfailures` reruns **only** listed tests, **only on PR and merge_group runs**. An expired entry loses its
-  rerun on the nightly `schedule` run, so the nightly goes red while the queue stays green — the expiry bites without
-  turning every branch red (the 2026-09-23 time bomb). Every entry needs an open fix issue (registry lint). Timing
-  flakes that hit the pytest timeout (thread method) cannot be rerun and always need a real fix. The ledger must
-  first prove it can read rerun records under the repo's JUnit family, and it shares one JUnit parser with #9063.
+- **D2 — Flake control (#9067).** A quarantine registry (node id, fix issue, owner, expiry ≤ 30 days, one renewal).
+  *Admission:* an open fix issue plus at least two observed flaky failures (run ids) — the registry lint rejects
+  anything else. *Behaviour:* `pytest-rerunfailures` reruns **only** listed tests and **never** on the nightly
+  `schedule` run, so a still-flaky test shows up red on the nightly; every rerun (first-attempt failure, rerun green)
+  is written to the job summary and the nightly flake ledger. *Expiry:* on the expiry date the nightly opens or updates
+  the fix issue; after a 7-day grace the entry's rerun is removed on every event, so an unfixed flake fails PR and queue
+  runs again — a bounded, announced return, never a surprise repo-wide red (the 2026-09-23 time bomb). *Escalation:*
+  a listed test that needs its rerun in more than 5 % of the week's queue runs escalates its issue to the driver's queue.
+  Timing flakes that hit the pytest timeout (thread method) cannot be rerun and always need a real fix. The ledger first
+  proves it can read rerun records under the repo's JUnit family, and it shares one JUnit parser with #9063.
 - **D3 — Merge-queue build concurrency (#8884 AC-03).** Keep `max_entries_to_build: 4` (0.57 % of busy time at ≥ 60
   concurrent jobs, 0 timeouts). Re-decide when queue wait, runner saturation or first-enqueue p95 regress — not only
   after an ejection — and after #9066 and #9062 change the job mix. Other workflows on the same events share the
   60 slots, so the paper figure (4 × 17 = 68) understates the peak.
 - **D5 — Test once per stage (#9057).** Dispatched workers run only the tests covering what they changed (including
-  dependents of a changed shared helper), in the foreground. The PR's own CI is the full-suite proof; a
-  `workflow_dispatch` run only when a brief asks (branch with no PR, baseline capture, diagnosis). Reviewers review
-  the diff and cite CI runs.
+  dependents of a changed shared helper), in the foreground. The PR's own CI run (its classified tier) is the proof for
+  the PR; the merge queue's full run is the proof for `main`; a `workflow_dispatch` run only when a brief asks (branch
+  with no PR, baseline capture, diagnosis). Reviewers review the diff and cite CI runs.
 
 ## 4. Task set — one ordered program (all are #8875 sub-issues)
 
@@ -117,9 +126,12 @@ Out of this program: #8921 (Claude workers backgrounding pytest — harness), #8
 
 ## 5. Risks and stop rules
 
-- **Under-selection** (#9066, #8872, #8506): no PR-side narrowing ships before #9073. Any change that lets a
-  known-failing replay pass, or lowers a tier's collected-test count, stops that change. Queue-only escapes above
-  1 / 100 queue runs reopen D1.
+- **Under-selection** (#9066, #8872, #8506): no PR-side narrowing ships before #9073. Before any selector ships, its
+  proof is a **fault-injection oracle**: for each of a fixed set of injected faults (and every historically failed run
+  in the replay set), the full suite is the oracle for which tests fail, and the selector must select at least one of
+  them — **zero misses**; merged-PR replays and importer checks alone are not proof. #8506's replay set includes
+  #8872's. A selector change that misses, or that lowers a tier's collected-test count, stops. Queue-only escapes
+  above 1 / 100 queue runs reopen D1.
 - **Quarantine as a parking lot** (#9067): an entry without an open fix issue fails the registry lint; entries expire
   and the nightly shows it.
 - **Nightly reliability:** the 2026-09-27 nightly started ~6 h late and the 2026-09-28 one had not started by 09:40Z.
