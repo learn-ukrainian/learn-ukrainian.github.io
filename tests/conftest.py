@@ -37,6 +37,7 @@ def _loaded_module(*parts: str):
     """Find an already imported module without making it a fixture import."""
     return sys.modules.get(".".join(parts))
 
+
 # Identity a launched agent session carries (#8778). A test that inherits it
 # keys hook dedupe, leases, and telemetry on the operator's live session.
 # tests/test_session_identity_env_isolation.py parses the export sites and
