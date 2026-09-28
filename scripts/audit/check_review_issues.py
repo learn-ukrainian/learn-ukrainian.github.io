@@ -22,11 +22,16 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.common.repo_root import project_interpreter
+
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
+VENV_PYTHON = str(project_interpreter())
 
 DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0

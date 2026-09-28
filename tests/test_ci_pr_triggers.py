@@ -24,7 +24,6 @@ import math
 import os
 import re
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +32,7 @@ import yaml
 
 from scripts.ci import classify_changes
 from scripts.ci.classify_changes import preflight_for
+from scripts.ci.frontend_change_scope import load_denominator
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _WORKFLOWS = _REPO_ROOT / ".github" / "workflows"
@@ -384,39 +384,16 @@ def test_ci_gate_runs_after_cancel() -> None:
 
 
 def _run_gate(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
-    with tempfile.TemporaryDirectory(dir=_REPO_ROOT, prefix="gate-gh-") as temp:
-        # The real gate queries this run attempt; replace only that transport
-        # so its shell logic is exercised against controlled matrix outcomes.
-        gh = Path(temp) / "gh"
-        gh.write_text(
-            "#!/bin/sh\n"
-            'if [ -n "${MOCK_PYTEST_JOB_LINES+x}" ]; then\n'
-            "  printf '%s\\n' \"$MOCK_PYTEST_JOB_LINES\"\n"
-            "  exit 0\n"
-            "fi\n"
-            "i=1\n"
-            'while [ "$i" -le "$SHARD_COUNT" ]; do\n'
-            "  printf 'pytest (%s)|success\\n' \"$i\"\n"
-            "  i=$((i+1))\n"
-            "done\n",
-            encoding="utf-8",
-        )
-        gh.chmod(0o755)
-        return subprocess.run(
-            ["bash", "-c", _gate_script()],
-            check=False,
-            capture_output=True,
-            text=True,
-            env={
-                **os.environ,
-                "PATH": f"{temp}:{os.environ['PATH']}",
-                "GITHUB_REPOSITORY": "owner/repo",
-                "GITHUB_RUN_ID": "123",
-                "GITHUB_RUN_ATTEMPT": "1",
-                **env,
-            },
-            timeout=30,
-        )
+    # No transport to fake: the real gate reads shard completeness from
+    # `needs` outputs alone (#8967), never a jobs-API re-listing.
+    return subprocess.run(
+        ["bash", "-c", _gate_script()],
+        check=False,
+        capture_output=True,
+        text=True,
+        env={**os.environ, **env},
+        timeout=30,
+    )
 
 
 # --- fast-checks (#8750 phase A.2) -------------------------------------------
@@ -569,6 +546,7 @@ _GREEN = {
     "PYTEST": "success",
     "AUDIT": "success",
     "SHARD_COUNT": "4",
+    "SHARDS": "[1,2,3,4]",
     "CONTRACTS": "success",
     "FRONTEND_JOB": "skipped",
 }
@@ -580,6 +558,47 @@ def test_ci_gate_passes_a_green_full_tier() -> None:
     assert "CI Gate green" in result.stdout
     for check in _FAST_CHECKS:
         assert f"fast-checks {check}" in result.stdout, check
+
+
+@pytest.mark.parametrize(
+    ("paths", "frontend"),
+    [
+        (["tests/test_example.py"], "false"),
+        ([".github/workflows/ci.yml"], "true"),
+        (["tests/test_example.py", "site/src/components/X.astro"], "true"),
+        (["site/src/components/X.astro"], "true"),
+        (["packages/activity-kit/src/card.ts"], "true"),
+        (["registry/practice/noun_mechanics_deck.json"], "true"),
+    ],
+)
+def test_queue_full_tier_requires_pytest_and_frontend_when_applicable(
+    paths: list[str], frontend: str,
+) -> None:
+    tier = classify_changes.classify(
+        paths,
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=load_denominator()["paths"],
+        tree_paths=frozenset(),
+    )
+    assert tier["pytest_mode"] == "full"
+    assert tier["shards"] == "[1, 2, 3, 4]"
+    assert tier["preflight"] == "false"
+    assert tier["frontend"] == frontend
+    gate_env = {
+        **_GREEN,
+        "FRONTEND": frontend,
+        "FRONTEND_JOB": "success" if frontend == "true" else "skipped",
+        "PREFLIGHT_SCHEDULED": "false",
+        "FC_PREFLIGHT": "skipped",
+        "SHARD_COUNT": tier["shard_count"],
+        "SHARDS": tier["shards"],
+    }
+    assert _run_gate(gate_env).returncode == 0
+    assert _run_gate({**gate_env, "PYTEST": "failure"}).returncode != 0
+    if frontend == "true":
+        assert _run_gate({**gate_env, "FRONTEND_JOB": "failure"}).returncode != 0
 
 
 def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
@@ -594,10 +613,29 @@ def test_ci_gate_fails_when_a_required_job_was_skipped() -> None:
     assert "CI Gate green" not in result.stdout
 
 
-def test_ci_gate_fails_when_a_pytest_matrix_job_is_missing() -> None:
-    result = _run_gate({**_GREEN, "MOCK_PYTEST_JOB_LINES": "pytest (1)|success\npytest (2)|success"})
+def test_ci_gate_fails_when_a_pytest_shard_did_not_succeed() -> None:
+    # A real shard failure (or a matrix instance GitHub never created) makes
+    # `needs.pytest.result` anything but `success` — no jobs-API listing
+    # needed to see it (#8967).
+    result = _run_gate({**_GREEN, "PYTEST": "failure"})
     assert result.returncode != 0
-    assert "pytest matrix jobs differ" in result.stdout
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_fails_when_shards_output_undercounts_shard_count() -> None:
+    # Guards a future drift between Changes.shard_count and Changes.shards —
+    # the run 36341779112 incident (#8967) was the two never actually
+    # diverging but the *listing* racing; this is the same-source check that
+    # replaces that racy re-list, with no API call involved.
+    result = _run_gate({**_GREEN, "SHARDS": "[1,2]"})
+    assert result.returncode != 0
+    assert "Changes.shards has 2 entries but shard_count=4" in result.stdout
+
+
+def test_ci_gate_fails_when_shards_output_is_not_valid_json() -> None:
+    result = _run_gate({**_GREEN, "SHARDS": "not-json"})
+    assert result.returncode != 0
+    assert "Changes.shards is not valid JSON" in result.stdout
 
 
 def test_ci_gate_fails_when_changes_was_cancelled() -> None:
@@ -615,6 +653,7 @@ _DOCS_TIER = {
     "CONTRACTS": "skipped",
     "AUDIT": "skipped",
     "SHARD_COUNT": "1",
+    "SHARDS": "[1]",
 }
 
 
@@ -637,7 +676,7 @@ def _gate_env(check: str, applies: bool, outcome: str) -> dict[str, str]:
     elif check == "ruff":
         env["DOCS_ONLY"] = "false" if applies else "true"
         if not applies:
-            env.update(FC_RUFF="skipped", CONTRACTS="skipped", AUDIT="skipped", SHARD_COUNT="1")
+            env.update(FC_RUFF="skipped", CONTRACTS="skipped", AUDIT="skipped", SHARD_COUNT="1", SHARDS="[1]")
     env["FC_" + check.upper()] = outcome
     # A failed blocking step fails the job; any other outcome is tested with
     # a successful job so the gate must reject it from the output alone.

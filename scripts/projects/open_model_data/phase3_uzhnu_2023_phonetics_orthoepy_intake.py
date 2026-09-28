@@ -21,12 +21,17 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_uzhnu_2023_phonetics_orthoepy_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_uzhnu_2023_phonetics_orthoepy_candidate_v1.json"
 FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
 POLICY_PATH = DATA / "admission/phase3_complete_source_policy_v4.json"
 SCRIPT_PATH = Path(__file__).resolve()
+# Independently pinned to the 55d0ed1515 source and exact frozen receipt.
+HISTORICAL_IMPLEMENTATION_SHA256 = "56cf2c56dd373f312a5174ebd09108046f456364ac28cb9acfc044ac43f4f158"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "24141962c3cb59cd422c5dbe79b3287a2139f24cad0faa318b628c5977328fef"
 
 SCHEMA_VERSION = "phase3_uzhnu_2023_phonetics_orthoepy_candidate_v1"
 STATUS = "ACADEMIC_CANON_CORROBORATION_CANDIDATE_NO_GAP_TRANSITION"
@@ -387,7 +392,10 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "receipt"
         raise Uzhnu2023PhoneticsOrthoepyIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
-    require(receipt == {**build_receipt_body(), "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
+    expected_body = build_receipt_body()
+    if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256:
+        expected_body["bindings"]["implementation_sha256"] = HISTORICAL_IMPLEMENTATION_SHA256
+    require(receipt == {**expected_body, "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
     encoded = canonical_json(receipt)
     for forbidden in (
         "GoogleDrive-",

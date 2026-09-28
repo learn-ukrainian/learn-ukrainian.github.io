@@ -1,0 +1,5 @@
+{"schema_version":"v4_provenance_restoration_index_v1","records":4}
+{"source_id":"source.literary.0020599cfcaf15e887bdb73c","cohort_id":"literary-non-ocr","source_family":"literary","source_locator":{"source_file":"wave12-hrushevsky-iu-odnotom"}}
+{"source_id":"source.public_textbooks.00cebc897bb7feab776c42a8","cohort_id":"public-textbooks-non-stem-non-ocr","source_family":"public_textbooks","source_locator":{"source_file":"9-klas-mystetstvo-masol-2017"}}
+{"source_id":"source.public_textbooks.07604d78ce2a01cae6661e9b","cohort_id":"public-textbooks-non-stem-non-ocr","source_family":"public_textbooks","source_locator":{"source_file":"3-klas-ukrainska-mova-vashulenko-2020-1"}}
+{"source_id":"source.public_textbooks.0ff382f420fb306c56f0c9c4","cohort_id":"public-textbooks-non-stem-non-ocr","source_family":"public_textbooks","source_locator":{"source_file":"antonenko-davydovych-yak-my-hovorymo"}}

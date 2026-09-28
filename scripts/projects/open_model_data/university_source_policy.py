@@ -4,14 +4,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 SCRIPT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = SCRIPT_PATH.parents[3]
-DEFAULT_POLICY_PATH = (
-    PROJECT_ROOT
-    / "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
+if __package__ in {None, ""} and str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
+DEFAULT_POLICY_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json",
+    repo=PROJECT_ROOT,
 )
 
 SCHEMA_VERSION = "phase3_university_source_policy_v1"
@@ -51,16 +57,10 @@ CONTENT_DISPOSITIONS = frozenset(
         "quarantine",
     }
 )
-TOP_LEVEL_KEYS = frozenset(
-    {"schema_version", "status", "default_disposition", "source_count", "sources"}
-)
-SOURCE_KEYS = frozenset(
-    {"source_file", "audience_class", "subject_role", "allowed_lanes", "evidence"}
-)
+TOP_LEVEL_KEYS = frozenset({"schema_version", "status", "default_disposition", "source_count", "sources"})
+SOURCE_KEYS = frozenset({"source_file", "audience_class", "subject_role", "allowed_lanes", "evidence"})
 V3_SOURCE_KEYS = SOURCE_KEYS | {"content_disposition"}
-EVIDENCE_KEYS = frozenset(
-    {"kind", "jsonl_sha256", "page_start", "page_end", "rows_sha256", "summary"}
-)
+EVIDENCE_KEYS = frozenset({"kind", "jsonl_sha256", "page_start", "page_end", "rows_sha256", "summary"})
 
 
 class UniversitySourcePolicyError(RuntimeError):
@@ -96,9 +96,7 @@ def load_jsonl_rows(path: Path) -> list[dict[str, Any]]:
                 continue
             value = json.loads(line)
             if not isinstance(value, dict):
-                raise UniversitySourcePolicyError(
-                    f"university JSONL line {line_number} is not an object"
-                )
+                raise UniversitySourcePolicyError(f"university JSONL line {line_number} is not an object")
             rows.append(value)
     if not rows:
         raise UniversitySourcePolicyError("university JSONL is empty")
@@ -129,9 +127,7 @@ def evidence_rows_sha256(
             }
         )
     if not selected:
-        raise UniversitySourcePolicyError(
-            f"audience evidence pages {page_start}-{page_end} contain no JSONL rows"
-        )
+        raise UniversitySourcePolicyError(f"audience evidence pages {page_start}-{page_end} contain no JSONL rows")
     return sha256_value(selected)
 
 
@@ -169,9 +165,7 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
     )
     _require(document["status"] == STATUS, "university source policy is not active")
     expected_default_disposition = (
-        V3_DEFAULT_DISPOSITION
-        if schema_version == V3_SCHEMA_VERSION
-        else DEFAULT_DISPOSITION
+        V3_DEFAULT_DISPOSITION if schema_version == V3_SCHEMA_VERSION else DEFAULT_DISPOSITION
     )
     _require(
         document["default_disposition"] == expected_default_disposition,
@@ -197,15 +191,14 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
         _require(audience in AUDIENCE_CLASSES, f"{source_file}: invalid audience class")
         _require(subject_role in SUBJECT_ROLES, f"{source_file}: invalid subject role")
         _require(
-            isinstance(lanes, list)
-            and lanes == sorted(set(lanes))
-            and set(lanes) <= ALLOWED_LANES,
+            isinstance(lanes, list) and lanes == sorted(set(lanes)) and set(lanes) <= ALLOWED_LANES,
             f"{source_file}: invalid or non-canonical allowed lanes",
         )
-        _require(isinstance(evidence, dict) and set(evidence) == EVIDENCE_KEYS, f"{source_file}: invalid evidence shape")
         _require(
-            evidence["kind"]
-            in {"jsonl_front_matter", "jsonl_front_matter_and_official_course"},
+            isinstance(evidence, dict) and set(evidence) == EVIDENCE_KEYS, f"{source_file}: invalid evidence shape"
+        )
+        _require(
+            evidence["kind"] in {"jsonl_front_matter", "jsonl_front_matter_and_official_course"},
             f"{source_file}: unsupported evidence kind",
         )
         _require(
@@ -221,7 +214,10 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
                 and all(character in "0123456789abcdef" for character in evidence[key]),
                 f"{source_file}: invalid {key}",
             )
-        _require(isinstance(evidence["summary"], str) and evidence["summary"].strip(), f"{source_file}: missing evidence summary")
+        _require(
+            isinstance(evidence["summary"], str) and evidence["summary"].strip(),
+            f"{source_file}: missing evidence summary",
+        )
         if schema_version == SCHEMA_VERSION:
             if audience == "A_ukrainian_university_audience":
                 _require(
@@ -263,8 +259,7 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
                 )
         if "linguistic_rule_evidence" in lanes:
             _require(
-                audience == "A_ukrainian_university_audience"
-                and subject_role == "ukrainian_linguistics",
+                audience == "A_ukrainian_university_audience" and subject_role == "ukrainian_linguistics",
                 f"{source_file}: only proven Ukrainian linguistics sources may support rule evidence",
             )
             if schema_version == V3_SCHEMA_VERSION:
@@ -281,20 +276,14 @@ def _entry_source_id(entry: dict[str, Any]) -> str:
     return str(entry.get("source_file") or entry.get("source_id") or "")
 
 
-def _entry_jsonl_evidence(
-    document: dict[str, Any], entry: dict[str, Any]
-) -> tuple[dict[str, Any], str, str, str]:
+def _entry_jsonl_evidence(document: dict[str, Any], entry: dict[str, Any]) -> tuple[dict[str, Any], str, str, str]:
     if document["schema_version"] == V4_SCHEMA_VERSION:
         _require(
             entry["source_kind"] == "university_jsonl",
             f"{entry['source_id']}: external reference has no university JSONL identity",
         )
         evidence = entry["jsonl_evidence"]
-        content_disposition = (
-            "admitted"
-            if entry["final_disposition"] == "admit_scoped"
-            else entry["final_disposition"]
-        )
+        content_disposition = "admitted" if entry["final_disposition"] == "admit_scoped" else entry["final_disposition"]
         return (
             evidence,
             evidence["audience_class"],
@@ -332,9 +321,7 @@ def require_source_admission(
         lane in entry["allowed_lanes"],
         f"{source_file}: university source policy denies lane {lane}",
     )
-    evidence, audience_class, subject_role, content_disposition = _entry_jsonl_evidence(
-        document, entry
-    )
+    evidence, audience_class, subject_role, content_disposition = _entry_jsonl_evidence(document, entry)
     actual_jsonl_sha256 = sha256_file(jsonl_path)
     _require(
         actual_jsonl_sha256 == evidence["jsonl_sha256"],
@@ -394,9 +381,7 @@ def require_source_quarantine(
         content_disposition == "quarantine" and not entry["allowed_lanes"],
         f"{source_file}: university source policy does not authorize quarantine",
     )
-    evidence, audience_class, subject_role, normalized_disposition = _entry_jsonl_evidence(
-        document, entry
-    )
+    evidence, audience_class, subject_role, normalized_disposition = _entry_jsonl_evidence(document, entry)
     actual_jsonl_sha256 = sha256_file(jsonl_path)
     _require(
         actual_jsonl_sha256 == evidence["jsonl_sha256"],

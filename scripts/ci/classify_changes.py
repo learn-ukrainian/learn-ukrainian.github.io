@@ -12,6 +12,7 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
 
 from scripts.ci.frontend_change_scope import load_denominator, path_in_denominator
+from scripts.ci.test_areas import load_areas, matches_root, matches_test
 
 # Content CI owns these trees. Other exemptions are Markdown in known docs trees.
 CONTENT_PREFIXES = ("wiki/", "curriculum/")
@@ -44,6 +45,7 @@ _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+_QUEUE_CODE_SUFFIXES = (".py", ".js", ".jsx", ".ts", ".tsx", ".sh")
 
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
 # the full tier on both events and is excluded from the docs exemption; the
@@ -394,7 +396,39 @@ def classify(
         tree_paths=tree_paths,
         repo_root=repo_root,
     )
-    return {**tier, "preflight": preflight_for(event, tier)}
+    return {
+        **tier,
+        "preflight": preflight_for(event, tier),
+        "skipped_areas": json.dumps(skipped_areas_for(paths, event=event, labels=labels, tier=tier)),
+    }
+
+
+def skipped_areas_for(
+    paths: list[str], *, event: str, labels: list[str], tier: dict[str, str]
+) -> list[str]:
+    """Only a known, unrelated full PR may omit an area; errors run everything."""
+    if (
+        event != "pull_request"
+        or tier["pytest_mode"] != "full"
+        or not paths
+        or len(paths) >= 300
+        or has_full_ci(labels)
+        or any(hits_shared_root_denylist(path) for path in paths)
+    ):
+        return []
+    try:
+        areas = load_areas()
+        return [
+            name
+            for name, area in areas.items()
+            if not any(
+                matches_test(_norm(path), area["tests"])
+                or matches_root(_norm(path), area["roots"])
+                for path in paths
+            )
+        ]
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return []
 
 
 def classify_tier(
@@ -407,21 +441,44 @@ def classify_tier(
     tree_paths: Iterable[str] | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, str]:
-    """Unknown paths run every pytest shard; only explicit docs/content may skip."""
+    """Classify PR paths and require full Python coverage for queue docs and code.
+
+    ``full`` runs every required Python test except ``slow`` and
+    ``atlas_release``; those markers run only nightly. On ``merge_group``,
+    docs-only and frontend-only changes run ``full`` while keeping their
+    existing Frontend-job denominator. Curriculum/wiki entries retain the
+    ``reads_content`` docs class; learner pages retain the content class.
+    Other paths run ``full``.
+    """
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
 
-    # Non-classified event / full-ci / empty / capped: force full (P1.1).
-    if event not in _PATH_CLASSIFIED_EVENTS or has_full_ci(labels) or not paths or len(paths) >= 300:
+    # Unclassified events and unknown paths fail closed, including Frontend.
+    if event not in _PATH_CLASSIFIED_EVENTS or not paths or len(paths) >= 300:
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
-    # Operator 2026-09-21 (#8437): pull_request and merge_group use the same
-    # path classes. A docs or backend-only change must not rebuild the site,
-    # and a frontend-only change must not run the Python shards. The nightly
-    # schedule and an unknown event still enter through the full return above.
+    # The label changes only the Python tier; known paths still decide Frontend.
+    if has_full_ci(labels):
+        return _full(shard_count, frontend="true" if frontend else "false")
+    # A Python or shell file is not frontend-only merely because it lives
+    # under site/ or packages/activity-kit/.
+    if event == "merge_group" and any(
+        _norm(path).endswith((".py", ".sh")) for path in paths
+    ):
+        return _full(shard_count, frontend="true" if frontend else "false")
+    # Python tests also read site/ and activity-kit files. The queue must run
+    # them even when the PR uses the frontend-only fast path (#9073).
     if all(is_pure_frontend_path(path) for path in paths):
+        if event == "merge_group":
+            return _full(shard_count, frontend="true" if frontend else "false")
         return _frontend_only()
+    # The broad curriculum/wiki docs/content exemptions can include code files
+    # outside the known code-imported set. They also need the queue's full gate.
+    if event == "merge_group" and any(
+        _norm(path).endswith(_QUEUE_CODE_SUFFIXES) for path in paths
+    ):
+        return _full(shard_count, frontend="true" if frontend else "false")
     if all(is_content_class_path(path) for path in paths) and any(
         _norm(path).startswith("site/src/content/docs/") for path in paths
     ):
@@ -432,10 +489,21 @@ def classify_tier(
         return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
+        # Tests may construct docs paths dynamically, so a static test-read
+        # allowlist cannot safely select the queue's narrow docs lane.
+        if event == "merge_group" and not all(
+            _norm(path).startswith(CONTENT_PREFIXES) for path in paths
+        ):
+            return _full(shard_count, frontend="false")
         # A curriculum/wiki docs PR still needs the reads_content leg (#8720):
         # the docs lane runs no reads_content tests otherwise, so an edit that
         # breaks a test reading those live trees would merge green.
         return _docs(reads_content=has_reads_content_root_path(paths))
+
+    # #9073 (D4): the queue is the full Python backstop for code and unknown
+    # paths. Do this before PR candidate selection, including tree lookups.
+    if event == "merge_group":
+        return _full(shard_count, frontend="true" if frontend else "false")
 
     tree: set[str] | None
     if tree_paths is not None:
@@ -596,7 +664,7 @@ def main() -> None:
                 os.environ.get("HEAD_REF", ""), os.environ.get("BASE", ""), os.environ["REPO"],
             ):
                 labels.extend(current_pr_labels(os.environ["REPO"], number))
-        if event in _PATH_CLASSIFIED_EVENTS and not has_full_ci(labels):
+        if event in _PATH_CLASSIFIED_EVENTS:
             # pull_request and merge_group both classify by changed paths;
             # the workflow maps pull_request.base/head or merge_group
             # .base_sha/.head_sha into BASE/HEAD. For a merge group that is

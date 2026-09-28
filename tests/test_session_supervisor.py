@@ -23,6 +23,7 @@ from scripts.session_supervisor import (
     LaunchRole,
     SessionSupervisor,
     SupervisorError,
+    _resolve_default_host_id,
     main,
     strip_lease_credentials,
 )
@@ -427,3 +428,33 @@ def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureF
     )
     assert exit_code == 4
     assert "workers cannot acquire" in capsys.readouterr().err
+
+
+def test_default_host_id_resolution_matches_delegates_self_dispatch_check(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A non-opaque LU_MONITOR_HOST_ID must resolve identically on both sides.
+
+    `scripts.session_supervisor.main` stores `_resolve_default_host_id()` on a
+    driver lease's `holder_host_id`; `scripts.delegate`'s Cursor self-dispatch
+    guard later resolves the same env var again to compare against it. If one
+    side stored the raw env string while the other compared a resolved value,
+    a non-opaque host id (e.g. a raw hostname) would collapse to `"local"`
+    only on the delegate side, and the guard would miss a real self-dispatch.
+    """
+    import scripts.delegate as delegate
+    from scripts.api.occupancy_local import resolve_launcher_host_id
+
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "krisztian-mbp.local")
+
+    stored_host_id = _resolve_default_host_id()
+    assert stored_host_id == "local"
+    assert stored_host_id != os.environ["LU_MONITOR_HOST_ID"]
+    assert resolve_launcher_host_id() == stored_host_id
+
+    lease = {"holder_host_id": stored_host_id, "holder_process_id": os.getpid()}
+    assert delegate._cursor_driver_lease_is_self_dispatch(lease) is True
+
+    unresolved_lease = {"holder_host_id": os.environ["LU_MONITOR_HOST_ID"], "holder_process_id": os.getpid()}
+    assert delegate._cursor_driver_lease_is_self_dispatch(unresolved_lease) is False

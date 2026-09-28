@@ -37,6 +37,7 @@ try:
 except ImportError:  # pragma: no cover - script path fallback
     from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
 
+from scripts.api.subscription_usage import pace_is_deficit
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import dispatch_admission
 
@@ -116,7 +117,8 @@ def is_avoid_lane(agent_info: dict[str, Any] | None, *, lane: str | None = None)
     status = lane_status(agent_info)
     if status in _AVOID_STATUSES:
         return True
-    return will_last_to_reset(agent_info) is False
+    cb = (agent_info or {}).get("codexbar")
+    return pace_is_deficit(cb if isinstance(cb, dict) else None) is True
 
 
 def remaining_pct(agent_info: dict[str, Any] | None) -> float | None:
@@ -263,6 +265,8 @@ def build_lane_rows(
         )
         status = lane_status(info)
         will_last = will_last_to_reset(info)
+        cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
+        pace_deficit = pace_is_deficit(cb) is True
         retired_target = RETIRED_AGENT_ALIASES.get(lane)
         avoid = is_avoid_lane(info, lane=lane) and not reserve_relaxes
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
@@ -283,7 +287,7 @@ def build_lane_rows(
                 notes.append("NEED_LOGIN")
             if retired_target:
                 notes.append(f"retired→{retired_target}")
-            if will_last is False:
+            if pace_deficit:
                 notes.append("deficit")
             if status in _AVOID_STATUSES:
                 notes.append(status)

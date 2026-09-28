@@ -17,10 +17,11 @@ import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.projects.open_model_data import freeze_phase3_p2_contracts as p2
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from tests.sparse_trees import tree_absent
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 P1 = DATA / "evidence/phase3_p1_universe_freeze_v1.json"
 P1_AMENDMENT = DATA / "evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
 P2 = DATA / "evidence/phase3_p2_canonical_contracts_v1.json"
@@ -50,8 +51,7 @@ def _contract() -> dict[str, Any]:
     # but P1 is missing, the test must fail, as it did before (#8581).
     if tree_absent("data/projects"):
         pytest.skip(
-            "data/projects is absent from this sparse worktree; "
-            "re-include it with --sparse-include data/projects"
+            "data/projects is absent from this sparse worktree; re-include it with --sparse-include data/projects"
         )
     return copy.deepcopy(p2.build_contract())
 
@@ -95,9 +95,7 @@ def _protected_cell_id() -> str:
 
 def _dialect_cell_id() -> str:
     return next(
-        cell_id
-        for cell_id, cell in _composite_cells().items()
-        if cell.get("role") == "protected_dialect_or_regional"
+        cell_id for cell_id, cell in _composite_cells().items() if cell.get("role") == "protected_dialect_or_regional"
     )
 
 
@@ -353,9 +351,11 @@ def test_p2_artifact_reproduces_exactly_from_the_frozen_p1_metadata() -> None:
         "sha256": P1_AMENDMENT_SHA256,
     }
     assert p1_binding["source_unit_count"] == len(p1["source_manifest"]["source_units"]) == 57
-    assert p1_binding["unknown_rights_blocker_count"] == sum(
-        unit["rights"]["required_state"] == "unknown" for unit in p1["source_manifest"]["source_units"]
-    ) == 39
+    assert (
+        p1_binding["unknown_rights_blocker_count"]
+        == sum(unit["rights"]["required_state"] == "unknown" for unit in p1["source_manifest"]["source_units"])
+        == 39
+    )
     expected_statuses = [
         {"cell_id": cell["cell_id"], "status": cell["status"]}
         for cell in sorted(p1["required_cell_manifest"]["cells"], key=lambda item: item["cell_id"])
@@ -383,7 +383,10 @@ def test_dialect_regional_amendment_is_additive_versioned_and_schema_valid() -> 
     Draft202012Validator.check_schema(amendment_schema)
     Draft202012Validator(amendment_schema).validate(amendment)
     assert p2.sha256_file(P1_AMENDMENT) == P1_AMENDMENT_SHA256
-    assert amendment["base_p1_manifest"] == {"path": "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json", "sha256": P1_SHA256}
+    assert amendment["base_p1_manifest"] == {
+        "path": "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
+        "sha256": P1_SHA256,
+    }
     assert amendment["amendment"]["base_p1_rewritten"] is False
     assert amendment["amendment"]["base_required_cell_count"] == 15
     assert amendment["amendment"]["additive_required_cell_count"] == 1
@@ -456,9 +459,7 @@ def test_json_schema_accepts_each_state_specific_case_branch(record_kind: str) -
         ("correct_modern_production", "modern_normalization", False),
     ],
 )
-def test_json_schema_rejects_cross_state_case_fields(
-    record_kind: str, field: str, value: Any
-) -> None:
+def test_json_schema_rejects_cross_state_case_fields(record_kind: str, field: str, value: Any) -> None:
     record = _case(record_kind)
     record[field] = value
     with pytest.raises(ValidationError):
@@ -489,7 +490,10 @@ def test_json_schema_rejects_missing_protection_identity_fields(record_kind: str
     [
         ({"amendment": {"base_p1_rewritten": True}}, "p1_dialect_regional_amendment_sha_drift"),
         ({"amendment": {"composite_required_cell_count": 15}}, "p1_dialect_regional_amendment_sha_drift"),
-        ({"dialect_regional_protection": {"automatic_normalization_to_modern_standard_ukrainian": True}}, "p1_dialect_regional_amendment_sha_drift"),
+        (
+            {"dialect_regional_protection": {"automatic_normalization_to_modern_standard_ukrainian": True}},
+            "p1_dialect_regional_amendment_sha_drift",
+        ),
     ],
 )
 def test_amendment_mutation_cannot_rewrite_the_composite_denominator(
@@ -561,11 +565,14 @@ def test_composite_strata_and_adjudication_registry_are_explicitly_non_admitting
     assert contract["p1_binding"]["required_cell_count"] == 15
     assert contract["p1_binding"]["composite_required_cell_count"] == 16
     assert len(contract["p1_binding"]["composite_required_cell_statuses"]) == 16
-    assert next(
-        status
-        for status in contract["p1_binding"]["composite_required_cell_statuses"]
-        if status["cell_id"] == _dialect_cell_id()
-    )["status"] == "coverage_blocked"
+    assert (
+        next(
+            status
+            for status in contract["p1_binding"]["composite_required_cell_statuses"]
+            if status["cell_id"] == _dialect_cell_id()
+        )["status"]
+        == "coverage_blocked"
+    )
     assert contract["case_state_contract"]["structurally_distinct_states"] == [
         "correct_modern_production",
         "source_backed_correction",
@@ -681,9 +688,12 @@ def test_atomic_rule_slot_identity_is_structured_and_canonical() -> None:
 def test_atomic_rule_slot_identity_accepts_structurally_valid_lineage(
     lineage_kind: str, parent_slot_ids: list[str]
 ) -> None:
-    assert p2.validate_rule_slot_identity(
-        _rule_slot(lineage_kind=lineage_kind, parent_slot_ids=parent_slot_ids), _contract()
-    ) is True
+    assert (
+        p2.validate_rule_slot_identity(
+            _rule_slot(lineage_kind=lineage_kind, parent_slot_ids=parent_slot_ids), _contract()
+        )
+        is True
+    )
 
 
 def test_rule_slot_identity_must_bind_to_one_of_the_frozen_composite_strata() -> None:
@@ -937,9 +947,7 @@ def test_case_evidence_refs_pin_source_identity_artifact_and_provenance(field: s
 def test_case_evidence_ref_cannot_use_an_unknown_rights_source() -> None:
     record = _case("not_applicable_with_evidence")
     unknown = next(
-        unit
-        for unit in _json(P1)["source_manifest"]["source_units"]
-        if unit["rights"]["required_state"] == "unknown"
+        unit for unit in _json(P1)["source_manifest"]["source_units"] if unit["rights"]["required_state"] == "unknown"
     )
     record["evidence_refs"][0].update(
         {
@@ -1096,9 +1104,7 @@ def test_case_evidence_roles_are_claim_appropriate(
         "not_applicable_with_evidence",
     ],
 )
-def test_case_evidence_requires_a_non_attestation_claim_role(
-    record_kind: str, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_case_evidence_requires_a_non_attestation_claim_role(record_kind: str, monkeypatch: pytest.MonkeyPatch) -> None:
     record = _case(record_kind)
     if record_kind in {"protected_historical_context", "protected_dialect_or_regional_context", "abstention"}:
         monkeypatch.setattr(p2, "read_p1", lambda: _satisfied_p1_for(record_kind))
@@ -1115,9 +1121,7 @@ def test_case_evidence_requires_a_non_attestation_claim_role(
         {"authority_kind": "model_agreement", "actor_kind": "human"},
     ],
 )
-def test_case_authority_laundering_is_rejected(
-    authority: dict[str, str], monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_case_authority_laundering_is_rejected(authority: dict[str, str], monkeypatch: pytest.MonkeyPatch) -> None:
     record = _case("protected_historical_context")
     monkeypatch.setattr(p2, "read_p1", lambda: _satisfied_p1_for("protected_historical_context"))
     record["authority"].update(authority)
@@ -1134,9 +1138,7 @@ def test_protected_dialect_cannot_be_laundered_as_historical_or_modern_state() -
     assert p2.validate_case_record(record) is False
 
 
-@pytest.mark.parametrize(
-    "record_kind", ["correct_modern_production", "source_backed_correction", "minimal_contrast"]
-)
+@pytest.mark.parametrize("record_kind", ["correct_modern_production", "source_backed_correction", "minimal_contrast"])
 def test_rule_backed_case_roles_cannot_fabricate_a_target_when_r_is_empty(record_kind: str) -> None:
     assert p2.validate_case_record(_case(record_kind), _contract()) is False
 
@@ -1159,7 +1161,9 @@ def test_proposal_binds_the_pinned_composite_input_not_the_base_p1_only() -> Non
         mutated = copy.deepcopy(proposal)
         mutated["input_identity_sha256"] = replacement
         mutated["producer_provenance"]["input_identity_sha256"] = replacement
-        mutated["proposal_sha256"] = p2.sha256_bytes(p2.canonical_json({key: value for key, value in mutated.items() if key != "proposal_sha256"}))
+        mutated["proposal_sha256"] = p2.sha256_bytes(
+            p2.canonical_json({key: value for key, value in mutated.items() if key != "proposal_sha256"})
+        )
         assert p2.validate_promotion(mutated, _promotion(mutated), contract) is False
 
 
@@ -1261,5 +1265,7 @@ def test_missing_case_provenance_or_claim_evidence_is_rejected() -> None:
 
     proposal = _proposal()
     del proposal["producer_provenance"]
-    proposal["proposal_sha256"] = p2.sha256_bytes(p2.canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"}))
+    proposal["proposal_sha256"] = p2.sha256_bytes(
+        p2.canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"})
+    )
     assert p2.validate_promotion(proposal, _promotion(proposal), _contract()) is False

@@ -28,25 +28,45 @@ from scripts.projects.open_model_data import phase3_functional_roles as function
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 DEFAULT_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
 DEFAULT_COVERAGE_CONTRACT = DATA / "evidence/correction_protection_coverage_contract_v1.json"
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
-DISPOSITION_CODES = frozenset({
-    "converted", "not_rule_bearing", "duplicate_representation", "evaluation_only",
-    "superseded_or_historical", "blocked_with_reason",
-})
-NONCONVERTED_DECISION_CODES = frozenset({
-    "agree", "disagree_should_be_converted", "disagree_wrong_code", "insufficient_locator_evidence",
-})
-CONVERTED_MISS_CODES = frozenset({
-    "disagree_stub_conversion", "disagree_misclassified_role_or_claim",
-    "disagree_unsupported_evidence", "disagree_non_actionable_rule",
-})
-LEXICAL_DECISION_CODES = frozenset({
-    "agree", "disagree_invalid_attestation", "disagree_unsupported_semantic_range",
-    "disagree_mismapped_morphology", "insufficient_locator_evidence",
-})
+DISPOSITION_CODES = frozenset(
+    {
+        "converted",
+        "not_rule_bearing",
+        "duplicate_representation",
+        "evaluation_only",
+        "superseded_or_historical",
+        "blocked_with_reason",
+    }
+)
+NONCONVERTED_DECISION_CODES = frozenset(
+    {
+        "agree",
+        "disagree_should_be_converted",
+        "disagree_wrong_code",
+        "insufficient_locator_evidence",
+    }
+)
+CONVERTED_MISS_CODES = frozenset(
+    {
+        "disagree_stub_conversion",
+        "disagree_misclassified_role_or_claim",
+        "disagree_unsupported_evidence",
+        "disagree_non_actionable_rule",
+    }
+)
+LEXICAL_DECISION_CODES = frozenset(
+    {
+        "agree",
+        "disagree_invalid_attestation",
+        "disagree_unsupported_semantic_range",
+        "disagree_mismapped_morphology",
+        "insufficient_locator_evidence",
+    }
+)
 SHA256 = re.compile(r"^[a-f0-9]{64}$")
 IDENTITY = re.compile(r"^[A-Za-z0-9_.:-]{1,160}$")
 ROUND_ID = re.compile(r"^audit_round_[a-z0-9_]{1,120}$")
@@ -91,7 +111,9 @@ def sha256_file(path: Path) -> str:
 
 
 def _functional_role_binding(
-    role_contract: Mapping[str, Any], *, role_contract_path: Path,
+    role_contract: Mapping[str, Any],
+    *,
+    role_contract_path: Path,
 ) -> tuple[dict[str, Any], dict[str, str]]:
     """Return the verified v2.1 disposition-audit task binding.
 
@@ -120,7 +142,9 @@ def _functional_role_binding(
 
 
 def _current_contract_bindings(
-    role_contract: Mapping[str, Any], *, role_contract_path: Path,
+    role_contract: Mapping[str, Any],
+    *,
+    role_contract_path: Path,
 ) -> dict[str, str]:
     verified, binding = _functional_role_binding(role_contract, role_contract_path=role_contract_path)
     return {
@@ -136,20 +160,23 @@ def _current_contract_bindings(
 
 
 def _validate_action_receipt(
-    receipt: Mapping[str, Any], *, role_contract: Mapping[str, Any], bindings: Mapping[str, str], input_manifest_sha256: str,
-    output_sha256: str, action_kind: str,
+    receipt: Mapping[str, Any],
+    *,
+    role_contract: Mapping[str, Any],
+    bindings: Mapping[str, str],
+    input_manifest_sha256: str,
+    output_sha256: str,
+    action_kind: str,
 ) -> None:
     """Validate the generic v2.1 action-receipt identity convention."""
     require(set(receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
     require(
-        receipt.get("role_id") == bindings["auditor_role_id"]
-        and receipt.get("task_id") == bindings["auditor_task_id"],
+        receipt.get("role_id") == bindings["auditor_role_id"] and receipt.get("task_id") == bindings["auditor_task_id"],
         "functional action receipt task binding mismatch",
     )
     require(receipt.get("action_kind") == action_kind, "functional action kind mismatch")
     require(
-        receipt.get("input_manifest_sha256") == input_manifest_sha256
-        and receipt.get("output_sha256") == output_sha256,
+        receipt.get("input_manifest_sha256") == input_manifest_sha256 and receipt.get("output_sha256") == output_sha256,
         "functional action artifact binding mismatch",
     )
     role = next(item for item in role_contract["functional_roles"] if item["role_id"] == bindings["auditor_role_id"])
@@ -157,17 +184,28 @@ def _validate_action_receipt(
         all(receipt.get(key) == role[key] for key in ("exact_model", "model_family", "harness")),
         "functional action execution lane mismatch",
     )
-    require(isinstance(receipt.get("provider"), str) and receipt["provider"], "functional action provider metadata missing")
+    require(
+        isinstance(receipt.get("provider"), str) and receipt["provider"], "functional action provider metadata missing"
+    )
     require(
         receipt.get("evaluation_cycle_id") == bindings["evaluation_cycle_id"]
-        and all(receipt.get(key) == bindings[key] for key in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )),
+        and all(
+            receipt.get(key) == bindings[key]
+            for key in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        ),
         "functional action contract binding mismatch",
     )
     require(receipt.get("status") == "completed", "functional action is not complete")
-    require(all(isinstance(receipt.get(key), str) and receipt[key] for key in ("receipt_id", "started_at", "completed_at")), "functional action metadata incomplete")
+    require(
+        all(isinstance(receipt.get(key), str) and receipt[key] for key in ("receipt_id", "started_at", "completed_at")),
+        "functional action metadata incomplete",
+    )
     identity = {
         key: receipt[key]
         for key in ("role_id", "task_id", "input_manifest_sha256", "evaluation_cycle_id", "output_sha256", "status")
@@ -210,12 +248,25 @@ def _first_containing_squash_merge(
     freeze_hash = _sha(population_freeze.get("population_freeze_sha256"), "population freeze")
     head = str(_git(repo_root, ["rev-parse", "--verify", origin_ref])).strip()
     require(GIT_SHA40.fullmatch(head) is not None, "invalid origin/main head")
-    output = str(_git(repo_root, [
-        "log", "--first-parent", "--reverse", "--format=%H", f"-S{freeze_hash}", origin_ref, "--",
-    ]))
+    output = str(
+        _git(
+            repo_root,
+            [
+                "log",
+                "--first-parent",
+                "--reverse",
+                "--format=%H",
+                f"-S{freeze_hash}",
+                origin_ref,
+                "--",
+            ],
+        )
+    )
     for candidate in (line.strip() for line in output.splitlines() if line.strip()):
         require(GIT_SHA40.fullmatch(candidate) is not None, "invalid entropy commit candidate")
-        paths = str(_git(repo_root, ["diff-tree", "--no-commit-id", "--name-only", "--diff-filter=AMR", "-r", candidate])).splitlines()
+        paths = str(
+            _git(repo_root, ["diff-tree", "--no-commit-id", "--name-only", "--diff-filter=AMR", "-r", candidate])
+        ).splitlines()
         for path in paths:
             if not path or path.startswith("-"):
                 continue
@@ -308,9 +359,17 @@ def validate_common_entropy_receipt(
     """Apply the reusable source/textbook/delta anti-grinding contract."""
     assigned = _identity(assigned_auditor_task_id, "assigned entropy auditor task")
     require(receipt.get("audit_kind") == audit_kind and audit_kind in AUDIT_KINDS, "entropy audit kind mismatch")
-    require(receipt.get("family_id") == family_id and receipt.get("population_kind") == population_kind, "entropy family or population mismatch")
-    require(receipt.get("population_freeze_sha256") == population_freeze.get("population_freeze_sha256"), "entropy population-freeze binding mismatch")
-    require(receipt.get("population_sha256") == population_universe_sha256, "entropy population universe binding mismatch")
+    require(
+        receipt.get("family_id") == family_id and receipt.get("population_kind") == population_kind,
+        "entropy family or population mismatch",
+    )
+    require(
+        receipt.get("population_freeze_sha256") == population_freeze.get("population_freeze_sha256"),
+        "entropy population-freeze binding mismatch",
+    )
+    require(
+        receipt.get("population_sha256") == population_universe_sha256, "entropy population universe binding mismatch"
+    )
     _sha(receipt.get("seed"), "derived audit seed")
     require(receipt.get("auditor_task_id") == assigned, "entropy task is not the assigned auditor")
     require(receipt.get("seed_committer_task_id") == assigned, "assigned auditor task must be the sole seed committer")
@@ -324,7 +383,10 @@ def validate_common_entropy_receipt(
     require(receipt.get("entropy_contract_version") == ENTROPY_CONTRACT_VERSION, "entropy contract version mismatch")
     require(receipt.get("origin_main_ref") == ORIGIN_MAIN_REF, "entropy provenance is not exact origin/main")
     first_commit = _first_containing_squash_merge(population_freeze, repo_root=repo_root)
-    require(receipt.get("first_containing_squash_merge_sha") == first_commit, "stale or non-first population-freeze merge binding")
+    require(
+        receipt.get("first_containing_squash_merge_sha") == first_commit,
+        "stale or non-first population-freeze merge binding",
+    )
     expected_tuple, expected_seed = _derive_entropy_seed_from_fields(
         first_containing_squash_merge_sha=first_commit,
         audit_kind=audit_kind,
@@ -336,9 +398,14 @@ def validate_common_entropy_receipt(
     require(receipt.get("entropy_tuple") == expected_tuple, "canonical entropy tuple mismatch")
     require(receipt.get("entropy_tuple_sha256") == expected_seed, "entropy tuple hash mismatch")
     require(receipt.get("seed") == expected_seed, "seed is not the unique approved entropy derivation")
-    require(receipt.get("seed_commitment_sha256") == sha256_bytes(expected_seed.encode("ascii")), "seed commitment mismatch")
+    require(
+        receipt.get("seed_commitment_sha256") == sha256_bytes(expected_seed.encode("ascii")), "seed commitment mismatch"
+    )
     receipt_hash = sha256_value(receipt)
-    require(receipt_hash not in set(prior_seed_receipt_sha256s), "seed receipt cannot be reused after a repair or passing audit")
+    require(
+        receipt_hash not in set(prior_seed_receipt_sha256s),
+        "seed receipt cannot be reused after a repair or passing audit",
+    )
     return receipt_hash
 
 
@@ -398,14 +465,37 @@ def _validate_source_audit(family: Mapping[str, Any]) -> None:
     require(isinstance(audit, Mapping), f"source audit missing: {family.get('family_id')}")
     require(audit.get("auditor_role_id") == "disposition_auditor", "source audit owner changed")
     require(audit.get("seed_owner_role_id") == "disposition_auditor", "source seed owner changed")
-    require(audit.get("nonconverted_formula") == "min(nonconverted_total,max(100,ceil(0.02*family_unit_total)))", "nonconverted formula changed")
-    require(audit.get("converted_formula") == "min(converted_total,max(100,ceil(0.02*family_unit_total)))", "converted formula changed")
-    require(audit.get("nonconverted_stratification") == ["disposition_code", "document_or_edition_identity"], "nonconverted strata changed")
-    require(audit.get("converted_stratification") == ["source_role", "claim_type", "document_or_edition_identity"], "converted strata changed")
+    require(
+        audit.get("nonconverted_formula") == "min(nonconverted_total,max(100,ceil(0.02*family_unit_total)))",
+        "nonconverted formula changed",
+    )
+    require(
+        audit.get("converted_formula") == "min(converted_total,max(100,ceil(0.02*family_unit_total)))",
+        "converted formula changed",
+    )
+    require(
+        audit.get("nonconverted_stratification") == ["disposition_code", "document_or_edition_identity"],
+        "nonconverted strata changed",
+    )
+    require(
+        audit.get("converted_stratification") == ["source_role", "claim_type", "document_or_edition_identity"],
+        "converted strata changed",
+    )
     require(audit.get("sampling_without_replacement") is True, "sampling-with-replacement is forbidden")
-    require(set(audit.get("nonconverted_decision_codes", ())) == NONCONVERTED_DECISION_CODES and len(audit.get("nonconverted_decision_codes", ())) == len(NONCONVERTED_DECISION_CODES), "nonconverted decision codes changed")
-    require(set(audit.get("converted_miss_codes", ())) == CONVERTED_MISS_CODES and len(audit.get("converted_miss_codes", ())) == len(CONVERTED_MISS_CODES), "converted miss codes changed")
-    require(audit.get("repair_invalidates_both_samples") is True and audit.get("passing_sample_reuse_forbidden") is True, "repair/reuse gate changed")
+    require(
+        set(audit.get("nonconverted_decision_codes", ())) == NONCONVERTED_DECISION_CODES
+        and len(audit.get("nonconverted_decision_codes", ())) == len(NONCONVERTED_DECISION_CODES),
+        "nonconverted decision codes changed",
+    )
+    require(
+        set(audit.get("converted_miss_codes", ())) == CONVERTED_MISS_CODES
+        and len(audit.get("converted_miss_codes", ())) == len(CONVERTED_MISS_CODES),
+        "converted miss codes changed",
+    )
+    require(
+        audit.get("repair_invalidates_both_samples") is True and audit.get("passing_sample_reuse_forbidden") is True,
+        "repair/reuse gate changed",
+    )
 
 
 def _source_receipt(source_universe_dir: Path) -> tuple[dict[str, Any], str, dict[str, list[dict[str, str]]]]:
@@ -422,12 +512,18 @@ def _source_receipt(source_universe_dir: Path) -> tuple[dict[str, Any], str, dic
         units: list[dict[str, str]] = []
         for line in ledger_path.read_text(encoding="utf-8").splitlines():
             item = json.loads(line)
-            units.append({
-                "unit_id": item["unit_id"], "unit_sha256": item["unit_sha256"],
-                "unit_locator_sha256": sha256_value(item["locator"]),
-            })
+            units.append(
+                {
+                    "unit_id": item["unit_id"],
+                    "unit_sha256": item["unit_sha256"],
+                    "unit_locator_sha256": sha256_value(item["locator"]),
+                }
+            )
         unit_ids = [unit["unit_id"] for unit in units]
-        require(len(units) == family["unit_count"] and len(set(unit_ids)) == len(units), f"invalid frozen unit ids: {family_id}")
+        require(
+            len(units) == family["unit_count"] and len(set(unit_ids)) == len(units),
+            f"invalid frozen unit ids: {family_id}",
+        )
         records[family_id] = sorted(units, key=lambda unit: unit["unit_id"])
     return receipt, sha256_file(receipt_path), records
 
@@ -461,23 +557,49 @@ def validate_disposition_ledger(
     roles = role_contract or read_json(role_contract_path)
     bindings = _current_contract_bindings(roles, role_contract_path=role_contract_path)
     _text_free(ledger, "disposition ledger")
-    _exact(ledger, {
-        "schema_version", "text_free", "source_universe_receipt_sha256",
-        "source_universe_payload_manifest_sha256", "coverage_contract_sha256",
-        "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-        "functional_role_contract_sha256", "conflict_graph_sha256", "repair_generation", "families",
-    }, "disposition ledger")
-    require(ledger["schema_version"] == "phase3_disposition_ledger_v2_1" and ledger["text_free"] is True, "invalid disposition ledger header; v1 is historical and non-current")
-    require(isinstance(ledger["repair_generation"], int) and ledger["repair_generation"] >= 0, "invalid repair generation")
+    _exact(
+        ledger,
+        {
+            "schema_version",
+            "text_free",
+            "source_universe_receipt_sha256",
+            "source_universe_payload_manifest_sha256",
+            "coverage_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "repair_generation",
+            "families",
+        },
+        "disposition ledger",
+    )
+    require(
+        ledger["schema_version"] == "phase3_disposition_ledger_v2_1" and ledger["text_free"] is True,
+        "invalid disposition ledger header; v1 is historical and non-current",
+    )
+    require(
+        isinstance(ledger["repair_generation"], int) and ledger["repair_generation"] >= 0, "invalid repair generation"
+    )
     receipt, receipt_hash, source_units = _source_receipt(source_universe_dir)
     require(ledger["source_universe_receipt_sha256"] == receipt_hash, "stale source-universe receipt binding")
-    require(ledger["source_universe_payload_manifest_sha256"] == receipt["artifact_manifest"]["payload_manifest_sha256"], "stale source-universe manifest binding")
+    require(
+        ledger["source_universe_payload_manifest_sha256"] == receipt["artifact_manifest"]["payload_manifest_sha256"],
+        "stale source-universe manifest binding",
+    )
     require(ledger["coverage_contract_sha256"] == sha256_value(coverage), "stale coverage contract binding")
     require(
-        all(ledger[name] == bindings[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )),
+        all(
+            ledger[name] == bindings[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        ),
         "stale functional-role binding",
     )
     coverage_families = _contract_families(coverage)
@@ -486,13 +608,29 @@ def validate_disposition_ledger(
     observed: dict[str, dict[str, Any]] = {}
     for family in families:
         require(isinstance(family, Mapping), "disposition family must be an object")
-        _exact(family, {
-            "family_id", "frozen_input_identity_total", "family_unit_total", "ledger_input_total",
-            "disposition_row_sum", "ledger_universe_sha256", "audit_universe_sha256", "rows",
-        }, "disposition family")
+        _exact(
+            family,
+            {
+                "family_id",
+                "frozen_input_identity_total",
+                "family_unit_total",
+                "ledger_input_total",
+                "disposition_row_sum",
+                "ledger_universe_sha256",
+                "audit_universe_sha256",
+                "rows",
+            },
+            "disposition family",
+        )
         family_id = family["family_id"]
-        require(isinstance(family_id, str) and family_id in source_units, f"unknown or lexical disposition family: {family_id}")
-        require(family_id in coverage_families and not family_id.startswith("lexical_"), f"family cannot use source disposition audit: {family_id}")
+        require(
+            isinstance(family_id, str) and family_id in source_units,
+            f"unknown or lexical disposition family: {family_id}",
+        )
+        require(
+            family_id in coverage_families and not family_id.startswith("lexical_"),
+            f"family cannot use source disposition audit: {family_id}",
+        )
         _validate_source_audit(coverage_families[family_id])
         require(family_id not in observed, f"duplicate disposition family: {family_id}")
         frozen_units = source_units[family_id]
@@ -509,16 +647,39 @@ def validate_disposition_ledger(
         normalized_rows: list[dict[str, Any]] = []
         for row in rows:
             require(isinstance(row, Mapping), "disposition row must be an object")
-            _exact(row, {
-                "unit_id", "unit_sha256", "unit_locator_sha256", "disposition_code", "document_or_edition_identity",
-                "source_role", "claim_type", "canonical_content_identity", "evidence_artifact_locators", "consumer_view_ids",
-                "conversion_predicate_locator", "reason_locator", "repeated_reason_count", "predicate_or_rationale_locator",
-            }, "disposition row")
+            _exact(
+                row,
+                {
+                    "unit_id",
+                    "unit_sha256",
+                    "unit_locator_sha256",
+                    "disposition_code",
+                    "document_or_edition_identity",
+                    "source_role",
+                    "claim_type",
+                    "canonical_content_identity",
+                    "evidence_artifact_locators",
+                    "consumer_view_ids",
+                    "conversion_predicate_locator",
+                    "reason_locator",
+                    "repeated_reason_count",
+                    "predicate_or_rationale_locator",
+                },
+                "disposition row",
+            )
             unit_id = row["unit_id"]
-            require(isinstance(unit_id, str) and unit_id in frozen_by_id and unit_id not in row_ids, f"duplicate or missing frozen unit id: {family_id}")
+            require(
+                isinstance(unit_id, str) and unit_id in frozen_by_id and unit_id not in row_ids,
+                f"duplicate or missing frozen unit id: {family_id}",
+            )
             row_ids.add(unit_id)
-            require(row["unit_sha256"] == frozen_by_id[unit_id]["unit_sha256"], f"frozen unit hash mismatch: {family_id}")
-            require(row["unit_locator_sha256"] == frozen_by_id[unit_id]["unit_locator_sha256"], f"frozen unit locator mismatch: {family_id}")
+            require(
+                row["unit_sha256"] == frozen_by_id[unit_id]["unit_sha256"], f"frozen unit hash mismatch: {family_id}"
+            )
+            require(
+                row["unit_locator_sha256"] == frozen_by_id[unit_id]["unit_locator_sha256"],
+                f"frozen unit locator mismatch: {family_id}",
+            )
             _sha(row["unit_sha256"], "unit hash")
             _sha(row["unit_locator_sha256"], "unit locator")
             require(row["disposition_code"] in DISPOSITION_CODES, f"invalid disposition code: {family_id}")
@@ -527,30 +688,56 @@ def validate_disposition_ledger(
                 _identity(row["source_role"], "converted source role")
                 _identity(row["claim_type"], "converted claim type")
                 _identity(row["canonical_content_identity"], "canonical converted content identity")
-                require(isinstance(row["evidence_artifact_locators"], list) and row["evidence_artifact_locators"], "converted row lacks immutable evidence artifact locator")
-                require(isinstance(row["consumer_view_ids"], list) and row["consumer_view_ids"], "converted row lacks consumer view")
+                require(
+                    isinstance(row["evidence_artifact_locators"], list) and row["evidence_artifact_locators"],
+                    "converted row lacks immutable evidence artifact locator",
+                )
+                require(
+                    isinstance(row["consumer_view_ids"], list) and row["consumer_view_ids"],
+                    "converted row lacks consumer view",
+                )
                 for locator in row["evidence_artifact_locators"]:
                     _identity(locator, "conversion evidence locator")
                 for view_id in row["consumer_view_ids"]:
                     _identity(view_id, "consumer view identity")
                 _identity(row["conversion_predicate_locator"], "conversion predicate locator")
-                require(row["reason_locator"] is None and row["repeated_reason_count"] is None and row["predicate_or_rationale_locator"] is None, "converted row has nonconverted reason fields")
+                require(
+                    row["reason_locator"] is None
+                    and row["repeated_reason_count"] is None
+                    and row["predicate_or_rationale_locator"] is None,
+                    "converted row has nonconverted reason fields",
+                )
             else:
-                require(row["source_role"] is None and row["claim_type"] is None and row["canonical_content_identity"] is None, "nonconverted row has converted strata")
-                require(row["evidence_artifact_locators"] == [] and row["consumer_view_ids"] == [] and row["conversion_predicate_locator"] is None, "nonconverted row has conversion artifacts")
+                require(
+                    row["source_role"] is None
+                    and row["claim_type"] is None
+                    and row["canonical_content_identity"] is None,
+                    "nonconverted row has converted strata",
+                )
+                require(
+                    row["evidence_artifact_locators"] == []
+                    and row["consumer_view_ids"] == []
+                    and row["conversion_predicate_locator"] is None,
+                    "nonconverted row has conversion artifacts",
+                )
                 _identity(row["reason_locator"], "nonconverted reason locator")
-                require(isinstance(row["repeated_reason_count"], int) and row["repeated_reason_count"] >= 1, "invalid repeated reason count")
+                require(
+                    isinstance(row["repeated_reason_count"], int) and row["repeated_reason_count"] >= 1,
+                    "invalid repeated reason count",
+                )
             normalized_rows.append(dict(row))
         require(row_ids == set(frozen_by_id), f"missing frozen unit id: {family_id}")
         reason_counts = Counter(
-            row["reason_locator"] for row in normalized_rows
-            if row["disposition_code"] != "converted"
+            row["reason_locator"] for row in normalized_rows if row["disposition_code"] != "converted"
         )
         for row in normalized_rows:
             if row["disposition_code"] == "converted":
                 continue
             computed_count = reason_counts[row["reason_locator"]]
-            require(row["repeated_reason_count"] == computed_count, "declared repeated reason count differs from family population")
+            require(
+                row["repeated_reason_count"] == computed_count,
+                "declared repeated reason count differs from family population",
+            )
             if computed_count >= 10:
                 _identity(row["predicate_or_rationale_locator"], "repeated-reason predicate locator")
             else:
@@ -605,79 +792,164 @@ def freeze_audit_populations(
     coverage = coverage_contract or read_json(DEFAULT_COVERAGE_CONTRACT)
     roles = role_contract or read_json(role_contract_path)
     bindings = _current_contract_bindings(roles, role_contract_path=role_contract_path)
-    validated = validate_disposition_ledger(ledger, source_universe_dir=source_universe_dir, coverage_contract=coverage, role_contract=roles, role_contract_path=role_contract_path)
+    validated = validate_disposition_ledger(
+        ledger,
+        source_universe_dir=source_universe_dir,
+        coverage_contract=coverage,
+        role_contract=roles,
+        role_contract_path=role_contract_path,
+    )
     population_families: list[dict[str, Any]] = []
     for family in validated["families"]:
         nonconverted: list[dict[str, Any]] = []
         converted: list[dict[str, Any]] = []
         for row in family["rows"]:
             if row["disposition_code"] == "converted":
-                converted.append({
-                    "unit_id": row["unit_id"], "source_role": row["source_role"], "claim_type": row["claim_type"],
-                    "document_or_edition_identity": row["document_or_edition_identity"],
-                })
+                converted.append(
+                    {
+                        "unit_id": row["unit_id"],
+                        "source_role": row["source_role"],
+                        "claim_type": row["claim_type"],
+                        "document_or_edition_identity": row["document_or_edition_identity"],
+                    }
+                )
             else:
-                nonconverted.append({
-                    "unit_id": row["unit_id"], "disposition_code": row["disposition_code"],
-                    "document_or_edition_identity": row["document_or_edition_identity"],
-                })
+                nonconverted.append(
+                    {
+                        "unit_id": row["unit_id"],
+                        "disposition_code": row["disposition_code"],
+                        "document_or_edition_identity": row["document_or_edition_identity"],
+                    }
+                )
         nonconverted.sort(key=lambda row: row["unit_id"])
         converted.sort(key=lambda row: row["unit_id"])
         nonconverted_size = sample_size(len(nonconverted), family["family_unit_total"])
         converted_size = sample_size(len(converted), family["family_unit_total"])
-        population_families.append({
-            "family_id": family["family_id"], "family_unit_total": family["family_unit_total"],
-            "nonconverted": {"total": len(nonconverted), "sample_size": nonconverted_size, "records": nonconverted, "strata": _strata_allocation(nonconverted, nonconverted_size, "nonconverted")},
-            "converted": {"total": len(converted), "sample_size": converted_size, "records": converted, "strata": _strata_allocation(converted, converted_size, "converted")},
-            "blocked_with_reason_total": sum(row["disposition_code"] == "blocked_with_reason" for row in family["rows"]),
-        })
+        population_families.append(
+            {
+                "family_id": family["family_id"],
+                "family_unit_total": family["family_unit_total"],
+                "nonconverted": {
+                    "total": len(nonconverted),
+                    "sample_size": nonconverted_size,
+                    "records": nonconverted,
+                    "strata": _strata_allocation(nonconverted, nonconverted_size, "nonconverted"),
+                },
+                "converted": {
+                    "total": len(converted),
+                    "sample_size": converted_size,
+                    "records": converted,
+                    "strata": _strata_allocation(converted, converted_size, "converted"),
+                },
+                "blocked_with_reason_total": sum(
+                    row["disposition_code"] == "blocked_with_reason" for row in family["rows"]
+                ),
+            }
+        )
     base = {
-        "schema_version": "phase3_disposition_population_freeze_v2_1", "text_free": True,
+        "schema_version": "phase3_disposition_population_freeze_v2_1",
+        "text_free": True,
         "source_universe_receipt_sha256": validated["source_universe_receipt_sha256"],
         "source_universe_payload_manifest_sha256": validated["source_universe_payload_manifest_sha256"],
         "disposition_ledger_sha256": validated["disposition_ledger_sha256"],
         "coverage_contract_sha256": sha256_value(coverage),
-        **{name: bindings[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )},
-        "repair_generation": validated["repair_generation"], "families": population_families,
+        **{
+            name: bindings[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        },
+        "repair_generation": validated["repair_generation"],
+        "families": population_families,
     }
     return {**base, "population_freeze_sha256": sha256_value(base)}
 
 
 def _assigned_disposition_auditor_task(
-    role_contract: Mapping[str, Any], *, role_contract_path: Path,
+    role_contract: Mapping[str, Any],
+    *,
+    role_contract_path: Path,
 ) -> str:
     """Resolve the one functional task authorized to audit dispositions."""
     return _current_contract_bindings(
-        role_contract, role_contract_path=role_contract_path,
+        role_contract,
+        role_contract_path=role_contract_path,
     )["auditor_task_id"]
 
 
 def validate_seed_receipt(
-    receipt: Mapping[str, Any], population_freeze: Mapping[str, Any], *, role_contract: Mapping[str, Any],
-    family_id: str, population_kind: str, audit_kind: str = "source_disposition",
-    repo_root: Path = ROOT, role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
-    prohibited_task_ids: Sequence[str] = (), prior_seed_receipt_sha256s: Sequence[str] = (),
+    receipt: Mapping[str, Any],
+    population_freeze: Mapping[str, Any],
+    *,
+    role_contract: Mapping[str, Any],
+    family_id: str,
+    population_kind: str,
+    audit_kind: str = "source_disposition",
+    repo_root: Path = ROOT,
+    role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
+    prohibited_task_ids: Sequence[str] = (),
+    prior_seed_receipt_sha256s: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Validate the auditor-attested unique entropy derivation or fail closed."""
     _text_free(receipt, "seed receipt")
-    _exact(receipt, {
-        "schema_version", "text_free", "audit_round_id", "seed", "seed_commitment_sha256", "seed_owner_role_id",
-        "auditor_task_id", "source_universe_receipt_sha256", "disposition_ledger_sha256",
-        "population_freeze_sha256", "coverage_contract_sha256", "base_contract_sha256", "amendment_sha256",
-        "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "repair_generation",
-        "results_recorded", "reroll_count", "prior_sample_reused", "proposal_task_ids", "family_id", "population_kind",
-        "population_sha256", "strata_allocation_sha256", "entropy_contract_version", "origin_main_ref",
-        "first_containing_squash_merge_sha", "audit_kind", "entropy_tuple", "entropy_tuple_sha256",
-        "seed_committer_task_id", "seed_attestor_task_id", "derivation_mode",
-    }, "seed receipt")
-    require(receipt["schema_version"] == "phase3_disposition_audit_seed_receipt_v2_1" and receipt["text_free"] is True, "invalid seed receipt header; v1 is historical and non-current")
-    require(isinstance(receipt["audit_round_id"], str) and ROUND_ID.fullmatch(receipt["audit_round_id"]) is not None, "invalid audit round id")
+    _exact(
+        receipt,
+        {
+            "schema_version",
+            "text_free",
+            "audit_round_id",
+            "seed",
+            "seed_commitment_sha256",
+            "seed_owner_role_id",
+            "auditor_task_id",
+            "source_universe_receipt_sha256",
+            "disposition_ledger_sha256",
+            "population_freeze_sha256",
+            "coverage_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "repair_generation",
+            "results_recorded",
+            "reroll_count",
+            "prior_sample_reused",
+            "proposal_task_ids",
+            "family_id",
+            "population_kind",
+            "population_sha256",
+            "strata_allocation_sha256",
+            "entropy_contract_version",
+            "origin_main_ref",
+            "first_containing_squash_merge_sha",
+            "audit_kind",
+            "entropy_tuple",
+            "entropy_tuple_sha256",
+            "seed_committer_task_id",
+            "seed_attestor_task_id",
+            "derivation_mode",
+        },
+        "seed receipt",
+    )
+    require(
+        receipt["schema_version"] == "phase3_disposition_audit_seed_receipt_v2_1" and receipt["text_free"] is True,
+        "invalid seed receipt header; v1 is historical and non-current",
+    )
+    require(
+        isinstance(receipt["audit_round_id"], str) and ROUND_ID.fullmatch(receipt["audit_round_id"]) is not None,
+        "invalid audit round id",
+    )
     _sha(receipt["seed"], "derived audit seed")
     require(receipt["seed_owner_role_id"] == "disposition_auditor", "wrong seed owner role")
-    require(receipt["family_id"] == family_id and receipt["population_kind"] == population_kind, "seed receipt is for a different family or population")
+    require(
+        receipt["family_id"] == family_id and receipt["population_kind"] == population_kind,
+        "seed receipt is for a different family or population",
+    )
     require(receipt["audit_kind"] == audit_kind and audit_kind in AUDIT_KINDS, "seed receipt audit kind mismatch")
     populations = {item["family_id"]: item for item in population_freeze["families"]}
     require(family_id in populations and population_kind in {"nonconverted", "converted"}, "unknown audit population")
@@ -686,10 +958,22 @@ def validate_seed_receipt(
     require(receipt["strata_allocation_sha256"] == sha256_value(population["strata"]), "stale seed strata binding")
     bindings = _current_contract_bindings(role_contract, role_contract_path=role_contract_path)
     assigned = bindings["auditor_task_id"]
-    for name in ("source_universe_receipt_sha256", "disposition_ledger_sha256", "population_freeze_sha256", "coverage_contract_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256"):
+    for name in (
+        "source_universe_receipt_sha256",
+        "disposition_ledger_sha256",
+        "population_freeze_sha256",
+        "coverage_contract_sha256",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "conflict_graph_sha256",
+    ):
         _sha(receipt[name], name)
         require(receipt[name] == population_freeze[name], f"stale seed receipt binding: {name}")
-    require(receipt["repair_generation"] == population_freeze["repair_generation"], "stale seed receipt repair generation")
+    require(
+        receipt["repair_generation"] == population_freeze["repair_generation"], "stale seed receipt repair generation"
+    )
     receipt_hash = validate_common_entropy_receipt(
         receipt,
         population_freeze,
@@ -702,7 +986,13 @@ def validate_seed_receipt(
         prohibited_task_ids=prohibited_task_ids,
         prior_seed_receipt_sha256s=prior_seed_receipt_sha256s,
     )
-    return {"ok": True, "seed_receipt_sha256": receipt_hash, "auditor_task_id": assigned, "family_id": family_id, "population_kind": population_kind}
+    return {
+        "ok": True,
+        "seed_receipt_sha256": receipt_hash,
+        "auditor_task_id": assigned,
+        "family_id": family_id,
+        "population_kind": population_kind,
+    }
 
 
 def _rank(seed: str, domain: str, value: str) -> str:
@@ -715,7 +1005,14 @@ def _stratum_key(record: Mapping[str, Any], kind: str) -> tuple[str, ...]:
     return (record["source_role"], record["claim_type"], record["document_or_edition_identity"])
 
 
-def _stratified_ids(records: Sequence[Mapping[str, Any]], total: int, seed: str, family_id: str, kind: str, published_strata: Sequence[Mapping[str, Any]] | None = None) -> list[str]:
+def _stratified_ids(
+    records: Sequence[Mapping[str, Any]],
+    total: int,
+    seed: str,
+    family_id: str,
+    kind: str,
+    published_strata: Sequence[Mapping[str, Any]] | None = None,
+) -> list[str]:
     require(len({record["unit_id"] for record in records}) == len(records), "population contains duplicate unit ids")
     grouped: dict[tuple[str, ...], list[Mapping[str, Any]]] = defaultdict(list)
     for record in records:
@@ -731,27 +1028,53 @@ def _stratified_ids(records: Sequence[Mapping[str, Any]], total: int, seed: str,
     selected: list[str] = []
     for key in keys:
         ranked = sorted(grouped[key], key=lambda row: _rank(seed, f"{family_id}:{kind}:unit", row["unit_id"]))
-        selected.extend(row["unit_id"] for row in ranked[:allocations[key]])
+        selected.extend(row["unit_id"] for row in ranked[: allocations[key]])
     require(len(selected) == total and len(set(selected)) == total, "sampling without replacement failed")
     return sorted(selected)
 
 
 def emit_samples(
-    population_freeze: Mapping[str, Any], seed_receipts: Sequence[Mapping[str, Any]], *, ledger: Mapping[str, Any],
-    role_contract: Mapping[str, Any], coverage_contract: Mapping[str, Any] | None = None,
-    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, audit_kind: str = "source_disposition",
-    repo_root: Path = ROOT, role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
-    prohibited_task_ids: Sequence[str] = (), prior_seed_receipt_sha256s: Sequence[str] = (),
+    population_freeze: Mapping[str, Any],
+    seed_receipts: Sequence[Mapping[str, Any]],
+    *,
+    ledger: Mapping[str, Any],
+    role_contract: Mapping[str, Any],
+    coverage_contract: Mapping[str, Any] | None = None,
+    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
+    audit_kind: str = "source_disposition",
+    repo_root: Path = ROOT,
+    role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
+    prohibited_task_ids: Sequence[str] = (),
+    prior_seed_receipt_sha256s: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Deterministically select the frozen samples from an already supplied auditor seed."""
     _text_free(population_freeze, "population freeze")
-    _exact(population_freeze, {
-        "schema_version", "text_free", "source_universe_receipt_sha256", "source_universe_payload_manifest_sha256",
-        "disposition_ledger_sha256", "coverage_contract_sha256", "base_contract_sha256", "amendment_sha256",
-        "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "repair_generation", "families", "population_freeze_sha256",
-    }, "population freeze")
+    _exact(
+        population_freeze,
+        {
+            "schema_version",
+            "text_free",
+            "source_universe_receipt_sha256",
+            "source_universe_payload_manifest_sha256",
+            "disposition_ledger_sha256",
+            "coverage_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "repair_generation",
+            "families",
+            "population_freeze_sha256",
+        },
+        "population freeze",
+    )
     base = {key: value for key, value in population_freeze.items() if key != "population_freeze_sha256"}
-    require(population_freeze["schema_version"] == "phase3_disposition_population_freeze_v2_1" and population_freeze["text_free"] is True, "invalid population freeze header; v1 is historical and non-current")
+    require(
+        population_freeze["schema_version"] == "phase3_disposition_population_freeze_v2_1"
+        and population_freeze["text_free"] is True,
+        "invalid population freeze header; v1 is historical and non-current",
+    )
     require(population_freeze["population_freeze_sha256"] == sha256_value(base), "population freeze hash mismatch")
     coverage = coverage_contract or read_json(DEFAULT_COVERAGE_CONTRACT)
     recomputed_freeze = freeze_audit_populations(
@@ -761,18 +1084,31 @@ def emit_samples(
         role_contract=role_contract,
         role_contract_path=role_contract_path,
     )
-    require(canonical_json(population_freeze) == canonical_json(recomputed_freeze), "population freeze differs from freshly derived disposition ledger population")
-    require(isinstance(seed_receipts, Sequence) and not isinstance(seed_receipts, (str, bytes)), "per-population seed receipts must be a list")
+    require(
+        canonical_json(population_freeze) == canonical_json(recomputed_freeze),
+        "population freeze differs from freshly derived disposition ledger population",
+    )
+    require(
+        isinstance(seed_receipts, Sequence) and not isinstance(seed_receipts, (str, bytes)),
+        "per-population seed receipts must be a list",
+    )
     receipt_by_population: dict[tuple[str, str], Mapping[str, Any]] = {}
     for seed_receipt in seed_receipts:
         require(isinstance(seed_receipt, Mapping), "seed receipt must be an object")
         key = (seed_receipt.get("family_id"), seed_receipt.get("population_kind"))
-        require(all(isinstance(item, str) for item in key) and key not in receipt_by_population, "duplicate or invalid per-population seed receipt")
+        require(
+            all(isinstance(item, str) for item in key) and key not in receipt_by_population,
+            "duplicate or invalid per-population seed receipt",
+        )
         receipt_by_population[key] = seed_receipt
     samples: list[dict[str, Any]] = []
     for family in population_freeze["families"]:
         require(isinstance(family, Mapping), "population family must be an object")
-        _exact(family, {"family_id", "family_unit_total", "nonconverted", "converted", "blocked_with_reason_total"}, "population family")
+        _exact(
+            family,
+            {"family_id", "family_unit_total", "nonconverted", "converted", "blocked_with_reason_total"},
+            "population family",
+        )
         for kind in ("nonconverted", "converted"):
             population = family[kind]
             require(isinstance(population, Mapping), "population must be an object")
@@ -783,19 +1119,59 @@ def emit_samples(
             require(population["sample_size"] == expected_size, "sample formula mismatch")
             receipt = receipt_by_population.get((family["family_id"], kind))
             require(receipt is not None, "missing per-population seed receipt")
-            seed = validate_seed_receipt(receipt, population_freeze, role_contract=role_contract, family_id=family["family_id"], population_kind=kind, audit_kind=audit_kind, repo_root=repo_root, role_contract_path=role_contract_path, prohibited_task_ids=prohibited_task_ids, prior_seed_receipt_sha256s=prior_seed_receipt_sha256s)
-            ids = _stratified_ids(records, expected_size, receipt["seed"], family["family_id"], kind, population["strata"])
-            samples.append({"family_id": family["family_id"], "sample_kind": kind, "sample_size": expected_size, "unit_ids": ids, "population_sha256": _population_hash(records), "strata_allocation_sha256": sha256_value(population["strata"]), "seed_receipt_sha256": seed["seed_receipt_sha256"], "auditor_task_id": seed["auditor_task_id"], "blocked_with_reason_total": family["blocked_with_reason_total"]})
-    require(set(receipt_by_population) == {(item["family_id"], kind) for item in population_freeze["families"] for kind in ("nonconverted", "converted")}, "extra seed receipt or missing audit population")
+            seed = validate_seed_receipt(
+                receipt,
+                population_freeze,
+                role_contract=role_contract,
+                family_id=family["family_id"],
+                population_kind=kind,
+                audit_kind=audit_kind,
+                repo_root=repo_root,
+                role_contract_path=role_contract_path,
+                prohibited_task_ids=prohibited_task_ids,
+                prior_seed_receipt_sha256s=prior_seed_receipt_sha256s,
+            )
+            ids = _stratified_ids(
+                records, expected_size, receipt["seed"], family["family_id"], kind, population["strata"]
+            )
+            samples.append(
+                {
+                    "family_id": family["family_id"],
+                    "sample_kind": kind,
+                    "sample_size": expected_size,
+                    "unit_ids": ids,
+                    "population_sha256": _population_hash(records),
+                    "strata_allocation_sha256": sha256_value(population["strata"]),
+                    "seed_receipt_sha256": seed["seed_receipt_sha256"],
+                    "auditor_task_id": seed["auditor_task_id"],
+                    "blocked_with_reason_total": family["blocked_with_reason_total"],
+                }
+            )
+    require(
+        set(receipt_by_population)
+        == {
+            (item["family_id"], kind)
+            for item in population_freeze["families"]
+            for kind in ("nonconverted", "converted")
+        },
+        "extra seed receipt or missing audit population",
+    )
     base_manifest = {
-        "schema_version": "phase3_disposition_sample_manifest_v2_1", "text_free": True,
+        "schema_version": "phase3_disposition_sample_manifest_v2_1",
+        "text_free": True,
         "source_universe_receipt_sha256": population_freeze["source_universe_receipt_sha256"],
         "disposition_ledger_sha256": population_freeze["disposition_ledger_sha256"],
         "population_freeze_sha256": population_freeze["population_freeze_sha256"],
-        **{name: population_freeze[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )},
+        **{
+            name: population_freeze[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        },
         "repair_generation": population_freeze["repair_generation"],
         "samples": sorted(samples, key=lambda item: (item["family_id"], item["sample_kind"])),
     }
@@ -820,8 +1196,28 @@ def validate_audit_results(
 ) -> dict[str, Any]:
     """Require exact sample coverage, valid result codes, and both zero-miss gates."""
     _text_free(results, "audit results")
-    _exact(results, {"schema_version", "text_free", "sample_manifest_sha256", "population_freeze_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "repair_generation", "action_receipt", "results"}, "audit results")
-    require(results["schema_version"] == "phase3_disposition_audit_results_v2_1" and results["text_free"] is True, "invalid audit results header; v1 is historical and non-current")
+    _exact(
+        results,
+        {
+            "schema_version",
+            "text_free",
+            "sample_manifest_sha256",
+            "population_freeze_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "repair_generation",
+            "action_receipt",
+            "results",
+        },
+        "audit results",
+    )
+    require(
+        results["schema_version"] == "phase3_disposition_audit_results_v2_1" and results["text_free"] is True,
+        "invalid audit results header; v1 is historical and non-current",
+    )
     recomputed_manifest = emit_samples(
         population_freeze,
         seed_receipts,
@@ -835,56 +1231,122 @@ def validate_audit_results(
         prohibited_task_ids=prohibited_task_ids,
         prior_seed_receipt_sha256s=prior_seed_receipt_sha256s,
     )
-    require(canonical_json(sample_manifest) == canonical_json(recomputed_manifest), "sample manifest differs from deterministic population-freeze selection")
+    require(
+        canonical_json(sample_manifest) == canonical_json(recomputed_manifest),
+        "sample manifest differs from deterministic population-freeze selection",
+    )
     manifest_base = {key: value for key, value in sample_manifest.items() if key != "sample_manifest_sha256"}
-    require(sample_manifest.get("sample_manifest_sha256") == sha256_value(manifest_base), "sample manifest integrity mismatch")
+    require(
+        sample_manifest.get("sample_manifest_sha256") == sha256_value(manifest_base),
+        "sample manifest integrity mismatch",
+    )
     for field in ("sample_manifest_sha256", "population_freeze_sha256"):
         require(results[field] == sample_manifest[field], f"stale audit result binding: {field}")
-    require(results["repair_generation"] == sample_manifest["repair_generation"], "stale audit results repair generation")
+    require(
+        results["repair_generation"] == sample_manifest["repair_generation"], "stale audit results repair generation"
+    )
     bindings = _current_contract_bindings(role_contract, role_contract_path=role_contract_path)
     require(
-        all(results[name] == bindings[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )),
+        all(
+            results[name] == bindings[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        ),
         "stale audit result functional-role binding",
     )
     expected: dict[tuple[str, str, str], tuple[set[str], str]] = {}
     pairs: set[tuple[str, str]] = set()
     for sample in sample_manifest["samples"]:
         require(isinstance(sample, Mapping), "sample manifest entry must be an object")
-        _exact(sample, {"family_id", "sample_kind", "sample_size", "unit_ids", "population_sha256", "strata_allocation_sha256", "seed_receipt_sha256", "auditor_task_id", "blocked_with_reason_total"}, "sample manifest entry")
+        _exact(
+            sample,
+            {
+                "family_id",
+                "sample_kind",
+                "sample_size",
+                "unit_ids",
+                "population_sha256",
+                "strata_allocation_sha256",
+                "seed_receipt_sha256",
+                "auditor_task_id",
+                "blocked_with_reason_total",
+            },
+            "sample manifest entry",
+        )
         pair = (sample["family_id"], sample["sample_kind"])
         require(pair not in pairs, "duplicate population sample")
         pairs.add(pair)
-        require(sample["sample_size"] == len(sample["unit_ids"]) == len(set(sample["unit_ids"])), "sample manifest without-replacement integrity failure")
-        allowed = NONCONVERTED_DECISION_CODES if sample["sample_kind"] == "nonconverted" else CONVERTED_MISS_CODES | {"agree"}
+        require(
+            sample["sample_size"] == len(sample["unit_ids"]) == len(set(sample["unit_ids"])),
+            "sample manifest without-replacement integrity failure",
+        )
+        allowed = (
+            NONCONVERTED_DECISION_CODES if sample["sample_kind"] == "nonconverted" else CONVERTED_MISS_CODES | {"agree"}
+        )
         for unit_id in sample["unit_ids"]:
             expected[(sample["family_id"], sample["sample_kind"], unit_id)] = (allowed, sample["auditor_task_id"])
     families = {family_id for family_id, _ in pairs}
-    require(pairs == {(family_id, kind) for family_id in families for kind in ("nonconverted", "converted")}, "paired nonconverted/converted population acceptance is incomplete")
+    require(
+        pairs == {(family_id, kind) for family_id in families for kind in ("nonconverted", "converted")},
+        "paired nonconverted/converted population acceptance is incomplete",
+    )
     observed: set[tuple[str, str, str]] = set()
     for result in results["results"]:
         require(isinstance(result, Mapping), "audit result must be an object")
-        _exact(result, {"family_id", "sample_kind", "unit_id", "decision_code", "auditor_task_id", "evidence_artifact_locators"}, "audit result")
+        _exact(
+            result,
+            {"family_id", "sample_kind", "unit_id", "decision_code", "auditor_task_id", "evidence_artifact_locators"},
+            "audit result",
+        )
         key = (result["family_id"], result["sample_kind"], result["unit_id"])
         require(key in expected and key not in observed, "duplicate, missing, or unsampled audit result")
         require(result["decision_code"] in expected[key][0], "invalid audit decision code")
-        require(result["auditor_task_id"] == expected[key][1] == bindings["auditor_task_id"], "result task is not the assigned disposition auditor")
-        require(isinstance(result["evidence_artifact_locators"], list) and result["evidence_artifact_locators"], "audit result lacks evidence references")
+        require(
+            result["auditor_task_id"] == expected[key][1] == bindings["auditor_task_id"],
+            "result task is not the assigned disposition auditor",
+        )
+        require(
+            isinstance(result["evidence_artifact_locators"], list) and result["evidence_artifact_locators"],
+            "audit result lacks evidence references",
+        )
         for locator in result["evidence_artifact_locators"]:
             _identity(locator, "audit evidence reference")
         observed.add(key)
     require(observed == set(expected), "audit results do not cover exact sample")
-    require(all(sample.get("blocked_with_reason_total") == 0 for sample in sample_manifest["samples"]), "blocked_with_reason cannot be accepted for source coverage")
-    nonagree = [key for key in observed if next(item["decision_code"] for item in results["results"] if (item["family_id"], item["sample_kind"], item["unit_id"]) == key) != "agree"]
+    require(
+        all(sample.get("blocked_with_reason_total") == 0 for sample in sample_manifest["samples"]),
+        "blocked_with_reason cannot be accepted for source coverage",
+    )
+    nonagree = [
+        key
+        for key in observed
+        if next(
+            item["decision_code"]
+            for item in results["results"]
+            if (item["family_id"], item["sample_kind"], item["unit_id"]) == key
+        )
+        != "agree"
+    ]
     require(not nonagree, "zero-nonagree/zero-miss gate failed; repair, new freeze, and fresh samples are required")
     _validate_action_receipt(
-        results["action_receipt"], role_contract=role_contract, bindings=bindings,
+        results["action_receipt"],
+        role_contract=role_contract,
+        bindings=bindings,
         input_manifest_sha256=sample_manifest["sample_manifest_sha256"],
-        output_sha256=sha256_value(results["results"]), action_kind="disposition_audit_results",
+        output_sha256=sha256_value(results["results"]),
+        action_kind="disposition_audit_results",
     )
-    return {"ok": True, "sample_manifest_sha256": sample_manifest["sample_manifest_sha256"], "result_count": len(observed), "zero_miss": True}
+    return {
+        "ok": True,
+        "sample_manifest_sha256": sample_manifest["sample_manifest_sha256"],
+        "result_count": len(observed),
+        "zero_miss": True,
+    }
 
 
 def validate_bundle(
@@ -903,13 +1365,30 @@ def validate_bundle(
 ) -> dict[str, Any]:
     """Recompute every disposition-audit bundle binding from supplied artifacts."""
     _text_free(bundle, "audit bundle")
-    _exact(bundle, {
-        "schema_version", "text_free", "source_universe_receipt_sha256", "coverage_contract_sha256",
-        "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-        "functional_role_contract_sha256", "conflict_graph_sha256", "disposition_ledger_sha256", "population_freeze_sha256",
-        "seed_receipt_sha256s", "sample_manifest_sha256", "audit_results_sha256",
-    }, "audit bundle")
-    require(bundle["schema_version"] == "phase3_disposition_audit_bundle_v2_1" and bundle["text_free"] is True, "invalid audit bundle header; v1 is historical and non-current")
+    _exact(
+        bundle,
+        {
+            "schema_version",
+            "text_free",
+            "source_universe_receipt_sha256",
+            "coverage_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "disposition_ledger_sha256",
+            "population_freeze_sha256",
+            "seed_receipt_sha256s",
+            "sample_manifest_sha256",
+            "audit_results_sha256",
+        },
+        "audit bundle",
+    )
+    require(
+        bundle["schema_version"] == "phase3_disposition_audit_bundle_v2_1" and bundle["text_free"] is True,
+        "invalid audit bundle header; v1 is historical and non-current",
+    )
     result = validate_audit_results(
         results,
         sample_manifest,
@@ -925,10 +1404,16 @@ def validate_bundle(
     expected = {
         "source_universe_receipt_sha256": population_freeze["source_universe_receipt_sha256"],
         "coverage_contract_sha256": sha256_value(coverage_contract),
-        **{name: _current_contract_bindings(role_contract, role_contract_path=role_contract_path)[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )},
+        **{
+            name: _current_contract_bindings(role_contract, role_contract_path=role_contract_path)[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        },
         "disposition_ledger_sha256": sha256_value(ledger),
         "population_freeze_sha256": population_freeze["population_freeze_sha256"],
         "seed_receipt_sha256s": sorted(sha256_value(receipt) for receipt in seed_receipts),
@@ -946,7 +1431,15 @@ def validate_bundle(
     }
 
 
-def validate_lexical_complete_census(census: Mapping[str, Any], *, source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, coverage_contract: Mapping[str, Any] | None = None, role_contract: Mapping[str, Any] | None = None, population_freeze: Mapping[str, Any] | None = None, prohibited_task_ids: Sequence[str] = ()) -> dict[str, Any]:
+def validate_lexical_complete_census(
+    census: Mapping[str, Any],
+    *,
+    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
+    coverage_contract: Mapping[str, Any] | None = None,
+    role_contract: Mapping[str, Any] | None = None,
+    population_freeze: Mapping[str, Any] | None = None,
+    prohibited_task_ids: Sequence[str] = (),
+) -> dict[str, Any]:
     """Route only the closed v2 lexical path; v1 is migration evidence only."""
     if census.get("schema_version") != "phase3_lexical_complete_census_v2_1":
         raise AuditError("historical v1 lexical census is non-current migration evidence and cannot be reclassified")
@@ -965,9 +1458,14 @@ def validate_lexical_complete_census(census: Mapping[str, Any], *, source_univer
 
 
 def validate_lexical_structural_audit(
-    receipt: Mapping[str, Any], *, source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
-    coverage_contract: Mapping[str, Any] | None = None, role_contract: Mapping[str, Any] | None = None,
-    sources_db: Path, vesum_db: Path, r2u_cache: Path,
+    receipt: Mapping[str, Any],
+    *,
+    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
+    coverage_contract: Mapping[str, Any] | None = None,
+    role_contract: Mapping[str, Any] | None = None,
+    sources_db: Path,
+    vesum_db: Path,
+    r2u_cache: Path,
 ) -> dict[str, Any]:
     """Expose the independent complete structural lexical audit primitive."""
     from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
@@ -987,9 +1485,15 @@ def validate_lexical_structural_audit(
 
 
 def freeze_lexical_used_subset_population(
-    release_manifest: Mapping[str, Any], *, release_root: Path,
-    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, coverage_contract: Mapping[str, Any] | None = None,
-    role_contract: Mapping[str, Any] | None = None, sources_db: Path, vesum_db: Path, r2u_cache: Path,
+    release_manifest: Mapping[str, Any],
+    *,
+    release_root: Path,
+    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
+    coverage_contract: Mapping[str, Any] | None = None,
+    role_contract: Mapping[str, Any] | None = None,
+    sources_db: Path,
+    vesum_db: Path,
+    r2u_cache: Path,
     repair_generation: int,
 ) -> dict[str, Any]:
     """Freeze exact typed release references before the lexical census starts."""
@@ -1077,28 +1581,135 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         coverage, roles = read_json(args.coverage_contract), read_json(args.role_contract)
         if args.command == "validate-ledger":
-            _print(validate_disposition_ledger(read_json(args.ledger), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, role_contract_path=args.role_contract))
+            _print(
+                validate_disposition_ledger(
+                    read_json(args.ledger),
+                    source_universe_dir=args.source_universe,
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    role_contract_path=args.role_contract,
+                )
+            )
         elif args.command == "freeze-populations":
-            _print(freeze_audit_populations(read_json(args.ledger), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, role_contract_path=args.role_contract))
+            _print(
+                freeze_audit_populations(
+                    read_json(args.ledger),
+                    source_universe_dir=args.source_universe,
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    role_contract_path=args.role_contract,
+                )
+            )
         elif args.command == "emit-samples":
-            _print(emit_samples(read_json(args.population_freeze), [read_json(path) for path in args.seed_receipt], ledger=read_json(args.ledger), role_contract=roles, coverage_contract=coverage, source_universe_dir=args.source_universe, audit_kind=args.audit_kind, role_contract_path=args.role_contract, prohibited_task_ids=args.prohibited_task, prior_seed_receipt_sha256s=args.prior_seed_receipt_sha256))
+            _print(
+                emit_samples(
+                    read_json(args.population_freeze),
+                    [read_json(path) for path in args.seed_receipt],
+                    ledger=read_json(args.ledger),
+                    role_contract=roles,
+                    coverage_contract=coverage,
+                    source_universe_dir=args.source_universe,
+                    audit_kind=args.audit_kind,
+                    role_contract_path=args.role_contract,
+                    prohibited_task_ids=args.prohibited_task,
+                    prior_seed_receipt_sha256s=args.prior_seed_receipt_sha256,
+                )
+            )
         elif args.command == "validate-results":
-            _print(validate_audit_results(read_json(args.results), read_json(args.sample_manifest), ledger=read_json(args.ledger), population_freeze=read_json(args.population_freeze), seed_receipts=[read_json(path) for path in args.seed_receipt], coverage_contract=coverage, role_contract=roles, source_universe_dir=args.source_universe, audit_kind=args.audit_kind, role_contract_path=args.role_contract, prohibited_task_ids=args.prohibited_task, prior_seed_receipt_sha256s=args.prior_seed_receipt_sha256))
+            _print(
+                validate_audit_results(
+                    read_json(args.results),
+                    read_json(args.sample_manifest),
+                    ledger=read_json(args.ledger),
+                    population_freeze=read_json(args.population_freeze),
+                    seed_receipts=[read_json(path) for path in args.seed_receipt],
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    source_universe_dir=args.source_universe,
+                    audit_kind=args.audit_kind,
+                    role_contract_path=args.role_contract,
+                    prohibited_task_ids=args.prohibited_task,
+                    prior_seed_receipt_sha256s=args.prior_seed_receipt_sha256,
+                )
+            )
         elif args.command == "validate-bundle":
-            _print(validate_bundle(read_json(args.bundle), ledger=read_json(args.ledger), population_freeze=read_json(args.population_freeze), seed_receipts=[read_json(path) for path in args.seed_receipt], sample_manifest=read_json(args.sample_manifest), results=read_json(args.results), coverage_contract=coverage, role_contract=roles, source_universe_dir=args.source_universe, role_contract_path=args.role_contract))
+            _print(
+                validate_bundle(
+                    read_json(args.bundle),
+                    ledger=read_json(args.ledger),
+                    population_freeze=read_json(args.population_freeze),
+                    seed_receipts=[read_json(path) for path in args.seed_receipt],
+                    sample_manifest=read_json(args.sample_manifest),
+                    results=read_json(args.results),
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    source_universe_dir=args.source_universe,
+                    role_contract_path=args.role_contract,
+                )
+            )
         elif args.command == "validate-lexical-census":
-            _print(validate_lexical_complete_census(read_json(args.census), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles))
+            _print(
+                validate_lexical_complete_census(
+                    read_json(args.census),
+                    source_universe_dir=args.source_universe,
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                )
+            )
         elif args.command == "validate-lexical-structural-audit":
-            _print(validate_lexical_structural_audit(read_json(args.receipt), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache))
+            _print(
+                validate_lexical_structural_audit(
+                    read_json(args.receipt),
+                    source_universe_dir=args.source_universe,
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    sources_db=args.sources_db,
+                    vesum_db=args.vesum_db,
+                    r2u_cache=args.r2u_cache,
+                )
+            )
         elif args.command == "freeze-lexical-used-subset":
-            _print(freeze_lexical_used_subset_population(read_json(args.release_manifest), release_root=args.release_root, source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache, repair_generation=args.repair_generation))
+            _print(
+                freeze_lexical_used_subset_population(
+                    read_json(args.release_manifest),
+                    release_root=args.release_root,
+                    source_universe_dir=args.source_universe,
+                    coverage_contract=coverage,
+                    role_contract=roles,
+                    sources_db=args.sources_db,
+                    vesum_db=args.vesum_db,
+                    r2u_cache=args.r2u_cache,
+                    repair_generation=args.repair_generation,
+                )
+            )
         else:
             from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
 
             if args.command == "validate-lexical-census-v2":
-                _print(validate_lexical_complete_census(read_json(args.census), population_freeze=read_json(args.population_freeze), coverage_contract=coverage, role_contract=roles, prohibited_task_ids=args.prohibited_task))
+                _print(
+                    validate_lexical_complete_census(
+                        read_json(args.census),
+                        population_freeze=read_json(args.population_freeze),
+                        coverage_contract=coverage,
+                        role_contract=roles,
+                        prohibited_task_ids=args.prohibited_task,
+                    )
+                )
             else:
-                _print(lexical.validate_lexical_bundle(read_json(args.bundle), structural_audit=read_json(args.structural_audit), population_freeze=read_json(args.population_freeze), census=read_json(args.census), role_contract=roles, coverage_contract=coverage, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache, source_universe_dir=args.source_universe))
+                _print(
+                    lexical.validate_lexical_bundle(
+                        read_json(args.bundle),
+                        structural_audit=read_json(args.structural_audit),
+                        population_freeze=read_json(args.population_freeze),
+                        census=read_json(args.census),
+                        role_contract=roles,
+                        coverage_contract=coverage,
+                        sources_db=args.sources_db,
+                        vesum_db=args.vesum_db,
+                        r2u_cache=args.r2u_cache,
+                        source_universe_dir=args.source_universe,
+                    )
+                )
     except ValueError as exc:
         parser.error(str(exc))
     return 0

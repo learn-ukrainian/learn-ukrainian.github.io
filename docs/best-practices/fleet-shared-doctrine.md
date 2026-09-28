@@ -93,6 +93,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | GPT-6 Sol (coding and review) | **`high`** default for accountable driving, coding, and adversarial review |
 | GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
+| **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
 | **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
 | Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
 | Opus 5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
@@ -134,6 +135,19 @@ Quirks that change the choice:
 - **Thinking is always on.** Effort is the only control; `thinking: disabled` and `budget_tokens` return a 400. To get less thinking, **lower effort before adding "think less" prompts**.
 - **More thinking per level than Opus 5**, most of all at `xhigh`/`max`. A setting carried over from Opus 5 means longer turns and more output tokens.
 - **Effort ≠ response length** (same as Fable 5.1): trim output with prompting, not the dial.
+
+#### Sonnet 5.5 /effort decision topology (operator 2026-09-28)
+
+Sonnet 5.5 effort levels are recalibrated versus Sonnet 5; do not carry settings over. The API default is **`high`**, and fleet dispatches default to **`high`** until measured outcomes support a narrower choice.
+
+| Level | When |
+|---|---|
+| **`medium`** | Well-specified agentic coding with a bounded task and explicit verification. |
+| **`high`** | Default for fleet dispatches, harder or longer agentic coding, and code reviews. |
+| **`low`** | Avoid for dispatched work: it can skip verification. |
+| **`xhigh` / `max`** | Only after a measured quality gain on the task family. |
+
+At `low` or `medium`, Sonnet 5.5 can check in before finishing. Make completion criteria and verification explicit even when choosing `medium`. Escalate complex, open-ended judgment to Opus 5.5 and authority decisions to Fable 5.1.
 
 ---
 
@@ -243,3 +257,4 @@ When a preferred lane is at quota/outage:
 | 2026-07-19 | Haiku listed with Luna for recon effort guidance / anti-patterns | grok/fleet-scorecard-haiku-recon |
 | 2026-09-09 | Fable 5.1 `/effort` decision topology: default high; medium/low routine; xhigh rare; max almost never; over-gather / low-search quirks | cursor-infra/fable-51-effort-guidance |
 | 2026-09-22 | Opus 5.5 is the default Claude model and driver seat (@ high); Fable 5.1 stays advisor; Opus 5.5 `/effort` topology (API default medium, levels not 1:1 with Opus 5) | claude/opus-5-5-default |
+| 2026-09-28 | Sonnet 5.5 replaces Sonnet 5 as the provisional Claude practical seat; recalibrated `/effort` topology and high fleet default | codex/impl-9111 |

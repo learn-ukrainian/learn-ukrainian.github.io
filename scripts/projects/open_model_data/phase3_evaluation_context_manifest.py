@@ -35,7 +35,9 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ua_context
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT = DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
@@ -598,7 +600,8 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     }.items():
         require(bindings[key] == expected, f"binding drift: {key}")
     require(
-        bindings["implementation_sha256"] in {
+        bindings["implementation_sha256"]
+        in {
             "ea60d179463a959167da7def277edb51a7e558c1442c6acb19f030e1c5f6be17",
             sha256_file(SCRIPT_PATH),
         },

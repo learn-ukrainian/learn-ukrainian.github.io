@@ -167,6 +167,46 @@ def test_plugin_loaded_from_addopts_and_pytest_plugins_is_idempotent(tmp_path: P
     assert completed.stdout.count(CAP_LINE) == 1
 
 
+def test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir(tmp_path: Path) -> None:
+    """#8795: a real dispatch-worker env must not break a nested pytest.
+
+    ``PYTEST_PLUGINS=ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
+    rootdir-relative ``pythonpath = ["scripts"]``. A test like
+    ``tests/test_pytest_tmp_guard.py`` spawns a nested pytest from ``tmp_path``
+    with its own bare ini (no ``pythonpath`` entry), which used to fail with
+    ``ImportError: No module named 'ci'`` once it inherited the worker's
+    ``PYTEST_PLUGINS``. This builds a real worker env via
+    ``scripts.delegate._build_worker_env`` (not a hand-rolled stand-in) and
+    proves a pytest project with no local pythonpath config still loads the
+    cap plugin cleanly.
+    """
+    import delegate
+
+    worker_env = delegate._build_worker_env(
+        task_id="impl-8795-nested-pytest",
+        dispatch_agent="codex",
+        base_env=os.environ,
+    )
+    project = tmp_path / "nested-project"
+    project.mkdir()
+    (project / "test_sample.py").write_text("def test_ok():\n    assert True\n", encoding="utf-8")
+
+    completed = subprocess.run(
+        [_PYTEST, "-m", "pytest", "-q", "test_sample.py"],
+        cwd=project,
+        env=worker_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode == 0, combined
+    assert "No module named 'ci'" not in combined
+    assert "1 passed" in completed.stdout
+
+
 def test_oversized_tx_is_rejected_before_workers_start(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     env = _child_env(tmp_path, marker="impl-8645-b")

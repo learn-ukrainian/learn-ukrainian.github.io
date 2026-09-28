@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from dataclasses import replace
 from pathlib import Path
 
@@ -9,17 +10,28 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import audit_model_ready_receipts as audit
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_RECEIPT = ROOT / "data/projects/open_model_data/model_views/model_ready_product_audit_v1.json"
+CANONICAL_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/model_views/model_ready_product_audit_v1.json"
+)
+# Code inputs recorded by the frozen receipt. Their hashes are the
+# pre-migration blobs; path routing changed the current bytes.
+PRE_MIGRATION = "55d0ed1515835e5f7b7d1d12b933ad4c46706e1f"
+CODE_INPUTS = (
+    "scripts/projects/open_model_data/audit_model_ready_receipts.py",
+    "scripts/projects/open_model_data/model_view_exporter.py",
+    "tests/test_model_ready_receipt_audit.py",
+)
 
 
 def rebind(receipt: dict[str, object]) -> None:
     material = dict(receipt)
     material.pop("audit_id")
-    receipt["audit_id"] = "model-ready-product-audit:" + hashlib.sha256(
-        audit.canonical_json(material).encode("utf-8")
-    ).hexdigest()
+    receipt["audit_id"] = (
+        "model-ready-product-audit:" + hashlib.sha256(audit.canonical_json(material).encode("utf-8")).hexdigest()
+    )
 
 
 def mutate(receipt: dict[str, object], name: str) -> None:
@@ -91,13 +103,35 @@ def mutate(receipt: dict[str, object], name: str) -> None:
     elif name == "phase_deliverable":
         receipt["phase_1_remaining_deliverables"].pop()  # type: ignore[index]
     elif name == "direct_input_hash":
-        receipt["direct_inputs"]["data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"]["sha256"] = "0" * 64  # type: ignore[index]
+        receipt["direct_inputs"]["data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"][
+            "sha256"
+        ] = "0" * 64  # type: ignore[index]
     elif name == "unknown_property":
         receipt["unexpected"] = True
     else:
         raise AssertionError(name)
 
 
+def _without_routed_code(receipt: dict[str, object]) -> dict[str, object]:
+    body = dict(receipt)
+    body.pop("audit_id")
+    direct = dict(body["direct_inputs"])  # type: ignore[arg-type]
+    for key in CODE_INPUTS:
+        direct.pop(key)
+    body["direct_inputs"] = direct
+    return body
+
+
+def _current_input(key: str) -> Path:
+    if key.startswith("data/projects/open_model_data/"):
+        return resolve_open_model_path(key)
+    return ROOT / key
+
+
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -> None:
     inputs = audit.default_inputs()
     tracked = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
@@ -105,7 +139,24 @@ def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -
 
     schema = json.loads(inputs.schema.read_text(encoding="utf-8"))
     assert not list(Draft202012Validator(schema).iter_errors(tracked))
-    assert receipt == tracked
+    assert not list(Draft202012Validator(schema).iter_errors(receipt))
+    assert _without_routed_code(receipt) == _without_routed_code(tracked)
+    for key, meta in receipt["direct_inputs"].items():
+        path = _current_input(key)
+        payload = path.read_bytes()
+        assert meta == {"bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
+    for key in CODE_INPUTS:
+        payload = subprocess.check_output(
+            ["git", "cat-file", "blob", f"{PRE_MIGRATION}:{key}"],
+            cwd=ROOT,
+            timeout=30,
+        )
+        assert tracked["direct_inputs"][key] == {
+            "bytes": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        }
+    with pytest.raises(audit.AuditError, match="direct input hashes"):
+        audit.validate_receipt(tracked, inputs.schema, inputs)
     audit.validate_receipt(receipt, inputs.schema, inputs)
     assert receipt["product_truth"]["continued_pretraining"]["faithful"] == {
         "historical_artifact_records": 1028,
@@ -120,6 +171,10 @@ def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -
     assert first.read_bytes() == second.read_bytes()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> None:
     inputs = audit.default_inputs()
     policy = json.loads(inputs.capability_policy.read_text(encoding="utf-8"))
@@ -132,19 +187,51 @@ def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> N
         audit.build_receipt(replace(inputs, capability_policy=changed_policy))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 @pytest.mark.parametrize(
     "name",
     [
-        "faithful_count", "modern_count", "silver_count", "evaluation_count", "inventory_rows", "inventory_words", "inventory_gate_interpretation",
-        "disposition", "evidence_grade", "source_family", "period", "genre", "genre_reallocation", "register",
-        "lane_state", "lane_eligibility", "lane_emission", "lane_blocked", "lane_artifact", "empty_lane_explanation",
-        "evaluation_isolation", "silver_eligibility", "heldout_eligibility", "cpt_eligibility", "cpt_selectable", "availability",
-        "release_status", "release_permission", "safety", "phase", "phase_deliverable", "direct_input_hash", "unknown_property",
+        "faithful_count",
+        "modern_count",
+        "silver_count",
+        "evaluation_count",
+        "inventory_rows",
+        "inventory_words",
+        "inventory_gate_interpretation",
+        "disposition",
+        "evidence_grade",
+        "source_family",
+        "period",
+        "genre",
+        "genre_reallocation",
+        "register",
+        "lane_state",
+        "lane_eligibility",
+        "lane_emission",
+        "lane_blocked",
+        "lane_artifact",
+        "empty_lane_explanation",
+        "evaluation_isolation",
+        "silver_eligibility",
+        "heldout_eligibility",
+        "cpt_eligibility",
+        "cpt_selectable",
+        "availability",
+        "release_status",
+        "release_permission",
+        "safety",
+        "phase",
+        "phase_deliverable",
+        "direct_input_hash",
+        "unknown_property",
     ],
 )
 def test_planted_mutations_are_rejected(name: str) -> None:
     inputs = audit.default_inputs()
-    receipt = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
+    receipt = audit.build_receipt(inputs)
     mutate(receipt, name)
     rebind(receipt)
 
@@ -152,6 +239,10 @@ def test_planted_mutations_are_rejected(name: str) -> None:
         audit.validate_receipt(receipt, inputs.schema, inputs)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_cli_writes_and_verifies_existing_receipt(tmp_path: Path) -> None:
     target = tmp_path / "receipt.json"
 

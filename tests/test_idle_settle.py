@@ -71,7 +71,19 @@ def test_reminder_silent_when_nothing_actionable() -> None:
 def test_reminder_silent_when_lane_unhealthy_or_busy() -> None:
     hot = _snapshot(lanes=[{"lane": "codex", "status": "hot", "in_flight": 0, "will_last": True}])
     busy = _snapshot(lanes=[{"lane": "cursor", "status": "cool", "in_flight": 1, "will_last": True}])
-    deficit = _snapshot(lanes=[{"lane": "kimi", "status": "cool", "in_flight": 0, "will_last": False}])
+    deficit = _snapshot(
+        lanes=[
+            {
+                "lane": "kimi",
+                "status": "cool",
+                "in_flight": 0,
+                "will_last": False,
+                "will_last_to_reset": False,
+                "weekly_pace_delta_pct": 12.0,
+                "weekly_expected_pct": 40.0,
+            }
+        ]
+    )
     for snap in (hot, busy, deficit):
         decision = idle.evaluate_settle(snap)
         assert decision.eligible is False
@@ -319,6 +331,36 @@ def test_items_from_work_next_marks_blockers() -> None:
     assert items[0].dependency_blocked is True
     assert items[1].dependency_blocked is False
     assert items[1].is_fillable() is True
+
+
+def test_freshly_reset_lane_is_available() -> None:
+    """Raw will_last False 50 minutes after reset is not a pace deficit."""
+    now = datetime.now(UTC)
+    resets_at = (now + timedelta(days=7) - timedelta(minutes=50)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    snap = _snapshot(
+        lanes=[
+            {
+                "lane": "codex",
+                "status": "cool",
+                "in_flight": 0,
+                "will_last": False,
+                "will_last_to_reset": False,
+                "weekly_pace_delta_pct": 2.5,
+                "weekly_expected_pct": None,
+                "weekly_resets_at": resets_at,
+            }
+        ]
+    )
+    assert snap.lanes[0].will_last is False
+    assert snap.lanes[0].is_healthy_available() is True
+    decision = idle.evaluate_settle(snap)
+    assert decision.eligible is True
+    assert decision.eligible_lanes == ("codex",)
+
+    from_capacity = idle.lanes_from_capacity_rows(
+        [{"lane": "codex", "status": "cool", "in_flight": 0, "will_last": False, "avoid": False}]
+    )
+    assert from_capacity[0].is_healthy_available() is True
 
 
 def test_lanes_from_capacity_rows_mark_avoid_as_quota_fail() -> None:

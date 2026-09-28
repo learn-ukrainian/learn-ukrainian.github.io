@@ -452,6 +452,34 @@ hook and push rewrite on `auto`. Matchers for the write worker also name the
 Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
 `hashline_edit`, which the Claude matcher aliases do not all cover.
 
+`hashline_edit` belongs to Grok's hashline file bundle
+(`hashline_read`, `hashline_edit`, `hashline_grep`). That bundle replaces the
+standard bundle (`read_file`, `search_replace`, `grep`); one session does not
+offer both. The file toolset is selected by `[toolset] file_toolset` in the
+Grok home `config.toml` (preserved probe: `batch_state/probe-evidence/9008/`,
+where that file sets `file_toolset = "hashline"`). Delegate's environment
+sanitizer drops `GROK_HOME` and `GROK_CONFIG`: `build_agent_env` in
+`scripts/agent_runtime/env_sanitize.py` (lines 421-439) copies a name only
+from an allowlist, and neither name is on `_SAFE_NAME_ALLOWLIST` (line 37),
+`_SAFE_VALUE_NAME_ALLOWLIST` (line 68), `_PROVIDER_SECRET_ALLOWLIST`
+(line 78), or `_PROVIDER_SAFE_NAME_ALLOWLIST` (line 108). A live hashline
+session uses a temporary `GROK_HOME` whose `config.toml` sets `file_toolset`.
+The write-worker matcher still names `hashline_edit`, and the primary-checkout
+guard blocks that tool the same way it blocks `search_replace`.
+
+Issue #9008 keeps `danger` on the same argv as `workspace-write`:
+`bypassPermissions`, `--always-approve`, and the `lu-write-worker` agent.
+Claude loads the fleet PreToolUse guards for both write modes. Its
+`workspace-write` mode is `dontAsk` plus an allow list, and its `danger` mode
+is `--dangerously-skip-permissions`. Grok 1.0.41 has no
+`--dangerously-skip-permissions` flag. `bypassPermissions` is Grok's
+always-approve mode, and the fleet hooks still run under it. `dontAsk` allows
+only pre-approved tools, and an explicit `auto` permission mode leaves
+`yolo_mode` false, so a headless worker cannot push its branch. The operator
+accepted `bypassPermissions` for Grok write workers (#8965). `danger` keeps
+the write-guard agent, so the fleet guards stay on that mode too.
+`test_danger_argv_matches_workspace_write` pins the shared argv.
+
 ## Weak-driver trail isolation (P5)
 
 Trail drivers are never given a shell, workspace writes, GitHub mutation, or
@@ -613,6 +641,10 @@ Two layouts are currently supported:
 | **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
 | flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
 | custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
+
+Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
+subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into
+the primary checkout; `--worktree <primary-checkout>` is refused.
 
 `delegate.py list` and `delegate.py status` print a deprecation notice
 when they encounter a flat-layout worktree.

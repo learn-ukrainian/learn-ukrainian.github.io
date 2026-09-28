@@ -141,6 +141,120 @@ def _cache_immutable_shipped_templates():
         prompt_render.template_sources = original_sources
 
 
+def _prompt_bytes(path: Path) -> bytes:
+    try:
+        return path.read_bytes()
+    except OSError:
+        return b""
+
+
+def _render_cache_key(
+    manifest_source: object,
+    template_name: str | None,
+    repo_root: Path | None,
+    prompts_dir: Path | None,
+    review_id: str | None,
+    attempt_id: str | None,
+) -> tuple | None:
+    """Content key for one render. A changed pin, manifest, or template misses."""
+    if repo_root is None:
+        return None
+    root = Path(repo_root).resolve()
+    try:
+        if isinstance(manifest_source, (str, Path)):
+            path = Path(manifest_source)
+            if root is not None and not path.is_absolute():
+                path = root / path
+            manifest_bytes = path.read_bytes()
+            doc = yaml.safe_load(manifest_bytes.decode("utf-8"))
+        elif isinstance(manifest_source, dict):
+            doc = manifest_source
+            manifest_bytes = json.dumps(manifest_source, sort_keys=True, default=str).encode()
+        else:
+            return None
+        pin_bytes = tuple(
+            (entry.get("path"), hashlib.sha256(_prompt_bytes(root / entry["path"])).hexdigest())
+            for _location, entry in manifest.pinned_entries(doc)
+            if isinstance(entry, dict) and isinstance(entry.get("path"), str)
+        )
+    except (OSError, UnicodeError, yaml.YAMLError, TypeError, ValueError):
+        return None
+    prompt_root = Path(prompts_dir) if prompts_dir is not None else _SHIPPED_PROMPTS
+    templates = tuple(
+        (path.name, hashlib.sha256(_prompt_bytes(path)).hexdigest()) for path in sorted(prompt_root.glob("*.md.j2"))
+    )
+    return (manifest_bytes, tuple(pin_bytes), templates, template_name, str(root), review_id, attempt_id)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _cache_repeated_exact_renders_and_template_lint():
+    """Reuse a render and the static template lint when every input byte matches.
+
+    ``check_prompt`` re-renders and re-lints the same manifest for each exact-render
+    assertion. The key covers the manifest, each pinned file, and every template,
+    so a rewrite cannot be served from the previous text.
+    """
+    from scripts.review.prompts import check as prompt_check
+
+    original_render = prompt_check.render
+    original_lint = prompt_check._lint_templates
+    renders: dict[tuple, object] = {}
+    lint_static: dict[tuple, tuple[list[str], list[str]]] = {}
+
+    def cached_render(manifest_source, template_name=None, **kwargs):
+        key = _render_cache_key(
+            manifest_source,
+            template_name,
+            kwargs.get("repo_root"),
+            kwargs.get("prompts_dir"),
+            kwargs.get("review_id"),
+            kwargs.get("attempt_id"),
+        )
+        if key is None:
+            return original_render(manifest_source, template_name, **kwargs)
+        cached = renders.get(key)
+        if cached is None:
+            cached = original_render(manifest_source, template_name, **kwargs)
+            renders[key] = cached
+        return copy.deepcopy(cached)
+
+    def cached_lint(manifest_doc, used_text, used_name, prompts_dir, root, foreign_slugs, verifier_reads, errors):
+        paths = tuple(prompt_check._template_paths(Path(prompts_dir)))
+        fingerprint = tuple((str(path), hashlib.sha256(_prompt_bytes(path)).hexdigest()) for path in paths)
+        slug = manifest_doc.get("slug") if isinstance(manifest_doc, dict) else None
+        key = (fingerprint, slug, tuple(sorted(foreign_slugs, key=str)))
+        static = lint_static.get(key)
+        if static is None:
+            static_errors: list[str] = []
+            static_reads: list[str] = []
+            original_lint(
+                manifest_doc, None, used_name, prompts_dir, root, foreign_slugs, static_reads, static_errors
+            )
+            static = (static_errors, static_reads)
+            lint_static[key] = static
+        errors.extend(static[0])
+        verifier_reads.extend(static[1])
+        if used_text is not None:
+            previous_attempt = isinstance(manifest_doc, dict) and bool(manifest_doc.get("previous_attempt"))
+            prompt_check._lint_template_text(
+                used_text,
+                f"the render of {used_name} without its pinned data",
+                own_slug=slug,
+                foreign_slugs=foreign_slugs,
+                rereview="rereview" in used_name or previous_attempt,
+                rendered=True,
+                errors=errors,
+            )
+
+    prompt_check.render = cached_render
+    prompt_check._lint_templates = cached_lint
+    try:
+        yield
+    finally:
+        prompt_check.render = original_render
+        prompt_check._lint_templates = original_lint
+
+
 EXPECTED_RULE_SNIPPET = (
     "when expected is present it is one contiguous substring copied character for character "
     "from the stored result of one named receipt the finding cites — the tool output the seat received, "

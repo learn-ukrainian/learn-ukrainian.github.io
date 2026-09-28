@@ -12,6 +12,8 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 
+from scripts.common.repo_root import project_interpreter
+
 from .monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
@@ -142,7 +144,7 @@ async def dispatcher_running():
 @router.post("/api/batch/dispatcher/scan")
 async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
     cmd = [
-        str(ctx.roots.live_repo_root / ".venv" / "bin" / "python"),
+        str(project_interpreter(ctx.roots.live_repo_root)),
         str(ctx.roots.live_repo_root / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]

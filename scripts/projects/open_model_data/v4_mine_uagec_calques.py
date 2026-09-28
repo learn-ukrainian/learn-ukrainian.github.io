@@ -27,6 +27,7 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,
     is_phase30_uagec_heldout_doc,
@@ -64,9 +65,7 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined"
 DEFAULT_GOLD_FILE = REPO_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
-DEFAULT_SCHEMA_FILE = (
-    REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_decolonization_mined_candidates.schema.json"
-)
+DEFAULT_SCHEMA_FILE = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/v1_decolonization_mined_candidates.schema.json"
 
 
 def load_curated_gold_contexts(gold_file: Path) -> dict[int, dict[str, Any]]:

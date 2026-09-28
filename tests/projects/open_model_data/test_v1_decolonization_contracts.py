@@ -8,9 +8,16 @@ from pathlib import Path
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-SEEDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "seeds"
+CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+
+
+def _seed_lines(name: str) -> list[str]:
+    snapshot = artifact_set("open_model_other_indexes")
+    return snapshot.artifacts[f"projects/open_model_data/decolonization/seeds/{name}"].decode("utf-8").splitlines()
 
 
 @pytest.fixture(scope="module")
@@ -33,28 +40,29 @@ def dpo_pair_schema() -> dict:
     return schema
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl"
+)
 def test_seed_trajectories_validate(trajectory_schema: dict) -> None:
-    seed_path = SEEDS_DIR / "seed_decolonization_trajectories.jsonl"
-    assert seed_path.is_file(), f"Missing seed file: {seed_path}"
 
     validator = jsonschema.Draft202012Validator(trajectory_schema)
     records = []
-    with seed_path.open("r", encoding="utf-8") as f:
-        for idx, line in enumerate(f, 1):
-            line = line.strip()
-            if not line:
-                continue
-            record = json.loads(line)
-            errors = list(validator.iter_errors(record))
-            assert not errors, f"Validation errors on line {idx}: {[e.message for e in errors]}"
-            records.append(record)
-
+    for idx, line in enumerate(_seed_lines("seed_decolonization_trajectories.jsonl"), 1):
+        line = line.strip()
+        if not line:
+            continue
+        record = json.loads(line)
+        errors = list(validator.iter_errors(record))
+        assert not errors, f"Validation errors on line {idx}: {[e.message for e in errors]}"
+        records.append(record)
 
     # Verify register_spectrum alternatives are fully covered in vesum_attestation
     for r in records:
         vesum_lemmas = {v["lemma"] for v in r["vesum_attestation"]}
         for alt in r["register_spectrum"]["alternatives"]:
-            assert alt["lemma"] in vesum_lemmas, f"Alternative {alt['lemma']} in {r['target_term']} not in vesum_attestation"
+            assert alt["lemma"] in vesum_lemmas, (
+                f"Alternative {alt['lemma']} in {r['target_term']} not in vesum_attestation"
+            )
 
     assert len(records) >= 3
     # Verify unique trajectory IDs
@@ -68,21 +76,21 @@ def test_seed_trajectories_validate(trajectory_schema: dict) -> None:
     assert "приймати участь" in targets
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/seeds/seed_decolonization_dpo_pairs.jsonl"
+)
 def test_seed_dpo_pairs_validate(dpo_pair_schema: dict) -> None:
-    seed_path = SEEDS_DIR / "seed_decolonization_dpo_pairs.jsonl"
-    assert seed_path.is_file(), f"Missing seed file: {seed_path}"
 
     validator = jsonschema.Draft202012Validator(dpo_pair_schema)
     records = []
-    with seed_path.open("r", encoding="utf-8") as f:
-        for idx, line in enumerate(f, 1):
-            line = line.strip()
-            if not line:
-                continue
-            record = json.loads(line)
-            errors = list(validator.iter_errors(record))
-            assert not errors, f"Validation errors on line {idx}: {[e.message for e in errors]}"
-            records.append(record)
+    for idx, line in enumerate(_seed_lines("seed_decolonization_dpo_pairs.jsonl"), 1):
+        line = line.strip()
+        if not line:
+            continue
+        record = json.loads(line)
+        errors = list(validator.iter_errors(record))
+        assert not errors, f"Validation errors on line {idx}: {[e.message for e in errors]}"
+        records.append(record)
 
     assert len(records) >= 3
     pair_ids = [r["pair_id"] for r in records]
@@ -211,7 +219,7 @@ def test_pilot_canary_receipt_schema_contract() -> None:
         schema = json.load(f)
     jsonschema.Draft202012Validator.check_schema(schema)
 
-    receipt_path = REPO_ROOT / "data" / "projects" / "open_model_data" / "canary" / "pilot_canary_receipt.json"
+    receipt_path = REGISTRY_OPEN_MODEL_DATA_DIR / "canary" / "pilot_canary_receipt.json"
     assert receipt_path.is_file(), f"Missing receipt: {receipt_path}"
     with receipt_path.open("r", encoding="utf-8") as rf:
         receipt = json.load(rf)

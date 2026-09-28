@@ -23,11 +23,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.projects.open_model_data import foundry_cli
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.ua_open_weight_eval import suite_cli
 
-LOCKS_PATH = ROOT / "data/projects/open_model_data/integrations/upstream-locks.json"
-EXAMPLE_PATH = ROOT / "data/projects/open_model_data/examples/portable-corpus-v1.jsonl"
-EXAMPLE_COST_PATH = ROOT / "data/projects/open_model_data/examples/portable-cost-v1.json"
+LOCKS_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "integrations/upstream-locks.json"
+EXAMPLE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "examples/portable-corpus-v1.jsonl"
+EXAMPLE_COST_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "examples/portable-cost-v1.json"
 
 
 class AdoptionError(ValueError):

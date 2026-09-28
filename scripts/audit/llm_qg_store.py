@@ -28,6 +28,7 @@ from uuid import uuid4
 
 from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.api.resilience import connect_sqlite
+from scripts.common.git_context import sanitized_git_env
 
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"
@@ -159,6 +160,7 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
             capture_output=True,
             text=True,
             timeout=10,
+            env=sanitized_git_env(),
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise RuntimeError(
@@ -195,6 +197,7 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
             capture_output=True,
             text=True,
             timeout=10,
+            env=sanitized_git_env(),
         )
         if main.returncode == 0:
             for line in main.stdout.splitlines():
@@ -398,6 +401,7 @@ def discover_worktree_dbs(repo_root: Path | None = None) -> list[Path]:
             capture_output=True,
             text=True,
             timeout=10,
+            env=sanitized_git_env(),
         )
         if proc.returncode == 0:
             for line in proc.stdout.splitlines():

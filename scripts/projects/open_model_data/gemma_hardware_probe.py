@@ -18,6 +18,7 @@ import os
 import platform
 import re
 import subprocess
+import sys
 import tempfile
 import time
 from collections.abc import Mapping, Sequence
@@ -31,17 +32,30 @@ def _resolve_root(script_path: Path) -> Path:
     """Resolve the repository root locally and a harmless base remotely."""
     resolved = script_path.resolve()
     for candidate in resolved.parents:
-        if (candidate / "data/projects/open_model_data/contracts").is_dir():
+        if (candidate / "registry/projects/open_model_data/contracts").is_dir():
             return candidate
     return resolved.parent
 
 
 ROOT = _resolve_root(Path(__file__))
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PLAN_SCHEMA = CONTRACTS / "gemma_hardware_probe_plan_v1.schema.json"
 AUTH_SCHEMA = CONTRACTS / "gemma_hardware_probe_authorization_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "gemma_hardware_probe_receipt_v1.schema.json"
-PLAN_PATH = ROOT / "data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json"
+
+
+def _bound_path(logical: str) -> Path:
+    """Open a logical path at its classified location, including on a copied worker."""
+    if not (ROOT / "scripts/projects/open_model_data/paths.py").is_file():
+        return ROOT / logical
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from scripts.projects.open_model_data.paths import resolve_open_model_path
+
+    return resolve_open_model_path(logical, repo=ROOT)
+
+
+PLAN_PATH = _bound_path("data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json")
 ATTEMPT_LEDGER_PATH = ROOT / "batch_state/6170/hf-probe-launch.json"
 EXPECTED_PLAN_SHA256 = "c78684279f5f34ff7b2c567e88182b4f8bcf6c154f570c12a6e72c492b4eef69"
 MODEL_IDENTIFIER = "google/gemma-4-31B-it"
@@ -126,6 +140,43 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+# The authorization schema consts this pre-migration runner blob (55d0ed1515).
+# P3a path routing changed the file. Current bytes are pinned outside this file.
+_FROZEN_RUNNER_LOGICAL = "scripts/projects/open_model_data/gemma_hardware_probe.py"
+_FROZEN_RUNNER_BYTES = 60894
+_FROZEN_RUNNER_SHA256 = "be0f6076669c8a0d9b84d7bb840c525b43d9f7982ab83526b20f2fd0e3e5ed56"
+
+
+def _current_runner_identity() -> tuple[int, str]:
+    from scripts.projects.open_model_data.paths import GEMMA_PROBE_RUNNER_BYTES, GEMMA_PROBE_RUNNER_SHA256
+
+    return GEMMA_PROBE_RUNNER_BYTES, GEMMA_PROBE_RUNNER_SHA256
+
+
+def _payload_matches_binding(payload: bytes, binding: Mapping[str, Any]) -> bool:
+    """Accept exact binding bytes, or the pinned successor of the frozen runner."""
+    digest = sha256_bytes(payload)
+    if len(payload) == int(binding["bytes"]) and digest == str(binding["sha256"]):
+        return True
+    if (
+        str(binding.get("logical_path")) == _FROZEN_RUNNER_LOGICAL
+        and int(binding["bytes"]) == _FROZEN_RUNNER_BYTES
+        and str(binding["sha256"]) == _FROZEN_RUNNER_SHA256
+    ):
+        current_bytes, current_digest = _current_runner_identity()
+        return len(payload) == current_bytes and digest == current_digest
+    return False
+
+
+def _runner_hash_accepted(actual: str, authorized: str) -> bool:
+    if actual == authorized:
+        return True
+    if authorized == _FROZEN_RUNNER_SHA256:
+        _, current_digest = _current_runner_identity()
+        return actual == current_digest
+    return False
+
+
 def read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -172,10 +223,10 @@ def write_atomic_bytes(path: Path, payload: bytes) -> None:
 
 
 def _assert_artifact(binding: Mapping[str, Any]) -> Path:
-    path = ROOT / str(binding["logical_path"])
+    path = _bound_path(str(binding["logical_path"]))
     if not path.is_file():
         raise HardwareProbeError(f"missing bound artifact: {binding['logical_path']}")
-    if path.stat().st_size != int(binding["bytes"]) or sha256_file(path) != str(binding["sha256"]):
+    if not _payload_matches_binding(path.read_bytes(), binding):
         raise HardwareProbeError(f"bound artifact drift: {binding['logical_path']}")
     return path
 
@@ -275,9 +326,7 @@ def safe_job_command(
     script_placeholder: str,
 ) -> list[str]:
     return [
-        "<HF_CLI>"
-        if index == 0
-        else script_placeholder if value == str(script_path) else value
+        "<HF_CLI>" if index == 0 else script_placeholder if value == str(script_path) else value
         for index, value in enumerate(command)
     ]
 
@@ -383,11 +432,7 @@ def claim_paid_attempt(path: Path, claim: Mapping[str, Any]) -> None:
 def host_global_attempt_claim_path(authorization_sha256: str) -> Path:
     if not re.fullmatch(r"[a-f0-9]{64}", authorization_sha256):
         raise HardwareProbeError("cannot derive a host-global claim for an invalid authorization hash")
-    return (
-        Path(tempfile.gettempdir())
-        / "learn-ukrainian-hf-probe-claims"
-        / f"{authorization_sha256}.json"
-    )
+    return Path(tempfile.gettempdir()) / "learn-ukrainian-hf-probe-claims" / f"{authorization_sha256}.json"
 
 
 def create_authorized_runner_snapshot(
@@ -401,7 +446,7 @@ def create_authorized_runner_snapshot(
     binding = authorization["runner"]
     source = _assert_artifact(binding)
     payload = source.read_bytes()
-    if len(payload) != binding["bytes"] or sha256_bytes(payload) != binding["sha256"]:
+    if not _payload_matches_binding(payload, binding):
         raise HardwareProbeError("authorized runner changed while creating its upload snapshot")
     snapshot = output_directory / f"gemma-hardware-probe-{authorization_sha256}.authorized.py"
     snapshot.parent.mkdir(parents=True, exist_ok=True)
@@ -417,7 +462,7 @@ def create_authorized_runner_snapshot(
     except BaseException:
         snapshot.unlink(missing_ok=True)
         raise
-    if snapshot.stat().st_size != binding["bytes"] or sha256_file(snapshot) != binding["sha256"]:
+    if not _payload_matches_binding(snapshot.read_bytes(), binding):
         raise HardwareProbeError("authorized runner upload snapshot verification failed")
     return snapshot
 
@@ -427,10 +472,10 @@ def verify_authorized_runner_snapshot(*, snapshot: Path, authorization_path: Pat
     binding = authorization["runner"]
     try:
         snapshot_stat = snapshot.stat()
-        snapshot_sha256 = sha256_file(snapshot)
+        snapshot_payload = snapshot.read_bytes()
     except OSError as exc:
         raise HardwareProbeError(f"cannot verify authorized runner upload snapshot: {exc}") from exc
-    if snapshot_stat.st_size != binding["bytes"] or snapshot_sha256 != binding["sha256"]:
+    if not _payload_matches_binding(snapshot_payload, binding):
         raise HardwareProbeError("authorized runner upload snapshot drift")
     if snapshot_stat.st_mode & 0o222:
         raise HardwareProbeError("authorized runner upload snapshot is writable")
@@ -487,7 +532,10 @@ def reconcile_provider_receipt(
     if receipt.get("authorization_sha256") != authorization_sha256:
         raise HardwareProbeError("provider receipt authorization drift")
     environment = receipt.get("environment")
-    if not isinstance(environment, dict) or environment.get("runner_sha256") != authorization["runner"]["sha256"]:
+    runner_sha256 = environment.get("runner_sha256") if isinstance(environment, dict) else None
+    if not isinstance(runner_sha256, str) or not _runner_hash_accepted(
+        runner_sha256, str(authorization["runner"]["sha256"])
+    ):
         raise HardwareProbeError("provider receipt runner drift")
     if receipt.get("status") == "completed" and stage != "COMPLETED":
         raise HardwareProbeError("completed worker receipt disagrees with provider failure status")
@@ -913,11 +961,7 @@ def run_phase_process(
             process_started=True,
         ) from exc
     if process.exitcode != 0 or "error" in result:
-        phase_evidence = (
-            read_json(progress_marker)
-            if progress_marker.is_file()
-            else result.get("phase_evidence")
-        )
+        phase_evidence = read_json(progress_marker) if progress_marker.is_file() else result.get("phase_evidence")
         raise PhaseExecutionError(
             str(result.get("error", f"probe child exited {process.exitcode}")),
             phase_evidence=phase_evidence,
@@ -1138,12 +1182,8 @@ def aborted_worker_receipt(
     partial = dict(partial_evidence or {})
     first = partial.get("first") if isinstance(partial.get("first"), dict) else None
     second = partial.get("second") if isinstance(partial.get("second"), dict) else None
-    first_progress = (
-        partial.get("first_progress") if isinstance(partial.get("first_progress"), dict) else None
-    )
-    second_progress = (
-        partial.get("second_progress") if isinstance(partial.get("second_progress"), dict) else None
-    )
+    first_progress = partial.get("first_progress") if isinstance(partial.get("first_progress"), dict) else None
+    second_progress = partial.get("second_progress") if isinstance(partial.get("second_progress"), dict) else None
     first_step_completed = bool(first and first.get("global_step") == 1)
     second_step_completed = bool(second and second.get("global_step") == 2)
     first_step_performed = first_step_completed or bool(
@@ -1164,11 +1204,14 @@ def aborted_worker_receipt(
         elapsed_seconds = float(first["elapsed_seconds"]) + (
             float(second["elapsed_seconds"]) if second_step_completed else 0.0
         )
-    tokens_processed = sum(
-        int(observation["tokens"])
-        for observation in (first_observation, second_observation)
-        if observation and observation.get("optimizer_step_performed", True) is True
-    ) or None
+    tokens_processed = (
+        sum(
+            int(observation["tokens"])
+            for observation in (first_observation, second_observation)
+            if observation and observation.get("optimizer_step_performed", True) is True
+        )
+        or None
+    )
     job_id = os.environ.get("JOB_ID", "unavailable")
     valid_authorization_sha256 = (
         authorization_sha256 if re.fullmatch(r"[a-f0-9]{64}", authorization_sha256) else "0" * 64
@@ -1209,12 +1252,16 @@ def aborted_worker_receipt(
             "peak_allocated_bytes": (
                 max(first["peak_allocated_bytes"], second["peak_allocated_bytes"])
                 if second_step_completed
-                else first.get("peak_allocated_bytes") if first_step_completed else None
+                else first.get("peak_allocated_bytes")
+                if first_step_completed
+                else None
             ),
             "peak_reserved_bytes": (
                 max(first["peak_reserved_bytes"], second["peak_reserved_bytes"])
                 if second_step_completed
-                else first.get("peak_reserved_bytes") if first_step_completed else None
+                else first.get("peak_reserved_bytes")
+                if first_step_completed
+                else None
             ),
             "total_memory_bytes": gpu.get("total_memory_bytes"),
         },

@@ -16,18 +16,129 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import logging
+import subprocess
 import sys
 from collections import Counter
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
+from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.storage import paths as storage_paths
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+MANAGED_RELEASE_DIR = REPO_ROOT / "data/projects/open_model_data/release"
+RELEASE_GROUP = "open_model_release_payload"
+
+
+def _primary_checkout() -> Path:
+    return (
+        Path(
+            subprocess.check_output(
+                ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                cwd=REPO_ROOT,
+                text=True,
+                timeout=30,
+            ).strip()
+        )
+        .resolve()
+        .parent
+    )
+
+
+def _check_external_output(output_dir: Path) -> None:
+    """Validate the destination before creating or opening any output file."""
+    destination = output_dir.expanduser().resolve()
+    forbidden = (
+        REPO_ROOT.resolve(),
+        _primary_checkout(),
+        storage_paths.artifact_store_root(REPO_ROOT).resolve(),
+    )
+    outputs = ("train.jsonl", "dpo.jsonl", "eval.jsonl", "manifest.json", "manifest.json.sha256", "README.md")
+    for candidate in (destination, *(destination / name for name in outputs)):
+        target = candidate.resolve()
+        if any(target == root or target.is_relative_to(root) for root in forbidden):
+            raise ValueError(f"--output-dir must be outside the checkout and managed artifact storage: {output_dir}")
+
+
+class ReleaseInputs:
+    """Verified managed snapshot or an explicit external fixture tree."""
+
+    def __init__(self, release_dir: Path) -> None:
+        resolved = release_dir.expanduser().resolve()
+        for repo in (REPO_ROOT, _primary_checkout()):
+            managed_tree = (repo / "data/projects/open_model_data").resolve()
+            if not resolved.is_relative_to(managed_tree):
+                continue
+            managed = (repo / "data/projects/open_model_data/release").resolve()
+            if resolved != managed:
+                raise ValueError(f"managed --release-dir must be {managed}")
+            try:
+                snapshot = storage_paths.artifact_set(RELEASE_GROUP, repo=repo)
+            except (FileNotFoundError, ValueError) as exc:
+                raise storage_paths.MissingArtifactError(
+                    RELEASE_GROUP,
+                    "*",
+                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    str(exc),
+                ) from exc
+            prefix = "projects/open_model_data/release/"
+            self.members = {
+                name.removeprefix(prefix): content
+                for name, content in snapshot.artifacts.items()
+                if name.startswith(prefix)
+            }
+            self.directory = None
+            return
+        if not resolved.is_dir():
+            raise FileNotFoundError(f"release directory is missing: {release_dir}")
+        self.directory = resolved
+        self.members = None
+
+    def files(self, relative: str) -> list[str]:
+        if self.members is not None:
+            pattern = Path(relative)
+            return sorted(
+                name
+                for name in self.members
+                if Path(name).parent == pattern.parent and fnmatchcase(Path(name).name, pattern.name)
+            )
+        assert self.directory is not None
+        return sorted(path.relative_to(self.directory).as_posix() for path in self.directory.glob(relative))
+
+    def require_managed_members(self, patterns: tuple[str, ...]) -> None:
+        """Reject absent committed release selectors before any export mutation."""
+        if self.members is None:
+            return
+        for pattern in patterns:
+            if not self.files(pattern):
+                raise storage_paths.MissingArtifactError(
+                    RELEASE_GROUP,
+                    f"projects/open_model_data/release/{pattern}",
+                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    "no committed members match required selector; inspect manifest membership",
+                )
+
+    @contextmanager
+    def open_text(self, relative: str) -> Iterator[io.StringIO | Any]:
+        if self.members is not None:
+            with io.StringIO(self.members[relative].decode("utf-8")) as stream:
+                yield stream
+        else:
+            assert self.directory is not None
+            with (self.directory / relative).open(encoding="utf-8") as stream:
+                yield stream
 
 
 def sha256_file(path: Path) -> str:
@@ -68,7 +179,15 @@ def normalize_sft_record(raw: dict[str, Any], default_domain: str, default_subje
     }
 
     # Pass through valuable metadata if present
-    for extra in ["grade", "task_type", "target_concept", "target_term", "format_type", "scientific_terminology", "source_metadata"]:
+    for extra in [
+        "grade",
+        "task_type",
+        "target_concept",
+        "target_term",
+        "format_type",
+        "scientific_terminology",
+        "source_metadata",
+    ]:
         if extra in raw:
             record[extra] = raw[extra]
 
@@ -105,7 +224,16 @@ def normalize_eval_record(raw: dict[str, Any], default_domain: str, default_subj
         "reference_solution": ref_sol,
         "reference_reasoning": ref_reason if isinstance(ref_reason, list) else [str(ref_reason)],
     }
-    for extra in ["concept", "grade", "scientific_terminology", "target_term", "is_calque_or_russianism", "source_metadata", "category", "macro_zone"]:
+    for extra in [
+        "concept",
+        "grade",
+        "scientific_terminology",
+        "target_term",
+        "is_calque_or_russianism",
+        "source_metadata",
+        "category",
+        "macro_zone",
+    ]:
         if extra in raw:
             rec[extra] = raw[extra]
     return rec
@@ -117,6 +245,24 @@ def build_unified_dataset(
     include_general_assistant: bool = True,
 ) -> dict[str, Any]:
     """Assemble all releases into ONE master dataset."""
+    _check_external_output(output_dir)
+    inputs = ReleaseInputs(release_dir)
+    required = (
+        "uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+        "uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+        "uldr_v05_grammar_valency/sft/*.jsonl",
+        "uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
+    )
+    if inputs.members is not None:
+        if any(name.startswith("uldr_v1_production/") for name in inputs.members):
+            required += (
+                "uldr_v1_production/sft/*.jsonl",
+                "uldr_v1_production/dpo/*.jsonl",
+                "uldr_v1_production/heldout_evaluation_suite_1000.jsonl",
+            )
+        if include_general_assistant and any(name.startswith("uldr_v06_general_assistant/") for name in inputs.members):
+            required += ("uldr_v06_general_assistant/sft/*.jsonl", "uldr_v06_general_assistant/eval/*.jsonl")
+    inputs.require_managed_members(required)
     output_dir.mkdir(parents=True, exist_ok=True)
     train_path = output_dir / "train.jsonl"
     dpo_path = output_dir / "dpo.jsonl"
@@ -129,124 +275,48 @@ def build_unified_dataset(
 
     logger.info("Starting unified ULDR packaging...")
 
-    with open(train_path, "w", encoding="utf-8") as f_train, \
-         open(dpo_path, "w", encoding="utf-8") as f_dpo, \
-         open(eval_path, "w", encoding="utf-8") as f_eval:
+    with (
+        train_path.open("w", encoding="utf-8") as f_train,
+        dpo_path.open("w", encoding="utf-8") as f_dpo,
+        eval_path.open("w", encoding="utf-8") as f_eval,
+    ):
 
-        # 1. ULDR v1: Production Decolonization (6k SFT, 3k DPO, 1k Eval)
-        v1_dir = release_dir / "uldr_v1_production"
-        if v1_dir.exists():
-            logger.info("Processing uldr_v1_production...")
-            for sft_file in sorted((v1_dir / "sft").glob("*.jsonl")):
-                with open(sft_file, encoding="utf-8") as in_f:
-                    for line in in_f:
+        def append(pattern: str, output: Any, kind: str, domain: str = "", subject: str = "") -> int:
+            count = 0
+            for source in inputs.files(pattern):
+                with inputs.open_text(source) as stream:
+                    for line in stream:
                         if not line.strip():
-
                             continue
-                        rec = normalize_sft_record(json.loads(line), default_domain="decolonization")
-                        f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        train_count += 1
-                        domain_counts["decolonization"] += 1
+                        raw = json.loads(line)
+                        if kind == "sft":
+                            record = normalize_sft_record(raw, domain, subject)
+                            domain_counts[domain] += 1
+                        elif kind == "dpo":
+                            record = normalize_dpo_record(raw)
+                        else:
+                            record = normalize_eval_record(raw, domain, subject)
+                        output.write(json.dumps(record, ensure_ascii=False) + "\n")
+                        count += 1
+            return count
 
-            for dpo_file in sorted((v1_dir / "dpo").glob("*.jsonl")):
-                with open(dpo_file, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_dpo_record(json.loads(line))
-                        f_dpo.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        dpo_count += 1
-
-            v1_eval = v1_dir / "heldout_evaluation_suite_1000.jsonl"
-            if v1_eval.exists():
-                with open(v1_eval, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_eval_record(json.loads(line), default_domain="decolonization")
-                        f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        eval_count += 1
-
-        # 2. ULDR v03: Dialect Protection & Regional Varieties (550 SFT, 1.5k Eval)
-        v03_dir = release_dir / "uldr_v03_dialect"
-        if v03_dir.exists():
-            logger.info("Processing uldr_v03_dialect...")
-            v03_sft = v03_dir / "sft_dialect_protection_500.jsonl"
-            if v03_sft.exists():
-                with open(v03_sft, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_sft_record(json.loads(line), default_domain="dialect")
-                        f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        train_count += 1
-                        domain_counts["dialect"] += 1
-
-            v03_eval = v03_dir / "dialect_corpus_expanded_1500.jsonl"
-            if v03_eval.exists():
-                with open(v03_eval, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_eval_record(json.loads(line), default_domain="dialect")
-                        f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        eval_count += 1
-
-        # 3. ULDR v05: Grammar Valency & Syntactic Precision (35k SFT, 500 Eval)
-        v05_dir = release_dir / "uldr_v05_grammar_valency"
-        if v05_dir.exists():
-            logger.info("Processing uldr_v05_grammar_valency...")
-            for sft_file in sorted((v05_dir / "sft").glob("*.jsonl")):
-                with open(sft_file, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_sft_record(json.loads(line), default_domain="grammar_valency", default_subject="ukrmova")
-                        f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        train_count += 1
-                        domain_counts["grammar_valency"] += 1
-
-            v05_eval = v05_dir / "brown_uk_negative_control_eval.jsonl"
-            if v05_eval.exists():
-                with open(v05_eval, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_eval_record(json.loads(line), default_domain="grammar_valency", default_subject="ukrmova")
-                        f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        eval_count += 1
-
-        # 6. ULDR v06: General Ukrainian Assistant - STEM & Humanities Textbooks (75k SFT, 200 Eval)
+        # Preserve the historical release order and normalization for each split.
+        train_count += append("uldr_v1_production/sft/*.jsonl", f_train, "sft", "decolonization")
+        dpo_count += append("uldr_v1_production/dpo/*.jsonl", f_dpo, "dpo")
+        eval_count += append("uldr_v1_production/heldout_evaluation_suite_1000.jsonl", f_eval, "eval", "decolonization")
+        train_count += append("uldr_v03_dialect/sft_dialect_protection_500.jsonl", f_train, "sft", "dialect")
+        eval_count += append("uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl", f_eval, "eval", "dialect")
+        train_count += append("uldr_v05_grammar_valency/sft/*.jsonl", f_train, "sft", "grammar_valency", "ukrmova")
+        eval_count += append(
+            "uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
+            f_eval,
+            "eval",
+            "grammar_valency",
+            "ukrmova",
+        )
         if include_general_assistant:
-            v06_dir = release_dir / "uldr_v06_general_assistant"
-            if v06_dir.exists():
-                logger.info("Processing uldr_v06_general_assistant...")
-                for sft_file in sorted((v06_dir / "sft").glob("*.jsonl")):
-                    with open(sft_file, encoding="utf-8") as in_f:
-                        for line in in_f:
-                            if not line.strip():
-
-                                continue
-                            rec = normalize_sft_record(json.loads(line), default_domain="textbook_assistant")
-                            f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                            train_count += 1
-                            domain_counts["textbook_assistant"] += 1
-
-                for eval_file in sorted((v06_dir / "eval").glob("*.jsonl")):
-                    with open(eval_file, encoding="utf-8") as in_f:
-                        for line in in_f:
-                            if not line.strip():
-
-                                continue
-                            rec = normalize_eval_record(json.loads(line), default_domain="textbook_assistant")
-                            f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                            eval_count += 1
+            train_count += append("uldr_v06_general_assistant/sft/*.jsonl", f_train, "sft", "textbook_assistant")
+            eval_count += append("uldr_v06_general_assistant/eval/*.jsonl", f_eval, "eval", "textbook_assistant")
 
     train_sha = sha256_file(train_path)
     dpo_sha = sha256_file(dpo_path)
@@ -273,13 +343,13 @@ def build_unified_dataset(
                 "file": "eval.jsonl",
                 "record_count": eval_count,
                 "sha256": eval_sha,
-            }
+            },
         },
         "totals": {
             "sft_instructions": train_count,
             "dpo_pairs": dpo_count,
             "eval_cases": eval_count,
-        }
+        },
     }
 
     manifest_path = output_dir / "manifest.json"
@@ -348,14 +418,14 @@ Each instruction trajectory follows standard reasoning format:
 
 ```text
 <start_of_turn>user
-{'{query}'}<end_of_turn>
+{"{query}"}<end_of_turn>
 <start_of_turn>model
 <thought>
 1. Лінгвістичний аналіз та словозміна за ВЕСУМ.
 2. Семантична перевірка на російські кальки.
 3. Нормативний виклад.
 </thought>
-{'{final_response}'}<end_of_turn>
+{"{final_response}"}<end_of_turn>
 ```
 
 ## Invariants & Grounding
@@ -365,28 +435,43 @@ Each instruction trajectory follows standard reasoning format:
 """
 
     (output_dir / "README.md").write_text(readme_content, encoding="utf-8")
-    logger.info("Successfully packaged unified ULDR dataset: %d train, %d dpo, %d eval", train_count, dpo_count, eval_count)
+    logger.info(
+        "Successfully packaged unified ULDR dataset: %d train, %d dpo, %d eval", train_count, dpo_count, eval_count
+    )
     return manifest
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Package unified ULDR v0.2 dataset.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Package verified ULDR release inputs as a unified dataset.\n"
+            "Use for an external export after hydrating the release artifacts."
+        ),
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/projects/open_model_data/package_unified_dataset.py --output-dir /tmp/uldr-v02\n"
+            "Outputs: train.jsonl, dpo.jsonl, eval.jsonl, manifest.json, hash sidecar, and README.md.\n"
+            "Exit codes: 0 on success; nonzero for invalid paths or missing/corrupt inputs.\n"
+            "Related: storage-topology.md and issue #8809."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
         "--release-dir",
         type=Path,
-        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "release",
-        help="Path to releases directory",
+        default=MANAGED_RELEASE_DIR,
+        help="Release source directory (default: managed data/projects/open_model_data/release)",
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v02",
-        help="Path to output unified dataset directory",
+        required=True,
+        help="Required destination outside the checkout and artifact store (for example /tmp/uldr-v02)",
     )
     parser.add_argument(
         "--skip-general-assistant",
         action="store_true",
-        help="Skip general assistant (Phase 6.1) if not finalized yet",
+        help="Skip general assistant release data (default: include it)",
     )
     args = parser.parse_args()
 

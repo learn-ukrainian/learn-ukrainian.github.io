@@ -31,9 +31,10 @@ from scripts.projects.open_model_data import phase3_functional_roles as function
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near_duplicate
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_rule_author_source_rows_v1.schema.json"
 PACKET_SCHEMA_PATH = DATA / "contracts/phase3_rule_author_packet_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_source_rows.py"
@@ -74,7 +75,11 @@ def sha256_file(path: Path) -> str:
 
 
 def receipt_body_sha256(receipt: Mapping[str, Any]) -> str:
-    return sha256_bytes((canonical_json({key: value for key, value in receipt.items() if key != "receipt_sha256"}) + "\n").encode("utf-8"))
+    return sha256_bytes(
+        (canonical_json({key: value for key, value in receipt.items() if key != "receipt_sha256"}) + "\n").encode(
+            "utf-8"
+        )
+    )
 
 
 def _lstat(path: Path, label: str) -> os.stat_result:
@@ -121,7 +126,9 @@ def read_json(path: Path, label: str = "JSON artifact") -> dict[str, Any]:
 def _schema_validator(definition: str) -> Draft202012Validator:
     schema = read_json(SCHEMA_PATH, "adapter schema")
     Draft202012Validator.check_schema(schema)
-    return Draft202012Validator({"$schema": schema["$schema"], "$defs": schema["$defs"], "$ref": f"#/$defs/{definition}"})
+    return Draft202012Validator(
+        {"$schema": schema["$schema"], "$defs": schema["$defs"], "$ref": f"#/$defs/{definition}"}
+    )
 
 
 def _validate(value: Mapping[str, Any], definition: str, label: str) -> None:
@@ -175,7 +182,10 @@ def _assert_output_paths_safe(
     rows_path = private_dir / ROWS_FILENAME
     private_absolute = _absolute_lexical(private_dir)
     public_absolute = _absolute_lexical(public_receipt_path)
-    require(public_absolute != private_absolute and private_absolute not in public_absolute.parents, "public receipt may not be inside private source-row directory")
+    require(
+        public_absolute != private_absolute and private_absolute not in public_absolute.parents,
+        "public receipt may not be inside private source-row directory",
+    )
     require(not _same_path(public_receipt_path, rows_path), "public receipt aliases private source rows")
     for input_path in inputs:
         require(not _same_path(rows_path, input_path), "private source rows alias an input artifact")
@@ -241,7 +251,18 @@ def _assert_public_safe(
     path: str = "$",
     approved_strings: frozenset[str] | None = None,
 ) -> None:
-    forbidden = ("unit_id", "locator", "fingerprint", "source_text", "corrected_text", "source_record", "error", "correct", "doc_id", "body")
+    forbidden = (
+        "unit_id",
+        "locator",
+        "fingerprint",
+        "source_text",
+        "corrected_text",
+        "source_record",
+        "error",
+        "correct",
+        "doc_id",
+        "body",
+    )
     approved = approved_strings or frozenset(
         {
             "phase3_rule_author_source_rows_receipt_v2_1",
@@ -329,12 +350,18 @@ def _clearance_and_bindings(
             evaluation_path=evaluation_path,
             coverage_path=coverage_path,
             role_path=role_path,
-    )
+        )
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
-    require(partition_receipt.get("schema_version") == "phase3_heldout_public_receipt_v2_1", "wrong partition public receipt")
+    require(
+        partition_receipt.get("schema_version") == "phase3_heldout_public_receipt_v2_1",
+        "wrong partition public receipt",
+    )
     require(partition_receipt.get("text_free") is True, "partition public receipt is not text-free")
-    require(heldout.receipt_body_sha256(partition_receipt) == partition_receipt.get("receipt_sha256"), "partition public receipt hash drift")
+    require(
+        heldout.receipt_body_sha256(partition_receipt) == partition_receipt.get("receipt_sha256"),
+        "partition public receipt hash drift",
+    )
     role_contract = read_json(role_path, "role contract")
     try:
         functional_roles.verify_value(role_contract)
@@ -346,7 +373,9 @@ def _clearance_and_bindings(
         author = packets._derive_role_actor(role_contract, "rule_author_extractor")
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
-    require(author["task_id"] != expected_steward["task_id"], "heldout steward and rule author task IDs must be distinct")
+    require(
+        author["task_id"] != expected_steward["task_id"], "heldout steward and rule author task IDs must be distinct"
+    )
     public_bindings = partition_receipt.get("input_bindings")
     require(isinstance(public_bindings, Mapping), "partition public input bindings missing")
     clearance_bindings = clearance["input_bindings"]
@@ -380,8 +409,13 @@ def _clearance_and_bindings(
     require(action_receipt == expected_action_receipt, "clearance action receipt drift")
     artifact_hashes = partition_receipt.get("artifact_hashes")
     require(isinstance(artifact_hashes, Mapping), "partition artifact hashes missing")
-    require(artifact_hashes.get("author_clearance_sha256") == clearance.get("receipt_sha256"), "clearance receipt binding drift")
-    require(partition_receipt.get("action_receipt") == clearance.get("action_receipt"), "partition action evidence drift")
+    require(
+        artifact_hashes.get("author_clearance_sha256") == clearance.get("receipt_sha256"),
+        "clearance receipt binding drift",
+    )
+    require(
+        partition_receipt.get("action_receipt") == clearance.get("action_receipt"), "partition action evidence drift"
+    )
     for field in ("heldout_excluded", "ua_eval_exclusion_enforced", "public_canary_exclusion_enforced"):
         require(clearance.get(field) is True, f"clearance {field} is not exactly true")
     require(clearance.get("heldout_complement_encoded") is False, "clearance encodes a heldout complement")
@@ -398,7 +432,9 @@ def _row_from_reconstructed(row: Mapping[str, Any]) -> dict[str, Any]:
     require(row.get("unit_sha256") == packets.source_universe._unit_hash(normalized), "source record unit hash drift")
     source_text = normalized.get("error")
     corrected_text = normalized.get("correct")
-    require(isinstance(source_text, str) and source_text and isinstance(corrected_text, str), "source text pair malformed")
+    require(
+        isinstance(source_text, str) and source_text and isinstance(corrected_text, str), "source text pair malformed"
+    )
     for field in ("error_type", "annotator_id", "is_native", "source_lang"):
         require(normalized.get(field) == row.get(field), f"reconstructed {field} drift")
     locator = heldout.frozen_locator_binding(row["locator"])
@@ -481,7 +517,11 @@ def build(
         raise SourceRowsError(str(exc)) from exc
     cleared = clearance.get("cleared_units")
     require(isinstance(cleared, list), "clearance cleared units missing")
-    allowed = {(item.get("family_id"), item.get("unit_id")): item.get("unit_sha256") for item in cleared if isinstance(item, Mapping)}
+    allowed = {
+        (item.get("family_id"), item.get("unit_id")): item.get("unit_sha256")
+        for item in cleared
+        if isinstance(item, Mapping)
+    }
     require(len(allowed) == len(cleared), "clearance has duplicate or malformed units")
     require(clearance.get("cleared_unit_count") == len(allowed), "clearance count drift")
     live = {(item["family_id"], item["unit_id"]): item for item in reconstructed}
@@ -553,8 +593,8 @@ def build(
             "local-python",
             "phase3-v2-1-evaluation-cycle-001",
             "completed",
-            * _binding_identity_strings(steward),
-            * _binding_identity_strings(author),
+            *_binding_identity_strings(steward),
+            *_binding_identity_strings(author),
         }
     )
     _assert_public_safe(receipt, approved_strings=approved)
@@ -577,10 +617,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         receipt = build(
-            clearance_path=args.clearance, source_universe_dir=args.source_universe,
-            sources_db=args.sources_db, public_partition_receipt_path=args.partition_public_receipt,
-            evaluation_path=args.evaluation, coverage_path=args.coverage, role_path=args.role,
-            near_duplicate_policy_path=args.near_duplicate_policy, private_dir=args.private_dir,
+            clearance_path=args.clearance,
+            source_universe_dir=args.source_universe,
+            sources_db=args.sources_db,
+            public_partition_receipt_path=args.partition_public_receipt,
+            evaluation_path=args.evaluation,
+            coverage_path=args.coverage,
+            role_path=args.role,
+            near_duplicate_policy_path=args.near_duplicate_policy,
+            private_dir=args.private_dir,
             public_receipt_path=args.public_receipt,
         )
     except SourceRowsError as exc:

@@ -75,7 +75,8 @@ slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
 
 **Refuse deficit when cooler seats exist.** Do **not** habit-route to Codex (or any
 subscription lane) while `usage show` / `routing-budget` shows hot / near_cap /
-deficit (`will_last_to_reset=False`) or a thinning reserve **and** `capacity_pick`
+deficit (visible pace, projected to run out before reset, and more than 2 points
+ahead of pace; near_cap ≥ 90% unchanged) or a thinning reserve **and** `capacity_pick`
 lists cool/idle free seats
 (Cursor, AGY, GLM, Kimi, …). `--check-budget` hard-subs when
 `dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
@@ -88,7 +89,7 @@ stampede one hot lane.
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
-| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-thinking-high`. Draws the API pool. |
+| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
 | **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
@@ -131,7 +132,7 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
-| Claude Sonnet 5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-thinking-high` |
+| Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` |
 | Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
 | Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
 | Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |

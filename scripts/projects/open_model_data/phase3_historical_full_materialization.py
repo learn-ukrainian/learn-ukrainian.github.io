@@ -35,15 +35,13 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 GATE_SCHEMA_PATH = DATA / "contracts/phase3_historical_full_materialization_gate_v1.schema.json"
-RECEIPT_SCHEMA_PATH = (
-    DATA / "contracts/phase3_historical_full_materialization_receipt_v1.schema.json"
-)
+RECEIPT_SCHEMA_PATH = DATA / "contracts/phase3_historical_full_materialization_receipt_v1.schema.json"
 DEFAULT_GATE_PATH = DATA / "admission/phase3_historical_full_materialization_gate_v1.json"
-PERIODIZATION_FREEZE_PATH = (
-    DATA / "admission/phase3_historical_periodization_freeze_v1.json"
-)
+PERIODIZATION_FREEZE_PATH = DATA / "admission/phase3_historical_periodization_freeze_v1.json"
 
 GATE_SCHEMA_VERSION = "phase3_historical_full_materialization_gate_v1"
 RECEIPT_SCHEMA_VERSION = "phase3_historical_full_materialization_receipt_v1"
@@ -54,19 +52,16 @@ RECEIPT_SCHEMA_SHA256 = "65468a558a01de40facdf9e0dfff589c39f91f7c16617753e4ff7ff
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
 PERIODIZATION_FREEZE_SHA256 = "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"
-HISTORICAL_REPRESENTATION_SCHEMA_SHA256 = (
-    "37db223de63aaa3ce05dc154193b86ae4db8022c6f14f49a9035ebb5d37d4441"
-)
-HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256 = (
-    "deb4af0bd367a470149b27e1b7c588485245e696546463ede46004183464423f"
-)
-LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256 = (
-    "0609635b31b2af469ff8427751bc3a5161b160d84d1d9e6065d85e0afffc58b5"
-)
-LINGUISTIC_REPRESENTATION_SCHEMA_SHA256 = (
-    "07dffdbc6220adfd088a1e3a19d369093d6331c67fa648880c59ca10d56b2489"
-)
+HISTORICAL_REPRESENTATION_SCHEMA_SHA256 = "37db223de63aaa3ce05dc154193b86ae4db8022c6f14f49a9035ebb5d37d4441"
+HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256 = "deb4af0bd367a470149b27e1b7c588485245e696546463ede46004183464423f"
+LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256 = "0609635b31b2af469ff8427751bc3a5161b160d84d1d9e6065d85e0afffc58b5"
+LINGUISTIC_REPRESENTATION_SCHEMA_SHA256 = "07dffdbc6220adfd088a1e3a19d369093d6331c67fa648880c59ca10d56b2489"
 CANARY_MATERIALIZER_SHA256 = "97e7cd63da36dacb7c88db0ec8225ea4075c3a5873ecd618e6d8b5ca4188536e"
+# The gate records original implementation identities above. Verify the
+# migrated runtime sources against independent exact pins as well.
+CURRENT_MATERIALIZER_SHA256 = "5350d71453661d36dfbd5c1060fb627672928b52f85fedd18fc275268a6f8cfb"
+CURRENT_HISTORICAL_REPRESENTATION_SHA256 = "56458b26568eb71c0f1abe0d5e0c876e412a0ad1ded5aa37d783ef93f0044aec"
+CURRENT_LINGUISTIC_REPRESENTATION_SHA256 = "06a61a6086cc1b165f1dcb31bfd8274f5a6ff736656decc2d124761a6414f23a"
 CANARY_RECEIPT_FILE_SHA256 = "8e83bc92b6611e6f252b86f76a610754d783da6c274b4e80c07bac2b9f4f296d"
 CANARY_UD_OUTPUT_SHA256 = "7140bf648a35b0630225725f51942ae634864c60a0e1b87d538fdaaa133b25a7"
 CANARY_PLUG2_OUTPUT_SHA256 = "4903747b4a8f079b75732aa7c983958e64c9b6ddf8f598afa733e900f0f03716"
@@ -109,9 +104,7 @@ def _validate_schema(value: Mapping[str, Any], path: Path, label: str) -> None:
     )
     if errors:
         location = "/".join(str(part) for part in errors[0].absolute_path) or label
-        raise HistoricalFullMaterializationError(
-            f"{label} schema violation at {location}: {errors[0].message}"
-        )
+        raise HistoricalFullMaterializationError(f"{label} schema violation at {location}: {errors[0].message}")
 
 
 def _with_receipt_sha256(body: Mapping[str, Any]) -> dict[str, Any]:
@@ -143,18 +136,10 @@ def build_gate(
             "full_materialization_gate_schema_sha256": GATE_SCHEMA_SHA256,
             "full_materialization_receipt_schema_sha256": RECEIPT_SCHEMA_SHA256,
             "historical_periodization_freeze_sha256": PERIODIZATION_FREEZE_SHA256,
-            "historical_representation_schema_sha256": (
-                HISTORICAL_REPRESENTATION_SCHEMA_SHA256
-            ),
-            "historical_representation_implementation_sha256": (
-                HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256
-            ),
-            "linguistic_representation_implementation_sha256": (
-                LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256
-            ),
-            "linguistic_representation_schema_sha256": (
-                LINGUISTIC_REPRESENTATION_SCHEMA_SHA256
-            ),
+            "historical_representation_schema_sha256": (HISTORICAL_REPRESENTATION_SCHEMA_SHA256),
+            "historical_representation_implementation_sha256": (HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256),
+            "linguistic_representation_implementation_sha256": (LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256),
+            "linguistic_representation_schema_sha256": (LINGUISTIC_REPRESENTATION_SCHEMA_SHA256),
             "historical_materializer_sha256": CANARY_MATERIALIZER_SHA256,
             "canary_receipt_file_sha256": CANARY_RECEIPT_FILE_SHA256,
             "canary_ud_output_sha256": CANARY_UD_OUTPUT_SHA256,
@@ -241,23 +226,19 @@ def validate_gate_document(gate: Mapping[str, Any]) -> dict[str, Any]:
         "historical periodization binding drift",
     )
     require(
-        bindings["historical_representation_schema_sha256"]
-        == HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
+        bindings["historical_representation_schema_sha256"] == HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
         "historical representation binding drift",
     )
     require(
-        bindings["historical_representation_implementation_sha256"]
-        == HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
+        bindings["historical_representation_implementation_sha256"] == HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
         "historical representation implementation binding drift",
     )
     require(
-        bindings["linguistic_representation_implementation_sha256"]
-        == LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
+        bindings["linguistic_representation_implementation_sha256"] == LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
         "linguistic representation implementation binding drift",
     )
     require(
-        bindings["linguistic_representation_schema_sha256"]
-        == LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
+        bindings["linguistic_representation_schema_sha256"] == LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
         "linguistic representation schema binding drift",
     )
     require(
@@ -284,9 +265,9 @@ def validate_gate_document(gate: Mapping[str, Any]) -> dict[str, Any]:
 def verify_runtime_bindings() -> None:
     """Fail closed if an imported reviewed implementation or schema drifted."""
     runtime_bindings = {
-        Path(base.__file__).resolve(): CANARY_MATERIALIZER_SHA256,
-        Path(historical.__file__).resolve(): HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
-        Path(linguistic.__file__).resolve(): LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
+        Path(base.__file__).resolve(): CURRENT_MATERIALIZER_SHA256,
+        Path(historical.__file__).resolve(): CURRENT_HISTORICAL_REPRESENTATION_SHA256,
+        Path(linguistic.__file__).resolve(): CURRENT_LINGUISTIC_REPRESENTATION_SHA256,
         PERIODIZATION_FREEZE_PATH: PERIODIZATION_FREEZE_SHA256,
         historical.SCHEMA_PATH: HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
         linguistic.SCHEMA_PATH: LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
@@ -354,7 +335,10 @@ def materialize_full(
     expected_plug2_archive_sha256 = source_denominators["plug2"]["archive_sha256"]
     expected_plug2_metadata_sha256 = source_denominators["plug2"]["metadata_sha256"]
 
-    require(not base._inside_git_checkout(private_output_dir.resolve()), "private text output cannot be inside a Git checkout")
+    require(
+        not base._inside_git_checkout(private_output_dir.resolve()),
+        "private text output cannot be inside a Git checkout",
+    )
     require(private_output_dir.name == OUTPUT_DIRECTORY_NAME, "output directory name is not the frozen value")
     require(receipt_output.parent.resolve() == private_output_dir.resolve(), "receipt must be inside immutable output")
     require(receipt_output.name == RECEIPT_FILENAME, "receipt filename is not the frozen value")
@@ -393,9 +377,7 @@ def materialize_full(
         "sentences": len(ud_candidates),
         "token_rows": sum(len(item.tokens) for item in ud_candidates),
     }
-    expected_ud_denominator = {
-        key: source_denominators["ud"][key] for key in ("documents", "sentences", "token_rows")
-    }
+    expected_ud_denominator = {key: source_denominators["ud"][key] for key in ("documents", "sentences", "token_rows")}
     require(actual_ud_denominator == expected_ud_denominator, "UD candidate denominator drift")
 
     rows = base.load_plug2_metadata(plug2_metadata)
@@ -428,9 +410,7 @@ def materialize_full(
                 try:
                     document_text = raw_bytes.decode("utf-8")
                 except UnicodeDecodeError as exc:
-                    raise HistoricalFullMaterializationError(
-                        f"PluG2 member is not UTF-8: {member_path}"
-                    ) from exc
+                    raise HistoricalFullMaterializationError(f"PluG2 member is not UTF-8: {member_path}") from exc
                 units = base.paragraph_units(document_text)
                 require(bool(units), f"PluG2 document has no non-empty paragraphs: {member_path}")
                 for paragraph_index, (start, end, value) in enumerate(units):
@@ -449,9 +429,7 @@ def materialize_full(
                     progress("plug2_documents", document_index, len(plug2_paths))
 
     private_output_dir.parent.mkdir(parents=True, exist_ok=True)
-    staging_dir = Path(
-        tempfile.mkdtemp(prefix=f".{private_output_dir.name}.staging-", dir=private_output_dir.parent)
-    )
+    staging_dir = Path(tempfile.mkdtemp(prefix=f".{private_output_dir.name}.staging-", dir=private_output_dir.parent))
     try:
         ud_output = staging_dir / "ud-orv-uk-full.jsonl.gz"
         ud_record_count, ud_output_bytes, ud_output_sha256 = base._write_jsonl_gzip(

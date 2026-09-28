@@ -23,15 +23,15 @@ _HOOK_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.common.repo_root import project_interpreter
 
 
 def _python_bin() -> str:
-    """Prefer this checkout's venv; walk parents for layout-A worktrees."""
-    for parent in [ROOT, *ROOT.parents]:
-        cand = parent / ".venv" / "bin" / "python"
-        if cand.is_file() and os.access(cand, os.X_OK):
-            return str(cand)
-    return sys.executable
+    """Project interpreter, including from a dispatch worktree with no local .venv."""
+    try:
+        return str(project_interpreter())
+    except FileNotFoundError:
+        return sys.executable
 
 
 PYTHON = _python_bin()

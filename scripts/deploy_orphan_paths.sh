@@ -2,7 +2,7 @@
 # Single-source orphan allowlist for scripts/deploy_prompts.sh and
 # scripts/check_rules_deployment.sh.
 #
-# Pure variable assignments — no side effects. Source from both consumers;
+# Variable assignments plus bytecode_cache_path(). Source from consumers;
 # do not execute directly.
 #
 # Declared orphan paths (relative to destination). Space-separated.
@@ -84,3 +84,59 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 # Codex discovers shared skills only via .agents/skills. Preserve the legacy
 # path from rsync deletion; capture verified copies into retained storage.
 CODEX_DISCOVERY_EXCLUDES="skills"
+
+# Interpreter cache written beside deployed hooks (#9108). Not declared runtime
+# state. rsync has no name rule for these: a *.pyc pattern also matches a
+# directory or a symlink, and would omit real source content. The preflight and
+# this diff filter ignore only a regular non-symlink file ending in .pyc, plus
+# a __pycache__ directory whose entries are all such files. --delete removes a
+# destination-only regular cache when a real sync runs.
+BYTECODE_CACHE_EXCLUDES=('*.pyc')
+
+# True for a path whose final component is *.pyc or exactly __pycache__.
+# Callers still have to check the file type. A directory or symlink keeps its
+# own name and is not cache.
+bytecode_cache_path() {
+    local base="${1##*/}"
+    case "$base" in
+        *.pyc | __pycache__) return 0 ;;
+    esac
+    return 1
+}
+
+# A regular file, not a symlink. -f follows links, so the -L test comes first.
+regular_file() {
+    [[ -f "$1" && ! -L "$1" ]]
+}
+
+# Drop diff lines that are only regular bytecode files.
+filter_pycache_only_diff() {
+    local line parent name path left right rest
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        case "$line" in
+            "Files "*.pyc" and "*.pyc" differ")
+                rest="${line#Files }"
+                rest="${rest% differ}"
+                left="${rest%% and *}"
+                right="${rest#* and }"
+                if regular_file "$left" && regular_file "$right"; then
+                    continue
+                fi
+                ;;
+            "Only in "*": "*)
+                parent="${line#"Only in "}"
+                parent="${parent%": "*}"
+                name="${line##*: }"
+                path="$parent/$name"
+                if [[ "$name" == *.pyc ]] && regular_file "$path"; then
+                    continue
+                fi
+                if [[ "$name" == "__pycache__" && -d "$path" && ! -L "$path" ]] \
+                    && ! find "$path" -mindepth 1 \( -type l -o ! -type f -o ! -name '*.pyc' \) -print -quit | grep -q .; then
+                    continue
+                fi
+                ;;
+        esac
+        printf '%s\n' "$line"
+    done
+}

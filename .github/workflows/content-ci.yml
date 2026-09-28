@@ -17,6 +17,7 @@ on:
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       content: ${{ steps.filter.outputs.content }}
       framing: ${{ steps.filter.outputs.framing }}
@@ -47,6 +48,7 @@ jobs:
   section7-xref:
     name: Content Gate (Section 7 xref)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.content == 'true'
     steps:
@@ -77,6 +79,7 @@ jobs:
   dossier-wordcount:
     name: Content Gate (dossier word count)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.content == 'true'
     steps:
@@ -97,6 +100,7 @@ jobs:
   promote-quality:
     name: Content Gate (promote quality)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.promote == 'true'
     steps:
@@ -117,6 +121,7 @@ jobs:
   folk-framing-compliance:
     name: Content Gate (FOLK framing advisory)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.framing == 'true'
     steps:

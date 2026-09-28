@@ -31,7 +31,7 @@ from scripts.common.schema_check import check_schema
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.model_view_exporter import build_exclusion_registry, registry_receipt
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 ROW_SCHEMA = CONTRACTS / "document_signal_record_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "document_signal_receipt_v1.schema.json"
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")

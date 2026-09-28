@@ -11,9 +11,10 @@ import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.projects.open_model_data import phase3_source_universe as freezer
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 SOURCE_TABLES = tuple(freezer.SOURCES_FAMILIES.values())
-FREEZE_SCHEMA = freezer.ROOT / "data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json"
+FREEZE_SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_source_universe_freeze_v1.schema.json"
 
 
 def _json(path: Path, value: object) -> None:
@@ -23,8 +24,13 @@ def _json(path: Path, value: object) -> None:
 def _contract() -> dict[str, object]:
     families = []
     family_ids = set(freezer.SOURCES_FAMILIES) | {
-        "antonenko_textbook_representation", "lexical_vesum", "calque_inventory", "lexical_r2u",
-        "pravopys_2019_complete", "pravopys_2026_complete", "other_normative_style_inventory",
+        "antonenko_textbook_representation",
+        "lexical_vesum",
+        "calque_inventory",
+        "lexical_r2u",
+        "pravopys_2019_complete",
+        "pravopys_2026_complete",
+        "other_normative_style_inventory",
     }
     for family_id in sorted(family_ids):
         count = 1
@@ -32,12 +38,20 @@ def _contract() -> dict[str, object]:
             count = 0
         if family_id in {"calque_inventory", "lexical_r2u", "pravopys_2019_complete", "pravopys_2026_complete"}:
             count = 5 if family_id.startswith("pravopys") else 3
-        families.append({
-            "family_id": family_id,
-            "coverage_mode": "lexical_structural_and_used_subset" if family_id.startswith("lexical_") else "source_conversion",
-            "input_identity": {"observed_input_total": count, "unit_grain": "fixture"},
-            "rights": {"source_text_committed": False, "locator_only_allowed": True, "rights_limited_disposition": "rights_limited_locator_only"},
-        })
+        families.append(
+            {
+                "family_id": family_id,
+                "coverage_mode": "lexical_structural_and_used_subset"
+                if family_id.startswith("lexical_")
+                else "source_conversion",
+                "input_identity": {"observed_input_total": count, "unit_grain": "fixture"},
+                "rights": {
+                    "source_text_committed": False,
+                    "locator_only_allowed": True,
+                    "rights_limited_disposition": "rights_limited_locator_only",
+                },
+            }
+        )
     return {"mandatory_families": families}
 
 
@@ -72,14 +86,19 @@ def _inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, object
     _json(contract, _contract())
     entries = [{"query": "one"}, {"query": "two"}, {"query": "three"}]
     _json(cache, {"cache_id": "fixture", "entries": entries, "entries_sha256": freezer._unit_hash(entries)})
-    module.write_text("CURATED_CALQUES={'a': {'x': 1}}\nPHRASAL_CALQUES={'b': {'x': 2}}\nSENSE_RESTRICTED_CALQUES={'c': {'x': 3}}\n", encoding="utf-8")
+    module.write_text(
+        "CURATED_CALQUES={'a': {'x': 1}}\nPHRASAL_CALQUES={'b': {'x': 2}}\nSENSE_RESTRICTED_CALQUES={'c': {'x': 3}}\n",
+        encoding="utf-8",
+    )
     pdf2019, pdf2026 = tmp_path / "2019.pdf", tmp_path / "2026.pdf"
     pdf2019.write_bytes(b"fixture 2019")
     pdf2026.write_bytes(b"fixture 2026")
     monkeypatch.setattr(freezer, "EXPECTED_2019_SHA256", freezer.sha256_file(pdf2019))
     monkeypatch.setattr(freezer, "EXPECTED_2026_SHA256", freezer.sha256_file(pdf2026).upper())
     monkeypatch.setattr(freezer, "EXPECTED_PARAGRAPH_COUNT", 2)
-    monkeypatch.setattr(freezer, "extract_pdf_pages", lambda path, tool: ["РОЗДІЛ I\n§ 1. heading\n1. unit", "§ 2. heading\nа) unit"])
+    monkeypatch.setattr(
+        freezer, "extract_pdf_pages", lambda path, tool: ["РОЗДІЛ I\n§ 1. heading\n1. unit", "§ 2. heading\nа) unit"]
+    )
     monkeypatch.setattr(
         freezer,
         "_verify_merged_main_binding",
@@ -90,13 +109,18 @@ def _inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, object
         },
     )
     return {
-        "coverage_contract": contract, "sources_db": sources, "vesum_db": vesum,
-        "pravopys_2019_pdf": pdf2019, "pravopys_2026_pdf": pdf2026,
+        "coverage_contract": contract,
+        "sources_db": sources,
+        "vesum_db": vesum,
+        "pravopys_2019_pdf": pdf2019,
+        "pravopys_2026_pdf": pdf2026,
         "pravopys_2019_retrieved_at": "2026-08-05T22:07:34Z",
         "pravopys_2019_retrieval_locator": "https://web.archive.org/fixture-2019",
         "pravopys_2026_retrieved_at": "2026-08-05T22:05:39Z",
         "pravopys_2026_retrieval_locator": "https://data.commoncrawl.org/fixture-2026",
-        "calque_module": module, "r2u_cache": cache, "pdftotext": tmp_path / "unused",
+        "calque_module": module,
+        "r2u_cache": cache,
+        "pdftotext": tmp_path / "unused",
         "merged_main_sha": "a" * 40,
     }
 
@@ -105,7 +129,9 @@ def _freeze(inputs: dict[str, object], output_dir: Path) -> dict[str, object]:
     return freezer.freeze(**inputs, output_dir=output_dir)
 
 
-def test_freeze_writes_all_21_text_free_ledgers_deterministically(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_freeze_writes_all_21_text_free_ledgers_deterministically(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     first, second = tmp_path / "first", tmp_path / "second"
     receipt = _freeze(inputs, first)
@@ -117,25 +143,49 @@ def test_freeze_writes_all_21_text_free_ledgers_deterministically(tmp_path: Path
         assert path.read_bytes() == (second / path.name).read_bytes()
         assert b"secret source sentence" not in path.read_bytes()
     unit = json.loads((first / "ua_gec.units.jsonl").read_text(encoding="utf-8"))
-    assert set(unit) >= {"unit_id", "unit_sha256", "locator", "duplicate_group_id", "parse_status", "rights", "provenance"}
+    assert set(unit) >= {
+        "unit_id",
+        "unit_sha256",
+        "locator",
+        "duplicate_group_id",
+        "parse_status",
+        "rights",
+        "provenance",
+    }
     structural = json.loads((first / "lexical_structural_freeze_v1.json").read_text(encoding="utf-8"))
     assert [item["family_id"] for item in structural["families"]] == sorted(
         item["family_id"] for item in receipt["families"] if item["family_id"].startswith("lexical_")
     )
-    assert all(item["binding_fields"] == ["unit_id", "unit_sha256", "duplicate_group_id", "parse_status", "provenance"] for item in structural["families"])
+    assert all(
+        item["binding_fields"] == ["unit_id", "unit_sha256", "duplicate_group_id", "parse_status", "provenance"]
+        for item in structural["families"]
+    )
     assert not (first / "lexical_balla_en_uk.structural.json").exists()
-    assert receipt["other_normative_style_inventory"] == {"candidate_tables": [], "additional_family_count": 0, "zero_additional_family_inventory": True}
+    assert receipt["other_normative_style_inventory"] == {
+        "candidate_tables": [],
+        "additional_family_count": 0,
+        "zero_additional_family_inventory": True,
+    }
     assert receipt["pdf_editions"]["pravopys_2019_complete"] == {
-        "edition_identity": "pravopys_2019_complete", "input_sha256": freezer.EXPECTED_2019_SHA256,
+        "edition_identity": "pravopys_2019_complete",
+        "input_sha256": freezer.EXPECTED_2019_SHA256,
         "official_download_locator": freezer.PRAVOPYS_2019_OFFICIAL_DOWNLOAD_LOCATOR,
-        "page_count_extracted": 2, "paragraph_count": 2,
+        "page_count_extracted": 2,
+        "paragraph_count": 2,
         "retrieval_locator": "https://web.archive.org/fixture-2019",
         "retrieved_at": "2026-08-05T22:07:34Z",
         "rights_provenance_classification": "rights_limited_locator_only",
-        "source_text_committed": False, "stable_grain": "pdf_numbered_hierarchy",
+        "source_text_committed": False,
+        "stable_grain": "pdf_numbered_hierarchy",
     }
-    assert receipt["pdf_editions"]["pravopys_2026_complete"]["official_decision_locator"] == freezer.PRAVOPYS_2026_DECISION_LOCATOR
-    assert receipt["pdf_editions"]["pravopys_2026_complete"]["official_download_locator"] == freezer.PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR
+    assert (
+        receipt["pdf_editions"]["pravopys_2026_complete"]["official_decision_locator"]
+        == freezer.PRAVOPYS_2026_DECISION_LOCATOR
+    )
+    assert (
+        receipt["pdf_editions"]["pravopys_2026_complete"]["official_download_locator"]
+        == freezer.PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR
+    )
     Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8"))).validate(receipt)
     manifest = receipt["artifact_manifest"]
     assert manifest["artifact_count"] == 10
@@ -151,7 +201,9 @@ def test_freeze_writes_all_21_text_free_ledgers_deterministically(tmp_path: Path
 def test_count_mismatch_fails_before_output_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     contract = json.loads(inputs["coverage_contract"].read_text(encoding="utf-8"))
-    next(item for item in contract["mandatory_families"] if item["family_id"] == "lexical_balla_en_uk")["input_identity"]["observed_input_total"] = 2
+    next(item for item in contract["mandatory_families"] if item["family_id"] == "lexical_balla_en_uk")[
+        "input_identity"
+    ]["observed_input_total"] = 2
     _json(inputs["coverage_contract"], contract)
     output = tmp_path / "out"
     with pytest.raises(freezer.FreezeError, match="frozen unit count mismatch"):
@@ -207,12 +259,14 @@ def test_receipt_schema_rejects_wrong_family_receipt_shape(tmp_path: Path, monke
     receipt = _freeze(_inputs(tmp_path, monkeypatch), tmp_path / "out")
     lexical = next(item for item in receipt["families"] if item["family_id"] == "lexical_balla_en_uk")
     lexical.clear()
-    lexical.update({
-        "family_id": "lexical_balla_en_uk",
-        "unit_count": 1,
-        "ledger_sha256": "a" * 64,
-        "ledger_file": "lexical_balla_en_uk.units.jsonl",
-    })
+    lexical.update(
+        {
+            "family_id": "lexical_balla_en_uk",
+            "unit_count": 1,
+            "ledger_sha256": "a" * 64,
+            "ledger_file": "lexical_balla_en_uk.units.jsonl",
+        }
+    )
     validator = Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8")))
     with pytest.raises(ValidationError):
         validator.validate(receipt)
@@ -243,10 +297,14 @@ def test_database_drift_fails_against_frozen_count(tmp_path: Path, monkeypatch: 
         _freeze(inputs, tmp_path / "second")
 
 
-def test_other_normative_inventory_enumerates_discovered_additions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_other_normative_inventory_enumerates_discovered_additions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     contract = json.loads(inputs["coverage_contract"].read_text(encoding="utf-8"))
-    next(item for item in contract["mandatory_families"] if item["family_id"] == "other_normative_style_inventory")["input_identity"]["observed_input_total"] = 1
+    next(item for item in contract["mandatory_families"] if item["family_id"] == "other_normative_style_inventory")[
+        "input_identity"
+    ]["observed_input_total"] = 1
     _json(inputs["coverage_contract"], contract)
     with sqlite3.connect(inputs["sources_db"]) as connection:
         connection.execute("CREATE TABLE normative_guide (id INTEGER PRIMARY KEY, text TEXT)")
@@ -259,11 +317,15 @@ def test_other_normative_inventory_enumerates_discovered_additions(tmp_path: Pat
 def test_dynamic_text_primary_key_is_hash_only_in_ledger(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     contract = json.loads(inputs["coverage_contract"].read_text(encoding="utf-8"))
-    next(item for item in contract["mandatory_families"] if item["family_id"] == "other_normative_style_inventory")["input_identity"]["observed_input_total"] = 1
+    next(item for item in contract["mandatory_families"] if item["family_id"] == "other_normative_style_inventory")[
+        "input_identity"
+    ]["observed_input_total"] = 1
     _json(inputs["coverage_contract"], contract)
     with sqlite3.connect(inputs["sources_db"]) as connection:
         connection.execute("CREATE TABLE normative_text_key (rule TEXT PRIMARY KEY, payload TEXT)")
-        connection.execute("INSERT INTO normative_text_key VALUES (?, ?)", ("source-bearing-key", "secret source sentence"))
+        connection.execute(
+            "INSERT INTO normative_text_key VALUES (?, ?)", ("source-bearing-key", "secret source sentence")
+        )
     output = tmp_path / "out"
     _freeze(inputs, output)
     ledger = (output / "other_normative_style_inventory.units.jsonl").read_text(encoding="utf-8")
@@ -277,17 +339,21 @@ def test_dynamic_text_primary_key_is_hash_only_in_ledger(tmp_path: Path, monkeyp
     }
 
 
-def test_pdf_hierarchy_filters_toc_and_binds_nested_unique_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pdf_hierarchy_filters_toc_and_binds_nested_unique_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     monkeypatch.setattr(
         freezer,
         "extract_pdf_pages",
-        lambda path, tool: ["§ 1. contents…..18\nРОЗДІЛ I\n§ 1. heading\n1. part\n1) point\nа) subpoint\n4.2.4. decimal\n§ 2. heading"],
+        lambda path, tool: [
+            "§ 1. contents…..18\nРОЗДІЛ I\n§ 1. heading\n1. part\n1) point\nа) subpoint\n4.2.4. decimal\n§ 2. heading"
+        ],
     )
-    family = next(
-        item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2026_complete"
+    family = next(item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2026_complete")
+    units, report = freezer._pdf_units(
+        inputs["pravopys_2026_pdf"], "pravopys_2026_complete", family, inputs["pdftotext"]
     )
-    units, report = freezer._pdf_units(inputs["pravopys_2026_pdf"], "pravopys_2026_complete", family, inputs["pdftotext"])
     paths = [tuple(unit["locator"]["section_path"]) for unit in units]
     assert report["paragraph_count"] == 2
     assert len(paths) == len(set(paths))
@@ -296,15 +362,17 @@ def test_pdf_hierarchy_filters_toc_and_binds_nested_unique_paths(tmp_path: Path,
     assert ("chapter:i", "decimal:4", "decimal:4.2", "decimal:4.2.4", "paragraph:2") in paths
 
 
-def test_pdf_ellipsis_title_is_not_treated_as_a_contents_leader(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pdf_ellipsis_title_is_not_treated_as_a_contents_leader(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     monkeypatch.setattr(freezer, "EXPECTED_PARAGRAPH_COUNT", 162)
     body = "\n".join(["РОЗДІЛ I", *(f"§ {number}. heading" for number in range(1, 162)), "§ 162. title (...)"])
     monkeypatch.setattr(freezer, "extract_pdf_pages", lambda path, tool: [body])
-    family = next(
-        item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2019_complete"
+    family = next(item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2019_complete")
+    units, report = freezer._pdf_units(
+        inputs["pravopys_2019_pdf"], "pravopys_2019_complete", family, inputs["pdftotext"]
     )
-    units, report = freezer._pdf_units(inputs["pravopys_2019_pdf"], "pravopys_2019_complete", family, inputs["pdftotext"])
     assert report["paragraph_count"] == 162
     assert any(unit["locator"]["section_path"][-1] == "paragraph:162" for unit in units)
 
@@ -317,14 +385,14 @@ def test_pdf_leaderless_navigation_duplicate_fails_closed(tmp_path: Path, monkey
         "extract_pdf_pages",
         lambda path, tool: ["§ 1. contents\n§ 2. contents\nРОЗДІЛ I\n§ 1. body\n§ 2. body"],
     )
-    family = next(
-        item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2026_complete"
-    )
+    family = next(item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2026_complete")
     with pytest.raises(freezer.FreezeError, match="possible unfiltered navigation capture"):
         freezer._pdf_units(inputs["pravopys_2026_pdf"], "pravopys_2026_complete", family, inputs["pdftotext"])
 
 
-def test_pdf_trailing_navigation_is_excluded_after_complete_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pdf_trailing_navigation_is_excluded_after_complete_body(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     monkeypatch.setattr(freezer, "EXPECTED_PARAGRAPH_COUNT", 168)
     body = "\n".join(["РОЗДІЛ I", *(f"§ {number}. body" for number in range(1, 169))])
@@ -333,9 +401,7 @@ def test_pdf_trailing_navigation_is_excluded_after_complete_body(tmp_path: Path,
         "extract_pdf_pages",
         lambda path, tool: [f"{body}\n§ 1. contents ........ 4\n§ 2. contents"],
     )
-    family = next(
-        item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2019_complete"
-    )
+    family = next(item for item in _contract()["mandatory_families"] if item["family_id"] == "pravopys_2019_complete")
     units, report = freezer._pdf_units(
         inputs["pravopys_2019_pdf"], "pravopys_2019_complete", family, inputs["pdftotext"]
     )

@@ -27,13 +27,14 @@ if __package__ in {None, ""}:
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
 ARTIFACT_PATH = DATA / "evidence/phase3_v3_cooperative_control_plane_v1.json"
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_LOGICAL_PATH = "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
 SCRIPT_LOGICAL_PATH = "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py"
 ARTIFACT_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v3_cooperative_control_plane_v1.json"
+FROZEN_VALIDATOR_SHA256 = "50a6ef3de21ee999325a07478e9c3570f9b7d353a622fc28ab50a3f75e9055b3"
 
 V2_PARENT_OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 REVIEWED_V3_CONSENSUS_SHA256 = "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"
@@ -48,7 +49,18 @@ P4_SCHEMA_LOGICAL_PATH = "data/projects/open_model_data/contracts/phase3_p4_pilo
 P4_ADMISSION_LOGICAL_PATH = "data/projects/open_model_data/admission/phase3_p4_pilot_construction_v1.json"
 V2_COMPATIBILITY_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
 P2_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json"
-P1_DIALECT_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
+P1_DIALECT_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
+)
+MIGRATED_K_INPUTS = frozenset(
+    {
+        P4_SCHEMA_LOGICAL_PATH,
+        P4_ADMISSION_LOGICAL_PATH,
+        V2_COMPATIBILITY_LOGICAL_PATH,
+        P2_LOGICAL_PATH,
+        P1_DIALECT_LOGICAL_PATH,
+    }
+)
 
 V2_CELL_IDS = (
     "boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable",
@@ -135,7 +147,11 @@ EXPECTED_NEXT_STATES = {
     "IDENTITY_AGREEMENT_QC": {"IDENTITY_HUMAN_QUEUE", "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"},
     "IDENTITY_DISPUTED": {"DISPUTE_CRITIC_PENDING"},
     "IDENTITY_PROVIDER_FAILURE": {"IDENTITY_REVIEWS_PENDING", "IDENTITY_HUMAN_QUEUE"},
-    "IDENTITY_HUMAN_QUEUE": {"IDENTITY_HUMAN_ADJUDICATED", "IDENTITY_HUMAN_ABSTAINED", "IDENTITY_EVIDENCE_INSUFFICIENT"},
+    "IDENTITY_HUMAN_QUEUE": {
+        "IDENTITY_HUMAN_ADJUDICATED",
+        "IDENTITY_HUMAN_ABSTAINED",
+        "IDENTITY_EVIDENCE_INSUFFICIENT",
+    },
     "DISPUTE_CRITIC_PENDING": {"DISPUTE_CRITIQUED", "IDENTITY_HUMAN_QUEUE"},
     "DISPUTE_CRITIQUED": {"IDENTITY_HUMAN_QUEUE"},
     "IDENTITY_HUMAN_ADJUDICATED": {"CASE_CANDIDATE_PENDING"},
@@ -240,8 +256,15 @@ def _validate_schema(value: Mapping[str, Any]) -> None:
 def _binding(value: Mapping[str, Any], name: str, path: str, digest: str) -> None:
     actual = value[name]
     require(actual == {"path": path, "sha256": digest}, f"binding drift: {name}")
-    resolved = ROOT / path
+    resolved = _registry_path(path)
     require(sha256_file(resolved) == digest, f"bound artifact bytes drift: {path}")
+
+
+def _registry_path(logical_path: str) -> Path:
+    """Resolve frozen K logical names to their post-migration byte location."""
+
+    require(logical_path in MIGRATED_K_INPUTS, f"unrecognized migrated K binding: {logical_path}")
+    return ROOT / logical_path.replace("data/projects/open_model_data/", "registry/projects/open_model_data/", 1)
 
 
 def _verify_bindings(value: Mapping[str, Any]) -> None:
@@ -254,13 +277,13 @@ def _verify_bindings(value: Mapping[str, Any]) -> None:
         "control-plane schema binding drift",
     )
     require(
-        bindings["validator"] == {"path": SCRIPT_LOGICAL_PATH, "sha256": sha256_file(SCRIPT_PATH)},
+        bindings["validator"] == {"path": SCRIPT_LOGICAL_PATH, "sha256": FROZEN_VALIDATOR_SHA256},
         "control-plane validator binding drift",
     )
     p4 = bindings["p4_v1"]
     require(p4["schema"] == {"path": P4_SCHEMA_LOGICAL_PATH, "sha256": P4_SCHEMA_SHA256}, "P4 v1 schema binding drift")
     require(
-        sha256_file(ROOT / P4_SCHEMA_LOGICAL_PATH) == P4_SCHEMA_SHA256,
+        sha256_file(_registry_path(P4_SCHEMA_LOGICAL_PATH)) == P4_SCHEMA_SHA256,
         "bound P4 v1 schema bytes drift",
     )
     require(
@@ -268,10 +291,10 @@ def _verify_bindings(value: Mapping[str, Any]) -> None:
         "P4 v1 admission binding drift",
     )
     require(
-        sha256_file(ROOT / P4_ADMISSION_LOGICAL_PATH) == P4_ADMISSION_FILE_SHA256,
+        sha256_file(_registry_path(P4_ADMISSION_LOGICAL_PATH)) == P4_ADMISSION_FILE_SHA256,
         "bound P4 v1 admission bytes drift",
     )
-    p4_actual = read_json(ROOT / P4_ADMISSION_LOGICAL_PATH)
+    p4_actual = read_json(_registry_path(P4_ADMISSION_LOGICAL_PATH))
     p4_actual_body = {key: item for key, item in p4_actual.items() if key != "receipt_sha256"}
     require(
         p4_actual.get("receipt_sha256") == P4_ADMISSION_RECEIPT_SHA256
@@ -373,7 +396,9 @@ def _verify_taxonomy(value: Mapping[str, Any]) -> None:
     )
     invariants = taxonomy["protected_invariants"]
     require(invariants["original_surface_preserved"], "original surface is not protected")
-    require(invariants["modern_correction_eligible_when_protected"] is False, "protected form became correction eligible")
+    require(
+        invariants["modern_correction_eligible_when_protected"] is False, "protected form became correction eligible"
+    )
     require(invariants["automatic_standard_normalization"] is False, "automatic standard normalization enabled")
     require(invariants["automatic_national_successor_mapping"] is False, "automatic successor mapping enabled")
     boundaries = taxonomy["identity_boundaries"]
@@ -384,11 +409,20 @@ def _verify_taxonomy(value: Mapping[str, Any]) -> None:
     require(partition["membership_frozen"] is False, "dialect membership was claimed frozen")
     require(partition["parent_denominator_visible"] is True, "dialect parent left denominator")
     require(partition["parent_direct_coverage_credit"] is False, "dialect parent receives direct child credit")
-    require(partition["partition_dimensions"] == ["source", "region", "period", "register"], "dialect partition dimensions drift")
+    require(
+        partition["partition_dimensions"] == ["source", "region", "period", "register"],
+        "dialect partition dimensions drift",
+    )
     child_ids = tuple(entry["stratum_id"] for entry in partition["child_strata"])
     require(child_ids == DIALECT_CHILD_STRATA, "dialect child stratum set drift")
-    require(all(entry["parent_cell_id"] == DIALECT_PARENT_CELL_ID for entry in partition["child_strata"]), "dialect lineage drift")
-    require(all(entry["source_membership_frozen"] is False for entry in partition["child_strata"]), "source membership leaked")
+    require(
+        all(entry["parent_cell_id"] == DIALECT_PARENT_CELL_ID for entry in partition["child_strata"]),
+        "dialect lineage drift",
+    )
+    require(
+        all(entry["source_membership_frozen"] is False for entry in partition["child_strata"]),
+        "source membership leaked",
+    )
 
 
 def _verify_roles_and_visibility(value: Mapping[str, Any]) -> None:
@@ -428,12 +462,18 @@ def _verify_roles_and_visibility(value: Mapping[str, Any]) -> None:
     require(dissent["forbidden_input_classes"] == identity_forbidden, "identity blind boundary differs")
     for role_id, entry in entries.items():
         expected_heldout = role_id == "EVALUATION_STEWARD"
-        require(entry["heldout_access"] == ("evaluation_runtime_only" if expected_heldout else "forbidden"), f"held-out access drift: {role_id}")
+        require(
+            entry["heldout_access"] == ("evaluation_runtime_only" if expected_heldout else "forbidden"),
+            f"held-out access drift: {role_id}",
+        )
         require(
             next(role for role in roles if role["role_id"] == role_id)["may_access_heldout"] is expected_heldout,
             f"role/visibility held-out access disagreement: {role_id}",
         )
-        require(entry["coverage_credit"] is False and entry["gold_credit"] is False and entry["training_credit"] is False, f"credit leaked to {role_id}")
+        require(
+            entry["coverage_credit"] is False and entry["gold_credit"] is False and entry["training_credit"] is False,
+            f"credit leaked to {role_id}",
+        )
     for role_id in ("IDENTITY_LEAD", "INDEPENDENT_DISSENT", "DISPUTE_CRITIC", "CANDIDATE_BUILDER"):
         forbidden = set(entries[role_id]["forbidden_input_classes"])
         require(
@@ -449,9 +489,16 @@ def _verify_roles_and_visibility(value: Mapping[str, Any]) -> None:
             f"blind boundary drift: {role_id}",
         )
     require(value["conflict_contract"]["same_packet_for_identity_roles"] is True, "identity packet sharing disabled")
-    require(value["conflict_contract"]["identity_outputs_hidden_from_each_other"] is True, "identity output isolation disabled")
-    require(value["conflict_contract"]["builder_receives_identity_opinions"] is False, "builder receives identity opinions")
-    require(value["conflict_contract"]["critic_receives_model_prestige_or_order"] is False, "critic receives model prestige")
+    require(
+        value["conflict_contract"]["identity_outputs_hidden_from_each_other"] is True,
+        "identity output isolation disabled",
+    )
+    require(
+        value["conflict_contract"]["builder_receives_identity_opinions"] is False, "builder receives identity opinions"
+    )
+    require(
+        value["conflict_contract"]["critic_receives_model_prestige_or_order"] is False, "critic receives model prestige"
+    )
     require(value["conflict_contract"]["model_may_vote_on_own_output"] is False, "self-vote is enabled")
     require(value["conflict_contract"]["independent_family_required"] is True, "cross-family independence disabled")
 
@@ -481,16 +528,17 @@ def _verify_state_machine(value: Mapping[str, Any]) -> None:
             "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
             "CASE_EVIDENCE_INSUFFICIENT",
         }:
-            require(state["resumable"] is True and state["resume_to_state"] is not None, f"resumable failure missing: {state_id}")
+            require(
+                state["resumable"] is True and state["resume_to_state"] is not None,
+                f"resumable failure missing: {state_id}",
+            )
         elif state_id == "TRAINING_ELIGIBLE":
             require(state["resumable"] is False and state["resume_to_state"] is None, "training terminal drift")
         else:
             require(state["resume_to_state"] is None, f"unexpected resume target: {state_id}")
     transitions = {(item["from_state"], item["to_state"]) for item in machine["transitions"]}
     expected_transitions = {
-        (from_state, target)
-        for from_state, targets in EXPECTED_NEXT_STATES.items()
-        for target in targets
+        (from_state, target) for from_state, targets in EXPECTED_NEXT_STATES.items() for target in targets
     }
     require(transitions == expected_transitions, "transition table exact-set drift")
     require(machine["format_retry_limit"] == 1, "format retry limit drift")
@@ -505,9 +553,19 @@ def _verify_agreement_and_quarantine(value: Mapping[str, Any]) -> None:
     require(predicate["abstention_state_compared"] is True, "abstention not compared")
     require(predicate["provider_output_not_gold"] is True, "provider output can become gold")
     quarantine = value["quarantine_policy"]
-    for key in ("counts_toward_coverage", "gold_eligible", "training_eligible", "evaluation_eligible", "teaching_view_eligible", "unsampled_promotion_allowed"):
+    for key in (
+        "counts_toward_coverage",
+        "gold_eligible",
+        "training_eligible",
+        "evaluation_eligible",
+        "teaching_view_eligible",
+        "unsampled_promotion_allowed",
+    ):
         require(quarantine[key] is False, f"quarantine policy drift: {key}")
-    require(quarantine["promotion_state"] == "CASE_HUMAN_ADJUDICATED", "quarantine promotion bypasses human case adjudication")
+    require(
+        quarantine["promotion_state"] == "CASE_HUMAN_ADJUDICATED",
+        "quarantine promotion bypasses human case adjudication",
+    )
     require(quarantine["protected_high_risk_always_human"] is True, "protected/high-risk human gate disabled")
     require(quarantine["critic_unresolved_routes_to_human"] is True, "critic failure stranded")
 
@@ -515,16 +573,40 @@ def _verify_agreement_and_quarantine(value: Mapping[str, Any]) -> None:
 def _verify_human_and_firewall(value: Mapping[str, Any]) -> None:
     manifest = value["human_work_manifest"]
     require(manifest["required_before_provider_pilot"] is True, "human manifest is not pre-provider")
-    require(manifest["atomic_decision_key"] == ["span_hash", "claim_type", "proposed_value", "evidence_bundle_hash", "source_revision"], "human decision key drift")
+    require(
+        manifest["atomic_decision_key"]
+        == ["span_hash", "claim_type", "proposed_value", "evidence_bundle_hash", "source_revision"],
+        "human decision key drift",
+    )
     require(manifest["protected_high_risk_review_fraction"] == 1.0, "protected/high-risk rows are not 100% reviewed")
     require(manifest["provider_calls_authorized"] is False, "provider calls enabled by control-plane contract")
-    require(manifest["unsampled_agreement_policy"] == "remain_quarantined_no_coverage_or_consumer_view_credit", "unsampled promotion policy drift")
-    require(manifest["audit_failure_policy"] == "freeze_uninspected_cohort_and_route_complete_human_review_or_unresolved", "audit failure policy drift")
+    require(
+        manifest["unsampled_agreement_policy"] == "remain_quarantined_no_coverage_or_consumer_view_credit",
+        "unsampled promotion policy drift",
+    )
+    require(
+        manifest["audit_failure_policy"] == "freeze_uninspected_cohort_and_route_complete_human_review_or_unresolved",
+        "audit failure policy drift",
+    )
     firewall = value["heldout_firewall"]
     require(firewall["required_nonzero_count_per_v3_stratum"] is True, "held-out strata do not require nonzero counts")
-    for key in ("membership_sealed_before_construction", "construction_freeze_before_exposure", "post_exposure_mutation_invalidates_version", "new_partition_required_after_invalidation", "solo_operator_limitation_disclosed"):
+    for key in (
+        "membership_sealed_before_construction",
+        "construction_freeze_before_exposure",
+        "post_exposure_mutation_invalidates_version",
+        "new_partition_required_after_invalidation",
+        "solo_operator_limitation_disclosed",
+    ):
         require(firewall[key] is True, f"held-out firewall drift: {key}")
-    for key in ("construction_access_to_membership", "construction_access_to_content", "construction_access_to_labels", "construction_access_to_locators", "construction_access_to_fingerprints", "construction_access_to_derivatives", "private_evaluation_runtime_during_construction"):
+    for key in (
+        "construction_access_to_membership",
+        "construction_access_to_content",
+        "construction_access_to_labels",
+        "construction_access_to_locators",
+        "construction_access_to_fingerprints",
+        "construction_access_to_derivatives",
+        "private_evaluation_runtime_during_construction",
+    ):
         require(firewall[key] is False, f"held-out construction access leaked: {key}")
     require(firewall["ambiguous_evidence_action"] == "abstain", "ambiguous evidence does not abstain")
 
@@ -550,15 +632,26 @@ def _verify_compatibility(value: Mapping[str, Any]) -> None:
         cell_id = entry["v2_cell_id"]
         require(entry["v2_status"] == V2_CELL_STATUS[cell_id], f"V2 cell status drift: {cell_id}")
         if cell_id == DIALECT_PARENT_CELL_ID:
-            require(entry["old_artifact"] == {"path": P1_DIALECT_LOGICAL_PATH, "sha256": P1_DIALECT_AMENDMENT_SHA256}, "dialect parent provenance drift")
+            require(
+                entry["old_artifact"] == {"path": P1_DIALECT_LOGICAL_PATH, "sha256": P1_DIALECT_AMENDMENT_SHA256},
+                "dialect parent provenance drift",
+            )
             require(entry["disposition"] == "carried_forward_exact", "dialect parent disposition drift")
-            require(tuple(entry["child_partition_ids"]) == DIALECT_CHILD_STRATA, "dialect child partition binding drift")
+            require(
+                tuple(entry["child_partition_ids"]) == DIALECT_CHILD_STRATA, "dialect child partition binding drift"
+            )
             require(entry["denominator_effect"] == "same_parent_denominator", "dialect denominator effect drift")
         else:
-            require(entry["old_artifact"] == {"path": P2_LOGICAL_PATH, "sha256": P2_CANONICAL_CONTRACTS_SHA256}, f"V2 parent provenance drift: {cell_id}")
+            require(
+                entry["old_artifact"] == {"path": P2_LOGICAL_PATH, "sha256": P2_CANONICAL_CONTRACTS_SHA256},
+                f"V2 parent provenance drift: {cell_id}",
+            )
             require(entry["disposition"] == "carried_forward_exact", f"V2 cell disposition drift: {cell_id}")
             require(entry["child_partition_ids"] == [], f"unexpected child partition: {cell_id}")
-            require(entry["denominator_effect"] in {"same_parent_denominator", "boundary_cell_preserved"}, f"V2 denominator effect drift: {cell_id}")
+            require(
+                entry["denominator_effect"] in {"same_parent_denominator", "boundary_cell_preserved"},
+                f"V2 denominator effect drift: {cell_id}",
+            )
         require(entry["v3_cell_id"] == cell_id, f"stable cell ID drift: {cell_id}")
         require(entry["new_binding"] == expected_new, f"V3 binding drift: {cell_id}")
     require(compatibility["dispositions_complete"] is True, "compatibility table is incomplete")
@@ -576,7 +669,10 @@ def _verify_children_and_gates(value: Mapping[str, Any]) -> None:
     )
     for slot in slots:
         require(slot["status"] == "NOT_STARTED", f"child slot status overclaim: {slot['slot_id']}")
-        require(slot["provider_calls_authorized"] is False and slot["mass_labeling_authorized"] is False, f"child slot execution gate drift: {slot['slot_id']}")
+        require(
+            slot["provider_calls_authorized"] is False and slot["mass_labeling_authorized"] is False,
+            f"child slot execution gate drift: {slot['slot_id']}",
+        )
         require(slot["completion_requires_exact_hashes"] is True, f"child slot hash gate disabled: {slot['slot_id']}")
     require(
         {slot["slot_id"]: slot["dependencies"] for slot in slots}
@@ -590,7 +686,13 @@ def _verify_children_and_gates(value: Mapping[str, Any]) -> None:
     gates = value["gates"]
     require(gates["ratification_complete"] is True, "ratification gate is not closed")
     require(gates["outcome_sha_scope_approved"] is True, "reviewed outcome/scope gate is not closed")
-    for key in ("provider_calls_authorized", "labeling_authorized", "training_authorized", "p4_v2_authorized", "p4_v1_mutation_allowed"):
+    for key in (
+        "provider_calls_authorized",
+        "labeling_authorized",
+        "training_authorized",
+        "p4_v2_authorized",
+        "p4_v1_mutation_allowed",
+    ):
         require(gates[key] is False, f"execution gate unexpectedly open: {key}")
     require(gates["required_child_slots"] == ["V3-A", "V3-B", "V3-C"], "required child slots drift")
 

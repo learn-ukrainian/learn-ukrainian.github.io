@@ -39,15 +39,12 @@ def _dispatch_args_hash(
 ) -> str:
     """The ``dispatch_args_sha256`` a real dispatch with exactly these raw CLI args would have recorded.
 
-    Mirrors ``adj.dispatch_argv``'s fixed shape (agent/task-id/prompt-file/mode[/model]) plus whichever of
-    ``--cwd``, ``--worktree``, ``--output-schema`` this scenario simulates having been given, so the canonical
-    combination (mode read-only, no cwd/worktree/output-schema) reduces to exactly what ``dispatch_argv`` builds.
+    Mirrors ``adj.dispatch_argv``'s fixed shape, including the canonical primary ``--cwd``.
     """
     argv = ["--agent", agent, "--task-id", task_id, "--prompt-file", str(task_file), "--mode", mode]
     if model:
         argv += ["--model", model]
-    if cwd:
-        argv += ["--cwd", cwd]
+    argv += ["--cwd", cwd if cwd is not None else str(delegate._REPO_ROOT)]
     if worktree_path:
         argv += ["--worktree", worktree_path]
     if output_schema:
@@ -284,12 +281,13 @@ def test_the_task_dispatches_through_delegate_py(seeded: Case) -> None:
     argv = adj.dispatch_argv(path, task_id, "agy", model="gemini-3.1-pro-preview")
     assert Path(argv[1]).name == "delegate.py" and argv[2] == "dispatch"
     parsed = delegate.build_parser().parse_args(argv[2:])  # the real dispatch parser accepts exactly this command
-    assert (parsed.agent, parsed.task_id, parsed.prompt_file, parsed.mode, parsed.model) == (
+    assert (parsed.agent, parsed.task_id, parsed.prompt_file, parsed.mode, parsed.model, parsed.cwd) == (
         "agy",
         task_id,
         str(path),
         "read-only",
         "gemini-3.1-pro-preview",
+        str(delegate._REPO_ROOT),
     )
 
 
@@ -576,7 +574,7 @@ def test_a_dispatch_with_a_caller_chosen_cwd_is_refused(seeded: Case, tmp_path: 
     # matching hashes, no appended blocks, read-only — only the cwd differs from the primary checkout
     seeded.dispatch("agy", "gemini-3.1-pro-preview", cwd=str(caller_cwd))
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-    # the canonical dispatch (no --cwd at all, so delegate's own default): accepted
+    # the canonical dispatch names the primary checkout explicitly: accepted
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
     assert seeded.record(good)["new"] is True
 
@@ -588,13 +586,12 @@ def test_a_dispatch_with_worktree_path_set_is_refused(seeded: Case, tmp_path: Pa
 
 
 def test_the_canonical_dispatch_argv_builds_is_accepted(seeded: Case) -> None:
-    """The record of exactly the command ``dispatch_argv`` prints (no --cwd/--worktree) is the one accepted."""
+    """The command pins primary cwd and leaves worktree unset."""
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
     parsed = delegate.build_parser().parse_args(argv[2:])
-    assert parsed.cwd is None and parsed.worktree is None and parsed.mode == "read-only"
-    # a plain dispatch of that exact command resolves to delegate's own default cwd (the primary checkout) and
-    # records no worktree_path — build the record delegate would write for it and confirm it is accepted.
+    assert parsed.cwd == str(delegate._REPO_ROOT) and parsed.worktree is None and parsed.mode == "read-only"
+    # Build the record delegate would write for this command and confirm it is accepted.
     seeded.dispatch(parsed.agent, parsed.model, task_id=parsed.task_id, mode=parsed.mode)
     assert seeded.record(good)["new"] is True
 

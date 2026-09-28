@@ -5,15 +5,21 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 from projects.open_model_data.freeze_phase3_p1_universe import build_manifest
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA = DATA / "contracts/phase3_p1_universe_freeze_v1.schema.json"
 ARTIFACT = DATA / "evidence/phase3_p1_universe_freeze_v1.json"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes", "projects/open_model_data/evidence/source_universe_v1/ua_gec.units.jsonl"
+)
 def test_p1_artifact_matches_deterministic_builder() -> None:
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     assert artifact == build_manifest()
@@ -27,7 +33,12 @@ def test_p1_artifact_validates_and_freezes_boundaries() -> None:
 
     language = artifact["language_universe"]
     assert language["modern_contact_classes"] == [
-        "russian", "belarusian", "bulgarian", "macedonian", "serbian_cyrillic", "montenegrin_cyrillic"
+        "russian",
+        "belarusian",
+        "bulgarian",
+        "macedonian",
+        "serbian_cyrillic",
+        "montenegrin_cyrillic",
     ]
     assert language["modern_contact_classes_exhaustive"] is True
     assert artifact["historical_protection"]["historical_forms_protected"] is True
@@ -52,7 +63,12 @@ def test_p1_predicate_and_cells_are_explicit_and_fail_closed() -> None:
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     predicate = artifact["applicability"]
     assert {clause["field"] for clause in predicate["all_of"]} == {
-        "language_identity", "script_profile", "context_role", "contrasted_contact_class", "scope_status", "human_adjudication"
+        "language_identity",
+        "script_profile",
+        "context_role",
+        "contrasted_contact_class",
+        "scope_status",
+        "human_adjudication",
     }
     assert predicate["else_route"] == "abstain"
 

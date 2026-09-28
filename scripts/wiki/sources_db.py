@@ -3163,8 +3163,30 @@ def search_slovnyk_me(
 
     `live=True` fetches only /dict/{slug}/{word} pages for the explicit query
     and known variants. It does not call slovnyk.me /search and does not crawl
-    sitemaps.
+    sitemaps. Use :func:`search_slovnyk_me_with_status` where an outage must not
+    read as "no results" (#9005).
     """
+    rows, _outages = search_slovnyk_me_with_status(
+        query, limit, dictionaries, live=live, db_path=db_path
+    )
+    return rows
+
+
+def search_slovnyk_me_with_status(
+    query: str,
+    limit: int = 10,
+    dictionaries: list[str] | tuple[str, ...] | None = None,
+    *,
+    live: bool = False,
+    db_path: str | Path | None = None,
+) -> tuple[list[dict], list[dict]]:
+    """:func:`search_slovnyk_me` plus the live fetches that failed (#9005).
+
+    Returns ``(rows, outages)``; ``outages`` lists one record per live direct-entry
+    fetch that failed (see ``slovnyk_me.fetch_entries``). Empty ``rows`` with
+    non-empty ``outages`` means "unavailable", never "not found".
+    """
+    outages: list[dict] = []
     limit = max(1, min(limit, 20))
     rows = _search_slovnyk_me_db(
         query,
@@ -3173,7 +3195,7 @@ def search_slovnyk_me(
         db_path=db_path,
     )
     if len(rows) >= limit or not live:
-        return rows[:limit]
+        return rows[:limit], outages
 
     live_rows = [
         _normalize_slovnyk_row(row, query)
@@ -3181,6 +3203,7 @@ def search_slovnyk_me(
             query,
             dictionaries=dictionaries,
             limit=limit - len(rows),
+            outages=outages,
         )
     ]
     seen = {
@@ -3193,7 +3216,7 @@ def search_slovnyk_me(
             seen.add(key)
             rows.append(row)
     rows.sort(key=lambda row: row["score"], reverse=True)
-    return rows[:limit]
+    return rows[:limit], outages
 
 
 def _json_object(value: object) -> dict[str, object]:
@@ -3324,6 +3347,7 @@ def search_heritage(
     *,
     include_live_slovnyk: bool = False,
     db_path: str | Path | None = None,
+    outages: list[dict] | None = None,
 ) -> list[dict]:
     """Merge heritage-defense evidence for a Ukrainian headword.
 
@@ -3376,13 +3400,17 @@ def search_heritage(
             "score": score,
         })
 
-    for hit in search_slovnyk_me(
+    slovnyk_rows, slovnyk_outages = search_slovnyk_me_with_status(
         query,
         limit=limit,
         dictionaries=slovnyk_me.HERITAGE_SLOVNYK_ME_DICTS,
         live=include_live_slovnyk,
         db_path=db_path,
-    ):
+    )
+    if outages is not None:
+        # #9005: a live slovnyk.me failure is reported to the caller, never read as "no heritage evidence".
+        outages.extend(slovnyk_outages)
+    for hit in slovnyk_rows:
         is_russianism = bool(hit.get("is_russianism"))
         is_dialect = bool(hit.get("is_dialect"))
         is_modern = bool(hit.get("is_modern"))

@@ -29,6 +29,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
 
 CONFIG_SCHEMA_VERSION = "v4_source_custody_access_config_v1"
@@ -36,8 +37,8 @@ ITEM_SCHEMA_VERSION = "v4_source_custody_access_v1"
 MISSING_REPORT_SCHEMA_VERSION = "v4_source_custody_missing_report_v1"
 RECEIPT_SCHEMA_VERSION = "v4_source_custody_access_receipt_v1"
 
-DEFAULT_CONFIG = Path("data/projects/open_model_data/custody/v4_source_custody_access_config_v1.json")
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+DEFAULT_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "custody/v4_source_custody_access_config_v1.json"
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 CONFIG_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_config_v1.schema.json"
 ITEM_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_item_v1.schema.json"
 MISSING_REPORT_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_missing_report_v1.schema.json"

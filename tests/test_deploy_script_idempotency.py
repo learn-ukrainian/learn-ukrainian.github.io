@@ -3,14 +3,20 @@
 from __future__ import annotations
 
 import ast
+import base64
 import inspect
+import io
 import os
 import py_compile
+import runpy
 import shlex
 import shutil
+import socket
 import subprocess
 import sys
+import threading
 import time
+import traceback
 from pathlib import Path
 
 import pytest
@@ -222,13 +228,15 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
         "agents_extensions/shared/skills/post-build-review/SKILL.md",
     ),
     "test_codex_orphan_is_caught": (),
+    "test_bytecode_cache_is_not_an_orphan_and_is_not_declared": (),
+    "test_pyc_named_symlink_is_deployed": (),
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
     "test_drift_is_caught": ("agents_extensions/shared/rules/pipeline.md",),
-    # The real skills tree, not two SKILL.md files. The test walks every
-    # top-level skill and skips Claude mirrors whose names end in ``-epic``;
-    # that branch only runs for drive-epic and drive-ukrainian-dataset-epic.
+    # Every top-level SKILL.md, plus one nested script so the legacy inventory
+    # recurses. The migrator shells out to git once per file; copying the rest
+    # of each skill does not add an assertion.
     "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy": (
         "agents_extensions/shared/skills",
     ),
@@ -263,6 +271,166 @@ def _calling_test_name() -> str:
     raise RuntimeError("_init_checkout must be called directly from a test")
 
 
+_SKILL_DISCOVERY_ROOT = "agents_extensions/shared/skills"
+_SKILL_NESTED_SAMPLE = "agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py"
+
+
+class _DeployPythonBroker:
+    """One warm interpreter for the deploy script's short Python helpers.
+
+    ``sync_agent_mirror.py`` calls ``os.execvp`` and must stay a real process.
+    Every other helper is re-executed with ``runpy`` so ``__file__`` still
+    names this checkout. The cache is the imported stdlib, not a path.
+    """
+
+    def __init__(self) -> None:
+        self.port: int | None = None
+        self._server: socket.socket | None = None
+        self._thread: threading.Thread | None = None
+        self._lock = threading.Lock()
+
+    def start(self) -> None:
+        if self._server is not None:
+            return
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(("127.0.0.1", 0))
+        server.listen(16)
+        self.port = server.getsockname()[1]
+        self._server = server
+        self._thread = threading.Thread(target=self._serve, name="deploy-python-broker", daemon=True)
+        self._thread.start()
+
+    def stop(self) -> None:
+        server = self._server
+        self._server = None
+        self.port = None
+        if server is not None:
+            server.close()
+
+    def _serve(self) -> None:
+        server = self._server
+        if server is None:
+            return
+        while self._server is not None:
+            try:
+                conn, _addr = server.accept()
+            except OSError:
+                return
+            threading.Thread(target=self._handle, args=(conn,), daemon=True).start()
+
+    def _handle(self, conn: socket.socket) -> None:
+        try:
+            conn.settimeout(60)
+            code, out, err = self._execute(conn)
+        except Exception:
+            code, out, err = 1, b"", traceback.format_exc().encode()
+        try:
+            # One line each. bash `read` buffers past a newline, so a raw byte
+            # frame after the headers would be consumed before `dd` could see it.
+            message = "\n".join(
+                (str(code), base64.b64encode(out).decode("ascii"), base64.b64encode(err).decode("ascii"), "")
+            )
+            conn.sendall(message.encode("ascii"))
+            conn.shutdown(socket.SHUT_WR)
+        except OSError:
+            pass
+        finally:
+            conn.close()
+
+    def _execute(self, conn: socket.socket) -> tuple[int, bytes, bytes]:
+        reader = conn.makefile("rb")
+        cwd = reader.readline().decode().removesuffix("\n")
+        argc = int(reader.readline().decode().strip())
+        argv = [reader.readline().decode().removesuffix("\n") for _ in range(argc)]
+        if not argv:
+            raise RuntimeError("deploy python broker received no argv")
+        script = argv[0]
+        out_buf, err_buf = io.BytesIO(), io.BytesIO()
+        out_txt = io.TextIOWrapper(out_buf, encoding="utf-8", errors="replace", newline="\n", write_through=True)
+        err_txt = io.TextIOWrapper(err_buf, encoding="utf-8", errors="replace", newline="\n", write_through=True)
+        old_cwd, old_argv, old_out, old_err = os.getcwd(), sys.argv, sys.stdout, sys.stderr
+        old_path = sys.path.copy()
+        old_main = sys.modules.get("__main__")
+        code = 1
+        with self._lock:
+            try:
+                os.chdir(cwd)
+                sys.argv = argv
+                sys.stdout, sys.stderr = out_txt, err_txt
+                try:
+                    runpy.run_path(script, run_name="__main__")
+                    code = 0
+                except SystemExit as exc:
+                    status = exc.code
+                    code = status if isinstance(status, int) else (0 if status is None else 1)
+                    if not isinstance(status, int) and status not in (None, 0):
+                        print(status, file=sys.stderr)
+            finally:
+                sys.stdout, sys.stderr = old_out, old_err
+                sys.argv = old_argv
+                sys.path[:] = old_path
+                if old_main is not None:
+                    sys.modules["__main__"] = old_main
+                os.chdir(old_cwd)
+                out_txt.flush()
+                err_txt.flush()
+                out_txt.detach()
+                err_txt.detach()
+        return code, out_buf.getvalue(), err_buf.getvalue()
+
+
+_DEPLOY_BROKER = _DeployPythonBroker()
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _warm_deploy_python():
+    _DEPLOY_BROKER.start()
+    yield
+    _DEPLOY_BROKER.stop()
+
+
+def _deploy_python_wrapper_script() -> str:
+    real = shlex.quote(str(PROJECT_PYTHON))
+    port = _DEPLOY_BROKER.port
+    if port is None:
+        return f'#!/usr/bin/env bash\nexec {real} "$@"\n'
+    # sync_agent_mirror replaces the process with rsync. The broker cannot host it.
+    return f"""#!/usr/bin/env bash
+real={real}
+case "${{1-}}" in
+  *sync_agent_mirror.py) exec "$real" "$@" ;;
+esac
+if ! exec 3<>"/dev/tcp/127.0.0.1/{port}"; then
+  exec "$real" "$@"
+fi
+printf '%s\\n' "$PWD" "$#" >&3
+for arg in "$@"; do
+  printf '%s\\n' "$arg" >&3
+done
+IFS= read -r code <&3 || exit 1
+IFS= read -r out_b64 <&3 || exit 1
+IFS= read -r err_b64 <&3 || exit 1
+printf '%s' "$out_b64" | base64 -d >&1
+printf '%s' "$err_b64" | base64 -d >&2
+exit "$code"
+"""
+
+
+def _copy_skill_discovery_shape(target: Path) -> None:
+    """Copy each asserted SKILL.md and one nested file the inventory recurses into."""
+    source_root = REPO_ROOT / _SKILL_DISCOVERY_ROOT
+    for skill_md in sorted(source_root.glob("*/SKILL.md")):
+        relative = skill_md.relative_to(REPO_ROOT)
+        destination = target / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(skill_md, destination)
+    nested = REPO_ROOT / _SKILL_NESTED_SAMPLE
+    destination = target / _SKILL_NESTED_SAMPLE
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(nested, destination)
+
+
 def _copy_deploy_harness(target: Path) -> None:
     for relative_path in (
         DEPLOY_SCRIPT,
@@ -288,10 +456,7 @@ def _copy_deploy_harness(target: Path) -> None:
     bin_dir = target / ".venv" / "bin"
     bin_dir.mkdir(parents=True, exist_ok=True)
     python_wrapper = bin_dir / "python"
-    python_wrapper.write_text(
-        f'#!/usr/bin/env bash\nexec {shlex.quote(str(PROJECT_PYTHON))} "$@"\n',
-        encoding="utf-8",
-    )
+    python_wrapper.write_text(_deploy_python_wrapper_script(), encoding="utf-8")
     python_wrapper.chmod(0o755)
 
 
@@ -299,6 +464,9 @@ def _copy_declared_paths(target: Path, paths: tuple[str, ...]) -> None:
     for relative in _SYNTHETIC_SOURCE_DIRS:
         (target / relative).mkdir(parents=True, exist_ok=True)
     for relative in paths:
+        if relative == _SKILL_DISCOVERY_ROOT:
+            _copy_skill_discovery_shape(target)
+            continue
         source = REPO_ROOT / relative
         destination = target / relative
         if source.is_dir():
@@ -436,6 +604,7 @@ def _delete_source_file(repo: Path, relative: Path) -> bytes:
     return original
 
 
+@pytest.mark.repo_wide
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
     repo = _init_checkout(tmp_path, full_tree=True)
@@ -1073,6 +1242,132 @@ def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None
     assert "shared/Gemini skill collision: post-build-review" in combined_output
 
 
+def test_changed_source_mtime_invalidates_retained_pycache(tmp_path: Path) -> None:
+    """A retained __pycache__ entry must not shadow a .py whose mtime changed.
+
+    This is the #9108 stop check for excluding bytecode from rsync --delete.
+    CPython's timestamp header stores the source mtime and size; rsync -a
+    publishes the new source mtime, so the next import recompiles.
+    """
+    module_path = tmp_path / "probe_mod.py"
+    module_path.write_text("VALUE = 1\n", encoding="utf-8")
+    os.utime(module_path, (1_700_000_000, 1_700_000_000))
+    cache = (
+        tmp_path
+        / "__pycache__"
+        / f"probe_mod.cpython-{sys.version_info.major}{sys.version_info.minor}.pyc"
+    )
+    cache.parent.mkdir()
+    py_compile.compile(str(module_path), cfile=str(cache), doraise=True)
+    module_path.write_text("VALUE = 2\n", encoding="utf-8")
+    os.utime(module_path, (1_800_000_000, 1_800_000_000))
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(tmp_path) + os.pathsep + env.get("PYTHONPATH", "")
+    probe = subprocess.run(
+        [sys.executable, "-c", "import probe_mod; print(probe_mod.VALUE)"],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "2"
+
+
+def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> None:
+    """Stray hook bytecode must not abort deploy and is not an ORPHAN_PATHS entry.
+
+    #9108: Python writes hooks/__pycache__/*.pyc into the deploy targets after
+    the guards import shell_shlex. The cache is excluded from copy and from
+    --delete, and a real destination-only file still aborts.
+    """
+    sets = _bash_orphan_sets()
+    for label, tokens in sets.items():
+        assert "__pycache__" not in tokens, label
+        assert "*.pyc" not in tokens, tokens
+
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stdout + first.stderr
+
+    marker = b"cache-marker-9108\n"
+    caches = [
+        repo / ".claude" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".codex" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".agent" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".agents" / "skills" / "__pycache__" / "x.cpython-312.pyc",
+        repo / ".gemini" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".gemini" / "rules" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".claude" / "hooks" / "legacy.pyc",
+    ]
+    for cache in caches:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_bytes(marker)
+    source_only = (
+        repo
+        / "agents_extensions"
+        / "shared"
+        / "hooks"
+        / "__pycache__"
+        / "from_source.cpython-312.pyc"
+    )
+    source_only.parent.mkdir(parents=True, exist_ok=True)
+    source_only.write_bytes(b"source-only-cache\n")
+    # A real source change forces rsync to run. Exit-before-sync would leave
+    # the stray cache in place without proving --delete was held back.
+    kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
+    kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    kept.chmod(0o755)
+    # .gemini/hooks is not created by the empty fixture. The directory itself
+    # must exist in source so the stray cache inside it is the only extra path.
+    (repo / "gemini_extensions" / "hooks").mkdir(parents=True, exist_ok=True)
+
+    second = _run(repo, DEPLOY_SCRIPT)
+    combined = f"{second.stdout}\n{second.stderr}"
+    assert second.returncode == 0, combined
+    assert "undeclared orphan" not in combined
+    assert (repo / ".claude" / "hooks" / "kept.sh").read_text(encoding="utf-8") == kept.read_text(
+        encoding="utf-8"
+    )
+    # --delete targets drop a destination-only regular cache. .agent has no
+    # --delete, so a hook-written cache there stays.
+    deleted = [cache for cache in caches if ".agent/" not in str(cache)]
+    for cache in deleted:
+        assert not cache.exists(), cache
+    assert (repo / ".agent" / "hooks" / "__pycache__" / "x.cpython-314.pyc").read_bytes() == marker
+    for mirror in (".claude", ".codex", ".agent"):
+        copied = repo / mirror / "hooks" / "__pycache__" / "from_source.cpython-312.pyc"
+        assert copied.read_bytes() == b"source-only-cache\n", copied
+
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+
+    stray = repo / ".claude" / "stale-only.txt"
+    stray.write_text("stale\n", encoding="utf-8")
+    third = _run(repo, DEPLOY_SCRIPT)
+    third_output = f"{third.stdout}\n{third.stderr}"
+    assert third.returncode != 0
+    assert "undeclared orphan 'stale-only.txt'" in third_output
+    assert "undeclared orphan 'hooks/__pycache__/x.cpython-314.pyc'" not in third_output
+
+
+def test_pyc_named_symlink_is_deployed(tmp_path: Path) -> None:
+    """A symlink named *.pyc is source content, not bytecode (#9108)."""
+    repo = _init_checkout(tmp_path)
+    kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
+    kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    kept.chmod(0o755)
+    link = repo / "agents_extensions" / "shared" / "hooks" / "link.pyc"
+    link.symlink_to("kept.sh")
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, deploy_result.stdout + deploy_result.stderr
+    deployed = repo / ".claude" / "hooks" / "link.pyc"
+    assert deployed.is_symlink()
+    assert os.readlink(deployed) == "kept.sh"
+
+
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:
     """Undeclared destination-only Codex paths must abort the deploy."""
     repo = _init_checkout(tmp_path)
@@ -1216,13 +1511,14 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     assert "pipeline.md" in combined_output
 
 
+@pytest.mark.repo_wide
 def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
-    """Walk the real skills tree, including nested files and ``*-epic`` names.
+    """Walk every top-level skill, including ``*-epic`` names and one nested script.
 
     Two flat SKILL.md files never reach the Claude ``*-epic`` skip or the nested
-    script files rsync and the legacy inventory both walk. This test therefore
-    copies ``agents_extensions/shared/skills`` (the discovery shape) rather than
-    the rest of the shared tree, which this assertion does not read.
+    directory the legacy inventory recurses into. Each SKILL.md is still compared
+    on every mirror. The remaining skill files are not named by an assertion, and
+    the migrator pays one git subprocess per file.
     """
     repo = _init_checkout(tmp_path)
     _init_git_history(repo)

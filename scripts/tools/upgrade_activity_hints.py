@@ -27,6 +27,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from common.repo_root import project_interpreter
 from tools.plan_autofix import _bump_version
 
 logger = logging.getLogger(__name__)
@@ -42,10 +43,6 @@ _CYRILLIC_RE = re.compile(r"[\u0400-\u04FF]{2,}")
 
 # Minimum number of Cyrillic words to consider a hint "specific"
 _MIN_CYRILLIC_WORDS = 2
-BRIDGE_CLI = [
-    str(REPO_ROOT / ".venv/bin/python"),
-    str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"),
-]
 
 # Snapshot environment (same as bridge uses)
 import os
@@ -157,12 +154,25 @@ Example output format:
 """
 
 
+def _bridge_command() -> list[str]:
+    """Project interpreter plus the bridge CLI, resolved when a spawn needs it."""
+    return [
+        str(project_interpreter(REPO_ROOT)),
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"),
+    ]
+
+
 def call_agy(prompt: str, model: str = "gemini-3.8-flash-high", timeout: int = 120) -> str | None:
     """Call AGY through ai_agent_bridge and return stdout."""
     try:
+        command = _bridge_command()
+    except FileNotFoundError as exc:
+        logger.error("Bridge python not found: %s", exc)
+        return None
+    try:
         result = subprocess.run(
             [
-                *BRIDGE_CLI,
+                *command,
                 "ask-agy",
                 "-",
                 "--task-id",
@@ -188,7 +198,7 @@ def call_agy(prompt: str, model: str = "gemini-3.8-flash-high", timeout: int = 1
         logger.error("AGY bridge timed out after %ds", timeout)
         return None
     except FileNotFoundError:
-        logger.error("Bridge python not found at: %s", BRIDGE_CLI[0])
+        logger.error("Bridge python not found at: %s", command[0])
         return None
 
 

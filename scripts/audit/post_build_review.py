@@ -356,6 +356,8 @@ def hash_target_files(target: Mapping[str, Any], *, repo_root: Path = PROJECT_RO
 
 
 def resolve_venv_python(repo_root: Path = PROJECT_ROOT) -> Path:
+    # Intentional: this checkout's interpreter when present, else the git
+    # common-dir checkout. A miss raises ReviewProtocolError.
     direct = repo_root / ".venv" / "bin" / "python"
     if direct.exists():
         # Preserve the venv entrypoint path. Resolving its interpreter symlink

@@ -35,15 +35,14 @@ from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.ingest import incremental_textbook_ingest as textbook_ingest
 from scripts.projects.open_model_data import phase3_vspu_source_materialization as materialization
 from scripts.projects.open_model_data import university_source_policy
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 PRIMARY_ROOT = resolve_main_root(ROOT) or ROOT
 SCHEMA_VERSION = "phase3_vspu_db_cutover_v1"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_vspu_db_cutover_v1.schema.json"
-MATERIALIZATION_PATH = ROOT / "data/projects/open_model_data/admission/phase3_vspu_source_materialization_v1.json"
-ADDITIVE_POLICY_PATH = (
-    ROOT / "data/projects/open_model_data/admission/phase3_vspu_additive_university_source_policy_v3.json"
-)
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_vspu_db_cutover_v1.schema.json"
+MATERIALIZATION_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_vspu_source_materialization_v1.json"
+ADDITIVE_POLICY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_vspu_additive_university_source_policy_v3.json"
 DEFAULT_LIVE_DB = PRIMARY_ROOT / "data/sources.db"
 
 SOURCE_ID = "uni-ukrmova-sulm-attestation-vspu-2021"

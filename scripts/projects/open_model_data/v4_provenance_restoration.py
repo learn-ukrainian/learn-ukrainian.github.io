@@ -29,10 +29,13 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
+CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
+DEFAULT_CONFIG = resolve_open_model_path(
+    "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
+)
 CLASSIFICATION_FIELDS = ("period", "register", "domain", "original_language", "translation_status")
 ORDERING = "cohort_id,source_id,work_id,locator_id"
 
@@ -202,17 +205,14 @@ def _check_private_sources_absent(config: Mapping[str, Any], rows: list[dict[str
         {
             row["source_locator"].get("source_file")
             for row in rows
-            if row["source_family"] == "public_textbooks"
-            and row["source_locator"].get("source_file") in private
+            if row["source_family"] == "public_textbooks" and row["source_locator"].get("source_file") in private
         }
     )
     if leaked:
         raise RestorationError(f"private teaching sources present in snapshot: {', '.join(leaked)}")
 
 
-def _acquisition_plan(
-    cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, Any]]
-) -> tuple[str, set[str]]:
+def _acquisition_plan(cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, Any]]) -> tuple[str, set[str]]:
     binding = cohort["acquisition"]
     asset_id = binding["inventory_asset_id"]
     record = ledger.get(asset_id)
@@ -223,9 +223,7 @@ def _acquisition_plan(
         raise RestorationError(f"inventory reconciliation {asset_id} missing or non-dict details object")
     for key in binding["require_empty_diffs"]:
         if key not in details:
-            raise RestorationError(
-                f"inventory reconciliation {asset_id} details missing required diff key: {key}"
-            )
+            raise RestorationError(f"inventory reconciliation {asset_id} details missing required diff key: {key}")
         diff_val = details[key]
         if not isinstance(diff_val, list) or len(diff_val) != 0:
             raise RestorationError(
@@ -247,7 +245,6 @@ def _acquisition_plan(
     else:
         unresolved = set()
     return binding["ref_template"], unresolved
-
 
 
 def _column_classification(
@@ -516,8 +513,10 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     config = _load_config(config_path)
     config_sha256 = sha256_file(config_path)
     output_root = input_root if output_root is None else output_root
-    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
-    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    snapshot_rows, snapshot = _load_snapshot(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    )
+    ledger = _load_ledger(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root))
     _check_ocr_exclusion_evidence(config, ledger)
     _check_private_sources_absent(config, snapshot_rows)
 
@@ -527,7 +526,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
 
     selected_by_cohort, cohort_summaries, exclusions = _select_eligible_rows(config, snapshot_rows)
 
-    database_path = input_root / config["inputs"]["database"]
+    database_path = resolve_open_model_path(config["inputs"]["database"], repo=input_root)
     connection: sqlite3.Connection | None = None
     column_evidence: dict[str, dict[str, str | None]] = {}
     try:
@@ -549,9 +548,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
                     for row in snapshot_rows
                     if row["source_family"] == cohort["source_family"]
                 }
-                classification_by_group = _column_classification(
-                    connection, cohort, column_bindings, snapshot_groups
-                )
+                classification_by_group = _column_classification(connection, cohort, column_bindings, snapshot_groups)
                 for group_key, values in sorted(classification_by_group.items()):
                     group_id = f"{cohort_id}:{group_key[0]}#{group_key[1]}"
                     column_evidence[group_id] = values
@@ -584,7 +581,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
         "ordering": ORDERING,
     }
     index_content = _index_content(records, header)
-    index_path = output_root / config["outputs"]["index"]
+    index_path = resolve_open_model_path(config["outputs"]["index"], repo=output_root)
     _publish(index_path, index_content)
     index_sha256 = sha256_bytes(index_content)
 
@@ -593,7 +590,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     )
     _validate(report, _validator("unresolvedReport"), "unresolved report")
     report_content = (canonical_json(report) + "\n").encode("utf-8")
-    report_path = output_root / config["outputs"]["unresolved_report"]
+    report_path = resolve_open_model_path(config["outputs"]["unresolved_report"], repo=output_root)
     _publish(report_path, report_content)
 
     receipt = {
@@ -602,11 +599,11 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
         "inputs": {
             "locator_index": {
                 "path": config["inputs"]["locator_index"],
-                "sha256": sha256_file(input_root / config["inputs"]["locator_index"]),
+                "sha256": sha256_file(resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)),
             },
             "inventory_ledger": {
                 "path": config["inputs"]["inventory_ledger"],
-                "sha256": sha256_file(input_root / config["inputs"]["inventory_ledger"]),
+                "sha256": sha256_file(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root)),
             },
             "database": {
                 "path": config["inputs"]["database"],
@@ -641,7 +638,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     }
     _validate(receipt, _validator("receipt"), "restoration receipt")
     receipt_content = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
-    receipt_path = output_root / config["outputs"]["receipt"]
+    receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=output_root)
     _publish(receipt_path, receipt_content)
     return {
         "records": len(records),
@@ -692,25 +689,25 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     config = _load_config(config_path)
     config_sha256 = sha256_file(config_path)
     output_root = input_root if output_root is None else output_root
-    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
+    snapshot_rows, snapshot = _load_snapshot(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    )
     snapshot_by_locator = {row["locator_id"]: row for row in snapshot_rows}
     if len(snapshot_by_locator) != len(snapshot_rows):
         raise RestorationError("duplicate locator_id in retained locator snapshot")
 
-    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    ledger = _load_ledger(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root))
     _check_ocr_exclusion_evidence(config, ledger)
     _check_private_sources_absent(config, snapshot_rows)
 
     selected_by_cohort, expected_cohorts, expected_exclusions = _select_eligible_rows(config, snapshot_rows)
     expected_locators = {row["locator_id"] for rows in selected_by_cohort.values() for row in rows}
     expected_cohort_by_locator = {
-        row["locator_id"]: cohort_id
-        for cohort_id, rows in selected_by_cohort.items()
-        for row in rows
+        row["locator_id"]: cohort_id for cohort_id, rows in selected_by_cohort.items() for row in rows
     }
     cohort_by_id = {cohort["cohort_id"]: cohort for cohort in config["cohorts"]}
 
-    index_path = output_root / config["outputs"]["index"]
+    index_path = resolve_open_model_path(config["outputs"]["index"], repo=output_root)
     index_sha256 = sha256_file(index_path)
     header, records = _read_index(index_path, _record_validator())
     if header["snapshot"] != snapshot:
@@ -770,12 +767,9 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                 f"diverge from expected {expected_cohort_summaries[cid]['selected_records']}"
             )
 
-    acquisition_plans = {
-        cohort["cohort_id"]: _acquisition_plan(cohort, ledger)
-        for cohort in config["cohorts"]
-    }
+    acquisition_plans = {cohort["cohort_id"]: _acquisition_plan(cohort, ledger) for cohort in config["cohorts"]}
 
-    report_path = output_root / config["outputs"]["unresolved_report"]
+    report_path = resolve_open_model_path(config["outputs"]["unresolved_report"], repo=output_root)
     report = _read_json(report_path)
     _validate(report, _validator("unresolvedReport"), "unresolved report")
     if report["index_sha256"] != index_sha256:
@@ -790,15 +784,17 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     if report["by_cohort"] != recomputed_report["by_cohort"]:
         raise RestorationError("unresolved report cohort accounting disagrees with the index rows")
 
-    receipt_path = output_root / config["outputs"]["receipt"]
+    receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=output_root)
     receipt = _read_json(receipt_path)
     _validate(receipt, _validator("receipt"), "restoration receipt")
     if receipt["config_sha256"] != config_sha256:
         raise RestorationError("receipt config hash disagrees with the config file")
-    if receipt["inputs"]["locator_index"]["sha256"] != sha256_file(input_root / config["inputs"]["locator_index"]):
+    if receipt["inputs"]["locator_index"]["sha256"] != sha256_file(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    ):
         raise RestorationError("receipt locator index hash disagrees with the retained snapshot file")
     if receipt["inputs"]["inventory_ledger"]["sha256"] != sha256_file(
-        input_root / config["inputs"]["inventory_ledger"]
+        resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root)
     ):
         raise RestorationError("receipt inventory ledger hash disagrees with the retained ledger file")
     if receipt["outputs"]["index"]["sha256"] != index_sha256:
@@ -817,7 +813,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     column_evidence = receipt_db.get("column_evidence")
     if not isinstance(column_evidence, dict):
         raise RestorationError("receipt database input missing or non-dict column_evidence")
-    database_path = input_root / config["inputs"]["database"]
+    database_path = resolve_open_model_path(config["inputs"]["database"], repo=input_root)
     if database_path.is_file():
         connection = _connect(database_path)
         try:
@@ -834,9 +830,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                     for group_key, values in live_db.items():
                         group_id = f"{cohort['cohort_id']}:{group_key[0]}#{group_key[1]}"
                         if group_id not in column_evidence or column_evidence[group_id] != values:
-                            raise RestorationError(
-                                f"receipt column evidence diverges from database for {group_id}"
-                            )
+                            raise RestorationError(f"receipt column evidence diverges from database for {group_id}")
         finally:
             connection.close()
 
@@ -856,9 +850,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             )
 
         if record["links"]["canonical_url"] != source["canonical_url"]:
-            raise RestorationError(
-                f"restored record {record['restoration_id']} canonical_url diverges from snapshot"
-            )
+            raise RestorationError(f"restored record {record['restoration_id']} canonical_url diverges from snapshot")
 
         if record["links"]["edition"] != dict(source["metadata"]):
             raise RestorationError(
@@ -902,7 +894,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             elif kind == "snapshot_metadata":
                 raw_val = _normalized(source["metadata"].get(binding["field"]))
                 if raw_val is None:
-                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "unresolved"
+                        or entry["value"] != "unknown"
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid missing metadata classification: {entry!r}"
                         )
@@ -912,7 +908,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} value {raw_val!r} outside vocabulary"
                         )
-                    if entry["status"] != "restored" or entry["value"] != raw_val or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "restored"
+                        or entry["value"] != raw_val
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid restored metadata classification: {entry!r}"
                         )
@@ -928,7 +928,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                     )
                 expected_val = column_evidence[group_id].get(field)
                 if expected_val is None:
-                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "unresolved"
+                        or entry["value"] != "unknown"
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid missing column classification: {entry!r}"
                         )
@@ -938,7 +942,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} value {expected_val!r} outside vocabulary"
                         )
-                    if entry["status"] != "restored" or entry["value"] != expected_val or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "restored"
+                        or entry["value"] != expected_val
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid restored column classification: {entry!r}"
                         )

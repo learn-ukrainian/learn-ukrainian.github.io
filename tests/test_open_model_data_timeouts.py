@@ -107,7 +107,10 @@ def test_gemma_hardware_probe_collect_job_timeout(tmp_path: Path) -> None:
     def fake_run(cmd, **kwargs):
         calls.append({"cmd": cmd, **kwargs})
         if "logs" in cmd:
-            receipt_payload = {"schema_version": "gemma_hardware_probe_receipt_v1", "provider_job": {"job_id": "617061706170617061706170"}}
+            receipt_payload = {
+                "schema_version": "gemma_hardware_probe_receipt_v1",
+                "provider_job": {"job_id": "617061706170617061706170"},
+            }
             return _completed(cmd, returncode=0, stdout=f"{ghp.RECEIPT_MARKER}{json.dumps(receipt_payload)}\n")
         return _completed(cmd, returncode=0, stdout="""[{"id": "617061706170617061706170"}]""")
 
@@ -116,13 +119,21 @@ def test_gemma_hardware_probe_collect_job_timeout(tmp_path: Path) -> None:
     hf_cli.chmod(0o755)
     auth_path = tmp_path / "auth.json"
 
-    with patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization", return_value=({}, "abc")), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.read_json", return_value={}), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_schema"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.reconcile_provider_receipt", return_value=({"provider_job": {"job_id": "617061706170617061706170"}}, {})), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic"), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization",
+            return_value=({}, "abc"),
+        ),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.read_json", return_value={}),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_schema"),
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.reconcile_provider_receipt",
+            return_value=({"provider_job": {"job_id": "617061706170617061706170"}}, {}),
+        ),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic"),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         res = ghp.collect_job(
             job_id="617061706170617061706170",
             hf_cli=hf_cli,
@@ -137,13 +148,20 @@ def test_gemma_hardware_probe_collect_job_timeout(tmp_path: Path) -> None:
     assert calls[2]["timeout"] == ghp.DEFAULT_HF_CLI_TIMEOUT_SECONDS
     assert calls[3]["timeout"] == ghp.DEFAULT_HF_CLI_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization", return_value=({}, "abc")), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.read_json", return_value={}), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"), \
-         patch(
-             "subprocess.run",
-             side_effect=subprocess.TimeoutExpired(["huggingface-cli", "jobs", "wait"], ghp.DEFAULT_HF_JOBS_WAIT_TIMEOUT_SECONDS),
-         ):
+    with (
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization",
+            return_value=({}, "abc"),
+        ),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.read_json", return_value={}),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(
+                ["huggingface-cli", "jobs", "wait"], ghp.DEFAULT_HF_JOBS_WAIT_TIMEOUT_SECONDS
+            ),
+        ),
+    ):
         with pytest.raises(ghp.HardwareProbeError, match="provider evidence collection failed"):
             ghp.collect_job(
                 job_id="617061706170617061706170",
@@ -172,9 +190,12 @@ def test_gemma_hardware_probe_cuda_evidence_timeout() -> None:
     assert len(calls) == 1
     assert calls[0]["timeout"] == ghp.DEFAULT_NVIDIA_SMI_TIMEOUT_SECONDS
 
-    with patch.dict("sys.modules", {"torch": torch_mock}), patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["nvidia-smi"], ghp.DEFAULT_NVIDIA_SMI_TIMEOUT_SECONDS),
+    with (
+        patch.dict("sys.modules", {"torch": torch_mock}),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["nvidia-smi"], ghp.DEFAULT_NVIDIA_SMI_TIMEOUT_SECONDS),
+        ),
     ):
         with pytest.raises(ghp.HardwareProbeError, match="cannot resolve the NVIDIA driver version"):
             ghp._cuda_evidence()
@@ -196,16 +217,42 @@ def test_gemma_hardware_probe_main_launch_timeout(tmp_path: Path) -> None:
     def fake_write_atomic(path, value):
         written_records.append((path, value))
 
-    with patch("sys.argv", ["gemma_hardware_probe.py", "launch", "--plan", str(plan_path), "--authorization", str(auth_path), "--hf-cli", str(hf_cli)]), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization", return_value=({}, "auth_sha")), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.require_no_provider_attempt"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.build_hf_job_command", return_value=["huggingface-cli", "jobs", "launch"]), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.create_authorized_runner_snapshot", return_value=tmp_path / "runner.py"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.verify_authorized_runner_snapshot"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.claim_paid_attempt"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic", side_effect=fake_write_atomic), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["huggingface-cli", "jobs"], ghp.DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS)):
+    with (
+        patch(
+            "sys.argv",
+            [
+                "gemma_hardware_probe.py",
+                "launch",
+                "--plan",
+                str(plan_path),
+                "--authorization",
+                str(auth_path),
+                "--hf-cli",
+                str(hf_cli),
+            ],
+        ),
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization",
+            return_value=({}, "auth_sha"),
+        ),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.require_no_provider_attempt"),
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.build_hf_job_command",
+            return_value=["huggingface-cli", "jobs", "launch"],
+        ),
+        patch(
+            "scripts.projects.open_model_data.gemma_hardware_probe.create_authorized_runner_snapshot",
+            return_value=tmp_path / "runner.py",
+        ),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.verify_authorized_runner_snapshot"),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.claim_paid_attempt"),
+        patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic", side_effect=fake_write_atomic),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["huggingface-cli", "jobs"], ghp.DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS),
+        ),
+    ):
         rc = ghp.main()
         assert rc == 2
 
@@ -305,15 +352,25 @@ def test_phase3_donnu_drive_item_id_timeout(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_donnu_2023_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_donnu_2023_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert donnu._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == donnu.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_donnu_2023_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], donnu.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_donnu_2023_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], donnu.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(donnu.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             donnu._drive_item_id(target_file)
 
@@ -334,15 +391,19 @@ def test_phase3_evaluation_context_manifest_drive_item_id_timeout(tmp_path: Path
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_evaluation_context_manifest.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_evaluation_context_manifest.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert ecm._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == ecm.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_evaluation_context_manifest.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], ecm.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_evaluation_context_manifest.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], ecm.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(ecm.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             ecm._drive_item_id(target_file)
 
@@ -412,15 +473,23 @@ def test_phase3_pliush_drive_item_id_timeout(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_pliush_2005_canonical_grammar_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_pliush_2005_canonical_grammar_intake.CLOUD_STORAGE_ROOT", tmp_path
+        ),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert pliush._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == pliush.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_pliush_2005_canonical_grammar_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], pliush.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_pliush_2005_canonical_grammar_intake.CLOUD_STORAGE_ROOT", tmp_path
+        ),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], pliush.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(pliush.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             pliush._drive_item_id(target_file)
 
@@ -441,15 +510,19 @@ def test_phase3_pravopys_evaluation_context_drive_item_id_timeout(tmp_path: Path
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_pravopys_evaluation_context.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_pravopys_evaluation_context.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert pec._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == pec.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_pravopys_evaluation_context.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], pec.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_pravopys_evaluation_context.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], pec.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(pec.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             pec._drive_item_id(target_file)
 
@@ -490,15 +563,19 @@ def test_phase3_rule_author_packets_output_is_private_timeout(tmp_path: Path) ->
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0)
 
-    with patch("scripts.projects.open_model_data.phase3_rule_author_packets.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_rule_author_packets.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         rap._output_is_private(batch_file)
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == rap.DEFAULT_GIT_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_rule_author_packets.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], rap.DEFAULT_GIT_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_rule_author_packets.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], rap.DEFAULT_GIT_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(rap.PacketCompilerError, match="packet output path is not ignored by Git"):
             rap._output_is_private(batch_file)
 
@@ -542,14 +619,21 @@ def test_phase3_rule_author_runner_run_timeout(tmp_path: Path) -> None:
         recorded_errors.append(execution_error)
         return {"status": "failed", "execution_error": execution_error}
 
-    with patch("scripts.projects.open_model_data.phase3_rule_author_runner.prepare", return_value=manifest), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner.command_for", return_value=["bridge"]), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._record", side_effect=fake_record), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._assert_tree"), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._safe_receipt_path", return_value=receipt_path), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._receipt", return_value={"complete": False, "canary": False, "failed_count": 1, "unparsed_count": 1}), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._write_public_receipt"), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["bridge"], 30.0)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_rule_author_runner.prepare", return_value=manifest),
+        patch("scripts.projects.open_model_data.phase3_rule_author_runner.command_for", return_value=["bridge"]),
+        patch("scripts.projects.open_model_data.phase3_rule_author_runner._record", side_effect=fake_record),
+        patch("scripts.projects.open_model_data.phase3_rule_author_runner._assert_tree"),
+        patch(
+            "scripts.projects.open_model_data.phase3_rule_author_runner._safe_receipt_path", return_value=receipt_path
+        ),
+        patch(
+            "scripts.projects.open_model_data.phase3_rule_author_runner._receipt",
+            return_value={"complete": False, "canary": False, "failed_count": 1, "unparsed_count": 1},
+        ),
+        patch("scripts.projects.open_model_data.phase3_rule_author_runner._write_public_receipt"),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["bridge"], 30.0)),
+    ):
         receipt = rar.run(
             bundle_path=bundle_path,
             role_path=role_path,
@@ -577,15 +661,19 @@ def test_phase3_school_parent_section_context_drive_item_id_timeout(tmp_path: Pa
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_school_parent_section_context.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_school_parent_section_context.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert spsc._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == spsc.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_school_parent_section_context.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], spsc.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_school_parent_section_context.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], spsc.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(spsc.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             spsc._drive_item_id(target_file)
 
@@ -610,8 +698,10 @@ def test_phase3_source_universe_verify_merged_main_binding_timeout(tmp_path: Pat
     script_file.parent.mkdir(parents=True, exist_ok=True)
     script_file.write_bytes(b"script bytes")
 
-    with patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         res = su._verify_merged_main_binding("abcdef1234567890abcdef1234567890abcdef12")
         assert res["implementation_version"] == su.FREEZER_IMPLEMENTATION_VERSION
 
@@ -619,8 +709,10 @@ def test_phase3_source_universe_verify_merged_main_binding_timeout(tmp_path: Pat
     assert calls[0]["timeout"] == su.DEFAULT_GIT_TIMEOUT_SECONDS
     assert calls[1]["timeout"] == su.DEFAULT_GIT_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], su.DEFAULT_GIT_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], su.DEFAULT_GIT_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(su.FreezeError, match="unable to verify merged-main binding"):
             su._verify_merged_main_binding("abcdef1234567890abcdef1234567890abcdef12")
 
@@ -647,7 +739,9 @@ def test_phase3_source_universe_extract_pdf_pages_timeout(tmp_path: Path) -> Non
     assert len(calls) == 1
     assert calls[0]["timeout"] == su.DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["pdftotext"], su.DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS)):
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["pdftotext"], su.DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS)
+    ):
         with pytest.raises(su.FreezeError, match=r"pdftotext failed for sample\.pdf"):
             su.extract_pdf_pages(pdf_file, pdftotext)
 
@@ -676,7 +770,9 @@ def test_phase3_ua_gec_complete_context_checkout_commit_timeout(tmp_path: Path) 
     assert calls[0]["timeout"] == ugc.DEFAULT_GIT_TIMEOUT_SECONDS
     assert calls[1]["timeout"] == ugc.DEFAULT_GIT_TIMEOUT_SECONDS
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], ugc.DEFAULT_GIT_TIMEOUT_SECONDS)):
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], ugc.DEFAULT_GIT_TIMEOUT_SECONDS)
+    ):
         with pytest.raises(ugc.UaGecCompleteContextError, match="cannot verify UA-GEC checkout commit"):
             ugc._checkout_commit(tmp_path)
 
@@ -727,7 +823,9 @@ def test_phase3_university_content_audit_freeze_validate_drive_backup_timeout(tm
     assert calls[0]["timeout"] == ucaf.DEFAULT_XATTR_TIMEOUT_SECONDS
 
     with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], ucaf.DEFAULT_XATTR_TIMEOUT_SECONDS)):
-        with pytest.raises(ucaf.UniversityContentAuditFreezeError, match="post-live database backup lacks Drive provider metadata"):
+        with pytest.raises(
+            ucaf.UniversityContentAuditFreezeError, match="post-live database backup lacks Drive provider metadata"
+        ):
             ucaf._validate_drive_backup(post_backup)
 
 
@@ -743,18 +841,24 @@ def test_phase3_v2_compatibility_tracked_evidence_paths_timeout(tmp_path: Path) 
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="file1\nfile2\n")
 
-    with patch("scripts.projects.open_model_data.phase3_v2_compatibility.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
-        paths = v2c._tracked_evidence_paths()
+    with (
+        patch("scripts.projects.open_model_data.phase3_v2_compatibility.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+        patch.object(v2c, "_physical_k_path", return_value=tmp_path / "missing"),
+    ):
+        paths = v2c._tracked_evidence_paths(MagicMock(artifacts={}))
         assert paths == {"file1", "file2"}
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == v2c.DEFAULT_GIT_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_v2_compatibility.ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], v2c.DEFAULT_GIT_TIMEOUT_SECONDS)):
+    with (
+        patch("scripts.projects.open_model_data.phase3_v2_compatibility.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], v2c.DEFAULT_GIT_TIMEOUT_SECONDS)),
+        patch.object(v2c, "_physical_k_path", return_value=tmp_path / "missing"),
+    ):
         with pytest.raises(v2c.CompatibilityError, match="cannot enumerate tracked evidence"):
-            v2c._tracked_evidence_paths()
+            v2c._tracked_evidence_paths(MagicMock(artifacts={}))
 
 
 # ---------------------------------------------------------------------------
@@ -773,15 +877,25 @@ def test_phase3_vspu_2025_morphemics_word_formation_intake_drive_item_id_timeout
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert vmfi._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == vmfi.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vmfi.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vmfi.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(vmfi.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             vmfi._drive_item_id(target_file)
 
@@ -802,16 +916,19 @@ def test_phase3_vspu_db_cutover_drive_item_id_timeout(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("pathlib.Path.home", return_value=tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with patch("pathlib.Path.home", return_value=tmp_path), patch("subprocess.run", side_effect=fake_run):
         assert vdc._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == vdc.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("pathlib.Path.home", return_value=tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vdc.DEFAULT_XATTR_TIMEOUT_SECONDS)):
-        with pytest.raises(vdc.DriveIdentityPendingError, match="private artifact lacks Google Drive provider identity"):
+    with (
+        patch("pathlib.Path.home", return_value=tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vdc.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
+        with pytest.raises(
+            vdc.DriveIdentityPendingError, match="private artifact lacks Google Drive provider identity"
+        ):
             vdc._drive_item_id(target_file)
 
 
@@ -857,16 +974,22 @@ def test_phase3_vspu_source_materialization_drive_item_id_timeout(tmp_path: Path
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_vspu_source_materialization.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch("scripts.projects.open_model_data.phase3_vspu_source_materialization.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert vsm._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == vsm.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_vspu_source_materialization.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vsm.DEFAULT_XATTR_TIMEOUT_SECONDS)):
-        with pytest.raises(vsm.VspuSourceMaterializationError, match="private JSONL lacks Google Drive provider identity"):
+    with (
+        patch("scripts.projects.open_model_data.phase3_vspu_source_materialization.CLOUD_STORAGE_ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vsm.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
+        with pytest.raises(
+            vsm.VspuSourceMaterializationError, match="private JSONL lacks Google Drive provider identity"
+        ):
             vsm._drive_item_id(target_file)
 
 
@@ -886,15 +1009,25 @@ def test_phase3_zhdu_2026_lexicology_phraseology_intake_drive_item_id_timeout(tm
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="drive-item-123\n")
 
-    with patch("scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=fake_run):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert zpi._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == zpi.DEFAULT_XATTR_TIMEOUT_SECONDS
 
-    with patch("scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], zpi.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+    with (
+        patch(
+            "scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT",
+            tmp_path,
+        ),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], zpi.DEFAULT_XATTR_TIMEOUT_SECONDS)),
+    ):
         with pytest.raises(zpi.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
             zpi._drive_item_id(target_file)
 

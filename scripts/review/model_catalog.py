@@ -542,8 +542,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name} violates operator 2026-09-25: "
                 "Gemini reviews Ukrainian only, never code (model-assignment.md)"
             )
-        if models[model_id]["lifecycle"] != "active":
-            raise ModelCatalogError(f"review candidate {name!r} must reference an active model")
+        if models[model_id]["lifecycle"] not in {"active", "fallback"}:
+            raise ModelCatalogError(f"review candidate {name!r} must reference an active or fallback model")
         _require_string(candidate.get("route"), f"review_candidates.{name}.route")
         transport = _require_string(transport_raw, f"review_candidates.{name}.transport")
         if transport not in models[model_id]["transports"]:
@@ -602,6 +602,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
+                if models[model_id]["lifecycle"] != "active":
+                    raise ModelCatalogError(
+                        f"review_ladders.{risk} candidate {candidate_name!r} must reference an active model"
+                    )
                 rung_ranks.add(tiers[models[model_id]["tier"]])
             if len(rung_ranks) != 1:
                 raise ModelCatalogError(f"review_ladders.{risk} mixes quality tiers in one rung")

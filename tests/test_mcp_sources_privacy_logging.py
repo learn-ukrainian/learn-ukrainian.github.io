@@ -5,10 +5,12 @@ Also covers step 4's additive ``cache_only`` option on ``query_ulif`` /
 cache is available.
 
 Exercises the real ``_log_tool_call``/``call_tool`` functions (not a
-reimplementation) against the repo's actual
-``logs/mcp-sources-requests.jsonl`` — the same file real tool calls append
-to — by recording the file's length before each call and reading only the
-newly appended line(s) after.
+reimplementation), pointed at a per-module tmp log directory via
+``LU_MCP_SOURCES_LOG_DIR`` (#8960) so this file never touches the shared
+checkout's ``logs/`` — a parallel test that cleans checkout pollution can't
+race it. Recording the file's length before each call and reading only the
+newly appended line(s) after keeps assertions scoped to one call even though
+the fixture (and the file) are shared across this module's tests.
 """
 
 from __future__ import annotations
@@ -16,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import importlib.util
 import json
+import os
 from pathlib import Path
 
 import mcp
@@ -23,7 +26,6 @@ import pytest
 import requests
 
 SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
-LOG_PATH = SERVER_PATH.parents[2].parent / "logs" / "mcp-sources-requests.jsonl"
 
 
 def _load_sources_server():
@@ -40,16 +42,30 @@ def _load_sources_server():
 
 
 @pytest.fixture(scope="module")
-def server():
+def log_path(tmp_path_factory: pytest.TempPathFactory):
+    """Redirect the server's log writes to a tmp dir for this module only."""
+    log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
+    previous = os.environ.get("LU_MCP_SOURCES_LOG_DIR")
+    os.environ["LU_MCP_SOURCES_LOG_DIR"] = str(log_dir)
+    try:
+        yield log_dir / "mcp-sources-requests.jsonl"
+    finally:
+        if previous is None:
+            os.environ.pop("LU_MCP_SOURCES_LOG_DIR", None)
+        else:
+            os.environ["LU_MCP_SOURCES_LOG_DIR"] = previous
+
+
+@pytest.fixture(scope="module")
+def server(log_path: Path):
     return _load_sources_server()
 
 
-def _call_and_capture_log_entry(server, name: str, arguments: dict) -> dict:
+def _call_and_capture_log_entry(server, log_path: Path, name: str, arguments: dict) -> dict:
     """Run one tool call and return the exact log entry it appended."""
-    LOG_PATH.parent.mkdir(exist_ok=True)
-    offset = LOG_PATH.stat().st_size if LOG_PATH.exists() else 0
+    offset = log_path.stat().st_size if log_path.exists() else 0
     asyncio.run(server.call_tool(name, dict(arguments)))
-    with open(LOG_PATH, "rb") as handle:
+    with open(log_path, "rb") as handle:
         handle.seek(offset)
         new_bytes = handle.read()
     lines = [line for line in new_bytes.decode("utf-8").splitlines() if line.strip()]
@@ -57,9 +73,11 @@ def _call_and_capture_log_entry(server, name: str, arguments: dict) -> dict:
     return json.loads(lines[0])
 
 
-def test_privacy_mode_logs_no_argument_values(server):
+def test_privacy_mode_logs_no_argument_values(server, log_path):
     private_word = "СЕКРЕТНЕ_СЛОВО_НЕ_ДРУКУВАТИ"
-    entry = _call_and_capture_log_entry(server, "check_russian_shadow", {"word": private_word, "_privacy_mode": True})
+    entry = _call_and_capture_log_entry(
+        server, log_path, "check_russian_shadow", {"word": private_word, "_privacy_mode": True}
+    )
     assert entry["privacy_mode"] is True
     dumped = json.dumps(entry, ensure_ascii=False)
     assert private_word not in dumped
@@ -69,21 +87,23 @@ def test_privacy_mode_logs_no_argument_values(server):
     assert len(entry["arg_sha256"]) == 64
 
 
-def test_privacy_mode_logs_no_response_text(server):
-    entry = _call_and_capture_log_entry(server, "check_russian_shadow", {"word": "тест", "_privacy_mode": True})
+def test_privacy_mode_logs_no_response_text(server, log_path):
+    entry = _call_and_capture_log_entry(server, log_path, "check_russian_shadow", {"word": "тест", "_privacy_mode": True})
     assert "response_text" not in entry
     assert "response" not in entry
     assert entry["response_sha256"] is None or len(entry["response_sha256"]) == 64
 
 
-def test_privacy_mode_error_never_leaks_the_exception_message(server):
-    entry = _call_and_capture_log_entry(server, "verify_words", {"_privacy_mode": True})  # missing required "words"
+def test_privacy_mode_error_never_leaks_the_exception_message(server, log_path):
+    entry = _call_and_capture_log_entry(
+        server, log_path, "verify_words", {"_privacy_mode": True}
+    )  # missing required "words"
     assert "error" not in entry  # the non-privacy full-message key must be absent
     assert "error_class" not in entry or "words" not in entry.get("error_class", "")
 
 
-def test_non_privacy_mode_is_unchanged(server):
-    entry = _call_and_capture_log_entry(server, "check_russian_shadow", {"word": "слово"})
+def test_non_privacy_mode_is_unchanged(server, log_path):
+    entry = _call_and_capture_log_entry(server, log_path, "check_russian_shadow", {"word": "слово"})
     assert "privacy_mode" not in entry
     assert entry["args"] == {"word": "слово"}
 
