@@ -57,6 +57,22 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
     assert _any_admin(f"cat {opener}\nnote\n{closer}\ngh pr merge 5 --admin")
 
 
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_admin_merge_visible(monkeypatch, first):
+    command = f"{first}\ngh pr merge 5 --admin\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert _any_admin(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
+def test_issue_9088_crlf_closer_keeps_admin_merge_visible(monkeypatch):
+    command = "cat <<EOF\r\nEOF\r\ngh pr merge 5 --admin\nEOF"
+    assert _any_admin(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
 def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
     command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
     assert _any_admin(command)

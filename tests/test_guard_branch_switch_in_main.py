@@ -61,6 +61,22 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
     assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
 
 
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_branch_switch_visible(repos, first):
+    command = f"{first}\ngit checkout -b feature\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_crlf_closer_keeps_branch_switch_visible(repos):
+    command = "cat <<EOF\r\nEOF\r\ngit checkout -b feature\nEOF"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
 def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
     command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
     assert _dangerous(command) is not None

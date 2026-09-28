@@ -233,6 +233,22 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
     )
 
 
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_secret_dump_visible(monkeypatch, first):
+    command = f"{first}\ncat .env\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_crlf_closer_keeps_secret_dump_visible(monkeypatch):
+    command = "cat <<EOF\r\nEOF\r\ncat .env\nEOF"
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
+
+
 def test_issue_9088_quoted_identifier_heredoc_body_is_inert(monkeypatch):
     assert _run(monkeypatch, "cat <<'EOF'\ncat .env\necho $GH_TOKEN\nEOF") == 0
 

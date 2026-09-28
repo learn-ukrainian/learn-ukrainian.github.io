@@ -32,7 +32,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import skippable_heredoc_delimiters
+    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -140,32 +140,7 @@ def _strip_heredoc_bodies(command: str) -> str:
     opener must not make trailing real `gh pr merge --admin` vanish. Only a
     heredoc that actually closes has its body + closer dropped.
     """
-    if "<<" not in command:
-        return command
-
-    lines = command.splitlines()
-    kept: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        kept.append(lines[i])
-        i += 1
-        pending = _heredoc_delimiters(lines[i - 1])
-        if pending is None:
-            kept.extend(lines[i:])
-            break
-        if not pending:
-            continue
-        body_start = i
-        while i < n and pending:
-            delimiter, strip_tabs = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(command)
 
 
 def _join_line_continuations(text: str) -> str:

@@ -145,7 +145,7 @@ from typing import Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import skippable_heredoc_delimiters
+    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -324,40 +324,9 @@ def _strip_heredoc_bodies(command: str) -> str:
     tokenized view. Those lines are kept; only a heredoc that actually
     closes has its body + closer dropped.
     """
-    if "<<" not in command:
-        return command
-
-    lines = command.split("\n")
-    kept: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        kept.append(lines[i])
-        i += 1
-        pending = _heredoc_delimiters(_strip_shell_comments(lines[i - 1]))
-        if pending is None:
-            kept.extend(lines[i:])
-            break
-        if not pending:
-            continue
-        body_start = i
-        substitutions: list[str] = []
-        while i < n and pending:
-            delimiter, strip_tabs, quoted = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            elif not quoted:
-                substitutions.extend(_heredoc_substitutions(lines[i]))
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-        else:
-            # Unquoted delimiters expand command substitutions in the body.
-            # Keep only those executable fragments, never ordinary document
-            # text (which may contain redirect-looking punctuation).
-            kept.extend(substitutions)
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(
+        command, opener_transform=_strip_shell_comments, body_substitutions=_heredoc_substitutions
+    )
 
 
 def _heredoc_substitutions(line: str) -> list[str]:

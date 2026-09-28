@@ -36,7 +36,11 @@ import sys
 # Use the sibling helper in either the source tree or a deployed hook copy.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import skippable_heredoc_delimiters, split_quote_preserving
+    from shell_shlex import (
+        skippable_heredoc_delimiters,
+        split_quote_preserving,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -284,34 +288,9 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | None:
 
 
 def _strip_heredoc_bodies(command: str) -> str:
-    if "<<" not in command:
-        return command
-
-    kept: list[str] = []
-    lines = command.split("\n")
-    i = 0
-    while i < len(lines):
-        kept.append(lines[i])
-        pending = _heredoc_delimiters(_strip_shell_comments(lines[i]))
-        i += 1
-        if pending is None:
-            kept.extend(lines[i:])
-            break
-        body_start = i
-        substitutions: list[str] = []
-        while pending and i < len(lines):
-            delimiter, strip_tabs, quoted = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            elif not quoted:
-                substitutions.extend(_substitution_fragments(lines[i]))
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-        else:
-            kept.extend(substitutions)
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(
+        command, opener_transform=_strip_shell_comments, body_substitutions=_substitution_fragments
+    )
 
 
 def _substitution_fragments(line: str) -> list[str]:

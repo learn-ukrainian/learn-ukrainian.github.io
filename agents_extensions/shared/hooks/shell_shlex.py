@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 import shlex
+from collections.abc import Callable
 
 _HEREDOC_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 
@@ -40,7 +41,10 @@ def skippable_heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | No
             quote = char
             index += 1
             continue
-        if not line.startswith("<<", index) or line.startswith("<<<", index):
+        if line.startswith("<<<", index):
+            index += 3
+            continue
+        if not line.startswith("<<", index):
             index += 1
             continue
 
@@ -83,6 +87,49 @@ def skippable_heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | No
     # A later safe-looking opener must not hide lines after an exotic opener
     # on the same command line.
     return None if ambiguous else delimiters
+
+
+def strip_skippable_heredoc_bodies(
+    command: str,
+    *,
+    opener_transform: Callable[[str], str] | None = None,
+    body_substitutions: Callable[[str], list[str]] | None = None,
+) -> str:
+    """Skip only closed, unambiguous here-doc bodies in all hook guards.
+
+    Bash retains carriage returns in here-doc delimiters. A command containing
+    one is left intact, so a mismatched closer can never conceal later commands.
+    """
+    if "<<" not in command or "\r" in command:
+        return command
+
+    lines = command.split("\n")
+    kept: list[str] = []
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        kept.append(line)
+        index += 1
+        opener = opener_transform(line) if opener_transform else line
+        pending = skippable_heredoc_delimiters(opener)
+        if pending is None:
+            kept.extend(lines[index:])
+            break
+        body_start = index
+        substitutions: list[str] = []
+        while pending and index < len(lines):
+            delimiter, strip_tabs, quoted = pending[0]
+            candidate = lines[index].lstrip("\t") if strip_tabs else lines[index]
+            if candidate == delimiter:
+                pending.pop(0)
+            elif not quoted and body_substitutions:
+                substitutions.extend(body_substitutions(lines[index]))
+            index += 1
+        if pending:
+            kept.extend(lines[body_start:index])
+        else:
+            kept.extend(substitutions)
+    return "\n".join(kept)
 
 
 def split_quote_preserving(command: str, *, punctuation_chars: str | bool, whitespace: str) -> list[str]:
