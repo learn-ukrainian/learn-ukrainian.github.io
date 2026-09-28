@@ -164,7 +164,50 @@ def _call_name(node: ast.AST) -> str | None:
     return None
 
 
-def _is_path_join(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
+def _path_join_aliases(tree: ast.Module) -> tuple[set[str], set[str], set[str]]:
+    """Resolve the imported spellings of os.path/posixpath.join in this module."""
+    os_names = {"os"}
+    path_names = {"posixpath"}
+    join_names: set[str] = set()
+    for statement in tree.body:
+        if isinstance(statement, ast.Import):
+            for alias in statement.names:
+                if alias.name == "os":
+                    os_names.add(alias.asname or "os")
+                elif alias.name == "os.path":
+                    if alias.asname:
+                        path_names.add(alias.asname)
+                    else:
+                        os_names.add("os")
+                elif alias.name == "posixpath":
+                    path_names.add(alias.asname or "posixpath")
+        elif isinstance(statement, ast.ImportFrom) and statement.module in {"os.path", "posixpath"}:
+            join_names.update(alias.asname or alias.name for alias in statement.names if alias.name == "join")
+        elif isinstance(statement, ast.ImportFrom) and statement.module == "os":
+            path_names.update(alias.asname or alias.name for alias in statement.names if alias.name == "path")
+    return os_names, path_names, join_names
+
+
+def _is_join_call(func: ast.AST, aliases: tuple[set[str], set[str], set[str]]) -> bool:
+    os_names, path_names, join_names = aliases
+    if isinstance(func, ast.Name):
+        return func.id in join_names
+    if not isinstance(func, ast.Attribute) or func.attr != "join":
+        return False
+    value = func.value
+    if isinstance(value, ast.Name):
+        return value.id in path_names
+    return (
+        isinstance(value, ast.Attribute)
+        and value.attr == "path"
+        and isinstance(value.value, ast.Name)
+        and value.value.id in os_names
+    )
+
+
+def _is_path_join(
+    node: ast.AST, parents: dict[ast.AST, ast.AST], aliases: tuple[set[str], set[str], set[str]]
+) -> bool:
     """Recognize joins around a literal, including a root embedded in an f-string."""
     child = node
     while child is not None:
@@ -173,16 +216,9 @@ def _is_path_join(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
         if isinstance(child, ast.Call):
             if _call_name(child) in {"Path", "PurePath"} and len(child.args) > 1:
                 return True
-            func = child.func
-            if (
-                isinstance(func, ast.Attribute)
-                and func.attr == "join"
-                and isinstance(func.value, ast.Attribute)
-                and func.value.attr == "path"
-                and isinstance(func.value.value, ast.Name)
-                and func.value.value.id == "os"
-                and len(child.args) > 1
-            ):
+            if _is_join_call(child.func, aliases) and len(child.args) > 1:
+                return True
+            if isinstance(child.func, ast.Attribute) and child.func.attr == "joinpath" and child.args:
                 return True
         if isinstance(child, ast.JoinedStr):
             for index, part in enumerate(child.values):
@@ -267,21 +303,69 @@ def _resource_root_names(tree: ast.Module) -> tuple[set[str], set[str]]:
     return names, imports
 
 
-def _resource_root_join(node: ast.AST, parents: dict[ast.AST, ast.AST], names: set[str], imports: set[str]) -> bool:
+def _local_bindings(function: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    """Names assigned in a function body, excluding bodies of nested scopes."""
+    bound: set[str] = set()
+
+    class Bindings(ast.NodeVisitor):
+        def visit_Name(self, node: ast.Name) -> None:
+            if isinstance(node.ctx, ast.Store):
+                bound.add(node.id)
+
+        def visit_Import(self, node: ast.Import) -> None:
+            bound.update(alias.asname or alias.name.split(".", 1)[0] for alias in node.names)
+
+        def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+            bound.update(alias.asname or alias.name for alias in node.names)
+
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            bound.add(node.name)
+
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            bound.add(node.name)
+
+        def visit_ClassDef(self, node: ast.ClassDef) -> None:
+            bound.add(node.name)
+
+        def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+            if node.name:
+                bound.add(node.name)
+            self.generic_visit(node)
+
+    visitor = Bindings()
+    for statement in function.body:
+        visitor.visit(statement)
+    return bound
+
+
+def _resource_root_join(
+    node: ast.AST,
+    parents: dict[ast.AST, ast.AST],
+    names: set[str],
+    imports: set[str],
+    aliases: tuple[set[str], set[str], set[str]],
+) -> bool:
     """Accept only a join rooted in the runtime's package resource namespace."""
-    function = next(
-        (
-            ancestor
-            for ancestor in _ancestors(node, parents)
-            if isinstance(ancestor, (ast.FunctionDef, ast.AsyncFunctionDef))
-        ),
-        None,
-    )
-    if function is not None:
+    functions = [
+        ancestor
+        for ancestor in _ancestors(node, parents)
+        if isinstance(ancestor, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ]
+    for function in reversed(functions):
         args = function.args.posonlyargs + function.args.args
-        for arg, default in zip(args[-len(function.args.defaults) :], function.args.defaults, strict=False):
-            if isinstance(default, ast.Name) and default.id in names:
-                names = names | {arg.arg}
+        parameters = {arg.arg for arg in args + function.args.kwonlyargs}
+        if function.args.vararg:
+            parameters.add(function.args.vararg.arg)
+        if function.args.kwarg:
+            parameters.add(function.args.kwarg.arg)
+        bound = _local_bindings(function)
+        inherited_defaults = {
+            arg.arg
+            for arg, default in zip(args[-len(function.args.defaults) :], function.args.defaults, strict=False)
+            if isinstance(default, ast.Name) and default.id in names and arg.arg not in bound
+        }
+        names = (names - bound - parameters) | inherited_defaults
+        imports = imports - bound - parameters
 
     def is_root(expr: ast.AST) -> bool:
         if isinstance(expr, ast.Name):
@@ -299,17 +383,24 @@ def _resource_root_join(node: ast.AST, parents: dict[ast.AST, ast.AST], names: s
         if isinstance(parent, ast.Call) and child in parent.args[1:]:
             if _call_name(parent) in {"Path", "PurePath"} and is_root(parent.args[0]):
                 return True
-            func = parent.func
+            if _is_join_call(parent.func, aliases) and is_root(parent.args[0]):
+                return True
             if (
-                isinstance(func, ast.Attribute)
-                and func.attr == "join"
-                and isinstance(func.value, ast.Attribute)
-                and func.value.attr == "path"
-                and isinstance(func.value.value, ast.Name)
-                and func.value.value.id == "os"
+                isinstance(parent.func, ast.Attribute)
+                and parent.func.attr == "joinpath"
+                and isinstance(parent.func.value, ast.Name)
+                and parent.func.value.id in {"Path", "PurePath"}
                 and is_root(parent.args[0])
             ):
                 return True
+        if (
+            isinstance(parent, ast.Call)
+            and isinstance(parent.func, ast.Attribute)
+            and parent.func.attr == "joinpath"
+            and child in parent.args
+            and is_root(parent.func.value)
+        ):
+            return True
         if isinstance(parent, ast.JoinedStr):
             for index, part in enumerate(parent.values):
                 if part is child and index > 0 and isinstance(part, ast.Constant) and isinstance(part.value, str):
@@ -333,6 +424,7 @@ def _literal_hits(source: str) -> list[dict[str, object]]:
         for child in ast.iter_child_nodes(parent):
             parents[child] = parent
     resource_names, resource_imports = _resource_root_names(tree)
+    join_aliases = _path_join_aliases(tree)
     classes = _classes()
     hits: list[dict[str, object]] = []
     for node in ast.walk(tree):
@@ -357,8 +449,8 @@ def _literal_hits(source: str) -> list[dict[str, object]]:
                 via_resolver = True
                 break
             ancestor = parents.get(ancestor)
-        is_join = _is_path_join(node, parents)
-        resource_join = is_join and _resource_root_join(node, parents, resource_names, resource_imports)
+        is_join = _is_path_join(node, parents, join_aliases)
+        resource_join = is_join and _resource_root_join(node, parents, resource_names, resource_imports, join_aliases)
         dict_key = None
         dict_parent = parents.get(node)
         if isinstance(dict_parent, ast.Dict):
@@ -583,6 +675,95 @@ def test_packaged_resource_join_rejects_rebound_and_parameter_roots() -> None:
     for hit in _literal_hits(source):
         assert hit["resource_join"] is False
         assert _disposition(hit, packaged=True) == "violation"
+
+
+@pytest.mark.parametrize(
+    ("import_line", "expression"),
+    [
+        ("import os.path as p", "p.join(REPO_ROOT, '{logical}')"),
+        ("from os.path import join", "join(REPO_ROOT, '{logical}')"),
+        ("import os as o", "o.path.join(REPO_ROOT, '{logical}')"),
+        ("import posixpath", "posixpath.join(REPO_ROOT, '{logical}')"),
+        ("import posixpath as p", "p.join(REPO_ROOT, '{logical}')"),
+        ("from posixpath import join as path_join", "path_join(REPO_ROOT, '{logical}')"),
+        ("from os import path as p", "p.join(REPO_ROOT, '{logical}')"),
+        ("from pathlib import Path", "REPO_ROOT.joinpath('{logical}')"),
+        ("from pathlib import Path", "Path(REPO_ROOT).joinpath('{logical}')"),
+        ("from pathlib import PurePath", "PurePath(REPO_ROOT).joinpath('{logical}')"),
+        ("from pathlib import Path", "Path.joinpath(REPO_ROOT, '{logical}')"),
+        ("from pathlib import PurePath", "PurePath.joinpath(REPO_ROOT, '{logical}')"),
+    ],
+)
+def test_packaged_resource_alias_joins_on_other_root_are_violations(import_line: str, expression: str) -> None:
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    source = f"{import_line}\n" + expression.format(logical=logical)
+    hit = _literal_hits(source)[0]
+    assert hit["join"] is True
+    assert hit["resource_join"] is False
+    assert _disposition(hit, packaged=True) == "violation"
+
+
+@pytest.mark.parametrize(
+    ("import_line", "expression"),
+    [
+        ("import os.path as p", "p.join(ROOT, '{logical}')"),
+        ("from os.path import join", "join(ROOT, '{logical}')"),
+        ("import os as o", "o.path.join(ROOT, '{logical}')"),
+        ("import posixpath", "posixpath.join(ROOT, '{logical}')"),
+    ],
+)
+def test_packaged_resource_alias_joins_accept_package_root(import_line: str, expression: str) -> None:
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    source = (
+        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
+        "ROOT = resource_root()\n"
+        f"{import_line}\n" + expression.format(logical=logical)
+    )
+    hit = _literal_hits(source)[0]
+    assert hit["join"] is True
+    assert hit["resource_join"] is True
+    assert _disposition(hit, packaged=True) == "packaged-resource"
+
+
+@pytest.mark.parametrize(
+    "function",
+    [
+        'def load():\n    ROOT = Path(".")\n    return ROOT / "{logical}"',
+        'def load(ROOT):\n    return ROOT / "{logical}"',
+        'def load(ROOT: Path = Path(".")):\n    return ROOT / "{logical}"',
+        'def load():\n    ROOT = Path(".")\n    return ROOT.joinpath("{logical}")',
+    ],
+)
+def test_packaged_resource_join_rejects_function_local_shadow(function: str) -> None:
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    source = (
+        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
+        "ROOT = resource_root()\n" + function.format(logical=logical)
+    )
+    hit = _literal_hits(source)[0]
+    assert hit["join"] is True
+    assert hit["resource_join"] is False
+    assert _disposition(hit, packaged=True) == "violation"
+
+
+@pytest.mark.parametrize(
+    "expression",
+    [
+        "ROOT.joinpath('{logical}')",
+        "resource_root().joinpath('{logical}')",
+        "Path.joinpath(ROOT, '{logical}')",
+    ],
+)
+def test_packaged_resource_joinpath_accepts_package_root(expression: str) -> None:
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    source = (
+        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
+        "ROOT = resource_root()\n" + expression.format(logical=logical)
+    )
+    hit = _literal_hits(source)[0]
+    assert hit["join"] is True
+    assert hit["resource_join"] is True
+    assert _disposition(hit, packaged=True) == "packaged-resource"
 
 
 @pytest.mark.parametrize(
