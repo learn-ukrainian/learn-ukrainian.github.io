@@ -2020,7 +2020,8 @@ def _ensure_sibling_repo_worktree(
     base: str = "main",
     dry_run: bool = False,
     run_nonce: str | None = None,
-) -> tuple[Path, str, dict[str, Any]]:
+    detached: bool = False,
+) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
     Public-primary helpers (sparse checkout, data symlinks, mirror-aware
@@ -2037,7 +2038,7 @@ def _ensure_sibling_repo_worktree(
         worktree_path.relative_to(root)
     except ValueError as exc:
         raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
-    worktree_branch = _derive_worktree_branch(agent, task_id)
+    worktree_branch = None if detached else _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
         "rebased": False,
@@ -2048,6 +2049,8 @@ def _ensure_sibling_repo_worktree(
         "repo_root": str(root),
     }
     if worktree_path.exists():
+        if detached:
+            raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
@@ -2086,7 +2089,11 @@ def _ensure_sibling_repo_worktree(
     if _resolve_sha(root, origin_ref) is None:
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
-    add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
+    add_command = ["git", "worktree", "add"]
+    if detached:
+        add_command.extend(["--detach", str(worktree_path), origin_ref])
+    else:
+        add_command.extend(["-b", worktree_branch, str(worktree_path), origin_ref])
     _add_reserved_worktree(
         add_command,
         repo_root=root,
@@ -2127,8 +2134,8 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # ``workspace-write`` and ``danger`` let the delegated worker mutate files. Both
 # MUST run inside an isolated dispatch worktree so those writes never dirty the
 # protected primary checkout — the operator contract must not rely on a model
-# *remembering* the worktree rule. ``read-only`` dispatches are exempt: repo-root
-# preflight and creating a worktree from the primary checkout stay allowed.
+# *remembering* the worktree rule. ``read-only`` dispatches are exempt from
+# this write guard; they get a detached worktree by default or an explicit cwd.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 # This is deliberately a narrow, directive-only check.  It catches briefs
@@ -2997,63 +3004,6 @@ def _resolve_write_cwd_error(
         f"❌ --mode {mode} requires an isolated worktree; without --worktree/--cwd "
         f"the worker would run in the primary checkout.\n   {_WRITE_WORKTREE_HINT}"
     )
-
-
-_AGY_READ_ONLY_WORKTREE_HINT = (
-    "agy has no CLI-enforced read-only mode (#8516): headless runs need "
-    "--dangerously-skip-permissions, and the CLI re-anchors its working "
-    "directory after spawn. Read-only agy dispatches therefore run pinned to "
-    "a disposable dispatch worktree — pass bare `--worktree` (automatic when "
-    "neither flag is given) or `--cwd` at an existing added worktree, never "
-    "the primary checkout."
-)
-
-
-def _resolve_agy_read_only_target_error(
-    *,
-    worktree_arg: str | None,
-    cwd_arg: str | None,
-) -> str | None:
-    """Reject an agy read-only dispatch pointed at the primary checkout (#8516).
-
-    Returns an operator-facing error string, or None when the dispatch target
-    is acceptable. Evaluated before any side effects so a rejection leaves no
-    worktree/branch residue behind. An out-of-tree or other-worktree target
-    is allowed: the post-run snapshot guard fails the task on any mutation,
-    and the disposable-worktree default (the caller auto-pins bare
-    ``--worktree`` when neither flag is given) covers the common path.
-    """
-    wc = _load_worktree_containment()
-
-    if worktree_arg and worktree_arg != "auto":
-        candidate = _normalize_worktree_path(worktree_arg)
-        if wc.is_primary_checkout(candidate):
-            return (
-                f"❌ --worktree {worktree_arg!r} points at the primary checkout; "
-                f"agy read-only dispatch may not run there (#8516).\n   {_AGY_READ_ONLY_WORKTREE_HINT}"
-            )
-        return None
-
-    if cwd_arg:
-        candidate = _resolve_cwd_path(cwd_arg)
-        if wc.is_primary_checkout(candidate):
-            return (
-                f"❌ --cwd {cwd_arg!r} resolves inside the primary checkout; "
-                f"agy read-only dispatch may not run there (#8516).\n   {_AGY_READ_ONLY_WORKTREE_HINT}"
-            )
-    return None
-
-
-def _agy_read_only_requires_auto_worktree(
-    *,
-    agent: str,
-    mode: str,
-    worktree_arg: str | None,
-    cwd_arg: str | None,
-    repo_default: bool,
-) -> bool:
-    """#8516 AC-01: an agy read-only dispatch with no isolated target auto-pins one."""
-    return agent == "agy" and mode == "read-only" and repo_default and not worktree_arg and not cwd_arg
 
 
 def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> str:
@@ -4789,7 +4739,6 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
 # ``.claude/hooks/``) must still fail a read-only task in its own worktree.
-# The shared primary checkout has narrow exceptions below (#9094).
 # Tracked files under these names still fail via porcelain status.
 _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
     {
@@ -4804,12 +4753,6 @@ _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
         "batch_state",
     }
 )
-# The primary checkout is shared with the driver and other live processes.
-# Their ignored state cannot be attributed to a read-only worker by two Git
-# status snapshots. Keep this exception primary-only: a dispatch worktree is
-# the worker's own checkout, so these same paths remain observable there.
-# Tracked files are never exempt, even under these directories (#9094).
-_READ_ONLY_PRIMARY_SHARED_STATE_PREFIXES = (".claude/infra-epic/briefs", ".venv")
 _READ_ONLY_RUNTIME_STATE_SUFFIXES = (
     ".db-journal",
     ".db-shm",
@@ -4934,15 +4877,9 @@ def _is_read_only_runtime_state_exemption(
     *,
     before_state: str | None,
     after_state: str | None,
-    shared_primary: bool = False,
 ) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
-    normalized = _normalize_read_only_relpath(path)
-    primary_shared_state = shared_primary and any(
-        normalized == prefix or normalized.startswith(f"{prefix}/")
-        for prefix in _READ_ONLY_PRIMARY_SHARED_STATE_PREFIXES
-    )
-    if not (_is_read_only_runtime_state_path(path) or primary_shared_state):
+    if not _is_read_only_runtime_state_path(path):
         return False
     return _is_read_only_untracked_or_ignored_status(before_state) and _is_read_only_untracked_or_ignored_status(
         after_state
@@ -4967,9 +4904,7 @@ def _is_read_only_ignored_mutation(*, before_state: str | None, after_state: str
     return _is_read_only_ignored_status(before_state)
 
 
-def _read_only_ignored_mutation_paths(
-    before: dict[str, str], after: dict[str, str], *, shared_primary: bool = False
-) -> list[str]:
+def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return changed ignored paths the guard deliberately tolerates as noise.
 
     Diagnostic companion to :func:`_read_only_mutation_paths` (#8516): an
@@ -4977,8 +4912,6 @@ def _read_only_ignored_mutation_paths(
     exactly the ignored deltas that were ALSO recognized as harness/runtime
     state — the build-noise class a read-only dispatch legitimately cannot
     own (``.pytest_cache/``, ``batch_state/``, ``.entire/`` telemetry, …).
-    On the shared primary checkout, it also records ignored driver and
-    shared-environment paths excluded from the failure gate (#9094).
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -4993,15 +4926,12 @@ def _read_only_ignored_mutation_paths(
             path,
             before_state=before.get(path),
             after_state=after.get(path),
-            shared_primary=shared_primary,
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
     )
 
 
-def _read_only_mutation_paths(
-    before: dict[str, str], after: dict[str, str], *, shared_primary: bool = False
-) -> list[str]:
+def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     A changed path is exempt only when it is recognized harness/runtime noise
@@ -5018,10 +4948,7 @@ def _read_only_mutation_paths(
     (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
     as diagnostic-only "ignored mutations" while the task settled ``done``.
     Now any other new, modified, or deleted path — tracked, untracked, or
-    ignored — fails the task and is named. The shared primary checkout also
-    exempts non-tracked driver briefs under ``.claude/infra-epic/briefs/``
-    and shared ``.venv/`` state because concurrent processes write there;
-    dispatch worktrees do not (#9094).
+    ignored — fails the task and is named.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -5032,7 +4959,6 @@ def _read_only_mutation_paths(
             path,
             before_state=before.get(path),
             after_state=after.get(path),
-            shared_primary=shared_primary,
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
     )
@@ -6517,6 +6443,7 @@ def _resolve_worktree_base_sha(
     branch: str | None,
     allow_rebase: bool = True,
     pinned_head_sha: str | None = None,
+    detached: bool = False,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -6527,6 +6454,8 @@ def _resolve_worktree_base_sha(
     """
     worktree_path = _normalize_worktree_path(raw_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
+    if detached and worktree_path.exists():
+        raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
 
     if worktree_path.exists():
         if not worktree_path.is_dir():
@@ -6635,7 +6564,8 @@ def _ensure_worktree(
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
     run_nonce: str | None = None,
-) -> tuple[Path, str, dict[str, Any]]:
+    detached: bool = False,
+) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
@@ -6653,7 +6583,9 @@ def _ensure_worktree(
     """
     worktree_path = _normalize_worktree_path(raw_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
-    worktree_branch = requested_branch or _derive_worktree_branch(agent, task_id)
+    if detached and requested_branch:
+        raise ValueError("detached worktree cannot attach a branch")
+    worktree_branch = None if detached else requested_branch or _derive_worktree_branch(agent, task_id)
     layout = _classify_worktree_layout(worktree_path)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -6696,6 +6628,8 @@ def _ensure_worktree(
                 )
 
     if worktree_path.exists():
+        if detached:
+            raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
@@ -6799,6 +6733,8 @@ def _ensure_worktree(
         # The branch was resolved before creation. Reset only to that immutable
         # commit, never a ref that might move before creation.
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
+    elif detached:
+        add_command.extend(["--detach", str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     _add_reserved_worktree(
@@ -7688,16 +7624,13 @@ def _run_worker(
                 read_only_snapshot_error = post_snapshot_error
             final_state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
             if read_only_checkout_pre is not None and read_only_checkout_post is not None:
-                shared_primary = _load_worktree_containment().is_primary_checkout(cwd)
                 read_only_ignored_mutation_paths = _read_only_ignored_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
-                    shared_primary=shared_primary,
                 )
                 read_only_mutation_paths = _read_only_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
-                    shared_primary=shared_primary,
                 )
             if task_records_pre is not None and task_records_post is not None:
                 read_only_mutation_paths = sorted(
@@ -8808,6 +8741,10 @@ def _dispatch(
             file=sys.stderr,
         )
         return 2
+    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
+    if detached_read_only:
+        worktree_arg = "auto"
+
     if not fleet_repo.default and not worktree_arg and not args.cwd:
         print(
             "❌ sibling --repo requires --worktree (auto) or --cwd at an existing sibling worktree.",
@@ -8838,10 +8775,20 @@ def _dispatch(
         print(acp_runtime_error, file=sys.stderr)
         return 2
 
+    if (
+        args.mode == "read-only"
+        and worktree_arg
+        and worktree_arg != "auto"
+        and _load_worktree_containment().is_primary_checkout(
+            _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
+        )
+    ):
+        print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
+        return 2
+
     # Write-capable modes (workspace-write / danger) must resolve to a verified
-    # added worktree — never the primary checkout (#4445). Read-only dispatches
-    # stay exempt so repo-root preflight keeps working. Evaluated before any
-    # side effects so a rejection leaves no worktree/branch/log residue.
+    # added worktree — never the primary checkout (#4445). An explicit read-only
+    # --cwd may still select the primary checkout. Evaluated before side effects.
     write_cwd_error = _resolve_write_cwd_error(
         mode=args.mode,
         worktree_arg=worktree_arg,
@@ -9149,37 +9096,6 @@ def _dispatch(
         )
         return 2
 
-    # #8516 AC-01: the agy CLI has no enforceable read-only mode (headless
-    # runs need --dangerously-skip-permissions, and the CLI re-anchors its
-    # cwd after spawn — 2026-09-24 live evidence), so an agy read-only
-    # dispatch never runs against the primary checkout. Pin it to a
-    # disposable dispatch worktree (reaped on a clean terminal settle,
-    # `_should_reap_settled_worktree`) unless the caller already named an
-    # isolated target. Placed after agent resolution so retired-lane aliases
-    # (gemini→agy) are covered; still before any worktree/log side effect.
-    if dispatch_agent == "agy" and args.mode == "read-only" and fleet_repo.default:
-        agy_target_error = _resolve_agy_read_only_target_error(
-            worktree_arg=worktree_arg,
-            cwd_arg=args.cwd,
-        )
-        if agy_target_error:
-            print(agy_target_error, file=sys.stderr)
-            return 2
-        if _agy_read_only_requires_auto_worktree(
-            agent=dispatch_agent,
-            mode=args.mode,
-            worktree_arg=worktree_arg,
-            cwd_arg=args.cwd,
-            repo_default=fleet_repo.default,
-        ):
-            worktree_arg = "auto"
-            print(
-                "📌 #8516: agy --mode read-only pinned to a disposable dispatch "
-                "worktree (bare --worktree); the agy CLI has no enforceable "
-                "read-only mode.",
-                file=sys.stderr,
-            )
-
     if dispatch_agent == "agy" and getattr(args, "model", None):
         from agent_runtime.adapters.agy import AgyAdapter
 
@@ -9392,6 +9308,7 @@ def _dispatch(
                     raw_path=resolved_worktree_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
@@ -9496,7 +9413,11 @@ def _dispatch(
         dry_run_worktree: Path | None = None
         dry_run_branch: str | None = None
         dry_run_worktree_telemetry: dict[str, Any] = {}
-        if requested_branch:
+        if detached_read_only:
+            assert resolved_worktree_raw is not None
+            dry_run_worktree = _normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root)
+            dry_run_worktree_telemetry["base_sha"] = resolved_worktree_base_sha
+        elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
             try:
@@ -9510,6 +9431,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     dry_run=True,
                     full_checkout=full_checkout,
@@ -9695,6 +9617,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
@@ -9708,6 +9631,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     run_nonce=run_nonce,
+                    detached=detached_read_only,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -9733,7 +9657,9 @@ def _dispatch(
                 requested_harness=requested_harness,
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
-                worktree_branch=requested_branch or _derive_worktree_branch(dispatch_agent, task_id),
+                worktree_branch=(
+                    None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
+                ),
                 worktree_base_sha=resolved_worktree_base_sha,
                 worktree_base=getattr(args, "base", None) or "main",
                 agent_alias_note=agent_alias_note,
@@ -11731,14 +11657,15 @@ def build_parser() -> argparse.ArgumentParser:
             "Allowlisted fleet repository for worktree creation and GitHub "
             "targeting (#672 P2.1). Keys come from scripts/config/fleet_repos.yaml "
             "(public, infra-private, hramatka). Default: public primary. Sibling "
-            "keys require --worktree (auto) or --cwd; task state stays on the "
+            "write modes require --worktree (auto) or --cwd; task state stays on the "
             "public primary control plane. Legacy manual sibling --cwd flow remains valid."
         ),
     )
     d.add_argument(
         "--cwd",
         default=None,
-        help="Working directory for the worker (default: primary checkout). "
+        help="Working directory for the worker (read-only defaults to a detached dispatch worktree; "
+        "pass --cwd explicitly to use the primary checkout). "
         "For workspace-write/danger it must be a verified added "
         "worktree, never the primary checkout — prefer --worktree. "
         "Sibling-repo flow: prefer `--repo KEY --worktree`, or manual "

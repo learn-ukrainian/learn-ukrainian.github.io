@@ -178,19 +178,22 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
 
 
-def test_read_only_primary_ignores_concurrent_driver_and_venv_writes(tmp_tasks_dir, tmp_path, monkeypatch):
-    """#9094: another process's ignored primary-checkout state cannot fail a review."""
-    checkout = (tmp_path / "primary").resolve()
-    checkout.mkdir()
-    _seed_read_only_checkout_fixture(checkout, monkeypatch)
-    gitignore = checkout / ".gitignore"
-    gitignore.write_text(gitignore.read_text(encoding="utf-8") + ".claude/\n.venv/\n", encoding="utf-8")
-    monkeypatch.setattr(delegate, "_REPO_ROOT", checkout)
-    task_id = "primary-concurrent-state"
+def test_read_only_worktree_ignores_concurrent_primary_writes(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#9094: the task snapshot covers only its detached worktree."""
+    primary = (tmp_path / "primary").resolve()
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = (tmp_path / "worktree").resolve()
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary, check=True, capture_output=True, timeout=30,
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    task_id = "worktree-concurrent-primary"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
     paths = (
-        ".claude/infra-epic/briefs/impl-9066.md",
+        ".claude/x.md",
         ".venv/lib/python3.12/site-packages/package/new.py",
     )
 
@@ -203,7 +206,7 @@ for relative in sys.argv[2:]:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text('other process\\n', encoding='utf-8')
 """
-        subprocess.run([sys.executable, "-c", script, str(checkout), *paths], check=True, timeout=30)
+        subprocess.run([sys.executable, "-c", script, str(primary), *paths], check=True, timeout=30)
         return _finalize_mock_result()
 
     with patch("agent_runtime.runner.invoke", side_effect=other_process_writes):
@@ -221,12 +224,14 @@ for relative in sys.argv[2:]:
     assert rc == 0
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
-    assert set(state["read_only_ignored_mutation_paths"]) == set(paths)
+    assert state["read_only_ignored_mutation_paths"] == []
 
 
-@pytest.mark.parametrize("path", ["tracked.txt", "data/projects/hydrated.json"])
-def test_read_only_primary_still_fails_own_checkout_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
-    """#9094: shared-state exclusions do not hide tracked edits or task artifacts."""
+@pytest.mark.parametrize(
+    "path", ["tracked.txt", "data/projects/hydrated.json", ".claude/x.md", ".venv/package/new.py"]
+)
+def test_read_only_explicit_primary_still_fails_checkout_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
+    """Explicit primary cwd retains the original whole-checkout snapshot."""
     checkout = (tmp_path / "primary").resolve()
     checkout.mkdir()
     _seed_read_only_checkout_fixture(checkout, monkeypatch)
@@ -259,8 +264,9 @@ def test_read_only_primary_still_fails_own_checkout_writes(path, tmp_tasks_dir, 
     assert state["last_error"] == f"read-only checkout mutation detected: {path}"
 
 
-def test_read_only_worktree_still_fails_untracked_deploy_state(tmp_tasks_dir, tmp_path, monkeypatch):
-    """#9094: the primary-only exception does not mask a worktree's own files."""
+@pytest.mark.parametrize("path", ["tracked.txt", ".claude/x.md"])
+def test_read_only_worktree_still_fails_own_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
+    """Tracked and untracked writes in the task's worktree are attributable."""
     primary = (tmp_path / "primary").resolve()
     primary.mkdir()
     _seed_read_only_checkout_fixture(primary, monkeypatch)
@@ -272,14 +278,12 @@ def test_read_only_worktree_still_fails_untracked_deploy_state(tmp_tasks_dir, tm
         capture_output=True,
         timeout=30,
     )
-    gitignore = checkout / ".gitignore"
-    gitignore.write_text(gitignore.read_text(encoding="utf-8") + ".claude/\n", encoding="utf-8")
     task_id = "worktree-own-state"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
 
     def worker_writes(*_args, **_kwargs):
-        target = checkout / ".claude" / "hooks" / "untracked.sh"
+        target = checkout / path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("task write\n", encoding="utf-8")
         return _finalize_mock_result()
@@ -298,7 +302,7 @@ def test_read_only_worktree_still_fails_untracked_deploy_state(tmp_tasks_dir, tm
     state = delegate._read_state(state_path)
     assert rc == 1
     assert state["status"] == "failed"
-    assert state["read_only_mutation_paths"] == [".claude/hooks/untracked.sh"]
+    assert state["read_only_mutation_paths"] == [path]
 
 
 @pytest.mark.parametrize("edit", ["overwrite", "append"])
