@@ -3276,7 +3276,12 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     tmp_path,
     monkeypatch,
 ):
-    """#4840: read-only seminar review leaks must be visible but never deleted."""
+    """#4840: read-only seminar review leaks must be visible but never deleted.
+
+    #8516 AC-02 supersedes the original diagnostic-only classification: the
+    gitignored ``.cache/`` leak is NOT recognized runtime/build noise, so it
+    now fails the task and is named alongside the untracked leaks.
+    """
     worktree = tmp_path / "seminar-review"
     worktree.mkdir()
     _init_git_repo_for_test(worktree, monkeypatch)
@@ -3325,15 +3330,17 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert state["read_only_checkout_pre"] == {}
     assert state["read_only_snapshot_retention"] == "full"
     assert (delegate._read_only_snapshot_dir_for("read-only-seminar-leak") / "read_only_checkout_post.json").is_file()
-    assert state["read_only_mutation_paths"] == leaked_paths
-    assert state["read_only_ignored_mutation_paths"] == ignored_paths
+    # #8516 AC-02: the ignored .cache/ leak is a named mutation too; only
+    # recognized runtime/build noise stays diagnostic-only.
+    assert state["read_only_mutation_paths"] == sorted(all_written_paths)
+    assert state["read_only_ignored_mutation_paths"] == []
     assert state["read_only_checkout_post"] == {
         ".cache/lemma-frequency-c1-999.json": "!!",
         "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md": "??",
         "curriculum/l2-uk-en/bio/andrii-malyshko/status/module.json": "??",
     }
-    assert state["last_error"] == "read-only checkout mutation detected: " + ", ".join(leaked_paths)
-    assert all((worktree / relative_path).exists() for relative_path in leaked_paths)
+    assert state["last_error"] == "read-only checkout mutation detected: " + ", ".join(sorted(all_written_paths))
+    assert all((worktree / relative_path).exists() for relative_path in all_written_paths)
 
 
 _ENTIRE_HARNESS_TELEMETRY_PATHS = (
@@ -3643,21 +3650,21 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
 
     after_cache_leak = {**after_runtime, ".cache/lemma-frequency-c1-999.json": "!!"}
-    assert delegate._read_only_mutation_paths(before, after_cache_leak) == []
-    assert delegate._read_only_ignored_mutation_paths(before, after_cache_leak) == sorted(
-        [*after_runtime, ".cache/lemma-frequency-c1-999.json"]
-    )
+    # #8516 AC-02: an ignored status alone no longer exempts; .cache/ is not
+    # recognized runtime noise, so the leak is a named mutation.
+    assert delegate._read_only_mutation_paths(before, after_cache_leak) == [".cache/lemma-frequency-c1-999.json"]
+    assert delegate._read_only_ignored_mutation_paths(before, after_cache_leak) == sorted(after_runtime)
+    assert delegate._read_only_mutation_paths(
+        {".cache/lemma-frequency-c1-999.json": "!!"},
+        {},
+    ) == [".cache/lemma-frequency-c1-999.json"]
     assert (
-        delegate._read_only_mutation_paths(
+        delegate._read_only_ignored_mutation_paths(
             {".cache/lemma-frequency-c1-999.json": "!!"},
             {},
         )
         == []
     )
-    assert delegate._read_only_ignored_mutation_paths(
-        {".cache/lemma-frequency-c1-999.json": "!!"},
-        {},
-    ) == [".cache/lemma-frequency-c1-999.json"]
 
     # Force-added tracked file under an exempted prefix must still trip (#6803 r2 / #6860).
     tracked_session = ".agent/sessions/force-added.json"
@@ -3723,12 +3730,17 @@ def test_read_only_dispatch_allows_harness_runtime_state(
         assert (checkout / relative_path).exists()
 
 
-def test_read_only_dispatch_allows_gitignored_cache_write(
+def test_read_only_dispatch_fails_on_gitignored_non_noise_write(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """#7253: a new gitignored cache file is diagnostic-only, not a failure."""
+    """#8516 AC-02: a new gitignored non-noise file now FAILS the task.
+
+    Supersedes #7253's diagnostic-only classification: ``.cache/`` is not
+    recognized harness/runtime state, so a worker writing there mutated the
+    checkout and the task must fail with the path named.
+    """
     checkout = (tmp_path / "gitignored-cache").resolve()
     checkout.mkdir(parents=True, exist_ok=True)
     _seed_read_only_checkout_fixture(checkout, monkeypatch)
@@ -3759,13 +3771,13 @@ def test_read_only_dispatch_allows_gitignored_cache_write(
         )
 
     state = delegate._read_state(state_path)
-    assert rc == 0
+    assert rc == 1
     assert state is not None
-    assert state["status"] == "done"
-    assert state["read_only_mutation_paths"] == []
-    assert state["read_only_ignored_mutation_paths"] == [cache_path]
-    assert state["last_error"] is None
-    assert state["read_only_snapshot_retention"] == "digest"
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [cache_path]
+    assert state["read_only_ignored_mutation_paths"] == []
+    assert state["last_error"] == f"read-only checkout mutation detected: {cache_path}"
+    assert state["read_only_snapshot_retention"] == "full"
     assert (checkout / cache_path).exists()
 
 
@@ -7051,6 +7063,7 @@ def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
 
 def test_dispatch_gemini_worker_env_strips_gh_token(
     tmp_tasks_dir,
+    tmp_path,
     monkeypatch,
 ):
     import argparse
@@ -7075,6 +7088,10 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    # The #8516 agy read-only target guard shells out to git, which fake Popen
+    # breaks; it is pinned by its own dedicated tests.
+    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="gemini",
@@ -7083,7 +7100,10 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        # #8516: gemini→agy read-only with no target now auto-pins a real
+        # dispatch worktree; this env-policy test passes an out-of-repo
+        # scratch cwd instead so no worktree is created under fake Popen.
+        cwd=str(tmp_path),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -7099,6 +7119,7 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
 
 def test_dispatch_agy_worker_env_strips_gh_token(
     tmp_tasks_dir,
+    tmp_path,
     monkeypatch,
 ):
     """The GH_TOKEN strip is a seat policy, not a spelling policy (#7020).
@@ -7131,6 +7152,10 @@ def test_dispatch_agy_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    # The #8516 agy read-only target guard shells out to git, which fake Popen
+    # breaks; it is pinned by its own dedicated tests.
+    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="agy",
@@ -7139,7 +7164,10 @@ def test_dispatch_agy_worker_env_strips_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        # #8516: agy read-only with no target now auto-pins a real dispatch
+        # worktree; this env-policy test passes an out-of-repo scratch cwd
+        # instead so no worktree is created under fake Popen.
+        cwd=str(tmp_path),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -7155,6 +7183,7 @@ def test_dispatch_agy_worker_env_strips_gh_token(
 
 def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
     tmp_tasks_dir,
+    tmp_path,
     monkeypatch,
 ):
     """`--agent gemini` is a permanent retired-CLI alias (operator 2026-08-18):
@@ -7183,6 +7212,10 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    # The #8516 agy read-only target guard shells out to git, which fake Popen
+    # breaks; it is pinned by its own dedicated tests.
+    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="gemini",
@@ -7191,7 +7224,10 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        # #8516: gemini→agy read-only with no target now auto-pins a real
+        # dispatch worktree; this alias test passes an out-of-repo scratch
+        # cwd instead so no worktree is created under fake Popen.
+        cwd=str(tmp_path),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -9043,6 +9079,133 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     )
     assert err is not None
     assert "primary checkout" in err
+
+
+# --- _resolve_agy_read_only_target_error / auto-pin unit tests (#8516 AC-01) -
+
+
+def test_read_only_agy_target_guard_allows_unspecified_or_auto_worktree():
+    assert delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=None) is None
+    assert delegate._resolve_agy_read_only_target_error(worktree_arg="auto", cwd_arg=None) is None
+
+
+def test_read_only_agy_target_guard_rejects_primary_cwd(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    err = delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(main))
+    assert err is not None
+    assert "primary checkout" in err
+    assert "#8516" in err
+
+
+def test_read_only_agy_target_guard_rejects_subdir_of_primary_cwd(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    subdir = main / "pkg"
+    subdir.mkdir()
+    err = delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(subdir))
+    assert err is not None
+    assert "primary checkout" in err
+
+
+def test_read_only_agy_target_guard_rejects_explicit_worktree_at_primary(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    err = delegate._resolve_agy_read_only_target_error(worktree_arg=str(main), cwd_arg=None)
+    assert err is not None
+    assert "primary checkout" in err
+
+
+def test_read_only_agy_target_guard_allows_added_worktree_cwd(tmp_path):
+    _, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    assert delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(dispatch_wt)) is None
+
+
+def test_read_only_agy_auto_worktree_pin_scoping():
+    """The auto-pin fires only for agy + read-only + default repo + no explicit target."""
+    assert delegate._agy_read_only_requires_auto_worktree(
+        agent="agy", mode="read-only", worktree_arg=None, cwd_arg=None, repo_default=True
+    )
+    for agent, mode, worktree_arg, cwd_arg, repo_default in [
+        ("codex", "read-only", None, None, True),  # other lanes unchanged (AC-03)
+        ("agy", "workspace-write", None, None, True),  # write modes have their own guard
+        ("agy", "read-only", "auto", None, True),  # explicit --worktree
+        ("agy", "read-only", None, "/somewhere", True),  # explicit --cwd
+        ("agy", "read-only", None, None, False),  # sibling --repo has its own rule
+    ]:
+        assert not delegate._agy_read_only_requires_auto_worktree(
+            agent=agent, mode=mode, worktree_arg=worktree_arg, cwd_arg=cwd_arg, repo_default=repo_default
+        )
+
+
+def test_read_only_agy_dispatch_auto_pins_worktree_end_to_end(tmp_tasks_dir, monkeypatch, capsys):
+    """#8516 AC-01: cmd_dispatch routes a target-less agy read-only dispatch
+    into worktree creation; other lanes are untouched."""
+    import argparse
+    import contextlib
+
+    ensure_calls: list[dict] = []
+
+    def fake_ensure_worktree(**kwargs):
+        ensure_calls.append(kwargs)
+        raise RuntimeError("sentinel: worktree creation reached")
+
+    @contextlib.contextmanager
+    def _null_lock(*_args, **_kwargs):
+        yield
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24682
+        stdin = _FakeStdin()
+
+    def fake_popen(*_args, **_kwargs):
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", fake_ensure_worktree)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **kwargs: "0" * 40)
+    monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "0" * 40)
+    monkeypatch.setattr(delegate, "worktree_lock", _null_lock)
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    agy_args = argparse.Namespace(
+        agent="agy",
+        task_id="agy-read-only-pin-probe",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+    rc = delegate.cmd_dispatch(agy_args)
+    captured = capsys.readouterr()
+    assert rc == 1  # sentinel aborts after the pin routed into worktree creation
+    assert ensure_calls and ensure_calls[0]["agent"] == "agy"
+    assert "#8516" in captured.err
+    assert "sentinel: worktree creation reached" in captured.err
+
+    ensure_calls.clear()
+    codex_args = argparse.Namespace(
+        agent="codex",
+        task_id="codex-read-only-no-pin-probe",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+    rc = delegate.cmd_dispatch(codex_args)
+    assert rc == 0  # fake Popen "ran" the worker without any worktree creation
+    assert ensure_calls == []
 
 
 def _add_acp_runtime(main: Path) -> Path:
