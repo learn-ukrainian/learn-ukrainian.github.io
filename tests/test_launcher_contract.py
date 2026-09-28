@@ -222,6 +222,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         # The core's deploy staleness gate sources this; without package.json
         # in the sandbox it warns and passes (#5958).
         "scripts/lib/deploy_extensions.sh",
+        "scripts/lib/project_interpreter.sh",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -383,6 +384,7 @@ def _core_driver_exit_fixture(
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
+        "scripts/lib/project_interpreter.sh",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -715,6 +717,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
+        "scripts/lib/project_interpreter.sh",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
     ):
