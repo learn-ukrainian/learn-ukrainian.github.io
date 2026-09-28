@@ -315,7 +315,7 @@ def test_run_inbox_stop_after_seconds_checks_between_groups(mock_invoke):
     second = _make_thread("claude", count=1)
     mock_invoke.return_value = _ok_result("claude")
 
-    with patch("scripts.ai_agent_bridge._inbox.time.monotonic", side_effect=[0.0, 5.0]):
+    with patch("scripts.ai_agent_bridge._inbox._monotonic", side_effect=[0.0, 5.0]):
         summary = _inbox.run_inbox("claude", stop_after_seconds=1)
 
     assert summary.threads_processed == 1
