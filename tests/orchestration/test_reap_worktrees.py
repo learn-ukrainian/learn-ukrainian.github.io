@@ -1146,6 +1146,15 @@ def test_squash_merge_branch_force_delete(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    # #8998: on a loaded CI runner, the locked region's default 5s-per-call /
+    # 25s-region budget (production values, tuned for a live dispatch host)
+    # can be outrun by an otherwise-harmless slow git subprocess, flipping
+    # this assertion's "removed" to a timeout "skipped" (see the sibling
+    # tests below at line ~4199 that shrink these same knobs to deliberately
+    # hit that path). Widen them here so the assertion tracks the reaper's
+    # actual decision, not host git-call latency.
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 60.0)
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 300.0)
     repo = init_repo(tmp_path)
     worktree_path = add_worktree(repo, "codex/squash-merged")
 
