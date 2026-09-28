@@ -1,7 +1,9 @@
 """
-Build Pre-Generated Cloze Shard for Curated Deck.
-Extracts authentic textbook sentences from data/sources.db for all teacher vocabulary words,
-generates smart distractors, and writes site/public/lexicon/practice-cloze.teacher.json.
+Build the legacy teacher-lesson cloze source for the Curated Deck key list.
+Extracts textbook sentences from data/sources.db for the teacher intake words and writes
+site/src/data/lexicon-teacher-cloze.json, from which generate-teacher-lesson-keys.ts derives
+the Curated Deck membership.  The served ``practice-cloze.teacher.json`` is owned by the
+teacher-deck refresh (scripts/lexicon/teacher_deck.py, #8843); this script never writes it.
 """
 
 import argparse
@@ -23,7 +25,6 @@ from scripts.verification.vesum import verify_lemma
 
 INTAKE_JSON: Path | None = None
 SOURCES_DB = REPO_ROOT / "data/sources.db"
-OUTPUT_PUBLIC_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
 OUTPUT_SRC_JSON = REPO_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 
 # These cards contain private-teacher content or reference it as a distractor.
@@ -94,7 +95,7 @@ def main():
         epilog="Example: .venv/bin/python -m "
         "scripts.lexicon.build_teacher_deck_cloze --sources-db data/sources.db "
         "--vesum-db data/vesum.db\n"
-        "Outputs: both teacher-cloze JSON artifacts; no database writes.\n"
+        "Outputs: site/src/data/lexicon-teacher-cloze.json only; no database writes.\n"
         "Exit codes: 0 success; nonzero missing inputs or build failure.\n"
         "Related: scripts/audit/check_teacher_cloze_content.py",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -198,15 +199,11 @@ def main():
     conn.close()
     payload = {"cloze": exclude_private_cloze_cards(extracted_cloze)}
 
-    OUTPUT_PUBLIC_JSON.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PUBLIC_JSON, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-
     OUTPUT_SRC_JSON.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_SRC_JSON, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"Successfully generated {len(payload['cloze'])} Cloze items -> {OUTPUT_PUBLIC_JSON} and {OUTPUT_SRC_JSON}")
+    print(f"Successfully generated {len(payload['cloze'])} Cloze items -> {OUTPUT_SRC_JSON}")
 
 
 if __name__ == "__main__":

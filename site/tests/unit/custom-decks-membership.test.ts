@@ -72,8 +72,9 @@ describe('getTeacherTableVirtualDeck weekly source boundary (#4387)', () => {
     });
     expect(deck.cloze_items).toBeUndefined();
 
-    // Current teacher table: 1155 data rows → 1133 unique UK.
-    expect(deck.lemma_keys.length).toBe(1133);
+    // Teacher table (DOCX 35da757f): 1155 data rows → 1134 distinct UK cells →
+    // 1125 entries after merging capitalisation variants of the same key (#8843).
+    expect(deck.lemma_keys.length).toBe(1125);
     expect(deck.lemma_keys.some((key) => /\s/.test(key))).toBe(true);
     expect(deck.lemma_keys[0]).toBe('Справедливий');
   });

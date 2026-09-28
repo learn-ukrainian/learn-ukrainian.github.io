@@ -253,7 +253,13 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
     temp_path.replace(pointer_path)
 
 
-def ensure_release(release_tag: str, repo: str) -> None:
+def ensure_release(
+    release_tag: str,
+    repo: str,
+    *,
+    title: str = "Atlas practice deck",
+    notes: str = "Release asset storage for generated Atlas practice deck shards.",
+) -> None:
     try:
         existing = subprocess.run(
             ["gh", "release", "view", release_tag, "--repo", repo],
@@ -276,9 +282,9 @@ def ensure_release(release_tag: str, repo: str) -> None:
                 "--repo",
                 repo,
                 "--title",
-                "Atlas practice deck",
+                title,
                 "--notes",
-                "Release asset storage for generated Atlas practice deck shards.",
+                notes,
             ],
             check=True,
             timeout=GH_RELEASE_CREATE_TIMEOUT_SECONDS,

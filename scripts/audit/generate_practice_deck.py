@@ -125,6 +125,11 @@ DEFAULT_GZIP_LIMIT = 180_000
 # for the source-preserved inventory cards admitted by the identity-decoy gate.
 DEFAULT_CLOZE_RAW_LIMIT = 2_250_000
 DEFAULT_CLOZE_GZIP_LIMIT = 240_000
+# Teacher-table deck (#8843): its own budget and build gate, separate from the
+# CEFR shards above.  The files load only when that deck is selected; the site
+# hydrate step (site/scripts/hydrate-teacher-deck.mjs) enforces the same limits.
+TEACHER_DECK_GZIP_LIMIT = 600_000
+TEACHER_CLOZE_GZIP_LIMIT = 560_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
