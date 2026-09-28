@@ -298,7 +298,13 @@ hash of `phase3_historical_document_chronology.py` (`67ae42be05f8`) to that
 file's current hash (`ee7721a822eb`). The spine contract does not embed
 either value.
 
-The consumer-check column remains open at this checkpoint.
+`consumers-P3.tsv` was filled from the round-6 junit files and blob
+comparisons: 2,589 rows checked, 577 blank. Checked rows are passing test
+files, scripts imported by those files, documentation mentions, and frozen
+JSON locators whose Git blob equals `55d0ed1515`. The largest blank consumer
+is `decolonization_language_reviews.py` (251 rows): its project test file
+failed, so it was not cited. Package allowlists and storage-scanner rows
+were not in the two open-model junit runs, so they stay blank.
 
 ## Unresolved P3a gates at this checkpoint
 
