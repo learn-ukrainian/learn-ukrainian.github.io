@@ -73,7 +73,10 @@ repos:
       - id: check-added-large-files
         name: block accidentally large files
         args: [--maxkb=2000]
-        exclude: ^data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors$
+        # The P3 CI capture is prefix-packed and still 2273KB. It is the phase
+        # record, not an accidental blob. The 2000KB cap still applies to
+        # everything else.
+        exclude: ^(?:data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors|registry/artifacts/test-baseline\.p3\.json)$
       - id: check-merge-conflict
       - id: end-of-file-fixer
         # The exact frozen K blob lacks a trailing newline; its classified
