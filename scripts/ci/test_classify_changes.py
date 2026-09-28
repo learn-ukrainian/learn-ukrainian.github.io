@@ -442,13 +442,16 @@ class ClassifierTests(unittest.TestCase):
 
     def test_merge_group_compare_failure_fails_closed(self):
         # Labels resolve cleanly, so the compare API is really reached.
-        stdout, compare, _ = self._run_main_merge_group(
-            _queue_ref(7, _MAIN_SHA), api_labels={7: []}, compare_error=OSError(),
-        )
-        compare.assert_called_once()
-        self.assertIn("files=0", stdout.getvalue())
-        self.assertIn("pytest_mode=full", stdout.getvalue())
-        self.assertIn("docs_only=false", stdout.getvalue())
+        for labels in ([], ["full-ci"]):
+            with self.subTest(labels=labels):
+                stdout, compare, _ = self._run_main_merge_group(
+                    _queue_ref(7, _MAIN_SHA), api_labels={7: labels}, compare_error=OSError(),
+                )
+                compare.assert_called_once()
+                self.assertIn("files=0", stdout.getvalue())
+                self.assertIn("pytest_mode=full", stdout.getvalue())
+                self.assertIn("frontend=true", stdout.getvalue())
+                self.assertIn("docs_only=false", stdout.getvalue())
 
     def test_content_rename_within_roots(self):
         # D6 (#8399): compare_paths emits both rename endpoints; a rename that
@@ -486,11 +489,22 @@ class ClassifierTests(unittest.TestCase):
             self.classify(paths, event="merge_group", tree_paths=tree), frontend="false"
         )
 
-    def test_full_ci_label_forces_full_over_content(self):
+    def test_full_ci_label_forces_python_only_and_preserves_path_frontend(self):
         self.assert_full(
             self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], labels=["full-ci"]),
+            frontend="false",
+        )
+        self.assert_full(self.classify(["tests/test_example.py"], labels=["full-ci"]))
+        self.assert_full(
+            self.classify(["site/src/components/X.astro"], labels=["full-ci"]),
             frontend="true",
         )
+        curriculum = ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"]
+        self.assert_docs(self.classify(curriculum, event="merge_group"), reads_content="true")
+        self.assert_full(self.classify(curriculum, event="merge_group", labels=["full-ci"]))
+        # The label changes only the Python tier.
+        self.assert_docs(self.classify(["docs/guide.md"]))
+        self.assert_frontend_only(self.classify(["site/src/components/X.astro"]))
 
     def test_contract_and_unknown_paths_cannot_skip(self):
         for path in (
@@ -532,21 +546,27 @@ class ClassifierTests(unittest.TestCase):
                     self.assert_full(self.classify([path]), frontend="true")
         self.assert_frontend_only(self.classify(["packages/activity-kit/src/index.ts"]))
 
+    def test_practice_deck_only_runs_frontend_with_or_without_full_ci(self):
+        deck = "registry/practice/noun_mechanics_deck.json"
+        for event in ("pull_request", "merge_group"):
+            for labels in ([], ["full-ci"]):
+                with self.subTest(event=event, labels=labels):
+                    self.assert_full(self.classify([deck], event=event, labels=labels), frontend="true")
+
     def test_event_and_label_overrides(self):
         # Only pull_request and merge_group classify by changed paths (#8399);
         # every other event forces the full tier including frontend.
         for event in ("schedule", "workflow_dispatch", "unknown"):
             with self.subTest(event=event):
                 self.assert_full(self.classify(["docs/guide.md"], event=event), frontend="true")
-        self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]), frontend="true")
+        self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]))
         self.assert_docs(self.classify(["docs/guide.md"], labels=["unrelated"]))
         # GitHub label names are case-insensitive (#8505).
         for label in ("Full-CI", "FULL-CI"):
             with self.subTest(label=label):
-                self.assert_full(self.classify(["docs/guide.md"], labels=[label]), frontend="true")
+                self.assert_full(self.classify(["docs/guide.md"], labels=[label]))
                 self.assert_full(
                     self.classify(["docs/guide.md"], event="merge_group", labels=[label]),
-                    frontend="true",
                 )
         self.assert_docs(self.classify(["docs/guide.md"], labels=["full-ci-later"]))
         # #9073 D4: a docs merge runs the full Python tier.
@@ -655,15 +675,16 @@ class ClassifierTests(unittest.TestCase):
 
     def test_pull_request_reads_current_labels_not_the_payload(self):
         # #8505: a rerun replays the original payload, so labels always come
-        # from the API. full-ci there forces full without the compare API.
+        # from the API. full-ci forces full, but paths still decide Frontend.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [], "number": 7}},
             api_labels=["full-ci"],
+            paths=["tests/test_example.py"],
         )
         labels_api.assert_called_once_with("owner/repo", 7)
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout)
-        self.assertIn("frontend=true", stdout)
+        self.assertIn("frontend=false", stdout)
         # A stale payload full-ci that is no longer on the PR does not count.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [{"name": "full-ci"}], "number": 7}},
@@ -680,8 +701,17 @@ class ClassifierTests(unittest.TestCase):
             api_labels=["Full-CI"],
             paths=["docs/guide.md"],
         )
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("frontend=false", stdout)
+        stdout, compare, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            api_labels=["full-ci"],
+            paths=["site/src/components/X.astro"],
+        )
+        compare.assert_called_once()
+        self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("frontend=true", stdout)
 
     def test_pull_request_label_lookup_failure_fails_closed(self):
         # S3 (#8505): a label-lookup error must fail closed to the full tier.
@@ -782,8 +812,9 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(called, [8656])
         refs_api.assert_called_once_with("owner/repo", "main")
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
+        self.assertIn("frontend=false", stdout.getvalue())
         # Without the label the group still classifies docs as full (#9073 D4).
         stdout, compare, (called, _, _) = self._run_main_merge_group(
             ref, api_labels={8656: ["bug"]}, queue_refs=refs, paths=["docs/guide.md"],
@@ -801,7 +832,7 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8657, 8656])
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_with_three_prs_honours_the_first_prs_label(self):
@@ -815,7 +846,7 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8650, 8657, 8656])
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
         # No PR in the group carries full-ci: docs still take the full tier.
         stdout, compare, (called, _, _) = self._run_main_merge_group(

@@ -420,11 +420,14 @@ def classify_tier(
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
 
-    # Non-classified event / full-ci / empty / capped: force full (P1.1).
-    if event not in _PATH_CLASSIFIED_EVENTS or has_full_ci(labels) or not paths or len(paths) >= 300:
+    # Unclassified events and unknown paths fail closed, including Frontend.
+    if event not in _PATH_CLASSIFIED_EVENTS or not paths or len(paths) >= 300:
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
+    # The label changes only the Python tier; known paths still decide Frontend.
+    if has_full_ci(labels):
+        return _full(shard_count, frontend="true" if frontend else "false")
     # A Python or shell file is not frontend-only merely because it lives
     # under site/ or packages/activity-kit/.
     if event == "merge_group" and any(
@@ -628,7 +631,7 @@ def main() -> None:
                 os.environ.get("HEAD_REF", ""), os.environ.get("BASE", ""), os.environ["REPO"],
             ):
                 labels.extend(current_pr_labels(os.environ["REPO"], number))
-        if event in _PATH_CLASSIFIED_EVENTS and not has_full_ci(labels):
+        if event in _PATH_CLASSIFIED_EVENTS:
             # pull_request and merge_group both classify by changed paths;
             # the workflow maps pull_request.base/head or merge_group
             # .base_sha/.head_sha into BASE/HEAD. For a merge group that is
