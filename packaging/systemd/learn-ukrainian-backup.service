@@ -1,6 +1,5 @@
 [Unit]
 Description=Learn Ukrainian data backup (restic via rclone remote)
-After=network.target
 
 [Service]
 Type=oneshot
@@ -17,6 +16,3 @@ TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
 ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
-
-[Install]
-WantedBy=default.target

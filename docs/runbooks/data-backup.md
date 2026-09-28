@@ -178,7 +178,7 @@ prune old versions. A per-user `flock` under `XDG_RUNTIME_DIR` (or `/run/user/$U
 then `/tmp`) serializes backup, retention, init, and restore execution. It waits
 up to one hour; a timeout fails visibly. The kernel releases the lock after a
 crash, and the next lock holder clears stale private staging before running.
-The `flock` command is required on the backup host.
+The `flock` command is required on the backup host (`brew install flock` on macOS).
 
 Each successful run contains `BACKUP-RECEIPT.json` with:
 
@@ -324,17 +324,22 @@ checkout (preview by default; writes only with `--apply`):
 
 The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
 Validation errors name the variable and condition without its value. The
-scheduled wrapper replaces the configured repository value (with or without
-the `rclone:` prefix) and password-file path in backup and retention output
+scheduled wrapper replaces either configured repository value, its remote
+path, and the password-file path in backup and retention output
 before sending it to the journal. `scripts/orchestration/run_scheduled_backup.sh`
-writes `batch_state/backups/last-run.json` on success and on failure (UTC
+writes `batch_state/backups/last-run.json` after an attempted backup (UTC
 start/end, exit status, restic run id, snapshot count, bytes added). A failed
 run exits non-zero, and so does a failed log capture or a failed
 `last-run.json` write, so `systemctl --user list-timers` and
 `journalctl --user -u learn-ukrainian-backup.service` show it; there is no
 separate alerting system.
-If systemd times out or kills the wrapper, `last-run.json` may still show the
-previous run; use its timestamp together with the unit status.
+Before each scheduled run's preflight, the wrapper removes the previous receipt;
+an early failure therefore leaves no receipt. If systemd times out or kills the
+wrapper before this point, `last-run.json` may still show the previous run; use
+its timestamp together with the unit status. The user manager has no reliable
+network-ready target, so a boot catch-up may fail visibly before network access
+is available. Existing snapshots remain available; the next scheduled backup
+or retention run retries at its usual daily or weekly interval.
 
 Elsewhere, the script remains suitable for launchd or cron after the one-time
 environment is available to that process. `backup --execute` returns nonzero

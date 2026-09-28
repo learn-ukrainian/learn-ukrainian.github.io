@@ -1332,6 +1332,26 @@ def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
     assert "must not be a symlink" in symlink_result.stderr
 
 
+def test_restore_latest_uses_parsed_time_with_mixed_offsets(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    older_id = "a" * 64
+    newer_id = "b" * 64
+    snapshots = _snapshot(older_id, "older", ["complete"], "2026-09-26T04:00:00+02:00")
+    snapshots += _snapshot(newer_id, "newer", ["complete"], "2026-09-26T03:00:00Z")
+    _write_snapshots(environment, tmp_path, snapshots)
+    snapshot_dir = Path(environment["FAKE_SNAPSHOT_DIR"])
+    snapshot_dir.mkdir()
+    (snapshot_dir / "BACKUP-RECEIPT.json").write_text('{"schema_version":1}\n', encoding="utf-8")
+
+    result = _run(environment, "restore", "latest", "--to", str(tmp_path / "restore-target"))
+
+    assert result.returncode == 0, result.stderr
+    assert f"arg=<dump> arg=<{newer_id}>" in _log(environment)
+    assert f"arg=<dump> arg=<{older_id}>" not in _log(environment)
+
+
 def test_restore_refuses_filesystem_root_as_project_overlap(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -2136,7 +2156,84 @@ def test_backup_lock_wait_is_bounded_and_loud(backup_environment: tuple[dict[str
         result = _run(environment, "retention", "--execute")
     assert result.returncode != 0
     assert "Timed out after 0s waiting for backup lock" in result.stderr
+    assert "waiting for lock" in result.stdout
     assert "arg=<snapshots>" not in _log(environment)
+
+
+@pytest.mark.skipif(not Path("/proc/self/fd").is_dir(), reason="Linux fd inspection required")
+def test_restic_and_git_children_do_not_inherit_backup_lock(
+    backup_environment: tuple[dict[str, str], Path, Path, Path]
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    restic = fake_bin / "restic"
+    original_restic = fake_bin / "restic-original"
+    restic.rename(original_restic)
+    environment["REAL_GIT"] = shutil.which("git") or ""
+    assert environment["REAL_GIT"]
+    environment["TEST_LOCK_PATH"] = str(
+        Path(environment["XDG_RUNTIME_DIR"]) / f"learn-ukrainian-backup.{os.getuid()}.lock"
+    )
+    lock_probe = (
+        'for fd in /proc/self/fd/*; do\n'
+        '  [[ "$(readlink "$fd")" == "$TEST_LOCK_PATH" ]] && exit 91\n'
+        'done\n'
+    )
+    _write_executable(restic, "#!/bin/bash\n" + lock_probe + 'exec "$(dirname "$0")/restic-original" "$@"\n')
+    _write_executable(fake_bin / "git", "#!/bin/bash\n" + lock_probe + 'exec "$REAL_GIT" "$@"\n')
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "arg=<backup>" in _log(environment)
+
+
+@pytest.mark.parametrize("invalid_output", ["bad-id", "jq-failure"])
+def test_retention_refuses_invalid_or_unreadable_forget_ids(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path, invalid_output: str
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    _write_snapshots(environment, tmp_path, snapshots)
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    environment["REAL_JQ"] = shutil.which("jq") or ""
+    assert environment["REAL_JQ"]
+    environment["TEST_INVALID_OUTPUT"] = invalid_output
+    _write_executable(
+        fake_bin / "jq",
+        '#!/bin/bash\n'
+        'if [[ "$1" == "-er" && "$2" == ".forget_ids[]" ]]; then\n'
+        '  [[ "$TEST_INVALID_OUTPUT" == "bad-id" ]] && { printf "bad-id\\n"; exit 0; }\n'
+        '  exit 42\n'
+        'fi\n'
+        'exec "$REAL_JQ" "$@"\n',
+    )
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    assert _forget_ids(environment) == []
+    assert "arg=<prune>" not in _log(environment)
+
+
+def test_missing_flock_error_includes_macos_install_hint(
+    backup_environment: tuple[dict[str, str], Path, Path, Path]
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    for command in ("dirname", "pwd", "sqlite3", "find", "git", "jq", "realpath", "touch", "uname"):
+        executable = shutil.which(command, path=os.environ["PATH"])
+        assert executable
+        (fake_bin / command).symlink_to(executable)
+    environment["PATH"] = str(fake_bin)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "brew install flock" in result.stderr
 
 
 def test_password_file_validation_names_variable_not_its_value(

@@ -95,6 +95,7 @@ write_last_run() {
       snapshot_count: (if $snapshot_count == "" then null else ($snapshot_count | tonumber) end),
       bytes_added: (if $bytes_added == "" then null else ($bytes_added | tonumber) end)
     }' > "$temporary" || { rm -f "$temporary"; return 1; }
+  jq -e . "$temporary" >/dev/null || { rm -f "$temporary"; return 1; }
   mv "$temporary" "$output" || { rm -f "$temporary"; return 1; }
   chmod 600 "$output" || return 1
 }
@@ -104,14 +105,17 @@ write_last_run() {
 # including regex metacharacters in rclone paths, without treating them as code.
 redact_backup_output() {
   jq -Rr --unbuffered '
-      ($ENV.LU_BACKUP_REPOSITORY // $ENV.RESTIC_REPOSITORY // "") as $repository
-      | ($ENV.RESTIC_PASSWORD_FILE // "") as $password_file
+      ($ENV.RESTIC_PASSWORD_FILE // "") as $password_file
+      | ([($ENV.LU_BACKUP_REPOSITORY // ""), ($ENV.RESTIC_REPOSITORY // "")]
+         | map(select(. != "")) | unique
+         | map(. as $repository | [
+             {value: $repository, replacement: "<repository>"},
+             {value: ($repository | sub("^rclone:"; "")), replacement: "<repository>"},
+             {value: ($repository | sub("^rclone:[^:]*:"; "")), replacement: "<repository>"}
+           ]) | add // []) as $repositories
       | (
-      reduce ([
-        {value: $repository, replacement: "<repository>"},
-        {value: ($repository | sub("^rclone:"; "")), replacement: "<repository>"},
-        {value: $password_file, replacement: "<password-file>"}
-      ] | map(select(.value != "")) | sort_by(.value | length) | reverse)[] as $item
+      reduce ([$repositories[], {value: $password_file, replacement: "<password-file>"}]
+        | map(select(.value != "")) | sort_by(.value | length) | reverse)[] as $item
         (. ; split($item.value) | join($item.replacement))
       )
     '
@@ -186,6 +190,10 @@ run_backup_and_record() {
   local started finished log status redact_status tee_status exit_status output
   local -a pipe_status
 
+  # Remove the prior receipt before any preflight that can fail. A missing
+  # receipt and a failed unit cannot be mistaken for a fresh success.
+  output="$(last_run_path)"
+  rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
   command -v jq >/dev/null 2>&1 ||
     { echo "scheduled-backup: jq is required" >&2; exit 78; }
   [[ -f "$BACKUP_SCRIPT" ]] ||
@@ -226,8 +234,7 @@ run_backup_and_record() {
     [[ "$exit_status" -ne 0 ]] || exit_status=1
   fi
 
-  output="$(last_run_path)"
-  if ! write_last_run "$status" "$started" "$finished" "$log" "$output"; then
+  if ! write_last_run "$exit_status" "$started" "$finished" "$log" "$output"; then
     echo "ERROR: could not write the last-run receipt: $output" >&2
     [[ "$exit_status" -ne 0 ]] || exit_status=1
   fi
