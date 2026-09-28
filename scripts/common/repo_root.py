@@ -47,11 +47,25 @@ def _lexical_absolute(path: Path) -> Path:
     return Path(os.path.normpath(os.fspath(path.absolute())))
 
 
-def _is_checkout_venv_entrypoint(interpreter: Path, checkout: Path) -> bool:
-    """True when ``interpreter`` is that checkout's ``.venv/bin/python`` or ``python3``."""
+def _venv_python(checkout: Path) -> Path:
+    """Path of ``checkout``'s project interpreter, whether or not the file exists."""
+    # Resolver definition: this join names that checkout's interpreter.
+    return checkout / ".venv" / "bin" / "python"
+
+
+def _venv_checkout_of(interpreter: Path) -> Path | None:
+    """Checkout that owns ``interpreter`` when it is that checkout's venv entrypoint.
+
+    ``python`` and ``python3`` under ``<checkout>/.venv/bin`` count. A toolchain
+    interpreter such as ``hostedtoolcache/.../bin/python`` does not.
+    """
     candidate = _lexical_absolute(interpreter)
-    venv_bin = _lexical_absolute(checkout / ".venv" / "bin")
-    return candidate.parent == venv_bin and candidate.name in _VENV_PYTHON_NAMES
+    if candidate.name not in _VENV_PYTHON_NAMES or candidate.parent.name != "bin":
+        return None
+    venv = candidate.parent.parent
+    if venv.name != ".venv":
+        return None
+    return venv.parent
 
 
 def project_interpreter(root: Path | None = None) -> Path:
@@ -61,31 +75,37 @@ def project_interpreter(root: Path | None = None) -> Path:
     imported. Import therefore succeeds when no project interpreter can be
     found; this function raises ``FileNotFoundError`` at the call.
 
-    ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
-    git directory and returns that primary checkout. Its ``.venv/bin/python``
-    is the project interpreter. A dispatch worktree has no local virtualenv,
-    so the worktree path is not a candidate while that primary file exists.
-    When the primary file is missing, ``sys.executable`` is accepted only when
-    it is the requested checkout's own ``.venv/bin/python`` (or ``python3``)
-    or the same entrypoint of that checkout's primary checkout. Another
-    checkout's interpreter raises ``FileNotFoundError``.
+    Resolution order for the requested checkout:
+
+    1. That checkout's own ``.venv/bin/python`` when the file exists.
+    2. Otherwise the primary checkout's ``.venv/bin/python``. The primary is
+       the git common-dir checkout ``main_checkout_root`` finds for a linked
+       worktree, and the checkout itself otherwise.
+    3. Otherwise ``sys.executable``. This is the CI case: the runner has no
+       project ``.venv``. ``sys.executable`` is refused only when it lives in
+       some other checkout's ``.venv`` — a foreign project interpreter must
+       not be returned for a checkout that asked for its own.
     """
-    repo = Path(__file__).resolve().parents[2] if root is None else root
+    repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
-    # Resolver definition: this join is the primary checkout's interpreter.
-    primary = primary_root / ".venv" / "bin" / "python"
-    if primary.is_file():
+    own = _venv_python(repo)
+    if own.is_file():
+        return own
+    primary = _venv_python(primary_root)
+    if primary_root != repo and primary.is_file():
         return primary
     current = Path(sys.executable)
-    if current.is_file() and (
-        _is_checkout_venv_entrypoint(current, repo) or _is_checkout_venv_entrypoint(current, primary_root)
-    ):
-        return current
-    raise FileNotFoundError(
-        "project interpreter not found: "
-        f"{primary} does not exist and sys.executable ({current}) "
-        "is not the requested checkout's .venv or its primary checkout's .venv"
-    )
+    owner = _venv_checkout_of(current)
+    if owner is not None:
+        allowed = {_lexical_absolute(repo), _lexical_absolute(primary_root)}
+        if owner not in allowed:
+            raise FileNotFoundError(
+                "project interpreter not found: "
+                f"{own} does not exist and {primary} does not exist and "
+                f"sys.executable ({current}) "
+                "is not the requested checkout's .venv or its primary checkout's .venv"
+            )
+    return current
 
 
 def resolve_repo_root(script_path: Path, parents: int) -> Path:

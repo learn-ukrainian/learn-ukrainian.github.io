@@ -18,9 +18,23 @@ from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
 
+
+def __getattr__(name: str) -> str:
+    """Resolve ``VENV_PYTHON`` on first use, not at import.
+
+    A release snapshot and a copied tree have no ``.venv``. Import of this
+    module (the sense-lint and API startup chain) must succeed there; the
+    interpreter is needed only when a later spawn asks for it.
+    """
+    if name != "VENV_PYTHON":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = str(project_interpreter())
+    globals()["VENV_PYTHON"] = value
+    return value
+
+
 # Base paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-VENV_PYTHON = str(project_interpreter())
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_YAML = CURRICULUM_DIR / "curriculum.yaml"
 PLANS_DIR = CURRICULUM_DIR / "plans"

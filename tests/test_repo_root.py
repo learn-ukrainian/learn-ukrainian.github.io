@@ -212,13 +212,38 @@ def test_project_interpreter_accepts_the_requested_worktree_venv_when_primary_ha
     assert project_interpreter(worktree) == local
 
 
-def test_project_interpreter_does_not_substitute_a_worktree_venv_for_a_foreign_interpreter(tmp_path, monkeypatch):
+def test_project_interpreter_prefers_the_requested_checkout_venv(tmp_path, monkeypatch):
+    """(a) The checkout's own ``.venv/bin/python`` wins over a foreign interpreter."""
     primary = tmp_path / "primary"
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
     _link_worktree(primary, worktree)
-    _write_venv_python(worktree)
+    _write_venv_python(primary)
+    own = _write_venv_python(worktree)
     foreign = _write_venv_python(tmp_path / "other-checkout")
     monkeypatch.setattr(sys, "executable", str(foreign))
 
-    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
-        project_interpreter(worktree)
+    assert project_interpreter(worktree) == own
+
+
+def test_project_interpreter_uses_the_primary_venv_when_the_checkout_has_none(tmp_path, monkeypatch):
+    """(b) A linked worktree with no ``.venv`` uses the primary checkout's interpreter."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    primary_python = _write_venv_python(primary)
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    assert project_interpreter(worktree) == primary_python
+
+
+def test_project_interpreter_uses_sys_executable_when_no_project_venv_exists(tmp_path, monkeypatch):
+    """(c) CI: no ``.venv`` anywhere, and ``sys.executable`` is not inside a checkout ``.venv``."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    ci_python = tmp_path / "hostedtoolcache" / "Python" / "3.12.8" / "x64" / "bin" / "python"
+    ci_python.parent.mkdir(parents=True)
+    ci_python.write_text("", encoding="utf-8")
+    monkeypatch.setattr(sys, "executable", str(ci_python))
+
+    assert project_interpreter(checkout) == ci_python

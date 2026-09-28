@@ -39,7 +39,7 @@ SCAN_SKIP = {
 ALLOWLIST: dict[str, tuple[int, str]] = {
     "scripts/common/repo_root.py": (
         1,
-        "defines project_interpreter(); the join is the primary checkout's interpreter",
+        "defines project_interpreter(); the join names a checkout's .venv interpreter (that checkout, else its primary)",
     ),
     "scripts/api/launchd_supervisor.py": (
         2,
@@ -88,6 +88,10 @@ ALLOWLIST: dict[str, tuple[int, str]] = {
     "scripts/projects/open_model_data/phase3_rule_author_runner.py": (
         1,
         "script_sha256 of this file is sealed into prepared run manifests; resume rejects hash drift",
+    ),
+    "scripts/projects/open_model_data/phase3_heldout_label_transport.py": (
+        1,
+        "tracked frozen v2 engine artifact; its file hash is pinned by the compatibility matrix (v2 engine artifact hash drift)",
     ),
 }
 

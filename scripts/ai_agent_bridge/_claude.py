@@ -55,7 +55,6 @@ from ._review_worktree import (
     review_target_payload,
 )
 
-VENV_PYTHON = project_interpreter()
 CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
 CLAUDE_ADVISORY_MODEL = "claude-opus-5"
 
@@ -491,7 +490,7 @@ def _launch_claude_background(msg, message_id, new_session):
 
     try:
         bridge_cmd = [
-            str(VENV_PYTHON), str(Path(__file__).parent / "__main__.py"),
+            str(project_interpreter()), str(Path(__file__).parent / "__main__.py"),
             "process-claude", str(message_id),
             "--no-timeout"
         ]
