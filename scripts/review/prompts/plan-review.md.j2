@@ -101,6 +101,33 @@ Exactly one of:
 Could be a gate:
 Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
 
+### Rules the validator enforces on the return
+
+A return that breaks any of these is recorded as REJECTED and the attempt is spent, however good the review is. Check the finished return against every line before answering:
+
+- The return is one YAML mapping.
+- The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`.
+- `kind` is `plan`, the kind of the manifest this prompt was rendered from.
+- `attempt.manifest_sha256` is exactly the Manifest SHA256 printed at the top of this prompt.
+- Each finding `id` is used once.
+- Every one of the ten checks in the template is present, and each is `clean` or a non-empty list of finding ids; an empty list is not `clean`.
+- No check is added beyond the ten in the template.
+- Every finding id is listed under exactly one check; an id listed under two checks, or under none, is rejected. When a finding touches two checks, list it under the one it belongs to and name the other in its `claim`.
+- A check lists only ids of findings that exist in `findings`.
+- A finding with `dimension: language` carries a `sub_dimension`, and no other finding does.
+- `sub_dimension` is one of `russianism`, `surzhyk`, `calque`, `paronym`, `government`, `agreement`, `orthography`, `register`, `euphony` or `stress`.
+- Each finding carries exactly one evidence branch (`evidence`, `unsupported_by_source` or `source_conflict`), never two and never none.
+- An `unsupported_by_source` finding has severity MINOR; MAJOR and BLOCKER are rejected for it.
+- `unsupported_by_source` lists at least one search.
+- Each search `outcome` is what the stored result of its receipt shows: `no_hits` only for a successful call with zero hits, `hits_but_no_support` only for one with hits, `unavailable` or `error` only for a call the ledger records as such.
+- Every cited receipt is in this attempt's ledger.
+- A receipt cited as `evidence`, or on either side of a `source_conflict`, has `status: ok` and comes from a tool in the review tool list above.
+- `expected`, when present, is a substring of the stored result of a receipt the finding cites (the `expected` rule above).
+- Every location `quote` is non-empty text.
+- Every named lesson, step, activity and field exists in the plan document.
+- Every location `quote` occurs verbatim inside the named unit of the plan.
+- A finding with `locations: []` (an absence finding) carries a `scope` naming a `lesson` (optionally one `step` or one `activity`); a finding with locations carries no `scope`.
+
 ### Return Schema Template:
 ```yaml
 review_schema: 1
