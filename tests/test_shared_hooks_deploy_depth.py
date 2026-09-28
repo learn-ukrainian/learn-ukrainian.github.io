@@ -45,9 +45,9 @@ def test_shared_bash_python_hook_runs_at_both_depths(
         else Path(".claude/hooks")
     )
     hooks_dir = repo / relative_hooks
-    hooks_dir.mkdir(parents=True)
+    hooks_dir.parent.mkdir(parents=True)
+    shutil.copytree(HOOKS_ROOT, hooks_dir)
     hook = hooks_dir / hook_name
-    shutil.copy2(HOOKS_ROOT / hook_name, hook)
 
     def run_hook(command: str) -> subprocess.CompletedProcess[str]:
         payload = {"tool_name": "Bash", "tool_input": {"command": command}}
@@ -80,6 +80,25 @@ def test_shared_bash_python_hook_runs_at_both_depths(
             timeout=30,
         )
         assert bare.stdout.strip() == "false"
+
+
+def test_guard_without_sibling_helper_fails_closed(tmp_path: Path) -> None:
+    hook = tmp_path / ".claude" / "hooks" / "guard-secret-print.py"
+    hook.parent.mkdir(parents=True)
+    shutil.copy2(HOOKS_ROOT / hook.name, hook)
+
+    payload = {"tool_name": "Bash", "tool_input": {"command": "git status"}}
+    result = subprocess.run(
+        [sys.executable, str(hook)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        cwd=tmp_path,
+        timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
+    assert "Traceback" not in result.stderr
 
 
 def test_heal_core_bare_silently_allows_missing_repo_marker(tmp_path: Path) -> None:
