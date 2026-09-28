@@ -77,10 +77,12 @@ def project_interpreter(root: Path | None = None) -> Path:
 
     Resolution order for the requested checkout:
 
-    1. That checkout's own ``.venv/bin/python`` when the file exists.
-    2. Otherwise the primary checkout's ``.venv/bin/python``. The primary is
-       the git common-dir checkout ``main_checkout_root`` finds for a linked
-       worktree, and the checkout itself otherwise.
+    1. The primary checkout's ``.venv/bin/python`` when the file exists.
+       The primary is the git common-dir checkout ``main_checkout_root``
+       finds for a linked worktree, and the checkout itself otherwise.
+       Dispatch worktrees share that interpreter even when the worktree
+       also has a ``.venv``.
+    2. Otherwise that checkout's own ``.venv/bin/python`` when the file exists.
     3. Otherwise ``sys.executable``. This is the CI case: the runner has no
        project ``.venv``. ``sys.executable`` is refused only when it lives in
        some other checkout's ``.venv`` — a foreign project interpreter must
@@ -88,12 +90,12 @@ def project_interpreter(root: Path | None = None) -> Path:
     """
     repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
-    own = _venv_python(repo)
-    if own.is_file():
-        return own
     primary = _venv_python(primary_root)
-    if primary_root != repo and primary.is_file():
+    if primary.is_file():
         return primary
+    own = _venv_python(repo)
+    if primary_root != repo and own.is_file():
+        return own
     current = Path(sys.executable)
     owner = _venv_checkout_of(current)
     if owner is not None:
@@ -101,7 +103,7 @@ def project_interpreter(root: Path | None = None) -> Path:
         if owner not in allowed:
             raise FileNotFoundError(
                 "project interpreter not found: "
-                f"{own} does not exist and {primary} does not exist and "
+                f"{primary} does not exist and {own} does not exist and "
                 f"sys.executable ({current}) "
                 "is not the requested checkout's .venv or its primary checkout's .venv"
             )

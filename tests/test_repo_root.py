@@ -203,30 +203,32 @@ def test_project_interpreter_accepts_running_python3_of_the_primary_checkout(tmp
 
 
 def test_project_interpreter_accepts_the_requested_worktree_venv_when_primary_has_none(tmp_path, monkeypatch):
+    """(b) When the primary checkout has no ``.venv``, the worktree's own interpreter is used."""
     primary = tmp_path / "primary"
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
     _link_worktree(primary, worktree)
     local = _write_venv_python(worktree)
-    monkeypatch.setattr(sys, "executable", str(local))
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
 
     assert project_interpreter(worktree) == local
 
 
-def test_project_interpreter_prefers_the_requested_checkout_venv(tmp_path, monkeypatch):
-    """(a) The checkout's own ``.venv/bin/python`` wins over a foreign interpreter."""
+def test_project_interpreter_prefers_the_primary_checkout_venv(tmp_path, monkeypatch):
+    """(a) The primary checkout's ``.venv/bin/python`` wins when the worktree also has one."""
     primary = tmp_path / "primary"
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
     _link_worktree(primary, worktree)
-    _write_venv_python(primary)
-    own = _write_venv_python(worktree)
+    primary_python = _write_venv_python(primary)
+    _write_venv_python(worktree)
     foreign = _write_venv_python(tmp_path / "other-checkout")
     monkeypatch.setattr(sys, "executable", str(foreign))
 
-    assert project_interpreter(worktree) == own
+    assert project_interpreter(worktree) == primary_python
 
 
 def test_project_interpreter_uses_the_primary_venv_when_the_checkout_has_none(tmp_path, monkeypatch):
-    """(b) A linked worktree with no ``.venv`` uses the primary checkout's interpreter."""
+    """(a) A linked worktree with no ``.venv`` uses the primary checkout's interpreter."""
     primary = tmp_path / "primary"
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
     _link_worktree(primary, worktree)

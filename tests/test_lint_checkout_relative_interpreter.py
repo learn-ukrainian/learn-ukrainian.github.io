@@ -39,7 +39,7 @@ SCAN_SKIP = {
 ALLOWLIST: dict[str, tuple[int, str]] = {
     "scripts/common/repo_root.py": (
         1,
-        "defines project_interpreter(); the join names a checkout's .venv interpreter (that checkout, else its primary)",
+        "defines project_interpreter(); the join names a checkout's .venv interpreter (primary checkout, else that checkout)",
     ),
     "scripts/api/launchd_supervisor.py": (
         2,
