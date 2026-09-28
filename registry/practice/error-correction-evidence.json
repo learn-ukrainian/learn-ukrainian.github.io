@@ -1,0 +1,3029 @@
+{
+  "deckId": "culture-error-correction",
+  "drills": {
+    "err_0001": {
+      "rowId": "textbooks:72172",
+      "rowSha256": "b253cec87da30151f49997a5adcf11a6520357b6bbc41c2bf08e8612069eba9a",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "вірне рішення",
+      "correct": "правильне рішення"
+    },
+    "err_0002": {
+      "rowId": "textbooks:72172",
+      "rowSha256": "b253cec87da30151f49997a5adcf11a6520357b6bbc41c2bf08e8612069eba9a",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "не протирічить суті",
+      "correct": "не суперечить суті"
+    },
+    "err_0003": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "нетактична поведінка",
+      "correct": "нетактовна поведінка"
+    },
+    "err_0004": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "проявляти недостатки",
+      "correct": "виявляти недоліки"
+    },
+    "err_0005": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "представляти інтерес",
+      "correct": "становити інтерес"
+    },
+    "err_0006": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "приймати участь",
+      "correct": "брати (узяти) участь"
+    },
+    "err_0007": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "мішати комусь",
+      "correct": "заважати, перешкоджати комусь"
+    },
+    "err_0008": {
+      "rowId": "textbooks:72208",
+      "rowSha256": "63a0281da16e99bfd72cab50ecd5330e33909a1e94cf346d41f4cf8051e63e0f",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "по-любому",
+      "correct": "у будь-якому разі (випадку)"
+    },
+    "err_0009": {
+      "rowId": "textbooks:72288",
+      "rowSha256": "8f9612e73e8f9c0b5ba1541925d601c54629b04572b05852ce255b19d76b7f18",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "помилки зустрічаються",
+      "correct": "помилки трапляються"
+    },
+    "err_0010": {
+      "rowId": "textbooks:72288",
+      "rowSha256": "8f9612e73e8f9c0b5ba1541925d601c54629b04572b05852ce255b19d76b7f18",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "узгожувати висновки",
+      "correct": "узгоджувати висновки"
+    },
+    "err_0011": {
+      "rowId": "textbooks:72288",
+      "rowSha256": "8f9612e73e8f9c0b5ba1541925d601c54629b04572b05852ce255b19d76b7f18",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "подавляюча частина",
+      "correct": "переважна частина"
+    },
+    "err_0012": {
+      "rowId": "textbooks:72288",
+      "rowSha256": "8f9612e73e8f9c0b5ba1541925d601c54629b04572b05852ce255b19d76b7f18",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "думки співпадають",
+      "correct": "думки збігаються"
+    },
+    "err_0013": {
+      "rowId": "textbooks:72382",
+      "rowSha256": "a1640eabe2266ce74302dd2b3e4313d4ff449373d67a6d71c7d301bb2a305593",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "придасть приміщенню",
+      "correct": "надасть приміщенню"
+    },
+    "err_0014": {
+      "rowId": "textbooks:72382",
+      "rowSha256": "a1640eabe2266ce74302dd2b3e4313d4ff449373d67a6d71c7d301bb2a305593",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "узорчаста шпалера",
+      "correct": "візерунчаста шпалера"
+    },
+    "err_0015": {
+      "rowId": "textbooks:72382",
+      "rowSha256": "a1640eabe2266ce74302dd2b3e4313d4ff449373d67a6d71c7d301bb2a305593",
+      "source": "Textbook Gr 10 (glazova)",
+      "error": "хвороба викликає",
+      "correct": "хвороба спричиняє"
+    },
+    "err_0016": {
+      "rowId": "textbooks:78527",
+      "rowSha256": "9615045ed9daeabd344d6ecb3276205ca9b1efc93e7380e23974788449252cd7",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "природній",
+      "correct": "природний"
+    },
+    "err_0017": {
+      "rowId": "textbooks:78527",
+      "rowSha256": "9615045ed9daeabd344d6ecb3276205ca9b1efc93e7380e23974788449252cd7",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "зворотній",
+      "correct": "зворотний"
+    },
+    "err_0018": {
+      "rowId": "textbooks:78527",
+      "rowSha256": "9615045ed9daeabd344d6ecb3276205ca9b1efc93e7380e23974788449252cd7",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "говорити на українській мові",
+      "correct": "говорити українською мовою"
+    },
+    "err_0019": {
+      "rowId": "textbooks:78533",
+      "rowSha256": "2f142bd4c0e8a2924ef7ade6775ad717831bba25dd70e3a3fc7cd22b3f92d161",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "влучний вираз",
+      "correct": "влучний вислів"
+    },
+    "err_0020": {
+      "rowId": "textbooks:78533",
+      "rowSha256": "2f142bd4c0e8a2924ef7ade6775ad717831bba25dd70e3a3fc7cd22b3f92d161",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "виписка з протоколу",
+      "correct": "витяг з протоколу"
+    },
+    "err_0021": {
+      "rowId": "textbooks:78533",
+      "rowSha256": "2f142bd4c0e8a2924ef7ade6775ad717831bba25dd70e3a3fc7cd22b3f92d161",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "завідувач відділом",
+      "correct": "завідувач відділу"
+    },
+    "err_0022": {
+      "rowId": "textbooks:78533",
+      "rowSha256": "2f142bd4c0e8a2924ef7ade6775ad717831bba25dd70e3a3fc7cd22b3f92d161",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "п’ять гривен",
+      "correct": "п’ять гривень"
+    },
+    "err_0023": {
+      "rowId": "textbooks:78533",
+      "rowSha256": "2f142bd4c0e8a2924ef7ade6775ad717831bba25dd70e3a3fc7cd22b3f92d161",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "золоті колосся",
+      "correct": "золоте колосся"
+    },
+    "err_0024": {
+      "rowId": "textbooks:78556",
+      "rowSha256": "727989ca773f41a61bc818c21a2bf87f71388d2b33ea9b952d3cf9f357843373",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "дорожний",
+      "correct": "дорожній"
+    },
+    "err_0025": {
+      "rowId": "textbooks:78556",
+      "rowSha256": "727989ca773f41a61bc818c21a2bf87f71388d2b33ea9b952d3cf9f357843373",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "алий",
+      "correct": "червоногарячий, яскраво-червоний"
+    },
+    "err_0026": {
+      "rowId": "textbooks:78562",
+      "rowSha256": "804f772ee628c93185a8ae1dff1cc80bb3962d08441b5bf218266a2dbbb5aa48",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "самий цікавий",
+      "correct": "найцікавіший"
+    },
+    "err_0027": {
+      "rowId": "textbooks:78562",
+      "rowSha256": "804f772ee628c93185a8ae1dff1cc80bb3962d08441b5bf218266a2dbbb5aa48",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "самий веселий",
+      "correct": "найвеселіший"
+    },
+    "err_0028": {
+      "rowId": "textbooks:78562",
+      "rowSha256": "804f772ee628c93185a8ae1dff1cc80bb3962d08441b5bf218266a2dbbb5aa48",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "більш цікавіший",
+      "correct": "більш цікавий"
+    },
+    "err_0029": {
+      "rowId": "textbooks:78562",
+      "rowSha256": "804f772ee628c93185a8ae1dff1cc80bb3962d08441b5bf218266a2dbbb5aa48",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "менш веселіший",
+      "correct": "менш веселий"
+    },
+    "err_0030": {
+      "rowId": "textbooks:78562",
+      "rowSha256": "804f772ee628c93185a8ae1dff1cc80bb3962d08441b5bf218266a2dbbb5aa48",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "дорожчий золота",
+      "correct": "дорожчий за золото"
+    },
+    "err_0031": {
+      "rowId": "textbooks:78575",
+      "rowSha256": "427c7a1c06db120d370778fa7571045cbf58dfb963c1f920472098b712d34888",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "у травні місяці",
+      "correct": "у травні"
+    },
+    "err_0032": {
+      "rowId": "textbooks:78575",
+      "rowSha256": "427c7a1c06db120d370778fa7571045cbf58dfb963c1f920472098b712d34888",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "у двох тисяч сьомому році",
+      "correct": "у дві тисячі сьомому році"
+    },
+    "err_0033": {
+      "rowId": "textbooks:78575",
+      "rowSha256": "427c7a1c06db120d370778fa7571045cbf58dfb963c1f920472098b712d34888",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "у тисячу дев’ятсот сімнадцятому році",
+      "correct": "у тисяча дев’ятсот сімнадцятому році"
+    },
+    "err_0034": {
+      "rowId": "textbooks:78575",
+      "rowSha256": "427c7a1c06db120d370778fa7571045cbf58dfb963c1f920472098b712d34888",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "п’ять хвилин шостої",
+      "correct": "п’ять хвилин на шосту"
+    },
+    "err_0035": {
+      "rowId": "textbooks:78580",
+      "rowSha256": "2b2ca0c7c5f546e9b8e4ced907814ca30544594c8ae55ac7eecabf2bdb981ace",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "властивий для мене",
+      "correct": "властивий мені"
+    },
+    "err_0036": {
+      "rowId": "textbooks:78580",
+      "rowSha256": "2b2ca0c7c5f546e9b8e4ced907814ca30544594c8ae55ac7eecabf2bdb981ace",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "нижня білизна",
+      "correct": "спідня білизна"
+    },
+    "err_0037": {
+      "rowId": "textbooks:78580",
+      "rowSha256": "2b2ca0c7c5f546e9b8e4ced907814ca30544594c8ae55ac7eecabf2bdb981ace",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "перший млинець комом",
+      "correct": "перший млинець нанівець"
+    },
+    "err_0038": {
+      "rowId": "textbooks:78580",
+      "rowSha256": "2b2ca0c7c5f546e9b8e4ced907814ca30544594c8ae55ac7eecabf2bdb981ace",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "одержати освіту",
+      "correct": "здобути освіту"
+    },
+    "err_0039": {
+      "rowId": "textbooks:78589",
+      "rowSha256": "09e7724ca31105ff728854dbc184fbe056250e4e1661b4f61ed7218b32f583b9",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "вірна смерть",
+      "correct": "неминуча смерть"
+    },
+    "err_0040": {
+      "rowId": "textbooks:78589",
+      "rowSha256": "09e7724ca31105ff728854dbc184fbe056250e4e1661b4f61ed7218b32f583b9",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "довга перерва",
+      "correct": "тривала перерва"
+    },
+    "err_0041": {
+      "rowId": "textbooks:78589",
+      "rowSha256": "09e7724ca31105ff728854dbc184fbe056250e4e1661b4f61ed7218b32f583b9",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "слідуючого дня",
+      "correct": "наступного дня"
+    },
+    "err_0042": {
+      "rowId": "textbooks:78589",
+      "rowSha256": "09e7724ca31105ff728854dbc184fbe056250e4e1661b4f61ed7218b32f583b9",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "учбовий процес",
+      "correct": "навчальний процес"
+    },
+    "err_0043": {
+      "rowId": "textbooks:78595",
+      "rowSha256": "e51aa95afb5be218d6690ab6c66030ac7590c109376c7bad0feb9b2a6e4f9f86",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "слідуючим чином",
+      "correct": "таким чином"
+    },
+    "err_0044": {
+      "rowId": "textbooks:78595",
+      "rowSha256": "e51aa95afb5be218d6690ab6c66030ac7590c109376c7bad0feb9b2a6e4f9f86",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "несуча стіна",
+      "correct": "тримальна (основна) стіна"
+    },
+    "err_0045": {
+      "rowId": "textbooks:78595",
+      "rowSha256": "e51aa95afb5be218d6690ab6c66030ac7590c109376c7bad0feb9b2a6e4f9f86",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "бігучий рядок",
+      "correct": "рухомий рядок"
+    },
+    "err_0046": {
+      "rowId": "textbooks:78595",
+      "rowSha256": "e51aa95afb5be218d6690ab6c66030ac7590c109376c7bad0feb9b2a6e4f9f86",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "лікуючий лікар",
+      "correct": "персональний лікар"
+    },
+    "err_0047": {
+      "rowId": "textbooks:78601",
+      "rowSha256": "7cf3b03b02822b54d03a947eb0470aaaaaac2395a4cd58b4e939bce1fd67dd6e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "користуватися попитом",
+      "correct": "мати попит"
+    },
+    "err_0048": {
+      "rowId": "textbooks:78601",
+      "rowSha256": "7cf3b03b02822b54d03a947eb0470aaaaaac2395a4cd58b4e939bce1fd67dd6e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "більше ста уроків",
+      "correct": "понад сто уроків"
+    },
+    "err_0049": {
+      "rowId": "textbooks:78601",
+      "rowSha256": "7cf3b03b02822b54d03a947eb0470aaaaaac2395a4cd58b4e939bce1fd67dd6e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "давайте повернемося",
+      "correct": "повернімося"
+    },
+    "err_0050": {
+      "rowId": "textbooks:78601",
+      "rowSha256": "7cf3b03b02822b54d03a947eb0470aaaaaac2395a4cd58b4e939bce1fd67dd6e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "залишити в спокої",
+      "correct": "дати спокій"
+    },
+    "err_0051": {
+      "rowId": "textbooks:78601",
+      "rowSha256": "7cf3b03b02822b54d03a947eb0470aaaaaac2395a4cd58b4e939bce1fd67dd6e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "попередити хворобу",
+      "correct": "запобігти хворобі"
+    },
+    "err_0052": {
+      "rowId": "textbooks:78608",
+      "rowSha256": "de07140566f8f8134d32a984e8203585a17bb8a8b3efd67226918205c9a12866",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "при умові",
+      "correct": "за умови"
+    },
+    "err_0053": {
+      "rowId": "textbooks:78608",
+      "rowSha256": "de07140566f8f8134d32a984e8203585a17bb8a8b3efd67226918205c9a12866",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "при Мазепі",
+      "correct": "за часів Мазепи"
+    },
+    "err_0054": {
+      "rowId": "textbooks:78608",
+      "rowSha256": "de07140566f8f8134d32a984e8203585a17bb8a8b3efd67226918205c9a12866",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "при підтримці",
+      "correct": "за підтримки"
+    },
+    "err_0055": {
+      "rowId": "textbooks:78608",
+      "rowSha256": "de07140566f8f8134d32a984e8203585a17bb8a8b3efd67226918205c9a12866",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "при сприянні",
+      "correct": "за сприяння"
+    },
+    "err_0056": {
+      "rowId": "textbooks:78608",
+      "rowSha256": "de07140566f8f8134d32a984e8203585a17bb8a8b3efd67226918205c9a12866",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "при виникненні",
+      "correct": "у разі виникнення"
+    },
+    "err_0057": {
+      "rowId": "textbooks:78628",
+      "rowSha256": "18f628697d58262e6eb88c75cfaafbf4318350b7e9d75f74a49828dad1c962ff",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "два відсотка",
+      "correct": "два відсотки"
+    },
+    "err_0058": {
+      "rowId": "textbooks:78628",
+      "rowSha256": "18f628697d58262e6eb88c75cfaafbf4318350b7e9d75f74a49828dad1c962ff",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "третє люте",
+      "correct": "третє лютого"
+    },
+    "err_0059": {
+      "rowId": "textbooks:78628",
+      "rowSha256": "18f628697d58262e6eb88c75cfaafbf4318350b7e9d75f74a49828dad1c962ff",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "півтора місяці",
+      "correct": "півтора місяця"
+    },
+    "err_0060": {
+      "rowId": "textbooks:78628",
+      "rowSha256": "18f628697d58262e6eb88c75cfaafbf4318350b7e9d75f74a49828dad1c962ff",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "по п’ятницям",
+      "correct": "по п’ятницях, щоп’ятниці"
+    },
+    "err_0061": {
+      "rowId": "textbooks:78678",
+      "rowSha256": "8308f94a5d10c7ae24158268e198bb8b458cd5e70a25797b8d5e6827d186686c",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "кофейник",
+      "correct": "кавник"
+    },
+    "err_0062": {
+      "rowId": "textbooks:78678",
+      "rowSha256": "8308f94a5d10c7ae24158268e198bb8b458cd5e70a25797b8d5e6827d186686c",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "кава зі сливками",
+      "correct": "кава з вершками"
+    },
+    "err_0063": {
+      "rowId": "textbooks:78678",
+      "rowSha256": "8308f94a5d10c7ae24158268e198bb8b458cd5e70a25797b8d5e6827d186686c",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "тушене м’ясо",
+      "correct": "тушковане м’ясо"
+    },
+    "err_0064": {
+      "rowId": "textbooks:78678",
+      "rowSha256": "8308f94a5d10c7ae24158268e198bb8b458cd5e70a25797b8d5e6827d186686c",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "щепотка солі",
+      "correct": "дрібка солі"
+    },
+    "err_0065": {
+      "rowId": "textbooks:78687",
+      "rowSha256": "bd24ffed2307c99ae42a9ab396f1232a2f81c9760567ca6b8a991eaf0542345d",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "дякуючи старанню",
+      "correct": "завдяки старанню"
+    },
+    "err_0066": {
+      "rowId": "textbooks:78687",
+      "rowSha256": "bd24ffed2307c99ae42a9ab396f1232a2f81c9760567ca6b8a991eaf0542345d",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "любою ціною",
+      "correct": "за всяку ціну"
+    },
+    "err_0067": {
+      "rowId": "textbooks:78687",
+      "rowSha256": "bd24ffed2307c99ae42a9ab396f1232a2f81c9760567ca6b8a991eaf0542345d",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "учбовий заклад",
+      "correct": "навчальний заклад"
+    },
+    "err_0068": {
+      "rowId": "textbooks:78687",
+      "rowSha256": "bd24ffed2307c99ae42a9ab396f1232a2f81c9760567ca6b8a991eaf0542345d",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "людяне місце",
+      "correct": "людне місце"
+    },
+    "err_0069": {
+      "rowId": "textbooks:78687",
+      "rowSha256": "bd24ffed2307c99ae42a9ab396f1232a2f81c9760567ca6b8a991eaf0542345d",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "трохи замерз",
+      "correct": "трохи змерз"
+    },
+    "err_0070": {
+      "rowId": "textbooks:78695",
+      "rowSha256": "781358920f8a4df2758f5343a6f8f920735cfd5ade0019ae110185d4dd9ff230",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "користуватися авторитетом",
+      "correct": "мати авторитет"
+    },
+    "err_0071": {
+      "rowId": "textbooks:78695",
+      "rowSha256": "781358920f8a4df2758f5343a6f8f920735cfd5ade0019ae110185d4dd9ff230",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "підводити підсумки",
+      "correct": "підбивати підсумки"
+    },
+    "err_0072": {
+      "rowId": "textbooks:78695",
+      "rowSha256": "781358920f8a4df2758f5343a6f8f920735cfd5ade0019ae110185d4dd9ff230",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "під відкритим небом",
+      "correct": "просто неба"
+    },
+    "err_0073": {
+      "rowId": "textbooks:78704",
+      "rowSha256": "db97d1b6a46fb2eb3b7f2091b5022e6e0865177a8d3093828a4cb870cc38c94e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "вірна відповідь",
+      "correct": "правильна відповідь"
+    },
+    "err_0074": {
+      "rowId": "textbooks:78704",
+      "rowSha256": "db97d1b6a46fb2eb3b7f2091b5022e6e0865177a8d3093828a4cb870cc38c94e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "об’єм тексту",
+      "correct": "обсяг тексту"
+    },
+    "err_0075": {
+      "rowId": "textbooks:78704",
+      "rowSha256": "db97d1b6a46fb2eb3b7f2091b5022e6e0865177a8d3093828a4cb870cc38c94e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "стати в нагоді",
+      "correct": "стати в пригоді"
+    },
+    "err_0076": {
+      "rowId": "textbooks:78704",
+      "rowSha256": "db97d1b6a46fb2eb3b7f2091b5022e6e0865177a8d3093828a4cb870cc38c94e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "прийняти міри",
+      "correct": "ужити заходів"
+    },
+    "err_0077": {
+      "rowId": "textbooks:78749",
+      "rowSha256": "711976caa9b66d02c5cee4a27f5e0276bccf6a67a466bbe1befb23ea1caaa67e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "моє день народження",
+      "correct": "мій день народження"
+    },
+    "err_0078": {
+      "rowId": "textbooks:78749",
+      "rowSha256": "711976caa9b66d02c5cee4a27f5e0276bccf6a67a466bbe1befb23ea1caaa67e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "командувач армією",
+      "correct": "командувач армії"
+    },
+    "err_0079": {
+      "rowId": "textbooks:78749",
+      "rowSha256": "711976caa9b66d02c5cee4a27f5e0276bccf6a67a466bbe1befb23ea1caaa67e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "бажаючі поспілкуватися",
+      "correct": "охочі поспілкуватися"
+    },
+    "err_0080": {
+      "rowId": "textbooks:78749",
+      "rowSha256": "711976caa9b66d02c5cee4a27f5e0276bccf6a67a466bbe1befb23ea1caaa67e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "задавати питання",
+      "correct": "ставити запитання"
+    },
+    "err_0081": {
+      "rowId": "textbooks:78749",
+      "rowSha256": "711976caa9b66d02c5cee4a27f5e0276bccf6a67a466bbe1befb23ea1caaa67e",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "приймати таблетки до їжі",
+      "correct": "приймати таблетки до їди"
+    },
+    "err_0082": {
+      "rowId": "textbooks:78768",
+      "rowSha256": "676579f2d9e2604f7ab0444503b4c7d96885db25cfeae294dbd043247568c763",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "бути правим",
+      "correct": "мати рацію, ваша правда"
+    },
+    "err_0083": {
+      "rowId": "textbooks:78768",
+      "rowSha256": "676579f2d9e2604f7ab0444503b4c7d96885db25cfeae294dbd043247568c763",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "сто років тому назад",
+      "correct": "сто років тому"
+    },
+    "err_0084": {
+      "rowId": "textbooks:78768",
+      "rowSha256": "676579f2d9e2604f7ab0444503b4c7d96885db25cfeae294dbd043247568c763",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "люба проблема",
+      "correct": "будь-яка проблема"
+    },
+    "err_0085": {
+      "rowId": "textbooks:78777",
+      "rowSha256": "cf5e66528bd808c1e12c68c88b1a5d4ad252f05b5144c83fbe454782d55c6d07",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "розкрити журнал",
+      "correct": "розгорнути журнал"
+    },
+    "err_0086": {
+      "rowId": "textbooks:78777",
+      "rowSha256": "cf5e66528bd808c1e12c68c88b1a5d4ad252f05b5144c83fbe454782d55c6d07",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "біля тридцяти хвилин",
+      "correct": "близько тридцяти хвилин"
+    },
+    "err_0087": {
+      "rowId": "textbooks:78777",
+      "rowSha256": "cf5e66528bd808c1e12c68c88b1a5d4ad252f05b5144c83fbe454782d55c6d07",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "наукова ступінь",
+      "correct": "науковий ступінь"
+    },
+    "err_0088": {
+      "rowId": "textbooks:78777",
+      "rowSha256": "cf5e66528bd808c1e12c68c88b1a5d4ad252f05b5144c83fbe454782d55c6d07",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "нові міроприємства",
+      "correct": "нові заходи"
+    },
+    "err_0089": {
+      "rowId": "textbooks:78782",
+      "rowSha256": "8b4f8fa05641e7ae3d2a6000fd3cd80a7a05db3a45e8b37167d77f56e679b766",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "три відсотка",
+      "correct": "три відсотки"
+    },
+    "err_0090": {
+      "rowId": "textbooks:78782",
+      "rowSha256": "8b4f8fa05641e7ae3d2a6000fd3cd80a7a05db3a45e8b37167d77f56e679b766",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "по четвергам",
+      "correct": "по четвергах, щочетверга"
+    },
+    "err_0091": {
+      "rowId": "textbooks:78790",
+      "rowSha256": "502950b4fe60d7f0e0ffeb7729525e64748a0ec35bdc35286abc58e20a973716",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "у його честь",
+      "correct": "на його честь"
+    },
+    "err_0092": {
+      "rowId": "textbooks:78790",
+      "rowSha256": "502950b4fe60d7f0e0ffeb7729525e64748a0ec35bdc35286abc58e20a973716",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "вчинити злочин",
+      "correct": "скоїти злочин"
+    },
+    "err_0093": {
+      "rowId": "textbooks:78790",
+      "rowSha256": "502950b4fe60d7f0e0ffeb7729525e64748a0ec35bdc35286abc58e20a973716",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "забезпечувати безпеку",
+      "correct": "гарантувати безпеку"
+    },
+    "err_0094": {
+      "rowId": "textbooks:78794",
+      "rowSha256": "cc77a0c5484a80fe3181256230da673d5a967521066322e6a4aeb7aaad8c62ba",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "за останній час",
+      "correct": "останнім часом"
+    },
+    "err_0095": {
+      "rowId": "textbooks:78794",
+      "rowSha256": "cc77a0c5484a80fe3181256230da673d5a967521066322e6a4aeb7aaad8c62ba",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "книжний магазин",
+      "correct": "книжковий магазин"
+    },
+    "err_0096": {
+      "rowId": "textbooks:78794",
+      "rowSha256": "cc77a0c5484a80fe3181256230da673d5a967521066322e6a4aeb7aaad8c62ba",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "хвилююча мить",
+      "correct": "зворушлива мить"
+    },
+    "err_0097": {
+      "rowId": "textbooks:78794",
+      "rowSha256": "cc77a0c5484a80fe3181256230da673d5a967521066322e6a4aeb7aaad8c62ba",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "халатне відношення",
+      "correct": "недбале ставлення"
+    },
+    "err_0098": {
+      "rowId": "textbooks:78801",
+      "rowSha256": "ddf4d0c478870bba0ef0a02d8519d113eb690c10dd418340831fa6e085b89ab6",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "відношення в родині",
+      "correct": "стосунки (взаємини) у родині"
+    },
+    "err_0099": {
+      "rowId": "textbooks:78801",
+      "rowSha256": "ddf4d0c478870bba0ef0a02d8519d113eb690c10dd418340831fa6e085b89ab6",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "поштовий ящик",
+      "correct": "поштова скринька"
+    },
+    "err_0100": {
+      "rowId": "textbooks:78801",
+      "rowSha256": "ddf4d0c478870bba0ef0a02d8519d113eb690c10dd418340831fa6e085b89ab6",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "сім гривнів",
+      "correct": "сім гривень"
+    },
+    "err_0101": {
+      "rowId": "textbooks:78801",
+      "rowSha256": "ddf4d0c478870bba0ef0a02d8519d113eb690c10dd418340831fa6e085b89ab6",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "вішати лапшу",
+      "correct": "замилювати очі"
+    },
+    "err_0102": {
+      "rowId": "textbooks:78801",
+      "rowSha256": "ddf4d0c478870bba0ef0a02d8519d113eb690c10dd418340831fa6e085b89ab6",
+      "source": "Textbook Gr 11 (avramenko)",
+      "error": "лід зрушився",
+      "correct": "крига скресла"
+    },
+    "err_0103": {
+      "rowId": "textbooks:78840",
+      "rowSha256": "d5b63534e2ca8aed05401bbd1d89db105e15c3411584cb7df1984f6a789746b1",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "порада сама найпотрібніша",
+      "correct": "порада найпотрібніша"
+    },
+    "err_0104": {
+      "rowId": "textbooks:78840",
+      "rowSha256": "d5b63534e2ca8aed05401bbd1d89db105e15c3411584cb7df1984f6a789746b1",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "найбільш найпотрібніший",
+      "correct": "найбільш потрібний (найпотрібніший)"
+    },
+    "err_0105": {
+      "rowId": "textbooks:78840",
+      "rowSha256": "d5b63534e2ca8aed05401bbd1d89db105e15c3411584cb7df1984f6a789746b1",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "самі професійніші",
+      "correct": "найбільш професійні"
+    },
+    "err_0106": {
+      "rowId": "textbooks:78840",
+      "rowSha256": "d5b63534e2ca8aed05401bbd1d89db105e15c3411584cb7df1984f6a789746b1",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "найдекоративніші деталі",
+      "correct": "декоративні деталі"
+    },
+    "err_0107": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "найімовірніше всього",
+      "correct": "найімовірніше"
+    },
+    "err_0108": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "дедалі найповніше",
+      "correct": "найповніше (найбільш повно)"
+    },
+    "err_0109": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "найбільш довжезний",
+      "correct": "найдовший (найбільш довгий)"
+    },
+    "err_0110": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "максимум сил",
+      "correct": "якнайбільше сил"
+    },
+    "err_0111": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "прикладати зусилля",
+      "correct": "докладати зусиль"
+    },
+    "err_0112": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "більш уважніше",
+      "correct": "уважніше (більш уважно)"
+    },
+    "err_0113": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "легше всього",
+      "correct": "найлегше"
+    },
+    "err_0114": {
+      "rowId": "textbooks:78845",
+      "rowSha256": "d242921695c5e5a6bf3a1d4fc7482051d9c843d1769dc9179d97dbe2807c5a82",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "з самої молодості",
+      "correct": "вже замолоду"
+    },
+    "err_0115": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "до двох тисяч двадцятого року",
+      "correct": "до дві тисячі двадцятого року"
+    },
+    "err_0116": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "три школяра",
+      "correct": "три школярі"
+    },
+    "err_0117": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "семеро жінок",
+      "correct": "сім жінок"
+    },
+    "err_0118": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "в вісім годин",
+      "correct": "о восьмій годині"
+    },
+    "err_0119": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "без десяти дев’ять",
+      "correct": "за десять хвилин до дев’ятої"
+    },
+    "err_0120": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "навчатися музиці",
+      "correct": "навчатися музики"
+    },
+    "err_0121": {
+      "rowId": "textbooks:78863",
+      "rowSha256": "c09db1dd9bb5bbec28c2269bfeae8326cbbf68e23f251e96127a572e87557c34",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "у різні часи",
+      "correct": "у різний час"
+    },
+    "err_0122": {
+      "rowId": "textbooks:78887",
+      "rowSha256": "ab99837feb6fe463e2ff17287ad2c6fc05889cb47231211c601e72c329291123",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "давайте зробимо вивод",
+      "correct": "зробімо висновок"
+    },
+    "err_0123": {
+      "rowId": "textbooks:78887",
+      "rowSha256": "ab99837feb6fe463e2ff17287ad2c6fc05889cb47231211c601e72c329291123",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "інтересуючий",
+      "correct": "такий (той), що цікавить"
+    },
+    "err_0124": {
+      "rowId": "textbooks:78887",
+      "rowSha256": "ab99837feb6fe463e2ff17287ad2c6fc05889cb47231211c601e72c329291123",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "вируюча річка",
+      "correct": "розбурхана річка"
+    },
+    "err_0125": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "вступити в інститут",
+      "correct": "вступити до інституту"
+    },
+    "err_0126": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "у повній мірі",
+      "correct": "повною (значною, вирішальною) мірою"
+    },
+    "err_0127": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "учитель по професії",
+      "correct": "учитель за професією (фахом)"
+    },
+    "err_0128": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "у відповідності з інструкцією",
+      "correct": "відповідно до інструкції"
+    },
+    "err_0129": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "при допомозі",
+      "correct": "за допомогою"
+    },
+    "err_0130": {
+      "rowId": "textbooks:78893",
+      "rowSha256": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "добитися успіху",
+      "correct": "досягнути (досягти) успіху"
+    },
+    "err_0131": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "навчатися чомусь",
+      "correct": "навчатися чогось"
+    },
+    "err_0132": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "доглядати за ким",
+      "correct": "доглядати когось"
+    },
+    "err_0133": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "не змусити довго на себе чекати",
+      "correct": "не забаритися"
+    },
+    "err_0134": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "глумитися над ким",
+      "correct": "глумитися з кого"
+    },
+    "err_0135": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "в любому разі",
+      "correct": "у будь-якому разі"
+    },
+    "err_0136": {
+      "rowId": "textbooks:78902",
+      "rowSha256": "ae76cfe4e131ac3ca80608942929686308c23c1bd8fe98bbb8c477abd2b79f36",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "халатно відноситись",
+      "correct": "недбало ставитись"
+    },
+    "err_0137": {
+      "rowId": "textbooks:78924",
+      "rowSha256": "a34b517fa421ca0aae8774af63e935ca89ac02567231c8674b2f6298a66b0596",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "із-за погоди",
+      "correct": "через погоду"
+    },
+    "err_0138": {
+      "rowId": "textbooks:78924",
+      "rowSha256": "a34b517fa421ca0aae8774af63e935ca89ac02567231c8674b2f6298a66b0596",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "по прикладу",
+      "correct": "за прикладом"
+    },
+    "err_0139": {
+      "rowId": "textbooks:78924",
+      "rowSha256": "a34b517fa421ca0aae8774af63e935ca89ac02567231c8674b2f6298a66b0596",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "розповідати за сусідів",
+      "correct": "розповідати про сусідів"
+    },
+    "err_0140": {
+      "rowId": "textbooks:78924",
+      "rowSha256": "a34b517fa421ca0aae8774af63e935ca89ac02567231c8674b2f6298a66b0596",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "пройде вдало",
+      "correct": "пройде успішно"
+    },
+    "err_0141": {
+      "rowId": "textbooks:78924",
+      "rowSha256": "a34b517fa421ca0aae8774af63e935ca89ac02567231c8674b2f6298a66b0596",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "по різних причинах",
+      "correct": "з різних причин"
+    },
+    "err_0142": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "розташований по вулиці",
+      "correct": "розташований на вулиці"
+    },
+    "err_0143": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "по праву вважають",
+      "correct": "справедливо вважають"
+    },
+    "err_0144": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "консультації по питанням",
+      "correct": "консультації з питань (проблем)"
+    },
+    "err_0145": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "пам’ятник архітектури",
+      "correct": "пам’ятка архітектури"
+    },
+    "err_0146": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "заказати по телефону",
+      "correct": "замовити телефоном"
+    },
+    "err_0147": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "старші по віку відвідувачі",
+      "correct": "старші за віком відвідувачі"
+    },
+    "err_0148": {
+      "rowId": "textbooks:78935",
+      "rowSha256": "01aa8900b6b07f8ef8c265f93006ba203b897b4994f98ea455601abcf085d75b",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "по ініціативі",
+      "correct": "за ініціативою"
+    },
+    "err_0149": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "сестро Тетяна",
+      "correct": "сестро Тетяно"
+    },
+    "err_0150": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "задати питання",
+      "correct": "поставити питання"
+    },
+    "err_0151": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "давай зустрінемось",
+      "correct": "зустріньмося"
+    },
+    "err_0152": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "вмішуватися до чужих справ",
+      "correct": "втручатися в чужі справи"
+    },
+    "err_0153": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "зустрічаються помилки",
+      "correct": "трапляються помилки"
+    },
+    "err_0154": {
+      "rowId": "textbooks:78963",
+      "rowSha256": "b436d3db3454f6d6cfea39939228e007abf1cf5d5aac9c31a94875eeedb53d33",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "подзвонити другові",
+      "correct": "потелефонувати другові"
+    },
+    "err_0155": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "поступити навчатися",
+      "correct": "вступити на навчання"
+    },
+    "err_0156": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "програмний матеріал",
+      "correct": "програмовий матеріал"
+    },
+    "err_0157": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "із-за хвороби",
+      "correct": "через хворобу"
+    },
+    "err_0158": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "наздоганяти пропущене",
+      "correct": "надолужувати пропущене"
+    },
+    "err_0159": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "учбові заклади",
+      "correct": "заклади освіти"
+    },
+    "err_0160": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "особовий вибір",
+      "correct": "особистий вибір"
+    },
+    "err_0161": {
+      "rowId": "textbooks:79035",
+      "rowSha256": "6c4ce990cf50c10c4fe18d52aa0c402c05745e29e38d84f8ec3de2bf2edba3e4",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "музикальна школа",
+      "correct": "музична школа"
+    },
+    "err_0162": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "у процесі проведення екскурсії",
+      "correct": "під час проведення екскурсії"
+    },
+    "err_0163": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "кидатися в очі",
+      "correct": "впадати в око (у вічі)"
+    },
+    "err_0164": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "експонати ХХ віку",
+      "correct": "експонати ХХ століття"
+    },
+    "err_0165": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "міроприємство",
+      "correct": "захід"
+    },
+    "err_0166": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "збори шкільного гуртка",
+      "correct": "засідання шкільного гуртка"
+    },
+    "err_0167": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "душі не чаяти",
+      "correct": "душі не чути"
+    },
+    "err_0168": {
+      "rowId": "textbooks:79078",
+      "rowSha256": "3539e5d49416f5bf73d20d3643349f209fd015ffc36c079c7b00df78a939ea41",
+      "source": "Textbook Gr 11 (glazova)",
+      "error": "згідно до плану",
+      "correct": "згідно з планом (відповідно до плану)"
+    },
+    "err_0169": {
+      "rowId": "textbooks:84754",
+      "rowSha256": "61c097f99b77460451096bc9be38817639123163efb0fdcb030727680a16a0b5",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "дані співпадають",
+      "correct": "дані збігаються"
+    },
+    "err_0170": {
+      "rowId": "textbooks:84754",
+      "rowSha256": "61c097f99b77460451096bc9be38817639123163efb0fdcb030727680a16a0b5",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "на протязі року",
+      "correct": "протягом (упродовж) року"
+    },
+    "err_0171": {
+      "rowId": "textbooks:84773",
+      "rowSha256": "a72bd4da92120ae51e32e61477a1738e886f1c024d77071130e3418a750d8ac5",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "на рахунок цього",
+      "correct": "щодо цього"
+    },
+    "err_0172": {
+      "rowId": "textbooks:84792",
+      "rowSha256": "524cc92aa45a0f010f7b99dda07879665d58784a48b14e6ebcec69a71c9b630d",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "притримуватися правил",
+      "correct": "дотримуватися правил"
+    },
+    "err_0173": {
+      "rowId": "textbooks:84792",
+      "rowSha256": "524cc92aa45a0f010f7b99dda07879665d58784a48b14e6ebcec69a71c9b630d",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "привести приклад",
+      "correct": "навести приклад"
+    },
+    "err_0174": {
+      "rowId": "textbooks:84792",
+      "rowSha256": "524cc92aa45a0f010f7b99dda07879665d58784a48b14e6ebcec69a71c9b630d",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "покращувати рівень знань",
+      "correct": "підвищувати рівень знань"
+    },
+    "err_0175": {
+      "rowId": "textbooks:84797",
+      "rowSha256": "77c74ce61d32840c606b8ab7ccbed4c32bfb885078b76bb91b959008738263a3",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "у грудні місяці",
+      "correct": "у грудні"
+    },
+    "err_0176": {
+      "rowId": "textbooks:84797",
+      "rowSha256": "77c74ce61d32840c606b8ab7ccbed4c32bfb885078b76bb91b959008738263a3",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "пам’ятний сувенір",
+      "correct": "сувенір"
+    },
+    "err_0177": {
+      "rowId": "textbooks:84797",
+      "rowSha256": "77c74ce61d32840c606b8ab7ccbed4c32bfb885078b76bb91b959008738263a3",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "кілька років тому назад",
+      "correct": "кілька років тому"
+    },
+    "err_0178": {
+      "rowId": "textbooks:84805",
+      "rowSha256": "0ec8802821097031c9c319867288f47c3b70ecda0312cc0eba185653275b91f2",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "сміятися над кимось",
+      "correct": "сміятися з когось"
+    },
+    "err_0179": {
+      "rowId": "textbooks:84805",
+      "rowSha256": "0ec8802821097031c9c319867288f47c3b70ecda0312cc0eba185653275b91f2",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "знущатися над кимось",
+      "correct": "знущатися з когось"
+    },
+    "err_0180": {
+      "rowId": "textbooks:84805",
+      "rowSha256": "0ec8802821097031c9c319867288f47c3b70ecda0312cc0eba185653275b91f2",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "властивий для птахів",
+      "correct": "властивий птахам"
+    },
+    "err_0181": {
+      "rowId": "textbooks:84818",
+      "rowSha256": "06e3b23939aeebd07273e6f92b916c1cd3a50d2a08b83d766e48946ff59f34a1",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "не дивлячись на труднощі",
+      "correct": "незважаючи на (попри) труднощі"
+    },
+    "err_0182": {
+      "rowId": "textbooks:84818",
+      "rowSha256": "06e3b23939aeebd07273e6f92b916c1cd3a50d2a08b83d766e48946ff59f34a1",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "у випадку потреби",
+      "correct": "у разі потреби, за потреби"
+    },
+    "err_0183": {
+      "rowId": "textbooks:84825",
+      "rowSha256": "00d2861728adc24e2feed20bc5e91a45dad0d4642e566ecbb9153458d65c65bf",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "бувша назва",
+      "correct": "колишня назва"
+    },
+    "err_0184": {
+      "rowId": "textbooks:84825",
+      "rowSha256": "00d2861728adc24e2feed20bc5e91a45dad0d4642e566ecbb9153458d65c65bf",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "зробити наступним чином",
+      "correct": "зробити таким чином"
+    },
+    "err_0185": {
+      "rowId": "textbooks:84831",
+      "rowSha256": "fd80fb2b82f7238559528ef435c5041c592392303fbdaa9cb1030fee75f5f0d0",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "нам не повезло",
+      "correct": "нам не пощастило"
+    },
+    "err_0186": {
+      "rowId": "textbooks:84846",
+      "rowSha256": "c649671fc32d360363ed40960ed37ceefbbff1f1307a786ee2b8a564781b0c19",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "здавати іспит",
+      "correct": "складати іспит"
+    },
+    "err_0187": {
+      "rowId": "textbooks:84859",
+      "rowSha256": "bd6348a13ef965dedde4d4ef760ecf7aecbea819929ed4f33c13a68b5614fcfc",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "у любому випадку",
+      "correct": "у будь-якому разі"
+    },
+    "err_0188": {
+      "rowId": "textbooks:84859",
+      "rowSha256": "bd6348a13ef965dedde4d4ef760ecf7aecbea819929ed4f33c13a68b5614fcfc",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "поважати друг друга",
+      "correct": "поважати одне одного"
+    },
+    "err_0189": {
+      "rowId": "textbooks:84859",
+      "rowSha256": "bd6348a13ef965dedde4d4ef760ecf7aecbea819929ed4f33c13a68b5614fcfc",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "потерпіти поразку",
+      "correct": "зазнати поразки"
+    },
+    "err_0190": {
+      "rowId": "textbooks:84869",
+      "rowSha256": "ea2adeeeda83a1e6b008dc09d108b4cbf02393287f100c3026948fb0df94a4a4",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "затягувати рішення",
+      "correct": "зволікати з рішенням"
+    },
+    "err_0191": {
+      "rowId": "textbooks:84869",
+      "rowSha256": "ea2adeeeda83a1e6b008dc09d108b4cbf02393287f100c3026948fb0df94a4a4",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "підняти питання",
+      "correct": "порушити питання"
+    },
+    "err_0192": {
+      "rowId": "textbooks:84869",
+      "rowSha256": "ea2adeeeda83a1e6b008dc09d108b4cbf02393287f100c3026948fb0df94a4a4",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "приймати міри",
+      "correct": "уживати заходів"
+    },
+    "err_0193": {
+      "rowId": "textbooks:84878",
+      "rowSha256": "d601c7b482fc07dbaf51d79916ccb810a7a94dde64c537d0b645058c65543c49",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "слідуюча зупинка",
+      "correct": "наступна зупинка"
+    },
+    "err_0194": {
+      "rowId": "textbooks:84878",
+      "rowSha256": "d601c7b482fc07dbaf51d79916ccb810a7a94dde64c537d0b645058c65543c49",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "миючі засоби",
+      "correct": "мийні засоби"
+    },
+    "err_0195": {
+      "rowId": "textbooks:84878",
+      "rowSha256": "d601c7b482fc07dbaf51d79916ccb810a7a94dde64c537d0b645058c65543c49",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "усі бажаючі",
+      "correct": "усі охочі"
+    },
+    "err_0196": {
+      "rowId": "textbooks:84894",
+      "rowSha256": "6f6fcd33ba3a0fbd893545a394936e45c21952b546e9f09f4c0d072025bfdfa6",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "улетіти в Лондон",
+      "correct": "полетіти до Лондона"
+    },
+    "err_0197": {
+      "rowId": "textbooks:84894",
+      "rowSha256": "6f6fcd33ba3a0fbd893545a394936e45c21952b546e9f09f4c0d072025bfdfa6",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "уїхати на море",
+      "correct": "поїхати до моря"
+    },
+    "err_0198": {
+      "rowId": "textbooks:84894",
+      "rowSha256": "6f6fcd33ba3a0fbd893545a394936e45c21952b546e9f09f4c0d072025bfdfa6",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "уйшов за хлібом",
+      "correct": "пішов по хліб"
+    },
+    "err_0199": {
+      "rowId": "textbooks:84903",
+      "rowSha256": "e5a49e36f50d115403591e38345f9137ca5fb6a100bc61b873b5b43291241beb",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "не звертати увагу",
+      "correct": "не звертати уваги"
+    },
+    "err_0200": {
+      "rowId": "textbooks:84903",
+      "rowSha256": "e5a49e36f50d115403591e38345f9137ca5fb6a100bc61b873b5b43291241beb",
+      "source": "Textbook Gr 5 (avramenko)",
+      "error": "ви праві",
+      "correct": "ви маєте рацію, ваша правда"
+    },
+    "err_0201": {
+      "rowId": "textbooks:87351",
+      "rowSha256": "cf424ed4103832703b2cfa192ab066596ccec492ffc3b5e1cc2fbe67993a92a6",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "розмовляти на українській мові",
+      "correct": "розмовляти українською мовою"
+    },
+    "err_0202": {
+      "rowId": "textbooks:87351",
+      "rowSha256": "cf424ed4103832703b2cfa192ab066596ccec492ffc3b5e1cc2fbe67993a92a6",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "вимова голосних букв",
+      "correct": "вимова голосних звуків"
+    },
+    "err_0203": {
+      "rowId": "textbooks:87351",
+      "rowSha256": "cf424ed4103832703b2cfa192ab066596ccec492ffc3b5e1cc2fbe67993a92a6",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "опанувати українською мовою",
+      "correct": "опанувати українську мову"
+    },
+    "err_0204": {
+      "rowId": "textbooks:87358",
+      "rowSha256": "70831b2c795a303c891178431226e14fbf16e7940ba1f7fa0e99fc641a0d877c",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "навчатися математиці",
+      "correct": "навчатися математики"
+    },
+    "err_0205": {
+      "rowId": "textbooks:87358",
+      "rowSha256": "70831b2c795a303c891178431226e14fbf16e7940ba1f7fa0e99fc641a0d877c",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "опановувати мовою",
+      "correct": "опановувати мову"
+    },
+    "err_0206": {
+      "rowId": "textbooks:87370",
+      "rowSha256": "0fd6fcfabd287fc3f0d81f7808d0b7f7ead51cc30fdcf3dd83f325f6f6627342",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "прейскурант цін",
+      "correct": "прейскурант"
+    },
+    "err_0207": {
+      "rowId": "textbooks:87370",
+      "rowSha256": "0fd6fcfabd287fc3f0d81f7808d0b7f7ead51cc30fdcf3dd83f325f6f6627342",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "вільна вакансія",
+      "correct": "вакансія"
+    },
+    "err_0208": {
+      "rowId": "textbooks:87380",
+      "rowSha256": "fff411ad266465e30c151820464c9f79fabf4c04682d057f8f206ab16e6a7c86",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "піднімати питання",
+      "correct": "порушувати питання"
+    },
+    "err_0209": {
+      "rowId": "textbooks:87380",
+      "rowSha256": "fff411ad266465e30c151820464c9f79fabf4c04682d057f8f206ab16e6a7c86",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "відмінити рішення",
+      "correct": "скасувати рішення"
+    },
+    "err_0210": {
+      "rowId": "textbooks:87385",
+      "rowSha256": "4c8bf4b55a71a0187b550650ec47e62cd2b6d8a4f044a038434ffe0fa573a39f",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "ведмежий барліг",
+      "correct": "барліг"
+    },
+    "err_0211": {
+      "rowId": "textbooks:87389",
+      "rowSha256": "2804bff7b19c21442e29c419f09f03b9a0094fa5541e98d6072f15a9c285f3cd",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "дякуючи наполегливості",
+      "correct": "завдяки наполегливості"
+    },
+    "err_0212": {
+      "rowId": "textbooks:87389",
+      "rowSha256": "2804bff7b19c21442e29c419f09f03b9a0094fa5541e98d6072f15a9c285f3cd",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "улетіти в теплі краї",
+      "correct": "полетіти у вирій"
+    },
+    "err_0213": {
+      "rowId": "textbooks:87409",
+      "rowSha256": "26c2b1712cd910a8c8cda6ad2ed8f465ccbad68f573f2be312674e2e74744399",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "відкрити журнал",
+      "correct": "розгорнути журнал"
+    },
+    "err_0214": {
+      "rowId": "textbooks:87419",
+      "rowSha256": "47aade998755cfd6386de1bcfeddfb75ed1b996538b4d2769334514a8477b28d",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "уязвиме місце",
+      "correct": "слабке (вразливе) місце, ахіллесова п’ята"
+    },
+    "err_0215": {
+      "rowId": "textbooks:87419",
+      "rowSha256": "47aade998755cfd6386de1bcfeddfb75ed1b996538b4d2769334514a8477b28d",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "бувший колега",
+      "correct": "колишній колега"
+    },
+    "err_0216": {
+      "rowId": "textbooks:87423",
+      "rowSha256": "2a678365b720625bd2c2db50218b48ab3512b5a2d2c39aeadeebf544603860ab",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "отримати освіту",
+      "correct": "здобути освіту"
+    },
+    "err_0217": {
+      "rowId": "textbooks:87435",
+      "rowSha256": "2a5b404ca64fc5698c11fb240ebbcccf0ae7059e15b94296efec179f77f8f894",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "на протязі години",
+      "correct": "протягом (упродовж) години"
+    },
+    "err_0218": {
+      "rowId": "textbooks:87439",
+      "rowSha256": "745222c92a6e72ca4159b28403d8bb65e0f67b46513d825547a1ce212877284c",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "сміятися над другом",
+      "correct": "сміятися з друга"
+    },
+    "err_0219": {
+      "rowId": "textbooks:87458",
+      "rowSha256": "44e4305e1dd819936ed27a2bf1488e17234db79401088a6552953bf1a9d28e1e",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "оточуюче середовище",
+      "correct": "довкілля, навколишнє середовище"
+    },
+    "err_0220": {
+      "rowId": "textbooks:87471",
+      "rowSha256": "6d76b78232a19696f275db5094b5781d228e83c3761d5d5eb1cfabf404032c4d",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "бувші учні",
+      "correct": "колишні учні"
+    },
+    "err_0221": {
+      "rowId": "textbooks:87471",
+      "rowSha256": "6d76b78232a19696f275db5094b5781d228e83c3761d5d5eb1cfabf404032c4d",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "помісячна оплата",
+      "correct": "щомісячна оплата"
+    },
+    "err_0222": {
+      "rowId": "textbooks:87471",
+      "rowSha256": "6d76b78232a19696f275db5094b5781d228e83c3761d5d5eb1cfabf404032c4d",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "чуткий сон",
+      "correct": "сторожкий сон"
+    },
+    "err_0223": {
+      "rowId": "textbooks:87489",
+      "rowSha256": "18446ae9b3b4d63be809366a1cd13ecb5435769aee4a039cf81557722345284b",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "бувші однокласники",
+      "correct": "колишні однокласники"
+    },
+    "err_0224": {
+      "rowId": "textbooks:87489",
+      "rowSha256": "18446ae9b3b4d63be809366a1cd13ecb5435769aee4a039cf81557722345284b",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "слідуюче питання",
+      "correct": "наступне питання"
+    },
+    "err_0225": {
+      "rowId": "textbooks:87509",
+      "rowSha256": "b0363816f39dc2da497852c2edfcabf3e1b20d5ed3a0068d735ababa0b02d5ed",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "шириною чотири метри",
+      "correct": "завширшки чотири метри"
+    },
+    "err_0226": {
+      "rowId": "textbooks:87509",
+      "rowSha256": "b0363816f39dc2da497852c2edfcabf3e1b20d5ed3a0068d735ababa0b02d5ed",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "висотою пів сантиметра",
+      "correct": "заввишки пів сантиметра"
+    },
+    "err_0227": {
+      "rowId": "textbooks:87509",
+      "rowSha256": "b0363816f39dc2da497852c2edfcabf3e1b20d5ed3a0068d735ababa0b02d5ed",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "довжиною сім міліметрів",
+      "correct": "завдовжки сім міліметрів"
+    },
+    "err_0228": {
+      "rowId": "textbooks:87515",
+      "rowSha256": "9e8d01e3c5f213a51bfb55537dd351f467eec3fbaf58b1a1eb1b4ca6427e1859",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "біля трьох кілометрів",
+      "correct": "близько трьох кілометрів"
+    },
+    "err_0229": {
+      "rowId": "textbooks:87515",
+      "rowSha256": "9e8d01e3c5f213a51bfb55537dd351f467eec3fbaf58b1a1eb1b4ca6427e1859",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "сім метрів у секунду",
+      "correct": "сім метрів за секунду"
+    },
+    "err_0230": {
+      "rowId": "textbooks:87523",
+      "rowSha256": "5949eb05e59099228903cfd7457cc10c5b9cbd05dfb36d5af130a103cbbad5cd",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "з Першим вересням",
+      "correct": "з Першим вересня"
+    },
+    "err_0231": {
+      "rowId": "textbooks:87523",
+      "rowSha256": "5949eb05e59099228903cfd7457cc10c5b9cbd05dfb36d5af130a103cbbad5cd",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "десяте люте",
+      "correct": "десяте лютого"
+    },
+    "err_0232": {
+      "rowId": "textbooks:87529",
+      "rowSha256": "50573b2b11dd1ce21b3754284744e09b93b2efc8b9cf83ff7eede71146095964",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "свій власний внесок",
+      "correct": "свій внесок / власний внесок"
+    },
+    "err_0233": {
+      "rowId": "textbooks:87529",
+      "rowSha256": "50573b2b11dd1ce21b3754284744e09b93b2efc8b9cf83ff7eede71146095964",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "прийти в другий раз",
+      "correct": "прийти іншим разом"
+    },
+    "err_0234": {
+      "rowId": "textbooks:87529",
+      "rowSha256": "50573b2b11dd1ce21b3754284744e09b93b2efc8b9cf83ff7eede71146095964",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "порушити наступні питання",
+      "correct": "порушити такі питання"
+    },
+    "err_0235": {
+      "rowId": "textbooks:87556",
+      "rowSha256": "10e12e0584083698b534f90ef0364ee383089760f2ff1d3834fcc8b6d7896192",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "витривале поні",
+      "correct": "витривалий поні"
+    },
+    "err_0236": {
+      "rowId": "textbooks:87558",
+      "rowSha256": "0795977c593c84ad0d5295c25295618e148fe51baca80c0be3bdf6f5ed1fc5d9",
+      "source": "Textbook Gr 6 (avramenko)",
+      "error": "розкрити підручник",
+      "correct": "розгорнути підручник"
+    },
+    "err_0237": {
+      "rowId": "textbooks:90027",
+      "rowSha256": "6e3fb1f39b5744e975964b94dbc36118f559f7a8bcf117ba0e52548818d95e51",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "ознайомитися з прейскурантом цін",
+      "correct": "ознайомитися з прейскурантом"
+    },
+    "err_0238": {
+      "rowId": "textbooks:90027",
+      "rowSha256": "6e3fb1f39b5744e975964b94dbc36118f559f7a8bcf117ba0e52548818d95e51",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "зустрітися в травні місяці",
+      "correct": "зустрітися в травні"
+    },
+    "err_0239": {
+      "rowId": "textbooks:90027",
+      "rowSha256": "6e3fb1f39b5744e975964b94dbc36118f559f7a8bcf117ba0e52548818d95e51",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "підніматися сходами вгору",
+      "correct": "підніматися сходами"
+    },
+    "err_0240": {
+      "rowId": "textbooks:90042",
+      "rowSha256": "07a0dd01b7a22933e7d25f5c1b4ca6c9de74e2f830d47529b0cf06d23ba30e9d",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "користуватися успіхом",
+      "correct": "мати успіх"
+    },
+    "err_0241": {
+      "rowId": "textbooks:90042",
+      "rowSha256": "07a0dd01b7a22933e7d25f5c1b4ca6c9de74e2f830d47529b0cf06d23ba30e9d",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "затягувати лікування",
+      "correct": "зволікати з лікуванням"
+    },
+    "err_0242": {
+      "rowId": "textbooks:90045",
+      "rowSha256": "3387992cc9e7c463d9e82c7fc9a4924b3054f546353f769ef497fe4a452c8f9a",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "знаходитися в Черкасах",
+      "correct": "перебувати в Черкасах"
+    },
+    "err_0243": {
+      "rowId": "textbooks:90054",
+      "rowSha256": "89e5656864044daf94271be0a1e3495dd4554927a22346a7300b7ceb5a0a218a",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "прививати любов",
+      "correct": "прищеплювати любов"
+    },
+    "err_0244": {
+      "rowId": "textbooks:90054",
+      "rowSha256": "89e5656864044daf94271be0a1e3495dd4554927a22346a7300b7ceb5a0a218a",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "приводити приклад",
+      "correct": "наводити приклад"
+    },
+    "err_0245": {
+      "rowId": "textbooks:90054",
+      "rowSha256": "89e5656864044daf94271be0a1e3495dd4554927a22346a7300b7ceb5a0a218a",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "приймати до уваги",
+      "correct": "брати до уваги"
+    },
+    "err_0246": {
+      "rowId": "textbooks:90068",
+      "rowSha256": "b250f94e49b9548dc682a923b9e8e1a27f3444b097baf6df4d79e0b65e1975f7",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "співпадіння обставин",
+      "correct": "збіг обставин"
+    },
+    "err_0247": {
+      "rowId": "textbooks:90068",
+      "rowSha256": "b250f94e49b9548dc682a923b9e8e1a27f3444b097baf6df4d79e0b65e1975f7",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "виключення з правил",
+      "correct": "виняток із правил"
+    },
+    "err_0248": {
+      "rowId": "textbooks:90068",
+      "rowSha256": "b250f94e49b9548dc682a923b9e8e1a27f3444b097baf6df4d79e0b65e1975f7",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "дякуючи допомозі",
+      "correct": "завдяки допомозі"
+    },
+    "err_0249": {
+      "rowId": "textbooks:90072",
+      "rowSha256": "b3b808cac9b31b81e25ef9cb87e6c4a715fe834fc35c0dac76dddda3b20982ad",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "у випадку необхідності",
+      "correct": "у разі потреби, за потреби"
+    },
+    "err_0250": {
+      "rowId": "textbooks:90088",
+      "rowSha256": "468058025f1dab6b47ffb3925ec4918cb1308ac4e89bead68113261b7f9fb631",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "лопнуло терпіння",
+      "correct": "урвався терпець"
+    },
+    "err_0251": {
+      "rowId": "textbooks:90098",
+      "rowSha256": "68d8e14d0ebc9b79f26858be25e686486374c9c88fdfdd5d6c94265ee1dd8f4f",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "у тексті зустрічаються помилки",
+      "correct": "у тексті трапляються помилки"
+    },
+    "err_0252": {
+      "rowId": "textbooks:90123",
+      "rowSha256": "e062d277cdaf07b199fc50d4135885ea89b041ae665015b223e67778e4aaca8e",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "уязвиме місце",
+      "correct": "вразливе / слабке місце"
+    },
+    "err_0253": {
+      "rowId": "textbooks:90166",
+      "rowSha256": "4e8a0bb9ec96fdf8c8729ec87693f2eca3b2676c6b6c5c862a8ac61ebb23a3ba",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "на сьогоднішній день",
+      "correct": "сьогодні, на сьогодні"
+    },
+    "err_0254": {
+      "rowId": "textbooks:90166",
+      "rowSha256": "4e8a0bb9ec96fdf8c8729ec87693f2eca3b2676c6b6c5c862a8ac61ebb23a3ba",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "на теперішній час",
+      "correct": "тепер, нині, зараз, наразі"
+    },
+    "err_0255": {
+      "rowId": "textbooks:90168",
+      "rowSha256": "2125eb2de9bc83f6eb84ca80caba70e0f484f87c2f60b370981f0f477e26e7f5",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "бігти врозсипну",
+      "correct": "кидатися врозтіч"
+    },
+    "err_0256": {
+      "rowId": "textbooks:90168",
+      "rowSha256": "2125eb2de9bc83f6eb84ca80caba70e0f484f87c2f60b370981f0f477e26e7f5",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "квітнева капель",
+      "correct": "квітневий капіж"
+    },
+    "err_0257": {
+      "rowId": "textbooks:90168",
+      "rowSha256": "2125eb2de9bc83f6eb84ca80caba70e0f484f87c2f60b370981f0f477e26e7f5",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "шаркати ногами",
+      "correct": "човгати ногами"
+    },
+    "err_0258": {
+      "rowId": "textbooks:90172",
+      "rowSha256": "58c11488b0f799369ba84c49f05247b694e65b033ef14c00d5573e5fa08d76d6",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "держатися в стороні",
+      "correct": "бути осторонь"
+    },
+    "err_0259": {
+      "rowId": "textbooks:90172",
+      "rowSha256": "58c11488b0f799369ba84c49f05247b694e65b033ef14c00d5573e5fa08d76d6",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "вірно сказати",
+      "correct": "правильно сказати"
+    },
+    "err_0260": {
+      "rowId": "textbooks:90178",
+      "rowSha256": "68512d9db5385d14fe1d407c23b099924a237c108102272595c7faa20f54219b",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "у кінці кінців",
+      "correct": "кінець кінцем, урешті-решт"
+    },
+    "err_0261": {
+      "rowId": "textbooks:90197",
+      "rowSha256": "0f9713c0165d80cfe1a1e116e7fae944d6e8bf626699c0ba810eff5beba3d250",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "на протязі дня",
+      "correct": "протягом дня"
+    },
+    "err_0262": {
+      "rowId": "textbooks:90197",
+      "rowSha256": "0f9713c0165d80cfe1a1e116e7fae944d6e8bf626699c0ba810eff5beba3d250",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "не дивлячись на спеку",
+      "correct": "незважаючи на спеку"
+    },
+    "err_0263": {
+      "rowId": "textbooks:90197",
+      "rowSha256": "0f9713c0165d80cfe1a1e116e7fae944d6e8bf626699c0ba810eff5beba3d250",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "уздовж усієї боротьби",
+      "correct": "упродовж усієї боротьби"
+    },
+    "err_0264": {
+      "rowId": "textbooks:90201",
+      "rowSha256": "1f57f68e5ae401ec2b1489255d28bda4d9674984f54dfeccf71a249ad8b7604e",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "повідомлення по адресу",
+      "correct": "повідомлення за адресою"
+    },
+    "err_0265": {
+      "rowId": "textbooks:90201",
+      "rowSha256": "1f57f68e5ae401ec2b1489255d28bda4d9674984f54dfeccf71a249ad8b7604e",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "переписуватися з другом",
+      "correct": "листуватися з другом"
+    },
+    "err_0266": {
+      "rowId": "textbooks:90201",
+      "rowSha256": "1f57f68e5ae401ec2b1489255d28bda4d9674984f54dfeccf71a249ad8b7604e",
+      "source": "Textbook Gr 7 (avramenko)",
+      "error": "пересилка по пошті",
+      "correct": "надсилання по пошті / поштою"
+    },
+    "err_0267": {
+      "rowId": "textbooks:93349",
+      "rowSha256": "ebb2bb00a8d90da3e01615a4fd2216d4d8e549ba256580340cb06dbe547aea3b",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "навчатися мові",
+      "correct": "навчатися мови"
+    },
+    "err_0268": {
+      "rowId": "textbooks:93349",
+      "rowSha256": "ebb2bb00a8d90da3e01615a4fd2216d4d8e549ba256580340cb06dbe547aea3b",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "являється засобом пізнання",
+      "correct": "є засобом пізнання"
+    },
+    "err_0269": {
+      "rowId": "textbooks:93379",
+      "rowSha256": "d8eea282bdcd76c1856bea3b785482f6878d620f94ab623d4b78f38f552788eb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "хворіти грипом",
+      "correct": "хворіти на грип"
+    },
+    "err_0270": {
+      "rowId": "textbooks:93379",
+      "rowSha256": "d8eea282bdcd76c1856bea3b785482f6878d620f94ab623d4b78f38f552788eb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "зраджувати товаришу",
+      "correct": "зраджувати товариша"
+    },
+    "err_0271": {
+      "rowId": "textbooks:93379",
+      "rowSha256": "d8eea282bdcd76c1856bea3b785482f6878d620f94ab623d4b78f38f552788eb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "уживати заходи",
+      "correct": "уживати заходів"
+    },
+    "err_0272": {
+      "rowId": "textbooks:93379",
+      "rowSha256": "d8eea282bdcd76c1856bea3b785482f6878d620f94ab623d4b78f38f552788eb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "дякувати друга",
+      "correct": "дякувати другові"
+    },
+    "err_0273": {
+      "rowId": "textbooks:93395",
+      "rowSha256": "5cccc9c30670a1d374d2da211c6d54990d67f4206e591ece357fae79e31966bb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "біля ста відтінків",
+      "correct": "близько ста відтінків"
+    },
+    "err_0274": {
+      "rowId": "textbooks:93395",
+      "rowSha256": "5cccc9c30670a1d374d2da211c6d54990d67f4206e591ece357fae79e31966bb",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "фарби осіннього парку",
+      "correct": "барви осіннього парку"
+    },
+    "err_0275": {
+      "rowId": "textbooks:93480",
+      "rowSha256": "ef86b779ccbf0d13ab4f715935160355def7b74c801c7b34643bdc6d99e2ac76",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "попередити пожежу",
+      "correct": "запобігти пожежі"
+    },
+    "err_0276": {
+      "rowId": "textbooks:93480",
+      "rowSha256": "ef86b779ccbf0d13ab4f715935160355def7b74c801c7b34643bdc6d99e2ac76",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "носити назву",
+      "correct": "мати назву, називатися"
+    },
+    "err_0277": {
+      "rowId": "textbooks:93490",
+      "rowSha256": "dcefc8555e8f22f1f89d7a2fe871add30b0c3a5cdf2269fdefd88acdcec400e3",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "подорожувати по різним країнам",
+      "correct": "подорожувати різними країнами"
+    },
+    "err_0278": {
+      "rowId": "textbooks:93490",
+      "rowSha256": "dcefc8555e8f22f1f89d7a2fe871add30b0c3a5cdf2269fdefd88acdcec400e3",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "тисяча років тому назад",
+      "correct": "тисяча років тому"
+    },
+    "err_0279": {
+      "rowId": "textbooks:93512",
+      "rowSha256": "ecb206ccfe619866d21d8670bfdab06f2981f46678023431cc97e3bf274e9f23",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "багаточисленні випадки",
+      "correct": "численні випадки"
+    },
+    "err_0280": {
+      "rowId": "textbooks:93512",
+      "rowSha256": "ecb206ccfe619866d21d8670bfdab06f2981f46678023431cc97e3bf274e9f23",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "малочисленні порушення",
+      "correct": "нечисленні порушення"
+    },
+    "err_0281": {
+      "rowId": "textbooks:93536",
+      "rowSha256": "1498363d5deab26096fcd6d28bd4eba0be6b510f8ac6b2ed966cd39eb112bfe0",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "розмовляю на іспанській мові",
+      "correct": "розмовляю іспанською мовою"
+    },
+    "err_0282": {
+      "rowId": "textbooks:93536",
+      "rowSha256": "1498363d5deab26096fcd6d28bd4eba0be6b510f8ac6b2ed966cd39eb112bfe0",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "позбутися від поганої звички",
+      "correct": "позбутися поганої звички"
+    },
+    "err_0283": {
+      "rowId": "textbooks:93536",
+      "rowSha256": "1498363d5deab26096fcd6d28bd4eba0be6b510f8ac6b2ed966cd39eb112bfe0",
+      "source": "Textbook Gr 8 (avramenko)",
+      "error": "це до мене не стосується",
+      "correct": "це мене не стосується"
+    },
+    "err_0284": {
+      "rowId": "textbooks:93632",
+      "rowSha256": "9bc83cd788239750b8ec02895e17e2f06bd0161f7fe0d36409fc6ee555e1402e",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "переходячий дорогу",
+      "correct": "який переходить дорогу"
+    },
+    "err_0285": {
+      "rowId": "textbooks:93632",
+      "rowSha256": "9bc83cd788239750b8ec02895e17e2f06bd0161f7fe0d36409fc6ee555e1402e",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "миючий засіб",
+      "correct": "мийний засіб"
+    },
+    "err_0286": {
+      "rowId": "textbooks:93632",
+      "rowSha256": "9bc83cd788239750b8ec02895e17e2f06bd0161f7fe0d36409fc6ee555e1402e",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "опавше листя",
+      "correct": "опале листя"
+    },
+    "err_0287": {
+      "rowId": "textbooks:93632",
+      "rowSha256": "9bc83cd788239750b8ec02895e17e2f06bd0161f7fe0d36409fc6ee555e1402e",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "постарівший",
+      "correct": "постарілий"
+    },
+    "err_0288": {
+      "rowId": "textbooks:93632",
+      "rowSha256": "9bc83cd788239750b8ec02895e17e2f06bd0161f7fe0d36409fc6ee555e1402e",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "випавший град",
+      "correct": "град, що випав"
+    },
+    "err_0289": {
+      "rowId": "textbooks:93638",
+      "rowSha256": "a042845a5b5f53b76a3024c7bd143f67ffd0921a4d5512aee84a350ce40ce0f2",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "невірний номер",
+      "correct": "неправильний номер"
+    },
+    "err_0290": {
+      "rowId": "textbooks:93638",
+      "rowSha256": "a042845a5b5f53b76a3024c7bd143f67ffd0921a4d5512aee84a350ce40ce0f2",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "співставляти факти",
+      "correct": "зіставляти факти"
+    },
+    "err_0291": {
+      "rowId": "textbooks:93638",
+      "rowSha256": "a042845a5b5f53b76a3024c7bd143f67ffd0921a4d5512aee84a350ce40ce0f2",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "кидатися в очі",
+      "correct": "впадати в око (очі)"
+    },
+    "err_0292": {
+      "rowId": "textbooks:93638",
+      "rowSha256": "a042845a5b5f53b76a3024c7bd143f67ffd0921a4d5512aee84a350ce40ce0f2",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "приймати участь",
+      "correct": "брати участь"
+    },
+    "err_0293": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "дєжурний у столовій",
+      "correct": "черговий у їдальні"
+    },
+    "err_0294": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "бувші випускники",
+      "correct": "колишні випускники"
+    },
+    "err_0295": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "заставив вивчити",
+      "correct": "змусив вивчити"
+    },
+    "err_0296": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "доказав теорему",
+      "correct": "довів теорему"
+    },
+    "err_0297": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "написав дві стрічки",
+      "correct": "написав два рядки"
+    },
+    "err_0298": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "не мішай писати",
+      "correct": "не заважай писати"
+    },
+    "err_0299": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "переверніть сторінку",
+      "correct": "перегорніть сторінку"
+    },
+    "err_0300": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "розкрийте зошит",
+      "correct": "розгорніть зошит"
+    },
+    "err_0301": {
+      "rowId": "textbooks:93679",
+      "rowSha256": "7726c0fd1a5a9dcbfa2e4755338a8cd6820ecbc042fa3090d8dadfdc17eb8a7c",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "учбовий корпус",
+      "correct": "навчальний корпус"
+    },
+    "err_0302": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "магазин відкрито",
+      "correct": "магазин відчинено"
+    },
+    "err_0303": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "заберіть здачу",
+      "correct": "заберіть решту"
+    },
+    "err_0304": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "давати гривну",
+      "correct": "давати гривню"
+    },
+    "err_0305": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "купля-продажа",
+      "correct": "купівля-продаж"
+    },
+    "err_0306": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "закривайте двері",
+      "correct": "зачиняйте двері"
+    },
+    "err_0307": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "самі дешеві товари",
+      "correct": "найдешевші товари"
+    },
+    "err_0308": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "часний магазин",
+      "correct": "приватний магазин"
+    },
+    "err_0309": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "купіть рубашку",
+      "correct": "купіть сорочку"
+    },
+    "err_0310": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "загорніть у бумагу",
+      "correct": "загорніть у папір"
+    },
+    "err_0311": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "мебельний магазин",
+      "correct": "меблевий магазин"
+    },
+    "err_0312": {
+      "rowId": "textbooks:93723",
+      "rowSha256": "11b99730523665c0b98fc586142be6fa7f2748629e0f8479d1a5696590ce64fb",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "обувний магазин",
+      "correct": "взуттєвий магазин"
+    },
+    "err_0313": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "пирожне з кремом",
+      "correct": "тістечко з кремом"
+    },
+    "err_0314": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "земляніка з лісу",
+      "correct": "суниці з лісу"
+    },
+    "err_0315": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "овощний суп",
+      "correct": "овочевий суп"
+    },
+    "err_0316": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "гречнева каша",
+      "correct": "гречана каша"
+    },
+    "err_0317": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "картофельне пюре",
+      "correct": "картопляне пюре"
+    },
+    "err_0318": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "блінчики з грибами",
+      "correct": "млинці з грибами"
+    },
+    "err_0319": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "сольоні огірки",
+      "correct": "солоні огірки"
+    },
+    "err_0320": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "жаркоє по-гуцульськи",
+      "correct": "печеня по-гуцульськи"
+    },
+    "err_0321": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "пиріжки з творогом",
+      "correct": "пиріжки із сиром"
+    },
+    "err_0322": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "соняшникове масло",
+      "correct": "соняшникова олія"
+    },
+    "err_0323": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "смачне блюдо",
+      "correct": "смачна страва"
+    },
+    "err_0324": {
+      "rowId": "textbooks:93758",
+      "rowSha256": "cac3bc1ca4e44e858fe52025c7ce712370ed6573ae8f11c5647e8d7c908db150",
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "error": "повний стакан",
+      "correct": "повна склянка"
+    },
+    "err_0325": {
+      "rowId": "textbooks:98187",
+      "rowSha256": "5a5fcbe6e71c3cd2ccd0ac84bca9733d1b7848d8b508ac097b694b69b1db7f1b",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "на Україні",
+      "correct": "в Україні"
+    },
+    "err_0326": {
+      "rowId": "textbooks:98187",
+      "rowSha256": "5a5fcbe6e71c3cd2ccd0ac84bca9733d1b7848d8b508ac097b694b69b1db7f1b",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "самий милозвучний",
+      "correct": "наймилозвучніший"
+    },
+    "err_0327": {
+      "rowId": "textbooks:98191",
+      "rowSha256": "6f4c4c5e62f67e93a838053e0e8b57c23b161f795fb4d9dafdaace36efd4cb76",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "жарити по рецепту",
+      "correct": "смажити за рецептом"
+    },
+    "err_0328": {
+      "rowId": "textbooks:98191",
+      "rowSha256": "6f4c4c5e62f67e93a838053e0e8b57c23b161f795fb4d9dafdaace36efd4cb76",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "свіжий творог",
+      "correct": "свіжий сир"
+    },
+    "err_0329": {
+      "rowId": "textbooks:98202",
+      "rowSha256": "eba7f4894ebca41eccacb34c58464c268facd697dfa18a2304b981d4f82da7fb",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "фарби осіннього лісу",
+      "correct": "барви/кольори осіннього лісу"
+    },
+    "err_0330": {
+      "rowId": "textbooks:98202",
+      "rowSha256": "eba7f4894ebca41eccacb34c58464c268facd697dfa18a2304b981d4f82da7fb",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "самий яскравий",
+      "correct": "найяскравіший"
+    },
+    "err_0331": {
+      "rowId": "textbooks:98202",
+      "rowSha256": "eba7f4894ebca41eccacb34c58464c268facd697dfa18a2304b981d4f82da7fb",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "вищий дерева",
+      "correct": "вищий за дерево"
+    },
+    "err_0332": {
+      "rowId": "textbooks:98202",
+      "rowSha256": "eba7f4894ebca41eccacb34c58464c268facd697dfa18a2304b981d4f82da7fb",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "по вівторкам",
+      "correct": "щовівторка"
+    },
+    "err_0333": {
+      "rowId": "textbooks:98217",
+      "rowSha256": "a61463e94456bd5d9f9853df23532d2b23b48978caa78e83428ff58f65e30e30",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "задавати питання",
+      "correct": "ставити питання"
+    },
+    "err_0334": {
+      "rowId": "textbooks:98217",
+      "rowSha256": "a61463e94456bd5d9f9853df23532d2b23b48978caa78e83428ff58f65e30e30",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "таємна усмішка",
+      "correct": "таємнича усмішка"
+    },
+    "err_0335": {
+      "rowId": "textbooks:98217",
+      "rowSha256": "a61463e94456bd5d9f9853df23532d2b23b48978caa78e83428ff58f65e30e30",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "опанувати мовою",
+      "correct": "опанувати мову"
+    },
+    "err_0336": {
+      "rowId": "textbooks:98244",
+      "rowSha256": "fca23b7565f6766c7b843c8be72a35b0ebb6416e48070ffb68bec3ae6fa5eebe",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "зайняти перше місце",
+      "correct": "посісти перше місце"
+    },
+    "err_0337": {
+      "rowId": "textbooks:98244",
+      "rowSha256": "fca23b7565f6766c7b843c8be72a35b0ebb6416e48070ffb68bec3ae6fa5eebe",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "на протязі місяця",
+      "correct": "протягом (упродовж) місяця"
+    },
+    "err_0338": {
+      "rowId": "textbooks:98244",
+      "rowSha256": "fca23b7565f6766c7b843c8be72a35b0ebb6416e48070ffb68bec3ae6fa5eebe",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "малочисленні випадки",
+      "correct": "нечисленні випадки"
+    },
+    "err_0339": {
+      "rowId": "textbooks:98249",
+      "rowSha256": "317fc24df078021483f6481637b4079142a0fda0933ad7fa2004fd05899a23af",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "грати роль у виборі",
+      "correct": "відігравати роль у виборі"
+    },
+    "err_0340": {
+      "rowId": "textbooks:98249",
+      "rowSha256": "317fc24df078021483f6481637b4079142a0fda0933ad7fa2004fd05899a23af",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "радує око",
+      "correct": "тішить око"
+    },
+    "err_0341": {
+      "rowId": "textbooks:98249",
+      "rowSha256": "317fc24df078021483f6481637b4079142a0fda0933ad7fa2004fd05899a23af",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "нам не повезло",
+      "correct": "нам не пощастило (не поталанило)"
+    },
+    "err_0342": {
+      "rowId": "textbooks:98249",
+      "rowSha256": "317fc24df078021483f6481637b4079142a0fda0933ad7fa2004fd05899a23af",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "лопнуло терпіння",
+      "correct": "увірвався терпець"
+    },
+    "err_0343": {
+      "rowId": "textbooks:98255",
+      "rowSha256": "b5dbec54012c6b5dadfaee23fbfc48bcade6b21807348ba6dee72a1661a07068",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "на смак і колір товариша нема",
+      "correct": "на колір і смак товариш не всяк"
+    },
+    "err_0344": {
+      "rowId": "textbooks:98255",
+      "rowSha256": "b5dbec54012c6b5dadfaee23fbfc48bcade6b21807348ba6dee72a1661a07068",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "шириною два метра",
+      "correct": "завширшки два метри"
+    },
+    "err_0345": {
+      "rowId": "textbooks:98270",
+      "rowSha256": "a688be79d98e47c88839db4feaf5bf9c1d89a84cc369bb453ebb113ecadf8aaa",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "у якості музиканта",
+      "correct": "як музикант"
+    },
+    "err_0346": {
+      "rowId": "textbooks:98270",
+      "rowSha256": "a688be79d98e47c88839db4feaf5bf9c1d89a84cc369bb453ebb113ecadf8aaa",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "відповідно мелодії",
+      "correct": "відповідно до мелодії"
+    },
+    "err_0347": {
+      "rowId": "textbooks:98270",
+      "rowSha256": "a688be79d98e47c88839db4feaf5bf9c1d89a84cc369bb453ebb113ecadf8aaa",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "бити по клавішам",
+      "correct": "бити по клавішах"
+    },
+    "err_0348": {
+      "rowId": "textbooks:98270",
+      "rowSha256": "a688be79d98e47c88839db4feaf5bf9c1d89a84cc369bb453ebb113ecadf8aaa",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "сама ніжна мелодія",
+      "correct": "найніжніша мелодія"
+    },
+    "err_0349": {
+      "rowId": "textbooks:98285",
+      "rowSha256": "20cea3d9e88978836b7c7b0b1705585962aecb523f55b5ef85be21032ba77b85",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "мандрувати по містам",
+      "correct": "мандрувати містами"
+    },
+    "err_0350": {
+      "rowId": "textbooks:98285",
+      "rowSha256": "20cea3d9e88978836b7c7b0b1705585962aecb523f55b5ef85be21032ba77b85",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "пересікати дорогу",
+      "correct": "перетинати дорогу"
+    },
+    "err_0351": {
+      "rowId": "textbooks:98285",
+      "rowSha256": "20cea3d9e88978836b7c7b0b1705585962aecb523f55b5ef85be21032ba77b85",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "поводитися відповідно вимог",
+      "correct": "поводитися відповідно до вимог"
+    },
+    "err_0352": {
+      "rowId": "textbooks:98285",
+      "rowSha256": "20cea3d9e88978836b7c7b0b1705585962aecb523f55b5ef85be21032ba77b85",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "далекий путь",
+      "correct": "далека путь"
+    },
+    "err_0353": {
+      "rowId": "textbooks:98291",
+      "rowSha256": "1232901e8d896b36082b6cc7cde56e56d98cfdfd2ca81e7bbacc0e59a1a4093b",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "квартира з усіма зручностями",
+      "correct": "квартира з усіма вигодами"
+    },
+    "err_0354": {
+      "rowId": "textbooks:98291",
+      "rowSha256": "1232901e8d896b36082b6cc7cde56e56d98cfdfd2ca81e7bbacc0e59a1a4093b",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "гарний вид із вікна",
+      "correct": "гарний краєвид із вікна"
+    },
+    "err_0355": {
+      "rowId": "textbooks:98291",
+      "rowSha256": "1232901e8d896b36082b6cc7cde56e56d98cfdfd2ca81e7bbacc0e59a1a4093b",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "у даному випадку",
+      "correct": "у цьому випадку"
+    },
+    "err_0356": {
+      "rowId": "textbooks:98319",
+      "rowSha256": "9a90e24b53ad5d3e3123703e66e977e476cda564d68c622f97c269a904f3aef5",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "моя автобіографія",
+      "correct": "автобіографія, моя біографія"
+    },
+    "err_0357": {
+      "rowId": "textbooks:98319",
+      "rowSha256": "9a90e24b53ad5d3e3123703e66e977e476cda564d68c622f97c269a904f3aef5",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "у місяці травні",
+      "correct": "у травні"
+    },
+    "err_0358": {
+      "rowId": "textbooks:98337",
+      "rowSha256": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "академічна гребля",
+      "correct": "академічне веслування"
+    },
+    "err_0359": {
+      "rowId": "textbooks:98337",
+      "rowSha256": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "стрибки з шестом",
+      "correct": "стрибки з жердиною"
+    },
+    "err_0360": {
+      "rowId": "textbooks:98337",
+      "rowSha256": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "щодня займатися бігом",
+      "correct": "щодня бігати"
+    },
+    "err_0361": {
+      "rowId": "textbooks:98337",
+      "rowSha256": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "найперший у скачках",
+      "correct": "перший у перегонах"
+    },
+    "err_0362": {
+      "rowId": "textbooks:98337",
+      "rowSha256": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "являтися переможцем",
+      "correct": "бути переможцем"
+    },
+    "err_0363": {
+      "rowId": "textbooks:98342",
+      "rowSha256": "c8616d4e248ad681237f43eff937c3cdcdceff312c33c4c5fbfe13649c09c495",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "властивий для людини",
+      "correct": "властивий людині"
+    },
+    "err_0364": {
+      "rowId": "textbooks:98342",
+      "rowSha256": "c8616d4e248ad681237f43eff937c3cdcdceff312c33c4c5fbfe13649c09c495",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "притаманний для брата",
+      "correct": "притаманний братові"
+    },
+    "err_0365": {
+      "rowId": "textbooks:98342",
+      "rowSha256": "c8616d4e248ad681237f43eff937c3cdcdceff312c33c4c5fbfe13649c09c495",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "характерний комусь",
+      "correct": "характерний для когось"
+    },
+    "err_0366": {
+      "rowId": "textbooks:98342",
+      "rowSha256": "c8616d4e248ad681237f43eff937c3cdcdceff312c33c4c5fbfe13649c09c495",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "старший батька",
+      "correct": "старший за батька"
+    },
+    "err_0367": {
+      "rowId": "textbooks:98342",
+      "rowSha256": "c8616d4e248ad681237f43eff937c3cdcdceff312c33c4c5fbfe13649c09c495",
+      "source": "Textbook Gr 9 (avramenko)",
+      "error": "опанувати собою",
+      "correct": "опанувати себе"
+    },
+    "err_0368": {
+      "rowId": "textbooks:100073",
+      "rowSha256": "150bdb1a319faa5448130a39a3fd4c9886955104e8929ab9bd6840ca06175b8b",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "іти за хлібом",
+      "correct": "іти по хліб"
+    },
+    "err_0369": {
+      "rowId": "textbooks:100073",
+      "rowSha256": "150bdb1a319faa5448130a39a3fd4c9886955104e8929ab9bd6840ca06175b8b",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "побігти за журналом",
+      "correct": "побігти по журнал"
+    },
+    "err_0370": {
+      "rowId": "textbooks:100073",
+      "rowSha256": "150bdb1a319faa5448130a39a3fd4c9886955104e8929ab9bd6840ca06175b8b",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "змагання по футболу",
+      "correct": "змагання з футболу"
+    },
+    "err_0371": {
+      "rowId": "textbooks:100073",
+      "rowSha256": "150bdb1a319faa5448130a39a3fd4c9886955104e8929ab9bd6840ca06175b8b",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "контрольна по історії",
+      "correct": "контрольна з історії"
+    },
+    "err_0372": {
+      "rowId": "textbooks:100078",
+      "rowSha256": "c0b9767d1e05f7257ef3b2e90ae6494558d38e0f0ce85443db00e7343149913c",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "прочитати вірно",
+      "correct": "прочитати правильно"
+    },
+    "err_0373": {
+      "rowId": "textbooks:100078",
+      "rowSha256": "c0b9767d1e05f7257ef3b2e90ae6494558d38e0f0ce85443db00e7343149913c",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "включити світло",
+      "correct": "увімкнути світло"
+    },
+    "err_0374": {
+      "rowId": "textbooks:100078",
+      "rowSha256": "c0b9767d1e05f7257ef3b2e90ae6494558d38e0f0ce85443db00e7343149913c",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відкривати ворота",
+      "correct": "відчиняти ворота"
+    },
+    "err_0375": {
+      "rowId": "textbooks:100078",
+      "rowSha256": "c0b9767d1e05f7257ef3b2e90ae6494558d38e0f0ce85443db00e7343149913c",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "розкрити зошит",
+      "correct": "розгорнути зошит"
+    },
+    "err_0376": {
+      "rowId": "textbooks:100078",
+      "rowSha256": "c0b9767d1e05f7257ef3b2e90ae6494558d38e0f0ce85443db00e7343149913c",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "слідуючий урок",
+      "correct": "наступний урок"
+    },
+    "err_0377": {
+      "rowId": "textbooks:100089",
+      "rowSha256": "24c3fc70bd421d1564095648bdeb4129290dcb569aef4ac14f13b8513ae41223",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "люба мелодія",
+      "correct": "будь-яка мелодія"
+    },
+    "err_0378": {
+      "rowId": "textbooks:100089",
+      "rowSha256": "24c3fc70bd421d1564095648bdeb4129290dcb569aef4ac14f13b8513ae41223",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "чекали два часа",
+      "correct": "чекали дві години"
+    },
+    "err_0379": {
+      "rowId": "textbooks:100089",
+      "rowSha256": "24c3fc70bd421d1564095648bdeb4129290dcb569aef4ac14f13b8513ae41223",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "мішати працювати",
+      "correct": "заважати працювати"
+    },
+    "err_0380": {
+      "rowId": "textbooks:100089",
+      "rowSha256": "24c3fc70bd421d1564095648bdeb4129290dcb569aef4ac14f13b8513ae41223",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "переводити текст",
+      "correct": "перекладати текст"
+    },
+    "err_0381": {
+      "rowId": "textbooks:100089",
+      "rowSha256": "24c3fc70bd421d1564095648bdeb4129290dcb569aef4ac14f13b8513ae41223",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "йому повезе",
+      "correct": "йому пощастить"
+    },
+    "err_0382": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "слідуючий день",
+      "correct": "наступний день"
+    },
+    "err_0383": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відношення до людей",
+      "correct": "ставлення до людей"
+    },
+    "err_0384": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "іти на рибалку",
+      "correct": "іти на риболовлю"
+    },
+    "err_0385": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відкрити двері",
+      "correct": "відчинити двері"
+    },
+    "err_0386": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відкрити очі",
+      "correct": "розплющити очі"
+    },
+    "err_0387": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відкрити книжку",
+      "correct": "розгорнути книжку"
+    },
+    "err_0388": {
+      "rowId": "textbooks:100093",
+      "rowSha256": "99ee600f809ad603b6e0dc2695052bbb697f0a0ed1eef7c5f0637a774bc639fe",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "відкрити замок",
+      "correct": "відімкнути замок"
+    },
+    "err_0389": {
+      "rowId": "textbooks:100189",
+      "rowSha256": "08217b81e1bc22ed3b74dc470853946d952395314b3a24f17f1b67223c992400",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "дякувати Максима",
+      "correct": "дякувати Максиму"
+    },
+    "err_0390": {
+      "rowId": "textbooks:100189",
+      "rowSha256": "08217b81e1bc22ed3b74dc470853946d952395314b3a24f17f1b67223c992400",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "милуватися з краєвиду",
+      "correct": "милуватися краєвидом"
+    },
+    "err_0391": {
+      "rowId": "textbooks:100189",
+      "rowSha256": "08217b81e1bc22ed3b74dc470853946d952395314b3a24f17f1b67223c992400",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "пам’ятник Лесі Українки",
+      "correct": "пам’ятник Лесі Українці"
+    },
+    "err_0392": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "вибачте мене",
+      "correct": "вибачте мені"
+    },
+    "err_0393": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "дякую вас",
+      "correct": "дякую вам"
+    },
+    "err_0394": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "опановувати знаннями",
+      "correct": "опановувати знання"
+    },
+    "err_0395": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "милуватися з природи",
+      "correct": "милуватися природою"
+    },
+    "err_0396": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "нехтувати своє здоров’я",
+      "correct": "нехтувати своїм здоров’ям"
+    },
+    "err_0397": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "зраджувати другові",
+      "correct": "зраджувати друга"
+    },
+    "err_0398": {
+      "rowId": "textbooks:100191",
+      "rowSha256": "a4fa489674129407550f819ab599368be1f78faadff1889717616caa549198a7",
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "error": "потребувати спокій",
+      "correct": "потребувати спокою"
+    },
+    "err_0399": {
+      "rowId": "textbooks:104258",
+      "rowSha256": "802dffe7857f19836f72b8304eb4872c35ea80d2b39076c18bc776627e13c024",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "у словнику біля ста тисяч слів",
+      "correct": "у словнику близько ста тисяч слів"
+    },
+    "err_0400": {
+      "rowId": "textbooks:104258",
+      "rowSha256": "802dffe7857f19836f72b8304eb4872c35ea80d2b39076c18bc776627e13c024",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "бачити власними очима",
+      "correct": "бачити на власні очі"
+    },
+    "err_0401": {
+      "rowId": "textbooks:104384",
+      "rowSha256": "77b073c9b723add97c28b5dfd9abcc1614a459c7d725edace90a3161fe300f97",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "грецький горіх",
+      "correct": "волоський горіх"
+    },
+    "err_0402": {
+      "rowId": "textbooks:104384",
+      "rowSha256": "77b073c9b723add97c28b5dfd9abcc1614a459c7d725edace90a3161fe300f97",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "виявити дану проблему",
+      "correct": "виявити цю проблему"
+    },
+    "err_0403": {
+      "rowId": "textbooks:104384",
+      "rowSha256": "77b073c9b723add97c28b5dfd9abcc1614a459c7d725edace90a3161fe300f97",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "природня поведінка",
+      "correct": "природна поведінка"
+    },
+    "err_0404": {
+      "rowId": "textbooks:104384",
+      "rowSha256": "77b073c9b723add97c28b5dfd9abcc1614a459c7d725edace90a3161fe300f97",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "живописна місцевість",
+      "correct": "мальовнича місцевість"
+    },
+    "err_0405": {
+      "rowId": "textbooks:104384",
+      "rowSha256": "77b073c9b723add97c28b5dfd9abcc1614a459c7d725edace90a3161fe300f97",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "завітна мрія",
+      "correct": "заповітна мрія"
+    },
+    "err_0406": {
+      "rowId": "textbooks:104396",
+      "rowSha256": "a0ba4ad3dba501299ccad5a1689b6facadc8a4eb449e02179771ae9a9b1c3c82",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "копчик",
+      "correct": "куприк"
+    },
+    "err_0407": {
+      "rowId": "textbooks:104396",
+      "rowSha256": "a0ba4ad3dba501299ccad5a1689b6facadc8a4eb449e02179771ae9a9b1c3c82",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "десна",
+      "correct": "ясна"
+    },
+    "err_0408": {
+      "rowId": "textbooks:104396",
+      "rowSha256": "a0ba4ad3dba501299ccad5a1689b6facadc8a4eb449e02179771ae9a9b1c3c82",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "макушка",
+      "correct": "маківка"
+    },
+    "err_0409": {
+      "rowId": "textbooks:104400",
+      "rowSha256": "14c000672a2ff1e4bfbdfdab89922f74c70b6be45c0fa78ae42402e20a1306d6",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "ричаг",
+      "correct": "важіль"
+    },
+    "err_0410": {
+      "rowId": "textbooks:104400",
+      "rowSha256": "14c000672a2ff1e4bfbdfdab89922f74c70b6be45c0fa78ae42402e20a1306d6",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "ремінь безпеки",
+      "correct": "пасок безпеки"
+    },
+    "err_0411": {
+      "rowId": "textbooks:104400",
+      "rowSha256": "14c000672a2ff1e4bfbdfdab89922f74c70b6be45c0fa78ae42402e20a1306d6",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "створка",
+      "correct": "стулка"
+    },
+    "err_0412": {
+      "rowId": "textbooks:104400",
+      "rowSha256": "14c000672a2ff1e4bfbdfdab89922f74c70b6be45c0fa78ae42402e20a1306d6",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "грузовик",
+      "correct": "вантажівка"
+    },
+    "err_0413": {
+      "rowId": "textbooks:104406",
+      "rowSha256": "c677cee2837f5bd57fba1a07b15febb9d6460680f40ab75e64d48fcab2590972",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "форточка",
+      "correct": "кватирка"
+    },
+    "err_0414": {
+      "rowId": "textbooks:104406",
+      "rowSha256": "c677cee2837f5bd57fba1a07b15febb9d6460680f40ab75e64d48fcab2590972",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "калітка",
+      "correct": "хвіртка"
+    },
+    "err_0415": {
+      "rowId": "textbooks:104406",
+      "rowSha256": "c677cee2837f5bd57fba1a07b15febb9d6460680f40ab75e64d48fcab2590972",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "крильцо",
+      "correct": "ґанок"
+    },
+    "err_0416": {
+      "rowId": "textbooks:104416",
+      "rowSha256": "7404c07eb61c9fd59a76a17345463aca873258d39a26af12e829f3b0a3ade9c3",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "челюсть",
+      "correct": "щелепа"
+    },
+    "err_0417": {
+      "rowId": "textbooks:104416",
+      "rowSha256": "7404c07eb61c9fd59a76a17345463aca873258d39a26af12e829f3b0a3ade9c3",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "сустав",
+      "correct": "суглоб"
+    },
+    "err_0418": {
+      "rowId": "textbooks:104416",
+      "rowSha256": "7404c07eb61c9fd59a76a17345463aca873258d39a26af12e829f3b0a3ade9c3",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "затилок",
+      "correct": "потилиця"
+    },
+    "err_0419": {
+      "rowId": "textbooks:104416",
+      "rowSha256": "7404c07eb61c9fd59a76a17345463aca873258d39a26af12e829f3b0a3ade9c3",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "почка",
+      "correct": "нирка"
+    },
+    "err_0420": {
+      "rowId": "textbooks:104437",
+      "rowSha256": "753197e856bdfb8eb4c4a256b2e35b711c1616231a031c70dcdad892a5b610ae",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "у даному випадку",
+      "correct": "у цьому разі"
+    },
+    "err_0421": {
+      "rowId": "textbooks:104457",
+      "rowSha256": "b7d0fdb9cd1529748951023b2fbba63bf38fab29bfcdaf9917cbebf060e6e7b5",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "удар по воротам",
+      "correct": "удар по воротах"
+    },
+    "err_0422": {
+      "rowId": "textbooks:104457",
+      "rowSha256": "b7d0fdb9cd1529748951023b2fbba63bf38fab29bfcdaf9917cbebf060e6e7b5",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "відповідно сюжету",
+      "correct": "відповідно до сюжету"
+    },
+    "err_0423": {
+      "rowId": "textbooks:104457",
+      "rowSha256": "b7d0fdb9cd1529748951023b2fbba63bf38fab29bfcdaf9917cbebf060e6e7b5",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "навчатися танцям",
+      "correct": "навчатися танців"
+    },
+    "err_0424": {
+      "rowId": "textbooks:104462",
+      "rowSha256": "b279f34ad2160da8c3b9d998dcede2185e5f673ada151227f51d8aae12fa037e",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "чекати друг друга",
+      "correct": "чекати одне одного"
+    },
+    "err_0425": {
+      "rowId": "textbooks:104473",
+      "rowSha256": "49a461015ceaa6da45f236bddbd3b19d9b98d395e0f1ac8aa3a536bbe135f92d",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "співпадати на сто відсотків",
+      "correct": "збігатися на сто відсотків"
+    },
+    "err_0426": {
+      "rowId": "textbooks:104473",
+      "rowSha256": "49a461015ceaa6da45f236bddbd3b19d9b98d395e0f1ac8aa3a536bbe135f92d",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "співставляти характеристики",
+      "correct": "зіставляти характеристики"
+    },
+    "err_0427": {
+      "rowId": "textbooks:104473",
+      "rowSha256": "49a461015ceaa6da45f236bddbd3b19d9b98d395e0f1ac8aa3a536bbe135f92d",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "попереджати гайморит",
+      "correct": "запобігати гайморитові"
+    },
+    "err_0428": {
+      "rowId": "textbooks:104473",
+      "rowSha256": "49a461015ceaa6da45f236bddbd3b19d9b98d395e0f1ac8aa3a536bbe135f92d",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "зраджувати коханій людині",
+      "correct": "зраджувати кохану людину"
+    },
+    "err_0429": {
+      "rowId": "textbooks:104480",
+      "rowSha256": "ab2426cb16d4e807a7896e369b5590b29eeb0283a97e678e923b7d2ee2a1126e",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "приймати таблетки до їжі",
+      "correct": "приймати пігулки до їди"
+    },
+    "err_0430": {
+      "rowId": "textbooks:104498",
+      "rowSha256": "3b0a9e6652569e393d5e566a4ac3ac64652400c10dee39c63ccfb310534280c0",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "самий смачний торт",
+      "correct": "найсмачніший торт"
+    },
+    "err_0431": {
+      "rowId": "textbooks:104498",
+      "rowSha256": "3b0a9e6652569e393d5e566a4ac3ac64652400c10dee39c63ccfb310534280c0",
+      "source": "Textbook Gr 10 (avramenko)",
+      "error": "у тисячу дев’ятсот п’ятому році",
+      "correct": "у тисяча дев’ятсот п’ятому році"
+    },
+    "err_0432": {
+      "rowId": "style_guide:202",
+      "rowSha256": "ed652590963c5d6847daba99e7d8449ad1419d98ba5563424716f1c7b7a89bd7",
+      "source": "Antonenko-Davydovych: Деякі відмінкові особливості (ЗАЙМЕННИКИ)",
+      "error": "Головну увагу мною приділено таким явищам",
+      "correct": "Головну увагу я приділив таким явищам"
+    }
+  }
+}
