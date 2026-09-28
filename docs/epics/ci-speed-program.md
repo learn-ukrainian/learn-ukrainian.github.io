@@ -1,4 +1,4 @@
-# CI program — plan v2.2
+# CI program — plan v2.3
 
 > Epic **#8875** (parent: infra stream epic #6943). Written by the infra driver (Claude), 2026-09-28, from the read-only
 > audit `audit-ci-program-v2` (186 `ci.yml` runs, 2026-09-27T11:02Z–2026-09-28T09:01Z; scratch data and scripts in
@@ -65,15 +65,14 @@ landed the same day, so the two effects are not separable. **What now dominates*
 
 - **D4 — The merge queue is the single full gate (#9073; first).** On `merge_group`, any change that touches code, tests,
   workflows, dependency files, or an unclassifiable path runs the full required Python tier on the merged tree;
-  docs-only, content-only and frontend-only changes keep their #8437 classes. "Full" means everything except the `slow`
-  and `atlas_release` markers, which run only nightly. This reverses the part of operator decision #8437 that gave
-  `merge_group` the same path classes as PRs. It is the standard merge-queue pattern and what makes any PR-side
-  selection safe. **Frontend-only exception (panel split, resolved by the driver):** Codex asked that frontend-only
-  code also run the full Python tier in the queue; Fable and Grok kept the #8437 class. The driver keeps the exception,
-  because a frontend-only change by definition touches no path any Python test reads — the classifier already routes
-  declared site inputs that tests read into the Python tier — and forcing ~75 runner-minutes on every site PR would
-  undo D1. The exception is re-opened if a queue-only escape (§2) is ever traced to a frontend-only classification. Cost: a genuine failure caught only by the queue costs one ejection cycle (~10 min), which the
-  drive-epic skill already treats as same-hour work, and is measured as queue-only escapes (§2).
+  **frontend-only changes too** — Python tests read `site/` and `packages/activity-kit/` files the classifier treats as
+  frontend-only (e.g. `tests/test_hramatka_teacher_dashboard_contract.py`), so skipping them in the queue would be a
+  real coverage hole (panel split resolved in Codex's favour on that evidence). Docs-only and content-only changes
+  keep their #8437 classes unless a Python test reads the path (then the path is treated as code). "Full" means
+  everything except the `slow` and `atlas_release` markers, which run only nightly. This reverses the part of operator
+  decision #8437 that gave `merge_group` the same path classes as PRs; it is the standard merge-queue pattern and what
+  makes any PR-side selection safe. Cost: a genuine failure caught only by the queue costs one ejection cycle (~10 min),
+  which the drive-epic skill already treats as same-hour work, and is measured as queue-only escapes (§2).
 - **D1 — Retire the blanket `full-ci` habit (#9066; after #9073 and #9057).** Remove the drive-epic rule that labels
   every PR touching `tests/`; the label stays for the rare change the classifier cannot see. `full-ci` stops forcing
   the Frontend job unless site paths changed.
@@ -128,7 +127,7 @@ Out of this program: #8921 (Claude workers backgrounding pytest — harness), #8
 
 - **Under-selection** (#9066, #8872, #8506): no PR-side narrowing ships before #9073. Before any selector ships, its
   proof is a **fault-injection oracle**: for each of a fixed set of injected faults (and every historically failed run
-  in the replay set), the full suite is the oracle for which tests fail, and the selector must select at least one of
+  in the replay set), the full suite is the oracle for which tests fail, and the selector must select **every** one of
   them — **zero misses**; merged-PR replays and importer checks alone are not proof. #8506's replay set includes
   #8872's. A selector change that misses, or that lowers a tier's collected-test count, stops. Queue-only escapes
   above 1 / 100 queue runs reopen D1.
