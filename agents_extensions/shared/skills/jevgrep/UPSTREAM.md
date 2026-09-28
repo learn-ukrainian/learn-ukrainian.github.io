@@ -22,15 +22,26 @@ development. There is no exact pin and no vendored upstream body in this repo.
 - It reads `https://registry.npmjs.org/` and resolves `latest` to an exact
   version. It installs that version only when the release has npm provenance
   attestations, has no `preinstall`/`install`/`postinstall` script, declares
-  `bin.jg`, and names a `registry.npmjs.org` tarball with a sha512
-  `dist.integrity`. Metadata and tarball requests follow no redirects, must end
+  `bin.jg`, declares only plain semver ranges in `dependencies`,
+  `optionalDependencies` and `peerDependencies` (npm installs URL, git, host
+  shorthand, `file:`, `link:` and `npm:` alias specs from wherever they point,
+  whatever `--registry` says), bundles nothing, and names a `registry.npmjs.org`
+  tarball with a sha512 `dist.integrity`. A dependency violation is labelled
+  `dependency_source_refused`. Metadata and tarball requests follow no redirects, must end
   on `registry.npmjs.org` over HTTPS, and are capped at 8 MiB and 64 MiB.
 - It checks the tarball against `dist.integrity` and installs the local file
   with `--ignore-scripts --no-package-lock --registry=https://registry.npmjs.org/`
   into its own prefix under `~/.local/share/learn-ukrainian/jevgrep/`. npm runs
   without any inherited `npm_config_*` variable, and its user and global config
   files are an empty temp file, so no host setting (scoped registries included)
-  can route a dependency elsewhere. The staged `jg --version` must match and the
+  can route a dependency elsewhere. Before anything staged runs, every package
+  in the prefix except jevgrep itself (installed from the verified tarball) must
+  appear in the staged `node_modules/.package-lock.json` with a `resolved` URL
+  under `https://registry.npmjs.org/` and an `integrity`; otherwise the prefix is
+  deleted with `dependency_source_refused`. npm 7+ writes that hidden lockfile on
+  every non-global install (`--no-package-lock` only stops `package-lock.json`)
+  and no longer writes `_resolved` into installed `package.json` files.
+  The staged `jg --version` must match and the
   staged `jg doctor` must pass. The staged package's upstream skill file must
   also exist. Only then does it switch the `~/.local/bin/jg` symlink atomically.
   If the switched `jg` fails its checks or a skill write fails, the previous

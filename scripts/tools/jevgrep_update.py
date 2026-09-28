@@ -9,6 +9,9 @@ exact version and checks the supply-chain guards on that metadata. It then
 downloads the tarball named by the same metadata (no redirects, size-capped),
 verifies its sha512 against ``dist.integrity``, and installs that local file
 into its own version prefix with npm configuration isolated from the host. The
+metadata may declare plain semver dependency ranges only, and every package npm
+then placed in the prefix must record a public-registry ``resolved`` URL and an
+integrity in the hidden lockfile before anything staged runs. The
 staged ``jg`` and both skill texts are checked before ``~/.local/bin/jg`` is
 switched atomically; any later failure restores the previous link and skill
 files without a download. Child output is never recorded: the state log,
@@ -32,7 +35,7 @@ import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -57,6 +60,22 @@ PACKAGE_REL = Path("node_modules/@dzhng/jevgrep")
 UPSTREAM_SKILL_REL = Path("dist/skills/jevgrep/SKILL.md")
 FORBIDDEN_SCRIPTS = ("preinstall", "install", "postinstall")
 VERSION_RE = re.compile(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?")
+DEPENDENCY_FIELDS = ("dependencies", "optionalDependencies", "peerDependencies")
+BUNDLE_FIELDS = ("bundleDependencies", "bundledDependencies")
+DEPENDENCY_SOURCE_REFUSED = "dependency_source_refused"
+# A node-semver range and nothing else: no ``:`` (URL, git, github:, file:, link:, npm: alias),
+# no ``/`` or ``#`` (host shorthand, paths, commit-ish), no tag names. npm resolves such a
+# spec only against the configured registry.
+_RANGE_VERSION = r"v?(?:0|[1-9]\d*|[xX*])(?:\.(?:0|[1-9]\d*|[xX*])){0,2}(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?"
+_RANGE_COMPARATOR = rf"(?:[<>]=?|=|\^|~>?)?\s*{_RANGE_VERSION}"
+_RANGE_SET = rf"(?:{_RANGE_VERSION}\s+-\s+{_RANGE_VERSION}|{_RANGE_COMPARATOR}(?:\s+{_RANGE_COMPARATOR})*)"
+REGISTRY_RANGE_RE = re.compile(rf"\s*(?:{_RANGE_SET})?\s*(?:\|\|\s*(?:{_RANGE_SET})?\s*)*")
+# npm reads a spec ending like a tarball file name as a local file, even without a slash.
+TARBALL_NAME_RE = re.compile(r"\.(?:tgz|tar\.gz|tar)\s*$", re.IGNORECASE)
+# npm >= 7 no longer writes ``_resolved`` into installed package.json files; every non-global
+# reify writes this hidden lockfile, whatever ``--no-package-lock`` says (that flag only
+# governs ``package-lock.json``).
+HIDDEN_LOCKFILE_REL = Path("node_modules/.package-lock.json")
 KEEP_PREFIXES = 2
 MAX_METADATA_BYTES = 8 * 1024 * 1024
 MAX_TARBALL_BYTES = 64 * 1024 * 1024
@@ -202,7 +221,66 @@ def guard_failures(packument: Mapping[str, Any], version: str) -> list[str]:
     bins = meta.get("bin")
     if not isinstance(bins, dict) or not bins.get("jg"):
         failures.append("bin.jg missing")
+    if not dependencies_from_registry(meta):
+        failures.append(DEPENDENCY_SOURCE_REFUSED)
     return failures
+
+
+def is_registry_range(spec: object) -> bool:
+    return (
+        isinstance(spec, str)
+        and len(spec) <= 256
+        and not TARBALL_NAME_RE.search(spec)
+        and REGISTRY_RANGE_RE.fullmatch(spec) is not None
+    )
+
+
+def dependencies_from_registry(meta: Mapping[str, Any]) -> bool:
+    """Every declared dependency is a plain semver range and nothing is bundled.
+
+    npm installs URL, git, host-shorthand, file, link and alias specs from wherever they
+    point, regardless of ``--registry``.
+    """
+    for name in DEPENDENCY_FIELDS:
+        specs = meta.get(name) or {}
+        if not isinstance(specs, dict) or not all(is_registry_range(spec) for spec in specs.values()):
+            return False
+    return not any(meta.get(name) for name in BUNDLE_FIELDS)
+
+
+def _installed_packages(prefix: Path, node_modules: Path) -> Iterator[str]:
+    """Yield the lockfile key (``node_modules/...`` relative to ``prefix``) of every package dir on disk."""
+    if not node_modules.is_dir() or node_modules.is_symlink():
+        return
+    for child in node_modules.iterdir():
+        if child.name.startswith("."):
+            continue
+        scoped = child.name.startswith("@") and child.is_dir() and not child.is_symlink()
+        for package in child.iterdir() if scoped else (child,):
+            yield package.relative_to(prefix).as_posix()
+            yield from _installed_packages(prefix, package / "node_modules")
+
+
+def staged_sources_from_registry(prefix: Path) -> bool:
+    """Every package npm placed in ``prefix`` came from the public registry with an integrity.
+
+    The jevgrep package itself is exempt: npm installed it from the local tarball already
+    checked against ``dist.integrity``. A package on disk that the hidden lockfile does not
+    describe fails, as does a missing or unreadable lockfile.
+    """
+    try:
+        packages = json.loads((prefix / HIDDEN_LOCKFILE_REL).read_text(encoding="utf-8"))["packages"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    if not isinstance(packages, dict):
+        return False
+    for key, entry in packages.items():
+        if key == PACKAGE_REL.as_posix():
+            continue
+        resolved = entry.get("resolved") if isinstance(entry, dict) else None
+        if not isinstance(resolved, str) or not resolved.startswith(REGISTRY_BASE) or not entry.get("integrity"):
+            return False
+    return set(_installed_packages(prefix, prefix / "node_modules")) <= packages.keys()
 
 
 def _sri_sha512(integrity: object) -> str | None:
@@ -381,6 +459,10 @@ def stage(run: Run, meta: Mapping[str, Any], version: str, prefix: Path) -> tupl
         code, _ = run.call("npm_install", install, INSTALL_TIMEOUT_S, env=npm_env(run.deps.environ, empty_config))
         if code != 0:
             raise StepFailed("npm_install_failed")
+    # Before anything from the staged tree runs: a dependency npm fetched from anywhere but
+    # the public registry fails the stage, and install() removes the prefix.
+    if not staged_sources_from_registry(prefix):
+        raise StepFailed(DEPENDENCY_SOURCE_REFUSED)
     package = prefix / PACKAGE_REL
     skill = build_skill(run.deps, package, version)
     binary = (package / meta["bin"]["jg"]).resolve()
@@ -558,10 +640,14 @@ def build_parser() -> argparse.ArgumentParser:
             f"Guards: metadata and tarball come from https://{REGISTRY_HOST}/ only, with no redirects\n"
             "and size caps (8 MiB metadata, 64 MiB tarball). The target release must carry npm\n"
             "provenance attestations, have no preinstall/install/postinstall script, declare bin.jg,\n"
-            f"and name a tarball on {REGISTRY_HOST} with a sha512 dist.integrity. That tarball is\n"
+            "declare only plain semver ranges in dependencies, optionalDependencies and\n"
+            "peerDependencies (no URL, git, host shorthand, file, link or npm: alias spec), bundle\n"
+            f"nothing, and name a tarball on {REGISTRY_HOST} with a sha512 dist.integrity. That tarball is\n"
             "checked against dist.integrity and installed from the local file into its own prefix with\n"
             f"--ignore-scripts --no-package-lock --registry={REGISTRY_BASE}; npm runs with no inherited\n"
-            "npm_config_* variables and empty user and global config files. The staged `jg --version`\n"
+            "npm_config_* variables and empty user and global config files. Every other package in\n"
+            f"the staged node_modules/.package-lock.json must resolve to {REGISTRY_BASE} with an\n"
+            "integrity, else the prefix is deleted (label dependency_source_refused). The staged `jg --version`\n"
             "and `jg doctor` must pass and its upstream skill file must exist before ~/.local/bin/jg is\n"
             "switched; a failed switch or skill write restores the previous link and skill files.\n"
             "Every non-dry run first rebuilds both skill copies from the active package, so a failed\n"

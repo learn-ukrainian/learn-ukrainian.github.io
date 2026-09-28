@@ -29,6 +29,11 @@ REPO = Path(__file__).resolve().parents[1]
 OVERLAY = (REPO / updater.OVERLAY_REL).read_text(encoding="utf-8")
 LEGACY_LINK = "../lib/node_modules/@dzhng/jevgrep/dist/bin/index.js"
 SECRET = "npm_FAKEtoken0123456789SECRET"
+PYODIDE = {
+    "version": "0.25.1",
+    "resolved": "https://registry.npmjs.org/pyodide/-/pyodide-0.25.1.tgz",
+    "integrity": "sha512-cHlvZGlkZQ==",
+}
 
 
 def _tarball_bytes(version: str) -> bytes:
@@ -86,6 +91,8 @@ class FakeHost:
         doctor_fails: frozenset[str] = frozenset(),
         link_doctor_fails: frozenset[str] = frozenset(),
         no_skill: frozenset[str] = frozenset(),
+        staged: dict[str, dict[str, Any] | None] | None = None,
+        hidden_lockfile: bool = True,
     ):
         self.home = home
         self.link = home / updater.BIN_LINK_REL
@@ -93,6 +100,8 @@ class FakeHost:
         self.doctor_fails = doctor_fails
         self.link_doctor_fails = link_doctor_fails
         self.no_skill = no_skill
+        self.staged = staged or {}
+        self.hidden_lockfile = hidden_lockfile
         self.calls: list[list[str]] = []
         self.npm_envs: list[dict[str, str]] = []
         self.npm_config_texts: list[str] = []
@@ -120,6 +129,25 @@ class FakeHost:
         self.downloads.append(url)
         dest.write_bytes(_tarball_bytes(url.rsplit("jevgrep-", 1)[1].removesuffix(".tgz")))
 
+    def _stage_dependencies(self, prefix: Path, version: str) -> None:
+        """Place dependency dirs and the hidden lockfile npm writes; a ``None`` entry is on disk only."""
+        packages: dict[str, dict[str, Any] | None] = {
+            updater.PACKAGE_REL.as_posix(): {
+                "version": version,
+                "resolved": f"file:../.download-x/jevgrep-{version}.tgz",
+                "integrity": _sri(_tarball_bytes(version)),
+            },
+            "node_modules/pyodide": PYODIDE,
+            **self.staged,
+        }
+        for key in packages:
+            (prefix / key).mkdir(parents=True, exist_ok=True)
+            if key != updater.PACKAGE_REL.as_posix():
+                (prefix / key / "package.json").write_text(json.dumps({"name": key.rsplit("node_modules/", 1)[1]}))
+        if self.hidden_lockfile:
+            lockfile = {"lockfileVersion": 3, "packages": {k: v for k, v in packages.items() if v is not None}}
+            (prefix / updater.HIDDEN_LOCKFILE_REL).write_text(json.dumps(lockfile))
+
     def _leak(self, cmd: list[str], code: int, stdout: str = "") -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess(cmd, code, f"{stdout}{SECRET}\n", f"token={SECRET}\n")
 
@@ -135,6 +163,7 @@ class FakeHost:
             if version in self.npm_fails:
                 return self._leak(cmd, 1)
             self._materialize(prefix / updater.PACKAGE_REL, version)
+            self._stage_dependencies(prefix, version)
             return self._leak(cmd, 0)
         binary = Path(cmd[0])
         if not binary.exists():
@@ -260,6 +289,103 @@ def test_guard_blocks_install(home: Path, meta: dict[str, Any], reason: str) -> 
     assert host.installs() == [] and host.downloads == []
     assert record["action"] == "blocked" and reason in record["detail"]
     assert os.readlink(host.link) == LEGACY_LINK
+
+
+NON_REGISTRY_SPECS = [
+    "git+https://github.com/x/y.git",
+    "git+ssh://git@github.com/x/y.git#abc",
+    "git://github.com/x/y",
+    "github:x/y",
+    "gitlab:x/y",
+    "bitbucket:x/y",
+    "x/y",
+    "https://example.com/y.tgz",
+    "http://registry.npmjs.org/y/-/y-1.0.0.tgz",
+    "file:../y",
+    "link:../y",
+    "../y",
+    "y.tgz",
+    "npm:other@1.0.0",
+    "1.0.0#abc",
+    "latest",
+]
+
+
+@pytest.mark.parametrize("spec", NON_REGISTRY_SPECS)
+@pytest.mark.parametrize("field", updater.DEPENDENCY_FIELDS)
+def test_non_registry_dependency_spec_is_refused_before_npm(home: Path, field: str, spec: str) -> None:
+    host = FakeHost(home)
+    meta = {**_meta("0.5.0"), field: {"pyodide": "0.25.1", "y": spec}}
+    code, record = updater.update(_deps(host, _packument("0.5.0", {"0.5.0": meta})))
+    assert code == 1
+    assert host.installs() == [] and host.downloads == []
+    assert (record["action"], record["result"], record["detail"]) == ("blocked", "failed", "dependency_source_refused")
+    assert os.readlink(host.link) == LEGACY_LINK
+
+
+@pytest.mark.parametrize("bundle", [{"bundleDependencies": ["y"]}, {"bundledDependencies": True}])
+def test_bundled_dependencies_are_refused_before_npm(home: Path, bundle: dict[str, Any]) -> None:
+    host = FakeHost(home)
+    meta = {**_meta("0.5.0"), "dependencies": {"y": "1.0.0"}, **bundle}
+    code, record = updater.update(_deps(host, _packument("0.5.0", {"0.5.0": meta})))
+    assert code == 1 and host.installs() == [] and host.downloads == []
+    assert record["detail"] == "dependency_source_refused"
+
+
+@pytest.mark.parametrize(
+    "spec", ["0.25.1", "^1.2.3", "~1.2", ">=1.0.0 <2.0.0", "1.x || >=2.5.0 || 5.0.0 - 7.2.3", "*", "", "1.0.0-rc.1"]
+)
+def test_plain_semver_dependency_ranges_pass_the_guard(spec: str) -> None:
+    meta = {**_meta("0.5.0"), "dependencies": {"y": spec}, "bundleDependencies": []}
+    assert updater.guard_failures({"versions": {"0.5.0": meta}}, "0.5.0") == []
+
+
+@pytest.mark.parametrize(
+    ("staged", "hidden_lockfile"),
+    [
+        ({"node_modules/evil": {"resolved": "git+ssh://git@github.com/x/evil.git#abc", "integrity": "sha512-x"}}, True),
+        ({"node_modules/evil": {"resolved": "https://evil.example/evil-1.0.0.tgz", "integrity": "sha512-x"}}, True),
+        (
+            {"node_modules/evil": {"resolved": "http://registry.npmjs.org/evil/-/evil-1.0.0.tgz", "integrity": "x"}},
+            True,
+        ),
+        ({"node_modules/pyodide/node_modules/evil": {"resolved": "file:../evil", "integrity": "sha512-x"}}, True),
+        ({"node_modules/evil": {"resolved": "../evil", "link": True}}, True),
+        ({"node_modules/evil": {"resolved": "https://registry.npmjs.org/evil/-/evil-1.0.0.tgz"}}, True),
+        ({"node_modules/@scope/evil": None}, True),
+        ({}, False),
+    ],
+    ids=["git", "other-host", "http", "nested-file", "link", "no-integrity", "not-in-lockfile", "no-lockfile"],
+)
+def test_non_registry_staged_package_never_switches_and_removes_prefix(
+    home: Path, staged: dict[str, dict[str, Any] | None], hidden_lockfile: bool
+) -> None:
+    host = FakeHost(home, staged=staged, hidden_lockfile=hidden_lockfile)
+    code, record = updater.update(_deps(host, _packument("0.5.0")))
+    assert code == 1
+    assert len(host.installs()) == 1
+    assert (record["result"], record["detail"]) == ("failed", "dependency_source_refused")
+    assert os.readlink(host.link) == LEGACY_LINK
+    assert _prefixes(home) == []
+    staged_prefix = updater.PREFIX_ROOT_REL.as_posix()
+    assert not any(staged_prefix in cmd[0] for cmd in host.calls if cmd[0] != "npm"), "nothing staged ever ran"
+    _assert_skills_at(home, "0.4.4")
+
+
+def test_registry_only_staged_tree_passes_including_nested_and_scoped(tmp_path: Path) -> None:
+    packages = {
+        updater.PACKAGE_REL.as_posix(): {"resolved": "file:../.download-x/jevgrep.tgz"},
+        "node_modules/pyodide": PYODIDE,
+        "node_modules/@types/node": PYODIDE,
+        "node_modules/pyodide/node_modules/ws": PYODIDE,
+    }
+    for key in packages:
+        (tmp_path / key).mkdir(parents=True)
+    (tmp_path / "node_modules/.bin").mkdir()
+    (tmp_path / updater.HIDDEN_LOCKFILE_REL).write_text(json.dumps({"lockfileVersion": 3, "packages": packages}))
+    assert updater.staged_sources_from_registry(tmp_path)
+    (tmp_path / "node_modules/pyodide/node_modules/stray").mkdir()
+    assert not updater.staged_sources_from_registry(tmp_path)
 
 
 @pytest.mark.parametrize("script", ["preinstall", "install", "postinstall"])
