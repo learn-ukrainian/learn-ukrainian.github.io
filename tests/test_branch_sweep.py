@@ -85,17 +85,24 @@ def test_detached_worktree_at_tip_is_never_deleted(repo: Path, tmp_path: Path) -
     assert git(repo, "ls-remote", "--heads", "origin", "claude/detached")
 
 
-def test_running_task_is_never_deleted(repo: Path) -> None:
+@pytest.mark.parametrize("status", ["spawning", "needs_finalize", None, "unexpected", {"unknown": True}])
+def test_unreleased_task_is_never_deleted(repo: Path, status: object) -> None:
     branch(repo, "grok/live")
     directory = repo / "batch_state" / "tasks"
     directory.mkdir(parents=True)
-    (directory / "live.json").write_text(json.dumps({"status": "spawning", "worktree_branch": "grok/live"}))
+    state = {"worktree_branch": "grok/live"}
+    if status is not None:
+        state["status"] = status
+    (directory / "live.json").write_text(json.dumps(state))
     item = only(repo, "grok/live", apply=True)
     assert item.classification == "skipped-live-task"
     assert git(repo, "ls-remote", "--heads", "origin", "grok/live")
 
 
-@pytest.mark.parametrize("name", ["main", "gh-pages", "production", "ordinary/branch"])
+@pytest.mark.parametrize("name", [
+    "main", "gh-pages", "production", "ordinary/branch",
+    "gh-readonly-queue/main/pr-1-x", "dependabot/x/pr-2", "release/pr-3",
+])
 def test_protected_or_non_candidate_name_is_not_deleted(repo: Path, name: str) -> None:
     if name != "main":
         branch(repo, name)
@@ -103,14 +110,23 @@ def test_protected_or_non_candidate_name_is_not_deleted(repo: Path, name: str) -
     assert item.classification == "protected"
 
 
-@pytest.mark.parametrize("state", ["MERGED", "CLOSED"])
-def test_matching_closed_pr_head_deletes_both_refs(repo: Path, state: str) -> None:
+def test_matching_merged_pr_head_deletes_both_refs(repo: Path) -> None:
     sha = branch(repo, "codex/finished", unique=True)
-    item = only(repo, "codex/finished", apply=True, states={"codex/finished": [PullRequestState(4, state, sha)]})
+    item = only(repo, "codex/finished", apply=True, states={"codex/finished": [PullRequestState(4, "MERGED", sha)]})
     assert item.classification == "delete-merged"
     assert item.remote_deleted and item.local_deleted
     assert not git(repo, "ls-remote", "--heads", "origin", "codex/finished")
     assert not git(repo, "branch", "--list", "codex/finished")
+
+
+@pytest.mark.parametrize("unique", [True, False])
+def test_matching_closed_unmerged_pr_head_is_report_only(repo: Path, unique: bool) -> None:
+    sha = branch(repo, "codex/closed", unique=unique)
+    item = only(repo, "codex/closed", apply=True, states={"codex/closed": [PullRequestState(4, "CLOSED", sha)]})
+    assert item.classification == "report-only"
+    assert "unmerged" in item.reason
+    assert git(repo, "ls-remote", "--heads", "origin", "codex/closed")
+    assert git(repo, "branch", "--list", "codex/closed")
 
 
 def test_closed_pr_head_mismatch_with_unique_commits_is_report_only(repo: Path) -> None:
@@ -137,7 +153,7 @@ def test_no_pr_unique_commit_is_report_only_with_age(repo: Path) -> None:
     assert git(repo, "ls-remote", "--heads", "origin", "kimi/unmerged")
 
 
-@pytest.mark.parametrize("name", ["codex/has space", "-codex/flag", "codex/a:b", "codex/a..b", "codex/@{bad"])
+@pytest.mark.parametrize("name", ["codex/has space", "-x/review-1", "codex/a:b", "codex/a..b", "codex/@{bad"])
 def test_hostile_branch_name_is_never_passed_to_git(repo: Path, name: str, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[str, ...]] = []
     original = sweep._git
@@ -151,6 +167,9 @@ def test_hostile_branch_name_is_never_passed_to_git(repo: Path, name: str, monke
                            worktree_branches=set(), detached_heads=set(), active_tasks=set(),
                            protected_branches=sweep.PROTECTED,
                            pr_lookup=lookup())
+    if name == "-x/review-1":
+        assert sweep._candidate(name)
+        assert item.reason == "invalid or unsafe branch name"
     assert item.classification in {"protected", "report-only"}
     assert not calls
 
@@ -282,3 +301,61 @@ def test_remote_disappears_after_classification_allows_local_deletion(
     assert item.classification == "delete-ancestor"
     assert not item.remote_deleted and item.local_deleted
     assert not git(repo, "branch", "--list", "codex/absent")
+
+
+def test_already_absent_remote_and_local_has_honest_receipt(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    branch(repo, "pr-absent")
+    git(repo, "branch", "-D", "pr-absent")
+    original = sweep._origin_head
+
+    def disappear(root: Path, name: str) -> str | None:
+        if name == "pr-absent":
+            git(repo, "push", "origin", "--delete", name)
+        return original(root, name)
+
+    monkeypatch.setattr(sweep, "_origin_head", disappear)
+    item = only(repo, "pr-absent", apply=True)
+    assert item.classification == "already-absent"
+    assert not item.remote_deleted and not item.local_deleted
+
+
+@pytest.mark.parametrize("failure", ["fetch", "task-recheck"])
+def test_json_receipts_survive_failure_after_deletion(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], failure: str,
+) -> None:
+    branch(repo, "codex/a")
+    branch(repo, "codex/b")
+    original_sweep = sweep.sweep
+    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
+    monkeypatch.setattr(sweep, "sweep", lambda root, *, apply: original_sweep(
+        root, apply=apply, pr_lookup=lookup(), protected_lookup=lambda _repo: set(),
+    ))
+    if failure == "fetch":
+        original_checked = sweep._checked
+
+        def fail_fetch(root: Path, *args: str) -> str:
+            if args[0] == "fetch":
+                raise RuntimeError("final fetch failed")
+            return original_checked(root, *args)
+
+        monkeypatch.setattr(sweep, "_checked", fail_fetch)
+    else:
+        original_tasks = sweep._active_tasks
+        calls = 0
+
+        def fail_recheck(root: Path) -> set[str]:
+            nonlocal calls
+            calls += 1
+            if calls == 3:
+                raise RuntimeError("task file unreadable")
+            return original_tasks(root)
+
+        monkeypatch.setattr(sweep, "_active_tasks", fail_recheck)
+    assert sweep.main(["--apply", "--json"]) == 1
+    receipt = json.loads(capsys.readouterr().out)
+    assert receipt["ok"] is False
+    assert failure.split("-")[0] in receipt["error"]
+    deleted = [d for d in receipt["decisions"] if d["branch"] == "codex/a"]
+    assert len(deleted) == 1
+    assert deleted[0]["remote_deleted"] and deleted[0]["local_deleted"]
+    assert not git(repo, "ls-remote", "--heads", "origin", "codex/a")

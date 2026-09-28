@@ -86,12 +86,26 @@ def test_branch_sweep_and_read_only_branch_probes_are_allowed() -> None:
     assert {
         "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
         "Bash(git for-each-ref *)",
-        "Bash(git ls-remote *)",
     } <= set(allow)
     assert _decide(".venv/bin/python -m scripts.hygiene.branch_sweep --json") == "allow"
     assert _decide("git for-each-ref refs/remotes/origin") == "allow"
-    assert _decide("git ls-remote --heads origin") == "allow"
     assert not any(pattern.startswith("git push") for pattern in _bash_patterns(allow))
+
+
+@pytest.mark.parametrize("command", [
+    "git ls-remote",
+    "git ls-remote --heads origin",
+    "git ls-remote --upload-pack='sh -c id' .",
+    "git ls-remote --receive-pack='sh -c id' .",
+    "git ls-remote -u 'sh -c id' .",
+    "git -c protocol.version=2 ls-remote .",
+    "git fetch --upload-pack='sh -c id' .",
+    "git push",
+    "git push origin HEAD:codex/x",
+])
+def test_no_allow_rule_admits_unsafe_git_probe_or_push(command: str) -> None:
+    allow = _bash_patterns(_permissions()["allow"])
+    assert not any(_matches(pattern, command) for pattern in allow), command
 
 
 def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:

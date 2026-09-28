@@ -15,6 +15,7 @@ from pathlib import Path
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
+from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
 AGENTS = frozenset({"codex", "claude", "grok", "agy", "kimi", "cursor", "deepseek", "gemini", "glm"})
 PROTECTED = frozenset({"main", "master", "gh-pages", "production"})
@@ -41,6 +42,14 @@ class Decision:
     age_days: int | None
     remote_deleted: bool = False
     local_deleted: bool = False
+
+
+class SweepError(RuntimeError):
+    """A failed sweep with the decisions completed before the failure."""
+
+    def __init__(self, message: str, decisions: list[Decision]) -> None:
+        super().__init__(message)
+        self.decisions = decisions
 
 
 def _git(repo: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
@@ -85,12 +94,12 @@ def _refs(repo: Path) -> list[Branch]:
 
 def _candidate(name: str) -> bool:
     parts = name.split("/")
-    return (
-        name.startswith("pr-") or (
-            len(parts) > 1
-            and (parts[0] in AGENTS or parts[0] == "rescue"
-                 or parts[-1].startswith("review-") or parts[-1].startswith("pr-"))
-        )
+    if len(parts) == 1:
+        return name.startswith("pr-")
+    # A leading dash is still sent to the branch-name validator. It cannot be
+    # a Git ref, but keeping it here exercises that safety boundary.
+    return parts[0] in AGENTS or parts[0] == "rescue" or (
+        parts[0].startswith("-") and parts[-1].startswith("review-")
     )
 
 
@@ -111,7 +120,8 @@ def _active_tasks(repo: Path) -> set[str]:
             raise RuntimeError(f"cannot inspect task state {path.name}: {exc}") from exc
         if not isinstance(state, dict):
             raise RuntimeError(f"cannot inspect task state {path.name}: not an object")
-        if state.get("status") not in {"running", "spawning"}:
+        status = state.get("status")
+        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
             continue
         for key in ("worktree_branch", "branch"):
             value = state.get(key)
@@ -162,7 +172,7 @@ def _classify(
     if (branch.remote_sha or branch.local_sha) in detached_heads:
         return decision("skipped-worktree", "detached worktree uses this branch tip")
     if name in active_tasks:
-        return decision("skipped-live-task", "running or spawning dispatch names this branch")
+        return decision("skipped-live-task", "unreleased dispatch names this branch")
     if branch.remote_sha and branch.local_sha and branch.remote_sha != branch.local_sha:
         return decision("report-only", "local and remote tips differ")
 
@@ -176,8 +186,10 @@ def _classify(
     tip = branch.remote_sha or branch.local_sha
     if tip is None:
         return decision("report-only", "branch has no readable tip")
-    if any(pr.head_sha == tip for pr in prs):
-        return decision("delete-merged", "closed/merged PR head matches branch tip")
+    if any(pr.state == "CLOSED" and pr.head_sha == tip for pr in prs):
+        return decision("report-only", "closed unmerged PR head matches branch tip")
+    if any(pr.state == "MERGED" and pr.head_sha == tip for pr in prs):
+        return decision("delete-merged", "merged PR head matches branch tip")
     main = _git(repo, "rev-parse", "--verify", "refs/remotes/origin/main")
     if main.returncode:
         return decision("report-only", "origin/main is unavailable")
@@ -195,46 +207,49 @@ def sweep(
     repo: Path, *, apply: bool = False, pr_lookup: PrLookup = reaper._query_pr_states,
     protected_lookup: Callable[[Path], set[str]] = remote_protected_branches,
 ) -> list[Decision]:
-    branches = _refs(repo)
-    try:
-        protected = PROTECTED | protected_lookup(repo)
-        protection_error = None
-    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        protected = PROTECTED
-        protection_error = str(exc)
-    worktrees = reaper.list_git_worktrees(repo)
-    worktree_branches = {item.branch for item in worktrees if item.branch}
-    detached_heads = {item.head for item in worktrees if item.detached and item.head}
-    active = _active_tasks(repo)
     decisions: list[Decision] = []
-    for branch in branches:
-        if protection_error and _candidate(branch.name) and branch.name not in PROTECTED:
-            decisions.append(Decision(
-                branch.name, "report-only", f"branch protection query unavailable: {protection_error}",
-                branch.remote_sha, branch.local_sha, _age(branch),
-            ))
-            continue
-        verdict = _classify(
-            repo, branch, worktree_branches=worktree_branches, detached_heads=detached_heads,
-            active_tasks=active,
-            protected_branches=protected, pr_lookup=pr_lookup,
-        )
-        if apply and verdict.classification.startswith("delete-"):
-            # Recheck all volatile guards before each destructive call. In particular,
-            # stale origin tracking refs cannot authorize deletion of a moved head.
-            current_worktrees = reaper.list_git_worktrees(repo)
+    try:
+        branches = _refs(repo)
+        try:
+            protected = PROTECTED | protected_lookup(repo)
+            protection_error = None
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            protected = PROTECTED
+            protection_error = str(exc)
+        worktrees = reaper.list_git_worktrees(repo)
+        worktree_branches = {item.branch for item in worktrees if item.branch}
+        detached_heads = {item.head for item in worktrees if item.detached and item.head}
+        active = _active_tasks(repo)
+        for branch in branches:
+            if protection_error and _candidate(branch.name) and branch.name not in PROTECTED:
+                decisions.append(Decision(
+                    branch.name, "report-only", f"branch protection query unavailable: {protection_error}",
+                    branch.remote_sha, branch.local_sha, _age(branch),
+                ))
+                continue
             verdict = _classify(
-                repo, branch,
-                worktree_branches={w.branch for w in current_worktrees if w.branch},
-                detached_heads={w.head for w in current_worktrees if w.detached and w.head},
-                active_tasks=_active_tasks(repo), protected_branches=protected,
-                pr_lookup=pr_lookup,
+                repo, branch, worktree_branches=worktree_branches, detached_heads=detached_heads,
+                active_tasks=active,
+                protected_branches=protected, pr_lookup=pr_lookup,
             )
-            if verdict.classification.startswith("delete-"):
-                verdict = _apply(repo, branch, verdict)
-        decisions.append(verdict)
-    if apply:
-        _checked(repo, "fetch", "--prune", "origin")
+            if apply and verdict.classification.startswith("delete-"):
+                # Recheck all volatile guards before each destructive call. In particular,
+                # stale origin tracking refs cannot authorize deletion of a moved head.
+                current_worktrees = reaper.list_git_worktrees(repo)
+                verdict = _classify(
+                    repo, branch,
+                    worktree_branches={w.branch for w in current_worktrees if w.branch},
+                    detached_heads={w.head for w in current_worktrees if w.detached and w.head},
+                    active_tasks=_active_tasks(repo), protected_branches=protected,
+                    pr_lookup=pr_lookup,
+                )
+                if verdict.classification.startswith("delete-"):
+                    verdict = _apply(repo, branch, verdict)
+            decisions.append(verdict)
+        if apply:
+            _checked(repo, "fetch", "--prune", "origin")
+    except Exception as exc:
+        raise SweepError(str(exc), decisions) from exc
     return decisions
 
 
@@ -273,10 +288,15 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
             return replace(verdict, classification="report-only", reason=f"remote verification failed: {exc}")
     if branch.local_sha:
         # The reaper checks the exact local head again before deleting it.
-        error = reaper._prune_branch(repo, name, force=True, expected_head=branch.local_sha)
+        try:
+            error = reaper._prune_branch(repo, name, force=True, expected_head=branch.local_sha)
+        except Exception as exc:
+            return replace(verdict, classification="report-only", reason=f"local deletion failed: {exc}")
         if error:
             return replace(verdict, classification="report-only", reason=f"local deletion failed: {error}")
         verdict = replace(verdict, local_deleted=True)
+    if not verdict.remote_deleted and not verdict.local_deleted:
+        return replace(verdict, classification="already-absent", reason="remote head already absent; no local ref")
     return verdict
 
 
@@ -308,7 +328,10 @@ def main(argv: list[str] | None = None) -> int:
         decisions = sweep(repo, apply=args.apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         if args.json:
-            print(json.dumps({"ok": False, "error": str(exc)}))
+            print(json.dumps({
+                "ok": False, "error": str(exc),
+                "decisions": [asdict(d) for d in exc.decisions] if isinstance(exc, SweepError) else [],
+            }))
         else:
             print(f"branch_sweep: {exc}", file=sys.stderr)
         return 1
