@@ -81,6 +81,19 @@ def test_allow_list_has_no_push_or_switch_rule() -> None:
     assert not any(p.startswith("git switch") for p in allow)
 
 
+def test_branch_sweep_and_read_only_branch_probes_are_allowed() -> None:
+    allow = _permissions()["allow"]
+    assert {
+        "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
+        "Bash(git for-each-ref *)",
+        "Bash(git ls-remote *)",
+    } <= set(allow)
+    assert _decide(".venv/bin/python -m scripts.hygiene.branch_sweep --json") == "allow"
+    assert _decide("git for-each-ref refs/remotes/origin") == "allow"
+    assert _decide("git ls-remote --heads origin") == "allow"
+    assert not any(pattern.startswith("git push") for pattern in _bash_patterns(allow))
+
+
 def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
     allow = _permissions()["allow"]
     assert "Bash" not in allow
