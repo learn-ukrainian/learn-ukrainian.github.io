@@ -2997,6 +2997,63 @@ def _resolve_write_cwd_error(
     )
 
 
+_AGY_READ_ONLY_WORKTREE_HINT = (
+    "agy has no CLI-enforced read-only mode (#8516): headless runs need "
+    "--dangerously-skip-permissions, and the CLI re-anchors its working "
+    "directory after spawn. Read-only agy dispatches therefore run pinned to "
+    "a disposable dispatch worktree — pass bare `--worktree` (automatic when "
+    "neither flag is given) or `--cwd` at an existing added worktree, never "
+    "the primary checkout."
+)
+
+
+def _resolve_agy_read_only_target_error(
+    *,
+    worktree_arg: str | None,
+    cwd_arg: str | None,
+) -> str | None:
+    """Reject an agy read-only dispatch pointed at the primary checkout (#8516).
+
+    Returns an operator-facing error string, or None when the dispatch target
+    is acceptable. Evaluated before any side effects so a rejection leaves no
+    worktree/branch residue behind. An out-of-tree or other-worktree target
+    is allowed: the post-run snapshot guard fails the task on any mutation,
+    and the disposable-worktree default (the caller auto-pins bare
+    ``--worktree`` when neither flag is given) covers the common path.
+    """
+    wc = _load_worktree_containment()
+
+    if worktree_arg and worktree_arg != "auto":
+        candidate = _normalize_worktree_path(worktree_arg)
+        if wc.is_primary_checkout(candidate):
+            return (
+                f"❌ --worktree {worktree_arg!r} points at the primary checkout; "
+                f"agy read-only dispatch may not run there (#8516).\n   {_AGY_READ_ONLY_WORKTREE_HINT}"
+            )
+        return None
+
+    if cwd_arg:
+        candidate = _resolve_cwd_path(cwd_arg)
+        if wc.is_primary_checkout(candidate):
+            return (
+                f"❌ --cwd {cwd_arg!r} resolves inside the primary checkout; "
+                f"agy read-only dispatch may not run there (#8516).\n   {_AGY_READ_ONLY_WORKTREE_HINT}"
+            )
+    return None
+
+
+def _agy_read_only_requires_auto_worktree(
+    *,
+    agent: str,
+    mode: str,
+    worktree_arg: str | None,
+    cwd_arg: str | None,
+    repo_default: bool,
+) -> bool:
+    """#8516 AC-01: an agy read-only dispatch with no isolated target auto-pins one."""
+    return agent == "agy" and mode == "read-only" and repo_default and not worktree_arg and not cwd_arg
+
+
 def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> str:
     shown = [f"{entry.get('xy', '').strip() or '??'} {entry.get('path', '')}" for entry in entries[:limit]]
     if len(entries) > limit:
@@ -4682,8 +4739,11 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # Gitignored-by-default dirs a worker's own tooling writes (#6860). Observed
 # false-fails: ``.agent/sessions/*.json``, fleet-comms sqlite ``-shm/-wal``,
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
-# (harness/session/cache residue), not task-authored leaks such as ``.cache/``
-# (#4840). Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# (harness/session/cache residue). Membership is load-bearing (#8516 AC-02):
+# an ignored ``!!`` path escapes the mutation guard ONLY through this
+# classification, so task-authored leak targets like ``.cache/`` (#4840),
+# root-level ``/*.py`` scratch, and ``/scratch/`` deliberately stay OUT and
+# now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
 # ``.claude/hooks/``) must still fail a read-only task. Exempt an exact
@@ -4759,9 +4819,11 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     """Return whether a path is harness/tooling runtime state, not repo content.
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
-    sidecars that false-failed successful read-only tasks (#6860). Task-authored
-    ignored paths such as ``.cache/`` are classified separately as diagnostic
-    notes (#4840, #7253).
+    sidecars that false-failed successful read-only tasks (#6860). Since #8516
+    AC-02 this classification is ALSO the only way an ignored ``!!`` path
+    escapes the mutation guard: task-authored ignored leaks outside it (the
+    review-a3-api-ui ``/*.py`` + ``/scratch/`` scratch class; ``.cache/``
+    residue from #4840/#7253) now fail the task like any other mutation.
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -4847,13 +4909,25 @@ def _is_read_only_ignored_mutation(*, before_state: str | None, after_state: str
 
 
 def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
-    """Return changed paths Git reports as ignored, for diagnostic notes only."""
+    """Return changed ignored paths the guard deliberately tolerates as noise.
+
+    Diagnostic companion to :func:`_read_only_mutation_paths` (#8516): an
+    ignored ``!!`` status alone no longer exempts a path, so this list holds
+    exactly the ignored deltas that were ALSO recognized as harness/runtime
+    state — the build-noise class a read-only dispatch legitimately cannot
+    own (``.pytest_cache/``, ``batch_state/``, ``.entire/`` telemetry, …).
+    """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
         and _is_read_only_ignored_mutation(
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
+        and _is_read_only_runtime_state_exemption(
+            path,
             before_state=before.get(path),
             after_state=after.get(path),
         )
@@ -4864,29 +4938,27 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
-    Gitignored paths are excluded because ``git status`` marks them ``!!`` (or
-    omits them without ``--ignored``); they are recorded by
-    :func:`_read_only_ignored_mutation_paths` instead. Runtime-state exemptions
-    remain for older snapshots and for paths whose status is not ignored.
-    Tracked paths under runtime prefixes (including force-added files) still
-    trip the guard.
+    A changed path is exempt only when it is recognized harness/runtime noise
+    (:func:`_is_read_only_runtime_state_exemption`: gitignored tooling residue
+    such as ``.pytest_cache/`` or ``batch_state/``) or a newly appeared
+    sibling dispatch sandbox under ``.worktrees/dispatch/<agent>/<task>/``
+    (#6938 defense in depth; since #7124 the snapshot itself already drops
+    every ``.worktrees/`` path). Tracked paths under runtime prefixes
+    (including force-added files) still trip the guard.
 
-    Newly appeared sibling dispatch sandboxes under
-    ``.worktrees/dispatch/<agent>/<task>/`` are also excluded (#6938): concurrent
-    ``git worktree add`` on the shared primary checkout is not this task's
-    mutation. Since #7124 the snapshot itself already drops every
-    ``.worktrees/`` path; this exemption remains as defense in depth for
-    snapshots persisted by older workers.
+    #8516 AC-02: an ignored ``!!`` status BY ITSELF no longer exempts a path.
+    The review-a3-api-ui leak showed why: the agy worker wrote its scratch
+    files at the checkout root and under ``scratch/``, where ``.gitignore``
+    (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
+    as diagnostic-only "ignored mutations" while the task settled ``done``.
+    Now any other new, modified, or deleted path — tracked, untracked, or
+    ignored — fails the task and is named.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
-        and not _is_read_only_ignored_mutation(
-            before_state=before.get(path),
-            after_state=after.get(path),
-        )
         and not _is_read_only_runtime_state_exemption(
             path,
             before_state=before.get(path),
@@ -8863,6 +8935,37 @@ def _dispatch(
             file=sys.stderr,
         )
         return 2
+
+    # #8516 AC-01: the agy CLI has no enforceable read-only mode (headless
+    # runs need --dangerously-skip-permissions, and the CLI re-anchors its
+    # cwd after spawn — 2026-09-24 live evidence), so an agy read-only
+    # dispatch never runs against the primary checkout. Pin it to a
+    # disposable dispatch worktree (reaped on a clean terminal settle,
+    # `_should_reap_settled_worktree`) unless the caller already named an
+    # isolated target. Placed after agent resolution so retired-lane aliases
+    # (gemini→agy) are covered; still before any worktree/log side effect.
+    if dispatch_agent == "agy" and args.mode == "read-only" and fleet_repo.default:
+        agy_target_error = _resolve_agy_read_only_target_error(
+            worktree_arg=worktree_arg,
+            cwd_arg=args.cwd,
+        )
+        if agy_target_error:
+            print(agy_target_error, file=sys.stderr)
+            return 2
+        if _agy_read_only_requires_auto_worktree(
+            agent=dispatch_agent,
+            mode=args.mode,
+            worktree_arg=worktree_arg,
+            cwd_arg=args.cwd,
+            repo_default=fleet_repo.default,
+        ):
+            worktree_arg = "auto"
+            print(
+                "📌 #8516: agy --mode read-only pinned to a disposable dispatch "
+                "worktree (bare --worktree); the agy CLI has no enforceable "
+                "read-only mode.",
+                file=sys.stderr,
+            )
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
         from agent_runtime.adapters.agy import AgyAdapter

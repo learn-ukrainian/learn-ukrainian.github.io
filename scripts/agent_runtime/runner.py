@@ -166,6 +166,7 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
         "acp_turn_limit",
         "github_secondary_rate_limited",
         "adapter_refused",
+        "cwd_unpinned",
         "primary_tree_write",
         "protocol_output_limit",
         "provider_unavailable",
@@ -228,6 +229,172 @@ class InterAgentTransportError(AgentRuntimeError):
     unavailable, unsupported, malformed, or lacked trusted provenance before
     any provider process could be spawned.
     """
+
+
+class CwdUnpinnedError(AgentRuntimeError):
+    """A read-only dispatch child never settled into its pinned cwd (#8516).
+
+    Raised when the grace window closed with the process still anchored
+    outside the dispatch-pinned working tree: the run's reads/writes are not
+    attributable to the pinned checkout, so the task fails instead of
+    reporting an unverifiable review.
+    """
+
+    def __init__(self, agent: str, *, expected: Path, observed: str):
+        self.agent = agent
+        self.expected = str(expected)
+        self.observed = observed
+        super().__init__(
+            f"{agent} read-only dispatch never settled into its pinned cwd "
+            f"(expected under {self.expected}, last observed {observed}) (#8516)"
+        )
+
+
+# Agents whose CLI is known to re-anchor its working directory after spawn
+# (#8516, 2026-09-24 live evidence: agy started in its own scratch directory,
+# listed sibling repositories, and only later found the cwd it was given).
+# Read-only dispatches for these agents get their process cwd verified at
+# startup instead of assumed.
+_CWD_PIN_READ_ONLY_AGENTS = frozenset({"agy"})
+_CWD_PIN_GRACE_ENV = "LU_DISPATCH_CWD_PIN_GRACE_S"
+_CWD_PIN_DEFAULT_GRACE_S = 45.0
+
+
+def _cwd_pin_grace_s() -> float:
+    raw = os.environ.get(_CWD_PIN_GRACE_ENV, "").strip()
+    if not raw:
+        return _CWD_PIN_DEFAULT_GRACE_S
+    try:
+        return float(raw)
+    except ValueError:
+        return _CWD_PIN_DEFAULT_GRACE_S
+
+
+def _child_process_cwd(pid: int) -> str | None:
+    """Return the child process's current cwd via /proc, or None when unreadable.
+
+    None covers a raced exit, a non-Linux host, and a deleted cwd; callers
+    treat it as inconclusive, never as proof of drift.
+    """
+    try:
+        return os.readlink(f"/proc/{pid}/cwd")
+    except OSError:
+        return None
+
+
+class _ChildCwdPin:
+    """Startup cwd verifier for read-only dispatch spawns (#8516).
+
+    ``subprocess(cwd=...)`` pins the child's INITIAL cwd by construction, but
+    a CLI that re-anchors itself afterwards (agy's scratch-directory startup)
+    silently escapes that pin. The child gets a grace window to settle inside
+    the pinned tree — agy's observed behavior is to start in scratch and then
+    find the given cwd — and one positive observation inside it verifies the
+    run. A child still outside when the window closes fails the dispatch as
+    ``cwd_unpinned``.
+    """
+
+    def __init__(
+        self,
+        *,
+        pid: int,
+        expected_root: Path,
+        deadline: float,
+        agent_name: str,
+        task_id: str | None,
+    ) -> None:
+        self.pid = pid
+        self.expected_root = expected_root
+        self.deadline = deadline
+        self.agent_name = agent_name
+        self.task_id = task_id
+        self.verified = False
+        self.done = False
+        self.last_observed: str | None = None
+
+    @classmethod
+    def start(
+        cls,
+        *,
+        proc: subprocess.Popen,
+        cwd: Path,
+        mode: str,
+        agent_name: str,
+        task_id: str | None,
+    ) -> _ChildCwdPin | None:
+        """Build a pin for one spawn, or None when not applicable.
+
+        Never raises: a host without /proc (non-Linux) or an unresolvable
+        expected root disables the check (fail-open, like PrimaryTreeWatch;
+        the delegate-side post-run snapshot guard remains fail-closed).
+        """
+        try:
+            if mode != "read-only" or agent_name not in _CWD_PIN_READ_ONLY_AGENTS or not task_id:
+                return None
+            grace = _cwd_pin_grace_s()
+            if grace <= 0:
+                return None
+            if not Path("/proc").is_dir():
+                return None
+            expected_root = cwd.resolve()
+            return cls(
+                pid=proc.pid,
+                expected_root=expected_root,
+                deadline=time.monotonic() + grace,
+                agent_name=agent_name,
+                task_id=task_id,
+            )
+        except Exception as exc:
+            _logger.warning(
+                "cwd pin unavailable for %s (%s: %s) — dispatch continues unverified",
+                agent_name,
+                type(exc).__name__,
+                exc,
+            )
+            return None
+
+    def check(self) -> str | None:
+        """Poll once; return ``"cwd_unpinned"`` when the run must be killed.
+
+        Returns None while the child is verified, still inside its grace
+        window, or transiently unreadable. A process that exits before the
+        deadline is reported by the poll loop's own ``proc.poll()``, not here.
+        """
+        if self.done:
+            return None
+        observed = _child_process_cwd(self.pid)
+        if observed is not None:
+            self.last_observed = observed
+            try:
+                observed_path = Path(observed).resolve()
+            except OSError:
+                observed_path = None
+            if observed_path is not None and (
+                observed_path == self.expected_root or self.expected_root in observed_path.parents
+            ):
+                self.verified = True
+                self.done = True
+                return None
+        if time.monotonic() < self.deadline:
+            return None
+        self.done = True
+        if observed is None:
+            # Unreadable at the deadline (raced exit or cleared /proc entry):
+            # inconclusive, never proof of drift — fail open with a warning.
+            _logger.warning(
+                "cwd pin for %s could not read /proc/%s/cwd by the grace deadline — dispatch continues unverified",
+                self.agent_name,
+                self.pid,
+            )
+            return None
+        _logger.error(
+            "CWD PIN VIOLATION: agent=%s task=%s never settled into %s (last observed %s) — killing (#8516)",
+            self.agent_name,
+            self.task_id,
+            self.expected_root,
+            self.last_observed,
+        )
+        return "cwd_unpinned"
 
 
 def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
@@ -1033,6 +1200,9 @@ class _ExecutionOutcome:
     # Tracked primary-checkout paths the child dirtied mid-dispatch (#6818);
     # empty unless the PrimaryTreeWatch tripwire fired.
     escaped_primary_paths: tuple[str, ...] = ()
+    # (expected root, last observed cwd) when the #8516 cwd pin killed the
+    # child; None otherwise.
+    cwd_pin_detail: tuple[str, str] | None = None
 
 
 @dataclass
@@ -1380,6 +1550,7 @@ def _execute_invocation_plan(
     fleet_capture: FleetCapture | None = None
     kill_reason: str | None = None
     escaped_primary: list[str] = []
+    cwd_pin: _ChildCwdPin | None = None
     v4_claim: dict[str, Any] | None = None
     # Mid-dispatch primary-tree tripwire (#6818): the spawn-time guard above
     # proved cwd isolation, but a child can still resolve absolute paths into
@@ -1455,6 +1626,16 @@ def _execute_invocation_plan(
         liveness_paths = tuple(adapter.liveness_signal_paths(plan))
         if plan.output_file is not None and plan.output_file not in liveness_paths:
             liveness_paths = (*liveness_paths, plan.output_file)
+        # #8516 AC-01: verify a drift-prone CLI's cwd at startup instead of
+        # assuming the spawn-time pin held. Created after the spawn so the
+        # verifier reads the real child's /proc entry.
+        cwd_pin = _ChildCwdPin.start(
+            proc=proc,
+            cwd=review_cwd,
+            mode=mode,
+            agent_name=agent_name,
+            task_id=task_id,
+        )
         stdout_line_transform = (
             _bounded_acpx_progress_filter()
             if output_limit is not None
@@ -1576,6 +1757,15 @@ def _execute_invocation_plan(
                 escaped_primary.extend(tree_watch.maybe_check())
                 if escaped_primary and tree_watch.enforce:
                     kill_reason = "primary_tree_write"
+                    returncode = proc.poll()
+                    if returncode is None:
+                        _kill_process_tree(proc)
+                    break
+
+            if cwd_pin is not None and not cwd_pin.done:
+                pin_verdict = cwd_pin.check()
+                if pin_verdict is not None:
+                    kill_reason = pin_verdict
                     returncode = proc.poll()
                     if returncode is None:
                         _kill_process_tree(proc)
@@ -1706,6 +1896,11 @@ def _execute_invocation_plan(
             isolation_prompt_digest=isolation_prompt_digest,
             isolation_prompt_transport=isolation_prompt_transport,
             escaped_primary_paths=tuple(escaped_primary),
+            cwd_pin_detail=(
+                (str(cwd_pin.expected_root), cwd_pin.last_observed or "")
+                if cwd_pin is not None and kill_reason == "cwd_unpinned"
+                else None
+            ),
         )
     finally:
         if proc is not None and proc.poll() is None:
@@ -1874,6 +2069,35 @@ def _raise_for_kill_reason(
         )
         write_record(record)
         raise AgentOutputLimitError(agent_name, limit_bytes, observed_bytes)
+    if kill_reason == "cwd_unpinned":
+        # #8516 AC-01: the child never settled into its dispatch-pinned cwd
+        # within the grace window (agy's scratch-directory startup class).
+        expected, observed = execution.cwd_pin_detail or ("", "")
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="error",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=(
+                f"cwd_unpinned: child cwd never settled under {expected!r} "
+                f"(last observed {observed!r}) (#8516)"
+            )[:500],
+            tokens=None,
+            substitution=record_substitution,
+            failure_code="cwd_unpinned",
+        )
+        write_record(record)
+        raise CwdUnpinnedError(agent_name, expected=Path(expected or str(cwd)), observed=observed or "unreadable")
     if kill_reason == "primary_tree_write":
         # Operator-gated enforcement fired (#6818): the child wrote tracked
         # primary-checkout files mid-dispatch. Paths were already recorded to
