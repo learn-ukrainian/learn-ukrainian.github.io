@@ -131,7 +131,7 @@ runner, and orchestrator hosts).
 - **What it does**: the backup service runs `scripts/orchestration/run_scheduled_backup.sh`, which executes `scripts/backup-data.sh backup --execute` (restic via the rclone remote) and records the outcome in `batch_state/backups/last-run.json`. The retention service uses the same wrapper's `retention` mode to run `scripts/backup-data.sh retention --execute`, applying the operator-approved `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` policy run-aware to the `learn-ukrainian-data` tag only: completed runs are kept or dropped as a unit and snapshots are forgotten by explicit snapshot ID, so a retained receipt never loses a snapshot it references. Other snapshot families in the repository are untouched.
 - **Secrets**: both services read `EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env` (repository + password-file path). Validation errors name the variable and condition without its value. The wrapper redacts the configured repository, its rclone spec without the `rclone:` prefix, and the password-file path from both services' output before it reaches the journal. The unit fails visibly when the file is missing.
 - **Disk safety**: `LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging` keeps SQLite staging on the same filesystem as `data/` (gitignored; see `scripts/backup-data.sh` — databases are staged sequentially and each staged copy is deleted before the next). `Nice=15` + `IOSchedulingClass=idle` keep the run off the fast path; `TimeoutStartSec=10800` allows one hour of lock wait plus two hours for backup or retention.
-- **Data-volume guard**: the two backup services have drop-ins among the eleven in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
+- **Data-volume guard**: the two backup services have drop-ins among the twelve in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
 - **Failure visibility**: a failed run exits non-zero, and a failed log capture or `last-run.json` write fails the backup service even when the backup succeeded, so `systemctl --user list-timers` and `journalctl --user -u learn-ukrainian-backup.service` show it; `last-run.json` carries start/end, exit status, run id, snapshot count, and bytes added. A systemd timeout or SIGTERM may leave the previous receipt in place; check its timestamp alongside the unit status.
 - **Install** (preview by default; writes only with `--apply`):
   ```bash
@@ -163,3 +163,27 @@ runner, and orchestrator hosts).
   journalctl --user -u learn-ukrainian-opencode-retention.service -n 30
   ```
   The templates do not install or enable themselves.
+
+### 6. jevgrep auto-update (`learn-ukrainian-jevgrep-update.service` + `.timer`)
+
+- **Frequency**: every 6 hours (`OnCalendar=*-*-* 00/6:00:00`, `RandomizedDelaySec=20min`, `Persistent=true`). Target host: any host whose agents use `jg` (#9134).
+- **What it does**: runs `scripts/tools/jevgrep_update.py --json`, which keeps `@dzhng/jevgrep` (`~/.local/bin/jg`) at npm `latest`. It installs a new release only when it has npm provenance attestations, no install scripts, and `bin.jg`; it installs the exact version with `--ignore-scripts`, requires `jg --version` and `jg doctor` to pass, and otherwise reinstalls the previous version. Every run rewrites `~/.claude/skills/jevgrep/SKILL.md` and `~/.agents/skills/jevgrep/SKILL.md` (tracked overlay + the installed upstream skill body) and appends one JSON line to `~/.local/state/learn-ukrainian/jevgrep-update.jsonl`.
+- **Prerequisite**: the operator has run `jg auth` once on the host (see `agents_extensions/shared/skills/jevgrep/UPSTREAM.md`); without it `jg doctor` fails and new releases roll back.
+- **Hold a version**: `systemctl --user edit learn-ukrainian-jevgrep-update.service`, add `Environment=JEVGREP_HOLD_VERSION=<x.y.z>` under `[Service]`; remove it to return to `latest`.
+- **Data-volume guard**: install the matching `data-volume.conf` drop-in with the unit, as for the other timers.
+- **Install, only after operator approval**: preview first with `"$(pwd -P)/.venv/bin/python" scripts/tools/jevgrep_update.py --dry-run --json`, then from the primary checkout:
+  ```bash
+  repo_root=$(pwd -P)
+  unit_dir="$HOME/.config/systemd/user"
+  mkdir -p "$unit_dir/learn-ukrainian-jevgrep-update.service.d"
+  sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PYTHON@|$repo_root/.venv/bin/python|g" \
+    packaging/systemd/learn-ukrainian-jevgrep-update.service > "$unit_dir/learn-ukrainian-jevgrep-update.service"
+  cp packaging/systemd/learn-ukrainian-jevgrep-update.timer "$unit_dir/"
+  sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PYTHON@|$repo_root/.venv/bin/python|g" \
+    packaging/systemd/dropins/learn-ukrainian-jevgrep-update.service.d/data-volume.conf \
+    > "$unit_dir/learn-ukrainian-jevgrep-update.service.d/data-volume.conf"
+  systemd-analyze verify "$unit_dir/learn-ukrainian-jevgrep-update.service" "$unit_dir/learn-ukrainian-jevgrep-update.timer"
+  systemctl --user daemon-reload
+  systemctl --user enable --now learn-ukrainian-jevgrep-update.timer
+  journalctl --user -u learn-ukrainian-jevgrep-update.service -n 30
+  ```

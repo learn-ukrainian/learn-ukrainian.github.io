@@ -1,0 +1,13 @@
+[Unit]
+Description=Learn Ukrainian jevgrep CLI update to npm latest and skill sync
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=@PYTHON@ @REPO_ROOT@/scripts/tools/jevgrep_update.py --json
+TimeoutStartSec=1800
+Nice=15
+
+[Install]
+WantedBy=default.target

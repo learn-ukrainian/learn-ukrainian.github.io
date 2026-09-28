@@ -229,10 +229,37 @@ Fleet CLIs should call `scripts/typesafe/client.py` (`load_typesafe_api_key`, `s
 
 ---
 
-## 10. Related
+## 10. jevgrep (code discovery)
+
+[jevgrep](https://github.com/dzhng/jevgrep) (`@dzhng/jevgrep`, bin `jg`, MIT) asks
+Jev which folders, files and declarations are relevant to a natural-language
+question and prints those files plus verbatim excerpts. It builds no index.
+
+- **When:** you must find where behaviour lives in code you have not located yet
+  (multi-file, unfamiliar area). Run `jg "<question>" <narrow subdir>
+  --max-source-bytes 24000` before broad `rg`/file-by-file reading. Known exact
+  symbols or paths still go to `rg` / `git grep`. Never use a root of `.` or the
+  repository root, and never use `jg` output as evidence for Ukrainian language facts.
+- **Host auto-update to `latest`:** operator decision 2026-09-28. The
+  `learn-ukrainian-jevgrep-update.timer` runs `scripts/tools/jevgrep_update.py`
+  every 6 hours. It installs a new release only with npm provenance and no install
+  scripts, verifies `jg --version` and `jg doctor`, rolls back on failure, and
+  rewrites the user-level skill copies as the tracked overlay plus the installed
+  upstream skill text. `JEVGREP_HOLD_VERSION` pins temporarily.
+- **Auth is operator-only:** the operator runs `jg auth` once per host. Agents
+  never run `jg auth` and never install or upgrade `jg`; if it is missing or
+  failing they say so and continue with ordinary tools.
+- **Skill:** `agents_extensions/shared/skills/jevgrep/SKILL.md` (binding overlay:
+  egress roots, cost, evidence rules) and `UPSTREAM.md` (provenance, host setup).
+  Issue #9134.
+
+---
+
+## 11. Related
 
 - Skill suggestion: `scripts/typesafe/skill_suggestion.py` (#8201)
 - Skill + overlay: `agents_extensions/shared/skills/typesafe-ai/`
+- Code discovery skill: `agents_extensions/shared/skills/jevgrep/` (#9134)
 - Upstream: [System One](https://docs.typesafe.ai/concepts/system-one.md),
   [primitives](https://docs.typesafe.ai/primitives.md),
   [confidence routing](https://docs.typesafe.ai/patterns/confidence-routing.md),

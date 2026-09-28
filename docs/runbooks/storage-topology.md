@@ -36,10 +36,10 @@ mount is absent, unreadable, or from a different volume. `services.sh`
 checks before `start`, `restart`, and `fix` on both systemd and direct-process
 paths; `status` prints the observed `data: volume <uuid>` or
 `data: root disk` (and `data: unknown` if mount identity cannot be read).
-The eleven systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
+The twelve systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
 each original `ExecStart` with the same guard and set
 `RestartPreventExitStatus=78`. This covers four loopback listeners and all
-seven timer-triggered services, including backup and OpenCode retention, without changing
+eight timer-triggered services, including backup, OpenCode retention and the jevgrep update, without changing
 the timer files. Preview
 the rendered `/etc/systemd/user/` files with
 `<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
