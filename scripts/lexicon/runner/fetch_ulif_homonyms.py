@@ -400,6 +400,12 @@ class SpellingLedger:
             );
             CREATE INDEX IF NOT EXISTS register_rows_normalized_spelling
                 ON register_rows (normalized_spelling);
+            CREATE TABLE IF NOT EXISTS register_size_discrepancies (
+                position INTEGER PRIMARY KEY,
+                stressed_headword TEXT NOT NULL,
+                printed_size INTEGER NOT NULL,
+                reason TEXT NOT NULL
+            );
             """
         )
         self.conn.commit()
@@ -764,6 +770,120 @@ class SpellingLedger:
             "register_size_changes": int(self.meta("register_size_changes_count", "0") or "0"),
         }
 
+    def record_terminal(self, printed_size: int) -> None:
+        """Persist the observed end and each positional difference after terminal proof."""
+        observed_end = int(self.conn.execute("SELECT COALESCE(SUM(row_count), 0) FROM register_pages").fetchone()[0])
+        self.conn.execute("DELETE FROM register_size_discrepancies")
+        self.conn.executemany(
+            """INSERT INTO register_size_discrepancies
+               (position, stressed_headword, printed_size, reason) VALUES (?, ?, ?, ?)""",
+            _expected_size_discrepancies(self, observed_end, printed_size),
+        )
+        self.set_meta("terminal_position", str(observed_end))
+
+
+def _expected_size_discrepancies(
+    ledger: SpellingLedger, observed_end: int, printed_size: int
+) -> list[tuple[int, str, int, str]]:
+    if observed_end <= printed_size:
+        return [
+            (position, "", printed_size, "printed_size_beyond_observed")
+            for position in range(observed_end + 1, printed_size + 1)
+        ]
+    return [
+        (int(row[0]), str(row[1]), printed_size, "observed_beyond_printed_size")
+        for row in ledger.conn.execute(
+            """WITH page_offsets AS (
+                 SELECT page_num, COALESCE(SUM(row_count) OVER (
+                   ORDER BY page_num ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 0) AS offset
+                 FROM register_pages
+               )
+               SELECT p.offset + r.row_index + 1, r.stressed_headword
+               FROM register_rows r JOIN page_offsets p ON p.page_num = r.page_num
+               WHERE p.offset + r.row_index + 1 > ? ORDER BY p.page_num, r.row_index""",
+            (printed_size,),
+        )
+    ]
+
+
+def _walk_completion_errors(ledger: SpellingLedger, printed_size: int) -> list[str]:
+    """Check that terminal evidence, page geometry and size differences reconcile."""
+    errors: list[str] = []
+    pages = ledger.conn.execute(
+        """SELECT p.page_num, p.state, p.row_count, COUNT(r.row_index) AS rows,
+                  MIN(r.row_index) AS first_row, MAX(r.row_index) AS last_row,
+                  SUM(CASE WHEN r.state = 'completed' THEN 1 ELSE 0 END) AS completed
+           FROM register_pages p LEFT JOIN register_rows r ON r.page_num = p.page_num
+           GROUP BY p.page_num ORDER BY p.page_num"""
+    ).fetchall()
+    if not pages:
+        return ["no register pages"]
+    for expected_page, page in enumerate(pages, 1):
+        count = int(page["rows"])
+        if int(page["page_num"]) != expected_page:
+            errors.append(f"page sequence gap before {page['page_num']}")
+        if page["state"] != "completed" or count != int(page["row_count"] or 0) or count != int(page["completed"] or 0):
+            errors.append(f"page {page['page_num']} incomplete")
+        if count == 0 or page["first_row"] != 0 or page["last_row"] != count - 1:
+            errors.append(f"page {page['page_num']} row gap")
+    orphan = ledger.conn.execute(
+        "SELECT COUNT(*) FROM register_rows r LEFT JOIN register_pages p ON p.page_num = r.page_num WHERE p.page_num IS NULL"
+    ).fetchone()[0]
+    if orphan:
+        errors.append(f"{orphan} rows without page records")
+    duplicate_identities = ledger.conn.execute(
+        """SELECT normalized_spelling, homonym_index, COUNT(*) AS n
+           FROM register_rows WHERE state = 'completed'
+           GROUP BY normalized_spelling, homonym_index HAVING n > 1 LIMIT 1"""
+    ).fetchone()
+    if duplicate_identities:
+        errors.append(
+            f"duplicate stored identity {duplicate_identities['normalized_spelling']} "
+            f"homonym_index={duplicate_identities['homonym_index']}"
+        )
+    boundary_rows = ledger.conn.execute(
+        "SELECT page_num, stressed_headword FROM register_rows ORDER BY page_num, row_index"
+    )
+    previous_words: list[dict[str, str]] = []
+    current_words: list[dict[str, str]] = []
+    current_page = 0
+    for row in boundary_rows:
+        page_num = int(row["page_num"])
+        if page_num != current_page:
+            if previous_words and current_words:
+                try:
+                    _verify_register_continuity(previous_words, current_words, current_page)
+                except SessionInvalid as exc:
+                    errors.append(str(exc))
+            previous_words, current_words = current_words, []
+            current_page = page_num
+        current_words.append({"stressed": str(row["stressed_headword"])})
+    if previous_words and current_words:
+        try:
+            _verify_register_continuity(previous_words, current_words, current_page)
+        except SessionInvalid as exc:
+            errors.append(str(exc))
+    observed_end = sum(int(page["rows"]) for page in pages)
+    if ledger.meta("terminal_position") != str(observed_end):
+        errors.append("terminal position missing or differs from stored rows")
+    actual = [tuple(row) for row in ledger.conn.execute(
+        "SELECT position, stressed_headword, printed_size, reason FROM register_size_discrepancies ORDER BY position"
+    )]
+    expected = _expected_size_discrepancies(ledger, observed_end, printed_size)
+    if actual != expected or len(expected) != abs(observed_end - printed_size):
+        errors.append("printed-size differences are not fully itemised")
+    return errors
+
+
+def _discrepancy_lines(ledger: SpellingLedger) -> list[str]:
+    rows = ledger.conn.execute(
+        "SELECT position, stressed_headword, printed_size, reason FROM register_size_discrepancies ORDER BY position"
+    ).fetchall()
+    return [f"size_discrepancies={len(rows)}"] + [
+        f"discrepancy position={row['position']} stressed_headword={row['stressed_headword'] or 'unknown'} "
+        f"printed_size={row['printed_size']} reason={row['reason']}" for row in rows
+    ]
+
 
 def status_text(
     ledger: SpellingLedger,
@@ -823,7 +943,7 @@ def status_text(
 
         if pages_total == 0 and pages_done == 0:
             complete = "not_started"
-        elif pages_total > 0 and pages_done == pages_total and reg_size.isdigit() and entries_stored == int(reg_size):
+        elif reg_size.isdigit() and not _walk_completion_errors(ledger, int(reg_size)):
             complete = "yes"
         else:
             complete = "no"
@@ -855,6 +975,7 @@ def status_text(
             f"register_size={reg_size}",
             f"register_size_changes={reg_changes}",
             f"differing_groups={differing_groups}",
+            *_discrepancy_lines(ledger),
             f"complete={complete}",
             f"runner={runner_str}",
             f"last_update={last_update}",
@@ -2913,11 +3034,11 @@ def _tail_window_advance(
     register_size: int | None,
     page_num: int,
 ) -> int:
-    """Return a tail window's stride when its overlap ends at the printed size.
+    """Return a tail window's stride when its overlap reaches the printed size.
 
     ASPX can clamp a next-page request to the final 25-row window while still
-    displaying the next control. Only the exact register-size boundary permits
-    this adjustment; a drifted count or an interior overlap remains an error.
+    displaying the next control. An interior overlap remains an error; the
+    observed tail may extend past the site's printed count.
     """
     stride = len(preceding)
     if register_size is None or start_global + stride + len(following) <= register_size:
@@ -2935,6 +3056,9 @@ def _tail_window_advance(
         default=0,
     )
     if not overlap:
+        if start_global + stride >= register_size:
+            _verify_register_continuity(preceding, following, page_num)
+            return stride
         raise SessionInvalid(f"page_{page_num}_register_size_mismatch")
     # One repeated headword may be the next homonym, not a repeated position.
     min_overlap = (
@@ -2946,8 +3070,8 @@ def _tail_window_advance(
     if overlap < min_overlap:
         raise SessionInvalid(f"page_{page_num}_register_overlap")
     observed_end = start_global + stride - overlap + len(following)
-    if observed_end != register_size:
-        raise SessionInvalid(f"page_{page_num}_register_size_mismatch: at_least_{observed_end}_printed_{register_size}")
+    if observed_end < register_size:
+        raise SessionInvalid(f"page_{page_num}_register_size_mismatch: at_most_{observed_end}_printed_{register_size}")
     return stride - overlap
 
 
@@ -3244,10 +3368,6 @@ def _walk_shifted_windows(
             if not rows or tokens is None or _validation_failure(html):
                 raise SessionInvalid(f"page_{target_page}_viewstate")
             register_size = _register_size(html)
-            if register_size is not None and start_global + len(rows) > register_size:
-                raise SessionInvalid(
-                    f"page_{target_page}_register_size_mismatch: at_least_{start_global + len(rows)}_printed_{register_size}"
-                )
             _verify_known_window_rows(ledger, rows, start_global)
             _verify_first_unrecorded_page(ledger, rows, start_global)
 
@@ -3285,8 +3405,9 @@ def _walk_shifted_windows(
                     if index == REGISTER_PAGE_SIZE - 1
                 }
             )
-            at_register_end = register_size is not None and start_global + len(rows) == register_size
+            at_register_end = register_size is not None and start_global + len(rows) >= register_size
             has_next = _has_control(html, PAGE_BUTTONS["next"])
+            probed_next_html: str | None = None
             if at_register_end and has_next:
                 probe_fields = _form_fields(
                     tokens,
@@ -3308,9 +3429,10 @@ def _walk_shifted_windows(
                     raise SessionInvalid(f"page_{target_page}_invalid_terminal_probe")
                 listing = [(row["stressed"], row["select"]) for row in rows]
                 probed_listing = [(row["stressed"], row["select"]) for row in probe_rows]
-                if listing != probed_listing:
-                    raise SessionInvalid(f"page_{target_page}_register_size_mismatch: next_window_after_printed_end")
-                has_next = False
+                if listing == probed_listing:
+                    has_next = False
+                else:
+                    probed_next_html = probe_html
             if not has_next and not any(position is not None for position in positions):
                 raise ResumeMismatchError(f"page {target_page} absent from terminal window")
             if not has_next and positions:
@@ -3370,30 +3492,36 @@ def _walk_shifted_windows(
                 page_started = clock()
                 page_reqs = client.requests_made
 
-            if max_pages is not None and completed >= max_pages:
-                return EXIT_OK, "max pages", completed
             if not has_next:
                 if rows:
                     _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+                if register_size is None:
+                    raise SessionInvalid(f"page_{target_page}_unknown_register_size")
+                ledger.record_terminal(register_size)
                 return EXIT_OK, "finished", completed
+            if max_pages is not None and completed >= max_pages:
+                return EXIT_OK, "max pages", completed
             if len(rows) != REGISTER_PAGE_SIZE:
                 raise SessionInvalid(f"page_{target_page}_short_nonterminal_window")
 
-            next_fields = _form_fields(
-                tokens,
-                spelling=str(rows[-1]["unstressed"]),
-                extra=_image_click(PAGE_BUTTONS["next"]),
-            )
-            next_html, request = client.exchange("POST", next_fields)
-            _keep_walk(
-                ledger,
-                cache,
-                "",
-                f"page:next:{target_page}",
-                next_html,
-                request,
-                current_page=target_page,
-            )
+            if probed_next_html is not None:
+                next_html = probed_next_html
+            else:
+                next_fields = _form_fields(
+                    tokens,
+                    spelling=str(rows[-1]["unstressed"]),
+                    extra=_image_click(PAGE_BUTTONS["next"]),
+                )
+                next_html, request = client.exchange("POST", next_fields)
+                _keep_walk(
+                    ledger,
+                    cache,
+                    "",
+                    f"page:next:{target_page}",
+                    next_html,
+                    request,
+                    current_page=target_page,
+                )
             next_rows = parse_register_list(next_html)
             if not next_rows or _tokens(next_html) is None or _validation_failure(next_html):
                 raise SessionInvalid(f"page_{target_page}_invalid_next_page")
@@ -3882,6 +4010,10 @@ def run_walk(
                         if not _has_control(current_page_html, PAGE_BUTTONS["next"]):
                             _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
                             ledger.mark_page(current_page, "completed")
+                            printed_size = _register_size(current_page_html)
+                            if printed_size is None:
+                                raise SessionInvalid(f"page_{current_page}_unknown_register_size")
+                            ledger.record_terminal(printed_size)
                             process_pages_finished += 1
                             page_wall = clock() - page_start_clock
                             process_wall_time += page_wall
@@ -4299,15 +4431,25 @@ def verify_complete(
                 if len(missing_db_entries) > 20:
                     print(f"  ... and {len(missing_db_entries) - 20} more", file=sys.stderr)
 
+            completion_errors = _walk_completion_errors(ledger, target_size)
+            discrepancy_lines = _discrepancy_lines(ledger)
+            print(f"Itemised differences: {len(discrepancy_lines) - 1}", file=sys.stderr)
+            for line in discrepancy_lines[1:]:
+                print(f"  {line}", file=sys.stderr)
+            if completion_errors:
+                print(f"Completion errors ({len(completion_errors)}):", file=sys.stderr)
+                for error in completion_errors:
+                    print(f"  {error}", file=sys.stderr)
+
             if (
-                diff == 0
+                not completion_errors
                 and not incomplete_pages
                 and not incomplete_rows
                 and not page_continuity_errors
                 and not missing_db_entries
-                and entries_count >= target_size
+                and entries_count >= stored_rows_count
             ):
-                print("Status: VERIFIED_COMPLETE (stored entries match printed register size)", file=sys.stderr)
+                print("Status: VERIFIED_COMPLETE (observed register stored; printed-size differences itemised)", file=sys.stderr)
                 return EXIT_OK
             else:
                 print("Status: INCOMPLETE", file=sys.stderr)
@@ -4676,8 +4818,8 @@ Related:
 
     verify = sub.add_parser(
         "verify-complete",
-        help="Verify stored entries match printed register size",
-        description="Verify stored entries in ledger/database match printed ULIF register size.\nUse after completing the register walk to ensure zero missing pages or rows; do not use mid-crawl.",
+        help="Verify the observed register and itemised printed-size differences",
+        description="Verify every observed register row is stored and printed-size differences are itemised.\nUse after completing the register walk to ensure zero unitemised gaps or overlaps; do not use mid-crawl.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -5035,6 +5177,7 @@ Related:
                                 "register_size=unknown",
                                 "register_size_changes=0",
                                 "differing_groups=0",
+                                "size_discrepancies=0",
                                 "complete=not_started",
                                 f"runner={runner_str}",
                                 "last_update=none",
