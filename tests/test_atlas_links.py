@@ -333,6 +333,8 @@ def sense_atlas(tmp_path, monkeypatch):
                 _entry("жнець", "жнець", gloss="Той, хто жне хлібні рослини.", en=["reaper (person who reaps)"]),
                 _entry("жниця", "жниця", gloss="Жін. до жнець.", en=["female equivalent of жнець: female reaper"]),
                 _entry("голово", "голово", gloss="chair, head (vocative)"),
+                _entry("знижений", "знижений", pos="adjective",
+                       en=["down (on a lower level than before)"]),
                 # Proper-noun articles.
                 _entry("Київ", "київ", pos="proper noun",
                        en=["Kyiv (capital city of Ukraine) (proper noun)"]),
@@ -360,6 +362,7 @@ def sense_atlas(tmp_path, monkeypatch):
     published = {
         "поділля", "реєстр", "робота", "хто", "бабусин", "київ", "андрій", "олена", "карпати",
         "належати", "мусити", "вона", "їсти", "друг", "жнець", "жниця", "голово",
+        "знижений",
     }
 
     def href(word, **sense):
@@ -498,6 +501,15 @@ def test_correct_sense_links_behind_mixed_script_or_inflection_survive(sense_atl
 def test_wrong_sense_inflected_forms_stay_unlinked(sense_atlas, word, translation):
     assert sense_atlas(word) is not None
     assert sense_atlas(word, translation=translation) is None
+
+
+@pytest.mark.parametrize("translation", ["low-register; lowered", "low-register; colloquially lowered"])
+def test_stemmed_overlap_cannot_confirm_qualified_register_sense(sense_atlas, translation):
+    assert sense_atlas("знижений", translation=translation, pos="adj") is None
+
+
+def test_grammatical_s_is_still_a_strong_overlap():
+    assert atlas_links._english_unstemmed_words("she works") == frozenset({"she", "work"})
 
 
 def test_preset_href_is_sense_checked_against_the_lesson_word(sense_atlas):

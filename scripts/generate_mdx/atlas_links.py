@@ -53,7 +53,9 @@ English words are compared after folding inflection (plural and third-person
 ``-s``, ``-ed``, ``-ing``, irregular pronoun and verb forms: "has" ~ "have",
 "whom" ~ "who", "these" ~ "this") and British spelling ("centre" ~ "center",
 "colouring" ~ "coloring"), because an inflected lesson form links to its
-lemma's article.
+lemma's article. A multiword lesson gloss needs an overlap that survives
+without ``-ed``/``-ing`` stemming; otherwise a qualifying phrase such as
+"low-register; lowered" could link to the unrelated sense "lower level".
 
 The vocabulary YAML is never modified — slugs are derived here at render time.
 """
@@ -141,6 +143,7 @@ class _ArticleSense:
 
     proper: bool
     english: frozenset[str]
+    english_unstemmed: frozenset[str]
 
 
 def _strip_stress(text: str) -> str:
@@ -235,6 +238,25 @@ def english_content_words(text: str) -> frozenset[str]:
     return frozenset(words - _EN_STOPWORDS or words)
 
 
+def _english_unstemmed_words(text: str) -> frozenset[str]:
+    """Fold spelling and irregular forms, but keep -ed/-ing words distinct.
+
+    A qualified lesson gloss cannot be confirmed just because a common word
+    such as "lowered" stems to an article's "lower" in another sense.
+    """
+    text = _SENSE_POS_LABEL.sub("", _english_portion(text))
+    folded = unicodedata.normalize("NFKD", text.casefold())
+    words: set[str] = set()
+    for token in _EN_WORD.findall(folded):
+        # Plurals and third-person -s are grammatical forms of the same word;
+        # -ed/-ing can also change an adjective's sense, as in "lowered".
+        if token.endswith("s") or token.endswith("'s"):
+            words.update(_english_word_forms(token))
+        else:
+            words.add(_american_spelling(token))
+    return frozenset(words - _EN_STOPWORDS or words)
+
+
 def _entry_english_senses(entry: dict) -> list[str]:
     """Senses an Atlas article shows that carry English: its gloss and translations."""
     senses: list[str] = []
@@ -281,6 +303,7 @@ def _load_manifest_tables(manifest_path: str) -> tuple[dict[str, str], dict[str,
     index: dict[str, str] = {}
     proper: dict[str, bool] = {}
     english: dict[str, set[str]] = {}
+    english_unstemmed: dict[str, set[str]] = {}
     for entry in data.get("entries", []):
         slug = entry.get("url_slug")
         lemma = entry.get("lemma")
@@ -293,10 +316,16 @@ def _load_manifest_tables(manifest_path: str) -> tuple[dict[str, str], dict[str,
         senses = _entry_english_senses(entry)
         proper[slug] = proper.get(slug, False) or _entry_is_proper(entry, senses)
         words = english.setdefault(slug, set())
+        unstemmed = english_unstemmed.setdefault(slug, set())
         for sense in senses:
             words.update(english_content_words(sense))
+            unstemmed.update(_english_unstemmed_words(sense))
     senses_by_slug = {
-        slug: _ArticleSense(proper=proper[slug], english=frozenset(english[slug]))
+        slug: _ArticleSense(
+            proper=proper[slug],
+            english=frozenset(english[slug]),
+            english_unstemmed=frozenset(english_unstemmed[slug]),
+        )
         for slug in proper
     }
     return index, senses_by_slug
@@ -382,7 +411,12 @@ def _sense_allows(
     lesson_english = english_content_words(translation or "")
     if not lesson_english:
         return True
-    return article is not None and bool(lesson_english & article.english)
+    if article is None or not (lesson_english & article.english):
+        return False
+    # A multiword gloss carries a qualifier. A match based solely on a
+    # -ed/-ing stem does not establish that the article covers that sense.
+    lesson_unstemmed = _english_unstemmed_words(translation or "")
+    return len(lesson_unstemmed) <= 1 or bool(lesson_unstemmed & article.english_unstemmed)
 
 
 def _href(slug: str) -> str:

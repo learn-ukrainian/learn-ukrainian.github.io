@@ -137,6 +137,8 @@ def test_committed_lessons_keep_wrong_sense_links_out():
         ("b2/active-participles-past.mdx", "реєстр", "реєстр"),
         ("b2/advanced-conjunctions-i.mdx", "реєстр", "реєстр"),
         ("b2/b2-final-exam.mdx", "реєстр", "реєстр"),
+        ("b2/synonymy-in-registers.mdx", "знижений", "знижений"),
+        ("b2/synonymy-types-and-rows.mdx", "знижений", "знижений"),
     }
     catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
     found = {
