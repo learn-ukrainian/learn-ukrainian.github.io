@@ -2,8 +2,12 @@
 # Consumed by /api/state/routing-budget and delegate.py --check-budget hard auto-sub.
 # referenced by orchestrator routing decisions (MEMORY.md, this file).
 
-# Machine-readable for hard auto-sub (when lane is near_cap, hot, or CodexBar
-# deficit / will_last_to_reset=False on a fresh snapshot):
+# Machine-readable for hard auto-sub (when lane is near_cap, hot for a reason
+# the pace rule still supports, or a routing pace deficit on a fresh snapshot:
+# pace visible, projected to run out before reset, and |delta| > 2).
+# Model rewrite for an explicit --model on these rows is
+# model_catalog.yaml `budget_substitution_models` (#8855). This file stays
+# agent→agent only.
 dispatch_fallbacks:
   claude: codex
   # Mechanical shed when Codex is hot or in weekly deficit while free seats
@@ -25,10 +29,12 @@ dispatch_fallbacks:
   # grok/cursor/kimi/agy: no automatic mapping without an explicit
   # operator comment (refuse dispatch when hot/deficit and no row here).
 #
-# Trigger condition: when a budget bucket is at status `near_cap` or `hot`,
-# or CodexBar reports will_last_to_reset=False (deficit), the orchestrator
+# Trigger condition: when a budget bucket is at status `near_cap`, `hot`
+# (runtime headroom or a real pace deficit), or the shared pace rule says the
+# lane will run out before reset outside the on-pace band, the orchestrator
 # MUST use the substitution path below instead of draining the depleted
-# bucket. Missing mapping → refuse unless --force-agent.
+# bucket. A pace that is not yet visible, or whose |delta| is within 2 points,
+# is not a deficit. Missing mapping → refuse unless --force-agent.
 #
 # Provenance: user direction 2026-05-13 — "you need to store this and add to
 # router" (paste of the substitution table built during the budget-economics

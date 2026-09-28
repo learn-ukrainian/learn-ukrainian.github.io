@@ -27,14 +27,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.rag.extract_text import detect_native_text_anomalies
 
-CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_item_v1.schema.json")
+CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_config_v1.schema.json")
+ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_item_v1.schema.json")
 QUARANTINE_SCHEMA_PATH = Path(
-    "data/projects/open_model_data/contracts/v4_native_extraction_quarantine_report_v1.schema.json"
+    "registry/projects/open_model_data/contracts/v4_native_extraction_quarantine_report_v1.schema.json"
 )
-RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_receipt_v1.schema.json")
+RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_receipt_v1.schema.json")
 
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/extraction/v4_native_extraction_config_v1.json")
 
@@ -129,13 +130,13 @@ def _get_search_roots(input_root: Path) -> list[Path]:
 
 
 def _resolve_file(path: Path, roots: Sequence[Path]) -> Path:
-    if path.is_absolute() and path.exists():
-        return path
-    for r in roots:
-        candidate = r / path
-        if candidate.exists():
+    if path.is_absolute():
+        return resolve_open_model_path(path)
+    for root in roots:
+        candidate = resolve_open_model_path(path, repo=root)
+        if candidate.is_file():
             return candidate
-    return roots[0] / path
+    return resolve_open_model_path(path, repo=roots[0])
 
 
 def _load_schema(schema_path: Path, roots: Sequence[Path]) -> Draft202012Validator:
@@ -347,9 +348,9 @@ def build(
     conn = sqlite3.connect(db_uri, uri=True)
     cur = conn.cursor()
 
-    out_index_path = norm_out / config["outputs"]["index"]
-    out_quarantine_path = norm_out / config["outputs"]["quarantine_report"]
-    out_receipt_path = norm_out / config["outputs"]["receipt"]
+    out_index_path = resolve_open_model_path(config["outputs"]["index"], repo=norm_out)
+    out_quarantine_path = resolve_open_model_path(config["outputs"]["quarantine_report"], repo=norm_out)
+    out_receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=norm_out)
 
     out_index_path.parent.mkdir(parents=True, exist_ok=True)
     out_quarantine_path.parent.mkdir(parents=True, exist_ok=True)

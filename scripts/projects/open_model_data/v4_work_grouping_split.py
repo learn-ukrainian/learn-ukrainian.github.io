@@ -26,6 +26,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 
 class WorkGroupingSplitError(ValueError):
     """Raised when work grouping or evaluation split clearance fails validation."""
@@ -168,22 +170,22 @@ def build(
     """Build deterministic work grouping, deduplication, and split clearance index & receipt."""
     input_root = Path(input_root)
     output_root = Path(output_root)
-    config_resolved = config_path if Path(config_path).is_absolute() else (input_root / config_path).resolve()
+    config_resolved = resolve_open_model_path(config_path, repo=input_root)
 
     if not config_resolved.is_file():
         raise WorkGroupingSplitError(f"Config file not found: {config_resolved}")
 
     config_data = json.loads(config_resolved.read_text(encoding="utf-8"))
     config_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
     )
     if config_schema_path.is_file():
         schema = json.loads(config_schema_path.read_text(encoding="utf-8"))
         Draft202012Validator(schema).validate(config_data)
 
-    lang_idx_path = input_root / config_data["inputs"]["language_usage_index"]
-    lang_rcpt_path = input_root / config_data["inputs"]["language_usage_receipt"]
-    prov_idx_path = input_root / config_data["inputs"]["provenance_index"]
+    lang_idx_path = resolve_open_model_path(config_data["inputs"]["language_usage_index"], repo=input_root)
+    lang_rcpt_path = resolve_open_model_path(config_data["inputs"]["language_usage_receipt"], repo=input_root)
+    prov_idx_path = resolve_open_model_path(config_data["inputs"]["provenance_index"], repo=input_root)
 
     if not lang_idx_path.is_file():
         raise WorkGroupingSplitError(f"Language usage index missing: {lang_idx_path}")
@@ -348,8 +350,8 @@ def build(
         split_items.append(split_item)
 
     # 6. Write Outputs
-    out_idx_path = output_root / config_data["outputs"]["index"]
-    out_rcpt_path = output_root / config_data["outputs"]["receipt"]
+    out_idx_path = resolve_open_model_path(config_data["outputs"]["index"], repo=output_root)
+    out_rcpt_path = resolve_open_model_path(config_data["outputs"]["receipt"], repo=output_root)
     out_idx_path.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -413,7 +415,7 @@ def verify(
     """Verify deterministic work grouping, deduplication, and split clearance."""
     input_root = Path(input_root)
     output_root = Path(output_root)
-    config_resolved = config_path if Path(config_path).is_absolute() else (input_root / config_path).resolve()
+    config_resolved = resolve_open_model_path(config_path, repo=input_root)
 
     if not config_resolved.is_file():
         raise WorkGroupingSplitError(f"Config file not found: {config_resolved}")
@@ -422,15 +424,15 @@ def verify(
 
     # Validate Config Schema
     cfg_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
     )
     if cfg_schema_path.is_file():
         schema = json.loads(cfg_schema_path.read_text(encoding="utf-8"))
         Draft202012Validator(schema).validate(config_data)
 
-    out_idx_path = output_root / config_data["outputs"]["index"]
-    out_rcpt_path = output_root / config_data["outputs"]["receipt"]
-    lang_rcpt_path = input_root / config_data["inputs"]["language_usage_receipt"]
+    out_idx_path = resolve_open_model_path(config_data["outputs"]["index"], repo=output_root)
+    out_rcpt_path = resolve_open_model_path(config_data["outputs"]["receipt"], repo=output_root)
+    lang_rcpt_path = resolve_open_model_path(config_data["inputs"]["language_usage_receipt"], repo=input_root)
 
     if not out_idx_path.is_file():
         raise WorkGroupingSplitError(f"Index file missing: {out_idx_path}")
@@ -443,7 +445,7 @@ def verify(
 
     # Validate Receipt Schema
     rcpt_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_receipt_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_receipt_v1.schema.json"
     )
     if rcpt_schema_path.is_file():
         schema = json.loads(rcpt_schema_path.read_text(encoding="utf-8"))
@@ -472,7 +474,9 @@ def verify(
         raise WorkGroupingSplitError(f"Receipt verdict is not confirmed: {receipt['verdict']}")
 
     # Validate Index items and firewall invariants
-    item_schema_path = input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
+    item_schema_path = (
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
+    )
     item_validator = None
     if item_schema_path.is_file():
         schema = json.loads(item_schema_path.read_text(encoding="utf-8"))

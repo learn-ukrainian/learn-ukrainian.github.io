@@ -682,6 +682,7 @@ _COMMON_ENV_ALLOWLIST = frozenset(
         "TEMP",
         "SHELL",
         "PATH",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
         "COLORTERM",
         "NO_COLOR",
         "FORCE_COLOR",

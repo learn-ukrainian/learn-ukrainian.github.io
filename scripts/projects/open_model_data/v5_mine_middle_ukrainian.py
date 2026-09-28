@@ -38,6 +38,7 @@ import argparse
 import contextlib
 import hashlib
 import html
+import io
 import json
 import os
 import random
@@ -58,7 +59,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
+from scripts.storage.paths import artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
@@ -109,7 +112,7 @@ DEFAULT_RELEASE_DIR = (
     / "quarantined_historical"
     / "uldr_v04b_middle_ukrainian"
 )
-DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+DEFAULT_CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
 
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_middle_ukrainian_eval_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_middle_ukrainian_release_receipt.schema.json"
@@ -965,35 +968,43 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
     p_prod: Path | None = None
 
     # 1. Load dialect protection trajectories (PRESERVE authentic dialect, is_calque_or_russianism=False)
-    if p_dialect.is_file():
-        with p_dialect.open("r", encoding="utf-8") as f:
-            for line in f:
-                if len(dialect_trajectories) >= dialect_quota:
-                    break
-                try:
-                    row = json.loads(line)
-                    if row.get("is_calque_or_russianism", False):
-                        continue
-                    row_id = f"traj.decolonize.{hashlib.sha256(('replay_dialect_' + row['trajectory_id']).encode()).hexdigest()[:16]}"
-                    row["trajectory_id"] = row_id
-                    attestations = row.get("vesum_attestation", [])
-                    if attestations and isinstance(attestations, list):
-                        for att in attestations:
-                            tags = att.setdefault("tags", [])
-                            if "modern_literary_replay" not in tags:
-                                tags.append("modern_literary_replay")
-                    else:
-                        row["vesum_attestation"] = [
-                            {
-                                "lemma": row.get("target_term", "адіт").casefold(),
-                                "vesum_forms_count": 1,
-                                "is_standard_attested": True,
-                                "tags": ["dialectal", "modern_literary_replay"],
-                            }
-                        ]
-                    dialect_trajectories.append(row)
-                except Exception:
+    try:
+        dialect_snapshot = artifact_set("open_model_release_payload", repo=REPO_ROOT)
+        dialect_bytes = dialect_snapshot.artifacts[p_dialect.relative_to(REPO_ROOT / "data").as_posix()]
+    except (FileNotFoundError, ValueError, KeyError) as exc:
+        raise RuntimeError(
+            "Middle Ukrainian replay requires the verified dialect artifact; hydrate with "
+            "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate "
+            "--group open_model_release_payload"
+        ) from exc
+    with io.StringIO(dialect_bytes.decode("utf-8")) as f:
+        for line in f:
+            if len(dialect_trajectories) >= dialect_quota:
+                break
+            try:
+                row = json.loads(line)
+                if row.get("is_calque_or_russianism", False):
                     continue
+                row_id = f"traj.decolonize.{hashlib.sha256(('replay_dialect_' + row['trajectory_id']).encode()).hexdigest()[:16]}"
+                row["trajectory_id"] = row_id
+                attestations = row.get("vesum_attestation", [])
+                if attestations and isinstance(attestations, list):
+                    for att in attestations:
+                        tags = att.setdefault("tags", [])
+                        if "modern_literary_replay" not in tags:
+                            tags.append("modern_literary_replay")
+                else:
+                    row["vesum_attestation"] = [
+                        {
+                            "lemma": row.get("target_term", "адіт").casefold(),
+                            "vesum_forms_count": 1,
+                            "is_standard_attested": True,
+                            "tags": ["dialectal", "modern_literary_replay"],
+                        }
+                    ]
+                dialect_trajectories.append(row)
+            except Exception:
+                continue
 
     # 2. Load modern literary anti-calque trajectories (CORRECT modern Russianisms, is_calque_or_russianism=True)
     if p_prod is not None:
@@ -1473,7 +1484,15 @@ def get_git_commit(repo_root: Path) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Mine Middle Ukrainian & Cossack Baroque texts and build SFT trajectories & eval benchmark."
+        description="Middle Ukrainian mining. Regeneration is deferred to P3b (#8809).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/projects/open_model_data/v5_mine_middle_ukrainian.py --help\n"
+            "Outputs: none; generation refuses before writing.\n"
+            "Exit codes: 0 for help, nonzero for deferred generation.\n"
+            "Related: issue #8809 P3b historical producer support."
+        ),
     )
     parser.add_argument(
         "--sources-db",
@@ -1534,6 +1553,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    refuse_historical_regeneration("v5_mine_middle_ukrainian.py")
     print("=" * 78)
     print("Phase 5.8: Middle Ukrainian & Cossack Baroque Literature Mining Engine")
     print(f"Sources DB:   {args.sources_db}")

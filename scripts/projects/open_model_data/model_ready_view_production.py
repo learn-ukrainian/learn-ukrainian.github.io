@@ -32,22 +32,27 @@ from tokenizers import Tokenizer
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import silver_evidence_factory as silver
 from scripts.projects.open_model_data import validate_source_records as source_record_contract
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.verification.vesum import verify_words
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PAYLOAD_SCHEMA = CONTRACTS / "foundry_source_payload_v1.schema.json"
 SILVER_SCHEMA = CONTRACTS / "language_contact_silver_record_v1.schema.json"
 PAYLOAD_RECEIPT_SCHEMA = CONTRACTS / "source_payload_preparation_receipt_v1.schema.json"
 TOKENIZER_RECEIPT_SCHEMA = CONTRACTS / "tokenizer_diagnostics_v1.schema.json"
 PRODUCTION_RECEIPT_SCHEMA = CONTRACTS / "model_ready_view_production_v1.schema.json"
-DEFAULT_DETECTOR_RECEIPT = ROOT / "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
-DEFAULT_SILVER_RECEIPT = ROOT / "data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"
-DEFAULT_ADMISSION_RECEIPT = (
-    ROOT / "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json"
+DEFAULT_DETECTOR_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
 )
-DEFAULT_OPERATOR_PACKET = (
-    ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json"
+DEFAULT_SILVER_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"
+)
+DEFAULT_ADMISSION_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json"
+)
+DEFAULT_OPERATOR_PACKET = resolve_open_model_path(
+    "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json"
 )
 WORD_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[’ʼ'][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*", re.UNICODE)
 BYTE_TOKEN_RE = re.compile(r"^<0x[0-9A-F]{2}>$")
@@ -641,9 +646,7 @@ def _project_masks_to_tokens(
             index += 1
         if overlap:
             counters["tokens_overlapping_masks"] += 1
-            counters[
-                "tokens_fully_masked" if overlap >= token_end - token_start else "tokens_partially_masked"
-            ] += 1
+            counters["tokens_fully_masked" if overlap >= token_end - token_start else "tokens_partially_masked"] += 1
     counters["zero_loss_tokens"] = counters["tokens_overlapping_masks"]
     return counters
 
@@ -775,9 +778,7 @@ def tokenizer_diagnostics(
         group["occurrences"] += occurrences
         group["assigned_tokens"] += pieces
     paradigm_groups = [group for group in primary_groups.values() if len(group["forms"]) >= 2]
-    paradigm_token_values = array.array(
-        "I", (int(group["assigned_tokens"]) for group in primary_groups.values())
-    )
+    paradigm_token_values = array.array("I", (int(group["assigned_tokens"]) for group in primary_groups.values()))
     diagnostic_hash = policy_hash(
         "tokenizer-diagnostics-v1",
         {
@@ -958,8 +959,7 @@ def assemble_production_receipt(
     require(modern_receipt["view_kind"] == "continued_pretraining", "wrong modern view kind")
     require(heldout_receipt["view_kind"] == "heldout_evaluation", "wrong heldout view kind")
     require(
-        faithful_receipt["counts"].get("exported_records")
-        == modern_receipt["counts"].get("exported_records"),
+        faithful_receipt["counts"].get("exported_records") == modern_receipt["counts"].get("exported_records"),
         "continued-pretraining arm cardinalities differ",
     )
     faithful_records = int(faithful_receipt["output"]["records"])
@@ -977,9 +977,7 @@ def assemble_production_receipt(
         if code.startswith("excluded_evaluation_contamination_")
     )
     duplicate_blocked = sum(
-        count
-        for code, count in faithful_receipt["counts"].items()
-        if code.startswith("excluded_intra_view_duplicate_")
+        count for code, count in faithful_receipt["counts"].items() if code.startswith("excluded_intra_view_duplicate_")
     )
     evidence_grade = silver_receipt["counts"]["by_evidence_grade"]
     payload_evidence_grade = payload_receipt["counts"]["evidence_grade_counts"]
@@ -1067,13 +1065,20 @@ def assemble_production_receipt(
             "blocked_records": duplicate_blocked,
         },
         "stratified_counts": {
-            "source": [{"category": "wikipedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "period": [{"category": "modern", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "genre": [{"category": "encyclopedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "register": [{"category": "reference", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
+            "source": [
+                {"category": "wikipedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "period": [
+                {"category": "modern", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "genre": [
+                {"category": "encyclopedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "register": [
+                {"category": "reference", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
             "evidence_grade": [
-                {"category": code, "records": int(count), "bytes": 0}
-                for code, count in sorted(evidence_grade.items())
+                {"category": code, "records": int(count), "bytes": 0} for code, count in sorted(evidence_grade.items())
             ],
             "protected_unresolved": [
                 {
@@ -1089,7 +1094,11 @@ def assemble_production_receipt(
             "prerequisites": [
                 {"code": "real_cpt_input", "state": "satisfied", "evidence_sha256": identity["faithful"]},
                 {"code": "evaluation_firewall", "state": "satisfied", "evidence_sha256": identity["heldout"]},
-                {"code": "tokenizer_loss_mask_diagnostics", "state": "satisfied", "evidence_sha256": identity["tokenizer"]},
+                {
+                    "code": "tokenizer_loss_mask_diagnostics",
+                    "state": "satisfied",
+                    "evidence_sha256": identity["tokenizer"],
+                },
                 {"code": "protected_no_change_inventory", "state": "satisfied", "evidence_sha256": identity["silver"]},
                 {"code": "operator_compute_ceiling", "state": "pending", "evidence_sha256": None},
                 {"code": "exact_treatment_preregistration", "state": "pending", "evidence_sha256": None},

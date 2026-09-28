@@ -11,10 +11,11 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import foundry_cli as foundry
 from scripts.projects.open_model_data import model_view_exporter as exporter
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE = ROOT / "data/projects/open_model_data/examples/portable-corpus-v1.jsonl"
-COST = ROOT / "data/projects/open_model_data/examples/portable-cost-v1.json"
+EXAMPLE = REGISTRY_OPEN_MODEL_DATA_DIR / "examples/portable-corpus-v1.jsonl"
+COST = REGISTRY_OPEN_MODEL_DATA_DIR / "examples/portable-cost-v1.json"
 
 
 def read_jsonl(path: Path) -> list[dict[str, object]]:
@@ -93,17 +94,13 @@ def test_example_runs_end_to_end_without_model_or_private_database(tmp_path: Pat
     }
 
     input_by_id = {row["record_id"]: row for row in sample_records()}
-    canonical_by_id = {
-        row["record_id"]: row for row in read_jsonl(result.output_dir / "canonical-records.jsonl")
-    }
+    canonical_by_id = {row["record_id"]: row for row in read_jsonl(result.output_dir / "canonical-records.jsonl")}
     assert set(input_by_id) == set(canonical_by_id)
     for record_id, source in input_by_id.items():
         assert canonical_by_id[record_id]["original_text"] == source["text"]
         assert canonical_by_id[record_id]["source"]["locators"] == source["source"]["locators"]
 
-    modern_by_id = {
-        row["record_id"]: row for row in read_jsonl(result.output_dir / "modern-learning.jsonl")
-    }
+    modern_by_id = {row["record_id"]: row for row in read_jsonl(result.output_dir / "modern-learning.jsonl")}
     assert "example.dialect" not in modern_by_id
     assert "example.historical" not in modern_by_id
     assert modern_by_id["example.russian-interference"]["character_mask_spans"]

@@ -68,11 +68,10 @@ updates:
     # fully-pinned lock) lets Dependabot propose past their parent's pin,
     # producing structurally un-mergeable PRs. See issue #2716.
     ignore:
-      # pydantic-core is pinned EXACTLY by pydantic (pydantic==2.12.5 requires
-      # pydantic-core==2.41.5). A standalone bump fails deterministically at
-      # import: `SystemError: ... pydantic-core ... incompatible ... requires
-      # 2.41.5`. It must move only via a pydantic bump (which recomputes the
-      # lock and brings a matching pydantic-core). Closed PR: #2540.
+      # pydantic pins pydantic-core exactly. Dependabot groups do not guarantee
+      # an atomic pair update, so block standalone core bumps. The install-
+      # integrity check tracked in #9061 must catch mismatched pins on pydantic bumps.
+      # Closed PR: #2540. Incomplete bump: #9033, #9045.
       - dependency-name: "pydantic-core"
       # pypdfium2 is exact-pinned by pdftext AND surya-ocr (both require
       # pypdfium2==4.30.0). A standalone bump (e.g. 4.30.0->5.9.0, #3359) breaks

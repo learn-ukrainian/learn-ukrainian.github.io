@@ -9,13 +9,10 @@ from __future__ import annotations
 
 import ctypes
 import dataclasses
-import errno
-import gc
 import gzip
 import hashlib
 import io
 import json
-import math
 import mmap
 import os
 import random
@@ -26,8 +23,6 @@ import sqlite3
 import stat
 import subprocess
 import sys
-import threading
-import tracemalloc
 import unicodedata
 import zlib
 from collections import defaultdict
@@ -38,19 +33,15 @@ import pytest
 
 from scripts.atlas import export_runtime_shards as exporter
 from scripts.atlas.export_runtime_shards import (
-    EntryReplay,
     ExportError,
     SearchFamilyIndex,
     StagedVersion,
-    compress_stream_bounded,
-    compute_data_version,
     export_runtime_shards,
     find_component_tokens,
     gzip_bytes,
     load_component_tokenization_vectors,
     load_entry_records,
     load_practice_levels_by_slug,
-    load_search_rows,
     logical_tree_fingerprint,
     open_readonly_db,
     tree_fingerprint,
@@ -60,16 +51,11 @@ from scripts.atlas.normalization import load_normalization_vectors, normalize_at
 
 ROOT = Path(__file__).resolve().parents[1]
 REAL_DB_PATH = ROOT / "data" / "atlas.db"
-FIXTURE_DB_PATH = ROOT / "tests" / "fixtures" / "atlas" / "runtime_shards_fixture.db"
 COMMITTED_RUNTIME_TREE = ROOT / "tests" / "fixtures" / "atlas" / "runtime-tree"
 PRACTICE_DECKS_ROOT = ROOT / "tests" / "fixtures" / "atlas" / "practice_decks"
 EXPORTER_SCRIPT = ROOT / "scripts" / "atlas" / "export_runtime_shards.py"
 
-
-@pytest.fixture(scope="module")
-def fixture_db() -> Path:
-    assert FIXTURE_DB_PATH.is_file(), f"missing fixture DB: {FIXTURE_DB_PATH}"
-    return FIXTURE_DB_PATH
+pytest_plugins = ("tests._export_runtime_shards_fixtures",)
 
 
 def _fp(root: Path) -> str:
@@ -161,7 +147,7 @@ def test_export_twice_is_byte_identical(fixture_db: Path, tmp_path: Path) -> Non
 
 
 def test_committed_runtime_tree_matches_fresh_fixture_export(
-    fixture_db: Path, tmp_path: Path
+    fixture_export: tuple[Path, dict]
 ) -> None:
     """Sol F006 freshness guard: committed runtime-tree must match a live export.
 
@@ -179,14 +165,7 @@ def test_committed_runtime_tree_matches_fresh_fixture_export(
         f"missing committed runtime-tree at {COMMITTED_RUNTIME_TREE}; "
         "run build_runtime_shards_fixture.py --emit-tree"
     )
-    fresh = tmp_path / "fresh-export"
-    export_runtime_shards(
-        db_path=fixture_db,
-        out_dir=fresh,
-        deck_dir=None,
-        include_decks=False,
-        verify=True,
-    )
+    fresh, _ = fixture_export
     committed_root = COMMITTED_RUNTIME_TREE / "atlas"
     fresh_root = fresh / "atlas"
     committed_fp = _logical_fp(committed_root)
@@ -211,21 +190,14 @@ def test_committed_runtime_tree_matches_fresh_fixture_export(
 
 
 def test_logical_freshness_guard_fails_on_corrupt_committed_gz(
-    fixture_db: Path, tmp_path: Path
+    fixture_export: tuple[Path, dict], tmp_path: Path
 ) -> None:
     """Corrupt-byte property: gz payload change / undecompressable → guard fails.
 
     Extends the fail-closed checksum surface (see ``test_trie_split_and_checksum_fail_closed``)
     to the logical freshness comparison used cross-platform.
     """
-    fresh = tmp_path / "fresh-export"
-    export_runtime_shards(
-        db_path=fixture_db,
-        out_dir=fresh,
-        deck_dir=None,
-        include_decks=False,
-        verify=True,
-    )
+    fresh, _ = fixture_export
     fresh_fp = _logical_fp(fresh / "atlas")
 
     corrupt_root = tmp_path / "corrupt-committed"
@@ -316,15 +288,8 @@ def test_trie_split_and_checksum_fail_closed(fixture_db: Path, tmp_path: Path) -
         verify_tree(out, "atlas")
 
 
-def test_search_families_remain_separate(fixture_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    report = export_runtime_shards(
-        db_path=fixture_db,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
+def test_search_families_remain_separate(fixture_export: tuple[Path, dict]) -> None:
+    out, report = fixture_export
     current = json.loads((out / "atlas" / "current.json").read_text(encoding="utf-8"))
     manifest = json.loads((out / "atlas" / current["manifestUrl"]).read_text(encoding="utf-8"))
     for desc in manifest["search"]["articles"]["shards"].values():
@@ -336,16 +301,11 @@ def test_search_families_remain_separate(fixture_db: Path, tmp_path: Path) -> No
     assert report["counts"]["searchAliases"] > 0
 
 
-def test_exported_entry_records_match_sqlite_projection(fixture_db: Path, tmp_path: Path) -> None:
+def test_exported_entry_records_match_sqlite_projection(
+    fixture_db: Path, fixture_export: tuple[Path, dict]
+) -> None:
     """Export records must match the Sqlite data-source projection (parity input)."""
-    out = tmp_path / "out"
-    export_runtime_shards(
-        db_path=fixture_db,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
+    out, _ = fixture_export
     conn = open_readonly_db(fixture_db)
     try:
         expected = {
@@ -402,15 +362,8 @@ def test_data_version_assert_flag(fixture_db: Path, tmp_path: Path) -> None:
     )
 
 
-def test_gzip_mtime_zero_and_newline_termination(fixture_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    export_runtime_shards(
-        db_path=fixture_db,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
+def test_gzip_mtime_zero_and_newline_termination(fixture_export: tuple[Path, dict]) -> None:
+    out, _ = fixture_export
     current = json.loads((out / "atlas" / "current.json").read_text(encoding="utf-8"))
     manifest = json.loads((out / "atlas" / current["manifestUrl"]).read_text(encoding="utf-8"))
     version_root = (out / "atlas" / current["manifestUrl"]).parent
@@ -648,11 +601,6 @@ def _make_source_db(
     conn.commit()
     conn.close()
     return path
-
-
-@pytest.fixture(scope="module")
-def edge_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    return _make_source_db(tmp_path_factory.mktemp("edge") / "edge.db")
 
 
 def _snapshot(root: Path) -> dict[str, bytes]:
@@ -993,141 +941,6 @@ def test_streamed_export_is_byte_identical_to_reference(
             assert any(name.endswith(".term.json.gz") for name in tree), "terminal shards exercised"
 
 
-def test_fixture_export_is_byte_identical_to_reference(fixture_db: Path, tmp_path: Path) -> None:
-    data_version, files, _ = _reference_export(
-        fixture_db, compression_level=9, entry_max=8_000, search_max=1_000
-    )
-    out = tmp_path / "out"
-    _export(fixture_db, out, entry_max_gzip_bytes=8_000, search_max_gzip_bytes=1_000)
-    tree = _snapshot(out / "atlas" / "versions" / data_version)
-    assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
-
-
-def test_replay_records_and_search_rows_match_reference_loaders(edge_db: Path, fixture_db: Path) -> None:
-    for db in (edge_db, fixture_db):
-        conn = open_readonly_db(db)
-        try:
-            expected = _ref_load_entry_records(conn, {"слово001": ["A1", "B1"]})
-            replay = EntryReplay(conn, practice_levels_by_slug={"слово001": ["A1", "B1"]})
-            assert list(replay.iter_records()) == expected
-            assert [replay.record_for_slug(r["slug"]) for r in expected] == expected
-            assert load_entry_records(conn, practice_levels_by_slug={"слово001": ["A1", "B1"]}) == expected
-            assert load_search_rows(conn) == _ref_load_search_rows(conn)
-        finally:
-            conn.close()
-
-
-def test_search_alias_dedup_keeps_reference_survivors(edge_db: Path) -> None:
-    conn = open_readonly_db(edge_db)
-    try:
-        _, aliases = load_search_rows(conn)
-        raw = conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility = 'public'").fetchone()[0]
-        assert len(aliases) < raw, "fixture must actually contain normalization duplicates"
-        assert aliases == _ref_load_search_rows(conn)[1]
-        assert len({(normalize_atlas_text(a["a"]), a["s"]) for a in aliases}) == len(aliases)
-    finally:
-        conn.close()
-
-
-def test_unicode_search_order_follows_code_points(edge_db: Path) -> None:
-    conn = open_readonly_db(edge_db)
-    try:
-        articles, _ = load_search_rows(conn)
-    finally:
-        conn.close()
-    heads = [normalize_atlas_text(row["l"]) for row in articles]
-    assert heads == sorted(heads)
-    assert heads.index("ﬀ") < heads.index("\U0001f600"), "UTF-16 order would invert these"
-
-
-def test_data_version_hasher_matches_reference_identity(edge_db: Path) -> None:
-    conn = open_readonly_db(edge_db)
-    try:
-        records = _ref_load_entry_records(conn, {})
-        articles, aliases = _ref_load_search_rows(conn)
-    finally:
-        conn.close()
-    deck_index = {"levels": {"B1": {"deckVersion": "d2"}, "A1": {"deckVersion": "d1"}}}
-    kwargs = {
-        "generated_at": "2026-01-02T03:04:05+00:00", "article_rows": articles,
-        "alias_rows": aliases, "deck_index": deck_index,
-    }
-    assert compute_data_version(entry_records=records, **kwargs) == _ref_data_version(
-        entry_records=records, **kwargs
-    )
-    empty = {"generated_at": "g", "article_rows": [], "alias_rows": [], "deck_index": {"levels": {}}}
-    assert compute_data_version(entry_records=[], **empty) == _ref_data_version(entry_records=[], **empty)
-
-
-@pytest.mark.parametrize("level", [0, 1, 2, 5, 6, 9])
-def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
-    rng = random.Random(level)
-    text = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(400_000)).encode("utf-8")
-    for size in (0, 1, 300, 70_000, len(text)):
-        raw = text[:size]
-        expected = gzip_bytes(raw, compression_level=level)
-        for chunk in (1, 7, 4_096, 65_536 + 3):
-            chunks = [raw[i : i + chunk] for i in range(0, len(raw), chunk)]
-            result = compress_stream_bounded(lambda chunks=chunks: chunks, compression_level=level, max_bytes=None)
-            assert result is not None
-            assert result.compressed == expected
-            assert result.uncompressed_bytes == len(raw)
-            assert result.json_sha256 == hashlib.sha256(raw).hexdigest()
-            assert gzip.decompress(result.compressed) == raw
-        # Exact cap boundary: fits at len, aborts at len - 1.
-        chunks = [raw[i : i + 999] for i in range(0, len(raw), 999)]
-        source = lambda chunks=chunks: chunks  # noqa: E731
-        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected)) is not None
-        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected) - 1) is None
-
-
-def test_stream_compression_aborts_before_consuming_source() -> None:
-    pulled = 0
-
-    def source():
-        nonlocal pulled
-        rng = random.Random(1)
-        while True:
-            pulled += 1
-            yield bytes(rng.getrandbits(8) for _ in range(4_096))
-
-    for level in (0, 1, 9):
-        pulled = 0
-        assert compress_stream_bounded(source, compression_level=level, max_bytes=20_000) is None
-        assert pulled < 20, "an oversized candidate must stop the replay early"
-
-
-def test_oversized_entry_leaf_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
-    with pytest.raises(ExportError) as expected:
-        _reference_export(edge_db, compression_level=9, entry_max=300, search_max=524_288)
-    with pytest.raises(ExportError) as actual:
-        _export(edge_db, tmp_path / "out", entry_max_gzip_bytes=300)
-    assert str(actual.value) == str(expected.value)
-    assert "single entry record exceeds" in str(actual.value)
-    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
-
-
-def test_unsplittable_search_shard_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
-    with pytest.raises(ExportError) as expected:
-        _reference_export(edge_db, compression_level=9, entry_max=1_048_576, search_max=150)
-    with pytest.raises(ExportError) as actual:
-        _export(edge_db, tmp_path / "out", search_max_gzip_bytes=150)
-    assert str(actual.value) == str(expected.value)
-    assert "cannot split" in str(actual.value)
-
-
-def test_failed_first_export_publishes_nothing(edge_db: Path, tmp_path: Path, monkeypatch) -> None:
-    def boom(*_args, **_kwargs):
-        raise RuntimeError("injected")
-
-    monkeypatch.setattr(exporter, "verify_tree", boom)
-    out = tmp_path / "out"
-    with pytest.raises(RuntimeError, match="injected"):
-        _export(edge_db, out)
-    assert not (out / "atlas" / "current.json").exists()
-    assert _snapshot(out) == {}, "no staged objects may remain"
-
-
 class _Injected(RuntimeError):
     pass
 
@@ -1154,97 +967,61 @@ _REEXPORT_STAGES = [
 ]
 
 
-@pytest.mark.parametrize("stage", _REEXPORT_STAGES)
-def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identical(
-    edge_db: Path, tmp_path: Path, monkeypatch, stage: str
-) -> None:
-    out = tmp_path / "out"
-    kwargs = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
-    report = _export(edge_db, out, **kwargs)
-    before = _snapshot(out)
-    current = json.loads(before["atlas/current.json"])
-    assert current["dataVersion"] == report["dataVersion"]  # re-export targets the referenced version
-    total_objects = sum(1 for name in before if name.startswith(f"atlas/versions/{report['dataVersion']}/"))
-    transport = stage.endswith("-transport")
-    reexport = {**kwargs, "compression_level": 6} if transport else kwargs
+# ---------------------------------------------------------------------------
+# Heap peaks of work that touches the filesystem are traced in a fresh interpreter
+# (#8997). In-process, the peak also counts process-global tables that happen to
+# grow inside the window: pathlib interns every path component, and once earlier
+# tests (or the modules a CI shard collects) have filled CPython's interned-string
+# table, the next new name resizes it. In CI shard 1 that resize added 7.7 MB to
+# one ``--verify`` window: an allocation that follows test order, not the payload.
+# ---------------------------------------------------------------------------
 
-    real_rename, real_replace = os.rename, os.replace
-    if stage == "first-leaf":
-        _fail_after_writes(monkeypatch, 0)
-    elif stage == "mid-export":
-        _fail_after_writes(monkeypatch, total_objects // 2)
-    elif stage == "manifest":
-        _fail_after_writes(monkeypatch, total_objects - 1)
-    elif stage == "verify":
-        monkeypatch.setattr(exporter, "verify_tree", lambda *a, **k: (_ for _ in ()).throw(_Injected("verify")))
-    elif stage == "swap-transport":
-        def rename(src, dst, *a, **k):
-            if Path(src).name.startswith(".export-"):
-                raise _Injected("swap")
-            return real_rename(src, dst, *a, **k)
-
-        monkeypatch.setattr(exporter.os, "rename", rename)
-    else:
-        def replace(src, dst, *a, **k):
-            if Path(dst).name == "current.json":
-                raise _Injected("pointer")
-            return real_replace(src, dst, *a, **k)
-
-        monkeypatch.setattr(exporter.os, "replace", replace)
-
-    with pytest.raises(_Injected):
-        _export(edge_db, out, **reexport)
-    monkeypatch.undo()
-    after = _snapshot(out)
-    # The pointer and every previously installed object are byte-identical; the only
-    # thing a failure may leave is a complete, unreferenced alternate tree.
-    assert {name: blob for name, blob in after.items() if name in before} == before
-    assert all(
-        name.startswith(f"atlas/versions/{report['dataVersion']}-transport-") for name in after.keys() - before.keys()
+_TRACED_SCRIPT = """
+import gc, json, sys, tracemalloc
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.atlas import export_runtime_shards as ex
+kind, args = sys.argv[2], json.loads(sys.argv[3])
+out = Path(args["out"])
+if kind == "export":
+    run = lambda: ex.export_runtime_shards(db_path=Path(args["db"]), out_dir=out, **args["kwargs"])
+elif kind == "verify":
+    run = lambda: ex.verify_tree(out, "atlas")
+else:
+    from tests.test_export_runtime_shards import _shared_key_alias_index
+    index, _records = _shared_key_alias_index(args["rows"], terminal=args["terminal"])
+    del _records
+    def open_object(relative):
+        path = out / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path.open("wb")
+    run = lambda: ex.build_search_family_shards(
+        index, family="aliases", data_version="v-test", schema=ex.SEARCH_ALIAS_SCHEMA,
+        open_object=open_object, **args["kwargs"],
     )
-    if stage != "pointer-transport":
-        assert after.keys() == before.keys()
-    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
-    assert _snapshot(out) == after
-
-    # And a subsequent healthy re-export still succeeds and the referenced tree is intact.
-    _export(edge_db, out, **reexport)
-    healed = _snapshot(out)
-    assert {name: blob for name, blob in healed.items() if name in before and name != "atlas/current.json"} == {
-        name: blob for name, blob in before.items() if name != "atlas/current.json"
-    }
-    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
-    if not transport:
-        assert healed == before
+# One-time, corpus-independent setup is not the measured work's memory.
+ex.check_stored_gzip_runtime()
+ex._json_backend()
+gc.collect()
+tracemalloc.start()
+try:
+    run()
+    error = None
+except ex.ExportError as exc:
+    error = str(exc)
+print(json.dumps({"error": error, "peak": tracemalloc.get_traced_memory()[1]}))
+"""
 
 
-def test_stale_staging_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    versions = out / "atlas" / "versions"
-    dead = versions / ".export-999999999-deadbeef"
-    dead.mkdir(parents=True)
-    (dead / "orphan.bin").write_bytes(b"x")
-    alive = versions / f".export-{os.getpid()}-cafebabe"
-    alive.mkdir()
-    _export(edge_db, out)
-    assert not dead.exists()
-    assert alive.exists(), "another live exporter's staging tree must not be touched"
-
-
-def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
-    """Peak Python heap stays a small fraction of the payload volume being exported."""
-    db = _make_source_db(tmp_path / "big.db", records=240, filler_chars=60_000, seed=5)
-    payload_bytes = sum(
-        len(row[0]) for row in sqlite3.connect(db).execute("SELECT payload_json FROM article_payloads")
+def _traced_in_fresh_interpreter(kind: str, **args) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one ``export``/``verify``/``aliases`` run."""
+    result = subprocess.run(
+        [sys.executable, "-c", _TRACED_SCRIPT, str(ROOT), kind, json.dumps(args, default=str)],
+        cwd=ROOT, capture_output=True, text=True, check=False, timeout=120,
     )
-    assert payload_bytes > 14_000_000
-    tracemalloc.start()
-    try:
-        _export(db, tmp_path / "out", compression_level=1, entry_max_gzip_bytes=150_000)
-        _, peak = tracemalloc.get_traced_memory()
-    finally:
-        tracemalloc.stop()
-    assert peak < payload_bytes * 0.25, f"peak {peak} vs payload {payload_bytes}"
+    assert result.returncode == 0, (kind, result.returncode, result.stderr)
+    measured = json.loads(result.stdout.splitlines()[-1])
+    return measured["error"], measured["peak"]
 
 
 # ---------------------------------------------------------------------------
@@ -1264,58 +1041,12 @@ def _version_dirs(out: Path) -> list[str]:
     return sorted(p.name for p in (out / "atlas" / "versions").iterdir() if not p.name.startswith("."))
 
 
-def test_identical_reexport_reuses_installed_tree_untouched(edge_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    report = _export(edge_db, out)
-    tree = out / "atlas" / "versions" / report["dataVersion"]
-    before, stat = _snapshot(out), tree.stat()
-    again = _export(edge_db, out)
-    assert _snapshot(out) == before
-    assert tree.stat().st_ino == stat.st_ino and tree.stat().st_mtime_ns == stat.st_mtime_ns
-    assert _version_dirs(out) == [report["dataVersion"]]
-    assert report["manifestUrl"] == again["manifestUrl"] == f"versions/{report['dataVersion']}/manifest.json"
-
-
 _CHANGED_LIMITS = [
     {"compression_level": 6},
     {"entry_max_gzip_bytes": 6_000},
     {"search_max_gzip_bytes": 700},
     {"entry_target_min_gzip_bytes": 1_000},
 ]
-
-
-@pytest.mark.parametrize("changed", _CHANGED_LIMITS, ids=lambda item: next(iter(item)))
-def test_changed_limits_keep_every_old_url_and_publish_alternate_tree(
-    edge_db: Path, tmp_path: Path, changed: dict
-) -> None:
-    out = tmp_path / "out"
-    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
-    first = _export(edge_db, out, **base)
-    old_manifest = _pointed_manifest(out)
-    before = _snapshot(out)
-
-    second = _export(edge_db, out, **{**base, **changed})
-
-    assert second["dataVersion"] == first["dataVersion"]  # same data, different transport bytes
-    after = _snapshot(out)
-    assert {name: blob for name, blob in after.items() if name in before and name != "atlas/current.json"} == {
-        name: blob for name, blob in before.items() if name != "atlas/current.json"
-    }, "no previously published URL may change or disappear"
-    new_root = _pointed_manifest(out).parent
-    assert new_root.name == f"{first['dataVersion']}-transport-{exporter._tree_digest(new_root)}"
-    assert second["manifestUrl"] == _pointer(out)["manifestUrl"] == f"versions/{new_root.name}/manifest.json"
-    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
-    # An old-manifest reader stays valid after the pointer switched.
-    assert old_manifest.is_file()
-    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
-
-    # Repeating the changed export reuses the alternate tree; the original limits point back home.
-    settled = _snapshot(out)
-    _export(edge_db, out, **{**base, **changed})
-    assert _snapshot(out) == settled
-    _export(edge_db, out, **base)
-    assert _pointer(out)["manifestUrl"] == first["manifestUrl"]
-    assert len(_version_dirs(out)) == 2
 
 
 _KILL_SCRIPT = """
@@ -1358,54 +1089,6 @@ def _run_killed(edge_db: Path, out: Path, point: str, **kwargs) -> None:
     assert result.returncode == -signal.SIGKILL, (point, result.returncode, result.stderr)
 
 
-@pytest.mark.parametrize(
-    ("point", "changed"),
-    # An identical re-export installs nothing (it reuses the tree), so only its pointer switch can be killed.
-    [(point, True) for point in _KILL_POINTS] + [("before-pointer", False), ("after-pointer", False)],
-)
-def test_sigkill_during_publication_always_leaves_pointer_to_complete_tree(
-    edge_db: Path, tmp_path: Path, point: str, changed: bool
-) -> None:
-    out = tmp_path / "out"
-    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
-    first = _export(edge_db, out, **base)
-    old_pointer = (out / "atlas" / "current.json").read_bytes()
-    old_manifest = _pointed_manifest(out)
-    old_tree = _snapshot(old_manifest.parent)
-
-    _run_killed(edge_db, out, point, **({**base, "compression_level": 6} if changed else base))
-
-    assert _snapshot(old_manifest.parent) == old_tree, "the published tree is never touched"
-    result = verify_tree(out, "atlas")  # pointer resolves to a complete, verifying tree
-    assert result["dataVersion"] == first["dataVersion"]
-    if point != "after-pointer" or not changed:
-        assert (out / "atlas" / "current.json").read_bytes() == old_pointer
-    else:
-        assert _pointed_manifest(out).parent.name.startswith(f"{first['dataVersion']}-transport-")
-    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
-
-    # The next healthy run cleans the dead staging tree and converges.
-    _export(edge_db, out, **({**base, "compression_level": 6} if changed else base))
-    assert not [name for name in os.listdir(out / "atlas" / "versions") if name.startswith(".export-")]
-    assert not list((out / "atlas").glob(".current-*"))
-    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
-
-
-@pytest.mark.parametrize("point", _KILL_POINTS)
-def test_sigkill_during_first_export_never_publishes_a_dangling_pointer(
-    edge_db: Path, tmp_path: Path, point: str
-) -> None:
-    out = tmp_path / "out"
-    _run_killed(edge_db, out, point)
-    pointer = out / "atlas" / "current.json"
-    if point == "after-pointer":
-        assert verify_tree(out, "atlas")["publicRoutes"] > 0
-    else:
-        assert not pointer.exists()
-    report = _export(edge_db, out)
-    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
-
-
 def _synthetic_stage(base: Path, data_version: str, files: dict[str, bytes]) -> StagedVersion:
     stage = StagedVersion(base, data_version)
     for relative, data in files.items():
@@ -1425,100 +1108,6 @@ _TREE_A = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"a" * 100}
 _TREE_B = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"b" * 100}
 
 
-def test_install_reuses_identical_and_never_overwrites_different(tmp_path: Path) -> None:
-    base = tmp_path / "atlas"
-    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
-    canonical = base / "versions" / "atlas-v1-x"
-    inode = canonical.stat().st_ino
-    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
-    assert canonical.stat().st_ino == inode
-
-    digest = exporter._tree_digest(_synthetic_stage(base, "atlas-v1-x", _TREE_B).root)
-    name = _publish_synthetic(base, "atlas-v1-x", _TREE_B)
-    assert name == f"atlas-v1-x-transport-{digest}"
-    assert _snapshot(canonical) == _TREE_A
-    assert _publish_synthetic(base, "atlas-v1-x", _TREE_B) == name  # identical suffix is reused
-    assert _version_dirs(tmp_path) == sorted(["atlas-v1-x", name])
-
-
-def test_transport_collision_with_different_bytes_fails_closed(tmp_path: Path) -> None:
-    base = tmp_path / "atlas"
-    _publish_synthetic(base, "atlas-v1-x", _TREE_A)
-    probe = _synthetic_stage(base, "atlas-v1-x", _TREE_B)
-    squatter = base / "versions" / f"atlas-v1-x-transport-{exporter._tree_digest(probe.root)}"
-    probe.discard()
-    squatter.mkdir()
-    (squatter / "manifest.json").write_bytes(b"squatter")
-    with pytest.raises(ExportError, match="refusing to overwrite"):
-        _publish_synthetic(base, "atlas-v1-x", _TREE_B)
-    assert _snapshot(squatter) == {"manifest.json": b"squatter"}
-    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
-
-
-@pytest.mark.parametrize("winner", ["identical", "different"])
-def test_concurrent_destination_creation_never_overwrites_the_winner(
-    tmp_path: Path, monkeypatch, winner: str
-) -> None:
-    base = tmp_path / "atlas"
-    loser = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
-    rival = _synthetic_stage(base, "atlas-v1-x", _TREE_A if winner == "identical" else _TREE_B)
-    real_rename = os.rename
-    state = {"raced": False}
-
-    def rename(src, dst, *a, **k):
-        if Path(src) == loser.root and not state["raced"]:
-            state["raced"] = True  # the rival lands on the canonical destination first
-            real_rename(rival.root, Path(dst))
-        return real_rename(src, dst, *a, **k)
-
-    monkeypatch.setattr(exporter.os, "rename", rename)
-    name = loser.install()
-    loser.discard()
-    monkeypatch.undo()
-    canonical = base / "versions" / "atlas-v1-x"
-    assert _snapshot(canonical) == (_TREE_A if winner == "identical" else _TREE_B)
-    if winner == "identical":
-        assert name == "atlas-v1-x"
-        assert _version_dirs(tmp_path) == ["atlas-v1-x"]
-    else:
-        assert name.startswith("atlas-v1-x-transport-")
-        assert _snapshot(base / "versions" / name) == _TREE_A
-
-
-def test_concurrent_publishers_do_not_overwrite_each_other(tmp_path: Path) -> None:
-    base = tmp_path / "atlas"
-    trees = [_TREE_A, _TREE_B] * 3
-    barrier = threading.Barrier(len(trees))
-    outcomes: list[tuple[dict[str, bytes], str]] = []
-    errors: list[BaseException] = []
-
-    def worker(files: dict[str, bytes]) -> None:
-        try:
-            stage = _synthetic_stage(base, "atlas-v1-x", files)
-            barrier.wait(timeout=30)
-            try:
-                publication = stage.publish(lambda url: json.dumps({"manifestUrl": url}).encode())
-                assert publication.durable
-                outcomes.append((files, publication.manifest_url))
-            finally:
-                stage.discard()
-        except BaseException as exc:
-            errors.append(exc)
-
-    threads = [threading.Thread(target=worker, args=(files,)) for files in trees]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join(timeout=60)
-    assert not errors, errors
-    assert len(outcomes) == len(trees)
-    for files, manifest_url in outcomes:
-        assert _snapshot((base / manifest_url).parent) == files
-    installed = _version_dirs(tmp_path)
-    assert len(installed) == 2 and "atlas-v1-x" in installed
-    assert (base / json.loads((base / "current.json").read_text())["manifestUrl"]).is_file()
-
-
 def _fsync_target(fd: int, base: Path) -> str:
     """Which publication step an ``os.fsync`` belongs to: the only file synced is the pending pointer."""
     status = os.fstat(fd)
@@ -1530,160 +1119,6 @@ def _fsync_target(fd: int, base: Path) -> str:
 
 
 _FSYNC_STEPS = ["versions-dir", "pointer-file", "base-dir"]  # install, pending pointer, then (after the rename) its dir
-
-
-@pytest.mark.parametrize("point", _FSYNC_STEPS)
-def test_fsync_failure_fails_export_only_before_the_pointer_replacement(
-    edge_db: Path, tmp_path: Path, monkeypatch, point: str
-) -> None:
-    """Before ``os.replace(pending, current.json)`` a failed fsync is a failed export (pointer untouched).
-
-    After it the export is published: readers already resolve the new pointer, so
-    reporting failure would misclassify it, and restoring the old pointer could
-    clobber a concurrent publisher. The export succeeds and its report says the
-    pointer's durability is unconfirmed.
-    """
-    out = tmp_path / "out"
-    atlas = out / "atlas"
-    kwargs = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
-    first = _export(edge_db, out, **kwargs)
-    assert "publication" not in first, "a durable publication reports exactly as before"
-    before = _snapshot(out)
-    synced: list[str] = []
-    real_fsync = os.fsync
-
-    def fsync(fd: int) -> None:
-        synced.append(_fsync_target(fd, atlas))
-        if synced[-1] == point:
-            raise OSError(errno.EIO, f"injected {point}")
-        real_fsync(fd)
-
-    monkeypatch.setattr(exporter.os, "fsync", fsync)
-    if point == "base-dir":
-        report = _export(edge_db, out, **kwargs, compression_level=6)
-    else:
-        with pytest.raises(OSError, match=f"injected {point}"):
-            _export(edge_db, out, **kwargs, compression_level=6)
-    monkeypatch.undo()
-    assert synced == _FSYNC_STEPS[: _FSYNC_STEPS.index(point) + 1]
-
-    after = _snapshot(out)
-    unchanged = {name: blob for name, blob in before.items() if name != "atlas/current.json"}
-    assert {name: blob for name, blob in after.items() if name in unchanged} == unchanged, "every old URL stays"
-    assert all(
-        name.startswith(f"atlas/versions/{first['dataVersion']}-transport-")
-        for name in after.keys() - before.keys()
-    )
-    assert not list(atlas.glob(".current-*")) and not list((atlas / "versions").glob(".export-*"))
-    if point == "base-dir":
-        assert report["publication"] == {
-            "committed": True, "durable": False, "error": f"fsync of {atlas} failed: [Errno 5] injected base-dir",
-        }
-        assert _pointer(out)["manifestUrl"] == report["manifestUrl"] != json.loads(before["atlas/current.json"])[
-            "manifestUrl"
-        ]
-    else:
-        assert after["atlas/current.json"] == before["atlas/current.json"]
-    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
-
-
-@pytest.mark.parametrize("point", ["pointer-file", "base-dir"])
-def test_failure_around_the_commit_never_moves_a_concurrent_publishers_pointer(
-    tmp_path: Path, monkeypatch, point: str
-) -> None:
-    """A rival publishes completely inside the failing fsync; the failing publisher never touches its pointer."""
-    base = tmp_path / "atlas"
-    publisher = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
-    rival = _synthetic_stage(base, "atlas-v1-y", _TREE_B)
-    real_fsync = os.fsync
-    raced: list[exporter.Publication] = []
-
-    def build_current(url: str) -> bytes:
-        return json.dumps({"manifestUrl": url}).encode()
-
-    def fsync(fd: int) -> None:
-        if not raced and _fsync_target(fd, base) == point:
-            raced.append(None)  # type: ignore[arg-type]  # the rival's own fsyncs pass through
-            raced[0] = rival.publish(build_current)
-            raise OSError(errno.EIO, "injected")
-        real_fsync(fd)
-
-    monkeypatch.setattr(exporter.os, "fsync", fsync)
-    try:
-        if point == "pointer-file":
-            with pytest.raises(OSError, match="injected"):
-                publisher.publish(build_current)
-        else:
-            publication = publisher.publish(build_current)
-            assert publication.manifest_url == "versions/atlas-v1-x/manifest.json"
-            assert not publication.durable and "injected" in str(publication.durability_error)
-    finally:
-        monkeypatch.undo()
-        publisher.discard()
-        rival.discard()
-    assert raced[0].durable and raced[0].manifest_url == "versions/atlas-v1-y/manifest.json"
-    assert json.loads((base / "current.json").read_text()) == {"manifestUrl": raced[0].manifest_url}
-    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
-    assert _snapshot(base / "versions" / "atlas-v1-y") == _TREE_B
-    assert not list(base.glob(".current-*"))
-
-
-def test_cli_reports_unconfirmed_pointer_durability_without_failing(
-    edge_db: Path, tmp_path: Path, monkeypatch, capsys
-) -> None:
-    out = tmp_path / "out"
-    real_fsync_dir = exporter._fsync_dir
-
-    def fsync_dir(path: Path) -> None:
-        if path == out / "atlas":
-            raise OSError(errno.EIO, "injected")
-        real_fsync_dir(path)
-
-    monkeypatch.setattr(exporter, "_fsync_dir", fsync_dir)
-    argv = ["--db", str(edge_db), "--out-dir", str(out), "--no-decks", "--verify"]
-    assert exporter.main(argv) == 0
-    captured = capsys.readouterr()
-    report = json.loads(captured.out)
-    assert report["publication"]["committed"] is True and report["publication"]["durable"] is False
-    assert captured.err.startswith(f"warning: published {report['manifestUrl']}, but its durability is unconfirmed")
-    assert _pointer(out)["manifestUrl"] == report["manifestUrl"]
-
-
-def test_concurrent_full_exports_with_different_limits_all_stay_valid(edge_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    variants = [{"compression_level": 9}, {"compression_level": 6}] * 2
-    errors: list[BaseException] = []
-
-    def worker(kwargs: dict) -> None:
-        try:
-            _export(edge_db, out, **kwargs)
-        except BaseException as exc:
-            errors.append(exc)
-
-    threads = [threading.Thread(target=worker, args=(kwargs,)) for kwargs in variants]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join(timeout=110)
-    assert not errors, errors
-    dirs = _version_dirs(out)
-    assert len(dirs) == 2
-    for name in dirs:
-        assert verify_tree(out, "atlas", manifest_path=out / "atlas" / "versions" / name / "manifest.json")
-    assert verify_tree(out, "atlas")["dataVersion"]
-
-
-def test_stale_pending_pointer_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    base = out / "atlas"
-    base.mkdir(parents=True)
-    dead = base / ".current-999999999-deadbeef.json"
-    dead.write_bytes(b"{}")
-    alive = base / f".current-{os.getpid()}-cafebabe.json"
-    alive.write_bytes(b"{}")
-    _export(edge_db, out)
-    assert not dead.exists()
-    assert alive.exists()
 
 
 # ---------------------------------------------------------------------------
@@ -1705,63 +1140,6 @@ def _build_indexes(conn: sqlite3.Connection) -> tuple[SearchFamilyIndex, SearchF
         replay=lambda rowid: exporter._replay_alias_search_row(conn, rowid),
     )
     return articles, aliases
-
-
-def test_replayed_search_fragments_match_reference_rows_and_order(edge_db: Path, fixture_db: Path) -> None:
-    for db in (edge_db, fixture_db):
-        conn = open_readonly_db(db)
-        try:
-            conn.execute("BEGIN")
-            articles, aliases = _build_indexes(conn)
-            ref_articles, ref_aliases = _ref_load_search_rows(conn)
-            assert list(articles.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_articles]
-            assert list(aliases.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_aliases]
-            assert not hasattr(articles, "fragments") and not hasattr(aliases, "fragments")
-        finally:
-            conn.close()
-
-
-def test_search_index_memory_follows_key_metadata_not_gloss_bodies(tmp_path: Path) -> None:
-    retained: dict[int, int] = {}
-    bodies: dict[int, int] = {}
-    for gloss_chars in (60, 20_000):
-        db = _make_source_db(tmp_path / f"g{gloss_chars}.db", records=700, filler_chars=1, gloss_chars=gloss_chars)
-        conn = open_readonly_db(db)
-        try:
-            conn.execute("BEGIN")
-            bodies[gloss_chars] = sum(len(r[0] or "") for r in conn.execute("SELECT gloss FROM articles"))
-            gc.collect()
-            tracemalloc.start()
-            try:
-                before = tracemalloc.get_traced_memory()[0]
-                articles, aliases = _build_indexes(conn)
-                gc.collect()
-                retained[gloss_chars] = tracemalloc.get_traced_memory()[0] - before
-                assert len(articles) > 600 and len(aliases) > 600
-            finally:
-                tracemalloc.stop()
-            del articles, aliases
-        finally:
-            conn.close()
-    assert bodies[20_000] > 10_000_000
-    assert retained[20_000] < retained[60] * 1.25, retained
-    assert retained[20_000] < bodies[20_000] * 0.25, (retained, bodies)
-
-
-def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
-    db = _make_source_db(tmp_path / "gloss.db", records=700, filler_chars=1, gloss_chars=20_000)
-    glosses = sum(len(r[0] or "") for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
-    assert glosses > 10_000_000
-    tracemalloc.start()
-    try:
-        export_runtime_shards(
-            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1,
-            verify=True,
-        )
-        _, peak = tracemalloc.get_traced_memory()
-    finally:
-        tracemalloc.stop()
-    assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"
 
 
 # ---------------------------------------------------------------------------
@@ -1798,59 +1176,10 @@ def _search_shard_raw(schema: str, prefix: str, records: list[dict], *, terminal
     )
 
 
-def _build_aliases_traced(index: SearchFamilyIndex, out: Path, *, level: int) -> tuple[str | None, int]:
+def _build_aliases_traced(rows: int, out: Path, *, terminal: bool, level: int) -> tuple[str | None, int]:
     """(ExportError text or None, traced heap peak) of one search-family build into ``out``."""
-
-    def open_object(relative: str):
-        path = out / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        return path.open("wb")
-
-    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary: not the bucket's memory
-    gc.collect()
-    tracemalloc.start()
-    try:
-        try:
-            exporter.build_search_family_shards(
-                index, family="aliases", data_version="v-test", max_gzip_bytes=_SHARED_KEY_CAP,
-                compression_level=level, schema=exporter.SEARCH_ALIAS_SCHEMA, open_object=open_object,
-            )
-            error = None
-        except ExportError as exc:
-            error = str(exc)
-        return error, tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
-
-
-@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
-def test_uncapped_search_bucket_is_exact_and_heap_does_not_grow_with_it(
-    tmp_path: Path, level: int, terminal: bool
-) -> None:
-    peaks: dict[int, int] = {}
-    bodies: dict[int, int] = {}
-    for rows in (250, 1_000):
-        index, records = _shared_key_alias_index(rows, terminal=terminal)
-        raw = _search_shard_raw(exporter.SEARCH_ALIAS_SCHEMA, "a", records, terminal=terminal)
-        expected = gzip_bytes(raw, compression_level=level)
-        assert len(expected) > 20 * _SHARED_KEY_CAP
-        out = tmp_path / f"rows{rows}"
-        error, peaks[rows] = _build_aliases_traced(index, out, level=level)
-        bodies[rows] = len(raw)
-        if terminal:
-            assert error is None
-            shard = f"search/aliases/{exporter.search_shard_id('a')}.term.json.gz"
-            assert (out / shard).read_bytes() == expected
-        else:
-            assert error == (
-                f"search aliases shard for prefix='a' exceeds max "
-                f"({len(expected)} > {_SHARED_KEY_CAP}) and cannot split"
-            )
-            assert not out.exists(), "a failing bucket writes nothing"
-    assert bodies[1_000] > 4 * bodies[250] * 0.95
-    assert peaks[1_000] < peaks[250] * 1.25, peaks
-    assert peaks[1_000] < bodies[1_000] * 0.2, (peaks, bodies)
+    kwargs = {"max_gzip_bytes": _SHARED_KEY_CAP, "compression_level": level}
+    return _traced_in_fresh_interpreter("aliases", rows=rows, terminal=terminal, out=out, kwargs=kwargs)
 
 
 def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: int = 8_000) -> Path:
@@ -1880,91 +1209,15 @@ def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: i
 
 def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
     """(ExportError text or None, traced heap peak) of one full export *with* ``--verify``."""
-    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary
-    gc.collect()
-    tracemalloc.start()
-    try:
-        try:
-            export_runtime_shards(
-                db_path=db, out_dir=out, include_decks=False, deck_dir=None, compression_level=level,
-                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP, verify=True,
-            )
-            error = None
-        except ExportError as exc:
-            error = str(exc)
-        return error, tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
+    kwargs = {"include_decks": False, "deck_dir": None, "compression_level": level,
+              "entry_max_gzip_bytes": 65_536, "search_max_gzip_bytes": _SHARED_KEY_CAP, "verify": True}
+    return _traced_in_fresh_interpreter("export", db=db, out=out, kwargs=kwargs)
 
 
 def _verify_traced(out: Path) -> int:
-    gc.collect()
-    tracemalloc.start()
-    try:
-        verify_tree(out, "atlas")
-        return tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
-
-
-@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
-@pytest.mark.parametrize("level", [0, 9])
-def test_reviewer_long_article_rows_export_matches_reference_in_bounded_heap(
-    tmp_path: Path, level: int, terminal: bool
-) -> None:
-    """Reviewer shape (fixed 8000-char gloss, 250 -> 1000 shared-key rows), export *with* --verify."""
-    peaks: dict[int, int] = {}
-    verify_peaks: dict[int, int] = {}
-    glosses: dict[int, int] = {}
-    for rows in (250, 1_000):
-        db = _make_shared_key_db(tmp_path / f"shared{rows}.db", rows=rows, terminal=terminal)
-        glosses[rows] = sum(len(r[0]) for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
-        out = tmp_path / f"out{rows}"
-        error, peaks[rows] = _export_traced(db, out, level=level)
-        if terminal:
-            assert error is None
-            data_version, files, indexes = _reference_export(
-                db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP
-            )
-            tree = _snapshot(out / "atlas" / "versions" / data_version)
-            assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
-            manifest = json.loads(tree["manifest.json"])
-            assert manifest["search"]["articles"] == indexes["articles"]
-            term = indexes["articles"]["shards"][f"{exporter.search_shard_id('a')}.term"]
-            assert term["count"] == rows and term["bytes"] > 20 * _SHARED_KEY_CAP
-            verify_peaks[rows] = _verify_traced(out)
-        else:
-            with pytest.raises(ExportError) as expected:
-                _reference_export(db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP)
-            assert error == str(expected.value)
-            assert "prefix='a'" in error and "cannot split" in error
-            assert not (out / "atlas" / "current.json").exists()
-    assert glosses[1_000] > 7_900_000
-    # Per-row index metadata (locators, sort keys, route digests) may grow; shard
-    # bodies may not: the old exporter's heap grew by the whole bucket, and the old
-    # --verify by the whole inflated terminal shard (twice for entries).
-    assert peaks[1_000] - peaks[250] < (glosses[1_000] - glosses[250]) * 0.25, (peaks, glosses)
-    assert peaks[1_000] < glosses[1_000] * 0.25, (peaks, glosses)
-    if terminal:
-        assert verify_peaks[1_000] < verify_peaks[250] * 1.25 + 1_000_000, verify_peaks
-        assert verify_peaks[1_000] < glosses[1_000] * 0.2, (verify_peaks, glosses)
-
-
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
-def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int) -> None:
-    rng = random.Random(level + 100)
-    raw = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(300_000)).encode("utf-8")
-    chunks = [raw[i : i + 5_000] for i in range(0, len(raw), 5_000)]
-    expected = gzip_bytes(raw, compression_level=level)
-    assert exporter.gzip_size(lambda: iter(chunks), compression_level=level) == len(expected)
-    pieces: list[bytes] = []
-    result = exporter.stream_gzip(lambda: iter(chunks), compression_level=level, sink=pieces.append)
-    assert b"".join(pieces) == expected
-    assert result == exporter.GzipResult(
-        len(expected), hashlib.sha256(expected).hexdigest(), len(raw), hashlib.sha256(raw).hexdigest()
-    )
-    if level:
-        assert len(pieces) > 2, "levels 1-9 hand compressed pieces over as they are produced"
+    error, peak = _traced_in_fresh_interpreter("verify", out=out)
+    assert error is None
+    return peak
 
 
 # ---------------------------------------------------------------------------
@@ -1981,16 +1234,6 @@ def _framed(data: bytes) -> bytes:
     return b"".join(pieces)
 
 
-def test_stored_block_plan_reproduces_observed_one_shot_block_lengths() -> None:
-    """Python 3.12.8 / zlib 1.3.1 one-shot framing observed by the reviewer."""
-    observed = {
-        65_531: [65_531], 65_532: [65_531, 1], 98_304: [65_531, 32_773], 100_000: [65_531, 32_773, 1_696],
-    }
-    for length, blocks in observed.items():
-        assert [size for size, _last in exporter.stored_block_plan(length)] == blocks
-        assert _framed(_STORED_PATTERN[:length]) == gzip_bytes(_STORED_PATTERN[:length], compression_level=0)
-
-
 def _stored_sweep_lengths() -> list[int]:
     lengths = set(range(0, 64)) | set(range(32_740, 32_790)) | set(range(65_500, 65_560))
     lengths |= set(range(98_280, 98_330)) | {131_072, 196_608, 262_144}
@@ -2001,41 +1244,6 @@ def _stored_sweep_lengths() -> list[int]:
     rng = random.Random(8672)
     lengths |= {rng.randrange(0, 3_000_000) for _ in range(150)}
     return sorted(length for length in lengths if 0 <= length <= len(_STORED_PATTERN))
-
-
-def test_level0_framing_matches_one_shot_gzip_at_boundaries_random_and_buffer_growths() -> None:
-    for length in _stored_sweep_lengths():
-        data = _STORED_PATTERN[:length]
-        assert _framed(data) == gzip_bytes(data, compression_level=0), length
-
-
-@pytest.mark.parametrize("chunking", ["bytes", "odd", "block+3", "random"])
-def test_level0_stream_is_chunking_independent_and_exact(chunking: str) -> None:
-    rng = random.Random(chunking)
-    for length in (0, 1, 32_753, 65_532, 100_000, 400_000, 1_500_000):
-        data = _STORED_PATTERN[:length]
-        if chunking == "bytes":
-            data = data[:3_000]
-            sizes = [1] * len(data)
-        elif chunking == "odd":
-            sizes = [7] * (len(data) // 7 + 1)
-        elif chunking == "block+3":
-            sizes = [65_538] * (len(data) // 65_538 + 1)
-        else:
-            sizes = [rng.randrange(0, 90_000) for _ in range(len(data) // 20_000 + 4)] + [len(data)]
-        chunks, position = [], 0
-        for size in sizes:
-            chunks.append(data[position : position + size])
-            position += size
-        expected = gzip_bytes(data, compression_level=0)
-        pieces: list[bytes] = []
-        result = exporter.stream_gzip(lambda chunks=chunks: iter(chunks), compression_level=0, sink=pieces.append)
-        assert b"".join(pieces) == expected
-        assert result == exporter.GzipResult(
-            len(expected), hashlib.sha256(expected).hexdigest(), len(data), hashlib.sha256(data).hexdigest()
-        )
-        assert exporter.gzip_size(lambda chunks=chunks: iter(chunks), compression_level=0) == len(expected)
-        assert max(len(piece) for piece in pieces) <= max(65_535, max(sizes, default=0)), "streamed, not joined"
 
 
 def _model_compressobj_blocks(lengths: list[int]) -> list[tuple[int, int]]:
@@ -2054,51 +1262,6 @@ def _model_compressobj_blocks(lengths: list[int]) -> list[tuple[int, int]]:
                     break
             assert model.avail_in == 0
     return blocks
-
-
-def test_stored_model_no_flush_path_matches_real_zlib_streams() -> None:
-    """``Z_NO_FLUSH`` (the path of every UINT_MAX input slice but the last) against live zlib."""
-    rng = random.Random(3)
-    for _ in range(120):
-        total = rng.choice((rng.randrange(0, 200_000), rng.randrange(0, 2_500_000)))
-        cuts = sorted(rng.randrange(0, total + 1) for _ in range(rng.randrange(0, 10)))
-        lengths = [end - start for start, end in zip([0, *cuts], [*cuts, total], strict=True)]
-        compressor = zlib.compressobj(0, zlib.DEFLATED, 31)
-        real, position = b"", 0
-        for length in lengths:
-            real += compressor.compress(_STORED_PATTERN[position : position + length])
-            position += length
-        real += compressor.flush()
-        pieces: list[bytes] = []
-        exporter._frame_stored_gzip(
-            lambda total=total: (_STORED_PATTERN[:total],), _model_compressobj_blocks(lengths), pieces.append
-        )
-        assert b"".join(pieces) == real, lengths
-
-
-def test_stored_block_plan_beyond_uint_max_without_allocating() -> None:
-    """``zlib_compress_impl`` hands zlib ``UINT_MAX`` slices: ``Z_NO_FLUSH`` then ``Z_FINISH``.
-
-    Source-derived: the ``Z_NO_FLUSH`` slice never writes a block shorter than
-    ``min_block`` (32 KiB), so its tail stays in the window and the ``Z_FINISH``
-    slice emits it together with the rest — the >4 GiB plan is the UINT_MAX plan
-    with its final block extended (and split at 65535) by the extra bytes.
-    """
-    uint_max = exporter._UINT_MAX
-    tracemalloc.start()
-    try:
-        base = exporter.stored_block_plan(uint_max)
-        for extra in (1, 12_345, 70_000):
-            plan = exporter.stored_block_plan(uint_max + extra)
-            tail = base[-1][0] + extra
-            expected_tail = [(65_535, 0)] * ((tail - 1) // 65_535) + [((tail - 1) % 65_535 + 1, 1)]
-            assert plan == base[:-1] + expected_tail, extra
-            assert sum(length for length, _last in plan) == uint_max + extra
-        peak = tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
-    assert base[:2] == [(65_531, 0), (32_773, 0)] and base[-1][1] == 1
-    assert peak < 64 * 1024 * 1024, "a length-only plan, never the bytes"
 
 
 class _StoredFrameReader:
@@ -2208,79 +1371,6 @@ def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
         source.close()
         output.close()
     return reader.blocks
-
-
-@pytest.mark.slow
-@pytest.mark.skipif(
-    _system_libz_version() != zlib.ZLIB_RUNTIME_VERSION, reason="system libz.so.1 is not this runtime's zlib"
-)
-def test_stored_block_plan_matches_live_zlib_beyond_uint_max() -> None:
-    """The length-only plan against the live library past ``UINT_MAX`` (two input slices)."""
-    one_shot = _StoredFrameReader()
-    one_shot.feed(memoryview(gzip_bytes(bytes(3_000_000), compression_level=0)))
-    assert _live_zlib_one_shot_blocks(3_000_000) == one_shot.blocks  # the driver is CPython's one-shot path
-    for total in (exporter._UINT_MAX + 1, exporter._UINT_MAX + 70_000):
-        assert _live_zlib_one_shot_blocks(total) == exporter.stored_block_plan(total), total
-
-
-def test_stored_planner_canary_fails_closed_on_runtime_disagreement(
-    edge_db: Path, tmp_path: Path, monkeypatch
-) -> None:
-    exporter.check_stored_gzip_runtime()
-    monkeypatch.setattr(exporter, "_stored_canary_passed", False)
-    # A runtime whose output buffer grows differently frames stored blocks differently.
-    monkeypatch.setattr(exporter, "_OUTPUT_BLOCK_SIZES", (16 * 1024, *exporter._OUTPUT_BLOCK_SIZES[1:]))
-    with pytest.raises(ExportError, match="planner disagrees with this runtime"):
-        exporter.check_stored_gzip_runtime()
-    with pytest.raises(ExportError, match="planner disagrees"):
-        exporter.stream_gzip(lambda: (b"x",), compression_level=0, sink=lambda _piece: None)
-    with pytest.raises(ExportError, match="planner disagrees"):
-        _export(edge_db, tmp_path / "out", compression_level=0)
-    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
-    assert exporter._stored_canary_passed is False
-
-
-def test_level0_replay_that_drifts_between_passes_fails_closed() -> None:
-    calls = {"n": 0}
-
-    def drifting():
-        calls["n"] += 1
-        return (b"a" * 70_000,) if calls["n"] == 1 else (b"b" * 70_000,)
-
-    with pytest.raises(ExportError, match="replay differs"):
-        exporter.stream_gzip(drifting, compression_level=0, sink=lambda _piece: None)
-    calls["n"] = 0
-
-    def growing():
-        calls["n"] += 1
-        return (b"a" * (70_000 + calls["n"]),)
-
-    with pytest.raises(ExportError, match="more bytes than planned"):
-        exporter.stream_gzip(growing, compression_level=0, sink=lambda _piece: None)
-
-
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
-def test_oversized_entry_leaf_error_matches_reference_at_every_level(
-    edge_db: Path, tmp_path: Path, level: int
-) -> None:
-    with pytest.raises(ExportError) as expected:
-        _reference_export(edge_db, compression_level=level, entry_max=300, search_max=524_288)
-    with pytest.raises(ExportError) as actual:
-        _export(edge_db, tmp_path / "out", compression_level=level, entry_max_gzip_bytes=300)
-    assert str(actual.value) == str(expected.value)
-    assert "single entry record exceeds" in str(actual.value)
-
-
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
-def test_unsplittable_search_error_matches_reference_at_every_level(
-    edge_db: Path, tmp_path: Path, level: int
-) -> None:
-    with pytest.raises(ExportError) as expected:
-        _reference_export(edge_db, compression_level=level, entry_max=1_048_576, search_max=150)
-    with pytest.raises(ExportError) as actual:
-        _export(edge_db, tmp_path / "out", compression_level=level, search_max_gzip_bytes=150)
-    assert str(actual.value) == str(expected.value)
-    assert "cannot split" in str(actual.value)
 
 
 # ---------------------------------------------------------------------------
@@ -2564,37 +1654,6 @@ _VERIFY_CASES = [
 ]
 
 
-@pytest.fixture(scope="module")
-def verified_tree(edge_db: Path, tmp_path_factory: pytest.TempPathFactory) -> Path:
-    out = tmp_path_factory.mktemp("verify") / "out"
-    _export(edge_db, out, entry_max_gzip_bytes=9_000, search_max_gzip_bytes=1_200)
-    return out
-
-
-@pytest.mark.parametrize("case", _VERIFY_CASES)
-def test_streaming_verify_matches_historical_verify(verified_tree: Path, tmp_path: Path, case: str) -> None:
-    out = tmp_path / "out"
-    shutil.copytree(verified_tree, out)
-    manifest_path = out / "atlas" / json.loads((out / "atlas" / "current.json").read_text())["manifestUrl"]
-    manifest = json.loads(manifest_path.read_text())
-    assert _outcome(verify_tree, out, manifest_path) == _outcome(_ref_verify_tree, out, manifest_path)
-    _mutate(case, manifest_path.parent, manifest)
-    expected = _outcome(_ref_verify_tree, out, manifest_path)
-    actual = _outcome(verify_tree, out, manifest_path)
-    if case in _HISTORICAL_CRASH:
-        assert expected[0] not in ("ok", "ExportError"), expected
-        assert actual[0] == "ExportError" and _HISTORICAL_CRASH[case] in actual[1], actual
-    elif case in _FAIL_CLOSED:
-        assert expected[0] == "ok", expected
-        assert actual[0] == "ExportError" and _FAIL_CLOSED[case] in actual[1], actual
-    else:
-        assert actual == expected
-    assert case in ("trailing-zero-padding", "second-gzip-member", "schema-version-float",
-                    "schema-version-near-one", "duplicate-members-last-wins",
-                    "bigint-overflow-surrogate-in-record", "extreme-numbers-in-record",
-                    "extreme-exponent-duplicate-member", "extreme-exponent-deck") or actual[0] != "ok", actual
-
-
 _JSON_DOCS = [
     b'{"a":1}', b' \n{ "a" : [ 1 , 2.5 , -0.0 , 1e2 , "x" ] , "b" : {} }\t\r\n', b"{}", b"[]", b'"s"', b"-12", b'""',
     b'{"records":[{"k":1},{"k":[1,{"x":"\\u00e9\\ud83d\\ude00"}]},{}],"schemaVersion":1,"dataVersion":"v"}',
@@ -2686,103 +1745,3 @@ def _json_loads_outcome(doc: bytes) -> tuple:
     except (ValueError, ArithmeticError, RecursionError):
         return ("invalid",)
     return ("ok", json.dumps(dataclasses.asdict(expected), sort_keys=True))
-
-
-def test_verify_fast_pass_is_yajl() -> None:
-    assert exporter._json_backend().backend_name == "yajl2_c"
-
-
-@pytest.mark.parametrize("read_bytes", [1, 2, 3, 5, 6, 7, 13, 64, 1 << 16])
-def test_json_stream_decodes_exactly_like_json_loads_at_every_read_size(read_bytes: int) -> None:
-    for doc in _JSON_DOCS:
-        assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc
-        assert _scan_outcome(doc, read_bytes, exact_only=True) == _json_loads_outcome(doc), doc
-        fast = exporter.scan_json_payload(io.BytesIO(doc), read_bytes=read_bytes)
-        if re.search(rb"\\u[dD][89a-fA-F]", doc):
-            assert not fast.values_exact, doc
-        elif not re.search(rb"[0-9]{19}", doc):  # no exponent Decimal refuses, no integer int() refuses
-            assert fast.values_exact, doc
-    for doc in _BAD_JSON_DOCS:
-        with pytest.raises(ValueError):
-            json.loads(doc.decode("utf-8"))
-        with pytest.raises(ValueError):
-            _scan(doc, read_bytes)
-        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
-    for doc in _FAIL_CLOSED_JSON_DOCS:
-        json.loads(doc.decode("utf-8"))
-        with pytest.raises(ValueError):
-            _scan(doc, read_bytes)
-        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
-
-
-def test_extreme_numbers_read_like_json_loads() -> None:
-    """The reviewer's deck, and each class of number literal no ``Decimal`` or yajl conversion holds."""
-    deck = exporter.scan_json_payload(io.BytesIO(b'{"deckVersion":"d","unused":1e-99999999999999999999}'))
-    assert deck.is_object and not deck.values_exact  # yajl judged the syntax; values come from the exact pass
-    cases = {
-        b"1e-99999999999999999999": 0.0, b"-1e-99999999999999999999": -0.0, b"1e99999999999999999999": math.inf,
-        b"-1e99999999999999999999": -math.inf, b"0e99999999999999999999": 0.0, b"-0e99999999999999999999": -0.0,
-        b"0.000e-99999999999999999999": 0.0, b"1E+000000000000000000000000001": 10.0, b"-0": 0, b"-0.0": -0.0,
-        b"9" * 4300: int("9" * 4300), b"-" + b"9" * 4300: -int("9" * 4300),
-    }
-    for literal, expected in cases.items():
-        doc = b'{"schemaVersion":' + literal + b',"records":[' + literal + b"]}"
-        scanned = _scan(doc, 64, summarize=lambda value: value)
-        assert json.loads(doc)["schemaVersion"] == expected
-        for value in (scanned.schema_version, scanned.rows[0]):
-            assert type(value) is type(expected) and repr(value) == repr(expected), literal[:30]
-    with pytest.raises(ValueError, match="integer string conversion"):
-        json.loads(b"[" + b"9" * 4301 + b"]")
-    with pytest.raises(ValueError, match="integer string conversion"):
-        _scan(b"[" + b"9" * 4301 + b"]", 64)
-
-
-@pytest.mark.parametrize("limit", [0, 640])
-def test_integer_digit_limit_matches_json_loads_at_every_read_size(limit: int) -> None:
-    """The yajl guard follows ``sys.get_int_max_str_digits()`` (0: no limit, 640: the smallest allowed)."""
-    previous = sys.get_int_max_str_digits()
-    sys.set_int_max_str_digits(limit)
-    try:
-        for digits in (639, 640, 641, 5000):
-            doc = b'{"records":[-' + b"7" * digits + b',"' + b"7" * digits + b'",0.' + b"7" * digits + b"]}"
-            for read_bytes in (1, 5, 64, 1 << 16):
-                assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), (limit, digits, read_bytes)
-    finally:
-        sys.set_int_max_str_digits(previous)
-
-
-def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
-    """Seeded differential: random documents and byte-level corruptions of them."""
-    rng = random.Random(8672)
-    tokens = [
-        b"{", b"}", b"[", b"]", b",", b":", b'"', b"\\", b"u", b"d", b"8", b"0", b"1", b"-", b"+", b".", b"e",
-        b" ", b"\t", b"\n", b"\x0b", b"\x0c", b"\x00", b"\x01", b"\xff", b"\xed", b"t", b"n", b"x",
-        "я".encode(), b"\\ud800", b"\\udc00", b"\\ud83d\\ude00", b'"records"', b'"schemaVersion"',
-        b"e99999999999999999999", b"e-99999999999999999999", b"1e99999999999999999999", b"9" * 4301, b"0" * 4301,
-    ]
-
-    def value(depth: int):
-        choice = rng.randrange(9 if depth < 4 else 6)
-        if choice == 0:
-            return rng.randrange(-10**30, 10**30)
-        if choice == 1:
-            return rng.uniform(-1e6, 1e6)
-        if choice == 2:
-            return "".join(rng.choice('aя"\\/\n\t😀é 𐀀') for _ in range(rng.randrange(0, 12)))
-        if choice in (3, 4, 5):
-            return (True, False, None)[choice - 3]
-        if choice in (6, 7):
-            return [value(depth + 1) for _ in range(rng.randrange(0, 5))]
-        return {str(value(depth + 1))[:6]: value(depth + 1) for _ in range(rng.randrange(0, 5))}
-
-    for _ in range(3000):
-        document = {"schemaVersion": 1, "records": [value(0) for _ in range(rng.randrange(0, 6))], "x": value(0)}
-        raw = bytearray(json.dumps(document, ensure_ascii=True, indent=rng.choice([None, 1])).encode())
-        for _ in range(rng.randrange(0, 4)):
-            position = rng.randrange(len(raw) + 1)
-            raw[position : position + rng.randrange(2)] = rng.choice(tokens)
-        doc = bytes(raw[: rng.randrange(len(raw) + 1)] if rng.random() < 0.2 else raw)
-        read_bytes = rng.choice([1, 3, 5, 8, 50])
-        expected = _json_loads_outcome(doc)
-        assert _scan_outcome(doc, read_bytes) == expected, doc
-        assert _scan_outcome(doc, read_bytes, exact_only=True) == expected, doc

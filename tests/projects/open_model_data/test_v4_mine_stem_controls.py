@@ -15,6 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_mine_stem_controls import (
     DEFAULT_OUTPUT_DIR,
     DPO_QUOTA,
@@ -37,7 +38,7 @@ from scripts.projects.open_model_data.v4_mine_stem_controls import (
     verify_artifacts,
 )
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_stem_controls_receipt.schema.json"
 
 
@@ -353,7 +354,12 @@ def test_mine_exact_production_quotas(tmp_path: Path) -> None:
     assert len(sft) == 1800
     assert len(dpo) == 900
     assert all(row["is_calque_or_russianism"] is False for row in sft)
-    assert all(item["is_standard_attested"] for row in sft for item in row["vesum_attestation"] if item["lemma"] == row["target_term"] or row["target_term"] == "науковий термін")
+    assert all(
+        item["is_standard_attested"]
+        for row in sft
+        for item in row["vesum_attestation"]
+        if item["lemma"] == row["target_term"] or row["target_term"] == "науковий термін"
+    )
     assert all(row["metadata"]["vesum_verified"] for row in dpo)
     dumped = json.dumps(receipt, ensure_ascii=False)
     assert "Об'єм піраміди становить" not in dumped
@@ -432,6 +438,10 @@ def test_module_and_docs_have_no_private_host_paths() -> None:
         assert "ops@" not in text
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl",
+)
 def test_load_heldout_chunk_ids_from_phase3() -> None:
     ids = load_heldout_chunk_ids()
     if not ids:

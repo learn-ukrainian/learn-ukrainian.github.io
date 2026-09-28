@@ -9,12 +9,15 @@ not an installed Claude compatibility proof.
 
 from __future__ import annotations
 
+import atexit
 import json
 import re
+import shutil
 import socket
 import subprocess
 import sys
 import sysconfig
+import tempfile
 import threading
 import time
 import zipfile
@@ -103,6 +106,75 @@ else:
 """
 
 
+_SHARED_BASE_FILES: list[dict[str, str]] | None = None
+_SHARED_CLOSURE_DIR: Path | None = None
+
+
+def _get_shared_base_files() -> list[dict[str, str]]:
+    global _SHARED_BASE_FILES, _SHARED_CLOSURE_DIR
+    if _SHARED_BASE_FILES is None:
+        root = Path(tempfile.mkdtemp(prefix="v4-runtime-closure-"))
+        _SHARED_CLOSURE_DIR = root
+        atexit.register(shutil.rmtree, root, ignore_errors=True)
+
+        base = Path(sys.base_prefix).resolve()
+        stdlib = Path(sysconfig.get_path("stdlib")).resolve()
+        version = f"{sys.version_info.major}{sys.version_info.minor}"
+        selected = {
+            Path(sys.executable).resolve(): "/runtime/py/bin/python",
+        }
+
+        stdlib_zip = (root / f"python{version}.zip").resolve()
+        with zipfile.ZipFile(stdlib_zip, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(stdlib.rglob("*.py")):
+                if path.is_file() and not {"site-packages", "__pycache__", "test", "tests"} & set(path.parts):
+                    archive.write(path, Path(path.relative_to(stdlib)).as_posix())
+        stdlib_zip.chmod(0o600)
+        selected[stdlib_zip] = f"/runtime/py/lib/python{version}.zip"
+
+        library_name = sysconfig.get_config_var("LDLIBRARY")
+        if not isinstance(library_name, str) or not library_name:
+            raise AssertionError("the fixture interpreter must expose LDLIBRARY")
+        libpython = (base / "lib" / library_name).resolve()
+        if not libpython.is_file():
+            raise AssertionError("the fixture interpreter libpython is missing")
+        selected[libpython] = "/runtime/py/lib/" + libpython.name
+
+        extension_sources = []
+        dynload = stdlib / "lib-dynload"
+        for path in sorted(dynload.glob("*.so*")):
+            if path.is_file():
+                resolved = path.resolve()
+                selected[resolved] = f"/runtime/py/lib/python{sys.version_info.major}.{sys.version_info.minor}/lib-dynload/{path.name}"
+                extension_sources.append(resolved)
+
+        for binary in [Path(sys.executable).resolve(), libpython, *extension_sources]:
+            result = subprocess.run(["ldd", str(binary)], capture_output=True, text=True, check=False, timeout=30)
+            for name in re.findall(r"(/[\w./+\-]+)", result.stdout):
+                path = Path(name)
+                if path.is_file():
+                    resolved = path.resolve()
+                    if not resolved.is_relative_to(base):
+                        selected[resolved] = name
+        if len(selected) >= 256:
+            raise AssertionError("fixture runtime closure is not bounded")
+        files = []
+        closure = root / "fixture-interpreter-files"
+        closure.mkdir()
+        for index, (path, target) in enumerate(sorted(selected.items(), key=lambda item: (item[1], str(item[0])))):
+            if path.stat().st_mode & 0o022:
+                copied = closure / str(index)
+                copied.write_bytes(path.read_bytes())
+                copied.chmod(0o700 if path.stat().st_mode & 0o111 else 0o600)
+                path = copied
+            entry = {"source": str(path), "destination": target, "sha256": digest(path.read_bytes())}
+            files.append(entry)
+            if target == "/runtime/py/lib/" + libpython.name:
+                files.append({**entry, "destination": "/usr/lib/" + libpython.name})
+        _SHARED_BASE_FILES = files
+    return _SHARED_BASE_FILES
+
+
 def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False,
                    reviewer_invalid=False):
     """Pin the fixture and a compact, portable CPython runtime closure."""
@@ -112,69 +184,13 @@ def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, re
         .replace("REVIEWER_NEGATIVE", repr(reviewer_negative)).replace("REVIEWER_INVALID", repr(reviewer_invalid))
     )
     executable.chmod(0o700)
-    base = Path(sys.base_prefix).resolve()
-    stdlib = Path(sysconfig.get_path("stdlib")).resolve()
-    version = f"{sys.version_info.major}{sys.version_info.minor}"
-    selected = {
-        Path(sys.executable).resolve(): "/runtime/py/bin/python",
-        executable.resolve(): "/runtime/fixture-cli",
+    base_files = _get_shared_base_files()
+    cli_entry = {
+        "source": str(executable.resolve()),
+        "destination": "/runtime/fixture-cli",
+        "sha256": digest(executable.read_bytes()),
     }
-
-    # CPython searches this exact zip before the unpacked stdlib directory.
-    # Keeping pure-Python modules in one immutable file avoids thousands of
-    # repeated --dir arguments when the fixture runs under bubblewrap.
-    stdlib_zip = (root / f"python{version}.zip").resolve()
-    with zipfile.ZipFile(stdlib_zip, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(stdlib.rglob("*.py")):
-            if path.is_file() and not {"site-packages", "__pycache__", "test", "tests"} & set(path.parts):
-                archive.write(path, Path(path.relative_to(stdlib)).as_posix())
-    stdlib_zip.chmod(0o600)
-    selected[stdlib_zip] = f"/runtime/py/lib/python{version}.zip"
-
-    library_name = sysconfig.get_config_var("LDLIBRARY")
-    if not isinstance(library_name, str) or not library_name:
-        raise AssertionError("the fixture interpreter must expose LDLIBRARY")
-    libpython = (base / "lib" / library_name).resolve()
-    if not libpython.is_file():
-        raise AssertionError("the fixture interpreter libpython is missing")
-    selected[libpython] = "/runtime/py/lib/" + libpython.name
-
-    extension_sources = []
-    dynload = stdlib / "lib-dynload"
-    for path in sorted(dynload.glob("*.so*")):
-        if path.is_file():
-            resolved = path.resolve()
-            selected[resolved] = f"/runtime/py/lib/python{sys.version_info.major}.{sys.version_info.minor}/lib-dynload/{path.name}"
-            extension_sources.append(resolved)
-
-    # This is only test interpreter dependency discovery, not product asset
-    # discovery. Never expose loader addresses or local dependency paths in logs.
-    for binary in [Path(sys.executable).resolve(), libpython, *extension_sources]:
-        result = subprocess.run(["ldd", str(binary)], capture_output=True, text=True, check=False, timeout=30)
-        for name in re.findall(r"(/[\w./+\-]+)", result.stdout):
-            path = Path(name)
-            if path.is_file():
-                resolved = path.resolve()
-                if not resolved.is_relative_to(base):
-                    selected[resolved] = name
-    if len(selected) >= 256:
-        raise AssertionError("fixture runtime closure is not bounded")
-    files = []
-    closure = root / "fixture-interpreter-files"
-    closure.mkdir()
-    for index, (path, target) in enumerate(sorted(selected.items(), key=lambda item: (item[1], str(item[0])))):
-        if path.stat().st_mode & 0o022:
-            copied = closure / str(index)
-            copied.write_bytes(path.read_bytes())
-            copied.chmod(0o700 if path.stat().st_mode & 0o111 else 0o600)
-            path = copied
-        entry = {"source": str(path), "destination": target, "sha256": digest(path.read_bytes())}
-        files.append(entry)
-        if target == "/runtime/py/lib/" + libpython.name:
-            # uv CPython names its origin-relative library explicitly; GitHub
-            # setup-python relies on loader search. Pin the same immutable bytes
-            # at both locations without inheriting a host library directory.
-            files.append({**entry, "destination": "/usr/lib/" + libpython.name})
+    files = sorted([*base_files, cli_entry], key=lambda item: (item["destination"], item["source"]))
     adapter = {
         "version": "input-consuming-fixture.v1",
         "models": ["claude-sonnet-5", "gpt-5.6-luna"],
@@ -187,11 +203,15 @@ def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, re
         "bwrap_sha256": digest(Path("/usr/bin/bwrap").read_bytes()),
         "sources_url": sources_url,
         "adapters": {
-            name: {**adapter, "provider_env": env, "files": [
-                *files,
-                *([{"source": str(executable.resolve()), "destination": "/runtime/codex-code-mode-host",
-                    "sha256": digest(executable.read_bytes())}] if name == "codex" else []),
-            ]}
+            name: {
+                **adapter,
+                "provider_env": env,
+                "files": [
+                    *files,
+                    *([{"source": str(executable.resolve()), "destination": "/runtime/codex-code-mode-host",
+                        "sha256": digest(executable.read_bytes())}] if name == "codex" else []),
+                ],
+            }
             for name, env in [("claude", "ANTHROPIC_API_KEY"), ("codex", "OPENAI_API_KEY")]
         },
     }
@@ -218,10 +238,52 @@ class WheelRelease:
         return {**actual, "wheel_sha256": digest(self.wheel.read_bytes()), "wheel_files": wheel_files}
 
 
+_SHARED_UVICORN_SERVER: uvicorn.Server | None = None
+_SHARED_UVICORN_URL: str | None = None
+_SHARED_UVICORN_THREAD: threading.Thread | None = None
+_UVICORN_LOCK = threading.Lock()
+
+
+def get_shared_sources_server() -> tuple[uvicorn.Server, str]:
+    global _SHARED_UVICORN_SERVER, _SHARED_UVICORN_URL, _SHARED_UVICORN_THREAD
+    with _UVICORN_LOCK:
+        if _SHARED_UVICORN_SERVER is None or not _SHARED_UVICORN_SERVER.started:
+            listener = socket.socket()
+            listener.bind(("localhost", 0))
+            listener.listen(16)
+            server = uvicorn.Server(
+                uvicorn.Config(sources_transport.create_sources_app(), log_level="critical", access_log=False)
+            )
+            thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
+            thread.start()
+            deadline = time.monotonic() + 10
+            while not server.started and thread.is_alive() and time.monotonic() < deadline:
+                time.sleep(0.01)
+            assert server.started
+            _SHARED_UVICORN_SERVER = server
+            _SHARED_UVICORN_URL = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
+            _SHARED_UVICORN_THREAD = thread
+            atexit.register(shutdown_shared_sources_server)
+        return _SHARED_UVICORN_SERVER, _SHARED_UVICORN_URL
+
+
+def shutdown_shared_sources_server():
+    global _SHARED_UVICORN_SERVER, _SHARED_UVICORN_URL, _SHARED_UVICORN_THREAD
+    with _UVICORN_LOCK:
+        if _SHARED_UVICORN_SERVER is not None:
+            _SHARED_UVICORN_SERVER.should_exit = True
+            if _SHARED_UVICORN_THREAD is not None:
+                _SHARED_UVICORN_THREAD.join(timeout=5)
+            _SHARED_UVICORN_SERVER = None
+            _SHARED_UVICORN_URL = None
+            _SHARED_UVICORN_THREAD = None
+
+
 class RuntimeResources:
     def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True, reviewer_negative=False,
-                 reviewer_invalid=False):
+                 reviewer_invalid=False, dedicated_server=False):
         self.root = root
+        self.dedicated_server = dedicated_server
         # LOGIN applies only to this owned ephemeral cluster. Production roles,
         # credentials and services are never touched.
         pg.execute("ALTER ROLE hramatka_v4_sources_writer LOGIN")
@@ -241,28 +303,32 @@ class RuntimeResources:
         key.chmod(0o400)
         monkeypatch.setattr(service_runtime, "provider_credential_path", lambda harness: key)
         monkeypatch.setattr(sources_handlers, "_backend", LexicalResources())
-        listener = socket.socket()
-        listener.bind(("localhost", 0))
-        listener.listen(16)
-        self.server = uvicorn.Server(
-            uvicorn.Config(sources_transport.create_sources_app(), log_level="critical", access_log=False)
-        )
-        self.thread = threading.Thread(target=self.server.run, kwargs={"sockets": [listener]}, daemon=True)
-        self.thread.start()
-        deadline = time.monotonic() + 10
-        while not self.server.started and self.thread.is_alive() and time.monotonic() < deadline:
-            time.sleep(0.01)
-        assert self.server.started
-        self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
+        if dedicated_server:
+            listener = socket.socket()
+            listener.bind(("localhost", 0))
+            listener.listen(16)
+            self.server = uvicorn.Server(
+                uvicorn.Config(sources_transport.create_sources_app(), log_level="critical", access_log=False)
+            )
+            self.thread = threading.Thread(target=self.server.run, kwargs={"sockets": [listener]}, daemon=True)
+            self.thread.start()
+            deadline = time.monotonic() + 10
+            while not self.server.started and self.thread.is_alive() and time.monotonic() < deadline:
+                time.sleep(0.01)
+            assert self.server.started
+            self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
+        else:
+            self.server, self.url = get_shared_sources_server()
         path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources,
                               reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
         monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
     def close(self):
-        self.server.should_exit = True
-        self.thread.join(timeout=10)
-        assert not self.thread.is_alive()
+        if self.dedicated_server and hasattr(self, "server"):
+            self.server.should_exit = True
+            self.thread.join(timeout=10)
+            assert not self.thread.is_alive()
 
 
 def produce_author_record(root, pg, monkeypatch, wheel):

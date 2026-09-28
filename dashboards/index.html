@@ -174,11 +174,12 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   </a>
 </div>
 
-<div class="footer">Serving from localhost:8765 — <a href="/docs">API docs</a> • <a href="/api/contracts/routes">contracts</a></div>
+<div class="footer">Serving from <span id="footer-origin">this host</span> — <a href="/docs">API docs</a> • <a href="/api/contracts/routes">contracts</a></div>
 </main>
 
 <script>
 const API_TIMEOUT_MS = 20000;
+document.getElementById('footer-origin').textContent = location.host || 'this host';
 
 async function fetchJson(path) {
   const controller = new AbortController();

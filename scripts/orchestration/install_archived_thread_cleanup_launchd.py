@@ -209,6 +209,7 @@ def _failure(action: str, result: subprocess.CompletedProcess[str]) -> LaunchdEr
 
 
 def _validate_runtime(repo_root: Path, codex_binary: Path) -> None:
+    # Intentional: validate the interpreter of the checkout this LaunchAgent runs.
     interpreter = repo_root / ".venv" / "bin" / "python"
     cleanup_script = repo_root / "scripts" / "orchestration" / "archived_thread_cleanup.py"
     wrapper = wrapper_path(repo_root)

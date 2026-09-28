@@ -19,6 +19,7 @@ import unicodedata
 from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Protocol
@@ -643,6 +644,174 @@ _UKRAINIAN_ROMANIZATION = {
 def _gloss_clean(gloss: str) -> str:
     first_sense = re.split(r"[;,]", gloss, maxsplit=1)[0]
     return re.sub(r"\s+", " ", first_sense).strip()
+
+
+# Dictionary-article header labels (#8715): government words, grammar and
+# style abbreviations that precede the definition in СУМ-style articles.
+_UK_ARTICLE_LABEL_WORDS = frozenset(
+    {
+        "або",
+        "без",
+        "біля",
+        "в",
+        "від",
+        "для",
+        "до",
+        "додатка",
+        "з",
+        "за",
+        "й",
+        "і",
+        "із",
+        "ким",
+        "кого",
+        "коло",
+        "кому",
+        "на",
+        "над",
+        "означ",
+        "під",
+        "підсил",
+        "про",
+        "рідко",
+        "та",
+        "тільки",
+        "у",
+        "часто",
+        "чий",
+        "чим",
+        "чия",
+        "чиє",
+        "чиї",
+        "чого",
+        "чому",
+        "що",
+    }
+)
+# A header ending in one of these is grammar, never prose (#8715).
+_UK_ARTICLE_GRAMMAR_MARKERS = frozenset(
+    {"док.", "недок.", "перех.", "неперех.", "дод.", "дієсл.", "наказ.", "род.", "інфін.", "прикм.", "присл."}
+)
+_UK_ARTICLE_STUBS = frozenset({"той", "те", "та", "ті", "такий", "така", "таке", "такі", "те саме", "той самий"})
+_UK_DEFINITION_START = re.compile(r"(?<![\w'’ʼ\u0301])[А-ЯІЇЄҐ]")
+_UK_CAPS_HEADWORD = re.compile(r"^[А-ЯІЇЄҐ][А-ЯІЇЄҐ\u0301'’ʼ-]+(?![а-яіїєґ])")
+# The definition after a CAPS header starts with a capitalised word («Везучи»,
+# «З труднощами»), not another CAPS form of the headword.
+_UK_CAPS_DEFINITION_START = re.compile(r"(?<![\w'’ʼ\u0301])[А-ЯІЇЄҐ](?=\u0301?[а-яіїєґ'’ʼ]|\s+[а-яіїєґ])")
+_UK_REFERENCE_TARGET = re.compile(r"(?:^|\s)(?:до|що|див\.)\s+\S*\u0301")
+_UK_SENTENCE_END = re.compile(r"\.(?=\s+(?:[А-ЯІЇЄҐA-Z(«„\[—–]|//|‖)|\s*$)")
+
+
+def _is_uk_grammar_label(token: str) -> bool:
+    word = token.strip(",.;:()—–- ")
+    return (
+        not word
+        or word.isdigit()
+        or word.casefold() in _UK_ARTICLE_LABEL_WORDS
+        or (token.rstrip(",;").endswith(".") and len(word) <= 7)
+    )
+
+
+def _is_uk_article_label(token: str) -> bool:
+    """Header token: a grammar label, a one-letter ending or a stressed form."""
+    word = token.strip(",.;:()—–- ")
+    return _is_uk_grammar_label(token) or len(word) == 1 or STRESS_MARK in word
+
+
+def _is_uk_article_header(prefix: str) -> bool:
+    clean = prefix.strip()
+    if not clean.endswith("."):
+        return False
+    tokens = clean.split()
+    return all(_is_uk_article_label(token) for token in tokens) or any(
+        token.rstrip(",;") in _UK_ARTICLE_GRAMMAR_MARKERS for token in tokens
+    )
+
+
+def _is_uk_gloss_stub(label: str, lemma: str = "", verifier: VesumVerifier | None = None) -> bool:
+    """A cleaned Ukrainian gloss that carries no meaning (#8715).
+
+    Grammar labels, government words and bare correlatives («Той», «Те саме»)
+    name no meaning, and neither does a form of the headword itself («хіть» →
+    «хі́ті», checked in VESUM).  A single other word («довкіл» → «довко́ла») or
+    a derivational reference («Присл. до абстра́ктний») is the dictionary's
+    own cross-reference definition and stays.
+    """
+    clean = re.sub(r"[\d.,;:()]+", " ", label).strip()
+    clean = re.sub(r"\s+", " ", clean)
+    if not clean or clean.casefold() in _UK_ARTICLE_STUBS:
+        return True
+    tokens = label.split()
+    if all(_is_uk_grammar_label(token) for token in tokens) and not _UK_REFERENCE_TARGET.search(label):
+        return True
+    if len(tokens) != 1 or not lemma:
+        return False
+    form = _plain(_strip_stress(clean))
+    lemma_plain = _plain(lemma)
+    if form == lemma_plain:
+        return True
+    if verifier is None:
+        return False
+    return any(
+        _plain(str(match.get("lemma") or "")) == lemma_plain for match in verifier.verify_words([form]).get(form, [])
+    )
+
+
+def _ukrainian_definition_clean(gloss: str) -> str:
+    """First sense of a Ukrainian dictionary definition (#8715).
+
+    Cutting at the first comma leaves «Той» of «Той, хто …» or the label «ж.»
+    of «ж., заст. Те саме, що …».  Drop the article header (sense number,
+    grammar and style labels, a CAPS headword with its inflections), keep the
+    first definition sentence up to its first ``;`` and drop trailing sense
+    references («двір¹ 1, 5» → «двір»).
+    """
+    text = re.sub(r"\s+", " ", gloss).strip().lstrip("‖ ").strip()
+    text = re.sub(r"^\d+[.)]?\s+", "", text)
+    if _UK_CAPS_HEADWORD.match(text):
+        start = _UK_CAPS_DEFINITION_START.search(text)
+        text = text[start.start() :] if start else ""
+    else:
+        start = _UK_DEFINITION_START.search(text)
+        if start and start.start() and _is_uk_article_header(text[: start.start()]):
+            text = text[start.start() :]
+    end = _UK_SENTENCE_END.search(text)
+    first_sense = (text[: end.start()] if end else text).split(";", 1)[0]
+    first_sense = re.sub(r"[¹²³⁴⁵⁶⁷⁸⁹⁰]", "", first_sense)
+    first_sense = re.sub(r"(?<=[^\d\s])\s+\d+(?:\s*,\s*\d+)*\s*$", "", first_sense)
+    return first_sense.strip(" ,.:")
+
+
+def _practice_gloss_clean(
+    entry: dict[str, Any],
+    gloss: str,
+    verifier: VesumVerifier | None = None,
+    *,
+    sense: dict[str, Any] | None = None,
+) -> str:
+    """Short meaning label shown beside the lemma (#8715).
+
+    English glosses keep their first comma/semicolon segment.  A Ukrainian
+    dictionary definition keeps its first sense; when that carries no meaning,
+    a sourced Ukrainian definition and then an English source gloss stand in.
+    Returns ``""`` only when no source has a meaning.
+    """
+    if _is_english_learner_gloss(gloss):
+        return _gloss_clean(gloss)
+    lemma = _clean_text(entry.get("lemma")) or ""
+    enrichment = entry.get("enrichment")
+    meaning = enrichment.get("meaning") if isinstance(enrichment, dict) else None
+    definitions = meaning.get("definitions") if isinstance(meaning, dict) else None
+    for text in [gloss, *(definitions if isinstance(definitions, list) else [])]:
+        text = _clean_text(text)
+        if not text or _is_english_learner_gloss(text):
+            continue
+        clean = _ukrainian_definition_clean(text)
+        if not _is_uk_gloss_stub(clean, lemma, verifier):
+            return clean
+    english = _english_translation_gloss(entry, sense=sense)
+    # e2u rows can carry a bare grammar code («P vt») instead of a gloss.
+    return english if english and re.search(r"[a-z]{3,}", english) else ""
 
 
 def _meaning_label_word_count(label: str) -> int:
@@ -1832,7 +2001,11 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
-    gloss_clean = _gloss_clean(gloss)
+    gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense)
+    if not gloss_clean:
+        # No source carries a meaning (#8715): showing the raw article head
+        # («МОТИВА́ТОР.») would teach nothing.
+        return None
     meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
     # word stays in the deck even when CEFR is unknown. Prefer enrichment morphology;
@@ -2264,107 +2437,6 @@ def _pos_alias_matches(part: str, alias: str) -> bool:
     )
 
 
-_DEFINITION_POS_ALIASES: dict[str, tuple[str, ...]] = {
-    "noun": ("іменник", "noun"),
-    "adjective": ("прикметник", "adjective"),
-    "numeral": ("числівник", "numr", "numeral"),
-    "pronoun": ("займенник", "pronoun", "pron", "pron\\."),
-    "verb": ("дієслово", "verb"),
-    "adverb": ("прислівник", "присл\\.", "adverb"),
-    "preposition": (
-        "прийменник",
-        "приймен\\.",
-        "preposition",
-        "prep",
-        "prep\\.",
-    ),
-    "conjunction": (
-        "сполучник",
-        "спол\\.",
-        "conjunction",
-        "conj",
-        "conj\\.",
-    ),
-    "particle": (
-        "частка",
-        "particle",
-        "part",
-        "part\\.",
-    ),
-    "interjection": ("вигук", "interjection", "interj", "interj\\.", "intj", "intj\\."),
-}
-
-
-def _definition_pos_alias_pattern(alias: str) -> str:
-    """Keep generic ``part`` from matching prose like ``part of speech``."""
-    if alias == "part":
-        return r"part(?=$|[.,;:])"
-    return alias
-
-
-_DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
-    (
-        bucket,
-        re.compile(
-            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:{'|'.join(_definition_pos_alias_pattern(alias) for alias in aliases)})(?=$|[\s,;:])",
-            re.IGNORECASE,
-        ),
-    )
-    for bucket, aliases in _DEFINITION_POS_ALIASES.items()
-)
-
-
-def _definition_card_pos_buckets(enrichment: dict[str, Any] | None) -> list[str]:
-    if not isinstance(enrichment, dict):
-        return []
-    cards = enrichment.get("definition_cards")
-    if not isinstance(cards, list):
-        return []
-    buckets: list[str] = []
-    for card in cards:
-        if not isinstance(card, dict):
-            continue
-        definitions = card.get("definitions")
-        if isinstance(definitions, str):
-            definitions = [definitions]
-        if not isinstance(definitions, list):
-            continue
-        for definition in definitions:
-            text = _clean_text(definition)
-            if not text:
-                continue
-            for bucket, pattern in _DEFINITION_POS_PATTERNS:
-                if pattern.search(text):
-                    buckets.append(bucket)
-    return buckets
-
-
-def _entry_pos_buckets(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> list[str]:
-    """Collect distinct POS evidence in stable source precedence order."""
-    if morphology is None:
-        morphology = _morphology(entry)
-    enrichment = entry.get("enrichment")
-    enrichment_dict = enrichment if isinstance(enrichment, dict) else {}
-    signals: list[Any] = []
-    if isinstance(morphology, dict):
-        signals.append(morphology.get("pos"))
-    signals.append(entry.get("pos"))
-    for section in ("cefr", "translation"):
-        payload = enrichment_dict.get(section)
-        if isinstance(payload, dict):
-            signals.append(payload.get("pos"))
-
-    buckets: list[str] = []
-    for signal in signals:
-        for bucket in _normalize_pos_buckets(signal):
-            if bucket not in buckets:
-                buckets.append(bucket)
-    for bucket in _definition_card_pos_buckets(enrichment_dict):
-        if bucket not in buckets:
-            buckets.append(bucket)
-    return buckets
-
-
 def _morph_pos(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> str:
     raw = ""
     if morphology is not None:
@@ -2463,34 +2535,6 @@ def _explicit_aspect_category(labels: list[str]) -> str | None:
     return next(iter(aspects)) if len(aspects) == 1 else None
 
 
-def _aspect_category(labels: list[str]) -> str | None:
-    """Classify aspect from VESUM/Atlas evidence before a documented fallback.
-
-    VESUM ``perf``/``imperf`` tags and their decoded Atlas labels are explicit
-    aspect evidence, so they win over tense.  Tense is only a legacy fallback:
-    an untagged verb with both present and future labels is imperfective because
-    imperfectives have analytic future forms; a future-only untagged verb is
-    treated as perfective.  Contradictory explicit tags are left unclassified.
-    """
-    explicit = _explicit_aspect_category(labels)
-    if explicit:
-        return explicit
-    if any(
-        pattern.search(label)
-        for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
-        for label in labels
-        for pattern in patterns
-    ):
-        return None
-    has_present = any("теперішній" in label for label in labels)
-    has_future = any("майбутній" in label for label in labels)
-    if has_present:
-        return "imperfective"
-    if has_future:
-        return "perfective"
-    return None
-
-
 def _vesum_aspect_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, str]:
     """Read explicit aspect from VESUM tags for exact verb lemmas in batches.
 
@@ -2570,13 +2614,12 @@ def _category_set_payload(set_id: str, value: str, level: str) -> dict[str, Any]
 
 
 def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] | None:
-    """Build a POS set with every source-attested school-category answer.
+    """Build a POS set with every VESUM-attested reading of the displayed POS.
 
-    The source signals have their own trust precedence, but the learner-facing
-    primary answer must remain deterministic in Ukrainian school-category
-    order.  A polyfunctional lemma therefore keeps that primary ``answer``
-    for older clients and adds ordered ``answers`` for clients that accept all
-    attested readings.
+    The learner-facing primary answer must remain deterministic in Ukrainian
+    school-category order.  A displayed POS that names several readings
+    (``adverb, preposition``) therefore keeps that primary ``answer`` for older
+    clients and adds ordered ``answers`` for clients that accept all of them.
     """
     answers = [value for value in CLASSIFY_LABELS["pos"] if value in values]
     if not answers:
@@ -2585,6 +2628,116 @@ def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] |
     if len(answers) > 1:
         payload["answers"] = answers
     return payload
+
+
+_VESUM_POS_BUCKETS = {
+    "noun": "noun",
+    "adj": "adjective",
+    "numr": "numeral",
+    "verb": "verb",
+    "adv": "adverb",
+    "prep": "preposition",
+    "conj": "conjunction",
+    "part": "particle",
+    "intj": "interjection",
+}
+
+
+def _vesum_analysis_pos_buckets(match: dict[str, Any]) -> set[str]:
+    """School POS readings one VESUM analysis supports.
+
+    VESUM files pronouns under ``noun``/``adj``/``adv`` with a ``pron`` tag and
+    ordinals under ``adj`` with a ``numr`` tag, so those tags add a reading.
+    """
+    buckets: set[str] = set()
+    base = _VESUM_POS_BUCKETS.get(str(match.get("pos") or ""))
+    if base:
+        buckets.add(base)
+    tags = set(str(match.get("tags") or "").split(":"))
+    if "pron" in tags:
+        buckets.add("pronoun")
+    if "numr" in tags:
+        buckets.add("numeral")
+    return buckets
+
+
+_VESUM_GENDERS = {"m": "masculine", "f": "feminine", "n": "neuter"}
+
+
+@dataclass(frozen=True)
+class VesumLemmaEvidence:
+    """What VESUM attests for one exact lemma (#8729).
+
+    ``pos`` holds the school POS readings.  ``genders`` holds, per reading
+    that carries a lexical gender, every singular gender VESUM gives it:
+    plain nouns under ``noun`` and personal pronouns («він», «вона») under
+    ``pronoun``.  Other pronouns inflect for gender («цей», «хто») rather than
+    having one, so they contribute none.  Two genders under one reading mean
+    homographs or a common-gender noun («сирота»): the displayed sense cannot
+    be bound to either.
+    """
+
+    pos: frozenset[str] = frozenset()
+    genders: dict[str, frozenset[str]] = dataclass_field(default_factory=dict)
+
+
+def _vesum_analysis_gender(match: dict[str, Any]) -> tuple[str, str] | None:
+    """``(reading, gender)`` for an analysis that fixes a lexical gender."""
+    tags = str(match.get("tags") or "").split(":")
+    gender = next((_VESUM_GENDERS[tag] for tag in tags if tag in _VESUM_GENDERS), None)
+    if gender is None or match.get("pos") != "noun":
+        return None
+    if "pron" not in tags:
+        return ("noun", gender)
+    return ("pronoun", gender) if "pers" in tags else None
+
+
+def _vesum_lemma_evidence(lemmas: list[str], verifier: VesumVerifier) -> dict[str, VesumLemmaEvidence]:
+    """VESUM evidence for each exact lemma, batched (#8729).
+
+    Only analyses whose VESUM lemma equals the headword count: a form of
+    another lemma (``п'ята`` as the feminine of ``п'ятий``) is a different
+    lexeme and cannot vouch for this one.
+    """
+    evidence_by_lemma: dict[str, VesumLemmaEvidence] = {}
+    unique_lemmas = list(dict.fromkeys(lemma for lemma in lemmas if lemma))
+    for start in range(0, len(unique_lemmas), 500):
+        batch = unique_lemmas[start : start + 500]
+        matches_by_form = verifier.verify_words(
+            list(dict.fromkeys(variant for lemma in batch for variant in _surface_variants(lemma)))
+        )
+        for lemma in batch:
+            lemma_plain = _plain(lemma)
+            buckets: set[str] = set()
+            genders: dict[str, set[str]] = {}
+            for variant in _surface_variants(lemma):
+                for match in matches_by_form.get(variant, []):
+                    if _plain(str(match.get("lemma") or "")) != lemma_plain:
+                        continue
+                    buckets |= _vesum_analysis_pos_buckets(match)
+                    reading_gender = _vesum_analysis_gender(match)
+                    if reading_gender:
+                        genders.setdefault(reading_gender[0], set()).add(reading_gender[1])
+            if buckets:
+                evidence_by_lemma[lemma_plain] = VesumLemmaEvidence(
+                    frozenset(buckets), {reading: frozenset(values) for reading, values in genders.items()}
+                )
+    return evidence_by_lemma
+
+
+def _bound_gender(reading: str, labels: list[str], evidence: VesumLemmaEvidence) -> str | None:
+    """Gender of the displayed reading, or ``None`` when it cannot be bound (#8729).
+
+    VESUM must give the exact lemma one gender for that reading, and the
+    enrichment labels must name that same gender: labels that name none or
+    several (the noun and verb forms of «мати» merged) cannot confirm which
+    lexeme the card shows.
+    """
+    genders = evidence.genders.get(reading, frozenset())
+    if len(genders) != 1:
+        return None
+    gender = next(iter(genders))
+    return gender if _gender_category(labels) == gender else None
 
 
 def _is_aspect_residual_target(entry: dict[str, Any], lexeme: dict[str, Any]) -> bool:
@@ -2597,9 +2750,29 @@ def _build_classify_items(
     lexeme: dict[str, Any],
     *,
     vesum_aspect: str | None = None,
+    vesum_evidence: VesumLemmaEvidence | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
+    """Grammar sets for the sense the learner sees (#8729).
+
+    The displayed lexeme's ``pos`` names that sense, and every key needs VESUM
+    to attest that reading for this exact lemma.  Gender and aspect come from
+    VESUM only when all of the lemma's analyses for that reading agree (same-POS
+    homographs or a common-gender noun leave the sense unbound).  Enrichment
+    morphology is one analysis of the surface form and can belong to a
+    homograph (the note «до» behind the preposition «до»), and the Atlas
+    ``pos`` alone can name the wrong reading («неминуче» filed as a noun,
+    glossed «inevitably»), so a grammar key also needs the enrichment analysis
+    to be of the displayed reading and to agree with VESUM.  The POS set keys
+    the displayed readings VESUM attests only when the enrichment analysis
+    agrees with a displayed reading.  No reliable key means no set; an
+    item with no sets is withheld.
+    """
     if not _normalize_cefr(lexeme.get("cefr")):
+        return []
+    displayed_pos = _normalize_pos_buckets(entry.get("pos"))
+    if not displayed_pos:
         return []
     morphology = _morphology(entry)
     if not morphology:
@@ -2612,23 +2785,42 @@ def _build_classify_items(
                     "reason": "missing_morphology",
                 }
             )
+        if pos_residuals is not None and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+            pos_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": "missing_morphology",
+                }
+            )
         return []
+    evidence = vesum_evidence or VesumLemmaEvidence()
     labels = _morph_labels(morphology)
-    pos = _morph_pos(entry, morphology)
-    pos_buckets = _entry_pos_buckets(entry, morphology)
+    pos_buckets = [bucket for bucket in displayed_pos if bucket in evidence.pos]
+    # The enrichment POS must be explicit: falling back to entry.pos would
+    # merely repeat the displayed claim instead of checking its analysis.
+    morph_pos = next(iter(_normalize_pos_buckets(morphology.get("pos"))), "")
+    pos_reading_matches = morph_pos in pos_buckets or (morph_pos == "noun" and "pronoun" in pos_buckets)
+    # Gender and aspect belong to one reading: a display naming several
+    # («adverb, preposition») has none to key.
+    reading = pos_buckets[0] if len(displayed_pos) == 1 and pos_buckets else ""
+    # VESUM files personal pronouns as nouns, so a noun analysis is the pronoun's own.
+    if morph_pos != reading and not (reading == "pronoun" and morph_pos == "noun"):
+        reading = ""
     sets: list[dict[str, Any]] = []
-    if pos == "noun":
-        gender = _gender_category(labels)
+    if reading in {"noun", "pronoun"}:
+        gender = _bound_gender(reading, labels, evidence)
         if gender:
             sets.append(_category_set_payload("gender", gender, lexeme["cefr"]))
-        declension = _declension_category(
-            entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {}
-        )
-        if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
-            sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
-    elif pos == "verb":
-        # Atlas form labels are primary. Direct VESUM lookup is only for
-        # manifests whose labels omitted aspect — never to override a conflict.
+        if reading == "noun" and gender and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
+            paradigm = morphology.get("paradigm")
+            declension = _declension_category(entry, labels, paradigm if isinstance(paradigm, dict) else {})
+            if declension:
+                sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
+    aspect_residual = "unbound_verb_reading"
+    if reading == "verb":
+        # VESUM keys aspect; explicit enrichment labels may only agree with it.
         explicit = _explicit_aspect_category(labels)
         has_any_explicit = any(
             pattern.search(label)
@@ -2636,24 +2828,37 @@ def _build_classify_items(
             for label in labels
             for pattern in patterns
         )
-        explicit_conflict = explicit is None and has_any_explicit
-        aspect = None if explicit_conflict else explicit or vesum_aspect or _aspect_category(labels)
+        explicit_conflict = (explicit is None and has_any_explicit) or bool(
+            explicit and vesum_aspect and explicit != vesum_aspect
+        )
+        aspect = None if explicit_conflict else vesum_aspect
+        aspect_residual = "conflicting_explicit_aspect" if explicit_conflict else "no_unambiguous_vesum_aspect"
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
-        elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
-            reason = "conflicting_explicit_aspect" if explicit_conflict else "no_explicit_aspect_or_tense_proxy"
-            aspect_residuals.append(
+            aspect_residual = ""
+    if aspect_residual and aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
+        aspect_residuals.append(
+            {
+                "lemmaId": str(lexeme["lemmaId"]),
+                "lemma": str(lexeme["lemma"]),
+                "cefr": str(lexeme["cefr"]),
+                "reason": aspect_residual,
+            }
+        )
+    if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+        if pos_reading_matches:
+            pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
+            if pos_set:
+                sets.append(pos_set)
+        elif pos_residuals is not None:
+            pos_residuals.append(
                 {
                     "lemmaId": str(lexeme["lemmaId"]),
                     "lemma": str(lexeme["lemma"]),
                     "cefr": str(lexeme["cefr"]),
-                    "reason": reason,
+                    "reason": "morphology_pos_mismatch" if pos_buckets else "vesum_displayed_pos_unattested",
                 }
             )
-    if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
-        pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
-        if pos_set:
-            sets.append(pos_set)
     if not sets:
         return []
     item: dict[str, Any] = {
@@ -4696,6 +4901,89 @@ def validate_imperative_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
+# A word keeps its apostrophes (', ’, ʼ) and combining marks such as the
+# stress accent U+0301, so «m'ясо» and «м'я́co» are each one mixed-script word
+# rather than a Latin fragment beside a Cyrillic one.
+_WORD_LETTER = r"[^\W\d_][\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]*"
+_CYRILLIC_LATIN_TOKEN = re.compile(rf"(?:{_WORD_LETTER})+(?:['’ʼ](?:{_WORD_LETTER})+)*", re.UNICODE)
+
+
+def _mixed_script_tokens(text: str) -> list[str]:
+    """Words that mix Cyrillic and Latin letters («вести cебе», «m'ясо»)."""
+    mixed = []
+    for token in _CYRILLIC_LATIN_TOKEN.findall(text):
+        scripts = {unicodedata.name(char, "").split(" ", 1)[0] for char in token}
+        if {"CYRILLIC", "LATIN"} <= scripts:
+            mixed.append(token)
+    return mixed
+
+
+_LATIN_TO_CYRILLIC_HOMOGLYPHS = str.maketrans("aceiopxyABCEHIKMOPTX", "асеіорхуАВСЕНІКМОРТХ")
+
+
+def _repair_homoglyphs(text: str) -> str:
+    """Replace Latin look-alikes inside Cyrillic words with Cyrillic (#8715).
+
+    Source typos («вести cебе», «вiзочку») mix scripts inside one word.  Only
+    a word that already mixes both scripts is touched, so English text and
+    whole Latin words stay as they are; a Latin letter without a Cyrillic
+    look-alike is left for :func:`validate_deck_text` to reject.
+    """
+    return _CYRILLIC_LATIN_TOKEN.sub(
+        lambda match: (
+            match.group().translate(_LATIN_TO_CYRILLIC_HOMOGLYPHS)
+            if _mixed_script_tokens(match.group())
+            else match.group()
+        ),
+        text,
+    )
+
+
+def _repair_deck_homoglyphs(value: Any) -> Any:
+    if isinstance(value, str):
+        return _repair_homoglyphs(value)
+    if isinstance(value, dict):
+        return {key: _repair_deck_homoglyphs(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [_repair_deck_homoglyphs(child) for child in value]
+    return value
+
+
+def validate_deck_text(
+    shards: dict[str, dict[str, dict[str, Any]]],
+    verifier: VesumVerifier | None = None,
+) -> list[str]:
+    """Deck-wide text gates (#8715).
+
+    Every string in every shard is free of mixed-script words, and every
+    Ukrainian ``glossClean`` names a meaning rather than a stub.
+    """
+    errors: list[str] = []
+
+    def walk(value: Any, path: str) -> None:
+        if isinstance(value, str):
+            for token in _mixed_script_tokens(value):
+                errors.append(f"{path}: mixed Cyrillic/Latin word {token!r}")
+        elif isinstance(value, dict):
+            for key, child in value.items():
+                walk(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                walk(child, f"{path}[{index}]")
+
+    for level, level_shards in shards.items():
+        for kind, payload in level_shards.items():
+            walk(payload, f"{kind}.{level}")
+        lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
+        for lexeme in lexemes if isinstance(lexemes, list) else []:
+            label = str(lexeme.get("glossClean") or "")
+            if _is_english_learner_gloss(label):
+                continue
+            if _is_uk_gloss_stub(label, str(lexeme.get("lemma") or ""), verifier):
+                errors.append(f"lexemes.{level}: {lexeme.get('lemmaId')} glossClean is a stub {label!r}")
+    return errors
+
+
 def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     if mode == "classify":
@@ -5020,6 +5308,7 @@ def build_practice_shards(
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
     cloze_withheld: list[dict[str, str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
@@ -5095,10 +5384,9 @@ def build_practice_shards(
         config,
         priority_lemma_keys,
     )
-    verb_lemmas = [
-        str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if _is_aspect_residual_target(entry, lexeme)
-    ]
-    vesum_aspects = _vesum_aspect_by_lemma(verb_lemmas, verifier)
+    classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
+    vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
+    vesum_evidence = _vesum_lemma_evidence(classify_lemmas, verifier)
     # Paronym emit resolves adjudicated pair slugs against the selected pool
     # (main's _select_practice_lexemes refactor supplies the pool; this map is
     # the branch's paronym-specific addition kept through the merge).
@@ -5185,7 +5473,9 @@ def build_practice_shards(
             _entry,
             lexeme,
             vesum_aspect=vesum_aspects.get(lexeme["lemmaPlain"]),
+            vesum_evidence=vesum_evidence.get(lexeme["lemmaPlain"]),
             aspect_residuals=aspect_residuals,
+            pos_residuals=pos_residuals,
         )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         paradigm_items = _build_paradigm_items(lexeme)
@@ -5629,6 +5919,10 @@ def build_practice_shards(
                         lemma = item.get("lemma") or item.get("lemmaId")
                         if lemma:
                             item["senseId"] = f"{lemma}_s1"
+    shards = _repair_deck_homoglyphs(shards)
+    text_errors = validate_deck_text(shards, verifier)
+    if text_errors:
+        raise ValueError(f"deck text gate failed ({len(text_errors)}): {text_errors[:10]}")
     return shards
 
 
@@ -6675,6 +6969,28 @@ def write_cloze_withheld_report(
     path.write_bytes(_json_bytes(payload))
 
 
+def write_pos_residual_report(path: Path, residuals: list[dict[str, str]]) -> None:
+    """Write named source-gate reasons for withheld A2--C1 POS cards."""
+    payload = {
+        "schema": "atlas-practice-pos-residuals-v1",
+        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
+        "count": len(residuals),
+        "lexemes": sorted(residuals, key=lambda row: (row["cefr"], row["lemmaId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
+def _emitted_lemma_ids(shards: dict[str, dict[str, dict[str, Any]]]) -> set[str]:
+    """Return IDs from the lexeme shard after size budgets are applied."""
+    return {
+        str(lexeme["lemmaId"])
+        for level_shards in shards.values()
+        for lexeme in level_shards.get("lexemes", {}).get("lexemes", [])
+        if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Generate deterministic Word Atlas practice shards from admitted lexemes. "
@@ -6820,6 +7136,11 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         help="Write cloze candidates withheld by the linguistic/prompt-context gates, with reasons.",
     )
     parser.add_argument(
+        "--pos-residual-report",
+        type=Path,
+        help="Write named A2-C1 lexemes with no POS set (default: none; e.g. batch_state/pos-residuals.json).",
+    )
+    parser.add_argument(
         "--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none)."
     )
     parser.add_argument(
@@ -6916,6 +7237,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     )
     aspect_residuals: list[dict[str, str]] = []
     cloze_withheld: list[dict[str, str]] = []
+    pos_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -6930,6 +7252,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
         cloze_withheld=cloze_withheld,
+        pos_residuals=pos_residuals,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
@@ -6984,25 +7307,28 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     if args.cloze_withheld_report:
         write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld, shards)
         print(f"cloze withheld {len(cloze_withheld)} findings -> {args.cloze_withheld_report}")
-    if args.aspect_residual_report:
-        emitted_lemma_ids = {
-            str(item.get("lemmaId"))
-            for level_shards in shards.values()
-            for item in level_shards.get("lexemes", {}).get("items", [])
-            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
-        }
-        aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
-        write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
-        print(
-            "aspect residuals "
-            + json.dumps(
-                {
-                    "count": len(aspect_residuals),
-                    "report": str(args.aspect_residual_report),
-                },
-                ensure_ascii=False,
+    if args.aspect_residual_report or args.pos_residual_report:
+        emitted_lemma_ids = _emitted_lemma_ids(shards)
+        if args.aspect_residual_report:
+            aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
+            print(
+                "aspect residuals "
+                + json.dumps(
+                    {"count": len(aspect_residuals), "report": str(args.aspect_residual_report)},
+                    ensure_ascii=False,
+                )
             )
-        )
+        if args.pos_residual_report:
+            pos_residuals = [residual for residual in pos_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_pos_residual_report(args.pos_residual_report, pos_residuals)
+            print(
+                "pos residuals "
+                + json.dumps(
+                    {"count": len(pos_residuals), "report": str(args.pos_residual_report)},
+                    ensure_ascii=False,
+                )
+            )
     written = write_shards(shards, args.out_dir)
     for path in written:
         print(path)

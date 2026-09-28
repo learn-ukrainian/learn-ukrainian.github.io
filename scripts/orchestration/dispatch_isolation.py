@@ -474,10 +474,14 @@ def _resolve_running_image(proc: subprocess.Popen[Any], read_fd: int) -> str:
     that process. ``systemd-run`` means the worker never exec'd. ``marker`` means
     the start wrapper never reached the worker. Both of those are stopped and
     then replaced with plain ``Popen``. ``exited`` means the process quit during
-    the wrapper wait. ``unknown`` means ``/proc`` could not be read.
+    the wrapper wait. ``unknown`` means ``/proc`` could not be read on this
+    attempt: the kernel exposes an empty ``cmdline`` for a brief window while
+    finishing an ``execve()`` (``proc(5)``), after ``exe`` already resolves to
+    the new image, so a bare ``unknown`` is retried exactly like ``marker``
+    instead of being treated as terminal.
     """
     image = _launch_image(proc.pid)
-    if image != "marker":
+    if image not in ("marker", "unknown"):
         return image
     if _marker_seen(proc, read_fd, _REAP_TIMEOUT_S):
         return "worker"

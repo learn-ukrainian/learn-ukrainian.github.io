@@ -56,9 +56,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import project_interpreter
+
 DB = PROJECT_ROOT / "data" / "sources.db"
 BRIDGE = PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"
-VENV_PY = PROJECT_ROOT / ".venv" / "bin" / "python"
+VENV_PY = project_interpreter()
 
 # Per-family subprocess timeout. Calibrated empirically: gemini-judge
 # calls can exceed 240s under load; claude/codex consistently land under

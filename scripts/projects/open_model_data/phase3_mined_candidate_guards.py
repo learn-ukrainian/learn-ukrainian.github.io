@@ -10,25 +10,20 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_uagec_heldout_doc,
 )
+from scripts.storage.paths import artifact_set
 
-DEFAULT_CUSTODY_FILE = (
-    Path(__file__).resolve().parents[3]
-    / "data"
-    / "projects"
-    / "open_model_data"
-    / "decolonization"
-    / "partitions"
-    / "train_source_custody.json"
-)
+DEFAULT_CUSTODY_FILE = REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization/partitions/train_source_custody.json"
 
 ALLOWED_MINED_JSONL_FILENAMES = frozenset(
     {
@@ -136,6 +131,21 @@ def verify_mined_manifest(
     schema_path: Path,
 ) -> dict[str, Any]:
     """Validate manifest + JSONL bytes/hashes/record schemas. Raises ValueError on failure."""
+    managed = {
+        REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization/mined",
+        ARTIFACT_OPEN_MODEL_DATA_DIR / "decolonization/mined",
+    }
+    if output_dir.resolve() in managed:
+        snapshot = artifact_set("open_model_other_indexes")
+        prefix = "projects/open_model_data/decolonization/mined/"
+        with tempfile.TemporaryDirectory(prefix="open-model-mined-verify-") as temporary:
+            staged = Path(temporary)
+            (staged / "decolonization_mined_manifest.json").write_bytes(
+                (REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization/mined/decolonization_mined_manifest.json").read_bytes()
+            )
+            for name in ALLOWED_MINED_JSONL_FILENAMES:
+                (staged / name).write_bytes(snapshot.artifacts[prefix + name])
+            return verify_mined_manifest(staged, schema_path)
     manifest_path = output_dir / "decolonization_mined_manifest.json"
     if not manifest_path.is_file():
         raise ValueError(f"Missing manifest: {manifest_path.name}")

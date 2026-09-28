@@ -19,25 +19,10 @@ from scripts.lexicon.runner.ledger import (
     compute_run_fingerprint,
 )
 from scripts.lexicon.runner.split import child_chunk_id
+from tests.helpers.lexicon_runner_fixtures import lexicon_slovnyk_offline as lexicon_slovnyk_offline
+from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"
-
-
-def _ensure_fixture() -> None:
-    needed = (
-        FIXTURE / "baseline.sha256",
-        FIXTURE / "baseline_enriched.json",
-        FIXTURE / "sources_slice.sqlite",
-        FIXTURE / "slice_input.json",
-        FIXTURE / "grac_frequency_slice.json",
-        FIXTURE / "kaikki_slice.json",
-    )
-    if not all(path.is_file() for path in needed):
-        from scripts.lexicon.runner.generate_pr1_fixture import main as gen
-
-        with pytest.MonkeyPatch.context() as mp:
-            mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
-            assert gen() == 0
 
 
 @pytest.fixture
@@ -779,7 +764,7 @@ def test_abandon_packet_operator_record(ledger: Ledger) -> None:
 
 def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Resume continues the frozen 500-lemma offline slice after interruption."""
-    _ensure_fixture()
+    sources = sources_slice(tmp_path)
     from scripts.lexicon import enrich_manifest as em
     from scripts.lexicon.runner.memory import EnforcementProof
     from scripts.lexicon.runner.offline_engine import enrich_offline_slice
@@ -823,7 +808,7 @@ def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch
 
     first = enrich_offline_slice(
         manifest_path=FIXTURE / "slice_input.json",
-        sources_db=FIXTURE / "sources_slice.sqlite",
+        sources_db=sources,
         kaikki_json=FIXTURE / "kaikki_slice.json",
         work_dir=work,
         output_path=out1,
@@ -845,7 +830,7 @@ def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch
     # Same fingerprint start must refuse and point at resumable run.
     refuse = enrich_offline_slice(
         manifest_path=FIXTURE / "slice_input.json",
-        sources_db=FIXTURE / "sources_slice.sqlite",
+        sources_db=sources,
         kaikki_json=FIXTURE / "kaikki_slice.json",
         work_dir=work,
         output_path=tmp_path / "should_refuse.json",
@@ -862,7 +847,7 @@ def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch
     out2 = tmp_path / "candidate2.json"
     second = enrich_offline_slice(
         manifest_path=FIXTURE / "slice_input.json",
-        sources_db=FIXTURE / "sources_slice.sqlite",
+        sources_db=sources,
         kaikki_json=FIXTURE / "kaikki_slice.json",
         work_dir=work,
         output_path=out2,

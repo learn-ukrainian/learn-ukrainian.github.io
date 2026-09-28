@@ -1,16 +1,7 @@
 #!/usr/bin/env python3
 """Upload unified ULDR dataset directly to Hugging Face Hub.
 
-Usage:
-  # Using HF_TOKEN env variable:
-  export HF_TOKEN="hf_..."
-  python scripts/projects/open_model_data/upload_to_huggingface.py
-
-  # Or passing token via CLI:
-  python scripts/projects/open_model_data/upload_to_huggingface.py --token hf_...
-
-  # Custom repo:
-  python scripts/projects/open_model_data/upload_to_huggingface.py --repo-id krisztiankoos/uldr --private
+Pass the external directory created by package_unified_dataset.py explicitly.
 """
 
 from __future__ import annotations
@@ -20,16 +11,28 @@ import os
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Upload unified ULDR dataset to Hugging Face.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Upload a previously built unified ULDR dataset to Hugging Face.\n"
+            "Use only after checking the external package and its intended repository."
+        ),
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/projects/open_model_data/upload_to_huggingface.py "
+            "--dataset-dir /tmp/uldr-v02 --repo-id owner/uldr --private\n"
+            "Outputs: a dataset repository commit on Hugging Face; no local package files.\n"
+            "Exit codes: 0 on upload; nonzero on invalid input, authentication, or upload failure.\n"
+            "Related: package_unified_dataset.py and issue #8809."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
         "--dataset-dir",
         type=Path,
-        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v02",
-        help="Path to directory containing train.jsonl, dpo.jsonl, eval.jsonl, README.md",
+        required=True,
+        help="External package directory containing train.jsonl, dpo.jsonl, eval.jsonl, README.md",
     )
     parser.add_argument(
         "--repo-id",

@@ -34,8 +34,9 @@ if str(ROOT) not in sys.path:
 
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import model_view_exporter
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 CANDIDATE_SCHEMA = CONTRACTS / "language_contact_candidate_v1.schema.json"
 DETECTOR_RECEIPT_SCHEMA = CONTRACTS / "language_contact_receipt_v1.schema.json"
 OBSERVATION_SCHEMA = CONTRACTS / "language_contact_silver_observation_v1.schema.json"
@@ -44,13 +45,11 @@ RECEIPT_SCHEMA = CONTRACTS / "language_contact_silver_receipt_v1.schema.json"
 ADMISSION_RECEIPT_SCHEMA = CONTRACTS / "corpus_admission_receipt_v1.schema.json"
 OPERATOR_PACKET_SCHEMA = CONTRACTS / "corpus_admission_operator_packet_v1.schema.json"
 
-DEFAULT_DETECTOR_CONFIG = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
+DEFAULT_DETECTOR_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "detector/language_contact_config_v1.json"
 DEFAULT_ADMISSION_RECEIPT = (
-    ROOT / "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json"
+    REGISTRY_OPEN_MODEL_DATA_DIR / "admission/public_external_accepted_admission_receipt_v1.json"
 )
-DEFAULT_OPERATOR_PACKET = (
-    ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json"
-)
+DEFAULT_OPERATOR_PACKET = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/public_external_operator_decision_packet_v1.json"
 DEFAULT_V011_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 DEFAULT_V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
 

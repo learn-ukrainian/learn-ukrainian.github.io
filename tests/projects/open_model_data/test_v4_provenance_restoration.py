@@ -12,16 +12,18 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data import v4_provenance_restoration as restoration
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
-EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
-PROVENANCE = ROOT / "data/projects/open_model_data/provenance"
-CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-CONFIG = PROVENANCE / "v4_provenance_restoration_config_v1.json"
-LOCATOR_CONFIG = EVIDENCE / "source_work_locator_config_v1.json"
-INDEX = PROVENANCE / "v4_provenance_restoration_index_v1.jsonl"
-UNRESOLVED = PROVENANCE / "v4_provenance_restoration_unresolved_v1.json"
-RECEIPT = PROVENANCE / "v4_provenance_restoration_receipt_v1.json"
+CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
+CONFIG = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json")
+LOCATOR_CONFIG = resolve_open_model_path("data/projects/open_model_data/evidence/source_work_locator_config_v1.json")
+INDEX = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl")
+UNRESOLVED = resolve_open_model_path(
+    "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json"
+)
+RECEIPT = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json")
+COMPACT = resolve_open_model_path("data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl")
 
 
 def _database(root: Path) -> Path:
@@ -34,9 +36,39 @@ def _database(root: Path) -> Path:
         connection.executemany(
             "INSERT INTO literary_texts (source_file, work_id, source_url, title, author, year, genre, language_period, text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("lit-a", "work-a", "https://example.test/a.pdf#page=1", "Title A", "Author A", 1900, "poetry", "modern", "LITERARY SECRET"),
-                ("lit-a", "work-a", "https://example.test/a.pdf#page=2", "Title A", "Author A", 1900, "poetry", "modern", "LITERARY SECRET"),
-                ("lit-b", "work-b", None, "Title B", "Author B", 1700, "chronicle", "middle_ukrainian", "LITERARY SECRET"),
+                (
+                    "lit-a",
+                    "work-a",
+                    "https://example.test/a.pdf#page=1",
+                    "Title A",
+                    "Author A",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
+                (
+                    "lit-a",
+                    "work-a",
+                    "https://example.test/a.pdf#page=2",
+                    "Title A",
+                    "Author A",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
+                (
+                    "lit-b",
+                    "work-b",
+                    None,
+                    "Title B",
+                    "Author B",
+                    1700,
+                    "chronicle",
+                    "middle_ukrainian",
+                    "LITERARY SECRET",
+                ),
             ],
         )
         connection.execute(
@@ -56,7 +88,17 @@ def _database(root: Path) -> Path:
         )
         connection.execute(
             "INSERT INTO external_articles VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            ("ext", "https://example.test/a", "https://example.test/a", "Article", "Speaker", "example.test", "2026-01-01", "channel", "EXTERNAL SECRET"),
+            (
+                "ext",
+                "https://example.test/a",
+                "https://example.test/a",
+                "Article",
+                "Speaker",
+                "example.test",
+                "2026-01-01",
+                "channel",
+                "EXTERNAL SECRET",
+            ),
         )
         connection.execute("CREATE TABLE wikipedia (fetched_at TEXT, title TEXT, url TEXT, text TEXT)")
         connection.execute(
@@ -108,14 +150,26 @@ def _build(root: Path) -> dict:
 
 
 def _index_rows(root: Path) -> tuple[dict, list[dict]]:
-    lines = (root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl").read_text(
-        encoding="utf-8"
-    ).splitlines()
+    lines = (
+        resolve_open_model_path(
+            "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl", repo=root
+        )
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
     return json.loads(lines[0]), [json.loads(line) for line in lines[1:]]
 
 
+def _out(root: Path, name: str) -> Path:
+    return resolve_open_model_path(f"data/projects/open_model_data/provenance/{name}", repo=root)
+
+
 def _artifact(root: Path, name: str) -> dict:
-    return json.loads((root / f"data/projects/open_model_data/provenance/{name}").read_text(encoding="utf-8"))
+    return json.loads(
+        resolve_open_model_path(f"data/projects/open_model_data/provenance/{name}", repo=root).read_text(
+            encoding="utf-8"
+        )
+    )
 
 
 def test_committed_config_validates_against_contract() -> None:
@@ -124,6 +178,10 @@ def test_committed_config_validates_against_contract() -> None:
     assert not list(validator.iter_errors(json.loads(CONFIG.read_text())))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+)
 def test_committed_artifacts_are_schema_valid_and_snapshot_bound() -> None:
     """PROV-4 on committed evidence: structure, hashes, binding; full verify runs in build tests."""
     schema = json.loads(CONTRACT.read_text())
@@ -131,9 +189,7 @@ def test_committed_artifacts_are_schema_valid_and_snapshot_bound() -> None:
     header = json.loads(lines[0])
     header_validator = Draft202012Validator({"$ref": "#/$defs/indexHeader", "$defs": schema["$defs"]})
     assert not list(header_validator.iter_errors(header))
-    snapshot_header = json.loads(
-        (EVIDENCE / "source_work_locator_index_v1.compact.jsonl").read_text(encoding="utf-8").splitlines()[0]
-    )
+    snapshot_header = json.loads(COMPACT.read_text(encoding="utf-8").splitlines()[0])
     assert header["snapshot"]["semantic_jsonl_sha256"] == snapshot_header["semantic_jsonl_sha256"]
     assert header["records"] == len(lines) - 1
     rows_bytes = "".join(line + "\n" for line in lines[1:]).encode("utf-8")
@@ -199,7 +255,12 @@ def test_build_excludes_stem_private_caption_and_non_view_families(tmp_path: Pat
     exclusions = {(entry["basis"], entry["scope"]): entry for entry in receipt["selection"]["exclusions"]}
     stem = exclusions[("stem_operator_exclusion_2026-09-10", "public_textbooks")]
     assert stem["rows"] == 1 and stem["subjects"] == {"algebra": 1}
-    assert exclusions[("video_captions_and_transcripts_excluded_by_operator_decision_2026-09-10", "external_articles")]["rows"] == 1
+    assert (
+        exclusions[("video_captions_and_transcripts_excluded_by_operator_decision_2026-09-10", "external_articles")][
+            "rows"
+        ]
+        == 1
+    )
     assert exclusions[("not_a_selected_consumer_view_for_the_first_eligible_cohort", "wikipedia")]["rows"] == 1
     private = exclusions[("private_teaching_material_operator_exclusion_2026-09-10", "db.textbooks.private")]
     assert len(private["sources"]) == 8
@@ -233,8 +294,8 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
     first = _build(root)
     paths = [
         root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
-        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json",
-        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json",
+        _out(root, "v4_provenance_restoration_unresolved_v1.json"),
+        _out(root, "v4_provenance_restoration_receipt_v1.json"),
     ]
     before = [path.read_bytes() for path in paths]
     second = _build(root)
@@ -245,13 +306,12 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
 def test_no_corpus_text_leaks_into_artifacts(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    provenance = root / "data/projects/open_model_data/provenance"
     for name in (
         "v4_provenance_restoration_index_v1.jsonl",
         "v4_provenance_restoration_unresolved_v1.json",
         "v4_provenance_restoration_receipt_v1.json",
     ):
-        content = (provenance / name).read_text(encoding="utf-8")
+        content = _out(root, name).read_text(encoding="utf-8")
         assert "SECRET" not in content
 
 
@@ -370,9 +430,7 @@ def test_verify_detects_tampered_index_and_reordered_rows(tmp_path: Path) -> Non
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
 
 
-def test_atomic_publication_failure_preserves_prior_outputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_atomic_publication_failure_preserves_prior_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _environment(tmp_path)
     _build(root)
     index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
@@ -390,10 +448,9 @@ def test_atomic_publication_failure_preserves_prior_outputs(
 
 def _reseal_tampered_artifacts(root: Path) -> None:
     """Helper to coherently reseal hashes across index header, unresolved report, and receipt."""
-    provenance = root / "data/projects/open_model_data/provenance"
-    index_path = provenance / "v4_provenance_restoration_index_v1.jsonl"
-    report_path = provenance / "v4_provenance_restoration_unresolved_v1.json"
-    receipt_path = provenance / "v4_provenance_restoration_receipt_v1.json"
+    index_path = _out(root, "v4_provenance_restoration_index_v1.jsonl")
+    report_path = _out(root, "v4_provenance_restoration_unresolved_v1.json")
+    receipt_path = _out(root, "v4_provenance_restoration_receipt_v1.json")
 
     lines = index_path.read_text(encoding="utf-8").splitlines()
     header = json.loads(lines[0])
@@ -459,7 +516,10 @@ def test_verify_rejects_fabricated_textbook_domain(tmp_path: Path) -> None:
     found = False
     for i in range(1, len(lines)):
         row = json.loads(lines[i])
-        if row["cohort_id"] == "public-textbooks-non-stem-non-ocr" and row["classification"]["domain"]["status"] == "restored":
+        if (
+            row["cohort_id"] == "public-textbooks-non-stem-non-ocr"
+            and row["classification"]["domain"]["status"] == "restored"
+        ):
             current_val = row["classification"]["domain"]["value"]
             row["classification"]["domain"]["value"] = "ekonomika" if current_val != "ekonomika" else "pravoznavstvo"
             lines[i] = restoration.canonical_json(row)
@@ -516,7 +576,10 @@ def test_verify_rejects_partial_selection(tmp_path: Path) -> None:
     lines = [lines[0], lines[1], lines[2]]
     index.write_text("\n".join(lines) + "\n", encoding="utf-8")
     _reseal_tampered_artifacts(root)
-    with pytest.raises(restoration.RestorationError, match=r"disagrees with expected selection|does not match complete eligible selection"):
+    with pytest.raises(
+        restoration.RestorationError,
+        match=r"disagrees with expected selection|does not match complete eligible selection",
+    ):
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
 
 
@@ -536,7 +599,7 @@ def test_verify_rejects_duplicate_locator(tmp_path: Path) -> None:
 def test_verify_rejects_divergent_receipt_selection_or_exclusions(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    receipt_path = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json"
+    receipt_path = _out(root, "v4_provenance_restoration_receipt_v1.json")
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     receipt["selection"]["cohorts"][0]["selected_rows"] = 999
     receipt_path.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
@@ -589,11 +652,16 @@ def test_acquisition_plan_rejects_missing_or_invalid_reconciliation_details() ->
     }
     # Missing unresolved key
     with pytest.raises(restoration.RestorationError, match="missing unresolved detail key"):
-        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": []}}})
+        restoration._acquisition_plan(
+            cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": []}}}
+        )
 
     # Non-list unresolved key
     with pytest.raises(restoration.RestorationError, match="is not a list"):
-        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}})
+        restoration._acquisition_plan(
+            cohort_with_unresolved,
+            {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}},
+        )
 
 
 def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:

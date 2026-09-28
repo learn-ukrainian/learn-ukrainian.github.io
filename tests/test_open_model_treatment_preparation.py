@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.prepare_treatment import (
     TreatmentError,
     build_safety_probes,
@@ -14,8 +15,8 @@ from scripts.projects.open_model_data.prepare_treatment import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
-TREATMENTS = ROOT / "data/projects/open_model_data/treatments"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+TREATMENTS = REGISTRY_OPEN_MODEL_DATA_DIR / "treatments"
 
 
 def _validate(schema_name: str, artifact_name: str) -> dict:
@@ -133,8 +134,12 @@ def test_safety_probe_builder_is_deterministic_and_partition_bound(tmp_path: Pat
     clean_id = _validation_id("clean")
     protected_id = _validation_id("protected")
     training_id = _training_id("training")
-    clean_sentences = [f"Це перевірене українське речення номер {index} для незмінного контрольного прикладу." for index in range(120)]
-    protected_sentences = [f"У цьому реченні захищено слово цитата{index} і решта контексту лишається видимою." for index in range(180)]
+    clean_sentences = [
+        f"Це перевірене українське речення номер {index} для незмінного контрольного прикладу." for index in range(120)
+    ]
+    protected_sentences = [
+        f"У цьому реченні захищено слово цитата{index} і решта контексту лишається видимою." for index in range(180)
+    ]
     clean_text = " ".join(clean_sentences)
     protected_text = " ".join(protected_sentences)
     masks: list[dict] = []
@@ -156,7 +161,9 @@ def test_safety_probe_builder_is_deterministic_and_partition_bound(tmp_path: Pat
     ]
     faithful_path = tmp_path / "faithful.jsonl"
     modern_path = tmp_path / "modern.jsonl"
-    faithful_path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in faithful_rows), encoding="utf-8")
+    faithful_path.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in faithful_rows), encoding="utf-8"
+    )
     modern_path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in modern_rows), encoding="utf-8")
     first_output = tmp_path / "first.jsonl"
     first_receipt = tmp_path / "first.receipt.json"

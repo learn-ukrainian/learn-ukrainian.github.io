@@ -179,7 +179,31 @@ def test_xdist_worker_takes_no_snapshot_and_never_enforces(repo: Path, monkeypat
     guard.pytest_sessionfinish(session, 0)
 
     assert not hasattr(session.config, guard._CONTENT_TREE_SNAPSHOT_KEY)
+    assert not hasattr(session.config, guard._LEXICON_FIXTURE_SNAPSHOT_KEY)
     assert session.exitstatus == pytest.ExitCode.OK
+
+
+def test_session_fails_when_a_tracked_lexicon_fixture_changes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = tmp_path / "repo"
+    tracked = root / "tests" / "fixtures" / "lexicon" / "runner_pr1" / "baseline.sha256"
+    tracked.parent.mkdir(parents=True)
+    tracked.write_text("sealed\n", encoding="utf-8")
+    _git(root, "init", "-q")
+    _git(root, "-c", "user.name=t", "-c", "user.email=t@example.com", "add", ".")
+    _git(root, "-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "init")
+    monkeypatch.setattr(guard, "_REPO_ROOT", root)
+    session = _session()
+    guard.pytest_sessionstart(session)
+    tracked.write_text("rewritten\n", encoding="utf-8")
+
+    guard.pytest_sessionfinish(session, 0)
+
+    out = capsys.readouterr().out
+    assert session.exitstatus == pytest.ExitCode.TESTS_FAILED
+    assert "lexicon fixture seal" in out
+    assert "tests/fixtures/lexicon/runner_pr1/baseline.sha256" in out
 
 
 def test_session_outside_git_is_a_noop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

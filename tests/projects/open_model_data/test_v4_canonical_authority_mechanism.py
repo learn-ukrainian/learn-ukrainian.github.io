@@ -6,15 +6,11 @@ observations are produced in ``test_v4_runner_origin_mechanism.py``.
 
 from __future__ import annotations
 
-import atexit
 import json
-import shutil
-import tempfile
 from pathlib import Path
 from typing import Any
 
 import _v4_a7_real_slot_fixture as fx
-import _v4_packaged_runtime_fixture as _packaged_runtime
 import pytest
 from test_v4_runner_origin_mechanism import (
     FIXTURE_MODEL,
@@ -72,63 +68,11 @@ _OWNED_PG = None
 _OWNED_WHEEL = None
 
 
-@pytest.fixture(autouse=True)
-def _owned_resources(pg_cluster, built_wheel, monkeypatch):
+@pytest.fixture
+def owned_resources(pg_cluster, built_wheel, monkeypatch):
     monkeypatch.setitem(globals(), "_OWNED_PG", pg_cluster)
     monkeypatch.setitem(globals(), "_OWNED_WHEEL", built_wheel)
-
-
-# ``pinned_profile`` rebuilds a byte-identical CPython runtime closure (stdlib
-# zip, ``ldd`` discovery, interpreter copies, sha256 digests) on every call --
-# ~1.3s per test for bytes that never change. Only ``sources_url`` varies, so
-# the closure is built once per process and every caller still receives its own
-# fresh ``profile.json`` (fresh URL, fresh digest) referencing the shared
-# read-only closure. Tests corrupt PG rows and records, never the closure.
-_REAL_PINNED_PROFILE = _packaged_runtime.pinned_profile
-_PROFILE_CLOSURES: dict[tuple[bool, bool, bool, bool], dict[str, Any]] = {}
-_PROFILE_CLOSURE_ROOT: Path | None = None
-
-
-def _profile_closure_root() -> Path:
-    global _PROFILE_CLOSURE_ROOT
-    if _PROFILE_CLOSURE_ROOT is None:
-        _PROFILE_CLOSURE_ROOT = Path(tempfile.mkdtemp(prefix="v4-profile-closure-"))
-        atexit.register(shutil.rmtree, _PROFILE_CLOSURE_ROOT, ignore_errors=True)
-    return _PROFILE_CLOSURE_ROOT
-
-
-def _shared_closure_pinned_profile(
-    root: Path,
-    *,
-    sources_url: str,
-    defect: bool = False,
-    reviewer_sources: bool = True,
-    reviewer_negative: bool = False,
-    reviewer_invalid: bool = False,
-) -> Path:
-    key = (defect, reviewer_sources, reviewer_negative, reviewer_invalid)
-    profile = _PROFILE_CLOSURES.get(key)
-    if profile is None:
-        closure_root = _profile_closure_root() / f"closure-{len(_PROFILE_CLOSURES)}"
-        closure_root.mkdir(parents=True)
-        built = _REAL_PINNED_PROFILE(
-            closure_root,
-            sources_url=sources_url,
-            defect=defect,
-            reviewer_sources=reviewer_sources,
-            reviewer_negative=reviewer_negative,
-            reviewer_invalid=reviewer_invalid,
-        )
-        profile = json.loads(built.read_text(encoding="utf-8"))
-        _PROFILE_CLOSURES[key] = profile
-    path = Path(root) / "profile.json"
-    path.write_text(json.dumps({**profile, "sources_url": sources_url}), encoding="utf-8")
-    return path
-
-
-@pytest.fixture(autouse=True)
-def _share_profile_closure(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(_packaged_runtime, "pinned_profile", _shared_closure_pinned_profile)
+    return pg_cluster, built_wheel
 
 
 def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -286,7 +230,7 @@ def test_issue_author_execution_receipt_signature_accepts_only_task_and_run_id()
     assert list(inspect.signature(sources_authority.issue_verifier_attestation).parameters) == ["invocation_id"]
 
 
-def test_issue_author_execution_receipt_refuses_an_unknown_task_run_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_author_execution_receipt_refuses_an_unknown_task_run_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     def _boom(role: str) -> tuple[str, str]:
         raise AssertionError("key access must never happen for an unresolved observation")
 
@@ -296,7 +240,7 @@ def test_issue_author_execution_receipt_refuses_an_unknown_task_run_before_key_a
         fleet_execution.issue_author_execution_receipt(task_id="ghost", run_id="ghost")
 
 
-def test_issue_author_execution_receipt_refuses_without_a_provisioned_production_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_author_execution_receipt_refuses_without_a_provisioned_production_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     """Unmonkeypatched key custody: the real ``load_production_signing_key``
     always refuses in mechanism-only production (no key file exists)."""
     binding, _record = _recorded_author_record(tmp_path, monkeypatch)
@@ -305,7 +249,7 @@ def test_issue_author_execution_receipt_refuses_without_a_provisioned_production
         fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
 
 
-def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     """The full chain: a genuine runner-owned execution produces the
     observation, the production issuer resolves it by opaque id alone, and
     repeat issuance is byte-identical."""
@@ -325,14 +269,14 @@ def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_pat
     assert receipt == again, "repeat issuance against the identical resolved observation must reproduce byte for byte"
 
 
-def test_issue_reviewer_execution_receipt_refuses_an_author_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_reviewer_execution_receipt_refuses_an_author_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(fleet_execution.FleetExecutionError, match="unknown task_id/run_id"):
         fleet_execution.issue_reviewer_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
 
 
-def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(fleet_execution.FleetExecutionError, match="unknown task_id/run_id"):
@@ -340,7 +284,7 @@ def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Pat
 
 
 @pytest.mark.parametrize("mutation", [{"status": "running"}, {"return_code": 1}, {"completion_state": "failed"}, {"terminal_event_observed": False}])
-def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any]) -> None:
+def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any], owned_resources) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     # Adversarially corrupt an actual parent-produced record in this owned PG
     # cluster. Keep its task/run/attempt, so rejection must inspect the record.
@@ -360,7 +304,7 @@ def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(t
 # --- canonical store: idempotency / conflict / rollback ---------------------
 
 
-def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.ExecutionObservationConflictError, match="different execution observation"):
@@ -374,7 +318,7 @@ def test_execution_observation_resolves_none_for_an_unknown_key(tmp_path: Path) 
         assert store.resolve_v4_execution_observation(task_id="nope", run_id="nope", role="author") is None
 
 
-def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     """Validation runs before the DB is touched -- a rejected write leaves
     no partial row behind (rollback/failure handling)."""
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
@@ -387,14 +331,14 @@ def test_execution_observation_write_rejects_a_malformed_record_before_any_persi
         assert store.resolve_v4_execution_observation(task_id="task-malformed", run_id=base["run_id"], role="author") is None
 
 
-def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="reviewer-only"):
             v4_store._persist_execution_observation({**base, "task_id": "t-x", "verdict": "PASS"}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
 
 
-def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     incomplete = {**base, "task_id": "t-y", "role": "reviewer", "authorship_receipt_sha256": AUTHORSHIP_SHA, "rubric_sha256": RUBRIC_SHA, "verdict": None}
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
@@ -402,7 +346,7 @@ def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_p
             v4_store._persist_execution_observation(incomplete, conn=conn, is_pg=store.authority.value == "pg", commit=False)
 
 
-def test_execution_observation_store_is_isolated_by_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_execution_observation_store_is_isolated_by_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store:
         assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="reviewer") is None
@@ -564,16 +508,20 @@ def _patch_sources(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, key_loade
         fx.install_policy_resource(monkeypatch, tmp_path, trust_policy[0])
 
 
-def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_access(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources, prepared
+) -> None:
     ArtifactStore(root=tmp_path).close()
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="unknown invocation_id"):
         sources_authority.issue_verifier_attestation(invocation_id="ghost")
+    _assert_shared_sources_server_dsn_isolation(tmp_path, owned_resources, monkeypatch, prepared)
 
 
-def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pg_cluster, prepared) -> None:
+def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources, prepared) -> None:
     from _v4_packaged_runtime_fixture import record_sources_without_terminal
-    record = record_sources_without_terminal(tmp_path, pg_cluster, monkeypatch, prepared, supported=False)
+    pg, _wheel = owned_resources
+    record = record_sources_without_terminal(tmp_path, pg, monkeypatch, prepared, supported=False)
     assert record is not None
     assert record["success"] is False
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for a failed invocation")))
@@ -581,9 +529,10 @@ def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp
         sources_authority.issue_verifier_attestation(invocation_id=record["invocation_id"])
 
 
-def test_issue_verifier_attestation_refuses_without_a_terminal_author_observation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pg_cluster, prepared) -> None:
+def test_issue_verifier_attestation_refuses_without_a_terminal_author_observation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources, prepared) -> None:
     from _v4_packaged_runtime_fixture import record_sources_without_terminal
-    record = record_sources_without_terminal(tmp_path, pg_cluster, monkeypatch, prepared, supported=True)
+    pg, _wheel = owned_resources
+    record = record_sources_without_terminal(tmp_path, pg, monkeypatch, prepared, supported=True)
     assert record is not None
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access without a terminal author join")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="no terminal author execution"):
@@ -756,7 +705,7 @@ def test_a3_production_entrypoints_accept_no_signing_key_argument() -> None:
     {"status": "running"}, {"return_code": 1}, {"completion_state": "failed"},
     {"terminal_event_observed": False}, {"attempt_id": "foreign-attempt"},
 ])
-def test_sources_issuer_refuses_corrupted_actual_author_join_before_key_access(tmp_path, monkeypatch, mutation):
+def test_sources_issuer_refuses_corrupted_actual_author_join_before_key_access(tmp_path, monkeypatch, mutation, owned_resources):
     import json
 
     binding, original = _recorded_author_record(tmp_path, monkeypatch)
@@ -771,3 +720,57 @@ def test_sources_issuer_refuses_corrupted_actual_author_join_before_key_access(t
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for corrupted join")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="no terminal author execution"):
         sources_authority.issue_verifier_attestation(invocation_id=invocation["invocation_id"])
+
+
+def _assert_shared_sources_server_dsn_isolation(
+    tmp_path: Path, owned_resources, monkeypatch: pytest.MonkeyPatch, prepared
+) -> None:
+    """The shared server reads each request's current credential, including after a rejected DSN."""
+    import urllib.error
+    import urllib.request
+
+    from _v4_packaged_runtime_fixture import RuntimeResources
+    from learn_ukrainian_v4_runtime import sources_transport
+    from psycopg.conninfo import make_conninfo
+    from test_v4_operation_lifecycle import claim, role_connection
+
+    pg, _wheel = owned_resources
+    root1 = tmp_path / "test1"
+    root1.mkdir()
+    io1 = RuntimeResources(root1, pg, monkeypatch)
+    with role_connection(pg, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
+
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}).encode()
+    request = urllib.request.Request(
+        io1.url,
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+            "Authorization": "Bearer " + owned["capability_token"],
+        },
+    )
+
+    def available() -> bool:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            return any(tool["name"] == "verify_word" for tool in json.load(response)["result"]["tools"])
+
+    assert available()
+    root2 = tmp_path / "test2"
+    root2.mkdir()
+    with monkeypatch.context() as other_config:
+        io2 = RuntimeResources(root2, pg, other_config)
+        assert io2.url == io1.url
+        wrong_role_path = root2 / "wrong_role.dsn"
+        wrong_role_path.write_text(make_conninfo(pg.info.dsn, user="hramatka_v4_control_writer"))
+        wrong_role_path.chmod(0o400)
+        other_config.setattr(sources_transport, "credential_path", lambda: wrong_role_path)
+        assert sources_transport.credential_path() != root1 / "hramatka_v4_sources_writer.dsn"
+        with pytest.raises(urllib.error.HTTPError) as exc_info:
+            urllib.request.urlopen(request, timeout=5)
+        assert exc_info.value.code == 401
+        io2.close()
+
+    assert available()
+    io1.close()

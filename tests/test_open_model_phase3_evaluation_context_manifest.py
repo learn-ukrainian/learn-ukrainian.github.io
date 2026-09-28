@@ -10,9 +10,10 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as manifest
 from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ua_context
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json"
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json"
 
 
 def _text(family: str, ordinal: int) -> str:
@@ -691,7 +692,7 @@ def test_production_manifest_against_drive_custody() -> None:
         drive / "backups/phase3-6375/20260811T090325Z/phase3-v3-prefreeze-20260812T024213Z/ua-gec-context-closure-v2"
     )
     backup_dir = drive / "backups/phase3-6375/20260813T220000Z/phase3-evaluation-context-manifest-v1"
-    public_receipt = ROOT / "data/projects/open_model_data/inventory/phase3_evaluation_context_manifest_receipt_v1.json"
+    public_receipt = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
     if not tarball.exists() or not closure.exists():
         pytest.skip("Drive custody artifacts unavailable")
     if backup_dir.exists() and (backup_dir / manifest.PRIVATE_FILENAME).exists():

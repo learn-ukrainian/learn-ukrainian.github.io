@@ -87,6 +87,73 @@ def test_p3_scan_finds_segment_joins_and_paths_import(tmp_path: Path) -> None:
     assert {"base:data-segment-join", "base:open_model_data.paths"} <= labels
 
 
+def test_p3_scan_covers_split_bases_and_non_python_consumers(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    table = tmp_path / "registry/artifacts/classification-v1.tsv"
+    table.parent.mkdir(parents=True)
+    table.write_text(
+        "path\tclass\tgroup\ndata/projects/open_model_data/components/grammar/grammar.json\tA\tpayload\n",
+        encoding="utf-8",
+    )
+    base_names = (
+        "REGISTRY_OPEN_MODEL_DATA_DIR",
+        "ARTIFACT_OPEN_MODEL_DATA_DIR",
+        "REGISTRY_COMPONENTS_DIR",
+        "ARTIFACT_COMPONENTS_DIR",
+        "REGISTRY_DECOLONIZATION_DIR",
+        "ARTIFACT_DECOLONIZATION_DIR",
+        "REGISTRY_IDIOMS_DIR",
+        "ARTIFACT_IDIOMS_DIR",
+        "REGISTRY_GRAMMAR_DIR",
+        "ARTIFACT_GRAMMAR_DIR",
+        "REGISTRY_TEXTBOOKS_DIR",
+        "ARTIFACT_TEXTBOOKS_DIR",
+        "REGISTRY_DIALECTS_DIR",
+        "ARTIFACT_DIALECTS_DIR",
+        "REGISTRY_RELEASE_DIR",
+        "ARTIFACT_RELEASE_DIR",
+        "REGISTRY_CORRECTION_PROTECTION_DIR",
+        "ARTIFACT_CORRECTION_PROTECTION_DIR",
+        "REGISTRY_ARCHIVE_DIR",
+        "ARTIFACT_ARCHIVE_DIR",
+        "REGISTRY_ARCHIVED_ULDR_V1_DIR",
+        "ARTIFACT_ARCHIVED_ULDR_V1_DIR",
+        "REGISTRY_QUARANTINED_HISTORICAL_DIR",
+        "ARTIFACT_QUARANTINED_HISTORICAL_DIR",
+    )
+    sources = {
+        "scripts/paths.py": "\n".join(f"{name} = object()" for name in base_names),
+        # The code cell is intentionally raw notebook JSON, not extracted or
+        # normalized Python; literal scanning must still find it.
+        "notebooks/train.ipynb": (
+            '{"cells":[{"cell_type":"code","source":["open(\\"'
+            "data/projects/open_model_data/components/grammar/grammar.json"
+            '\\")"]}],"metadata":{},"nbformat":4,"nbformat_minor":5}'
+        ),
+        # This models a packaged asset allowlist containing a managed path.
+        "packages/model/assets.json": ('{"include":["data/projects/open_model_data/components/grammar/grammar.json"]}'),
+    }
+    for suffix in (".json", ".txt", ".cfg", ".ini", ".astro", ".mdx", ".md"):
+        sources[f"config/reference{suffix}"] = "data/projects/open_model_data/components/grammar/grammar.json\n"
+    sources["Dockerfile"] = "COPY data/projects/open_model_data/components/grammar/grammar.json /app/\n"
+    sources["Makefile"] = "INPUT=data/projects/open_model_data/components/grammar/grammar.json\n"
+    for name, content in sources.items():
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    _git(tmp_path, "add", ".")
+
+    rows = scan_inventory(tmp_path, phase="P3", table=table)
+    found = {(row["artifact"], row["consumer"]) for row in rows}
+    for name in base_names:
+        assert (f"base:{name}", "scripts/paths.py") in found
+    for name in sources:
+        if name == "scripts/paths.py":
+            continue
+        assert ("data/projects/open_model_data/components/grammar/grammar.json", name) in found
+    assert "OPEN_MODEL_DATA_DIR" in KNOWN_BASES
+
+
 def test_scan_finds_moved_registry_twin_of_kept_paths(tmp_path: Path) -> None:
     _git(tmp_path, "init", "-q")
     table = tmp_path / "registry/artifacts/classification-v1.tsv"

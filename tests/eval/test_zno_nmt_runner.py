@@ -170,15 +170,15 @@ def test_preflight_does_not_export_endpoint_or_key(monkeypatch: pytest.MonkeyPat
     assert capability["capability"] == "chat-http-controller-mediated"
 
 
-def test_mcp_identity_hashes_actual_safe_corpus_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_mcp_identity_accepts_default_state_identity_and_hashes_every_field(monkeypatch: pytest.MonkeyPatch) -> None:
     identity = {
         "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
+        "sources_db_meta_identity": {"scheme": "file-meta-v1", "sha256": "d" * 64},
         "sources_db_bytes": 123,
         "vesum_db_sha256": "c" * 64,
         "vesum_db_bytes": 456,
     }
-    calls: list[str] = []
+    calls: list[tuple[str, dict[str, Any]]] = []
     replies = iter(
         [
             {"result": {"serverInfo": {"name": "Sources"}}},
@@ -192,14 +192,38 @@ def test_mcp_identity_hashes_actual_safe_corpus_identity(monkeypatch: pytest.Mon
     )
 
     def request(_url: str, payload: dict[str, Any], _timeout: int, _session: str | None = None):
-        calls.append(payload["method"])
+        calls.append((payload["method"], payload))
         return next(replies), "session"
 
     monkeypatch.setattr(adapters, "_mcp_request", request)
     tools, identity_sha = adapters._mcp_list_tools("https://sources.invalid/mcp", 5)
     assert [tool["name"] for tool in tools] == ["verify_word", "mcp_server_identity"]
     assert identity_sha == adapters.digest(identity)
-    assert calls == ["initialize", "notifications/initialized", "tools/list", "tools/call"]
+    assert [method for method, _payload in calls] == ["initialize", "notifications/initialized", "tools/list", "tools/call"]
+    assert calls[-1][1]["params"]["arguments"] == {}
+
+
+def test_mcp_identity_rejects_unknown_fields() -> None:
+    identity = {
+        "server_code_sha256": "a" * 64,
+        "sources_db_meta_identity": {"scheme": "file-meta-v1", "sha256": "d" * 64},
+        "vesum_db_sha256": "c" * 64,
+        "unexpected": "field",
+    }
+    response = {"result": {"content": [{"type": "text", "text": json.dumps(identity)}]}}
+    assert adapters._safe_mcp_server_identity(response) is None
+
+
+def test_mcp_identity_still_accepts_legacy_five_key_payload() -> None:
+    identity = {
+        "server_code_sha256": "a" * 64,
+        "sources_db_sha256": "b" * 64,
+        "sources_db_bytes": 123,
+        "vesum_db_sha256": "c" * 64,
+        "vesum_db_bytes": 456,
+    }
+    response = {"result": {"content": [{"type": "text", "text": json.dumps(identity)}]}}
+    assert adapters._safe_mcp_server_identity(response) == adapters.digest(identity)
 
 
 def test_mcp_missing_identity_is_unknown_not_serverinfo_hash(monkeypatch: pytest.MonkeyPatch) -> None:

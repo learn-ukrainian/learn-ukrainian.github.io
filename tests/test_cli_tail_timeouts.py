@@ -44,7 +44,9 @@ def test_channel_context_timeout_returns_editor_failure(
 def test_writer_matrix_timeout_returns_failed_bench_cell(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     calls: list[dict[str, object]] = []
     project_root = tmp_path / "project"
-    project_root.mkdir()
+    interpreter = project_root / ".venv" / "bin" / "python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text("", encoding="utf-8")
     monkeypatch.setattr(writer_matrix, "PROJECT_ROOT", project_root)
     monkeypatch.setattr(writer_matrix.subprocess, "run", _raise_timeout(calls))
 

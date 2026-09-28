@@ -450,7 +450,7 @@ def resolve_launcher_host_id() -> str:
     """Resolve the launcher host id from the canonical occupancy configuration."""
     explicit = os.environ.get("LU_MONITOR_HOST_ID")
     if explicit is not None:
-        return explicit or "local"
+        return explicit if explicit and _opaque_host_id(explicit) else "local"
 
     driver_host_id = os.environ.get(ENV_DRIVER_HOST_ID, "").strip().lower()
     if driver_host_id and _opaque_host_id(driver_host_id):

@@ -12,11 +12,12 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR, resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json"
-POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
-ROLE = ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_heldout_partition_bundle_v1.schema.json"
+POLICY = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_near_duplicate_policy_v1.json"
+ROLE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_functional_role_contract_v2_1.json"
 EXECUTION_METADATA = {
     "provider": "local",
     "started_at": "2026-08-09T00:00:00Z",
@@ -164,8 +165,8 @@ def _build_fixture_root(tmp_path: Path) -> Path:
         "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json",
         "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json",
     ):
-        source = ROOT / relative
-        target = root / relative
+        source = REGISTRY_OPEN_MODEL_DATA_DIR / Path(relative).relative_to("data/projects/open_model_data")
+        target = root / "registry" / Path(relative).relative_to("data")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(source.read_bytes())
 
@@ -294,7 +295,10 @@ def _build_fixture_root(tmp_path: Path) -> Path:
         },
     }
     _write(
-        root / "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
+        resolve_open_model_path(
+            "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
+            repo=root,
+        ),
         known_answers,
     )
     return root
@@ -312,9 +316,9 @@ def _build_fixture_artifacts(root: Path) -> tuple[Path, Path]:
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -330,9 +334,9 @@ def _verify_fixture_artifacts(root: Path, private: Path, public: Path, *, requir
         schema_path=root / SCHEMA.relative_to(ROOT),
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         sources_db=root / "data/sources.db",
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
@@ -374,7 +378,17 @@ def test_reconstruction_preserves_empty_source_lang_and_rejects_non_strings(tmp_
             )
             connection.execute(
                 "INSERT INTO ua_gec_errors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (1, "synthetic error", "synthetic correction", "G/Case", "doc", "annotator", "gec/train", 1, source_lang),
+                (
+                    1,
+                    "synthetic error",
+                    "synthetic correction",
+                    "G/Case",
+                    "doc",
+                    "annotator",
+                    "gec/train",
+                    1,
+                    source_lang,
+                ),
             )
         payload = {
             "id": 1,
@@ -416,9 +430,9 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -433,9 +447,9 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -486,7 +500,10 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
     heldout._assert_no_forbidden_public_fields(public_receipt)
     assert public_receipt["capability"]["state"] == "NOT_YET_LABELLED_OR_ACTIVATED"
     assert public_receipt["zero_overlap"]["test_excluded_from_author_clearance"] is True
-    assert public_receipt["role_binding"] == {"role_id": "heldout_steward", "task_id": "phase3-v2-1-heldout-stewardship"}
+    assert public_receipt["role_binding"] == {
+        "role_id": "heldout_steward",
+        "task_id": "phase3-v2-1-heldout-stewardship",
+    }
     assert public_receipt["action_receipt"]["combined_contract_sha256"] == heldout.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
     body = public / "public_receipt_v1.json"
     assert "alpha beta" not in body.read_text(encoding="utf-8")
@@ -519,9 +536,9 @@ def test_private_seal_tamper_byte_locator_fingerprint_fail(tmp_path: Path) -> No
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -676,7 +693,7 @@ def test_public_only_verification_recomputes_action_identity(tmp_path: Path) -> 
 
 def test_v1_role_contract_and_v2_1_binding_drift_fail_closed() -> None:
     role_contract = heldout.read_json(ROLE)
-    legacy = heldout.read_json(ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json")
+    legacy = heldout.read_json(REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_role_contract_v1.json")
     with pytest.raises(heldout.PartitionError, match="functional-role"):
         heldout.verify_role_binding(legacy)
 
@@ -799,7 +816,9 @@ def test_verify_recomputes_author_clearance_and_live_contract_bindings(tmp_path:
         _verify_fixture_artifacts(root, private, public)
 
     _build_fixture_artifacts(root)
-    eval_contract = root / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
+    eval_contract = (
+        root / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
+    )
     eval_contract.write_text(eval_contract.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     with pytest.raises(heldout.PartitionError, match="evaluation-contract hash drift"):
         _verify_fixture_artifacts(root, private, public)
@@ -841,9 +860,9 @@ def test_malformed_comparison_fail_closed_and_source_drift(tmp_path: Path) -> No
             public_dir=root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1",
             role_contract_path=root / ROLE.relative_to(ROOT),
             eval_contract_path=root
-            / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+            / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
             coverage_contract_path=root
-            / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+            / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
             near_dup_policy_path=root / POLICY.relative_to(ROOT),
             schema_path=root / SCHEMA.relative_to(ROOT),
             skip_source_freeze_git_binding=True,

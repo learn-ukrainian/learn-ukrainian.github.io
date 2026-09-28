@@ -54,6 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -110,6 +111,7 @@ Issue: #1184, #7230.
 from __future__ import annotations
 
 import argparse
+import ast
 import contextlib
 import functools
 import hashlib
@@ -143,8 +145,9 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
     ensure_scratch_root,
@@ -2017,7 +2020,8 @@ def _ensure_sibling_repo_worktree(
     base: str = "main",
     dry_run: bool = False,
     run_nonce: str | None = None,
-) -> tuple[Path, str, dict[str, Any]]:
+    detached: bool = False,
+) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
     Public-primary helpers (sparse checkout, data symlinks, mirror-aware
@@ -2034,7 +2038,7 @@ def _ensure_sibling_repo_worktree(
         worktree_path.relative_to(root)
     except ValueError as exc:
         raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
-    worktree_branch = _derive_worktree_branch(agent, task_id)
+    worktree_branch = None if detached else _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
         "rebased": False,
@@ -2045,6 +2049,8 @@ def _ensure_sibling_repo_worktree(
         "repo_root": str(root),
     }
     if worktree_path.exists():
+        if detached:
+            raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
@@ -2083,7 +2089,11 @@ def _ensure_sibling_repo_worktree(
     if _resolve_sha(root, origin_ref) is None:
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
-    add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
+    add_command = ["git", "worktree", "add"]
+    if detached:
+        add_command.extend(["--detach", str(worktree_path), origin_ref])
+    else:
+        add_command.extend(["-b", worktree_branch, str(worktree_path), origin_ref])
     _add_reserved_worktree(
         add_command,
         repo_root=root,
@@ -2124,8 +2134,8 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # ``workspace-write`` and ``danger`` let the delegated worker mutate files. Both
 # MUST run inside an isolated dispatch worktree so those writes never dirty the
 # protected primary checkout — the operator contract must not rely on a model
-# *remembering* the worktree rule. ``read-only`` dispatches are exempt: repo-root
-# preflight and creating a worktree from the primary checkout stay allowed.
+# *remembering* the worktree rule. ``read-only`` dispatches are exempt from
+# this write guard; they get a detached worktree by default or an explicit cwd.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 # This is deliberately a narrow, directive-only check.  It catches briefs
@@ -2897,6 +2907,10 @@ def _resolve_verified_worktree_path(path: Path) -> Path | None:
     """
     wc = _load_worktree_containment()
     target = wc.canonicalize(path)
+    if target == wc.canonicalize(_REPO_ROOT):
+        # The exact primary root cannot be an added worktree. This common
+        # explicit --cwd path needs no git subprocess before worker spawn.
+        return None
     start = target if target.exists() else target.parent
     try:
         main_root = wc.resolve_main_root(start)
@@ -4663,6 +4677,46 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     return entries, None
 
 
+def _read_only_task_record_snapshot(
+    task_id: str,
+    baseline: dict[str, tuple[str, str | None]] | None = None,
+) -> tuple[dict[str, tuple[str, str | None]] | None, str | None]:
+    """Fingerprint results of tasks already terminal when the review starts.
+
+    A sibling task owns its live record and may finish during a review. Only
+    changes to a pre-existing terminal result are attributable here. A new
+    run_nonce means ``--force-new`` replaced the hot record, not that the old
+    result was edited.
+    """
+    own_stem = _state_path(task_id).stem
+    snapshot: dict[str, tuple[str, str | None]] = {}
+    try:
+        paths = (
+            list(tasks_dir().glob("*.result"))
+            if baseline is None
+            else [tasks_dir() / Path(name).name for name in baseline]
+        )
+    except OSError as exc:
+        return None, f"task record snapshot failed: {type(exc).__name__}: {exc}"
+    for path in paths:
+        if path.stem == own_stem:
+            continue
+        state = _read_state_json(path.with_suffix(".json"))
+        if baseline is None and (state is None or state.get("status") not in _TERMINAL_STATUSES):
+            continue
+        name = f"batch_state/tasks/{path.name}"
+        nonce = state.get("run_nonce") if state else None
+        if baseline is not None and nonce != baseline[name][1]:
+            continue
+        try:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            # The task may have been archived or reaped during the scan.
+            continue
+        snapshot[name] = (digest, nonce)
+    return snapshot, None
+
+
 # Harness-owned Entire residue under the checkout (ADR-018 capture). These paths
 # are gitignored and appear in the read-only snapshot because the guard includes
 # ignored files (#4840). Treating them as task mutations false-fails healthy
@@ -4681,13 +4735,15 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # Gitignored-by-default dirs a worker's own tooling writes (#6860). Observed
 # false-fails: ``.agent/sessions/*.json``, fleet-comms sqlite ``-shm/-wal``,
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
-# (harness/session/cache residue), not task-authored leaks such as ``.cache/``
-# (#4840). Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# (harness/session/cache residue). Membership is load-bearing (#8516 AC-02):
+# an ignored ``!!`` path escapes the mutation guard ONLY through this
+# classification, so task-authored leak targets like ``.cache/`` (#4840),
+# root-level ``/*.py`` scratch, and ``/scratch/`` deliberately stay OUT and
+# now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
-# ``.claude/hooks/``) must still fail a read-only task. Exempt an exact
-# subpath later if a genuine runtime false-positive appears. Tracked
-# files under these names still fail via porcelain status.
+# ``.claude/hooks/``) must still fail a read-only task in its own worktree.
+# Tracked files under these names still fail via porcelain status.
 _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
     {
         ".agent",
@@ -4758,9 +4814,11 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     """Return whether a path is harness/tooling runtime state, not repo content.
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
-    sidecars that false-failed successful read-only tasks (#6860). Task-authored
-    ignored paths such as ``.cache/`` are classified separately as diagnostic
-    notes (#4840, #7253).
+    sidecars that false-failed successful read-only tasks (#6860). Since #8516
+    AC-02 this classification is ALSO the only way an ignored ``!!`` path
+    escapes the mutation guard: task-authored ignored leaks outside it (the
+    review-a3-api-ui ``/*.py`` + ``/scratch/`` scratch class; ``.cache/``
+    residue from #4840/#7253) now fail the task like any other mutation.
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -4818,7 +4876,12 @@ def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
     return state[:2] in _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES
 
 
-def _is_read_only_runtime_state_exemption(path: str, *, before_state: str | None, after_state: str | None) -> bool:
+def _is_read_only_runtime_state_exemption(
+    path: str,
+    *,
+    before_state: str | None,
+    after_state: str | None,
+) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
     if not _is_read_only_runtime_state_path(path):
         return False
@@ -4846,13 +4909,25 @@ def _is_read_only_ignored_mutation(*, before_state: str | None, after_state: str
 
 
 def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
-    """Return changed paths Git reports as ignored, for diagnostic notes only."""
+    """Return changed ignored paths the guard deliberately tolerates as noise.
+
+    Diagnostic companion to :func:`_read_only_mutation_paths` (#8516): an
+    ignored ``!!`` status alone no longer exempts a path, so this list holds
+    exactly the ignored deltas that were ALSO recognized as harness/runtime
+    state — the build-noise class a read-only dispatch legitimately cannot
+    own (``.pytest_cache/``, ``batch_state/``, ``.entire/`` telemetry, …).
+    """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
         and _is_read_only_ignored_mutation(
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
+        and _is_read_only_runtime_state_exemption(
+            path,
             before_state=before.get(path),
             after_state=after.get(path),
         )
@@ -4863,29 +4938,27 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
-    Gitignored paths are excluded because ``git status`` marks them ``!!`` (or
-    omits them without ``--ignored``); they are recorded by
-    :func:`_read_only_ignored_mutation_paths` instead. Runtime-state exemptions
-    remain for older snapshots and for paths whose status is not ignored.
-    Tracked paths under runtime prefixes (including force-added files) still
-    trip the guard.
+    A changed path is exempt only when it is recognized harness/runtime noise
+    (:func:`_is_read_only_runtime_state_exemption`: gitignored tooling residue
+    such as ``.pytest_cache/`` or ``batch_state/``) or a newly appeared
+    sibling dispatch sandbox under ``.worktrees/dispatch/<agent>/<task>/``
+    (#6938 defense in depth; since #7124 the snapshot itself already drops
+    every ``.worktrees/`` path). Tracked paths under runtime prefixes
+    (including force-added files) still trip the guard.
 
-    Newly appeared sibling dispatch sandboxes under
-    ``.worktrees/dispatch/<agent>/<task>/`` are also excluded (#6938): concurrent
-    ``git worktree add`` on the shared primary checkout is not this task's
-    mutation. Since #7124 the snapshot itself already drops every
-    ``.worktrees/`` path; this exemption remains as defense in depth for
-    snapshots persisted by older workers.
+    #8516 AC-02: an ignored ``!!`` status BY ITSELF no longer exempts a path.
+    The review-a3-api-ui leak showed why: the agy worker wrote its scratch
+    files at the checkout root and under ``scratch/``, where ``.gitignore``
+    (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
+    as diagnostic-only "ignored mutations" while the task settled ``done``.
+    Now any other new, modified, or deleted path — tracked, untracked, or
+    ignored — fails the task and is named.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
-        and not _is_read_only_ignored_mutation(
-            before_state=before.get(path),
-            after_state=after.get(path),
-        )
         and not _is_read_only_runtime_state_exemption(
             path,
             before_state=before.get(path),
@@ -5012,6 +5085,15 @@ def _build_worker_env(
     if _dispatch_cap_plugin not in _pytest_plugins:
         _pytest_plugins.append(_dispatch_cap_plugin)
     worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
+    # #8795: "ci.pytest_dispatch_cap" only resolves via pyproject.toml's
+    # `pythonpath = ["scripts"]`, which is rootdir-relative and inactive for a
+    # pytest process started elsewhere (e.g. a test's own `pytester` subprocess
+    # in a temp dir). PYTHONPATH is an interpreter-level env var, so it makes
+    # the import resolve regardless of that nested pytest's rootdir.
+    _worker_scripts_dir = str((worktree_path if worktree_path is not None else _REPO_ROOT) / "scripts")
+    _worker_pythonpath = [part for part in worker_env.get("PYTHONPATH", "").split(os.pathsep) if part]
+    if _worker_scripts_dir not in _worker_pythonpath:
+        worker_env["PYTHONPATH"] = os.pathsep.join([_worker_scripts_dir, *_worker_pythonpath])
     _inject_gh_token_for_agent(worker_env, dispatch_agent)
     _scrub_unusable_gh_config_dir(worker_env)
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
@@ -5864,7 +5946,9 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # Default cone sparse-checkout exclusions for dispatch worktrees.
 # Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
 # of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
-# data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
+# data/lexicon/ 277MB. The migrated open-model registry payload tree is also
+# excluded independently from registry/ so registry/lexicon remains available.
+# Dropping these trees leaves a default dispatch under
 # 450MB (re-measured 2026-09-25: 287MB). Opt back in with --sparse-include
 # or --full-checkout. wiki/ is still a top-level tree
 # (`git ls-tree -d HEAD wiki`), so it stays excluded.
@@ -5892,6 +5976,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "wiki",
         "data/projects",
         "data/lexicon",
+        "registry/projects",
     }
 )
 _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
@@ -5944,8 +6029,70 @@ def _sparse_reinclude_prefix_matches(path: str, prefix: str) -> bool:
     return prefix.endswith("_") and path.startswith(prefix)
 
 
+def _assignment_mentions_marker(module_path: Path, name: str, markers: tuple[str, ...]) -> bool:
+    """True when ``name = ...`` in ``module_path`` embeds a marker string."""
+    try:
+        source = module_path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except (OSError, SyntaxError, UnicodeError):
+        return False
+    for stmt in tree.body:
+        targets: list[ast.expr] = []
+        value: ast.expr | None = None
+        if isinstance(stmt, ast.Assign):
+            targets = list(stmt.targets)
+            value = stmt.value
+        elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+            targets = [stmt.target]
+            value = stmt.value
+        if value is None:
+            continue
+        if any(isinstance(target, ast.Name) and target.id == name for target in targets):
+            rendered = ast.unparse(value)
+            if any(marker in rendered for marker in markers):
+                return True
+    return False
+
+
+def _imported_binding_mentions_marker(text: str, markers: tuple[str, ...]) -> bool:
+    """True when the file uses an imported name whose value embeds a marker.
+
+    Content-gated sparse stems used to require the literal ``data/projects``
+    in the owned file. Readers that reach the tree through an imported path
+    constant (``foundry.DEFAULT_V011_MANIFEST``) still need that tree.
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return False
+    imported: dict[str, tuple[str, str]] = {}
+    for stmt in tree.body:
+        if isinstance(stmt, ast.ImportFrom) and stmt.module and stmt.level == 0:
+            for alias in stmt.names:
+                if alias.name == "*":
+                    continue
+                imported[alias.asname or alias.name] = (stmt.module, alias.name)
+    needed: set[tuple[str, str]] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.value.id)
+            if binding is None:
+                continue
+            module, imported_name = binding
+            needed.add((f"{module}.{imported_name}", node.attr))
+        elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+            binding = imported.get(node.id)
+            if binding is not None:
+                needed.add(binding)
+    for dotted, attr in needed:
+        module_path = _REPO_ROOT / Path(*dotted.split(".")).with_suffix(".py")
+        if module_path.is_file() and _assignment_mentions_marker(module_path, attr, markers):
+            return True
+    return False
+
+
 def _reinclude_file_confirms(path: str, prefix: str) -> bool:
-    """Content-gated stems must mention the tree in the owned file."""
+    """Content-gated stems must read the tree, directly or via an import."""
     markers = _SPARSE_REINCLUDE_CONTENT_MARKERS.get(prefix)
     if not markers:
         return True
@@ -5954,15 +6101,18 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
         text = file_path.read_text(encoding="utf-8")
     except OSError:
         return False
-    return any(marker in text for marker in markers)
+    if any(marker in text for marker in markers):
+        return True
+    return _imported_binding_mentions_marker(text, markers)
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
     """Normalize --sparse-include values to unique default-excluded trees.
 
     Fail closed: explicit values must be names in the default exclusion set
-    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``). Other
-    nested paths and unknown names raise :class:`ValueError`.
+    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``,
+    ``registry/projects``). Other nested paths and unknown names raise
+    :class:`ValueError`.
     """
     if not raw:
         return ()
@@ -5974,14 +6124,14 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
         if not name or name in {".", ".."} or name.startswith("../") or "/../" in f"/{name}/":
             raise ValueError(
                 f"--sparse-include {item!r} is empty or invalid; "
-                "pass a default-excluded tree such as 'curriculum', 'wiki', or 'data/projects'"
+                "pass a default-excluded tree such as 'curriculum', 'wiki', 'data/projects', "
+                "or 'registry/projects'"
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
             if "/" in name:
-                top = name.split("/", 1)[0]
                 raise ValueError(
                     f"--sparse-include {item!r} must name a default-excluded tree "
-                    f"(top-level example: {top!r}; nested exclusions: data/projects, data/lexicon). "
+                    "(nested exclusions: data/projects, data/lexicon, registry/projects). "
                     f"Allowed: {allowed}"
                 )
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
@@ -6086,30 +6236,33 @@ def _dispatch_sparse_cone_dirs(
     top_dirs: Sequence[str],
     data_children: Sequence[str],
     exclude: Collection[str],
+    registry_children: Sequence[str] = (),
 ) -> tuple[list[str], list[str]]:
     """Build a cone include list that drops excluded dirs at directory level.
 
-    Nested exclusions (``data/projects``) are expressed by listing the other
-    ``data/*`` children instead of the parent ``data`` directory. Cone mode
-    then keeps files that sit directly in ``data/``.
+    Nested exclusions (``data/projects``, ``data/lexicon``, and
+    ``registry/projects``) are expressed by listing the sibling directories
+    instead of their parent. Cone mode then keeps files directly in each
+    parent and preserves the other sibling trees.
     """
     exclude_set = set(exclude)
+    nested_children = {"data": data_children, "registry": registry_children}
     cone: list[str] = []
     excluded: list[str] = []
     for name in top_dirs:
-        if name != "data":
+        if name not in nested_children:
             if name in exclude_set:
                 excluded.append(name)
             else:
                 cone.append(name)
             continue
-        if "data" in exclude_set:
-            excluded.append("data")
+        if name in exclude_set:
+            excluded.append(name)
             continue
-        children = list(data_children)
+        children = list(nested_children[name])
         dropped = [child for child in children if child in exclude_set]
         if not dropped:
-            cone.append("data")
+            cone.append(name)
             continue
         for child in children:
             if child in exclude_set:
@@ -6128,7 +6281,9 @@ def _apply_dispatch_sparse_checkout(
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
+    (~633MB), ``data/lexicon/`` (~277MB), and ``registry/projects/``. The
+    latter is excluded as a nested tree so ``registry/lexicon/`` stays
+    available. When ``curriculum`` stays
     excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
     directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
     and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
@@ -6179,7 +6334,8 @@ def _apply_dispatch_sparse_checkout(
     exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
     all_dirs = _list_worktree_top_dirs(worktree_path)
     data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
-    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
+    registry_children = _list_worktree_dirs(worktree_path, "registry/") if "registry" in all_dirs else []
+    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude, registry_children)
     manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
     if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
         included.append(manifest_cone)
@@ -6267,7 +6423,7 @@ def _record_worktree_local_venv_warning(
     if local_venv.get("present"):
         print(
             "⚠️  dispatch worktree contains a local .venv; do not use, copy, or "
-            f"replace it. Use the primary interpreter {_REPO_ROOT / '.venv' / 'bin' / 'python'} "
+            f"replace it. Use the primary interpreter {project_interpreter()} "
             f"instead: {worktree_path / '.venv'} ({local_venv.get('kind')}).",
             file=sys.stderr,
         )
@@ -6291,6 +6447,7 @@ def _resolve_worktree_base_sha(
     branch: str | None,
     allow_rebase: bool = True,
     pinned_head_sha: str | None = None,
+    detached: bool = False,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -6301,6 +6458,8 @@ def _resolve_worktree_base_sha(
     """
     worktree_path = _normalize_worktree_path(raw_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
+    if detached and worktree_path.exists():
+        raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
 
     if worktree_path.exists():
         if not worktree_path.is_dir():
@@ -6409,7 +6568,8 @@ def _ensure_worktree(
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
     run_nonce: str | None = None,
-) -> tuple[Path, str, dict[str, Any]]:
+    detached: bool = False,
+) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
@@ -6427,7 +6587,9 @@ def _ensure_worktree(
     """
     worktree_path = _normalize_worktree_path(raw_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
-    worktree_branch = requested_branch or _derive_worktree_branch(agent, task_id)
+    if detached and requested_branch:
+        raise ValueError("detached worktree cannot attach a branch")
+    worktree_branch = None if detached else requested_branch or _derive_worktree_branch(agent, task_id)
     layout = _classify_worktree_layout(worktree_path)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -6470,6 +6632,8 @@ def _ensure_worktree(
                 )
 
     if worktree_path.exists():
+        if detached:
+            raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
@@ -6573,6 +6737,8 @@ def _ensure_worktree(
         # The branch was resolved before creation. Reset only to that immutable
         # commit, never a ref that might move before creation.
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
+    elif detached:
+        add_command.extend(["--detach", str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     _add_reserved_worktree(
@@ -6661,6 +6827,32 @@ def _augment_prompt_with_worktree(
             '`DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. '
             "This line is optional — its absence never fails the dispatch.\n"
         )
+    # #9057: every worktree dispatch carries one test-scope rule. Write modes
+    # run only the tests for files they changed, including importers of a
+    # changed shared helper; review modes cite CI. The PR's own CI, and the
+    # merge queue on the merged tree, are the full-suite proof — a dispatch
+    # `gh workflow run` does not satisfy the PR's required check.
+    if mode in _WRITE_CAPABLE_MODES:
+        test_scope = (
+            "\n[test scope]\n"
+            "Run only the tests that cover the files you changed, including tests of "
+            "code that imports a changed shared helper, and name those test files explicitly.\n"
+            "Never collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`); "
+            "never `-n auto` or `-n` above 2.\n"
+            "Run tests in the foreground and wait for them "
+            "(never end the turn while a test runs in the background).\n"
+            "The full suite runs in the PR's CI (and again in the merge queue on the merged "
+            "tree) — that is the proof; do not trigger extra full runs. "
+            "Use `gh workflow run ci.yml --ref <branch>` only when the brief explicitly asks "
+            "for it (a branch with no PR yet, a baseline capture, or diagnosis).\n"
+        )
+    else:
+        test_scope = (
+            "\n[test scope]\n"
+            "Do not re-run test suites that the PR's CI runs. Review the diff.\n"
+            "Run at most the specific tests that reproduce a finding you are checking.\n"
+            "Cite CI run ids for suite results.\n"
+        )
     return (
         "[delegate worktree]\n"
         f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
@@ -6674,11 +6866,11 @@ def _augment_prompt_with_worktree(
         "(no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n"
         "\n[shared project interpreter]\n"
         "Never create, copy, symlink, activate, or use a `.venv` inside this worktree. "
-        f"Run every project Python command with `{_REPO_ROOT / '.venv' / 'bin' / 'python'}` "
+        f"Run every project Python command with `{project_interpreter()}` "
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
-        f"{sparse_note}{delivery_note}\n"
+        f"{sparse_note}{test_scope}{delivery_note}\n"
         f"{prompt}"
     )
 
@@ -7088,7 +7280,9 @@ def _run_worker(
     cwd = Path(cwd_str)
     read_only_checkout_pre: dict[str, str] | None = None
     read_only_checkout_post: dict[str, str] | None = None
+    task_records_pre: dict[str, str] | None = None
     read_only_snapshot_error: str | None = None
+    task_records_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
     read_only_ignored_mutation_paths: list[str] = []
     # Set only after digest.json is on disk. Phase files stay until the
@@ -7096,6 +7290,10 @@ def _run_worker(
     clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+        task_records_snapshot_error = task_records_error
+        if read_only_snapshot_error is None:
+            read_only_snapshot_error = task_records_error
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
         state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
         _write_state_atomic(state_path, state)
@@ -7420,6 +7618,11 @@ def _run_worker(
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            task_records_post, task_records_error = _read_only_task_record_snapshot(task_id, task_records_pre)
+            if task_records_snapshot_error is None:
+                task_records_snapshot_error = task_records_error
+            if post_snapshot_error is None:
+                post_snapshot_error = task_records_error
             _write_read_only_snapshot_sidecar(task_id, "post", read_only_checkout_post)
             if read_only_snapshot_error is None and post_snapshot_error is not None:
                 read_only_snapshot_error = post_snapshot_error
@@ -7432,6 +7635,15 @@ def _run_worker(
                 read_only_mutation_paths = _read_only_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
+                )
+            if task_records_pre is not None and task_records_post is not None:
+                read_only_mutation_paths = sorted(
+                    set(read_only_mutation_paths)
+                    | {
+                        path
+                        for path, fingerprint in task_records_post.items()
+                        if fingerprint[0] != task_records_pre[path][0]
+                    }
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
@@ -7450,7 +7662,7 @@ def _run_worker(
                 final_state.pop("read_only_checkout_pre", None)
                 final_state.pop("read_only_checkout_post", None)
                 clean_snapshots_to_discard = snapshot_dir
-            if read_only_mutation_paths:
+            if read_only_mutation_paths or task_records_snapshot_error:
                 final_status = "failed"
                 ok_outcome = False
 
@@ -7653,6 +7865,8 @@ def _run_worker(
             # stderr) behind the mutation list. The paths stay independently
             # queryable via ``read_only_mutation_paths`` either way.
             last_error = f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
+        if task_records_snapshot_error:
+            last_error = f"{last_error}; {task_records_snapshot_error}" if last_error else task_records_snapshot_error
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
 
@@ -7786,10 +8000,12 @@ def _run_worker(
         substitution = result_substitution
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
+    runtime_substitution = substitution
+    substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
     cursor_model_state = _cursor_model_state(
         agent=agent,
         result=result,
-        substitution=substitution,
+        substitution=runtime_substitution if isinstance(runtime_substitution, dict) else None,
     )
 
     final_state.update(
@@ -8006,6 +8222,7 @@ def _record_worktree_prep_failure(
     returncode_reason: str = "worktree preparation failed",
     worktree_prep_cleanup: dict[str, Any] | None = None,
     worktree_prep: dict[str, Any] | None = None,
+    substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
@@ -8078,7 +8295,7 @@ def _record_worktree_prep_failure(
         "returncode_reason": returncode_reason,
         "last_error": _first_error_line(error_str) or error_str,
         "exit_code": None,
-        "substitution": None,
+        "substitution": substitution,
         "agent_alias_note": agent_alias_note,
     }
     if requested_harness is not None:
@@ -8125,6 +8342,7 @@ def _record_forward_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when VPS forward dispatch is refused."""
     return _record_worktree_prep_failure(
@@ -8152,6 +8370,7 @@ def _record_forward_failure(
         initial_response_timeout=initial_response_timeout,
         max_budget_usd=max_budget_usd,
         returncode_reason="forward configuration failed",
+        substitution=substitution,
     )
 
 
@@ -8283,6 +8502,17 @@ def _dispatch(
 
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
+
+    caller_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
+    if caller_task_id:
+        caller_state = _read_state(_state_path(caller_task_id))
+        if caller_state is None or caller_state.get("mode") not in _WRITE_CAPABLE_MODES:
+            print(
+                f"❌ dispatch refused from task {caller_task_id!r}: "
+                "read-only or unavailable parent task record cannot start a dispatch.",
+                file=sys.stderr,
+            )
+            return 2
 
     try:
         attribution = resolve_invocation_attribution(
@@ -8515,6 +8745,10 @@ def _dispatch(
             file=sys.stderr,
         )
         return 2
+    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
+    if detached_read_only:
+        worktree_arg = "auto"
+
     if not fleet_repo.default and not worktree_arg and not args.cwd:
         print(
             "❌ sibling --repo requires --worktree (auto) or --cwd at an existing sibling worktree.",
@@ -8545,10 +8779,19 @@ def _dispatch(
         print(acp_runtime_error, file=sys.stderr)
         return 2
 
+    if args.mode == "read-only" and worktree_arg and worktree_arg != "auto":
+        candidate = _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
+        primary_root = target_repo_root.resolve()
+        if candidate == primary_root or (
+            candidate.is_relative_to(primary_root)
+            and not candidate.is_relative_to(primary_root / ".worktrees")
+        ):
+            print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
+            return 2
+
     # Write-capable modes (workspace-write / danger) must resolve to a verified
-    # added worktree — never the primary checkout (#4445). Read-only dispatches
-    # stay exempt so repo-root preflight keeps working. Evaluated before any
-    # side effects so a rejection leaves no worktree/branch/log residue.
+    # added worktree — never the primary checkout (#4445). An explicit read-only
+    # --cwd may still select the primary checkout. Evaluated before side effects.
     write_cwd_error = _resolve_write_cwd_error(
         mode=args.mode,
         worktree_arg=worktree_arg,
@@ -8597,10 +8840,8 @@ def _dispatch(
     # silently overwrote batch_state/tasks/<id>.json + .result and
     # destroyed receipt evidence. Must run BEFORE ownership admission
     # so a rejected duplicate cannot DELETE/replace live write claims
-    # (#5643 CF F001). --force-new archives first; it never clobbers.
-    # --force-new has no escape for a live running/spawning pid: archiving
-    # that record and spawning again is the duplicate-worker race the
-    # pre-#6980 guard refused with no override (#6981 F1 / #5643 CF F001).
+    # (#5643 CF F001). --force-new archives only the caller's terminal
+    # record; a dead pid does not make a nonterminal record safe to replace.
     existing = _read_state(state_path)
     record_exists = state_path.exists()
     result_exists = _result_path(task_id).exists()
@@ -8620,25 +8861,25 @@ def _dispatch(
             print(
                 f"❌ task_id {task_id!r} is already {status}{pid_part}. "
                 "Dispatch refuses to reuse a task-id in any state. "
-                "Use a unique --task-id, or pass --force-new to archive "
-                "the prior record+result first.",
+                "Use a unique --task-id; --force-new can archive only "
+                "the caller's own terminal record+result.",
                 file=sys.stderr,
             )
             return 2
-        status = existing.get("status") if existing else None
-        pid = existing.get("pid") if existing else None
-        live_pid = False
-        if status in ("running", "spawning") and not isinstance(pid, bool):
-            try:
-                live_pid = isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
-            except (TypeError, ValueError):
-                live_pid = False
-        if live_pid:
+        # Only the hot record establishes ownership. Archived siblings are
+        # history and may belong to earlier runs by another initiator.
+        prior_status = existing.get("status") if existing else None
+        prior_initiator = existing.get("initiator") if existing else None
+        if (record_exists or result_exists) and (
+            prior_status not in _RUNTIME_TMP_TERMINAL_STATUSES
+            or prior_initiator in (None, "unknown")
+            or prior_initiator != attribution.initiator
+        ):
             print(
-                f"❌ task_id {task_id!r} is already {status} (pid={pid}) "
-                "and that process is still alive. --force-new has no escape "
-                "for live tasks; refusing to archive a live worker and spawn "
-                "a duplicate.",
+                f"❌ task_id {task_id!r} cannot be reused with --force-new: "
+                f"prior status {prior_status!r} must be terminal and prior initiator "
+                f"{prior_initiator!r} must match a known caller {attribution.initiator!r}. "
+                "The prior record and result were not archived.",
                 file=sys.stderr,
             )
             return 2
@@ -8666,6 +8907,41 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+    if review_attempt:
+        # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
+        # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
+        from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+
+        try:
+            prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        except AttemptIdsUnreadableError as err:
+            print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
+            return 2
+        if prompt_review_id is None or prompt_attempt_id is None:
+            # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
+            # ledger this dispatch prepares — the failure #8996 was filed for.
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
+                "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
+        id_mismatches = [
+            f"{name} prompt={found!r} dispatch={expected!r}"
+            for name, found, expected in (
+                ("review_id", prompt_review_id, review_id),
+                ("attempt_id", prompt_attempt_id, attempt_id),
+            )
+            if found != expected
+        ]
+        if id_mismatches:
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
+                f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
@@ -8722,6 +8998,9 @@ def _dispatch(
     # gemini ~99% remaining the same night `--agent gemini` failed with
     # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
     # not this — there is no CLI left to force.
+    original_agent = args.agent
+    original_model = getattr(args, "model", None)
+    model_resolution: dict[str, Any] = {}
     agent_alias_note: str | None = None
     retired_target = resolve_retired_agent_alias(args.agent)
     requested_agent = args.agent
@@ -8732,9 +9011,24 @@ def _dispatch(
                 file=sys.stderr,
             )
             return 2
+        try:
+            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="retired-cli",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=retired_target,
+            actual_model=retired_model,
+            how=retired_how,
+        )
         agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
         print(
             f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
+            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
             f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
             file=sys.stderr,
         )
@@ -8754,15 +9048,48 @@ def _dispatch(
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
+                _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    provider="openrouter",
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
                 if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
+                else _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
             )
         except BudgetGuardRefuseError as exc:
             print(f"❌ {exc}", file=sys.stderr)
             return 2
     else:
         dispatch_agent = requested_agent
+
+    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
+    if dispatch_agent != original_agent and agent_substitution is None:
+        try:
+            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=dispatch_agent,
+            actual_model=chosen_model,
+            how=chosen_how,
+        )
+        agent_substitution = model_resolution["record"]
+    if agent_substitution is not None:
+        args.model = agent_substitution["actual_model"]
 
     if language_lane and dispatch_agent not in _LANGUAGE_LANES:
         print(
@@ -8822,18 +9149,6 @@ def _dispatch(
                     file=sys.stderr,
                 )
                 return 2
-
-    explicit_model = getattr(args, "model", None)
-    if (
-        explicit_model
-        and dispatch_agent != requested_agent
-        and _adapter_rejects_model(dispatch_agent, str(explicit_model))
-    ):
-        print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
-            file=sys.stderr,
-        )
-        args.model = None
 
     from agent_runtime.telemetry import _resolve_model_from_defaults
 
@@ -8932,6 +9247,7 @@ def _dispatch(
                         ),
                         max_budget_usd=getattr(args, "max_budget_usd", None),
                         output_schema_path=getattr(args, "output_schema", None),
+                        substitution=agent_substitution,
                     )
                     refusal_msg = format_forward_config_refusal(forward_error, host_id=host_id)
                     print(refusal_msg, file=sys.stderr)
@@ -8971,7 +9287,7 @@ def _dispatch(
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
     resolved_worktree_raw: str | None = None
-    if worktree_arg:
+    if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
         resolved_worktree_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
             if worktree_arg == "auto"
@@ -8995,6 +9311,7 @@ def _dispatch(
                     raw_path=resolved_worktree_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
@@ -9030,6 +9347,7 @@ def _dispatch(
                     silence_timeout=silence_timeout,
                     initial_response_timeout=initial_response_timeout,
                     max_budget_usd=max_budget_usd,
+                    substitution=agent_substitution,
                 )
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
@@ -9098,7 +9416,11 @@ def _dispatch(
         dry_run_worktree: Path | None = None
         dry_run_branch: str | None = None
         dry_run_worktree_telemetry: dict[str, Any] = {}
-        if requested_branch:
+        if detached_read_only:
+            # A dry-run describes the eventual checkout without fetching the
+            # base or creating a worktree. Both can spawn git subprocesses.
+            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+        elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
             try:
@@ -9112,6 +9434,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     dry_run=True,
                     full_checkout=full_checkout,
@@ -9178,7 +9501,7 @@ def _dispatch(
                 "returncode_reason": None,
                 "last_error": None,
                 "exit_code": None,
-                "substitution": None,
+                "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
             if requested_harness is not None:
@@ -9297,6 +9620,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
+                    detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
@@ -9310,6 +9634,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
                     run_nonce=run_nonce,
+                    detached=detached_read_only,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -9335,7 +9660,9 @@ def _dispatch(
                 requested_harness=requested_harness,
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
-                worktree_branch=requested_branch or _derive_worktree_branch(dispatch_agent, task_id),
+                worktree_branch=(
+                    None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
+                ),
                 worktree_base_sha=resolved_worktree_base_sha,
                 worktree_base=getattr(args, "base", None) or "main",
                 agent_alias_note=agent_alias_note,
@@ -9346,6 +9673,7 @@ def _dispatch(
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                substitution=agent_substitution,
                 worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
                 worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
             )
@@ -9446,6 +9774,7 @@ def _dispatch(
             silence_timeout=silence_timeout,
             initial_response_timeout=initial_response_timeout,
             max_budget_usd=max_budget_usd,
+            substitution=agent_substitution,
         )
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
@@ -9540,7 +9869,7 @@ def _dispatch(
             "returncode_reason": None,
             "last_error": None,
             "exit_code": None,
-            "substitution": None,
+            "substitution": agent_substitution,
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
@@ -9550,6 +9879,13 @@ def _dispatch(
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
             initial_state["worktree_disallow_reuse"] = True
+            # Binds this task to its review attempt (#9022): the recorder attests a return's prompt hash only
+            # from the task whose record names the same review, attempt and manifest.
+            initial_state["review_attempt"] = {
+                "review_id": review_id,
+                "attempt_id": attempt_id,
+                "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
+            }
         initial_state = _with_optional_research_state(initial_state, research_state)
         if worktree_path is not None and not worktree_path.is_dir():
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
@@ -9605,7 +9941,7 @@ def _dispatch(
         # Python interpreter: the project rule (non-negotiable-rules.md)
         # is to always use .venv/bin/python. delegate.py follows that rule
         # strictly.
-        venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
+        venv_python = project_interpreter()
         python_bin = str(venv_python)
         cmd = [
             python_bin,
@@ -9947,12 +10283,33 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         if lane_l == exclude:
             continue
         status = _budget_lane_status(lane_l, info)
-        will_last = _budget_will_last_to_reset(info)
-        if status in {"hot", "near_cap"} or will_last is False:
+        cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
+        if status in {"hot", "near_cap"} or pace_is_deficit(cb) is True:
             continue
         if status in {"cool", "warm"}:
             cool.append(lane_l)
     return sorted(cool)
+
+
+def _budget_pace(agent_info: dict[str, Any]) -> dict[str, Any] | None:
+    cb = agent_info.get("codexbar")
+    return cb if isinstance(cb, dict) else None
+
+
+def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
+    runtime = agent_info.get("runtime")
+    return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
+
+
+def _pace_expected_pct(pace: dict[str, Any] | None) -> float | None:
+    if not isinstance(pace, dict):
+        return None
+    for key in ("expected_pct", "weekly_expected_pct", "expectedUsedPercent"):
+        value = pace.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        return float(value)
+    return None
 
 
 def _budget_needs_hard_capacity_action(
@@ -9961,16 +10318,36 @@ def _budget_needs_hard_capacity_action(
     will_last: bool | None,
     is_stale: bool,
     records_loaded: int,
+    pace: dict[str, Any] | None = None,
+    headroom_blocked: bool = False,
 ) -> tuple[bool, str]:
-    """Return (needs_action, reason) for near_cap / hot / CodexBar deficit."""
+    """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
+
+    ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
+    hot label is the early-window or on-pace false positive: a pace reading is
+    present and :func:`pace_is_deficit` is not true, and runtime headroom did
+    not set the hot label. A bare ``will_last`` with no pace record still
+    counts only when no pace dict was supplied.
+    """
     if is_stale:
         return False, ""
     # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
     if status == "near_cap" and records_loaded > 0:
         return True, "near_cap (>90% on FRESH snapshot)"
+    if status == "hot" and headroom_blocked:
+        return True, "status=hot"
+    deficit = pace_is_deficit(pace) if pace else None
+    expected = _pace_expected_pct(pace)
+    hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
+    # Hot that the pace rule does not support is the freshly-reset / on-pace
+    # false positive. Runtime headroom hot was returned above.
+    if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
+        return False, ""
+    if deficit is True:
+        return True, "codexbar will_last_to_reset=False (deficit)"
     if status == "hot":
         return True, "status=hot"
-    if will_last is False:
+    if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"
     return False, ""
 
@@ -10020,8 +10397,8 @@ def _discard_model_probe_output(plan: object) -> None:
         return
 
 
-def _adapter_rejects_model(agent: str, model: str) -> bool:
-    """True when the target adapter refuses this explicit model before spawn.
+def _adapter_model_rejection(agent: str, model: str) -> str | None:
+    """Return the adapter's refusal text, or None when this model is not refused.
 
     A successful probe is not a rejection. Any error other than the adapter's
     model ValueError is inconclusive: keep the explicit model instead of
@@ -10033,7 +10410,7 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
     entry = get_agent_entry(agent)
     spec = str(entry.get("adapter") or "")
     if ":" not in spec:
-        return False
+        return None
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
@@ -10049,15 +10426,150 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
         )
     except ValueError as exc:
         text = str(exc)
-        return model in text and ("rejected" in text or "unsupported" in text.lower())
+        if model in text and ("rejected" in text or "unsupported" in text.lower()):
+            return text
+        return None
     except Exception as exc:
         print(
             f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
             file=sys.stderr,
         )
-        return False
+        return None
     _discard_model_probe_output(plan)
-    return False
+    return None
+
+
+def _adapter_rejects_model(agent: str, model: str) -> bool:
+    """True when the target adapter refuses this explicit model before spawn."""
+    return _adapter_model_rejection(agent, model) is not None
+
+
+def _lane_default_model(agent: str) -> str | None:
+    """Registry default for ``agent`` — the dispatch pin, not the seat identity."""
+    from agent_runtime.telemetry import _default_model_for
+
+    return _default_model_for(agent)
+
+
+def _load_budget_substitution_table() -> dict[str, dict[str, str]]:
+    from scripts.review.model_catalog import ModelCatalogError, budget_substitution_table, load_model_catalog
+
+    try:
+        return budget_substitution_table(load_model_catalog())
+    except ModelCatalogError as exc:
+        raise BudgetGuardRefuseError(
+            f"ROUTING REFUSED: model catalog cannot resolve a substitution model: {exc}"
+        ) from exc
+
+
+def _substitution_model_admitted(agent: str, model: str) -> bool:
+    """True when ``model`` is a catalog-or-invocation model for ``agent`` and the adapter does not reject it."""
+    from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, substitution_model_admitted
+
+    try:
+        admitted = substitution_model_admitted(load_model_catalog(), agent, model)
+    except ModelCatalogError as exc:
+        raise BudgetGuardRefuseError(
+            f"ROUTING REFUSED: model catalog cannot resolve a substitution model: {exc}"
+        ) from exc
+    if not admitted:
+        return False
+    return not _adapter_rejects_model(agent, model)
+
+
+def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -> tuple[str, str]:
+    """Map ``explicit_model`` onto ``target_agent``, or use that lane's registry default.
+
+    A mapping row wins when the substitute admits the mapped model. With no
+    explicit model, or an explicit model the substitute adapter does not
+    reject, dispatch uses that lane's registry default. An explicit model
+    with no mapping row that the adapter rejects is refused before spawn:
+    the default must not hide that refusal (retired alias and budget guard).
+
+    Returns ``(model, "mapped"|"catalog-default")``. Raises BudgetGuardRefuseError
+    when the explicit model is rejected, or neither a mapped model nor the
+    default is valid for the substitute.
+    """
+    table = _load_budget_substitution_table().get(target_agent, {})
+    mapped = table.get(explicit_model) if explicit_model else None
+    default = _lane_default_model(target_agent)
+    if mapped and _substitution_model_admitted(target_agent, mapped):
+        return mapped, "mapped"
+    if explicit_model and mapped is None:
+        rejection = _adapter_model_rejection(target_agent, explicit_model)
+        if rejection:
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: substitute "
+                f"--agent {target_agent} rejects explicit --model {explicit_model} "
+                f"({rejection}). Refusing before spawn."
+            )
+    if default and _substitution_model_admitted(target_agent, default):
+        return default, "catalog-default"
+    raise BudgetGuardRefuseError(
+        "ROUTING REFUSED: no valid model for substitute "
+        f"--agent {target_agent} "
+        f"(requested --model {explicit_model or '(none)'}; "
+        f"mapped {mapped or '(none)'}; "
+        f"catalog default {default or '(none)'}). "
+        "Refusing before spawn."
+    )
+
+
+def _substitution_model_phrase(chosen: str, how: str, explicit_model: str | None) -> str:
+    if how == "mapped":
+        return f"--model {chosen} (mapped from {explicit_model})"
+    if explicit_model:
+        return f"--model {chosen} (catalog default; {explicit_model} has no mapping)"
+    return f"--model {chosen} (catalog default)"
+
+
+def _remember_agent_substitution(
+    sink: dict[str, Any] | None,
+    *,
+    source: str,
+    requested_agent: str,
+    requested_model: str | None,
+    actual_agent: str,
+    actual_model: str,
+    how: str,
+) -> None:
+    if sink is None:
+        return
+    sink["applied"] = True
+    sink["model"] = actual_model
+    sink["record"] = {
+        "kind": "agent-substitution",
+        "substituted": True,
+        "source": source,
+        "requested_agent": requested_agent,
+        "actual_agent": actual_agent,
+        "requested_model": requested_model,
+        "actual_model": actual_model,
+        "actual_model_known": True,
+        "model_resolution": how,
+    }
+
+
+def _applied_agent_substitution(resolution: dict[str, Any], dispatch_agent: str) -> dict[str, Any] | None:
+    if not resolution.get("applied"):
+        return None
+    record = resolution.get("record")
+    if not isinstance(record, dict) or record.get("actual_agent") != dispatch_agent:
+        return None
+    return record
+
+
+def _merge_agent_substitution(prior: Any, runtime: Any) -> Any:
+    """Keep a dispatch agent-substitution when later runtime attribution arrives."""
+    if not isinstance(prior, dict) or prior.get("kind") != "agent-substitution":
+        return runtime
+    if not isinstance(runtime, dict):
+        return prior
+    if runtime.get("kind") == "agent-substitution":
+        return runtime
+    merged = dict(prior)
+    merged["runtime_attribution"] = runtime
+    return merged
 
 
 def _resolve_agent_with_budget_guard(
@@ -10065,6 +10577,9 @@ def _resolve_agent_with_budget_guard(
     *,
     provider: str | None = None,
     language_lane: bool = False,
+    requested_model: str | None = None,
+    model_resolution: dict[str, Any] | None = None,
+    origin_agent: str | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -10162,8 +10677,9 @@ def _resolve_agent_with_budget_guard(
                 print(f"Rationale: {rec['rationale']}", file=sys.stderr)
 
     agent_info = agents.get(requested, {}) or {}
-    status = _budget_lane_status(requested, agent_info if isinstance(agent_info, dict) else {})
-    will_last = _budget_will_last_to_reset(agent_info if isinstance(agent_info, dict) else {})
+    agent_dict = agent_info if isinstance(agent_info, dict) else {}
+    status = _budget_lane_status(requested, agent_dict)
+    will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT)
     reserve_relaxes = (
         requested == "codex"
@@ -10194,6 +10710,8 @@ def _resolve_agent_with_budget_guard(
             will_last=will_last,
             is_stale=is_stale,
             records_loaded=records_loaded,
+            pace=_budget_pace(agent_dict),
+            headroom_blocked=_budget_headroom_blocked(agent_dict),
         )
     )
     if not needs_action:
@@ -10219,14 +10737,28 @@ def _resolve_agent_with_budget_guard(
                 is_stale=is_stale,
                 records_loaded=records_loaded,
                 reset_reserve=reserve,
+                requested_model=requested_model,
+                model_resolution=model_resolution,
+                origin_agent=origin_agent or requested,
             )
+        chosen, how = _resolve_substitution_model(sub, requested_model)
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+            f"{_substitution_model_phrase(chosen, how, requested_model)} "
             f"({reason}; "
             f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks). "
             "Substitution noted for operator contract / review independence."
         )
         print(note, file=sys.stderr)
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how=how,
+        )
         if burn is not None:
             print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
         return sub
@@ -10249,15 +10781,20 @@ def _language_lane_substitute(
     is_stale: bool,
     records_loaded: int,
     reset_reserve: dict[str, Any] | None = None,
+    requested_model: str | None = None,
+    model_resolution: dict[str, Any] | None = None,
+    origin_agent: str | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
     seen = {seat}
+    current_model = requested_model
+    origin = origin_agent or requested
     while True:
         info = agents.get(seat, {}) or {}
-        status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
-        will_last = _budget_will_last_to_reset(info if isinstance(info, dict) else {})
         info_dict = info if isinstance(info, dict) else {}
+        status = _budget_lane_status(seat, info_dict)
+        will_last = _budget_will_last_to_reset(info_dict)
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
@@ -10271,6 +10808,8 @@ def _language_lane_substitute(
                 will_last=will_last,
                 is_stale=is_stale,
                 records_loaded=records_loaded,
+                pace=_budget_pace(info_dict),
+                headroom_blocked=_budget_headroom_blocked(info_dict),
             )
         )
         if not needs:
@@ -10282,11 +10821,23 @@ def _language_lane_substitute(
                 f"Language work on --agent {requested} cannot move to "
                 f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
+        chosen, how = _resolve_substitution_model(nxt, current_model)
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
+            f"{_substitution_model_phrase(chosen, how, current_model)} "
             f"({why}; language-lane fallback stays inside claude, codex, agy).",
             file=sys.stderr,
         )
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=origin,
+            requested_model=requested_model,
+            actual_agent=nxt,
+            actual_model=chosen,
+            how=how,
+        )
+        current_model = chosen
         seen.add(nxt)
         seat = nxt
         if len(seen) > len(_LANGUAGE_LANES):
@@ -11028,8 +11579,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Reuse an existing --task-id by first archiving the prior record "
             "and result alongside (never clobber). Required when the task "
-            "record already exists in a non-live state (#6980). Refuses when "
-            "a running/spawning record still has a live pid (#6981 F1)."
+            "record is terminal and has the caller's initiator (#9075). "
+            "Refuses nonterminal or foreign records even when their pid is dead."
         ),
     )
     d.add_argument(
@@ -11109,14 +11660,15 @@ def build_parser() -> argparse.ArgumentParser:
             "Allowlisted fleet repository for worktree creation and GitHub "
             "targeting (#672 P2.1). Keys come from scripts/config/fleet_repos.yaml "
             "(public, infra-private, hramatka). Default: public primary. Sibling "
-            "keys require --worktree (auto) or --cwd; task state stays on the "
+            "write modes require --worktree (auto) or --cwd; task state stays on the "
             "public primary control plane. Legacy manual sibling --cwd flow remains valid."
         ),
     )
     d.add_argument(
         "--cwd",
         default=None,
-        help="Working directory for the worker (default: primary checkout). "
+        help="Working directory for the worker (read-only defaults to a detached dispatch worktree; "
+        "pass --cwd explicitly to use the primary checkout). "
         "For workspace-write/danger it must be a verified added "
         "worktree, never the primary checkout — prefer --worktree. "
         "Sibling-repo flow: prefer `--repo KEY --worktree`, or manual "
@@ -11240,7 +11792,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
             "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
-            "data/projects/ (633MB), and data/lexicon/ (277MB), leaving a default "
+            "data/projects/ (633MB), data/lexicon/ (277MB), and registry/projects/ "
+            "while retaining registry/lexicon/, leaving a default "
             "worktree under 450MB. Use this when the task needs the entire tree."
         ),
     )
@@ -11251,8 +11804,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="DIR",
         help=(
             "Keep a tree that default sparse-checkout would exclude "
-            "(curriculum, wiki, data/projects, data/lexicon). Repeatable. "
-            "Example: --sparse-include data/projects, or --sparse-include curriculum "
+            "(curriculum, wiki, data/projects, data/lexicon, registry/projects). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include registry/projects "
             "for module content. Owned paths under those trees are included automatically."
         ),
     )

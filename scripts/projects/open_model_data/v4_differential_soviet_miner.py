@@ -25,6 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 
 def resolve_data_path(rel_path: str) -> Path:
     """Resolve a relative data path, falling back to git common parent checkout for gitignored files."""
@@ -51,8 +53,12 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "soviet_candidates"
 DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
-CANDIDATE_SCHEMA = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_differential_soviet_candidate.schema.json"
-RECEIPT_SCHEMA = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_differential_soviet_receipt.schema.json"
+CANDIDATE_SCHEMA = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_differential_soviet_candidate.schema.json"
+)
+RECEIPT_SCHEMA = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_differential_soviet_receipt.schema.json"
+)
 
 TOTAL_SUM11_RISK_POOL = 7152
 
@@ -710,20 +716,35 @@ def build_differential_receipt(
     archaisms = sum(1 for c in candidates if c["status"] == AdjudicationStatus.SKRYPNYKIVKA_ARCHAISM_REJECTED.value)
 
     # Invariant checks
-    false_calques = sum(1 for c in candidates if c["is_neologism_whitelisted"] and c["status"] == AdjudicationStatus.CANDIDATE_ADMITTED.value)
+    false_calques = sum(
+        1
+        for c in candidates
+        if c["is_neologism_whitelisted"] and c["status"] == AdjudicationStatus.CANDIDATE_ADMITTED.value
+    )
     if false_calques != 0:
         raise ValueError(f"Invariant violation: {false_calques} false calque flags on whitelisted neologisms!")
 
-    timeout_as_missing = sum(1 for c in candidates if c["r2u_lookup_status"] == R2ULookupStatus.SOURCE_UNAVAILABLE.value and c["status"] == AdjudicationStatus.CANDIDATE_ADMITTED.value)
+    timeout_as_missing = sum(
+        1
+        for c in candidates
+        if c["r2u_lookup_status"] == R2ULookupStatus.SOURCE_UNAVAILABLE.value
+        and c["status"] == AdjudicationStatus.CANDIDATE_ADMITTED.value
+    )
     if timeout_as_missing != 0:
         raise ValueError(f"Invariant violation: {timeout_as_missing} network timeouts treated as missing word proof!")
 
     discovery_candidates = [
-        c for c in candidates
-        if not (c["status"] == AdjudicationStatus.WHITELIST_PRESERVED.value and c["adjudication_category"] == AdjudicationCategory.STANDARD_UKRAINIAN_PRESERVED.value)
+        c
+        for c in candidates
+        if not (
+            c["status"] == AdjudicationStatus.WHITELIST_PRESERVED.value
+            and c["adjudication_category"] == AdjudicationCategory.STANDARD_UKRAINIAN_PRESERVED.value
+        )
     ]
 
-    queried_candidates = sum(1 for c in discovery_candidates if c["r2u_lookup_status"] != R2ULookupStatus.NOT_QUERIED.value)
+    queried_candidates = sum(
+        1 for c in discovery_candidates if c["r2u_lookup_status"] != R2ULookupStatus.NOT_QUERIED.value
+    )
     if len(discovery_candidates) > 0 and queried_candidates == 0:
         raise ValueError("Invariant violation: zero discovery candidates had R2U differential queries performed!")
 
@@ -810,9 +831,11 @@ def run_miner(
 ) -> int:
     """Run Phase 3.4 differential Soviet candidate miner."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    receipt_path = output_dir / "differential_soviet_receipt.json"
-    index_path = output_dir / "differential_soviet_candidates.jsonl"
-    manifest_path = output_dir / "differential_soviet_manifest.json"
+    receipt_path = resolve_open_model_path(output_dir / "differential_soviet_receipt.json")
+    index_path = resolve_open_model_path(output_dir / "differential_soviet_candidates.jsonl")
+    manifest_path = resolve_open_model_path(output_dir / "differential_soviet_manifest.json")
+    for managed_path in (receipt_path, index_path, manifest_path):
+        managed_path.parent.mkdir(parents=True, exist_ok=True)
 
     if verify_only:
         if not receipt_path.exists() or not index_path.exists() or not manifest_path.exists():
@@ -924,7 +947,9 @@ def run_miner(
         manifest_path.write_text(manifest_content, encoding="utf-8")
         receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         if r2u_cache:
-            cache_path.write_text(json.dumps(r2u_cache, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+            cache_path.write_text(
+                json.dumps(r2u_cache, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8"
+            )
 
         print(f"Successfully processed {len(candidates)} entries.")
         print(f"  Admitted candidates: {receipt['counts']['candidates_admitted']}")
@@ -944,7 +969,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Output directory")
     parser.add_argument("--verify-only", action="store_true", help="Verify receipt and hashes without re-mining")
-    parser.add_argument("--no-network", action="store_true", help="Disable live network queries; rely only on local cache")
+    parser.add_argument(
+        "--no-network", action="store_true", help="Disable live network queries; rely only on local cache"
+    )
     args = parser.parse_args(argv)
 
     return run_miner(

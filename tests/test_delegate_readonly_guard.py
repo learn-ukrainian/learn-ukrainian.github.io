@@ -10,9 +10,11 @@ dependencies from tests/test_delegate.py.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,6 +22,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+import agent_runtime.runner as runner
 import delegate
 
 
@@ -173,6 +176,288 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     assert snapshot is not None
     assert "untracked.txt" in snapshot
     assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
+
+
+def test_read_only_worktree_ignores_concurrent_primary_writes(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#9094: the task snapshot covers only its detached worktree."""
+    primary = (tmp_path / "primary").resolve()
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = (tmp_path / "worktree").resolve()
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary, check=True, capture_output=True, timeout=30,
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    task_id = "worktree-concurrent-primary"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+    paths = (
+        ".claude/x.md",
+        ".venv/lib/python3.12/site-packages/package/new.py",
+    )
+
+    def other_process_writes(*_args, **_kwargs):
+        script = """from pathlib import Path
+import sys
+root = Path(sys.argv[1])
+for relative in sys.argv[2:]:
+    target = root / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text('other process\\n', encoding='utf-8')
+"""
+        subprocess.run([sys.executable, "-c", script, str(primary), *paths], check=True, timeout=30)
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=other_process_writes):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == []
+
+
+@pytest.mark.parametrize(
+    "path", ["tracked.txt", "data/projects/hydrated.json", ".claude/x.md", ".venv/package/new.py"]
+)
+def test_read_only_explicit_primary_still_fails_checkout_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
+    """Explicit primary cwd retains the original whole-checkout snapshot."""
+    checkout = (tmp_path / "primary").resolve()
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", checkout)
+    task_id = "primary-own-write"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def worker_writes(*_args, **_kwargs):
+        target = checkout / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("task write\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=worker_writes):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [path]
+    assert state["last_error"] == f"read-only checkout mutation detected: {path}"
+
+
+@pytest.mark.parametrize("path", ["tracked.txt", ".claude/x.md"])
+def test_read_only_worktree_still_fails_own_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
+    """Tracked and untracked writes in the task's worktree are attributable."""
+    primary = (tmp_path / "primary").resolve()
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = (tmp_path / "worktree").resolve()
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    task_id = "worktree-own-state"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def worker_writes(*_args, **_kwargs):
+        target = checkout / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("task write\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=worker_writes):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [path]
+
+
+@pytest.mark.parametrize("edit", ["overwrite", "append"])
+def test_read_only_worker_fails_after_changing_terminal_result(edit, tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_id = "review-task"
+    own_path = delegate._state_path(own_id)
+    delegate._write_state_atomic(own_path, {"task_id": own_id, "cwd": str(checkout)})
+    delegate._write_state_atomic(
+        delegate._state_path("impl-task"),
+        {"task_id": "impl-task", "status": "done", "run_nonce": "first"},
+    )
+    foreign_path = tmp_tasks_dir / "impl-task.result"
+    foreign_path.write_text("original\n", encoding="utf-8")
+
+    def overwrite_foreign_record(*_args, **_kwargs):
+        if edit == "append":
+            with foreign_path.open("a", encoding="utf-8") as output:
+                output.write("appended\n")
+        else:
+            foreign_path.write_text("replaced\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=overwrite_foreign_record):
+        rc = delegate._run_worker(
+            task_id=own_id,
+            agent="grok",
+            prompt="Review the change.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(own_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"batch_state/tasks/{foreign_path.name}"]
+    assert f"batch_state/tasks/{foreign_path.name}" in state["last_error"]
+
+
+def test_read_only_review_ignores_sibling_task_lifecycle(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_path = delegate._state_path("review-task")
+    delegate._write_state_atomic(own_path, {"task_id": "review-task", "cwd": str(checkout)})
+    sibling_path = delegate._state_path("sibling-task")
+    delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "spawning"})
+
+    def finish_sibling(*_args, **_kwargs):
+        delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "running"})
+        sibling_path.with_suffix(".result").write_text("completed\n", encoding="utf-8")
+        delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "done"})
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=finish_sibling):
+        rc = delegate._run_worker(
+            task_id="review-task", agent="grok", prompt="Review.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert delegate._read_state(own_path)["status"] == "done"
+    assert delegate._read_state(own_path)["read_only_mutation_paths"] == []
+
+
+def test_overlapping_read_only_reviews_ignore_each_other(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    for task_id in ("review-a", "review-b"):
+        delegate._write_state_atomic(
+            delegate._state_path(task_id),
+            {"task_id": task_id, "cwd": str(checkout), "status": "spawning"},
+        )
+
+    def run_second_review(*_args, **_kwargs):
+        with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+            second_rc = delegate._run_worker(
+                task_id="review-b", agent="grok", prompt="Review B.", mode="read-only",
+                cwd_str=str(checkout), model=None, hard_timeout=60,
+            )
+        assert second_rc == 0
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=run_second_review):
+        first_rc = delegate._run_worker(
+            task_id="review-a", agent="grok", prompt="Review A.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert first_rc == 0
+    for task_id in ("review-a", "review-b"):
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+
+
+@pytest.mark.parametrize("replacement", [False, True])
+def test_read_only_review_ignores_archived_terminal_result(replacement, tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_path = delegate._state_path("review-task")
+    delegate._write_state_atomic(own_path, {"task_id": "review-task", "cwd": str(checkout)})
+    prior_path = delegate._state_path("finished-task")
+    delegate._write_state_atomic(
+        prior_path, {"task_id": "finished-task", "status": "done", "run_nonce": "old"}
+    )
+    result_path = prior_path.with_suffix(".result")
+    result_path.write_text("old result\n", encoding="utf-8")
+
+    def archive_result(*_args, **_kwargs):
+        prior_path.rename(tmp_tasks_dir / "finished-task.archived.json")
+        result_path.rename(tmp_tasks_dir / "finished-task.archived.result")
+        if replacement:
+            delegate._write_state_atomic(
+                prior_path, {"task_id": "finished-task", "status": "done", "run_nonce": "new"}
+            )
+            result_path.write_text("new result\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=archive_result):
+        rc = delegate._run_worker(
+            task_id="review-task", agent="grok", prompt="Review.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert delegate._read_state(own_path)["read_only_mutation_paths"] == []
+
+
+def test_read_only_record_snapshot_ignores_result_vanishing_during_read(tmp_tasks_dir, monkeypatch):
+    state_path = delegate._state_path("finished-task")
+    delegate._write_state_atomic(state_path, {"task_id": "finished-task", "status": "done"})
+    result_path = state_path.with_suffix(".result")
+    result_path.write_text("original\n", encoding="utf-8")
+    baseline, error = delegate._read_only_task_record_snapshot("review-task")
+    assert error is None
+    assert baseline
+
+    original_read_bytes = Path.read_bytes
+
+    def vanished_on_read(path):
+        if path == result_path:
+            raise FileNotFoundError(result_path)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", vanished_on_read)
+    after, error = delegate._read_only_task_record_snapshot("review-task", baseline)
+    assert error is None
+    assert after == {}
 
 
 def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(tmp_path, monkeypatch):
@@ -399,3 +684,262 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
     last_error = state["last_error"]
     assert "worker killed: out of memory" in last_error
     assert "read-only checkout mutation detected: tracked.txt" in last_error
+
+
+# ---------------------------------------------------------------------------
+# #8516: read-only dispatch must not be able to write into the checkout
+# (AC-02 post-run guard; AC-03 per-lane coverage; AC-01 agy cwd pin)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "grok", "cursor", "kimi"])
+def test_read_only_snapshot_untracked_root_leak_fails_task_per_lane(
+    agent,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#8516 AC-02/AC-03: a fake agent writing an untracked file into the
+    checkout root fails the task with that path named — on every lane.
+
+    Replays the review-a3-api-ui leak shape (``routes_and_dash.txt`` at the
+    checkout root) through the post-run snapshot guard.
+    """
+    checkout = (tmp_path / f"repo-{agent}").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = f"read-only-root-leak-{agent}"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def root_leak(*_args, **_kwargs):
+        (checkout / "routes_and_dash.txt").write_text("Routes found: 3\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=root_leak):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent=agent,
+            prompt="Review the API surface without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["routes_and_dash.txt"]
+    assert state["last_error"] == "read-only checkout mutation detected: routes_and_dash.txt"
+    assert state["read_only_snapshot_retention"] == "full"
+
+
+def test_read_only_snapshot_ignored_scratch_leak_fails_task(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#8516 AC-02: gitignored scratch writes are NOT exempt build noise.
+
+    The exact review-a3-api-ui escape: agy wrote ``check_dead.py``-class
+    files at the checkout root (matched by the repo's ``/*.py`` ignore rule)
+    and under ``scratch/`` — every one landed as ``!!`` and the pre-#8516
+    guard filed them as diagnostic-only "ignored mutations" while the task
+    settled ``done``. They now fail the task and are named.
+    """
+    checkout = (tmp_path / "repo-ignored-scratch").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    gitignore = checkout / ".gitignore"
+    gitignore.write_text(gitignore.read_text(encoding="utf-8") + "/*.py\n/scratch/\n", encoding="utf-8")
+
+    task_id = "read-only-ignored-scratch-leak"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def ignored_scratch_leak(*_args, **_kwargs):
+        (checkout / "check_dead.py").write_text("# scratch\n", encoding="utf-8")
+        scratch = checkout / "scratch"
+        scratch.mkdir()
+        (scratch / "notes.txt").write_text("scratch\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=ignored_scratch_leak):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Inventory the routes without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["check_dead.py", "scratch/notes.txt"]
+    assert state["read_only_ignored_mutation_paths"] == []
+    assert "check_dead.py" in state["last_error"]
+    assert "scratch/notes.txt" in state["last_error"]
+
+
+def test_read_only_snapshot_runtime_noise_still_passes(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#8516 AC-02 boundary: recognized harness/runtime build noise stays exempt."""
+    checkout = (tmp_path / "repo-runtime-noise").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-runtime-noise"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    noise = [".pytest_cache/v/lastfailed", "batch_state/fleet-comms/v1/comms.sqlite3-wal"]
+
+    def runtime_noise_only(*_args, **_kwargs):
+        for relative in noise:
+            target = checkout / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("noise\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=runtime_noise_only):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == noise
+    assert state["last_error"] is None
+
+
+def test_read_only_snapshot_clean_run_passes(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#8516 AC-02: a clean read-only run settles done with empty mutations."""
+    checkout = (tmp_path / "repo-clean").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-clean-run"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    with patch("agent_runtime.runner.invoke", side_effect=lambda *_args, **_kwargs: _finalize_mock_result()):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == []
+    assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
+
+
+# --- #8516 AC-01: runner cwd pin (agy re-anchors its cwd after spawn) -------
+
+_needs_procfs = pytest.mark.skipif(not Path("/proc").is_dir(), reason="cwd pin reads /proc (Linux-only)")
+
+
+@contextlib.contextmanager
+def _sleeping_child(cwd: Path, *argv_prefix: str):
+    argv = list(argv_prefix) or ["sleep", "30"]
+    proc = subprocess.Popen(argv, cwd=str(cwd))
+    try:
+        yield proc
+    finally:
+        proc.kill()
+        proc.wait(timeout=10)
+
+
+@_needs_procfs
+def test_read_only_agy_cwd_pin_scoping(tmp_path):
+    """The pin applies only to dispatch (task_id set) read-only agy spawns."""
+    with _sleeping_child(tmp_path) as proc:
+        assert runner._ChildCwdPin.start(proc=proc, cwd=tmp_path, mode="read-only", agent_name="agy", task_id=None) is None
+        assert (
+            runner._ChildCwdPin.start(proc=proc, cwd=tmp_path, mode="read-only", agent_name="codex", task_id="t") is None
+        )
+        assert runner._ChildCwdPin.start(proc=proc, cwd=tmp_path, mode="workspace-write", agent_name="agy", task_id="t") is None
+        pin = runner._ChildCwdPin.start(proc=proc, cwd=tmp_path, mode="read-only", agent_name="agy", task_id="t")
+        assert pin is not None
+
+
+@_needs_procfs
+def test_read_only_agy_cwd_pin_verifies_child_settled_inside(tmp_path):
+    """A child anchored in the pinned tree verifies on the first check."""
+    with _sleeping_child(tmp_path) as proc:
+        pin = runner._ChildCwdPin.start(proc=proc, cwd=tmp_path, mode="read-only", agent_name="agy", task_id="t")
+        assert pin is not None
+        assert pin.check() is None
+        assert pin.verified is True
+
+
+@_needs_procfs
+def test_read_only_agy_cwd_pin_fails_when_child_anchors_outside(tmp_path, monkeypatch):
+    """A child still outside the pinned tree when grace closes fails cwd_unpinned."""
+    monkeypatch.setenv(runner._CWD_PIN_GRACE_ENV, "0.2")
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    pinned = tmp_path / "pinned"
+    pinned.mkdir()
+    with _sleeping_child(elsewhere) as proc:
+        pin = runner._ChildCwdPin.start(proc=proc, cwd=pinned, mode="read-only", agent_name="agy", task_id="t")
+        assert pin is not None
+        assert pin.check() is None  # still inside the grace window
+        time.sleep(0.4)
+        assert pin.check() == "cwd_unpinned"
+        assert pin.last_observed is not None
+
+
+@_needs_procfs
+def test_read_only_agy_cwd_pin_allows_late_settle(tmp_path, monkeypatch):
+    """A child that starts in scratch and then settles into the pin passes.
+
+    Mirrors the 2026-09-24 agy evidence on #8516: the CLI starts in its own
+    scratch directory and only later finds the cwd it was given.
+    """
+    monkeypatch.setenv(runner._CWD_PIN_GRACE_ENV, "10")
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    pinned = tmp_path / "pinned"
+    pinned.mkdir()
+    argv = ["bash", "-c", 'sleep 0.5; cd "$1" && exec sleep 30', "_", str(pinned)]
+    with _sleeping_child(elsewhere, *argv) as proc:
+        pin = runner._ChildCwdPin.start(proc=proc, cwd=pinned, mode="read-only", agent_name="agy", task_id="t")
+        assert pin is not None
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline and not pin.verified:
+            assert pin.check() is None
+            time.sleep(0.2)
+        assert pin.verified is True

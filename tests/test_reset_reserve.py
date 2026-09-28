@@ -10,6 +10,7 @@ import pytest
 
 from scripts.fleet.reset_reserve import (
     SCHEMA_VERSION,
+    codex_is_threatened,
     codex_reset_reserve_eligible,
     load_reset_reserve,
     unavailable_reserve,
@@ -95,13 +96,51 @@ def _eligible_codex() -> dict:
         "health": {"healthy": True},
         "freshness": "fresh",
         "age_s": 10,
-        "codexbar": {"will_last_to_reset": False, "weekly_used_pct": 25.0, "windows": {"primary": {"remaining_pct": 12.0}}},
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_used_pct": 25.0,
+            "windows": {"primary": {"remaining_pct": 12.0}},
+        },
         "runtime": {
             "headroom_blocked": False,
             "rate_limited": 0,
             "last_rate_limited_at": None,
         },
     }
+
+
+def test_threatened_uses_pace_deficit_not_a_bare_will_last_flag():
+    on_pace = {
+        "status": "warm",
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 1.5,
+            "weekly_expected_pct": 40.0,
+            "weekly_used_pct": 41.5,
+        },
+    }
+    early = {
+        "status": "warm",
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 0.49,
+            "weekly_expected_pct": 0.52,
+            "weekly_used_pct": 1.0,
+        },
+    }
+    real_deficit = {
+        "status": "warm",
+        "codexbar": {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 7.2,
+            "weekly_expected_pct": 17.8,
+            "weekly_used_pct": 25.0,
+        },
+    }
+    assert codex_is_threatened(on_pace) is False
+    assert codex_is_threatened(early) is False
+    assert codex_is_threatened(real_deficit) is True
+    assert codex_is_threatened({"status": "near_cap", "codexbar": {"will_last_to_reset": True}}) is True
 
 
 def test_eligibility_requires_provider_runtime_and_health_headroom():
@@ -119,14 +158,24 @@ def test_eligibility_requires_provider_runtime_and_health_headroom():
         lambda info: info["codexbar"]["windows"].update(secondary={"used_pct": 100}),
         lambda info: info["codexbar"].update(weekly_used_pct=100, weekly_remaining_pct=None),
         lambda info: info["codexbar"].update(weekly_used_pct=None, weekly_remaining_pct=None),
-        lambda info: info.update(notebook_report={
-            "source": "notebook-report", "freshness": "fresh", "age_s": 5,
-            "weekly_used_pct": 100, "weekly_remaining_pct": 0,
-        }),
-        lambda info: info.update(notebook_report={
-            "source": "notebook-report", "freshness": "stale_last_good", "age_s": 901,
-            "weekly_used_pct": 20, "weekly_remaining_pct": 80,
-        }),
+        lambda info: info.update(
+            notebook_report={
+                "source": "notebook-report",
+                "freshness": "fresh",
+                "age_s": 5,
+                "weekly_used_pct": 100,
+                "weekly_remaining_pct": 0,
+            }
+        ),
+        lambda info: info.update(
+            notebook_report={
+                "source": "notebook-report",
+                "freshness": "stale_last_good",
+                "age_s": 901,
+                "weekly_used_pct": 20,
+                "weekly_remaining_pct": 80,
+            }
+        ),
     ):
         info = _eligible_codex()
         mutate(info)

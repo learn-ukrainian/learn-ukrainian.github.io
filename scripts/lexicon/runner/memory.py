@@ -22,14 +22,14 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
+from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
-VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 
 
 @dataclass(frozen=True, slots=True)
@@ -147,6 +147,7 @@ def run_startup_self_test(
     timeout_s: float = 30.0,
 ) -> EnforcementProof:
     """Prove the configured limit is enforced in a disposable child process."""
+    interpreter = project_interpreter()
     if test_max_bytes is None:
         rss = current_rss_bytes() or (64 * 1024 * 1024)
         test_max_bytes = max(rss + 64 * 1024 * 1024, 128 * 1024 * 1024)
@@ -156,7 +157,7 @@ def run_startup_self_test(
         result_path = Path(tmp) / "self_test.json"
         proc = subprocess.run(
             [
-                str(VENV_PYTHON),
+                str(interpreter),
                 "-m",
                 "scripts.lexicon.runner.memory",
                 "--self-test-child",
@@ -224,7 +225,7 @@ def current_rss_bytes() -> int | None:
             libc = ctypes.CDLL(libc_name, use_errno=True)
 
             class Rusage(ctypes.Structure):
-                _fields_ = [
+                _fields_: ClassVar[list[tuple[str, type]]] = [
                     ("ru_utime", ctypes.c_int64 * 2),
                     ("ru_stime", ctypes.c_int64 * 2),
                     ("ru_maxrss", ctypes.c_int64),

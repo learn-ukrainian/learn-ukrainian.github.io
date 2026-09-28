@@ -26,6 +26,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.build_data_manifest import LEMMA_FIELDS, _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
@@ -33,7 +34,7 @@ from scripts.verification.vesum import verify_words
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+PYTHON = project_interpreter()
 _ENRICHMENT_TIMEOUT_SECONDS = 300
 _SINGLE_TOKEN_UK_RE = re.compile(r"^[\u0400-\u052f]+(?:['’ʼ-][\u0400-\u052f]+)*$", re.IGNORECASE)
 

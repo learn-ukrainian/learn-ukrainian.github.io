@@ -265,6 +265,24 @@ def _dispatch_pytest_plugins(raw: Mapping[str, str]) -> str | None:
     return _DISPATCH_CAP_PLUGIN
 
 
+def _dispatch_pytest_pythonpath(raw: Mapping[str, str]) -> str | None:
+    """Return the PYTHONPATH entries that actually host the cap plugin, or None.
+
+    #8795: ``ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
+    rootdir-relative ``pythonpath = ["scripts"]``, which is inactive for a
+    pytest process rooted elsewhere. ``_build_worker_env`` adds the plugin's
+    real ``scripts`` directory to PYTHONPATH so it resolves regardless; this
+    mirrors ``_dispatch_pytest_plugins`` to carry only that entry through the
+    same rebuild, gated the same way, rather than the raw inherited value —
+    an ambient PYTHONPATH must not inject an unrelated import path here.
+    """
+    if _dispatch_pytest_plugins(raw) is None:
+        return None
+    entries = [part for part in raw.get("PYTHONPATH", "").split(os.pathsep) if part]
+    kept = [entry for entry in entries if (Path(entry) / "ci" / "pytest_dispatch_cap.py").is_file()]
+    return os.pathsep.join(kept) if kept else None
+
+
 def usable_host_gh_config_dir(path: str | None) -> str | None:
     """Return ``path`` only when it holds real gh auth material.
 
@@ -443,6 +461,12 @@ def build_agent_env(
         env.pop("PYTEST_PLUGINS", None)
     else:
         env["PYTEST_PLUGINS"] = pytest_plugins
+
+    pytest_pythonpath = _dispatch_pytest_pythonpath(raw)
+    if pytest_pythonpath is None:
+        env.pop("PYTHONPATH", None)
+    else:
+        env["PYTHONPATH"] = pytest_pythonpath
 
     if "PATH" not in env and "PATH" in raw and not _looks_sensitive_value(raw["PATH"]):
         env["PATH"] = raw["PATH"]

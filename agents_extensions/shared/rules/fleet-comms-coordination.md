@@ -179,10 +179,10 @@ Every epic driver session (any harness) MUST:
 
 - Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
   `./start-gemini-driver.sh --epic <epic>`,
-  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5|claude-sonnet-5]`,
+  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5|claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
-  Grok→atlas/tracks, Sonnet-5→judgment-dense, Opus→hardest-judgment exception only — it
+  Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
   spends the cross-family review-of-record seat). **Live policy** is still
   `model_catalog.orchestrator_seats` + `/api/rules`.
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added

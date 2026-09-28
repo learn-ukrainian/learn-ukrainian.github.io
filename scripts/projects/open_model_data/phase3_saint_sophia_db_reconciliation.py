@@ -31,7 +31,7 @@ from scripts.ingest import incremental_historical_source_ingest as ingest
 from scripts.wiki import historical_sources
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_saint_sophia_db_reconciliation_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_saint_sophia_db_reconciliation_v1.schema.json"
 DENOMINATOR_PATH = ROOT / "registry/historical_language_corpus_denominator.yaml"
 COLLECTION_ID = "saint-sophia-inscriptions"
 EXPECTED_ROWS = 4_157
@@ -159,20 +159,27 @@ def _database_evidence(path: Path) -> dict[str, Any]:
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='historical_source_records'"
             ).fetchone()
             historical_rows = (
-                connection.execute("SELECT COUNT(*) FROM historical_source_records WHERE collection_id=?", (COLLECTION_ID,)).fetchone()[0]
-                if has_historical else 0
+                connection.execute(
+                    "SELECT COUNT(*) FROM historical_source_records WHERE collection_id=?", (COLLECTION_ID,)
+                ).fetchone()[0]
+                if has_historical
+                else 0
             )
             historical_fts_rows = (
                 connection.execute(
                     "SELECT COUNT(*) FROM historical_source_records_fts AS f "
-                    "JOIN historical_source_records AS r ON r.id=f.rowid WHERE r.collection_id=?", (COLLECTION_ID,)
+                    "JOIN historical_source_records AS r ON r.id=f.rowid WHERE r.collection_id=?",
+                    (COLLECTION_ID,),
                 ).fetchone()[0]
-                if has_historical else 0
+                if has_historical
+                else 0
             )
             foreign_count, foreign_hash = _foreign_key_evidence(connection)
             return {
-                "sha256": sha256_file(path), "historical_rows": historical_rows,
-                "historical_fts_rows": historical_fts_rows, "foreign_key_failures": foreign_count,
+                "sha256": sha256_file(path),
+                "historical_rows": historical_rows,
+                "historical_fts_rows": historical_fts_rows,
+                "foreign_key_failures": foreign_count,
                 "foreign_key_failure_sha256": foreign_hash,
                 "non_historical_table_fingerprint": _non_historical_fingerprint(connection),
                 "integrity_check": str(connection.execute("PRAGMA integrity_check").fetchone()[0]),
@@ -181,17 +188,28 @@ def _database_evidence(path: Path) -> dict[str, Any]:
         raise SaintSophiaReconciliationError(f"cannot inspect database: {exc}") from exc
 
 
-def _validate_inputs(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: Path, coverage_receipt_path: Path) -> tuple[list[tuple[Any, ...]], dict[str, Any], str]:
+def _validate_inputs(
+    *, database_path: Path, expected_pre_db_sha256: str, jsonl_path: Path, coverage_receipt_path: Path
+) -> tuple[list[tuple[Any, ...]], dict[str, Any], str]:
     collection, denominator_hash = _denominator()
     _regular_file(database_path, "database")
     require(sha256_file(database_path) == expected_pre_db_sha256, "caller expected pre-database SHA-256 does not match")
     artifact_hashes = collection.get("artifact_sha256")
     canonical_db = collection.get("canonical_database")
-    require(isinstance(artifact_hashes, dict) and isinstance(canonical_db, dict), "Saint Sophia denominator hashes are missing")
+    require(
+        isinstance(artifact_hashes, dict) and isinstance(canonical_db, dict),
+        "Saint Sophia denominator hashes are missing",
+    )
     _regular_file(jsonl_path, "Saint Sophia JSONL")
     _regular_file(coverage_receipt_path, "Saint Sophia coverage receipt")
-    require(sha256_file(jsonl_path) == artifact_hashes.get("historical_source_records_jsonl"), "Saint Sophia JSONL hash drift")
-    require(sha256_file(coverage_receipt_path) == artifact_hashes.get("coverage_receipt_json"), "Saint Sophia coverage hash drift")
+    require(
+        sha256_file(jsonl_path) == artifact_hashes.get("historical_source_records_jsonl"),
+        "Saint Sophia JSONL hash drift",
+    )
+    require(
+        sha256_file(coverage_receipt_path) == artifact_hashes.get("coverage_receipt_json"),
+        "Saint Sophia coverage hash drift",
+    )
     require(canonical_db.get("historical_source_rows") == EXPECTED_ROWS, "Saint Sophia row denominator drift")
     require(canonical_db.get("historical_fts_rows") == EXPECTED_ROWS, "Saint Sophia FTS denominator drift")
     require(canonical_db.get("sha256") != expected_pre_db_sha256, "pre-database SHA must be pre-reconciliation")
@@ -229,7 +247,9 @@ def _verify_post_evidence(path: Path, before: Mapping[str, Any]) -> dict[str, An
 
 
 def _candidate_path(live_path: Path) -> Path:
-    fd, candidate = tempfile.mkstemp(dir=live_path.parent, prefix=f".{live_path.name}.saint-sophia-", suffix=".candidate")
+    fd, candidate = tempfile.mkstemp(
+        dir=live_path.parent, prefix=f".{live_path.name}.saint-sophia-", suffix=".candidate"
+    )
     os.close(fd)
     return Path(candidate)
 
@@ -298,43 +318,126 @@ def _atomic_write_private(path: Path, value: Mapping[str, Any]) -> None:
             temporary.unlink(missing_ok=True)
 
 
-def _receipt(*, mode: str, collection: Mapping[str, Any], denominator_hash: str, jsonl_path: Path, coverage_path: Path, before: Mapping[str, Any], after: Mapping[str, Any], post_sha256: str) -> dict[str, Any]:
+def _receipt(
+    *,
+    mode: str,
+    collection: Mapping[str, Any],
+    denominator_hash: str,
+    jsonl_path: Path,
+    coverage_path: Path,
+    before: Mapping[str, Any],
+    after: Mapping[str, Any],
+    post_sha256: str,
+) -> dict[str, Any]:
     body: dict[str, Any] = {
-        "schema_version":"phase3_saint_sophia_db_reconciliation_v1", "text_free":True, "provider_calls":False, "mode":mode,
-        "bindings":{"implementation_sha256":sha256_file(Path(__file__).resolve()), "schema_sha256":sha256_file(SCHEMA_PATH), "denominator_sha256":denominator_hash, "expected_pre_database_sha256":before["sha256"], "saint_sophia_jsonl_sha256":sha256_file(jsonl_path), "saint_sophia_coverage_sha256":sha256_file(coverage_path), "coverage_receipt_sha256":sha256_file(coverage_path)},
-        "database":{"pre_sha256":before["sha256"], "post_sha256":post_sha256, "historical_rows_before":before["historical_rows"], "historical_rows_after":after["historical_rows"], "historical_fts_rows_after":after["historical_fts_rows"], "foreign_key_failures_before":before["foreign_key_failures"], "foreign_key_failures_after":after["foreign_key_failures"], "foreign_key_failure_sha256_before":before["foreign_key_failure_sha256"], "foreign_key_failure_sha256_after":after["foreign_key_failure_sha256"]},
-        "invariants":{"saint_sophia_id_set_sha256":collection["public_record_id_set_sha256"], "non_historical_table_fingerprint_before":before["non_historical_table_fingerprint"], "non_historical_table_fingerprint_after":after["non_historical_table_fingerprint"], "integrity_check":after["integrity_check"]},
-        "safeguards":{"exact_expected_rows":True,"exact_fts_parity":True,"foreign_key_failures_unchanged":True,"non_historical_invariants_unchanged":True,"output_private_0600":True},
-        "phase_boundaries":{"historical_modern_correction_eligible":False,"phase4_blocked":True},
+        "schema_version": "phase3_saint_sophia_db_reconciliation_v1",
+        "text_free": True,
+        "provider_calls": False,
+        "mode": mode,
+        "bindings": {
+            "implementation_sha256": sha256_file(Path(__file__).resolve()),
+            "schema_sha256": sha256_file(SCHEMA_PATH),
+            "denominator_sha256": denominator_hash,
+            "expected_pre_database_sha256": before["sha256"],
+            "saint_sophia_jsonl_sha256": sha256_file(jsonl_path),
+            "saint_sophia_coverage_sha256": sha256_file(coverage_path),
+            "coverage_receipt_sha256": sha256_file(coverage_path),
+        },
+        "database": {
+            "pre_sha256": before["sha256"],
+            "post_sha256": post_sha256,
+            "historical_rows_before": before["historical_rows"],
+            "historical_rows_after": after["historical_rows"],
+            "historical_fts_rows_after": after["historical_fts_rows"],
+            "foreign_key_failures_before": before["foreign_key_failures"],
+            "foreign_key_failures_after": after["foreign_key_failures"],
+            "foreign_key_failure_sha256_before": before["foreign_key_failure_sha256"],
+            "foreign_key_failure_sha256_after": after["foreign_key_failure_sha256"],
+        },
+        "invariants": {
+            "saint_sophia_id_set_sha256": collection["public_record_id_set_sha256"],
+            "non_historical_table_fingerprint_before": before["non_historical_table_fingerprint"],
+            "non_historical_table_fingerprint_after": after["non_historical_table_fingerprint"],
+            "integrity_check": after["integrity_check"],
+        },
+        "safeguards": {
+            "exact_expected_rows": True,
+            "exact_fts_parity": True,
+            "foreign_key_failures_unchanged": True,
+            "non_historical_invariants_unchanged": True,
+            "output_private_0600": True,
+        },
+        "phase_boundaries": {"historical_modern_correction_eligible": False, "phase4_blocked": True},
     }
-    return {**body, "receipt_sha256":receipt_sha256(body)}
+    return {**body, "receipt_sha256": receipt_sha256(body)}
 
 
 def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     receipt = dict(value)
     _validate_schema(receipt)
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "reconciliation receipt body hash drift")
-    require(receipt["provider_calls"] is False and receipt["phase_boundaries"]["phase4_blocked"] is True, "reconciliation boundary drift")
-    require(receipt["database"]["pre_sha256"] == receipt["bindings"]["expected_pre_database_sha256"], "pre-database binding drift")
+    require(
+        receipt["provider_calls"] is False and receipt["phase_boundaries"]["phase4_blocked"] is True,
+        "reconciliation boundary drift",
+    )
+    require(
+        receipt["database"]["pre_sha256"] == receipt["bindings"]["expected_pre_database_sha256"],
+        "pre-database binding drift",
+    )
     require(receipt["database"]["historical_rows_after"] == EXPECTED_ROWS, "historical row denominator drift")
     require(receipt["database"]["historical_fts_rows_after"] == EXPECTED_ROWS, "historical FTS denominator drift")
     require(receipt["invariants"]["saint_sophia_id_set_sha256"] == EXPECTED_ID_SET_SHA256, "Saint Sophia ID set drift")
     bindings = receipt["bindings"]
     require(bindings["saint_sophia_jsonl_sha256"] == EXPECTED_JSONL_SHA256, "Saint Sophia JSONL binding drift")
     require(bindings["saint_sophia_coverage_sha256"] == EXPECTED_COVERAGE_SHA256, "Saint Sophia coverage binding drift")
-    require(bindings["coverage_receipt_sha256"] == EXPECTED_COVERAGE_SHA256, "Saint Sophia duplicate coverage binding drift")
-    require(receipt["database"]["foreign_key_failures_before"] == receipt["database"]["foreign_key_failures_after"], "foreign-key failure count drift")
-    require(receipt["database"]["foreign_key_failure_sha256_before"] == receipt["database"]["foreign_key_failure_sha256_after"], "foreign-key failure fingerprint drift")
-    require(receipt["invariants"]["non_historical_table_fingerprint_before"] == receipt["invariants"]["non_historical_table_fingerprint_after"], "non-historical invariant drift")
+    require(
+        bindings["coverage_receipt_sha256"] == EXPECTED_COVERAGE_SHA256, "Saint Sophia duplicate coverage binding drift"
+    )
+    require(
+        receipt["database"]["foreign_key_failures_before"] == receipt["database"]["foreign_key_failures_after"],
+        "foreign-key failure count drift",
+    )
+    require(
+        receipt["database"]["foreign_key_failure_sha256_before"]
+        == receipt["database"]["foreign_key_failure_sha256_after"],
+        "foreign-key failure fingerprint drift",
+    )
+    require(
+        receipt["invariants"]["non_historical_table_fingerprint_before"]
+        == receipt["invariants"]["non_historical_table_fingerprint_after"],
+        "non-historical invariant drift",
+    )
     return receipt
 
 
-def reconcile(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: Path, coverage_receipt_path: Path, output_receipt_path: Path | None = None, apply: bool = False, apply_in_place: bool = False) -> dict[str, Any]:
+def reconcile(
+    *,
+    database_path: Path,
+    expected_pre_db_sha256: str,
+    jsonl_path: Path,
+    coverage_receipt_path: Path,
+    output_receipt_path: Path | None = None,
+    apply: bool = False,
+    apply_in_place: bool = False,
+) -> dict[str, Any]:
     """Plan by default; apply exactly one explicit, fail-closed mutation mode."""
     require(not (apply and apply_in_place), "choose only one apply mode")
-    rows, collection, denominator_hash = _validate_inputs(database_path=Path(database_path), expected_pre_db_sha256=expected_pre_db_sha256, jsonl_path=Path(jsonl_path), coverage_receipt_path=Path(coverage_receipt_path))
+    rows, collection, denominator_hash = _validate_inputs(
+        database_path=Path(database_path),
+        expected_pre_db_sha256=expected_pre_db_sha256,
+        jsonl_path=Path(jsonl_path),
+        coverage_receipt_path=Path(coverage_receipt_path),
+    )
     before = _database_evidence(Path(database_path))
-    plan = {"text_free":True,"provider_calls":False,"mode":"dry_run","pre_database_sha256":before["sha256"],"input_rows":len(rows),"saint_sophia_id_set_sha256":EXPECTED_ID_SET_SHA256,"phase4_blocked":True}
+    plan = {
+        "text_free": True,
+        "provider_calls": False,
+        "mode": "dry_run",
+        "pre_database_sha256": before["sha256"],
+        "input_rows": len(rows),
+        "saint_sophia_id_set_sha256": EXPECTED_ID_SET_SHA256,
+        "phase4_blocked": True,
+    }
     if not apply and not apply_in_place:
         return plan
     require(output_receipt_path is not None, "output receipt is required for apply")
@@ -387,7 +490,18 @@ def reconcile(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: P
             == {key: value for key, value in after_candidate.items() if key != "sha256"},
             "live postconditions differ from validated candidate",
         )
-        receipt = validate_receipt(_receipt(mode=mode, collection=collection, denominator_hash=denominator_hash, jsonl_path=Path(jsonl_path), coverage_path=Path(coverage_receipt_path), before=before, after=after, post_sha256=post_sha256))
+        receipt = validate_receipt(
+            _receipt(
+                mode=mode,
+                collection=collection,
+                denominator_hash=denominator_hash,
+                jsonl_path=Path(jsonl_path),
+                coverage_path=Path(coverage_receipt_path),
+                before=before,
+                after=after,
+                post_sha256=post_sha256,
+            )
+        )
         _atomic_write_private(Path(output_receipt_path), receipt)
         return receipt
     except BaseException as reconciliation_error:
@@ -427,8 +541,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        result = reconcile(database_path=args.database, expected_pre_db_sha256=args.expected_pre_db_sha256, jsonl_path=args.saint_sophia_jsonl, coverage_receipt_path=args.coverage_receipt, output_receipt_path=args.output_receipt, apply=args.apply, apply_in_place=args.apply_in_place)
-        print(canonical_json({"ok":True,"mode":result["mode"],"receipt_sha256":result.get("receipt_sha256")}))
+        result = reconcile(
+            database_path=args.database,
+            expected_pre_db_sha256=args.expected_pre_db_sha256,
+            jsonl_path=args.saint_sophia_jsonl,
+            coverage_receipt_path=args.coverage_receipt,
+            output_receipt_path=args.output_receipt,
+            apply=args.apply,
+            apply_in_place=args.apply_in_place,
+        )
+        print(canonical_json({"ok": True, "mode": result["mode"], "receipt_sha256": result.get("receipt_sha256")}))
     except SaintSophiaReconciliationError as exc:
         print(canonical_json({"ok": False, "error": str(exc)}))
         return 2

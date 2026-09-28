@@ -616,6 +616,29 @@ def _build_with(tmp_path: Path, tool_config: dict | None):
     )
 
 
+def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
+    """#8516 AC-01: read-only invocations pin AGY's workspace to the dispatch cwd.
+
+    agy re-anchors its process cwd to a scratch directory during startup
+    (2026-09-24 evidence on #8516), so without ``--add-dir`` a read-only
+    run's workspace is wherever agy drifted, not the pinned checkout.
+    """
+    plan = _build_with(tmp_path, None)
+    assert "--add-dir" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
+
+    write_plan = AgyAdapter().build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id="t-write",
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--add-dir" not in write_plan.cmd
+
+
 def test_agy_home_override_sets_home_and_app_data_dir(tmp_path: Path) -> None:
     scoped = tmp_path / "att.agy-home"
     plan = _build_with(tmp_path, {"agy_home_override": str(scoped)})

@@ -9,9 +9,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[1]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 SCHEMA = CONTRACTS / "dataset_v4_pilot_slot_manifest_v1.schema.json"
 MANIFEST = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"

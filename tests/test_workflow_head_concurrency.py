@@ -28,6 +28,11 @@ _EVENT_PR_NUMBER_OR_DISPATCH_GROUP = (
 )
 _PR_NUMBER_ONLY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number }}"
 _EVENT_SHA_GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}"
+_PR_OR_UNIQUE_RUN_GROUP = (
+    "${{ github.workflow }}-${{ github.event_name }}-"
+    "${{ github.event.pull_request.number || github.run_id }}"
+)
+_PR_ONLY_CANCELLATION = "${{ github.event_name == 'pull_request' }}"
 _WORKFLOW_EXPECTATIONS = {
     ".github/workflows/ci.yml": {
         "group": _EVENT_PR_NUMBER_OR_DISPATCH_GROUP,
@@ -52,6 +57,20 @@ _WORKFLOW_EXPECTATIONS = {
     ".github/workflows/zizmor.yml": {
         "group": "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}",
         "cancel-in-progress": True,
+    },
+    **{
+        f".github/workflows/{name}.yml": {
+            "group": _PR_OR_UNIQUE_RUN_GROUP,
+            "cancel-in-progress": _PR_ONLY_CANCELLATION,
+        }
+        for name in (
+            "ui-policy-gate",
+            "model-catalog-freshness",
+            "actionlint",
+            "entire-kimi-agent",
+            "rules-deployment-check",
+            "validate-yaml",
+        )
     },
 }
 

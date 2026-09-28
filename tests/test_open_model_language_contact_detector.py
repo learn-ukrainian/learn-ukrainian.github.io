@@ -11,6 +11,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 import scripts.projects.open_model_data.language_contact_detector as detector
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_ROOT = ROOT
@@ -149,7 +150,7 @@ def test_schema_and_config_conformance(config: dict) -> None:
 
 
 def test_frozen_denominator_and_source_adapters_match_profiler(config: dict) -> None:
-    profile = _json(ROOT / "data/projects/open_model_data/profiles/public_external_full_corpus_v1.json")
+    profile = _json(REGISTRY_OPEN_MODEL_DATA_DIR / "profiles/public_external_full_corpus_v1.json")
     expected_rows = sum(source["expected"]["rows"] for source in config["sources"])
     expected_words = sum(source["expected"]["lexical_words"] for source in config["sources"])
     assert (expected_rows, expected_words) == (189150, 50298925)
@@ -164,17 +165,29 @@ def test_frozen_denominator_and_source_adapters_match_profiler(config: dict) -> 
     assert detector_sources == profiler_sources
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_clean_long_ukrainian_emits_zero_and_never_leaks_full_text(config: dict, runtime) -> None:
     text = "Українська мова має багату історію та живу сучасну традицію. " * 200
     assert len(text) > 10000
     assert _detect(text, config=config, runtime=runtime) == []
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_short_and_hyphen_fragments_do_not_become_morphology_rescues(config: dict, runtime) -> None:
     text = "Хто-небудь згадає ї та н у технічному покажчику."
     assert _detect(text, config=config, runtime=runtime) == []
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_bounded_offsets_unicode_apostrophes_and_boundaries(config: dict, runtime) -> None:
     text = (
         "Перший абзац про м’яту й памʼять. " * 15
@@ -208,6 +221,10 @@ def test_nested_imbalanced_quotes_and_dash_dialogue_have_exact_offsets() -> None
     assert "запитав" not in dialogue_span.original_text
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_standard_russian_quotation_and_modern_narration_are_distinct(config: dict, runtime) -> None:
     quoted = _detect("Автор навів: «что вызвало смуту».", config=config, runtime=runtime)
     narration = _detect("Ця тема звучит у новинах.", config=config, runtime=runtime)
@@ -219,6 +236,10 @@ def test_standard_russian_quotation_and_modern_narration_are_distinct(config: di
     assert narration[0]["automatic_error_label"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_mandatory_zvuchyt_canary_detects_narration_and_protects_exact_quotation(
     config: dict,
     runtime,
@@ -240,6 +261,10 @@ def test_mandatory_zvuchyt_canary_detects_narration_and_protects_exact_quotation
     assert all(candidate["classification"]["category"] != "modern_narration_interference" for candidate in quoted_match)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 @pytest.mark.parametrize(
     "text",
     [
@@ -260,6 +285,10 @@ def test_zvuchyt_quote_boundary_mutations_never_become_narration_corrections(
     assert all(candidate["classification"]["category"] != "modern_narration_interference" for candidate in matching)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_phonetic_reconstruction_requires_context_morphology_and_r2u(config: dict, runtime) -> None:
     assert _detect("У примітці є форма очєнь.", config=config, runtime=runtime) == []
     candidates = _detect("Вона сказала: «очєнь вєжліви с нєй».", config=config, runtime=runtime)
@@ -272,6 +301,10 @@ def test_phonetic_reconstruction_requires_context_morphology_and_r2u(config: dic
     assert all(item["transformation_path"][0].startswith("configured:") for item in reconstructions)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 @pytest.mark.parametrize(
     "surface",
     ["перекличка", "переклички", "перекличку", "перекличці", "перекличкою"],
@@ -293,6 +326,10 @@ def test_pereklychka_inflections_are_rescued_by_actual_sum_evidence(
     assert candidates[0]["queue_route"] == "protected_rescue"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 @pytest.mark.parametrize(
     ("text", "surface", "dictionary_identity"),
     [
@@ -309,9 +346,7 @@ def test_short_russian_morphology_hits_with_heritage_evidence_are_protected(
     runtime,
 ) -> None:
     candidates = _detect(text, config=config, runtime=runtime)
-    assert [item["classification"]["category"] for item in candidates] == [
-        "protected_authentic_ukrainian"
-    ]
+    assert [item["classification"]["category"] for item in candidates] == ["protected_authentic_ukrainian"]
     heritage = candidates[0]["evidence"]["heritage"]
     assert any(
         hit["dictionary_identity"] == dictionary_identity
@@ -321,6 +356,10 @@ def test_short_russian_morphology_hits_with_heritage_evidence_are_protected(
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 @pytest.mark.parametrize(
     "text",
     [
@@ -340,6 +379,10 @@ def test_adjacent_russian_morphology_without_anchor_or_r2u_is_uncertain(
     assert candidates[0]["automatic_error_label"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_vesum_present_ochen_is_not_accepted_without_russian_context(config: dict, runtime) -> None:
     tokens = detector.tokenize_with_offsets("очєнь")
     vesum = runtime.vesum.lookup(token.normalized for token in tokens)
@@ -347,6 +390,10 @@ def test_vesum_present_ochen_is_not_accepted_without_russian_context(config: dic
     assert _detect("У покажчику подано очєнь як форму.", config=config, runtime=runtime) == []
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_proper_name_other_language_and_ocr_require_positive_suspicion(config: dict, runtime) -> None:
     assert _detect("Тарас Шевченко відвідав Київ.", config=config, runtime=runtime) == []
     proper = _detect("У документі згадано Ростовъ як назву.", config=config, runtime=runtime)
@@ -358,6 +405,10 @@ def test_proper_name_other_language_and_ocr_require_positive_suspicion(config: d
     assert ocr[0]["classification"]["category"] == "ocr_or_encoding_candidate"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_quoted_capitalized_russian_orthography_cannot_self_corroborate(config: dict, runtime) -> None:
     candidates = _detect("Автор згадав назву «Ростовъ» у примітці.", config=config, runtime=runtime)
     assert [item["classification"]["category"] for item in candidates] == ["uncertain"]
@@ -366,6 +417,10 @@ def test_quoted_capitalized_russian_orthography_cannot_self_corroborate(config: 
     assert candidates[0]["automatic_error_label"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_vetted_valid_word_route_is_candidate_only(config: dict, runtime) -> None:
     candidates = _detect("Він хотів прийняти участь у події.", config=config, runtime=runtime)
     candidate = candidates[0]
@@ -376,6 +431,10 @@ def test_vetted_valid_word_route_is_candidate_only(config: dict, runtime) -> Non
     assert candidate["queue_route"] == "valid_word_review"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_evidence_identities_and_pending_states_are_truthful(config: dict, runtime) -> None:
     quote = _detect("Автор навів: «что вызвало смуту».", config=config, runtime=runtime)[0]
     evidence = quote["evidence"]
@@ -443,6 +502,10 @@ def _mini_config(tmp_path: Path, config: dict, texts: list[str]) -> Path:
     return path
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_receipt_arithmetic_derives_from_rows_and_bytes_are_deterministic(
     tmp_path: Path,
     config: dict,
@@ -529,9 +592,7 @@ def test_dimension_reads_aliased_sqlite_columns_instead_of_row_values() -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
     try:
-        row = connection.execute(
-            "SELECT 'middle_ukrainian' AS __period, 'dialectal' AS __register"
-        ).fetchone()
+        row = connection.execute("SELECT 'middle_ukrainian' AS __period, 'dialectal' AS __register").fetchone()
     finally:
         connection.close()
     assert row is not None
@@ -548,6 +609,10 @@ def test_dimension_reads_aliased_sqlite_columns_instead_of_row_values() -> None:
     assert detector._dimension(row, source, "origin") == "unknown"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_prefilter_arithmetic_includes_records_without_lexical_tokens(
     tmp_path: Path,
     config: dict,
@@ -564,6 +629,10 @@ def test_prefilter_arithmetic_includes_records_without_lexical_tokens(
     assert prefilter["rows_with_signal"] + prefilter["rows_without_signal"] == 2
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_source_growth_marks_coverage_incomplete_without_negative_drop_counts(
     tmp_path: Path,
     config: dict,
@@ -593,6 +662,10 @@ def test_source_growth_marks_coverage_incomplete_without_negative_drop_counts(
     assert coverage["source_results"][0]["matches_expected"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_receipt_promotion_failure_restores_prior_detector_artifacts(
     tmp_path: Path,
     config: dict,
@@ -632,6 +705,10 @@ def test_receipt_promotion_failure_restores_prior_detector_artifacts(
     assert not list(tmp_path.glob("*.rollback"))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_missing_evidence_adapters_fail_closed(tmp_path: Path, config: dict) -> None:
     broken_vesum = copy.deepcopy(config)
     broken_vesum["vesum"]["database"] = "missing-vesum.db"
@@ -651,24 +728,31 @@ def test_missing_evidence_adapters_fail_closed(tmp_path: Path, config: dict) -> 
     try:
         tokens = detector.tokenize_with_offsets("Перед уроком відбулася перекличка.")
         vesum = active.vesum.lookup(token.normalized for token in tokens)
-        assert detector.run_detector_on_text(
-            text="Перед уроком відбулася перекличка.",
-            record_id="missing",
-            locator="sqlite:fixture.db#records/missing",
-            source_family="fixture",
-            source_record_id="fixture:missing",
-            period="modern",
-            register="literary",
-            origin="project_authored_fixture",
-            vesum_matches=vesum,
-            config=no_heritage,
-            runtime=active,
-            input_root=tmp_path,
-        ) == []
+        assert (
+            detector.run_detector_on_text(
+                text="Перед уроком відбулася перекличка.",
+                record_id="missing",
+                locator="sqlite:fixture.db#records/missing",
+                source_family="fixture",
+                source_record_id="fixture:missing",
+                period="modern",
+                register="literary",
+                origin="project_authored_fixture",
+                vesum_matches=vesum,
+                config=no_heritage,
+                runtime=active,
+                input_root=tmp_path,
+            )
+            == []
+        )
     finally:
         active.close()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_frozen_regression_fixture_uses_real_local_adapters(config: dict) -> None:
     fixture = _json(detector.DEFAULT_REGRESSION_FIXTURE)
     _seed_vesum([case["text"] for case in fixture["cases"]])

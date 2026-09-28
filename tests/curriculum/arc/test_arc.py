@@ -27,7 +27,7 @@ ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 ROLLUP_ROW = "| 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |"
 POS1_ROW_FRAGMENT = "**13 letters**, primer part 1 order"
 POS42_ROW = "| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |"
-POS5_ROW = "| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions (`:485`) | Li | 3 |"
+POS5_ROW = "| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions | Li (`:485`) | 3 |"
 STATED_TOTAL_ANCHOR = "orientation only and total 162"
 STATED_TOTAL_SENTENCE = "The lesson counts above are estimates for\norientation only and total 162."
 
@@ -93,6 +93,35 @@ def test_standard_line_refs_parsing() -> None:
     assert records[28]["standard_line_refs"] == []
 
 
+#: A Standard source-line reference in any spelling: `:361`, `:489-493`, (`:549-551`), :531–533.
+#: A clock time (10:30) is not one: the colon must not follow a digit.
+JOB_SOURCE_LINE_REF_RE = re.compile(r"(?<!\d):\d+(?:[-–]\d+)?")
+
+
+@pytest.mark.parametrize(
+    "text, leaks",
+    [
+        ("weight and volume (`:531-533`)", True),
+        ("address an envelope `:361`", True),
+        ("at the border :523–525", True),
+        ("meet at 10:30 for coffee", False),
+        ("Ask and tell the time", False),
+    ],
+)
+def test_job_source_line_ref_pattern(text: str, leaks: bool) -> None:
+    assert bool(JOB_SOURCE_LINE_REF_RE.search(text)) is leaks
+
+
+def test_job_text_has_no_leaked_source_line_reference() -> None:
+    """`job` is rendered verbatim on the arc landing (ArcLanding.tsx, ArcModule.tsx); a
+    source citation like ``(`:489-493`)`` leaking into it is learner-facing noise, not a
+    citation — the reference belongs in a non-learner-facing field (skills duty) or prose."""
+    for record in _records():
+        assert not JOB_SOURCE_LINE_REF_RE.search(record["job"]), (
+            f"position {record['position']} ({record['slug']}) job leaks a source line reference: {record['job']!r}"
+        )
+
+
 def test_mutation_one_slug_breaks_check(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, "`euphony`", "`euphony-x`")
     assert generate_arc.main(["--level", "a1", "--check", "--doc", str(mutated)]) == 1
@@ -140,25 +169,25 @@ def test_stated_total_sentence_removed_fails_generation(tmp_path: Path) -> None:
 
 
 def test_unknown_skills_code_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| X | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| X | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_trailing_comma_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li, | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li, | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_double_comma_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li,, W | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li,, W | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_duplicate_code_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li, Li | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li, Li | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="repeats skill code"):
         generate_arc.generate_yaml(mutated)
 

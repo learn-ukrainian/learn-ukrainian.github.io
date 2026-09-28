@@ -58,8 +58,8 @@ from yaml_activities import (
 )
 
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+from scripts.common.repo_root import project_interpreter
 
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 _VALIDATE_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124
 
@@ -1087,7 +1087,7 @@ def main():
         print('\n' + '=' * 50)
         print('Running MDX validation...\n')
         import subprocess
-        validate_args = [str(VENV_PYTHON), str(SCRIPT_DIR / 'validate_mdx.py'), lang_pair]
+        validate_args = [str(project_interpreter()), str(SCRIPT_DIR / 'validate_mdx.py'), lang_pair]
         if target_level:
             validate_args.append(target_level)
         if target_module:

@@ -22,6 +22,36 @@ from typing import Any
 
 import jsonschema
 
+from scripts.storage.artifacts import write_artifact_set
+from scripts.storage.paths import artifact_set
+
+_ASSESSMENT = "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+
+
+def _publish_assessment(repo_root: Path, output: Path, content: bytes) -> None:
+    registry = repo_root / "registry/projects/open_model_data"
+    resolved = output.resolve()
+    if resolved != repo_root / _ASSESSMENT:
+        if output.absolute().is_relative_to(registry) or resolved.is_relative_to(registry):
+            raise ValueError(f"unbound managed assessment output: {output}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(content)
+        return
+    snapshot = artifact_set("open_model_other_indexes", repo=repo_root)
+    expected = snapshot.manifest["set_descriptor"]["companions"][_ASSESSMENT]
+    digest = hashlib.sha256((json.dumps(snapshot.manifest, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
+    write_artifact_set(
+        repo_root,
+        "open_model_other_indexes",
+        "v4_dataset_quality_evaluation",
+        {},
+        expected_hashes={},
+        expected_members={entry["path"][5:] for entry in snapshot.manifest["entries"]},
+        companions={_ASSESSMENT: (expected, lambda staged: staged.write_bytes(content))},
+        expected_manifest=digest,
+    )
+
+
 LEGACY_OUTCOME_HASH = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
 PROHIBITED_HOST_PATTERNS = [
@@ -73,9 +103,7 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
     if isinstance(data, str):
         for pat in PROHIBITED_HOST_PATTERNS:
             if pat.search(data):
-                raise ValueError(
-                    f"Prohibited host path detected at {path_prefix}: {data}"
-                )
+                raise ValueError(f"Prohibited host path detected at {path_prefix}: {data}")
     elif isinstance(data, dict):
         for k, v in data.items():
             assert_no_private_host_paths(v, f"{path_prefix}.{k}")
@@ -86,10 +114,10 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
 
 def assess_pilot_dataset(
     repo_root: Path,
-    manifest_rel: str = "data/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json",
-    receipt_rel: str = "data/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json",
+    manifest_rel: str = "registry/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json",
+    receipt_rel: str = "registry/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json",
     records_rel: str = "data/projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
-    schema_rel: str = "data/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json",
+    schema_rel: str = "registry/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json",
 ) -> dict[str, Any]:
     """Perform independent quality, fidelity, and separation assessment."""
     manifest_path = repo_root / manifest_rel
@@ -231,15 +259,17 @@ def assess_pilot_dataset(
     cohort_findings: list[dict[str, Any]] = []
     for c_id, c_recs in sorted(cohort_records.items()):
         stratum = c_recs[0].get("source_family", "general")
-        cohort_findings.append({
-            "cohort_id": c_id,
-            "stratum": stratum,
-            "evaluated_spans": len(c_recs),
-            "verbatim_fidelity_confirmed": True,
-            "split_firewall_confirmed": True,
-            "verdict": "PASS",
-            "notes": f"Cohort {c_id} passed independent fidelity, loss-mask, and partition firewall checks",
-        })
+        cohort_findings.append(
+            {
+                "cohort_id": c_id,
+                "stratum": stratum,
+                "evaluated_spans": len(c_recs),
+                "verbatim_fidelity_confirmed": True,
+                "split_firewall_confirmed": True,
+                "verdict": "PASS",
+                "notes": f"Cohort {c_id} passed independent fidelity, loss-mask, and partition firewall checks",
+            }
+        )
 
     # Generate assessment receipt
     assessment_id = f"eval.assessment.{sha256_bytes((receipt_sha + records_sha).encode())[:24]}"
@@ -319,8 +349,8 @@ def assess_pilot_dataset(
 
 def verify_assessment(
     repo_root: Path,
-    assessment_rel: str = "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json",
-    schema_rel: str = "data/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json",
+    assessment_rel: str = "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json",
+    schema_rel: str = "registry/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json",
 ) -> bool:
     """Verify an existing assessment receipt."""
     assessment_path = repo_root / assessment_rel
@@ -347,9 +377,7 @@ def verify_assessment(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Independent dataset quality and evaluation separation assessment"
-    )
+    parser = argparse.ArgumentParser(description="Independent dataset quality and evaluation separation assessment")
     parser.add_argument(
         "action",
         choices=["assess", "verify"],
@@ -364,7 +392,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"),
+        default=Path(_ASSESSMENT),
         help="Output assessment JSON file",
     )
 
@@ -375,8 +403,7 @@ def main() -> int:
         if args.action == "assess":
             assessment = assess_pilot_dataset(repo_root)
             out_path = args.output if args.output.is_absolute() else repo_root / args.output
-            out_path.parent.mkdir(parents=True, exist_ok=True)
-            out_path.write_text(json.dumps(assessment, indent=2) + "\n", encoding="utf-8")
+            _publish_assessment(repo_root, out_path, (json.dumps(assessment, indent=2) + "\n").encode())
             print(f"SUCCESS: Assessment generated at {out_path} with verdict: {assessment['verdict']}")
             return 0
         elif args.action == "verify":

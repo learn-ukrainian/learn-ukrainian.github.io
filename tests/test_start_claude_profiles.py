@@ -37,7 +37,7 @@ def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     assert "--effort" not in default.stdout
     assert "would exec claude " in default.stdout
     assert "would exec claude --model claude-fable-5-1" in fable.stdout
-    assert "would exec claude --model claude-sonnet-5" in sonnet.stdout
+    assert "would exec claude --model claude-sonnet-5-5" in sonnet.stdout
 
 
 def test_claude_interactive_injects_effort_when_explicit() -> None:
@@ -65,6 +65,12 @@ def test_certified_claude_driver_models_are_revalidated() -> None:
         assert "would claim lease" in result.stdout
     untrusted = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-haiku-5")
     assert untrusted.returncode == 4
+
+
+def test_explicit_legacy_sonnet_driver_pin_remains_accepted() -> None:
+    result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-sonnet-5")
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-sonnet-5" in result.stdout
 
 
 OPUS_5_5_1M = "claude-opus-5-5\\[1m\\]"  # printf %q form of claude-opus-5-5[1m]

@@ -37,6 +37,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
+
 def resolve_data_path(rel_path: str) -> Path:
     """Resolve a relative data path, falling back to git common dir for gitignored files."""
     local_p = PROJECT_ROOT / rel_path
@@ -65,8 +68,12 @@ DEFAULT_UA_GEC_DIR = resolve_data_path("tmp/cache/ua-gec")
 DEFAULT_BROWN_UK_DIR = resolve_data_path("tmp/cache/brown-uk")
 DEFAULT_TONE_DICT_DIR = resolve_data_path("tmp/cache/tone-dict-uk")
 
-SCHEMA_EVAL_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_eval_record.schema.json"
-SCHEMA_RECEIPT_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_release_receipt.schema.json"
+SCHEMA_EVAL_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_grammar_valency_eval_record.schema.json"
+)
+SCHEMA_RECEIPT_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_grammar_valency_release_receipt.schema.json"
+)
 
 ANN_RE = re.compile(r"\{([^{}=]*?)=>([^{}]*?):::error_type=([^}]+)\}")
 CLEAN_SRC_RE = re.compile(r"\{([^{}=]*?)=>[^{}]*?:::error_type=[^}]+\}")
@@ -88,11 +95,35 @@ COMPOUND_ABBREVIATIONS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bм\.\s*п\.", re.IGNORECASE), "м§DOT§ п§DOT§"),
 ]
 INLINE_ABBREVIATIONS = (
-    "тис", "млн", "млрд", "р", "рр", "ст", "грн", "коп",
-    "обл", "рай", "вид", "рис", "табл", "ін", "д",
+    "тис",
+    "млн",
+    "млрд",
+    "р",
+    "рр",
+    "ст",
+    "грн",
+    "коп",
+    "обл",
+    "рай",
+    "вид",
+    "рис",
+    "табл",
+    "ін",
+    "д",
 )
 TITLE_PREFIXES = (
-    "м", "с", "вул", "ім", "проф", "доц", "акад", "напр", "див", "п", "о", "ред",
+    "м",
+    "с",
+    "вул",
+    "ім",
+    "проф",
+    "доц",
+    "акад",
+    "напр",
+    "див",
+    "п",
+    "о",
+    "ред",
 )
 INLINE_ABBR_PATTERN = re.compile(
     r"\b(" + "|".join(INLINE_ABBREVIATIONS) + r")\.(?=\s+[а-яіїєґ\d,;–—])",
@@ -102,9 +133,7 @@ TITLE_PREFIX_PATTERN = re.compile(
     r"\b(" + "|".join(TITLE_PREFIXES) + r")\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])",
     re.IGNORECASE,
 )
-INITIAL_PATTERN = re.compile(
-    r"(?:^|(?<=[\s«\"„]))([А-ЯІЇЄҐA-Z])\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])"
-)
+INITIAL_PATTERN = re.compile(r"(?:^|(?<=[\s«\"„]))([А-ЯІЇЄҐA-Z])\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])")
 
 
 def protect_abbreviations(text: str) -> str:
@@ -124,16 +153,16 @@ def unprotect_abbreviations(text: str) -> str:
 
 # Syntactic validation patterns for pristine sentence quality
 UNCLOSED_RELATIVE_CLAUSE_RE = re.compile(
-    r',\s+(?:на\s+яку|в\s+які[йм]|у\s+які[йм]|яка|який|яке|які|якого|якій|яким|яких|якої|котри[йаеі])\s+[^,]{3,60}?\s+(?:обов\'язково\s+)?(?:повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
+    r",\s+(?:на\s+яку|в\s+які[йм]|у\s+які[йм]|яка|який|яке|які|якого|якій|яким|яких|якої|котри[йаеі])\s+[^,]{3,60}?\s+(?:обов\'язково\s+)?(?:повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b",
     re.IGNORECASE,
 )
 UNCLOSED_TOBTO_RE = re.compile(
     # Bounded single span — avoid nested (?:[^,]+,\s*)* which CodeQL flags as ReDoS.
-    r',\s+(?:тобто|а\s+саме)\s+[^.]{3,120}?\s+(?:нагаду[єє]|повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
+    r",\s+(?:тобто|а\s+саме)\s+[^.]{3,120}?\s+(?:нагаду[єє]|повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b",
     re.IGNORECASE,
 )
 SUBJECT_COMMA_PRED_RE = re.compile(
-    r'^[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:не\s+)?(?:дозволили|могли|змогли|повинн|стали|були|мають)\b',
+    r"^[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:не\s+)?(?:дозволили|могли|змогли|повинн|стали|були|мають)\b",
     re.IGNORECASE,
 )
 CLAUSE_INITIAL_CONJUNCTION_COMMA_RE = re.compile(
@@ -222,13 +251,53 @@ INVALID_DOCUMENT_AKTU_RE = re.compile(
     re.IGNORECASE,
 )
 PERSONAL_PRONOUNS_NOM = {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "та", "те", "ті"}
-CLAUSE_INTRO = {"що", "як", "коли", "де", "куди", "звідки", "мов", "наче", "ніби", "неначе", "хоч", "хоча", "якби", "якщо", "тому"}
+CLAUSE_INTRO = {
+    "що",
+    "як",
+    "коли",
+    "де",
+    "куди",
+    "звідки",
+    "мов",
+    "наче",
+    "ніби",
+    "неначе",
+    "хоч",
+    "хоча",
+    "якби",
+    "якщо",
+    "тому",
+}
 COORD_CONJ = {"і", "й", "та", "або", "чи"}
 PREDICATE_WORDS = {
-    "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
-    "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
-    "логічно", "показово", "важливо", "цікаво", "прикро", "дивно", "небезпечно",
-    "певно", "ясно", "чутно", "видно",
+    "є",
+    "це",
+    "немає",
+    "нема",
+    "треба",
+    "можна",
+    "слід",
+    "варто",
+    "необхідно",
+    "потрібно",
+    "жаль",
+    "сором",
+    "пора",
+    "час",
+    "досить",
+    "відомо",
+    "зрозуміло",
+    "логічно",
+    "показово",
+    "важливо",
+    "цікаво",
+    "прикро",
+    "дивно",
+    "небезпечно",
+    "певно",
+    "ясно",
+    "чутно",
+    "видно",
 }
 
 
@@ -340,7 +409,7 @@ def split_clean_ukrainian_sentences(
 def check_invalid_future_construction(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Reject ungrammatical compound future constructions like 'будуть змагатимуться' or 'буде робить'."""
     for m in re.finditer(r"\b(буд(?:у|еш|е|емо|ете|уть))\b", s, re.IGNORECASE):
-        after = s[m.end():]
+        after = s[m.end() :]
         words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", after)
         for w in words[:3]:
             wl = w.lower()
@@ -379,13 +448,61 @@ def check_invalid_numeral_case(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 PRONOUNS_NAZ = {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "хто", "що"}
 PERSON_NUMBER_TAGS = (":s:1", ":s:2", ":s:3", ":p:1", ":p:2", ":p:3")
 SUBORDINATE_MARKERS = {
-    "що", "щоб", "як", "яка", "який", "яке", "які", "якого", "якій", "яким", "яких", "якої",
-    "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби", "чи",
+    "що",
+    "щоб",
+    "як",
+    "яка",
+    "який",
+    "яке",
+    "які",
+    "якого",
+    "якій",
+    "яким",
+    "яких",
+    "якої",
+    "де",
+    "куди",
+    "звідки",
+    "коли",
+    "бо",
+    "оскільки",
+    "хоч",
+    "хоча",
+    "якщо",
+    "якби",
+    "чи",
 }
 COMMON_PREPOSITIONS = {
-    "в", "у", "до", "на", "з", "із", "зі", "за", "під", "над", "перед", "при", "по",
-    "про", "для", "від", "од", "без", "через", "між", "серед", "біля", "коло",
-    "проти", "щодо", "заради", "внаслідок", "згідно", "поруч", "замість",
+    "в",
+    "у",
+    "до",
+    "на",
+    "з",
+    "із",
+    "зі",
+    "за",
+    "під",
+    "над",
+    "перед",
+    "при",
+    "по",
+    "про",
+    "для",
+    "від",
+    "од",
+    "без",
+    "через",
+    "між",
+    "серед",
+    "біля",
+    "коло",
+    "проти",
+    "щодо",
+    "заради",
+    "внаслідок",
+    "згідно",
+    "поруч",
+    "замість",
 }
 
 
@@ -395,9 +512,7 @@ def get_verb_finite_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
         (w.lower(), w.capitalize()),
     )
     return [
-        r[0]
-        for r in cur.fetchall()
-        if any(x in r[0] for x in (":past:", ":pres:", ":futr:")) and ":inf" not in r[0]
+        r[0] for r in cur.fetchall() if any(x in r[0] for x in (":past:", ":pres:", ":futr:")) and ":inf" not in r[0]
     ]
 
 
@@ -437,7 +552,12 @@ def check_subj_verb_agreement(st: str, vt: str) -> bool:
         if "1" in v_parts and "1" not in s_parts:
             return False
         return not ("2" in v_parts and "2" not in s_parts)
-    if "p" not in s_parts and "p" not in v_parts and bool(s_parts & {"s", "m", "f", "n"}) and bool(v_parts & {"s", "m", "f", "n"}):
+    if (
+        "p" not in s_parts
+        and "p" not in v_parts
+        and bool(s_parts & {"s", "m", "f", "n"})
+        and bool(v_parts & {"s", "m", "f", "n"})
+    ):
         if "1" in v_parts and "1" not in s_parts:
             return False
         if "2" in v_parts and "2" not in s_parts:
@@ -478,17 +598,70 @@ def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
 
 
 PARENTHETICAL_PHRASES = {
-    "наприклад", "зокрема", "мабуть", "можливо", "певне", "певно", "безперечно", "безумовно",
-    "очевидно", "справді", "дійсно", "правда", "кажуть", "скажімо", "значить", "отже",
-    "навпаки", "до речі", "між іншим", "на жаль", "на щастя", "на біду", "по-перше", "по-друге",
-    "по-третє", "з одного боку", "з другого боку", "з іншого боку", "коротше кажучи",
-    "коротко кажучи", "власне кажучи", "щиро кажучи", "правду кажучи", "правду сказати",
-    "інакше кажучи", "м'яко кажучи", "чесно кажучи", "простіше кажучи", "коротко сказати",
-    "чесно сказати", "іншими словами", "одним словом", "словом", "так би мовити",
-    "на мою думку", "на твою думку", "на його думку", "на її думку", "на нашу думку",
-    "на вашу думку", "на їхню думку", "на мій погляд", "на твій погляд", "на його погляд",
-    "на її погляд", "на наш погляд", "на ваш погляд", "на їхній погляд", "на перший погляд",
-    "без сумніву", "як відомо", "як то кажуть", "як кажуть", "взагалі",
+    "наприклад",
+    "зокрема",
+    "мабуть",
+    "можливо",
+    "певне",
+    "певно",
+    "безперечно",
+    "безумовно",
+    "очевидно",
+    "справді",
+    "дійсно",
+    "правда",
+    "кажуть",
+    "скажімо",
+    "значить",
+    "отже",
+    "навпаки",
+    "до речі",
+    "між іншим",
+    "на жаль",
+    "на щастя",
+    "на біду",
+    "по-перше",
+    "по-друге",
+    "по-третє",
+    "з одного боку",
+    "з другого боку",
+    "з іншого боку",
+    "коротше кажучи",
+    "коротко кажучи",
+    "власне кажучи",
+    "щиро кажучи",
+    "правду кажучи",
+    "правду сказати",
+    "інакше кажучи",
+    "м'яко кажучи",
+    "чесно кажучи",
+    "простіше кажучи",
+    "коротко сказати",
+    "чесно сказати",
+    "іншими словами",
+    "одним словом",
+    "словом",
+    "так би мовити",
+    "на мою думку",
+    "на твою думку",
+    "на його думку",
+    "на її думку",
+    "на нашу думку",
+    "на вашу думку",
+    "на їхню думку",
+    "на мій погляд",
+    "на твій погляд",
+    "на його погляд",
+    "на її погляд",
+    "на наш погляд",
+    "на ваш погляд",
+    "на їхній погляд",
+    "на перший погляд",
+    "без сумніву",
+    "як відомо",
+    "як то кажуть",
+    "як кажуть",
+    "взагалі",
 }
 
 
@@ -551,7 +724,7 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if not cur_ves:
         return False
     for m in re.finditer(r",\s*(?:і|й|та)\s+", s):
-        before = s[:m.start()]
+        before = s[: m.start()]
         segments = [c.strip() for c in before.split(",") if c.strip()]
         if not segments:
             continue
@@ -571,7 +744,9 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
             w_seg = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", seg.lower())
             if any(marker in w_seg for marker in SUBORDINATE_MARKERS):
                 if not finite1_list:
-                    finite1_list = [(w, get_verb_finite_tags(w, cur_ves)) for w in w_seg if get_verb_finite_tags(w, cur_ves)]
+                    finite1_list = [
+                        (w, get_verb_finite_tags(w, cur_ves)) for w in w_seg if get_verb_finite_tags(w, cur_ves)
+                    ]
                     words_last = w_seg
                 break
             f_list = [(w, get_verb_finite_tags(w, cur_ves)) for w in w_seg if get_verb_finite_tags(w, cur_ves)]
@@ -583,7 +758,7 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         if not finite1_list:
             continue
 
-        after_clause = s[m.end():].split(",")[0]
+        after_clause = s[m.end() :].split(",")[0]
         words_after = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", after_clause.lower())
 
         v2_word = None
@@ -676,8 +851,8 @@ def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None)
     if not cur_ves:
         return False
     for m in re.finditer(r"(?<![,:;\-–—])\s+(?:і|й|та)\s+", s):
-        before = s[:m.start()].strip()
-        after = s[m.end():].strip()
+        before = s[: m.start()].strip()
+        after = s[m.end() :].strip()
 
         words_before = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", before)
         if not words_before:
@@ -702,7 +877,9 @@ def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None)
 
         all_v1 = []
         for i, w in enumerate(words_before):
-            if i > 0 and (words_before[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_before[i - 1], cur_ves)):
+            if i > 0 and (
+                words_before[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_before[i - 1], cur_ves)
+            ):
                 continue
             tags = get_verb_finite_tags(w, cur_ves)
             if tags:
@@ -737,7 +914,9 @@ def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None)
 
         all_v2 = []
         for i, w in enumerate(words_after):
-            if i > 0 and (words_after[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_after[i - 1], cur_ves)):
+            if i > 0 and (
+                words_after[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_after[i - 1], cur_ves)
+            ):
                 continue
             tags = get_verb_finite_tags(w, cur_ves)
             if tags:
@@ -772,8 +951,8 @@ def has_unclosed_appositive_comma(s: str, cur_ves: sqlite3.Cursor | None) -> boo
     if not cur_ves:
         return False
     for m in re.finditer(r",", s):
-        before = s[:m.start()].strip()
-        after = s[m.end():].strip()
+        before = s[: m.start()].strip()
+        after = s[m.end() :].strip()
 
         # If there's already a comma in before, skip to avoid flagging list items
         if "," in before:
@@ -855,7 +1034,20 @@ def has_unclosed_appositive_comma(s: str, cur_ves: sqlite3.Cursor | None) -> boo
 
 
 LOC_TIME_PREPOSITIONS = {
-    "під", "біля", "коло", "поблизу", "неподалік", "над", "в", "у", "на", "за", "перед", "при", "серед", "між",
+    "під",
+    "біля",
+    "коло",
+    "поблизу",
+    "неподалік",
+    "над",
+    "в",
+    "у",
+    "на",
+    "за",
+    "перед",
+    "при",
+    "серед",
+    "між",
 }
 
 
@@ -864,8 +1056,8 @@ def has_unclosed_clarification(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if not cur_ves:
         return False
     for m in re.finditer(r",", s):
-        before = s[:m.start()].strip()
-        after = s[m.end():].strip()
+        before = s[: m.start()].strip()
+        after = s[m.end() :].strip()
 
         # Clause before comma
         clause_before = before.split(",")[-1].strip()
@@ -917,7 +1109,11 @@ def has_unclosed_clarification(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
                         (w_s, w_s.capitalize()),
                     )
                     rows = cur_ves.fetchall()
-                    if rows and any("v_naz" in r[0] for r in rows) and not any(c in rows[0][0] for c in ["v_rod", "v_dav", "v_mis"] if len(rows) == 1):
+                    if (
+                        rows
+                        and any("v_naz" in r[0] for r in rows)
+                        and not any(c in rows[0][0] for c in ["v_rod", "v_dav", "v_mis"] if len(rows) == 1)
+                    ):
                         return True
                     if w_s.lower() in PRONOUNS_NAZ:
                         return True
@@ -1071,7 +1267,7 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     if not cur_ves:
         return False
     for m in COMPOUND_GENITIVE_PREP_RE.finditer(s):
-        after = s[m.end():].strip()
+        after = s[m.end() :].strip()
         if not after or after[0] in ",:;–—":
             continue
         words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", after)
@@ -1136,41 +1332,170 @@ def normalize_apostrophes(text: str) -> str:
 
 
 RELATIVE_PRONOUNS = {
-    "який", "яка", "яке", "які", "якого", "якій", "яким", "яких", "якої", "якому", "яку", "якими", "якою",
-    "котрий", "котра", "котре", "котрі", "котрого", "котрій", "котрим", "котрих", "котрої", "котрому", "котру", "котрими", "котрою",
-    "хто", "кого", "кому", "ким", "кім",
-    "що", "чого", "чому", "чим", "чім",
+    "який",
+    "яка",
+    "яке",
+    "які",
+    "якого",
+    "якій",
+    "яким",
+    "яких",
+    "якої",
+    "якому",
+    "яку",
+    "якими",
+    "якою",
+    "котрий",
+    "котра",
+    "котре",
+    "котрі",
+    "котрого",
+    "котрій",
+    "котрим",
+    "котрих",
+    "котрої",
+    "котрому",
+    "котру",
+    "котрими",
+    "котрою",
+    "хто",
+    "кого",
+    "кому",
+    "ким",
+    "кім",
+    "що",
+    "чого",
+    "чому",
+    "чим",
+    "чім",
 }
 OBLIQUE_SUBSTANTIVE_PRONOUNS = {
     # Oblique relative pronouns
-    "якого", "якій", "яким", "яких", "якої", "якому", "яку", "якими", "якою",
-    "котрого", "котрій", "котрим", "котрих", "котрої", "котрому", "котру", "котрими", "котрою",
-    "кого", "кому", "ким", "кім",
-    "чого", "чому", "чим", "чім",
+    "якого",
+    "якій",
+    "яким",
+    "яких",
+    "якої",
+    "якому",
+    "яку",
+    "якими",
+    "якою",
+    "котрого",
+    "котрій",
+    "котрим",
+    "котрих",
+    "котрої",
+    "котрому",
+    "котру",
+    "котрими",
+    "котрою",
+    "кого",
+    "кому",
+    "ким",
+    "кім",
+    "чого",
+    "чому",
+    "чим",
+    "чім",
     # 1st/2nd person oblique personal pronouns
-    "мене", "мені", "мною",
-    "тебе", "тобі", "тобою",
-    "нас", "нам", "нами",
-    "вас", "вам", "вами",
+    "мене",
+    "мені",
+    "мною",
+    "тебе",
+    "тобі",
+    "тобою",
+    "нас",
+    "нам",
+    "нами",
+    "вас",
+    "вам",
+    "вами",
     # 3rd person personal pronouns with obligatory prepositional n- (Правопис 2019 §114.2)
-    "нього", "ньому", "нім", "ним",
-    "неї", "ній", "нею",
-    "них", "ними",
+    "нього",
+    "ньому",
+    "нім",
+    "ним",
+    "неї",
+    "ній",
+    "нею",
+    "них",
+    "ними",
     # Reflexive
-    "себе", "собі", "собою",
+    "себе",
+    "собі",
+    "собою",
 }
 SUBORDINATE_CONJUNCTIONS = {
-    "де", "коли", "якщо", "хоч", "хоча", "бо", "тому що", "куди", "звідки", "доки", "поки", "як",
+    "де",
+    "коли",
+    "якщо",
+    "хоч",
+    "хоча",
+    "бо",
+    "тому що",
+    "куди",
+    "звідки",
+    "доки",
+    "поки",
+    "як",
 }
 PREPOSITIONS = {
-    "в", "у", "вві", "уві", "до", "від", "од", "з", "із", "зі", "ізо",
-    "за", "на", "над", "надо", "під", "підо", "перед", "передо", "по",
-    "через", "крізь", "при", "про", "без", "для", "після", "проти",
-    "серед", "коло", "біля", "повз", "круг", "довкола", "навколо",
-    "поруч", "посеред", "щодо", "заради", "замість", "всупереч",
-    "згідно", "наперекір", "завдяки", "поза", "понад", "попід",
-    "поміж", "між", "близько", "щойно", "супроти", "вздовж", "уздовж",
-    "крім", "опрач",
+    "в",
+    "у",
+    "вві",
+    "уві",
+    "до",
+    "від",
+    "од",
+    "з",
+    "із",
+    "зі",
+    "ізо",
+    "за",
+    "на",
+    "над",
+    "надо",
+    "під",
+    "підо",
+    "перед",
+    "передо",
+    "по",
+    "через",
+    "крізь",
+    "при",
+    "про",
+    "без",
+    "для",
+    "після",
+    "проти",
+    "серед",
+    "коло",
+    "біля",
+    "повз",
+    "круг",
+    "довкола",
+    "навколо",
+    "поруч",
+    "посеред",
+    "щодо",
+    "заради",
+    "замість",
+    "всупереч",
+    "згідно",
+    "наперекір",
+    "завдяки",
+    "поза",
+    "понад",
+    "попід",
+    "поміж",
+    "між",
+    "близько",
+    "щойно",
+    "супроти",
+    "вздовж",
+    "уздовж",
+    "крім",
+    "опрач",
 }
 
 
@@ -1324,9 +1649,8 @@ def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor
                 if not has_nested_prep:
                     if "noun" in w_pos:
                         has_noun_before_nested = True
-                    if (
-                        ("adj" in w_pos or "part" in w_pos or "pron" in w_pos)
-                        and words_can_agree(s_w, words[n_idx], cur)
+                    if ("adj" in w_pos or "part" in w_pos or "pron" in w_pos) and words_can_agree(
+                        s_w, words[n_idx], cur
                     ):
                         has_adj_before_nested = True
 
@@ -1343,23 +1667,76 @@ def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor
 
 
 TIME_DURATION_NOUNS = {
-    "день", "дні", "днів", "дня", "дню", "днем",
-    "ніч", "ночі", "ночей", "ніччю",
-    "доба", "добу", "доби", "добою", "діб",
-    "тиждень", "тижні", "тижнів", "тижня", "тижнем",
-    "місяць", "місяці", "місяців", "місяця", "місяцем",
-    "рік", "роки", "років", "року", "роком",
-    "година", "годину", "години", "годин", "годиною",
-    "хвилина", "хвилину", "хвилини", "хвилин", "хвилиною",
-    "секунда", "секунду", "секунди", "секунд", "секундою",
-    "мить", "миті", "митю", "митей",
-    "час", "часу", "часом", "часи", "часів",
-    "ранок", "ранку", "ранком", "ранки", "ранків",
-    "вечір", "вечора", "вечором", "вечори", "вечорів",
+    "день",
+    "дні",
+    "днів",
+    "дня",
+    "дню",
+    "днем",
+    "ніч",
+    "ночі",
+    "ночей",
+    "ніччю",
+    "доба",
+    "добу",
+    "доби",
+    "добою",
+    "діб",
+    "тиждень",
+    "тижні",
+    "тижнів",
+    "тижня",
+    "тижнем",
+    "місяць",
+    "місяці",
+    "місяців",
+    "місяця",
+    "місяцем",
+    "рік",
+    "роки",
+    "років",
+    "року",
+    "роком",
+    "година",
+    "годину",
+    "години",
+    "годин",
+    "годиною",
+    "хвилина",
+    "хвилину",
+    "хвилини",
+    "хвилин",
+    "хвилиною",
+    "секунда",
+    "секунду",
+    "секунди",
+    "секунд",
+    "секундою",
+    "мить",
+    "миті",
+    "митю",
+    "митей",
+    "час",
+    "часу",
+    "часом",
+    "часи",
+    "часів",
+    "ранок",
+    "ранку",
+    "ранком",
+    "ранки",
+    "ранків",
+    "вечір",
+    "вечора",
+    "вечором",
+    "вечори",
+    "вечорів",
 }
 
 
-def get_clause_agreeing_subject_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
+def get_clause_agreeing_subject_indices(
+    words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None
+) -> list[int]:
     """Return indices of words in the clause that can serve as agreeing nominative subjects for words[verb_idx]."""
     if not cur:
         return []
@@ -1369,8 +1746,11 @@ def get_clause_agreeing_subject_indices(words: list[str], verb_idx: int, cur: sq
         is_fem_past = any(":past:f" in r[0] for r in v_rows)
         if not is_fem_past:
             return [
-                i for i in range(len(words))
-                if i != verb_idx and not is_in_direct_or_enclosing_pp(words, i, cur) and not is_preposition(words[i].lower(), cur)
+                i
+                for i in range(len(words))
+                if i != verb_idx
+                and not is_in_direct_or_enclosing_pp(words, i, cur)
+                and not is_preposition(words[i].lower(), cur)
             ]
 
         subj_indices: list[int] = []
@@ -1409,51 +1789,173 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
 
 
 EVENT_DURATION_NOUNS = {
-    "вистава", "вистави", "виставі", "виставу", "виставою", "виставах", "вистав",
-    "спектакль", "спектаклю", "спектаклем", "спектаклі", "спектаклів",
-    "концерт", "концерту", "концертом", "концерти", "концертів",
-    "фільм", "фільму", "фільмом", "фільми", "фільмів",
+    "вистава",
+    "вистави",
+    "виставі",
+    "виставу",
+    "виставою",
+    "виставах",
+    "вистав",
+    "спектакль",
+    "спектаклю",
+    "спектаклем",
+    "спектаклі",
+    "спектаклів",
+    "концерт",
+    "концерту",
+    "концертом",
+    "концерти",
+    "концертів",
+    "фільм",
+    "фільму",
+    "фільмом",
+    "фільми",
+    "фільмів",
     "кіно",
-    "лекція", "лекції", "лекцію", "лекцією", "лекціях", "лекцій",
-    "урок", "уроку", "уроком", "уроки", "уроків",
-    "виступ", "виступу", "виступом", "виступи", "виступів",
-    "матч", "матчу", "матчем", "матчі", "матчів",
-    "гра", "гри", "гру", "грою", "ігри", "ігор", "іграх",
-    "сезон", "сезону", "сезоном", "сезони", "сезонів",
-    "сесія", "сесії", "сесію", "сесією", "сесіях", "сесій",
-    "репетиція", "репетиції", "репетицію", "репетицією", "репетиціях", "репетицій",
-    "пара", "пари", "пару", "парою", "пар",
+    "лекція",
+    "лекції",
+    "лекцію",
+    "лекцією",
+    "лекціях",
+    "лекцій",
+    "урок",
+    "уроку",
+    "уроком",
+    "уроки",
+    "уроків",
+    "виступ",
+    "виступу",
+    "виступом",
+    "виступи",
+    "виступів",
+    "матч",
+    "матчу",
+    "матчем",
+    "матчі",
+    "матчів",
+    "гра",
+    "гри",
+    "гру",
+    "грою",
+    "ігри",
+    "ігор",
+    "іграх",
+    "сезон",
+    "сезону",
+    "сезоном",
+    "сезони",
+    "сезонів",
+    "сесія",
+    "сесії",
+    "сесію",
+    "сесією",
+    "сесіях",
+    "сесій",
+    "репетиція",
+    "репетиції",
+    "репетицію",
+    "репетицією",
+    "репетиціях",
+    "репетицій",
+    "пара",
+    "пари",
+    "пару",
+    "парою",
+    "пар",
 }
 
 DURATION_MODIFIERS = {
-    "весь", "ввесь", "увесь", "всю", "усю", "все", "усе", "всі", "усі",
-    "цілий", "цілу", "ціле", "цілі",
-    "кожний", "кожну", "кожне", "кожні", "кожен",
+    "весь",
+    "ввесь",
+    "увесь",
+    "всю",
+    "усю",
+    "все",
+    "усе",
+    "всі",
+    "усі",
+    "цілий",
+    "цілу",
+    "ціле",
+    "цілі",
+    "кожний",
+    "кожну",
+    "кожне",
+    "кожні",
+    "кожен",
 }
 
 QUANTITY_WORDS = {
-    "багато", "кілька", "декілька", "скільки", "стільки",
-    "чимало", "трохи", "мало", "немало",
+    "багато",
+    "кілька",
+    "декілька",
+    "скільки",
+    "стільки",
+    "чимало",
+    "трохи",
+    "мало",
+    "немало",
 }
 
 MEASURE_AND_FREQUENCY_NOUNS = {
-    "раз", "рази", "разів", "разу",
-    "крок", "кроки", "кроків", "крока", "кроком",
-    "кілометр", "кілометри", "кілометрів", "кілометра", "кілометром",
-    "метр", "метри", "метрів", "метра", "метром",
-    "сантиметр", "сантиметри", "сантиметрів",
-    "миля", "милі", "миль",
+    "раз",
+    "рази",
+    "разів",
+    "разу",
+    "крок",
+    "кроки",
+    "кроків",
+    "крока",
+    "кроком",
+    "кілометр",
+    "кілометри",
+    "кілометрів",
+    "кілометра",
+    "кілометром",
+    "метр",
+    "метри",
+    "метрів",
+    "метра",
+    "метром",
+    "сантиметр",
+    "сантиметри",
+    "сантиметрів",
+    "миля",
+    "милі",
+    "миль",
 }
 
 PRENOMINAL_TITLES = {
-    "пані", "пан", "добродійка", "добродій",
-    "леді", "мадам", "міс", "місіс", "фрау", "мадмуазель", "мадемуазель",
-    "сеньйора", "сеньйорита", "фрейлейн",
+    "пані",
+    "пан",
+    "добродійка",
+    "добродій",
+    "леді",
+    "мадам",
+    "міс",
+    "місіс",
+    "фрау",
+    "мадмуазель",
+    "мадемуазель",
+    "сеньйора",
+    "сеньйорита",
+    "фрейлейн",
 }
 
-TEMPORAL_GEN_MODIFIERS: frozenset[str] = frozenset({
-    "року", "років", "дня", "днів", "тижня", "тижнів", "місяця", "місяців", "часу", "пори",
-})
+TEMPORAL_GEN_MODIFIERS: frozenset[str] = frozenset(
+    {
+        "року",
+        "років",
+        "дня",
+        "днів",
+        "тижня",
+        "тижнів",
+        "місяця",
+        "місяців",
+        "часу",
+        "пори",
+    }
+)
 
 
 def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
@@ -1505,7 +2007,9 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
                 ):
                     next_k += 1
                 if next_k < len(words) and next_k != verb_idx:
-                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[next_k].lower(),))
+                    cur.execute(
+                        "SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[next_k].lower(),)
+                    )
                     next_rows = cur.fetchall()
                     if any("v_naz" in r[0] for r in next_rows):
                         continue
@@ -1517,7 +2021,11 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
         is_qty = w_lower in QUANTITY_WORDS
         if is_numr or is_qty:
             next_k = i + 1
-            while next_k < len(words) and is_modifier_or_adv(words[next_k], cur) and not is_preposition(words[next_k], cur):
+            while (
+                next_k < len(words)
+                and is_modifier_or_adv(words[next_k], cur)
+                and not is_preposition(words[next_k], cur)
+            ):
                 next_k += 1
             if next_k < len(words) and not is_in_direct_or_enclosing_pp(words, next_k, cur):
                 head_w = words[next_k].lower()
@@ -1585,11 +2093,7 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
     # (e.g. 'після виготовлення мила', 'після купівлі мила', 'після продажу мила', 'після зміни режисера', 'від виконання роботи')
     if has_genitive_reading(words[idx], cur):
         k = idx - 1
-        while (
-            k >= 0
-            and not is_preposition(words[k], cur)
-            and is_modifier_or_adv(words[k], cur)
-        ):
+        while k >= 0 and not is_preposition(words[k], cur) and is_modifier_or_adv(words[k], cur):
             if cur:
                 try:
                     cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[k],))
@@ -1620,8 +2124,6 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
             return True
 
     return False
-
-
 
 
 RELATIVE_PRONOUN_PATTERN = (
@@ -1693,8 +2195,7 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     # Subordinate clauses require finite indicative or impersonal predicates (:past, :pres, :futr, :impers).
                     # Imperative (:impr) forms and non-finite infinitives (:inf) do not complete subordinate clauses.
                     has_finite_verb = any(
-                        any(t in r[1] for t in (":past", ":pres", ":futr", ":impers"))
-                        for r in verb_rows
+                        any(t in r[1] for t in (":past", ":pres", ":futr", ":impers")) for r in verb_rows
                     )
                     if not has_finite_verb:
                         continue
@@ -1729,7 +2230,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                             # - Adverbs of degree ('багато', 'трохи', 'мало') modify verbs directly ('багато шила', 'мало пила').
                             # - Numeral subjects ('одна пила чай', 'один став лікарем', 'дві пили чай', 'три пили чай', 'троє пили каву') function as subject + predicate unless accompanied by an animate adnominal genitive attribute ('дві пили майстра').
                             # - Numeral-noun phrases with adjectival agreement ('одне шило') or paucal governance ('два шила') function as noun complements.
-                            cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'numr'", (prev_w,))
+                            cur.execute(
+                                "SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'numr'", (prev_w,)
+                            )
                             numr_rows = cur.fetchall()
                             is_numr = bool(numr_rows) and "adv" not in prev_pos
 
@@ -1748,7 +2251,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                     next_w = words[post_k]
                                     cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (next_w,))
                                     next_rows = cur.fetchall()
-                                    is_pure_noun = bool(next_rows) and all(r[0] == "noun" and ":pron:" not in r[1] for r in next_rows)
+                                    is_pure_noun = bool(next_rows) and all(
+                                        r[0] == "noun" and ":pron:" not in r[1] for r in next_rows
+                                    )
                                     if is_pure_noun:
                                         break
                                     is_modifier = any(r[0] in ("adj", "adv") or ":pron:" in r[1] for r in next_rows)
@@ -1760,13 +2265,18 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                 if post_k < len(words):
                                     try:
                                         dep_w = words[post_k]
-                                        cur.execute("SELECT pos, tags, lemma FROM forms_all WHERE word_form = ?", (dep_w,))
+                                        cur.execute(
+                                            "SELECT pos, tags, lemma FROM forms_all WHERE word_form = ?", (dep_w,)
+                                        )
                                         dep_rows = cur.fetchall()
                                         dep_noun_rows = [r for r in dep_rows if r[0] == "noun"]
                                         dep_is_gen = any("v_rod" in r[1] for r in dep_noun_rows)
                                         dep_is_acc = any("v_zna" in r[1] for r in dep_noun_rows)
 
-                                        cur.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
+                                        cur.execute(
+                                            "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb'",
+                                            (words[idx],),
+                                        )
                                         v_lemmas = {r[0] for r in cur.fetchall()}
 
                                         dep_is_anim = any(":anim" in r[1] for r in dep_noun_rows)
@@ -1784,20 +2294,38 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
 
                                         if v_lemmas & {"пити"}:
                                             has_instrumental_predicate = any(
-                                                any("v_oru" in r[0] for r in cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (cw,)).fetchall())
-                                                for cw in words[post_k + 1:]
+                                                any(
+                                                    "v_oru" in r[0]
+                                                    for r in cur.execute(
+                                                        "SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'",
+                                                        (cw,),
+                                                    ).fetchall()
+                                                )
+                                                for cw in words[post_k + 1 :]
                                             )
-                                            if dep_is_gen and (is_locative_clause or has_instrumental_predicate or dep_is_anim):
+                                            if dep_is_gen and (
+                                                is_locative_clause or has_instrumental_predicate or dep_is_anim
+                                            ):
                                                 has_gen_dependent = True
                                             else:
                                                 has_gen_dependent = False
                                         elif v_lemmas & {"стати"}:
-                                            if dep_is_gen and dep_w not in TEMPORAL_GEN_MODIFIERS and dep_w not in DURATION_MODIFIERS:
+                                            if (
+                                                dep_is_gen
+                                                and dep_w not in TEMPORAL_GEN_MODIFIERS
+                                                and dep_w not in DURATION_MODIFIERS
+                                            ):
                                                 has_gen_dependent = True
                                             else:
                                                 has_ins = any(
-                                                    any("m:v_oru" in r[0] for r in cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (cw,)).fetchall())
-                                                    for cw in words[idx + 1:]
+                                                    any(
+                                                        "m:v_oru" in r[0]
+                                                        for r in cur.execute(
+                                                            "SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'",
+                                                            (cw,),
+                                                        ).fetchall()
+                                                    )
+                                                    for cw in words[idx + 1 :]
                                                 )
                                                 if has_ins:
                                                     has_gen_dependent = False
@@ -1817,7 +2345,11 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                     # Forms of 'один' ('один', 'одна', 'одне', 'одні'):
                                     # If prev_w agrees with words[idx] as a finite verb and has no animate genitive dependent, it is subject + predicate ('одна пила чай', 'один став лікарем', 'одні пили чай').
                                     # Otherwise, if it agrees with words[idx] as an adjectival noun, it is a noun phrase ('одне шило', 'одні пили майстра').
-                                    if prev_is_nom and verb_agrees_with_numeral(prev_w, verb_rows) and not has_gen_dependent:
+                                    if (
+                                        prev_is_nom
+                                        and verb_agrees_with_numeral(prev_w, verb_rows)
+                                        and not has_gen_dependent
+                                    ):
                                         is_governed_noun = False
                                     elif words_can_agree(prev_w, words[idx], cur, allow_numr=True):
                                         is_governed_noun = True
@@ -1826,9 +2358,15 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                     if any("v_rod" in r[1] and "p:v_rod" not in r[1] for r in noun_rows):
                                         is_governed_noun = True
                                 elif prev_w in {"два", "дві", "три", "чотири", "обидва", "обидві"}:
-                                    has_paucal_noun = any(any(c in r[1] for c in ("p:v_naz", "p:v_zna")) for r in noun_rows)
+                                    has_paucal_noun = any(
+                                        any(c in r[1] for c in ("p:v_naz", "p:v_zna")) for r in noun_rows
+                                    )
                                     if has_paucal_noun:
-                                        if prev_is_nom and verb_agrees_with_numeral(prev_w, verb_rows) and not has_gen_dependent:
+                                        if (
+                                            prev_is_nom
+                                            and verb_agrees_with_numeral(prev_w, verb_rows)
+                                            and not has_gen_dependent
+                                        ):
                                             is_governed_noun = False
                                         else:
                                             is_governed_noun = True
@@ -1844,9 +2382,7 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                             # 1b. If preceded by a quantity word/duration modifier and is an event duration noun
                             #     (e.g. 'кілька вистав', 'багато вистав', 'всю виставу'), it is an event noun complement
                             if (
-                                prev_w in QUANTITY_WORDS
-                                or prev_w in DURATION_MODIFIERS
-                                or bool(prev_pos & {"numr"})
+                                prev_w in QUANTITY_WORDS or prev_w in DURATION_MODIFIERS or bool(prev_pos & {"numr"})
                             ) and words[idx].lower() in EVENT_DURATION_NOUNS:
                                 continue
 
@@ -2109,7 +2645,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
                 _w2, s2, _e2 = nom_nouns[j + 1]
                 between_text = inside[e1:s2]
                 between_words = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", between_text.lower()))
-                is_coordinated = ("," in between_text or ";" in between_text or bool(between_words & COORD_CONJ))
+                is_coordinated = "," in between_text or ";" in between_text or bool(between_words & COORD_CONJ)
                 if not is_coordinated:
                     has_uncoordinated_noun_pair = True
                     break
@@ -2122,9 +2658,28 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
             nom_noun_word = nom_nouns[0][0]
             idx = content_tokens.index(nom_noun_word)
             possessives = {
-                "її", "його", "їхній", "їхня", "їхнє", "їхні",
-                "мій", "моя", "моє", "мої", "твій", "твоя", "твоє", "твої",
-                "наш", "наша", "наше", "наші", "ваш", "ваша", "ваше", "ваші",
+                "її",
+                "його",
+                "їхній",
+                "їхня",
+                "їхнє",
+                "їхні",
+                "мій",
+                "моя",
+                "моє",
+                "мої",
+                "твій",
+                "твоя",
+                "твоє",
+                "твої",
+                "наш",
+                "наша",
+                "наше",
+                "наші",
+                "ваш",
+                "ваша",
+                "ваше",
+                "ваші",
             }
             if (idx == 0 or (idx == 1 and content_tokens[0] in possessives)) and idx + 1 < len(content_tokens):
                 next_tok = content_tokens[idx + 1]
@@ -2146,10 +2701,28 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     return False
 
 
-NON_PREDICATE_PRONOUNS_ADVERBS: frozenset[str] = frozenset({
-    "хтось", "щось", "десь", "колись", "якось", "якийсь", "якась", "якесь", "якісь",
-    "чийсь", "чиясь", "чиєсь", "чиїсь", "весь", "увесь", "ввесь", "ось", "сьогодні",
-})
+NON_PREDICATE_PRONOUNS_ADVERBS: frozenset[str] = frozenset(
+    {
+        "хтось",
+        "щось",
+        "десь",
+        "колись",
+        "якось",
+        "якийсь",
+        "якась",
+        "якесь",
+        "якісь",
+        "чийсь",
+        "чиясь",
+        "чиєсь",
+        "чиїсь",
+        "весь",
+        "увесь",
+        "ввесь",
+        "ось",
+        "сьогодні",
+    }
+)
 
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -2167,7 +2740,33 @@ def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
                     return True
             except Exception:
                 pass
-        elif any(w.endswith(sfx) for sfx in ("ти", "тися", "ться", "лося", "лася", "лися", "лась", "лось", "лись", "ло", "ла", "ли", "в", "ють", "ять", "уть", "ать", "ить", "уться", "ються", "аться", "яться")):
+        elif any(
+            w.endswith(sfx)
+            for sfx in (
+                "ти",
+                "тися",
+                "ться",
+                "лося",
+                "лася",
+                "лися",
+                "лась",
+                "лось",
+                "лись",
+                "ло",
+                "ла",
+                "ли",
+                "в",
+                "ють",
+                "ять",
+                "уть",
+                "ать",
+                "ить",
+                "уться",
+                "ються",
+                "аться",
+                "яться",
+            )
+        ):
             return True
 
     # Zero-copula predicative dash between nominative nouns (Правопис 2019 §158.2)
@@ -2175,9 +2774,13 @@ def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if m and cur_ves:
         w1, w2 = m.group(1).lower(), m.group(2).lower()
         try:
-            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w1,))
+            cur_ves.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w1,)
+            )
             r1 = cur_ves.fetchone()
-            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w2,))
+            cur_ves.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w2,)
+            )
             r2 = cur_ves.fetchone()
             if r1 and r2:
                 return True
@@ -2312,19 +2915,31 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return False
 
     # 5. Erroneous comma before single 'або' or 'чи' joining homogeneous parts (Pravopys 2019, §158)
-    if re.search(r",\s+(?:або|чи)\s+(?:на|у|в|до|з|із|зі|за|під|над|по|про|для|від|без|через|при|між|перед)\s+[^\,]+[.!?…»\"]$", s, re.IGNORECASE):
+    if re.search(
+        r",\s+(?:або|чи)\s+(?:на|у|в|до|з|із|зі|за|під|над|по|про|для|від|без|через|при|між|перед)\s+[^\,]+[.!?…»\"]$",
+        s,
+        re.IGNORECASE,
+    ):
         return False
     m_abo_end = re.search(r",\s+(?:або|чи)\s+([а-яіїєґА-ЯІЇЄҐ']+)\s+([а-яіїєґА-ЯІЇЄҐ']+)[.!?…»\"]$", s, re.IGNORECASE)
-    if m_abo_end and not (check_has_predicate(m_abo_end.group(1), cur_ves) or check_has_predicate(m_abo_end.group(2), cur_ves)):
+    if m_abo_end and not (
+        check_has_predicate(m_abo_end.group(1), cur_ves) or check_has_predicate(m_abo_end.group(2), cur_ves)
+    ):
         return False
 
     # 6. Unclosed subordinate clause before coordinating conjunction joining matrix predicates
     # e.g., 'Він наголосив, що ... допомагає ... і закликав' (missing comma before 'і')
-    m_unclosed = re.search(r",\s+(?:що|щоб|якщо|якби|оскільки|бо)\b([^,]+?)\s+(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ']+)\b", s, re.IGNORECASE)
+    m_unclosed = re.search(
+        r",\s+(?:що|щоб|якщо|якби|оскільки|бо)\b([^,]+?)\s+(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ']+)\b", s, re.IGNORECASE
+    )
     if m_unclosed:
         sub_body = m_unclosed.group(1)
         v_next = m_unclosed.group(2).lower()
-        if check_has_predicate(v_next, cur_ves) and check_has_predicate(sub_body, cur_ves) and check_has_predicate(s[:m_unclosed.start()], cur_ves):
+        if (
+            check_has_predicate(v_next, cur_ves)
+            and check_has_predicate(sub_body, cur_ves)
+            and check_has_predicate(s[: m_unclosed.start()], cur_ves)
+        ):
             return False
 
     # 7. Subordinate clause completeness at end
@@ -2338,7 +2953,7 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         s,
         re.IGNORECASE,
     )
-    if m_clause_end and not check_has_predicate(s[:m_clause_end.start()], cur_ves):
+    if m_clause_end and not check_has_predicate(s[: m_clause_end.start()], cur_ves):
         return False
 
     # 9. Prepositional fragment starting with phrase followed by relative clause
@@ -2395,6 +3010,7 @@ def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> t
     except Exception:
         pass
     return clean_token, 1, False
+
 
 ALL_GRAMMAR_CATEGORIES = (
     "G/Case",
@@ -2517,10 +3133,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «опанувати» в українській мові перехідне і керує знахідним відмінком без прийменника: опанувати мову, опанувати професію, опанувати комп'ютерну грамотність (помилково: опанувати мовою).",
         "critique": "Конструкція «опанувати чим» порушує валентність перехідного дієслова: в українській літературній мові воно керує прямим знахідним відмінком («опанувати що»).",
         "examples": [
-            ("Студенти успішно опанували складний теоретичний матеріал з квантової фізики.", "Студенти успішно опанували складним теоретичним матеріалом з квантової фізики."),
-            ("Щоб стати фахівцем, необхідно опанувати сучасні цифрові технології.", "Щоб стати фахівцем, необхідно опанувати сучасними цифровими технологіями."),
-            ("Він за рік опанував українську мову на професійному рівні.", "Він за рік опанував українською мовою на професійному рівні."),
-            ("Інженери лабораторії опанували передове програмне забезпечення.", "Інженери лабораторії опанували передовим програмним забезпеченням."),
+            (
+                "Студенти успішно опанували складний теоретичний матеріал з квантової фізики.",
+                "Студенти успішно опанували складним теоретичним матеріалом з квантової фізики.",
+            ),
+            (
+                "Щоб стати фахівцем, необхідно опанувати сучасні цифрові технології.",
+                "Щоб стати фахівцем, необхідно опанувати сучасними цифровими технологіями.",
+            ),
+            (
+                "Він за рік опанував українську мову на професійному рівні.",
+                "Він за рік опанував українською мовою на професійному рівні.",
+            ),
+            (
+                "Інженери лабораторії опанували передове програмне забезпечення.",
+                "Інженери лабораторії опанували передовим програмним забезпеченням.",
+            ),
         ],
     },
     {
@@ -2532,10 +3160,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Іменник «завідувач» керує іменником у родовому відмінку без прийменника: завідувач кафедри, завідувач відділу, завідувач лабораторії (помилково під впливом російської: завідувач кафедрою).",
         "critique": "Конструкція «завідувач чим» є синтаксичною калькою; питома українська модель вимагає безприйменникового родового відмінка («завідувач чого»).",
         "examples": [
-            ("На засіданні виступив завідувач кафедри української філології.", "На засіданні виступив завідувач кафедрою української філології."),
-            ("Наказом призначено нового завідувача наукового відділу університету.", "Наказом призначено нового завідувача науковим відділом університету."),
-            ("Завідувач лабораторії підписав висновок експериментального дослідження.", "Завідувач лабораторією підписав висновок експериментального дослідження."),
-            ("Зверніться із заявою безпосередньо до завідувача поліклініки.", "Зверніться із заявою безпосередньо до завідувача поліклінікою."),
+            (
+                "На засіданні виступив завідувач кафедри української філології.",
+                "На засіданні виступив завідувач кафедрою української філології.",
+            ),
+            (
+                "Наказом призначено нового завідувача наукового відділу університету.",
+                "Наказом призначено нового завідувача науковим відділом університету.",
+            ),
+            (
+                "Завідувач лабораторії підписав висновок експериментального дослідження.",
+                "Завідувач лабораторією підписав висновок експериментального дослідження.",
+            ),
+            (
+                "Зверніться із заявою безпосередньо до завідувача поліклініки.",
+                "Зверніться із заявою безпосередньо до завідувача поліклінікою.",
+            ),
         ],
     },
     {
@@ -2552,10 +3192,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         ),
         "critique": "Конструкція «докоряти кого» у СУМ кваліфікується як розмовна (розм.), а в сучасній літературній нормі та діловому мовленні нормативним є виключно давальний відмінок («докоряти кому»).",
         "examples": [
-            ("Батько ніколи не докоряв синові за тимчасові життєві невдачі.", "Батько ніколи не докоряв сина за тимчасові життєві невдачі."),
-            ("Вона гірко докоряла собі за виявлену в розмові нестриманість.", "Вона гірко докоряла себе за виявлену в розмові нестриманість."),
-            ("Не варто докоряти друзям за дрібні помилки чи непорозуміння.", "Не варто докоряти друзів за дрібні помилки чи непорозуміння."),
-            ("Учитель спокійно пояснив правило, не докоряючи учневі за помилку.", "Учитель спокійно пояснив правило, не докоряючи учня за помилку."),
+            (
+                "Батько ніколи не докоряв синові за тимчасові життєві невдачі.",
+                "Батько ніколи не докоряв сина за тимчасові життєві невдачі.",
+            ),
+            (
+                "Вона гірко докоряла собі за виявлену в розмові нестриманість.",
+                "Вона гірко докоряла себе за виявлену в розмові нестриманість.",
+            ),
+            (
+                "Не варто докоряти друзям за дрібні помилки чи непорозуміння.",
+                "Не варто докоряти друзів за дрібні помилки чи непорозуміння.",
+            ),
+            (
+                "Учитель спокійно пояснив правило, не докоряючи учневі за помилку.",
+                "Учитель спокійно пояснив правило, не докоряючи учня за помилку.",
+            ),
         ],
     },
     {
@@ -2572,10 +3224,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         ),
         "critique": "Конструкція «навчатися чому» у словниках (зокрема СУМ) має позначку «рідко» і є нерекомендованою для сучасного літературного стилю; усталеною нормою є безприйменниковий родовий відмінок («навчатися чого»).",
         "examples": [
-            ("Студенти наполегливо навчаються української літературної мови.", "Студенти наполегливо навчаються українській літературній мові."),
-            ("Молодь охоче навчається сучасних цифрових технологій та дизайну.", "Молодь охоче навчається сучасним цифровим технологіям та дизайну."),
-            ("У дитинстві він сумлінно навчався музичного мистецтва та гри на фортепіано.", "У дитинстві він сумлінно навчався музичному мистецтву та грі на фортепіано."),
-            ("Майбутні інженери щодня навчаються комп'ютерного моделювання.", "Майбутні інженери щодня навчаються комп'ютерному моделюванню."),
+            (
+                "Студенти наполегливо навчаються української літературної мови.",
+                "Студенти наполегливо навчаються українській літературній мові.",
+            ),
+            (
+                "Молодь охоче навчається сучасних цифрових технологій та дизайну.",
+                "Молодь охоче навчається сучасним цифровим технологіям та дизайну.",
+            ),
+            (
+                "У дитинстві він сумлінно навчався музичного мистецтва та гри на фортепіано.",
+                "У дитинстві він сумлінно навчався музичному мистецтву та грі на фортепіано.",
+            ),
+            (
+                "Майбутні інженери щодня навчаються комп'ютерного моделювання.",
+                "Майбутні інженери щодня навчаються комп'ютерному моделюванню.",
+            ),
         ],
     },
     {
@@ -2587,10 +3251,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Прикметники «властивий» та «притаманний» керують давальним відмінком: властивий людині, притаманний мові (конструкція «властивий для кого» є калькою з російської «свойственный для»).",
         "critique": "Конструкція «властивий для кого» є синтаксичною калькою (з рос. «свойственный для»); українські прикметники «властивий» та «притаманний» керують давальним відмінком без прийменника («властивий кому»).",
         "examples": [
-            ("Така дивовижна доброзичливість властива щирим і відкритим людям.", "Така дивовижна доброзичливість властива для щирих і відкритих людей."),
-            ("Мелодійність та вокалізм властиві українській фонетичній системі.", "Мелодійність та вокалізм властиві для української фонетичної системи."),
-            ("Глибокий психологізм завжди був властивий творам класиків літератури.", "Глибокий психологізм завжди був властивий для творів класиків літератури."),
-            ("Висока точність формулювань властива академічному стилю мовлення.", "Висока точність формулювань властива для академічного стилю мовлення."),
+            (
+                "Така дивовижна доброзичливість властива щирим і відкритим людям.",
+                "Така дивовижна доброзичливість властива для щирих і відкритих людей.",
+            ),
+            (
+                "Мелодійність та вокалізм властиві українській фонетичній системі.",
+                "Мелодійність та вокалізм властиві для української фонетичної системи.",
+            ),
+            (
+                "Глибокий психологізм завжди був властивий творам класиків літератури.",
+                "Глибокий психологізм завжди був властивий для творів класиків літератури.",
+            ),
+            (
+                "Висока точність формулювань властива академічному стилю мовлення.",
+                "Висока точність формулювань властива для академічного стилю мовлення.",
+            ),
         ],
     },
     {
@@ -2602,10 +3278,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «дякувати» вимагає виключно давального відмінка: дякую вам, щиро дякуємо захисникам (вживання знахідного відмінка «дякую вас» є грубою синтаксичною калькою).",
         "critique": "Конструкція «дякувати кого» є синтаксичною калькою; дієслово «дякувати» в українській мові послідовно керує давальним відмінком («дякувати кому»).",
         "examples": [
-            ("Громада щиро дякує волонтерам за своєчасну доставку ліків.", "Громада щиро дякує волонтерів за своєчасну доставку ліків."),
-            ("Хочу від щирого серця подякувати своїм шановним наставникам.", "Хочу від щирого серця подякувати своїх шановних наставників."),
-            ("Ми дякуємо всім присутнім за активну участь у дискусії.", "Ми дякуємо всіх присутніх за активну участь у дискусії."),
-            ("Автор книжки щиро подякував читачам за цінні зауваження.", "Автор книжки щиро подякував читачів за цінні зауваження."),
+            (
+                "Громада щиро дякує волонтерам за своєчасну доставку ліків.",
+                "Громада щиро дякує волонтерів за своєчасну доставку ліків.",
+            ),
+            (
+                "Хочу від щирого серця подякувати своїм шановним наставникам.",
+                "Хочу від щирого серця подякувати своїх шановних наставників.",
+            ),
+            (
+                "Ми дякуємо всім присутнім за активну участь у дискусії.",
+                "Ми дякуємо всіх присутніх за активну участь у дискусії.",
+            ),
+            (
+                "Автор книжки щиро подякував читачам за цінні зауваження.",
+                "Автор книжки щиро подякував читачів за цінні зауваження.",
+            ),
         ],
     },
     {
@@ -2618,9 +3306,18 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "critique": "Конструкція «вибачте мене» є калькою з російського мовлення; в українській літературній мові дієслово «вибачати» керує давальним відмінком особи («вибачте мені»).",
         "examples": [
             ("Прошу, вибачте мені за цю мимовільну прикрість.", "Прошу, вибачте мене за цю мимовільну прикрість."),
-            ("Справжні друзі завжди щиро вибачають один одному дрібні непорозуміння.", "Справжні друзі завжди щиро вибачають один одного за дрібні непорозуміння."),
-            ("Він попросив вибачити йому спізнення на засідання ради.", "Він попросив вибачити його за спізнення на засідання ради."),
-            ("Учитель лагідно вибачив учневі невелику необачність.", "Учитель лагідно вибачив учня за невелику необачність."),
+            (
+                "Справжні друзі завжди щиро вибачають один одному дрібні непорозуміння.",
+                "Справжні друзі завжди щиро вибачають один одного за дрібні непорозуміння.",
+            ),
+            (
+                "Він попросив вибачити йому спізнення на засідання ради.",
+                "Він попросив вибачити його за спізнення на засідання ради.",
+            ),
+            (
+                "Учитель лагідно вибачив учневі невелику необачність.",
+                "Учитель лагідно вибачив учня за невелику необачність.",
+            ),
         ],
     },
     {
@@ -2632,10 +3329,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "В українській мові назва хвороби при дієслові «хворіти / захворіти» вживається з прийменником «на» у знахідному відмінку: хворіти на грип, захворіти на ангіну (орудний відмінок «хворіти грипом» є калькою з російської).",
         "critique": "Конструкція «хворіти грипом» в орудному відмінку є калькою з російської мови; в українській літературній мові нормативною є прийменникова модель «хворіти на що».",
         "examples": [
-            ("Узимку багато дітей у класі захворіло на сезонну застуду.", "Узимку багато дітей у класі захворіло сезонною застудою."),
-            ("Лікар наголосив, що пацієнт тривалий час хворіє на цукровий діабет.", "Лікар наголосив, що пацієнт тривалий час хворіє цукровим діабетом."),
-            ("Щеплення захищає організм від ризику захворіти на кір чи краснуху.", "Щеплення захищає організм від ризику захворіти кором чи краснухою."),
-            ("Він уже тиждень хворіє на запалення легень і перебуває під наглядом.", "Він уже тиждень хворіє запаленням легень і перебуває під наглядом."),
+            (
+                "Узимку багато дітей у класі захворіло на сезонну застуду.",
+                "Узимку багато дітей у класі захворіло сезонною застудою.",
+            ),
+            (
+                "Лікар наголосив, що пацієнт тривалий час хворіє на цукровий діабет.",
+                "Лікар наголосив, що пацієнт тривалий час хворіє цукровим діабетом.",
+            ),
+            (
+                "Щеплення захищає організм від ризику захворіти на кір чи краснуху.",
+                "Щеплення захищає організм від ризику захворіти кором чи краснухою.",
+            ),
+            (
+                "Він уже тиждень хворіє на запалення легень і перебуває під наглядом.",
+                "Він уже тиждень хворіє запаленням легень і перебуває під наглядом.",
+            ),
         ],
     },
     {
@@ -2657,10 +3366,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
             "зразковим літературним вибором є модель із родовим відмінком («знущатися з кого») (Є. Чак)."
         ),
         "examples": [
-            ("Правозахисники зафіксували численні факти того, як ворог знущався з полонених.", "Правозахисники зафіксували численні факти того, як ворог знущався над полоненими."),
-            ("Неприпустимо будь-кому знущатися з беззахисних тварин.", "Неприпустимо будь-кому знущатися над беззахисними тваринами."),
-            ("Цинічно знущатися зі світлої пам'яті полеглих героїв є неприпустимим вчинком.", "Цинічно знущатися над світлою пам'яттю полеглих героїв є неприпустимим вчинком."),
-            ("Окупаційна влада нещадно знущалася з місцевого цивільного населення.", "Окупаційна влада нещадно знущалася над місцевим цивільним населенням."),
+            (
+                "Правозахисники зафіксували численні факти того, як ворог знущався з полонених.",
+                "Правозахисники зафіксували численні факти того, як ворог знущався над полоненими.",
+            ),
+            (
+                "Неприпустимо будь-кому знущатися з беззахисних тварин.",
+                "Неприпустимо будь-кому знущатися над беззахисними тваринами.",
+            ),
+            (
+                "Цинічно знущатися зі світлої пам'яті полеглих героїв є неприпустимим вчинком.",
+                "Цинічно знущатися над світлою пам'яттю полеглих героїв є неприпустимим вчинком.",
+            ),
+            (
+                "Окупаційна влада нещадно знущалася з місцевого цивільного населення.",
+                "Окупаційна влада нещадно знущалася над місцевим цивільним населенням.",
+            ),
         ],
     },
     {
@@ -2672,10 +3393,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «глузувати» в українській мові традиційно керує прийменником «з» і родовим відмінком: глузувати з чужої біди, глузувати з забобонів (Є. Чак). Конструкція з прийменником «над» є стилістично вторинною.",
         "critique": "У сучасній українській літературній мові нормативною є модель «глузувати з кого/чого»; варіант «глузувати над ким» є стилістично небажаним.",
         "examples": [
-            ("Глузувати з прагнення людини до знань свідчить про невихованість.", "Глузувати над прагненням людини до знань свідчить про невихованість."),
-            ("Нечемно глузувати з чужих щирих поглядів під час академічної дискусії.", "Нечемно глузувати над чужими щирими поглядами під час академічної дискусії."),
-            ("Підлітки часто бездумно глузують з однолітків через їхню зовнішність.", "Підлітки часто бездумно глузують над однолітками через їхню зовнішність."),
-            ("Автор гостро глузує з лицемірства та жадібності тогочасних чиновників.", "Автор гостро глузує над лицемірством та жадібністю тогочасних чиновників."),
+            (
+                "Глузувати з прагнення людини до знань свідчить про невихованість.",
+                "Глузувати над прагненням людини до знань свідчить про невихованість.",
+            ),
+            (
+                "Нечемно глузувати з чужих щирих поглядів під час академічної дискусії.",
+                "Нечемно глузувати над чужими щирими поглядами під час академічної дискусії.",
+            ),
+            (
+                "Підлітки часто бездумно глузують з однолітків через їхню зовнішність.",
+                "Підлітки часто бездумно глузують над однолітками через їхню зовнішність.",
+            ),
+            (
+                "Автор гостро глузує з лицемірства та жадібності тогочасних чиновників.",
+                "Автор гостро глузує над лицемірством та жадібністю тогочасних чиновників.",
+            ),
         ],
     },
     {
@@ -2687,10 +3420,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «кепкувати» вимагає додатка в родовому відмінку з прийменником «з»: кепкувати з невдачі, кепкувати з хвалька (О. Пономарів).",
         "critique": "Керування «кепкувати над ким» є порушенням стилістичної норми; зразковий синтаксис вимагає конструкції «кепкувати з кого/чого».",
         "examples": [
-            ("Неприпустимо кепкувати з чужих фізичних вад чи недоліків.", "Неприпустимо кепкувати над чужими фізичними вадами чи недоліками."),
-            ("Друзі доброзичливо кепкували з його кумедних пригод у мандрівці.", "Друзі доброзичливо кепкували над його кумедними пригодами у мандрівці."),
-            ("Не варто кепкувати з недосвідченого новачка в перші дні його праці.", "Не варто кепкувати над недосвідченим новачком в перші дні його праці."),
-            ("Герої комедії дотепно кепкують з незграбних вчинків одне одного.", "Герої комедії дотепно кепкують над незграбними вчинками одне одного."),
+            (
+                "Неприпустимо кепкувати з чужих фізичних вад чи недоліків.",
+                "Неприпустимо кепкувати над чужими фізичними вадами чи недоліками.",
+            ),
+            (
+                "Друзі доброзичливо кепкували з його кумедних пригод у мандрівці.",
+                "Друзі доброзичливо кепкували над його кумедними пригодами у мандрівці.",
+            ),
+            (
+                "Не варто кепкувати з недосвідченого новачка в перші дні його праці.",
+                "Не варто кепкувати над недосвідченим новачком в перші дні його праці.",
+            ),
+            (
+                "Герої комедії дотепно кепкують з незграбних вчинків одне одного.",
+                "Герої комедії дотепно кепкують над незграбними вчинками одне одного.",
+            ),
         ],
     },
     {
@@ -2702,10 +3447,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «сміятися» в українській мові нормативно керує родовим відмінком із прийменником «з»: сміятися з жарту, сміятися з комедії (О. Пономарів, Б. Антоненко-Давидович). Модель «сміятися над ким» є калькою з російської.",
         "critique": "Конструкція «сміятися над ким/чим» є синтаксичною калькою; питома літературна модель вимагає родового відмінка з прийменником «з» («сміятися з кого/чого»).",
         "examples": [
-            ("Глядачі щиро сміялися з дотепних жартів ведучого програми.", "Глядачі щиро сміялися над дотепними жартами ведучого програми."),
-            ("Не можна сміятися з чужої біди чи нещасного випадку.", "Не можна сміятися над чужою бідою чи нещасним випадком."),
-            ("У залі всі дружно сміялися з веселих витівок акторів театру.", "У залі всі дружно сміялися над веселими витівками акторів театру."),
-            ("Він лише тихо посміявся з наївних побоювань своїх співрозмовників.", "Він лише тихо посміявся над наївними побоюваннями своїх співрозмовників."),
+            (
+                "Глядачі щиро сміялися з дотепних жартів ведучого програми.",
+                "Глядачі щиро сміялися над дотепними жартами ведучого програми.",
+            ),
+            (
+                "Не можна сміятися з чужої біди чи нещасного випадку.",
+                "Не можна сміятися над чужою бідою чи нещасним випадком.",
+            ),
+            (
+                "У залі всі дружно сміялися з веселих витівок акторів театру.",
+                "У залі всі дружно сміялися над веселими витівками акторів театру.",
+            ),
+            (
+                "Він лише тихо посміявся з наївних побоювань своїх співрозмовників.",
+                "Він лише тихо посміявся над наївними побоюваннями своїх співрозмовників.",
+            ),
         ],
     },
     {
@@ -2717,10 +3474,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Дієслово «потребувати» в українській мові послідовно керує родовим відмінком: потребувати допомоги, потребувати ремонту, потребувати уваги (знахідний відмінок є помилковим).",
         "critique": "Дієслово «потребувати» керує родовим відмінком без прийменника («потребувати чого»); конструкції зі знахідним відмінком порушують норму літературного слововживання.",
         "examples": [
-            ("Постраждалі внаслідок негоди люди потребують негайної медичної допомоги.", "Постраждалі внаслідок негоди люди потребують негайну медичну допомогу."),
-            ("Старовинна споруда замку давно потребує капітальної реставрації.", "Старовинна споруда замку давно потребує капітальну реставрацію."),
-            ("Цей складний випадок потребує детального фахового аналізу.", "Цей складний випадок потребує детальний фаховий аналіз."),
-            ("Розвиток науки в державі потребує системної фінансової підтримки.", "Розвиток науки в державі потребує системну фінансову підтримку."),
+            (
+                "Постраждалі внаслідок негоди люди потребують негайної медичної допомоги.",
+                "Постраждалі внаслідок негоди люди потребують негайну медичну допомогу.",
+            ),
+            (
+                "Старовинна споруда замку давно потребує капітальної реставрації.",
+                "Старовинна споруда замку давно потребує капітальну реставрацію.",
+            ),
+            (
+                "Цей складний випадок потребує детального фахового аналізу.",
+                "Цей складний випадок потребує детальний фаховий аналіз.",
+            ),
+            (
+                "Розвиток науки в державі потребує системної фінансової підтримки.",
+                "Розвиток науки в державі потребує системну фінансову підтримку.",
+            ),
         ],
     },
     {
@@ -2733,10 +3502,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "В українській мові про негативні наслідки, шкоду, біль, удар кажуть «завдати шкоди / завдати удару» (родовий відмінок). Слово «нанести» вживають лише в прямому значенні нанесення фарби чи нанесення на карту.",
         "critique": "Дієслово «завдати» сполучається з родовим відмінком («завдати шкоди, удару»); вживання «нанести збитки» є канцеляризмом і порушенням лексичної сполучуваності.",
         "examples": [
-            ("Рясні зливи завдали значних збитків місцевим фермерським господарствам.", "Рясні зливи нанесли значні збитки місцевим фермерським господарствам."),
-            ("Сили оборони завдали нищівного удару по позиціях окупантів.", "Сили оборони нанесли нищівний удар по позиціях окупантів."),
-            ("Необдумані рішення посадовців завдали істотної шкоди довкіллю.", "Необдумані рішення посадовців нанесли істотну шкоду довкіллю."),
-            ("Грубі слова кривдника завдали дитині глибокого душевного болю.", "Грубі слова кривдника нанесли дитині глибокий душевний біль."),
+            (
+                "Рясні зливи завдали значних збитків місцевим фермерським господарствам.",
+                "Рясні зливи нанесли значні збитки місцевим фермерським господарствам.",
+            ),
+            (
+                "Сили оборони завдали нищівного удару по позиціях окупантів.",
+                "Сили оборони нанесли нищівний удар по позиціях окупантів.",
+            ),
+            (
+                "Необдумані рішення посадовців завдали істотної шкоди довкіллю.",
+                "Необдумані рішення посадовців нанесли істотну шкоду довкіллю.",
+            ),
+            (
+                "Грубі слова кривдника завдали дитині глибокого душевного болю.",
+                "Грубі слова кривдника нанесли дитині глибокий душевний біль.",
+            ),
         ],
     },
     {
@@ -2749,10 +3530,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Нормативний український вислів — «вжити заходів». Вислів «прийняти міри» є грубою калькою з російської канцелярської мови («принять меры»).",
         "critique": "Вислів «прийняти міри» є канцелярською калькою з російської («принять меры»); нормативний український відповідник — «вжити заходів».",
         "examples": [
-            ("Керівництво підприємства зобов'язане терміново вжити заходів безпеки.", "Керівництво підприємства зобов'язане терміново прийняти міри безпеки."),
-            ("Комісія постановила вжити дієвих заходів для ліквідації аварії.", "Комісія постановила прийняти дієві міри для ліквідації аварії."),
-            ("Уряд вжив невідкладних заходів щодо стабілізації економіки.", "Уряд прийняв невідкладні міри щодо стабілізації економіки."),
-            ("Місцева влада вживає всіх можливих заходів для захисту населення.", "Місцева влада приймає всі можливі міри для захисту населення."),
+            (
+                "Керівництво підприємства зобов'язане терміново вжити заходів безпеки.",
+                "Керівництво підприємства зобов'язане терміново прийняти міри безпеки.",
+            ),
+            (
+                "Комісія постановила вжити дієвих заходів для ліквідації аварії.",
+                "Комісія постановила прийняти дієві міри для ліквідації аварії.",
+            ),
+            (
+                "Уряд вжив невідкладних заходів щодо стабілізації економіки.",
+                "Уряд прийняв невідкладні міри щодо стабілізації економіки.",
+            ),
+            (
+                "Місцева влада вживає всіх можливих заходів для захисту населення.",
+                "Місцева влада приймає всі можливі міри для захисту населення.",
+            ),
         ],
     },
     {
@@ -2767,9 +3560,18 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "examples": [
             ("Директор вирушив у службових справах до столиці.", "Директор вирушив по службових справах до столиці."),
             ("Суд виніс рішення суворо за чинним законом.", "Суд виніс рішення суворо по чинному закону."),
-            ("Консультації з правових питань проводяться щовівторка.", "Консультації по правовим питанням проводяться щовівторка."),
-            ("Сім'я зазвичай відпочиває у вихідні дні на природі.", "Сім'я зазвичай відпочиває по вихідним дням на природі."),
-            ("Працівник подав заяву про звільнення за власним бажанням.", "Працівник подав заяву про звільнення по власному бажанню."),
+            (
+                "Консультації з правових питань проводяться щовівторка.",
+                "Консультації по правовим питанням проводяться щовівторка.",
+            ),
+            (
+                "Сім'я зазвичай відпочиває у вихідні дні на природі.",
+                "Сім'я зазвичай відпочиває по вихідним дням на природі.",
+            ),
+            (
+                "Працівник подав заяву про звільнення за власним бажанням.",
+                "Працівник подав заяву про звільнення по власному бажанню.",
+            ),
         ],
     },
     {
@@ -2782,10 +3584,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "explanation": "Прийменник «при» вказує на просторову близькість (при дорозі, при університеті). Вживання «при» у значенні супроводу, умови чи часу є ненормативною синтаксичною моделлю (Б. Антоненко-Давидович «Як ми говоримо»).",
         "critique": "Вживання «при» у значенні супроводу, умови чи часу є ненормативною моделлю; нормативними відповідниками є конструкції «за умови», «під час», «за участі».",
         "examples": [
-            ("Конференція відбулася за активної участі провідних науковців.", "Конференція відбулася при активній участі провідних науковців."),
-            ("Договір набуває чинності лише за умови підписання обома сторонами.", "Договір набуває чинності лише при умові підписання обома сторонами."),
-            ("Видатний письменник ще за життя здобув світове визнання.", "Видатний письменник ще при житті здобув світове визнання."),
-            ("Ми детально обговоримо цей проєкт під час особистої зустрічі.", "Ми детально обговоримо цей проєкт при особистій зустрічі."),
+            (
+                "Конференція відбулася за активної участі провідних науковців.",
+                "Конференція відбулася при активній участі провідних науковців.",
+            ),
+            (
+                "Договір набуває чинності лише за умови підписання обома сторонами.",
+                "Договір набуває чинності лише при умові підписання обома сторонами.",
+            ),
+            (
+                "Видатний письменник ще за життя здобув світове визнання.",
+                "Видатний письменник ще при житті здобув світове визнання.",
+            ),
+            (
+                "Ми детально обговоримо цей проєкт під час особистої зустрічі.",
+                "Ми детально обговоримо цей проєкт при особистій зустрічі.",
+            ),
         ],
     },
 ]
@@ -2798,9 +3612,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Заміна невластивих активних дієприкметників теперішнього часу на -чий прикметниками або описовими зворотами.",
         "explanation": "В українській літературній мові активні дієприкметники теперішнього часу на -чий (-ачий, -ячий, -учий, -ючий) не мають широкого функціонування і вважаються нерекомендованими (О. Пономарів, Б. Антоненко-Давидович). Замість калькованого «бажаючий» слід вживати прикметник «охочий» або описову конструкцію «той, хто бажає».",
         "examples": [
-            ("Усі охочі взяти участь у конкурсі мають заповнити анкету.", "Усі бажаючі взяти участь у конкурсі мають заповнити анкету."),
-            ("Двері відчинені для кожного, хто бажає навчитися нової професії.", "Двері відчинені для кожного бажаючого навчитися нової професії."),
-            ("Для охочих відвідати екскурсію організовано спеціальний транспорт.", "Для бажаючих відвідати екскурсію організовано спеціальний транспорт."),
+            (
+                "Усі охочі взяти участь у конкурсі мають заповнити анкету.",
+                "Усі бажаючі взяти участь у конкурсі мають заповнити анкету.",
+            ),
+            (
+                "Двері відчинені для кожного, хто бажає навчитися нової професії.",
+                "Двері відчинені для кожного бажаючого навчитися нової професії.",
+            ),
+            (
+                "Для охочих відвідати екскурсію організовано спеціальний транспорт.",
+                "Для бажаючих відвідати екскурсію організовано спеціальний транспорт.",
+            ),
         ],
     },
     {
@@ -2810,9 +3633,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання нормативного віддієслівного прикметника замість невластивого активного дієприкметника на -чий.",
         "explanation": "Активні дієприкметники на -чий штучно поширювалися під впливом російської мови. В українській мові для вираження постійної ознаки або стану вживають прикметники з суфіксом -н- («панівний» замість «пануючий»).",
         "examples": [
-            ("У суспільстві утвердилася панівна думка щодо необхідності реформ.", "У суспільстві утвердилася пануюча думка щодо необхідності реформ."),
-            ("Панівні вітри в цьому регіоні дмуть переважно з північного заходу.", "Пануючі вітри в цьому регіоні дмуть переважно з північного заходу."),
-            ("Ця партія тривалий час зберігала свій панівний статус у парламенті.", "Ця партія тривалий час зберігала свій пануючий статус у парламенті."),
+            (
+                "У суспільстві утвердилася панівна думка щодо необхідності реформ.",
+                "У суспільстві утвердилася пануюча думка щодо необхідності реформ.",
+            ),
+            (
+                "Панівні вітри в цьому регіоні дмуть переважно з північного заходу.",
+                "Пануючі вітри в цьому регіоні дмуть переважно з північного заходу.",
+            ),
+            (
+                "Ця партія тривалий час зберігала свій панівний статус у парламенті.",
+                "Ця партія тривалий час зберігала свій пануючий статус у парламенті.",
+            ),
         ],
     },
     {
@@ -2822,9 +3654,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Розмежування значень: нормативний прикметник «чинний» для законів, правил та угод замість кальки «діючий».",
         "explanation": "Слово «діючий» є калькою з російського «действующий». Про закони, постанови, договори, нормативи та правопис в українській мові кажуть «чинний» (чинне законодавство, чинний правопис), а про дієві засоби чи ліки — «дієвий» або «ефективний».",
         "examples": [
-            ("Згідно з чинним законодавством України громадяни мають право на захист.", "Згідно з діючим законодавством України громадяни мають право на захист."),
-            ("Усі умови чинного договору залишаються незмінними до кінця року.", "Усі умови діючого договору залишаються незмінними до кінця року."),
-            ("Новий наказ скасовує дію попередніх правил і вводить чинні нормативи.", "Новий наказ скасовує дію попередніх правил і вводить діючі нормативи."),
+            (
+                "Згідно з чинним законодавством України громадяни мають право на захист.",
+                "Згідно з діючим законодавством України громадяни мають право на захист.",
+            ),
+            (
+                "Усі умови чинного договору залишаються незмінними до кінця року.",
+                "Усі умови діючого договору залишаються незмінними до кінця року.",
+            ),
+            (
+                "Новий наказ скасовує дію попередніх правил і вводить чинні нормативи.",
+                "Новий наказ скасовує дію попередніх правил і вводить діючі нормативи.",
+            ),
         ],
     },
     {
@@ -2834,9 +3675,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання питомого прикметника «навколишній» замість ненормативного активного дієприкметника «оточуючий».",
         "explanation": "Конструкція «оточуюче середовище» або «оточуючі люди» є прямою калькою з російської («окружающая среда», «окружающие»). В українській мові нормативно казати: «навколишнє середовище», «довкілля», «люди навколо» або «оточення».",
         "examples": [
-            ("Охорона навколишнього середовища є одним із найважливіших завдань людства.", "Охорона оточуючого середовища є одним із найважливіших завдань людства."),
-            ("Його доброзичливе ставлення завжди приваблювало навколишніх людей.", "Його доброзичливе ставлення завжди приваблювало оточуючих людей."),
-            ("Діти пізнають навколишній світ через гру та живе спілкування.", "Діти пізнають оточуючий світ через гру та живе спілкування."),
+            (
+                "Охорона навколишнього середовища є одним із найважливіших завдань людства.",
+                "Охорона оточуючого середовища є одним із найважливіших завдань людства.",
+            ),
+            (
+                "Його доброзичливе ставлення завжди приваблювало навколишніх людей.",
+                "Його доброзичливе ставлення завжди приваблювало оточуючих людей.",
+            ),
+            (
+                "Діти пізнають навколишній світ через гру та живе спілкування.",
+                "Діти пізнають оточуючий світ через гру та живе спілкування.",
+            ),
         ],
     },
     {
@@ -2846,9 +3696,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Заміна штучного дієприкметника «існуючий» питомими лексемами «наявний», «теперішній» або конструкцією «той, що є».",
         "explanation": "Активний дієприкметник «існуючий» суперечить законам української морфології. Залежно від контексту нормативними відповідниками є: «наявний», «теперішній», «сучасний» або описовий зворот «що існує / який є».",
         "examples": [
-            ("Комісія детально проаналізувала наявні недоліки в роботі системи.", "Комісія детально проаналізувала існуючі недоліки в роботі системи."),
-            ("За наявними даними, експеримент завершився цілком успішно.", "За існуючими даними, експеримент завершився цілком успішно."),
-            ("Він намагався подолати всі наявні перешкоди на шляху до мети.", "Він намагався подолати всі існуючі перешкоди на шляху до мети."),
+            (
+                "Комісія детально проаналізувала наявні недоліки в роботі системи.",
+                "Комісія детально проаналізувала існуючі недоліки в роботі системи.",
+            ),
+            (
+                "За наявними даними, експеримент завершився цілком успішно.",
+                "За існуючими даними, експеримент завершився цілком успішно.",
+            ),
+            (
+                "Він намагався подолати всі наявні перешкоди на шляху до мети.",
+                "Він намагався подолати всі існуючі перешкоди на шляху до мети.",
+            ),
         ],
     },
     {
@@ -2858,9 +3717,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання іменника «голова» (на зборах / у суді) замість скалькованого субстантивованого дієприкметника «головуючий».",
         "explanation": "В офіційно-діловому стилі української мови особу, яка веде збори чи судове засідання, називають «голова зборів», «голова суду», або описово «той, хто головує», але не «головуючий».",
         "examples": [
-            ("Голова засідання оголосив перерву для узгодження позицій сторін.", "Головуючий засідання оголосив перерву для узгодження позицій сторін."),
-            ("Після тривалих дебатів голова зборів поставив питання на голосування.", "Після тривалих дебатів головуючий зборів поставив питання на голосування."),
-            ("Голова суду закликав учасників процесу дотримуватися порядку в залі.", "Головуючий суду закликав учасників процесу дотримуватися порядку в залі."),
+            (
+                "Голова засідання оголосив перерву для узгодження позицій сторін.",
+                "Головуючий засідання оголосив перерву для узгодження позицій сторін.",
+            ),
+            (
+                "Після тривалих дебатів голова зборів поставив питання на голосування.",
+                "Після тривалих дебатів головуючий зборів поставив питання на голосування.",
+            ),
+            (
+                "Голова суду закликав учасників процесу дотримуватися порядку в залі.",
+                "Головуючий суду закликав учасників процесу дотримуватися порядку в залі.",
+            ),
         ],
     },
     {
@@ -2870,9 +3738,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання нормативного віддієслівного іменника на -ач «виконувач» у діловому мовленні замість дієприкметника на -чий.",
         "explanation": "В українській діловій номенклатурі посад усталеною нормою є найменування «виконувач обов'язків» (скорочено в. о.), а не «виконуючий обов'язки».",
         "examples": [
-            ("Наказом міністерства призначено нового виконувача обов'язків ректора.", "Наказом міністерства призначено нового виконуючого обов'язки ректора."),
-            ("Виконувач обов'язків директора підписав наказ про початок стажування.", "Виконуючий обов'язки директора підписав наказ про початок стажування."),
-            ("Свої підписи під угодою поставили виконувач обов'язків голови та секретар.", "Свої підписи під угодою поставили виконуючий обов'язки голови та секретар."),
+            (
+                "Наказом міністерства призначено нового виконувача обов'язків ректора.",
+                "Наказом міністерства призначено нового виконуючого обов'язки ректора.",
+            ),
+            (
+                "Виконувач обов'язків директора підписав наказ про початок стажування.",
+                "Виконуючий обов'язки директора підписав наказ про початок стажування.",
+            ),
+            (
+                "Свої підписи під угодою поставили виконувач обов'язків голови та секретар.",
+                "Свої підписи під угодою поставили виконуючий обов'язки голови та секретар.",
+            ),
         ],
     },
     {
@@ -2882,9 +3759,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання іменника на -альник «відпочивальник» замість субстантивованого дієприкметника «відпочиваючий».",
         "explanation": "Для позначення осіб, що перебувають на відпочинку чи лікуванні, українська мова послуговується питомими суфіксальними утвореннями: «відпочивальник», «курортник», а не калькованим словом «відпочиваючий».",
         "examples": [
-            ("Улітку санаторій гостинно приймає сотні відпочивальників з усієї країни.", "Улітку санаторій гостинно приймає сотні відпочиваючих з усієї країни."),
-            ("На чистому морському березі зібралися численні відпочивальники.", "На чистому морському березі зібралися численні відпочиваючі."),
-            ("Адміністрація курорту створила комфортні умови для всіх відпочивальників.", "Адміністрація курорту створила комфортні умови для всіх відпочиваючих."),
+            (
+                "Улітку санаторій гостинно приймає сотні відпочивальників з усієї країни.",
+                "Улітку санаторій гостинно приймає сотні відпочиваючих з усієї країни.",
+            ),
+            (
+                "На чистому морському березі зібралися численні відпочивальники.",
+                "На чистому морському березі зібралися численні відпочиваючі.",
+            ),
+            (
+                "Адміністрація курорту створила комфортні умови для всіх відпочивальників.",
+                "Адміністрація курорту створила комфортні умови для всіх відпочиваючих.",
+            ),
         ],
     },
     {
@@ -2894,9 +3780,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання питомого іменника або прикметника «подорожній», «мандрівник» замість дієприкметника «подорожуючий».",
         "explanation": "В українській мові особу, яка мандрує або подорожує, традиційно називають «подорожній» або «мандрівник», уникаючи штучних активних форм на -чий.",
         "examples": [
-            ("Втомлений подорожній зупинився на нічліг у затишному гірському готелі.", "Втомлений подорожуючий зупинився на нічліг у затишному гірському готелі."),
-            ("Для зручності подорожніх на вокзалі облаштували цілодобові зали очікування.", "Для зручності подорожуючих на вокзалі облаштували цілодобові зали очікування."),
-            ("Досвідчені мандрівники радять завжди мати при собі точну карту місцевості.", "Досвідчені подорожуючі радять завжди мати при собі точну карту місцевості."),
+            (
+                "Втомлений подорожній зупинився на нічліг у затишному гірському готелі.",
+                "Втомлений подорожуючий зупинився на нічліг у затишному гірському готелі.",
+            ),
+            (
+                "Для зручності подорожніх на вокзалі облаштували цілодобові зали очікування.",
+                "Для зручності подорожуючих на вокзалі облаштували цілодобові зали очікування.",
+            ),
+            (
+                "Досвідчені мандрівники радять завжди мати при собі точну карту місцевості.",
+                "Досвідчені подорожуючі радять завжди мати при собі точну карту місцевості.",
+            ),
         ],
     },
     {
@@ -2906,9 +3801,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання якісних прикметників «зворушливий», «бентежний», «хвилівний» замість кальки «хвилюючий».",
         "explanation": "Словосполучення на зразок «хвилююча мить» або «хвилююча зустріч» є синтаксичною та морфологічною калькою. Нормативними українськими відповідниками є «зворушлива мить», «бентежна зустріч», «зворушлива подія».",
         "examples": [
-            ("Це була надзвичайно зворушлива мить для всієї нашої родини.", "Це була надзвичайно хвилююча мить для всієї нашої родини."),
-            ("Актор виголосив зворушливу промову під час урочистого нагородження.", "Актор виголосив хвилюючу промову під час урочистого нагородження."),
-            ("У книзі описано бентежні події боротьби українського народу за волю.", "У книзі описано хвилюючі події боротьби українського народу за волю."),
+            (
+                "Це була надзвичайно зворушлива мить для всієї нашої родини.",
+                "Це була надзвичайно хвилююча мить для всієї нашої родини.",
+            ),
+            (
+                "Актор виголосив зворушливу промову під час урочистого нагородження.",
+                "Актор виголосив хвилюючу промову під час урочистого нагородження.",
+            ),
+            (
+                "У книзі описано бентежні події боротьби українського народу за волю.",
+                "У книзі описано хвилюючі події боротьби українського народу за волю.",
+            ),
         ],
     },
     {
@@ -2918,9 +3822,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання іменників «доповідач», «промовець» замість калькованого дієприкметника «виступаючий».",
         "explanation": "Для називання людини, яка виголошує промову чи доповідь, в українській мові є точні іменники: «доповідач», «промовець», або зворот «той, хто виступає».",
         "examples": [
-            ("Наступний доповідач навів переконливі статистичні докази своєї тези.", "Наступний виступаючий навів переконливі статистичні докази своєї тези."),
-            ("Слухачі уважно слухали промовця та ставили йому змістовні запитання.", "Слухачі уважно слухали виступаючого та ставили йому змістовні запитання."),
-            ("Голова подякував усім доповідачам за змістовні виступи на конференції.", "Голова подякував усім виступаючим за змістовні виступи на конференції."),
+            (
+                "Наступний доповідач навів переконливі статистичні докази своєї тези.",
+                "Наступний виступаючий навів переконливі статистичні докази своєї тези.",
+            ),
+            (
+                "Слухачі уважно слухали промовця та ставили йому змістовні запитання.",
+                "Слухачі уважно слухали виступаючого та ставили йому змістовні запитання.",
+            ),
+            (
+                "Голова подякував усім доповідачам за змістовні виступи на конференції.",
+                "Голова подякував усім виступаючим за змістовні виступи на конференції.",
+            ),
         ],
     },
     {
@@ -2930,9 +3843,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання питомого прикметника «наступний» замість суржикового дієприкметника «слідуючий».",
         "explanation": "Слово «слідуючий» є грубим суржиком (калькою російського «следующий»). В українській мові вживають виключно: «наступний день», «наступна зупинка», «такі правила».",
         "examples": [
-            ("Пасажири готуються до виходу на наступній зупинці біля парку.", "Пасажири готуються до виходу на слідуючій зупинці біля парку."),
-            ("У наступному розділі монографії автор детально описує хід експерименту.", "У слідуючому розділі монографії автор детально описує хід експерименту."),
-            ("Комісія сформулювала такі важливі висновки за підсумками аудиту.", "Комісія сформулювала слідуючі важливі висновки за підсумками аудиту."),
+            (
+                "Пасажири готуються до виходу на наступній зупинці біля парку.",
+                "Пасажири готуються до виходу на слідуючій зупинці біля парку.",
+            ),
+            (
+                "У наступному розділі монографії автор детально описує хід експерименту.",
+                "У слідуючому розділі монографії автор детально описує хід експерименту.",
+            ),
+            (
+                "Комісія сформулювала такі важливі висновки за підсумками аудиту.",
+                "Комісія сформулювала слідуючі важливі висновки за підсумками аудиту.",
+            ),
         ],
     },
     {
@@ -2942,9 +3864,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання іменника «початківець» замість дієприкметникової кальки «початкуючий».",
         "explanation": "Людину, яка тільки починає свою діяльність у певній галузі, українською мовою називають «початківець», а не «початкуючий фахівець / письменник».",
         "examples": [
-            ("Цей курс лекцій буде надзвичайно корисним для початківців у програмуванні.", "Цей курс лекцій буде надзвичайно корисним для початкуючих програмістів."),
-            ("Талановитий початківець опублікував свою першу збірку поезій.", "Початкуючий поет опублікував свою першу збірку поезій."),
-            ("Досвідчені майстри охоче допомагають початківцям опанувати ремесло.", "Досвідчені майстри охоче допомагають початкуючим опанувати ремесло."),
+            (
+                "Цей курс лекцій буде надзвичайно корисним для початківців у програмуванні.",
+                "Цей курс лекцій буде надзвичайно корисним для початкуючих програмістів.",
+            ),
+            (
+                "Талановитий початківець опублікував свою першу збірку поезій.",
+                "Початкуючий поет опублікував свою першу збірку поезій.",
+            ),
+            (
+                "Досвідчені майстри охоче допомагають початківцям опанувати ремесло.",
+                "Досвідчені майстри охоче допомагають початкуючим опанувати ремесло.",
+            ),
         ],
     },
     {
@@ -2954,9 +3885,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Уживання якісних прикметників «разючий», «показний», «глибокий» замість ненормативної кальки «вражаючий».",
         "explanation": "Замість невластивої українській мові активної форми «вражаючий» слід вживати точні прикметники: «разючий успіх», «разючий контраст», «несподівані результати».",
         "examples": [
-            ("Нові наукові відкриття продемонстрували разючий прогрес біотехнологій.", "Нові наукові відкриття продемонстрували вражаючий прогрес біотехнологій."),
-            ("Між двома регіонами спостерігається разючий контраст у рівні доходів.", "Між двома регіонами спостерігається вражаючий контраст у рівні доходів."),
-            ("Юний піаніст досяг разючих успіхів на міжнародному музичному конкурсі.", "Юний піаніст досяг вражаючих успіхів на міжнародному музичному конкурсі."),
+            (
+                "Нові наукові відкриття продемонстрували разючий прогрес біотехнологій.",
+                "Нові наукові відкриття продемонстрували вражаючий прогрес біотехнологій.",
+            ),
+            (
+                "Між двома регіонами спостерігається разючий контраст у рівні доходів.",
+                "Між двома регіонами спостерігається вражаючий контраст у рівні доходів.",
+            ),
+            (
+                "Юний піаніст досяг разючих успіхів на міжнародному музичному конкурсі.",
+                "Юний піаніст досяг вражаючих успіхів на міжнародному музичному конкурсі.",
+            ),
         ],
     },
     {
@@ -2966,9 +3906,18 @@ PARTICIPLE_FRAMES: list[dict[str, Any]] = [
         "rule": "Розмежування значень: уживання прикметника «провідний» для фахівців, підприємств та галузей замість «ведучий».",
         "explanation": "Слово «ведучий» в українській мові є іменником лише для позначення ведучого передачі, програми чи концерту, або технічного терміна (ведуче колесо). У значенні головний, передовий слід вживати прикметник «провідний» (провідний інженер, провідна галузь).",
         "examples": [
-            ("До складу ради директорів увійшли провідні інженери та вчені.", "До складу ради директорів увійшли ведучі інженери та вчені."),
-            ("Цей завод залишається провідним підприємством вітчизняного машинобудування.", "Цей завод залишається ведучим підприємством вітчизняного машинобудування."),
-            ("Провідні фахівці галузі підготували обґрунтовані пропозиції до законопроєкту.", "Ведучі фахівці галузі підготували обґрунтовані пропозиції до законопроєкту."),
+            (
+                "До складу ради директорів увійшли провідні інженери та вчені.",
+                "До складу ради директорів увійшли ведучі інженери та вчені.",
+            ),
+            (
+                "Цей завод залишається провідним підприємством вітчизняного машинобудування.",
+                "Цей завод залишається ведучим підприємством вітчизняного машинобудування.",
+            ),
+            (
+                "Провідні фахівці галузі підготували обґрунтовані пропозиції до законопроєкту.",
+                "Ведучі фахівці галузі підготували обґрунтовані пропозиції до законопроєкту.",
+            ),
         ],
     },
 ]
@@ -3044,12 +3993,26 @@ PEJORATIVE_STEMS: tuple[str, ...] = (
 )
 
 
-TUPYI_ADJECTIVE_FORMS: frozenset[str] = frozenset({
-    "тупий", "тупа", "тупе", "тупі",
-    "тупого", "тупому", "тупим", "тупих", "тупими",
-    "тупу", "тупою",
-    "тупіший", "тупіша", "тупіше", "тупіші", "найтупіший",
-})
+TUPYI_ADJECTIVE_FORMS: frozenset[str] = frozenset(
+    {
+        "тупий",
+        "тупа",
+        "тупе",
+        "тупі",
+        "тупого",
+        "тупому",
+        "тупим",
+        "тупих",
+        "тупими",
+        "тупу",
+        "тупою",
+        "тупіший",
+        "тупіша",
+        "тупіше",
+        "тупіші",
+        "найтупіший",
+    }
+)
 
 
 def verify_respectful_tone(text: str, pejorative_words: set[str]) -> bool:
@@ -3128,43 +4091,8 @@ def load_brown_uk_sentences(
             if s not in eval_seen_sentences and is_pristine_eval_sentence(s, cur_ves):
                 eval_seen_sentences.add(s)
                 eval_id = f"eval_gram_val_{hashlib.sha256(s.encode()).hexdigest()[:8]}"
-                eval_records.append({
-                    "eval_id": eval_id,
-                    "source_corpus": "brown_uk_good",
-                    "document_id": doc.stem,
-                    "sentence_text": s,
-                    "target_action": "PRESERVE",
-                    "is_pristine_control": True,
-                    "syntactic_category": "standard_literary_syntax",
-                    "linguistic_explanation": (
-                        "Речення взято з авторитетного золотого корпусу сучасної української мови "
-                        "(Brown-UK, розряд good) і становить незмінний негативний контроль (Gate 3). "
-                        "Граматичні зв'язки, відмінкове керування та порядок слів відповідають нормі."
-                    ),
-                    "source_metadata": {
-                        "source": "brown_uk",
-                        "partition": "held_out_eval",
-                        "doc_name": doc.name,
-                        "char_length": len(s),
-                    },
-                })
-                doc_count += 1
-                if doc_count >= per_doc_limit or len(eval_records) >= eval_count:
-                    break
-        if len(eval_records) >= eval_count:
-            break
-
-    # Pass 2: fill any remaining gap up to eval_count in balanced round-robin across held_out_docs
-    while len(eval_records) < eval_count:
-        added_in_round = 0
-        for doc in held_out_docs:
-            text = doc.read_text(encoding="utf-8")
-            clean_sents = split_clean_ukrainian_sentences(text)
-            for s in clean_sents:
-                if s not in eval_seen_sentences and is_pristine_eval_sentence(s, cur_ves):
-                    eval_seen_sentences.add(s)
-                    eval_id = f"eval_gram_val_{hashlib.sha256(s.encode()).hexdigest()[:8]}"
-                    eval_records.append({
+                eval_records.append(
+                    {
                         "eval_id": eval_id,
                         "source_corpus": "brown_uk_good",
                         "document_id": doc.stem,
@@ -3183,7 +4111,46 @@ def load_brown_uk_sentences(
                             "doc_name": doc.name,
                             "char_length": len(s),
                         },
-                    })
+                    }
+                )
+                doc_count += 1
+                if doc_count >= per_doc_limit or len(eval_records) >= eval_count:
+                    break
+        if len(eval_records) >= eval_count:
+            break
+
+    # Pass 2: fill any remaining gap up to eval_count in balanced round-robin across held_out_docs
+    while len(eval_records) < eval_count:
+        added_in_round = 0
+        for doc in held_out_docs:
+            text = doc.read_text(encoding="utf-8")
+            clean_sents = split_clean_ukrainian_sentences(text)
+            for s in clean_sents:
+                if s not in eval_seen_sentences and is_pristine_eval_sentence(s, cur_ves):
+                    eval_seen_sentences.add(s)
+                    eval_id = f"eval_gram_val_{hashlib.sha256(s.encode()).hexdigest()[:8]}"
+                    eval_records.append(
+                        {
+                            "eval_id": eval_id,
+                            "source_corpus": "brown_uk_good",
+                            "document_id": doc.stem,
+                            "sentence_text": s,
+                            "target_action": "PRESERVE",
+                            "is_pristine_control": True,
+                            "syntactic_category": "standard_literary_syntax",
+                            "linguistic_explanation": (
+                                "Речення взято з авторитетного золотого корпусу сучасної української мови "
+                                "(Brown-UK, розряд good) і становить незмінний негативний контроль (Gate 3). "
+                                "Граматичні зв'язки, відмінкове керування та порядок слів відповідають нормі."
+                            ),
+                            "source_metadata": {
+                                "source": "brown_uk",
+                                "partition": "held_out_eval",
+                                "doc_name": doc.name,
+                                "char_length": len(s),
+                            },
+                        }
+                    )
                     added_in_round += 1
                     if len(eval_records) >= eval_count:
                         break
@@ -3219,13 +4186,15 @@ def load_brown_uk_sentences(
             if indices[g] < len(genre_good_sents[g]):
                 s, doc_id = genre_good_sents[g][indices[g]]
                 indices[g] += 1
-                train_sentences.append({
-                    "text": s,
-                    "doc_id": doc_id,
-                    "genre": g,
-                    "source": "brown_uk_good",
-                    "is_error": False,
-                })
+                train_sentences.append(
+                    {
+                        "text": s,
+                        "doc_id": doc_id,
+                        "genre": g,
+                        "source": "brown_uk_good",
+                        "is_error": False,
+                    }
+                )
                 good_train_count += 1
                 added_in_round = True
                 if good_train_count >= 20000:
@@ -3253,13 +4222,15 @@ def load_brown_uk_sentences(
                 if soso_indices[g] < len(soso_by_genre[g]):
                     s, doc_id = soso_by_genre[g][soso_indices[g]]
                     soso_indices[g] += 1
-                    train_sentences.append({
-                        "text": s,
-                        "doc_id": doc_id,
-                        "genre": g,
-                        "source": "brown_uk_so_so",
-                        "is_error": True,
-                    })
+                    train_sentences.append(
+                        {
+                            "text": s,
+                            "doc_id": doc_id,
+                            "genre": g,
+                            "source": "brown_uk_so_so",
+                            "is_error": True,
+                        }
+                    )
                     soso_train_count += 1
                     added_in_round = True
                     if soso_train_count >= 20000:
@@ -3331,7 +4302,8 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
 
                 matches = list(ANN_RE.finditer(restored_sent))
                 valid_matches = [
-                    m for m in matches
+                    m
+                    for m in matches
                     if m.group(3).strip() in FULL_TAXONOMY and m.group(1).strip() and m.group(2).strip()
                 ]
                 # N2: Require that 100% of annotations in the sentence belong to FULL_TAXONOMY
@@ -3384,15 +4356,17 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
                     for m in valid_matches
                 ]
 
-                extracted.append({
-                    "doc_id": doc_id,
-                    "tag": primary_tag,
-                    "error": primary_err,
-                    "correction": primary_corr,
-                    "all_errors": all_errors,
-                    "source_sentence": src_sent,
-                    "target_sentence": tgt_sent,
-                })
+                extracted.append(
+                    {
+                        "doc_id": doc_id,
+                        "tag": primary_tag,
+                        "error": primary_err,
+                        "correction": primary_corr,
+                        "all_errors": all_errors,
+                        "source_sentence": src_sent,
+                        "target_sentence": tgt_sent,
+                    }
+                )
 
     return extracted
 
@@ -3422,20 +4396,18 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
                     f"3. Оцінка помилкової моделі: {frame['critique'].rstrip('.')}.",
                     f"4. Нормативна редакція: «{corr_clean}».",
                 ]
-                final_response = (
-                    f"У реченні допущено прийменникову помилку. Нормативний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
-                )
+                final_response = f"У реченні допущено прийменникову помилку. Нормативний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
             elif cat == "F/Style":
-                query = f"Відредагуйте речення з огляду на стилістичні норми української літературної мови: «{inc_clean}»."
+                query = (
+                    f"Відредагуйте речення з огляду на стилістичні норми української літературної мови: «{inc_clean}»."
+                )
                 reasoning = [
                     f"1. Аналіз стилістичної сполучуваності: у реченні «{inc_clean}» вжито варіантну модель керування при слові «{head_word}».",
                     f"2. Стилістична норма слововживання: в сучасній українській літературній мові усталеною і рекомендованою є модель {frame['correct_pattern'].rstrip('.')}.",
                     f"3. Оцінка помилкової моделі: {frame['critique'].rstrip('.')}.",
                     f"4. Нормативна редакція: «{corr_clean}».",
                 ]
-                final_response = (
-                    f"Для зразкового літературного стилю рекомендовано вжити модель {frame['correct_pattern'].rstrip('.')}: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
-                )
+                final_response = f"Для зразкового літературного стилю рекомендовано вжити модель {frame['correct_pattern'].rstrip('.')}: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
             elif cat == "F/Calque":
                 error_head = frame.get("error_head_word", head_word)
                 query = f"Відредагуйте речення та поясніть синтаксично-стилістичні норми слововживання: «{inc_clean}»."
@@ -3445,9 +4417,7 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
                     f"3. Оцінка помилкової моделі: {frame['critique'].rstrip('.')}.",
                     f"4. Нормативна редакція: «{corr_clean}».",
                 ]
-                final_response = (
-                    f"У реченні допущено стилістично небажану синтаксичну кальку («{error_head}» замість «{head_word}»). Рекомендований літературний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
-                )
+                final_response = f"У реченні допущено стилістично небажану синтаксичну кальку («{error_head}» замість «{head_word}»). Рекомендований літературний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
             else:
                 query = f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{inc_clean}»."
                 reasoning = [
@@ -3456,35 +4426,35 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
                     f"3. Оцінка помилкової моделі: {frame['critique'].rstrip('.')}.",
                     f"4. Нормативна редакція: «{corr_clean}».",
                 ]
-                final_response = (
-                    f"Речення містить помилку відмінкового керування. Нормативний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
-                )
+                final_response = f"Речення містить помилку відмінкового керування. Нормативний варіант: «{corr_clean}».\n\nПояснення: {frame['explanation'].rstrip('.')}."
 
-            trajectories.append({
-                "schema_version": "v1_grammar_valency_trajectory",
-                "trajectory_id": f"traj.valency.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",
-                "category": cat,
-                "subtype": subt,
-                "query": query,
-                "target_term": target_term,
-                "is_erroneous": True,
-                "original_text": incorrect_sent,
-                "corrected_text": correct_sent,
-                "morphemic_breakdown": {
-                    "syntactic_rule": frame["correct_pattern"],
-                    "grammatical_mechanism": frame["explanation"],
-                },
-                "vesum_attestation": [
-                    {
-                        "lemma": lemma,
-                        "vesum_forms_count": forms_cnt,
-                        "is_standard_attested": attested,
-                        "tags": ["morphological_attestation", "standard_lemma"],
-                    }
-                ],
-                "reasoning_steps": reasoning,
-                "final_response": final_response,
-            })
+            trajectories.append(
+                {
+                    "schema_version": "v1_grammar_valency_trajectory",
+                    "trajectory_id": f"traj.valency.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",
+                    "category": cat,
+                    "subtype": subt,
+                    "query": query,
+                    "target_term": target_term,
+                    "is_erroneous": True,
+                    "original_text": incorrect_sent,
+                    "corrected_text": correct_sent,
+                    "morphemic_breakdown": {
+                        "syntactic_rule": frame["correct_pattern"],
+                        "grammatical_mechanism": frame["explanation"],
+                    },
+                    "vesum_attestation": [
+                        {
+                            "lemma": lemma,
+                            "vesum_forms_count": forms_cnt,
+                            "is_standard_attested": attested,
+                            "tags": ["morphological_attestation", "standard_lemma"],
+                        }
+                    ],
+                    "reasoning_steps": reasoning,
+                    "final_response": final_response,
+                }
+            )
     return trajectories
 
 
@@ -3501,7 +4471,9 @@ def build_participle_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list
             inc_clean = incorrect_sent.rstrip(". ")
             corr_clean = correct_sent.rstrip(". ")
             err_stem = err_word[:5]
-            actual_err_tokens = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", incorrect_sent, re.IGNORECASE) if err_stem in w.lower()]
+            actual_err_tokens = [
+                w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", incorrect_sent, re.IGNORECASE) if err_stem in w.lower()
+            ]
             actual_err = actual_err_tokens[0] if actual_err_tokens else err_word
 
             query = f"Відредагуйте речення, усунувши невластиву українській мові дієприкметникову форму: «{inc_clean}»."
@@ -3517,31 +4489,33 @@ def build_participle_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list
                 f"Обґрунтування: {frame['explanation'].rstrip('.')}."
             )
 
-            trajectories.append({
-                "schema_version": "v1_grammar_valency_trajectory",
-                "trajectory_id": f"traj.participle.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",
-                "category": "G/Participle",
-                "subtype": "participle_norm",
-                "query": query,
-                "target_term": actual_err,
-                "is_erroneous": True,
-                "original_text": incorrect_sent,
-                "corrected_text": correct_sent,
-                "morphemic_breakdown": {
-                    "syntactic_rule": frame["rule"],
-                    "grammatical_mechanism": frame["explanation"],
-                },
-                "vesum_attestation": [
-                    {
-                        "lemma": lemma,
-                        "vesum_forms_count": forms_cnt,
-                        "is_standard_attested": attested,
-                        "tags": ["morphological_attestation", "standard_lemma"],
-                    }
-                ],
-                "reasoning_steps": reasoning,
-                "final_response": final_response,
-            })
+            trajectories.append(
+                {
+                    "schema_version": "v1_grammar_valency_trajectory",
+                    "trajectory_id": f"traj.participle.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",
+                    "category": "G/Participle",
+                    "subtype": "participle_norm",
+                    "query": query,
+                    "target_term": actual_err,
+                    "is_erroneous": True,
+                    "original_text": incorrect_sent,
+                    "corrected_text": correct_sent,
+                    "morphemic_breakdown": {
+                        "syntactic_rule": frame["rule"],
+                        "grammatical_mechanism": frame["explanation"],
+                    },
+                    "vesum_attestation": [
+                        {
+                            "lemma": lemma,
+                            "vesum_forms_count": forms_cnt,
+                            "is_standard_attested": attested,
+                            "tags": ["morphological_attestation", "standard_lemma"],
+                        }
+                    ],
+                    "reasoning_steps": reasoning,
+                    "final_response": final_response,
+                }
+            )
     return trajectories
 
 
@@ -3616,7 +4590,13 @@ def quote_sentence(s: str, outer_mark: str = ".") -> str:
 def quote_span(s: str, outer_mark: str = ".") -> str:
     """Quote a fragment or word, omitting outer mark if fragment already ends in punctuation."""
     s_str = s.strip()
-    if s_str.endswith(".") or s_str.endswith("?") or s_str.endswith("!") or s_str.endswith("…") or s_str.endswith("..."):
+    if (
+        s_str.endswith(".")
+        or s_str.endswith("?")
+        or s_str.endswith("!")
+        or s_str.endswith("…")
+        or s_str.endswith("...")
+    ):
         return f"«{s_str}»"
     return f"«{s_str}»{outer_mark}"
 
@@ -3631,25 +4611,118 @@ def sanitize_punctuation(text: str) -> str:
 def extract_context_content_sample(text: str, cur_ves: sqlite3.Cursor | None = None) -> tuple[str, str]:
     """Extract sample content words and a primary content token for sentence-grounded reasoning."""
     function_words = {
-        "було", "були", "буде", "вони", "його", "який", "яких", "яка", "яке",
-        "цього", "тому", "лише", "може", "також", "яким", "інших", "інший", "інша", "інше", "інші", "іншого", "іншому",
-        "свої", "свого", "своїх", "таких", "таким", "через", "після", "перед",
-        "коли", "якщо", "якби", "щоб", "потім", "проте", "однак", "тощо",
-        "хіба", "авжеж", "тобто", "чому", "цьому", "чомусь", "якому", "якомусь",
-        "кому", "чого", "чим", "ким", "комусь", "чимось", "кимось", "навіть",
-        "майже", "невже", "разом", "дуже", "зараз", "тепер", "туди", "сюди",
-        "звідти", "звідси", "навіщо", "відтак", "щодо", "посеред", "серед",
-        "поза", "поруч", "навколо", "довкола", "проти", "замість", "попри",
-        "ніхто", "ніщо", "нікого", "нічого", "нікому", "нічому", "ніким", "нічим",
-        "хтось", "щось", "когось", "чогось",
-        "всі", "усі", "всього", "усього", "всьому", "усьому", "всіх", "усіх", "всім", "усім",
-        "кожен", "кожна", "кожне", "кожні", "кожного", "кожному", "кожній",
-        "більше", "менше", "багато", "трохи", "цілому",
+        "було",
+        "були",
+        "буде",
+        "вони",
+        "його",
+        "який",
+        "яких",
+        "яка",
+        "яке",
+        "цього",
+        "тому",
+        "лише",
+        "може",
+        "також",
+        "яким",
+        "інших",
+        "інший",
+        "інша",
+        "інше",
+        "інші",
+        "іншого",
+        "іншому",
+        "свої",
+        "свого",
+        "своїх",
+        "таких",
+        "таким",
+        "через",
+        "після",
+        "перед",
+        "коли",
+        "якщо",
+        "якби",
+        "щоб",
+        "потім",
+        "проте",
+        "однак",
+        "тощо",
+        "хіба",
+        "авжеж",
+        "тобто",
+        "чому",
+        "цьому",
+        "чомусь",
+        "якому",
+        "якомусь",
+        "кому",
+        "чого",
+        "чим",
+        "ким",
+        "комусь",
+        "чимось",
+        "кимось",
+        "навіть",
+        "майже",
+        "невже",
+        "разом",
+        "дуже",
+        "зараз",
+        "тепер",
+        "туди",
+        "сюди",
+        "звідти",
+        "звідси",
+        "навіщо",
+        "відтак",
+        "щодо",
+        "посеред",
+        "серед",
+        "поза",
+        "поруч",
+        "навколо",
+        "довкола",
+        "проти",
+        "замість",
+        "попри",
+        "ніхто",
+        "ніщо",
+        "нікого",
+        "нічого",
+        "нікому",
+        "нічому",
+        "ніким",
+        "нічим",
+        "хтось",
+        "щось",
+        "когось",
+        "чогось",
+        "всі",
+        "усі",
+        "всього",
+        "усього",
+        "всьому",
+        "усьому",
+        "всіх",
+        "усіх",
+        "всім",
+        "усім",
+        "кожен",
+        "кожна",
+        "кожне",
+        "кожні",
+        "кожного",
+        "кожному",
+        "кожній",
+        "більше",
+        "менше",
+        "багато",
+        "трохи",
+        "цілому",
     }
-    words = [
-        w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{4,}\b", text)
-        if w.lower() not in function_words
-    ]
+    words = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{4,}\b", text) if w.lower() not in function_words]
     all_tokens = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text) if w.lower() not in function_words]
     valid_content_words: list[str] = []
     if cur_ves and words:
@@ -3666,10 +4739,16 @@ def extract_context_content_sample(text: str, cur_ves: sqlite3.Cursor | None = N
                 logger.warning("VESUM grounding token lookup failed for '%s': %s", w, e)
 
     primary_token = (
-        valid_content_words[0] if valid_content_words else (words[0] if words else (all_tokens[0] if all_tokens else text[:10]))
+        valid_content_words[0]
+        if valid_content_words
+        else (words[0] if words else (all_tokens[0] if all_tokens else text[:10]))
     )
     sample = (
-        valid_content_words[:3] if valid_content_words else (words[:3] if words else (all_tokens[:2] if all_tokens else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2]))
+        valid_content_words[:3]
+        if valid_content_words
+        else (
+            words[:3] if words else (all_tokens[:2] if all_tokens else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2])
+        )
     )
     sample_str = ", ".join(f"«{w}»" for w in sample) if sample else "ключових лексем"
     return sample_str, primary_token
@@ -3733,10 +4812,13 @@ def build_sft_dataset(
         if len(all_trajectories) >= target_count:
             break
         tag = item["tag"]
-        cat_meta = CATEGORY_EXPLANATIONS.get(tag, {
-            "title": "Граматична правильність",
-            "rule": "Дотримання граматичних норм української мови.",
-        })
+        cat_meta = CATEGORY_EXPLANATIONS.get(
+            tag,
+            {
+                "title": "Граматична правильність",
+                "rule": "Дотримання граматичних норм української мови.",
+            },
+        )
         all_errs = [
             {
                 "tag": e["tag"],
@@ -3752,7 +4834,9 @@ def build_sft_dataset(
         src_quoted = quote_sentence(src_clean, ".")
         tgt_quoted = quote_sentence(tgt_clean, ".")
         if len(all_errs) > 1:
-            query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: {src_quoted}"
+            query = (
+                f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: {src_quoted}"
+            )
             err_bullets = "\n".join(
                 f"- [{e['tag']}] «{e['error']}» замість «{e['correction']}» ({CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('title', 'Нормативність')})"
                 for e in all_errs
@@ -3858,9 +4942,7 @@ def build_sft_dataset(
                 f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
                 "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
             ]
-            final_response = (
-                f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
-            )
+            final_response = f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
@@ -3919,9 +5001,7 @@ def build_sft_dataset(
                 f"3. Збереження змісту: слововживання зі словом «{token_to_check}» є змістовно зрозумілим і не потребує нормативного втручання.",
                 "4. Підсумок: підтверджуємо прийнятність речення у відповідному функціональному стилі.",
             ]
-            final_response = (
-                f"Речення становить зразок живої мовної практики ({genre_title}, {genre_style}): {s_dot}\n\nСинтаксична структура та зміст є зрозумілими в цьому функціональному стилі."
-            )
+            final_response = f"Речення становить зразок живої мовної практики ({genre_title}, {genre_style}): {s_dot}\n\nСинтаксична структура та зміст є зрозумілими в цьому функціональному стилі."
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
@@ -3981,9 +5061,7 @@ def build_sft_dataset(
                     f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
                     "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
                 ]
-                final_response = (
-                    f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
-                )
+                final_response = f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
 
                 traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
                 traj = {
@@ -4077,12 +5155,14 @@ def shard_dataset(
 
         sha256 = sha256_file(shard_path)
         shard_files.append(shard_path)
-        shard_manifest_entries.append({
-            "shard_file": shard_filename,
-            "trajectories_count": len(shard_trajectories),
-            "size_kb": round(size_kb, 2),
-            "sha256": sha256,
-        })
+        shard_manifest_entries.append(
+            {
+                "shard_file": shard_filename,
+                "trajectories_count": len(shard_trajectories),
+                "size_kb": round(size_kb, 2),
+                "sha256": sha256,
+            }
+        )
 
     manifest = {
         "dataset_name": "uldr_v05_grammar_valency_sft",
@@ -4179,10 +5259,14 @@ def main() -> int:
         print("\n[4/5] Building VESUM case valency & participle frames...")
         valency_items = build_valency_trajectories(cur_ves=cur_ves)
         participle_items = build_participle_trajectories(cur_ves=cur_ves)
-        print(f"Generated {len(valency_items)} base valency trajectories and {len(participle_items)} participle trajectories.")
+        print(
+            f"Generated {len(valency_items)} base valency trajectories and {len(participle_items)} participle trajectories."
+        )
 
         # 5. Assemble and shard full SFT dataset
-        print(f"\n[5/5] Assembling and sharding {args.target_count} SFT trajectories across {args.shards_count} shards...")
+        print(
+            f"\n[5/5] Assembling and sharding {args.target_count} SFT trajectories across {args.shards_count} shards..."
+        )
         trajectories = build_sft_dataset(
             ua_gec_items=ua_gec_items,
             valency_items=valency_items,
@@ -4200,7 +5284,9 @@ def main() -> int:
         cat_dist = Counter(t["category"] for t in trajectories)
         sources_summary = {
             "ua_gec_grammar_and_fluency": sum(1 for t in trajectories if t.get("subtype") == "ua_gec_taxonomy"),
-            "vesum_valency_and_government": sum(1 for t in trajectories if t.get("subtype") in ("valency_government", "participle_norm")),
+            "vesum_valency_and_government": sum(
+                1 for t in trajectories if t.get("subtype") in ("valency_government", "participle_norm")
+            ),
             "brown_uk_corpus": sum(1 for t in trajectories if t.get("subtype", "").startswith("brown_uk")),
         }
 
@@ -4209,15 +5295,17 @@ def main() -> int:
 
         # Dynamically evaluate all invariants before building receipt (resolves F3)
         eval_texts = {rec["sentence_text"].strip() for rec in eval_records}
-        train_texts = {t["original_text"].strip() for t in trajectories} | {t["corrected_text"].strip() for t in trajectories}
-        zero_train_eval_leakage = (len(eval_texts & train_texts) == 0)
+        train_texts = {t["original_text"].strip() for t in trajectories} | {
+            t["corrected_text"].strip() for t in trajectories
+        }
+        zero_train_eval_leakage = len(eval_texts & train_texts) == 0
 
         eval_doc_stems = {rec["document_id"] for rec in eval_records}
         train_good_doc_stems = {b["doc_id"] for b in brown_uk_train if not b.get("is_error", False)}
-        document_partitioning_enforced = (len(eval_doc_stems & train_good_doc_stems) == 0 and len(eval_doc_stems) == 50)
+        document_partitioning_enforced = len(eval_doc_stems & train_good_doc_stems) == 0 and len(eval_doc_stems) == 50
 
         cats_present = set(cat_dist.keys())
-        full_20_category_taxonomy_ingested = (set(FULL_TAXONOMY) <= cats_present)
+        full_20_category_taxonomy_ingested = set(FULL_TAXONOMY) <= cats_present
 
         vesum_valency_verified = all(
             t["vesum_attestation"][0]["is_standard_attested"]
@@ -4276,12 +5364,16 @@ def main() -> int:
         receipt_path = output_dir / "release_receipt.json"
         receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         receipt_sha = sha256_file(receipt_path)
-        (output_dir / "release_receipt.json.sha256").write_text(f"{receipt_sha}  release_receipt.json\n", encoding="utf-8")
+        (output_dir / "release_receipt.json.sha256").write_text(
+            f"{receipt_sha}  release_receipt.json\n", encoding="utf-8"
+        )
 
         print("\n=== Release Complete ===")
         print(f"Receipt written to {receipt_path}")
         print(f"Eval records: {len(eval_records)} (SHA-256: {eval_sha256})")
-        print(f"SFT trajectories: {len(trajectories)} across {args.shards_count} shards (Max size: {max_shard_size_kb:.2f} KB)")
+        print(
+            f"SFT trajectories: {len(trajectories)} across {args.shards_count} shards (Max size: {max_shard_size_kb:.2f} KB)"
+        )
         print(f"Sources summary: {sources_summary}")
         print(f"Invariants verified: {invariants_verified}")
     finally:

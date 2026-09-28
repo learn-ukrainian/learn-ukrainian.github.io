@@ -101,15 +101,22 @@ def ingest_words(
     for index, word in enumerate(words):
         if index and sleep_s > 0:
             time.sleep(sleep_s)
+        outages: list[dict] = []
         fetched = fetch_entries(
             word,
             dictionaries=dictionaries,
             limit=len(dictionaries),
             user_agent=user_agent,
             max_text_chars=max_text_chars,
+            outages=outages,
         )
         rows.extend(fetched)
-        print(f"{word}: {len(fetched)} slovnyk.me row(s)")
+        note = ""
+        if outages:
+            # #9005: a failed fetch is not "no entry"; say so rather than print a bare count.
+            failed = sorted({f"{o['dictionary_slug']} ({o['error']})" for o in outages})
+            note = f" — UNAVAILABLE: {', '.join(failed)}"
+        print(f"{word}: {len(fetched)} slovnyk.me row(s){note}")
 
     if dry_run:
         print(f"[dry-run] would upsert {len(rows)} row(s) into {db_path}")

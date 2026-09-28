@@ -28,11 +28,13 @@ sys.path.insert(0, str(ROOT))
 from scripts.projects.open_model_data import (
     phase3_university_source_admission as admission,
 )
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 SCHEMA_VERSION = "phase3_complete_source_policy_v4"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_complete_source_policy_v4.schema.json"
-DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
-DEFAULT_V3_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
+SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_complete_source_policy_v4.schema.json"
+DEFAULT_POLICY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_complete_source_policy_v4.json"
+DEFAULT_V3_POLICY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_university_source_policy_v3.json"
 EXPECTED_POLICY_SHA256 = "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"
 
 EXPECTED_INPUT_HASHES = {
@@ -158,6 +160,10 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def write_text_atomic(path: Path, text: str) -> None:
     path = Path(path)
+    if path == DEFAULT_POLICY_PATH:
+        validate_policy_document(json.loads(text))
+        publish_bound_companion(ROOT, "open_model_other_indexes", "phase3_source_policy_v4", path, text.encode("utf-8"))
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     require(not path.is_symlink(), f"refusing symlink output: {path}")
     temporary_path: Path | None = None

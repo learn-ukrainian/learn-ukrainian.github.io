@@ -108,6 +108,19 @@ class TestHtmlValidation:
         closes = len(re.findall(r"</script>", text, re.I))
         assert opens == closes, f"Unbalanced <script> in {html_file.name}: {opens} open, {closes} close"
 
+    def test_index_footer_has_no_hardcoded_host(self):
+        """index.html must label its own origin dynamically (#8542).
+
+        The footer used to read "Serving from localhost:8765", which is wrong
+        whenever the Monitor API is served from anywhere else. It now derives
+        the label from ``location.host`` at render time.
+        """
+        text = (DASHBOARDS_DIR / "index.html").read_text()
+        assert "localhost:8765" not in text
+        assert "127.0.0.1" not in text
+        assert 'id="footer-origin"' in text
+        assert "location.host" in text
+
 
 # ── API endpoint coverage ───────────────────────────────────────
 

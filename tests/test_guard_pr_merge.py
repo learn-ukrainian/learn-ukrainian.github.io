@@ -23,7 +23,9 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
+import sys
 import threading
 from pathlib import Path
 
@@ -48,6 +50,109 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+
+@pytest.mark.parametrize("shape", [
+    "echo $((1 << EOF))\n{payload}\nEOF",
+    "((1 << EOF))\n{payload}\nEOF",
+    "echo ${x#<<EOF }\n{payload}\nEOF",
+    "let 'x=1<<EOF'\n{payload}\nEOF",
+    "true # <<EOF\n{payload}\nEOF",
+    ": <<EOF; \\\n{payload}\nnote\nEOF",
+    ": <<EOF\n$({payload})\nEOF",
+    ": <<EOF\n`{payload}`\nEOF",
+    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
+])
+def test_issue_9102_executable_payload_stays_visible(monkeypatch, shape):
+    command = shape.replace("{payload}", "gh pr merge 5 --squash")
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9102_real_let_heredoc_body_is_inert():
+    assert not _any_judged_merge("let x=1<<EOF\ngh pr merge 5 --squash\nEOF")
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
+@pytest.mark.parametrize("opener,closer", [
+    ("<<'EOF'", "EOF"),
+    ('<<"EOF"', "EOF"),
+    ("<<EOF", "EOF"),
+    ("<<-EOF", "\tEOF"),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert not _any_judged_merge(f"cat {opener}\ngh pr merge 5 --squash\n{closer}")
+    assert _any_judged_merge(f"cat {opener}\nnote\n{closer}\ngh pr merge 5 --squash")
+
+
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_pr_merge_visible(monkeypatch, first):
+    command = f"{first}\ngh pr merge 5 --squash\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9088_crlf_closer_keeps_pr_merge_visible(monkeypatch):
+    command = "cat <<EOF\r\nEOF\r\ngh pr merge 5 --squash\nEOF"
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_merge_visible(monkeypatch, opener, closer):
+    command = f"cat {opener}\ngh pr merge 5 --admin\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
+    command = "cat <<$'EOF'\ncat <<SAFE\ngh pr merge 5 --admin\nSAFE\nEOF"
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "gh pr merge 1 --admin"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 def _any_judged_merge(command: str) -> bool:
@@ -104,8 +209,7 @@ def _run(
         (["gh", "pr", "merge", "123", "--squash", "--delete-branch"], True),
         (["gh", "pr", "merge", "--auto", "--squash"], True),
         (["sudo", "gh", "pr", "merge", "5"], True),
-        # Admin merges belong to guard-admin-merge and are not double-judged here.
-        (["gh", "pr", "merge", "5", "--admin"], False),
+        (["gh", "pr", "merge", "5", "--admin"], True),
         # Disarms auto-merge rather than merging; it is the remedy, not the offence.
         (["gh", "pr", "merge", "5", "--disable-auto"], False),
         (["gh", "pr", "view", "5"], False),
@@ -162,11 +266,11 @@ def test_unrelated_command_is_untouched(monkeypatch):
     assert _run(monkeypatch, "git push origin main") == 0
 
 
-def test_admin_merge_is_deferred_to_admin_guard(monkeypatch):
+def test_admin_merge_is_judged_by_pr_guard(monkeypatch):
     judged: list[list[str]] = []
     monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
-    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 0
-    assert judged == []
+    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 2
+    assert judged == [["5", "--admin"]]
 
 
 @pytest.mark.parametrize(
@@ -183,12 +287,12 @@ def test_compound_merge_segments_are_judged(monkeypatch, command, checks, protec
     assert _run(monkeypatch, command, checks=checks, protected=protected) == 2
 
 
-def test_compound_admin_merge_is_deferred_without_double_judging(monkeypatch):
+def test_compound_admin_merge_is_judged(monkeypatch):
     judged: list[list[str]] = []
     monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
     command = "gh pr comment 5 --body note && gh pr merge 5 --admin"
-    assert _run(monkeypatch, command, checks=(["boundary-and-tests"], [])) == 0
-    assert judged == []
+    assert _run(monkeypatch, command, checks=(["boundary-and-tests"], [])) == 2
+    assert judged == [["5", "--admin"]]
 
 
 def test_disable_auto_is_not_a_merge(monkeypatch):
@@ -421,11 +525,11 @@ def test_disable_auto_equals_true_is_not_a_merge(monkeypatch):
     )
 
 
-def test_admin_equals_true_is_deferred_to_admin_guard(monkeypatch):
+def test_admin_equals_true_is_judged_by_pr_guard(monkeypatch):
     judged: list[list[str]] = []
     monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
-    assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 0
-    assert judged == []
+    assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 2
+    assert judged == [["5", "--admin=true"]]
 
 
 @pytest.mark.parametrize(
@@ -858,7 +962,7 @@ def test_flag_looking_value_does_not_force_auto_path():
 
 def test_real_control_flags_still_recognized():
     assert guard._merge_args(["gh", "pr", "merge", "5", "--disable-auto"]) is None
-    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) is None
+    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) == ["5", "--admin"]
     assert guard._flag_enabled(guard._classify(["5", "--auto"])[0], "auto")
 
 

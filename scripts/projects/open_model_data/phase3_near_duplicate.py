@@ -20,7 +20,9 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+DEFAULT_POLICY_PATH = (
+    ROOT / "registry/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+)
 POLICY_ID = "near_duplicate_policy_v1"
 POLICY_SCHEMA_VERSION = "near_duplicate_policy_v1"
 PINNED_POLICY_FINGERPRINT = "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e"
@@ -146,9 +148,7 @@ def load_policy(
     return value
 
 
-def pinned_policy_fingerprint(
-    *, path: Path = DEFAULT_POLICY_PATH, expected_fingerprint: str | None = None
-) -> str:
+def pinned_policy_fingerprint(*, path: Path = DEFAULT_POLICY_PATH, expected_fingerprint: str | None = None) -> str:
     """Return the verified policy fingerprint for sealing a downstream artifact."""
     return str(load_policy(path, expected_fingerprint=expected_fingerprint)["policy_fingerprint_sha256"])
 
@@ -250,22 +250,30 @@ def classify_records(
     if scope == "document":
         duplicate = _field(left, "source_document_identity") == _field(right, "source_document_identity")
         return MatchResult(
-            "exact" if duplicate else "nonmatch", duplicate, scope, "source_document_identity",
-            1.0 if duplicate else 0.0, 1.0 if duplicate else 0.0, pin,
+            "exact" if duplicate else "nonmatch",
+            duplicate,
+            scope,
+            "source_document_identity",
+            1.0 if duplicate else 0.0,
+            1.0 if duplicate else 0.0,
+            pin,
         )
     if scope == "unit":
         same_document = _field(left, "source_document_identity") == _field(right, "source_document_identity")
         duplicate = same_document and _field(left, "unit_identity") == _field(right, "unit_identity")
         return MatchResult(
-            "exact" if duplicate else "nonmatch", duplicate, scope, "source_document_identity_and_unit_identity",
-            1.0 if duplicate else 0.0, 1.0 if duplicate else 0.0, pin,
+            "exact" if duplicate else "nonmatch",
+            duplicate,
+            scope,
+            "source_document_identity_and_unit_identity",
+            1.0 if duplicate else 0.0,
+            1.0 if duplicate else 0.0,
+            pin,
         )
     left_span_fingerprint = _field(left, "span_fingerprint")
     right_span_fingerprint = _field(right, "span_fingerprint")
     if left_span_fingerprint == right_span_fingerprint:
-        return MatchResult(
-            "exact", True, scope, "span_fingerprint", 1.0, 1.0, pin
-        )
+        return MatchResult("exact", True, scope, "span_fingerprint", 1.0, 1.0, pin)
     return classify_texts(
         _field(left, "normalized_surface"), _field(right, "normalized_surface"), scope=scope, policy=active
     )
@@ -305,7 +313,9 @@ def _rule_surface_pair(rule: Mapping[str, Any]) -> tuple[str, str]:
     """Return the normalized incorrect-to-correct pair used for rule collapse."""
     original = rule.get("original_surface", rule.get("surface", rule.get("incorrect")))
     replacement = rule.get("replacement", rule.get("correct"))
-    _require(isinstance(original, str) and isinstance(replacement, str), "rule needs original/surface and replacement text")
+    _require(
+        isinstance(original, str) and isinstance(replacement, str), "rule needs original/surface and replacement text"
+    )
     return normalize(original), normalize(replacement)
 
 
@@ -314,9 +324,7 @@ def _pair_text(pair: tuple[str, str]) -> str:
     return f"incorrect {pair[0]} replacement {pair[1]}"
 
 
-def _pairs_are_duplicates(
-    left: tuple[str, str], right: tuple[str, str], *, policy: Mapping[str, Any]
-) -> bool:
+def _pairs_are_duplicates(left: tuple[str, str], right: tuple[str, str], *, policy: Mapping[str, Any]) -> bool:
     """Compare the whole normalized surface-pair key under the frozen policy."""
     return classify_texts(_pair_text(left), _pair_text(right), policy=policy).duplicate
 
@@ -407,7 +415,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             _json_output({"normalized_surface": normalize(args.text)})
         elif args.command == "fingerprint":
             item = fingerprint(args.text)
-            _json_output({"exact_fingerprint": item.exact_fingerprint, "normalized_surface": item.normalized_surface, "tokens": list(item.tokens)})
+            _json_output(
+                {
+                    "exact_fingerprint": item.exact_fingerprint,
+                    "normalized_surface": item.normalized_surface,
+                    "tokens": list(item.tokens),
+                }
+            )
         else:
             _json_output(classify_texts(args.left, args.right, scope=args.scope, policy=policy).as_dict())
     except NearDuplicatePolicyError as exc:

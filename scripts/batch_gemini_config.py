@@ -12,6 +12,8 @@ semantics for the existing importers.
 # ruff: noqa: F401, F403, I001
 # F401/I001: explicit re-imports below are intentional for pyright (star import alone is opaque).
 # F403: star re-export is the runtime shim contract.
+from typing import TYPE_CHECKING
+
 from batch.batch_gemini_config import *  # re-export everything for pyright
 from batch.batch_gemini_config import (
     CASCADE_PER_CALL_MAX_S,
@@ -39,10 +41,27 @@ from batch.batch_gemini_config import (
     TIMEOUT_VOCAB,
     TIMEOUT_WRITE,
     TIMEOUT_WRITE_NO_TOOLS,
-    VENV_PYTHON,
     get_module_index,
     get_module_paths,
     get_track_config,
     num_for_slug,
     slug_for_num,
 )
+
+if TYPE_CHECKING:
+    from batch.batch_gemini_config import VENV_PYTHON as VENV_PYTHON
+
+
+def __getattr__(name: str) -> str:
+    """Re-export ``VENV_PYTHON`` without resolving it at import.
+
+    The implementation resolves the interpreter on first use. Binding it
+    here would crash release snapshots and copied trees that import this
+    shim only for model names.
+    """
+    if name != "VENV_PYTHON":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    from batch.batch_gemini_config import VENV_PYTHON
+
+    globals()["VENV_PYTHON"] = VENV_PYTHON
+    return VENV_PYTHON

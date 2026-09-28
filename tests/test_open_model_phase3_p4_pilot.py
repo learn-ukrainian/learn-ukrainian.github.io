@@ -258,14 +258,14 @@ def test_current_pilot_is_exact_zero_row_nonadmitting_contract() -> None:
 
 def test_frozen_input_bindings_and_schema_digest_are_exact() -> None:
     value = _contract()
-    expected = {
-        name: {"path": path, "sha256": digest}
-        for name, (path, digest) in EXPECTED_INPUT_BINDINGS.items()
-    }
+    expected = {name: {"path": path, "sha256": digest} for name, (path, digest) in EXPECTED_INPUT_BINDINGS.items()}
     assert value["bindings"] == expected
     assert value["controlling_outcome_sha256"] == EXPECTED_OUTCOME_SHA256
     assert value["generator"]["path"] == "scripts/projects/open_model_data/build_phase3_p4_pilot.py"
-    assert value["generator"]["implementation_sha256"] == p4.sha256_file(Path(p4.__file__).resolve())
+    assert value["generator"]["implementation_sha256"] == p4.FROZEN_GENERATOR_SHA256
+    assert p4.sha256_file(Path(p4.__file__).resolve()) != p4.FROZEN_GENERATOR_SHA256
+    for source, expected in p4.CURRENT_PREDECESSOR_SHA256.items():
+        assert p4.sha256_file(source) == expected
     assert value["generator"]["schema_sha256"] == p4.sha256_file(p4.SCHEMA_PATH)
 
 
@@ -303,22 +303,21 @@ def test_schema_is_draft_2020_12_and_strict_at_every_object_boundary() -> None:
         (("bindings", "p2_canonical_contracts", "sha256"), "0" * 64),
         (("bindings", "modern_contact_channels", "sha256"), "f" * 64),
         (("candidate_metadata_contract", "candidate_preflight_only"), False),
-        (("candidate_metadata_contract", "future_nonempty_version_must_verify_adjudication_registry_membership"), False),
+        (
+            ("candidate_metadata_contract", "future_nonempty_version_must_verify_adjudication_registry_membership"),
+            False,
+        ),
         (("candidate_metadata_contract", "future_nonempty_version_must_verify_adjudication_evidence_binding"), False),
     ],
 )
-def test_validator_rejects_denominator_claim_and_parent_hash_drift(
-    path: tuple[str, ...], replacement: Any
-) -> None:
+def test_validator_rejects_denominator_claim_and_parent_hash_drift(path: tuple[str, ...], replacement: Any) -> None:
     value = _contract()
     _set_path(value, path, replacement)
     _reject_contract(value)
 
 
 @pytest.mark.parametrize("name", sorted(EXPECTED_INPUT_BINDINGS))
-def test_builder_fails_closed_when_any_bound_input_digest_drifts(
-    name: str, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_builder_fails_closed_when_any_bound_input_digest_drifts(name: str, monkeypatch: pytest.MonkeyPatch) -> None:
     target = {
         "p2_canonical_contracts": p4.P2_PATH,
         "scope_circularity_firewall": p4.FIREWALL_PATH,
@@ -406,23 +405,24 @@ def test_zero_row_state_rejects_any_emitted_row_counter_or_vacuous_claim(
 @pytest.mark.parametrize(
     ("path", "replacement"),
     [
-        (("residuals",), [
-            "canonical_rule_slots_R_zero",
-            "source_qualified_adjudication_registry_frozen_nonadmitting",
-            "unknown_rights_blockers_39",
-            "modern_contact_channels_blocked",
-            "historical_and_dialect_protection_source_gaps_open",
-            "hidden_blocker",
-        ]),
+        (
+            ("residuals",),
+            [
+                "canonical_rule_slots_R_zero",
+                "source_qualified_adjudication_registry_frozen_nonadmitting",
+                "unknown_rights_blockers_39",
+                "modern_contact_channels_blocked",
+                "historical_and_dialect_protection_source_gaps_open",
+                "hidden_blocker",
+            ],
+        ),
         (("residuals",), ["hidden_blocker"] * 6),
         (("current_construction", "construction_state"), "blocked_without_reason"),
         (("current_construction", "candidate_admission_implemented"), False),
         (("claims", "historical_or_dialect_modernized"), True),
     ],
 )
-def test_blockers_cannot_be_hidden_removed_or_reclassified(
-    path: tuple[str, ...], replacement: Any
-) -> None:
+def test_blockers_cannot_be_hidden_removed_or_reclassified(path: tuple[str, ...], replacement: Any) -> None:
     value = _contract()
     _set_path(value, path, replacement)
     _reject_contract(value)
@@ -474,9 +474,7 @@ def test_firewall_deny_list_and_atomic_split_requirements_are_exact() -> None:
     ):
         mutations.append(lambda item, key=key: item["firewall_constraints"].__setitem__(key, False))
     mutations.append(
-        lambda item: item["firewall_constraints"].__setitem__(
-            "atomic_split_requirements", ["source", "document"]
-        )
+        lambda item: item["firewall_constraints"].__setitem__("atomic_split_requirements", ["source", "document"])
     )
     for mutate in mutations:
         candidate = copy.deepcopy(value)
@@ -635,13 +633,3 @@ def test_schema_rejects_uppercase_or_noncanonical_hashes_before_contract_compari
         Draft202012Validator(_json(p4.SCHEMA_PATH)).validate(value)
     with pytest.raises(p4.P4PilotError):
         p4.validate_contract(value)
-
-
-@pytest.fixture(autouse=True)
-def _frozen_exporter_pin(monkeypatch: pytest.MonkeyPatch) -> None:
-    original = p4.sha256_file
-    def frozen_sha(path: Path) -> str:
-        if Path(path) == p4.EXPORT_ADMISSION_GATE_PATH:
-            return p4.PINS[p4.EXPORT_ADMISSION_GATE_PATH]
-        return original(path)
-    monkeypatch.setattr(p4, "sha256_file", frozen_sha)
