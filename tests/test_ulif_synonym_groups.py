@@ -9,14 +9,20 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
+from collections.abc import Callable
+from dataclasses import replace
 from pathlib import Path
+
+import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.practice.ulif_synonym_groups import (
+    UlifSynonymGroup,
     UlifSynonymGroups,
+    group_from_payload,
     parse_group_members,
     payload_from_row_html,
     plain,
@@ -56,6 +62,28 @@ ZALYSHATY = (
 
 def _groups(*rows: str) -> UlifSynonymGroups:
     return UlifSynonymGroups.from_payloads(payload_from_row_html(row) for row in rows)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda group: replace(group, group_id="changed"),
+        lambda group: replace(group, terms=(*group.terms, "new-member")),
+        lambda group: replace(group, members=(replace(group.members[0], lemma="changed"), *group.members[1:])),
+        lambda group: replace(group, members=(group.members[0], replace(group.members[1], cluster=1), *group.members[2:])),
+        lambda group: replace(group, members=(group.members[0], replace(group.members[1], labels=("розм.",)), *group.members[2:])),
+        lambda group: replace(group, members=(group.members[0], replace(group.members[1], note="changed"), *group.members[2:])),
+        lambda group: replace(group, members=(group.members[0], replace(group.members[1], perfective=True), *group.members[2:])),
+        lambda group: replace(group, members=(group.members[1], group.members[0], *group.members[2:])),
+    ],
+)
+def test_fingerprint_changes_with_membership_or_pair_eligibility(
+    change: Callable[[UlifSynonymGroup], UlifSynonymGroup],
+) -> None:
+    group = group_from_payload(payload_from_row_html(SPYSOK))
+    assert group is not None
+    changed = change(group)
+    assert UlifSynonymGroups([group]).fingerprint() != UlifSynonymGroups([changed]).fingerprint()
 
 
 def test_plain_strips_stress_brackets_and_hyphen_spacing() -> None:

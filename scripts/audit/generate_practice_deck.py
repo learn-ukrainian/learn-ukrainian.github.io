@@ -20,6 +20,7 @@ import unicodedata
 from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Protocol
@@ -3902,6 +3903,61 @@ class WithheldSynonymDirection:
     reason: str
 
 
+@dataclass
+class SynonymAccounting:
+    """Candidate directions carried through size trimming before publication."""
+
+    candidate_directions: int = 0
+    verdict_summary: str = ""
+    loaded: bool = False
+    emitted_by_id: dict[str, WithheldSynonymDirection] = dataclass_field(default_factory=dict)
+    withheld: list[WithheldSynonymDirection] = dataclass_field(default_factory=list)
+    finalized: bool = False
+
+
+def reconcile_synonym_accounting(
+    shards: dict[str, dict[str, dict[str, Any]]], accounting: SynonymAccounting
+) -> None:
+    """Account for every direction after all shard trimming, before writing."""
+    if accounting.finalized:
+        raise RuntimeError("synonym accounting was already finalized")
+    final_ids: set[str] = set()
+    final_count = 0
+    for level, level_shards in shards.items():
+        for item in level_shards["synonym"]["synonym"]:
+            item_id = item.get("synonymId")
+            if not isinstance(item_id, str) or item_id not in accounting.emitted_by_id:
+                raise RuntimeError(f"unaccounted synonym item in final {level} shard: {item_id!r}")
+            if item_id in final_ids:
+                raise RuntimeError(f"duplicate synonym item in final shards: {item_id}")
+            final_ids.add(item_id)
+            final_count += 1
+    if len(accounting.emitted_by_id) + len(accounting.withheld) != accounting.candidate_directions:
+        raise RuntimeError(
+            "synonym withheld ledger does not partition generated candidate directions: "
+            f"emitted={len(accounting.emitted_by_id)} + withheld={len(accounting.withheld)} "
+            f"!= candidates={accounting.candidate_directions}"
+        )
+    trimmed_ids = accounting.emitted_by_id.keys() - final_ids
+    for item_id in sorted(trimmed_ids):
+        row = accounting.emitted_by_id[item_id]
+        accounting.withheld.append(
+            WithheldSynonymDirection(row.level, row.prompt, row.target, row.polarity, "size_budget_trim")
+        )
+    emitted = accounting.candidate_directions - len(accounting.withheld)
+    if emitted != final_count:
+        raise RuntimeError(f"synonym ledger emitted={emitted} != final shard items={final_count}")
+    print(
+        f"{accounting.verdict_summary} emitted_items={emitted} withheld_directions={len(accounting.withheld)}",
+        file=sys.stderr,
+    )
+    if accounting.loaded:
+        _report_withheld_synonym_directions(
+            accounting.withheld, candidate_directions=accounting.candidate_directions, emitted=emitted
+        )
+    accounting.finalized = True
+
+
 def _build_synonym_items(
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]],
     by_plain_lemma: dict[str, dict[str, Any]],
@@ -5456,6 +5512,7 @@ def build_practice_shards(
     aspect_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
     ulif_synonym_groups: UlifSynonymGroups | None = None,
+    synonym_accounting: SynonymAccounting | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     if isinstance(cloze_sources, BuildConfig) and config is None:
@@ -5641,26 +5698,30 @@ def build_practice_shards(
     for item in synonym_items:
         level = str(item.pop("level"))
         item.pop("promptLevel", None)
+        if synonym_accounting is not None:
+            item_id = str(item["synonymId"])
+            if item_id in synonym_accounting.emitted_by_id:
+                raise RuntimeError(f"duplicate generated synonym item: {item_id}")
+            synonym_accounting.emitted_by_id[item_id] = WithheldSynonymDirection(
+                level, str(item["prompt"]), str(item["answer"]), str(item["polarity"]), ""
+            )
         mode_by_level[level]["synonym"].append(item)
     resolved_approved_pairs = set().union(*(encountered_pairs[level]["approved"] for level in CEFR_ORDER))
     effective_approved_set = approved_set - rejected_set
     # Non-overlapping buckets: effective pairs = resolved + unresolved;
     # resolved pairs x 2 directions = emitted items + withheld directions.
-    print(
+    verdict_summary = (
         "synonym verdicts: "
         f"approved={len(approved_set)} rejected={len(rejected_set)} effective={len(effective_approved_set)} "
         f"resolved_pairs={len(resolved_approved_pairs)} "
         f"unresolved_pairs={len(effective_approved_set - resolved_approved_pairs)} "
-        f"candidate_directions={2 * len(resolved_approved_pairs)} "
-        f"emitted_items={len(synonym_items)} withheld_directions={len(withheld_synonyms)}",
-        file=sys.stderr,
+        f"candidate_directions={2 * len(resolved_approved_pairs)}"
     )
-    if synonym_verdicts_loaded:
-        _report_withheld_synonym_directions(
-            withheld_synonyms,
-            candidate_directions=2 * len(resolved_approved_pairs),
-            emitted=len(synonym_items),
-        )
+    if synonym_accounting is not None:
+        synonym_accounting.candidate_directions = 2 * len(resolved_approved_pairs)
+        synonym_accounting.verdict_summary = verdict_summary
+        synonym_accounting.loaded = synonym_verdicts_loaded
+        synonym_accounting.withheld.extend(withheld_synonyms)
 
     heritage_frame_debt = 0
     for index, pair in enumerate(heritage_pairs or []):
@@ -7316,6 +7377,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_enabled=not args.disable_cloze,
     )
     aspect_residuals: list[dict[str, str]] = []
+    synonym_accounting = SynonymAccounting()
     try:
         ulif_synonym_groups = read_ulif_synonym_groups(args.ulif_db, synonym_verdicts)
     except UlifSynonymDataUnavailable as exc:
@@ -7335,6 +7397,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
         ulif_synonym_groups=ulif_synonym_groups,
+        synonym_accounting=synonym_accounting,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
@@ -7386,6 +7449,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
+    reconcile_synonym_accounting(shards, synonym_accounting)
     if args.aspect_residual_report:
         emitted_lemma_ids = {
             str(item.get("lemmaId"))

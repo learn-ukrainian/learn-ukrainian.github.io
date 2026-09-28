@@ -31,8 +31,11 @@ from scripts.audit.generate_practice_deck import (
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
+    SynonymAccounting,
+    apply_size_budgets,
     build_practice_shards,
     read_ulif_synonym_groups,
+    reconcile_synonym_accounting,
     validate_mode_items,
     validate_synonym_option_sets,
 )
@@ -236,6 +239,7 @@ def _build(
 ) -> tuple[list[dict[str, Any]], dict[tuple[str, str], str], tuple[int, int, int]]:
     """Synonym items, withheld ledger ``{(prompt, target): reason}`` and (candidates, emitted, withheld)."""
     capsys.readouterr()
+    accounting = SynonymAccounting()
     shards = build_practice_shards(
         manifest,
         ReviewedSourceAllowlist.from_payload([]),
@@ -244,7 +248,9 @@ def _build(
         config=BuildConfig(target=200),
         synonym_verdicts={"approved": approved, "rejected": rejected or []},
         ulif_synonym_groups=ulif,
+        synonym_accounting=accounting,
     )
+    reconcile_synonym_accounting(shards, accounting)
     err = capsys.readouterr().err.splitlines()
     ledger: dict[tuple[str, str], str] = {}
     for line in err:
@@ -493,6 +499,44 @@ def test_ledger_partitions_candidate_directions(capsys: pytest.CaptureFixture[st
         ("великий", "величезний"): "insufficient_distractors",
         ("величезний", "великий"): "insufficient_distractors",
     }
+
+
+def test_budget_trim_is_withheld_and_final_emitted_count_matches_shards(capsys: pytest.CaptureFixture[str]) -> None:
+    manifest = [_entry("список", "noun", "list"), _entry("перелік", "noun", "enumeration"), *_NOUN_FILLERS]
+    config = BuildConfig(target=200, raw_limit=650, gzip_limit=650)
+    accounting = SynonymAccounting()
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier(_VESUM_VERBS),
+        cloze_sources=None,
+        config=config,
+        synonym_verdicts={"approved": [_approved("список", "перелік")], "rejected": []},
+        ulif_synonym_groups=_ulif(SPYSOK),
+        synonym_accounting=accounting,
+    )
+    apply_size_budgets(shards, raw_limit=config.raw_limit, gzip_limit=config.gzip_limit)
+    reconcile_synonym_accounting(shards, accounting)
+    err = capsys.readouterr().err.splitlines()
+    summary = next(tuple(int(value) for value in match.groups()) for line in err if (match := _SUMMARY.match(line)))
+    final_items = [item for level in shards for item in shards[level]["synonym"]["synonym"]]
+    assert summary[1] == len(final_items)
+    assert summary[0] == summary[1] + summary[2]
+    assert any("size_budget_trim" in line for line in err)
+
+
+def test_final_synonym_gate_rejects_unaccounted_shard_item() -> None:
+    accounting = SynonymAccounting(candidate_directions=0, verdict_summary="synonym verdicts:")
+    shards = {"B1": {"synonym": {"synonym": [{"synonymId": "unexpected"}]}}}
+    with pytest.raises(RuntimeError, match="unaccounted synonym item"):
+        reconcile_synonym_accounting(shards, accounting)
+
+
+def test_final_synonym_gate_rejects_incomplete_candidate_ledger() -> None:
+    accounting = SynonymAccounting(candidate_directions=1, verdict_summary="synonym verdicts:")
+    shards = {"B1": {"synonym": {"synonym": []}}}
+    with pytest.raises(RuntimeError, match="does not partition generated candidate directions"):
+        reconcile_synonym_accounting(shards, accounting)
 
 
 def test_aspect_pair_is_withheld_but_same_aspect_synonym_ships(capsys: pytest.CaptureFixture[str]) -> None:

@@ -5,6 +5,7 @@ import json
 import sqlite3
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -21,6 +22,7 @@ from scripts.audit.generate_practice_deck import (
     read_paronym_pairs,
     write_shards,
 )
+from scripts.practice.ulif_synonym_groups import UlifSynonymGroups, group_from_payload, payload_from_row_html
 from scripts.practice_deck import publish as publish_module
 from scripts.practice_deck.publish import (
     ASSET_NAME,
@@ -343,6 +345,33 @@ def test_publish_refuses_synonym_verdicts_without_ulif_data(tmp_path: Path, monk
     _write_practice_deck(practice_dir, deck_version=unavailable_version)
 
     with pytest.raises(PracticeDeckPublishError, match="ULIF synonym groups"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=tmp_path / "deck.json.gz",
+            dry_run=True,
+            **input_paths,
+        )
+
+
+def test_publish_rejects_stale_deck_after_ulif_register_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.audit import generate_practice_deck as generator
+    from scripts.practice_deck.publish import expected_deck_version
+
+    group = group_from_payload(payload_from_row_html("<b>TEST</b>, <b>OTHER</b>."))
+    assert group is not None
+    changed = replace(group, members=(group.members[0], replace(group.members[1], labels=("register",))))
+    input_paths = _write_publish_inputs(
+        tmp_path / "inputs",
+        synonym_verdicts={"approved": [{"a": "test", "b": "other", "polarity": "synonym"}], "rejected": []},
+    )
+    practice_dir = tmp_path / "lexicon"
+    monkeypatch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: UlifSynonymGroups([group]))
+    _write_practice_deck(practice_dir, deck_version=expected_deck_version(**input_paths))
+    monkeypatch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: UlifSynonymGroups([changed]))
+
+    with pytest.raises(PracticeDeckPublishError, match="does not match expected version"):
         publish_practice_deck(
             practice_dir=practice_dir,
             gzip_path=tmp_path / "deck.json.gz",

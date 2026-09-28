@@ -24,7 +24,7 @@ import re
 import sqlite3
 import unicodedata
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -295,8 +295,10 @@ class UlifSynonymGroups:
         return len(self._groups)
 
     def fingerprint(self) -> str:
-        """Stable digest of the loaded groups, for the deck version."""
-        return hashlib.sha256("\n".join(sorted(self._groups)).encode("utf-8")).hexdigest()[:16]
+        """Stable digest of every loaded membership and core-pair input."""
+        payload = [asdict(self._groups[group_id]) for group_id in sorted(self._groups)]
+        encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()[:16]
 
     def co_members(self, lemma: str) -> set[str]:
         """Every word sharing any group with ``lemma`` (any cluster, label or aspect row)."""
