@@ -2,12 +2,11 @@
 
 ## Status
 
-P3a — migration complete (1,125 rows), producer routing done for the
-routed set, consumer census executed except 33 rows whose readers still
-open moved K files under `data/` (round 7; not fixed here); P3b
-residuals: `v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`,
-and `v4_production_shards_assembly.py` native archive regeneration (owner:
-claude-infra). P3 completion: NO (P3a). P3a ready for review: NO.
+P3a — migration complete (1,125 rows), producer routing done, consumer
+census 3,166 checked / 0 blank (round 8). P3b residuals:
+`v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`, and
+`v4_production_shards_assembly.py` native archive regeneration (owner:
+claude-infra). P3 completion: NO (P3a). P3a ready for review: YES.
 
 This is an incomplete P3a checkpoint, not a landing claim. A green migration
 count alone does not establish producer or consumer completion.
@@ -348,7 +347,47 @@ errors`. The failures are a missing worktree `.venv`, ohoiko calque
 assertions, and two v4 release tests; they are not the unrouted K opens
 above. P3a ready for review: NO.
 
+## Round-8 last readers
+
+Round 8 routed the 33 blank consumers through `resolve_open_model_path`.
+K files are read from `registry/projects/open_model_data/`; A files stay
+under `data/projects/open_model_data/`. Logical `data/` keys in the frozen
+model-ready receipt are unchanged. The gemma authorization schema still
+consts the pre-migration runner blob `be0f6076669c8a0d…` (60894 bytes at
+`55d0ed1515`); the current runner is pinned in `paths.py` and checked by
+`test_runner_pin_matches_current_file_and_pre_migration_blob`. No A file
+and no P3 manifest changed.
+
+`consumers-P3.tsv` is 3,166 checked and 0 blank. The routed consumer
+pytest selection printed `512 passed`. `audit_corpus_training_usability
+--help` and `audit_model_ready_receipts --help` exited 0. Judge and
+assistant-quality K reports resolve under `registry/` and were not
+rewritten.
+
+The same round-7 census selection printed `10 failed, 812 passed, 3
+skipped, 6 errors`. Every one of those ids fails the same way at
+`origin/main` (`202f5478f9`) in a scratch worktree: six layerb tests miss
+the checkout `.venv` (#9018 class), four ohoiko calque assertions fail,
+and the six v4 setup errors are `external_dependencies` rejecting an
+in-repo pytest basetemp. With basetemp outside the repo those six v4 ids
+passed on this branch and on `origin/main`.
+
+Top-level `tests/test_open_model_*.py`: `2155 passed, 13 skipped`.
+`tests/projects/open_model_data`: `2 failed, 2348 passed, 17 skipped`.
+The two failures are the #9023 decolonization ids, which fail on main.
+`artifacts verify --group` exited 0 for archive 80, component 17,
+evidence 10, other 49, release 233, and study 23. The migration audit
+printed `rows=1125 K=713 K_bytes=12942226 A=412 A_bytes=637987720 errors=0`.
+P3a ready for review: YES. P3 completion remains NO while the three P3b
+archive residuals are open.
+
 ## Unresolved P3a gates at this checkpoint
+
+Round 8 closed the consumer-route and census gates recorded below. What
+remains is the three owned P3b archive residuals, the pre-existing #9023
+decolonization failures, the #9018-class missing-worktree-`.venv` tests,
+and the driver-owned after-CI baseline plus exact-head cross-family review
+(Decision J). The round-3 numbers are kept as history.
 
 - The round-3 top-level `tests/test_open_model_*.py` consumer run failed:
   `1103 failed, 774 passed, 67 skipped, 73 errors` on its checkpoint head.
