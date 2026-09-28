@@ -143,18 +143,22 @@ Public #4542 is charter + bare pointer — never generate or mirror a public che
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
 remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
 status feed. Host actions on the Hramatka host follow item 10's split: routine
-maintenance (pull merged `main`, restart an updated or broken service only after
-checking no active dispatch depends on it, install or enable only a reviewed
-systemd user unit or timer that lives in the repo, clean agent-generated
-caches, logs, and worktrees) is driver work; a production release rollover on the
-live-serving host (private #360 class — rebuilding/swapping the read-only
-release checkout) is a **production cutover** and stays **ESCALATE** on missing
-GO. Anything needing sudo on the Hramatka host falls under the #212 ask-once
-class (along with host access/security config such as root-login and SSH
-hardening — not named by any item 10 category on current evidence):
-**ESCALATE** and ask once, do not guess. If #349 and any other queue view
-disagree, **#349 wins** — correct the other view the same session. Full
-contract: `docs/runbooks/hramatka-driver-queue.md`.
+maintenance there means only non-sudo actions (pull merged `main`, install or
+enable only a reviewed systemd user unit or timer that lives in the repo, clean
+agent-generated caches, logs, and worktrees) and is driver work; a production
+release rollover on the live-serving host (running `hramatka/ops/deploy.sh` or
+anything that swaps live `/opt/hramatka/current`, including rebuilding or
+swapping the read-only release checkout — private #360 class) is a **production
+cutover** and needs a present-tense operator GO for that rollover; a GO recorded
+on an earlier or closed issue does not count, and the private deploy runbook
+applies only after that GO (it stays **ESCALATE** without that present-tense GO).
+Anything that needs sudo on the Hramatka host — including restarting a system
+service — falls under the #212 ask-once class (along with host access/security
+config such as root-login and SSH hardening — private #212 class, not named by
+any item 10 category on current evidence): **ESCALATE** and ask the operator
+once rather than guess, until the operator decides that class. If #349 and any
+other queue view disagree, **#349 wins** — correct the other view the same
+session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.

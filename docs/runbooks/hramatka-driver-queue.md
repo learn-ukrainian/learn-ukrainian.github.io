@@ -66,11 +66,21 @@ never becomes an implicit allow. The gate has no environment-variable bypass.
 
 Host actions on the Hramatka host follow operator-expectations item 10's split
 (production cutover stays operator-only; routine maintenance is driver work).
-A production release rollover on the live-serving host (private #360 class)
-remains `ESCALATE` without an explicit operator GO. Host access/security
-config such as sudo or root-login changes (private #212 class) is not named
-by any item 10 category on current evidence — `ESCALATE` and ask once rather
-than guess.
+A production release rollover on the live-serving Hramatka host (running
+`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
+including rebuilding or swapping the read-only release checkout — private #360
+class) is a production cutover under operator-expectations item 10 and needs a
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count; the private deploy runbook applies only after that
+GO (it remains `ESCALATE` without that present-tense GO). Anything that needs
+sudo on the Hramatka host — including restarting a system service — falls under
+the #212 ask-once class (along with host access/security config such as
+root-login and SSH hardening — private #212 class, not matching a named item 10
+category on current evidence): **ESCALATE** and ask the operator once rather
+than guess, until the operator decides that class. Routine host maintenance
+there means only non-sudo actions (pull merged `main`, install or enable only a
+reviewed systemd user unit or timer that lives in the repo, clean
+agent-generated caches, logs, and worktrees) and is driver work per item 10.
 
 ## Closeout hygiene check
 
@@ -115,18 +125,20 @@ A production release rollover on the live-serving Hramatka host (running
 `hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
 including rebuilding or swapping the read-only release checkout — private #360
 class) is a production cutover under operator-expectations item 10 and needs a
-present-tense operator GO; it must **ESCALATE** without that explicit GO. Only
-after a present-tense operator GO is granted may drivers with SSH access follow
-the private deploy runbook and record evidence on the private issue (never
-freestyling host changes outside that documented deploy path). Routine host
-maintenance (pull merged `main`, restart an updated or broken service only after
-checking no active dispatch depends on it, install or enable only a reviewed
-systemd user unit or timer that lives in the repo, clean agent-generated
-caches, logs, and worktrees) is driver work per item 10. Anything needing sudo on
-the Hramatka host falls under the #212 ask-once class (along with host
-access/security config such as root-login and SSH hardening — private #212
-class, not matching a named item 10 category on current evidence): **ESCALATE**
-and ask the operator once rather than guess.
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count; the private deploy runbook applies only after that
+GO (it must **ESCALATE** without that present-tense GO). Only after a
+present-tense operator GO is granted may drivers with SSH access follow the
+private deploy runbook and record evidence on the private issue (never
+freestyling host changes outside that documented deploy path). Anything that
+needs sudo on the Hramatka host — including restarting a system service — falls
+under the #212 ask-once class (along with host access/security config such as
+root-login and SSH hardening — private #212 class, not matching a named item 10
+category on current evidence): **ESCALATE** and ask the operator once rather
+than guess, until the operator decides that class. Routine host maintenance
+there means only non-sudo actions (pull merged `main`, install or enable only a
+reviewed systemd user unit or timer that lives in the repo, clean
+agent-generated caches, logs, and worktrees) and is driver work per item 10.
 
 ## Same-session correction rule
 
