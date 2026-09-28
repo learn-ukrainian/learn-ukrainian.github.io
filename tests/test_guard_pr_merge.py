@@ -50,6 +50,10 @@ def _load_hook():
 guard = _load_hook()
 
 
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
 def _any_judged_merge(command: str) -> bool:
     """Whether any segment of `command` — `bash -c` payloads included — is a judged merge."""
     return any(guard._merge_args(s.argv) is not None for s in guard._judged_segments(command))

@@ -143,6 +143,9 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Optional
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shell_shlex import split_quote_preserving
+
 # ---------------------------------------------------------------------------
 # shared containment predicate (issue #4444) — imported, never re-derived
 # ---------------------------------------------------------------------------
@@ -306,11 +309,7 @@ def _strip_quotes_for_heredoc(token: str) -> str:
 
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t\n"
-        lexer.commenters = ""
-        tokens = list(lexer)
+        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
     except ValueError:
         return []
 

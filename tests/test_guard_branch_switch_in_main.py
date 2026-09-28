@@ -41,6 +41,10 @@ def _load_hook():
 guard = _load_hook()
 
 
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
 def _dangerous(command: str) -> str | None:
     """Replicate the hook's per-segment scan; return the first reason or None."""
     for seg in guard._segments(command):

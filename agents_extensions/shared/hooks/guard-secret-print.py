@@ -33,6 +33,10 @@ import re
 import shlex
 import sys
 
+# Use the sibling helper in either the source tree or a deployed hook copy.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shell_shlex import split_quote_preserving
+
 SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
@@ -156,15 +160,8 @@ def _tokenize(command: str) -> list[str]:
             _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
         )
         protected, parameters = _protect_parameters(executable)
-        lexer = shlex.shlex(
-            protected,
-            posix=False,
-            punctuation_chars="();&|<>\n",
-        )
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t"
-        lexer.commenters = ""
-        return [_restore_parameters(token, parameters) for token in lexer]
+        tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
+        return [_restore_parameters(token, parameters) for token in tokens]
     except ValueError:
         return ["__UNDECIDABLE_SECRET_COMMAND__"]
 
@@ -279,11 +276,7 @@ def _is_assignment(token: str) -> bool:
 
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t\n"
-        lexer.commenters = ""
-        tokens = list(lexer)
+        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
     except ValueError:
         return []
 

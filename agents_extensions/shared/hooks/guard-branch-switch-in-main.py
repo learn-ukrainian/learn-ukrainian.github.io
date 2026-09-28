@@ -44,6 +44,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shell_shlex import split_quote_preserving
+
 # Words that, when seen as the FIRST token after `git`, indicate a branch
 # switch. Everything else is treated as a different git verb and ignored.
 SWITCH_VERBS = frozenset({"checkout", "switch"})
@@ -163,10 +166,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     the opener.
     """
     try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.commenters = ""
-        tokens = list(lexer)
+        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
     except ValueError:
         return []
 

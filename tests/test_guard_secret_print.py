@@ -193,6 +193,38 @@ def test_issue_8896_parameter_expansion_stays_one_word():
     assert guard._tokenize("echo ${x#y}; cat .env") == ["echo", "${x#y}", ";", "cat", ".env"]
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        r'''grep -rn "\"why\"\|'why'" scripts/ --include=*.py | head -8''',
+        r'echo "a \" b"',
+        r'printf "%s\n" "x\"y"',
+        r'''echo 'single' "double \" quoted" | head -8''',
+    ],
+)
+def test_issue_9088_escaped_double_quote_commands_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_9088_double_quote_escapes_keep_quote_preserving_tokens():
+    assert guard._tokenize(r'echo "a \" b"') == ["echo", r'"a \" b"']
+    assert guard._tokenize(r'printf "%s\n" "x\"y"') == ["printf", r'"%s\n"', r'"x\"y"']
+    assert guard._tokenize(r'echo "a \\ \$ \` b"') == ["echo", r'"a \\ \$ \` b"']
+    assert guard._tokenize(r'echo "a \\"') == ["echo", r'"a \\"']
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
+
+
+def test_issue_9088_secret_after_escaped_quote_still_blocks(monkeypatch):
+    assert _run(monkeypatch, r'echo "escaped quote: \" and $GH_TOKEN"') == 2
+
+
+def test_issue_9088_unbalanced_double_quote_still_blocks(monkeypatch):
+    assert _run(monkeypatch, r'echo "a \"') == 2
+
+
 def test_issue_8896_secret_recursion_limit_blocks(monkeypatch):
     command = "cat .env"
     for _ in range(12):

@@ -50,6 +50,9 @@ import sys
 from datetime import datetime, timezone
 from typing import NamedTuple
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shell_shlex import split_quote_preserving
+
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> every merge
 # fail-closes (review B1, PR #5324). Every gh subprocess below runs with the force
@@ -154,10 +157,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
     ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
     try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.commenters = ""
-        tokens = list(lexer)
+        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
     except ValueError:
         return []
 

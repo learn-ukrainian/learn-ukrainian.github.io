@@ -65,6 +65,10 @@ def _load_hook():
 hook = _load_hook()
 
 
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert hook._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
+
+
 # ===========================================================================
 # Pure extraction — Bash
 # ===========================================================================

@@ -38,6 +38,10 @@ def _load_hook():
 guard = _load_hook()
 
 
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
 def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
     """Drive main() with a simulated stdin payload + monkeypatched network calls."""
     payload = json.dumps({"tool_input": {"command": command}})
