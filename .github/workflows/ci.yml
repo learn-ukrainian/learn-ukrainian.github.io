@@ -71,6 +71,7 @@ jobs:
       pytest_mode: ${{ steps.classify.outputs.pytest_mode }}
       shard_count: ${{ steps.classify.outputs.shard_count }}
       pytest_candidates: ${{ steps.classify.outputs.pytest_candidates }}
+      skipped_areas: ${{ steps.classify.outputs.skipped_areas }}
       # The one "should preflight run" decision (#8750): classify_changes
       # .preflight_for. The fast-checks preflight step and CI Gate both read it.
       preflight: ${{ steps.classify.outputs.preflight }}
@@ -414,6 +415,7 @@ jobs:
           SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}
           PYTEST_MODE: ${{ needs.changes.outputs.pytest_mode }}
           PYTEST_CANDIDATES: ${{ needs.changes.outputs.pytest_candidates }}
+          SKIPPED_AREAS: ${{ needs.changes.outputs.skipped_areas }}
         run: |
           set -euo pipefail
           allowlist="${RUNNER_TEMP}/pytest-shard-${SHARD}-files.txt"
@@ -426,11 +428,20 @@ jobs:
                 --durations scripts/ci/pytest-file-durations.json \
                 --output "$allowlist"
           else
-            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
-              .venv/bin/python scripts/ci/pytest_shards.py plan-files \
+            all_files="${RUNNER_TEMP}/pytest-all-files.txt"
+            filtered_files="${RUNNER_TEMP}/pytest-filtered-files.txt"
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort > "$all_files"
+            .venv/bin/python scripts/ci/test_areas.py filter --skip "$SKIPPED_AREAS" \
+              < "$all_files" > "$filtered_files"
+            if [ "$SHARD" = "1" ]; then
+              dropped=$(( $(wc -l < "$all_files") - $(wc -l < "$filtered_files") ))
+              echo "Skipped test areas: ${SKIPPED_AREAS}; dropped test files: ${dropped}" \
+                >> "$GITHUB_STEP_SUMMARY"
+            fi
+            .venv/bin/python scripts/ci/pytest_shards.py plan-files \
                 --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
                 --durations ci-artifacts/pytest-file-durations.json \
-                --output "$allowlist"
+                --output "$allowlist" < "$filtered_files"
           fi
           echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
       - name: Start memory sampler

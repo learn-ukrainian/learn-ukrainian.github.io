@@ -36,6 +36,7 @@ from scripts.ci.pytest_shards import (
 from scripts.ci.pytest_shards import (
     main as pytest_shards_main,
 )
+from scripts.ci.test_areas import filter_paths
 from tests.conftest import (
     LU_PYTEST_SHARD_FILES_ENV_VAR,
     _load_shard_allowlist,
@@ -481,6 +482,29 @@ def test_ci_yml_plan_files_uses_changes_shard_count() -> None:
     assert "SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}" in ci_text
     assert "PYTEST_CANDIDATES" in ci_text
     assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
+
+
+def test_full_plan_filters_area_before_partition_and_reports_count() -> None:
+    ci_text = _ci_text()
+    assert "skipped_areas: ${{ steps.classify.outputs.skipped_areas }}" in ci_text
+    assert "SKIPPED_AREAS: ${{ needs.changes.outputs.skipped_areas }}" in ci_text
+    plan = ci_text.split("      - name: Plan pytest shard files", 1)[1].split("      - name:", 1)[0]
+    assert plan.index("test_areas.py filter") < plan.index("pytest_shards.py plan-files", plan.index("else"))
+    assert "Skipped test areas:" in plan and "dropped test files:" in plan
+
+
+def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
+    (tmp_path / "tests").mkdir()
+    ordinary = "tests/test_open_model_ordinary.py"
+    repo_wide = "tests/test_open_model_repo_wide.py"
+    (tmp_path / ordinary).write_text("def test_one(): pass\n", encoding="utf-8")
+    (tmp_path / repo_wide).write_text("pytest.mark.repo_wide\n", encoding="utf-8")
+    paths = [ordinary, repo_wide, "tests/test_unrelated.py"]
+    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths[1:], 1)
+    assert filter_paths(paths, ["unknown"], repo=tmp_path) == (paths, 0)
+    bad = tmp_path / "bad.json"
+    bad.write_text("{}", encoding="utf-8")
+    assert filter_paths(paths, ["open_model_data"], manifest=bad, repo=tmp_path) == (paths, 0)
 
 
 def test_content_lane_excludes_slow_partition_test() -> None:
