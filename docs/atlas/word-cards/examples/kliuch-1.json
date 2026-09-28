@@ -1,0 +1,1017 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_hb4t8k1nq6zv",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "ключ",
+    "stress_patterns": [
+      "ключ"
+    ],
+    "pos": "noun",
+    "paradigm_key": "vesum:entry:168409"
+  },
+  "identity": {
+    "confidence": "medium",
+    "method": "overlay",
+    "decided_by": "rules: dictionary homonym division (ULIF 1/2, ВТС I/II) with identical paradigm — see identity.md §5 case D",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:168409",
+        "match_note": "one VESUM entry for both ULIF homonyms; mapped to both, paradigm shared"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:3",
+        "match_note": "homonym 1 (six sub-senses in sense_gloss)"
+      },
+      {
+        "source_id": "vts",
+        "key": "vts:ключ#I"
+      },
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:ключ"
+      }
+    ],
+    "notes": [
+      "ULIF homonym 2 ключ (джерело) is a separate card (wc_m3y6w9dc2sxr); the paradigm table is byte-identical (2,184 chars) so only the dictionaries' homonym division separates them."
+    ]
+  },
+  "senses": [
+    {
+      "sense_id": "ws_h8j9k1m2n3p4",
+      "order": 1,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "vts",
+          "source_sense_key": "vts:ключ#I/1"
+        },
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[1]"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_ab6dc5047f8a9a37510e9995",
+          "values": [
+            {
+              "value_norm": "Знаряддя для замикання та відмикання замка, засува та ін.",
+              "assertion_ids": [
+                "wa_ab6dc5047f8a9a37510e9995"
+              ],
+              "independence_groups": []
+            }
+          ],
+          "independence_groups_agreeing": 0
+        },
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_15052e0a2ec8aa00deb2e5cc",
+          "values": [
+            {
+              "value_norm": "знаряддя",
+              "assertion_ids": [
+                "wa_15052e0a2ec8aa00deb2e5cc"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_j9k1m2n3p4q5",
+      "order": 2,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "vts",
+          "source_sense_key": "vts:ключ#I/2"
+        },
+        {
+          "source_id": "kaikki",
+          "source_sense_key": "kaikki:ключ definitions[1]",
+          "mapped_by": "curator"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_e59b6e764e41c1242e44f6a0",
+          "values": [
+            {
+              "value_norm": "Інструмент для загвинчування або відгвинчування гайок, болтів і т. ін.",
+              "assertion_ids": [
+                "wa_e59b6e764e41c1242e44f6a0"
+              ],
+              "independence_groups": []
+            }
+          ],
+          "independence_groups_agreeing": 0
+        },
+        "gloss_en": {
+          "state": "single-source",
+          "selected": "wa_c1a655f5363d0773ae899239",
+          "values": [
+            {
+              "value_norm": "wrench, spanner, screw wrench",
+              "assertion_ids": [
+                "wa_c1a655f5363d0773ae899239"
+              ],
+              "independence_groups": [
+                "G-WIKI"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_k1m2n3p4q5r6",
+      "order": 3,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[2]"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_38c8c1c2cdbbbbcb0a74ace0",
+          "values": [
+            {
+              "value_norm": "засіб для розуміння",
+              "assertion_ids": [
+                "wa_38c8c1c2cdbbbbcb0a74ace0"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_m2n3p4q5r6s7",
+      "order": 4,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[3]"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_6f4c1de71dd097b10a676dd3",
+          "values": [
+            {
+              "value_norm": "найважливіший пункт",
+              "assertion_ids": [
+                "wa_6f4c1de71dd097b10a676dd3"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_n3p4q5r6s7t8",
+      "order": 5,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[4]"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_0910259f1a2db9bba71d52fb",
+          "values": [
+            {
+              "value_norm": "вимикач у телеграфному апараті",
+              "assertion_ids": [
+                "wa_0910259f1a2db9bba71d52fb"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_p4q5r6s7t8v9",
+      "order": 6,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[5]"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_04a7ac55372bf3b81b99174a",
+          "values": [
+            {
+              "value_norm": "знак на початку нотного рядка",
+              "assertion_ids": [
+                "wa_04a7ac55372bf3b81b99174a"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    },
+    {
+      "sense_id": "ws_q5r6s7t8v9w1",
+      "order": 7,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:3 sense_gloss[6]"
+        },
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:section:124670"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_0367ffd9708a8b7b5b7d891e",
+          "values": [
+            {
+              "value_norm": "ряд однорідних предметів або живих істот, які рухаються один за одним, утворюючи кут",
+              "assertion_ids": [
+                "wa_0367ffd9708a8b7b5b7d891e"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        },
+        "synonyms": {
+          "state": "single-source",
+          "selected": "wa_65a8da58db6a2b604ac015b9",
+          "values": [
+            {
+              "value_norm": "[\"ЛАНЦЮГО́М\", \"НИ́ЗКОЮ\", \"ЛАНЦЮЖКО́М\", \"ВЕРВЕ́ЧКОЮ\", \"ВА́ЛКОЮ\", \"ЦЕ́ПОМ\", \"КЛЮЧЕ́М\", \"КЛЮЧА́МИ\"]",
+              "assertion_ids": [
+                "wa_65a8da58db6a2b604ac015b9"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "wl_d313a49549a24b048d274b5b",
+      "type": "homograph_of",
+      "from": "wc_hb4t8k1nq6zv",
+      "to": "wc_m3y6w9dc2sxr",
+      "assertion_ids": [],
+      "state": "active"
+    }
+  ],
+  "fields": {
+    "cefr": {
+      "state": "single-source",
+      "selected": "wa_2a4872a2a8117c2d00b31ea4",
+      "values": [
+        {
+          "value_norm": "A2",
+          "assertion_ids": [
+            "wa_2a4872a2a8117c2d00b31ea4"
+          ],
+          "independence_groups": [
+            "G-PULS"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "english_gloss": {
+      "state": "single-source",
+      "selected": "wa_6cb541cae269427aa132c75b",
+      "values": [
+        {
+          "value_norm": "key",
+          "assertion_ids": [
+            "wa_6cb541cae269427aa132c75b"
+          ],
+          "independence_groups": [
+            "G-WIKI"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1,
+      "level_policy": "scaffold: shown at A1 by design, never raised from A2 (#8983)"
+    },
+    "pos": {
+      "state": "verified",
+      "selected": "wa_669ae8cbc6035e000cf49b85",
+      "values": [
+        {
+          "value_norm": "noun",
+          "assertion_ids": [
+            "wa_669ae8cbc6035e000cf49b85",
+            "wa_7f7c5b09a55178591866a933"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_9b5e0bffc342fa1f6c056f08",
+      "values": [
+        {
+          "value_norm": "ключ",
+          "assertion_ids": [
+            "wa_9b5e0bffc342fa1f6c056f08",
+            "wa_e030eea2a731cac978583878"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "stress": {
+      "state": "verified",
+      "selected": "wa_6bf24edf09f2665f3b8faad7",
+      "values": [
+        {
+          "value_norm": "ключ",
+          "assertion_ids": [
+            "wa_6bf24edf09f2665f3b8faad7",
+            "wa_e4b275a0d0f2acbed39d175a"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-WIKI"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_e030eea2a731cac978583878",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "spelling",
+      "value": "ключ",
+      "value_norm": "ключ",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:168409",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_9b5e0bffc342fa1f6c056f08",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "spelling",
+      "value": "ключ",
+      "value_norm": "ключ",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_6bf24edf09f2665f3b8faad7",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "stress",
+      "value": "ключ",
+      "value_norm": "ключ",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 canonical_headword (monosyllable, unmarked)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_e4b275a0d0f2acbed39d175a",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "stress",
+      "value": "клю́ч",
+      "value_norm": "ключ",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:ключ/stress",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "spelling-keyed; ULIF homonyms 1 and 2 share the paradigm, stress decides nothing here"
+      }
+    },
+    {
+      "assertion_id": "wa_7f7c5b09a55178591866a933",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "pos",
+      "value": "noun",
+      "value_norm": "noun",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:168409 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_669ae8cbc6035e000cf49b85",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "pos",
+      "value": "іменник чоловічого роду",
+      "value_norm": "noun",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_2a4872a2a8117c2d00b31ea4",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "cefr",
+      "value": "A2",
+      "value_norm": "A2",
+      "source_id": "puls",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "sources.puls_cefr:id:3768 (ключ, іменник)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "puls extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "puls",
+        "register_version": 2
+      },
+      "independence_group": "G-PULS",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "PULS rows are keyed by spelling; which замок the A2 rating means is not stated"
+      }
+    },
+    {
+      "assertion_id": "wa_6cb541cae269427aa132c75b",
+      "subject": {
+        "kind": "card",
+        "id": "wc_hb4t8k1nq6zv"
+      },
+      "field": "english_gloss",
+      "value": "key",
+      "value_norm": "key",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:ключ/meaning definitions[0]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "spelling-keyed"
+      }
+    },
+    {
+      "assertion_id": "wa_ab6dc5047f8a9a37510e9995",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_h8j9k1m2n3p4"
+      },
+      "field": "definition_uk",
+      "value": "Знаряддя для замикання та відмикання замка, засува та ін.",
+      "value_norm": "Знаряддя для замикання та відмикання замка, засува та ін.",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:ключ/definition_cards vts 'I' 1》",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vts extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_e59b6e764e41c1242e44f6a0",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_j9k1m2n3p4q5"
+      },
+      "field": "definition_uk",
+      "value": "Інструмент для загвинчування або відгвинчування гайок, болтів і т. ін.",
+      "value_norm": "Інструмент для загвинчування або відгвинчування гайок, болтів і т. ін.",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:ключ/definition_cards vts 'I' 2》",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vts extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_c1a655f5363d0773ae899239",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_j9k1m2n3p4q5"
+      },
+      "field": "gloss_en",
+      "value": "wrench, spanner, screw wrench",
+      "value_norm": "wrench, spanner, screw wrench",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:ключ/meaning definitions[1]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "aligned to ВТС I/2 by curator"
+      }
+    },
+    {
+      "assertion_id": "wa_65a8da58db6a2b604ac015b9",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_q5r6s7t8v9w1"
+      },
+      "field": "synonyms",
+      "value": [
+        "ЛАНЦЮГО́М",
+        "НИ́ЗКОЮ",
+        "ЛАНЦЮЖКО́М",
+        "ВЕРВЕ́ЧКОЮ",
+        "ВА́ЛКОЮ",
+        "ЦЕ́ПОМ",
+        "КЛЮЧЕ́М",
+        "КЛЮЧА́МИ"
+      ],
+      "value_norm": "[\"ЛАНЦЮГО́М\", \"НИ́ЗКОЮ\", \"ЛАНЦЮЖКО́М\", \"ВЕРВЕ́ЧКОЮ\", \"ВА́ЛКОЮ\", \"ЦЕ́ПОМ\", \"КЛЮЧЕ́М\", \"КЛЮЧА́МИ\"]",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3/section:124670 (synonyms:1) terms",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_15052e0a2ec8aa00deb2e5cc",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_h8j9k1m2n3p4"
+      },
+      "field": "sense_label",
+      "value": "знаряддя",
+      "value_norm": "знаряддя",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 1 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_38c8c1c2cdbbbbcb0a74ace0",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_k1m2n3p4q5r6"
+      },
+      "field": "sense_label",
+      "value": "засіб для розуміння",
+      "value_norm": "засіб для розуміння",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 2 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_6f4c1de71dd097b10a676dd3",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_m2n3p4q5r6s7"
+      },
+      "field": "sense_label",
+      "value": "найважливіший пункт",
+      "value_norm": "найважливіший пункт",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 3 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_0910259f1a2db9bba71d52fb",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_n3p4q5r6s7t8"
+      },
+      "field": "sense_label",
+      "value": "вимикач у телеграфному апараті",
+      "value_norm": "вимикач у телеграфному апараті",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 4 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_04a7ac55372bf3b81b99174a",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_p4q5r6s7t8v9"
+      },
+      "field": "sense_label",
+      "value": "знак на початку нотного рядка",
+      "value_norm": "знак на початку нотного рядка",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 5 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_0367ffd9708a8b7b5b7d891e",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_q5r6s7t8v9w1"
+      },
+      "field": "sense_label",
+      "value": "ряд однорідних предметів або живих істот, які рухаються один за одним, утворюючи кут",
+      "value_norm": "ряд однорідних предметів або живих істот, які рухаються один за одним, утворюючи кут",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:3 sense_gloss item 6 of '(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд одно",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif sense_gloss ';' splitter",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    }
+  ],
+  "quality": {
+    "identity_confidence": "medium",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "meaning",
+        "eligible": true,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "sense s1 definition_uk single-source ВТС; cefr A2; identity medium accepted for meaning mode by rules-v1-draft (open question Q7)"
+        ],
+        "sense_id": "ws_h8j9k1m2n3p4"
+      },
+      {
+        "mode": "synonyms",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "only ULIF group is the 'flock' sense (s7); no CEFR for that sense; register unknown"
+        ],
+        "sense_id": "ws_q5r6s7t8v9w1"
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_x2j5n8sd1vpc",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "вряди-годи",
+    "pos": "adv",
+    "paradigm_key": "vesum:entry:67854"
+  },
+  "identity": {
+    "confidence": "high",
+    "method": "unique_match",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:67854"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:47595"
+      },
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:вряди-годи"
+      }
+    ],
+    "notes": [
+      "One lemma on every side (VESUM 1 entry, ULIF 1 homonym): the stress disagreement is a real value conflict, not an identity artefact."
+    ]
+  },
+  "senses": [],
+  "links": [],
+  "fields": {
+    "pos": {
+      "state": "verified",
+      "selected": "wa_69d7753573ce9cc19badb16b",
+      "values": [
+        {
+          "value_norm": "adv",
+          "assertion_ids": [
+            "wa_69d7753573ce9cc19badb16b",
+            "wa_9ae5c60d476f1a908d131c47"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_1aa0ddc06897a94d4cf2eca1",
+      "values": [
+        {
+          "value_norm": "вряди-годи",
+          "assertion_ids": [
+            "wa_1aa0ddc06897a94d4cf2eca1",
+            "wa_ace1dec416b40f4829f3f24f"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "stress": {
+      "state": "conflict",
+      "selected": null,
+      "values": [
+        {
+          "value_norm": "вряди́-го́ди",
+          "assertion_ids": [
+            "wa_3af6a55c0a506fcdc7745b57"
+          ],
+          "independence_groups": []
+        },
+        {
+          "value_norm": "вряди́-годи́",
+          "assertion_ids": [
+            "wa_13e2a6627e129ec7647f8bed"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 0
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_ace1dec416b40f4829f3f24f",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "spelling",
+      "value": "вряди-годи",
+      "value_norm": "вряди-годи",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:67854",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_1aa0ddc06897a94d4cf2eca1",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "spelling",
+      "value": "вряди-годи",
+      "value_norm": "вряди-годи",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:47595",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_13e2a6627e129ec7647f8bed",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "stress",
+      "value": "вряди́-годи́",
+      "value_norm": "вряди́-годи́",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:47595 canonical_headword",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_3af6a55c0a506fcdc7745b57",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "stress",
+      "value": "вряди́-го́ди",
+      "value_norm": "вряди́-го́ди",
+      "source_id": "ukrainian_word_stress",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:вряди-годи/stress (ukrainian-word-stress)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ukrainian_word_stress extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ukrainian_word_stress",
+        "register_version": 2
+      },
+      "independence_group": "G-UWS?",
+      "tier": 2,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_9ae5c60d476f1a908d131c47",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "pos",
+      "value": "adv",
+      "value_norm": "adv",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:67854 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_69d7753573ce9cc19badb16b",
+      "subject": {
+        "kind": "card",
+        "id": "wc_x2j5n8sd1vpc"
+      },
+      "field": "pos",
+      "value": "прислівник",
+      "value_norm": "adv",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:47595 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    }
+  ],
+  "quality": {
+    "identity_confidence": "high",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "stress",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "stress in conflict; excluded until an overlay `resolve` or a language-lane review"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}

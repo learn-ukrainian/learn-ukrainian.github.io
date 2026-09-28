@@ -1,0 +1,490 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_v5r2b9nx3cfk",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "броня",
+    "stress_patterns": [
+      "броня́"
+    ],
+    "pos": "noun",
+    "paradigm_key": "vesum:entry:30497"
+  },
+  "identity": {
+    "confidence": "medium",
+    "method": "stress_only",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:29075",
+        "match_note": "homonym 2, header not parsed; paradigm броня́"
+      },
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:30497",
+        "match_note": "shared with wc_w8g1k4qt7zhm; VESUM did not split"
+      },
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:броня"
+      }
+    ],
+    "notes": [
+      "Sources disagree on identity: VESUM one lemma with two stresses, ULIF two homonyms with distinct senses (бро́ня закріплення; документ про закріплення / броня́). Rules follow the finer division when stress and sense both differ; confidence medium until a language lane confirms."
+    ]
+  },
+  "senses": [
+    {
+      "sense_id": "ws_s7t8v9w1x2y3",
+      "order": 1,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "wiktionary",
+          "source_sense_key": "wiktionary:11318/definitions[0]",
+          "mapped_by": "curator"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_30d83f9ea2eaa4614166f6b7",
+          "values": [
+            {
+              "value_norm": "металевий одяг для захисту тулуба воїна",
+              "assertion_ids": [
+                "wa_30d83f9ea2eaa4614166f6b7"
+              ],
+              "independence_groups": [
+                "G-WIKI"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "wl_0efe8aa3f81ca23d3051969f",
+      "type": "homograph_of",
+      "from": "wc_v5r2b9nx3cfk",
+      "to": "wc_w8g1k4qt7zhm",
+      "assertion_ids": [],
+      "state": "active"
+    }
+  ],
+  "fields": {
+    "cefr": {
+      "state": "unverified",
+      "selected": "wa_311203c9f1e8670c3234e22a",
+      "values": [
+        {
+          "value_norm": "B2",
+          "assertion_ids": [
+            "wa_311203c9f1e8670c3234e22a"
+          ],
+          "independence_groups": [
+            "G-PROJECT"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 0
+    },
+    "gender": {
+      "state": "single-source",
+      "selected": "wa_476d1f726a24ccaf196ed88a",
+      "values": [
+        {
+          "value_norm": "f",
+          "assertion_ids": [
+            "wa_476d1f726a24ccaf196ed88a"
+          ],
+          "independence_groups": [
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "pos": {
+      "state": "single-source",
+      "selected": "wa_6fb83567e7dbee1f07ec2a9b",
+      "values": [
+        {
+          "value_norm": "noun",
+          "assertion_ids": [
+            "wa_6fb83567e7dbee1f07ec2a9b"
+          ],
+          "independence_groups": [
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_324f4d6e8ad470fbf717e223",
+      "values": [
+        {
+          "value_norm": "броня",
+          "assertion_ids": [
+            "wa_324f4d6e8ad470fbf717e223",
+            "wa_a84cf259af9ac6c370876770"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "stress": {
+      "state": "verified",
+      "selected": "wa_16d8b8b80ac520680312e5e0",
+      "values": [
+        {
+          "value_norm": "броня́",
+          "assertion_ids": [
+            "wa_16d8b8b80ac520680312e5e0",
+            "wa_f332c804697af049c31dd2fd"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-WIKI"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_a84cf259af9ac6c370876770",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "spelling",
+      "value": "броня",
+      "value_norm": "броня",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:30497",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "VESUM has one entry for both ULIF homonyms (comment 'xv2 броня́; бро́ня')"
+      }
+    },
+    {
+      "assertion_id": "wa_324f4d6e8ad470fbf717e223",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "spelling",
+      "value": "броня",
+      "value_norm": "броня",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29075",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_16d8b8b80ac520680312e5e0",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "stress",
+      "value": "броня́",
+      "value_norm": "броня́",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29075/section:28470 rows[1][1]",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif paradigm-row headword recovery",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_f332c804697af049c31dd2fd",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "stress",
+      "value": "броня́",
+      "value_norm": "броня́",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:броня/stress (kaikki/Wiktionary)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "spelling-keyed; matches this homonym's stress"
+      }
+    },
+    {
+      "assertion_id": "wa_f4319431736056a08783f509",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "stress",
+      "value": "xv2 броня́; бро́ня",
+      "value_norm": "броня́|бро́ня",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:30497 source_comment",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "mapping": {
+        "confidence": "low",
+        "note": "unsplit: VESUM declares both stresses on one lemma; retained as evidence, does not vote on a split card"
+      }
+    },
+    {
+      "assertion_id": "wa_6fb83567e7dbee1f07ec2a9b",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "pos",
+      "value": "noun",
+      "value_norm": "noun",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:30497 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_476d1f726a24ccaf196ed88a",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "gender",
+      "value": "f",
+      "value_norm": "f",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:30497 tags noun:inanim:f:v_naz",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_311203c9f1e8670c3234e22a",
+      "subject": {
+        "kind": "card",
+        "id": "wc_v5r2b9nx3cfk"
+      },
+      "field": "cefr",
+      "value": "B2",
+      "value_norm": "B2",
+      "source_id": "grac_estimate",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:броня/cefr 'estimated (GRAC frequency)' 0.55/million rank 2792/4161",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "estimator",
+        "name": "GRAC frequency → CEFR estimate",
+        "version": "atlas0"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "grac_estimate",
+        "register_version": 2
+      },
+      "independence_group": "G-PROJECT",
+      "tier": 3,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "spelling-keyed frequency"
+      }
+    },
+    {
+      "assertion_id": "wa_30d83f9ea2eaa4614166f6b7",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_s7t8v9w1x2y3"
+      },
+      "field": "definition_uk",
+      "value": "металевий одяг для захисту тулуба воїна",
+      "value_norm": "металевий одяг для захисту тулуба воїна",
+      "source_id": "wiktionary",
+      "snapshot_id": "sources.db@2026-09-28",
+      "locator": "sources.wiktionary:id:11318 definitions[0]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "wiktionary extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "wiktionary",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "spelling-keyed list; item mapped to the armour homonym by curator"
+      }
+    }
+  ],
+  "quality": {
+    "identity_confidence": "medium",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "stress",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "identity medium",
+          "cefr unverified (estimate only)"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}

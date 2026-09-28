@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-v1.schema.json",
+  "title": "Word card v1 (#8978 / #8334)",
+  "description": "One assembled word card: an opaque stable id, senses, typed links, every retained assertion with its source locator, and the materialised field resolutions with their quality state. Spec: docs/atlas/word-cards/schema.md. Cards are derived: atlas.db = build(sources.db, vesum.db, curation overlay, rules).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "card_id",
+    "card_kind",
+    "state",
+    "key_at_creation",
+    "identity",
+    "senses",
+    "links",
+    "fields",
+    "assertions",
+    "quality",
+    "build"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "card_id": {
+      "$ref": "#/$defs/card_id"
+    },
+    "card_kind": {
+      "enum": [
+        "lexeme",
+        "mwe",
+        "proper_name"
+      ]
+    },
+    "state": {
+      "description": "Card-level state. `redirected` requires merged_into; `suppressed` means every public output omits the card while assertions are retained internally.",
+      "enum": [
+        "active",
+        "redirected",
+        "suppressed"
+      ]
+    },
+    "merged_into": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/card_id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "key_at_creation": {
+      "description": "The matching evidence recorded when the id was minted. Attributes, not identity: the id never changes when these do.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spelling",
+        "pos"
+      ],
+      "properties": {
+        "spelling": {
+          "type": "string",
+          "minLength": 1,
+          "description": "NFC, stress marks stripped, case as the lemma is written (proper names keep their capital)."
+        },
+        "stress_patterns": {
+          "type": "array",
+          "description": "Stressed forms accepted for the lemma at creation; more than one means a declared doublet (e.g. по́ми́лка).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pos": {
+          "type": "string",
+          "description": "Coarse POS in VESUM vocabulary (noun, verb, adj, adv, ...)."
+        },
+        "paradigm_key": {
+          "type": "string",
+          "description": "Source key of the paradigm that fixes the lexeme, e.g. vesum:entry:128973."
+        },
+        "mwe_key": {
+          "type": "string",
+          "description": "MWE cards only: `<source_locator>|<normalised form>`; see identity.md §6."
+        },
+        "source_keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_key"
+          }
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confidence",
+        "method",
+        "source_keys"
+      ],
+      "properties": {
+        "confidence": {
+          "$ref": "#/$defs/identity_confidence"
+        },
+        "method": {
+          "enum": [
+            "unique_match",
+            "stress_and_paradigm",
+            "paradigm_only",
+            "stress_only",
+            "overlay",
+            "unresolved"
+          ]
+        },
+        "decided_by": {
+          "type": "string",
+          "description": "rules:<version> or overlay:<entry id>."
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_key"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "senses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sense"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "fields": {
+      "description": "Card-level materialised resolutions, keyed by card field name.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/card_field_name"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/field_resolution"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assertion"
+      },
+      "description": "Every retained assertion whose subject is this card, one of its senses, or one of its links. Suppressed and superseded assertions stay here with their status."
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity_confidence",
+        "linguistic_review",
+        "practice_eligibility"
+      ],
+      "properties": {
+        "identity_confidence": {
+          "$ref": "#/$defs/identity_confidence"
+        },
+        "extraction_confidence_min": {
+          "$ref": "#/$defs/extraction_confidence"
+        },
+        "linguistic_review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "none",
+                "sampled",
+                "reviewed",
+                "rejected"
+              ]
+            },
+            "lane": {
+              "type": "string"
+            },
+            "record": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "practice_eligibility": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "eligible",
+              "rules_version",
+              "reasons"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string"
+              },
+              "eligible": {
+                "type": "boolean"
+              },
+              "rules_version": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sense_id": {
+                "$ref": "#/$defs/sense_id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "overlay_applied": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/overlay_ref"
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "build_id",
+        "rules_version",
+        "inputs"
+      ],
+      "properties": {
+        "build_id": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Content hashes / commits of every build input: vesum canonical sha, sources.db table digests, overlay commit."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "link_id": {
+      "type": "string",
+      "pattern": "^wl_[0-9a-f]{24}$"
+    },
+    "identity_confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unresolved"
+      ]
+    },
+    "extraction_confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "source_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "key"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "description": "Source id from docs/sources/permissions-register.yaml (ulif, vesum, sum20, kaikki, ...) or `atlas0` for the pre-card atlas.db."
+        },
+        "key": {
+          "type": "string",
+          "description": "Namespaced source key, e.g. ulif:entry:76792, vesum:entry:128973, vts:замок#I, atlas0:slug:замок."
+        },
+        "snapshot_id": {
+          "type": "string"
+        },
+        "match_note": {
+          "type": "string"
+        }
+      }
+    },
+    "card_field_name": {
+      "enum": [
+        "spelling",
+        "stress",
+        "pos",
+        "grammatical_label",
+        "gender",
+        "aspect",
+        "paradigm",
+        "cefr",
+        "frequency",
+        "heritage_status",
+        "transliteration",
+        "english_gloss",
+        "spelling_variants",
+        "mwe_form",
+        "mwe_frame"
+      ]
+    },
+    "sense_field_name": {
+      "enum": [
+        "definition_uk",
+        "gloss_en",
+        "sense_label",
+        "register",
+        "synonyms",
+        "antonyms",
+        "examples",
+        "russification_exposed",
+        "collocations"
+      ]
+    },
+    "sense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sense_id",
+        "order",
+        "state",
+        "sense_map",
+        "fields"
+      ],
+      "properties": {
+        "sense_id": {
+          "$ref": "#/$defs/sense_id"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "enum": [
+            "active",
+            "redirected",
+            "suppressed",
+            "unsplit"
+          ]
+        },
+        "merged_into": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sense_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sense_map": {
+          "type": "array",
+          "description": "Which source sense units feed this sense. `unsplit` senses carry every unit of a source that could not be aligned.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_id",
+              "source_sense_key"
+            ],
+            "properties": {
+              "source_id": {
+                "type": "string"
+              },
+              "source_sense_key": {
+                "type": "string",
+                "description": "e.g. ulif:section:96935 (synonyms:2), sum20:sense:82852/1, vts:замок#I/1"
+              },
+              "mapped_by": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fields": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/sense_field_name"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/field_resolution"
+          }
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "link_id",
+        "type",
+        "from",
+        "to",
+        "assertion_ids"
+      ],
+      "properties": {
+        "link_id": {
+          "$ref": "#/$defs/link_id"
+        },
+        "type": {
+          "enum": [
+            "aspect_pair",
+            "component_of",
+            "stress_variant_of",
+            "synonym",
+            "antonym",
+            "see_also",
+            "russification_contrast",
+            "homograph_of"
+          ]
+        },
+        "from": {
+          "type": "string",
+          "description": "card_id or sense_id"
+        },
+        "to": {
+          "type": "string",
+          "description": "card_id or sense_id"
+        },
+        "role": {
+          "type": "string",
+          "description": "Typed role, e.g. imperfective/perfective for aspect_pair, anchor/component for component_of."
+        },
+        "assertion_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/assertion_id"
+          }
+        },
+        "state": {
+          "enum": [
+            "active",
+            "suppressed"
+          ]
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_id",
+        "subject",
+        "field",
+        "value",
+        "value_norm",
+        "source_id",
+        "snapshot_id",
+        "locator",
+        "extraction_version",
+        "extraction_confidence",
+        "producer",
+        "review",
+        "licence_ref",
+        "status"
+      ],
+      "properties": {
+        "assertion_id": {
+          "$ref": "#/$defs/assertion_id",
+          "description": "wa_ + first 24 hex chars of sha256(canonical JSON of {source_id, snapshot_id, locator, subject, field, value_norm, extraction_version}). Deterministic across rebuilds."
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "id"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "card",
+                "sense",
+                "link"
+              ]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
+        },
+        "field": {
+          "type": "string"
+        },
+        "value": {
+          "description": "The value as extracted (string, list, object). Never model-written Ukrainian."
+        },
+        "value_norm": {
+          "type": "string",
+          "description": "Canonical comparison form used to decide agreement (NFC, lower-cased for common nouns, combining accents kept)."
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "description": "Which edition/snapshot of the source: e.g. ulif@2026-09-22..2026-09-27/ulif-dictua-v2, vesum@53923150."
+        },
+        "locator": {
+          "type": "string",
+          "description": "Where in the source: ulif:entry:76793/section:96933, vesum:entry:128972, sum20:wordid:82852/sense:1, kaikki:замок, textbook:<id>::<section>."
+        },
+        "extraction_version": {
+          "type": "string",
+          "description": "Parser/transformer version that produced the value from the snapshot."
+        },
+        "extraction_confidence": {
+          "$ref": "#/$defs/extraction_confidence"
+        },
+        "producer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "source_extract",
+                "generator",
+                "teacher",
+                "curator",
+                "estimator"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "produced_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "none",
+                "sampled",
+                "reviewed",
+                "rejected"
+              ]
+            },
+            "lane": {
+              "type": "string",
+              "description": "Reviewing lane (gemini-agy, gpt-codex, claude, human)."
+            },
+            "record": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "licence_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "register_source_id",
+            "register_version"
+          ],
+          "properties": {
+            "register_source_id": {
+              "type": "string"
+            },
+            "register_version": {
+              "type": "integer"
+            },
+            "appears_in": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "internal",
+                  "site",
+                  "dataset"
+                ]
+              }
+            }
+          }
+        },
+        "independence_group": {
+          "type": "string",
+          "description": "Lineage group used for corroboration counting (schema.md §7). Copied from the register at build time."
+        },
+        "tier": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "status": {
+          "enum": [
+            "active",
+            "suppressed",
+            "superseded"
+          ]
+        },
+        "suppression_ref": {
+          "type": "string",
+          "description": "overlay suppression id or takedown issue URL."
+        },
+        "mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "confidence"
+          ],
+          "description": "How surely this source row belongs to this card (per-assertion identity confidence). Missing = high. Assertions at low/unresolved are retained as evidence but do not vote in field resolution (schema.md §8).",
+          "properties": {
+            "confidence": {
+              "$ref": "#/$defs/identity_confidence"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "field_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "values"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "verified",
+            "single-source",
+            "variant",
+            "conflict",
+            "unverified",
+            "suppressed"
+          ]
+        },
+        "selected": {
+          "description": "Assertion id(s) whose value is shown. A list for `variant`; null for `conflict` and `suppressed`.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assertion_id"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/assertion_id"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value_norm",
+              "assertion_ids",
+              "independence_groups"
+            ],
+            "properties": {
+              "value_norm": {
+                "type": "string"
+              },
+              "assertion_ids": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/assertion_id"
+                }
+              },
+              "independence_groups": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "independence_groups_agreeing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolution_ref": {
+          "type": "string",
+          "description": "overlay entry that resolved a conflict or declared a variant."
+        },
+        "level_policy": {
+          "type": "string",
+          "description": "english_gloss only: scaffold field; shown at A1 by design, never raised from A2 (#8983)."
+        }
+      }
+    },
+    "overlay_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overlay_id",
+        "kind"
+      ],
+      "properties": {
+        "overlay_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "merge",
+            "split",
+            "resolve",
+            "variant",
+            "suppress",
+            "level_override",
+            "sense_map",
+            "link",
+            "identity"
+          ]
+        },
+        "author": {
+          "type": "string"
+        },
+        "lane": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

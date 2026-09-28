@@ -1,0 +1,366 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_w8g1k4qt7zhm",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "броня",
+    "stress_patterns": [
+      "бро́ня"
+    ],
+    "pos": "noun",
+    "paradigm_key": "vesum:entry:30497"
+  },
+  "identity": {
+    "confidence": "medium",
+    "method": "stress_only",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:29074",
+        "match_note": "homonym 1 бро́ня (закріплення)"
+      },
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:30497",
+        "match_note": "shared, unsplit"
+      }
+    ]
+  },
+  "senses": [
+    {
+      "sense_id": "ws_t8v9w1x2y3z4",
+      "order": 1,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:29074 sense_gloss"
+        },
+        {
+          "source_id": "wiktionary",
+          "source_sense_key": "wiktionary:11318/definitions[4]",
+          "mapped_by": "curator"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_e4360d1faf73e41306a17896",
+          "values": [
+            {
+              "value_norm": "закріплення когось або чогось за ким-, чим-небудь; документ на це закріплення",
+              "assertion_ids": [
+                "wa_e4360d1faf73e41306a17896"
+              ],
+              "independence_groups": [
+                "G-WIKI"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        },
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_daedb9540775a8eda9070ad1",
+          "values": [
+            {
+              "value_norm": "(закріплення; документ про закріплення)",
+              "assertion_ids": [
+                "wa_daedb9540775a8eda9070ad1"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "wl_adee4a8c5d866e47ff590674",
+      "type": "homograph_of",
+      "from": "wc_w8g1k4qt7zhm",
+      "to": "wc_v5r2b9nx3cfk",
+      "assertion_ids": [],
+      "state": "active"
+    }
+  ],
+  "fields": {
+    "grammatical_label": {
+      "state": "single-source",
+      "selected": "wa_790fd17491f7afb382990e1a",
+      "values": [
+        {
+          "value_norm": "іменник жіночого роду",
+          "assertion_ids": [
+            "wa_790fd17491f7afb382990e1a"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "spelling": {
+      "state": "single-source",
+      "selected": "wa_d9de683eb89cae845e326f2f",
+      "values": [
+        {
+          "value_norm": "броня",
+          "assertion_ids": [
+            "wa_d9de683eb89cae845e326f2f"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "stress": {
+      "state": "single-source",
+      "selected": "wa_e68402d9cfcd79118c32c684",
+      "values": [
+        {
+          "value_norm": "бро́ня",
+          "assertion_ids": [
+            "wa_e68402d9cfcd79118c32c684"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_d9de683eb89cae845e326f2f",
+      "subject": {
+        "kind": "card",
+        "id": "wc_w8g1k4qt7zhm"
+      },
+      "field": "spelling",
+      "value": "броня",
+      "value_norm": "броня",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29074",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_e68402d9cfcd79118c32c684",
+      "subject": {
+        "kind": "card",
+        "id": "wc_w8g1k4qt7zhm"
+      },
+      "field": "stress",
+      "value": "бро́ня",
+      "value_norm": "бро́ня",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29074 canonical_headword",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_e4dbb47633465ebe286698bb",
+      "subject": {
+        "kind": "card",
+        "id": "wc_w8g1k4qt7zhm"
+      },
+      "field": "stress",
+      "value": "xv2 броня́; бро́ня",
+      "value_norm": "броня́|бро́ня",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:30497 source_comment",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "mapping": {
+        "confidence": "low",
+        "note": "unsplit VESUM lemma; evidence only"
+      }
+    },
+    {
+      "assertion_id": "wa_790fd17491f7afb382990e1a",
+      "subject": {
+        "kind": "card",
+        "id": "wc_w8g1k4qt7zhm"
+      },
+      "field": "grammatical_label",
+      "value": "іменник жіночого роду",
+      "value_norm": "іменник жіночого роду",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29074 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_daedb9540775a8eda9070ad1",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_t8v9w1x2y3z4"
+      },
+      "field": "sense_label",
+      "value": "(закріплення; документ про закріплення)",
+      "value_norm": "(закріплення; документ про закріплення)",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:29074 sense_gloss",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_e4360d1faf73e41306a17896",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_t8v9w1x2y3z4"
+      },
+      "field": "definition_uk",
+      "value": "закріплення когось або чогось за ким-, чим-небудь; документ на це закріплення",
+      "value_norm": "закріплення когось або чогось за ким-, чим-небудь; документ на це закріплення",
+      "source_id": "wiktionary",
+      "snapshot_id": "sources.db@2026-09-28",
+      "locator": "sources.wiktionary:id:11318 definitions[4]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "wiktionary extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "wiktionary",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "note": "mapped by curator to the ULIF sense_gloss"
+      }
+    }
+  ],
+  "quality": {
+    "identity_confidence": "medium",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "stress",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "stress single-source",
+          "identity medium",
+          "no cefr"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}

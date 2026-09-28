@@ -1,0 +1,354 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_e9p1s4dz7xkm",
+  "card_kind": "proper_name",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "Замок",
+    "stress_patterns": [
+      "За́мок"
+    ],
+    "pos": "noun",
+    "paradigm_key": "vesum:entry:128971"
+  },
+  "identity": {
+    "confidence": "high",
+    "method": "unique_match",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:128971"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:76791"
+      }
+    ],
+    "notes": [
+      "Proper name: VESUM :prop:geo tag and ULIF capitalised headword; never merged with the common nouns."
+    ]
+  },
+  "senses": [
+    {
+      "sense_id": "ws_g7h8j9k1m2n3",
+      "order": 1,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:entry:76791 sense_gloss"
+        }
+      ],
+      "fields": {
+        "sense_label": {
+          "state": "single-source",
+          "selected": "wa_c3e048cbf0e40a2fd3ca97cc",
+          "values": [
+            {
+              "value_norm": "(населений пункт в Україні)",
+              "assertion_ids": [
+                "wa_c3e048cbf0e40a2fd3ca97cc"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ]
+            }
+          ],
+          "independence_groups_agreeing": 1
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "wl_b9e48e07028f7d74ffbb8f96",
+      "type": "homograph_of",
+      "from": "wc_e9p1s4dz7xkm",
+      "to": "wc_7k3m9q2xw4pd",
+      "assertion_ids": [],
+      "state": "active"
+    }
+  ],
+  "fields": {
+    "grammatical_label": {
+      "state": "single-source",
+      "selected": "wa_031e94c4ad62743a5ee0396c",
+      "values": [
+        {
+          "value_norm": "іменник чоловічого роду",
+          "assertion_ids": [
+            "wa_031e94c4ad62743a5ee0396c"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "pos": {
+      "state": "single-source",
+      "selected": "wa_1b681d2ca4cd24a05b0d45d8",
+      "values": [
+        {
+          "value_norm": "noun",
+          "assertion_ids": [
+            "wa_1b681d2ca4cd24a05b0d45d8"
+          ],
+          "independence_groups": [
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_19575ab28a8f1af8e929db78",
+      "values": [
+        {
+          "value_norm": "Замок",
+          "assertion_ids": [
+            "wa_19575ab28a8f1af8e929db78",
+            "wa_575969b16f415aea073a3393"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "stress": {
+      "state": "single-source",
+      "selected": "wa_a60af54f65f7dd75c24d1ef8",
+      "values": [
+        {
+          "value_norm": "За́мок",
+          "assertion_ids": [
+            "wa_a60af54f65f7dd75c24d1ef8"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_575969b16f415aea073a3393",
+      "subject": {
+        "kind": "card",
+        "id": "wc_e9p1s4dz7xkm"
+      },
+      "field": "spelling",
+      "value": "Замок",
+      "value_norm": "Замок",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128971 (noun:inanim:m:v_naz:prop:geo)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_19575ab28a8f1af8e929db78",
+      "subject": {
+        "kind": "card",
+        "id": "wc_e9p1s4dz7xkm"
+      },
+      "field": "spelling",
+      "value": "Замок",
+      "value_norm": "Замок",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76791",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_a60af54f65f7dd75c24d1ef8",
+      "subject": {
+        "kind": "card",
+        "id": "wc_e9p1s4dz7xkm"
+      },
+      "field": "stress",
+      "value": "За́мок",
+      "value_norm": "За́мок",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76791 canonical_headword",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_1b681d2ca4cd24a05b0d45d8",
+      "subject": {
+        "kind": "card",
+        "id": "wc_e9p1s4dz7xkm"
+      },
+      "field": "pos",
+      "value": "noun",
+      "value_norm": "noun",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128971 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_031e94c4ad62743a5ee0396c",
+      "subject": {
+        "kind": "card",
+        "id": "wc_e9p1s4dz7xkm"
+      },
+      "field": "grammatical_label",
+      "value": "іменник чоловічого роду",
+      "value_norm": "іменник чоловічого роду",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76791 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_c3e048cbf0e40a2fd3ca97cc",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_g7h8j9k1m2n3"
+      },
+      "field": "sense_label",
+      "value": "(населений пункт в Україні)",
+      "value_norm": "(населений пункт в Україні)",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76791 sense_gloss",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    }
+  ],
+  "quality": {
+    "identity_confidence": "high",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "*",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "proper names are excluded from vocabulary practice modes"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}

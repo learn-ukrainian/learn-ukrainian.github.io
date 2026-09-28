@@ -1,0 +1,357 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_z4f7m1kb8xsq",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "key_at_creation": {
+    "spelling": "вибігти",
+    "stress_patterns": [
+      "ви́бігти"
+    ],
+    "pos": "verb",
+    "paradigm_key": "vesum:entry:40942"
+  },
+  "identity": {
+    "confidence": "high",
+    "method": "unique_match",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:40942"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:34099"
+      }
+    ],
+    "notes": []
+  },
+  "senses": [],
+  "links": [
+    {
+      "link_id": "wl_14360c9e8984fbeb964d8a20",
+      "type": "aspect_pair",
+      "from": "wc_z4f7m1kb8xsq",
+      "to": "wc_y9c3q6hw4rtn",
+      "role": "perfective",
+      "assertion_ids": [
+        "wa_0d607aa5a9893320531bb7a9"
+      ],
+      "state": "active"
+    }
+  ],
+  "fields": {
+    "aspect": {
+      "state": "verified",
+      "selected": "wa_25f3d847fa66cfc4530e44b3",
+      "values": [
+        {
+          "value_norm": "perf",
+          "assertion_ids": [
+            "wa_25f3d847fa66cfc4530e44b3",
+            "wa_3605fca0225deef58026aae8"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "pos": {
+      "state": "single-source",
+      "selected": "wa_aa9b2eccd98e06643f49119d",
+      "values": [
+        {
+          "value_norm": "verb",
+          "assertion_ids": [
+            "wa_aa9b2eccd98e06643f49119d"
+          ],
+          "independence_groups": [
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_0a4ff736c8edf683d014c0bc",
+      "values": [
+        {
+          "value_norm": "вибігти",
+          "assertion_ids": [
+            "wa_0a4ff736c8edf683d014c0bc",
+            "wa_f023a6a703d5e7d40b845582"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 2
+    },
+    "stress": {
+      "state": "single-source",
+      "selected": "wa_326878c761b0741c62d5553a",
+      "values": [
+        {
+          "value_norm": "ви́бігти",
+          "assertion_ids": [
+            "wa_326878c761b0741c62d5553a"
+          ],
+          "independence_groups": [
+            "G-ULIF"
+          ]
+        }
+      ],
+      "independence_groups_agreeing": 1
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_f023a6a703d5e7d40b845582",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "spelling",
+      "value": "вибігти",
+      "value_norm": "вибігти",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:40942",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_0a4ff736c8edf683d014c0bc",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "spelling",
+      "value": "вибігти",
+      "value_norm": "вибігти",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:34099",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_326878c761b0741c62d5553a",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "stress",
+      "value": "ви́бігти",
+      "value_norm": "ви́бігти",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:34099 canonical_headword",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_aa9b2eccd98e06643f49119d",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "pos",
+      "value": "verb",
+      "value_norm": "verb",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:40942 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_3605fca0225deef58026aae8",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "aspect",
+      "value": "verb:perf:inf",
+      "value_norm": "perf",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:40942 tags",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_25f3d847fa66cfc4530e44b3",
+      "subject": {
+        "kind": "card",
+        "id": "wc_z4f7m1kb8xsq"
+      },
+      "field": "aspect",
+      "value": "дієслово доконаного виду",
+      "value_norm": "perf",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:34099 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_0d607aa5a9893320531bb7a9",
+      "subject": {
+        "kind": "link",
+        "id": "wl_14360c9e8984fbeb964d8a20"
+      },
+      "field": "aspect_pair",
+      "value": "II вибіг`ати - а ю, - а єш, недок. , в и бігти, -іжу, -іжиш, док. 1》 Бігом залишати, покидати як",
+      "value_norm": "вибігати(недок.)↔вибігти(док.)",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:вибігати/definition_cards vts 'II вибіг`ати' header (недок. … док.)",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ВТС header 'недок./док.' pair reader",
+        "version": "example"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active"
+    }
+  ],
+  "quality": {
+    "identity_confidence": "high",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "forms",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "aspect verified (VESUM + ULIF)",
+          "cefr unverified (estimate) or missing"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
+      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
+      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
+      "overlay": "none (examples)"
+    }
+  }
+}
