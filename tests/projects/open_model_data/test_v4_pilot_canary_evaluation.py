@@ -180,6 +180,10 @@ def test_negative_control_diversity() -> None:
     assert len(queries) >= 50, f"Expected diverse queries for PRESERVE items, got {len(queries)}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl",
+)
 def test_partition_firewall_zero_heldout_contamination() -> None:
     """Verify zero overlap between pilot canary dataset and held-out suite."""
     if not DEFAULT_HELDOUT_SUITE.exists():

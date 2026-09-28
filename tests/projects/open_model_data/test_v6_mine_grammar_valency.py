@@ -2387,6 +2387,10 @@ def test_quote_sentence_typography() -> None:
     assert miner.quote_sentence("«Через це сталося лихо».", ".") == "«„Через це сталося лихо“»."
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_shards_zero_double_terminal_punctuation() -> None:
     """Verify that no SFT shard contains double punctuation, adjacent closing quotes, or period inside guillemets."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
@@ -2451,6 +2455,10 @@ def test_shards_zero_double_terminal_punctuation() -> None:
     assert not violations, f"Found double punctuation in shards: {violations[:5]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_control_records_verbatim_fidelity() -> None:
     """Verify that for every Control record, the quoted sentence in query matches original_text (R7-1, R8-4)."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
@@ -2482,6 +2490,10 @@ def test_control_records_verbatim_fidelity() -> None:
     assert checked_count >= 30000, f"Expected >= 30,000 control records, checked {checked_count}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_ua_gec_sanitized_error_spans_in_query() -> None:
     """Verify that every UA-GEC trajectory contains its sanitized error span in the query (R8-5)."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))

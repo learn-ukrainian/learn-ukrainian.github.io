@@ -24,6 +24,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
     DANGLING_STARTER_RE,
     DEFAULT_OUTPUT_DIR,
@@ -400,9 +401,13 @@ def test_synthetic_pipeline_hermetic_run():
         assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v06_general_assistant/eval/eval_shard_001_of_005.jsonl",
+)
 def test_eval_benchmark_disk_invariants_and_schema():
     """Validate full evaluation benchmark against schema if present on disk."""
-    manifest_file = DEFAULT_OUTPUT_DIR / "eval" / "manifest.json"
+    manifest_file = resolve_open_model_path(DEFAULT_OUTPUT_DIR / "eval" / "manifest.json")
     if not manifest_file.is_file():
         pytest.skip("Full release eval benchmark not generated yet")
 
@@ -466,10 +471,14 @@ def test_eval_benchmark_disk_invariants_and_schema():
 
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v06_general_assistant/sft/sft_shard_001_of_150.jsonl",
+)
 def test_sft_manifest_and_shards_invariants():
     """Validate SFT shards and manifest against invariants if present on disk."""
     import re
-    manifest_file = DEFAULT_OUTPUT_DIR / "sft" / "manifest.json"
+    manifest_file = resolve_open_model_path(DEFAULT_OUTPUT_DIR / "sft" / "manifest.json")
     if not manifest_file.is_file():
         pytest.skip("Full release SFT dataset not generated yet")
 
@@ -506,9 +515,13 @@ def test_sft_manifest_and_shards_invariants():
                         assert t.lower() not in STOPWORD_TERMS, f"Stopword '{t}' in SFT terms: {t}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v06_general_assistant/eval/eval_shard_001_of_005.jsonl",
+)
 def test_release_receipt_schema_and_checksum():
     """Validate release receipt against Draft 2020-12 schema if present on disk."""
-    receipt_file = DEFAULT_OUTPUT_DIR / "release_receipt.json"
+    receipt_file = resolve_open_model_path(DEFAULT_OUTPUT_DIR / "release_receipt.json")
     if not receipt_file.is_file():
         pytest.skip("Full release receipt not generated yet")
 

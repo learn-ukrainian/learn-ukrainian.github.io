@@ -840,6 +840,10 @@ def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
     assert res_id["southwestern"]["gate_cleared"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_modern_literary_non_regression() -> None:
     """Verify <= 0.5% regression against the frozen v0.2 modern literary benchmark."""
     if not V02_BASELINE_SUITE_PATH.exists():

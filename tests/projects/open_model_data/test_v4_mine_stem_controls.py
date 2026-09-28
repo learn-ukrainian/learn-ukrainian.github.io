@@ -438,6 +438,10 @@ def test_module_and_docs_have_no_private_host_paths() -> None:
         assert "ops@" not in text
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl",
+)
 def test_load_heldout_chunk_ids_from_phase3() -> None:
     ids = load_heldout_chunk_ids()
     if not ids:
