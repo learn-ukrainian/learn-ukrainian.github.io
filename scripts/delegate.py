@@ -54,6 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -9633,6 +9634,13 @@ def _dispatch(
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
             initial_state["worktree_disallow_reuse"] = True
+            # Binds this task to its review attempt (#9022): the recorder attests a return's prompt hash only
+            # from the task whose record names the same review, attempt and manifest.
+            initial_state["review_attempt"] = {
+                "review_id": review_id,
+                "attempt_id": attempt_id,
+                "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
+            }
         initial_state = _with_optional_research_state(initial_state, research_state)
         if worktree_path is not None and not worktree_path.is_dir():
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
