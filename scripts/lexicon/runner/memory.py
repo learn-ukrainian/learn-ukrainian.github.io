@@ -1,8 +1,13 @@
-"""Hard memory enforcement for enrichment workers (#5230 PR1).
+"""Hard memory enforcement for enrichment workers (#5230 PR1, #9143).
 
 Polling is telemetry only. Limits are enforced by the OS:
 
-- Linux: cgroup v2 ``memory.high`` / ``memory.max`` (inspect ``memory.events`` for OOM).
+- Linux: a transient ``systemd-run --user --scope`` whose cgroup contains only
+  that worker. ``memory.high`` / ``memory.max`` are written only after
+  ``cgroup.procs`` lists that worker alone. A shared cgroup is never written;
+  the worker falls back to ``RLIMIT_AS``. ``MemorySwapMax=0`` is set on the
+  scope because ``memory.max`` alone is absorbed by swap. OOM is the scope
+  exit signal (typically SIGKILL, returncode -9) or ``MemoryError``.
 - Other POSIX: ``RLIMIT_AS`` set in the child before importing the engine.
 
 A startup self-test must prove enforcement; production refuses to claim hard-cap
@@ -20,6 +25,7 @@ import resource
 import subprocess
 import sys
 import tempfile
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, Literal
@@ -76,30 +82,183 @@ def apply_worker_memory_limit(policy: MemoryPolicy) -> EnforcementKind:
         return "none"
 
 
-def _apply_cgroup_v2(policy: MemoryPolicy) -> bool:
-    """Best-effort write into the current cgroup's memory.max / memory.high."""
-    proc_cgroup: str | None = None
+def _self_cgroup_dir() -> Path | None:
+    """Return this process's cgroup v2 directory, or None when it cannot be read."""
     try:
-        with open("/proc/self/cgroup", encoding="utf-8") as handle:
-            for line in handle:
-                line = line.strip()
-                if line.startswith("0::"):
-                    proc_cgroup = line.split(":", 2)[2]
-                    break
-        if proc_cgroup is None:
-            return False
-        base = f"/sys/fs/cgroup{proc_cgroup}"
-        high_path = f"{base}/memory.high"
-        max_path = f"{base}/memory.max"
-        if not os.access(max_path, os.W_OK):
-            return False
-        with open(high_path, "w", encoding="utf-8") as handle:
-            handle.write(str(policy.high_bytes))
-        with open(max_path, "w", encoding="utf-8") as handle:
-            handle.write(str(policy.max_bytes))
-        return True
+        text = Path("/proc/self/cgroup").read_text(encoding="utf-8")
+    except OSError:
+        return None
+    for line in text.splitlines():
+        if line.startswith("0::"):
+            relative = line.split(":", 2)[2].lstrip("/")
+            return Path("/sys/fs/cgroup") / relative
+    return None
+
+
+def _cgroup_procs_exclusive(cgroup_dir: Path, worker_pid: int) -> bool:
+    """True when ``cgroup.procs`` lists ``worker_pid`` and no other process."""
+    if worker_pid <= 0:
+        return False
+    try:
+        text = (cgroup_dir / "cgroup.procs").read_text(encoding="utf-8")
     except OSError:
         return False
+    pids: set[int] = set()
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        try:
+            pids.add(int(stripped))
+        except ValueError:
+            return False
+    return pids == {worker_pid}
+
+
+def _try_apply_cgroup_limit(cgroup_dir: Path, policy: MemoryPolicy, worker_pid: int) -> bool:
+    """Write ``memory.high`` / ``memory.max`` only for an exclusive worker cgroup.
+
+    A shared cgroup is left unchanged. Callers fall back to ``RLIMIT_AS``.
+    """
+    if not _cgroup_procs_exclusive(cgroup_dir, worker_pid):
+        return False
+    high_path = cgroup_dir / "memory.high"
+    max_path = cgroup_dir / "memory.max"
+    if not os.access(max_path, os.W_OK):
+        return False
+    try:
+        with high_path.open("w", encoding="utf-8") as handle:
+            handle.write(str(policy.high_bytes))
+        with max_path.open("w", encoding="utf-8") as handle:
+            handle.write(str(policy.max_bytes))
+    except OSError:
+        return False
+    return True
+
+
+def _apply_cgroup_v2(policy: MemoryPolicy) -> bool:
+    """Best-effort exclusive-cgroup write. Shared cgroups are not modified."""
+    cgroup_dir = _self_cgroup_dir()
+    if cgroup_dir is None:
+        return False
+    return _try_apply_cgroup_limit(cgroup_dir, policy, os.getpid())
+
+
+def _user_systemd_environ() -> dict[str, str] | None:
+    """Return an environment that can talk to the user systemd bus.
+
+    ``None`` when that bus socket is absent. Creating the scope does not need
+    root; a missing user bus means the caller must use ``RLIMIT_AS``.
+    """
+    env = os.environ.copy()
+    runtime = env.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}"
+    bus = Path(runtime) / "bus"
+    if not env.get("DBUS_SESSION_BUS_ADDRESS"):
+        if not bus.exists():
+            return None
+        env["XDG_RUNTIME_DIR"] = runtime
+        env["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={bus}"
+    else:
+        env.setdefault("XDG_RUNTIME_DIR", runtime)
+    return env
+
+
+def _systemd_scope_rejected(proc: subprocess.CompletedProcess[str]) -> bool:
+    """True when ``systemd-run`` exited without exec'ing the worker."""
+    if proc.returncode <= 0:
+        return False
+    text = f"{proc.stderr or ''}{proc.stdout or ''}"
+    markers = (
+        "Failed to connect",
+        "Failed to start transient",
+        "Failed to create bus",
+        "not been booted",
+        "Access denied",
+        "Interactive authentication",
+        "Failed to parse",
+    )
+    return any(marker in text for marker in markers)
+
+
+def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
+    try:
+        subprocess.run(
+            ["systemctl", "--user", "stop", f"{unit}.scope"],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return
+
+
+def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str) -> list[str]:
+    """``systemd-run --scope`` argv. ``--scope`` execs ``cmd`` in place after ``--``.
+
+    ``MemorySwapMax=0`` is required for the cap to SIGKILL: with swap left at
+    ``max``, anonymous allocations are swapped and ``memory.max`` never fires.
+    """
+    return [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--expand-environment=no",
+        "--collect",
+        "--quiet",
+        f"--unit={unit}",
+        "-p",
+        f"MemoryMax={policy.max_bytes}",
+        "-p",
+        f"MemoryHigh={policy.high_bytes}",
+        "-p",
+        "MemorySwapMax=0",
+        "--",
+        *cmd,
+    ]
+
+
+def run_bounded_command(
+    cmd: list[str],
+    policy: MemoryPolicy,
+    *,
+    cwd: str,
+    timeout_s: float | None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ``cmd`` under a dedicated user scope, or as a plain child if that fails.
+
+    The plain child still calls :func:`apply_worker_memory_limit`, which refuses
+    to write a shared cgroup and uses ``RLIMIT_AS``.
+    """
+    scope_env = _user_systemd_environ()
+    if scope_env is not None:
+        unit = f"lexicon-cap-{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        try:
+            proc = subprocess.run(
+                _scope_argv(cmd, policy, unit),
+                cwd=cwd,
+                env=scope_env,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+                check=False,
+            )
+        except FileNotFoundError:
+            proc = None
+        except subprocess.TimeoutExpired:
+            _stop_user_scope(unit, scope_env)
+            raise
+        if proc is not None and not _systemd_scope_rejected(proc):
+            return proc
+    return subprocess.run(
+        cmd,
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        timeout=timeout_s,
+        check=False,
+    )
 
 
 def _allocate_until_breach(target_bytes: int) -> None:
@@ -155,7 +314,8 @@ def run_startup_self_test(
 
     with tempfile.TemporaryDirectory(prefix="lexicon-mem-") as tmp:
         result_path = Path(tmp) / "self_test.json"
-        proc = subprocess.run(
+        policy = MemoryPolicy(high_bytes=test_max_bytes, max_bytes=test_max_bytes)
+        proc = run_bounded_command(
             [
                 str(interpreter),
                 "-m",
@@ -164,11 +324,9 @@ def run_startup_self_test(
                 str(test_max_bytes),
                 str(result_path),
             ],
+            policy,
             cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
+            timeout_s=timeout_s,
         )
         if result_path.is_file():
             data = json.loads(result_path.read_text(encoding="utf-8"))
@@ -179,8 +337,8 @@ def run_startup_self_test(
                 detail=str(data.get("detail") or ""),
                 max_bytes=test_max_bytes,
             )
-        # No result file — OS may have SIGKILL'd the child under the limit.
-        if proc.returncode < 0:
+        # No result file — the scope SIGKILL (returncode -9) or exit 137 is OOM.
+        if classify_oom_exit(proc.returncode):
             kind: EnforcementKind = "cgroup_v2" if sys.platform.startswith("linux") else "rlimit_as"
             return EnforcementProof(
                 kind=kind,

@@ -17,6 +17,7 @@ from scripts.lexicon.runner.memory import (
     classify_oom_exit,
     current_rss_bytes,
     project_interpreter,
+    run_bounded_command,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -98,15 +99,19 @@ def run_capped_worker(
     result_path: Path,
     timeout_s: float | None = None,
 ) -> WorkerResult:
-    """Spawn a hard-capped child via subprocess; classify OOM when the OS stops it."""
+    """Spawn a hard-capped child in its own scope; classify OOM when the OS stops it."""
     interpreter = project_interpreter()
     result_path.parent.mkdir(parents=True, exist_ok=True)
     if result_path.exists():
         result_path.unlink()
     payload_path = result_path.with_suffix(".payload.json")
     payload_path.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    policy = MemoryPolicy(
+        high_bytes=int(payload.get("memory_high_bytes") or MemoryPolicy().high_bytes),
+        max_bytes=int(payload.get("memory_max_bytes") or MemoryPolicy().max_bytes),
+    )
     try:
-        completed = subprocess.run(
+        completed = run_bounded_command(
             [
                 str(interpreter),
                 "-m",
@@ -114,11 +119,9 @@ def run_capped_worker(
                 str(payload_path),
                 str(result_path),
             ],
+            policy,
             cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
+            timeout_s=timeout_s,
         )
     except subprocess.TimeoutExpired:
         if payload_path.exists():

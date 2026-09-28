@@ -119,6 +119,179 @@ def test_injected_allocation_breach_classified_as_oom(tmp_path: Path) -> None:
     assert result.outcome == "failed_terminal"
 
 
+def test_cgroup_guard_refuses_shared_fake_directory_and_writes_exclusive(tmp_path: Path) -> None:
+    """The write guard is decided from cgroup.procs, not from a live kernel cgroup."""
+    from scripts.lexicon.runner.memory import MemoryPolicy, _try_apply_cgroup_limit
+
+    policy = MemoryPolicy(high_bytes=1000, max_bytes=2000)
+
+    missing = tmp_path / "missing"
+    missing.mkdir()
+    assert _try_apply_cgroup_limit(missing, policy, 10) is False
+    assert not (missing / "memory.max").exists()
+
+    shared = tmp_path / "shared"
+    shared.mkdir()
+    (shared / "cgroup.procs").write_text("10\n20\n", encoding="utf-8")
+    (shared / "memory.max").write_text("max\n", encoding="utf-8")
+    (shared / "memory.high").write_text("max\n", encoding="utf-8")
+    assert _try_apply_cgroup_limit(shared, policy, 10) is False
+    assert (shared / "memory.max").read_text(encoding="utf-8") == "max\n"
+    assert (shared / "memory.high").read_text(encoding="utf-8") == "max\n"
+
+    exclusive = tmp_path / "exclusive"
+    exclusive.mkdir()
+    (exclusive / "cgroup.procs").write_text("10\n", encoding="utf-8")
+    (exclusive / "memory.max").write_text("max\n", encoding="utf-8")
+    (exclusive / "memory.high").write_text("max\n", encoding="utf-8")
+    assert _try_apply_cgroup_limit(exclusive, policy, 10) is True
+    assert (exclusive / "memory.max").read_text(encoding="utf-8").strip() == "2000"
+    assert (exclusive / "memory.high").read_text(encoding="utf-8").strip() == "1000"
+
+
+def test_systemd_scope_oom_signal_is_not_a_start_failure() -> None:
+    import subprocess
+
+    from scripts.lexicon.runner.memory import _systemd_scope_rejected
+
+    killed = subprocess.CompletedProcess(args=["systemd-run"], returncode=-9, stdout="", stderr="")
+    assert _systemd_scope_rejected(killed) is False
+    denied = subprocess.CompletedProcess(
+        args=["systemd-run"],
+        returncode=1,
+        stdout="",
+        stderr="Failed to connect to user scope bus via local transport",
+    )
+    assert _systemd_scope_rejected(denied) is True
+
+
+def _user_scope_environ() -> dict[str, str]:
+    import subprocess
+    import sys
+
+    from scripts.lexicon.runner.memory import _user_systemd_environ
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("cgroup v2 shared-scope probe is Linux-only")
+    env = _user_systemd_environ()
+    if env is None:
+        pytest.skip("user systemd bus is absent; a dedicated cgroup cannot be created without root")
+    probe = subprocess.run(
+        ["systemd-run", "--user", "--scope", "--quiet", "--collect", "--", "/bin/true"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    if probe.returncode != 0:
+        detail = (probe.stderr or probe.stdout or "").strip()
+        pytest.skip(f"user transient scope is not writable without root: {detail}")
+    return env
+
+
+def test_shared_cgroup_memory_max_unchanged_and_breach_is_oom(tmp_path: Path) -> None:
+    """A child sharing a cgroup must not lower that cgroup's memory.max.
+
+    The allocation breach is still ``failed_oom`` via ``RLIMIT_AS``.
+    """
+    import subprocess
+
+    from scripts.lexicon.runner.memory import project_interpreter
+
+    env = _user_scope_environ()
+    interpreter = project_interpreter()
+    repo = Path(__file__).resolve().parents[1]
+    scope_max = 1024 * 1024 * 1024
+    worker_cap = 128 * 1024 * 1024
+    payload = tmp_path / "payload.json"
+    payload.write_text(
+        json.dumps(
+            {
+                "job": "inject_oom",
+                "chunk_id": "shared-cgroup",
+                "memory_high_bytes": worker_cap,
+                "memory_max_bytes": worker_cap,
+            }
+        ),
+        encoding="utf-8",
+    )
+    result_path = tmp_path / "result.json"
+    probe = tmp_path / "shared_cgroup_probe.py"
+    probe.write_text(
+        "\n".join(
+            [
+                "import json, subprocess, sys, time",
+                "from pathlib import Path",
+                "def cgroup_file(name):",
+                "    rel = ''",
+                "    for line in Path('/proc/self/cgroup').read_text(encoding='utf-8').splitlines():",
+                "        if line.startswith('0::'):",
+                "            rel = line.split(':', 2)[2]",
+                "            break",
+                "    return Path('/sys/fs/cgroup') / rel.lstrip('/') / name",
+                "def pids():",
+                "    text = cgroup_file('cgroup.procs').read_text(encoding='utf-8')",
+                "    return [int(line) for line in text.split() if line.strip()]",
+                "before = cgroup_file('memory.max').read_text(encoding='utf-8').strip()",
+                "sleeper = subprocess.Popen(['/bin/sleep', '30'])",
+                "try:",
+                "    time.sleep(0.2)",
+                "    procs = pids()",
+                "    if sleeper.pid not in procs or len(set(procs)) < 2:",
+                "        raise SystemExit(f'sleeper did not share the cgroup: procs={procs} sleeper={sleeper.pid}')",
+                "    completed = subprocess.run(",
+                "        [sys.argv[3], '-m', 'scripts.lexicon.runner.worker', sys.argv[1], sys.argv[2]],",
+                "        cwd=sys.argv[4], check=False, timeout=45,",
+                "    )",
+                "    after = cgroup_file('memory.max').read_text(encoding='utf-8').strip()",
+                "    body = json.loads(Path(sys.argv[2]).read_text(encoding='utf-8')) if Path(sys.argv[2]).is_file() else {}",
+                "    print(json.dumps({'before': before, 'after': after, 'procs': procs,",
+                "        'worker_returncode': completed.returncode, 'error_code': body.get('error_code'),",
+                "        'outcome': body.get('outcome')}))",
+                "finally:",
+                "    sleeper.kill()",
+                "    sleeper.wait(timeout=5)",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    completed = subprocess.run(
+        [
+            "systemd-run",
+            "--user",
+            "--scope",
+            "--quiet",
+            "--collect",
+            "--expand-environment=no",
+            "-p",
+            f"MemoryMax={scope_max}",
+            "-p",
+            f"MemoryHigh={scope_max}",
+            "--",
+            str(interpreter),
+            str(probe),
+            str(payload),
+            str(result_path),
+            str(interpreter),
+            str(repo),
+        ],
+        cwd=repo,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr + completed.stdout
+    report = json.loads(completed.stdout.strip().splitlines()[-1])
+    assert report["before"] == str(scope_max)
+    assert report["after"] == report["before"]
+    assert report["error_code"] == ErrorCode.FAILED_OOM.value
+    assert report["outcome"] == "failed_terminal"
+
+
 def test_deterministic_oom_split_and_single_lemma_failed_oom() -> None:
     parent = ChunkSpec(chunk_id="parent", lemma_ids=["a", "b", "c", "d"])
     split = split_on_oom(parent)
