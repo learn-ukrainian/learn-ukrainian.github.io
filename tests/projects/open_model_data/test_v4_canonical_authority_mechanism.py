@@ -508,11 +508,14 @@ def _patch_sources(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, key_loade
         fx.install_policy_resource(monkeypatch, tmp_path, trust_policy[0])
 
 
-def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
+def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_access(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources, prepared
+) -> None:
     ArtifactStore(root=tmp_path).close()
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="unknown invocation_id"):
         sources_authority.issue_verifier_attestation(invocation_id="ghost")
+    _assert_shared_sources_server_dsn_isolation(tmp_path, owned_resources, monkeypatch, prepared)
 
 
 def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources, prepared) -> None:
@@ -719,59 +722,55 @@ def test_sources_issuer_refuses_corrupted_actual_author_join_before_key_access(t
         sources_authority.issue_verifier_attestation(invocation_id=invocation["invocation_id"])
 
 
-def test_uvicorn_sharing_isolates_dsn_config(tmp_path: Path, owned_resources, monkeypatch: pytest.MonkeyPatch) -> None:
-    """AC-03: Proves two uvicorn-sharing tests with different DSN settings do not see each other's config."""
+def _assert_shared_sources_server_dsn_isolation(
+    tmp_path: Path, owned_resources, monkeypatch: pytest.MonkeyPatch, prepared
+) -> None:
+    """The shared server reads each request's current credential, including after a rejected DSN."""
     import urllib.error
     import urllib.request
 
-    from _v4_packaged_runtime_fixture import RuntimeResources, get_shared_sources_server
+    from _v4_packaged_runtime_fixture import RuntimeResources
     from learn_ukrainian_v4_runtime import sources_transport
+    from psycopg.conninfo import make_conninfo
+    from test_v4_operation_lifecycle import claim, role_connection
 
     pg, _wheel = owned_resources
-    _server, shared_url = get_shared_sources_server()
-
-    # Context 1: RuntimeResources initializes first DSN setting
     root1 = tmp_path / "test1"
     root1.mkdir()
     io1 = RuntimeResources(root1, pg, monkeypatch)
-    assert io1.url == shared_url
-    dsn_path_1 = sources_transport.credential_path()
-    assert dsn_path_1.is_file()
-    dsn_content_1 = dsn_path_1.read_text()
+    with role_connection(pg, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
 
-    # Context 2: second test session with distinct root / DSN setting sharing the same uvicorn server
-    root2 = tmp_path / "test2"
-    root2.mkdir()
-    custom_dsn = "postgresql://isolated_user:secret@localhost:5432/isolated_db"
-    io2 = RuntimeResources(root2, pg, monkeypatch)
-    assert io2.url == shared_url  # Server instance and port are shared
-
-    # Write a distinct DSN into an isolated credential file
-    isolated_dsn_file = root2 / "isolated_sources_writer.dsn"
-    isolated_dsn_file.write_text(custom_dsn)
-    isolated_dsn_file.chmod(0o400)
-    monkeypatch.setattr(sources_transport, "credential_path", lambda: isolated_dsn_file)
-
-    dsn_path_2 = sources_transport.credential_path()
-    assert dsn_path_2 == isolated_dsn_file
-    assert dsn_path_2.read_text() == custom_dsn
-    assert dsn_path_2.read_text() != dsn_content_1
-
-    # In addition, test that an attempt resolution against the shared server refuses when token is unauthenticated
-    body = json.dumps({
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {"name": "verify_word", "arguments": {"word": "test"}},
-    }).encode()
-    req = urllib.request.Request(
-        io2.url,
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}).encode()
+    request = urllib.request.Request(
+        io1.url,
         data=body,
         headers={
             "Content-Type": "application/json",
-            "Authorization": "Bearer non-existent-token",
+            "Accept": "application/json, text/event-stream",
+            "Authorization": "Bearer " + owned["capability_token"],
         },
     )
-    with pytest.raises(urllib.error.HTTPError) as exc_info:
-        urllib.request.urlopen(req, timeout=5)
-    assert exc_info.value.code == 401
+
+    def available() -> bool:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            return any(tool["name"] == "verify_word" for tool in json.load(response)["result"]["tools"])
+
+    assert available()
+    root2 = tmp_path / "test2"
+    root2.mkdir()
+    with monkeypatch.context() as other_config:
+        io2 = RuntimeResources(root2, pg, other_config)
+        assert io2.url == io1.url
+        wrong_role_path = root2 / "wrong_role.dsn"
+        wrong_role_path.write_text(make_conninfo(pg.info.dsn, user="hramatka_v4_control_writer"))
+        wrong_role_path.chmod(0o400)
+        other_config.setattr(sources_transport, "credential_path", lambda: wrong_role_path)
+        assert sources_transport.credential_path() != root1 / "hramatka_v4_sources_writer.dsn"
+        with pytest.raises(urllib.error.HTTPError) as exc_info:
+            urllib.request.urlopen(request, timeout=5)
+        assert exc_info.value.code == 401
+        io2.close()
+
+    assert available()
+    io1.close()

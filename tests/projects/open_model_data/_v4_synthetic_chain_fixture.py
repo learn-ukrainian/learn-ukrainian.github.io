@@ -233,6 +233,8 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     for f in scripts_base.iterdir():
         if f.is_file():
             os.link(f, dest_scripts / f.name)
+        elif f.is_dir():
+            (dest_scripts / f.name).symlink_to(f, target_is_directory=True)
 
     return tmp_path
 

@@ -1212,6 +1212,11 @@ def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(
     synthetic_bundle: SyntheticCustodyBundle,
 ) -> None:
     """Receipt summary must count all textbooks with unmounted host archives as missing_on_host."""
+    real_receipt = json.loads(
+        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
+    )
+    assert real_receipt["summary"]["textbook_cohort"]["missing_on_host"] == 122
+
     receipt_data = synthetic_bundle.read_receipt()
     expected_missing = receipt_data["summary"]["textbook_cohort"]["missing_on_host"]
 
