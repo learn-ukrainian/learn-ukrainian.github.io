@@ -29,6 +29,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 DEFAULT_WORKFLOW = "CI"
 DEFAULT_WORKFLOW_FILE = "ci.yml"
@@ -384,6 +385,7 @@ def fetch_workflow_runs_from_api(
 ) -> list[dict[str, Any]]:
     """Fetch completed workflow runs from the GitHub Actions API with bounded pagination."""
     all_runs: list[dict[str, Any]] = []
+    fetched_count = 0
     page = 1
     per_page = 100
 
@@ -394,6 +396,11 @@ def fetch_workflow_runs_from_api(
         query_parts.append(f"event={event}")
     if branch:
         query_parts.append(f"branch={branch}")
+    if since_dt is not None:
+        # GitHub's `created` filter narrows the API result set before pagination.
+        # Retain the local cutoff for subsecond precision and defensive filtering.
+        since_utc = since_dt.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+        query_parts.append(f"created={quote(f'>={since_utc}', safe='')}")
 
     while page <= max_pages:
         path = f"repos/{repo}/actions/workflows/{workflow_file}/runs?{'&'.join(query_parts)}&page={page}"
@@ -406,7 +413,7 @@ def fetch_workflow_runs_from_api(
             if runs_page:
                 break
             if attempt == EMPTY_PAGE_ATTEMPTS - 1:
-                if isinstance(total_count, int) and total_count > len(all_runs):
+                if isinstance(total_count, int) and total_count > fetched_count:
                     raise RuntimeError(
                         f"Workflow runs page {page} stayed empty after {EMPTY_PAGE_ATTEMPTS} attempts "
                         f"despite total_count={total_count}"
@@ -415,33 +422,24 @@ def fetch_workflow_runs_from_api(
         if not runs_page:
             break
 
-        reached_since_cutoff = False
+        fetched_count += len(runs_page)
         for run in runs_page:
             if not isinstance(run, dict):
                 continue
             created_at = parse_github_timestamp(run.get("created_at"))
             if since_dt is not None and created_at is not None and created_at < since_dt:
-                reached_since_cutoff = True
                 continue
 
             all_runs.append(run)
             if limit is not None and len(all_runs) >= limit:
                 return all_runs
 
-        if reached_since_cutoff:
-            break
-        if len(runs_page) < per_page:
-            if (
-                isinstance(total_count, int)
-                and len(all_runs) < total_count
-                and (limit is None or len(all_runs) < limit)
-            ):
-                raise RuntimeError(f"Workflow runs pagination ended early: received {len(all_runs)} of {total_count}")
+        if len(runs_page) < per_page or (isinstance(total_count, int) and fetched_count >= total_count):
             break
 
         page += 1
 
-    if page > max_pages and len(runs_page) == per_page and not reached_since_cutoff:
+    if page > max_pages and len(runs_page) == per_page:
         raise RuntimeError(f"Workflow runs exceeded the {max_pages}-page limit; narrow --since")
     return all_runs
 

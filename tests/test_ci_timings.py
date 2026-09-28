@@ -16,6 +16,7 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -447,6 +448,47 @@ def test_fetch_workflow_runs_api_event_limit_with_newer_non_matching_runs(
     )
     assert len(fetched) == 2
     assert all(r.get("event") == "push" for r in fetched)
+
+
+def test_fetch_workflow_runs_out_of_order_page_does_not_stop_pagination(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A stale entry before newer runs must not hide later pages."""
+    cutoff = datetime(2026, 9, 27, 12, tzinfo=UTC)
+    paths: list[str] = []
+    recent = [
+        {"id": run_id, "created_at": "2026-09-28T00:00:00Z"}
+        for run_id in range(1, 101)
+    ]
+    pages = {
+        1: [{"id": 0, "created_at": "2026-09-26T00:00:00Z"}, *recent[:99]],
+        2: recent[99:],
+    }
+
+    def fake_gh_api_get(path: str, **_kwargs: Any) -> dict[str, Any]:
+        paths.append(path)
+        query = parse_qs(urlsplit(path).query)
+        assert query["created"] == [">=2026-09-27T12:00:00Z"]
+        assert "event" not in query
+        return {"total_count": 101, "workflow_runs": pages[int(query["page"][0])]}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml", since_dt=cutoff, event="all")
+
+    assert [run["id"] for run in runs] == list(range(1, 101))
+    assert len(paths) == 2
+
+
+def test_fetch_workflow_runs_stops_at_total_count_on_full_page(monkeypatch: pytest.MonkeyPatch) -> None:
+    paths: list[str] = []
+
+    def fake_gh_api_get(path: str, **_kwargs: Any) -> dict[str, Any]:
+        paths.append(path)
+        return {"total_count": 100, "workflow_runs": [{"id": i} for i in range(100)]}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    assert len(fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")) == 100
+    assert len(paths) == 1
 
 
 def test_cli_main_api_event_limit_matching_runs(
