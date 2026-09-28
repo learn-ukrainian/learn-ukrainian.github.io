@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7d2fa5d47d45",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-9062",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/actions/python-ci-env/action.yml",
+    ".github/workflows/ci.yml",
+    "tests/test_ci_dependency_check.py",
+    "tests/test_ci_preflight.py",
+    "tests/test_frontend_change_scope.py",
+    "zizmor.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/7d/2fa5d47d45/0/metadata.json",
+      "transcript": "/7d/2fa5d47d45/0/full.jsonl",
+      "compact_transcript": "/7d/2fa5d47d45/0/transcript.jsonl",
+      "content_hash": "/7d/2fa5d47d45/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 121086,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8123520,
+    "output_tokens": 17269,
+    "api_call_count": 66
+  }
+}
