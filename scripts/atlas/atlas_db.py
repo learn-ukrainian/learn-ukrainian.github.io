@@ -383,13 +383,18 @@ def migrate_manifest(
 ) -> dict[str, int]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
-    from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+    from scripts.lexicon.source_attribution import soviet_citation_learner_violation
 
     for entry in entries:
-        if cites_soviet_dictionary_outside_context(entry):
+        violation = soviet_citation_learner_violation(entry)
+        label = entry.get("url_slug") or entry.get("lemma")
+        if violation == "outside soviet_colonization_context":
             raise ValueError(
-                f"СУМ-11 citation outside soviet_colonization_context in manifest entry "
-                f"{entry.get('url_slug') or entry.get('lemma')!r}"
+                f"СУМ-11 citation outside soviet_colonization_context in manifest entry {label!r}"
+            )
+        if violation == "missing russification marker":
+            raise ValueError(
+                f"СУМ-11 citation without a russification marker in manifest entry {label!r}"
             )
     if db_path.exists():
         db_path.unlink()

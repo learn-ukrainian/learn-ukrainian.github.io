@@ -343,7 +343,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "8967c7d637dadc2a03870cc58cf27127e2307c1c02a19a048c43bc59e633d5c6"
+        "sha256": "af204663c13d40007277ac9a09147f13f83dc878396f16e2ee82fd90b98e0d7f"
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",

@@ -16,7 +16,7 @@ For every cited section, the audit queried the exact `ulif_dictua_entries.normal
 | Antonyms | 297 | 79 | 218 | 117 | 262 |
 | **Total** | **4,408** | **2,024** | **2,384** | **14,250** | **5,416** |
 
-The extraction command printed `{"antonyms": {"confirmed_items": 117, "fully_confirmed_rows": 79, "held_items": 262, "held_rows": 218, "rows": 297}, "synonyms": {"confirmed_items": 14133, "fully_confirmed_rows": 1945, "held_items": 5154, "held_rows": 2166, "rows": 4111}}`. A next build recomputes cited sections from allowed sources and withholds unsupported items; Atlas migration and runtime export reject learner citations outside `soviet_colonization_context`.
+The extraction command printed `{"antonyms": {"confirmed_items": 117, "fully_confirmed_rows": 79, "held_items": 262, "held_rows": 218, "rows": 297}, "synonyms": {"confirmed_items": 14133, "fully_confirmed_rows": 1945, "held_items": 5154, "held_rows": 2166, "rows": 4111}}`. A next build recomputes cited sections from allowed sources and withholds unsupported items. Atlas migration and runtime export reject a learner citation outside `soviet_colonization_context`, and they also reject a citation that stays inside that context without a russification marker (`russif`, `русиф`, `русизм`, `sovietiz`, or `red_flag` on the same card).
 
 | Match | Class | Reason |
 | --- | --- | --- |

@@ -28,17 +28,26 @@ from scripts.lexicon.source_attribution import (
     official_url_for_slug,
     official_url_from_mirror,
     remap_mirror_source_string,
+    soviet_citation_learner_violation,
 )
 from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
 
 
 def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
-    assert not cites_soviet_dictionary_outside_context(
-        {"heritage_status": {"soviet_colonization_context": {"source": "СУМ-11"}}}
-    )
-    assert cites_soviet_dictionary_outside_context(
-        {"sections": {"synonyms": {"source": "СУМ-20 + СУМ-11", "items": ["абрикоса"]}}}
-    )
+    marked = {
+        "heritage_status": {
+            "soviet_colonization_context": {"source": "СУМ-11", "sovietization_risk": 0}
+        }
+    }
+    unmarked = {"heritage_status": {"soviet_colonization_context": {"source": "СУМ-11"}}}
+    synonym = {"sections": {"synonyms": {"source": "СУМ-20 + СУМ-11", "items": ["абрикоса"]}}}
+    assert not cites_soviet_dictionary_outside_context(marked)
+    assert not cites_soviet_dictionary_outside_context(unmarked)
+    assert cites_soviet_dictionary_outside_context(synonym)
+    assert soviet_citation_learner_violation(marked) is None
+    assert soviet_citation_learner_violation(unmarked) == "missing russification marker"
+    assert soviet_citation_learner_violation(synonym) == "outside soviet_colonization_context"
+    assert soviet_citation_learner_violation({"sections": {"synonyms": {"source": "СУМ-20"}}}) is None
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:

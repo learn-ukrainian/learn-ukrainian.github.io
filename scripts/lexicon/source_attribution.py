@@ -48,6 +48,26 @@ def cites_soviet_dictionary_outside_context(payload: object) -> bool:
     return isinstance(payload, str) and bool(SOVIET_DICTIONARY_CITATION_RE.search(payload))
 
 
+# Same tokens the #9127 register probe used on published section JSON.
+RUSSIFICATION_MARKER_RE = re.compile(r"russif|русиф|русизм|sovietiz|red_flag", re.IGNORECASE)
+
+
+def soviet_citation_learner_violation(payload: object) -> str | None:
+    """Why a learner-facing card must not ship, or None when it may.
+
+    A citation outside ``soviet_colonization_context`` is rejected. A citation
+    that stays inside that context still needs a russification marker on the
+    same card (rule #M-6).
+    """
+    if cites_soviet_dictionary_outside_context(payload):
+        return "outside soviet_colonization_context"
+    if cites_soviet_dictionary(payload) and not RUSSIFICATION_MARKER_RE.search(
+        json.dumps(payload, ensure_ascii=False, default=str)
+    ):
+        return "missing russification marker"
+    return None
+
+
 SLOVNYK_DICT_PATH_RE = re.compile(
     r"https?://(?:www\.)?slovnyk\.me/dict/(?P<slug>[^/]+)/(?P<word>[^/?#]+)",
     re.IGNORECASE,
