@@ -110,7 +110,9 @@ sources:
   stored_in:
   - data/sources.db ulif_dictua_entries, ulif_dictua_sections
   - data/lexicon/cache/ulif_raw.sqlite ulif_dictua_raw_responses
-  - data/atlas.db / site lexicon shards (synonyms, antonyms, idioms already exported — see md § Findings)
+  - data/atlas.db / site lexicon shards (scripts/atlas/export_runtime_shards.py writes each public payload_json into
+    the shards; the 2026-09-11 build carries one ULIF-labelled payload and no ULIF-labelled synonym, antonym or
+    idiom section — see appears_note)
   provenance:
     urls:
     - https://lcorp.ulif.org.ua/dictua/
@@ -180,7 +182,8 @@ sources:
     copy.
   stored_in:
   - data/sources.db sum20_articles, sum20_senses, sum20_citations (crawled from sum20ua.com)
-  - site lexicon shards (definition cards; see md § Findings)
+  - site lexicon shards (definition cards; scripts/atlas/export_runtime_shards.py writes each public payload_json,
+    including the СУМ-20-labelled ones counted in appears_note, into the shards)
   provenance:
     urls:
     - https://sum20ua.com/
@@ -352,7 +355,8 @@ sources:
     asset; counted 2026-09-28).'
   stored_in:
   - data/sources.db slovnyk_me_entries (snippets capped at 200–500 chars)
-  - data/lexicon/slovnyk_cache/ (pre-filled cache for Atlas lemmas — see md § Findings)
+  - data/lexicon/slovnyk_cache/ (per-lemma cache pre-filled for every manifest lemma by scripts/lexicon/build_slovnyk_mirror.py,
+    per its module docstring)
   provenance:
     urls:
     - https://slovnyk.me/
@@ -394,6 +398,65 @@ sources:
     scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the
       stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions: []
+- id: synonyms_dictionary
+  name: «Словник синонімів української мови» as served by slovnyk.me (dictionary slug `synonyms`) — edition not established
+  organisation: 'Not established. slovnyk.me names no author, editor, publisher or year for this dictionary in any
+    record we hold. The title matches the two-volume «Словник синонімів української мови» (1999–2000) that ULIF''s
+    system description names as the base of its own synonym module (docs/research/UKRAINIAN_DATA_FOUNDRY_LANGUAGE_SPAN_AND_LEXICAL_EVIDENCE.md
+    § ULIF evidence, citing https://lcorp.ulif.org.ua/pdf/Pro_Systemu.pdf), and a 2026-06-11 brief lists that work
+    as «А. А. Бурячок та ін., 2 т., 1999–2000» (docs/dispatch-briefs/2026-06-11-ua-lexicon-source-research.md, a
+    seed list to verify, not a verification). Nothing we hold ties slovnyk.me''s copy to that edition.'
+  role: Synonym chips and synonym groups (synsets with sense glosses) on Atlas word cards.
+  fields_used:
+  - synonym_groups
+  - sense_gloss
+  appears_in:
+  - internal
+  - site
+  - dataset
+  appears_note: 4,835 public synonym sections name this work in their source, and every one of them carries a slovnyk.me/dict/synonyms/
+    URL; atlas.db enrichment has 2,469 synonym rows with this label (atlas.db public-route payloads of the 2026-09-11
+    manifest, published as the atlas-manifest release asset; counted 2026-09-28). Filled by scripts/lexicon/enrich_manifest.py
+    under scripts/lexicon/source_attribution.py SYNONYMS_LABEL; scripts/atlas/export_runtime_shards.py writes each
+    public payload_json into the site shards.
+  stored_in:
+  - data/lexicon/slovnyk_cache/<lemma>.json lookups.synonyms (4,937 cached lookups, dictionary_slug synonyms)
+  - data/atlas.db enrichment (section synonyms) and article_payloads
+  provenance:
+    urls:
+    - https://slovnyk.me/dict/synonyms/
+    retrieved: '2026-08-25'
+    retrieved_evidence: 'data/lexicon/slovnyk_cache/*.json: the 4,937 files with a synonyms lookup have fetched_at
+      from 2026-08-06 to 2026-08-25 (scripts/lexicon/build_slovnyk_mirror.py). The cached records carry only dictionary_slug,
+      dictionary_label, word, source_url, title and text — no edition data.'
+  terms:
+    found: false
+    licence:
+      name: Not established — the underlying edition and its rights holder are not recorded; slovnyk.me's own terms
+        (see the slovnyk_me entry) forbid copying without permission.
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes: []
+    searched:
+    - data/lexicon/slovnyk_cache/*.json synonyms lookups (4,937 records; no author, editor, publisher or year field)
+    - scripts/wiki/slovnyk_me.py SLOVNYK_ME_DICTS (slug synonyms → title only)
+    - scripts/lexicon/source_attribution.py SYNONYMS_LABEL (title only)
+    - docs/research/UKRAINIAN_DATA_FOUNDRY_LANGUAGE_SPAN_AND_LEXICAL_EVIDENCE.md § ULIF evidence (edition of ULIF's
+      module, not of slovnyk.me's copy)
+  citation:
+    form: Словник синонімів української мови (edition not established; retrieved via slovnyk.me). Once the edition
+      is established, cite its compilers, place, publisher and year per docs/best-practices/atlas-source-presentation.md rules 1–3.
+    shown_label: Словник синонімів української мови — scripts/lexicon/source_attribution.py SYNONYMS_LABEL
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the
+      stored copies listed in stored_in (deleted only with the operator's authorisation).
+  open_questions:
+  - Which edition does slovnyk.me serve under this title (the 1999–2000 two-volume dictionary or another), who compiled
+    it, and who holds its rights?
 - id: grinchenko
   name: Грінченко Б. Д. «Словарь української мови» (1907–1909)
   organisation: Public domain (compiler Борис Грінченко, d. 1910). Our digital copy comes from the bakustarver/ukr-dictionaries-list-opensource
@@ -472,7 +535,14 @@ sources:
   - dataset
   appears_note: '4,886 public payloads mention СУМ-11 and atlas.db enrichment labels 3,583 synonym and 387 antonym
     rows СУМ-11 (atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release
-    asset; counted 2026-09-28). That build predates the rule #M-6 enforcement (edfaa5ebd0, 2026-09-27).'
+    asset; counted 2026-09-28). That build predates the rule #M-6 enforcement (edfaa5ebd0, 2026-09-27). Known mismatch
+    with rule #M-6 in that build: it cites СУМ-11 as ordinary synonym and antonym evidence. The public `абрикос`
+    payload''s sections.synonyms.source reads «Словник синонімів української мови + … + СУМ-11: Те саме, що → абрикоса»
+    with no russification flag or modern-norm pair anywhere in the payload; 4,121 public synonym sections and 297
+    public antonym sections name СУМ-11 in their source, and 1 of those 4,418 sections contains any russification
+    marker (evidence query, read-only on atlas.db: SELECT slug, payload_json FROM article_payloads WHERE is_public_route
+    = 1; for sections.synonyms / sections.antonyms whose source contains «СУМ-11», search the section JSON for
+    russif|русиф|русизм|sovietiz|red_flag; run 2026-09-28).'
   stored_in:
   - data/sources.db sum11(word, definition, text, source) from the bakustarver/ukr-dictionaries-list-opensource
     JSON (scripts/rag/convert_dictionaries.py)
@@ -521,8 +591,9 @@ sources:
     scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the
       stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions:
-  - 'Do the СУМ-11-labelled synonym and antonym rows in the 2026-09-11 Atlas build meet rule #M-6 (red-flagged russification
-    evidence only), or are they modern evidence that the #8969 enforcement should have removed?'
+  - 'Do Atlas builds after the #8969 enforcement (edfaa5ebd0) still cite СУМ-11 as ordinary synonym, antonym or sense
+    evidence? The remaining scripts/lexicon uses are tracked in #8990; the 2026-09-11 build''s mismatch is recorded
+    in appears_note.'
   - Replace the aggregator copy with passages checked against the official edition.
 - id: grac
   name: ГРАК — Генеральний регіонально анотований корпус української мови

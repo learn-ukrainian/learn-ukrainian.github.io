@@ -82,6 +82,20 @@ def test_schema_rejects_an_entry_missing_provenance(register: dict) -> None:
     assert any("'provenance' is a required property" in m for m in messages), messages
 
 
+def test_schema_rejects_an_entry_missing_its_citation_form(register: dict) -> None:
+    broken = copy.deepcopy(register)
+    del broken["sources"][0]["citation"]["form"]
+    messages = [e.message for e in _validator().iter_errors(broken)]
+    assert any("'form' is a required property" in m for m in messages), messages
+
+
+def test_schema_rejects_an_entry_missing_its_removal_route(register: dict) -> None:
+    broken = copy.deepcopy(register)
+    del broken["sources"][0]["removal"]["route"]
+    messages = [e.message for e in _validator().iter_errors(broken)]
+    assert any("'route' is a required property" in m for m in messages), messages
+
+
 def test_schema_rejects_a_removal_route_that_is_not_a_github_issue(register: dict) -> None:
     broken = copy.deepcopy(register)
     broken["sources"][0]["removal"]["route"] = "mailto:takedown@example.org"
