@@ -55,7 +55,9 @@ def _decide(command: str) -> str | None:
 # the exact strings in INTERPRETERS — so a disguised path like
 # "/some/venv/bin/python3.11" or "/opt/foo/bash" is still caught (#9030 Grok
 # review: pytest/interpreter allow rules must never hide behind a path).
-_INTERPRETER_HEAD_RE = re.compile(r"(^|/)(python(3(\.\d+)?)?|bash|sh)$")
+# Also catches the free-threaded build suffix ("python3.13t") and the dash/zsh
+# shells (#9030 round-2 residual).
+_INTERPRETER_HEAD_RE = re.compile(r"(^|/)(python(3(\.\d+)?t?)?|bash|sh|dash|zsh)$")
 
 
 def _is_interpreter_head(head: str) -> bool:
@@ -64,9 +66,19 @@ def _is_interpreter_head(head: str) -> bool:
 
 def test_allow_list_is_present_and_bash_scoped() -> None:
     allow = _permissions()["allow"]
-    assert len(allow) >= 60
+    assert len(allow) >= 50
     assert len(allow) == len(set(allow)), "duplicate allow rules"
     assert all(rule.startswith("Bash(") and rule.endswith(")") for rule in allow)
+
+
+def test_allow_list_has_no_push_or_switch_rule() -> None:
+    # #9030 round-2 (Grok): a trailing "*" in a push/delete allow rule also
+    # swallows extra refspecs and clustered short flags (-uf force-pushes),
+    # and prefix globs cannot make `git push`/`git switch` safe. These now go
+    # back to the auto-mode classifier, which force-blocks by default.
+    allow = _bash_patterns(_permissions()["allow"])
+    assert not any(p.startswith("git push") for p in allow)
+    assert not any(p.startswith("git switch") for p in allow)
 
 
 def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
@@ -102,32 +114,35 @@ def test_no_ask_rule_shadows_an_allow_rule() -> None:
 @pytest.mark.parametrize(
     ("command", "expected"),
     [
-        ("git push origin HEAD:claude/impl-automode-allow", "allow"),
-        ("git push origin HEAD:claude/x", "allow"),
-        ("git push origin --delete claude/impl-automode-allow", "allow"),
-        ("git push origin --delete grok/y", "allow"),
+        # `git push`/`git switch` are no longer pre-approved at all (#9030
+        # round-2, driver decision): a trailing "*" cannot be made safe
+        # against a second refspec or a clustered short flag, so these now
+        # fall through to the auto-mode classifier instead of being allowed.
+        ("git push origin HEAD:claude/impl-automode-allow", None),
+        ("git push origin HEAD:claude/x", None),
+        ("git push origin --delete claude/impl-automode-allow", None),
+        ("git push origin --delete grok/y", None),
         ("gh pr merge 9030 --squash", "allow"),
         ("gh workflow run ci.yml --ref claude/x", "allow"),
         (".venv/bin/python -m scripts.fleet.capacity_pick --json", "allow"),
         ("npm run agents:deploy", "allow"),
         ("sudo systemctl restart caddy", "allow"),
         ("sudo caddy reload --config /etc/caddy/Caddyfile", "allow"),
-        # deny wins even though an allow rule also matches each of these
         ("git push origin HEAD:claude/x --force", "deny"),
         ("git push origin --delete claude/x --force", "deny"),
+        # deny wins even though an allow rule also matches this one
         ("sudo systemctl link /tmp/x.service", "deny"),
         ("git push origin HEAD:main", "deny"),
         ("git push origin HEAD:main --force", "deny"),
         ("git push origin HEAD:refs/heads/main", "deny"),
         ("git push origin --delete main", "deny"),
         ("gh pr merge 9030 --admin --squash", "deny"),
-        # Grok review r1 (#9030): commands wrongly allowed by the broad
-        # HEAD*/-u HEAD/--delete */-m pytest * rules must now be denied or
-        # simply unmatched (never pre-approved).
         ("git push origin HEAD", None),
         ("git push origin HEAD -f", "deny"),
         ("git push origin HEAD --force-with-lease", "deny"),
-        ("git push origin --delete refs/heads/main", None),
+        # `Bash(git push *main*)` now catches a bare ref name too, so this is
+        # deny where round-1 left it unmatched.
+        ("git push origin --delete refs/heads/main", "deny"),
         ("git push origin --delete main --force", "deny"),
         ("git push origin --delete --force main", "deny"),
         ("git push origin HEAD:gh-pages", "deny"),
@@ -144,6 +159,35 @@ def test_no_ask_rule_shadows_an_allow_rule() -> None:
         ("sudo rm -rf /var/tmp/lu", None),
         ("sudo bash -c id", None),
         ("git push --force origin claude/x", "deny"),
+        # Grok review r2 (#9030): a second refspec or a clustered short flag
+        # slipped past the round-1 rules because the allow rule's trailing
+        # "*" swallowed it. The push/switch allow rules are gone now, so most
+        # of these are simply unmatched; the ones that name a protected ref
+        # (main/gh-pages/production, anywhere in the command) get a hard
+        # deny. `Bash(git push *main*)` etc. also denies a legitimate agent
+        # branch whose name merely contains one of those words (e.g.
+        # "claude/maintenance-fix") — accepted collateral, not a bug.
+        ("git push origin HEAD:claude/x main", "deny"),
+        ("git push origin HEAD:claude/x gh-pages", "deny"),
+        ("git push origin HEAD:claude/x production", "deny"),
+        ("git push origin HEAD:claude/x refs/heads/main", "deny"),
+        ("git push origin HEAD:claude/x HEAD", None),
+        ("git push origin --delete claude/x main", "deny"),
+        ("git push origin --delete claude/x gh-pages", "deny"),
+        ("git push origin --delete claude/x production", "deny"),
+        ("git push origin --delete claude/x refs/heads/gh-pages", "deny"),
+        ("git push origin --delete claude/x refs/heads/production", "deny"),
+        ("git push origin HEAD:claude/x -uf", None),
+        ("git push origin HEAD:claude/x -fu", None),
+        ("git push origin HEAD:claude/x -fv", None),
+        ("git push origin HEAD:claude/x main -uf", "deny"),
+        ("git switch other -f", "deny"),
+        ("git switch other --force", "deny"),
+        ("git switch other --discard-changes", "deny"),
+        ("git switch --guess -f other", "deny"),
+        ("sudo systemctl --user link x", "deny"),
+        ("sudo systemctl --force link", "deny"),
+        ("sudo systemctl -f link", "deny"),
     ],
 )
 def test_rule_precedence(command: str, expected: str | None) -> None:
@@ -153,14 +197,12 @@ def test_rule_precedence(command: str, expected: str | None) -> None:
 @pytest.mark.parametrize(
     "command",
     [
-        # "HEAD:main" / "--delete main" no longer match any allow rule now
-        # that push/delete allow rules are agent-namespaced (#9030 r2) — the
-        # cases below still exercise real allow/deny overlaps.
+        # `git push`/`git switch` no longer match any allow rule at all
+        # (#9030 round-2) — the cases below are the only remaining real
+        # allow/deny overlaps in the settings.
         "gh pr merge 1 --admin --squash",
-        "git push origin HEAD:claude/x --force",
-        "git push origin --delete claude/x --force",
         "sudo systemctl link /tmp/x.service",
-        "git switch -f main",
+        "sudo systemctl --user link x",
     ],
 )
 def test_denied_commands_are_also_allowed_so_precedence_is_exercised(command: str) -> None:
