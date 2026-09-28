@@ -25,12 +25,17 @@
 # they stay valid only while the cited `adr` file exists and the finding
 # still matches (see _validate_approved_exemptions in
 # test_opsec_route_sweep.py). Adding one requires editing
-# FROZEN_EXEMPTION_IDS in the same diff.
+# FROZEN_EXEMPTION_IDS in the same diff. `kind`/`token` pin the row to the
+# exact scanner finding (opsec_scan.Finding.kind / .token); operation and
+# field alone match the whole dashboard file body, so any other finding in
+# that body (a new leak, a swapped URL) would otherwise be absorbed too.
 version = 1
 
 [[approved_exemptions]]
 id = "dashboard-work-loopback"
 operation = "dashboard:work.html"
 field = "body"
+kind = "ipv4"
+token = "127.0.0.1:8769"
 adr = "docs/decisions/ADR-019-work-control-plane.md"
 reason = "ADR-019 fixes dashboards/work.html's browser-local private-adapter URL to the literal loopback constant http://127.0.0.1:8769/v1/projection; it is a permanent design choice, not an owned burn-down leak."

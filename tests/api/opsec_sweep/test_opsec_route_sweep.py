@@ -569,6 +569,13 @@ def _validate_approved_exemptions(
     stays valid only as long as its cited ADR file still exists and the
     finding it excuses still matches. Anything left over is passed on to
     ``_validate_known_leaks`` for the ordinary burn-down accounting.
+
+    ``operation``/``field`` alone identify a whole response leaf (a dashboard
+    file is scanned as one ``body`` leaf), so a row must also pin the exact
+    scanner ``kind`` and ``token`` it excuses via plain equality, never a
+    glob. Any other finding sharing that operation/field — a new leak, or the
+    cited leak's token replaced with a different one — is left in
+    ``remaining`` and must be caught by ``_validate_known_leaks`` instead.
     """
     ids = [row.get("id") for row in rows]
     assert all(isinstance(row_id, str) and row_id for row_id in ids), "every approved exemption needs a non-empty id"
@@ -585,6 +592,8 @@ def _validate_approved_exemptions(
             for row in rows
             if _matches(finding.operation, row.get("operation", ""))
             and _matches(finding.field_path, row.get("field", ""))
+            and finding.kind == row.get("kind")
+            and finding.token == row.get("token")
         ]
         if not row_matches:
             remaining.append(finding)
@@ -597,6 +606,8 @@ def _validate_approved_exemptions(
         assert row.get("reason"), f"approved exemption row has no reason: {row['id']}"
         assert row.get("operation"), f"approved exemption row has no operation: {row['id']}"
         assert row.get("field"), f"approved exemption row has no field: {row['id']}"
+        assert row.get("kind"), f"approved exemption row has no kind: {row['id']}"
+        assert row.get("token"), f"approved exemption row has no token: {row['id']}"
         adr_path = REPO_ROOT / row["adr"]
         assert adr_path.is_file(), f"approved exemption {row['id']} cites a missing ADR: {row['adr']}"
         assert matched[row["id"]], f"approved exemption row no longer matches a finding: {row['id']}"
@@ -917,7 +928,7 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
     finding = opsec_scan.Finding(
         operation="dashboard:work.html",
         field_path="body",
-        kind="host-port",
+        kind="ipv4",
         token="127.0.0.1:8769",
         start=0,
         end=14,
@@ -927,6 +938,8 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
         "id": "not-a-frozen-exemption-id",
         "operation": "dashboard:work.html",
         "field": "body",
+        "kind": "ipv4",
+        "token": "127.0.0.1:8769",
         "adr": "docs/decisions/ADR-019-work-control-plane.md",
         "reason": "test",
     }
@@ -937,6 +950,8 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
         "id": "dashboard-work-loopback",
         "operation": "dashboard:work.html",
         "field": "body",
+        "kind": "ipv4",
+        "token": "127.0.0.1:8769",
         "adr": "docs/decisions/ADR-0000-does-not-exist.md",
         "reason": "test",
     }
@@ -953,6 +968,44 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
     )
     remaining = _validate_approved_exemptions([valid], [finding, unrelated])
     assert remaining == [unrelated]
+
+
+def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_body() -> None:
+    """A row pinned to one token must not excuse a different finding sharing its operation/field.
+
+    `dashboard:work.html` / `body` covers the whole dashboard file as one
+    scanned leaf. Before this row pinned `kind`/`token`, any second loopback
+    (a new leak, or the cited ADR URL swapped for a different one) sharing
+    that operation and field was silently absorbed by the same row.
+    """
+    known = opsec_scan.Finding(
+        operation="dashboard:work.html",
+        field_path="body",
+        kind="ipv4",
+        token="127.0.0.1:8769",
+        start=0,
+        end=14,
+    )
+    second_loopback = opsec_scan.Finding(
+        operation="dashboard:work.html",
+        field_path="body",
+        kind="ipv4",
+        token="127.0.0.1:9769",
+        start=200,
+        end=214,
+    )
+    remaining = _validate_approved_exemptions(_load_approved_exemptions(), [known, second_loopback])
+    assert remaining == [second_loopback]
+
+
+def test_dashboard_work_loopback_exemption_is_pinned_to_the_exact_token() -> None:
+    """A glob edit to this row's operation, field, kind, or token must fail this test."""
+    rows = _load_approved_exemptions()
+    row = next(row for row in rows if row["id"] == "dashboard-work-loopback")
+    assert row["operation"] == "dashboard:work.html"
+    assert row["field"] == "body"
+    assert row["kind"] == "ipv4"
+    assert row["token"] == "127.0.0.1:8769"
 
 
 def test_sweep_seam_honesty_requires_real_cold_start_board_producer(

@@ -205,10 +205,13 @@ dashboard file under `dashboards/` is scanned as a static consumer as well.
 
 The test uses `TestClient(app)` without entering the lifespan context. Existing
 module seams are redirected to an isolated temporary store whose absolute path
-contains a planted canary; `MONITOR_OCCUPANCY_HOST_IDS` and
-`LU_MONITOR_HOST_ID` receive separate canaries. The fixture proves those seams
-are wired before scanning. Socket and subprocess seams are denied, so a new
-route cannot quietly make a live network, SSH, Git, or child-process call.
+contains a planted canary. The fixture sets `MONITOR_OCCUPANCY_HOST_IDS` to
+map a host-alias canary to an opaque host-id canary, and sets
+`LU_MONITOR_HOST_ID` to that same opaque host-id canary — but only the host
+alias is scanned as a canary; the opaque host id is deliberately not, because
+real dashboards publish it verbatim. The fixture proves those seams are wired
+before scanning. Socket and subprocess seams are denied, so a new route
+cannot quietly make a live network, SSH, Git, or child-process call.
 
 [`scripts/api/opsec_scan.py`](../scripts/api/opsec_scan.py) is the shared
 scanner. It reports operation and field-path provenance while scanning JSON or

@@ -117,9 +117,12 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
 - `/api/health` exposes in-flight, saturation, timeout, slow-request, and
   slow-SQL telemetry, plus `instance.host` (the opaque host id from
   `occupancy_local.resolve_launcher_host_id()` — `LU_MONITOR_HOST_ID` when it
-  is a valid opaque id, else the occupancy driver/host-id mapping, else
-  `"local"`; never a raw hostname) and `instance.git_sha` (exact git HEAD) so
-  SSH-tunneled VPS hosts are distinguishable from a local Mac Monitor.
+  is a valid opaque id; a *set but non-opaque* `LU_MONITOR_HOST_ID` returns
+  `"local"` immediately and does not fall through to the driver id or the
+  occupancy host-id mapping; only when the variable is unset does resolution
+  fall through to the driver id, then the mapping, else `"local"`; never a
+  raw hostname) and `instance.git_sha` (exact git HEAD) so SSH-tunneled VPS
+  hosts are distinguishable from a local Mac Monitor.
 - `agents_extensions/shared/hooks/tool-timing.sh` serializes hook data with
   `jq` and posts it to `/api/telemetry/tool-timings`. The endpoint keeps its
   strict `ToolTimingIngest` schema; malformed hook input is discarded locally
