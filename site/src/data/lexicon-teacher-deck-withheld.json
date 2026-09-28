@@ -124,6 +124,7 @@
     {"sentenceSha256":"6a33a2ceb7a147266b4314235d1190cbc6d17c53558bfe5f843f6e3723eac52b","code":"ERR","reviewer":"gemini-3.8-flash-high (review-8843-sent-4)","reviewedAt":"2026-09-28"},
     {"sentenceSha256":"6a3cfc0fba072eb5788fd2c54af5315c7815e898771457cf58c97d6553d6a439","code":"FRAG","reviewer":"gemini-3.8-flash-high (review-8843-lang-1/-2)","reviewedAt":"2026-09-27"},
     {"sentenceSha256":"6a507c052d5c9d8945a6b8feaaea25ce2c0a2352a3aaf967b601e411e7eded8d","code":"FRAG","reviewer":"gemini-3.8-flash-high (review-8843-sent-4)","reviewedAt":"2026-09-28"},
+    {"sentenceSha256":"6a59274cc0fbfe7e767ce6b0e8e1405228d9502f7c8b3d766d5a2d9f34f5fe21","code":"AMBIG","reviewer":"OpenAI gpt-6-sol (review-8843-sent-r7)","reviewedAt":"2026-09-28"},
     {"sentenceSha256":"6e7a84228afe2a54edaa6cd2c0899b3edd6cfebb066a6b8b838be422db825ee0","code":"FRAG","reviewer":"gemini-3.8-flash-high (review-8843-lang-1/-2)","reviewedAt":"2026-09-27"},
     {"sentenceSha256":"6f9ce1bf13c3a8efabef9e43f8a636529beaa812fef586b8a861cbe4bd5cb84b","code":"ERR","reviewer":"openai gpt-6-sol (review-8843-sent-r4)","reviewedAt":"2026-09-28"},
     {"sentenceSha256":"701b0ec7ed9a0cdcc85004cad6c5b22891d11ccb8431fd64f7fd3b781aa16eb3","code":"ERR","reviewer":"gemini-3.8-flash-high (review-8843-sent-1)","reviewedAt":"2026-09-28"},
