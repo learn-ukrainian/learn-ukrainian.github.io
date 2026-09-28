@@ -45,6 +45,7 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const siteRoot = resolve(scriptDir, '..');
 const DEFAULT_POINTER = resolve(siteRoot, 'src/data/lexicon-teacher-deck.pointer.json');
 const DEFAULT_TARGET = resolve(siteRoot, 'public/lexicon');
+const DEFAULT_LEDGER = resolve(siteRoot, 'src/data/lexicon-teacher-deck-withheld.json');
 
 function sha256(data) {
   return createHash('sha256').update(data).digest('hex');
@@ -66,6 +67,15 @@ export function validatePointer(pointer) {
     throw new Error('teacher deck pointer hashes must be SHA-256 hex digests');
   }
   if (!Array.isArray(pointer.files)) throw new Error('teacher deck pointer files must be a list');
+  const reviews = pointer.inputs?.sentenceReviews;
+  if (
+    !reviews ||
+    !SHA256_RE.test(String(reviews.sha256)) ||
+    !Number.isInteger(reviews.withheld) ||
+    !Number.isInteger(reviews.kept)
+  ) {
+    throw new Error('teacher deck pointer lacks inputs.sentenceReviews (sha256, withheld, kept)');
+  }
   for (const { name, record, expected } of servedRecords(pointer)) {
     if (!SHA256_RE.test(String(record.sha256)) || !Number.isInteger(record.bytes)) {
       throw new Error(`teacher deck pointer record for ${name} lacks a SHA-256 or byte size`);
@@ -77,16 +87,37 @@ export function validatePointer(pointer) {
   return pointer;
 }
 
-export function readPointer(pointerPath = DEFAULT_POINTER) {
+/**
+ * The committed review ledger must be the exact file the published deck was built from: the
+ * Python publisher records SHA-256 of the ledger's raw bytes plus its withheld/kept counts.
+ * A ledger edited after publishing would otherwise keep serving the old, unfiltered asset.
+ */
+export function verifyReviewLedger(pointer, ledgerPath = DEFAULT_LEDGER) {
+  if (!existsSync(ledgerPath)) {
+    throw new Error(`teacher deck review ledger missing: ${ledgerPath}. ${RECOVERY}`);
+  }
+  const data = readFileSync(ledgerPath);
+  const recorded = pointer.inputs.sentenceReviews;
+  if (sha256(data) !== recorded.sha256) {
+    throw new Error(`teacher deck review ledger differs from the published deck (hash mismatch). ${RECOVERY}`);
+  }
+  const ledger = JSON.parse(data.toString('utf8'));
+  if (ledger.withheld?.length !== recorded.withheld || ledger.kept?.length !== recorded.kept) {
+    throw new Error(`teacher deck review ledger counts differ from the pointer. ${RECOVERY}`);
+  }
+  return pointer;
+}
+
+export function readPointer(pointerPath = DEFAULT_POINTER, ledgerPath = DEFAULT_LEDGER) {
   if (!existsSync(pointerPath)) {
     throw new Error(`teacher deck pointer missing: ${pointerPath} (the deck has not been published). ${RECOVERY}`);
   }
-  return validatePointer(JSON.parse(readFileSync(pointerPath, 'utf8')));
+  return verifyReviewLedger(validatePointer(JSON.parse(readFileSync(pointerPath, 'utf8'))), ledgerPath);
 }
 
-/** Committed-artifact check (`npm run verify:artifacts`): the pointer must exist and pass `validatePointer`. */
-export function verifyTeacherDeckPointer({ pointerPath = DEFAULT_POINTER } = {}) {
-  return { version: readPointer(pointerPath).deck_version };
+/** Committed-artifact check (`npm run verify:artifacts`): the pointer must exist, pass `validatePointer`, and match the ledger. */
+export function verifyTeacherDeckPointer({ pointerPath = DEFAULT_POINTER, ledgerPath = DEFAULT_LEDGER } = {}) {
+  return { version: readPointer(pointerPath, ledgerPath).deck_version };
 }
 
 function servedRecords(pointer) {
@@ -156,8 +187,12 @@ function alreadyServed(pointer, targetDir) {
   });
 }
 
-export async function hydrateTeacherDeck({ pointerPath = DEFAULT_POINTER, targetDir = DEFAULT_TARGET } = {}) {
-  const pointer = readPointer(pointerPath);
+export async function hydrateTeacherDeck({
+  pointerPath = DEFAULT_POINTER,
+  targetDir = DEFAULT_TARGET,
+  ledgerPath = DEFAULT_LEDGER,
+} = {}) {
+  const pointer = readPointer(pointerPath, ledgerPath);
   if (alreadyServed(pointer, targetDir)) return { version: pointer.deck_version, downloaded: false };
   const gzBytes = await downloadGzip(pointer);
   const files = parseTeacherPackage(gunzipSync(gzBytes), pointer);

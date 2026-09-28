@@ -9,12 +9,21 @@ import {
   hydrateTeacherDeck,
   parseTeacherPackage,
   validatePointer,
+  verifyReviewLedger,
   verifyTeacherDeckPointer,
 } from '../../scripts/hydrate-teacher-deck.mjs';
 
 const ASSET_URL =
   'https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-teacher-deck/lexicon-teacher-deck-teacher-v1-test.json.gz';
 const dirs: string[] = [];
+const COMMITTED_POINTER = join(__dirname, '../../src/data/lexicon-teacher-deck.pointer.json');
+const COMMITTED_LEDGER = join(__dirname, '../../src/data/lexicon-teacher-deck-withheld.json');
+const LEDGER = `${JSON.stringify({
+  schema: 'atlas-practice-teacher-withheld',
+  schemaVersion: 1,
+  withheld: [{ sentenceSha256: 'a'.repeat(64), code: 'ERR', reviewer: 't', reviewedAt: '2026-09-28' }],
+  kept: [{ sentenceSha256: 'b'.repeat(64), reviewer: 't', reviewedAt: '2026-09-28' }],
+})}\n`;
 
 function sha256(data: Buffer | string): string {
   return createHash('sha256').update(data).digest('hex');
@@ -63,6 +72,7 @@ function fixture(options: { dropCloze?: boolean; deckSchemaVersion?: number; clo
     package_sha256: sha256(packageBytes),
     gz_bytes: gzBytes.length,
     package_bytes: packageBytes.length,
+    inputs: { sentenceReviews: { withheld: 1, kept: 1, sha256: sha256(LEDGER) } },
     files: Object.entries(served).map(([path, content]) => ({
       path,
       schema: JSON.parse(content).schema,
@@ -82,6 +92,12 @@ function record(pointer: Pointer, path: string) {
   const found = pointer.files.find((file) => file.path === path);
   if (!found) throw new Error(`fixture lacks ${path}`);
   return found;
+}
+
+function writeLedger(content: string = LEDGER): string {
+  const ledgerPath = join(tempDir(), 'ledger.json');
+  writeFileSync(ledgerPath, content);
+  return ledgerPath;
 }
 
 function writePointer(pointer: unknown): string {
@@ -109,12 +125,12 @@ describe('teacher deck build gate (#8843)', () => {
     const targetDir = tempDir();
     const fetchMock = stubDownload(gzBytes);
 
-    await expect(hydrateTeacherDeck({ pointerPath, targetDir })).resolves.toEqual({
+    await expect(hydrateTeacherDeck({ pointerPath, targetDir, ledgerPath: writeLedger() })).resolves.toEqual({
       version: 'teacher-v1-test',
       downloaded: true,
     });
     expect(JSON.parse(readFileSync(join(targetDir, 'practice-cloze.teacher.json'), 'utf8')).cloze).toEqual([]);
-    await expect(hydrateTeacherDeck({ pointerPath, targetDir })).resolves.toMatchObject({ downloaded: false });
+    await expect(hydrateTeacherDeck({ pointerPath, targetDir, ledgerPath: writeLedger() })).resolves.toMatchObject({ downloaded: false });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
@@ -125,7 +141,7 @@ describe('teacher deck build gate (#8843)', () => {
     const targetDir = tempDir();
     stubDownload(gzBytes);
 
-    await expect(hydrateTeacherDeck({ pointerPath, targetDir })).rejects.toThrow(
+    await expect(hydrateTeacherDeck({ pointerPath, targetDir, ledgerPath: writeLedger() })).rejects.toThrow(
       /artifact missing from the package: practice-cloze.teacher.json/,
     );
     expect(existsSync(join(targetDir, 'practice-deck.teacher.json'))).toBe(false);
@@ -144,7 +160,7 @@ describe('teacher deck build gate (#8843)', () => {
     const { pointer, gzBytes } = fixture();
     const pointerPath = writePointer({ ...pointer, asset_url: ASSET_URL.replace('teacher-v1-test', 'teacher-v1-other') });
     stubDownload(gzBytes);
-    await expect(hydrateTeacherDeck({ pointerPath, targetDir: tempDir() })).rejects.toThrow(/asset_url is not/);
+    await expect(hydrateTeacherDeck({ pointerPath, targetDir: tempDir(), ledgerPath: writeLedger() })).rejects.toThrow(/asset_url is not/);
   });
 
   test('fails the build when a served file exceeds its gzip budget', () => {
@@ -182,7 +198,7 @@ describe('teacher deck committed-artifact check (#8843)', () => {
 
   test('accepts a well-formed pointer', () => {
     const { pointer } = fixture();
-    expect(verifyTeacherDeckPointer({ pointerPath: writePointer(pointer) })).toEqual({ version: 'teacher-v1-test' });
+    expect(verifyTeacherDeckPointer({ pointerPath: writePointer(pointer), ledgerPath: writeLedger() })).toEqual({ version: 'teacher-v1-test' });
   });
 
   test.each([
@@ -219,7 +235,40 @@ describe('teacher deck committed-artifact check (#8843)', () => {
     ],
   ])('fails closed on a wrong %s', (_label, mutate, message) => {
     const pointerPath = writePointer(mutate(fixture().pointer));
-    expect(() => verifyTeacherDeckPointer({ pointerPath })).toThrow(message);
+    expect(() => verifyTeacherDeckPointer({ pointerPath, ledgerPath: writeLedger() })).toThrow(message);
     expect(() => validatePointer(mutate(fixture().pointer))).toThrow(message);
+  });
+
+  test('fails when the pointer records a zeroed review hash', () => {
+    const { pointer } = fixture();
+    pointer.inputs.sentenceReviews.sha256 = '0'.repeat(64);
+    expect(() => verifyTeacherDeckPointer({ pointerPath: writePointer(pointer), ledgerPath: writeLedger() })).toThrow(
+      /review ledger differs from the published deck/,
+    );
+  });
+
+  test('fails when the ledger is edited after publishing', () => {
+    const { pointer } = fixture();
+    const edited = LEDGER.replace('"ERR"', '"AMBIG"');
+    expect(() => verifyReviewLedger(pointer, writeLedger(edited))).toThrow(/hash mismatch/);
+    expect(() => verifyReviewLedger(pointer, join(tempDir(), 'none.json'))).toThrow(/review ledger missing/);
+  });
+
+  test('fails when the recorded counts differ from the ledger', () => {
+    const { pointer } = fixture();
+    pointer.inputs.sentenceReviews.kept = 2;
+    expect(() => verifyReviewLedger(pointer, writeLedger())).toThrow(/counts differ/);
+  });
+
+  test('requires the pointer to record the review ledger', () => {
+    const { pointer } = fixture();
+    const { inputs: _inputs, ...bare } = pointer;
+    expect(() => validatePointer(bare)).toThrow(/lacks inputs.sentenceReviews/);
+  });
+
+  test('the real committed pointer and ledger match', () => {
+    const pointer = JSON.parse(readFileSync(COMMITTED_POINTER, 'utf8'));
+    expect(sha256(readFileSync(COMMITTED_LEDGER))).toBe(pointer.inputs.sentenceReviews.sha256);
+    expect(() => verifyTeacherDeckPointer()).not.toThrow();
   });
 });
