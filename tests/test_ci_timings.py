@@ -355,6 +355,34 @@ def test_cli_main_with_fixture_json(capsys: pytest.CaptureFixture[str]) -> None:
     assert not err
 
 
+def test_fixture_json_is_byte_identical_across_worker_counts(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    class FixedDatetime(datetime):
+        @classmethod
+        def now(cls, tz: Any = None) -> datetime:
+            return datetime(2026, 9, 28, 12, tzinfo=UTC)
+
+    monkeypatch.setattr("scripts.ci.ci_timings.datetime", FixedDatetime)
+    outputs = []
+    for workers in (1, 8):
+        assert main(["--fixture", str(_FIXTURE_PATH), "--event", "all", "--json", "--max-workers", str(workers)]) == 0
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        outputs.append(captured.out.encode())
+    assert outputs[0] == outputs[1]
+
+
+def test_run_jobs_fetch_error_is_not_dropped() -> None:
+    runs, _ = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
+
+    def fail_jobs(_run_id: int) -> list[dict[str, Any]]:
+        raise RuntimeError("job fetch failed")
+
+    with pytest.raises(RuntimeError, match="job fetch failed"):
+        analyze_timings(runs, fail_jobs, event_filter="all", max_workers=8)
+
+
 def test_cli_main_invalid_since(capsys: pytest.CaptureFixture[str]) -> None:
     """Test CLI main() returns exit code 2 on invalid --since."""
     exit_code = main(["--since", "not-a-valid-date"])
@@ -456,10 +484,7 @@ def test_fetch_workflow_runs_out_of_order_page_does_not_stop_pagination(
     """A stale entry before newer runs must not hide later pages."""
     cutoff = datetime(2026, 9, 27, 12, tzinfo=UTC)
     paths: list[str] = []
-    recent = [
-        {"id": run_id, "created_at": "2026-09-28T00:00:00Z"}
-        for run_id in range(1, 101)
-    ]
+    recent = [{"id": run_id, "created_at": "2026-09-28T00:00:00Z"} for run_id in range(1, 101)]
     pages = {
         1: [{"id": 0, "created_at": "2026-09-26T00:00:00Z"}, *recent[:99]],
         2: recent[99:],
@@ -477,6 +502,27 @@ def test_fetch_workflow_runs_out_of_order_page_does_not_stop_pagination(
 
     assert [run["id"] for run in runs] == list(range(1, 101))
     assert len(paths) == 2
+
+
+def test_fetch_workflow_runs_stops_when_page_ends_before_since(monkeypatch: pytest.MonkeyPatch) -> None:
+    cutoff = datetime(2026, 9, 27, 12, tzinfo=UTC)
+    paths: list[str] = []
+
+    def fake_gh_api_get(path: str, **_kwargs: Any) -> dict[str, Any]:
+        paths.append(path)
+        assert "page=1" in path
+        return {
+            "total_count": 300,
+            "workflow_runs": [
+                {"id": run_id, "created_at": "2026-09-28T00:00:00Z" if run_id < 50 else "2026-09-26T00:00:00Z"}
+                for run_id in range(100)
+            ],
+        }
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml", since_dt=cutoff, event="all")
+    assert len(runs) == 50
+    assert len(paths) == 1
 
 
 def test_fetch_workflow_runs_stops_at_total_count_on_full_page(monkeypatch: pytest.MonkeyPatch) -> None:

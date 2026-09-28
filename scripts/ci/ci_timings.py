@@ -25,6 +25,7 @@ import statistics
 import subprocess
 import sys
 from collections.abc import Mapping, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -35,6 +36,7 @@ DEFAULT_WORKFLOW = "CI"
 DEFAULT_WORKFLOW_FILE = "ci.yml"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 DEFAULT_SUBPROCESS_TIMEOUT = 60
+DEFAULT_MAX_WORKERS = 8
 MAX_PAGINATION_PAGES = 10
 EMPTY_PAGE_ATTEMPTS = 3
 
@@ -434,6 +436,14 @@ def fetch_workflow_runs_from_api(
             if limit is not None and len(all_runs) >= limit:
                 return all_runs
 
+        # The API orders runs newest first. A page ending before the cutoff
+        # cannot be followed by a page containing runs in the window.
+        last_created = (
+            parse_github_timestamp(runs_page[-1].get("created_at")) if isinstance(runs_page[-1], dict) else None
+        )
+        if since_dt is not None and last_created is not None and last_created < since_dt:
+            break
+
         if len(runs_page) < per_page or (isinstance(total_count, int) and fetched_count >= total_count):
             break
 
@@ -505,6 +515,7 @@ def analyze_timings(
     since_dt: datetime | None = None,
     limit: int | None = None,
     classifier_log_fetcher: Any = None,
+    max_workers: int = DEFAULT_MAX_WORKERS,
 ) -> TimingReport:
     """Analyze CI durations and queue timings from workflow runs and job data."""
     # Filter runs
@@ -546,6 +557,36 @@ def analyze_timings(
 
     target_events = ["pull_request", "merge_group", "push"] if event_filter == "all" else [event_filter]
 
+    selected_runs = [
+        run
+        for ev in target_events
+        for run in (runs_by_event.get(ev, [])[-limit:] if limit is not None else runs_by_event.get(ev, []))
+    ]
+
+    def fetch_run_data(run: Mapping[str, Any]) -> tuple[list[dict[str, Any]], str]:
+        run_id = int(run["id"])
+        if callable(jobs_fetcher):
+            jobs = jobs_fetcher(run_id)
+        elif isinstance(jobs_fetcher, Mapping):
+            jobs = jobs_fetcher.get(str(run_id)) or jobs_fetcher.get(run_id) or []
+        else:
+            jobs = []
+
+        first_jobs = [j for j in jobs if isinstance(j, Mapping) and j.get("run_attempt", 1) == 1]
+        changes_job = next((j for j in first_jobs if j.get("name") == "Changes"), None)
+        log = ""
+        if changes_job is not None and classifier_log_fetcher is not None:
+            try:
+                log = classifier_log_fetcher(int(changes_job["id"]))
+            except RuntimeError:
+                log = ""
+        return first_jobs, log
+
+    # map yields in input order and propagates job-fetch failures to the caller.
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        fetched_run_data = list(executor.map(fetch_run_data, selected_runs))
+    run_data = iter(fetched_run_data)
+
     event_reports: dict[str, EventReport] = {}
 
     for ev in target_events:
@@ -571,32 +612,17 @@ def analyze_timings(
         pr_rerun_to_green = 0
 
         for r in ev_runs:
-            run_id = int(r["id"])
-            # Fetch jobs
-            if callable(jobs_fetcher):
-                jobs = jobs_fetcher(run_id)
-            elif isinstance(jobs_fetcher, Mapping):
-                jobs = jobs_fetcher.get(str(run_id)) or jobs_fetcher.get(run_id) or []
-            else:
-                jobs = []
-
             # The jobs endpoint is requested with filter=all. Use the first
             # attempt so a later rerun cannot inflate the original CI wall.
-            first_jobs = [j for j in jobs if isinstance(j, Mapping) and j.get("run_attempt", 1) == 1]
-            changes_job = next((j for j in first_jobs if j.get("name") == "Changes"), None)
-            if changes_job is not None and classifier_log_fetcher is not None:
-                try:
-                    log = classifier_log_fetcher(int(changes_job["id"]))
-                except RuntimeError:
-                    log = ""
-                match = CLASSIFIER_RE.search(log)
-                if match:
-                    classified += 1
-                    mode = match.group(2)
-                    tiers[mode] = tiers.get(mode, 0) + 1
-                    # files=0 is the audit's observable proxy for label-forced
-                    # full tier; classifier fallback can produce it too.
-                    label_forced += int(match.group(1) == "0" and mode == "full")
+            first_jobs, log = next(run_data)
+            match = CLASSIFIER_RE.search(log)
+            if match:
+                classified += 1
+                mode = match.group(2)
+                tiers[mode] = tiers.get(mode, 0) + 1
+                # files=0 is the audit's observable proxy for label-forced
+                # full tier; classifier fallback can produce it too.
+                label_forced += int(match.group(1) == "0" and mode == "full")
 
             run_jobs = 0
             run_runner_minutes = 0.0
@@ -1004,7 +1030,19 @@ def render_json(report: TimingReport) -> str:
 def build_arg_parser() -> argparse.ArgumentParser:
     """Build the command-line argument parser."""
     parser = argparse.ArgumentParser(
-        description="Compute per-event and per-job CI durations and queue timings from GitHub Actions.",
+        description=(
+            "Compute per-event and per-job CI durations and queue timings from GitHub Actions. "
+            "Use for historical CI measurements, or pass --fixture for offline analysis."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --since 24h --event all --json\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --fixture runs.json --event merge_group\n"
+            "Outputs: Report on stdout; no files or database updates.\n"
+            "Exit codes: 0 = report produced; 1 = fetch or data error; 2 = invalid arguments.\n"
+            "Related: issue #9058; GitHub Actions CI workflow (ci.yml)."
+        ),
     )
     parser.add_argument(
         "--workflow",
@@ -1027,6 +1065,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=int,
         default=None,
         help="Maximum number of most recent runs per event to evaluate (default: all matching runs in window).",
+    )
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=DEFAULT_MAX_WORKERS,
+        help="Maximum concurrent per-run job and log fetches (default: %(default)s; 1 = serial).",
     )
     parser.add_argument(
         "--branch",
@@ -1092,6 +1136,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit is not None and args.limit < 1:
         print("Error: --limit must be positive", file=sys.stderr)
         return 2
+    if args.max_workers < 1:
+        print("Error: --max-workers must be positive", file=sys.stderr)
+        return 2
 
     repo = resolve_repository(args.repo)
     workflow = args.workflow
@@ -1125,14 +1172,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error querying GitHub Actions API: {exc}", file=sys.stderr)
             return 1
 
-        jobs_cache: dict[int, list[dict[str, Any]]] = {}
+        def fetch_jobs(run_id: int) -> list[dict[str, Any]]:
+            return fetch_run_jobs_from_api(repo, run_id, token=token)
 
-        def fetch_jobs_cached(run_id: int) -> list[dict[str, Any]]:
-            if run_id not in jobs_cache:
-                jobs_cache[run_id] = fetch_run_jobs_from_api(repo, run_id, token=token)
-            return jobs_cache[run_id]
-
-        jobs_fetcher = fetch_jobs_cached
+        jobs_fetcher = fetch_jobs
 
     classifier_log_fetcher = None if args.fixture_file else lambda job_id: fetch_classifier_log(job_id, token=token)
 
@@ -1147,6 +1190,7 @@ def main(argv: list[str] | None = None) -> int:
         since_dt=since_dt,
         limit=args.limit,
         classifier_log_fetcher=classifier_log_fetcher,
+        max_workers=args.max_workers,
     )
 
     if sum(event.runs_count for event in report.events.values()) == 0:
