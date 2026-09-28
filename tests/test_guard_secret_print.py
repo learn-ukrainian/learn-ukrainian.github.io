@@ -18,6 +18,9 @@ import importlib.util
 import io
 import json
 import shlex
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -215,6 +218,53 @@ def test_issue_9088_double_quote_escapes_keep_quote_preserving_tokens():
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
+
+
+@pytest.mark.parametrize("opener,closer,quoted", [
+    ("<<'EOF'", "EOF", True),
+    ('<<"EOF"', "EOF", True),
+    ("<<EOF", "EOF", False),
+    ("<<-EOF", "\tEOF", False),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
+    assert guard._strip_heredoc_bodies(f"cat {opener}\ncat .env\n{closer}\necho $GH_TOKEN") == (
+        f"cat {opener}\necho $GH_TOKEN"
+    )
+
+
+@pytest.mark.parametrize("word,delimiter", [
+    (r"'EO\F'", r"EO\F"),
+    (r'"EO\"F"', 'EO"F'),
+    (r'"EO\\F"', r'EO\F'),
+    (r'"EO\$F"', 'EO$F'),
+    (r'"EO\`F"', 'EO`F'),
+    (r'"EO\qF"', r'EO\qF'),
+    (r'EO\F', 'EOF'),
+    (r"EO\'F", "EO'F"),
+])
+def test_issue_9088_bash_quote_removal_for_heredoc(word, delimiter):
+    assert guard.heredoc_delimiter(word) == delimiter
+    assert guard._strip_heredoc_bodies(f"cat <<{word}\nnote\n{delimiter}\ncat .env") == (
+        f"cat <<{word}\ncat .env"
+    )
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "cat .env"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 def test_issue_9088_secret_after_escaped_quote_still_blocks(monkeypatch):

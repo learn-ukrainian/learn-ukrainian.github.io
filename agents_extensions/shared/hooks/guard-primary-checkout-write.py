@@ -144,7 +144,11 @@ from pathlib import Path
 from typing import Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shell_shlex import split_quote_preserving
+try:
+    from shell_shlex import heredoc_delimiter, split_quote_preserving
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
 
 # ---------------------------------------------------------------------------
 # shared containment predicate (issue #4444) — imported, never re-derived
@@ -301,12 +305,6 @@ _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
 _REDIRECT_OPS = _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}
 
 
-def _strip_quotes_for_heredoc(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
         tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
@@ -334,7 +332,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
                 delim_tok = nxt[1:]
             else:
                 delim_tok = nxt
-        delimiter = _strip_quotes_for_heredoc(delim_tok)
+        delimiter = heredoc_delimiter(delim_tok)
         if delimiter:
             delimiters.append((delimiter, strip_tabs, delim_tok != delimiter))
         i = j + 1

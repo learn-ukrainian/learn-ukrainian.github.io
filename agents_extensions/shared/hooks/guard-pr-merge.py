@@ -51,7 +51,11 @@ from datetime import datetime, timezone
 from typing import NamedTuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shell_shlex import split_quote_preserving
+try:
+    from shell_shlex import heredoc_delimiter, split_quote_preserving
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> every merge
@@ -147,12 +151,6 @@ def _command(payload: dict) -> str:
 # it is harmless there and they are left alone rather than churned.
 
 
-def _strip_quotes(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
     ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
@@ -182,7 +180,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
                 delim_tok = nxt[1:]
             else:
                 delim_tok = nxt
-        delimiter = _strip_quotes(delim_tok)
+        delimiter = heredoc_delimiter(delim_tok)
         if delimiter:
             delimiters.append((delimiter, strip_tabs))
         i = j + 1
@@ -663,9 +661,8 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     Skipped: `--disable-auto` (any spelling), which disarms auto-merge rather than
     merging anything and is exactly the remedy this hook's --auto verdict asks for.
 
-    `--admin` (including its explicit true/false spelling) belongs exclusively to
-    ``guard-admin-merge.py``. Returning None here prevents both PreToolUse hooks from
-    judging the same command; a disabled `--admin=false` remains a normal merge.
+    Admin merges are judged here as well as by ``guard-admin-merge.py``: the
+    ordinary PR checks still apply when a command contains ``--admin``.
     """
     i, via_xargs = _invoked_start(seg)
     if seg[i : i + 3] == ["gh", "pr", "merge"]:
@@ -689,8 +686,6 @@ def _merge_args(seg: list[str]) -> list[str] | None:
         # another; refuse instead.
         args = [*args, _UNREADABLE_MARKER]
     flags, _ = _classify(args)
-    if _flag_enabled(flags, "admin"):
-        return None
     # `gh pr merge --help` prints help and merges nothing — reading the manual is not
     # the offence this guard is for. --help is a bool like any other, so it gets the same
     # spelling treatment (`--help=true`) rather than a bare-token check.

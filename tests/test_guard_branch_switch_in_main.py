@@ -18,8 +18,12 @@ Only module-level defs/constants run on load (``main`` is guarded by
 from __future__ import annotations
 
 import importlib.util
+import io
+import json
 import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -43,6 +47,39 @@ guard = _load_hook()
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
+@pytest.mark.parametrize("opener,closer", [
+    ("<<'EOF'", "EOF"),
+    ('<<"EOF"', "EOF"),
+    ("<<EOF", "EOF"),
+    ("<<-EOF", "\tEOF"),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert _dangerous(f"cat {opener}\ngit checkout -b feature\n{closer}") is None
+    assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    monkeypatch.chdir(repos["public"])
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "git checkout -b feature"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 def _dangerous(command: str) -> str | None:

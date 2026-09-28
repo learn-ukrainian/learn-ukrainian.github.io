@@ -35,7 +35,11 @@ import sys
 
 # Use the sibling helper in either the source tree or a deployed hook copy.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shell_shlex import split_quote_preserving
+try:
+    from shell_shlex import heredoc_delimiter, split_quote_preserving
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
 
 SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
@@ -301,7 +305,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
             else:
                 delim_token = tokens[j]
         if delim_token:
-            delimiter = _strip_quotes(delim_token)
+            delimiter = heredoc_delimiter(delim_token)
             if delimiter:
                 delimiters.append((delimiter, strip_tabs, delim_token != delimiter))
         i = j + 1

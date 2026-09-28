@@ -45,7 +45,11 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shell_shlex import split_quote_preserving
+try:
+    from shell_shlex import heredoc_delimiter, split_quote_preserving
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
 
 # Words that, when seen as the FIRST token after `git`, indicate a branch
 # switch. Everything else is treated as a different git verb and ignored.
@@ -149,12 +153,6 @@ def _in_main_worktree(project_root: Path) -> bool:
 # guard-admin-merge.py, and guard-pr-merge.py in sync.
 
 
-def _strip_quotes(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     """Return (delimiter, strip_tabs) for each heredoc opener on `line`.
 
@@ -191,7 +189,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
                 delim_tok = nxt[1:]
             else:
                 delim_tok = nxt
-        delimiter = _strip_quotes(delim_tok)
+        delimiter = heredoc_delimiter(delim_tok)
         if delimiter:
             delimiters.append((delimiter, strip_tabs))
         i = j + 1

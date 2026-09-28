@@ -10,6 +10,33 @@ from __future__ import annotations
 import shlex
 
 
+def heredoc_delimiter(word: str) -> str:
+    """Apply Bash quote removal to a here-document delimiter word.
+
+    The splitter keeps quotes and escapes so callers can tell whether the
+    body expands. The line that ends the body uses the quote-removed word.
+    """
+    result: list[str] = []
+    quote = ""
+    index = 0
+    while index < len(word):
+        char = word[index]
+        if char == "\\" and quote != "'" and index + 1 < len(word):
+            following = word[index + 1]
+            if not quote or following in {'"', "\\", "$", "`"}:
+                result.append(following)
+                index += 2
+                continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        else:
+            result.append(char)
+        index += 1
+    return "".join(result)
+
+
 def split_quote_preserving(command: str, *, punctuation_chars: str | bool, whitespace: str) -> list[str]:
     marker_code = 0xE000
     while chr(marker_code) in command:

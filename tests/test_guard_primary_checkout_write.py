@@ -69,6 +69,37 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert hook._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
 
 
+@pytest.mark.parametrize("opener,closer,quoted", [
+    ("<<'EOF'", "EOF", True),
+    ('<<"EOF"', "EOF", True),
+    ("<<EOF", "EOF", False),
+    ("<<-EOF", "\tEOF", False),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
+    assert hook._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
+    assert hook.bash_write_targets(f"cat {opener}\ntee AGENTS.md\n{closer}") == []
+    assert hook.bash_write_targets(f"cat {opener}\nnote\n{closer}\ntee AGENTS.md") == ["AGENTS.md"]
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(repo: Path):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert "AGENTS.md" in hook.bash_write_targets(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
+
+
 # ===========================================================================
 # Pure extraction — Bash
 # ===========================================================================
