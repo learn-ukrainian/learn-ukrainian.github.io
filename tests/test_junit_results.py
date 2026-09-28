@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ci.flake_quarantine import TIMEOUT_PATTERN
 from scripts.ci.junit_results import parse_junit
+from scripts.common.flake_quarantine import TIMEOUT_PATTERN
 
 
 def test_parser_reads_recovered_rerun_failure_and_class_node_id(tmp_path: Path):

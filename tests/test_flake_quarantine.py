@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from scripts.ci.flake_quarantine import load_registry, rerun_node_ids
+from scripts.common.flake_quarantine import load_registry, rerun_node_ids
 from tests import conftest as root_conftest
 
 

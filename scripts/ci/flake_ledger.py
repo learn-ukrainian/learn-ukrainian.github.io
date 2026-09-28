@@ -14,8 +14,8 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.ci.flake_quarantine import REGISTRY, load_registry
 from scripts.ci.junit_results import parse_junit
+from scripts.common.flake_quarantine import REGISTRY, load_registry
 
 
 def _gh(*args: str) -> str:

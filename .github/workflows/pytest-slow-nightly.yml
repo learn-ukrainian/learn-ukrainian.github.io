@@ -136,7 +136,7 @@ jobs:
           LU_FLAKE_DISABLE_RERUN: '1'
         run: |
           set -euo pipefail
-          mapfile -t nodeids < <(.venv/bin/python -c 'from scripts.ci.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
+          mapfile -t nodeids < <(.venv/bin/python -c 'from scripts.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
           if (( ${#nodeids[@]} )); then
             mkdir -p ci-artifacts
             .venv/bin/python -m pytest "${nodeids[@]}" --strict-markers \

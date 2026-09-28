@@ -27,8 +27,8 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.ci.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
@@ -1610,6 +1610,10 @@ def pytest_configure(config: pytest.Config) -> None:
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
     _install_socket_guard()
+    config.addinivalue_line(
+        "markers",
+        "flaky(reruns, rerun_except): quarantine marker; pytest-rerunfailures enforces reruns when installed",
+    )
     config.addinivalue_line(
         "markers",
         "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
