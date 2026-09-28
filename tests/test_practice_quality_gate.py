@@ -90,6 +90,7 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
                 "correctForm": "брав участь",
                 "options": ["брав участь", "приймав участь"],
                 "explanation": "Калька з російської мови.",
+                "sourceRow": "приймав участь брав участь",
             },
             {
                 "id": "drill_missing_target",
@@ -112,7 +113,7 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
     deck_path = tmp_path / "ec.json"
     deck_path.write_text(json.dumps(valid_deck, ensure_ascii=False), encoding="utf-8")
 
-    violations = audit_error_correction_deck(deck_path)
+    violations = audit_error_correction_deck(deck_path, sources_db=None)
     assert any(v["type"] == "ERROR_TARGET_NOT_IN_SENTENCE" and v["item"] == "drill_missing_target" for v in violations)
     assert any(
         v["type"] == "CORRECT_TARGET_MISSING_IN_OPTIONS" and v["item"] == "drill_missing_in_options" for v in violations
@@ -181,7 +182,7 @@ def _error_correction_deck(tmp_path: Path, drills: list[dict]) -> Path:
     return deck_path
 
 
-def _drill(item_id: str, error: str, correct: str, options: list[str] | None = None) -> dict:
+def _drill(item_id: str, error: str, correct: str, options: list[str] | None = None, **extra) -> dict:
     return {
         "id": item_id,
         "sentence": f"Уважно прочитайте: «{error}» — тут допущено помилку.",
@@ -189,7 +190,49 @@ def _drill(item_id: str, error: str, correct: str, options: list[str] | None = N
         "correctForm": correct,
         "options": options or sorted([correct, error]),
         "explanation": f"Правильно вживати «{correct}» замість помилкового «{error}».",
+        "source": "Textbook Gr 10 (glazova)",
+        "sourceRow": f"{error} {correct}",
+        **extra,
     }
+
+
+def _fixture_vesum(tmp_path: Path, forms: list[tuple[str, str]], marked: tuple[str, ...] = ()) -> Path:
+    """Minimal VESUM file: (word form, part of speech); ``marked`` forms carry a ``bad`` marker."""
+    import sqlite3
+
+    vesum_path = tmp_path / "vesum.db"
+    conn = sqlite3.connect(vesum_path)
+    conn.execute(
+        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
+        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+    )
+    conn.execute("CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)")
+    conn.execute("CREATE VIEW forms AS SELECT word_form, lemma, tags, pos FROM forms_all")
+    for form_id, (form, pos) in enumerate(forms, 1):
+        conn.execute(
+            "INSERT INTO forms_all (id, entry_id, word_form, lemma, pos, tags, source_location)"
+            " VALUES (?, 1, ?, ?, ?, ?, '')",
+            (form_id, form, form, pos, pos),
+        )
+        if form in marked:
+            conn.execute("INSERT INTO form_markers VALUES (?, 'bad', 'tag', 'invalid')", (form_id,))
+    conn.commit()
+    conn.close()
+    return vesum_path
+
+
+def _fixture_sources(tmp_path: Path, textbooks: list[tuple[int, str, str]]) -> Path:
+    """Minimal sources.db: (grade, author, text) textbook rows and an empty style guide."""
+    import sqlite3
+
+    sources_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources_path)
+    conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, grade INTEGER, author TEXT, title TEXT, text TEXT)")
+    conn.execute("CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT, text TEXT)")
+    conn.executemany("INSERT INTO textbooks (grade, author, title, text) VALUES (?, ?, 'Сторінка 1', ?)", textbooks)
+    conn.commit()
+    conn.close()
+    return sources_path
 
 
 def test_audit_error_correction_flags_register_label_distractors(tmp_path: Path):
@@ -201,38 +244,27 @@ def test_audit_error_correction_flags_register_label_distractors(tmp_path: Path)
         ["природний", "природний (застаріле)", "природній", "природній (розм.)"],
     )
     violations = audit_error_correction_deck(
-        _error_correction_deck(tmp_path, [planted, _drill("err_clean", "природній", "природний")]), vesum_db=None
+        _error_correction_deck(tmp_path, [planted, _drill("err_clean", "природній", "природний")]),
+        vesum_db=None,
+        sources_db=None,
     )
     assert [(v["type"], v["item"]) for v in violations] == [("REGISTER_LABEL_DISTRACTOR", "err_labelled")]
 
 
 def test_audit_error_correction_flags_unevidenced_pairs(tmp_path: Path):
     """#8723 err_0013/0021/0203/0001: pairs the source does not support fail the gate."""
-    import sqlite3
-
-    vesum_path = tmp_path / "vesum.db"
-    conn = sqlite3.connect(vesum_path)
-    conn.execute(
-        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
-        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+    vesum_path = _fixture_vesum(
+        tmp_path,
+        [
+            ("побудували", "verb"),
+            ("цегляний", "adj"),
+            ("україномовний", "adj"),
+            ("українськомовний", "adj"),
+            ("влучний", "adj"),
+            ("вираз", "noun"),
+            ("вислів", "noun"),
+        ],
     )
-    conn.execute("CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)")
-    conn.execute("CREATE VIEW forms AS SELECT word_form, lemma, tags, pos FROM forms_all")
-    forms = [
-        ("побудували", "verb"),
-        ("цегляний", "adj"),
-        ("україномовний", "adj"),
-        ("українськомовний", "adj"),
-        ("влучний", "adj"),
-        ("вираз", "noun"),
-        ("вислів", "noun"),
-    ]
-    conn.executemany(
-        "INSERT INTO forms_all (entry_id, word_form, lemma, pos, tags, source_location) VALUES (1, ?, ?, ?, ?, '')",
-        [(form, form, pos, pos) for form, pos in forms],
-    )
-    conn.commit()
-    conn.close()
 
     drills = [
         _drill("err_initial", "О.", "Теліга"),
@@ -241,10 +273,77 @@ def test_audit_error_correction_flags_unevidenced_pairs(tmp_path: Path):
         _drill("err_contested", "україномовний", "українськомовний"),
         _drill("err_good", "влучний вираз", "влучний вислів"),
     ]
-    violations = audit_error_correction_deck(_error_correction_deck(tmp_path, drills), vesum_db=vesum_path)
+    violations = audit_error_correction_deck(
+        _error_correction_deck(tmp_path, drills), vesum_db=vesum_path, sources_db=None
+    )
     flagged = {v["item"] for v in violations if v["type"] == "UNEVIDENCED_ERROR_CORRECTION_PAIR"}
     assert flagged == {"err_initial", "err_names", "err_fragment", "err_contested"}
     assert not any(v["item"] == "err_good" for v in violations)
+
+
+# Real VESUM (data/vesum.db, 2026-09-28): брати/купити/приймати/участь are standard;
+# «протирічить» carries a VESUM error marker.
+_PARTICIPATION_FORMS = [
+    ("брати", "verb"),
+    ("купити", "verb"),
+    ("приймати", "verb"),
+    ("участь", "noun"),
+    ("не", "part"),
+    ("протирічить", "verb"),
+    ("суперечить", "verb"),
+    ("суті", "noun"),
+]
+
+
+def test_audit_error_correction_rejects_a_fabricated_substitution(tmp_path: Path):
+    """#8723 round 3 probe: «брати участь → купити участь» passed as `shared_stem`.
+
+    Keeping «участь» says nothing about «брати → купити». A standard word swapped for
+    another is evidenced only by the source's own row: without one the pair fails, and
+    a row the named source does not contain fails provenance.
+    """
+    vesum_path = _fixture_vesum(tmp_path, _PARTICIPATION_FORMS, marked=("протирічить",))
+    table = "НЕПРАВИЛЬНО ПРАВИЛЬНО\nприймати участь брати участь\nне протирічить суті не суперечить суті"
+    sources_path = _fixture_sources(tmp_path, [(10, "glazova", table)])
+    drills = [
+        _drill("err_probe_no_row", "брати участь", "купити участь", sourceRow=None),
+        _drill("err_probe_forged_row", "брати участь", "купити участь"),
+        _drill("err_real", "приймати участь", "брати участь"),
+        _drill("err_vesum_marked", "не протирічить суті", "не суперечить суті", sourceRow=None),
+    ]
+    violations = audit_error_correction_deck(
+        _error_correction_deck(tmp_path, drills), vesum_db=vesum_path, sources_db=sources_path
+    )
+    assert sorted((v["item"], v["type"]) for v in violations) == [
+        ("err_probe_forged_row", "SOURCE_ROW_NOT_IN_SOURCE"),
+        ("err_probe_no_row", "UNEVIDENCED_ERROR_CORRECTION_PAIR"),
+    ]
+    assert "changed_words_without_source_evidence" in next(
+        v["message"] for v in violations if v["item"] == "err_probe_no_row"
+    )
+
+
+def test_audit_error_correction_checks_typed_answers(tmp_path: Path):
+    """#8723 round 3 probe: an error added to `answers` still passed; the site accepts every answer."""
+    vesum_path = _fixture_vesum(tmp_path, [*_PARTICIPATION_FORMS, ("узяти", "verb")])
+    good = ["брати (узяти) участь", "брати участь", "узяти участь"]
+    drills = [
+        _drill("err_accepts_error", "приймати участь", "брати участь", answers=["брати участь", "Приймати  участь."]),
+        _drill("err_omits_correction", "приймати участь", "брати участь", answers=["участь"]),
+        _drill("err_foreign_answer", "приймати участь", "брати участь", answers=["брати участь", "купити участь"]),
+        _drill("err_good", "приймати участь", "брати (узяти) участь", answers=good),
+        _drill("err_default", "приймати участь", "брати участь"),
+    ]
+    violations = audit_error_correction_deck(
+        _error_correction_deck(tmp_path, drills), vesum_db=vesum_path, sources_db=None
+    )
+    assert sorted((v["item"], v["type"]) for v in violations) == [
+        ("err_accepts_error", "ANSWERS_ACCEPT_ERROR"),
+        ("err_accepts_error", "ANSWER_NOT_A_SOURCE_READING"),
+        ("err_foreign_answer", "ANSWER_NOT_A_SOURCE_READING"),
+        ("err_omits_correction", "ANSWERS_OMIT_CORRECTION"),
+        ("err_omits_correction", "ANSWER_NOT_A_SOURCE_READING"),
+    ]
 
 
 def test_production_culture_deck_passes_error_correction_gate():
@@ -756,5 +855,5 @@ def test_audit_error_correction_flags_reviewed_withheld_pairs(tmp_path: Path):
         _drill("err_contested", "відпочивати на морі", "відпочивати біля моря"),
         _drill("err_good", "влучний вираз", "влучний вислів"),
     ]
-    violations = audit_error_correction_deck(_error_correction_deck(tmp_path, drills), vesum_db=None)
+    violations = audit_error_correction_deck(_error_correction_deck(tmp_path, drills), vesum_db=None, sources_db=None)
     assert [(v["type"], v["item"]) for v in violations] == [("REVIEWED_WITHHELD_PAIR", "err_contested")]

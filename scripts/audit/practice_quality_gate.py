@@ -14,9 +14,10 @@ Enforces:
 - Required pedagogical metadata (distinction gloss, rationale, case rule, grammatical notes)
 - Intentional error quarantine (no leaked contrastive tables/headers in positive cloze)
 - Error-correction drill integrity (substring containment, option validity, explanation)
-- Error-correction evidence (#8723): no generated register-label distractors, and every
-  error/correction pair is related by a shared stem, a parallel phrase, or (with VESUM)
-  a VESUM-corroborated single-word error
+- Error-correction evidence (#8723): no generated register-label distractors; the words
+  a pair changes share their stem, are a VESUM-recorded error, or stand in the drill's
+  ``sourceRow``, which (with sources.db) must occur in the named source; typed
+  ``answers`` accept the correction and its listed readings, never the error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
 - TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
@@ -60,18 +61,35 @@ try:
         REGISTER_LABEL_RE,
         VesumLookup,
         assess_pair,
+        correction_answers,
         load_reviewed_withholds,
+        load_source_texts,
         pair_key,
+        row_in_source,
+        typed_answer_key,
     )
 except ImportError:
     from practice.extract_textbook_error_corrections import (
         REGISTER_LABEL_RE,
         VesumLookup,
         assess_pair,
+        correction_answers,
         load_reviewed_withholds,
+        load_source_texts,
         pair_key,
+        row_in_source,
+        typed_answer_key,
     )
 
+# sources.db is gitignored; a dispatch worktree reads the enclosing primary checkout's copy.
+DEFAULT_SOURCES_DB = next(
+    (
+        parent / "data/sources.db"
+        for parent in (PROJECT_ROOT, *PROJECT_ROOT.parents)
+        if (parent / "data/sources.db").is_file()
+    ),
+    PROJECT_ROOT / "data/sources.db",
+)
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
 DEFAULT_SENTENCE_INVENTORY = PROJECT_ROOT / "site/src/data/lexicon-sentence-inventory.json"
@@ -261,10 +279,84 @@ def _error_correction_vesum(vesum_db: Path | str | None) -> VesumLookup | None:
     return lookup
 
 
-def audit_error_correction_deck(
-    path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB
+def _error_correction_source_texts(sources_db: Path | str | None) -> dict[str, list[str]] | None:
+    """Source texts by drill ``source`` label, or None when sources.db is unavailable."""
+    if not sources_db or not Path(sources_db).exists():
+        return None
+    import sqlite3
+
+    try:
+        conn = sqlite3.connect(f"file:{Path(sources_db)}?mode=ro", uri=True)
+        try:
+            return load_source_texts(conn)
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return None
+
+
+def _typed_answer_violations(
+    item_id: str, error_target: str, correct_target: str, answers: Any, vesum: VesumLookup | None
 ) -> list[dict[str, Any]]:
-    """Audit error-correction dataset for schema, substring match, and pedagogical validity."""
+    """Typed answers must accept the correction and its listed readings, never the error (#8723)."""
+    if answers is None:
+        return []  # the site accepts only ``correctForm``
+    if not isinstance(answers, list) or not answers or not all(isinstance(a, str) and a.strip() for a in answers):
+        return [
+            {"type": "INVALID_ANSWERS", "item": item_id, "message": f"answers must be non-empty strings: {answers!r}"}
+        ]
+    violations = []
+    keys = {typed_answer_key(answer): answer for answer in answers}
+    if error_target and typed_answer_key(error_target) in keys:
+        violations.append(
+            {
+                "type": "ANSWERS_ACCEPT_ERROR",
+                "item": item_id,
+                "message": f"answers accept the error {keys[typed_answer_key(error_target)]!r}",
+            }
+        )
+    if correct_target and typed_answer_key(correct_target) not in keys:
+        violations.append(
+            {
+                "type": "ANSWERS_OMIT_CORRECTION",
+                "item": item_id,
+                "message": f"answers {answers!r} do not accept the correction {correct_target!r}",
+            }
+        )
+
+    # Every reading comes from the correction's own words; with VESUM it must be one
+    # the extractor derives from the correction.
+    def words(text: str) -> set[str]:
+        return set(re.findall(r"[\w’-]+", typed_answer_key(text)))
+
+    correct_words = words(correct_target)
+    readings = correction_answers(correct_target, vesum) if vesum is not None and correct_target else None
+    reading_keys = {typed_answer_key(reading) for reading in readings or []}
+    foreign = [
+        answer
+        for key, answer in keys.items()
+        if not words(answer) <= correct_words or (readings is not None and key not in reading_keys)
+    ]
+    if foreign:
+        violations.append(
+            {
+                "type": "ANSWER_NOT_A_SOURCE_READING",
+                "item": item_id,
+                "message": f"answers {foreign!r} are not readings of the correction {correct_target!r}",
+            }
+        )
+    return violations
+
+
+def audit_error_correction_deck(
+    path: Path | str,
+    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    sources_db: Path | str | None = DEFAULT_SOURCES_DB,
+) -> list[dict[str, Any]]:
+    """Audit error-correction dataset for schema, substring match, and pedagogical validity.
+
+    With ``sources_db`` each drill's ``sourceRow`` must occur in the source it names.
+    """
     violations: list[dict[str, Any]] = []
     p = Path(path)
     if not p.exists():
@@ -284,6 +376,7 @@ def audit_error_correction_deck(
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
     pair_vesum = _error_correction_vesum(vesum_db)
+    source_texts = _error_correction_source_texts(sources_db)
     reviewed_withholds = load_reviewed_withholds()
 
     seen_ids: set[str] = set()
@@ -338,8 +431,9 @@ def audit_error_correction_deck(
                 }
             )
 
+        source_row = item.get("sourceRow")
         if error_target and correct_target:
-            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum)
+            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum, source_row)
             if reason:
                 violations.append(
                     {
@@ -348,6 +442,22 @@ def audit_error_correction_deck(
                         "message": f"{error_target!r} → {correct_target!r} is not a source-evidenced correction ({reason})",
                     }
                 )
+        if (
+            source_texts is not None
+            and source_row
+            and not row_in_source(source_row, source_texts.get(item.get("source", ""), []))
+        ):
+            violations.append(
+                {
+                    "type": "SOURCE_ROW_NOT_IN_SOURCE",
+                    "item": item_id,
+                    "message": f"sourceRow {source_row!r} does not occur in {item.get('source')!r}",
+                }
+            )
+
+        violations.extend(
+            _typed_answer_violations(item_id, error_target, correct_target, item.get("answers"), pair_vesum)
+        )
 
         options = item.get("options", [])
         labelled = [o for o in options if isinstance(o, str) and REGISTER_LABEL_RE.search(o)]

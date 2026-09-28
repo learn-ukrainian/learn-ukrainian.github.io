@@ -13,6 +13,8 @@ export interface ErrorCorrectionDrill {
   explanation: string;
   isUkrainian: boolean;
   source: string;
+  /** The source text the pair was read from (audited against sources.db). */
+  sourceRow?: string;
 }
 
 export interface ErrorCorrectionPracticeProps {

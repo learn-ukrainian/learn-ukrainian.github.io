@@ -111,12 +111,17 @@ describe('ErrorCorrectionPractice', () => {
     render(<ErrorCorrectionPractice items={mockDrills} onBackToDecks={() => {}} chromeLocale="uk" />);
 
     await user.click(screen.getByText('участь'));
-    await user.type(screen.getByRole('textbox', { name: 'Ваше виправлення' }), 'приймати участь');
+    await user.type(screen.getByRole('textbox', { name: 'Ваше виправлення' }), 'купити участь');
     await user.click(screen.getByRole('button', { name: 'Перевірити' }));
+
+    // #8723 round 3: the completed sentence shows the correction, never the wrong attempt.
+    const completed = document.querySelector('[data-activity="error-correction-sentence"]');
+    expect(completed).toHaveTextContent('приймати участь брати (узяти) участь');
+    expect(completed).not.toHaveTextContent('купити');
 
     const feedback = document.querySelector('[data-activity="error-correction-feedback"]');
     expect(feedback).toHaveAttribute('data-correct', 'false');
-    expect(feedback).toHaveTextContent('Ваша відповідь: "приймати участь"');
+    expect(feedback).toHaveTextContent('Ваша відповідь: "купити участь"');
     expect(feedback).toHaveTextContent('✗ Правильна відповідь: "приймати участь" → "брати (узяти) участь"');
     expect(screen.getByTestId('drill-counter-badge')).toHaveTextContent('Виконано: 1 (правильно: 0)');
   });

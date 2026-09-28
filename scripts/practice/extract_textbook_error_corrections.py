@@ -7,7 +7,10 @@ deliberate pedagogical errors from textbook exercise prompts.
 Every extracted pair must be backed by its source (#8723): a row of a real
 НЕПРАВИЛЬНО/ПРАВИЛЬНО table (or a style-guide contrast), split at a point the row
 itself evidences, and — for single-word lexical claims — corroborated by VESUM.
-Anything the sources cannot decide is withheld with a reason instead of guessed.
+The words a pair changes need their own evidence: a stem shared with their
+replacement, a VESUM error record, or the source row (kept on the drill as
+``sourceRow`` so the gate can re-check it against ``sources.db``). Anything the
+sources cannot decide is withheld with a reason instead of guessed.
 
 Regenerate the bundled Culture-of-Speech deck (and the audited registry copy):
 
@@ -25,6 +28,7 @@ import argparse
 import json
 import re
 import sqlite3
+import unicodedata
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
@@ -218,6 +222,49 @@ def _alignment_score(left: list[str], right: list[str]) -> int:
     return rows[-1][-1]
 
 
+def _changed_words(left: list[str], right: list[str]) -> tuple[list[str], list[str]]:
+    """Words of each side left unaligned by ``_alignment_score``: what the edit replaces, adds or drops.
+
+    Aligned words are the same word or share a stem ("нетактична"/"нетактовна");
+    "брати участь" → "купити участь" leaves ``(["брати"], ["купити"])``.
+    """
+    rows = [[0] * (len(right) + 1) for _ in range(len(left) + 1)]
+    for i in range(len(left) - 1, -1, -1):
+        for j in range(len(right) - 1, -1, -1):
+            if _related(left[i], right[j]):
+                rows[i][j] = rows[i + 1][j + 1] + 1
+            else:
+                rows[i][j] = max(rows[i + 1][j], rows[i][j + 1])
+    i = j = 0
+    changed_left: list[str] = []
+    changed_right: list[str] = []
+    while i < len(left) and j < len(right):
+        if _related(left[i], right[j]) and rows[i][j] == rows[i + 1][j + 1] + 1:
+            i, j = i + 1, j + 1
+        elif rows[i + 1][j] >= rows[i][j + 1]:
+            changed_left.append(left[i])
+            i += 1
+        else:
+            changed_right.append(right[j])
+            j += 1
+    return changed_left + left[i:], changed_right + right[j:]
+
+
+def _row_key(text: str) -> str:
+    return _tidy(re.sub(f"[{_APOSTROPHES}]", "’", text)).casefold()
+
+
+def row_attests(source_row: str | None, error: str, correct: str) -> bool:
+    """True when the source row contains the error and its correction as whole phrases."""
+    if not source_row:
+        return False
+    row = _row_key(source_row)
+    return all(
+        re.search(rf"(?<![{_LETTERS}’]){re.escape(_row_key(phrase))}(?![{_LETTERS}’])", row, re.IGNORECASE)
+        for phrase in (error, correct)
+    )
+
+
 def _balanced_parentheses(phrase: str) -> bool:
     depth = 0
     for ch in phrase:
@@ -392,28 +439,47 @@ def correction_answers(correct: str, vesum: VesumLookup | None = None) -> list[s
     return list(dict.fromkeys(answers))
 
 
-def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> tuple[str | None, str | None]:
-    """Validate an error→correction pair against its own text and VESUM.
+def typed_answer_key(value: str) -> str:
+    """Comparison key of a typed correction, as the site grades it.
+
+    Mirrors ``normalizeTypedCorrection`` in ``site/src/components/ErrorCorrection.tsx``:
+    stress marks, case, apostrophe variants, spacing around ``, ; :`` and final
+    punctuation do not change an answer.
+    """
+    text = unicodedata.normalize("NFC", unicodedata.normalize("NFD", value).replace("\u0301", ""))
+    text = re.sub("['ʼʹ`‘]", "’", text).lower()
+    text = re.sub(r"\s*([,;:])\s*", r"\1 ", text)
+    text = re.sub(r"\s+", " ", text)
+    return re.sub(r"[\s.!?…,;:]+$", "", text).strip()
+
+
+def assess_pair(
+    error: str, correct: str, vesum: VesumLookup | None = None, source_row: str | None = None
+) -> tuple[str | None, str | None]:
+    """Validate an error→correction pair against its source row and VESUM.
 
     Returns ``(evidence, None)`` for an accepted pair or ``(None, reason)`` for a
-    withheld one. Evidence kinds:
+    withheld one. Sharing an unchanged word proves nothing about the words a pair
+    changes ("брати участь" → "купити участь"), so the changed words carry the
+    evidence:
 
-    * ``shared_stem`` — the two sides share a word or stem (minimal-pair edit);
-    * ``pos_parallel`` — multi-word sides with the same VESUM part-of-speech sequence;
-    * ``vesum_marked_error`` / ``vesum_unattested_error`` — a single-word error that
-      VESUM itself records as an error, or does not know as Ukrainian at all;
-    * ``parallel_shape`` / ``table_row`` — structural-only evidence used when VESUM is
-      unavailable (audit fallback; the extractor always runs with VESUM).
+    * ``shared_stem`` — every changed word shares a stem with its replacement
+      ("нетактична поведінка" → "нетактовна поведінка");
+    * ``vesum_marked_error`` / ``vesum_unattested_error`` — VESUM records a changed
+      error word as an error, or does not know it as Ukrainian;
+    * ``source_row`` — a standard word replaced, added or dropped: only the source's
+      own contrast row, containing both sides, evidences that ("приймати участь" →
+      "брати участь"). Without ``source_row`` such a pair is withheld.
 
-    A correction whose parenthetical variant is not parallel to its main form is
-    withheld (language review of #8723).
+    Multi-word sides that share no word must also be parallel (same length and, with
+    VESUM, the same part of speech word by word). A correction whose parenthetical
+    variant is not parallel to its main form is withheld (language review of #8723).
     """
     reason = _shape_reason(error, correct)
     if reason:
         return None, reason
 
     error_words, correct_words = _words(error), _words(correct)
-    shared = _alignment_score(error_words, correct_words) > 0
 
     if vesum is not None:
         for word in correct_words:
@@ -422,9 +488,7 @@ def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> t
         if correction_answers(correct, vesum) is None:
             return None, "non_parallel_parenthetical_variant"
 
-    if len(error_words) == 1:
-        if vesum is None:
-            return ("shared_stem" if shared else "table_row"), None
+    if len(error_words) == 1 and vesum is not None:
         status = vesum.status(error_words[0])
         if status == "clean":
             # VESUM lists the "error" as standard Ukrainian: the claim is contested
@@ -436,14 +500,24 @@ def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> t
                 return None, "part_of_speech_mismatch"
         return f"vesum_{status}_error", None
 
-    if shared:
+    if len(error_words) > 1 and _alignment_score(error_words, correct_words) == 0:
+        if len(error_words) != len(correct_words):
+            return None, "unrelated_replacement"
+        if vesum is not None and not all(
+            vesum.pos(a) & vesum.pos(b) for a, b in zip(error_words, correct_words, strict=True)
+        ):
+            return None, "unrelated_replacement"
+
+    changed_error, changed_correct = _changed_words(error_words, correct_words)
+    if not changed_error and not changed_correct:
         return "shared_stem", None
-    if len(error_words) == len(correct_words):
-        if vesum is None:
-            return "parallel_shape", None
-        if all(vesum.pos(a) & vesum.pos(b) for a, b in zip(error_words, correct_words, strict=True)):
-            return "pos_parallel", None
-    return None, "unrelated_replacement"
+    if vesum is not None:
+        statuses = {vesum.status(word) for word in changed_error} - {"clean"}
+        if statuses:
+            return ("vesum_marked_error" if "marked" in statuses else "vesum_unattested_error"), None
+    if row_attests(source_row, error, correct):
+        return "source_row", None
+    return None, "changed_words_without_source_evidence"
 
 
 def split_contrastive_row(line: str, vesum: VesumLookup | None = None) -> tuple[str, str] | str:
@@ -495,7 +569,11 @@ def _split_row(line: str, vesum: VesumLookup | None = None) -> tuple[str, str, s
     if vesum is not None and len(tokens) % 2 == 0:
         half = len(tokens) // 2
         for k, error, correct in legal:
-            if k == half and assess_pair(error, correct, vesum)[0] == "pos_parallel":
+            if (
+                k == half
+                and _alignment_score(_words(error), _words(correct)) == 0
+                and assess_pair(error, correct, vesum, line)[1] is None
+            ):
                 return error, correct, "pos_parallel"
     return "ambiguous_split"
 
@@ -618,24 +696,53 @@ def _textbook_source(grade: Any, author: str, title: str) -> str:
     return f"Textbook Gr {grade} ({author or title})"
 
 
+def _style_guide_source(word: str, section: str) -> str:
+    return f"Antonenko-Davydovych: {word} ({section})"
+
+
+_TEXTBOOK_TABLES_QUERY = """
+    SELECT grade, author, title, text
+    FROM textbooks
+    WHERE text LIKE '%ПРАВИЛЬНО%' OR text LIKE '%равильно%'
+    ORDER BY id
+    """
+
+
+def load_source_texts(conn: sqlite3.Connection) -> dict[str, list[str]]:
+    """Texts the extractor reads, keyed by the ``source`` label it gives their drills."""
+    texts: dict[str, list[str]] = {}
+    for grade, author, title, text in conn.execute(_TEXTBOOK_TABLES_QUERY):
+        texts.setdefault(_textbook_source(grade, author, title), []).append(text)
+    for word, section, text in conn.execute("SELECT word, section, text FROM style_guide ORDER BY id"):
+        texts.setdefault(_style_guide_source(word, section), []).append(text)
+    return texts
+
+
+def row_in_source(source_row: str, texts: Iterable[str]) -> bool:
+    """True when every line of ``source_row`` occurs in one of the source's texts."""
+    lines = [_row_key(line) for line in source_row.split("\n") if line.strip()]
+    return bool(lines) and any(all(line in _row_key(text) for line in lines) for text in texts)
+
+
 def parse_contrastive_textbook_tables(
     conn: sqlite3.Connection,
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Extract НЕПРАВИЛЬНО → ПРАВИЛЬНО pairs from school-textbook contrast tables."""
-    query = """
-    SELECT grade, author, title, text
-    FROM textbooks
-    WHERE text LIKE '%ПРАВИЛЬНО%' OR text LIKE '%равильно%'
-    ORDER BY id
-    """
     results = []
     seen = set()
 
-    def accept(error: str, correct: str, source: str, grade: Any, line: str, *, inferred_rows: bool = False) -> None:
-        evidence, reason = assess_pair(error, correct, vesum)
-        if evidence in {"pos_parallel", "parallel_shape"} and inferred_rows:
+    def accept(
+        error: str, correct: str, source: str, grade: Any, line: str, source_row: str, *, inferred_rows: bool = False
+    ) -> None:
+        evidence, reason = assess_pair(error, correct, vesum, source_row)
+        if (
+            evidence
+            and inferred_rows
+            and len(_words(error)) > 1
+            and _alignment_score(_words(error), _words(correct)) == 0
+        ):
             # Vertical columns are paired by position; a bare part-of-speech parallel
             # cannot tell a real pair from a column shifted by a wrapped line.
             evidence, reason = None, "vertical_pair_without_shared_stem"
@@ -654,6 +761,7 @@ def parse_contrastive_textbook_tables(
                 "category": "lexical_norm",
                 "grade": grade,
                 "evidence": evidence,
+                "source_row": source_row,
             }
         )
 
@@ -667,9 +775,9 @@ def parse_contrastive_textbook_tables(
             if interleaved_with_next_row(error, correct, next_row):
                 _withhold(withheld, source, "row_interleaved_with_next_row", line=row)
             else:
-                accept(error, correct, source, grade, row)
+                accept(error, correct, source, grade, row, row)
 
-    for grade, author, title, text in conn.execute(query):
+    for grade, author, title, text in conn.execute(_TEXTBOOK_TABLES_QUERY):
         source = _textbook_source(grade, author, title)
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         for idx, line in enumerate(lines):
@@ -688,7 +796,10 @@ def parse_contrastive_textbook_tables(
             pairs = _vertical_pairs(rows, order)
             if pairs:
                 for error, correct in pairs:
-                    accept(error, correct, source, grade, f"{error} | {correct}", inferred_rows=True)
+                    # Each column cell is a whole source line.
+                    accept(
+                        error, correct, source, grade, f"{error} | {correct}", f"{error}\n{correct}", inferred_rows=True
+                    )
             elif all(not isinstance(split := _split_row(row, vesum), str) and split[2] == "edge" for row in rows):
                 # A header over one-line pairs ("звук звучить звук лунає").
                 horizontal(rows, source, grade, correct_first=order == "correct_first")
@@ -715,15 +826,16 @@ def parse_style_guide_entries(
     for word, section, text in conn.execute(query):
         # Look for explicit quotation contrast patterns in text
         # e.g. Неправильно: ... а треба ... / Замість ... слід казати ...
-        matches = re.findall(
+        matches = re.finditer(
             r"(?i)(?:не\s+можна\s+казати|замість|неправильно)[^«\"']*[«\"']([^»\"']+)[»\"'][^«\"']*(?:слід|треба|правильно)[^«\"']*[«\"']([^»\"']+)[»\"']",
             text,
         )
-        source = f"Antonenko-Davydovych: {word} ({section})"
-        for bad, good in matches:
-            bad = " ".join(bad.split())
-            good = " ".join(good.split())
-            evidence, reason = assess_pair(bad, good, vesum)
+        source = _style_guide_source(word, section)
+        for match in matches:
+            bad = " ".join(match.group(1).split())
+            good = " ".join(match.group(2).split())
+            source_row = " ".join(match.group(0).split())
+            evidence, reason = assess_pair(bad, good, vesum, source_row)
             if reason:
                 _withhold(withheld, source, reason, error=bad, correct=good)
                 continue
@@ -744,6 +856,7 @@ def parse_style_guide_entries(
                     "explanation": explanation,
                     "category": "style_norm",
                     "evidence": evidence,
+                    "source_row": source_row,
                 }
             )
 
@@ -829,17 +942,19 @@ def create_error_correction_drill(
     explanation: str | None = None,
     source: str = "textbook",
     answers: list[str] | None = None,
+    source_row: str | None = None,
 ) -> dict[str, Any]:
     """Format an error-correction drill conforming to ErrorCorrectionItemProps.
 
     Options are only the two forms the source itself contrasts; no distractor is
     invented (the pre-#8723 builder appended "(розм.)"/"(застаріле)" labels).
-    ``answers`` are the corrections a learner may type (``correction_answers``).
+    ``answers`` are the corrections a learner may type (``correction_answers``);
+    ``source_row`` is the source text the pair was read from.
     """
     sentence = f"Уважно прочитайте: «{error_phrase}» — тут допущено помилку."
     expl = explanation or f"Правильно вживати «{correct_phrase}» замість помилкового «{error_phrase}»."
 
-    return {
+    drill = {
         "sentence": sentence,
         "errorWord": error_phrase,
         "correctForm": correct_phrase,
@@ -849,6 +964,9 @@ def create_error_correction_drill(
         "isUkrainian": True,
         "source": source,
     }
+    if source_row:
+        drill["sourceRow"] = source_row
+    return drill
 
 
 def build_culture_deck(drills: list[dict[str, Any]]) -> dict[str, Any]:
@@ -892,6 +1010,7 @@ def extract_error_correction_deck(
             explanation=item.get("explanation"),
             source=item["source"],
             answers=correction_answers(item["correct"], vesum),
+            source_row=item["source_row"],
         )
         for item in pairs
     ]

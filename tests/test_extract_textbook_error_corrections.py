@@ -504,3 +504,75 @@ def test_committed_deck_excludes_reviewed_withholds():
         assert pair_key(drill["errorWord"], drill["correctForm"]) not in reviewed
         assert drill["answers"][0] == drill["correctForm"]
         assert "(" not in "".join(drill["answers"][1:]), drill["id"]
+
+
+# ---------------------------------------------------------------------------
+# Review round 3 (#8723): the words a pair changes carry the evidence
+# ---------------------------------------------------------------------------
+
+# Real VESUM (data/vesum.db, 2026-09-28): брати/купити/приймати/участь are standard;
+# «протирічить» carries a VESUM error marker.
+_PARTICIPATION_FORMS = {
+    "брати": ("verb", False),
+    "купити": ("verb", False),
+    "приймати": ("verb", False),
+    "участь": ("noun", False),
+    "не": ("part", False),
+    "протирічить": ("verb", True),
+    "суперечить": ("verb", False),
+    "суті": ("noun", False),
+}
+
+
+def test_changed_words_are_what_the_edit_replaces():
+    from scripts.practice.extract_textbook_error_corrections import _changed_words
+
+    assert _changed_words(["брати", "участь"], ["купити", "участь"]) == (["брати"], ["купити"])
+    assert _changed_words(["нетактична", "поведінка"], ["нетактовна", "поведінка"]) == ([], [])
+    assert _changed_words(["у", "травні", "місяці"], ["у", "травні"]) == (["місяці"], [])
+
+
+def test_a_kept_word_does_not_evidence_the_substitution(tmp_path: Path):
+    """Round 3 probe: «брати участь → купити участь» was accepted as `shared_stem`."""
+    from scripts.practice.extract_textbook_error_corrections import assess_pair
+
+    vesum = _fake_vesum(tmp_path, _PARTICIPATION_FORMS)
+    assert assess_pair("брати участь", "купити участь", vesum) == (None, "changed_words_without_source_evidence")
+    assert assess_pair("брати участь", "купити участь", vesum, "приймати участь брати участь") == (
+        None,
+        "changed_words_without_source_evidence",
+    )
+    # The textbook row evidences its own substitution; VESUM evidences a recorded error.
+    assert assess_pair("приймати участь", "брати участь", vesum, "приймати участь брати участь") == (
+        "source_row",
+        None,
+    )
+    assert assess_pair("не протирічить суті", "не суперечить суті", vesum) == ("vesum_marked_error", None)
+
+
+def test_drills_carry_the_source_row_they_were_read_from(tmp_path: Path):
+    from scripts.practice.extract_textbook_error_corrections import (
+        extract_error_correction_deck,
+        load_source_texts,
+        row_in_source,
+    )
+
+    text = "НЕПРАВИЛЬНО ПРАВИЛЬНО\nприймати участь брати участь\nне протирічить суті не суперечить суті"
+    conn = _textbook_db((10, "glazova", text))
+    deck = extract_error_correction_deck(conn, _fake_vesum(tmp_path, _PARTICIPATION_FORMS), log=lambda _msg: None)
+    rows = {(d["errorWord"], d["correctForm"]): d["sourceRow"] for d in deck["drills"]}
+    assert rows == {
+        ("приймати участь", "брати участь"): "приймати участь брати участь",
+        ("не протирічить суті", "не суперечить суті"): "не протирічить суті не суперечить суті",
+    }
+    texts = load_source_texts(conn)
+    assert all(row_in_source(d["sourceRow"], texts[d["source"]]) for d in deck["drills"])
+    assert not row_in_source("брати участь купити участь", texts["Textbook Gr 10 (glazova)"])
+
+
+def test_typed_answer_key_matches_the_site_normalizer():
+    """Mirrors `normalizeTypedCorrection` (site/tests/unit/ErrorCorrectionPractice.test.tsx)."""
+    from scripts.practice.extract_textbook_error_corrections import typed_answer_key
+
+    assert typed_answer_key("  Бра́ти   участь. ") == "брати участь"
+    assert typed_answer_key("по п'ятницях ,щоп’ятниці;") == "по п’ятницях, щоп’ятниці"

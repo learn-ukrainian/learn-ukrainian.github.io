@@ -292,7 +292,8 @@ export function ErrorCorrectionItem({
             return <span key={idx}>{word}</span>;
           }
 
-          // For complete step, show strikethrough for all error words, replacement after last error word
+          // For complete step, strike through the error words and show the correct form after
+          // the last one; the learner's own (possibly wrong) attempt stays in the feedback.
           const isLastErrorWord = errorWord && isError && idx === words.findLastIndex(w => {
             const cw = cleanErrorToken(w);
             return errorWords.includes(cw.toLowerCase());
@@ -320,7 +321,7 @@ export function ErrorCorrectionItem({
               {step === 'complete' && isError ? (
                 <>
                   <s>{word}</s>
-                  {isLastErrorWord && selectedFix ? ` ${selectedFix}` : ''}
+                  {isLastErrorWord ? ` ${correctForm}` : ''}
                 </>
               ) : (
                 word
@@ -438,8 +439,8 @@ export function ErrorCorrectionItem({
               `✓ ${isUkrainian ? 'Правильно!' : 'Correct!'} "${errorWord}" → "${correctForm}"`
             ) : (
               <>
-                {typedFix && selectedFix && (
-                  <div data-activity="error-correction-typed-answer">
+                {selectedFix && (
+                  <div data-activity="error-correction-learner-answer">
                     {isUkrainian ? 'Ваша відповідь:' : 'Your answer:'} "{selectedFix}"
                   </div>
                 )}

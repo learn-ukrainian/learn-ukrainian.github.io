@@ -18,7 +18,8 @@
       ],
       "explanation": "Правильно вживати «правильне рішення» замість помилкового «вірне рішення».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "вірне рішення\nправильне рішення"
     },
     {
       "id": "err_0002",
@@ -34,7 +35,8 @@
       ],
       "explanation": "Правильно вживати «не суперечить суті» замість помилкового «не протирічить суті».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "не протирічить суті\nне суперечить суті"
     },
     {
       "id": "err_0003",
@@ -50,7 +52,8 @@
       ],
       "explanation": "Правильно вживати «нетактовна поведінка» замість помилкового «нетактична поведінка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "нетактична поведінка\nнетактовна поведінка"
     },
     {
       "id": "err_0004",
@@ -66,7 +69,8 @@
       ],
       "explanation": "Правильно вживати «виявляти недоліки» замість помилкового «проявляти недостатки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "проявляти недостатки\nвиявляти недоліки"
     },
     {
       "id": "err_0005",
@@ -82,7 +86,8 @@
       ],
       "explanation": "Правильно вживати «становити інтерес» замість помилкового «представляти інтерес».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "представляти інтерес\nстановити інтерес"
     },
     {
       "id": "err_0006",
@@ -100,7 +105,8 @@
       ],
       "explanation": "Правильно вживати «брати (узяти) участь» замість помилкового «приймати участь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "приймати участь\nбрати (узяти) участь"
     },
     {
       "id": "err_0007",
@@ -118,7 +124,8 @@
       ],
       "explanation": "Правильно вживати «заважати, перешкоджати комусь» замість помилкового «мішати комусь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "мішати комусь\nзаважати, перешкоджати комусь"
     },
     {
       "id": "err_0008",
@@ -136,7 +143,8 @@
       ],
       "explanation": "Правильно вживати «у будь-якому разі (випадку)» замість помилкового «по-любому».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "по-любому\nу будь-якому разі (випадку)"
     },
     {
       "id": "err_0009",
@@ -152,7 +160,8 @@
       ],
       "explanation": "Правильно вживати «помилки трапляються» замість помилкового «помилки зустрічаються».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "помилки зустрічаються\nпомилки трапляються"
     },
     {
       "id": "err_0010",
@@ -168,7 +177,8 @@
       ],
       "explanation": "Правильно вживати «узгоджувати висновки» замість помилкового «узгожувати висновки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "узгожувати висновки\nузгоджувати висновки"
     },
     {
       "id": "err_0011",
@@ -184,7 +194,8 @@
       ],
       "explanation": "Правильно вживати «переважна частина» замість помилкового «подавляюча частина».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "подавляюча частина\nпереважна частина"
     },
     {
       "id": "err_0012",
@@ -200,7 +211,8 @@
       ],
       "explanation": "Правильно вживати «думки збігаються» замість помилкового «думки співпадають».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "думки співпадають\nдумки збігаються"
     },
     {
       "id": "err_0013",
@@ -216,7 +228,8 @@
       ],
       "explanation": "Правильно вживати «надасть приміщенню» замість помилкового «придасть приміщенню».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "придасть приміщенню\nнадасть приміщенню"
     },
     {
       "id": "err_0014",
@@ -232,7 +245,8 @@
       ],
       "explanation": "Правильно вживати «візерунчаста шпалера» замість помилкового «узорчаста шпалера».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "узорчаста шпалера\nвізерунчаста шпалера"
     },
     {
       "id": "err_0015",
@@ -248,7 +262,8 @@
       ],
       "explanation": "Правильно вживати «хвороба спричиняє» замість помилкового «хвороба викликає».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (glazova)"
+      "source": "Textbook Gr 10 (glazova)",
+      "sourceRow": "хвороба викликає\nхвороба спричиняє"
     },
     {
       "id": "err_0016",
@@ -264,7 +279,8 @@
       ],
       "explanation": "Правильно вживати «природний» замість помилкового «природній».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "природній природний"
     },
     {
       "id": "err_0017",
@@ -280,7 +296,8 @@
       ],
       "explanation": "Правильно вживати «зворотний» замість помилкового «зворотній».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "зворотній зворотний"
     },
     {
       "id": "err_0018",
@@ -296,7 +313,8 @@
       ],
       "explanation": "Правильно вживати «говорити українською мовою» замість помилкового «говорити на українській мові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "говорити на українській мові говорити українською мовою"
     },
     {
       "id": "err_0019",
@@ -312,7 +330,8 @@
       ],
       "explanation": "Правильно вживати «влучний вислів» замість помилкового «влучний вираз».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "влучний вираз влучний вислів"
     },
     {
       "id": "err_0020",
@@ -328,7 +347,8 @@
       ],
       "explanation": "Правильно вживати «витяг з протоколу» замість помилкового «виписка з протоколу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "виписка з протоколу витяг з протоколу"
     },
     {
       "id": "err_0021",
@@ -344,7 +364,8 @@
       ],
       "explanation": "Правильно вживати «завідувач відділу» замість помилкового «завідувач відділом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "завідувач відділом завідувач відділу"
     },
     {
       "id": "err_0022",
@@ -360,7 +381,8 @@
       ],
       "explanation": "Правильно вживати «п’ять гривень» замість помилкового «п’ять гривен».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "п’ять гривен п’ять гривень"
     },
     {
       "id": "err_0023",
@@ -376,7 +398,8 @@
       ],
       "explanation": "Правильно вживати «золоте колосся» замість помилкового «золоті колосся».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "золоті колосся золоте колосся"
     },
     {
       "id": "err_0024",
@@ -392,7 +415,8 @@
       ],
       "explanation": "Правильно вживати «дорожній» замість помилкового «дорожний».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "дорожний дорожній"
     },
     {
       "id": "err_0025",
@@ -410,7 +434,8 @@
       ],
       "explanation": "Правильно вживати «червоногарячий, яскраво-червоний» замість помилкового «алий».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "алий червоногарячий, яскраво-червоний"
     },
     {
       "id": "err_0026",
@@ -426,7 +451,8 @@
       ],
       "explanation": "Правильно вживати «найцікавіший» замість помилкового «самий цікавий».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "самий цікавий найцікавіший"
     },
     {
       "id": "err_0027",
@@ -442,7 +468,8 @@
       ],
       "explanation": "Правильно вживати «найвеселіший» замість помилкового «самий веселий».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "самий веселий найвеселіший"
     },
     {
       "id": "err_0028",
@@ -458,7 +485,8 @@
       ],
       "explanation": "Правильно вживати «більш цікавий» замість помилкового «більш цікавіший».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "більш цікавіший більш цікавий"
     },
     {
       "id": "err_0029",
@@ -474,7 +502,8 @@
       ],
       "explanation": "Правильно вживати «менш веселий» замість помилкового «менш веселіший».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "менш веселіший менш веселий"
     },
     {
       "id": "err_0030",
@@ -490,7 +519,8 @@
       ],
       "explanation": "Правильно вживати «дорожчий за золото» замість помилкового «дорожчий золота».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "дорожчий золота дорожчий за золото"
     },
     {
       "id": "err_0031",
@@ -506,7 +536,8 @@
       ],
       "explanation": "Правильно вживати «у травні» замість помилкового «у травні місяці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "у травні місяці у травні"
     },
     {
       "id": "err_0032",
@@ -522,7 +553,8 @@
       ],
       "explanation": "Правильно вживати «у дві тисячі сьомому році» замість помилкового «у двох тисяч сьомому році».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "у двох тисяч сьомому році у дві тисячі сьомому році"
     },
     {
       "id": "err_0033",
@@ -538,7 +570,8 @@
       ],
       "explanation": "Правильно вживати «у тисяча дев’ятсот сімнадцятому році» замість помилкового «у тисячу дев’ятсот сімнадцятому році».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "у тисячу дев’ятсот сімнадцятому році у тисяча дев’ятсот сімнадцятому році"
     },
     {
       "id": "err_0034",
@@ -554,7 +587,8 @@
       ],
       "explanation": "Правильно вживати «п’ять хвилин на шосту» замість помилкового «п’ять хвилин шостої».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "п’ять хвилин шостої п’ять хвилин на шосту"
     },
     {
       "id": "err_0035",
@@ -570,7 +604,8 @@
       ],
       "explanation": "Правильно вживати «властивий мені» замість помилкового «властивий для мене».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "властивий для мене властивий мені"
     },
     {
       "id": "err_0036",
@@ -586,7 +621,8 @@
       ],
       "explanation": "Правильно вживати «спідня білизна» замість помилкового «нижня білизна».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "нижня білизна спідня білизна"
     },
     {
       "id": "err_0037",
@@ -602,7 +638,8 @@
       ],
       "explanation": "Правильно вживати «перший млинець нанівець» замість помилкового «перший млинець комом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "перший млинець комом перший млинець нанівець"
     },
     {
       "id": "err_0038",
@@ -618,7 +655,8 @@
       ],
       "explanation": "Правильно вживати «здобути освіту» замість помилкового «одержати освіту».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "одержати освіту здобути освіту"
     },
     {
       "id": "err_0039",
@@ -634,7 +672,8 @@
       ],
       "explanation": "Правильно вживати «неминуча смерть» замість помилкового «вірна смерть».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "вірна смерть неминуча смерть"
     },
     {
       "id": "err_0040",
@@ -650,7 +689,8 @@
       ],
       "explanation": "Правильно вживати «тривала перерва» замість помилкового «довга перерва».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "довга перерва тривала перерва"
     },
     {
       "id": "err_0041",
@@ -666,7 +706,8 @@
       ],
       "explanation": "Правильно вживати «наступного дня» замість помилкового «слідуючого дня».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "слідуючого дня наступного дня"
     },
     {
       "id": "err_0042",
@@ -682,7 +723,8 @@
       ],
       "explanation": "Правильно вживати «навчальний процес» замість помилкового «учбовий процес».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "учбовий процес навчальний процес"
     },
     {
       "id": "err_0043",
@@ -698,7 +740,8 @@
       ],
       "explanation": "Правильно вживати «таким чином» замість помилкового «слідуючим чином».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "слідуючим чином таким чином"
     },
     {
       "id": "err_0044",
@@ -716,7 +759,8 @@
       ],
       "explanation": "Правильно вживати «тримальна (основна) стіна» замість помилкового «несуча стіна».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "несуча стіна тримальна (основна) стіна"
     },
     {
       "id": "err_0045",
@@ -732,7 +776,8 @@
       ],
       "explanation": "Правильно вживати «рухомий рядок» замість помилкового «бігучий рядок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "бігучий рядок рухомий рядок"
     },
     {
       "id": "err_0046",
@@ -748,7 +793,8 @@
       ],
       "explanation": "Правильно вживати «персональний лікар» замість помилкового «лікуючий лікар».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "лікуючий лікар персональний лікар"
     },
     {
       "id": "err_0047",
@@ -764,7 +810,8 @@
       ],
       "explanation": "Правильно вживати «мати попит» замість помилкового «користуватися попитом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "користуватися попитом мати попит"
     },
     {
       "id": "err_0048",
@@ -780,7 +827,8 @@
       ],
       "explanation": "Правильно вживати «понад сто уроків» замість помилкового «більше ста уроків».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "більше ста уроків понад сто уроків"
     },
     {
       "id": "err_0049",
@@ -796,7 +844,8 @@
       ],
       "explanation": "Правильно вживати «повернімося» замість помилкового «давайте повернемося».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "давайте повернемося повернімося"
     },
     {
       "id": "err_0050",
@@ -812,7 +861,8 @@
       ],
       "explanation": "Правильно вживати «дати спокій» замість помилкового «залишити в спокої».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "залишити в спокої дати спокій"
     },
     {
       "id": "err_0051",
@@ -828,7 +878,8 @@
       ],
       "explanation": "Правильно вживати «запобігти хворобі» замість помилкового «попередити хворобу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "попередити хворобу запобігти хворобі"
     },
     {
       "id": "err_0052",
@@ -844,7 +895,8 @@
       ],
       "explanation": "Правильно вживати «за умови» замість помилкового «при умові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "при умові за умови"
     },
     {
       "id": "err_0053",
@@ -860,7 +912,8 @@
       ],
       "explanation": "Правильно вживати «за часів Мазепи» замість помилкового «при Мазепі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "при Мазепі за часів Мазепи"
     },
     {
       "id": "err_0054",
@@ -876,7 +929,8 @@
       ],
       "explanation": "Правильно вживати «за підтримки» замість помилкового «при підтримці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "при підтримці за підтримки"
     },
     {
       "id": "err_0055",
@@ -892,7 +946,8 @@
       ],
       "explanation": "Правильно вживати «за сприяння» замість помилкового «при сприянні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "при сприянні за сприяння"
     },
     {
       "id": "err_0056",
@@ -908,7 +963,8 @@
       ],
       "explanation": "Правильно вживати «у разі виникнення» замість помилкового «при виникненні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "при виникненні у разі виникнення"
     },
     {
       "id": "err_0057",
@@ -924,7 +980,8 @@
       ],
       "explanation": "Правильно вживати «два відсотки» замість помилкового «два відсотка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "два відсотка два відсотки"
     },
     {
       "id": "err_0058",
@@ -940,7 +997,8 @@
       ],
       "explanation": "Правильно вживати «третє лютого» замість помилкового «третє люте».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "третє люте третє лютого"
     },
     {
       "id": "err_0059",
@@ -956,7 +1014,8 @@
       ],
       "explanation": "Правильно вживати «півтора місяця» замість помилкового «півтора місяці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "півтора місяці півтора місяця"
     },
     {
       "id": "err_0060",
@@ -974,7 +1033,8 @@
       ],
       "explanation": "Правильно вживати «по п’ятницях, щоп’ятниці» замість помилкового «по п’ятницям».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "по п’ятницям по п’ятницях, щоп’ятниці"
     },
     {
       "id": "err_0061",
@@ -990,7 +1050,8 @@
       ],
       "explanation": "Правильно вживати «кавник» замість помилкового «кофейник».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "кофейник кавник"
     },
     {
       "id": "err_0062",
@@ -1006,7 +1067,8 @@
       ],
       "explanation": "Правильно вживати «кава з вершками» замість помилкового «кава зі сливками».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "кава зі сливками кава з вершками"
     },
     {
       "id": "err_0063",
@@ -1022,7 +1084,8 @@
       ],
       "explanation": "Правильно вживати «тушковане м’ясо» замість помилкового «тушене м’ясо».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "тушене м’ясо тушковане м’ясо"
     },
     {
       "id": "err_0064",
@@ -1038,7 +1101,8 @@
       ],
       "explanation": "Правильно вживати «дрібка солі» замість помилкового «щепотка солі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "щепотка солі дрібка солі"
     },
     {
       "id": "err_0065",
@@ -1054,7 +1118,8 @@
       ],
       "explanation": "Правильно вживати «завдяки старанню» замість помилкового «дякуючи старанню».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "дякуючи старанню завдяки старанню"
     },
     {
       "id": "err_0066",
@@ -1070,7 +1135,8 @@
       ],
       "explanation": "Правильно вживати «за всяку ціну» замість помилкового «любою ціною».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "любою ціною за всяку ціну"
     },
     {
       "id": "err_0067",
@@ -1086,7 +1152,8 @@
       ],
       "explanation": "Правильно вживати «навчальний заклад» замість помилкового «учбовий заклад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "учбовий заклад навчальний заклад"
     },
     {
       "id": "err_0068",
@@ -1102,7 +1169,8 @@
       ],
       "explanation": "Правильно вживати «людне місце» замість помилкового «людяне місце».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "людяне місце людне місце"
     },
     {
       "id": "err_0069",
@@ -1118,7 +1186,8 @@
       ],
       "explanation": "Правильно вживати «трохи змерз» замість помилкового «трохи замерз».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "трохи замерз трохи змерз"
     },
     {
       "id": "err_0070",
@@ -1134,7 +1203,8 @@
       ],
       "explanation": "Правильно вживати «мати авторитет» замість помилкового «користуватися авторитетом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "користуватися авторитетом мати авторитет"
     },
     {
       "id": "err_0071",
@@ -1150,7 +1220,8 @@
       ],
       "explanation": "Правильно вживати «підбивати підсумки» замість помилкового «підводити підсумки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "підводити підсумки підбивати підсумки"
     },
     {
       "id": "err_0072",
@@ -1166,7 +1237,8 @@
       ],
       "explanation": "Правильно вживати «просто неба» замість помилкового «під відкритим небом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "під відкритим небом просто неба"
     },
     {
       "id": "err_0073",
@@ -1182,7 +1254,8 @@
       ],
       "explanation": "Правильно вживати «правильна відповідь» замість помилкового «вірна відповідь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "вірна відповідь правильна відповідь"
     },
     {
       "id": "err_0074",
@@ -1198,7 +1271,8 @@
       ],
       "explanation": "Правильно вживати «обсяг тексту» замість помилкового «об’єм тексту».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "об’єм тексту обсяг тексту"
     },
     {
       "id": "err_0075",
@@ -1214,7 +1288,8 @@
       ],
       "explanation": "Правильно вживати «стати в пригоді» замість помилкового «стати в нагоді».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "стати в нагоді стати в пригоді"
     },
     {
       "id": "err_0076",
@@ -1230,7 +1305,8 @@
       ],
       "explanation": "Правильно вживати «ужити заходів» замість помилкового «прийняти міри».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "прийняти міри ужити заходів"
     },
     {
       "id": "err_0077",
@@ -1246,7 +1322,8 @@
       ],
       "explanation": "Правильно вживати «мій день народження» замість помилкового «моє день народження».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "моє день народження мій день народження"
     },
     {
       "id": "err_0078",
@@ -1262,7 +1339,8 @@
       ],
       "explanation": "Правильно вживати «командувач армії» замість помилкового «командувач армією».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "командувач армією командувач армії"
     },
     {
       "id": "err_0079",
@@ -1278,7 +1356,8 @@
       ],
       "explanation": "Правильно вживати «охочі поспілкуватися» замість помилкового «бажаючі поспілкуватися».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "бажаючі поспілкуватися охочі поспілкуватися"
     },
     {
       "id": "err_0080",
@@ -1294,7 +1373,8 @@
       ],
       "explanation": "Правильно вживати «ставити запитання» замість помилкового «задавати питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "задавати питання ставити запитання"
     },
     {
       "id": "err_0081",
@@ -1310,7 +1390,8 @@
       ],
       "explanation": "Правильно вживати «приймати таблетки до їди» замість помилкового «приймати таблетки до їжі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "приймати таблетки до їжі приймати таблетки до їди"
     },
     {
       "id": "err_0082",
@@ -1328,7 +1409,8 @@
       ],
       "explanation": "Правильно вживати «мати рацію, ваша правда» замість помилкового «бути правим».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "бути правим мати рацію, ваша правда"
     },
     {
       "id": "err_0083",
@@ -1344,7 +1426,8 @@
       ],
       "explanation": "Правильно вживати «сто років тому» замість помилкового «сто років тому назад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "сто років тому назад сто років тому"
     },
     {
       "id": "err_0084",
@@ -1360,7 +1443,8 @@
       ],
       "explanation": "Правильно вживати «будь-яка проблема» замість помилкового «люба проблема».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "люба проблема будь-яка проблема"
     },
     {
       "id": "err_0085",
@@ -1376,7 +1460,8 @@
       ],
       "explanation": "Правильно вживати «розгорнути журнал» замість помилкового «розкрити журнал».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "розкрити журнал розгорнути журнал"
     },
     {
       "id": "err_0086",
@@ -1392,7 +1477,8 @@
       ],
       "explanation": "Правильно вживати «близько тридцяти хвилин» замість помилкового «біля тридцяти хвилин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "біля тридцяти хвилин близько тридцяти хвилин"
     },
     {
       "id": "err_0087",
@@ -1408,7 +1494,8 @@
       ],
       "explanation": "Правильно вживати «науковий ступінь» замість помилкового «наукова ступінь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "наукова ступінь науковий ступінь"
     },
     {
       "id": "err_0088",
@@ -1424,7 +1511,8 @@
       ],
       "explanation": "Правильно вживати «нові заходи» замість помилкового «нові міроприємства».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "нові міроприємства нові заходи"
     },
     {
       "id": "err_0089",
@@ -1440,7 +1528,8 @@
       ],
       "explanation": "Правильно вживати «три відсотки» замість помилкового «три відсотка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "три відсотка три відсотки"
     },
     {
       "id": "err_0090",
@@ -1458,7 +1547,8 @@
       ],
       "explanation": "Правильно вживати «по четвергах, щочетверга» замість помилкового «по четвергам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "по четвергам по четвергах, щочетверга"
     },
     {
       "id": "err_0091",
@@ -1474,7 +1564,8 @@
       ],
       "explanation": "Правильно вживати «на його честь» замість помилкового «у його честь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "у його честь на його честь"
     },
     {
       "id": "err_0092",
@@ -1490,7 +1581,8 @@
       ],
       "explanation": "Правильно вживати «скоїти злочин» замість помилкового «вчинити злочин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "вчинити злочин скоїти злочин"
     },
     {
       "id": "err_0093",
@@ -1506,7 +1598,8 @@
       ],
       "explanation": "Правильно вживати «гарантувати безпеку» замість помилкового «забезпечувати безпеку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "забезпечувати безпеку гарантувати безпеку"
     },
     {
       "id": "err_0094",
@@ -1522,7 +1615,8 @@
       ],
       "explanation": "Правильно вживати «останнім часом» замість помилкового «за останній час».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "за останній час останнім часом"
     },
     {
       "id": "err_0095",
@@ -1538,7 +1632,8 @@
       ],
       "explanation": "Правильно вживати «книжковий магазин» замість помилкового «книжний магазин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "книжний магазин книжковий магазин"
     },
     {
       "id": "err_0096",
@@ -1554,7 +1649,8 @@
       ],
       "explanation": "Правильно вживати «зворушлива мить» замість помилкового «хвилююча мить».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "хвилююча мить зворушлива мить"
     },
     {
       "id": "err_0097",
@@ -1570,7 +1666,8 @@
       ],
       "explanation": "Правильно вживати «недбале ставлення» замість помилкового «халатне відношення».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "халатне відношення недбале ставлення"
     },
     {
       "id": "err_0098",
@@ -1588,7 +1685,8 @@
       ],
       "explanation": "Правильно вживати «стосунки (взаємини) у родині» замість помилкового «відношення в родині».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "відношення в родині стосунки (взаємини) у родині"
     },
     {
       "id": "err_0099",
@@ -1604,7 +1702,8 @@
       ],
       "explanation": "Правильно вживати «поштова скринька» замість помилкового «поштовий ящик».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "поштовий ящик поштова скринька"
     },
     {
       "id": "err_0100",
@@ -1620,7 +1719,8 @@
       ],
       "explanation": "Правильно вживати «сім гривень» замість помилкового «сім гривнів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "сім гривнів сім гривень"
     },
     {
       "id": "err_0101",
@@ -1636,7 +1736,8 @@
       ],
       "explanation": "Правильно вживати «замилювати очі» замість помилкового «вішати лапшу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "вішати лапшу замилювати очі"
     },
     {
       "id": "err_0102",
@@ -1652,7 +1753,8 @@
       ],
       "explanation": "Правильно вживати «крига скресла» замість помилкового «лід зрушився».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (avramenko)"
+      "source": "Textbook Gr 11 (avramenko)",
+      "sourceRow": "лід зрушився крига скресла"
     },
     {
       "id": "err_0103",
@@ -1668,7 +1770,8 @@
       ],
       "explanation": "Правильно вживати «порада найпотрібніша» замість помилкового «порада сама найпотрібніша».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "порада сама найпотрібніша\nпорада найпотрібніша"
     },
     {
       "id": "err_0104",
@@ -1686,7 +1789,8 @@
       ],
       "explanation": "Правильно вживати «найбільш потрібний (найпотрібніший)» замість помилкового «найбільш найпотрібніший».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "найбільш найпотрібніший\nнайбільш потрібний (найпотрібніший)"
     },
     {
       "id": "err_0105",
@@ -1702,7 +1806,8 @@
       ],
       "explanation": "Правильно вживати «найбільш професійні» замість помилкового «самі професійніші».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "самі професійніші\nнайбільш професійні"
     },
     {
       "id": "err_0106",
@@ -1718,7 +1823,8 @@
       ],
       "explanation": "Правильно вживати «декоративні деталі» замість помилкового «найдекоративніші деталі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "найдекоративніші деталі\nдекоративні деталі"
     },
     {
       "id": "err_0107",
@@ -1734,7 +1840,8 @@
       ],
       "explanation": "Правильно вживати «найімовірніше» замість помилкового «найімовірніше всього».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "найімовірніше всього\nнайімовірніше"
     },
     {
       "id": "err_0108",
@@ -1752,7 +1859,8 @@
       ],
       "explanation": "Правильно вживати «найповніше (найбільш повно)» замість помилкового «дедалі найповніше».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "дедалі найповніше\nнайповніше (найбільш повно)"
     },
     {
       "id": "err_0109",
@@ -1770,7 +1878,8 @@
       ],
       "explanation": "Правильно вживати «найдовший (найбільш довгий)» замість помилкового «найбільш довжезний».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "найбільш довжезний\nнайдовший (найбільш довгий)"
     },
     {
       "id": "err_0110",
@@ -1786,7 +1895,8 @@
       ],
       "explanation": "Правильно вживати «якнайбільше сил» замість помилкового «максимум сил».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "максимум сил\nякнайбільше сил"
     },
     {
       "id": "err_0111",
@@ -1802,7 +1912,8 @@
       ],
       "explanation": "Правильно вживати «докладати зусиль» замість помилкового «прикладати зусилля».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "прикладати зусилля\nдокладати зусиль"
     },
     {
       "id": "err_0112",
@@ -1820,7 +1931,8 @@
       ],
       "explanation": "Правильно вживати «уважніше (більш уважно)» замість помилкового «більш уважніше».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "більш уважніше\nуважніше (більш уважно)"
     },
     {
       "id": "err_0113",
@@ -1836,7 +1948,8 @@
       ],
       "explanation": "Правильно вживати «найлегше» замість помилкового «легше всього».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "легше всього\nнайлегше"
     },
     {
       "id": "err_0114",
@@ -1852,7 +1965,8 @@
       ],
       "explanation": "Правильно вживати «вже замолоду» замість помилкового «з самої молодості».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "з самої молодості\nвже замолоду"
     },
     {
       "id": "err_0115",
@@ -1868,7 +1982,8 @@
       ],
       "explanation": "Правильно вживати «до дві тисячі двадцятого року» замість помилкового «до двох тисяч двадцятого року».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "до двох тисяч двадцятого року\nдо дві тисячі двадцятого року"
     },
     {
       "id": "err_0116",
@@ -1884,7 +1999,8 @@
       ],
       "explanation": "Правильно вживати «три школярі» замість помилкового «три школяра».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "три школяра\nтри школярі"
     },
     {
       "id": "err_0117",
@@ -1900,7 +2016,8 @@
       ],
       "explanation": "Правильно вживати «сім жінок» замість помилкового «семеро жінок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "семеро жінок\nсім жінок"
     },
     {
       "id": "err_0118",
@@ -1916,7 +2033,8 @@
       ],
       "explanation": "Правильно вживати «о восьмій годині» замість помилкового «в вісім годин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "в вісім годин\nо восьмій годині"
     },
     {
       "id": "err_0119",
@@ -1932,7 +2050,8 @@
       ],
       "explanation": "Правильно вживати «за десять хвилин до дев’ятої» замість помилкового «без десяти дев’ять».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "без десяти дев’ять\nза десять хвилин до дев’ятої"
     },
     {
       "id": "err_0120",
@@ -1948,7 +2067,8 @@
       ],
       "explanation": "Правильно вживати «навчатися музики» замість помилкового «навчатися музиці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "навчатися музиці\nнавчатися музики"
     },
     {
       "id": "err_0121",
@@ -1964,7 +2084,8 @@
       ],
       "explanation": "Правильно вживати «у різний час» замість помилкового «у різні часи».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "у різні часи\nу різний час"
     },
     {
       "id": "err_0122",
@@ -1980,7 +2101,8 @@
       ],
       "explanation": "Правильно вживати «зробімо висновок» замість помилкового «давайте зробимо вивод».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "давайте зробимо вивод\nзробімо висновок"
     },
     {
       "id": "err_0123",
@@ -1998,7 +2120,8 @@
       ],
       "explanation": "Правильно вживати «такий (той), що цікавить» замість помилкового «інтересуючий».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "інтересуючий\nтакий (той), що цікавить"
     },
     {
       "id": "err_0124",
@@ -2014,7 +2137,8 @@
       ],
       "explanation": "Правильно вживати «розбурхана річка» замість помилкового «вируюча річка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "вируюча річка\nрозбурхана річка"
     },
     {
       "id": "err_0125",
@@ -2030,7 +2154,8 @@
       ],
       "explanation": "Правильно вживати «вступити до інституту» замість помилкового «вступити в інститут».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "вступити в інститут\nвступити до інституту"
     },
     {
       "id": "err_0126",
@@ -2049,7 +2174,8 @@
       ],
       "explanation": "Правильно вживати «повною (значною, вирішальною) мірою» замість помилкового «у повній мірі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "у повній мірі\nповною (значною, вирішальною) мірою"
     },
     {
       "id": "err_0127",
@@ -2067,7 +2193,8 @@
       ],
       "explanation": "Правильно вживати «учитель за професією (фахом)» замість помилкового «учитель по професії».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "учитель по професії\nучитель за професією (фахом)"
     },
     {
       "id": "err_0128",
@@ -2083,7 +2210,8 @@
       ],
       "explanation": "Правильно вживати «відповідно до інструкції» замість помилкового «у відповідності з інструкцією».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "у відповідності з інструкцією\nвідповідно до інструкції"
     },
     {
       "id": "err_0129",
@@ -2099,7 +2227,8 @@
       ],
       "explanation": "Правильно вживати «за допомогою» замість помилкового «при допомозі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "при допомозі\nза допомогою"
     },
     {
       "id": "err_0130",
@@ -2117,7 +2246,8 @@
       ],
       "explanation": "Правильно вживати «досягнути (досягти) успіху» замість помилкового «добитися успіху».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "добитися успіху\nдосягнути (досягти) успіху"
     },
     {
       "id": "err_0131",
@@ -2133,7 +2263,8 @@
       ],
       "explanation": "Правильно вживати «навчатися чогось» замість помилкового «навчатися чомусь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "навчатися чомусь\nнавчатися чогось"
     },
     {
       "id": "err_0132",
@@ -2149,7 +2280,8 @@
       ],
       "explanation": "Правильно вживати «доглядати когось» замість помилкового «доглядати за ким».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "доглядати за ким\nдоглядати когось"
     },
     {
       "id": "err_0133",
@@ -2165,7 +2297,8 @@
       ],
       "explanation": "Правильно вживати «не забаритися» замість помилкового «не змусити довго на себе чекати».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "не змусити довго на себе чекати\nне забаритися"
     },
     {
       "id": "err_0134",
@@ -2181,7 +2314,8 @@
       ],
       "explanation": "Правильно вживати «глумитися з кого» замість помилкового «глумитися над ким».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "глумитися над ким\nглумитися з кого"
     },
     {
       "id": "err_0135",
@@ -2197,7 +2331,8 @@
       ],
       "explanation": "Правильно вживати «у будь-якому разі» замість помилкового «в любому разі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "в любому разі\nу будь-якому разі"
     },
     {
       "id": "err_0136",
@@ -2213,7 +2348,8 @@
       ],
       "explanation": "Правильно вживати «недбало ставитись» замість помилкового «халатно відноситись».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "халатно відноситись\nнедбало ставитись"
     },
     {
       "id": "err_0137",
@@ -2229,7 +2365,8 @@
       ],
       "explanation": "Правильно вживати «через погоду» замість помилкового «із-за погоди».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "із-за погоди\nчерез погоду"
     },
     {
       "id": "err_0138",
@@ -2245,7 +2382,8 @@
       ],
       "explanation": "Правильно вживати «за прикладом» замість помилкового «по прикладу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "по прикладу\nза прикладом"
     },
     {
       "id": "err_0139",
@@ -2261,7 +2399,8 @@
       ],
       "explanation": "Правильно вживати «розповідати про сусідів» замість помилкового «розповідати за сусідів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "розповідати за сусідів\nрозповідати про сусідів"
     },
     {
       "id": "err_0140",
@@ -2277,7 +2416,8 @@
       ],
       "explanation": "Правильно вживати «пройде успішно» замість помилкового «пройде вдало».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "пройде вдало\nпройде успішно"
     },
     {
       "id": "err_0141",
@@ -2293,7 +2433,8 @@
       ],
       "explanation": "Правильно вживати «з різних причин» замість помилкового «по різних причинах».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "по різних причинах\nз різних причин"
     },
     {
       "id": "err_0142",
@@ -2309,7 +2450,8 @@
       ],
       "explanation": "Правильно вживати «розташований на вулиці» замість помилкового «розташований по вулиці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "розташований по вулиці\nрозташований на вулиці"
     },
     {
       "id": "err_0143",
@@ -2325,7 +2467,8 @@
       ],
       "explanation": "Правильно вживати «справедливо вважають» замість помилкового «по праву вважають».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "по праву вважають\nсправедливо вважають"
     },
     {
       "id": "err_0144",
@@ -2343,7 +2486,8 @@
       ],
       "explanation": "Правильно вживати «консультації з питань (проблем)» замість помилкового «консультації по питанням».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "консультації по питанням\nконсультації з питань (проблем)"
     },
     {
       "id": "err_0145",
@@ -2359,7 +2503,8 @@
       ],
       "explanation": "Правильно вживати «пам’ятка архітектури» замість помилкового «пам’ятник архітектури».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "пам’ятник архітектури\nпам’ятка архітектури"
     },
     {
       "id": "err_0146",
@@ -2375,7 +2520,8 @@
       ],
       "explanation": "Правильно вживати «замовити телефоном» замість помилкового «заказати по телефону».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "заказати по телефону\nзамовити телефоном"
     },
     {
       "id": "err_0147",
@@ -2391,7 +2537,8 @@
       ],
       "explanation": "Правильно вживати «старші за віком відвідувачі» замість помилкового «старші по віку відвідувачі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "старші по віку відвідувачі\nстарші за віком відвідувачі"
     },
     {
       "id": "err_0148",
@@ -2407,7 +2554,8 @@
       ],
       "explanation": "Правильно вживати «за ініціативою» замість помилкового «по ініціативі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "по ініціативі\nза ініціативою"
     },
     {
       "id": "err_0149",
@@ -2423,7 +2571,8 @@
       ],
       "explanation": "Правильно вживати «сестро Тетяно» замість помилкового «сестро Тетяна».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "сестро Тетяна\nсестро Тетяно"
     },
     {
       "id": "err_0150",
@@ -2439,7 +2588,8 @@
       ],
       "explanation": "Правильно вживати «поставити питання» замість помилкового «задати питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "задати питання\nпоставити питання"
     },
     {
       "id": "err_0151",
@@ -2455,7 +2605,8 @@
       ],
       "explanation": "Правильно вживати «зустріньмося» замість помилкового «давай зустрінемось».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "давай зустрінемось\nзустріньмося"
     },
     {
       "id": "err_0152",
@@ -2471,7 +2622,8 @@
       ],
       "explanation": "Правильно вживати «втручатися в чужі справи» замість помилкового «вмішуватися до чужих справ».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "вмішуватися до чужих справ\nвтручатися в чужі справи"
     },
     {
       "id": "err_0153",
@@ -2487,7 +2639,8 @@
       ],
       "explanation": "Правильно вживати «трапляються помилки» замість помилкового «зустрічаються помилки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "зустрічаються помилки\nтрапляються помилки"
     },
     {
       "id": "err_0154",
@@ -2503,7 +2656,8 @@
       ],
       "explanation": "Правильно вживати «потелефонувати другові» замість помилкового «подзвонити другові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "подзвонити другові\nпотелефонувати другові"
     },
     {
       "id": "err_0155",
@@ -2519,7 +2673,8 @@
       ],
       "explanation": "Правильно вживати «вступити на навчання» замість помилкового «поступити навчатися».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "поступити навчатися\nвступити на навчання"
     },
     {
       "id": "err_0156",
@@ -2535,7 +2690,8 @@
       ],
       "explanation": "Правильно вживати «програмовий матеріал» замість помилкового «програмний матеріал».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "програмний матеріал\nпрограмовий матеріал"
     },
     {
       "id": "err_0157",
@@ -2551,7 +2707,8 @@
       ],
       "explanation": "Правильно вживати «через хворобу» замість помилкового «із-за хвороби».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "із-за хвороби\nчерез хворобу"
     },
     {
       "id": "err_0158",
@@ -2567,7 +2724,8 @@
       ],
       "explanation": "Правильно вживати «надолужувати пропущене» замість помилкового «наздоганяти пропущене».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "наздоганяти пропущене\nнадолужувати пропущене"
     },
     {
       "id": "err_0159",
@@ -2583,7 +2741,8 @@
       ],
       "explanation": "Правильно вживати «заклади освіти» замість помилкового «учбові заклади».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "учбові заклади\nзаклади освіти"
     },
     {
       "id": "err_0160",
@@ -2599,7 +2758,8 @@
       ],
       "explanation": "Правильно вживати «особистий вибір» замість помилкового «особовий вибір».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "особовий вибір\nособистий вибір"
     },
     {
       "id": "err_0161",
@@ -2615,7 +2775,8 @@
       ],
       "explanation": "Правильно вживати «музична школа» замість помилкового «музикальна школа».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "музикальна школа\nмузична школа"
     },
     {
       "id": "err_0162",
@@ -2631,7 +2792,8 @@
       ],
       "explanation": "Правильно вживати «під час проведення екскурсії» замість помилкового «у процесі проведення екскурсії».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "у процесі проведення екскурсії\nпід час проведення екскурсії"
     },
     {
       "id": "err_0163",
@@ -2649,7 +2811,8 @@
       ],
       "explanation": "Правильно вживати «впадати в око (у вічі)» замість помилкового «кидатися в очі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "кидатися в очі\nвпадати в око (у вічі)"
     },
     {
       "id": "err_0164",
@@ -2665,7 +2828,8 @@
       ],
       "explanation": "Правильно вживати «експонати ХХ століття» замість помилкового «експонати ХХ віку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "експонати ХХ віку\nекспонати ХХ століття"
     },
     {
       "id": "err_0165",
@@ -2681,7 +2845,8 @@
       ],
       "explanation": "Правильно вживати «захід» замість помилкового «міроприємство».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "міроприємство\nзахід"
     },
     {
       "id": "err_0166",
@@ -2697,7 +2862,8 @@
       ],
       "explanation": "Правильно вживати «засідання шкільного гуртка» замість помилкового «збори шкільного гуртка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "збори шкільного гуртка\nзасідання шкільного гуртка"
     },
     {
       "id": "err_0167",
@@ -2713,7 +2879,8 @@
       ],
       "explanation": "Правильно вживати «душі не чути» замість помилкового «душі не чаяти».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "душі не чаяти\nдуші не чути"
     },
     {
       "id": "err_0168",
@@ -2731,7 +2898,8 @@
       ],
       "explanation": "Правильно вживати «згідно з планом (відповідно до плану)» замість помилкового «згідно до плану».",
       "isUkrainian": true,
-      "source": "Textbook Gr 11 (glazova)"
+      "source": "Textbook Gr 11 (glazova)",
+      "sourceRow": "згідно до плану\nзгідно з планом (відповідно до плану)"
     },
     {
       "id": "err_0169",
@@ -2747,7 +2915,8 @@
       ],
       "explanation": "Правильно вживати «дані збігаються» замість помилкового «дані співпадають».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "дані співпадають дані збігаються"
     },
     {
       "id": "err_0170",
@@ -2765,7 +2934,8 @@
       ],
       "explanation": "Правильно вживати «протягом (упродовж) року» замість помилкового «на протязі року».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "на протязі року протягом (упродовж) року"
     },
     {
       "id": "err_0171",
@@ -2781,7 +2951,8 @@
       ],
       "explanation": "Правильно вживати «щодо цього» замість помилкового «на рахунок цього».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "на рахунок цього щодо цього"
     },
     {
       "id": "err_0172",
@@ -2797,7 +2968,8 @@
       ],
       "explanation": "Правильно вживати «дотримуватися правил» замість помилкового «притримуватися правил».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "притримуватися правил дотримуватися правил"
     },
     {
       "id": "err_0173",
@@ -2813,7 +2985,8 @@
       ],
       "explanation": "Правильно вживати «навести приклад» замість помилкового «привести приклад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "привести приклад навести приклад"
     },
     {
       "id": "err_0174",
@@ -2829,7 +3002,8 @@
       ],
       "explanation": "Правильно вживати «підвищувати рівень знань» замість помилкового «покращувати рівень знань».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "покращувати рівень знань підвищувати рівень знань"
     },
     {
       "id": "err_0175",
@@ -2845,7 +3019,8 @@
       ],
       "explanation": "Правильно вживати «у грудні» замість помилкового «у грудні місяці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "у грудні місяці у грудні"
     },
     {
       "id": "err_0176",
@@ -2861,7 +3036,8 @@
       ],
       "explanation": "Правильно вживати «сувенір» замість помилкового «пам’ятний сувенір».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "пам’ятний сувенір сувенір"
     },
     {
       "id": "err_0177",
@@ -2877,7 +3053,8 @@
       ],
       "explanation": "Правильно вживати «кілька років тому» замість помилкового «кілька років тому назад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "кілька років тому назад кілька років тому"
     },
     {
       "id": "err_0178",
@@ -2893,7 +3070,8 @@
       ],
       "explanation": "Правильно вживати «сміятися з когось» замість помилкового «сміятися над кимось».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "сміятися над кимось сміятися з когось"
     },
     {
       "id": "err_0179",
@@ -2909,7 +3087,8 @@
       ],
       "explanation": "Правильно вживати «знущатися з когось» замість помилкового «знущатися над кимось».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "знущатися над кимось знущатися з когось"
     },
     {
       "id": "err_0180",
@@ -2925,7 +3104,8 @@
       ],
       "explanation": "Правильно вживати «властивий птахам» замість помилкового «властивий для птахів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "властивий для птахів властивий птахам"
     },
     {
       "id": "err_0181",
@@ -2943,7 +3123,8 @@
       ],
       "explanation": "Правильно вживати «незважаючи на (попри) труднощі» замість помилкового «не дивлячись на труднощі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "не дивлячись на труднощі незважаючи на (попри) труднощі"
     },
     {
       "id": "err_0182",
@@ -2961,7 +3142,8 @@
       ],
       "explanation": "Правильно вживати «у разі потреби, за потреби» замість помилкового «у випадку потреби».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "у випадку потреби у разі потреби, за потреби"
     },
     {
       "id": "err_0183",
@@ -2977,7 +3159,8 @@
       ],
       "explanation": "Правильно вживати «колишня назва» замість помилкового «бувша назва».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "бувша назва колишня назва"
     },
     {
       "id": "err_0184",
@@ -2993,7 +3176,8 @@
       ],
       "explanation": "Правильно вживати «зробити таким чином» замість помилкового «зробити наступним чином».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "зробити наступним чином зробити таким чином"
     },
     {
       "id": "err_0185",
@@ -3009,7 +3193,8 @@
       ],
       "explanation": "Правильно вживати «нам не пощастило» замість помилкового «нам не повезло».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "нам не повезло нам не пощастило"
     },
     {
       "id": "err_0186",
@@ -3025,7 +3210,8 @@
       ],
       "explanation": "Правильно вживати «складати іспит» замість помилкового «здавати іспит».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "здавати іспит складати іспит"
     },
     {
       "id": "err_0187",
@@ -3041,7 +3227,8 @@
       ],
       "explanation": "Правильно вживати «у будь-якому разі» замість помилкового «у любому випадку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "у любому випадку у будь-якому разі"
     },
     {
       "id": "err_0188",
@@ -3057,7 +3244,8 @@
       ],
       "explanation": "Правильно вживати «поважати одне одного» замість помилкового «поважати друг друга».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "поважати друг друга поважати одне одного"
     },
     {
       "id": "err_0189",
@@ -3073,7 +3261,8 @@
       ],
       "explanation": "Правильно вживати «зазнати поразки» замість помилкового «потерпіти поразку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "потерпіти поразку зазнати поразки"
     },
     {
       "id": "err_0190",
@@ -3089,7 +3278,8 @@
       ],
       "explanation": "Правильно вживати «зволікати з рішенням» замість помилкового «затягувати рішення».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "затягувати рішення зволікати з рішенням"
     },
     {
       "id": "err_0191",
@@ -3105,7 +3295,8 @@
       ],
       "explanation": "Правильно вживати «порушити питання» замість помилкового «підняти питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "підняти питання порушити питання"
     },
     {
       "id": "err_0192",
@@ -3121,7 +3312,8 @@
       ],
       "explanation": "Правильно вживати «уживати заходів» замість помилкового «приймати міри».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "приймати міри уживати заходів"
     },
     {
       "id": "err_0193",
@@ -3137,7 +3329,8 @@
       ],
       "explanation": "Правильно вживати «наступна зупинка» замість помилкового «слідуюча зупинка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "слідуюча зупинка наступна зупинка"
     },
     {
       "id": "err_0194",
@@ -3153,7 +3346,8 @@
       ],
       "explanation": "Правильно вживати «мийні засоби» замість помилкового «миючі засоби».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "миючі засоби мийні засоби"
     },
     {
       "id": "err_0195",
@@ -3169,7 +3363,8 @@
       ],
       "explanation": "Правильно вживати «усі охочі» замість помилкового «усі бажаючі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "усі бажаючі усі охочі"
     },
     {
       "id": "err_0196",
@@ -3185,7 +3380,8 @@
       ],
       "explanation": "Правильно вживати «полетіти до Лондона» замість помилкового «улетіти в Лондон».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "улетіти в Лондон полетіти до Лондона"
     },
     {
       "id": "err_0197",
@@ -3201,7 +3397,8 @@
       ],
       "explanation": "Правильно вживати «поїхати до моря» замість помилкового «уїхати на море».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "уїхати на море поїхати до моря"
     },
     {
       "id": "err_0198",
@@ -3217,7 +3414,8 @@
       ],
       "explanation": "Правильно вживати «пішов по хліб» замість помилкового «уйшов за хлібом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "уйшов за хлібом пішов по хліб"
     },
     {
       "id": "err_0199",
@@ -3233,7 +3431,8 @@
       ],
       "explanation": "Правильно вживати «не звертати уваги» замість помилкового «не звертати увагу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "не звертати увагу не звертати уваги"
     },
     {
       "id": "err_0200",
@@ -3251,7 +3450,8 @@
       ],
       "explanation": "Правильно вживати «ви маєте рацію, ваша правда» замість помилкового «ви праві».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (avramenko)"
+      "source": "Textbook Gr 5 (avramenko)",
+      "sourceRow": "ви праві ви маєте рацію, ваша правда"
     },
     {
       "id": "err_0201",
@@ -3267,7 +3467,8 @@
       ],
       "explanation": "Правильно вживати «розмовляти українською мовою» замість помилкового «розмовляти на українській мові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "розмовляти на українській мові\nрозмовляти українською мовою"
     },
     {
       "id": "err_0202",
@@ -3283,7 +3484,8 @@
       ],
       "explanation": "Правильно вживати «вимова голосних звуків» замість помилкового «вимова голосних букв».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "вимова голосних букв\nвимова голосних звуків"
     },
     {
       "id": "err_0203",
@@ -3299,7 +3501,8 @@
       ],
       "explanation": "Правильно вживати «опанувати українську мову» замість помилкового «опанувати українською мовою».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "опанувати українською мовою\nопанувати українську мову"
     },
     {
       "id": "err_0204",
@@ -3315,7 +3518,8 @@
       ],
       "explanation": "Правильно вживати «навчатися математики» замість помилкового «навчатися математиці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "навчатися математиці\nнавчатися математики"
     },
     {
       "id": "err_0205",
@@ -3331,7 +3535,8 @@
       ],
       "explanation": "Правильно вживати «опановувати мову» замість помилкового «опановувати мовою».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "опановувати мовою\nопановувати мову"
     },
     {
       "id": "err_0206",
@@ -3347,7 +3552,8 @@
       ],
       "explanation": "Правильно вживати «прейскурант» замість помилкового «прейскурант цін».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "прейскурант цін\nпрейскурант"
     },
     {
       "id": "err_0207",
@@ -3363,7 +3569,8 @@
       ],
       "explanation": "Правильно вживати «вакансія» замість помилкового «вільна вакансія».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "вільна вакансія\nвакансія"
     },
     {
       "id": "err_0208",
@@ -3379,7 +3586,8 @@
       ],
       "explanation": "Правильно вживати «порушувати питання» замість помилкового «піднімати питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "піднімати питання\nпорушувати питання"
     },
     {
       "id": "err_0209",
@@ -3395,7 +3603,8 @@
       ],
       "explanation": "Правильно вживати «скасувати рішення» замість помилкового «відмінити рішення».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "відмінити рішення\nскасувати рішення"
     },
     {
       "id": "err_0210",
@@ -3411,7 +3620,8 @@
       ],
       "explanation": "Правильно вживати «барліг» замість помилкового «ведмежий барліг».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "ведмежий барліг\nбарліг"
     },
     {
       "id": "err_0211",
@@ -3427,7 +3637,8 @@
       ],
       "explanation": "Правильно вживати «завдяки наполегливості» замість помилкового «дякуючи наполегливості».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "дякуючи наполегливості\nзавдяки наполегливості"
     },
     {
       "id": "err_0212",
@@ -3443,7 +3654,8 @@
       ],
       "explanation": "Правильно вживати «полетіти у вирій» замість помилкового «улетіти в теплі краї».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "улетіти в теплі краї\nполетіти у вирій"
     },
     {
       "id": "err_0213",
@@ -3459,7 +3671,8 @@
       ],
       "explanation": "Правильно вживати «розгорнути журнал» замість помилкового «відкрити журнал».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "відкрити журнал\nрозгорнути журнал"
     },
     {
       "id": "err_0214",
@@ -3478,7 +3691,8 @@
       ],
       "explanation": "Правильно вживати «слабке (вразливе) місце, ахіллесова п’ята» замість помилкового «уязвиме місце».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "уязвиме місце\nслабке (вразливе) місце, ахіллесова п’ята"
     },
     {
       "id": "err_0215",
@@ -3494,7 +3708,8 @@
       ],
       "explanation": "Правильно вживати «колишній колега» замість помилкового «бувший колега».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "бувший колега\nколишній колега"
     },
     {
       "id": "err_0216",
@@ -3510,7 +3725,8 @@
       ],
       "explanation": "Правильно вживати «здобути освіту» замість помилкового «отримати освіту».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "отримати освіту\nздобути освіту"
     },
     {
       "id": "err_0217",
@@ -3528,7 +3744,8 @@
       ],
       "explanation": "Правильно вживати «протягом (упродовж) години» замість помилкового «на протязі години».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "на протязі години\nпротягом (упродовж) години"
     },
     {
       "id": "err_0218",
@@ -3544,7 +3761,8 @@
       ],
       "explanation": "Правильно вживати «сміятися з друга» замість помилкового «сміятися над другом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "сміятися над другом\nсміятися з друга"
     },
     {
       "id": "err_0219",
@@ -3562,7 +3780,8 @@
       ],
       "explanation": "Правильно вживати «довкілля, навколишнє середовище» замість помилкового «оточуюче середовище».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "оточуюче середовище\nдовкілля, навколишнє середовище"
     },
     {
       "id": "err_0220",
@@ -3578,7 +3797,8 @@
       ],
       "explanation": "Правильно вживати «колишні учні» замість помилкового «бувші учні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "бувші учні\nколишні учні"
     },
     {
       "id": "err_0221",
@@ -3594,7 +3814,8 @@
       ],
       "explanation": "Правильно вживати «щомісячна оплата» замість помилкового «помісячна оплата».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "помісячна оплата\nщомісячна оплата"
     },
     {
       "id": "err_0222",
@@ -3610,7 +3831,8 @@
       ],
       "explanation": "Правильно вживати «сторожкий сон» замість помилкового «чуткий сон».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "чуткий сон\nсторожкий сон"
     },
     {
       "id": "err_0223",
@@ -3626,7 +3848,8 @@
       ],
       "explanation": "Правильно вживати «колишні однокласники» замість помилкового «бувші однокласники».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "бувші однокласники\nколишні однокласники"
     },
     {
       "id": "err_0224",
@@ -3642,7 +3865,8 @@
       ],
       "explanation": "Правильно вживати «наступне питання» замість помилкового «слідуюче питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "слідуюче питання\nнаступне питання"
     },
     {
       "id": "err_0225",
@@ -3658,7 +3882,8 @@
       ],
       "explanation": "Правильно вживати «завширшки чотири метри» замість помилкового «шириною чотири метри».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "шириною чотири метри\nзавширшки чотири метри"
     },
     {
       "id": "err_0226",
@@ -3674,7 +3899,8 @@
       ],
       "explanation": "Правильно вживати «заввишки пів сантиметра» замість помилкового «висотою пів сантиметра».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "висотою пів сантиметра\nзаввишки пів сантиметра"
     },
     {
       "id": "err_0227",
@@ -3690,7 +3916,8 @@
       ],
       "explanation": "Правильно вживати «завдовжки сім міліметрів» замість помилкового «довжиною сім міліметрів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "довжиною сім міліметрів\nзавдовжки сім міліметрів"
     },
     {
       "id": "err_0228",
@@ -3706,7 +3933,8 @@
       ],
       "explanation": "Правильно вживати «близько трьох кілометрів» замість помилкового «біля трьох кілометрів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "біля трьох кілометрів\nблизько трьох кілометрів"
     },
     {
       "id": "err_0229",
@@ -3722,7 +3950,8 @@
       ],
       "explanation": "Правильно вживати «сім метрів за секунду» замість помилкового «сім метрів у секунду».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "сім метрів у секунду\nсім метрів за секунду"
     },
     {
       "id": "err_0230",
@@ -3738,7 +3967,8 @@
       ],
       "explanation": "Правильно вживати «з Першим вересня» замість помилкового «з Першим вересням».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "з Першим вересням\nз Першим вересня"
     },
     {
       "id": "err_0231",
@@ -3754,7 +3984,8 @@
       ],
       "explanation": "Правильно вживати «десяте лютого» замість помилкового «десяте люте».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "десяте люте\nдесяте лютого"
     },
     {
       "id": "err_0232",
@@ -3772,7 +4003,8 @@
       ],
       "explanation": "Правильно вживати «свій внесок / власний внесок» замість помилкового «свій власний внесок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "свій власний внесок\nсвій внесок / власний внесок"
     },
     {
       "id": "err_0233",
@@ -3788,7 +4020,8 @@
       ],
       "explanation": "Правильно вживати «прийти іншим разом» замість помилкового «прийти в другий раз».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "прийти в другий раз\nприйти іншим разом"
     },
     {
       "id": "err_0234",
@@ -3804,7 +4037,8 @@
       ],
       "explanation": "Правильно вживати «порушити такі питання» замість помилкового «порушити наступні питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "порушити наступні питання\nпорушити такі питання"
     },
     {
       "id": "err_0235",
@@ -3820,7 +4054,8 @@
       ],
       "explanation": "Правильно вживати «витривалий поні» замість помилкового «витривале поні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "витривале поні\nвитривалий поні"
     },
     {
       "id": "err_0236",
@@ -3836,7 +4071,8 @@
       ],
       "explanation": "Правильно вживати «розгорнути підручник» замість помилкового «розкрити підручник».",
       "isUkrainian": true,
-      "source": "Textbook Gr 6 (avramenko)"
+      "source": "Textbook Gr 6 (avramenko)",
+      "sourceRow": "розкрити підручник\nрозгорнути підручник"
     },
     {
       "id": "err_0237",
@@ -3852,7 +4088,8 @@
       ],
       "explanation": "Правильно вживати «ознайомитися з прейскурантом» замість помилкового «ознайомитися з прейскурантом цін».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "ознайомитися з прейскурантом цін\nознайомитися з прейскурантом"
     },
     {
       "id": "err_0238",
@@ -3868,7 +4105,8 @@
       ],
       "explanation": "Правильно вживати «зустрітися в травні» замість помилкового «зустрітися в травні місяці».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "зустрітися в травні місяці\nзустрітися в травні"
     },
     {
       "id": "err_0239",
@@ -3884,7 +4122,8 @@
       ],
       "explanation": "Правильно вживати «підніматися сходами» замість помилкового «підніматися сходами вгору».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "підніматися сходами вгору\nпідніматися сходами"
     },
     {
       "id": "err_0240",
@@ -3900,7 +4139,8 @@
       ],
       "explanation": "Правильно вживати «мати успіх» замість помилкового «користуватися успіхом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "користуватися успіхом\nмати успіх"
     },
     {
       "id": "err_0241",
@@ -3916,7 +4156,8 @@
       ],
       "explanation": "Правильно вживати «зволікати з лікуванням» замість помилкового «затягувати лікування».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "затягувати лікування\nзволікати з лікуванням"
     },
     {
       "id": "err_0242",
@@ -3932,7 +4173,8 @@
       ],
       "explanation": "Правильно вживати «перебувати в Черкасах» замість помилкового «знаходитися в Черкасах».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "знаходитися в Черкасах\nперебувати в Черкасах"
     },
     {
       "id": "err_0243",
@@ -3948,7 +4190,8 @@
       ],
       "explanation": "Правильно вживати «прищеплювати любов» замість помилкового «прививати любов».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "прививати любов\nприщеплювати любов"
     },
     {
       "id": "err_0244",
@@ -3964,7 +4207,8 @@
       ],
       "explanation": "Правильно вживати «наводити приклад» замість помилкового «приводити приклад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "приводити приклад\nнаводити приклад"
     },
     {
       "id": "err_0245",
@@ -3980,7 +4224,8 @@
       ],
       "explanation": "Правильно вживати «брати до уваги» замість помилкового «приймати до уваги».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "приймати до уваги\nбрати до уваги"
     },
     {
       "id": "err_0246",
@@ -3996,7 +4241,8 @@
       ],
       "explanation": "Правильно вживати «збіг обставин» замість помилкового «співпадіння обставин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "співпадіння обставин\nзбіг обставин"
     },
     {
       "id": "err_0247",
@@ -4012,7 +4258,8 @@
       ],
       "explanation": "Правильно вживати «виняток із правил» замість помилкового «виключення з правил».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "виключення з правил\nвиняток із правил"
     },
     {
       "id": "err_0248",
@@ -4028,7 +4275,8 @@
       ],
       "explanation": "Правильно вживати «завдяки допомозі» замість помилкового «дякуючи допомозі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "дякуючи допомозі\nзавдяки допомозі"
     },
     {
       "id": "err_0249",
@@ -4046,7 +4294,8 @@
       ],
       "explanation": "Правильно вживати «у разі потреби, за потреби» замість помилкового «у випадку необхідності».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "у випадку необхідності\nу разі потреби, за потреби"
     },
     {
       "id": "err_0250",
@@ -4062,7 +4311,8 @@
       ],
       "explanation": "Правильно вживати «урвався терпець» замість помилкового «лопнуло терпіння».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "лопнуло терпіння\nурвався терпець"
     },
     {
       "id": "err_0251",
@@ -4078,7 +4328,8 @@
       ],
       "explanation": "Правильно вживати «у тексті трапляються помилки» замість помилкового «у тексті зустрічаються помилки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "у тексті зустрічаються помилки\nу тексті трапляються помилки"
     },
     {
       "id": "err_0252",
@@ -4096,7 +4347,8 @@
       ],
       "explanation": "Правильно вживати «вразливе / слабке місце» замість помилкового «уязвиме місце».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "уязвиме місце\nвразливе / слабке місце"
     },
     {
       "id": "err_0253",
@@ -4114,7 +4366,8 @@
       ],
       "explanation": "Правильно вживати «сьогодні, на сьогодні» замість помилкового «на сьогоднішній день».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "на сьогоднішній день\nсьогодні, на сьогодні"
     },
     {
       "id": "err_0254",
@@ -4134,7 +4387,8 @@
       ],
       "explanation": "Правильно вживати «тепер, нині, зараз, наразі» замість помилкового «на теперішній час».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "на теперішній час\nтепер, нині, зараз, наразі"
     },
     {
       "id": "err_0255",
@@ -4150,7 +4404,8 @@
       ],
       "explanation": "Правильно вживати «кидатися врозтіч» замість помилкового «бігти врозсипну».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "бігти врозсипну\nкидатися врозтіч"
     },
     {
       "id": "err_0256",
@@ -4166,7 +4421,8 @@
       ],
       "explanation": "Правильно вживати «квітневий капіж» замість помилкового «квітнева капель».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "квітнева капель\nквітневий капіж"
     },
     {
       "id": "err_0257",
@@ -4182,7 +4438,8 @@
       ],
       "explanation": "Правильно вживати «човгати ногами» замість помилкового «шаркати ногами».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "шаркати ногами\nчовгати ногами"
     },
     {
       "id": "err_0258",
@@ -4198,7 +4455,8 @@
       ],
       "explanation": "Правильно вживати «бути осторонь» замість помилкового «держатися в стороні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "держатися в стороні\nбути осторонь"
     },
     {
       "id": "err_0259",
@@ -4214,7 +4472,8 @@
       ],
       "explanation": "Правильно вживати «правильно сказати» замість помилкового «вірно сказати».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "вірно сказати\nправильно сказати"
     },
     {
       "id": "err_0260",
@@ -4232,7 +4491,8 @@
       ],
       "explanation": "Правильно вживати «кінець кінцем, урешті-решт» замість помилкового «у кінці кінців».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "у кінці кінців\nкінець кінцем, урешті-решт"
     },
     {
       "id": "err_0261",
@@ -4248,7 +4508,8 @@
       ],
       "explanation": "Правильно вживати «протягом дня» замість помилкового «на протязі дня».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "на протязі дня\nпротягом дня"
     },
     {
       "id": "err_0262",
@@ -4264,7 +4525,8 @@
       ],
       "explanation": "Правильно вживати «незважаючи на спеку» замість помилкового «не дивлячись на спеку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "не дивлячись на спеку\nнезважаючи на спеку"
     },
     {
       "id": "err_0263",
@@ -4280,7 +4542,8 @@
       ],
       "explanation": "Правильно вживати «упродовж усієї боротьби» замість помилкового «уздовж усієї боротьби».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "уздовж усієї боротьби\nупродовж усієї боротьби"
     },
     {
       "id": "err_0264",
@@ -4296,7 +4559,8 @@
       ],
       "explanation": "Правильно вживати «повідомлення за адресою» замість помилкового «повідомлення по адресу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "повідомлення по адресу\nповідомлення за адресою"
     },
     {
       "id": "err_0265",
@@ -4312,7 +4576,8 @@
       ],
       "explanation": "Правильно вживати «листуватися з другом» замість помилкового «переписуватися з другом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "переписуватися з другом\nлистуватися з другом"
     },
     {
       "id": "err_0266",
@@ -4330,7 +4595,8 @@
       ],
       "explanation": "Правильно вживати «надсилання по пошті / поштою» замість помилкового «пересилка по пошті».",
       "isUkrainian": true,
-      "source": "Textbook Gr 7 (avramenko)"
+      "source": "Textbook Gr 7 (avramenko)",
+      "sourceRow": "пересилка по пошті\nнадсилання по пошті / поштою"
     },
     {
       "id": "err_0267",
@@ -4346,7 +4612,8 @@
       ],
       "explanation": "Правильно вживати «навчатися мови» замість помилкового «навчатися мові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "навчатися мові\nнавчатися мови"
     },
     {
       "id": "err_0268",
@@ -4362,7 +4629,8 @@
       ],
       "explanation": "Правильно вживати «є засобом пізнання» замість помилкового «являється засобом пізнання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "являється засобом пізнання\nє засобом пізнання"
     },
     {
       "id": "err_0269",
@@ -4378,7 +4646,8 @@
       ],
       "explanation": "Правильно вживати «хворіти на грип» замість помилкового «хворіти грипом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "хворіти грипом\nхворіти на грип"
     },
     {
       "id": "err_0270",
@@ -4394,7 +4663,8 @@
       ],
       "explanation": "Правильно вживати «зраджувати товариша» замість помилкового «зраджувати товаришу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "зраджувати товаришу\nзраджувати товариша"
     },
     {
       "id": "err_0271",
@@ -4410,7 +4680,8 @@
       ],
       "explanation": "Правильно вживати «уживати заходів» замість помилкового «уживати заходи».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "уживати заходи\nуживати заходів"
     },
     {
       "id": "err_0272",
@@ -4426,7 +4697,8 @@
       ],
       "explanation": "Правильно вживати «дякувати другові» замість помилкового «дякувати друга».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "дякувати друга\nдякувати другові"
     },
     {
       "id": "err_0273",
@@ -4442,7 +4714,8 @@
       ],
       "explanation": "Правильно вживати «близько ста відтінків» замість помилкового «біля ста відтінків».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "біля ста відтінків\nблизько ста відтінків"
     },
     {
       "id": "err_0274",
@@ -4458,7 +4731,8 @@
       ],
       "explanation": "Правильно вживати «барви осіннього парку» замість помилкового «фарби осіннього парку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "фарби осіннього парку\nбарви осіннього парку"
     },
     {
       "id": "err_0275",
@@ -4474,7 +4748,8 @@
       ],
       "explanation": "Правильно вживати «запобігти пожежі» замість помилкового «попередити пожежу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "попередити пожежу\nзапобігти пожежі"
     },
     {
       "id": "err_0276",
@@ -4492,7 +4767,8 @@
       ],
       "explanation": "Правильно вживати «мати назву, називатися» замість помилкового «носити назву».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "носити назву\nмати назву, називатися"
     },
     {
       "id": "err_0277",
@@ -4508,7 +4784,8 @@
       ],
       "explanation": "Правильно вживати «подорожувати різними країнами» замість помилкового «подорожувати по різним країнам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "подорожувати по різним країнам\nподорожувати різними країнами"
     },
     {
       "id": "err_0278",
@@ -4524,7 +4801,8 @@
       ],
       "explanation": "Правильно вживати «тисяча років тому» замість помилкового «тисяча років тому назад».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "тисяча років тому назад\nтисяча років тому"
     },
     {
       "id": "err_0279",
@@ -4540,7 +4818,8 @@
       ],
       "explanation": "Правильно вживати «численні випадки» замість помилкового «багаточисленні випадки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "багаточисленні випадки\nчисленні випадки"
     },
     {
       "id": "err_0280",
@@ -4556,7 +4835,8 @@
       ],
       "explanation": "Правильно вживати «нечисленні порушення» замість помилкового «малочисленні порушення».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "малочисленні порушення\nнечисленні порушення"
     },
     {
       "id": "err_0281",
@@ -4572,7 +4852,8 @@
       ],
       "explanation": "Правильно вживати «розмовляю іспанською мовою» замість помилкового «розмовляю на іспанській мові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "розмовляю на іспанській мові\nрозмовляю іспанською мовою"
     },
     {
       "id": "err_0282",
@@ -4588,7 +4869,8 @@
       ],
       "explanation": "Правильно вживати «позбутися поганої звички» замість помилкового «позбутися від поганої звички».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "позбутися від поганої звички\nпозбутися поганої звички"
     },
     {
       "id": "err_0283",
@@ -4604,7 +4886,8 @@
       ],
       "explanation": "Правильно вживати «це мене не стосується» замість помилкового «це до мене не стосується».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (avramenko)"
+      "source": "Textbook Gr 8 (avramenko)",
+      "sourceRow": "це до мене не стосується\nце мене не стосується"
     },
     {
       "id": "err_0284",
@@ -4620,7 +4903,8 @@
       ],
       "explanation": "Правильно вживати «який переходить дорогу» замість помилкового «переходячий дорогу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "переходячий дорогу\nякий переходить дорогу"
     },
     {
       "id": "err_0285",
@@ -4636,7 +4920,8 @@
       ],
       "explanation": "Правильно вживати «мийний засіб» замість помилкового «миючий засіб».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "миючий засіб\nмийний засіб"
     },
     {
       "id": "err_0286",
@@ -4652,7 +4937,8 @@
       ],
       "explanation": "Правильно вживати «опале листя» замість помилкового «опавше листя».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "опавше листя\nопале листя"
     },
     {
       "id": "err_0287",
@@ -4668,7 +4954,8 @@
       ],
       "explanation": "Правильно вживати «постарілий» замість помилкового «постарівший».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "постарівший\nпостарілий"
     },
     {
       "id": "err_0288",
@@ -4684,7 +4971,8 @@
       ],
       "explanation": "Правильно вживати «град, що випав» замість помилкового «випавший град».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "випавший град\nград, що випав"
     },
     {
       "id": "err_0289",
@@ -4700,7 +4988,8 @@
       ],
       "explanation": "Правильно вживати «неправильний номер» замість помилкового «невірний номер».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "невірний номер\nнеправильний номер"
     },
     {
       "id": "err_0290",
@@ -4716,7 +5005,8 @@
       ],
       "explanation": "Правильно вживати «зіставляти факти» замість помилкового «співставляти факти».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "співставляти факти\nзіставляти факти"
     },
     {
       "id": "err_0291",
@@ -4734,7 +5024,8 @@
       ],
       "explanation": "Правильно вживати «впадати в око (очі)» замість помилкового «кидатися в очі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "кидатися в очі\nвпадати в око (очі)"
     },
     {
       "id": "err_0292",
@@ -4750,7 +5041,8 @@
       ],
       "explanation": "Правильно вживати «брати участь» замість помилкового «приймати участь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "приймати участь\nбрати участь"
     },
     {
       "id": "err_0293",
@@ -4766,7 +5058,8 @@
       ],
       "explanation": "Правильно вживати «черговий у їдальні» замість помилкового «дєжурний у столовій».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "дєжурний у столовій\nчерговий у їдальні"
     },
     {
       "id": "err_0294",
@@ -4782,7 +5075,8 @@
       ],
       "explanation": "Правильно вживати «колишні випускники» замість помилкового «бувші випускники».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "бувші випускники\nколишні випускники"
     },
     {
       "id": "err_0295",
@@ -4798,7 +5092,8 @@
       ],
       "explanation": "Правильно вживати «змусив вивчити» замість помилкового «заставив вивчити».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "заставив вивчити\nзмусив вивчити"
     },
     {
       "id": "err_0296",
@@ -4814,7 +5109,8 @@
       ],
       "explanation": "Правильно вживати «довів теорему» замість помилкового «доказав теорему».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "доказав теорему\nдовів теорему"
     },
     {
       "id": "err_0297",
@@ -4830,7 +5126,8 @@
       ],
       "explanation": "Правильно вживати «написав два рядки» замість помилкового «написав дві стрічки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "написав дві стрічки\nнаписав два рядки"
     },
     {
       "id": "err_0298",
@@ -4846,7 +5143,8 @@
       ],
       "explanation": "Правильно вживати «не заважай писати» замість помилкового «не мішай писати».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "не мішай писати\nне заважай писати"
     },
     {
       "id": "err_0299",
@@ -4862,7 +5160,8 @@
       ],
       "explanation": "Правильно вживати «перегорніть сторінку» замість помилкового «переверніть сторінку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "переверніть сторінку\nперегорніть сторінку"
     },
     {
       "id": "err_0300",
@@ -4878,7 +5177,8 @@
       ],
       "explanation": "Правильно вживати «розгорніть зошит» замість помилкового «розкрийте зошит».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "розкрийте зошит\nрозгорніть зошит"
     },
     {
       "id": "err_0301",
@@ -4894,7 +5194,8 @@
       ],
       "explanation": "Правильно вживати «навчальний корпус» замість помилкового «учбовий корпус».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "учбовий корпус\nнавчальний корпус"
     },
     {
       "id": "err_0302",
@@ -4910,7 +5211,8 @@
       ],
       "explanation": "Правильно вживати «магазин відчинено» замість помилкового «магазин відкрито».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "магазин відкрито\nмагазин відчинено"
     },
     {
       "id": "err_0303",
@@ -4926,7 +5228,8 @@
       ],
       "explanation": "Правильно вживати «заберіть решту» замість помилкового «заберіть здачу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "заберіть здачу\nзаберіть решту"
     },
     {
       "id": "err_0304",
@@ -4942,7 +5245,8 @@
       ],
       "explanation": "Правильно вживати «давати гривню» замість помилкового «давати гривну».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "давати гривну\nдавати гривню"
     },
     {
       "id": "err_0305",
@@ -4958,7 +5262,8 @@
       ],
       "explanation": "Правильно вживати «купівля-продаж» замість помилкового «купля-продажа».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "купля-продажа\nкупівля-продаж"
     },
     {
       "id": "err_0306",
@@ -4974,7 +5279,8 @@
       ],
       "explanation": "Правильно вживати «зачиняйте двері» замість помилкового «закривайте двері».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "закривайте двері\nзачиняйте двері"
     },
     {
       "id": "err_0307",
@@ -4990,7 +5296,8 @@
       ],
       "explanation": "Правильно вживати «найдешевші товари» замість помилкового «самі дешеві товари».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "самі дешеві товари\nнайдешевші товари"
     },
     {
       "id": "err_0308",
@@ -5006,7 +5313,8 @@
       ],
       "explanation": "Правильно вживати «приватний магазин» замість помилкового «часний магазин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "часний магазин\nприватний магазин"
     },
     {
       "id": "err_0309",
@@ -5022,7 +5330,8 @@
       ],
       "explanation": "Правильно вживати «купіть сорочку» замість помилкового «купіть рубашку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "купіть рубашку\nкупіть сорочку"
     },
     {
       "id": "err_0310",
@@ -5038,7 +5347,8 @@
       ],
       "explanation": "Правильно вживати «загорніть у папір» замість помилкового «загорніть у бумагу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "загорніть у бумагу\nзагорніть у папір"
     },
     {
       "id": "err_0311",
@@ -5054,7 +5364,8 @@
       ],
       "explanation": "Правильно вживати «меблевий магазин» замість помилкового «мебельний магазин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "мебельний магазин\nмеблевий магазин"
     },
     {
       "id": "err_0312",
@@ -5070,7 +5381,8 @@
       ],
       "explanation": "Правильно вживати «взуттєвий магазин» замість помилкового «обувний магазин».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "обувний магазин\nвзуттєвий магазин"
     },
     {
       "id": "err_0313",
@@ -5086,7 +5398,8 @@
       ],
       "explanation": "Правильно вживати «тістечко з кремом» замість помилкового «пирожне з кремом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "пирожне з кремом\nтістечко з кремом"
     },
     {
       "id": "err_0314",
@@ -5102,7 +5415,8 @@
       ],
       "explanation": "Правильно вживати «суниці з лісу» замість помилкового «земляніка з лісу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "земляніка з лісу\nсуниці з лісу"
     },
     {
       "id": "err_0315",
@@ -5118,7 +5432,8 @@
       ],
       "explanation": "Правильно вживати «овочевий суп» замість помилкового «овощний суп».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "овощний суп\nовочевий суп"
     },
     {
       "id": "err_0316",
@@ -5134,7 +5449,8 @@
       ],
       "explanation": "Правильно вживати «гречана каша» замість помилкового «гречнева каша».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "гречнева каша\nгречана каша"
     },
     {
       "id": "err_0317",
@@ -5150,7 +5466,8 @@
       ],
       "explanation": "Правильно вживати «картопляне пюре» замість помилкового «картофельне пюре».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "картофельне пюре\nкартопляне пюре"
     },
     {
       "id": "err_0318",
@@ -5166,7 +5483,8 @@
       ],
       "explanation": "Правильно вживати «млинці з грибами» замість помилкового «блінчики з грибами».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "блінчики з грибами\nмлинці з грибами"
     },
     {
       "id": "err_0319",
@@ -5182,7 +5500,8 @@
       ],
       "explanation": "Правильно вживати «солоні огірки» замість помилкового «сольоні огірки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "сольоні огірки\nсолоні огірки"
     },
     {
       "id": "err_0320",
@@ -5198,7 +5517,8 @@
       ],
       "explanation": "Правильно вживати «печеня по-гуцульськи» замість помилкового «жаркоє по-гуцульськи».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "жаркоє по-гуцульськи\nпеченя по-гуцульськи"
     },
     {
       "id": "err_0321",
@@ -5214,7 +5534,8 @@
       ],
       "explanation": "Правильно вживати «пиріжки із сиром» замість помилкового «пиріжки з творогом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "пиріжки з творогом\nпиріжки із сиром"
     },
     {
       "id": "err_0322",
@@ -5230,7 +5551,8 @@
       ],
       "explanation": "Правильно вживати «соняшникова олія» замість помилкового «соняшникове масло».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "соняшникове масло\nсоняшникова олія"
     },
     {
       "id": "err_0323",
@@ -5246,7 +5568,8 @@
       ],
       "explanation": "Правильно вживати «смачна страва» замість помилкового «смачне блюдо».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "смачне блюдо\nсмачна страва"
     },
     {
       "id": "err_0324",
@@ -5262,7 +5585,8 @@
       ],
       "explanation": "Правильно вживати «повна склянка» замість помилкового «повний стакан».",
       "isUkrainian": true,
-      "source": "Textbook Gr 8 (zabolotnyi)"
+      "source": "Textbook Gr 8 (zabolotnyi)",
+      "sourceRow": "повний стакан\nповна склянка"
     },
     {
       "id": "err_0325",
@@ -5278,7 +5602,8 @@
       ],
       "explanation": "Правильно вживати «в Україні» замість помилкового «на Україні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "на Україні в Україні"
     },
     {
       "id": "err_0326",
@@ -5294,7 +5619,8 @@
       ],
       "explanation": "Правильно вживати «наймилозвучніший» замість помилкового «самий милозвучний».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "самий милозвучний наймилозвучніший"
     },
     {
       "id": "err_0327",
@@ -5310,7 +5636,8 @@
       ],
       "explanation": "Правильно вживати «смажити за рецептом» замість помилкового «жарити по рецепту».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "жарити по рецепту смажити за рецептом"
     },
     {
       "id": "err_0328",
@@ -5326,7 +5653,8 @@
       ],
       "explanation": "Правильно вживати «свіжий сир» замість помилкового «свіжий творог».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "свіжий творог свіжий сир"
     },
     {
       "id": "err_0329",
@@ -5344,7 +5672,8 @@
       ],
       "explanation": "Правильно вживати «барви/кольори осіннього лісу» замість помилкового «фарби осіннього лісу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "фарби осіннього лісу барви/кольори осіннього лісу"
     },
     {
       "id": "err_0330",
@@ -5360,7 +5689,8 @@
       ],
       "explanation": "Правильно вживати «найяскравіший» замість помилкового «самий яскравий».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "самий яскравий найяскравіший"
     },
     {
       "id": "err_0331",
@@ -5376,7 +5706,8 @@
       ],
       "explanation": "Правильно вживати «вищий за дерево» замість помилкового «вищий дерева».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "вищий дерева вищий за дерево"
     },
     {
       "id": "err_0332",
@@ -5392,7 +5723,8 @@
       ],
       "explanation": "Правильно вживати «щовівторка» замість помилкового «по вівторкам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "по вівторкам щовівторка"
     },
     {
       "id": "err_0333",
@@ -5408,7 +5740,8 @@
       ],
       "explanation": "Правильно вживати «ставити питання» замість помилкового «задавати питання».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "задавати питання ставити питання"
     },
     {
       "id": "err_0334",
@@ -5424,7 +5757,8 @@
       ],
       "explanation": "Правильно вживати «таємнича усмішка» замість помилкового «таємна усмішка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "таємна усмішка таємнича усмішка"
     },
     {
       "id": "err_0335",
@@ -5440,7 +5774,8 @@
       ],
       "explanation": "Правильно вживати «опанувати мову» замість помилкового «опанувати мовою».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "опанувати мовою опанувати мову"
     },
     {
       "id": "err_0336",
@@ -5456,7 +5791,8 @@
       ],
       "explanation": "Правильно вживати «посісти перше місце» замість помилкового «зайняти перше місце».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "зайняти перше місце посісти перше місце"
     },
     {
       "id": "err_0337",
@@ -5474,7 +5810,8 @@
       ],
       "explanation": "Правильно вживати «протягом (упродовж) місяця» замість помилкового «на протязі місяця».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "на протязі місяця протягом (упродовж) місяця"
     },
     {
       "id": "err_0338",
@@ -5490,7 +5827,8 @@
       ],
       "explanation": "Правильно вживати «нечисленні випадки» замість помилкового «малочисленні випадки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "малочисленні випадки нечисленні випадки"
     },
     {
       "id": "err_0339",
@@ -5506,7 +5844,8 @@
       ],
       "explanation": "Правильно вживати «відігравати роль у виборі» замість помилкового «грати роль у виборі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "грати роль у виборі відігравати роль у виборі"
     },
     {
       "id": "err_0340",
@@ -5522,7 +5861,8 @@
       ],
       "explanation": "Правильно вживати «тішить око» замість помилкового «радує око».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "радує око тішить око"
     },
     {
       "id": "err_0341",
@@ -5540,7 +5880,8 @@
       ],
       "explanation": "Правильно вживати «нам не пощастило (не поталанило)» замість помилкового «нам не повезло».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "нам не повезло нам не пощастило (не поталанило)"
     },
     {
       "id": "err_0342",
@@ -5556,7 +5897,8 @@
       ],
       "explanation": "Правильно вживати «увірвався терпець» замість помилкового «лопнуло терпіння».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "лопнуло терпіння увірвався терпець"
     },
     {
       "id": "err_0343",
@@ -5572,7 +5914,8 @@
       ],
       "explanation": "Правильно вживати «на колір і смак товариш не всяк» замість помилкового «на смак і колір товариша нема».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "на смак і колір товариша нема на колір і смак товариш не всяк"
     },
     {
       "id": "err_0344",
@@ -5588,7 +5931,8 @@
       ],
       "explanation": "Правильно вживати «завширшки два метри» замість помилкового «шириною два метра».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "шириною два метра завширшки два метри"
     },
     {
       "id": "err_0345",
@@ -5604,7 +5948,8 @@
       ],
       "explanation": "Правильно вживати «як музикант» замість помилкового «у якості музиканта».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "у якості музиканта як музикант"
     },
     {
       "id": "err_0346",
@@ -5620,7 +5965,8 @@
       ],
       "explanation": "Правильно вживати «відповідно до мелодії» замість помилкового «відповідно мелодії».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "відповідно мелодії відповідно до мелодії"
     },
     {
       "id": "err_0347",
@@ -5636,7 +5982,8 @@
       ],
       "explanation": "Правильно вживати «бити по клавішах» замість помилкового «бити по клавішам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "бити по клавішам бити по клавішах"
     },
     {
       "id": "err_0348",
@@ -5652,7 +5999,8 @@
       ],
       "explanation": "Правильно вживати «найніжніша мелодія» замість помилкового «сама ніжна мелодія».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "сама ніжна мелодія найніжніша мелодія"
     },
     {
       "id": "err_0349",
@@ -5668,7 +6016,8 @@
       ],
       "explanation": "Правильно вживати «мандрувати містами» замість помилкового «мандрувати по містам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "мандрувати по містам мандрувати містами"
     },
     {
       "id": "err_0350",
@@ -5684,7 +6033,8 @@
       ],
       "explanation": "Правильно вживати «перетинати дорогу» замість помилкового «пересікати дорогу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "пересікати дорогу перетинати дорогу"
     },
     {
       "id": "err_0351",
@@ -5700,7 +6050,8 @@
       ],
       "explanation": "Правильно вживати «поводитися відповідно до вимог» замість помилкового «поводитися відповідно вимог».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "поводитися відповідно вимог поводитися відповідно до вимог"
     },
     {
       "id": "err_0352",
@@ -5716,7 +6067,8 @@
       ],
       "explanation": "Правильно вживати «далека путь» замість помилкового «далекий путь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "далекий путь далека путь"
     },
     {
       "id": "err_0353",
@@ -5732,7 +6084,8 @@
       ],
       "explanation": "Правильно вживати «квартира з усіма вигодами» замість помилкового «квартира з усіма зручностями».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "квартира з усіма зручностями квартира з усіма вигодами"
     },
     {
       "id": "err_0354",
@@ -5748,7 +6101,8 @@
       ],
       "explanation": "Правильно вживати «гарний краєвид із вікна» замість помилкового «гарний вид із вікна».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "гарний вид із вікна гарний краєвид із вікна"
     },
     {
       "id": "err_0355",
@@ -5764,7 +6118,8 @@
       ],
       "explanation": "Правильно вживати «у цьому випадку» замість помилкового «у даному випадку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "у даному випадку у цьому випадку"
     },
     {
       "id": "err_0356",
@@ -5782,7 +6137,8 @@
       ],
       "explanation": "Правильно вживати «автобіографія, моя біографія» замість помилкового «моя автобіографія».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "моя автобіографія автобіографія, моя біографія"
     },
     {
       "id": "err_0357",
@@ -5798,7 +6154,8 @@
       ],
       "explanation": "Правильно вживати «у травні» замість помилкового «у місяці травні».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "у місяці травні у травні"
     },
     {
       "id": "err_0358",
@@ -5814,7 +6171,8 @@
       ],
       "explanation": "Правильно вживати «академічне веслування» замість помилкового «академічна гребля».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "академічна гребля академічне веслування"
     },
     {
       "id": "err_0359",
@@ -5830,7 +6188,8 @@
       ],
       "explanation": "Правильно вживати «стрибки з жердиною» замість помилкового «стрибки з шестом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "стрибки з шестом стрибки з жердиною"
     },
     {
       "id": "err_0360",
@@ -5846,7 +6205,8 @@
       ],
       "explanation": "Правильно вживати «щодня бігати» замість помилкового «щодня займатися бігом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "щодня займатися бігом щодня бігати"
     },
     {
       "id": "err_0361",
@@ -5862,7 +6222,8 @@
       ],
       "explanation": "Правильно вживати «перший у перегонах» замість помилкового «найперший у скачках».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "найперший у скачках перший у перегонах"
     },
     {
       "id": "err_0362",
@@ -5878,7 +6239,8 @@
       ],
       "explanation": "Правильно вживати «бути переможцем» замість помилкового «являтися переможцем».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "являтися переможцем бути переможцем"
     },
     {
       "id": "err_0363",
@@ -5894,7 +6256,8 @@
       ],
       "explanation": "Правильно вживати «властивий людині» замість помилкового «властивий для людини».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "властивий для людини властивий людині"
     },
     {
       "id": "err_0364",
@@ -5910,7 +6273,8 @@
       ],
       "explanation": "Правильно вживати «притаманний братові» замість помилкового «притаманний для брата».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "притаманний для брата притаманний братові"
     },
     {
       "id": "err_0365",
@@ -5926,7 +6290,8 @@
       ],
       "explanation": "Правильно вживати «характерний для когось» замість помилкового «характерний комусь».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "характерний комусь характерний для когось"
     },
     {
       "id": "err_0366",
@@ -5942,7 +6307,8 @@
       ],
       "explanation": "Правильно вживати «старший за батька» замість помилкового «старший батька».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "старший батька старший за батька"
     },
     {
       "id": "err_0367",
@@ -5958,7 +6324,8 @@
       ],
       "explanation": "Правильно вживати «опанувати себе» замість помилкового «опанувати собою».",
       "isUkrainian": true,
-      "source": "Textbook Gr 9 (avramenko)"
+      "source": "Textbook Gr 9 (avramenko)",
+      "sourceRow": "опанувати собою опанувати себе"
     },
     {
       "id": "err_0368",
@@ -5974,7 +6341,8 @@
       ],
       "explanation": "Правильно вживати «іти по хліб» замість помилкового «іти за хлібом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "іти за хлібом\nіти по хліб"
     },
     {
       "id": "err_0369",
@@ -5990,7 +6358,8 @@
       ],
       "explanation": "Правильно вживати «побігти по журнал» замість помилкового «побігти за журналом».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "побігти за журналом\nпобігти по журнал"
     },
     {
       "id": "err_0370",
@@ -6006,7 +6375,8 @@
       ],
       "explanation": "Правильно вживати «змагання з футболу» замість помилкового «змагання по футболу».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "змагання по футболу\nзмагання з футболу"
     },
     {
       "id": "err_0371",
@@ -6022,7 +6392,8 @@
       ],
       "explanation": "Правильно вживати «контрольна з історії» замість помилкового «контрольна по історії».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "контрольна по історії\nконтрольна з історії"
     },
     {
       "id": "err_0372",
@@ -6038,7 +6409,8 @@
       ],
       "explanation": "Правильно вживати «прочитати правильно» замість помилкового «прочитати вірно».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "прочитати вірно\nпрочитати правильно"
     },
     {
       "id": "err_0373",
@@ -6054,7 +6426,8 @@
       ],
       "explanation": "Правильно вживати «увімкнути світло» замість помилкового «включити світло».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "включити світло\nувімкнути світло"
     },
     {
       "id": "err_0374",
@@ -6070,7 +6443,8 @@
       ],
       "explanation": "Правильно вживати «відчиняти ворота» замість помилкового «відкривати ворота».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відкривати ворота\nвідчиняти ворота"
     },
     {
       "id": "err_0375",
@@ -6086,7 +6460,8 @@
       ],
       "explanation": "Правильно вживати «розгорнути зошит» замість помилкового «розкрити зошит».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "розкрити зошит\nрозгорнути зошит"
     },
     {
       "id": "err_0376",
@@ -6102,7 +6477,8 @@
       ],
       "explanation": "Правильно вживати «наступний урок» замість помилкового «слідуючий урок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "слідуючий урок\nнаступний урок"
     },
     {
       "id": "err_0377",
@@ -6118,7 +6494,8 @@
       ],
       "explanation": "Правильно вживати «будь-яка мелодія» замість помилкового «люба мелодія».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "люба мелодія\nбудь-яка мелодія"
     },
     {
       "id": "err_0378",
@@ -6134,7 +6511,8 @@
       ],
       "explanation": "Правильно вживати «чекали дві години» замість помилкового «чекали два часа».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "чекали два часа\nчекали дві години"
     },
     {
       "id": "err_0379",
@@ -6150,7 +6528,8 @@
       ],
       "explanation": "Правильно вживати «заважати працювати» замість помилкового «мішати працювати».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "мішати працювати\nзаважати працювати"
     },
     {
       "id": "err_0380",
@@ -6166,7 +6545,8 @@
       ],
       "explanation": "Правильно вживати «перекладати текст» замість помилкового «переводити текст».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "переводити текст\nперекладати текст"
     },
     {
       "id": "err_0381",
@@ -6182,7 +6562,8 @@
       ],
       "explanation": "Правильно вживати «йому пощастить» замість помилкового «йому повезе».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "йому повезе\nйому пощастить"
     },
     {
       "id": "err_0382",
@@ -6198,7 +6579,8 @@
       ],
       "explanation": "Правильно вживати «наступний день» замість помилкового «слідуючий день».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "слідуючий день\nнаступний день"
     },
     {
       "id": "err_0383",
@@ -6214,7 +6596,8 @@
       ],
       "explanation": "Правильно вживати «ставлення до людей» замість помилкового «відношення до людей».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відношення до людей\nставлення до людей"
     },
     {
       "id": "err_0384",
@@ -6230,7 +6613,8 @@
       ],
       "explanation": "Правильно вживати «іти на риболовлю» замість помилкового «іти на рибалку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "іти на рибалку\nіти на риболовлю"
     },
     {
       "id": "err_0385",
@@ -6246,7 +6630,8 @@
       ],
       "explanation": "Правильно вживати «відчинити двері» замість помилкового «відкрити двері».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відкрити двері\nвідчинити двері"
     },
     {
       "id": "err_0386",
@@ -6262,7 +6647,8 @@
       ],
       "explanation": "Правильно вживати «розплющити очі» замість помилкового «відкрити очі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відкрити очі\nрозплющити очі"
     },
     {
       "id": "err_0387",
@@ -6278,7 +6664,8 @@
       ],
       "explanation": "Правильно вживати «розгорнути книжку» замість помилкового «відкрити книжку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відкрити книжку\nрозгорнути книжку"
     },
     {
       "id": "err_0388",
@@ -6294,7 +6681,8 @@
       ],
       "explanation": "Правильно вживати «відімкнути замок» замість помилкового «відкрити замок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "відкрити замок\nвідімкнути замок"
     },
     {
       "id": "err_0389",
@@ -6310,7 +6698,8 @@
       ],
       "explanation": "Правильно вживати «дякувати Максиму» замість помилкового «дякувати Максима».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "дякувати Максима\nдякувати Максиму"
     },
     {
       "id": "err_0390",
@@ -6326,7 +6715,8 @@
       ],
       "explanation": "Правильно вживати «милуватися краєвидом» замість помилкового «милуватися з краєвиду».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "милуватися з краєвиду\nмилуватися краєвидом"
     },
     {
       "id": "err_0391",
@@ -6342,7 +6732,8 @@
       ],
       "explanation": "Правильно вживати «пам’ятник Лесі Українці» замість помилкового «пам’ятник Лесі Українки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "пам’ятник Лесі Українки\nпам’ятник Лесі Українці"
     },
     {
       "id": "err_0392",
@@ -6358,7 +6749,8 @@
       ],
       "explanation": "Правильно вживати «вибачте мені» замість помилкового «вибачте мене».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "вибачте мене\nвибачте мені"
     },
     {
       "id": "err_0393",
@@ -6374,7 +6766,8 @@
       ],
       "explanation": "Правильно вживати «дякую вам» замість помилкового «дякую вас».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "дякую вас\nдякую вам"
     },
     {
       "id": "err_0394",
@@ -6390,7 +6783,8 @@
       ],
       "explanation": "Правильно вживати «опановувати знання» замість помилкового «опановувати знаннями».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "опановувати знаннями\nопановувати знання"
     },
     {
       "id": "err_0395",
@@ -6406,7 +6800,8 @@
       ],
       "explanation": "Правильно вживати «милуватися природою» замість помилкового «милуватися з природи».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "милуватися з природи\nмилуватися природою"
     },
     {
       "id": "err_0396",
@@ -6422,7 +6817,8 @@
       ],
       "explanation": "Правильно вживати «нехтувати своїм здоров’ям» замість помилкового «нехтувати своє здоров’я».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "нехтувати своє здоров’я\nнехтувати своїм здоров’ям"
     },
     {
       "id": "err_0397",
@@ -6438,7 +6834,8 @@
       ],
       "explanation": "Правильно вживати «зраджувати друга» замість помилкового «зраджувати другові».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "зраджувати другові\nзраджувати друга"
     },
     {
       "id": "err_0398",
@@ -6454,7 +6851,8 @@
       ],
       "explanation": "Правильно вживати «потребувати спокою» замість помилкового «потребувати спокій».",
       "isUkrainian": true,
-      "source": "Textbook Gr 5 (zabolotnyi)"
+      "source": "Textbook Gr 5 (zabolotnyi)",
+      "sourceRow": "потребувати спокій\nпотребувати спокою"
     },
     {
       "id": "err_0399",
@@ -6470,7 +6868,8 @@
       ],
       "explanation": "Правильно вживати «у словнику близько ста тисяч слів» замість помилкового «у словнику біля ста тисяч слів».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "у словнику біля ста тисяч слів у словнику близько ста тисяч слів"
     },
     {
       "id": "err_0400",
@@ -6486,7 +6885,8 @@
       ],
       "explanation": "Правильно вживати «бачити на власні очі» замість помилкового «бачити власними очима».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "бачити власними очима бачити на власні очі"
     },
     {
       "id": "err_0401",
@@ -6502,7 +6902,8 @@
       ],
       "explanation": "Правильно вживати «волоський горіх» замість помилкового «грецький горіх».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "грецький горіх волоський горіх"
     },
     {
       "id": "err_0402",
@@ -6518,7 +6919,8 @@
       ],
       "explanation": "Правильно вживати «виявити цю проблему» замість помилкового «виявити дану проблему».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "виявити дану проблему виявити цю проблему"
     },
     {
       "id": "err_0403",
@@ -6534,7 +6936,8 @@
       ],
       "explanation": "Правильно вживати «природна поведінка» замість помилкового «природня поведінка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "природня поведінка природна поведінка"
     },
     {
       "id": "err_0404",
@@ -6550,7 +6953,8 @@
       ],
       "explanation": "Правильно вживати «мальовнича місцевість» замість помилкового «живописна місцевість».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "живописна місцевість мальовнича місцевість"
     },
     {
       "id": "err_0405",
@@ -6566,7 +6970,8 @@
       ],
       "explanation": "Правильно вживати «заповітна мрія» замість помилкового «завітна мрія».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "завітна мрія заповітна мрія"
     },
     {
       "id": "err_0406",
@@ -6582,7 +6987,8 @@
       ],
       "explanation": "Правильно вживати «куприк» замість помилкового «копчик».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "копчик куприк"
     },
     {
       "id": "err_0407",
@@ -6598,7 +7004,8 @@
       ],
       "explanation": "Правильно вживати «ясна» замість помилкового «десна».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "десна ясна"
     },
     {
       "id": "err_0408",
@@ -6614,7 +7021,8 @@
       ],
       "explanation": "Правильно вживати «маківка» замість помилкового «макушка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "макушка маківка"
     },
     {
       "id": "err_0409",
@@ -6630,7 +7038,8 @@
       ],
       "explanation": "Правильно вживати «важіль» замість помилкового «ричаг».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "ричаг важіль"
     },
     {
       "id": "err_0410",
@@ -6646,7 +7055,8 @@
       ],
       "explanation": "Правильно вживати «пасок безпеки» замість помилкового «ремінь безпеки».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "ремінь безпеки пасок безпеки"
     },
     {
       "id": "err_0411",
@@ -6662,7 +7072,8 @@
       ],
       "explanation": "Правильно вживати «стулка» замість помилкового «створка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "створка стулка"
     },
     {
       "id": "err_0412",
@@ -6678,7 +7089,8 @@
       ],
       "explanation": "Правильно вживати «вантажівка» замість помилкового «грузовик».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "грузовик вантажівка"
     },
     {
       "id": "err_0413",
@@ -6694,7 +7106,8 @@
       ],
       "explanation": "Правильно вживати «кватирка» замість помилкового «форточка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "форточка кватирка"
     },
     {
       "id": "err_0414",
@@ -6710,7 +7123,8 @@
       ],
       "explanation": "Правильно вживати «хвіртка» замість помилкового «калітка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "калітка хвіртка"
     },
     {
       "id": "err_0415",
@@ -6726,7 +7140,8 @@
       ],
       "explanation": "Правильно вживати «ґанок» замість помилкового «крильцо».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "крильцо ґанок"
     },
     {
       "id": "err_0416",
@@ -6742,7 +7157,8 @@
       ],
       "explanation": "Правильно вживати «щелепа» замість помилкового «челюсть».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "челюсть щелепа"
     },
     {
       "id": "err_0417",
@@ -6758,7 +7174,8 @@
       ],
       "explanation": "Правильно вживати «суглоб» замість помилкового «сустав».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "сустав суглоб"
     },
     {
       "id": "err_0418",
@@ -6774,7 +7191,8 @@
       ],
       "explanation": "Правильно вживати «потилиця» замість помилкового «затилок».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "затилок потилиця"
     },
     {
       "id": "err_0419",
@@ -6790,7 +7208,8 @@
       ],
       "explanation": "Правильно вживати «нирка» замість помилкового «почка».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "почка нирка"
     },
     {
       "id": "err_0420",
@@ -6806,7 +7225,8 @@
       ],
       "explanation": "Правильно вживати «у цьому разі» замість помилкового «у даному випадку».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "у даному випадку у цьому разі"
     },
     {
       "id": "err_0421",
@@ -6822,7 +7242,8 @@
       ],
       "explanation": "Правильно вживати «удар по воротах» замість помилкового «удар по воротам».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "удар по воротам удар по воротах"
     },
     {
       "id": "err_0422",
@@ -6838,7 +7259,8 @@
       ],
       "explanation": "Правильно вживати «відповідно до сюжету» замість помилкового «відповідно сюжету».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "відповідно сюжету відповідно до сюжету"
     },
     {
       "id": "err_0423",
@@ -6854,7 +7276,8 @@
       ],
       "explanation": "Правильно вживати «навчатися танців» замість помилкового «навчатися танцям».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "навчатися танцям навчатися танців"
     },
     {
       "id": "err_0424",
@@ -6870,7 +7293,8 @@
       ],
       "explanation": "Правильно вживати «чекати одне одного» замість помилкового «чекати друг друга».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "чекати друг друга чекати одне одного"
     },
     {
       "id": "err_0425",
@@ -6886,7 +7310,8 @@
       ],
       "explanation": "Правильно вживати «збігатися на сто відсотків» замість помилкового «співпадати на сто відсотків».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "співпадати на сто відсотків збігатися на сто відсотків"
     },
     {
       "id": "err_0426",
@@ -6902,7 +7327,8 @@
       ],
       "explanation": "Правильно вживати «зіставляти характеристики» замість помилкового «співставляти характеристики».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "співставляти характеристики зіставляти характеристики"
     },
     {
       "id": "err_0427",
@@ -6918,7 +7344,8 @@
       ],
       "explanation": "Правильно вживати «запобігати гайморитові» замість помилкового «попереджати гайморит».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "попереджати гайморит запобігати гайморитові"
     },
     {
       "id": "err_0428",
@@ -6934,7 +7361,8 @@
       ],
       "explanation": "Правильно вживати «зраджувати кохану людину» замість помилкового «зраджувати коханій людині».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "зраджувати коханій людині зраджувати кохану людину"
     },
     {
       "id": "err_0429",
@@ -6950,7 +7378,8 @@
       ],
       "explanation": "Правильно вживати «приймати пігулки до їди» замість помилкового «приймати таблетки до їжі».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "приймати таблетки до їжі приймати пігулки до їди"
     },
     {
       "id": "err_0430",
@@ -6966,7 +7395,8 @@
       ],
       "explanation": "Правильно вживати «найсмачніший торт» замість помилкового «самий смачний торт».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "самий смачний торт найсмачніший торт"
     },
     {
       "id": "err_0431",
@@ -6982,7 +7412,8 @@
       ],
       "explanation": "Правильно вживати «у тисяча дев’ятсот п’ятому році» замість помилкового «у тисячу дев’ятсот п’ятому році».",
       "isUkrainian": true,
-      "source": "Textbook Gr 10 (avramenko)"
+      "source": "Textbook Gr 10 (avramenko)",
+      "sourceRow": "у тисячу дев’ятсот п’ятому році у тисяча дев’ятсот п’ятому році"
     },
     {
       "id": "err_0432",
@@ -6998,7 +7429,8 @@
       ],
       "explanation": "Норма слововживання: Деякі відмінкові особливості",
       "isUkrainian": true,
-      "source": "Antonenko-Davydovych: Деякі відмінкові особливості (ЗАЙМЕННИКИ)"
+      "source": "Antonenko-Davydovych: Деякі відмінкові особливості (ЗАЙМЕННИКИ)",
+      "sourceRow": "замість якого іноді помилково пишуть: при одній думці, при одній згадці. У розділі про іменники ми вже принагідно бачили, що за українською мовною традицією дійова особа в реченні, виражена іменником чи займенником, звичайно стоїть у називному відмінку, а не орудному, як часто буває в російській мові. Недобре звучить по–українському така, наприклад, фраза: \"Головну увагу мною приділено таким явищам\", – а слід: \"Головну увагу я приділив таким явищам\""
     }
   ]
 }
