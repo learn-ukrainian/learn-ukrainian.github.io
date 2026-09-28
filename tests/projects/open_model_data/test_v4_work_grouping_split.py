@@ -10,8 +10,10 @@ import jsonschema
 import pytest
 
 import scripts.projects.open_model_data.v4_work_grouping_split as split_mod
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-CONFIG_PATH = Path("data/projects/open_model_data/splits/v4_work_grouping_split_config_v1.json")
+CONFIG_PATH = resolve_open_model_path("data/projects/open_model_data/splits/v4_work_grouping_split_config_v1.json")
+_RECEIPT = "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 
 
@@ -117,7 +119,7 @@ def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -150,7 +152,8 @@ def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
         tampered_rcpt["index_sha256"],
     )
 
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(split_mod.WorkGroupingSplitError, match=r"crossed split boundaries"):
@@ -163,7 +166,7 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -173,7 +176,8 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
 
     tampered_rcpt = copy.deepcopy(orig_receipt)
     tampered_rcpt["index_sha256"] = "0" * 64
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(split_mod.WorkGroupingSplitError, match=r"Index SHA-256 mismatch"):
@@ -186,7 +190,7 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -196,7 +200,8 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
 
     tampered_rcpt = copy.deepcopy(orig_receipt)
     tampered_rcpt["notes"] = "Evaluated on /home/ops/secret/server"
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(

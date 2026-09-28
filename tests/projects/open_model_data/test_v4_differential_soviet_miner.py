@@ -12,6 +12,8 @@ from unittest.mock import MagicMock, patch
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -32,13 +34,13 @@ from scripts.projects.open_model_data.v4_differential_soviet_miner import (
     verify_in_vesum,
 )
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 CANDIDATE_SCHEMA_PATH = CONTRACTS_DIR / "v1_differential_soviet_candidate.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_differential_soviet_receipt.schema.json"
 OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "soviet_candidates"
-RECEIPT_FILE = OUTPUT_DIR / "differential_soviet_receipt.json"
-MANIFEST_FILE = OUTPUT_DIR / "differential_soviet_manifest.json"
-CANDIDATES_FILE = OUTPUT_DIR / "differential_soviet_candidates.jsonl"
+RECEIPT_FILE = resolve_open_model_path(OUTPUT_DIR / "differential_soviet_receipt.json")
+MANIFEST_FILE = resolve_open_model_path(OUTPUT_DIR / "differential_soviet_manifest.json")
+CANDIDATES_FILE = resolve_open_model_path(OUTPUT_DIR / "differential_soviet_candidates.jsonl")
 
 
 @pytest.fixture(scope="module")
@@ -67,18 +69,67 @@ def mock_vesum_cursor() -> sqlite3.Cursor:
     cursor.execute("CREATE INDEX idx_forms_all_lemma ON forms_all(lemma)")
     cursor.execute("CREATE INDEX idx_forms_all_word_form ON forms_all(word_form)")
     test_lemmas = [
-        "чинний", "переважний", "збігатися", "брати", "участь", "принаймні",
-        "міра", "того", "як", "ініціатива", "щодо", "наступний", "крайній",
-        "раз", "мати", "рація", "відбуватися", "впадати", "око", "насамперед",
-        "кошт", "порушити", "питання", "панівний", "відсталий", "віджилий",
-        "домінантний", "надихальний", "організаційний", "підрослий",
-        "підпорядковувальний", "перетворювальний", "життєствердний",
-        "принизливий", "спрямовувальний", "стримувальний", "хвилювальний",
-        "програмування", "комп'ютер", "авіація", "транзистор", "лазер",
-        "пластмаса", "полімер", "радар", "генетика", "інтернет",
-        "рівнобіжник", "терпуг", "прямовис", "довгокутник", "дрібножил",
-        "комсомол", "колгосп", "партком", "райком", "стахановець",
-        "діючий", "подавляючий", "співпадати", "слідуючий",
+        "чинний",
+        "переважний",
+        "збігатися",
+        "брати",
+        "участь",
+        "принаймні",
+        "міра",
+        "того",
+        "як",
+        "ініціатива",
+        "щодо",
+        "наступний",
+        "крайній",
+        "раз",
+        "мати",
+        "рація",
+        "відбуватися",
+        "впадати",
+        "око",
+        "насамперед",
+        "кошт",
+        "порушити",
+        "питання",
+        "панівний",
+        "відсталий",
+        "віджилий",
+        "домінантний",
+        "надихальний",
+        "організаційний",
+        "підрослий",
+        "підпорядковувальний",
+        "перетворювальний",
+        "життєствердний",
+        "принизливий",
+        "спрямовувальний",
+        "стримувальний",
+        "хвилювальний",
+        "програмування",
+        "комп'ютер",
+        "авіація",
+        "транзистор",
+        "лазер",
+        "пластмаса",
+        "полімер",
+        "радар",
+        "генетика",
+        "інтернет",
+        "рівнобіжник",
+        "терпуг",
+        "прямовис",
+        "довгокутник",
+        "дрібножил",
+        "комсомол",
+        "колгосп",
+        "партком",
+        "райком",
+        "стахановець",
+        "діючий",
+        "подавляючий",
+        "співпадати",
+        "слідуючий",
     ]
     for lem in test_lemmas:
         cursor.execute("INSERT INTO forms_all (lemma, word_form) VALUES (?, ?)", (lem, lem))
@@ -152,7 +203,10 @@ def test_r2u_network_timeout_vs_absence_disambiguation() -> None:
     mock_response.read.return_value = b"<html><body>No entries found</body></html>"
 
     with patch("urllib.request.urlopen", return_value=mock_response):
-        with patch("scripts.rag.source_query.r2u_translate_with_status", return_value=(R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, [])):
+        with patch(
+            "scripts.rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
             status, translations = query_r2u_safe("неіснуючеслово123", allow_network=True)
             assert status == R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE
             assert translations == []

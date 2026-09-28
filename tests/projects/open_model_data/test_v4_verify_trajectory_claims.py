@@ -119,16 +119,16 @@ def mock_dbs(tmp_path: Path) -> tuple[Path, Path, Path]:
     return vesum_path, sources_path, ulif_path
 
 
-def test_seed_trajectories_full_verification_suite(receipt_schema: dict) -> None:
+def test_seed_trajectories_full_verification_suite(tmp_path: Path, receipt_schema: dict) -> None:
     """Validate that real seed trajectories pass all checks with 100% verification rate."""
     if not (DEFAULT_VESUM_DB.is_file() and DEFAULT_SOURCES_DB.is_file()):
         pytest.skip(f"Requires local databases: {DEFAULT_VESUM_DB}, {DEFAULT_SOURCES_DB}")
 
     receipt = run_claim_verifier(
         input_path=DEFAULT_INPUT_TRAJECTORIES,
-        verified_output_path=DEFAULT_VERIFIED_OUTPUT,
-        rejected_output_path=DEFAULT_REJECTED_OUTPUT,
-        receipt_output_path=DEFAULT_RECEIPT_OUTPUT,
+        verified_output_path=tmp_path / "verified.jsonl",
+        rejected_output_path=tmp_path / "rejected.jsonl",
+        receipt_output_path=tmp_path / "receipt.json",
         vesum_db=DEFAULT_VESUM_DB,
         sources_db=DEFAULT_SOURCES_DB,
         verify_only=False,
@@ -1618,9 +1618,7 @@ def test_r2u_polarity_in_historical_suppression_note_ambiguous_fails(
     assert any("Ambiguous 1920s lexicographical claim" in str(r) for r in rej_data[0]["rejection_reasons"])
 
 
-def test_pure_stem_zero_dictionary_batch_passes_verify_only(
-    mock_dbs: tuple[Path, Path, Path], tmp_path: Path
-) -> None:
+def test_pure_stem_zero_dictionary_batch_passes_verify_only(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
     """A batch with zero dictionary claims (pure STEM negative control) evaluates zero_unverified_dictionary_claims as True and passes --verify-only."""
     vesum, sources, ulif = mock_dbs
     inp = tmp_path / "pure_stem_batch.jsonl"

@@ -11,6 +11,7 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_human_source_dataset import (
     OPERATOR_EXCLUDED_RESIDUALS,
     _get_language_usage_masks,
@@ -25,10 +26,11 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
 )
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
-DATASET_DIR = Path("data/projects/open_model_data/dataset")
-MANIFEST_PATH = DATASET_DIR / "v4_human_source_dataset_manifest_v1.json"
-RECEIPT_PATH = DATASET_DIR / "v4_human_source_dataset_receipt_v1.json"
-RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
+MANIFEST_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+)
+RECEIPT_PATH = resolve_open_model_path("data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json")
+RECORDS_PATH = resolve_open_model_path("data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl")
 
 _ORIGINAL_JSONSCHEMA_VALIDATE = jsonschema.validate
 _COMPILED_VALIDATORS: dict[int, tuple[Any, Any]] = {}
@@ -197,9 +199,12 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
 
     splits_dir = fake_repo / "data/projects/open_model_data/splits"
     splits_dir.mkdir(parents=True, exist_ok=True)
-    (splits_dir / "v4_work_grouping_split_receipt_v1.json").symlink_to(
-        (repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json").resolve()
-    )
+    receipt_logical = "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    quality_logical = "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    for logical in (receipt_logical, quality_logical):
+        destination = resolve_open_model_path(logical, repo=fake_repo)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.symlink_to(resolve_open_model_path(logical))
 
     # Create split_index with one line missing to create an intentional denominator mismatch
     src_split_index = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl"
@@ -518,6 +523,14 @@ def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatc
         target = fake_repo / f"data/projects/open_model_data/{dir_name}"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.symlink_to((repo_root / f"data/projects/open_model_data/{dir_name}").resolve())
+    for logical in (
+        "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json",
+        "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json",
+    ):
+        destination = resolve_open_model_path(logical, repo=fake_repo)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if not destination.exists():
+            destination.symlink_to(resolve_open_model_path(logical))
 
     out_dir = tmp_path / "out"
     out_dir.mkdir(parents=True)

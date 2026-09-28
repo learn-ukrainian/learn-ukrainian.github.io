@@ -29,10 +29,13 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
+DEFAULT_CONFIG = resolve_open_model_path(
+    "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
+)
 CLASSIFICATION_FIELDS = ("period", "register", "domain", "original_language", "translation_status")
 ORDERING = "cohort_id,source_id,work_id,locator_id"
 
@@ -510,8 +513,10 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     config = _load_config(config_path)
     config_sha256 = sha256_file(config_path)
     output_root = input_root if output_root is None else output_root
-    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
-    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    snapshot_rows, snapshot = _load_snapshot(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    )
+    ledger = _load_ledger(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root))
     _check_ocr_exclusion_evidence(config, ledger)
     _check_private_sources_absent(config, snapshot_rows)
 
@@ -521,7 +526,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
 
     selected_by_cohort, cohort_summaries, exclusions = _select_eligible_rows(config, snapshot_rows)
 
-    database_path = input_root / config["inputs"]["database"]
+    database_path = resolve_open_model_path(config["inputs"]["database"], repo=input_root)
     connection: sqlite3.Connection | None = None
     column_evidence: dict[str, dict[str, str | None]] = {}
     try:
@@ -576,7 +581,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
         "ordering": ORDERING,
     }
     index_content = _index_content(records, header)
-    index_path = output_root / config["outputs"]["index"]
+    index_path = resolve_open_model_path(config["outputs"]["index"], repo=output_root)
     _publish(index_path, index_content)
     index_sha256 = sha256_bytes(index_content)
 
@@ -585,7 +590,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     )
     _validate(report, _validator("unresolvedReport"), "unresolved report")
     report_content = (canonical_json(report) + "\n").encode("utf-8")
-    report_path = output_root / config["outputs"]["unresolved_report"]
+    report_path = resolve_open_model_path(config["outputs"]["unresolved_report"], repo=output_root)
     _publish(report_path, report_content)
 
     receipt = {
@@ -594,11 +599,11 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
         "inputs": {
             "locator_index": {
                 "path": config["inputs"]["locator_index"],
-                "sha256": sha256_file(input_root / config["inputs"]["locator_index"]),
+                "sha256": sha256_file(resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)),
             },
             "inventory_ledger": {
                 "path": config["inputs"]["inventory_ledger"],
-                "sha256": sha256_file(input_root / config["inputs"]["inventory_ledger"]),
+                "sha256": sha256_file(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root)),
             },
             "database": {
                 "path": config["inputs"]["database"],
@@ -633,7 +638,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
     }
     _validate(receipt, _validator("receipt"), "restoration receipt")
     receipt_content = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
-    receipt_path = output_root / config["outputs"]["receipt"]
+    receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=output_root)
     _publish(receipt_path, receipt_content)
     return {
         "records": len(records),
@@ -684,12 +689,14 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     config = _load_config(config_path)
     config_sha256 = sha256_file(config_path)
     output_root = input_root if output_root is None else output_root
-    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
+    snapshot_rows, snapshot = _load_snapshot(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    )
     snapshot_by_locator = {row["locator_id"]: row for row in snapshot_rows}
     if len(snapshot_by_locator) != len(snapshot_rows):
         raise RestorationError("duplicate locator_id in retained locator snapshot")
 
-    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    ledger = _load_ledger(resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root))
     _check_ocr_exclusion_evidence(config, ledger)
     _check_private_sources_absent(config, snapshot_rows)
 
@@ -700,7 +707,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     }
     cohort_by_id = {cohort["cohort_id"]: cohort for cohort in config["cohorts"]}
 
-    index_path = output_root / config["outputs"]["index"]
+    index_path = resolve_open_model_path(config["outputs"]["index"], repo=output_root)
     index_sha256 = sha256_file(index_path)
     header, records = _read_index(index_path, _record_validator())
     if header["snapshot"] != snapshot:
@@ -762,7 +769,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
 
     acquisition_plans = {cohort["cohort_id"]: _acquisition_plan(cohort, ledger) for cohort in config["cohorts"]}
 
-    report_path = output_root / config["outputs"]["unresolved_report"]
+    report_path = resolve_open_model_path(config["outputs"]["unresolved_report"], repo=output_root)
     report = _read_json(report_path)
     _validate(report, _validator("unresolvedReport"), "unresolved report")
     if report["index_sha256"] != index_sha256:
@@ -777,15 +784,17 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     if report["by_cohort"] != recomputed_report["by_cohort"]:
         raise RestorationError("unresolved report cohort accounting disagrees with the index rows")
 
-    receipt_path = output_root / config["outputs"]["receipt"]
+    receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=output_root)
     receipt = _read_json(receipt_path)
     _validate(receipt, _validator("receipt"), "restoration receipt")
     if receipt["config_sha256"] != config_sha256:
         raise RestorationError("receipt config hash disagrees with the config file")
-    if receipt["inputs"]["locator_index"]["sha256"] != sha256_file(input_root / config["inputs"]["locator_index"]):
+    if receipt["inputs"]["locator_index"]["sha256"] != sha256_file(
+        resolve_open_model_path(config["inputs"]["locator_index"], repo=input_root)
+    ):
         raise RestorationError("receipt locator index hash disagrees with the retained snapshot file")
     if receipt["inputs"]["inventory_ledger"]["sha256"] != sha256_file(
-        input_root / config["inputs"]["inventory_ledger"]
+        resolve_open_model_path(config["inputs"]["inventory_ledger"], repo=input_root)
     ):
         raise RestorationError("receipt inventory ledger hash disagrees with the retained ledger file")
     if receipt["outputs"]["index"]["sha256"] != index_sha256:
@@ -804,7 +813,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     column_evidence = receipt_db.get("column_evidence")
     if not isinstance(column_evidence, dict):
         raise RestorationError("receipt database input missing or non-dict column_evidence")
-    database_path = input_root / config["inputs"]["database"]
+    database_path = resolve_open_model_path(config["inputs"]["database"], repo=input_root)
     if database_path.is_file():
         connection = _connect(database_path)
         try:

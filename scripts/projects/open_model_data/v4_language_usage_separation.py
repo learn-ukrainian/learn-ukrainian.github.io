@@ -22,6 +22,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
 CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
 ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
@@ -122,13 +124,13 @@ def _get_search_roots(input_root: Path | None = None) -> list[Path]:
 
 
 def _resolve_file(rel_path: Path, roots: list[Path]) -> Path:
-    if rel_path.is_absolute() and rel_path.exists():
-        return rel_path.resolve()
+    if rel_path.is_absolute():
+        return resolve_open_model_path(rel_path)
     for root in roots:
-        cand = (root / rel_path).resolve()
-        if cand.exists():
-            return cand
-    return (roots[0] / rel_path).resolve()
+        candidate = resolve_open_model_path(rel_path, repo=root)
+        if candidate.is_file():
+            return candidate
+    return resolve_open_model_path(rel_path, repo=roots[0])
 
 
 def _load_schema(schema_path: Path, roots: list[Path]) -> jsonschema.Draft202012Validator:
@@ -378,8 +380,8 @@ def build(
     conn = sqlite3.connect(db_uri, uri=True)
     cur = conn.cursor()
 
-    out_index_path = norm_out / config["outputs"]["index"]
-    out_receipt_path = norm_out / config["outputs"]["receipt"]
+    out_index_path = resolve_open_model_path(config["outputs"]["index"], repo=norm_out)
+    out_receipt_path = resolve_open_model_path(config["outputs"]["receipt"], repo=norm_out)
     out_index_path.parent.mkdir(parents=True, exist_ok=True)
     out_receipt_path.parent.mkdir(parents=True, exist_ok=True)
 

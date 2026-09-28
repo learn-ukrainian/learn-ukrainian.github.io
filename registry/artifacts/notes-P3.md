@@ -253,6 +253,29 @@ The final-tree scanner regenerated `consumers-P3.tsv` with 3,166 rows and
 3,166 blank checks (737 distinct consumers). Each executable row still needs an exercised
 disposition; doc and logical-id rows need reasons. This is a stop gate for P3a.
 
+## Round-6 reader routing checkpoint
+
+Readers that still opened moved K files under `data/projects/open_model_data/`
+now resolve them with `resolve_open_model_path()` in
+`scripts/projects/open_model_data/paths.py`. The function uses the frozen
+classification table: K members resolve under
+`registry/projects/open_model_data/`, A members stay under
+`data/projects/open_model_data/`, and logical `data/` strings stored in
+contracts are left unchanged. Mixed directories keep the caller's prefix.
+The scanner base list includes `resolve_open_model_path`.
+
+The round-5 project failures were concentrated in the V4 pilot, provenance,
+language, extraction, split, dataset, canary, grammar, dialect, ULIF, and
+delivery readers. Those filesystem opens now go through the classifier.
+Delivery verification treats a managed study snapshot mismatch as a failed
+check. Replaying the 135 round-5 failure IDs reported `133 passed, 2 failed`.
+The two failures are `test_decolonization_component_8340.py` textbook lookups
+(`decol_syn_032`, `decol_lex_003`). `git diff 55d0ed1515` does not change the
+`textbooks_fts` query or the missing-evidence error in
+`query_source_evidence`, so they are the same `sources.db` misses already
+recorded against that base. The full project suite, the consumer-check
+column, and Decision H semantic equivalence remain open at this checkpoint.
+
 ## Unresolved P3a gates at this checkpoint
 
 - The round-3 top-level `tests/test_open_model_*.py` consumer run failed:

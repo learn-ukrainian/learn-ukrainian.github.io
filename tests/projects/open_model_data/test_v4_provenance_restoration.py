@@ -12,17 +12,18 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data import v4_provenance_restoration as restoration
-from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
-EVIDENCE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence"
-PROVENANCE = ROOT / "data/projects/open_model_data/provenance"
 CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-CONFIG = PROVENANCE / "v4_provenance_restoration_config_v1.json"
-LOCATOR_CONFIG = EVIDENCE / "source_work_locator_config_v1.json"
-INDEX = PROVENANCE / "v4_provenance_restoration_index_v1.jsonl"
-UNRESOLVED = PROVENANCE / "v4_provenance_restoration_unresolved_v1.json"
-RECEIPT = PROVENANCE / "v4_provenance_restoration_receipt_v1.json"
+CONFIG = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json")
+LOCATOR_CONFIG = resolve_open_model_path("data/projects/open_model_data/evidence/source_work_locator_config_v1.json")
+INDEX = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl")
+UNRESOLVED = resolve_open_model_path(
+    "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json"
+)
+RECEIPT = resolve_open_model_path("data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json")
+COMPACT = resolve_open_model_path("data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl")
 
 
 def _database(root: Path) -> Path:
@@ -150,15 +151,25 @@ def _build(root: Path) -> dict:
 
 def _index_rows(root: Path) -> tuple[dict, list[dict]]:
     lines = (
-        (root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl")
+        resolve_open_model_path(
+            "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl", repo=root
+        )
         .read_text(encoding="utf-8")
         .splitlines()
     )
     return json.loads(lines[0]), [json.loads(line) for line in lines[1:]]
 
 
+def _out(root: Path, name: str) -> Path:
+    return resolve_open_model_path(f"data/projects/open_model_data/provenance/{name}", repo=root)
+
+
 def _artifact(root: Path, name: str) -> dict:
-    return json.loads((root / f"data/projects/open_model_data/provenance/{name}").read_text(encoding="utf-8"))
+    return json.loads(
+        resolve_open_model_path(f"data/projects/open_model_data/provenance/{name}", repo=root).read_text(
+            encoding="utf-8"
+        )
+    )
 
 
 def test_committed_config_validates_against_contract() -> None:
@@ -174,9 +185,7 @@ def test_committed_artifacts_are_schema_valid_and_snapshot_bound() -> None:
     header = json.loads(lines[0])
     header_validator = Draft202012Validator({"$ref": "#/$defs/indexHeader", "$defs": schema["$defs"]})
     assert not list(header_validator.iter_errors(header))
-    snapshot_header = json.loads(
-        (EVIDENCE / "source_work_locator_index_v1.compact.jsonl").read_text(encoding="utf-8").splitlines()[0]
-    )
+    snapshot_header = json.loads(COMPACT.read_text(encoding="utf-8").splitlines()[0])
     assert header["snapshot"]["semantic_jsonl_sha256"] == snapshot_header["semantic_jsonl_sha256"]
     assert header["records"] == len(lines) - 1
     rows_bytes = "".join(line + "\n" for line in lines[1:]).encode("utf-8")
@@ -281,8 +290,8 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
     first = _build(root)
     paths = [
         root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
-        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json",
-        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json",
+        _out(root, "v4_provenance_restoration_unresolved_v1.json"),
+        _out(root, "v4_provenance_restoration_receipt_v1.json"),
     ]
     before = [path.read_bytes() for path in paths]
     second = _build(root)
@@ -293,13 +302,12 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
 def test_no_corpus_text_leaks_into_artifacts(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    provenance = root / "data/projects/open_model_data/provenance"
     for name in (
         "v4_provenance_restoration_index_v1.jsonl",
         "v4_provenance_restoration_unresolved_v1.json",
         "v4_provenance_restoration_receipt_v1.json",
     ):
-        content = (provenance / name).read_text(encoding="utf-8")
+        content = _out(root, name).read_text(encoding="utf-8")
         assert "SECRET" not in content
 
 
@@ -436,10 +444,9 @@ def test_atomic_publication_failure_preserves_prior_outputs(tmp_path: Path, monk
 
 def _reseal_tampered_artifacts(root: Path) -> None:
     """Helper to coherently reseal hashes across index header, unresolved report, and receipt."""
-    provenance = root / "data/projects/open_model_data/provenance"
-    index_path = provenance / "v4_provenance_restoration_index_v1.jsonl"
-    report_path = provenance / "v4_provenance_restoration_unresolved_v1.json"
-    receipt_path = provenance / "v4_provenance_restoration_receipt_v1.json"
+    index_path = _out(root, "v4_provenance_restoration_index_v1.jsonl")
+    report_path = _out(root, "v4_provenance_restoration_unresolved_v1.json")
+    receipt_path = _out(root, "v4_provenance_restoration_receipt_v1.json")
 
     lines = index_path.read_text(encoding="utf-8").splitlines()
     header = json.loads(lines[0])
@@ -588,7 +595,7 @@ def test_verify_rejects_duplicate_locator(tmp_path: Path) -> None:
 def test_verify_rejects_divergent_receipt_selection_or_exclusions(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    receipt_path = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json"
+    receipt_path = _out(root, "v4_provenance_restoration_receipt_v1.json")
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     receipt["selection"]["cohorts"][0]["selected_rows"] = 999
     receipt_path.write_text(json.dumps(receipt, indent=2), encoding="utf-8")

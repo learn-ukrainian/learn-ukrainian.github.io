@@ -15,11 +15,19 @@ import pytest
 from jsonschema import validate
 
 from scripts.projects.open_model_data import v6_mine_grammar_valency as miner
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
-EVAL_SCHEMA_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_eval_record.schema.json"
-RECEIPT_SCHEMA_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_release_receipt.schema.json"
+EVAL_SCHEMA_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_grammar_valency_eval_record.schema.json"
+)
+RECEIPT_SCHEMA_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_grammar_valency_release_receipt.schema.json"
+)
+RECEIPT_FILE = resolve_open_model_path(RELEASE_DIR / "release_receipt.json")
+RECEIPT_SHA_FILE = resolve_open_model_path(RELEASE_DIR / "release_receipt.json.sha256")
+SFT_MANIFEST = resolve_open_model_path(RELEASE_DIR / "sft" / "manifest.json")
 
 
 def test_taxonomy_coverage_and_categories() -> None:
@@ -73,6 +81,7 @@ def test_vesum_database_resolution_and_attestation() -> None:
     assert vesum_db.is_file(), f"VESUM database could not be resolved at {vesum_db}"
 
     import sqlite3
+
     conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
     cur = conn.cursor()
 
@@ -160,7 +169,7 @@ def test_zero_train_eval_leakage_firewall() -> None:
 
 def test_sft_shards_disk_invariants_and_manifest() -> None:
     """Verify SFT manifest, shard sizes <= 2,000 KB, SHA-256 integrity, ID uniqueness, and zero markup."""
-    manifest_path = RELEASE_DIR / "sft" / "manifest.json"
+    manifest_path = SFT_MANIFEST
     assert manifest_path.is_file()
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -226,11 +235,15 @@ def test_sentence_splitting_rejects_unbalanced_and_defective_punctuation() -> No
     assert len(miner.split_clean_ukrainian_sentences(sample_paren)) == 0
 
     # Defect: unclosed relative clause missing closing comma before main predicate
-    sample_comma = "Посада, на яку приймаєте працівника обов'язково повинна бути в державному класифікаторі професій в Україні."
+    sample_comma = (
+        "Посада, на яку приймаєте працівника обов'язково повинна бути в державному класифікаторі професій в Україні."
+    )
     assert len(miner.split_clean_ukrainian_sentences(sample_comma)) == 0
 
     # Valid sentence with balanced punctuation and subordinate clause must pass
-    sample_valid = "Посада, на яку приймаєте працівника, обов'язково повинна бути в державному класифікаторі професій в Україні."
+    sample_valid = (
+        "Посада, на яку приймаєте працівника, обов'язково повинна бути в державному класифікаторі професій в Україні."
+    )
     assert len(miner.split_clean_ukrainian_sentences(sample_valid)) == 1
 
     # Defect: compound abbreviation preceding sentence boundary must split and not merge
@@ -238,7 +251,10 @@ def test_sentence_splitting_rejects_unbalanced_and_defective_punctuation() -> No
     sents_abbr = miner.split_clean_ukrainian_sentences(sample_abbr)
     # The first sentence ends in 'р. н.' and is filtered out by the abbreviation ending guard; second sentence is pristine
     assert len(sents_abbr) == 1
-    assert sents_abbr[0] == "З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
+    assert (
+        sents_abbr[0]
+        == "З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
+    )
 
 
 @pytest.mark.parametrize(
@@ -394,7 +410,9 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_mp, cur_ves=cur)
 
     # Defect 19 (Round 8): Pleonastic double future construction (Правопис 2019; IMZO Gr 7)
-    frag_double_future = "Першими на дистанцію запрошують досвідчених плавців, що будуть змагатимуться за призові місця."
+    frag_double_future = (
+        "Першими на дистанцію запрошують досвідчених плавців, що будуть змагатимуться за призові місця."
+    )
     assert not miner.is_pristine_eval_sentence(frag_double_future, cur_ves=cur)
 
     # Defect 20 (Round 8): Unpunctuated explanatory construction with demonstrative (Правопис 2019 §158.3.г)
@@ -416,7 +434,9 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_homogeneous_comma)) == 0
 
     # Defect 24 (Round 9): Sentence-initial explanatory conjunction 'Тобто' with erroneous comma (Правопис §158)
-    frag_tobto_comma = "Тобто, ця сума залишається на рахунку одержувача, а решта невикористаної субсидії повертається державі."
+    frag_tobto_comma = (
+        "Тобто, ця сума залишається на рахунку одержувача, а решта невикористаної субсидії повертається державі."
+    )
     assert not miner.is_pristine_eval_sentence(frag_tobto_comma, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_tobto_comma)) == 0
 
@@ -436,7 +456,9 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_otogh_comma)) == 0
 
     # Defect 28 (Round 11): Unpunctuated compound sentence lacking comma before 'і' (Правопис §158.2)
-    frag_unpunctuated_compound = "Підростав Олексій і вже Миколка народився, тож вирішив пан Роман сам зробити свою першу скрипку синові."
+    frag_unpunctuated_compound = (
+        "Підростав Олексій і вже Миколка народився, тож вирішив пан Роман сам зробити свою першу скрипку синові."
+    )
     assert not miner.is_pristine_eval_sentence(frag_unpunctuated_compound, cur_ves=cur)
     assert miner.check_unpunctuated_compound_sentence(frag_unpunctuated_compound, cur_ves=cur)
 
@@ -606,12 +628,16 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_moho_pohlyad, cur_ves=cur)
 
     # Defect 45 / Negative regression (Round 21 P2): Unpunctuated source-attribution parenthetical following coordinating conjunction lacking opening comma (Правопис 2019 §158 I.11)
-    frag_ta_yak_perekonyuyut = "Та як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    frag_ta_yak_perekonyuyut = (
+        "Та як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    )
     assert miner.UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE.search(frag_ta_yak_perekonyuyut)
     assert not miner.is_pristine_eval_sentence(frag_ta_yak_perekonyuyut, cur_ves=cur)
 
     # Defect 46 / Positive control (Round 21 P2): Properly punctuated source-attribution parenthetical with opening comma (Правопис 2019 §158 I.11)
-    frag_ta_yak_valid = "Та, як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    frag_ta_yak_valid = (
+        "Та, як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    )
     assert not miner.UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE.search(frag_ta_yak_valid)
     assert miner.is_pristine_eval_sentence(frag_ta_yak_valid, cur_ves=cur)
 
@@ -636,7 +662,9 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_ne_vystachae_dash, cur_ves=cur)
 
     # Defect 51 / Positive control (Round 23 P2): Clean replacement literary sentence
-    frag_yikh_same_dlya_tsyoho = "Їх саме для цього обирали, і у своїх передвиборних програмах вони на цьому акцентували."
+    frag_yikh_same_dlya_tsyoho = (
+        "Їх саме для цього обирали, і у своїх передвиборних програмах вони на цьому акцентували."
+    )
     assert not miner.UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(frag_yikh_same_dlya_tsyoho)
     assert miner.is_pristine_eval_sentence(frag_yikh_same_dlya_tsyoho, cur_ves=cur)
 
@@ -930,25 +958,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_quoted_title_verb)) == 0
 
     # Defect 102 / Negative regression (Round 46 P2): Nested quotation verbs do not bypass apposition agreement (Правопис 2019 §164, примітка 3)
-    frag_discordant_nested_quoted_title_verb = (
-        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває”» – стали комічні вибрики."
-    )
+    frag_discordant_nested_quoted_title_verb = "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває”» – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_nested_quoted_title_verb, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_nested_quoted_title_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_nested_quoted_title_verb)) == 0
 
     # Defect 103 / Negative regression (Round 47 P2): Dashes inside quoted titles do not truncate apposition boundary (Правопис 2019 §164)
-    frag_discordant_dash_in_quoted_title = (
-        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває — гра”» – стали комічні вибрики."
-    )
+    frag_discordant_dash_in_quoted_title = "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває — гра”» – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_dash_in_quoted_title, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_dash_in_quoted_title, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_dash_in_quoted_title)) == 0
 
     # Defect 104 / Negative regression (Round 48 P2): Earlier quoted titles with dashes do not divert opening dash boundary (Правопис 2019 §158, §164)
-    frag_discordant_earlier_quoted_title_with_dash = (
-        "На виставі «Життя триває — гра» вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_earlier_quoted_title_with_dash = "На виставі «Життя триває — гра» вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_earlier_quoted_title_with_dash, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_earlier_quoted_title_with_dash, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_earlier_quoted_title_with_dash)) == 0
@@ -978,695 +1000,563 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_after_unpaired_dash)) == 1
 
     # Defect 108 / Negative regression (Round 51 P2): Genitive plural noun ending in '-ів' does not fake predicate and bypass discordant apposition (Правопис 2019 §158, Ющук §21)
-    frag_discordant_apposition_plural_noun_in_clause = (
-        "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_plural_noun_in_clause = "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_plural_noun_in_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_plural_noun_in_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_plural_noun_in_clause)) == 0
 
     # Defect 109 / Positive control (Round 51 P2): Agreeing instrumental apposition with plural noun in clause accepted (Правопис 2019 §158, Ющук §21)
-    frag_agreeing_apposition_plural_noun_in_clause = (
-        "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_plural_noun_in_clause = "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_plural_noun_in_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_plural_noun_in_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_plural_noun_in_clause)) == 1
 
     # Defect 110 / Negative regression (Round 52 P2): Quoted title verb in clause does not fake predicate and bypass discordant apposition (Правопис 2019 §154, §158, §164)
-    frag_discordant_apposition_quoted_verb_in_clause = (
-        "Театр — місце, де на виставі «Життя триває» вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_quoted_verb_in_clause = "Театр — місце, де на виставі «Життя триває» вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_quoted_verb_in_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_quoted_verb_in_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_quoted_verb_in_clause)) == 0
 
     # Defect 111 / Positive control (Round 52 P2): Agreeing instrumental apposition with quoted verb in clause accepted (Правопис 2019 §154, §158, §164)
-    frag_agreeing_apposition_quoted_verb_in_clause = (
-        "Театр — місце, де на виставі «Життя триває» вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_quoted_verb_in_clause = "Театр — місце, де на виставі «Життя триває» вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_quoted_verb_in_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_quoted_verb_in_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_quoted_verb_in_clause)) == 1
 
     # Defect 112 / Negative regression (Round 53 P2): Quoted subordinate marker does not trigger false subordinate clause boundary or corrupt quote stripping (Правопис 2019 §154, §158, §164)
-    frag_discordant_apposition_quoted_subordinate_marker = (
-        "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_quoted_subordinate_marker = "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_quoted_subordinate_marker, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_quoted_subordinate_marker, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_quoted_subordinate_marker)) == 0
 
     # Defect 113 / Positive control (Round 53 P2): Agreeing instrumental apposition with quoted subordinate marker accepted (Правопис 2019 §154, §158, §164)
-    frag_agreeing_apposition_quoted_subordinate_marker = (
-        "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_quoted_subordinate_marker = "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_quoted_subordinate_marker, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_quoted_subordinate_marker, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_quoted_subordinate_marker)) == 1
 
     # Defect 114 / Negative regression (Round 54 P2): Predicate in earlier relative clause does not fake completeness of later clause (Правопис 2019 §158, §161, Ющук §21)
-    frag_discordant_apposition_earlier_clause_predicate = (
-        "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_earlier_clause_predicate = "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_earlier_clause_predicate, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_earlier_clause_predicate, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_earlier_clause_predicate)) == 0
 
     # Defect 115 / Positive control (Round 54 P2): Agreeing instrumental apposition with earlier relative clause accepted (Правопис 2019 §158, §161, Ющук §21)
-    frag_agreeing_apposition_earlier_clause_predicate = (
-        "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_earlier_clause_predicate = "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_earlier_clause_predicate, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_earlier_clause_predicate, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_earlier_clause_predicate)) == 1
 
     # Defect 116 / Negative regression (Round 55 P2): Predicate in nested relative clause does not fake completeness of enclosing clause (Правопис 2019 §158, §161, Ющук §21)
-    frag_discordant_apposition_nested_relative_clause = (
-        "Театр — місце, де для глядачів, які знають виставу, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_nested_relative_clause = "Театр — місце, де для глядачів, які знають виставу, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_nested_relative_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_nested_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_nested_relative_clause)) == 0
 
     # Defect 117 / Positive control (Round 55 P2): Agreeing instrumental apposition with nested relative clause accepted (Правопис 2019 §158, §161, Ющук §21)
-    frag_agreeing_apposition_nested_relative_clause = (
-        "Театр — місце, де для глядачів, які знають виставу, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_nested_relative_clause = "Театр — місце, де для глядачів, які знають виставу, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_nested_relative_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_nested_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_nested_relative_clause)) == 1
 
     # Defect 118 / Negative regression (Round 56 P2): Preposition-led relative clause does not fake completeness of enclosing clause (Правопис 2019 §158, §161, Ющук §21)
-    frag_discordant_apposition_prep_relative_clause = (
-        "Театр — місце, де для глядачів, з якими він говорив, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_prep_relative_clause = "Театр — місце, де для глядачів, з якими він говорив, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_relative_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_relative_clause)) == 0
 
     # Defect 119 / Positive control (Round 56 P2): Agreeing instrumental apposition with preposition-led relative clause accepted (Правопис 2019 §158, §161, Ющук §21)
-    frag_agreeing_apposition_prep_relative_clause = (
-        "Театр — місце, де для глядачів, з якими він говорив, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_prep_relative_clause = "Театр — місце, де для глядачів, з якими він говорив, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_relative_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_relative_clause)) == 1
 
     # Defect 120 / Negative regression (Round 57 P2): Multiword preposition-led relative clause does not fake completeness of enclosing clause (Правопис 2019 §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_multiword_prep_relative_clause = (
-        "Театр — місце, де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_multiword_prep_relative_clause = "Театр — місце, де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_multiword_prep_relative_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_multiword_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_multiword_prep_relative_clause)) == 0
 
     # Defect 121 / Positive control (Round 57 P2): Agreeing instrumental apposition with multiword preposition-led relative clause accepted (Правопис 2019 §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_multiword_prep_relative_clause = (
-        "Театр — місце, де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    frag_agreeing_apposition_multiword_prep_relative_clause = "Театр — місце, де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_multiword_prep_relative_clause, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_multiword_prep_relative_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_multiword_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_multiword_prep_relative_clause)) == 1
 
     # Defect 122 / Negative regression (Round 58 P2): Typographic apostrophe in multiword preposition does not bypass relative clause detection (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_typographic_apostrophe_prep_relative_clause = (
-        "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    frag_discordant_apposition_typographic_apostrophe_prep_relative_clause = "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    assert miner.has_discordant_dash_apposition(
+        frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur
     )
-    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
-    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
-    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause)) == 0
+    assert not miner.is_pristine_eval_sentence(
+        frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur
+    )
+    assert (
+        len(
+            miner.split_clean_ukrainian_sentences(
+                frag_discordant_apposition_typographic_apostrophe_prep_relative_clause
+            )
+        )
+        == 0
+    )
 
     # Defect 123 / Positive control (Round 58 P2): Agreeing instrumental apposition with typographic apostrophe in multiword preposition accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause = (
-        "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause = "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
-    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
-    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause)) == 1
+    assert miner.is_pristine_eval_sentence(
+        frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur
+    )
+    assert (
+        len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause))
+        == 1
+    )
 
     # Defect 124 / Negative regression (Round 59 P2): Unbounded multiword prepositional phrase does not bypass relative clause detection (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_unbounded_prep_relative_clause = (
-        "Театр — місце, де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_unbounded_prep_relative_clause = "Театр — місце, де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_unbounded_prep_relative_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_unbounded_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_unbounded_prep_relative_clause)) == 0
 
     # Defect 125 / Positive control (Round 59 P2): Agreeing instrumental apposition with unbounded multiword prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_unbounded_prep_relative_clause = (
-        "Театр — місце, де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    frag_agreeing_apposition_unbounded_prep_relative_clause = "Театр — місце, де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_unbounded_prep_relative_clause, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_unbounded_prep_relative_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_unbounded_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_unbounded_prep_relative_clause)) == 1
 
     # Defect 126 / Negative regression (Round 60 P2): Noun head with homonymous verb reading in relative clause does not bypass detection (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_noun_head_relative_clause = (
-        "Театр — місце, де для глядачів, мати яких працювала, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_noun_head_relative_clause = "Театр — місце, де для глядачів, мати яких працювала, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_noun_head_relative_clause, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_noun_head_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_noun_head_relative_clause)) == 0
 
     # Defect 127 / Positive control (Round 60 P2): Agreeing instrumental apposition with noun-headed relative clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_noun_head_relative_clause = (
-        "Театр — місце, де для глядачів, мати яких працювала, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_noun_head_relative_clause = "Театр — місце, де для глядачів, мати яких працювала, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_noun_head_relative_clause, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_noun_head_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_noun_head_relative_clause)) == 1
 
     # Defect 128 / Negative regression (Round 61 P2): Noun/infinitive homonym 'мати' as subject does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_noun_homonym_maty = (
-        "Театр — місце, де мати вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_noun_homonym_maty = "Театр — місце, де мати вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_noun_homonym_maty, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_noun_homonym_maty, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_noun_homonym_maty)) == 0
 
     # Defect 129 / Positive control (Round 61 P2): Agreeing instrumental apposition with subject 'мати' accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_noun_homonym_maty = (
-        "Театр — місце, де мати вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
-    )
+    frag_agreeing_apposition_noun_homonym_maty = "Театр — місце, де мати вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_noun_homonym_maty, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_noun_homonym_maty, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_noun_homonym_maty)) == 1
 
     # Defect 130 / Contrastive negative control (Round 61 P2): Unambiguous noun subject 'сестра' rejects discordant apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_noun_sestra = (
-        "Театр — місце, де сестра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_noun_sestra = "Театр — місце, де сестра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_noun_sestra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_noun_sestra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_noun_sestra)) == 0
 
     # Defect 131 / Contrastive positive control (Round 61 P2): Unambiguous noun subject 'сестра' accepts agreeing apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_noun_sestra = (
-        "Театр — місце, де сестра вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
-    )
+    frag_agreeing_apposition_noun_sestra = "Театр — місце, де сестра вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_noun_sestra, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_noun_sestra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_noun_sestra)) == 1
 
     # Defect 132 / Negative regression (Round 62 P2): Verb homonym with imperative reading in prepositional phrase does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_prep_homonym_zminy = (
-        "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_prep_homonym_zminy = "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_homonym_zminy, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_homonym_zminy, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_homonym_zminy)) == 0
 
     # Defect 133 / Positive control (Round 62 P2): Agreeing instrumental apposition with prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_prep_homonym_zminy = (
-        "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_prep_homonym_zminy = "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_homonym_zminy, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_homonym_zminy, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_homonym_zminy)) == 1
 
     # Defect 134 / Contrastive negative control (Round 62 P2): Unambiguous noun in prepositional phrase rejects discordant apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_prep_noun_kontsert = (
-        "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_prep_noun_kontsert = "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_noun_kontsert, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_noun_kontsert, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_noun_kontsert)) == 0
 
     # Defect 135 / Contrastive positive control (Round 62 P2): Unambiguous noun in prepositional phrase accepts agreeing apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_prep_noun_kontsert = (
-        "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_prep_noun_kontsert = "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_noun_kontsert, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_noun_kontsert, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_noun_kontsert)) == 1
 
     # Defect 136 / Negative regression (Round 62 P2): Dependent infinitive in prepositional phrase does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_dependent_infinitive = (
-        "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_dependent_infinitive = "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dependent_infinitive, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dependent_infinitive, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dependent_infinitive)) == 0
 
     # Defect 137 / Positive control (Round 62 P2): Agreeing instrumental apposition with dependent infinitive accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_dependent_infinitive = (
-        "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
-    )
+    frag_agreeing_apposition_dependent_infinitive = "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dependent_infinitive, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dependent_infinitive, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dependent_infinitive)) == 1
 
     # Defect 138 / Negative regression (Round 63 P2): Modified prepositional phrase with predicative noun 'час' does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_prep_modified_chas = (
-        "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_prep_modified_chas = "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_modified_chas, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_modified_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_modified_chas)) == 0
 
     # Defect 139 / Positive control (Round 63 P2): Agreeing instrumental apposition with modified prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_prep_modified_chas = (
-        "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_prep_modified_chas = "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_modified_chas, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_modified_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_modified_chas)) == 1
 
     # Defect 140 / Negative regression (Round 64 P2): Enclosing prepositional phrase with nested prepositional modifier does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_nested_prep_chas = (
-        "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_nested_prep_chas = "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_nested_prep_chas, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_nested_prep_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_nested_prep_chas)) == 0
 
     # Defect 141 / Positive control (Round 64 P2): Agreeing instrumental apposition with nested prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_nested_prep_chas = (
-        "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_nested_prep_chas = "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_nested_prep_chas, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_nested_prep_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_nested_prep_chas)) == 1
 
     # Defect 142 / Negative regression (Round 64 P2): Expanded modifier chain without token cutoff does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_expanded_modifiers_chas = (
-        "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_expanded_modifiers_chas = "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_expanded_modifiers_chas, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_expanded_modifiers_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_expanded_modifiers_chas)) == 0
 
     # Defect 143 / Positive control (Round 64 P2): Agreeing instrumental apposition with expanded modifier chain accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_expanded_modifiers_chas = (
-        "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_expanded_modifiers_chas = "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_expanded_modifiers_chas, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_expanded_modifiers_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_expanded_modifiers_chas)) == 1
 
     # Defect 144 / Negative regression (Round 65 P2): Dependent nouns inside nested prepositional phrase do not prematurely close enclosing preposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_dependent_nouns_chas = (
-        "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_dependent_nouns_chas = "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dependent_nouns_chas, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dependent_nouns_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dependent_nouns_chas)) == 0
 
     # Defect 145 / Positive control (Round 65 P2): Agreeing instrumental apposition across dependent nouns accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_dependent_nouns_chas = (
-        "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_dependent_nouns_chas = "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dependent_nouns_chas, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dependent_nouns_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dependent_nouns_chas)) == 1
 
     # Defect 146 / Negative regression (Round 66 P2): Noun/verb homonyms inside nested prepositional phrase do not break enclosing preposition tracking (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_homonym_myla_chas = (
-        "Театр — місце, де у вільний від виготовлення мила час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_homonym_myla_chas = "Театр — місце, де у вільний від виготовлення мила час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_homonym_myla_chas, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_homonym_myla_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_homonym_myla_chas)) == 0
 
     # Defect 147 / Positive control (Round 66 P2): Agreeing instrumental apposition across noun/verb homonyms accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_homonym_myla_chas = (
-        "Театр — місце, де у вільний від виготовлення мила час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_homonym_myla_chas = "Театр — місце, де у вільний від виготовлення мила час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_homonym_myla_chas, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_homonym_myla_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_homonym_myla_chas)) == 1
 
     # Defect 148 / Negative regression (Round 67 P2): Actual finite verbs following adverbial prepositional phrase are not swallowed (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_clause_verb_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_clause_verb_myla = "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_clause_verb_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_clause_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_clause_verb_myla)) == 0
 
     # Defect 149 / Positive control (Round 67 P2): Agreeing instrumental apposition across clause verb accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_clause_verb_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_clause_verb_myla = "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_clause_verb_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_myla)) == 1
 
     # Defect 150 / Negative regression (Round 68 P2): Dependent genitive nouns inside prepositional phrases do not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_dep_genitive_myla = (
-        "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_dep_genitive_myla = "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dep_genitive_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dep_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dep_genitive_myla)) == 0
 
     # Defect 151 / Positive control (Round 68 P2): Agreeing instrumental apposition across dependent genitive noun accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_dep_genitive_myla = (
-        "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_dep_genitive_myla = "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dep_genitive_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dep_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dep_genitive_myla)) == 1
 
     # Defect 152 / Negative regression (Round 68 P2): Enclosing phrase tracking does not span across separate prepositional phrases (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_clause_verb_across_pp = (
-        "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_clause_verb_across_pp = "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_clause_verb_across_pp, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_clause_verb_across_pp, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_clause_verb_across_pp)) == 0
 
     # Defect 153 / Positive control (Round 68 P2): Agreeing instrumental apposition across separate prepositional phrases accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_clause_verb_across_pp = (
-        "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_clause_verb_across_pp = "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_clause_verb_across_pp, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_across_pp, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_across_pp)) == 1
 
     # Defect 154 / Negative regression (Round 69 P2): Agreeing subject with subsequent matrix verb does not make PP-internal genitive a predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_agreeing_subject_genitive_myla = (
-        "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_agreeing_subject_genitive_myla = "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_agreeing_subject_genitive_myla)) == 0
 
     # Defect 155 / Positive control (Round 69 P2): Agreeing instrumental apposition across subject and genitive PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_agreeing_subject_genitive_myla = (
-        "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
+    frag_agreeing_apposition_agreeing_subject_genitive_myla = "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_agreeing_subject_genitive_myla)) == 1
 
     # Defect 156 / Negative regression (Round 70 P2): Preceding direct object across adverbial PP preserves finite predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_preceding_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_preceding_object_myla = "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_preceding_object_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_preceding_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_preceding_object_myla)) == 0
 
     # Defect 157 / Positive control (Round 70 P2): Agreeing instrumental apposition with preceding direct object accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_preceding_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_preceding_object_myla = "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_preceding_object_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_preceding_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_preceding_object_myla)) == 1
 
     # Defect 158 / Negative regression (Round 70 P2): Pronominal direct object preserves finite predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_pronominal_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_pronominal_object_myla = "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pronominal_object_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pronominal_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pronominal_object_myla)) == 0
 
     # Defect 159 / Positive control (Round 70 P2): Agreeing instrumental apposition with pronominal direct object accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_pronominal_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_pronominal_object_myla = "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_pronominal_object_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_pronominal_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_pronominal_object_myla)) == 1
 
     # Defect 160 / Negative regression (Round 71 P2): Deverbal noun PP followed by finite verb with direct object preserves clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_deverbal_pp_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_deverbal_pp_finite_verb_myla = "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_deverbal_pp_finite_verb_myla)) == 0
 
     # Defect 161 / Positive control (Round 71 P2): Agreeing instrumental apposition across deverbal noun PP and finite verb accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_deverbal_pp_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_deverbal_pp_finite_verb_myla = "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_deverbal_pp_finite_verb_myla)) == 1
 
     # Defect 162 / Negative regression (Round 71 P2): Genitive noun governed by non-suffix action noun 'купівля' does not fake clause predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_kupivlia_genitive_myla = (
-        "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_kupivlia_genitive_myla = "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kupivlia_genitive_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kupivlia_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kupivlia_genitive_myla)) == 0
 
     # Defect 163 / Positive control (Round 71 P2): Agreeing instrumental apposition across 'купівля' PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_kupivlia_genitive_myla = (
-        "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_kupivlia_genitive_myla = "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_kupivlia_genitive_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_kupivlia_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_kupivlia_genitive_myla)) == 1
 
     # Defect 164 / Negative regression (Round 71 P2): Genitive noun governed by non-suffix action noun 'продаж' does not fake clause predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_prodazh_genitive_myla = (
-        "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_prodazh_genitive_myla = "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prodazh_genitive_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prodazh_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prodazh_genitive_myla)) == 0
 
     # Defect 165 / Positive control (Round 71 P2): Agreeing instrumental apposition across 'продаж' PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_prodazh_genitive_myla = (
-        "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_prodazh_genitive_myla = "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prodazh_genitive_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prodazh_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prodazh_genitive_myla)) == 1
 
     # Defect 166 / Negative regression (Round 72 P2): Negated verb with genitive direct object under negation preserves clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_negated_verb_genitive_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи не мила посуду — та з лікаркою — досвідчена фахівчиня — про виставу."
+    frag_discordant_apposition_negated_verb_genitive_object_myla = "Він говорив із сестрою — дівчиною, яка після роботи не мила посуду — та з лікаркою — досвідчена фахівчиня — про виставу."
+    assert miner.has_discordant_dash_apposition(
+        frag_discordant_apposition_negated_verb_genitive_object_myla, cur_ves=cur
     )
-    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_negated_verb_genitive_object_myla, cur_ves=cur)
-    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_negated_verb_genitive_object_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(
+        frag_discordant_apposition_negated_verb_genitive_object_myla, cur_ves=cur
+    )
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_negated_verb_genitive_object_myla)) == 0
 
     # Defect 167 / Positive control (Round 72 P2): Agreeing instrumental apposition across negated verb with genitive direct object accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_agreeing_apposition_negated_verb_genitive_object_myla = (
-        "Він говорив із сестрою — дівчиною, яка після роботи не мила посуду — та з лікаркою — досвідченою фахівчинею — про виставу."
+    frag_agreeing_apposition_negated_verb_genitive_object_myla = "Він говорив із сестрою — дівчиною, яка після роботи не мила посуду — та з лікаркою — досвідченою фахівчинею — про виставу."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_negated_verb_genitive_object_myla, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_negated_verb_genitive_object_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_negated_verb_genitive_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_negated_verb_genitive_object_myla)) == 1
 
     # Defect 168 / Negative regression (Round 72 P2): Accusative duration adverbial 'цілий день' does not make genitive noun a spurious predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_discordant_apposition_duration_adverbial_myla = (
-        "Театр — місце, де після купівлі мила цілий день вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_duration_adverbial_myla = "Театр — місце, де після купівлі мила цілий день вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_duration_adverbial_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_duration_adverbial_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_duration_adverbial_myla)) == 0
 
     # Defect 169 / Positive control (Round 72 P2): Agreeing instrumental apposition across duration adverbial accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
-    frag_agreeing_apposition_duration_adverbial_myla = (
-        "Театр — місце, де після купівлі мила цілий день вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
-    )
+    frag_agreeing_apposition_duration_adverbial_myla = "Театр — місце, де після купівлі мила цілий день вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_duration_adverbial_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_duration_adverbial_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_duration_adverbial_myla)) == 1
 
     # Defect 170 / Negative regression (Round 73 P2): Relative pronoun 'що' subject preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_shcho_relative_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_shcho_relative_finite_verb_myla = "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_shcho_relative_finite_verb_myla)) == 0
 
     # Defect 171 / Positive control (Round 73 P2): Agreeing instrumental apposition across 'що' relative clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_agreeing_apposition_shcho_relative_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    frag_agreeing_apposition_shcho_relative_finite_verb_myla = "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_shcho_relative_finite_verb_myla, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_shcho_relative_finite_verb_myla)) == 1
 
     # Defect 172 / Negative regression (Round 73 P2): 1st-person pronoun 'я' subject preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_ia_pronoun_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_ia_pronoun_finite_verb_myla = "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ia_pronoun_finite_verb_myla)) == 0
 
     # Defect 173 / Positive control (Round 73 P2): Agreeing instrumental apposition across 'я' clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_agreeing_apposition_ia_pronoun_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
-    )
+    frag_agreeing_apposition_ia_pronoun_finite_verb_myla = "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_ia_pronoun_finite_verb_myla)) == 1
 
     # Defect 174 / Negative regression (Round 74 Fable P2): Noun subject across 'з якою' relative clause preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla = "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    assert miner.has_discordant_dash_apposition(
+        frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur
     )
-    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
-    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
-    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla)) == 0
+    assert not miner.is_pristine_eval_sentence(
+        frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur
+    )
+    assert (
+        len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla)) == 0
+    )
 
     # Defect 175 / Positive control (Round 74 Fable P2): Agreeing instrumental apposition across 'з якою' relative clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla = (
-        "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla = "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    assert not miner.has_discordant_dash_apposition(
+        frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur
     )
-    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
-    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla)) == 1
+    assert (
+        len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla)) == 1
+    )
 
     # Defect 176 / Negative regression (Round 74 Codex P2): Common-gender subject with duration adverbial does not fake finite verb across action noun PP (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_duration_action_noun_myla = (
-        "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_duration_action_noun_myla = "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_duration_action_noun_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_duration_action_noun_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_duration_action_noun_myla)) == 0
 
     # Defect 177 / Positive control (Round 74 Codex P2): Agreeing instrumental apposition across action noun PP and duration adverbial accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_agreeing_apposition_duration_action_noun_myla = (
-        "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважав комічні вибрики."
-    )
+    frag_agreeing_apposition_duration_action_noun_myla = "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважав комічні вибрики."
     assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_duration_action_noun_myla, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_duration_action_noun_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_duration_action_noun_myla)) == 1
 
     # Defect 178 / Negative regression (Round 75 Codex P2): Quantified direct object 'всю підлогу' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_vsiu_pidlohu_finite_verb = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила всю підлогу — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_vsiu_pidlohu_finite_verb = "Він говорив із сестрою — дівчиною, що після роботи мила всю підлогу — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_vsiu_pidlohu_finite_verb, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_vsiu_pidlohu_finite_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_vsiu_pidlohu_finite_verb)) == 0
 
     # Defect 179 / Negative regression (Round 75 Codex P2): Non-restricted direct objects 'чашку'/'стіл' preserve finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_chashku_finite_verb = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила чашку — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_chashku_finite_verb = "Він говорив із сестрою — дівчиною, що після роботи мила чашку — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_chashku_finite_verb, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_chashku_finite_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_chashku_finite_verb)) == 0
 
     # Defect 180 / Negative regression (Round 75 Codex P2): 1st person subject 'я' with direct object 'посуд' preserves finite verb completeness across action noun PP (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_ia_pryhotuvannya_posud = (
-        "Він говорив із сестрою — дівчиною, у якої я після приготування мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_ia_pryhotuvannya_posud = "Він говорив із сестрою — дівчиною, у якої я після приготування мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ia_pryhotuvannya_posud, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ia_pryhotuvannya_posud, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ia_pryhotuvannya_posud)) == 0
 
     # Defect 181 / Negative regression (Round 75 Fable P1): Animate direct object 'дитину' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_ditynu_finite_verb = (
-        "Він говорив із сестрою — дівчиною, яка після роботи мила дитину — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_ditynu_finite_verb = "Він говорив із сестрою — дівчиною, яка після роботи мила дитину — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ditynu_finite_verb, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ditynu_finite_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ditynu_finite_verb)) == 0
 
     # Defect 182 / Negative regression (Round 75 Fable P2): Possessive pronoun 'її' inside PP does not leak noun out of prepositional governance (Правопис 2019 §9, §37, §114.2, §158, §161)
-    frag_discordant_apposition_bez_yiyi_myla = (
-        "Театр — місце, де без її мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_bez_yiyi_myla = "Театр — місце, де без її мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bez_yiyi_myla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bez_yiyi_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bez_yiyi_myla)) == 0
 
     # Defect 183 / Negative regression (Round 75 Fable P2): Noun inside possessive PP 'на її честь' is not treated as matrix clause subject (Правопис 2019 §9, §37, §114.2, §158, §161)
-    frag_discordant_apposition_na_yiyi_chest = (
-        "Театр — місце, де він на її честь після купівлі мила посуд вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_na_yiyi_chest = "Театр — місце, де він на її честь після купівлі мила посуд вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_na_yiyi_chest, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_na_yiyi_chest, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_na_yiyi_chest)) == 0
 
     # Defect 184 / Negative regression (Round 76 Codex P2): Intervening adjective between duration modifier and event noun ('всю довгу виставу') does not count as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_vsiu_dovhu_vystavu = (
-        "Театр — місце, де я після купівлі мила всю довгу виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_vsiu_dovhu_vystavu = "Театр — місце, де я після купівлі мила всю довгу виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_vsiu_dovhu_vystavu, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_vsiu_dovhu_vystavu, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_vsiu_dovhu_vystavu)) == 0
 
     # Defect 185 / Negative regression (Round 76 Codex P2): Syncretic noun 'пані' cannot fill both subject and direct object roles simultaneously (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pani_syncretic = (
-        "Театр — місце, де пані після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_pani_syncretic = "Театр — місце, де пані після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_syncretic, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_syncretic, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_syncretic)) == 0
 
     # Defect 186 / Negative regression (Round 76 Fable P2): Numeral modifier 'двох' (numr) inside PP does not break PP boundary (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_dvoch_kupivel = (
-        "Театр — місце, де після двох купівель мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
-    )
+    frag_discordant_apposition_dvoch_kupivel = "Театр — місце, де після двох купівель мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvoch_kupivel, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvoch_kupivel, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvoch_kupivel)) == 0
 
     # Defect 187 / Negative regression (Round 76 Fable P2): Quantified direct object 'багато посуду' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_bahato_posudu = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила багато посуду — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_bahato_posudu = "Він говорив із сестрою — дівчиною, що після роботи мила багато посуду — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bahato_posudu, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bahato_posudu, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_posudu)) == 0
 
     # Defect 188 / Negative regression (Round 76 Fable P2): Quantified direct objects with numerals 'п'ять чашок' and quantifiers 'кілька тарілок' preserve finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_pyat_chashok = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила п'ять чашок — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_pyat_chashok = "Він говорив із сестрою — дівчиною, що після роботи мила п'ять чашок — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pyat_chashok, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pyat_chashok, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pyat_chashok)) == 0
 
-    frag_discordant_apposition_kilka_tarilok = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила кілька тарілок — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_kilka_tarilok = "Він говорив із сестрою — дівчиною, що після роботи мила кілька тарілок — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kilka_tarilok, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kilka_tarilok, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kilka_tarilok)) == 0
 
     # Defect 189 / Negative regression (Round 77 Codex P2): Quantity adverb modifying an adverb ('трохи згодом') without a governed genitive nominal object does not count as direct object (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
-    frag_discordant_apposition_trokhy_zghodom = (
-        "Театр — місце, де я після купівлі мила трохи згодом вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_trokhy_zghodom = "Театр — місце, де я після купівлі мила трохи згодом вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_trokhy_zghodom, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_trokhy_zghodom, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_trokhy_zghodom)) == 0
 
     # Defect 190 / Negative regression (Round 77 Fable P2): Conjunction 'та' inside coordinate PP ('пані після купівлі мила та шампуню') cannot serve as nominative subject satisfying distinct subject/object requirement (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pani_ta_shampuniu = (
-        "Театр — місце, де пані після купівлі мила та шампуню вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_pani_ta_shampuniu = "Театр — місце, де пані після купівлі мила та шампуню вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_ta_shampuniu, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_ta_shampuniu, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_ta_shampuniu)) == 0
 
     # Defect 191 / Negative regression (Round 77 Fable P2): Numeral or quantifier with event duration noun ('п\'ять вистав', 'дві вистави') functions as duration adverbial rather than direct object or finite predicate (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pyat_vystav = (
-        "Театр — місце, де я після купівлі мила п'ять вистав вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_pyat_vystav = "Театр — місце, де я після купівлі мила п'ять вистав вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pyat_vystav, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pyat_vystav, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pyat_vystav)) == 0
 
-    frag_discordant_apposition_dvi_vystavy = (
-        "Театр — місце, де я після купівлі мила дві вистави вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_dvi_vystavy = "Театр — місце, де я після купівлі мила дві вистави вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_vystavy, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_vystavy, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_vystavy)) == 0
 
     # Defect 192 / Negative regression (Round 77 Fable P2): Prenominal title noun ('пані лікарка') modifying nominative subject does not count as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pani_likarka = (
-        "Театр — місце, де пані лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_pani_likarka = "Театр — місце, де пані лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_likarka, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_likarka)) == 0
@@ -1688,41 +1578,31 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_trokhy_hovoryla)) == 0
 
     # Defect 195 / Negative regression (Round 78 Fable P2 Finding 2): Frequency noun phrase with quantifier ('кілька разів') functions as frequency adverbial rather than direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_kilka_raziv = (
-        "Театр — місце, де я після купівлі мила кілька разів вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
-    )
+    frag_discordant_apposition_kilka_raziv = "Театр — місце, де я після купівлі мила кілька разів вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kilka_raziv, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kilka_raziv, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kilka_raziv)) == 0
 
     # Defect 196 / Negative regression (Round 78 Fable P2 Finding 3): Indeclinable prenominal title noun ('леді лікарка') modifying nominative subject does not count as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_ledi_likarka = (
-        "Театр — місце, де леді лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_ledi_likarka = "Театр — місце, де леді лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ledi_likarka, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ledi_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ledi_likarka)) == 0
 
     # Defect 197 / Negative regression (Round 79 Codex P2 Finding 1): Physical building floors ('мила поверхи') is a direct object, not a measure adverbial (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_poverkhy = (
-        "Він говорив із сестрою — дівчиною, що після роботи мила поверхи — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_poverkhy = "Він говорив із сестрою — дівчиною, що після роботи мила поверхи — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_poverkhy, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_poverkhy, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_poverkhy)) == 0
 
     # Defect 198 / Negative regression (Round 79 Codex P2 Finding 2): Direct object preceding noun subject ('посуд лікарка') is not discarded as title apposition (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_posud_likarka = (
-        "Він говорив із сестрою — дівчиною, якій після роботи мила посуд лікарка — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_posud_likarka = "Він говорив із сестрою — дівчиною, якій після роботи мила посуд лікарка — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_posud_likarka, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_posud_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_posud_likarka)) == 0
 
     # Defect 199 / Negative regression (Round 79 Fable P2 Finding 1): Direct object preceding noun subject ('посуд сестра') is not discarded as title apposition (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_posud_sestra = (
-        "Він говорив із сестрою — дівчиною, у якої посуд сестра після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_posud_sestra = "Він говорив із сестрою — дівчиною, у якої посуд сестра після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_posud_sestra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_posud_sestra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_posud_sestra)) == 0
@@ -1750,9 +1630,7 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_shyla)) == 0
 
     # Defect 201 / Negative regression (Round 79 Fable P3 Finding 4): Intervening adjective between title and noun ('пані головна лікарка') modifies subject and does not count as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pani_holovna_likarka = (
-        "Театр — місце, де пані головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_pani_holovna_likarka = "Театр — місце, де пані головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_holovna_likarka, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_holovna_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_holovna_likarka)) == 0
@@ -1790,9 +1668,7 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_troye_pyly)) == 0
 
     # Defect 206 / Negative regression (Round 81 Fable P3 Finding 2): Prenominal title variant 'сеньйора' modifying subject (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_senyora_likarka = (
-        "Театр — місце, де сеньйора головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
-    )
+    frag_discordant_apposition_senyora_likarka = "Театр — місце, де сеньйора головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_senyora_likarka, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_senyora_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_senyora_likarka)) == 0
@@ -1806,17 +1682,13 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odne_shylo)) == 0
 
     # Defect 208 / Negative regression (Round 82 Codex P2 Finding 2): Numeral-governed noun phrase with genitive dependent 'два шила майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_dva_shyla_maistra = (
-        "Театр — місце, де два шила майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
-    )
+    frag_discordant_apposition_dva_shyla_maistra = "Театр — місце, де два шила майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dva_shyla_maistra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dva_shyla_maistra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dva_shyla_maistra)) == 0
 
     # Defect 209 / Negative regression (Round 82 Fable P3 Finding 3): Fractional numeral 'півтора шила' governing genitive singular functions as noun complement (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_pivtora_shyla = (
-        "Театр — місце, де півтора шила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
-    )
+    frag_discordant_apposition_pivtora_shyla = "Театр — місце, де півтора шила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pivtora_shyla, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pivtora_shyla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pivtora_shyla)) == 0
@@ -1846,25 +1718,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_chai)) == 0
 
     # Defect 213 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'дві пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_dvi_pyly_maistra = (
-        "Театр — місце, де дві пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
-    )
+    frag_discordant_apposition_dvi_pyly_maistra = "Театр — місце, де дві пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_maistra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_maistra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_maistra)) == 0
 
     # Defect 214 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'три пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_try_pyly_maistra = (
-        "Театр — місце, де три пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
-    )
+    frag_discordant_apposition_try_pyly_maistra = "Театр — місце, де три пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_try_pyly_maistra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_try_pyly_maistra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_try_pyly_maistra)) == 0
 
     # Defect 215 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'одні пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_odni_pyly_maistra = (
-        "Театр — місце, де одні пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
-    )
+    frag_discordant_apposition_odni_pyly_maistra = "Театр — місце, де одні пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odni_pyly_maistra, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odni_pyly_maistra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_maistra)) == 0
@@ -1910,17 +1776,13 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_vody)) == 0
 
     # Defect 221 / Negative regression (Round 85 Fable Finding 1): Paucal numeral subject with accusative plural object 'дві пили таблетки' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_dvi_pyly_tabletky = (
-        "Він говорив із сестрами — дівчатами, що дві пили таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_dvi_pyly_tabletky = "Він говорив із сестрами — дівчатами, що дві пили таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_tabletky, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_tabletky, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_tabletky)) == 0
 
     # Defect 222 / Negative regression (Round 85 Fable Finding 1): Feminine numeral subject with accusative object 'одна пила таблетки' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_odna_pyla_tabletky = (
-        "Він говорив із сестрами — дівчатами, що одна пила таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_odna_pyla_tabletky = "Він говорив із сестрами — дівчатами, що одна пила таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_pyla_tabletky, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_pyla_tabletky, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_tabletky)) == 0
@@ -1941,24 +1803,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_vyna)) == 0
 
     # Defect 224 / Negative regression (Round 85 Fable Finding 1): Masculine numeral subject with pronominal possessive modifier 'один став його другом' / 'один став її чоловіком' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_odyn_stav_yoho_druhom = (
-        "Він говорив із сестрами — хлопцями, що один став його другом — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_odyn_stav_yoho_druhom = "Він говорив із сестрами — хлопцями, що один став його другом — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_yoho_druhom, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_yoho_druhom, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_yoho_druhom)) == 0
 
-    frag_discordant_apposition_odyn_stav_yiyi_cholovikom = (
-        "Він говорив із сестрами — хлопцями, що один став її чоловіком — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_odyn_stav_yiyi_cholovikom = "Він говорив із сестрами — хлопцями, що один став її чоловіком — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_yiyi_cholovikom, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_yiyi_cholovikom, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_yiyi_cholovikom)) == 0
 
     # Defect 225 / Negative regression (Round 85 Fable Finding 1): Masculine numeral subject with temporal demonstrative adverbial 'один став цього року лікарем' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
-    frag_discordant_apposition_odyn_stav_tsioho_roku = (
-        "Він говорив із сестрами — хлопцями, що один став цього року лікарем — та з лікаркою — досвідчена фахівчиня — про виставу."
-    )
+    frag_discordant_apposition_odyn_stav_tsioho_roku = "Він говорив із сестрами — хлопцями, що один став цього року лікарем — та з лікаркою — досвідчена фахівчиня — про виставу."
     assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_tsioho_roku, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_tsioho_roku, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_tsioho_roku)) == 0
@@ -2037,15 +1893,11 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_discordant_dash_apposition(frag_pos_odyn_stav_yoho_druhom, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_pos_odyn_stav_yoho_druhom, cur_ves=cur)
 
-    frag_pos_dvi_pyly_maistra_buly = (
-        "Театр — місце, де дві пили майстра були вдалою знахідкою — вважала лікарка."
-    )
+    frag_pos_dvi_pyly_maistra_buly = "Театр — місце, де дві пили майстра були вдалою знахідкою — вважала лікарка."
     assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
 
-    frag_pos_dvi_pyly_zavodu_buly = (
-        "Театр — місце, де дві пили заводу були вдалою знахідкою — вважала лікарка."
-    )
+    frag_pos_dvi_pyly_zavodu_buly = "Театр — місце, де дві пили заводу були вдалою знахідкою — вважала лікарка."
     assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_zavodu_buly, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_zavodu_buly, cur_ves=cur)
 
@@ -2068,13 +1920,9 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_pos_odyn_pas_konei, cur_ves=cur)
 
 
-
-
-
-
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
-    receipt_file = RELEASE_DIR / "release_receipt.json"
+    receipt_file = RECEIPT_FILE
     assert receipt_file.is_file()
 
     schema = json.loads(RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -2093,7 +1941,7 @@ def test_release_receipt_schema_and_checksum() -> None:
     assert receipt["invariants_verified"]["precommit_file_ceiling_satisfied"] is True
 
     # Check sha256 file
-    sha_file = RELEASE_DIR / "release_receipt.json.sha256"
+    sha_file = RECEIPT_SHA_FILE
     assert sha_file.is_file()
     expected_sha = miner.sha256_file(receipt_file)
     assert expected_sha in sha_file.read_text(encoding="utf-8")
@@ -2252,7 +2100,9 @@ def test_f10_participle_sharding_distribution() -> None:
             shards_with_participles += 1
 
     assert participle_count == 45, f"Expected 45 participle trajectories, got {participle_count}"
-    assert shards_with_participles >= 20, f"Expected participle distribution across >=20 shards, got {shards_with_participles}"
+    assert shards_with_participles >= 20, (
+        f"Expected participle distribution across >=20 shards, got {shards_with_participles}"
+    )
 
 
 def test_n1_ua_gec_single_layer_and_zero_overlapping_contradictions(tmp_path: Path) -> None:
@@ -2287,7 +2137,9 @@ def test_n2_zero_unexplained_edits_and_pure_taxonomy(tmp_path: Path) -> None:
     train_dir.mkdir(parents=True)
 
     dirty_ann = "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} {-=>—:::error_type=Punctuation} це велике досягнення.\n\n"
-    pure_ann = "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} за один навчальний семестр в університеті.\n\n"
+    pure_ann = (
+        "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} за один навчальний семестр в університеті.\n\n"
+    )
 
     (train_dir / "0200.ann").write_text(dirty_ann + pure_ann, encoding="utf-8")
     items = miner.load_ua_gec_annotations(fake_gec)
@@ -2327,20 +2179,17 @@ def test_n5_proekt_spelling_rejection() -> None:
 def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
     """Verify Brown-UK negative controls reject pre-2019 'проект'."""
     import sqlite3
+
     conn = sqlite3.connect(f"file:{miner.DEFAULT_VESUM_DB}?mode=ro", uri=True)
     cur = conn.cursor()
-    assert not miner.is_pristine_eval_sentence(
-        "Ми ознайомилися з новим проектом постанови уряду на засіданні.", cur
-    )
-    assert miner.is_pristine_eval_sentence(
-        "Ми ознайомилися з новим проєктом постанови уряду на засіданні.", cur
-    )
+    assert not miner.is_pristine_eval_sentence("Ми ознайомилися з новим проектом постанови уряду на засіданні.", cur)
+    assert miner.is_pristine_eval_sentence("Ми ознайомилися з новим проєктом постанови уряду на засіданні.", cur)
     conn.close()
 
 
 def test_r4_control_categories_isolation() -> None:
     """Verify Brown-UK controls are categorized as Control/Usus or Control/Normative, not F/Style or G/Other."""
-    receipt_file = RELEASE_DIR / "release_receipt.json"
+    receipt_file = RECEIPT_FILE
     assert receipt_file.is_file()
     receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
     cat_dist = receipt["sft_training_dataset"]["category_distribution"]
@@ -2485,13 +2334,31 @@ def test_quote_sentence_typography() -> None:
     assert miner.quote_sentence("вулиця Франка?.", "?") == "«вулиця Франка?»"
     assert miner.quote_sentence("вулиця Франка?.", ".") == "«вулиця Франка?»"
     # Nested quotes converted to „...“ per § 164 and terminal period placed outside outer guillemets
-    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".") == "«…під час конкурсу малюнків „Яка ти, Європо?“»."
-    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?") == "«…під час конкурсу малюнків „Яка ти, Європо?“»?"
-    assert miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", ".") == "«У 1970 році почав працювати на заводі „Електроприлад“»."
-    assert miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", "?") == "«У 1970 році почав працювати на заводі „Електроприлад“»?"
+    assert (
+        miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".")
+        == "«…під час конкурсу малюнків „Яка ти, Європо?“»."
+    )
+    assert (
+        miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?")
+        == "«…під час конкурсу малюнків „Яка ти, Європо?“»?"
+    )
+    assert (
+        miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", ".")
+        == "«У 1970 році почав працювати на заводі „Електроприлад“»."
+    )
+    assert (
+        miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", "?")
+        == "«У 1970 році почав працювати на заводі „Електроприлад“»?"
+    )
     # Direct speech ending in ! or ?: mark stays inside, balanced quotes, no doubled marks
-    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", "?") == "«Він сказав: „Добрий день, рідна школо!“»"
-    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", ".") == "«Він сказав: „Добрий день, рідна школо!“»"
+    assert (
+        miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", "?")
+        == "«Він сказав: „Добрий день, рідна школо!“»"
+    )
+    assert (
+        miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", ".")
+        == "«Він сказав: „Добрий день, рідна школо!“»"
+    )
     # Sentence starting with quote: no doubled ««
     assert miner.quote_sentence("«Через це сталося лихо».", ".") == "«„Через це сталося лихо“»."
 
@@ -2579,17 +2446,12 @@ def test_control_records_verbatim_fidelity() -> None:
                         orig, "?" if rec.get("category") == "Control/Normative" else "."
                     )
                     assert expected_quoted in query, (
-                        f"Mismatch in {sf.name}:{line_no}:\n"
-                        f"orig: {orig}\n"
-                        f"expected: {expected_quoted}\n"
-                        f"query: {query}"
+                        f"Mismatch in {sf.name}:{line_no}:\norig: {orig}\nexpected: {expected_quoted}\nquery: {query}"
                     )
                     # 2. Non-circular core content match (R8-4): corpus text without outer punctuation
                     core_orig = miner.convert_nested_quotes(orig.strip()).rstrip(".?!…").strip()
                     assert core_orig in query, (
-                        f"Core content mismatch in {sf.name}:{line_no}:\n"
-                        f"core_orig: {core_orig}\n"
-                        f"query: {query}"
+                        f"Core content mismatch in {sf.name}:{line_no}:\ncore_orig: {core_orig}\nquery: {query}"
                     )
                     checked_count += 1
 
@@ -2616,8 +2478,7 @@ def test_ua_gec_sanitized_error_spans_in_query() -> None:
                     err_span = m.group(1)
                     query = rec.get("query", "")
                     assert err_span in query, (
-                        f"Error span '{err_span}' missing from query in {sf.name}:{line_no} ({tid}):\n"
-                        f"query: {query}"
+                        f"Error span '{err_span}' missing from query in {sf.name}:{line_no} ({tid}):\nquery: {query}"
                     )
                     checked_count += 1
 

@@ -871,7 +871,11 @@ def verify_delivery(
 
     verify_study = _get_verify_study()
 
-    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+    try:
+        study_ok = verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path)
+    except ValueError:
+        return False
+    if not study_ok:
         return False
 
     # Validate runs against study receipt

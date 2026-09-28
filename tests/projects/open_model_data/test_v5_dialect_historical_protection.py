@@ -28,6 +28,7 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     oes_work_bucket,
     surzhyk_record_is_authentic,
 )
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v5_dialect_protection_evaluator import (
     evaluate_protection_suite,
     evaluate_single_case,
@@ -40,11 +41,11 @@ from scripts.projects.open_model_data.v5_dialect_protection_evaluator import (
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = REPO_ROOT / "data" / "projects" / "open_model_data"
 PARTITION_DIR = DATA_DIR / "decolonization" / "partitions"
-CONTRACTS_DIR = DATA_DIR / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 
-SUITE_PATH = PARTITION_DIR / "dialect_historical_protection_suite_600.jsonl"
-SHA_PATH = PARTITION_DIR / "dialect_historical_protection_suite_600.sha256"
-RECEIPT_PATH = PARTITION_DIR / "dialect_historical_protection_receipt_v1.json"
+SUITE_PATH = resolve_open_model_path(PARTITION_DIR / "dialect_historical_protection_suite_600.jsonl")
+SHA_PATH = resolve_open_model_path(PARTITION_DIR / "dialect_historical_protection_suite_600.sha256")
+RECEIPT_PATH = resolve_open_model_path(PARTITION_DIR / "dialect_historical_protection_receipt_v1.json")
 RECORD_SCHEMA_PATH = CONTRACTS_DIR / "v1_dialect_historical_protection_record.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_dialect_historical_protection_receipt.schema.json"
 

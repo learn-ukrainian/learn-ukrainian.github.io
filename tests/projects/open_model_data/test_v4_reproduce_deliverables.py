@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import jsonschema
@@ -249,6 +250,7 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
+    _git_study_checkout(mock_root)
     mock_receipt = mock_root / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
     assert verify_delivery(mock_root, mock_receipt) is True
 
@@ -490,6 +492,34 @@ def test_mock_delivery_stream_loader_with_text(tmp_path: Path) -> None:
     assert part_records[0]["text"] == sample_text
 
 
+def _git_study_checkout(root: Path) -> None:
+    """Give a fixture the committed study set so managed verification can read it."""
+    source = Path.cwd()
+    manifest_rel = Path("registry/artifacts/open_model_study_outputs.manifest.json")
+    manifest = json.loads((source / manifest_rel).read_text(encoding="utf-8"))
+    study_link = root / "data/projects/open_model_data/study"
+    if study_link.is_symlink():
+        study_link.unlink()
+    relatives = [entry["path"] for entry in manifest["entries"]]
+    relatives.extend((manifest.get("set_descriptor") or {}).get("companions", {}))
+    for relative in relatives:
+        src = source / relative
+        dst = root / relative
+        if dst.is_symlink():
+            dst.unlink()
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if not dst.exists():
+            shutil.copy2(src, dst)
+    manifest_dst = root / manifest_rel
+    manifest_dst.parent.mkdir(parents=True, exist_ok=True)
+    if manifest_dst.is_symlink():
+        manifest_dst.unlink()
+    if not manifest_dst.exists():
+        shutil.copy2(source / manifest_rel, manifest_dst)
+    if not (root / ".git").exists():
+        subprocess.run(["git", "init"], cwd=root, check=True, capture_output=True, timeout=30)
+
+
 def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple[Path, Path]:
     repo_root = Path.cwd()
     fake_repo = tmp_path / "repo"
@@ -501,8 +531,18 @@ def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple
     # Symlink shared open_model_data directories
     data_omd = fake_repo / "data/projects/open_model_data"
     data_omd.mkdir(parents=True, exist_ok=True)
-    for sub in ["contracts", "study", "language", "extraction", "delivery"]:
+    for sub in ["contracts", "language", "extraction", "delivery"]:
         (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+    registry_contracts = fake_repo / "registry/projects/open_model_data/contracts"
+    registry_contracts.parent.mkdir(parents=True, exist_ok=True)
+    registry_contracts.symlink_to((repo_root / "registry/projects/open_model_data/contracts").resolve())
+    registry_dataset = fake_repo / "registry/projects/open_model_data/dataset"
+    registry_dataset.mkdir(parents=True, exist_ok=True)
+    for name in (
+        "v4_human_source_dataset_manifest_v1.json",
+        "v4_human_source_dataset_receipt_v1.json",
+    ):
+        (registry_dataset / name).symlink_to((repo_root / "registry/projects/open_model_data/dataset" / name).resolve())
 
     # Setup dataset dir with symlinked manifest & receipt, and custom records file
     dataset_dir = data_omd / "dataset"
@@ -523,6 +563,7 @@ def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple
     receipt_data["dataset_reproduction"]["records_sha256"] = sha256_file(custom_records)
     fake_receipt = tmp_path / "test_delivery_receipt.json"
     fake_receipt.write_text(json.dumps(receipt_data), encoding="utf-8")
+    _git_study_checkout(fake_repo)
 
     return fake_repo, fake_receipt
 
@@ -621,6 +662,9 @@ def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(t
     data_omd.mkdir(parents=True, exist_ok=True)
     for sub in ["contracts", "language", "extraction", "dataset"]:
         (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+    registry_contracts = fake_repo / "registry/projects/open_model_data/contracts"
+    registry_contracts.parent.mkdir(parents=True, exist_ok=True)
+    registry_contracts.symlink_to((repo_root / "registry/projects/open_model_data/contracts").resolve())
 
     # Copy study directory so we can mutate study receipt
     shutil.copytree(repo_root / "data/projects/open_model_data/study", data_omd / "study")
@@ -741,5 +785,6 @@ def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: P
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
+    _git_study_checkout(fake_repo)
     receipt_path = fake_repo / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
     assert verify_delivery(fake_repo, receipt_path) is True

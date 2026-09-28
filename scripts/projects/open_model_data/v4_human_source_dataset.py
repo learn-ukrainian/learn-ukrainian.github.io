@@ -26,6 +26,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MAX_FILE_SIZE_BYTES = 2000 * 1024  # 2000 KB pre-commit limit
 
@@ -111,13 +113,23 @@ def build_dataset(
     receipt_out: Path,
 ) -> dict[str, Any]:
     """Build the complete representative human-source dataset cohort."""
-    split_index_path = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl"
-    split_receipt_path = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
-    lang_index_path = repo_root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
-    extraction_index_path = repo_root / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl"
-    prov_index_path = repo_root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
-    quality_assessment_path = (
-        repo_root / "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    split_index_path = resolve_open_model_path(
+        "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl", repo=repo_root
+    )
+    split_receipt_path = resolve_open_model_path(
+        "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json", repo=repo_root
+    )
+    lang_index_path = resolve_open_model_path(
+        "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl", repo=repo_root
+    )
+    extraction_index_path = resolve_open_model_path(
+        "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl", repo=repo_root
+    )
+    prov_index_path = resolve_open_model_path(
+        "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl", repo=repo_root
+    )
+    quality_assessment_path = resolve_open_model_path(
+        "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json", repo=repo_root
     )
 
     for p in [
@@ -568,9 +580,9 @@ def verify_dataset(
     receipt_rel: str = "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
 ) -> bool:
     """Verify the complete dataset artifacts."""
-    manifest_path = repo_root / manifest_rel
-    records_path = repo_root / records_rel
-    receipt_path = repo_root / receipt_rel
+    manifest_path = resolve_open_model_path(manifest_rel, repo=repo_root)
+    records_path = resolve_open_model_path(records_rel, repo=repo_root)
+    receipt_path = resolve_open_model_path(receipt_rel, repo=repo_root)
 
     if not manifest_path.exists() or not records_path.exists() or not receipt_path.exists():
         return False
@@ -1073,9 +1085,9 @@ def main() -> int:
 
     try:
         if args.action == "build":
-            m_path = args.manifest if args.manifest.is_absolute() else repo_root / args.manifest
-            r_path = args.records if args.records.is_absolute() else repo_root / args.records
-            rc_path = args.receipt if args.receipt.is_absolute() else repo_root / args.receipt
+            m_path = resolve_open_model_path(args.manifest, repo=repo_root)
+            r_path = resolve_open_model_path(args.records, repo=repo_root)
+            rc_path = resolve_open_model_path(args.receipt, repo=repo_root)
             receipt = build_dataset(repo_root, m_path, r_path, rc_path)
             print(f"SUCCESS: Built dataset with receipt {receipt['receipt_id']}")
             return 0

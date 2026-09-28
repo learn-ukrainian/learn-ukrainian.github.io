@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import csv
+from functools import lru_cache
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_OPEN_MODEL_DATA_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data"
 ARTIFACT_OPEN_MODEL_DATA_DIR = REPO_ROOT / "data" / "projects" / "open_model_data"
+LOGICAL_OPEN_MODEL_PREFIX = "data/projects/open_model_data"
+REGISTRY_OPEN_MODEL_PREFIX = "registry/projects/open_model_data"
 
 REGISTRY_COMPONENTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "components"
 ARTIFACT_COMPONENTS_DIR = ARTIFACT_OPEN_MODEL_DATA_DIR / "components"
@@ -60,6 +64,86 @@ def is_archived_or_quarantined_path(path: Path | str | None) -> bool:
         )
     except (ValueError, RuntimeError):
         return False
+
+
+@lru_cache(maxsize=1)
+def open_model_classes() -> dict[str, str]:
+    """Map each open-model relative path to its frozen K or A class."""
+    table = REPO_ROOT / "registry/artifacts/classification-v1.tsv"
+    classes: dict[str, str] = {}
+    with table.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for row in reader:
+            logical = row.get("path", "")
+            marker = LOGICAL_OPEN_MODEL_PREFIX + "/"
+            if logical.startswith(marker) and row.get("class") in {"K", "A"}:
+                classes[logical[len(marker) :]] = row["class"]
+    if not classes:
+        raise ValueError(f"open-model classification rows missing from {table}")
+    return classes
+
+
+def open_model_class(relative: str) -> str | None:
+    """Return K or A when the relative path, or a single-class directory, is classified."""
+    classes = open_model_classes()
+    normalized = relative.strip("/")
+    if not normalized:
+        return None
+    found = classes.get(normalized)
+    if found is not None:
+        return found
+    prefix = normalized + "/"
+    child_classes = {classes[item] for item in classes if item.startswith(prefix)}
+    if child_classes == {"K"}:
+        return "K"
+    if child_classes == {"A"}:
+        return "A"
+    return None
+
+
+def _open_model_split(text: str) -> tuple[str, str, str] | None:
+    """Return the path head, matched prefix, and open-model relative tail."""
+    for marker in (LOGICAL_OPEN_MODEL_PREFIX, REGISTRY_OPEN_MODEL_PREFIX):
+        token = marker + "/"
+        index = text.find(token)
+        if index != -1:
+            return text[:index], marker, text[index + len(token) :]
+        if text == marker or text.endswith("/" + marker):
+            start = text.rfind(marker)
+            return text[:start], marker, ""
+    return None
+
+
+def resolve_open_model_path(path: str | Path, *, repo: Path | None = None) -> Path:
+    """Resolve a logical or physical open-model path to its classified location.
+
+    K members live under ``registry/projects/open_model_data``. A members stay
+    under ``data/projects/open_model_data``. Logical ``data/`` strings recorded
+    in frozen contracts are unchanged; only the filesystem location moves.
+    Mixed directories keep the caller's prefix. Paths outside the tree join
+    ``repo`` when they are relative.
+    """
+    raw = Path(path)
+    split = _open_model_split(raw.as_posix())
+    if split is None:
+        if raw.is_absolute() or repo is None:
+            return raw
+        return repo / raw
+    head, marker, relative = split
+    klass = open_model_class(relative)
+    if klass == "K":
+        chosen = REGISTRY_OPEN_MODEL_PREFIX
+    elif klass == "A":
+        chosen = LOGICAL_OPEN_MODEL_PREFIX
+    else:
+        chosen = marker
+    tail = f"{chosen}/{relative}" if relative else chosen
+    if raw.is_absolute() or head not in {"", "."}:
+        prefix = head
+        if prefix and not prefix.endswith("/"):
+            prefix = prefix + "/"
+        return Path(f"{prefix}{tail}")
+    return (repo if repo is not None else REPO_ROOT) / tail
 
 
 def assert_not_archived_path(path: Path | str | None, context: str = "dataset operation") -> None:

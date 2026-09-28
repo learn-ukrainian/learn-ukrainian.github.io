@@ -61,6 +61,7 @@ KNOWN_BASES_BY_PHASE = {
         "RELEASE_DIR",
         "DEFAULT_CONTRACTS_DIR",
         "DEFAULT_RELEASE_DIR",
+        "resolve_open_model_path",
     ),
     "P4": ("DATA_DIR", "DATA_ROOT", "artifact_path"),
     "P5": ("DATA_DIR", "DATA_ROOT", "REGISTRY_ROOT", "artifact_path"),

@@ -30,6 +30,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 
 class PilotDatasetError(ValueError):
     """Raised when pilot dataset construction or verification fails."""
@@ -67,7 +69,7 @@ def build(
     """Build the first private human-source dataset pilot records and receipt."""
     input_root = Path(input_root)
     output_root = Path(output_root)
-    manifest_resolved = manifest_path if Path(manifest_path).is_absolute() else (input_root / manifest_path).resolve()
+    manifest_resolved = resolve_open_model_path(manifest_path, repo=input_root)
 
     if not manifest_resolved.is_file():
         raise PilotDatasetError(f"Manifest file not found: {manifest_resolved}")
@@ -80,11 +82,11 @@ def build(
         schema = json.loads(manifest_schema_path.read_text(encoding="utf-8"))
         Draft202012Validator(schema).validate(manifest_data)
 
-    split_idx_path = input_root / manifest_data["inputs"]["split_index"]
-    split_rcpt_path = input_root / manifest_data["inputs"]["split_receipt"]
-    lang_idx_path = input_root / manifest_data["inputs"]["language_index"]
-    ext_idx_path = input_root / manifest_data["inputs"]["extraction_index"]
-    prov_idx_path = input_root / manifest_data["inputs"]["provenance_index"]
+    split_idx_path = resolve_open_model_path(manifest_data["inputs"]["split_index"], repo=input_root)
+    split_rcpt_path = resolve_open_model_path(manifest_data["inputs"]["split_receipt"], repo=input_root)
+    lang_idx_path = resolve_open_model_path(manifest_data["inputs"]["language_index"], repo=input_root)
+    ext_idx_path = resolve_open_model_path(manifest_data["inputs"]["extraction_index"], repo=input_root)
+    prov_idx_path = resolve_open_model_path(manifest_data["inputs"]["provenance_index"], repo=input_root)
 
     if not split_idx_path.is_file():
         raise PilotDatasetError(f"Split index missing: {split_idx_path}")
@@ -273,8 +275,8 @@ def build(
         raise PilotDatasetError("Failed to find any cleared training span for 1/1 pilot proof (PILOT-1)")
 
     # 5. Write Outputs
-    out_rec_path = output_root / manifest_data["outputs"]["records"]
-    out_rcpt_path = output_root / manifest_data["outputs"]["receipt"]
+    out_rec_path = resolve_open_model_path(manifest_data["outputs"]["records"], repo=output_root)
+    out_rcpt_path = resolve_open_model_path(manifest_data["outputs"]["receipt"], repo=output_root)
     out_rec_path.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -332,7 +334,7 @@ def verify(
     """Verify pilot dataset records, proof-of-mechanism, and accounting."""
     input_root = Path(input_root)
     output_root = Path(output_root)
-    manifest_resolved = manifest_path if Path(manifest_path).is_absolute() else (input_root / manifest_path).resolve()
+    manifest_resolved = resolve_open_model_path(manifest_path, repo=input_root)
 
     if not manifest_resolved.is_file():
         raise PilotDatasetError(f"Manifest file not found: {manifest_resolved}")
@@ -347,9 +349,9 @@ def verify(
         schema = json.loads(m_schema_path.read_text(encoding="utf-8"))
         Draft202012Validator(schema).validate(manifest_data)
 
-    out_rec_path = output_root / manifest_data["outputs"]["records"]
-    out_rcpt_path = output_root / manifest_data["outputs"]["receipt"]
-    split_rcpt_path = input_root / manifest_data["inputs"]["split_receipt"]
+    out_rec_path = resolve_open_model_path(manifest_data["outputs"]["records"], repo=output_root)
+    out_rcpt_path = resolve_open_model_path(manifest_data["outputs"]["receipt"], repo=output_root)
+    split_rcpt_path = resolve_open_model_path(manifest_data["inputs"]["split_receipt"], repo=input_root)
 
     if not out_rec_path.is_file():
         raise PilotDatasetError(f"Records file missing: {out_rec_path}")

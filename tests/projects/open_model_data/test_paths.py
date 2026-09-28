@@ -30,6 +30,7 @@ from scripts.projects.open_model_data.paths import (
     REGISTRY_TEXTBOOKS_DIR,
     REPO_ROOT,
     ensure_component_directories,
+    resolve_open_model_path,
 )
 from scripts.storage.paths import artifact_path
 
@@ -56,6 +57,24 @@ def test_paths_relative_hierarchy() -> None:
     assert ARTIFACT_ARCHIVED_ULDR_V1_DIR == ARTIFACT_ARCHIVE_DIR / "uldr_v1_production"
     assert REGISTRY_QUARANTINED_HISTORICAL_DIR == REGISTRY_ARCHIVE_DIR / "quarantined_historical"
     assert CONTRACTS_DIR == REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+
+
+def test_resolve_open_model_path_follows_classification(tmp_path: Path) -> None:
+    """K members resolve under registry; A members stay under data."""
+    receipt = "data/projects/open_model_data/canary/pilot_canary_receipt.json"
+    dataset = "data/projects/open_model_data/canary/pilot_canary_train_200.jsonl"
+    assert resolve_open_model_path(receipt) == REGISTRY_OPEN_MODEL_DATA_DIR / "canary/pilot_canary_receipt.json"
+    assert resolve_open_model_path(dataset) == ARTIFACT_OPEN_MODEL_DATA_DIR / "canary/pilot_canary_train_200.jsonl"
+    assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
+    moved = resolve_open_model_path(
+        REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/source_work_locator_index_v1.compact.jsonl"
+    )
+    assert moved == ARTIFACT_OPEN_MODEL_DATA_DIR / "evidence/source_work_locator_index_v1.compact.jsonl"
+    fixture_receipt = resolve_open_model_path(receipt, repo=tmp_path)
+    assert fixture_receipt == tmp_path / "registry/projects/open_model_data/canary/pilot_canary_receipt.json"
+    assert resolve_open_model_path("data/sources.db", repo=tmp_path) == tmp_path / "data/sources.db"
+    mixed = resolve_open_model_path("data/projects/open_model_data/canary", repo=tmp_path)
+    assert mixed == tmp_path / "data/projects/open_model_data/canary"
 
 
 def test_tombstone_exists_in_archived_uldr_v1() -> None:
