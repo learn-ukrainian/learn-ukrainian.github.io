@@ -8,26 +8,29 @@ import yaml
 from scripts.audit import check_ci_dependencies
 from scripts.audit.check_ci_dependencies import unexpected_diagnostics
 
-_CI = Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_CI = _REPO_ROOT / ".github/workflows/ci.yml"
+_ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
+
+
+def _action_step(name: str) -> dict:
+    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
+    matches = [step for step in steps if step.get("name") == name]
+    assert len(matches) == 1, f"expected one action step named {name!r}"
+    return matches[0]
 
 
 def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
+    # #9062: the install/hydrate block is one composite action, and every job
+    # that used to carry a copy calls it, so the copies cannot drift apart.
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
-    scripts = [
-        next(step["run"] for step in jobs[job]["steps"] if step.get("name") == name)
-        for job, name in (
-            ("fast-checks", "Install preflight Python deps"),
-            ("pytest", "Install Python deps"),
-            ("needs-artifact-audit", "Install Python deps"),
-        )
-    ]
-    commands = [
-        [line.strip() for line in script.splitlines() if line.strip() and not line.strip().startswith("#")]
-        for script in scripts
-    ]
-    assert commands[0] == commands[1] == commands[2]
-    script = scripts[0]
+    for job in ("fast-checks", "pytest", "needs-artifact-audit"):
+        assert any(
+            step.get("uses") == "./.github/actions/python-ci-env"
+            for step in jobs[job]["steps"]
+        ), job
+    script = _action_step("Install Python deps")["run"]
     assert script.index("uv pip install --offline") < script.index(
         "uv pip install --python"
     ) < script.index("scripts/audit/check_ci_dependencies.py")
