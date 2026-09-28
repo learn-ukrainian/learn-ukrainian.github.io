@@ -451,6 +451,11 @@ class AgyAdapter:
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
 
+        # Unknown explicit models raise here, before `agy --version`. Dispatch
+        # probes this method to refuse before spawn, and that probe must not
+        # depend on a subprocess.
+        resolved_model = self._resolve_model_flag(model)
+
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
@@ -516,7 +521,6 @@ class AgyAdapter:
             ]
         )
 
-        resolved_model = self._resolve_model_flag(model)
         if resolved_model:
             cmd += ["--model", resolved_model]
 
