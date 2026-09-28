@@ -7,12 +7,18 @@ Polling is telemetry only. Limits are enforced by the OS:
   dispatch worker passes ``lu-dispatch.slice``). That worker scope is a
   sibling of the caller's scope inside the caller's slice, so it stays in
   the slice's accounting and limit. ``memory.high`` / ``memory.max`` are
-  written only after ``cgroup.procs`` lists that worker alone. A shared
-  cgroup is never written; the worker falls back to ``RLIMIT_AS``.
-  ``MemorySwapMax=0`` is set on the scope because ``memory.max`` alone is
-  absorbed by swap. The scope is stopped in a ``finally`` on normal exit,
-  exceptions, and ``KeyboardInterrupt``. OOM is SIGKILL (returncode -9 or
-  137) or ``MemoryError``. Stopping the scope (SIGTERM, -15) is not OOM.
+  written only after ``cgroup.procs`` lists that worker alone and
+  ``cgroup.stat`` reports ``nr_descendants == 0``. A shared cgroup, or one
+  with a child cgroup, is never written; the worker falls back to
+  ``RLIMIT_AS``. ``MemorySwapMax=0`` is set on the scope because
+  ``memory.max`` alone is absorbed by swap. The scope is stopped in a
+  ``finally`` on normal exit, exceptions, and ``KeyboardInterrupt``.
+  ``--slice`` is omitted when the caller's cgroup has no ``user@`` segment.
+  A cgroup OOM is ``memory.events`` ``oom_kill`` (read while the scope
+  still exists, before it is stopped) or ``MemoryError``. When that file
+  cannot be read, only SIGKILL (returncode -9 or 137) counts. An external
+  SIGKILL with ``oom_kill == 0`` is not OOM, and stopping the scope
+  (SIGTERM, -15) is not OOM.
 - Other POSIX: ``RLIMIT_AS`` set in the child before importing the engine.
 
 Whether ``systemd-run --user --scope`` works is probed once per process
@@ -74,6 +80,8 @@ class BoundedCommandResult:
 
     completed: subprocess.CompletedProcess[str]
     mechanism: MemoryMechanism
+    # ``None`` when the scope's ``memory.events`` could not be read.
+    oom_kill: int | None = None
 
 
 def _log_mechanism(mechanism: str, unit: str | None) -> None:
@@ -146,6 +154,11 @@ def apply_worker_memory_limit(policy: MemoryPolicy) -> EnforcementKind:
     """Apply the best available hard limit in the current (child) process."""
     if sys.platform.startswith("linux") and _apply_cgroup_v2(policy):
         return "cgroup_v2"
+    # The scope reaper shares this cgroup, so the exclusive-cgroup write is
+    # refused. The scope already has MemoryMax; RLIMIT_AS would turn that
+    # SIGKILL into MemoryError and hide oom_kill.
+    if os.environ.get("LEXICON_OOM_EVENTS_FILE"):
+        return "cgroup_v2"
     try:
         _try_set_rlimit_as(policy.max_bytes)
         return "rlimit_as"
@@ -168,19 +181,22 @@ def self_cgroup_relative() -> str | None:
 
 
 def slice_name_from_cgroup_relative(relative: str) -> str | None:
-    """Last ``*.slice`` that contains ``relative`` inside the user manager.
+    """Last ``*.slice`` below the ``user@*.service`` segment, or None.
 
     ``.../user@1000.service/lu.slice/lu-dispatch.slice/<scope>.scope`` yields
     ``lu-dispatch.slice``, the slice a dispatch worker must pass to
-    ``systemd-run --slice``.
+    ``systemd-run --slice``. A cgroup with no ``user@`` segment (an ssh
+    session scope, a system slice) returns None so the caller omits
+    ``--slice`` instead of inventing a slice inside the user manager.
     """
     parts = [part for part in relative.split("/") if part]
     service_at: int | None = None
     for index, part in enumerate(parts):
         if part.startswith("user@") and part.endswith(".service"):
             service_at = index
-    search = parts[service_at + 1 :] if service_at is not None else parts
-    for part in reversed(search):
+    if service_at is None:
+        return None
+    for part in reversed(parts[service_at + 1 :]):
         if part.endswith(".slice"):
             return part
     return None
@@ -222,16 +238,39 @@ def _cgroup_procs_exclusive(cgroup_dir: Path, worker_pid: int) -> bool:
     return pids == {worker_pid}
 
 
+def _cgroup_has_no_descendants(cgroup_dir: Path) -> bool:
+    """True only when ``cgroup.stat`` says ``nr_descendants`` is 0.
+
+    ``memory.max`` applies to the whole subtree. A missing or unreadable
+    stat file is not proof of an empty subtree, so the write is refused.
+    """
+    try:
+        text = (cgroup_dir / "cgroup.stat").read_text(encoding="utf-8")
+    except OSError:
+        return False
+    for line in text.splitlines():
+        key, _, value = line.strip().partition(" ")
+        if key != "nr_descendants":
+            continue
+        try:
+            return int(value) == 0
+        except ValueError:
+            return False
+    return False
+
+
 def _try_apply_cgroup_limit(cgroup_dir: Path, policy: MemoryPolicy, worker_pid: int) -> bool:
-    """Write ``memory.high`` / ``memory.max`` only for an exclusive worker cgroup.
+    """Write ``memory.high`` / ``memory.max`` only for an exclusive leaf cgroup.
 
     The ``cgroup.procs`` read and the write are not atomic. That is safe
     here: the worker scope contains only this process, and the plain
     fallback always shares the parent's cgroup, so the guard refuses and
-    no write happens. A shared cgroup is left unchanged. Callers fall back
-    to ``RLIMIT_AS``.
+    no write happens. A shared cgroup, or one with descendant cgroups, is
+    left unchanged. Callers fall back to ``RLIMIT_AS``.
     """
     if not _cgroup_procs_exclusive(cgroup_dir, worker_pid):
+        return False
+    if not _cgroup_has_no_descendants(cgroup_dir):
         return False
     high_path = cgroup_dir / "memory.high"
     max_path = cgroup_dir / "memory.max"
@@ -310,6 +349,83 @@ def systemd_user_scope_available() -> bool:
     return _systemd_scope_ok
 
 
+# Records ``oom_kill`` after the worker exits and before this process leaves
+# the scope. The scope cgroup is removed once its last process exits, which
+# is before the parent reaches ``_stop_user_scope``, so the parent cannot
+# read ``memory.events`` itself. A missing file means "unreadable": callers
+# fall back to the returncode rule.
+_SCOPE_REAP_SCRIPT = """\
+"$@"
+rc=$?
+rel=$(awk -F: '$1 == "0" { print $3; exit }' /proc/self/cgroup)
+events="/sys/fs/cgroup${rel}/memory.events"
+if [ -n "$rel" ] && [ -r "$events" ]; then
+  awk '$1 == "oom_kill" { print $2; exit }' "$events" > "$LEXICON_OOM_EVENTS_FILE" || true
+fi
+if [ "$rc" -gt 128 ] && [ "$rc" -lt 256 ]; then
+  kill -$((rc - 128)) $$
+fi
+exit "$rc"
+"""
+
+
+def _scope_reap_argv(cmd: list[str]) -> list[str]:
+    """Run ``cmd`` in this cgroup, then record ``oom_kill`` before exiting."""
+    return ["/bin/sh", "-c", _SCOPE_REAP_SCRIPT, "lexicon-scope-reap", *cmd]
+
+
+def _read_recorded_oom_kill(path: Path) -> int | None:
+    try:
+        text = path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if not text:
+        return None
+    try:
+        value = int(text.split()[0])
+    except (ValueError, IndexError):
+        return None
+    if value < 0:
+        return None
+    return value
+
+
+def _parse_oom_kill(text: str) -> int | None:
+    for line in text.splitlines():
+        key, _, value = line.strip().partition(" ")
+        if key != "oom_kill":
+            continue
+        try:
+            parsed = int(value)
+        except ValueError:
+            return None
+        return parsed if parsed >= 0 else None
+    return None
+
+
+def _scope_memory_events_oom_kill(unit: str, env: dict[str, str]) -> int | None:
+    """Read ``oom_kill`` from a still-loaded scope. None when it is gone."""
+    try:
+        proc = subprocess.run(
+            ["systemctl", "--user", "show", "-p", "ControlGroup", "--value", f"{unit}.scope"],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    relative = proc.stdout.strip()
+    if proc.returncode != 0 or not relative.startswith("/"):
+        return None
+    try:
+        text = (Path("/sys/fs/cgroup") / relative.lstrip("/") / "memory.events").read_text(encoding="utf-8")
+    except OSError:
+        return None
+    return _parse_oom_kill(text)
+
+
 def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
     try:
         subprocess.run(
@@ -330,7 +446,9 @@ def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str
     ``--slice`` places the scope in the caller's slice, as a sibling of the
     caller's own scope. ``MemorySwapMax=0`` is required for the cap to
     SIGKILL: with swap left at ``max``, anonymous allocations are swapped
-    and ``memory.max`` never fires.
+    and ``memory.max`` never fires. ``OOMPolicy=kill`` overrides the user
+    manager default ``stop``, which would SIGTERM the scope and look like
+    a normal stop instead of an OOM.
     """
     argv = [
         "systemd-run",
@@ -351,6 +469,8 @@ def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str
             f"MemoryHigh={policy.high_bytes}",
             "-p",
             "MemorySwapMax=0",
+            "-p",
+            "OOMPolicy=kill",
             "--",
             *cmd,
         ]
@@ -378,16 +498,28 @@ def run_bounded_command(
         unit = f"lexicon-cap-{os.getpid()}-{uuid.uuid4().hex[:8]}"
         slice_name = caller_slice_name()
         proc: subprocess.CompletedProcess[str] | None = None
+        oom_kill: int | None = None
+        fd, oom_name = tempfile.mkstemp(prefix="lexicon-oom-")
+        os.close(fd)
+        oom_file = Path(oom_name)
+        launch_env = dict(scope_env)
+        launch_env["LEXICON_OOM_EVENTS_FILE"] = str(oom_file)
         try:
             proc = subprocess.run(
-                _scope_argv(cmd, policy, unit, slice_name),
+                _scope_argv(_scope_reap_argv(cmd), policy, unit, slice_name),
                 cwd=cwd,
-                env=scope_env,
+                env=launch_env,
                 capture_output=True,
                 text=True,
                 timeout=timeout_s,
                 check=False,
             )
+            # Prefer the in-scope record. If the scope was killed before it
+            # could write the file, try the live cgroup once more, still
+            # before ``_stop_user_scope`` removes whatever remains.
+            oom_kill = _read_recorded_oom_kill(oom_file)
+            if oom_kill is None:
+                oom_kill = _scope_memory_events_oom_kill(unit, scope_env)
         except FileNotFoundError:
             proc = None
         except Exception:
@@ -395,9 +527,10 @@ def run_bounded_command(
             raise
         finally:
             _stop_user_scope(unit, scope_env)
+            oom_file.unlink(missing_ok=True)
         if proc is not None:
             _log_mechanism("systemd_scope", unit)
-            return BoundedCommandResult(completed=proc, mechanism="systemd_scope")
+            return BoundedCommandResult(completed=proc, mechanism="systemd_scope", oom_kill=oom_kill)
     try:
         plain = subprocess.run(
             cmd,
@@ -494,7 +627,7 @@ def run_startup_self_test(
         # No result file. Kind follows the mechanism that ran. Only SIGKILL
         # (returncode -9 or 137) counts as an enforced OOM.
         kind = _proof_kind(bounded.mechanism, None)
-        if classify_oom_exit(proc.returncode) and kind != "none":
+        if classify_oom_exit(proc.returncode, oom_kill=bounded.oom_kill) and kind != "none":
             return EnforcementProof(
                 kind=kind,
                 enforced=True,
@@ -519,14 +652,23 @@ def require_hard_cap_protection(proof: EnforcementProof) -> None:
         )
 
 
-def classify_oom_exit(exitcode: int | None, *, memory_error: bool = False) -> bool:
+def classify_oom_exit(
+    exitcode: int | None,
+    *,
+    memory_error: bool = False,
+    oom_kill: int | None = None,
+) -> bool:
     """Return True when a worker exit should be classified as OOM.
 
-    Only SIGKILL counts: returncode ``-9`` or ``137`` (128+9). ``-15`` is
-    SIGTERM from stopping the scope and is not an OOM.
+    A readable ``oom_kill`` count decides: only a cgroup OOM kill counts, so
+    an external SIGKILL (``oom_kill == 0``) does not. When the count could
+    not be read, only SIGKILL counts: returncode ``-9`` or ``137`` (128+9).
+    ``-15`` is SIGTERM from stopping the scope and is not an OOM.
     """
     if memory_error:
         return True
+    if oom_kill is not None:
+        return oom_kill > 0
     if exitcode is None:
         return False
     return exitcode in {-9, 137}

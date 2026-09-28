@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -25,6 +26,10 @@ from scripts.lexicon.runner.memory import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
+# Reachable only when the parent exports this. A production payload cannot
+# opt in: the job name alone is rejected.
+_PROBE_JOBS_ENV = "LEXICON_WORKER_PROBE_JOBS"
+_PROBE_ONLY_JOBS = frozenset({"stderr_exit", "sleep", "placement"})
 
 
 def _write_result(result_path: str, result: WorkerResult) -> None:
@@ -32,6 +37,10 @@ def _write_result(result_path: str, result: WorkerResult) -> None:
         json.dumps(asdict(result), ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+
+
+def _probe_jobs_enabled() -> bool:
+    return os.environ.get(_PROBE_JOBS_ENV) == "1"
 
 
 def _stderr_exit_probe(payload: dict[str, Any]) -> None:
@@ -53,6 +62,18 @@ def _worker_main(payload: dict[str, Any], result_path: str) -> None:
     kind = apply_worker_memory_limit(policy)
     job = str(payload.get("job") or "enrich")
     chunk_id = str(payload.get("chunk_id") or "")
+    if job in _PROBE_ONLY_JOBS and not _probe_jobs_enabled():
+        _write_result(
+            result_path,
+            WorkerResult(
+                chunk_id=chunk_id,
+                outcome="failed_terminal",
+                error_code="unknown_job",
+                message=f"unknown job {job!r}",
+                memory_mechanism=kind,
+            ),
+        )
+        return
     if job == "stderr_exit":
         _stderr_exit_probe(payload)
         return
@@ -197,7 +218,7 @@ def run_capped_worker(
         )
 
     mechanism = observed_memory_mechanism(bounded.mechanism, "")
-    if classify_oom_exit(completed.returncode):
+    if classify_oom_exit(completed.returncode, oom_kill=bounded.oom_kill):
         return WorkerResult(
             chunk_id=str(payload.get("chunk_id") or ""),
             outcome="failed_terminal",
@@ -209,9 +230,18 @@ def run_capped_worker(
         chunk_id=str(payload.get("chunk_id") or ""),
         outcome="failed_terminal",
         error_code="worker_crash",
-        message=f"worker exited without result (returncode={completed.returncode})",
+        message=_worker_crash_message(completed),
         memory_mechanism=mechanism,
     )
+
+
+def _worker_crash_message(completed: subprocess.CompletedProcess[str]) -> str:
+    """Crash text, including a stderr tail when the scope or worker left one."""
+    message = f"worker exited without result (returncode={completed.returncode})"
+    tail = (completed.stderr or "").strip()
+    if not tail:
+        return message
+    return f"{message}; stderr={tail[-500:]}"
 
 
 def worker_cli(argv: list[str] | None = None) -> int:
