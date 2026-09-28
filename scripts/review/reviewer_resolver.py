@@ -33,6 +33,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
+from fnmatch import fnmatchcase
 from typing import Literal
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
@@ -44,6 +45,37 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
+
+# Operator 2026-09-27: "only claude, gpt and gemini should be involved in
+# ukrainian content. no other models allowed if it is about ukrainian lang.
+# culture, heritage."
+UKRAINIAN_CONTENT_PATHS = (
+    "curriculum/",
+    "scripts/curriculum/",
+    "scripts/data/stress_overrides.yaml",
+    "scripts/verification/stress*",
+    "scripts/pipeline/stress_annotator.py",
+    "scripts/lexicon/",
+    "site/src/lib/lexicon/",
+    "scripts/review/prompts/",
+    "scripts/build/phases/",
+    "scripts/build/fresh/prompt*",
+    "docs/epics/fresh-build-*",
+    "schemas/activities-*",
+)
+_UKRAINIAN_CONTENT_FAMILIES = frozenset({"anthropic", "openai", "google"})
+
+
+def is_ukrainian_content_change(inputs: ResolverInputs) -> bool:
+    """Classify a review from its paths or explicit language routing signal."""
+    if inputs.language_lane or inputs.review_profile.strip().casefold() == "ukrainian":
+        return True
+    return any(
+        path == pattern or (pattern.endswith("/") and path.startswith(pattern)) or fnmatchcase(path, pattern)
+        for path in (*inputs.changed_paths, *inputs.owned_paths)
+        for pattern in UKRAINIAN_CONTENT_PATHS
+    )
+
 
 # --- family resolution -------------------------------------------------------
 
@@ -317,6 +349,8 @@ class ResolverInputs:
     review_profile: str = "code"
     risk: str = "medium"
     domain: str = "code"
+    changed_paths: tuple[str, ...] = ()
+    language_lane: bool = False
     required_capabilities: frozenset[str] = field(default_factory=frozenset)
     # Optional exact catalog model role (for example ``security_review``).
     # When omitted, profile/risk role suitability comes from model_catalog.
@@ -576,6 +610,20 @@ def evaluate_candidate(
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
 
+    if is_ukrainian_content_change(inputs) and candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason="Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini",
+            health=health,
+        )
     if inputs.subject_seats or inputs.subject_families:
         subject_reason = subject_exclusion_reason(
             candidate,

@@ -4,6 +4,7 @@
 Grok sends camelCase tool fields and native tool names. The tracked guards
 consume Claude-shaped fields. This bridge preserves the original payload and
 adds the shape the guards require; an unreadable event or missing guard denies.
+Reviewer sessions and write sessions both enter through this bridge.
 """
 
 from __future__ import annotations
@@ -13,12 +14,18 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Claude matchers auto-expand to some Grok ids (Bash → run_terminal_command,
+# Write|Edit|MultiEdit → search_replace). Write sessions also name the
+# model-facing ids that expansion does not cover. Unknown ids still deny.
 _TOOL_NAMES = {
     "run_terminal_command": "Bash",
+    "run_terminal_cmd": "Bash",
     "Bash": "Bash",
     "search_replace": "Edit",
-    "Edit": "Edit",
+    "hashline_edit": "Edit",
+    "write": "Write",
     "Write": "Write",
+    "Edit": "Edit",
     "MultiEdit": "MultiEdit",
 }
 

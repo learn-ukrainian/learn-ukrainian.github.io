@@ -61,6 +61,7 @@ from scripts.build.fresh.assemble import (
     check_9_stress_and_render,
     check_11_render,
 )
+from scripts.build.fresh.candidates import item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
@@ -642,6 +643,28 @@ def check_4_activities(
                     return failure(4, "answer_key_conflict", "writer", activity=aid, token=str(idx)), {}
 
                 item["_resolved_key_index"] = next(iter(resolved_indices))
+
+            if (
+                level == "a1"
+                and item.get("kind") == "form"
+                and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
+            ):
+                generated = item_candidates(item, words, typ)
+                offered = {(candidate["record"], candidate["form"]) for candidate in generated}
+                options = item.get("options") or []
+                bindings = option_record_bindings(item, typ)
+                if len(bindings) != len(options) or any(
+                    (record_id, _choice_text(option)) not in offered
+                    for record_id, option in zip(bindings, options, strict=True)
+                ):
+                    return failure(
+                        4,
+                        "form_candidate_not_generated",
+                        "writer",
+                        code="form_candidate_not_generated",
+                        activity=aid,
+                        token=str(idx),
+                    ), {}
 
             if typ == "odd-one-out" and "words" in item:
                 words_list = item.get("words") or []

@@ -1942,3 +1942,11 @@ def test_parse_attempt_ids_fails_closed_when_named_ids_cannot_be_read(prompt):
 def test_parse_attempt_ids_refuses_an_entry_whose_ids_cannot_be_read(block):
     with pytest.raises(AttemptIdsUnreadableError):
         parse_attempt_ids(block)
+
+
+@pytest.mark.parametrize("template", ["lesson-review.md.j2", "lesson-rereview.md.j2", "plan-review.md.j2"])
+def test_review_prompts_check_one_sentence_one_language(template: str) -> None:
+    """Operator direction 2026-09-27: reviewers flag a sentence that mixes Ukrainian and English."""
+    text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text(encoding="utf-8")
+    assert "one language, Ukrainian or English, never a mix" in text
+    assert "about that item" in text

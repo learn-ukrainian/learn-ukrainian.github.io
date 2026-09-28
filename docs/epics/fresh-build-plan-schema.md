@@ -267,7 +267,9 @@ passes silently and never invents a value.
   `prerequisites` hold slugs and are ASCII.
   A combining acute or grave accent (U+0301, U+0300) anywhere in a plan fails: stress lives in the
   word store. Word forms quoted inside prose fields are not machine-checked; they are in scope for
-  the cross-family plan review, which checks them against the sources (R-35).
+  the cross-family plan review, which checks them against the sources (R-35). Every sentence of those prose fields is in
+  one language (operator direction 2026-09-27; writer contract §6): an English sentence may quote a Ukrainian item only
+  when it is about that item, never in place of the English word for the thing named — the plan review checks this.
 - **A v1 plan** is any file without `plan_schema: 2`, or with a `content_outline` key. It is
   rejected with a message saying v1 plans are not read or converted (§7.4).
 - **Failure, not-checked and waiver codes are a registry**, one constant per code in the validator
