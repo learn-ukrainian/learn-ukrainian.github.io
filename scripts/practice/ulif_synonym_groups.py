@@ -52,6 +52,10 @@ def plain(value: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+class UlifSynonymDataUnavailable(RuntimeError):
+    """Approved synonym pairs need ULIF synonym groups, and none could be read."""
+
+
 @dataclass(frozen=True)
 class UlifMember:
     lemma: str
@@ -219,6 +223,17 @@ def group_from_payload(payload: dict[str, Any]) -> UlifSynonymGroup | None:
     return UlifSynonymGroup(group_id=group_id, terms=terms, members=tuple(members))
 
 
+def _lists_any(terms_json: str | None, keys: set[str]) -> bool:
+    """Whether a group's ``terms`` JSON names any of ``keys``; unreadable terms name nothing."""
+    try:
+        terms = json.loads(terms_json or "[]")
+    except (TypeError, ValueError):
+        return False
+    if not isinstance(terms, list):
+        return False
+    return any(plain(term.get("text") if isinstance(term, dict) else str(term)) in keys for term in terms)
+
+
 class UlifSynonymGroups:
     """Index of checked ULIF synonym groups by member."""
 
@@ -238,23 +253,33 @@ class UlifSynonymGroups:
 
     @classmethod
     def from_sources_db(cls, db_path: Path, lemmas: Iterable[str]) -> UlifSynonymGroups | None:
-        """Groups listed under the given lemmas' checked entries; ``None`` when the tables are absent."""
+        """Every checked group listing any of ``lemmas`` as a term; ``None`` when the data is absent.
+
+        A group is filed under one headword's entry but lists several words, so
+        the match runs over each group's terms, not over ``normalized_query``:
+        a group filed under a third headword that lists both an answer and a
+        candidate distractor must still block that distractor.  A database
+        without the tables, or without a single checked synonym group, counts
+        as absent.
+        """
         if not db_path.exists():
             return None
-        keys = sorted({plain(lemma) for lemma in lemmas} - {""})
+        keys = {plain(lemma) for lemma in lemmas} - {""}
         payloads: list[dict[str, Any]] = []
         with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
             try:
-                for start in range(0, len(keys), _QUERY_CHUNK):
-                    chunk = keys[start : start + _QUERY_CHUNK]
+                checked = conn.execute(
+                    "SELECT s.id, json_extract(s.payload_json, '$.terms') FROM ulif_dictua_sections s "
+                    "JOIN ulif_dictua_entries e ON e.id = s.entry_id "
+                    "WHERE s.kind = 'synonyms' AND e.homonym_checked = 1 AND e.status = 'ok'"
+                ).fetchall()
+                if not checked:
+                    return None
+                section_ids = [section_id for section_id, terms_json in checked if _lists_any(terms_json, keys)]
+                for start in range(0, len(section_ids), _QUERY_CHUNK):
+                    chunk = section_ids[start : start + _QUERY_CHUNK]
                     marks = ",".join("?" * len(chunk))
-                    rows = conn.execute(
-                        "SELECT s.payload_json FROM ulif_dictua_sections s "
-                        "JOIN ulif_dictua_entries e ON e.id = s.entry_id "
-                        "WHERE s.kind = 'synonyms' AND e.homonym_checked = 1 AND e.status = 'ok' "
-                        f"AND e.normalized_query IN ({marks})",
-                        chunk,
-                    )
+                    rows = conn.execute(f"SELECT payload_json FROM ulif_dictua_sections WHERE id IN ({marks})", chunk)
                     for (payload_json,) in rows:
                         try:
                             payload = json.loads(payload_json)

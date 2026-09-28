@@ -586,9 +586,10 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
     changed_paronym_pairs = json.loads(json.dumps(paronym_pairs)) if paronym_pairs else []
     if changed_paronym_pairs:
         changed_paronym_pairs[0]["distinction_gloss_uk"] = "changed distinction for fingerprint test"
+    # A new rejected verdict changes the input without needing ULIF synonym groups.
     changed_synonym_verdicts = {
-        "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
-        "rejected": [],
+        "approved": [],
+        "rejected": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
     }
 
     assert version_for(entries_override=changed_entries) != base_version
@@ -2445,7 +2446,9 @@ def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pyte
     assert calls == 1
 
 
-def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
+def test_cli_fails_when_approved_synonyms_lack_ulif_data(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    # Reviewer probe (cf-8714-r3-codex): without sources.db the build warned and
+    # wrote an empty synonym mode.
     end_dictionary = tmp_path / "end-dictionary-inventory.json"
     end_dictionary.write_text(
         json.dumps(
@@ -2455,6 +2458,41 @@ def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
     )
     exit_code = main(
         [
+            "--end-dictionary-inventory",
+            str(end_dictionary),
+            "--manifest",
+            str(MANIFEST),
+            "--reviewed-allowlist",
+            str(ALLOWLIST),
+            "--vesum-fixture",
+            str(VESUM),
+            "--ulif-db",
+            str(tmp_path / "missing-sources.db"),
+            "--out-dir",
+            str(tmp_path / "out"),
+        ]
+    )
+
+    assert exit_code == 1
+    assert "ULIF synonym groups" in capsys.readouterr().err
+    assert not (tmp_path / "out" / "practice-synonym.A1.json").exists()
+
+
+def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
+    end_dictionary = tmp_path / "end-dictionary-inventory.json"
+    end_dictionary.write_text(
+        json.dumps(
+            {"schema": "atlas-end-dictionary-inventory", "entries": [], "counts": {"sections": 0, "entries": 0}}
+        ),
+        encoding="utf-8",
+    )
+    # The registry's approved synonym verdicts need ULIF groups this fixture run lacks.
+    synonym_verdicts = tmp_path / "synonym_pair_verdicts.yaml"
+    synonym_verdicts.write_text("approved: []\nrejected: []\n", encoding="utf-8")
+    exit_code = main(
+        [
+            "--synonym-verdicts",
+            str(synonym_verdicts),
             "--manifest",
             str(MANIFEST),
             "--reviewed-allowlist",

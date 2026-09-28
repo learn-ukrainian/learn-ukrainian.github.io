@@ -152,3 +152,30 @@ def test_from_sources_db_reads_only_checked_ok_entries(tmp_path: Path) -> None:
     assert groups.core_pair("список", "перелік") is not None
     assert groups.core_pair("копати", "рити") is None
     assert UlifSynonymGroups.from_sources_db(tmp_path / "missing.db", ["список"]) is None
+
+
+def test_from_sources_db_finds_groups_filed_under_another_headword(tmp_path: Path) -> None:
+    # The СПИСОК group filed only under the РЕЄСТР entry still answers for перелік.
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.executescript(
+            """
+            CREATE TABLE ulif_dictua_entries (
+                id INTEGER PRIMARY KEY, normalized_query TEXT, homonym_checked INTEGER, status TEXT
+            );
+            CREATE TABLE ulif_dictua_sections (
+                id INTEGER PRIMARY KEY, entry_id INTEGER, kind TEXT, source_order INTEGER, payload_json TEXT
+            );
+            """
+        )
+        conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'реєстр', 1, 'ok')")
+        conn.execute(
+            "INSERT INTO ulif_dictua_sections VALUES (1, 1, 'synonyms', 0, ?)",
+            (json.dumps(payload_from_row_html(SPYSOK), ensure_ascii=False),),
+        )
+    groups = UlifSynonymGroups.from_sources_db(db, ["перелік"])
+    assert groups is not None and len(groups) == 1
+    assert groups.shares_group("перелік", "каталог")
+    assert groups.core_pair("список", "перелік") is not None
+    unrelated = UlifSynonymGroups.from_sources_db(db, ["копати"])
+    assert unrelated is not None and len(unrelated) == 0

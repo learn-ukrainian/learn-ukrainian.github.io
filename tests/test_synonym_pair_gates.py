@@ -13,7 +13,9 @@ ULIF rows below are excerpts of real checked groups from ``sources.db``
 
 from __future__ import annotations
 
+import json
 import re
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -30,10 +32,15 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
     build_practice_shards,
+    read_ulif_synonym_groups,
     validate_mode_items,
     validate_synonym_option_sets,
 )
-from scripts.practice.ulif_synonym_groups import UlifSynonymGroups, payload_from_row_html
+from scripts.practice.ulif_synonym_groups import (
+    UlifSynonymDataUnavailable,
+    UlifSynonymGroups,
+    payload_from_row_html,
+)
 
 SYNONYM_VERDICTS_YAML = PROJECT_ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
 
@@ -78,6 +85,13 @@ SPYSOK = (
     "<b>СПИ́СОК</b> (опис з перерахуванням яких-небудь осіб або предметів), <b>РЕЄСТР</b>, <b>ПЕРЕ́ЛІК</b>, "
     "<b>ПРЕЙСКУРА́НТ</b>, <b>ІНДЕКС</b>, <b>РЕГІ́СТР</b> <i>спец.; </i> <b>КАТАЛО́Г</b> (перелік книжок, "
     "рукописів, картин тощо, складений у певному порядку)."
+)
+# Filed under НЕСАМОВИ́ТІСТЬ, ЛЮТЬ, ШАЛ and ten more headwords, never under a checked ГНІВ entry;
+# ГНІВ is one of its terms only through the closing "Пор." cross-reference.
+NESAMOVYTIST = (
+    "<p><b>НЕСАМОВИ́ТІСТЬ</b> (стан несамовитої людини); <b>ШАЛ</b>, <b>ШАЛЕ́НСТВО</b>, <b>ШАЛЕ́НІСТЬ</b>, "
+    "<b>РАЖ</b> <i>розм. рідко</i> (від збудження, роздратування, гніву тощо). <i>Щезла свідомість. Повна "
+    "нестяма. Шаленість</i> (М. Коцюбинський). - Пор. <b>гнів</b>, <b>лють</b>, 1. <b>нестя́ма</b>.</p>"
 )
 OBLYCHCHIA = (
     "<b>ОБЛИ́ЧЧЯ</b> (передня частина голови людини), <b>ЛИЦЕ́</b>, <b>ВИД</b>, <b>О́БРАЗ</b> <i>розм.,</i> "
@@ -604,11 +618,83 @@ def test_antonym_pair_needs_a_dictionary_source_not_ulif(capsys: pytest.CaptureF
     assert items == [] and set(ledger.values()) == {"no_dictionary_source"}
 
 
-def test_synonyms_fail_closed_without_ulif(capsys: pytest.CaptureFixture[str]) -> None:
+def _sources_db(path: Path, rows_by_headword: dict[str, str]) -> Path:
+    """A minimal ``sources.db`` whose checked entries file each row under its headword."""
+    with sqlite3.connect(path) as conn:
+        conn.executescript(
+            """
+            CREATE TABLE ulif_dictua_entries (
+                id INTEGER PRIMARY KEY, normalized_query TEXT, homonym_checked INTEGER, status TEXT
+            );
+            CREATE TABLE ulif_dictua_sections (
+                id INTEGER PRIMARY KEY, entry_id INTEGER, kind TEXT, source_order INTEGER, payload_json TEXT
+            );
+            """
+        )
+        for entry_id, (headword, row) in enumerate(rows_by_headword.items(), start=1):
+            conn.execute("INSERT INTO ulif_dictua_entries VALUES (?, ?, 1, 'ok')", (entry_id, headword))
+            conn.execute(
+                "INSERT INTO ulif_dictua_sections VALUES (?, ?, 'synonyms', 0, ?)",
+                (entry_id, entry_id, json.dumps(payload_from_row_html(row), ensure_ascii=False)),
+            )
+    return path
+
+
+def test_distractor_never_shares_a_group_filed_under_a_third_headword(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Reviewer probe (cf-8714-r3-codex): the reader loaded only groups filed under
+    # an approved pair's own headwords, so шал, which shares the НЕСАМОВИТІСТЬ group
+    # with the answer гнів, stayed eligible as a distractor.
+    db = _sources_db(
+        tmp_path / "sources.db",
+        {"гнів": _fixture_row("гнів", "злість"), "несамовитість": NESAMOVYTIST},
+    )
+    approved = [_approved("гнів", "злість")]
+    ulif = read_ulif_synonym_groups(db, {"approved": approved, "rejected": []})
+    assert ulif is not None and len(ulif) == 2
+    assert ulif.shares_group("гнів", "шал")
+    manifest = [
+        _entry("гнів", "noun", "anger"),
+        _entry("злість", "noun", "spite"),
+        _entry("шал", "noun", "frenzy"),
+        _entry("підручник", "noun", "textbook"),
+        _entry("бібліотека", "noun", "library"),
+        _entry("університет", "noun", "university"),
+    ]
+    items, _ledger, _summary = _build(capsys, manifest, approved, ulif)
+    assert _pairs(items) == {("гнів", "злість"), ("злість", "гнів")}
+    for item in items:
+        distractors = {option["label"] for option in item["options"] if option["kind"] == "distractor"}
+        assert "шал" not in distractors, (item["prompt"], item["answer"], distractors)
+
+
+def test_synonym_build_fails_without_ulif(capsys: pytest.CaptureFixture[str]) -> None:
+    # Reviewer probe: with ULIF data unavailable the build warned and shipped an empty
+    # synonym mode.
     manifest = [_entry("список", "noun", "list"), _entry("перелік", "noun", "enumeration"), *_NOUN_FILLERS]
-    items, ledger, _summary = _build(capsys, manifest, [_approved("список", "перелік")], None)
-    assert items == []
-    assert set(ledger.values()) == {"ulif_unavailable"} and len(ledger) == 2
+    with pytest.raises(UlifSynonymDataUnavailable):
+        _build(capsys, manifest, [_approved("список", "перелік")], None)
+
+
+@pytest.mark.parametrize("state", ["no_path", "missing_file", "no_tables", "no_checked_group"])
+def test_ulif_reader_fails_when_approved_synonyms_need_missing_data(tmp_path: Path, state: str) -> None:
+    db: Path | None = tmp_path / "sources.db"
+    if state == "no_path":
+        db = None
+    elif state == "no_tables":
+        sqlite3.connect(tmp_path / "sources.db").close()
+    elif state == "no_checked_group":
+        _sources_db(tmp_path / "sources.db", {})
+    verdicts = {"approved": [_approved("список", "перелік")], "rejected": []}
+    with pytest.raises(UlifSynonymDataUnavailable):
+        read_ulif_synonym_groups(db, verdicts)
+
+
+def test_ulif_reader_is_not_needed_without_approved_synonyms(tmp_path: Path) -> None:
+    antonyms = {"approved": [_approved("швидко", "повільно", polarity="antonym")], "rejected": []}
+    assert read_ulif_synonym_groups(tmp_path / "missing.db", antonyms) is None
+    assert read_ulif_synonym_groups(None, {"approved": [], "rejected": []}) is None
 
 
 def _item(prompt: str, answer: str, distractors: list[str], polarity: str = "synonym") -> dict[str, Any]:

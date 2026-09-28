@@ -50,7 +50,11 @@ from scripts.lexicon.curated_membership import (
     read_membership,
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
-from scripts.practice.ulif_synonym_groups import ULIF_SYNONYMS_SOURCE, UlifSynonymGroups
+from scripts.practice.ulif_synonym_groups import (
+    ULIF_SYNONYMS_SOURCE,
+    UlifSynonymDataUnavailable,
+    UlifSynonymGroups,
+)
 from scripts.practice_deck.end_dictionaries import (
     coverage_intersection_report,
     load_inventory,
@@ -3399,17 +3403,39 @@ def build_synonym_verdict_sets(
     return approved_set, rejected_set, a2_exception_set
 
 
+def _approved_synonym_lemmas(synonym_verdicts: dict[str, Any] | None) -> set[str]:
+    """Both legs of every approved synonym-polarity verdict: the pairs that need ULIF evidence."""
+    return {
+        str(record.get(leg) or "")
+        for record in (synonym_verdicts or {}).get("approved", [])
+        if isinstance(record, dict) and record.get("polarity") == "synonym"
+        for leg in ("a", "b")
+    } - {""}
+
+
 def read_ulif_synonym_groups(db_path: Path | None, synonym_verdicts: dict[str, Any] | None) -> UlifSynonymGroups | None:
-    """Checked ULIF synonym groups for every lemma an approved verdict names (``None`` if unavailable)."""
-    if db_path is None or not synonym_verdicts:
+    """Checked ULIF synonym groups listing any lemma an approved verdict names.
+
+    ``None`` only when no approved synonym-polarity verdict needs them.  When
+    one does and the groups cannot be read (no path, no file, no tables, no
+    checked group), this raises: an empty synonym mode must not build or
+    pass the publication check as if it were the real deck.
+    """
+    if not _approved_synonym_lemmas(synonym_verdicts):
         return None
     lemmas = {
         str(record.get(leg) or "")
-        for record in synonym_verdicts.get("approved", [])
+        for record in (synonym_verdicts or {}).get("approved", [])
         if isinstance(record, dict)
         for leg in ("a", "b")
     }
-    return UlifSynonymGroups.from_sources_db(db_path, lemmas)
+    groups = UlifSynonymGroups.from_sources_db(db_path, lemmas) if db_path is not None else None
+    if groups is None:
+        raise UlifSynonymDataUnavailable(
+            f"approved synonym verdicts need checked ULIF synonym groups, but {db_path} has none "
+            "(missing file, missing ulif_dictua tables or no checked synonym group); pass --ulif-db"
+        )
+    return groups
 
 
 def ulif_synonym_evidence_payload(groups: UlifSynonymGroups | None) -> dict[str, Any]:
@@ -3660,7 +3686,7 @@ def _synonym_evidence(
     """
     if polarity == "synonym":
         if ulif_groups is None:
-            return None, "ulif_unavailable"
+            raise UlifSynonymDataUnavailable("a synonym-polarity pair needs checked ULIF synonym groups")
         pair = ulif_groups.core_pair(prompt["lemma"], target["lemma"])
         if pair is None:
             if ulif_groups.shares_group(prompt["lemma"], target["lemma"]):
@@ -5449,11 +5475,8 @@ def build_practice_shards(
     else:
         synonym_verdicts_loaded = True
     approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
-    if synonym_verdicts_loaded and ulif_synonym_groups is None:
-        print(
-            "WARN: ULIF synonym groups not loaded; synonym-polarity pairs withheld (ulif_unavailable)",
-            file=sys.stderr,
-        )
+    if ulif_synonym_groups is None and any(polarity == "synonym" for _a, _b, polarity in approved_set):
+        raise UlifSynonymDataUnavailable("approved synonym verdicts need checked ULIF synonym groups; none were loaded")
 
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
         level: {"approved": set(), "rejected": set(), "awaiting": set()} for level in CEFR_ORDER
@@ -7293,6 +7316,11 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_enabled=not args.disable_cloze,
     )
     aspect_residuals: list[dict[str, str]] = []
+    try:
+        ulif_synonym_groups = read_ulif_synonym_groups(args.ulif_db, synonym_verdicts)
+    except UlifSynonymDataUnavailable as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -7306,7 +7334,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
-        ulif_synonym_groups=read_ulif_synonym_groups(args.ulif_db, synonym_verdicts),
+        ulif_synonym_groups=ulif_synonym_groups,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}

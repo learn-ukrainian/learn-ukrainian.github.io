@@ -324,6 +324,33 @@ def test_publish_practice_deck_skips_existing_verified_versioned_asset(
     assert "--clobber" in upload_calls[0]
 
 
+def test_publish_refuses_synonym_verdicts_without_ulif_data(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Reviewer probe (cf-8714-r3-codex): a deck built while ULIF data was unavailable
+    # carries the "no ULIF groups" fingerprint, and the publish check recomputed the
+    # same fingerprint and accepted the empty synonym mode.
+    from scripts.audit import generate_practice_deck as generator
+    from scripts.practice_deck.publish import expected_deck_version
+
+    practice_dir = tmp_path / "lexicon"
+    input_paths = _write_publish_inputs(
+        tmp_path / "inputs",
+        synonym_verdicts={"approved": [{"a": "список", "b": "перелік", "polarity": "synonym"}], "rejected": []},
+    )
+    input_paths["ulif_db_path"] = tmp_path / "missing-sources.db"
+    with monkeypatch.context() as patch:
+        patch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: None)
+        unavailable_version = expected_deck_version(**input_paths)
+    _write_practice_deck(practice_dir, deck_version=unavailable_version)
+
+    with pytest.raises(PracticeDeckPublishError, match="ULIF synonym groups"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=tmp_path / "deck.json.gz",
+            dry_run=True,
+            **input_paths,
+        )
+
+
 def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -> None:
     entries = read_manifest(MANIFEST)
     public_only_paths = _write_publish_inputs(
@@ -410,9 +437,10 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         stale_antonym_pairs[0]["distinction_gloss_uk"] = "змінене розрізнення антонімів"
         _write_json(input_paths["antonym_pairs_path"], {"pairs": stale_antonym_pairs})
     elif stale_input == "synonym_verdicts":
+        # A new rejected verdict changes the input without needing ULIF groups.
         stale_synonym_verdicts = {
-            "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
-            "rejected": [],
+            "approved": [],
+            "rejected": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
         }
         _write_json(input_paths["synonym_verdicts_path"], stale_synonym_verdicts)
     else:
