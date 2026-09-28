@@ -13,8 +13,13 @@ export interface ErrorCorrectionDrill {
   explanation: string;
   isUkrainian: boolean;
   source: string;
-  /** The source text the pair was read from (audited against sources.db). */
-  sourceRow?: string;
+  /** The sources.db row, spans and direction the pair was read from (audited by the practice gate). */
+  sourceRef?: {
+    rowId: string;
+    errorSpan: [number, number];
+    correctSpan: [number, number];
+    direction: 'error_first' | 'correct_first';
+  };
 }
 
 export interface ErrorCorrectionPracticeProps {

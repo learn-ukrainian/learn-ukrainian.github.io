@@ -532,42 +532,124 @@ def test_changed_words_are_what_the_edit_replaces():
     assert _changed_words(["у", "травні", "місяці"], ["у", "травні"]) == (["місяці"], [])
 
 
-def test_a_kept_word_does_not_evidence_the_substitution(tmp_path: Path):
-    """Round 3 probe: «брати участь → купити участь» was accepted as `shared_stem`."""
+def test_a_kept_word_names_the_source_row_as_its_evidence(tmp_path: Path):
+    """Round 3 probe: «брати участь → купити участь» was accepted as `shared_stem`.
+
+    A standard word swapped for another is evidenced only by the pair's own source row,
+    which ``sourceRef`` binds and the gate verifies; the text alone never makes it a
+    `shared_stem` or VESUM claim.
+    """
     from scripts.practice.extract_textbook_error_corrections import assess_pair
 
     vesum = _fake_vesum(tmp_path, _PARTICIPATION_FORMS)
-    assert assess_pair("брати участь", "купити участь", vesum) == (None, "changed_words_without_source_evidence")
-    assert assess_pair("брати участь", "купити участь", vesum, "приймати участь брати участь") == (
-        None,
-        "changed_words_without_source_evidence",
-    )
-    # The textbook row evidences its own substitution; VESUM evidences a recorded error.
-    assert assess_pair("приймати участь", "брати участь", vesum, "приймати участь брати участь") == (
-        "source_row",
-        None,
-    )
+    assert assess_pair("брати участь", "купити участь", vesum) == ("source_row", None)
+    assert assess_pair("приймати участь", "брати участь", vesum) == ("source_row", None)
     assert assess_pair("не протирічить суті", "не суперечить суті", vesum) == ("vesum_marked_error", None)
 
 
-def test_drills_carry_the_source_row_they_were_read_from(tmp_path: Path):
+# ---------------------------------------------------------------------------
+# Review round 4 (#8723): each drill is bound to its exact source row and spans
+# ---------------------------------------------------------------------------
+
+# Real sources.db row textbooks:72208 (Glazova, grade 10), a column-block table.
+_GLAZOVA_TABLE = (
+    "ПІДКАЗКА\nНеправильно Правильно\nнетактична поведінка\nпроявляти недостатки\n"
+    "представляти інтерес\nнетактовна поведінка\nвиявляти недоліки\nстановити інтерес\n"
+)
+
+
+def test_drills_are_bound_to_their_row_spans_and_direction(tmp_path: Path):
     from scripts.practice.extract_textbook_error_corrections import (
+        build_evidence_snapshot,
         extract_error_correction_deck,
-        load_source_texts,
-        row_in_source,
+        row_sha256,
+        span_text,
     )
 
-    text = "НЕПРАВИЛЬНО ПРАВИЛЬНО\nприймати участь брати участь\nне протирічить суті не суперечить суті"
-    conn = _textbook_db((10, "glazova", text))
-    deck = extract_error_correction_deck(conn, _fake_vesum(tmp_path, _PARTICIPATION_FORMS), log=lambda _msg: None)
-    rows = {(d["errorWord"], d["correctForm"]): d["sourceRow"] for d in deck["drills"]}
-    assert rows == {
-        ("приймати участь", "брати участь"): "приймати участь брати участь",
-        ("не протирічить суті", "не суперечить суті"): "не протирічить суті не суперечить суті",
+    horizontal = "НЕПРАВИЛЬНО ПРАВИЛЬНО\nприймати  участь брати участь\nне протирічить суті не суперечить суті"
+    correct_first = "ПРАВИЛЬНО НЕПРАВИЛЬНО\nвлучний вислів влучний вираз"
+    conn = _textbook_db((10, "glazova", horizontal), (10, "glazova", _GLAZOVA_TABLE), (5, "x", correct_first))
+    texts = {f"textbooks:{i}": t for i, t in enumerate([horizontal, _GLAZOVA_TABLE, correct_first], 1)}
+    deck = extract_error_correction_deck(conn, None, log=lambda _msg: None)
+    refs = {(d["errorWord"], d["correctForm"]): d["sourceRef"] for d in deck["drills"]}
+    assert {pair: (ref["rowId"], ref["direction"]) for pair, ref in refs.items()} == {
+        ("приймати участь", "брати участь"): ("textbooks:1", "error_first"),
+        ("не протирічить суті", "не суперечить суті"): ("textbooks:1", "error_first"),
+        ("нетактична поведінка", "нетактовна поведінка"): ("textbooks:2", "error_first"),
+        ("проявляти недостатки", "виявляти недоліки"): ("textbooks:2", "error_first"),
+        ("представляти інтерес", "становити інтерес"): ("textbooks:2", "error_first"),
+        ("влучний вираз", "влучний вислів"): ("textbooks:3", "correct_first"),
     }
-    texts = load_source_texts(conn)
-    assert all(row_in_source(d["sourceRow"], texts[d["source"]]) for d in deck["drills"])
-    assert not row_in_source("брати участь купити участь", texts["Textbook Gr 10 (glazova)"])
+    for (error, correct), ref in refs.items():
+        text = texts[ref["rowId"]]
+        assert (span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"])) == (error, correct)
+    assert refs[("приймати участь", "брати участь")]["errorSpan"] == [22, 38]  # the double space is kept in the span
+
+    evidence = build_evidence_snapshot(deck, conn)["drills"]
+    assert evidence["err_0004"] == {
+        "rowId": "textbooks:2",
+        "rowSha256": row_sha256(_GLAZOVA_TABLE),
+        "error": "проявляти недостатки",
+        "correct": "виявляти недоліки",
+    }
+
+
+def test_a_rows_pairs_never_combine_two_rows():
+    """Round 4 probe 1: err_0005's error with err_0004's correction is not a pair of the row."""
+    from scripts.practice.extract_textbook_error_corrections import derive_row_pairs
+
+    pairs = {(p["error"], p["correct"]) for p in derive_row_pairs("textbooks:72208", _GLAZOVA_TABLE)}
+    assert ("представляти інтерес", "становити інтерес") in pairs
+    assert ("представляти інтерес", "виявляти недоліки") not in pairs
+    assert len(pairs) == 3
+
+
+def test_style_guide_pairs_are_bound_to_their_quotations():
+    from scripts.practice.extract_textbook_error_corrections import extract_error_correction_deck, span_text
+
+    text = "Пасив. Неправильно «Головну увагу мною приділено таким явищам», треба « Головну увагу я приділив таким явищам»."
+    conn = _textbook_db()
+    conn.execute("INSERT INTO style_guide (word, section, text) VALUES ('Пасив', '', ?)", (text,))
+    (drill,) = extract_error_correction_deck(conn, None, log=lambda _msg: None)["drills"]
+    ref = drill["sourceRef"]
+    assert ref["rowId"] == "style_guide:1" and ref["direction"] == "error_first"
+    assert text[slice(*ref["correctSpan"])] == drill["correctForm"] == span_text(text, ref["correctSpan"])
+
+
+def test_export_stops_when_a_drill_cannot_be_bound():
+    from scripts.practice.extract_textbook_error_corrections import build_evidence_snapshot
+
+    conn = _textbook_db((10, "glazova", _GLAZOVA_TABLE))
+    drill = {**create_error_correction_drill("брати участь", "купити участь"), "id": "err_0001"}
+    with pytest.raises(ValueError, match="missing sourceRef"):
+        build_evidence_snapshot({"deckId": "d", "drills": [drill]}, conn)
+    drill["sourceRef"] = {
+        "rowId": "textbooks:1",
+        "errorSpan": [0, 5],
+        "correctSpan": [6, 9],
+        "direction": "error_first",
+    }
+    with pytest.raises(ValueError, match="not the drill's pair"):
+        build_evidence_snapshot({"deckId": "d", "drills": [drill]}, conn)
+
+
+def test_committed_evidence_snapshot_covers_every_drill():
+    """One snapshot entry per bundled drill, carrying the drill's own error and correction."""
+    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot, source_ref_problem
+
+    root = Path(__file__).resolve().parents[1]
+    deck = json.loads((root / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
+    evidence = load_evidence_snapshot()
+    assert sorted(evidence) == sorted(d["id"] for d in deck["drills"])
+    for drill in deck["drills"]:
+        assert source_ref_problem(drill["sourceRef"]) is None, drill["id"]
+        entry = evidence[drill["id"]]
+        assert (entry["rowId"], entry["error"], entry["correct"]) == (
+            drill["sourceRef"]["rowId"],
+            drill["errorWord"],
+            drill["correctForm"],
+        )
+        assert len(entry["rowSha256"]) == 64
 
 
 def test_typed_answer_key_matches_the_site_normalizer():

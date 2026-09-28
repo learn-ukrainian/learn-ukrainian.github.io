@@ -14,10 +14,12 @@ Enforces:
 - Required pedagogical metadata (distinction gloss, rationale, case rule, grammatical notes)
 - Intentional error quarantine (no leaked contrastive tables/headers in positive cloze)
 - Error-correction drill integrity (substring containment, option validity, explanation)
-- Error-correction evidence (#8723): no generated register-label distractors; the words
-  a pair changes share their stem, are a VESUM-recorded error, or stand in the drill's
-  ``sourceRow``, which (with sources.db) must occur in the named source; typed
-  ``answers`` accept the correction and its listed readings, never the error
+- Error-correction evidence (#8723): no generated register-label distractors; every
+  drill is bound by ``sourceRef`` to one sources.db row, the spans of its error and
+  correction, and their direction. The committed evidence snapshot must match each
+  drill (row id, error and correction span strings); with sources.db the row's SHA-256,
+  the text at both spans and the extractor's own pairing of that row are re-verified.
+  Typed ``answers`` accept the correction and its listed readings, never the error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
 - TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
@@ -58,26 +60,36 @@ except ImportError:
 
 try:
     from scripts.practice.extract_textbook_error_corrections import (
+        EVIDENCE_SNAPSHOT_PATH,
         REGISTER_LABEL_RE,
         VesumLookup,
         assess_pair,
         correction_answers,
+        derive_row_pairs,
+        load_evidence_snapshot,
         load_reviewed_withholds,
-        load_source_texts,
+        load_source_row,
         pair_key,
-        row_in_source,
+        row_sha256,
+        source_ref_problem,
+        span_text,
         typed_answer_key,
     )
 except ImportError:
     from practice.extract_textbook_error_corrections import (
+        EVIDENCE_SNAPSHOT_PATH,
         REGISTER_LABEL_RE,
         VesumLookup,
         assess_pair,
         correction_answers,
+        derive_row_pairs,
+        load_evidence_snapshot,
         load_reviewed_withholds,
-        load_source_texts,
+        load_source_row,
         pair_key,
-        row_in_source,
+        row_sha256,
+        source_ref_problem,
+        span_text,
         typed_answer_key,
     )
 
@@ -92,6 +104,7 @@ DEFAULT_SOURCES_DB = next(
 )
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
+DEFAULT_ERROR_CORRECTION_EVIDENCE = EVIDENCE_SNAPSHOT_PATH
 DEFAULT_SENTENCE_INVENTORY = PROJECT_ROOT / "site/src/data/lexicon-sentence-inventory.json"
 DEFAULT_SHARDS_DIR = PROJECT_ROOT / "site/public/lexicon"
 
@@ -279,20 +292,128 @@ def _error_correction_vesum(vesum_db: Path | str | None) -> VesumLookup | None:
     return lookup
 
 
-def _error_correction_source_texts(sources_db: Path | str | None) -> dict[str, list[str]] | None:
-    """Source texts by drill ``source`` label, or None when sources.db is unavailable."""
+class _SourceRows:
+    """sources.db rows by ``rowId``, with the pairs the extractor derives from each row."""
+
+    def __init__(self, sources_db: Path, vesum: VesumLookup | None):
+        import sqlite3
+
+        self._conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+        self._conn.execute("SELECT 1 FROM textbooks LIMIT 1")  # sqlite3.Error when not a sources.db
+        self._vesum = vesum
+        self._texts: dict[str, str | None] = {}
+        self._pairs: dict[str, set[tuple]] = {}
+
+    def text(self, row_id: str) -> str | None:
+        import sqlite3
+
+        if row_id not in self._texts:
+            try:
+                self._texts[row_id] = load_source_row(self._conn, row_id)
+            except sqlite3.OperationalError:
+                self._texts[row_id] = None  # a sources.db without that table
+        return self._texts[row_id]
+
+    def derives(self, row_id: str, error: str, correct: str, ref: dict[str, Any]) -> bool:
+        """True when the extractor reads exactly this pair, at these spans and in this direction, from the row."""
+        if row_id not in self._pairs:
+            self._pairs[row_id] = {
+                (p["error"], p["correct"], tuple(p["errorSpan"]), tuple(p["correctSpan"]), p["direction"])
+                for p in derive_row_pairs(row_id, self.text(row_id) or "", self._vesum)
+            }
+        key = (error, correct, tuple(ref["errorSpan"]), tuple(ref["correctSpan"]), ref["direction"])
+        return key in self._pairs[row_id]
+
+
+def _error_correction_source_rows(sources_db: Path | str | None, vesum: VesumLookup | None) -> _SourceRows | None:
+    """Source-row verifier, or None when sources.db is unavailable (CI checks the evidence snapshot only).
+
+    The extractor pairs rows with VESUM, so re-deriving a pair needs VESUM too: without
+    the audit's own VESUM view the default database is used.
+    """
     if not sources_db or not Path(sources_db).exists():
         return None
     import sqlite3
 
     try:
-        conn = sqlite3.connect(f"file:{Path(sources_db)}?mode=ro", uri=True)
-        try:
-            return load_source_texts(conn)
-        finally:
-            conn.close()
+        return _SourceRows(Path(sources_db), vesum or _error_correction_vesum(DEFAULT_VESUM_DB))
     except sqlite3.Error:
         return None
+
+
+def _source_binding_violations(
+    item_id: str,
+    item: dict[str, Any],
+    error_target: str,
+    correct_target: str,
+    evidence: dict[str, dict[str, str]],
+    source_rows: _SourceRows | None,
+) -> list[dict[str, Any]]:
+    """A drill must be the exact pair of one source row (#8723); a missing binding is a failure.
+
+    Both modes: ``sourceRef`` is well formed and the committed evidence snapshot has
+    this drill's row id and, as its span strings, exactly the drill's error and
+    correction. With sources.db: the row still hashes to the snapshot, the text at
+    both spans is the error and the correction, and the extractor itself pairs those
+    spans, in that direction, when it reads the row — so one row's error cannot be
+    combined with another row's correction, nor one marked word license a new edit.
+    """
+    ref = item.get("sourceRef")
+    problem = source_ref_problem(ref)
+    if problem:
+        return [{"type": "MISSING_SOURCE_REF", "item": item_id, "message": f"not bound to a source row: {problem}"}]
+    entry = evidence.get(item_id)
+    if not entry:
+        return [
+            {
+                "type": "EVIDENCE_SNAPSHOT_MISSING",
+                "item": item_id,
+                "message": f"no evidence snapshot entry for {item_id} ({ref['rowId']})",
+            }
+        ]
+    expected = {"rowId": ref["rowId"], "error": error_target, "correct": correct_target}
+    mismatched = {field: entry.get(field) for field, value in expected.items() if entry.get(field) != value}
+    if mismatched:
+        return [
+            {
+                "type": "EVIDENCE_SNAPSHOT_MISMATCH",
+                "item": item_id,
+                "message": f"drill {expected!r} does not match its evidence snapshot {mismatched!r}",
+            }
+        ]
+    if source_rows is None:
+        return []
+
+    text = source_rows.text(ref["rowId"])
+    if text is None:
+        return [{"type": "SOURCE_ROW_MISSING", "item": item_id, "message": f"{ref['rowId']} is not in sources.db"}]
+    if row_sha256(text) != entry.get("rowSha256"):
+        return [
+            {
+                "type": "SOURCE_ROW_CHANGED",
+                "item": item_id,
+                "message": f"{ref['rowId']} no longer hashes to its evidence snapshot SHA-256",
+            }
+        ]
+    read = (span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"]))
+    if read != (error_target, correct_target):
+        return [
+            {
+                "type": "SOURCE_SPAN_MISMATCH",
+                "item": item_id,
+                "message": f"{ref['rowId']} reads {read[0]!r} → {read[1]!r} at the drill's spans",
+            }
+        ]
+    if not source_rows.derives(ref["rowId"], error_target, correct_target, ref):
+        return [
+            {
+                "type": "SOURCE_PAIR_NOT_DERIVED",
+                "item": item_id,
+                "message": f"{ref['rowId']} does not pair {error_target!r} → {correct_target!r} "
+                f"at spans {ref['errorSpan']} → {ref['correctSpan']} ({ref['direction']})",
+            }
+        ]
+    return []
 
 
 def _typed_answer_violations(
@@ -352,10 +473,12 @@ def audit_error_correction_deck(
     path: Path | str,
     vesum_db: Path | str | None = DEFAULT_VESUM_DB,
     sources_db: Path | str | None = DEFAULT_SOURCES_DB,
+    evidence_path: Path | str = DEFAULT_ERROR_CORRECTION_EVIDENCE,
 ) -> list[dict[str, Any]]:
     """Audit error-correction dataset for schema, substring match, and pedagogical validity.
 
-    With ``sources_db`` each drill's ``sourceRow`` must occur in the source it names.
+    Every drill must match its ``evidence_path`` snapshot entry; with ``sources_db`` the
+    snapshot and the drill's spans are re-verified against the source row.
     """
     violations: list[dict[str, Any]] = []
     p = Path(path)
@@ -376,7 +499,8 @@ def audit_error_correction_deck(
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
     pair_vesum = _error_correction_vesum(vesum_db)
-    source_texts = _error_correction_source_texts(sources_db)
+    source_rows = _error_correction_source_rows(sources_db, pair_vesum)
+    evidence = load_evidence_snapshot(evidence_path)
     reviewed_withholds = load_reviewed_withholds()
 
     seen_ids: set[str] = set()
@@ -408,6 +532,15 @@ def audit_error_correction_deck(
                     "message": f"errorTarget {error_target!r} not found in sentence {sentence!r}",
                 }
             )
+        elif sentence.count(error_target) > 1:
+            # The edit replaces one occurrence; every changed token must lie in the bound error span.
+            violations.append(
+                {
+                    "type": "ERROR_TARGET_AMBIGUOUS",
+                    "item": item_id,
+                    "message": f"errorTarget {error_target!r} occurs more than once in sentence {sentence!r}",
+                }
+            )
 
         if not correct_target:
             violations.append({"type": "EMPTY_CORRECT_TARGET", "item": item_id, "message": "correctTarget is empty"})
@@ -431,9 +564,8 @@ def audit_error_correction_deck(
                 }
             )
 
-        source_row = item.get("sourceRow")
         if error_target and correct_target:
-            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum, source_row)
+            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum)
             if reason:
                 violations.append(
                     {
@@ -442,18 +574,9 @@ def audit_error_correction_deck(
                         "message": f"{error_target!r} → {correct_target!r} is not a source-evidenced correction ({reason})",
                     }
                 )
-        if (
-            source_texts is not None
-            and source_row
-            and not row_in_source(source_row, source_texts.get(item.get("source", ""), []))
-        ):
-            violations.append(
-                {
-                    "type": "SOURCE_ROW_NOT_IN_SOURCE",
-                    "item": item_id,
-                    "message": f"sourceRow {source_row!r} does not occur in {item.get('source')!r}",
-                }
-            )
+        violations.extend(
+            _source_binding_violations(item_id, item, error_target, correct_target, evidence, source_rows)
+        )
 
         violations.extend(
             _typed_answer_violations(item_id, error_target, correct_target, item.get("answers"), pair_vesum)

@@ -7,10 +7,13 @@ deliberate pedagogical errors from textbook exercise prompts.
 Every extracted pair must be backed by its source (#8723): a row of a real
 НЕПРАВИЛЬНО/ПРАВИЛЬНО table (or a style-guide contrast), split at a point the row
 itself evidences, and — for single-word lexical claims — corroborated by VESUM.
-The words a pair changes need their own evidence: a stem shared with their
-replacement, a VESUM error record, or the source row (kept on the drill as
-``sourceRow`` so the gate can re-check it against ``sources.db``). Anything the
-sources cannot decide is withheld with a reason instead of guessed.
+Each drill is bound to that exact source row: ``sourceRef`` names the
+``sources.db`` row (``textbooks:<id>`` / ``style_guide:<id>``), the character spans
+of the marked error and of its correction in the row text, and their direction.
+The committed evidence snapshot records, per drill, the row id, the SHA-256 of the
+row text and the two span strings, so the gate can check drills without
+``sources.db`` and re-derive every pair from its row when the database is present.
+Anything the sources cannot decide is withheld with a reason instead of guessed.
 
 Regenerate the bundled Culture-of-Speech deck (and the audited registry copy):
 
@@ -18,6 +21,7 @@ Regenerate the bundled Culture-of-Speech deck (and the audited registry copy):
         --db data/sources.db --vesum-db data/vesum.db \\
         --export-json site/src/data/practice-error-corrections.json \\
         --export-json registry/practice/textbook-error-corrections.json \\
+        --evidence-json registry/practice/error-correction-evidence.json \\
         --withheld-json /tmp/error-corrections-withheld.json
 
 Pairs a language reviewer rejected are withheld by their text through the committed,
@@ -25,6 +29,7 @@ reviewed list ``registry/practice/error-correction-withheld.yaml``.
 """
 
 import argparse
+import hashlib
 import json
 import re
 import sqlite3
@@ -47,6 +52,7 @@ ERROR_CONTEXT_PATTERNS = [
 ]
 
 REVIEWED_WITHHELD_PATH = Path(__file__).resolve().parents[2] / "registry/practice/error-correction-withheld.yaml"
+EVIDENCE_SNAPSHOT_PATH = Path(__file__).resolve().parents[2] / "registry/practice/error-correction-evidence.json"
 REVIEW_CODES = frozenset({"WRONG_ERROR", "WRONG_FIX", "CONTESTED"})
 
 CULTURE_DECK_ID = "culture-error-correction"
@@ -89,6 +95,10 @@ _CASES = ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis", "v_kly")
 _FUNCTION_POS = frozenset({"prep", "part", "conj", "intj"})
 _MAX_TABLE_ROWS = 9
 _MAX_ROW_CHARS = 90
+
+# ``sourceRef.rowId``: the sources.db table and row a drill was read from.
+_ROW_ID_RE = re.compile(r"^(textbooks|style_guide):([1-9]\d*)$")
+DIRECTIONS = ("error_first", "correct_first")
 
 
 def is_intentional_error_context(text: str) -> bool:
@@ -248,21 +258,6 @@ def _changed_words(left: list[str], right: list[str]) -> tuple[list[str], list[s
             changed_right.append(right[j])
             j += 1
     return changed_left + left[i:], changed_right + right[j:]
-
-
-def _row_key(text: str) -> str:
-    return _tidy(re.sub(f"[{_APOSTROPHES}]", "’", text)).casefold()
-
-
-def row_attests(source_row: str | None, error: str, correct: str) -> bool:
-    """True when the source row contains the error and its correction as whole phrases."""
-    if not source_row:
-        return False
-    row = _row_key(source_row)
-    return all(
-        re.search(rf"(?<![{_LETTERS}’]){re.escape(_row_key(phrase))}(?![{_LETTERS}’])", row, re.IGNORECASE)
-        for phrase in (error, correct)
-    )
 
 
 def _balanced_parentheses(phrase: str) -> bool:
@@ -453,23 +448,23 @@ def typed_answer_key(value: str) -> str:
     return re.sub(r"[\s.!?…,;:]+$", "", text).strip()
 
 
-def assess_pair(
-    error: str, correct: str, vesum: VesumLookup | None = None, source_row: str | None = None
-) -> tuple[str | None, str | None]:
-    """Validate an error→correction pair against its source row and VESUM.
+def assess_pair(error: str, correct: str, vesum: VesumLookup | None = None) -> tuple[str | None, str | None]:
+    """Validate the text of an error→correction pair against VESUM.
 
-    Returns ``(evidence, None)`` for an accepted pair or ``(None, reason)`` for a
-    withheld one. Sharing an unchanged word proves nothing about the words a pair
-    changes ("брати участь" → "купити участь"), so the changed words carry the
-    evidence:
+    Returns ``(evidence, None)`` for a well-formed pair or ``(None, reason)`` for a
+    withheld one. The evidence label names what backs the words the pair changes:
 
     * ``shared_stem`` — every changed word shares a stem with its replacement
       ("нетактична поведінка" → "нетактовна поведінка");
     * ``vesum_marked_error`` / ``vesum_unattested_error`` — VESUM records a changed
       error word as an error, or does not know it as Ukrainian;
-    * ``source_row`` — a standard word replaced, added or dropped: only the source's
-      own contrast row, containing both sides, evidences that ("приймати участь" →
-      "брати участь"). Without ``source_row`` such a pair is withheld.
+    * ``source_row`` — a standard word replaced, added or dropped ("приймати участь"
+      → "брати участь"): only the source's own contrast row evidences that.
+
+    None of these makes a pair publishable on its own: a kept word or one marked
+    error word says nothing about the rest of the edit ("брати участь" → "купити
+    участь", "проявляти недостатки" → "становити інтерес"). Every drill is bound to
+    its source row by ``sourceRef``, which the gate verifies.
 
     Multi-word sides that share no word must also be parallel (same length and, with
     VESUM, the same part of speech word by word). A correction whose parenthetical
@@ -515,9 +510,7 @@ def assess_pair(
         statuses = {vesum.status(word) for word in changed_error} - {"clean"}
         if statuses:
             return ("vesum_marked_error" if "marked" in statuses else "vesum_unattested_error"), None
-    if row_attests(source_row, error, correct):
-        return "source_row", None
-    return None, "changed_words_without_source_evidence"
+    return "source_row", None
 
 
 def split_contrastive_row(line: str, vesum: VesumLookup | None = None) -> tuple[str, str] | str:
@@ -572,7 +565,7 @@ def _split_row(line: str, vesum: VesumLookup | None = None) -> tuple[str, str, s
             if (
                 k == half
                 and _alignment_score(_words(error), _words(correct)) == 0
-                and assess_pair(error, correct, vesum, line)[1] is None
+                and assess_pair(error, correct, vesum)[1] is None
             ):
                 return error, correct, "pos_parallel"
     return "ambiguous_split"
@@ -626,11 +619,14 @@ def _is_table_stop(line: str) -> bool:
     )
 
 
-def _horizontal_rows(lines: list[str], start: int) -> Iterable[str]:
-    for line in lines[start : start + _MAX_TABLE_ROWS]:
-        if _is_table_stop(line) or _HORIZONTAL_HEADER_RE.search(line):
-            return
-        yield line
+def _horizontal_rows(lines: list[str], start: int) -> list[int]:
+    """Indices of the one-line rows of the horizontal table whose header is ``lines[start - 1]``."""
+    rows = []
+    for index in range(start, min(start + _MAX_TABLE_ROWS, len(lines))):
+        if _is_table_stop(lines[index]) or _HORIZONTAL_HEADER_RE.search(lines[index]):
+            break
+        rows.append(index)
+    return rows
 
 
 def _header_order(line: str) -> str | None:
@@ -647,9 +643,11 @@ def _header_order(line: str) -> str | None:
     return "error_first" if first == "неправильно" else "correct_first"
 
 
-def _vertical_rows(lines: list[str], start: int) -> list[str] | None:
-    rows: list[str] = []
-    for line in lines[start:]:
+def _vertical_rows(lines: list[str], start: int) -> list[int] | None:
+    """Indices of the column cells under a vertical table header, or None for a phonetic table."""
+    rows: list[int] = []
+    for index in range(start, len(lines)):
+        line = lines[index]
         if (
             _TABLE_STOP_RE.match(line)
             or not _LOWER_START_RE.match(line)
@@ -660,12 +658,12 @@ def _vertical_rows(lines: list[str], start: int) -> list[str] | None:
             break
         if "[" in line or "]" in line:
             return None  # phonetic transcription table, not word usage
-        rows.append(line)
+        rows.append(index)
     return rows
 
 
-def _vertical_pairs(rows: list[str], order: str) -> list[tuple[str, str]] | None:
-    """Pair a vertical table's rows as ``(error, correct)``, or None when unaligned.
+def _vertical_pairs(rows: list[str], order: str) -> list[tuple[int, int]] | None:
+    """Pair a vertical table's rows as ``(error index, correct index)``, or None when unaligned.
 
     Two layouts occur: column blocks (all of one column, then all of the other) and
     interleaved rows (a pair per two lines). The layout whose pairs share stems more
@@ -675,12 +673,15 @@ def _vertical_pairs(rows: list[str], order: str) -> list[tuple[str, str]] | None
     if not rows or len(rows) % 2:
         return None
     half = len(rows) // 2
-    layouts = [list(zip(rows[:half], rows[half:], strict=True)), list(zip(rows[0::2], rows[1::2], strict=True))]
+    layouts = [
+        list(zip(range(half), range(half, len(rows)), strict=True)),
+        list(zip(range(0, len(rows), 2), range(1, len(rows), 2), strict=True)),
+    ]
     if order == "correct_first":
         layouts = [[(e, c) for c, e in layout] for layout in layouts]
 
-    def strength(layout: list[tuple[str, str]]) -> tuple[int, int]:
-        scores = [_alignment_score(_words(e), _words(c)) for e, c in layout]
+    def strength(layout: list[tuple[int, int]]) -> tuple[int, int]:
+        scores = [_alignment_score(_words(rows[e]), _words(rows[c])) for e, c in layout]
         return sum(score > 0 for score in scores), sum(scores)
 
     ranked = sorted(layouts, key=strength, reverse=True)
@@ -692,51 +693,59 @@ def _vertical_pairs(rows: list[str], order: str) -> list[tuple[str, str]] | None
     return ranked[0]
 
 
-def _textbook_source(grade: Any, author: str, title: str) -> str:
-    return f"Textbook Gr {grade} ({author or title})"
+def _source_lines(text: str) -> list[tuple[str, int]]:
+    """Non-blank lines of a source text, stripped, each with the offset of its first character."""
+    lines, offset = [], 0
+    for raw in text.splitlines(keepends=True):
+        stripped = raw.strip()
+        if stripped:
+            lines.append((stripped, offset + len(raw) - len(raw.lstrip())))
+        offset += len(raw)
+    return lines
 
 
-def _style_guide_source(word: str, section: str) -> str:
-    return f"Antonenko-Davydovych: {word} ({section})"
+def _split_spans(line: str, offset: int, left_tokens: int) -> tuple[list[int], list[int]]:
+    """Character spans of a row's two sides when its first ``left_tokens`` tokens form the left one."""
+    tokens = [match.span() for match in re.finditer(r"\S+", line)]
+    return (
+        [offset + tokens[0][0], offset + tokens[left_tokens - 1][1]],
+        [offset + tokens[left_tokens][0], offset + tokens[-1][1]],
+    )
 
 
-_TEXTBOOK_TABLES_QUERY = """
-    SELECT grade, author, title, text
-    FROM textbooks
-    WHERE text LIKE '%ПРАВИЛЬНО%' OR text LIKE '%равильно%'
-    ORDER BY id
-    """
+def span_text(text: str, span: list[int] | tuple[int, int]) -> str:
+    """The phrase at ``span`` of a source text, whitespace collapsed as the drills store it."""
+    start, end = span
+    return " ".join(text[start:end].split())
 
 
-def load_source_texts(conn: sqlite3.Connection) -> dict[str, list[str]]:
-    """Texts the extractor reads, keyed by the ``source`` label it gives their drills."""
-    texts: dict[str, list[str]] = {}
-    for grade, author, title, text in conn.execute(_TEXTBOOK_TABLES_QUERY):
-        texts.setdefault(_textbook_source(grade, author, title), []).append(text)
-    for word, section, text in conn.execute("SELECT word, section, text FROM style_guide ORDER BY id"):
-        texts.setdefault(_style_guide_source(word, section), []).append(text)
-    return texts
-
-
-def row_in_source(source_row: str, texts: Iterable[str]) -> bool:
-    """True when every line of ``source_row`` occurs in one of the source's texts."""
-    lines = [_row_key(line) for line in source_row.split("\n") if line.strip()]
-    return bool(lines) and any(all(line in _row_key(text) for line in lines) for text in texts)
-
-
-def parse_contrastive_textbook_tables(
-    conn: sqlite3.Connection,
+def textbook_row_pairs(
+    text: str,
     vesum: VesumLookup | None = None,
     withheld: list[dict[str, Any]] | None = None,
+    source: str = "",
 ) -> list[dict[str, Any]]:
-    """Extract НЕПРАВИЛЬНО → ПРАВИЛЬНО pairs from school-textbook contrast tables."""
-    results = []
-    seen = set()
+    """Accepted НЕПРАВИЛЬНО → ПРАВИЛЬНО pairs of one textbook text, each bound to its spans.
+
+    Every pair carries ``error``, ``correct``, ``evidence``, the character spans
+    ``errorSpan`` / ``correctSpan`` of both sides in ``text`` and the ``direction``
+    ("error_first" when the error column precedes the correction). A cross-row
+    combination (one row's error with another row's correction) is never derived.
+    """
+    lines = _source_lines(text)
+    texts = [line for line, _ in lines]
+    pairs: list[dict[str, Any]] = []
 
     def accept(
-        error: str, correct: str, source: str, grade: Any, line: str, source_row: str, *, inferred_rows: bool = False
+        error: str,
+        correct: str,
+        line: str,
+        spans: tuple[list[int], list[int]],
+        direction: str,
+        *,
+        inferred_rows: bool = False,
     ) -> None:
-        evidence, reason = assess_pair(error, correct, vesum, source_row)
+        evidence, reason = assess_pair(error, correct, vesum)
         if (
             evidence
             and inferred_rows
@@ -749,63 +758,219 @@ def parse_contrastive_textbook_tables(
         if reason:
             _withhold(withheld, source, reason, line=line, error=error, correct=correct)
             return
-        pair_key = (error.casefold(), correct.casefold())
-        if pair_key in seen:
-            return
-        seen.add(pair_key)
-        results.append(
+        pairs.append(
             {
-                "source": source,
                 "error": error,
                 "correct": correct,
-                "category": "lexical_norm",
-                "grade": grade,
                 "evidence": evidence,
-                "source_row": source_row,
+                "errorSpan": spans[0],
+                "correctSpan": spans[1],
+                "direction": direction,
             }
         )
 
-    def horizontal(rows: list[str], source: str, grade: Any, *, correct_first: bool = False) -> None:
-        for row, next_row in zip(rows, [*rows[1:], None], strict=True):
+    def horizontal(rows: list[int], *, correct_first: bool = False) -> None:
+        for index, next_index in zip(rows, [*rows[1:], None], strict=True):
+            row, offset = lines[index]
             split = _split_row(row, vesum)
             if isinstance(split, str):
                 _withhold(withheld, source, split, line=row)
                 continue
-            error, correct = (split[1], split[0]) if correct_first else split[:2]
-            if interleaved_with_next_row(error, correct, next_row):
+            left, right = split[:2]
+            left_span, right_span = _split_spans(row, offset, len(left.split()))
+            if correct_first:
+                error, correct, spans, direction = right, left, (right_span, left_span), "correct_first"
+            else:
+                error, correct, spans, direction = left, right, (left_span, right_span), "error_first"
+            if interleaved_with_next_row(error, correct, texts[next_index] if next_index is not None else None):
                 _withhold(withheld, source, "row_interleaved_with_next_row", line=row)
             else:
-                accept(error, correct, source, grade, row, row)
+                accept(error, correct, row, spans, direction)
 
-    for grade, author, title, text in conn.execute(_TEXTBOOK_TABLES_QUERY):
+    for idx, line in enumerate(texts):
+        if _HORIZONTAL_HEADER_RE.search(line):
+            horizontal(_horizontal_rows(texts, idx + 1))
+            continue
+        order = _header_order(line)
+        if order is None:
+            continue
+        rows = _vertical_rows(texts, idx + 1)
+        if rows is None:
+            _withhold(withheld, source, "phonetic_transcription_table", line=line)
+            continue
+        if not rows:
+            continue
+        cells = [texts[index] for index in rows]
+        pairs_at = _vertical_pairs(cells, order)
+        if pairs_at:
+            for error_at, correct_at in pairs_at:
+                # Each column cell is a whole source line.
+                (error_cell, error_offset), (correct_cell, correct_offset) = (
+                    lines[rows[error_at]],
+                    lines[rows[correct_at]],
+                )
+                accept(
+                    " ".join(error_cell.split()),
+                    " ".join(correct_cell.split()),
+                    f"{error_cell} | {correct_cell}",
+                    (
+                        [error_offset, error_offset + len(error_cell)],
+                        [correct_offset, correct_offset + len(correct_cell)],
+                    ),
+                    order,
+                    inferred_rows=True,
+                )
+        elif all(not isinstance(split := _split_row(cell, vesum), str) and split[2] == "edge" for cell in cells):
+            # A header over one-line pairs ("звук звучить звук лунає").
+            horizontal(rows, correct_first=order == "correct_first")
+        else:
+            _withhold(withheld, source, "vertical_table_unaligned", line=" | ".join(cells))
+    return pairs
+
+
+# Explicit quotation contrasts: «Неправильно: … а треба …» / «Замість … слід казати …».
+_STYLE_CONTRAST_RE = re.compile(
+    r"(?i)(?:не\s+можна\s+казати|замість|неправильно)[^«\"']*[«\"']([^»\"']+)[»\"'][^«\"']*(?:слід|треба|правильно)[^«\"']*[«\"']([^»\"']+)[»\"']"
+)
+
+
+def _tight_span(match: re.Match[str], group: int) -> list[int]:
+    start, end = match.span(group)
+    value = match.group(group)
+    return [start + len(value) - len(value.lstrip()), end - len(value) + len(value.rstrip())]
+
+
+def style_guide_row_pairs(
+    text: str,
+    vesum: VesumLookup | None = None,
+    withheld: list[dict[str, Any]] | None = None,
+    source: str = "",
+) -> list[dict[str, Any]]:
+    """Accepted quotation contrasts of one style-guide entry, bound to their spans like ``textbook_row_pairs``."""
+    pairs = []
+    for match in _STYLE_CONTRAST_RE.finditer(text):
+        bad = " ".join(match.group(1).split())
+        good = " ".join(match.group(2).split())
+        evidence, reason = assess_pair(bad, good, vesum)
+        if reason:
+            _withhold(withheld, source, reason, error=bad, correct=good)
+            continue
+        pairs.append(
+            {
+                "error": bad,
+                "correct": good,
+                "evidence": evidence,
+                "errorSpan": _tight_span(match, 1),
+                "correctSpan": _tight_span(match, 2),
+                "direction": "error_first",
+            }
+        )
+    return pairs
+
+
+_ROW_PARSERS: dict[str, Callable[..., list[dict[str, Any]]]] = {
+    "textbooks": textbook_row_pairs,
+    "style_guide": style_guide_row_pairs,
+}
+
+
+def derive_row_pairs(row_id: str, text: str, vesum: VesumLookup | None = None) -> list[dict[str, Any]]:
+    """The pairs the extractor derives from one source row (before cross-row dedup and review)."""
+    match = _ROW_ID_RE.match(row_id)
+    if not match:
+        raise ValueError(f"not a source row id: {row_id!r}")
+    return _ROW_PARSERS[match.group(1)](text, vesum)
+
+
+def source_ref_problem(ref: Any) -> str | None:
+    """Why a drill's ``sourceRef`` cannot bind it to a source row, else None."""
+    if not isinstance(ref, dict):
+        return "missing sourceRef"
+    if not isinstance(ref.get("rowId"), str) or not _ROW_ID_RE.match(ref["rowId"]):
+        return f"rowId {ref.get('rowId')!r} is not textbooks:<id> or style_guide:<id>"
+    spans = [ref.get("errorSpan"), ref.get("correctSpan")]
+    for span in spans:
+        if not (
+            isinstance(span, list)
+            and len(span) == 2
+            and all(isinstance(bound, int) and not isinstance(bound, bool) for bound in span)
+            and 0 <= span[0] < span[1]
+        ):
+            return f"span {span!r} is not [start, end]"
+    error_span, correct_span = spans
+    if error_span[1] > correct_span[0] and correct_span[1] > error_span[0]:
+        return "error and correction spans overlap"
+    if ref.get("direction") not in DIRECTIONS:
+        return f"direction {ref.get('direction')!r} is not one of {DIRECTIONS}"
+    if (ref["direction"] == "error_first") != (error_span[0] < correct_span[0]):
+        return f"spans are not in the {ref['direction']} order"
+    return None
+
+
+def load_source_row(conn: sqlite3.Connection, row_id: str) -> str | None:
+    """Text of the sources.db row ``row_id`` (``textbooks:<id>`` / ``style_guide:<id>``), or None."""
+    match = _ROW_ID_RE.match(row_id or "")
+    if not match:
+        return None
+    row = conn.execute(f"SELECT text FROM {match.group(1)} WHERE id = ?", (int(match.group(2)),)).fetchone()
+    return row[0] if row else None
+
+
+def row_sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _textbook_source(grade: Any, author: str, title: str) -> str:
+    return f"Textbook Gr {grade} ({author or title})"
+
+
+def _style_guide_source(word: str, section: str) -> str:
+    return f"Antonenko-Davydovych: {word} ({section})"
+
+
+_TEXTBOOK_TABLES_QUERY = """
+    SELECT id, grade, author, title, text
+    FROM textbooks
+    WHERE text LIKE '%ПРАВИЛЬНО%' OR text LIKE '%равильно%'
+    ORDER BY id
+    """
+
+
+def _source_ref(table: str, row_id: int, pair: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "rowId": f"{table}:{row_id}",
+        "errorSpan": pair["errorSpan"],
+        "correctSpan": pair["correctSpan"],
+        "direction": pair["direction"],
+    }
+
+
+def parse_contrastive_textbook_tables(
+    conn: sqlite3.Connection,
+    vesum: VesumLookup | None = None,
+    withheld: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    """Extract НЕПРАВИЛЬНО → ПРАВИЛЬНО pairs from school-textbook contrast tables."""
+    results = []
+    seen = set()
+    for row_id, grade, author, title, text in conn.execute(_TEXTBOOK_TABLES_QUERY):
         source = _textbook_source(grade, author, title)
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
-        for idx, line in enumerate(lines):
-            if _HORIZONTAL_HEADER_RE.search(line):
-                horizontal(list(_horizontal_rows(lines, idx + 1)), source, grade)
+        for pair in textbook_row_pairs(text, vesum, withheld, source):
+            key = (pair["error"].casefold(), pair["correct"].casefold())
+            if key in seen:
                 continue
-            order = _header_order(line)
-            if order is None:
-                continue
-            rows = _vertical_rows(lines, idx + 1)
-            if rows is None:
-                _withhold(withheld, source, "phonetic_transcription_table", line=line)
-                continue
-            if not rows:
-                continue
-            pairs = _vertical_pairs(rows, order)
-            if pairs:
-                for error, correct in pairs:
-                    # Each column cell is a whole source line.
-                    accept(
-                        error, correct, source, grade, f"{error} | {correct}", f"{error}\n{correct}", inferred_rows=True
-                    )
-            elif all(not isinstance(split := _split_row(row, vesum), str) and split[2] == "edge" for row in rows):
-                # A header over one-line pairs ("звук звучить звук лунає").
-                horizontal(rows, source, grade, correct_first=order == "correct_first")
-            else:
-                _withhold(withheld, source, "vertical_table_unaligned", line=" | ".join(rows))
-
+            seen.add(key)
+            results.append(
+                {
+                    "source": source,
+                    "error": pair["error"],
+                    "correct": pair["correct"],
+                    "category": "lexical_norm",
+                    "grade": grade,
+                    "evidence": pair["evidence"],
+                    "source_ref": _source_ref("textbooks", row_id, pair),
+                }
+            )
     return results
 
 
@@ -815,34 +980,15 @@ def parse_style_guide_entries(
     withheld: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Extract stylistic corrections and explanations from Antonenko-Davydovych."""
-    query = """
-    SELECT word, section, text
-    FROM style_guide
-    ORDER BY id
-    """
     results = []
     seen = set()
-
-    for word, section, text in conn.execute(query):
-        # Look for explicit quotation contrast patterns in text
-        # e.g. Неправильно: ... а треба ... / Замість ... слід казати ...
-        matches = re.finditer(
-            r"(?i)(?:не\s+можна\s+казати|замість|неправильно)[^«\"']*[«\"']([^»\"']+)[»\"'][^«\"']*(?:слід|треба|правильно)[^«\"']*[«\"']([^»\"']+)[»\"']",
-            text,
-        )
+    for row_id, word, section, text in conn.execute("SELECT id, word, section, text FROM style_guide ORDER BY id"):
         source = _style_guide_source(word, section)
-        for match in matches:
-            bad = " ".join(match.group(1).split())
-            good = " ".join(match.group(2).split())
-            source_row = " ".join(match.group(0).split())
-            evidence, reason = assess_pair(bad, good, vesum, source_row)
-            if reason:
-                _withhold(withheld, source, reason, error=bad, correct=good)
+        for pair in style_guide_row_pairs(text, vesum, withheld, source):
+            key = (pair["error"].lower(), pair["correct"].lower())
+            if key in seen:
                 continue
-            pair_key = (bad.lower(), good.lower())
-            if pair_key in seen:
-                continue
-            seen.add(pair_key)
+            seen.add(key)
 
             # First sentence of text as explanation
             first_sent = text.split(".")[0].strip().replace("\n", " ")
@@ -851,15 +997,14 @@ def parse_style_guide_entries(
             results.append(
                 {
                     "source": source,
-                    "error": bad,
-                    "correct": good,
+                    "error": pair["error"],
+                    "correct": pair["correct"],
                     "explanation": explanation,
                     "category": "style_norm",
-                    "evidence": evidence,
-                    "source_row": source_row,
+                    "evidence": pair["evidence"],
+                    "source_ref": _source_ref("style_guide", row_id, pair),
                 }
             )
-
     return results
 
 
@@ -942,14 +1087,14 @@ def create_error_correction_drill(
     explanation: str | None = None,
     source: str = "textbook",
     answers: list[str] | None = None,
-    source_row: str | None = None,
+    source_ref: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Format an error-correction drill conforming to ErrorCorrectionItemProps.
 
     Options are only the two forms the source itself contrasts; no distractor is
     invented (the pre-#8723 builder appended "(розм.)"/"(застаріле)" labels).
     ``answers`` are the corrections a learner may type (``correction_answers``);
-    ``source_row`` is the source text the pair was read from.
+    ``source_ref`` binds the pair to the source row and spans it was read from.
     """
     sentence = f"Уважно прочитайте: «{error_phrase}» — тут допущено помилку."
     expl = explanation or f"Правильно вживати «{correct_phrase}» замість помилкового «{error_phrase}»."
@@ -964,8 +1109,8 @@ def create_error_correction_drill(
         "isUkrainian": True,
         "source": source,
     }
-    if source_row:
-        drill["sourceRow"] = source_row
+    if source_ref:
+        drill["sourceRef"] = source_ref
     return drill
 
 
@@ -1010,12 +1155,53 @@ def extract_error_correction_deck(
             explanation=item.get("explanation"),
             source=item["source"],
             answers=correction_answers(item["correct"], vesum),
-            source_row=item["source_row"],
+            source_ref=item["source_ref"],
         )
         for item in pairs
     ]
     log(f"Total error-correction drills synthesized: {len(drills)}")
     return build_culture_deck(drills)
+
+
+def build_evidence_snapshot(deck: dict[str, Any], conn: sqlite3.Connection) -> dict[str, Any]:
+    """Per-drill source evidence, read from sources.db, that the gate checks without the database.
+
+    Each drill id maps to its source ``rowId``, the SHA-256 of that row's text and the
+    strings at its error and correction spans. A drill whose spans do not read back
+    as its error and correction is an extractor bug and stops the export.
+    """
+    evidence: dict[str, dict[str, str]] = {}
+    for drill in deck["drills"]:
+        ref = drill.get("sourceRef")
+        problem = source_ref_problem(ref)
+        text = load_source_row(conn, ref["rowId"]) if problem is None else None
+        if text is None:
+            raise ValueError(f"{drill['id']}: cannot bind to a source row ({problem or 'row not in sources.db'})")
+        error, correct = span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"])
+        if (error, correct) != (drill["errorWord"], drill["correctForm"]):
+            raise ValueError(f"{drill['id']}: spans read {error!r} → {correct!r}, not the drill's pair")
+        evidence[drill["id"]] = {
+            "rowId": ref["rowId"],
+            "rowSha256": row_sha256(text),
+            "error": error,
+            "correct": correct,
+        }
+    return {"deckId": deck["deckId"], "drills": evidence}
+
+
+def load_evidence_snapshot(path: Path | str = EVIDENCE_SNAPSHOT_PATH) -> dict[str, dict[str, str]]:
+    """Committed per-drill evidence by drill id; empty when the snapshot file is absent."""
+    path = Path(path)
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8")).get("drills") or {}
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
 
 
 def main():
@@ -1028,6 +1214,11 @@ def main():
         action="append",
         default=[],
         help="Write the deck JSON here (repeatable: site bundle and registry copy)",
+    )
+    parser.add_argument(
+        "--evidence-json",
+        type=Path,
+        help="Write the per-drill evidence snapshot (row id, row SHA-256, span strings) here",
     )
     parser.add_argument("--withheld-json", type=Path, help="Write withheld source rows with reasons here")
     parser.add_argument(
@@ -1053,18 +1244,16 @@ def main():
         conn, VesumLookup(args.vesum_db), withheld, reviewed=load_reviewed_withholds(args.reviewed_withheld)
     )
     print(f"Withheld {len(withheld)} source rows.")
+    evidence = build_evidence_snapshot(deck, conn)
 
     for path in args.export_json:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(deck, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+        _write_json(path, deck)
         print(f"Exported drills to {path}")
+    if args.evidence_json:
+        _write_json(args.evidence_json, evidence)
+        print(f"Exported evidence snapshot to {args.evidence_json}")
     if args.withheld_json:
-        args.withheld_json.parent.mkdir(parents=True, exist_ok=True)
-        with open(args.withheld_json, "w", encoding="utf-8") as f:
-            json.dump({"withheld": withheld}, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+        _write_json(args.withheld_json, {"withheld": withheld})
         print(f"Exported withheld rows to {args.withheld_json}")
 
 
