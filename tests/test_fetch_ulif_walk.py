@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
 import json
 import re
 import sqlite3
@@ -1012,42 +1013,135 @@ class ShiftedWindowServer:
         return HttpResult(200, "<html></html>", {})
 
 
-def test_recorded_ulif_tail_advances_past_printed_size() -> None:
-    """Captured 2026-09-28 windows add 40 positions where ULIF prints 37."""
+def test_recorded_ulif_tail_ends_at_printed_size() -> None:
+    """The captured windows add 40 positions after the 262,772 preceding rows."""
     first = parse_register_list(_html("ulif-tail-window-1.html.gz"))
     second = parse_register_list(_html("ulif-tail-window-2.html.gz"))
     repeated = parse_register_list(_html("ulif-tail-window-3.html.gz"))
     assert [row["stressed"] for row in second] == [row["stressed"] for row in repeated]
     assert [row["stressed"] for row in first[-5:]] == [row["stressed"] for row in second[:5]]
     assert ulif_walk._register_size(_html("ulif-tail-window-2.html.gz")) == 262812
-    assert ulif_walk._tail_window_advance(first, second, start_global=262770, register_size=262812, page_num=10512) == 20
+    assert ulif_walk._tail_window_advance(first, second, start_register=262767, register_size=262812, page_num=10512) == 20
 
 
 def test_mid_register_overlap_still_fails() -> None:
     first = parse_register_list(_html("ulif-tail-window-1.html.gz"))
     second = parse_register_list(_html("ulif-tail-window-2.html.gz"))
     with pytest.raises(ulif_walk.SessionInvalid, match="register_overlap"):
-        ulif_walk._tail_window_advance(first, second, start_global=20, register_size=100, page_num=2)
+        ulif_walk._tail_window_advance(first, second, start_register=20, register_size=100, page_num=2)
 
 
-def test_tail_advance_accepts_new_window_after_printed_size() -> None:
+def test_tail_advance_accepts_new_window_at_register_end() -> None:
     first = [{"stressed": f"synthetic-a-{index}"} for index in range(25)]
     following = [{"stressed": f"synthetic-b-{index}"} for index in range(25)]
-    assert ulif_walk._tail_window_advance(first, following, start_global=60, register_size=62, page_num=4) == 25
+    assert ulif_walk._tail_window_advance(first, following, start_register=60, register_size=62, page_num=4) == 25
 
 
 def test_single_repeated_tail_headword_is_not_assumed_to_be_an_overlap() -> None:
     first = [{"stressed": "synthetic-a"}, {"stressed": "synthetic-homonym"}]
     second = [{"stressed": "synthetic-homonym"}, {"stressed": "synthetic-z"}]
     with pytest.raises(ulif_walk.SessionInvalid, match="register_overlap"):
-        ulif_walk._tail_window_advance(first, second, start_global=58, register_size=61, page_num=3)
+        ulif_walk._tail_window_advance(first, second, start_register=58, register_size=61, page_num=3)
 
 
-@pytest.mark.parametrize("straddle,printed_size", [("none", 62), ("continued", 62), ("page", 65), ("window", 65)])
-def test_synthetic_tail_clamp_stores_positions_once_and_completes(
-    tmp_path: Path, straddle: str, printed_size: int, capsys: pytest.CaptureFixture[str]
+def test_reconcile_legacy_null_homonyms_at_real_register_positions(tmp_path: Path) -> None:
+    ledger = SpellingLedger(tmp_path / "state" / "ledger.sqlite")
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    groups = {
+        "ані": [(183, 22, "А́ні"), (183, 24, "ані́"), (184, 0, "ані́")],
+        "копиль": [(3804, 14, "копиль"), (3805, 8, "Ко́пиль")],
+        "луч": [(4245, 4, "луч"), (4246, 8, "луч")],
+        "ящикуватий": [(10512, 20, "ящикува́тий")],
+    }
+    try:
+        for spelling, positions in groups.items():
+            for ordinal, (page, index, headword) in enumerate(positions, 1):
+                body = _entry_html(headword, "synthetic", f"ENTRY-{page}-{index}").encode("utf-8")
+                digest = hashlib.sha256(body).hexdigest()
+                ulif_walk._store_blob(cache, digest, body, "text/html; charset=utf-8")
+                ledger.ensure_row(
+                    page, index, select_arg=f"Select${index}",
+                    stressed_headword=headword, normalized_spelling=spelling,
+                )
+                existing_index = 1 if ordinal == 1 and spelling != "ящикуватий" else None
+                ledger.mark_row(page, index, "completed", entry_sha256=digest,
+                                homonym_index=existing_index)
+                ledger.record_response(
+                    spelling=spelling, role="entry", response_sha256=digest,
+                    request_sha256=digest, register_position=f"{page}:{index}",
+                    homonym_index=existing_index,
+                )
+            if spelling != "ящикуватий":
+                ledger.ensure(spelling)
+                ledger.mark(spelling, "stored", entry_count=1)
+                cache.execute(
+                    """INSERT INTO ulif_dictua_entries
+                       (normalized_query, homonym_index, canonical_headword, status)
+                       VALUES (?, 1, ?, 'ok')""",
+                    (spelling, positions[0][2]),
+                )
+        cache.commit()
+
+        ulif_walk._reconcile_unindexed_stored_groups(ledger, cache)
+        assert ledger.completed_rows_for_spelling("ящикуватий")[0]["homonym_index"] is None
+        ulif_walk._commit_spelling_group(ledger, cache, "ящикуватий")
+        for spelling, positions in groups.items():
+            assert [row["homonym_index"] for row in ledger.completed_rows_for_spelling(spelling)] == list(
+                range(1, len(positions) + 1)
+            )
+            assert [row[0] for row in cache.execute(
+                "SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = ? ORDER BY homonym_index",
+                (spelling,),
+            )] == list(range(1, len(positions) + 1))
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_null_homonym_rows_use_register_order_for_verification(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """Recorded tail rows, printed-size drift, and optional boundary homonyms."""
+    state_dir = tmp_path / "state"
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    try:
+        ledger.ensure_page(1, start_headword="А́ні", end_headword="ані́", row_count=3, register_size=3)
+        for index, word in enumerate(("А́ні", "ані́", "ані́")):
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word,
+                              normalized_spelling="ані")
+            ledger.mark_row(1, index, "completed", homonym_index=1 if index == 0 else None)
+            cache.execute(
+                """INSERT INTO ulif_dictua_entries
+                   (normalized_query, homonym_index, canonical_headword, status)
+                   VALUES ('ані', ?, ?, 'ok')""",
+                (index + 1, word),
+            )
+        cache.commit()
+        ledger.mark_page(1, "completed")
+        ledger.set_meta("register_size", "3")
+        ledger.record_terminal(3)
+        assert "complete=yes" in status_text(ledger, delay_seconds=1)
+        assert verify_complete(state_dir=state_dir, db_path=tmp_path / "cache.db", expected_size=3) == EXIT_OK
+        cache.execute("DELETE FROM ulif_dictua_entries WHERE normalized_query='ані' AND homonym_index=3")
+        cache.execute(
+            """INSERT INTO ulif_dictua_entries
+               (normalized_query, homonym_index, canonical_headword, status)
+               VALUES ('other', 1, 'other', 'ok')"""
+        )
+        cache.commit()
+        assert verify_complete(state_dir=state_dir, db_path=tmp_path / "cache.db", expected_size=3) == EXIT_USAGE
+        assert "page 1 row 2" in capsys.readouterr().err
+    finally:
+        cache.close()
+        ledger.close()
+
+
+@pytest.mark.parametrize("straddle", ["none", "page", "window"])
+def test_synthetic_tail_clamp_stores_positions_once_and_completes(
+    tmp_path: Path, straddle: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A 22-row first page and overlapping tail fill the printed register exactly."""
+    printed_size = 87
     first_words = [row["stressed"] for row in parse_register_list(_html("ulif-tail-window-1.html.gz"))]
     last_words = [row["stressed"] for row in parse_register_list(_html("ulif-tail-window-2.html.gz"))]
     if straddle == "page":
@@ -1058,9 +1152,6 @@ def test_synthetic_tail_clamp_stores_positions_once_and_completes(
         _register_html(first_words, "TAIL-1", register_size=printed_size),
         _register_html(last_words, "TAIL-2", register_size=printed_size),
     ]
-    continued_words = last_words[5:] + [f"synthetic-extra-{index}" for index in range(5)]
-    if straddle == "continued":
-        windows.append(_register_html(continued_words, "TAIL-3", register_size=printed_size))
     state_dir = tmp_path / "state"
     state_dir.mkdir()
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
@@ -1068,38 +1159,38 @@ def test_synthetic_tail_clamp_stores_positions_once_and_completes(
     next_requests: list[str] = []
     try:
         prior_words = [f"synthetic-{index:02d}" for index in range(20)] + first_words[:5]
-        ledger.ensure_page(1, start_headword=prior_words[0], end_headword=prior_words[-1], row_count=25)
-        for index, word in enumerate(prior_words):
-            ledger.ensure_row(
-                1,
-                index,
-                select_arg=f"Select${index}",
-                stressed_headword=word,
-                normalized_spelling=normalize_ulif_spelling(word),
-            )
-            ledger.mark_row(1, index, "completed", homonym_index=1)
-            cache.execute(
-                """INSERT INTO ulif_dictua_entries
-                   (normalized_query, homonym_index, canonical_headword, status, homonym_checked)
-                   VALUES (?, 1, ?, 'ok', 1)""",
-                (normalize_ulif_spelling(word), word),
-            )
+        for page_num, words in ((1, [f"synthetic-start-{index:02d}" for index in range(22)]), (2, prior_words)):
+            ledger.ensure_page(page_num, start_headword=words[0], end_headword=words[-1], row_count=len(words))
+            for index, word in enumerate(words):
+                ledger.ensure_row(
+                    page_num,
+                    index,
+                    select_arg=f"Select${index}",
+                    stressed_headword=word,
+                    normalized_spelling=normalize_ulif_spelling(word),
+                )
+                ledger.mark_row(page_num, index, "completed", homonym_index=1)
+                cache.execute(
+                    """INSERT INTO ulif_dictua_entries
+                       (normalized_query, homonym_index, canonical_headword, status, homonym_checked)
+                       VALUES (?, 1, ?, 'ok', 1)""",
+                    (normalize_ulif_spelling(word), word),
+                )
+            ledger.mark_page(page_num, "completed")
         cache.commit()
-        ledger.mark_page(1, "completed")
         ledger.set_meta("register_size", str(printed_size))
+        assert ledger.register_offset_for_grid(45) == 42
 
         def transport(method: str, data: dict[str, str] | None) -> HttpResult:
             assert method == "POST" and data is not None
             viewstate = data["__VIEWSTATE"]
             if "ctl00$ContentPlaceHolder1$nextpage.x" in data:
                 next_requests.append(viewstate)
-                allowed = ("TAIL-1", "TAIL-2", "TAIL-3") if straddle == "continued" else ("TAIL-1", "TAIL-2")
-                assert viewstate in allowed
-                destination = windows[1] if viewstate == "TAIL-1" else windows[-1]
-                return HttpResult(200, destination, {})
+                assert viewstate in ("TAIL-1", "TAIL-2")
+                return HttpResult(200, windows[1], {})
             assert data["__EVENTTARGET"] == ulif_walk.GRID_TARGET
             index = int(data["__EVENTARGUMENT"].split("$")[1])
-            words = {"TAIL-1": first_words, "TAIL-2": last_words, "TAIL-3": continued_words}[viewstate]
+            words = {"TAIL-1": first_words, "TAIL-2": last_words}[viewstate]
             word = words[index]
             return HttpResult(
                 200, _entry_html(word, "synthetic", f"ENTRY-{viewstate}-{index}", register_size=printed_size), {}
@@ -1110,7 +1201,7 @@ def test_synthetic_tail_clamp_stores_positions_once_and_completes(
             client,
             ledger,
             cache,
-            first_page=2,
+            first_page=3,
             first_html=windows[0],
             offset=5,
             start_headword="а",
@@ -1121,65 +1212,54 @@ def test_synthetic_tail_clamp_stores_positions_once_and_completes(
             clock=lambda: 0.0,
         )
         assert (code, reason, completed) == (EXIT_OK, "finished", 2)
-        assert next_requests == (["TAIL-1", "TAIL-2", "TAIL-3"] if straddle == "continued" else ["TAIL-1", "TAIL-2"])
-        last_count = 20 if straddle == "continued" else 15
-        assert [ledger.get_page(page)["row_count"] for page in (2, 3)] == [25, last_count]
-        assert [len(ledger.page_rows(page)) for page in (1, 2, 3)] == [25, 25, last_count]
-        assert ledger.walk_counts()["entries_stored"] == 50 + last_count
+        assert next_requests == ["TAIL-1", "TAIL-2"]
+        last_count = 15
+        assert [ledger.get_page(page)["row_count"] for page in (3, 4)] == [25, last_count]
+        assert [len(ledger.page_rows(page)) for page in (1, 2, 3, 4)] == [22, 25, 25, last_count]
+        assert ledger.walk_counts()["entries_stored"] == 72 + last_count
         status = status_text(ledger, delay_seconds=1)
         assert "complete=yes" in status
         assert verify_complete(state_dir=state_dir, db_path=tmp_path / "cache.db", expected_size=printed_size) == EXIT_OK
         verified_report = capsys.readouterr().err
         if straddle == "none":
-            assert "size_discrepancies=3" in status
-            for position, headword in ((63, "я́щурний"), (64, "я́щурячий"), (65, "Я́я")):
-                line = (
-                    f"discrepancy position={position} stressed_headword={headword} "
-                    "printed_size=62 reason=observed_beyond_printed_size"
-                )
-                assert line in status
-                assert f"  {line}" in verified_report
-            assert "Printed register size: 62" in verified_report
-            assert "Completed rows:        65" in verified_report
-            assert "Difference:            -3" in verified_report
-            assert "Itemised differences: 3" in verified_report
-            assert "Status: VERIFIED_COMPLETE (observed register stored; printed-size differences itemised)" in verified_report
-            assert [(row["position"], row["stressed_headword"], row["printed_size"], row["reason"])
-                    for row in ledger.conn.execute("SELECT * FROM register_size_discrepancies ORDER BY position")] == [
-                (63, "я́щурний", 62, "observed_beyond_printed_size"),
-                (64, "я́щурячий", 62, "observed_beyond_printed_size"),
-                (65, "Я́я", 62, "observed_beyond_printed_size"),
-            ]
-            ledger.conn.execute("DELETE FROM register_size_discrepancies WHERE position = 64")
+            assert "size_discrepancies=0" in status
+            assert f"Printed register size: {printed_size}" in verified_report
+            assert f"Completed rows:        {printed_size}" in verified_report
+            assert "Difference:            0" in verified_report
+            assert "Itemised differences: 0" in verified_report
+            ledger.conn.execute(
+                "INSERT INTO register_size_discrepancies VALUES (?, ?, ?, ?)",
+                (printed_size, "false", printed_size, "observed_beyond_printed_size"),
+            )
             ledger.conn.commit()
             assert "complete=no" in status_text(ledger, delay_seconds=1)
             assert verify_complete(state_dir=state_dir, db_path=tmp_path / "cache.db", expected_size=printed_size) == EXIT_USAGE
             assert "printed-size differences are not fully itemised" in capsys.readouterr().err
             ledger.record_terminal(printed_size)
             ledger.conn.execute(
-                "UPDATE register_rows SET normalized_spelling = 'synthetic-00' WHERE page_num = 1 AND row_index = 1"
+                "UPDATE register_rows SET normalized_spelling = 'synthetic-start-00' WHERE page_num = 1 AND row_index = 1"
             )
             ledger.conn.commit()
             assert "complete=no" in status_text(ledger, delay_seconds=1)
             assert verify_complete(state_dir=state_dir, db_path=tmp_path / "cache.db", expected_size=printed_size) == EXIT_USAGE
-            assert "duplicate stored identity synthetic-00" in capsys.readouterr().err
+            assert "duplicate stored identity synthetic-start-00" in capsys.readouterr().err
             ledger.conn.execute(
-                "UPDATE register_rows SET normalized_spelling = 'synthetic-01' WHERE page_num = 1 AND row_index = 1"
+                "UPDATE register_rows SET normalized_spelling = 'synthetic-start-01' WHERE page_num = 1 AND row_index = 1"
             )
             ledger.conn.commit()
-        ledger.set_meta("register_size", "64")
+        ledger.set_meta("register_size", "86")
         assert "complete=no" in status_text(ledger, delay_seconds=1)
         ledger.set_meta("register_size", str(printed_size))
         entry_positions = [
             row[0]
             for row in ledger.conn.execute("SELECT register_position FROM responses WHERE role='entry' ORDER BY id")
         ]
-        assert entry_positions == [f"{page}:{index}" for page, count in ((2, 25), (3, last_count)) for index in range(count)]
+        assert entry_positions == [f"{page}:{index}" for page, count in ((3, 25), (4, last_count)) for index in range(count)]
         if straddle == "page":
             rows = ledger.completed_rows_for_spelling("synthetic-homonym")
             assert [(row["page_num"], row["row_index"], row["homonym_index"]) for row in rows] == [
-                (2, 24, 1),
-                (3, 0, 2),
+                (3, 24, 1),
+                (4, 0, 2),
             ]
             assert (
                 ledger.conn.execute(
@@ -1190,8 +1270,8 @@ def test_synthetic_tail_clamp_stores_positions_once_and_completes(
         elif straddle == "window":
             rows = ledger.completed_rows_for_spelling("synthetic-seam")
             assert [(row["page_num"], row["row_index"], row["homonym_index"]) for row in rows] == [
-                (2, 19, 1),
-                (2, 20, 2),
+                (3, 19, 1),
+                (3, 20, 2),
             ]
             assert tuple(
                 ledger.conn.execute(
@@ -2287,7 +2367,7 @@ def test_verify_complete_exits_zero_on_complete(tmp_path: Path):
     assert code == EXIT_OK
 
 
-def test_printed_size_beyond_observed_is_itemised(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
+def test_printed_size_beyond_observed_fails_verification(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
     server = MockULIFServer(page1_size=9, page2_size=9, page3_size=9)
     state_dir = tmp_path / "state"
     db_path = tmp_path / "cache.db"
@@ -2302,12 +2382,14 @@ def test_printed_size_beyond_observed_is_itemised(tmp_path: Path, capsys: pytest
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
     try:
         status = status_text(ledger, delay_seconds=1.0)
-        assert "complete=yes" in status
-        assert "discrepancy position=9 stressed_headword=unknown printed_size=9 reason=printed_size_beyond_observed" in status
+        assert "complete=no" in status
+        assert "size_discrepancies=0" in status
     finally:
         ledger.close()
-    assert verify_complete(state_dir=state_dir, db_path=db_path, expected_size=9) == EXIT_OK
-    assert "Itemised differences: 1" in capsys.readouterr().err
+    assert verify_complete(state_dir=state_dir, db_path=db_path, expected_size=9) == EXIT_USAGE
+    report = capsys.readouterr().err
+    assert "stored register ends at 8, before printed size 9" in report
+    assert "Status: INCOMPLETE" in report
 
 
 def test_status_on_empty_walk_ledger_prints_complete_not_started(tmp_path: Path):

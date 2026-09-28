@@ -714,6 +714,15 @@ class SpellingLedger:
             )
         )
 
+    def register_offset_for_grid(self, grid_offset: int) -> int:
+        """Map a 25-row grid offset to the count of preceding register rows."""
+        page_num, row_index = divmod(grid_offset, REGISTER_PAGE_SIZE)
+        preceding = self.conn.execute(
+            "SELECT COALESCE(SUM(row_count), 0) FROM register_pages WHERE page_num <= ?",
+            (page_num,),
+        ).fetchone()[0]
+        return int(preceding) + row_index
+
     def completed_rows_for_spelling(self, normalized_spelling: str) -> list[sqlite3.Row]:
         return list(
             self.conn.execute(
@@ -786,10 +795,7 @@ def _expected_size_discrepancies(
     ledger: SpellingLedger, observed_end: int, printed_size: int
 ) -> list[tuple[int, str, int, str]]:
     if observed_end <= printed_size:
-        return [
-            (position, "", printed_size, "printed_size_beyond_observed")
-            for position in range(observed_end + 1, printed_size + 1)
-        ]
+        return []
     return [
         (int(row[0]), str(row[1]), printed_size, "observed_beyond_printed_size")
         for row in ledger.conn.execute(
@@ -833,7 +839,7 @@ def _walk_completion_errors(ledger: SpellingLedger, printed_size: int) -> list[s
         errors.append(f"{orphan} rows without page records")
     duplicate_identities = ledger.conn.execute(
         """SELECT normalized_spelling, homonym_index, COUNT(*) AS n
-           FROM register_rows WHERE state = 'completed'
+           FROM register_rows WHERE state = 'completed' AND homonym_index IS NOT NULL
            GROUP BY normalized_spelling, homonym_index HAVING n > 1 LIMIT 1"""
     ).fetchone()
     if duplicate_identities:
@@ -864,6 +870,8 @@ def _walk_completion_errors(ledger: SpellingLedger, printed_size: int) -> list[s
         except SessionInvalid as exc:
             errors.append(str(exc))
     observed_end = sum(int(page["rows"]) for page in pages)
+    if observed_end < printed_size:
+        errors.append(f"stored register ends at {observed_end}, before printed size {printed_size}")
     if ledger.meta("terminal_position") != str(observed_end):
         errors.append("terminal position missing or differs from stored rows")
     actual = [tuple(row) for row in ledger.conn.execute(
@@ -1929,7 +1937,13 @@ def _commit_spelling_group(
     if not completed_rows:
         return 0
 
-    if ledger.state_of(normalized_spelling) == "stored":
+    stored = ledger.conn.execute(
+        "SELECT entry_count FROM spellings WHERE spelling = ? AND state = 'stored'",
+        (normalized_spelling,),
+    ).fetchone()
+    if stored is not None and int(stored[0]) == len(completed_rows) and all(
+        row["homonym_index"] is not None for row in completed_rows
+    ):
         return 0
 
     parsed_rows: list[dict[str, Any]] = []
@@ -1994,6 +2008,18 @@ def _commit_spelling_group(
     ledger.mark(normalized_spelling, "stored", entry_count=len(parsed_rows), straddled=straddled)
     ledger.set_duplicate_content(normalized_spelling, _duplicate_content(parsed_rows))
     return differing
+
+
+def _reconcile_unindexed_stored_groups(ledger: SpellingLedger, cache: sqlite3.Connection) -> None:
+    """Finish legacy groups that gained register rows after being stored."""
+    spellings = ledger.conn.execute(
+        """SELECT DISTINCT r.normalized_spelling FROM register_rows r
+           JOIN spellings s ON s.spelling = r.normalized_spelling
+           WHERE r.state = 'completed' AND r.homonym_index IS NULL AND s.state = 'stored'
+           ORDER BY r.normalized_spelling"""
+    ).fetchall()
+    for row in spellings:
+        _commit_spelling_group(ledger, cache, str(row[0]))
 
 
 def _print_start_banner(
@@ -3030,18 +3056,17 @@ def _tail_window_advance(
     preceding: Sequence[Mapping[str, Any]],
     following: Sequence[Mapping[str, Any]],
     *,
-    start_global: int,
+    start_register: int,
     register_size: int | None,
     page_num: int,
 ) -> int:
-    """Return a tail window's stride when its overlap reaches the printed size.
+    """Return a tail window's stride using its register-order position.
 
     ASPX can clamp a next-page request to the final 25-row window while still
-    displaying the next control. An interior overlap remains an error; the
-    observed tail may extend past the site's printed count.
+    displaying the next control. An interior overlap remains an error.
     """
     stride = len(preceding)
-    if register_size is None or start_global + stride + len(following) <= register_size:
+    if register_size is None or start_register + stride + len(following) <= register_size:
         _verify_register_continuity(preceding, following, page_num)
         return stride
 
@@ -3056,7 +3081,7 @@ def _tail_window_advance(
         default=0,
     )
     if not overlap:
-        if start_global + stride >= register_size:
+        if start_register + stride >= register_size:
             _verify_register_continuity(preceding, following, page_num)
             return stride
         raise SessionInvalid(f"page_{page_num}_register_size_mismatch")
@@ -3069,7 +3094,7 @@ def _tail_window_advance(
     )
     if overlap < min_overlap:
         raise SessionInvalid(f"page_{page_num}_register_overlap")
-    observed_end = start_global + stride - overlap + len(following)
+    observed_end = start_register + stride - overlap + len(following)
     if observed_end < register_size:
         raise SessionInvalid(f"page_{page_num}_register_size_mismatch: at_most_{observed_end}_printed_{register_size}")
     return stride - overlap
@@ -3405,7 +3430,10 @@ def _walk_shifted_windows(
                     if index == REGISTER_PAGE_SIZE - 1
                 }
             )
-            at_register_end = register_size is not None and start_global + len(rows) >= register_size
+            at_register_end = (
+                register_size is not None
+                and ledger.register_offset_for_grid(start_global) + len(rows) >= register_size
+            )
             has_next = _has_control(html, PAGE_BUTTONS["next"])
             probed_next_html: str | None = None
             if at_register_end and has_next:
@@ -3433,6 +3461,8 @@ def _walk_shifted_windows(
                     has_next = False
                 else:
                     probed_next_html = probe_html
+            if not has_next and register_size is None:
+                raise SessionInvalid(f"page_{target_page}_unknown_register_size")
             if not has_next and not any(position is not None for position in positions):
                 raise ResumeMismatchError(f"page {target_page} absent from terminal window")
             if not has_next and positions:
@@ -3495,8 +3525,7 @@ def _walk_shifted_windows(
             if not has_next:
                 if rows:
                     _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
-                if register_size is None:
-                    raise SessionInvalid(f"page_{target_page}_unknown_register_size")
+                assert register_size is not None
                 ledger.record_terminal(register_size)
                 return EXIT_OK, "finished", completed
             if max_pages is not None and completed >= max_pages:
@@ -3530,7 +3559,7 @@ def _walk_shifted_windows(
             advance = _tail_window_advance(
                 rows,
                 next_rows,
-                start_global=start_global,
+                start_register=ledger.register_offset_for_grid(start_global),
                 register_size=_register_size(next_html),
                 page_num=target_page,
             )
@@ -3724,6 +3753,7 @@ def run_walk(
                     return EXIT_USAGE
                 ledger.set_meta("mode", "walk")
                 ledger.set_meta("delay_seconds", str(delay_seconds))
+                _reconcile_unindexed_stored_groups(ledger, cache)
                 base_requests = int(ledger.meta("requests_made", "0") or "0")
 
                 def _on_request(req_in_proc: int) -> None:
@@ -4008,11 +4038,11 @@ def run_walk(
                         consecutive_retries = 0
 
                         if not _has_control(current_page_html, PAGE_BUTTONS["next"]):
-                            _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
-                            ledger.mark_page(current_page, "completed")
                             printed_size = _register_size(current_page_html)
                             if printed_size is None:
                                 raise SessionInvalid(f"page_{current_page}_unknown_register_size")
+                            _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+                            ledger.mark_page(current_page, "completed")
                             ledger.record_terminal(printed_size)
                             process_pages_finished += 1
                             page_wall = clock() - page_start_clock
@@ -4381,17 +4411,20 @@ def verify_complete(
 
             completed_rows = ledger.conn.execute(
                 """
-                SELECT page_num, row_index, select_arg, stressed_headword, normalized_spelling, homonym_index
-                FROM register_rows
-                WHERE state = 'completed'
+                SELECT page_num, row_index, select_arg, stressed_headword,
+                       normalized_spelling, homonym_index,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY normalized_spelling ORDER BY page_num, row_index
+                       ) AS register_homonym_index
+                FROM register_rows WHERE state = 'completed'
                 ORDER BY page_num, row_index
                 """
             ).fetchall()
 
             missing_db_entries = []
             for r in completed_rows:
-                h_idx = r["homonym_index"]
-                if h_idx is None or (str(r["normalized_spelling"]), int(h_idx)) not in db_entries:
+                h_idx = r["homonym_index"] if r["homonym_index"] is not None else r["register_homonym_index"]
+                if (str(r["normalized_spelling"]), int(h_idx)) not in db_entries:
                     missing_db_entries.append(r)
 
             print("=== ULIF Verification Report ===", file=sys.stderr)
