@@ -147,6 +147,37 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
     return identity_from_record(task, task_id, record_path=path)
 
 
+#: The return templates print this line for the seat to fill, but a prompt cannot contain its own hash and a seat
+#: that only reads its prompt cannot compute it. The dispatch record holds the hash of the exact prompt the runtime
+#: sent (``delegate.py`` ``prompt_sha256``), so the recorder attests it from there.
+PROMPT_SHA_PLACEHOLDER = re.compile(rb"""(?m)^(?P<key>[ \t]+prompt_sha256:[ \t]*)["']?<prompt_sha256>["']?[ \t]*$""")
+HEX64 = re.compile(r"[0-9a-f]{64}")
+
+
+def dispatch_prompt_sha256(task_id: str, tasks_dir: Path) -> str | None:
+    """The sha256 of the prompt the dispatch sent, from its record, or ``None`` when the record does not hold one."""
+    try:
+        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    value = task.get("prompt_sha256") if isinstance(task, dict) else None
+    return value if isinstance(value, str) and HEX64.fullmatch(value) else None
+
+
+def attest_prompt_sha256(data: bytes, dispatch_sha: str | None) -> bytes:
+    """Replace the template's untouched ``prompt_sha256: "<prompt_sha256>"`` line with the dispatch-attested hash.
+
+    Only the literal placeholder, and only when it occurs exactly once and the dispatch record holds a hash; every
+    other value is left for the validator to judge (a malformed value still fails the schema).
+    """
+    if dispatch_sha is None:
+        return data
+    replaced, count = PROMPT_SHA_PLACEHOLDER.subn(
+        lambda match: match.group("key") + f'"{dispatch_sha}"'.encode("ascii"), data
+    )
+    return replaced if count == 1 else data
+
+
 def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | None = None) -> dict[str, str]:
     """The reviewer's ``model``, ``harness`` and ``family`` from an already-parsed dispatch record.
 
@@ -353,9 +384,10 @@ def record_return(
             raise RecordError(f"{name} is missing or not a safe token: pass --{name.replace('_', '-')}")
     review_id, attempt_id = ids["review_id"], ids["attempt_id"]
 
-    identity = resolve_reviewer_identity(
-        task_id, Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
-    )
+    tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
+    identity = resolve_reviewer_identity(task_id, tasks_root)
+    if failure is None:
+        data = attest_prompt_sha256(data, dispatch_prompt_sha256(task_id, tasks_root))
     params = findings_db.load_parameters()
     if second and kind != "lesson":
         raise RecordError("a second seat reviews lessons, not plans")

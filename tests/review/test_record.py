@@ -1660,3 +1660,51 @@ def test_repair_projections_closes_the_items_record_could_not(world: World) -> N
     [item] = world.db_rows("settle_items")
     assert repair["moot_closed"] == [str(item["item_id"])] and again["moot_closed"] == []
     assert item["outcome"] == findings_db.MOOT_SUPERSEDED
+
+
+def _with_placeholder_prompt_sha(made: dict[str, Any]) -> None:
+    """Make the return look like a seat that left the template's prompt_sha256 line untouched."""
+    path = made["review"]
+    doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+    doc["reviewer"]["prompt_sha256"] = "PLACEHOLDER"
+    text = yaml.safe_dump(doc, allow_unicode=True, sort_keys=False).replace(
+        "prompt_sha256: PLACEHOLDER", 'prompt_sha256: "<prompt_sha256>"'
+    )
+    assert 'prompt_sha256: "<prompt_sha256>"' in text
+    path.write_text(text, encoding="utf-8")
+
+
+def test_the_template_prompt_sha_placeholder_is_attested_from_the_dispatch_record(world: World) -> None:
+    """A seat cannot hash the prompt it reads; the dispatch record's prompt_sha256 fills the untouched line."""
+    sent = "ab" * 32
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent)
+    made = world.make_return(1)
+    _with_placeholder_prompt_sha(made)
+    outcome = world.record(made, task_id="review-attested")
+    assert outcome.accepted, outcome.rejection_codes
+    saved = yaml.safe_load((world.root / outcome.saved_return).read_text(encoding="utf-8"))
+    assert saved["reviewer"]["prompt_sha256"] == sent
+    [attempt] = world.db_rows("attempts")
+    assert attempt["prompt_sha256"] == sent
+
+
+def test_the_placeholder_is_not_filled_without_a_dispatch_hash(world: World) -> None:
+    """No hash in the dispatch record: nothing is invented, and the untouched placeholder fails the schema."""
+    made = world.make_return(1)
+    _with_placeholder_prompt_sha(made)
+    outcome = world.record(made)  # the default fixture task record carries no prompt_sha256
+    assert not outcome.accepted
+    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+
+
+def test_attest_prompt_sha256_touches_only_the_literal_placeholder() -> None:
+    sent = "cd" * 32
+    real = b'reviewer:\n  prompt_sha256: "' + b"ef" * 32 + b'"\n'
+    assert record.attest_prompt_sha256(real, sent) == real
+    twice = b'a:\n  prompt_sha256: "<prompt_sha256>"\nb:\n  prompt_sha256: "<prompt_sha256>"\n'
+    assert record.attest_prompt_sha256(twice, sent) == twice  # ambiguous: left for the validator
+    one = b'reviewer:\n  prompt_sha256: "<prompt_sha256>"\nchecks: {}\n'
+    assert (
+        record.attest_prompt_sha256(one, sent) == b'reviewer:\n  prompt_sha256: "' + sent.encode() + b'"\nchecks: {}\n'
+    )
+    assert record.attest_prompt_sha256(one, None) == one
