@@ -2192,7 +2192,7 @@ def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, caps
 def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_dir):
     archived = delegate._archived_state_path("archived-task")
     delegate._write_state_atomic(
-        archived, {"task_id": "archived-task", "status": "done", "initiator": "owner", "keep": True}
+        archived, {"task_id": "archived-task", "status": "done", "initiator": "other-owner", "keep": True}
     )
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
@@ -2247,7 +2247,7 @@ def test_force_new_refuses_foreign_terminal_record(tmp_tasks_dir, capsys, prior_
     assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.*"))
 
 
-def test_force_new_refuses_foreign_archived_owner_even_with_owned_hot_record(tmp_tasks_dir, capsys):
+def test_force_new_allows_owned_hot_record_with_foreign_archived_sibling(tmp_tasks_dir):
     task_id = "mixed-history"
     hot_path = delegate._state_path(task_id)
     archived_path = delegate._archived_state_path(task_id)
@@ -2255,13 +2255,14 @@ def test_force_new_refuses_foreign_archived_owner_even_with_owned_hot_record(tmp
     archived = {"task_id": task_id, "status": "done", "initiator": "other-owner"}
     delegate._write_state_atomic(hot_path, hot)
     delegate._write_state_atomic(archived_path, archived)
-    with patch("delegate.subprocess.Popen", side_effect=AssertionError("must not spawn")):
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
         rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True, initiator="owner"))
-    assert rc == 2
-    assert "must match a known caller" in capsys.readouterr().err
-    assert delegate._read_state(hot_path) == hot
+    assert rc == 0
+    assert delegate._read_state(hot_path)["status"] == "spawning"
     assert delegate._read_state(archived_path) == archived
-    assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json"))
+    archived_hot = list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json"))
+    assert len(archived_hot) == 1
+    assert delegate._read_state(archived_hot[0]) == hot
 
 
 def test_status_and_wait_fall_back_to_archived_record(tmp_tasks_dir, capsys):

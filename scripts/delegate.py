@@ -4723,22 +4723,43 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     return entries, None
 
 
-def _read_only_task_record_snapshot(task_id: str) -> tuple[dict[str, str] | None, str | None]:
-    """Fingerprint other tasks' hot records, including files ignored by Git.
+def _read_only_task_record_snapshot(
+    task_id: str,
+    baseline: dict[str, tuple[str, str | None]] | None = None,
+) -> tuple[dict[str, tuple[str, str | None]] | None, str | None]:
+    """Fingerprint results of tasks already terminal when the review starts.
 
-    Git porcelain reports only ``!!`` for an existing ignored result, so an
-    overwrite is otherwise invisible to the checkout snapshot. Keep the same
-    path/value shape so the existing read-only diff and failure path applies.
+    A sibling task owns its live record and may finish during a review. Only
+    changes to a pre-existing terminal result are attributable here. A new
+    run_nonce means ``--force-new`` replaced the hot record, not that the old
+    result was edited.
     """
     own_stem = _state_path(task_id).stem
-    snapshot: dict[str, str] = {}
+    snapshot: dict[str, tuple[str, str | None]] = {}
     try:
-        for path in tasks_dir().iterdir():
-            if path.suffix not in {".json", ".result"} or path.stem == own_stem or not path.is_file():
-                continue
-            snapshot[f"batch_state/tasks/{path.name}"] = f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+        paths = (
+            list(tasks_dir().glob("*.result"))
+            if baseline is None
+            else [tasks_dir() / Path(name).name for name in baseline]
+        )
     except OSError as exc:
         return None, f"task record snapshot failed: {type(exc).__name__}: {exc}"
+    for path in paths:
+        if path.stem == own_stem:
+            continue
+        state = _read_state_json(path.with_suffix(".json"))
+        if baseline is None and (state is None or state.get("status") not in _TERMINAL_STATUSES):
+            continue
+        name = f"batch_state/tasks/{path.name}"
+        nonce = state.get("run_nonce") if state else None
+        if baseline is not None and nonce != baseline[name][1]:
+            continue
+        try:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            # The task may have been archived or reaped during the scan.
+            continue
+        snapshot[name] = (digest, nonce)
     return snapshot, None
 
 
@@ -7629,7 +7650,7 @@ def _run_worker(
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
-            task_records_post, task_records_error = _read_only_task_record_snapshot(task_id)
+            task_records_post, task_records_error = _read_only_task_record_snapshot(task_id, task_records_pre)
             if task_records_snapshot_error is None:
                 task_records_snapshot_error = task_records_error
             if post_snapshot_error is None:
@@ -7649,7 +7670,12 @@ def _run_worker(
                 )
             if task_records_pre is not None and task_records_post is not None:
                 read_only_mutation_paths = sorted(
-                    set(read_only_mutation_paths) | set(_read_only_mutation_paths(task_records_pre, task_records_post))
+                    set(read_only_mutation_paths)
+                    | {
+                        path
+                        for path, fingerprint in task_records_post.items()
+                        if fingerprint[0] != task_records_pre[path][0]
+                    }
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
@@ -8859,29 +8885,23 @@ def _dispatch(
                 file=sys.stderr,
             )
             return 2
-        prior_records = []
-        if record_exists:
-            prior_records.append(existing)
-        if archived_exists:
-            prior_records.append(_read_state(archived_path))
-        if not prior_records:
-            prior_records.append(None)  # Orphan result: ownership is unknown.
-        for prior in prior_records:
-            prior_status = prior.get("status") if prior else None
-            prior_initiator = prior.get("initiator") if prior else None
-            if (
-                prior_status not in _RUNTIME_TMP_TERMINAL_STATUSES
-                or prior_initiator in (None, "unknown")
-                or prior_initiator != attribution.initiator
-            ):
-                print(
-                    f"❌ task_id {task_id!r} cannot be reused with --force-new: "
-                    f"prior status {prior_status!r} must be terminal and prior initiator "
-                    f"{prior_initiator!r} must match a known caller {attribution.initiator!r}. "
-                    "The prior record and result were not archived.",
-                    file=sys.stderr,
-                )
-                return 2
+        # Only the hot record establishes ownership. Archived siblings are
+        # history and may belong to earlier runs by another initiator.
+        prior_status = existing.get("status") if existing else None
+        prior_initiator = existing.get("initiator") if existing else None
+        if (record_exists or result_exists) and (
+            prior_status not in _RUNTIME_TMP_TERMINAL_STATUSES
+            or prior_initiator in (None, "unknown")
+            or prior_initiator != attribution.initiator
+        ):
+            print(
+                f"❌ task_id {task_id!r} cannot be reused with --force-new: "
+                f"prior status {prior_status!r} must be terminal and prior initiator "
+                f"{prior_initiator!r} must match a known caller {attribution.initiator!r}. "
+                "The prior record and result were not archived.",
+                file=sys.stderr,
+            )
+            return 2
         try:
             archived = _archive_task_artifacts(task_id)
         except OSError as exc:
