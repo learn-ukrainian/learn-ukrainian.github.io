@@ -26,12 +26,6 @@ GENERATOR_DEPENDENCIES = {
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
 ARC_GENERATED_RE = re.compile(r"^arc_kind:\s*(landing|module)\s*$", re.MULTILINE)
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
-MDX_SOURCE_PARITY_RESIDUALS = {
-    "folk/narodna-kultura-yak-systema.mdx": (
-        "#9002: restored to origin/main while the folk lane regenerates or rescores "
-        "the stale-score lesson; withheld Atlas link removals apply then"
-    ),
-}
 
 def get_legacy_levels() -> set[str]:
     if not LEGACY_TRACKS_FILE.exists():
@@ -308,8 +302,6 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
                 continue
 
         if not source_changed:
-            if rel_path.as_posix() in MDX_SOURCE_PARITY_RESIDUALS:
-                continue
             violations.append((
                 mdx_path,
                 f"MDX file changed but no source files changed under "
