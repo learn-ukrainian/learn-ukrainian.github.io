@@ -360,6 +360,12 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     args = _dispatch_args("--language-lane")
     args.agent = agent
+    if agent == "agy":
+        # AGY read-only dispatch now auto-pins a worktree. Keep this routing
+        # test at the dry-run boundary: a blanket Popen fake cannot service
+        # the subprocess.run git fetch needed to create that worktree.
+        args.dry_run = True
+        monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: "0" * 40)
 
     assert delegate.cmd_dispatch(args) == 0
 
