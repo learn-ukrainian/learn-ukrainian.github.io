@@ -326,6 +326,106 @@ def _validate_formal_cf_defaults(raw: Any) -> None:
 
 
 
+def _lane_catalog_transport(catalog: dict[str, Any], lane: str) -> str | None:
+    endpoints = (catalog.get("review_scheduler") or {}).get("endpoints") or {}
+    endpoint = endpoints.get(lane) if isinstance(endpoints, dict) else None
+    if not isinstance(endpoint, dict):
+        return None
+    transport = endpoint.get("catalog_transport")
+    if isinstance(transport, str) and transport.strip():
+        return transport.strip()
+    return None
+
+
+def _invocation_uses_model(invocation: str, model: str) -> bool:
+    parts = invocation.split()
+    return any(
+        part == "--model" and index + 1 < len(parts) and parts[index + 1] == model for index, part in enumerate(parts)
+    )
+
+
+def substitution_model_admitted(catalog: dict[str, Any], lane: str, model: str) -> bool:
+    """True when ``lane`` may be invoked with ``model``.
+
+    A catalog model is admitted when its transports include the lane's
+    ``catalog_transport`` and it is not retired. A Cursor CLI slug that is not
+    itself a catalog id is admitted when a review candidate for that route
+    invokes it with ``--model``.
+    """
+    transport = _lane_catalog_transport(catalog, lane)
+    models = catalog.get("models") or {}
+    if transport and isinstance(models, dict):
+        entry = models.get(model)
+        if not isinstance(entry, dict):
+            for candidate in models.values():
+                aliases = candidate.get("aliases") if isinstance(candidate, dict) else None
+                if isinstance(aliases, list) and model in aliases:
+                    entry = candidate
+                    break
+        if (
+            isinstance(entry, dict)
+            and entry.get("lifecycle") != "retired"
+            and transport in (entry.get("transports") or [])
+        ):
+            return True
+    candidates = catalog.get("review_candidates") or {}
+    if isinstance(candidates, dict):
+        for candidate in candidates.values():
+            if not isinstance(candidate, dict) or candidate.get("route") != lane:
+                continue
+            invocation = candidate.get("invocation")
+            if isinstance(invocation, str) and _invocation_uses_model(invocation, model):
+                return True
+    return False
+
+
+def budget_substitution_table(catalog: dict[str, Any] | None = None) -> dict[str, dict[str, str]]:
+    """Return ``budget_substitution_models`` as lane → {source model: target model}."""
+    source = catalog if catalog is not None else load_model_catalog()
+    raw = source.get("budget_substitution_models") or {}
+    if not isinstance(raw, dict):
+        raise ModelCatalogError("budget_substitution_models must be a mapping")
+    table: dict[str, dict[str, str]] = {}
+    for lane, rows in raw.items():
+        if not isinstance(lane, str) or not lane.strip():
+            raise ModelCatalogError("budget_substitution_models lane must be a non-empty string")
+        if not isinstance(rows, dict):
+            raise ModelCatalogError(f"budget_substitution_models.{lane} must be a mapping")
+        mapped: dict[str, str] = {}
+        for source_model, target_model in rows.items():
+            if not isinstance(source_model, str) or not source_model.strip():
+                raise ModelCatalogError(f"budget_substitution_models.{lane} has an empty source model")
+            if not isinstance(target_model, str) or not target_model.strip():
+                raise ModelCatalogError(
+                    f"budget_substitution_models.{lane}.{source_model} must be a non-empty string"
+                )
+            mapped[source_model.strip()] = target_model.strip()
+        table[lane.strip()] = mapped
+    return table
+
+
+def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> None:
+    if raw is None:
+        return
+    table = _require_mapping(raw, "budget_substitution_models")
+    models = catalog["models"]
+    for lane, rows in table.items():
+        _require_string(lane, "budget_substitution_models lane")
+        mapping = _require_mapping(rows, f"budget_substitution_models.{lane}")
+        for source_model, target_model in mapping.items():
+            _require_string(source_model, f"budget_substitution_models.{lane} source")
+            target = _require_string(target_model, f"budget_substitution_models.{lane}.{source_model}")
+            if source_model not in models:
+                raise ModelCatalogError(
+                    f"budget_substitution_models.{lane}.{source_model} is not a catalog model id"
+                )
+            if not substitution_model_admitted(catalog, lane, target):
+                raise ModelCatalogError(
+                    f"budget_substitution_models.{lane} maps {source_model} to {target}, "
+                    f"which {lane} does not admit"
+                )
+
+
 def validate_catalog(data: Any) -> dict[str, Any]:
     """Validate the catalog structure without enforcing wall-clock freshness."""
     # Normalize the top-level date without mutating the caller's object. This
@@ -511,6 +611,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if rung_rank > floor_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor")
             previous_rank = rung_rank
+    _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
     return catalog
 
 

@@ -947,12 +947,39 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
     ]
 
 
-def render_and_check(root: Path, manifest: Path, prompt: Path) -> tuple[str, str]:
-    """Render the prompt from the manifest and check it with the repository's own CLIs; returns its sha256 and the note."""
-    rendered = run_main(prompt_render.main, [str(manifest), "--output", str(prompt), "--repo-root", str(root)])
+def render_and_check(root: Path, manifest: Path, prompt: Path, review_id: str, attempt_id: str) -> tuple[str, str]:
+    """Render the prompt from the manifest with this seat's ids (#8996) and check it with the repository's own
+    CLIs; returns its sha256 and the note."""
+    rendered = run_main(
+        prompt_render.main,
+        [
+            str(manifest),
+            "--output",
+            str(prompt),
+            "--repo-root",
+            str(root),
+            "--review-id",
+            review_id,
+            "--attempt-id",
+            attempt_id,
+        ],
+    )
     if rendered.code != 0:
         raise RuntimeError(f"render failed: {rendered.err.strip()[-400:]}")
-    checked = run_main(prompt_check.main, [str(prompt), "--manifest", str(manifest), "--repo-root", str(root)])
+    checked = run_main(
+        prompt_check.main,
+        [
+            str(prompt),
+            "--manifest",
+            str(manifest),
+            "--repo-root",
+            str(root),
+            "--review-id",
+            review_id,
+            "--attempt-id",
+            attempt_id,
+        ],
+    )
     if checked.code != 0:
         raise RuntimeError(f"prompt check failed: {checked.out.strip()[-600:]}")
     digest = sha256(prompt)
@@ -994,7 +1021,7 @@ def make_card(
     **extra: Any,
 ) -> dict[str, Any]:
     """Render and check the prompt, then describe everything the driver needs to run the seat and record its return."""
-    digest, note = render_and_check(root, manifest, prompt)
+    digest, note = render_and_check(root, manifest, prompt, seat.review_id, seat.attempt_id)
     return {
         "case": key,
         "title": title,

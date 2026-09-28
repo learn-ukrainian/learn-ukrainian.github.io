@@ -415,8 +415,8 @@ on as the guard.
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
-blocks all tool calls outright. The adapter maps `workspace-write` to
-`auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
+blocks all tool calls outright. The adapter maps `workspace-write` and `danger`
+to `bypassPermissions --always-approve`, and
 ordinary `read-only` to `auto` with `--deny` on the native write
 permission prefixes (`Write`, `Edit`) and `Bash` unless reviewer tools are
 opted in. The built-in ID
@@ -437,6 +437,48 @@ ordinary Git push rewrite used by Claude. Code the reviewer runs (Python,
 scripts, HTTP) can still publish using host credentials: it can override its
 Git config to push or call GitHub APIs directly. The deny rules, publish hook,
 and push rewrite stop ordinary command forms only.
+
+On Grok 1.0.41 an explicit `--permission-mode auto` wins over `--always-approve`
+and leaves `yolo_mode` false. The auto classifier then refuses `git push`
+before the command runs, including a write worker's push of its own branch
+(#8965). `workspace-write` and `danger` use `bypassPermissions` so that
+classifier is not the session mode. Both also install the tracked fleet
+PreToolUse guards from `agents_extensions/shared/settings.json` (primary-checkout
+write, secret-print, merge, and the other worker hooks) through
+`scripts/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
+agent. That agent does not load `guard-reviewer-publish.py` and does not set
+the read-only Git push rewrite. The read-only reviewer opt-in keeps its publish
+hook and push rewrite on `auto`. Matchers for the write worker also name the
+Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
+`hashline_edit`, which the Claude matcher aliases do not all cover.
+
+`hashline_edit` belongs to Grok's hashline file bundle
+(`hashline_read`, `hashline_edit`, `hashline_grep`). That bundle replaces the
+standard bundle (`read_file`, `search_replace`, `grep`); one session does not
+offer both. The file toolset is selected by `[toolset] file_toolset` in the
+Grok home `config.toml` (preserved probe: `batch_state/probe-evidence/9008/`,
+where that file sets `file_toolset = "hashline"`). Delegate's environment
+sanitizer drops `GROK_HOME` and `GROK_CONFIG`: `build_agent_env` in
+`scripts/agent_runtime/env_sanitize.py` (lines 421-439) copies a name only
+from an allowlist, and neither name is on `_SAFE_NAME_ALLOWLIST` (line 37),
+`_SAFE_VALUE_NAME_ALLOWLIST` (line 68), `_PROVIDER_SECRET_ALLOWLIST`
+(line 78), or `_PROVIDER_SAFE_NAME_ALLOWLIST` (line 108). A live hashline
+session uses a temporary `GROK_HOME` whose `config.toml` sets `file_toolset`.
+The write-worker matcher still names `hashline_edit`, and the primary-checkout
+guard blocks that tool the same way it blocks `search_replace`.
+
+Issue #9008 keeps `danger` on the same argv as `workspace-write`:
+`bypassPermissions`, `--always-approve`, and the `lu-write-worker` agent.
+Claude loads the fleet PreToolUse guards for both write modes. Its
+`workspace-write` mode is `dontAsk` plus an allow list, and its `danger` mode
+is `--dangerously-skip-permissions`. Grok 1.0.41 has no
+`--dangerously-skip-permissions` flag. `bypassPermissions` is Grok's
+always-approve mode, and the fleet hooks still run under it. `dontAsk` allows
+only pre-approved tools, and an explicit `auto` permission mode leaves
+`yolo_mode` false, so a headless worker cannot push its branch. The operator
+accepted `bypassPermissions` for Grok write workers (#8965). `danger` keeps
+the write-guard agent, so the fleet guards stay on that mode too.
+`test_danger_argv_matches_workspace_write` pins the shared argv.
 
 ## Weak-driver trail isolation (P5)
 
