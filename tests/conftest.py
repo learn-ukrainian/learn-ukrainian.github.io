@@ -323,10 +323,14 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
 _CONTENT_TREE_PATHSPECS = ("curriculum/", "site/src/content/")
 _CONTENT_TREE_GIT_TIMEOUT_S = 60
 _CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
+# Sealed lexicon fixtures (#9001). A missing gitignored sqlite must not make a
+# test rewrite tracked files under this tree.
+_LEXICON_FIXTURE_PATHSPEC = "tests/fixtures/lexicon/"
+_LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
 
 
-def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
-    """``git status --porcelain`` lines for the content trees, or None outside git."""
+def _git_pathspec_snapshot(root: Path, pathspecs: tuple[str, ...]) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for ``pathspecs``, or None outside git."""
     git_args = ["git", "-C", str(root)]
     try:
         top = subprocess.run(
@@ -339,7 +343,7 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
         if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
             return None
         status = subprocess.run(
-            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *_CONTENT_TREE_PATHSPECS],
+            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *pathspecs],
             capture_output=True,
             text=True,
             timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
@@ -350,6 +354,11 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
     if status.returncode != 0:
         return None
     return frozenset(line for line in status.stdout.splitlines() if line.strip())
+
+
+def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for the content trees, or None outside git."""
+    return _git_pathspec_snapshot(root, _CONTENT_TREE_PATHSPECS)
 
 
 def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> tuple[list[str], list[str]]:
@@ -368,6 +377,11 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     if hasattr(config, "workerinput"):
         return
     setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
+    setattr(
+        config,
+        _LEXICON_FIXTURE_SNAPSHOT_KEY,
+        _git_pathspec_snapshot(_REPO_ROOT, (_LEXICON_FIXTURE_PATHSPEC,)),
+    )
 
 
 def _enforce_content_tree_clean(session: pytest.Session) -> None:
@@ -391,12 +405,36 @@ def _enforce_content_tree_clean(session: pytest.Session) -> None:
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
+def _enforce_lexicon_fixture_seal(session: pytest.Session) -> None:
+    """Fail the session if tracked lexicon fixtures changed (#9001)."""
+    before = getattr(session.config, _LEXICON_FIXTURE_SNAPSHOT_KEY, None)
+    added, removed = _content_tree_changes(
+        before,
+        _git_pathspec_snapshot(_REPO_ROOT, (_LEXICON_FIXTURE_PATHSPEC,)),
+    )
+    if not added and not removed:
+        return
+    print(
+        "lexicon fixture seal: git status under tests/fixtures/lexicon/ changed during "
+        "the test session. Sealed tracked fixtures must not be rewritten; generate "
+        "gitignored inputs in tmp_path (#9001):"
+    )
+    for label, lines in (("added", added), ("removed", removed)):
+        if lines:
+            print(f"  status entries {label} since session start:")
+            for line in lines:
+                print(f"    {line}")
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
     _enforce_content_tree_clean(session)
+    _enforce_lexicon_fixture_seal(session)
 
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
