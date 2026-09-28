@@ -35,8 +35,10 @@ class AdapterError(ValueError):
 _TOOL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,127}$")
 _PROJECT_PYTHON = project_interpreter()
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
-_SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "sources_db_sha256", "vesum_db_sha256"})
-_SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset({"sources_db_bytes", "vesum_db_bytes"})
+_SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "vesum_db_sha256"})
+_SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset(
+    {"sources_db_sha256", "sources_db_meta_identity", "sources_db_bytes", "vesum_db_bytes"}
+)
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _TOOL_POLICY_ERROR = "tool_policy_error"
 _TOOL_LIMIT_ERROR = "tool_limit_error"
@@ -401,9 +403,27 @@ def _safe_mcp_server_identity(response: Mapping[str, Any]) -> str | None:
         if not isinstance(candidate, str) or not _SHA256_RE.fullmatch(candidate):
             return None
         identity[key] = candidate
+    sources_sha = value.get("sources_db_sha256")
+    if "sources_db_sha256" in value:
+        if not isinstance(sources_sha, str) or not _SHA256_RE.fullmatch(sources_sha):
+            return None
+        identity["sources_db_sha256"] = sources_sha
+    meta_identity = value.get("sources_db_meta_identity")
+    if "sources_db_meta_identity" in value:
+        if (
+            not isinstance(meta_identity, Mapping)
+            or set(meta_identity) != {"scheme", "sha256"}
+            or meta_identity.get("scheme") != "file-meta-v1"
+            or not isinstance(meta_identity.get("sha256"), str)
+            or not _SHA256_RE.fullmatch(meta_identity["sha256"])
+        ):
+            return None
+        identity["sources_db_meta_identity"] = dict(meta_identity)
+    elif "sources_db_sha256" not in value:
+        return None
     for key in ("sources_db_bytes", "vesum_db_bytes"):
-        candidate = value.get(key)
-        if candidate is not None:
+        if key in value:
+            candidate = value[key]
             if not isinstance(candidate, int) or isinstance(candidate, bool) or candidate < 0:
                 return None
             identity[key] = candidate
