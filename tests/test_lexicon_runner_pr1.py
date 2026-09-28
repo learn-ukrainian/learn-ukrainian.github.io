@@ -90,8 +90,11 @@ def test_classify_oom_exitcodes() -> None:
 
     assert classify_oom_exit(-9) is True
     assert classify_oom_exit(137) is True
+    assert classify_oom_exit(-15) is False
+    assert classify_oom_exit(15) is False
     assert classify_oom_exit(1) is False
     assert classify_oom_exit(0) is False
+    assert classify_oom_exit(None) is False
     assert classify_oom_exit(0, memory_error=True) is True
 
 
@@ -149,147 +152,215 @@ def test_cgroup_guard_refuses_shared_fake_directory_and_writes_exclusive(tmp_pat
     assert (exclusive / "memory.high").read_text(encoding="utf-8").strip() == "1000"
 
 
-def test_systemd_scope_oom_signal_is_not_a_start_failure() -> None:
-    import subprocess
+def test_slice_name_from_dispatch_cgroup() -> None:
+    from scripts.lexicon.runner.memory import slice_name_from_cgroup_relative
 
-    from scripts.lexicon.runner.memory import _systemd_scope_rejected
-
-    killed = subprocess.CompletedProcess(args=["systemd-run"], returncode=-9, stdout="", stderr="")
-    assert _systemd_scope_rejected(killed) is False
-    denied = subprocess.CompletedProcess(
-        args=["systemd-run"],
-        returncode=1,
-        stdout="",
-        stderr="Failed to connect to user scope bus via local transport",
+    dispatch = (
+        "/user.slice/user-1000.slice/user@1000.service/lu.slice/"
+        "lu-dispatch.slice/lu-worker-fix.scope"
     )
-    assert _systemd_scope_rejected(denied) is True
+    assert slice_name_from_cgroup_relative(dispatch) == "lu-dispatch.slice"
+    assert slice_name_from_cgroup_relative("/app.slice/run-p1.scope") == "app.slice"
+    assert slice_name_from_cgroup_relative("/user.slice/user-1000.slice/user@1000.service") is None
 
 
-def _user_scope_environ() -> dict[str, str]:
-    import subprocess
+def _skip_without_user_scope() -> None:
     import sys
+
+    from scripts.lexicon.runner.memory import _user_systemd_environ, systemd_user_scope_available
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("user systemd scope is Linux-only")
+    if _user_systemd_environ() is None:
+        pytest.skip("user systemd bus is absent; a dedicated cgroup cannot be created without root")
+    if not systemd_user_scope_available():
+        pytest.skip("user transient scope is not writable without root")
+
+
+def _lexicon_cap_units() -> list[str]:
+    import subprocess
 
     from scripts.lexicon.runner.memory import _user_systemd_environ
 
-    if not sys.platform.startswith("linux"):
-        pytest.skip("cgroup v2 shared-scope probe is Linux-only")
     env = _user_systemd_environ()
     if env is None:
-        pytest.skip("user systemd bus is absent; a dedicated cgroup cannot be created without root")
-    probe = subprocess.run(
-        ["systemd-run", "--user", "--scope", "--quiet", "--collect", "--", "/bin/true"],
+        return []
+    completed = subprocess.run(
+        ["systemctl", "--user", "list-units", "lexicon-cap-*", "--no-legend", "--plain", "--all"],
         env=env,
         capture_output=True,
         text=True,
         timeout=15,
         check=False,
     )
-    if probe.returncode != 0:
-        detail = (probe.stderr or probe.stdout or "").strip()
-        pytest.skip(f"user transient scope is not writable without root: {detail}")
-    return env
+    return [line.strip() for line in completed.stdout.splitlines() if "lexicon-cap-" in line]
+
+
+def _wait_lexicon_cap_units(before: list[str]) -> list[str]:
+    import time
+
+    after = _lexicon_cap_units()
+    for _ in range(20):
+        if after == before:
+            return after
+        time.sleep(0.1)
+        after = _lexicon_cap_units()
+    return after
+
+
+def test_failed_to_connect_stderr_runs_worker_once(tmp_path: Path) -> None:
+    """A worker that prints a scope-start marker and exits 1 runs exactly once."""
+    import sys
+
+    from scripts.lexicon.runner.memory import systemd_user_scope_available
+
+    counter = tmp_path / "runs.txt"
+    result = run_capped_worker(
+        {
+            "job": "stderr_exit",
+            "chunk_id": "stderr-once",
+            "stderr_text": "Failed to connect to user scope bus via local transport",
+            "exit_code": 1,
+            "counter_path": str(counter),
+        },
+        result_path=tmp_path / "result.json",
+        timeout_s=30,
+    )
+    assert counter.read_text(encoding="utf-8").splitlines() == ["1"]
+    assert result.error_code == "worker_crash"
+    if sys.platform.startswith("linux"):
+        expected = "systemd_scope" if systemd_user_scope_available() else "rlimit_as"
+        assert result.memory_mechanism == expected
+
+
+def test_worker_scope_is_sibling_in_caller_slice(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    import logging
+
+    from scripts.lexicon.runner.memory import caller_slice_name, self_cgroup_relative
+
+    _skip_without_user_scope()
+    slice_name = caller_slice_name()
+    assert slice_name
+    parent = self_cgroup_relative() or ""
+    with caplog.at_level(logging.INFO, logger="scripts.lexicon.runner.memory"):
+        result = run_capped_worker(
+            {"job": "placement", "chunk_id": "placement"},
+            result_path=tmp_path / "placement.json",
+            timeout_s=30,
+        )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "systemd_scope"
+    assert any("mechanism=systemd_scope" in record.message for record in caplog.records)
+    child_parts = [part for part in result.message.split("/") if part]
+    parent_parts = [part for part in parent.split("/") if part]
+    assert child_parts[-1].startswith("lexicon-cap-")
+    assert child_parts[-1].endswith(".scope")
+    assert child_parts[-2] == slice_name
+    assert child_parts[-1] != parent_parts[-1]
+
+
+def test_scope_sigkill_classified_as_oom(tmp_path: Path) -> None:
+    _skip_without_user_scope()
+    cap = 128 * 1024 * 1024
+    result = run_capped_worker(
+        {
+            "job": "inject_oom",
+            "chunk_id": "scope-oom",
+            "memory_high_bytes": cap,
+            "memory_max_bytes": cap,
+        },
+        result_path=tmp_path / "oom.json",
+        timeout_s=60,
+    )
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.outcome == "failed_terminal"
+    assert result.memory_mechanism == "systemd_scope"
+    assert "returncode=-9" in result.message
+
+
+def test_timeout_stops_worker_scope(tmp_path: Path) -> None:
+    _skip_without_user_scope()
+    before = _lexicon_cap_units()
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "timeout", "sleep_s": 30},
+        result_path=tmp_path / "sleep.json",
+        timeout_s=3,
+    )
+    assert result.error_code == "worker_timeout"
+    assert result.memory_mechanism == "systemd_scope"
+    assert _wait_lexicon_cap_units(before) == before
+
+
+def test_unavailable_scope_records_rlimit_as(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    import logging
+    import sys
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("RLIMIT_AS fallback is the Linux plain-child path")
+    monkeypatch.setattr("scripts.lexicon.runner.memory.systemd_user_scope_available", lambda: False)
+    with caplog.at_level(logging.INFO, logger="scripts.lexicon.runner.memory"):
+        result = run_capped_worker(
+            {"job": "placement", "chunk_id": "fallback"},
+            result_path=tmp_path / "fallback.json",
+            timeout_s=30,
+        )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "rlimit_as"
+    assert any("mechanism=rlimit_as" in record.message for record in caplog.records)
 
 
 def test_shared_cgroup_memory_max_unchanged_and_breach_is_oom(tmp_path: Path) -> None:
-    """A child sharing a cgroup must not lower that cgroup's memory.max.
+    """A capped worker must not lower a cgroup it shares with another process.
 
-    The allocation breach is still ``failed_oom`` via ``RLIMIT_AS``.
+    Goes through ``run_capped_worker``. With a user scope the worker is a
+    sibling and the breach is the scope SIGKILL; without one the shared
+    cgroup is left alone and ``RLIMIT_AS`` still classifies ``failed_oom``.
     """
     import subprocess
+    import sys
+    import time
+    from pathlib import Path as FsPath
 
-    from scripts.lexicon.runner.memory import project_interpreter
+    from scripts.lexicon.runner.memory import self_cgroup_relative
 
-    env = _user_scope_environ()
-    interpreter = project_interpreter()
-    repo = Path(__file__).resolve().parents[1]
-    scope_max = 1024 * 1024 * 1024
-    worker_cap = 128 * 1024 * 1024
-    payload = tmp_path / "payload.json"
-    payload.write_text(
-        json.dumps(
+    if not sys.platform.startswith("linux"):
+        pytest.skip("cgroup v2 shared-scope probe is Linux-only")
+    relative = self_cgroup_relative()
+    if not relative:
+        pytest.skip("this process has no readable cgroup v2 path")
+    cgroup_dir = FsPath("/sys/fs/cgroup") / relative.lstrip("/")
+    max_path = cgroup_dir / "memory.max"
+    procs_path = cgroup_dir / "cgroup.procs"
+    try:
+        before = max_path.read_text(encoding="utf-8").strip()
+    except OSError:
+        pytest.skip("this process has no readable memory.max")
+    sleeper = subprocess.Popen(["/bin/sleep", "30"])
+    try:
+        time.sleep(0.2)
+        procs = [int(line) for line in procs_path.read_text(encoding="utf-8").split() if line.strip()]
+        if sleeper.pid not in procs or len(set(procs)) < 2:
+            pytest.fail(f"sleeper did not share the cgroup: procs={procs} sleeper={sleeper.pid}")
+        cap = 128 * 1024 * 1024
+        result = run_capped_worker(
             {
                 "job": "inject_oom",
                 "chunk_id": "shared-cgroup",
-                "memory_high_bytes": worker_cap,
-                "memory_max_bytes": worker_cap,
-            }
-        ),
-        encoding="utf-8",
-    )
-    result_path = tmp_path / "result.json"
-    probe = tmp_path / "shared_cgroup_probe.py"
-    probe.write_text(
-        "\n".join(
-            [
-                "import json, subprocess, sys, time",
-                "from pathlib import Path",
-                "def cgroup_file(name):",
-                "    rel = ''",
-                "    for line in Path('/proc/self/cgroup').read_text(encoding='utf-8').splitlines():",
-                "        if line.startswith('0::'):",
-                "            rel = line.split(':', 2)[2]",
-                "            break",
-                "    return Path('/sys/fs/cgroup') / rel.lstrip('/') / name",
-                "def pids():",
-                "    text = cgroup_file('cgroup.procs').read_text(encoding='utf-8')",
-                "    return [int(line) for line in text.split() if line.strip()]",
-                "before = cgroup_file('memory.max').read_text(encoding='utf-8').strip()",
-                "sleeper = subprocess.Popen(['/bin/sleep', '30'])",
-                "try:",
-                "    time.sleep(0.2)",
-                "    procs = pids()",
-                "    if sleeper.pid not in procs or len(set(procs)) < 2:",
-                "        raise SystemExit(f'sleeper did not share the cgroup: procs={procs} sleeper={sleeper.pid}')",
-                "    completed = subprocess.run(",
-                "        [sys.argv[3], '-m', 'scripts.lexicon.runner.worker', sys.argv[1], sys.argv[2]],",
-                "        cwd=sys.argv[4], check=False, timeout=45,",
-                "    )",
-                "    after = cgroup_file('memory.max').read_text(encoding='utf-8').strip()",
-                "    body = json.loads(Path(sys.argv[2]).read_text(encoding='utf-8')) if Path(sys.argv[2]).is_file() else {}",
-                "    print(json.dumps({'before': before, 'after': after, 'procs': procs,",
-                "        'worker_returncode': completed.returncode, 'error_code': body.get('error_code'),",
-                "        'outcome': body.get('outcome')}))",
-                "finally:",
-                "    sleeper.kill()",
-                "    sleeper.wait(timeout=5)",
-                "",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    completed = subprocess.run(
-        [
-            "systemd-run",
-            "--user",
-            "--scope",
-            "--quiet",
-            "--collect",
-            "--expand-environment=no",
-            "-p",
-            f"MemoryMax={scope_max}",
-            "-p",
-            f"MemoryHigh={scope_max}",
-            "--",
-            str(interpreter),
-            str(probe),
-            str(payload),
-            str(result_path),
-            str(interpreter),
-            str(repo),
-        ],
-        cwd=repo,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
-    assert completed.returncode == 0, completed.stderr + completed.stdout
-    report = json.loads(completed.stdout.strip().splitlines()[-1])
-    assert report["before"] == str(scope_max)
-    assert report["after"] == report["before"]
-    assert report["error_code"] == ErrorCode.FAILED_OOM.value
-    assert report["outcome"] == "failed_terminal"
+                "memory_high_bytes": cap,
+                "memory_max_bytes": cap,
+            },
+            result_path=tmp_path / "result.json",
+            timeout_s=60,
+        )
+        after = max_path.read_text(encoding="utf-8").strip()
+    finally:
+        sleeper.kill()
+        sleeper.wait(timeout=5)
+    assert after == before
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.outcome == "failed_terminal"
 
 
 def test_deterministic_oom_split_and_single_lemma_failed_oom() -> None:

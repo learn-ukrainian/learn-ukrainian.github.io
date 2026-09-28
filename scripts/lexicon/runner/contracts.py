@@ -94,6 +94,8 @@ class WorkerResult:
     lemma_artifacts: dict[str, str] = field(default_factory=dict)  # lemma_id -> content hash
     peak_rss_bytes: int | None = None
     message: str = ""
+    # systemd_scope, cgroup_v2, rlimit_as, or none — the cap that actually ran (#9143).
+    memory_mechanism: str = ""
 
 
 @dataclass(frozen=True, slots=True)

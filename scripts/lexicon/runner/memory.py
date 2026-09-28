@@ -2,16 +2,28 @@
 
 Polling is telemetry only. Limits are enforced by the OS:
 
-- Linux: a transient ``systemd-run --user --scope`` whose cgroup contains only
-  that worker. ``memory.high`` / ``memory.max`` are written only after
-  ``cgroup.procs`` lists that worker alone. A shared cgroup is never written;
-  the worker falls back to ``RLIMIT_AS``. ``MemorySwapMax=0`` is set on the
-  scope because ``memory.max`` alone is absorbed by swap. OOM is the scope
-  exit signal (typically SIGKILL, returncode -9) or ``MemoryError``.
+- Linux: a transient ``systemd-run --user --scope`` in the caller's own slice
+  (the last ``*.slice`` in ``/proc/self/cgroup`` below the user manager; a
+  dispatch worker passes ``lu-dispatch.slice``). That worker scope is a
+  sibling of the caller's scope inside the caller's slice, so it stays in
+  the slice's accounting and limit. ``memory.high`` / ``memory.max`` are
+  written only after ``cgroup.procs`` lists that worker alone. A shared
+  cgroup is never written; the worker falls back to ``RLIMIT_AS``.
+  ``MemorySwapMax=0`` is set on the scope because ``memory.max`` alone is
+  absorbed by swap. The scope is stopped in a ``finally`` on normal exit,
+  exceptions, and ``KeyboardInterrupt``. OOM is SIGKILL (returncode -9 or
+  137) or ``MemoryError``. Stopping the scope (SIGTERM, -15) is not OOM.
 - Other POSIX: ``RLIMIT_AS`` set in the child before importing the engine.
 
-A startup self-test must prove enforcement; production refuses to claim hard-cap
-protection if neither mechanism works.
+Whether ``systemd-run --user --scope`` works is probed once per process
+(``/bin/true``) and cached. A worker's stderr is never treated as a failed
+scope start, so a worker that prints ``Failed to connect`` and exits 1 runs
+once. The mechanism that ran (``systemd_scope``, ``cgroup_v2``,
+``rlimit_as``, or ``none``) is logged and stored on the worker result.
+
+A startup self-test must prove enforcement; production refuses to claim
+hard-cap protection if neither mechanism works. The self-test's ``kind``
+comes from the mechanism that ran, not from the returncode alone.
 """
 
 from __future__ import annotations
@@ -19,6 +31,7 @@ from __future__ import annotations
 import ctypes
 import ctypes.util
 import json
+import logging
 import os
 import platform
 import resource
@@ -34,8 +47,11 @@ from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]
+MemoryMechanism = Literal["systemd_scope", "cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
+_LOG = logging.getLogger(__name__)
+_systemd_scope_ok: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +66,63 @@ class EnforcementProof:
     enforced: bool
     detail: str
     max_bytes: int
+
+
+@dataclass(frozen=True, slots=True)
+class BoundedCommandResult:
+    """A finished command and the cap mechanism that actually ran."""
+
+    completed: subprocess.CompletedProcess[str]
+    mechanism: MemoryMechanism
+
+
+def _log_mechanism(mechanism: str, unit: str | None) -> None:
+    _LOG.info("lexicon memory mechanism=%s unit=%s", mechanism, unit or "-")
+
+
+def _as_mechanism(value: str) -> MemoryMechanism | None:
+    if value == "systemd_scope":
+        return "systemd_scope"
+    if value == "cgroup_v2":
+        return "cgroup_v2"
+    if value == "rlimit_as":
+        return "rlimit_as"
+    if value == "none":
+        return "none"
+    return None
+
+
+def _as_enforcement_kind(value: str) -> EnforcementKind | None:
+    if value == "cgroup_v2":
+        return "cgroup_v2"
+    if value == "rlimit_as":
+        return "rlimit_as"
+    if value == "none":
+        return "none"
+    return None
+
+
+def observed_memory_mechanism(launch: MemoryMechanism, child: str) -> MemoryMechanism:
+    """Prefer the scope when it launched; otherwise the child's own cap."""
+    if launch == "systemd_scope":
+        return "systemd_scope"
+    reported = _as_mechanism(child)
+    if reported is not None:
+        return reported
+    return launch
+
+
+def _proof_kind(launch: MemoryMechanism, child_kind: str | None) -> EnforcementKind:
+    """Map the mechanism that ran onto the self-test kind. Ignores returncode."""
+    if launch == "systemd_scope":
+        return "cgroup_v2"
+    if child_kind is not None:
+        reported = _as_enforcement_kind(child_kind)
+        if reported is not None:
+            return reported
+    if launch == "rlimit_as":
+        return "rlimit_as"
+    return "none"
 
 
 def _is_finite_positive_ceiling(limit: int) -> bool:
@@ -82,17 +155,51 @@ def apply_worker_memory_limit(policy: MemoryPolicy) -> EnforcementKind:
         return "none"
 
 
-def _self_cgroup_dir() -> Path | None:
-    """Return this process's cgroup v2 directory, or None when it cannot be read."""
+def self_cgroup_relative() -> str | None:
+    """This process's cgroup v2 path relative to ``/sys/fs/cgroup``, or None."""
     try:
         text = Path("/proc/self/cgroup").read_text(encoding="utf-8")
     except OSError:
         return None
     for line in text.splitlines():
         if line.startswith("0::"):
-            relative = line.split(":", 2)[2].lstrip("/")
-            return Path("/sys/fs/cgroup") / relative
+            return line.split(":", 2)[2]
     return None
+
+
+def slice_name_from_cgroup_relative(relative: str) -> str | None:
+    """Last ``*.slice`` that contains ``relative`` inside the user manager.
+
+    ``.../user@1000.service/lu.slice/lu-dispatch.slice/<scope>.scope`` yields
+    ``lu-dispatch.slice``, the slice a dispatch worker must pass to
+    ``systemd-run --slice``.
+    """
+    parts = [part for part in relative.split("/") if part]
+    service_at: int | None = None
+    for index, part in enumerate(parts):
+        if part.startswith("user@") and part.endswith(".service"):
+            service_at = index
+    search = parts[service_at + 1 :] if service_at is not None else parts
+    for part in reversed(search):
+        if part.endswith(".slice"):
+            return part
+    return None
+
+
+def caller_slice_name() -> str | None:
+    """Systemd slice that contains this process, for ``--slice=``."""
+    relative = self_cgroup_relative()
+    if not relative:
+        return None
+    return slice_name_from_cgroup_relative(relative)
+
+
+def _self_cgroup_dir() -> Path | None:
+    """Return this process's cgroup v2 directory, or None when it cannot be read."""
+    relative = self_cgroup_relative()
+    if not relative:
+        return None
+    return Path("/sys/fs/cgroup") / relative.lstrip("/")
 
 
 def _cgroup_procs_exclusive(cgroup_dir: Path, worker_pid: int) -> bool:
@@ -118,7 +225,11 @@ def _cgroup_procs_exclusive(cgroup_dir: Path, worker_pid: int) -> bool:
 def _try_apply_cgroup_limit(cgroup_dir: Path, policy: MemoryPolicy, worker_pid: int) -> bool:
     """Write ``memory.high`` / ``memory.max`` only for an exclusive worker cgroup.
 
-    A shared cgroup is left unchanged. Callers fall back to ``RLIMIT_AS``.
+    The ``cgroup.procs`` read and the write are not atomic. That is safe
+    here: the worker scope contains only this process, and the plain
+    fallback always shares the parent's cgroup, so the guard refuses and
+    no write happens. A shared cgroup is left unchanged. Callers fall back
+    to ``RLIMIT_AS``.
     """
     if not _cgroup_procs_exclusive(cgroup_dir, worker_pid):
         return False
@@ -163,21 +274,40 @@ def _user_systemd_environ() -> dict[str, str] | None:
     return env
 
 
-def _systemd_scope_rejected(proc: subprocess.CompletedProcess[str]) -> bool:
-    """True when ``systemd-run`` exited without exec'ing the worker."""
-    if proc.returncode <= 0:
+def _probe_systemd_user_scope() -> bool:
+    """True when a transient user scope can be created in the caller's slice."""
+    env = _user_systemd_environ()
+    if env is None:
         return False
-    text = f"{proc.stderr or ''}{proc.stdout or ''}"
-    markers = (
-        "Failed to connect",
-        "Failed to start transient",
-        "Failed to create bus",
-        "not been booted",
-        "Access denied",
-        "Interactive authentication",
-        "Failed to parse",
-    )
-    return any(marker in text for marker in markers)
+    argv = ["systemd-run", "--user", "--scope", "-q", "--collect"]
+    slice_name = caller_slice_name()
+    if slice_name:
+        argv.append(f"--slice={slice_name}")
+    argv.extend(["--", "/bin/true"])
+    try:
+        proc = subprocess.run(
+            argv,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def systemd_user_scope_available() -> bool:
+    """Whether ``systemd-run --user --scope`` works. Cached for this process.
+
+    The probe runs ``/bin/true`` once. Later worker stderr is never used to
+    decide that a scope failed to start.
+    """
+    global _systemd_scope_ok
+    if _systemd_scope_ok is None:
+        _systemd_scope_ok = _probe_systemd_user_scope()
+    return _systemd_scope_ok
 
 
 def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
@@ -194,13 +324,15 @@ def _stop_user_scope(unit: str, env: dict[str, str]) -> None:
         return
 
 
-def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str) -> list[str]:
+def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str, slice_name: str | None) -> list[str]:
     """``systemd-run --scope`` argv. ``--scope`` execs ``cmd`` in place after ``--``.
 
-    ``MemorySwapMax=0`` is required for the cap to SIGKILL: with swap left at
-    ``max``, anonymous allocations are swapped and ``memory.max`` never fires.
+    ``--slice`` places the scope in the caller's slice, as a sibling of the
+    caller's own scope. ``MemorySwapMax=0`` is required for the cap to
+    SIGKILL: with swap left at ``max``, anonymous allocations are swapped
+    and ``memory.max`` never fires.
     """
-    return [
+    argv = [
         "systemd-run",
         "--user",
         "--scope",
@@ -208,15 +340,22 @@ def _scope_argv(cmd: list[str], policy: MemoryPolicy, unit: str) -> list[str]:
         "--collect",
         "--quiet",
         f"--unit={unit}",
-        "-p",
-        f"MemoryMax={policy.max_bytes}",
-        "-p",
-        f"MemoryHigh={policy.high_bytes}",
-        "-p",
-        "MemorySwapMax=0",
-        "--",
-        *cmd,
     ]
+    if slice_name:
+        argv.append(f"--slice={slice_name}")
+    argv.extend(
+        [
+            "-p",
+            f"MemoryMax={policy.max_bytes}",
+            "-p",
+            f"MemoryHigh={policy.high_bytes}",
+            "-p",
+            "MemorySwapMax=0",
+            "--",
+            *cmd,
+        ]
+    )
+    return argv
 
 
 def run_bounded_command(
@@ -225,18 +364,23 @@ def run_bounded_command(
     *,
     cwd: str,
     timeout_s: float | None,
-) -> subprocess.CompletedProcess[str]:
-    """Run ``cmd`` under a dedicated user scope, or as a plain child if that fails.
+) -> BoundedCommandResult:
+    """Run ``cmd`` in a sibling scope, or as a plain child when that is unavailable.
 
-    The plain child still calls :func:`apply_worker_memory_limit`, which refuses
-    to write a shared cgroup and uses ``RLIMIT_AS``.
+    Availability comes from :func:`systemd_user_scope_available`, not from
+    the worker's stderr. The scope is stopped in a ``finally`` so a normal
+    exit, an exception, and ``KeyboardInterrupt`` all reap it. The plain
+    child still calls :func:`apply_worker_memory_limit`, which refuses to
+    write a shared cgroup and uses ``RLIMIT_AS``.
     """
-    scope_env = _user_systemd_environ()
+    scope_env = _user_systemd_environ() if systemd_user_scope_available() else None
     if scope_env is not None:
         unit = f"lexicon-cap-{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        slice_name = caller_slice_name()
+        proc: subprocess.CompletedProcess[str] | None = None
         try:
             proc = subprocess.run(
-                _scope_argv(cmd, policy, unit),
+                _scope_argv(cmd, policy, unit, slice_name),
                 cwd=cwd,
                 env=scope_env,
                 capture_output=True,
@@ -246,19 +390,28 @@ def run_bounded_command(
             )
         except FileNotFoundError:
             proc = None
-        except subprocess.TimeoutExpired:
-            _stop_user_scope(unit, scope_env)
+        except Exception:
+            _log_mechanism("systemd_scope", unit)
             raise
-        if proc is not None and not _systemd_scope_rejected(proc):
-            return proc
-    return subprocess.run(
-        cmd,
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        timeout=timeout_s,
-        check=False,
-    )
+        finally:
+            _stop_user_scope(unit, scope_env)
+        if proc is not None:
+            _log_mechanism("systemd_scope", unit)
+            return BoundedCommandResult(completed=proc, mechanism="systemd_scope")
+    try:
+        plain = subprocess.run(
+            cmd,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        _log_mechanism("rlimit_as", None)
+        raise
+    _log_mechanism("rlimit_as", None)
+    return BoundedCommandResult(completed=plain, mechanism="rlimit_as")
 
 
 def _allocate_until_breach(target_bytes: int) -> None:
@@ -315,7 +468,7 @@ def run_startup_self_test(
     with tempfile.TemporaryDirectory(prefix="lexicon-mem-") as tmp:
         result_path = Path(tmp) / "self_test.json"
         policy = MemoryPolicy(high_bytes=test_max_bytes, max_bytes=test_max_bytes)
-        proc = run_bounded_command(
+        bounded = run_bounded_command(
             [
                 str(interpreter),
                 "-m",
@@ -328,18 +481,20 @@ def run_startup_self_test(
             cwd=str(ROOT),
             timeout_s=timeout_s,
         )
+        proc = bounded.completed
         if result_path.is_file():
             data = json.loads(result_path.read_text(encoding="utf-8"))
-            kind_s = str(data.get("kind") or "none")
+            child_kind = str(data.get("kind") or "")
             return EnforcementProof(
-                kind=kind_s if kind_s in {"cgroup_v2", "rlimit_as", "none"} else "none",
+                kind=_proof_kind(bounded.mechanism, child_kind),
                 enforced=bool(data.get("enforced")),
                 detail=str(data.get("detail") or ""),
                 max_bytes=test_max_bytes,
             )
-        # No result file — the scope SIGKILL (returncode -9) or exit 137 is OOM.
-        if classify_oom_exit(proc.returncode):
-            kind: EnforcementKind = "cgroup_v2" if sys.platform.startswith("linux") else "rlimit_as"
+        # No result file. Kind follows the mechanism that ran. Only SIGKILL
+        # (returncode -9 or 137) counts as an enforced OOM.
+        kind = _proof_kind(bounded.mechanism, None)
+        if classify_oom_exit(proc.returncode) and kind != "none":
             return EnforcementProof(
                 kind=kind,
                 enforced=True,
@@ -348,7 +503,7 @@ def run_startup_self_test(
             )
         detail = (proc.stderr or proc.stdout or "").strip() or f"no result (returncode={proc.returncode})"
         return EnforcementProof(
-            kind="none",
+            kind=kind,
             enforced=False,
             detail=detail[:500],
             max_bytes=test_max_bytes,
@@ -365,14 +520,16 @@ def require_hard_cap_protection(proof: EnforcementProof) -> None:
 
 
 def classify_oom_exit(exitcode: int | None, *, memory_error: bool = False) -> bool:
-    """Return True when a worker exit should be classified as OOM."""
+    """Return True when a worker exit should be classified as OOM.
+
+    Only SIGKILL counts: returncode ``-9`` or ``137`` (128+9). ``-15`` is
+    SIGTERM from stopping the scope and is not an OOM.
+    """
     if memory_error:
         return True
     if exitcode is None:
         return False
-    if exitcode < 0:
-        return True
-    return exitcode in {137, 9}
+    return exitcode in {-9, 137}
 
 
 def current_rss_bytes() -> int | None:
