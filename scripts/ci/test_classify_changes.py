@@ -37,6 +37,7 @@ class ClassifierTests(unittest.TestCase):
         )
         tier = dict(result)
         preflight = tier.pop("preflight")
+        self.assertIsInstance(json.loads(tier.pop("skipped_areas")), list)
         expected = (
             "true"
             if event == "pull_request" and tier["pytest_mode"] in {"full", "selected"}
@@ -44,6 +45,42 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(preflight, expected, (event, tier["pytest_mode"]))
         return tier
+
+    def test_open_model_data_skip_scope(self):
+        def skipped(paths, *, event="pull_request", labels=None):
+            result = scope.classify(
+                paths,
+                event=event,
+                labels=labels or [],
+                shard_count=4,
+                denominator=load_denominator()["paths"],
+                tree_paths=frozenset(),
+            )
+            return result["pytest_mode"], json.loads(result["skipped_areas"])
+
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"]), ("full", ["open_model_data"]))
+        for path in (
+            "scripts/projects/open_model_data/paths.py",
+            "packages/v4-runtime/src/learn_ukrainian_v4_runtime/provenance.py",
+            "data/projects/open_model_data/example.json",
+            "registry/projects/open_model_data/example.json",
+            "tests/test_open_model_view_exporter.py",
+            "scripts/storage/paths.py",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(skipped([path]), ("full", []))
+        for path in (
+            "tests/conftest.py",
+            "requirements.txt",
+            ".github/workflows/ci.yml",
+            "scripts/ci/classify_changes.py",
+        ):
+            with self.subTest(shared=path):
+                self.assertEqual(skipped([path]), ("full", []))
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"], labels=["full-ci"]), ("full", []))
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"], event="merge_group"), ("full", []))
+        with patch.object(scope, "load_areas", side_effect=ValueError("bad manifest")):
+            self.assertEqual(skipped(["scripts/unmapped_backend.py"]), ("full", []))
 
     def assert_full(self, result, frontend="false"):
         self.assertEqual(
@@ -338,6 +375,7 @@ class ClassifierTests(unittest.TestCase):
                     denominator=load_denominator()["paths"],
                 )
                 self.assertEqual(result.pop("preflight"), "false")
+                self.assertEqual(result.pop("skipped_areas"), "[]")
                 self.assert_full(
                     result,
                     frontend="true" if path == ".github/workflows/ci.yml" else "false",
@@ -619,7 +657,7 @@ class ClassifierTests(unittest.TestCase):
             }
             full_line = (
                 "docs_only=false\ndocs_reads_content=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
-                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\npreflight=true\n"
+                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\npreflight=true\nskipped_areas=[]\n"
             )
             for error in (
                 OSError(),
@@ -645,7 +683,7 @@ class ClassifierTests(unittest.TestCase):
                 self.assertEqual(
                     output.read_text(),
                     "docs_only=true\ndocs_reads_content=false\nfrontend=false\nbackend=true\nshards=[1]\n"
-                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\npreflight=false\n",
+                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\npreflight=false\nskipped_areas=[]\n",
                 )
 
     def _run_main_pull_request(self, payload, api_labels=None, api_error=None, paths=None):

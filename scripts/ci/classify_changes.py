@@ -12,6 +12,7 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
 
 from scripts.ci.frontend_change_scope import load_denominator, path_in_denominator
+from scripts.ci.test_areas import load_areas, matches_root, matches_test
 
 # Content CI owns these trees. Other exemptions are Markdown in known docs trees.
 CONTENT_PREFIXES = ("wiki/", "curriculum/")
@@ -395,7 +396,39 @@ def classify(
         tree_paths=tree_paths,
         repo_root=repo_root,
     )
-    return {**tier, "preflight": preflight_for(event, tier)}
+    return {
+        **tier,
+        "preflight": preflight_for(event, tier),
+        "skipped_areas": json.dumps(skipped_areas_for(paths, event=event, labels=labels, tier=tier)),
+    }
+
+
+def skipped_areas_for(
+    paths: list[str], *, event: str, labels: list[str], tier: dict[str, str]
+) -> list[str]:
+    """Only a known, unrelated full PR may omit an area; errors run everything."""
+    if (
+        event != "pull_request"
+        or tier["pytest_mode"] != "full"
+        or not paths
+        or len(paths) >= 300
+        or has_full_ci(labels)
+        or any(hits_shared_root_denylist(path) for path in paths)
+    ):
+        return []
+    try:
+        areas = load_areas()
+        return [
+            name
+            for name, area in areas.items()
+            if not any(
+                matches_test(_norm(path), area["tests"])
+                or matches_root(_norm(path), area["roots"])
+                for path in paths
+            )
+        ]
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return []
 
 
 def classify_tier(
