@@ -79,7 +79,7 @@ The seat's final answer starts with the YAML return; no free-text verdict line i
 Return schema conforms to `schemas/review-v1.schema.json` with `kind: plan`.
 
 The `expected` rule:
-when expected is present it is one contiguous substring copied character for character from the stored result of one named receipt the finding cites — the tool output the seat received, not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; an unsupported_by_source finding carries no expected.
+when expected is present it is one contiguous substring copied character for character from the stored result of one named receipt the finding cites — the tool output the seat received, not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; an unsupported_by_source finding may carry expected too, and then the same rule applies: it must be copied from the stored result of one of the search receipts that finding cites.
 
 Plan locations:
 A quote inside one unit of the plan:
@@ -119,7 +119,7 @@ A return that breaks any of these is recorded as REJECTED and the attempt is spe
 - Each finding carries exactly one evidence branch (`evidence`, `unsupported_by_source` or `source_conflict`), never two and never none.
 - An `unsupported_by_source` finding has severity MINOR; MAJOR and BLOCKER are rejected for it.
 - `unsupported_by_source` lists at least one search.
-- Each search `outcome` is what the stored status and result of its receipt show: `error` only for a call whose record or result is an error, `unavailable` only for a call that succeeded but reports its source unavailable, `no_hits` only for a successful, available call with zero hits, and `hits_but_no_support` only for a successful call with at least one hit.
+- Each search `outcome` is what the stored status and result of its receipt show: `error` only for a call whose record or result is an error, `unavailable` only for a call that succeeded but reports its source unavailable, `no_hits` only for a successful, available call with zero hits (a successful call whose result reports an error and zero hits shows both, so `error` and `no_hits` are each accepted for it), and `hits_but_no_support` only for a successful call with at least one hit.
 - Every receipt a finding cites (its `evidence` receipt, both sides of a `source_conflict`, each search of `unsupported_by_source`) is in this attempt's ledger, issued for this review, attempt and manifest. A receipt of a previous attempt is accepted only when `attempt.previous_attempt_id` names that attempt and the finding's `status` is `resolved` or `persisting`; this prompt's return template sets `previous_attempt_id: null`, so here every cited receipt must be in this attempt's ledger.
 - A receipt cited as `evidence`, or on either side of a `source_conflict`, has `status: ok` and comes from a tool in the review tool list above.
 - `expected`, when present, is a substring of the stored result of at least one receipt the finding cites (the `expected` rule above).
