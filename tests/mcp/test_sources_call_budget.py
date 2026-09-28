@@ -149,6 +149,7 @@ def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime
     with patch.object(server_module, "PROJECT_ROOT", tmp_path):
         try:
             first = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+            assert first["sources_db_sha256"] == hashlib.sha256(b"sources-db-v1").hexdigest()
         finally:
             server_module._FILE_HASH_CACHE.pop(poisoned_key, None)
         assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
@@ -156,7 +157,6 @@ def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime
         os.utime(sources_db, ns=(original_mtime, original_mtime))
         second = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
     assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
-    assert first["sources_db_sha256"] == hashlib.sha256(b"sources-db-v1").hexdigest()
     assert second["sources_db_sha256"] == hashlib.sha256(b"sources-db-v2").hexdigest()
     assert first["sources_db_sha256"] != second["sources_db_sha256"]
 
