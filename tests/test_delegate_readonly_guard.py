@@ -178,6 +178,161 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
 
 
+@pytest.mark.parametrize("edit", ["overwrite", "append"])
+def test_read_only_worker_fails_after_changing_terminal_result(edit, tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_id = "review-task"
+    own_path = delegate._state_path(own_id)
+    delegate._write_state_atomic(own_path, {"task_id": own_id, "cwd": str(checkout)})
+    delegate._write_state_atomic(
+        delegate._state_path("impl-task"),
+        {"task_id": "impl-task", "status": "done", "run_nonce": "first"},
+    )
+    foreign_path = tmp_tasks_dir / "impl-task.result"
+    foreign_path.write_text("original\n", encoding="utf-8")
+
+    def overwrite_foreign_record(*_args, **_kwargs):
+        if edit == "append":
+            with foreign_path.open("a", encoding="utf-8") as output:
+                output.write("appended\n")
+        else:
+            foreign_path.write_text("replaced\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=overwrite_foreign_record):
+        rc = delegate._run_worker(
+            task_id=own_id,
+            agent="grok",
+            prompt="Review the change.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(own_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"batch_state/tasks/{foreign_path.name}"]
+    assert f"batch_state/tasks/{foreign_path.name}" in state["last_error"]
+
+
+def test_read_only_review_ignores_sibling_task_lifecycle(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_path = delegate._state_path("review-task")
+    delegate._write_state_atomic(own_path, {"task_id": "review-task", "cwd": str(checkout)})
+    sibling_path = delegate._state_path("sibling-task")
+    delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "spawning"})
+
+    def finish_sibling(*_args, **_kwargs):
+        delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "running"})
+        sibling_path.with_suffix(".result").write_text("completed\n", encoding="utf-8")
+        delegate._write_state_atomic(sibling_path, {"task_id": "sibling-task", "status": "done"})
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=finish_sibling):
+        rc = delegate._run_worker(
+            task_id="review-task", agent="grok", prompt="Review.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert delegate._read_state(own_path)["status"] == "done"
+    assert delegate._read_state(own_path)["read_only_mutation_paths"] == []
+
+
+def test_overlapping_read_only_reviews_ignore_each_other(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    for task_id in ("review-a", "review-b"):
+        delegate._write_state_atomic(
+            delegate._state_path(task_id),
+            {"task_id": task_id, "cwd": str(checkout), "status": "spawning"},
+        )
+
+    def run_second_review(*_args, **_kwargs):
+        with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+            second_rc = delegate._run_worker(
+                task_id="review-b", agent="grok", prompt="Review B.", mode="read-only",
+                cwd_str=str(checkout), model=None, hard_timeout=60,
+            )
+        assert second_rc == 0
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=run_second_review):
+        first_rc = delegate._run_worker(
+            task_id="review-a", agent="grok", prompt="Review A.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert first_rc == 0
+    for task_id in ("review-a", "review-b"):
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+
+
+@pytest.mark.parametrize("replacement", [False, True])
+def test_read_only_review_ignores_archived_terminal_result(replacement, tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    own_path = delegate._state_path("review-task")
+    delegate._write_state_atomic(own_path, {"task_id": "review-task", "cwd": str(checkout)})
+    prior_path = delegate._state_path("finished-task")
+    delegate._write_state_atomic(
+        prior_path, {"task_id": "finished-task", "status": "done", "run_nonce": "old"}
+    )
+    result_path = prior_path.with_suffix(".result")
+    result_path.write_text("old result\n", encoding="utf-8")
+
+    def archive_result(*_args, **_kwargs):
+        prior_path.rename(tmp_tasks_dir / "finished-task.archived.json")
+        result_path.rename(tmp_tasks_dir / "finished-task.archived.result")
+        if replacement:
+            delegate._write_state_atomic(
+                prior_path, {"task_id": "finished-task", "status": "done", "run_nonce": "new"}
+            )
+            result_path.write_text("new result\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=archive_result):
+        rc = delegate._run_worker(
+            task_id="review-task", agent="grok", prompt="Review.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert delegate._read_state(own_path)["read_only_mutation_paths"] == []
+
+
+def test_read_only_record_snapshot_ignores_result_vanishing_during_read(tmp_tasks_dir, monkeypatch):
+    state_path = delegate._state_path("finished-task")
+    delegate._write_state_atomic(state_path, {"task_id": "finished-task", "status": "done"})
+    result_path = state_path.with_suffix(".result")
+    result_path.write_text("original\n", encoding="utf-8")
+    baseline, error = delegate._read_only_task_record_snapshot("review-task")
+    assert error is None
+    assert baseline
+
+    original_read_bytes = Path.read_bytes
+
+    def vanished_on_read(path):
+        if path == result_path:
+            raise FileNotFoundError(result_path)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", vanished_on_read)
+    after, error = delegate._read_only_task_record_snapshot("review-task", baseline)
+    assert error is None
+    assert after == {}
+
+
 def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(tmp_path, monkeypatch):
     """#7147: renaming a tracked file INTO ``.worktrees/`` keeps the source.
 

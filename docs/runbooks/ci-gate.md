@@ -21,11 +21,13 @@ only.
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | CI Gate | always |
 
-The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
-ruff/contracts and run one `docs_skills` pytest leg only when every path is
-Markdown in docs/, shared skills, agent deploy trees, or the repository root,
+The Changes job uses `scripts/ci/classify_changes.py`. The `full` Python tier
+runs every required Python test except `slow` and `atlas_release`; those run
+only nightly. Ordinary PRs skip ruff/contracts and run one `docs_skills` pytest
+leg only when every path is Markdown in docs/, shared skills, agent deploy
+trees, or the repository root,
 or belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki
-fast path predates the content class; the queue run is its safety net).
+fast path predates the content class).
 Frontend denominator matches always override the docs exemption, including
 `packages/activity-kit/`. Unknown paths, including Markdown under unrecognized
 or executable trees, run the full pytest shard set and ruff/contracts;
@@ -48,9 +50,35 @@ events then differ deliberately:
   content class AND at least one is `site/src/content/docs/**` — the case
   that used to fall to full because `frontend` was true (PR #8384). A PR
   touching only `curriculum/**`/`wiki/**` keeps the docs fast path.
-- **merge_group**: classified with the same path classes as a PR, using each
-  queue entry's own changed paths (ALLGREEN), so a group can resolve to any
-  tier. Any lookup failure or ambiguity resolves to `full`.
+- **merge_group**: each queue entry uses its own changed paths (ALLGREEN).
+  Docs-only changes run the full required Python tier because tests can read
+  docs through dynamically constructed paths. Curriculum/wiki-only entries
+  keep their `docs` class with the `reads_content` leg; learner-page content
+  keeps its `content` class. Frontend-only changes run the full
+  required Python tier because Python tests read `site/` and
+  `packages/activity-kit/` files. Any other change, including Python source,
+  tests, workflows, dependencies, mixed classes, and uncertain paths, runs
+  `full` before reaching `main`.
+  Code files under broad curriculum/wiki docs roots, and Python or shell files
+  under frontend roots, also run `full` even if they previously entered a
+  narrower class.
+  Frontend still follows its existing path denominator; `full` does not
+  automatically turn on the Frontend job. Lookup failures resolve to `full`.
+
+| Changed-path class | `pull_request` Python tier | `merge_group` Python tier | Frontend job |
+| --- | --- | --- | --- |
+| Docs-only | `docs` | `full` | off |
+| Content-only learner pages | `content` | `content` | on |
+| Curriculum/wiki without learner pages | `docs` | `docs` | off |
+| Docs mixed with curriculum/wiki | `docs` | `full` | off |
+| Frontend-only `site/` or `packages/activity-kit/` | none | `full` | on when in denominator |
+| Code, other mixed classes, or uncertain | selected or `full` | `full` | existing denominator |
+
+The docs lane runs marked `docs_skills` and `repo_wide` tests, plus
+`reads_content` for curriculum/wiki edits. The content lane runs marked
+`reads_content` tests. The queue runs `full` for every docs-only entry,
+including dynamically constructed test reads. Their PR path class remains
+`docs`.
 
 The content class emits `pytest_mode=content`: one shard running
 `-m 'reads_content and not slow and not atlas_release'` (same filters and
@@ -78,6 +106,11 @@ edits do not start it. `full-ci` is read from the PR's current labels
 (case-insensitive, fail closed) on the next PR push and in every merge-queue
 run, where every PR in the group is resolved from the queue refs. A label added
 after a green PR run does not rerun it: push again, or rely on the merge queue.
+Use the label only when a change affects tests the path classifier cannot see;
+explain that blind spot in the PR. It forces the full Python tier while known
+changed paths still decide whether Frontend runs. The merge queue already runs
+the full Python tier for code, frontend-only, and docs changes outside
+curriculum/wiki (#9073).
 Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
 floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the
 separate slow selection; this adds no retries or duplicate slow-test execution.
@@ -91,7 +124,8 @@ pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,
 conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under
 `tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted
 test files, empty or ≥80 candidates, and anything outside the allowlist stay
-`pytest_mode=full` with ten shards. Contracts and ruff stay on whenever
+`pytest_mode=full` with ten shards. A selected PR runs `full` on its
+`merge_group` entry. Contracts and ruff stay on whenever
 `docs_only=false`. After merge, the CI stream owner tracks one week of
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).

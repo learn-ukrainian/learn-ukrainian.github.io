@@ -1,0 +1,63 @@
+name: Warm uv cache
+
+# Writes the uv cache onto refs/heads/main so later pull_request and
+# merge_group runs can install offline (#9095).
+#
+# setup-uv keys the cache on requirements-lock.txt and restores only that
+# exact key. save-cache `auto` never saves on merge_group, and a cache saved
+# for a pull_request ref is invisible to every other ref. The only writer
+# that lands on main inside ci.yml is the nightly schedule, so a lockfile
+# change leaves the merge queue on PyPI until the next night. This workflow
+# is the writer for that key: every lock change pushes to main, and the
+# 04:30 UTC run repopulates the entry if that push missed or the cache was
+# evicted. It does not run on pull_request or merge_group (those cannot
+# publish a cache other refs can read, and would spend a runner slot per PR).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'requirements-lock.txt'
+      - '.python-version'
+      - '.github/actions/python-ci-env/**'
+      - '.github/workflows/uv-cache-warm.yml'
+  schedule:
+    # An hour after ci.yml's 03:30 UTC schedule, which also saves this cache
+    # when the whole nightly job succeeds. This run still fills the entry
+    # when that job fails before the post step, or when the cache was evicted.
+    - cron: '30 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Queue, do not cancel: cancelling drops the run that would publish a new
+  # lock's cache. A later push for the same ref waits and then restores it.
+  group: uv-cache-warm-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  UV_HTTP_RETRIES: '6'
+  UV_HTTP_TIMEOUT: '60'
+  PIP_RETRIES: '6'
+  PIP_TIMEOUT: '60'
+
+jobs:
+  warm:
+    name: Warm uv cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      # Same composite as ci.yml, so the cache key (runner, Python from
+      # .python-version, requirements-lock.txt) and the cached wheels match
+      # the install the shards restore.
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env

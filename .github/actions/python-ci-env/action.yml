@@ -1,0 +1,48 @@
+name: 'Python CI environment'
+description: >-
+  Set up uv, install requirements-lock.txt into .venv (offline-first with an
+  index retry, #9061), install ./packages/v4-runtime, then verify the Atlas
+  lexicon manifest. Shared by the pytest, fast-checks and needs-artifact-audit
+  jobs so the copied setup blocks cannot drift (#9062).
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up uv
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: '0.12.9'
+        enable-cache: true
+        # Hash of requirements-lock.txt only. setup-uv restores that exact key
+        # and passes no restore-keys; a different lock cannot satisfy --offline.
+        cache-dependency-glob: requirements-lock.txt
+        # `auto` saves on push, pull_request, schedule, and workflow_dispatch,
+        # and refuses merge_group. A merge_group save is scoped to the
+        # gh-readonly-queue ref, which the next run cannot read, and each one
+        # is ~427 MiB. The entry merge_group can read is written on main by
+        # uv-cache-warm.yml (#9095).
+        save-cache: auto
+
+    - name: Install Python deps
+      shell: bash
+      run: |
+        set -euo pipefail
+        python -m venv .venv
+        # Lockfile is internally inconsistent (marker-pdf vs pillow; see
+        # requirements.txt). Documented CI install is `--no-deps`. Drop
+        # live-ML wheels — the unit suite does not import them and they
+        # blow the 15m budget.
+        grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+          > "${RUNNER_TEMP}/requirements-ci.txt"
+        if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
+          echo 'uv cache incomplete; retrying installation from the index'
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+        fi
+        .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+        .venv/bin/python scripts/audit/check_ci_dependencies.py
+        .venv/bin/python packages/v4-runtime/build_assets.py
+
+    - name: Hydrate Atlas lexicon manifest
+      shell: bash
+      run: |
+        .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"

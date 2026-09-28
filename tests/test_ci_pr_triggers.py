@@ -32,6 +32,7 @@ import yaml
 
 from scripts.ci import classify_changes
 from scripts.ci.classify_changes import preflight_for
+from scripts.ci.frontend_change_scope import load_denominator
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _WORKFLOWS = _REPO_ROOT / ".github" / "workflows"
@@ -557,6 +558,47 @@ def test_ci_gate_passes_a_green_full_tier() -> None:
     assert "CI Gate green" in result.stdout
     for check in _FAST_CHECKS:
         assert f"fast-checks {check}" in result.stdout, check
+
+
+@pytest.mark.parametrize(
+    ("paths", "frontend"),
+    [
+        (["tests/test_example.py"], "false"),
+        ([".github/workflows/ci.yml"], "true"),
+        (["tests/test_example.py", "site/src/components/X.astro"], "true"),
+        (["site/src/components/X.astro"], "true"),
+        (["packages/activity-kit/src/card.ts"], "true"),
+        (["registry/practice/noun_mechanics_deck.json"], "true"),
+    ],
+)
+def test_queue_full_tier_requires_pytest_and_frontend_when_applicable(
+    paths: list[str], frontend: str,
+) -> None:
+    tier = classify_changes.classify(
+        paths,
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=load_denominator()["paths"],
+        tree_paths=frozenset(),
+    )
+    assert tier["pytest_mode"] == "full"
+    assert tier["shards"] == "[1, 2, 3, 4]"
+    assert tier["preflight"] == "false"
+    assert tier["frontend"] == frontend
+    gate_env = {
+        **_GREEN,
+        "FRONTEND": frontend,
+        "FRONTEND_JOB": "success" if frontend == "true" else "skipped",
+        "PREFLIGHT_SCHEDULED": "false",
+        "FC_PREFLIGHT": "skipped",
+        "SHARD_COUNT": tier["shard_count"],
+        "SHARDS": tier["shards"],
+    }
+    assert _run_gate(gate_env).returncode == 0
+    assert _run_gate({**gate_env, "PYTEST": "failure"}).returncode != 0
+    if frontend == "true":
+        assert _run_gate({**gate_env, "FRONTEND_JOB": "failure"}).returncode != 0
 
 
 def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
