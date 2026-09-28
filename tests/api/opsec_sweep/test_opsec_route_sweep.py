@@ -52,16 +52,21 @@ from .mutation_recipes import LOOPBACK_BASE_URL, LOOPBACK_CLIENT, MutationEnv
 pytestmark = pytest.mark.repo_invariant
 
 KNOWN_LEAKS_PATH = Path(__file__).with_name("known_leaks.toml")
-FROZEN_IDS = frozenset(
-    {
-        "fleet-workers-host-id",
-        "occupancy-host-id",
-        "health-instance-host",
-        "dashboard-work-loopback",
-    }
-)
+REPO_ROOT = Path(__file__).resolve().parents[3]
+# #8542's burn-down is complete: no production known-leak row should exist
+# (see known_leaks.toml's header). This sentinel id exists solely so
+# test_known_leak_table_rejects_unmatched_dead_and_expired_rows can exercise
+# _validate_known_leaks without pointing at a real emitter regression.
+FROZEN_IDS = frozenset({"opsec-sweep-test-row"})
+# dashboard-work-loopback is ADR-019's permanent loopback constant, not a
+# burn-down obligation; see the `[[approved_exemptions]]` table instead.
+FROZEN_EXEMPTION_IDS = frozenset({"dashboard-work-loopback"})
 PATH_CANARY = "opsec-fixture-canary"
 HOST_ALIAS_CANARY = "opsec-host-alias"
+# The real host name an operator's MONITOR_OCCUPANCY_HOST_IDS mapping stands
+# for. HOST_ID_CANARY (below) is the opaque label real dashboards are
+# designed to echo publicly, so it is deliberately never a scan canary; only
+# HOST_ALIAS_CANARY is treated as a leak everywhere in this sweep.
 HOST_ID_CANARY = "opsec-host-id"
 MAX_SWEEP_SECONDS = 60.0
 # Captured at import, before ``isolated_fixture`` patches ``sqlite3.connect``:
@@ -492,7 +497,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
 
     return IsolatedFixture(
         root=root,
-        canaries=(PATH_CANARY, HOST_ALIAS_CANARY, HOST_ID_CANARY),
+        canaries=(PATH_CANARY, HOST_ALIAS_CANARY),
     )
 
 
@@ -546,6 +551,57 @@ def _validate_known_leaks(rows: list[dict[str, str]], findings: list[opsec_scan.
         assert row.get("operation"), f"known leak row has no operation: {row['id']}"
         assert row.get("field"), f"known leak row has no field: {row['id']}"
         tracking_issues.assert_cites_open_issue(f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking)
+
+
+def _load_approved_exemptions() -> list[dict[str, str]]:
+    payload = tomllib.loads(KNOWN_LEAKS_PATH.read_text(encoding="utf-8"))
+    rows = payload.get("approved_exemptions", [])
+    assert isinstance(rows, list), "known_leaks.toml must contain [[approved_exemptions]] rows"
+    return rows
+
+
+def _validate_approved_exemptions(
+    rows: list[dict[str, str]], findings: list[opsec_scan.Finding]
+) -> list[opsec_scan.Finding]:
+    """Filter out findings covered by a still-valid, ADR-backed exemption.
+
+    Unlike a ``known_leaks`` row, an approved exemption never expires: it
+    stays valid only as long as its cited ADR file still exists and the
+    finding it excuses still matches. Anything left over is passed on to
+    ``_validate_known_leaks`` for the ordinary burn-down accounting.
+    """
+    ids = [row.get("id") for row in rows]
+    assert all(isinstance(row_id, str) and row_id for row_id in ids), "every approved exemption needs a non-empty id"
+    assert len(ids) == len(set(ids)), "approved exemption ids must be unique"
+    assert set(ids) <= FROZEN_EXEMPTION_IDS, (
+        "adding an approved exemption requires editing FROZEN_EXEMPTION_IDS in the same diff"
+    )
+
+    remaining: list[opsec_scan.Finding] = []
+    matched: dict[str, int] = dict.fromkeys(ids, 0)
+    for finding in findings:
+        row_matches = [
+            row
+            for row in rows
+            if _matches(finding.operation, row.get("operation", ""))
+            and _matches(finding.field_path, row.get("field", ""))
+        ]
+        if not row_matches:
+            remaining.append(finding)
+            continue
+        for row in row_matches:
+            matched[row["id"]] += 1
+
+    for row in rows:
+        assert row.get("adr"), f"approved exemption row has no adr citation: {row['id']}"
+        assert row.get("reason"), f"approved exemption row has no reason: {row['id']}"
+        assert row.get("operation"), f"approved exemption row has no operation: {row['id']}"
+        assert row.get("field"), f"approved exemption row has no field: {row['id']}"
+        adr_path = REPO_ROOT / row["adr"]
+        assert adr_path.is_file(), f"approved exemption {row['id']} cites a missing ADR: {row['adr']}"
+        assert matched[row["id"]], f"approved exemption row no longer matches a finding: {row['id']}"
+
+    return remaining
 
 
 def _path_for_record(record: registry.ExerciseRecord) -> str:
@@ -819,7 +875,7 @@ def test_registry_reports_a_removed_operation() -> None:
 
 def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
     row = {
-        "id": "occupancy-host-id",
+        "id": "opsec-sweep-test-row",
         "operation": "GET /synthetic",
         "field": "body.value",
         "owner": "test-owner",
@@ -841,13 +897,13 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
 
     expired = dict(row)
     expired.update(
-        operation="GET /api/occupancy",
-        field="body.hosts.opsec-host-id.host_id",
+        operation="GET /api/synthetic",
+        field="body.hosts.opsec-sweep-test-row.host_id",
         expiry=(date.today() - timedelta(days=1)).isoformat(),
     )
     matching = opsec_scan.Finding(
-        operation="GET /api/occupancy",
-        field_path="body.hosts.opsec-host-id.host_id",
+        operation="GET /api/synthetic",
+        field_path="body.hosts.opsec-sweep-test-row.host_id",
         kind="canary",
         token="synthetic",
         start=0,
@@ -855,6 +911,48 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
     )
     with pytest.raises(AssertionError, match="expired"):
         _validate_known_leaks([expired], [matching])
+
+
+def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() -> None:
+    finding = opsec_scan.Finding(
+        operation="dashboard:work.html",
+        field_path="body",
+        kind="host-port",
+        token="127.0.0.1:8769",
+        start=0,
+        end=14,
+    )
+
+    undeclared = {
+        "id": "not-a-frozen-exemption-id",
+        "operation": "dashboard:work.html",
+        "field": "body",
+        "adr": "docs/decisions/ADR-019-work-control-plane.md",
+        "reason": "test",
+    }
+    with pytest.raises(AssertionError, match="FROZEN_EXEMPTION_IDS"):
+        _validate_approved_exemptions([undeclared], [finding])
+
+    missing_adr = {
+        "id": "dashboard-work-loopback",
+        "operation": "dashboard:work.html",
+        "field": "body",
+        "adr": "docs/decisions/ADR-0000-does-not-exist.md",
+        "reason": "test",
+    }
+    with pytest.raises(AssertionError, match="missing ADR"):
+        _validate_approved_exemptions([missing_adr], [finding])
+
+    stale = dict(missing_adr, adr="docs/decisions/ADR-019-work-control-plane.md")
+    with pytest.raises(AssertionError, match="no longer matches"):
+        _validate_approved_exemptions([stale], [])
+
+    valid = dict(stale)
+    unrelated = opsec_scan.Finding(
+        operation="GET /other", field_path="body.value", kind="canary", token="x", start=0, end=1
+    )
+    remaining = _validate_approved_exemptions([valid], [finding, unrelated])
+    assert remaining == [unrelated]
 
 
 def test_sweep_seam_honesty_requires_real_cold_start_board_producer(
@@ -1044,6 +1142,17 @@ def test_opsec_route_sweep_isolated_and_bounded(
     elapsed = time.perf_counter() - started
     assert elapsed < MAX_SWEEP_SECONDS, f"OPSEC route sweep exceeded {MAX_SWEEP_SECONDS:.0f}s: {elapsed:.2f}s"
     assert not failures, "exercised route failures: " + ", ".join(sorted(failures))
+
+    # The alias stands for the real host name behind MONITOR_OCCUPANCY_HOST_IDS
+    # and must never leave the API, unlike its opaque host_id counterpart
+    # (HOST_ID_CANARY, deliberately not a canary here) which dashboards are
+    # designed to show. No known-leak or exemption row may excuse this.
+    alias_leaks = [finding for finding in findings if finding.token == HOST_ALIAS_CANARY]
+    assert not alias_leaks, "host alias canary leaked into a public response: " + json.dumps(
+        [finding.as_dict() for finding in alias_leaks], sort_keys=True
+    )
+
+    findings = _validate_approved_exemptions(_load_approved_exemptions(), findings)
     _validate_known_leaks(_load_known_leaks(), findings)
 
     print(

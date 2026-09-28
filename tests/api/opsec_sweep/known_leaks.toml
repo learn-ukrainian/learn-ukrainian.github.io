@@ -1,52 +1,36 @@
 # PR-A starts green by recording only findings observed against the isolated
-# fixture.  Rows are burn-down obligations: remove the row with the emitter
-# change in PR-B; do not add compatibility path fields to make a finding fit.
-# Renewed 2026-09-23 to unblock CI; burn-down tracked in #8542. Every row cites
-# its open tracking `issue` (checked against tracking_issues.toml).
+# fixture.  [[known_leaks]] rows are burn-down obligations: remove the row
+# with the emitter change in the same diff; do not add compatibility path
+# fields to make a finding fit. Every known_leaks row cites its open tracking
+# `issue` (checked against tracking_issues.toml).
 #
-# #8542 residual (stop policy): dashboard-index-localhost was burned down
-# (dashboards/index.html now derives its footer label from location.host).
-# The remaining four rows echo an already-validated opaque self host id
-# (occupancy_sanitize.opaque_host_id) that real consumers depend on verbatim:
-# fleet.html/orient.html/epics.html/epics-map.html read host_id from
-# GET /api/fleet/workers/v1 and GET /api/occupancy to label per-host activity;
-# tests/test_api_endpoints.py::test_health_respects_lu_monitor_host_id requires
-# GET /api/health's instance.host to echo LU_MONITOR_HOST_ID verbatim (even a
-# non-opaque value) for operator diagnostics; dashboard:work.html's loopback
-# 127.0.0.1:8769 URL is a fixed, ADR-019-approved constant for the browser-local
-# private adapter (tests/test_work_dashboard_private_integration.py pins the
-# literal string). Redacting any of the four would break a real, tested
-# consumer, so they stay with a renewed expiry citing #8542 per its stop policy.
+# #8542 burn-down is complete (2026-09-28):
+# - dashboard-index-localhost was fixed first (dashboards/index.html now
+#   derives its footer label from location.host).
+# - fleet-workers-host-id and occupancy-host-id were scanner false positives:
+#   they matched the already-public opaque self host id, which real
+#   consumers (fleet.html/orient.html/epics.html/epics-map.html) depend on
+#   verbatim. HOST_ID_CANARY was dropped from the sweep's canary tuple in
+#   test_opsec_route_sweep.py; HOST_ALIAS_CANARY (the real host name the
+#   opaque id stands for) remains a canary everywhere.
+# - health-instance-host is fixed at the emitter:
+#   occupancy_local.resolve_launcher_host_id now rejects a non-opaque
+#   LU_MONITOR_HOST_ID and falls back to "local" instead of echoing it.
+# - dashboard-work-loopback was never a burn-down candidate: ADR-019 fixes
+#   dashboards/work.html's private-adapter URL as a permanent design
+#   constant, so it now lives in `[[approved_exemptions]]` below instead of
+#   an expiring known-leak row.
+#
+# `[[approved_exemptions]]` rows never expire and take no `owner`/`issue`:
+# they stay valid only while the cited `adr` file exists and the finding
+# still matches (see _validate_approved_exemptions in
+# test_opsec_route_sweep.py). Adding one requires editing
+# FROZEN_EXEMPTION_IDS in the same diff.
 version = 1
 
-[[known_leaks]]
-id = "fleet-workers-host-id"
-operation = "GET /api/fleet/workers/v1"
-field = "body.hosts[1].host_id"
-owner = "monitor-fleet"
-expiry = "2026-10-21"
-issue = 8542
-
-[[known_leaks]]
-id = "occupancy-host-id"
-operation = "GET /api/occupancy"
-field = "body.hosts.opsec-host-id.host_id"
-owner = "monitor-occupancy"
-expiry = "2026-10-21"
-issue = 8542
-
-[[known_leaks]]
-id = "health-instance-host"
-operation = "GET /api/health"
-field = "body.instance.host"
-owner = "monitor-core"
-expiry = "2026-10-21"
-issue = 8542
-
-[[known_leaks]]
+[[approved_exemptions]]
 id = "dashboard-work-loopback"
 operation = "dashboard:work.html"
 field = "body"
-owner = "monitor-dashboard"
-expiry = "2026-10-21"
-issue = 8542
+adr = "docs/decisions/ADR-019-work-control-plane.md"
+reason = "ADR-019 fixes dashboards/work.html's browser-local private-adapter URL to the literal loopback constant http://127.0.0.1:8769/v1/projection; it is a permanent design choice, not an owned burn-down leak."
