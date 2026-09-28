@@ -14,12 +14,8 @@ import json
 import shlex
 import subprocess
 import sys
+from contextlib import suppress
 from pathlib import Path
-
-_PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(_PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_DIR))
-from scripts.common.repo_root import project_interpreter
 
 
 def _read_payload() -> dict:
@@ -43,6 +39,14 @@ def _is_git_command(command: str) -> bool:
     return "git" in tokens
 
 
+def _project_dir() -> Path | None:
+    here = Path(__file__).resolve()
+    for candidate in (here.parent, *here.parents):
+        if (candidate / "scripts" / "common" / "repo_root.py").is_file():
+            return candidate
+    return None
+
+
 def main() -> int:
     payload = _read_payload()
     command = _bash_command(payload)
@@ -50,20 +54,28 @@ def main() -> int:
     if not command or not _is_git_command(command):
         return 0
 
-    project_dir = _PROJECT_DIR
+    project_dir = _project_dir()
+    if project_dir is None:
+        return 0
+
     script = project_dir / "scripts" / "audit" / "check_core_bare.py"
     try:
+        if str(project_dir) not in sys.path:
+            sys.path.insert(0, str(project_dir))
+        from scripts.common.repo_root import project_interpreter
+
         python_bin = project_interpreter()
-    except FileNotFoundError:
+    except Exception:
         return 0
 
     if script.exists() and python_bin.is_file():
-        subprocess.run(
-            [str(python_bin), str(script), "--repo", str(project_dir), "--fix", "-q"],
-            check=False,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+        with suppress(OSError):
+            subprocess.run(
+                [str(python_bin), str(script), "--repo", str(project_dir), "--fix", "-q"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
 
     return 0
 
