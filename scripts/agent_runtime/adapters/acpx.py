@@ -171,8 +171,8 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
     "--provider",
 )
 AGY_ACP_MODEL = "gemini-3.8-flash-high"
-CLAUDE_ACP_MODEL = "claude-sonnet-5"
-CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
+CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-sonnet-5", "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.

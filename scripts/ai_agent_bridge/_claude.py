@@ -55,7 +55,7 @@ from ._review_worktree import (
     review_target_payload,
 )
 
-CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
+CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5-5"
 CLAUDE_ADVISORY_MODEL = "claude-opus-5"
 
 
@@ -321,7 +321,7 @@ def _run_claude_sync_via_runtime(
 
         provenance_data, actual_model = response_provenance(
             msg,
-            actual_model=result.model or target_model or "claude-sonnet-5",
+            actual_model=result.model or target_model or "claude-sonnet-5-5",
             harness="claude",
             effort_applied=effort_applied if effort_reason else getattr(result, "effort", None),
             effort_reason=effort_reason,

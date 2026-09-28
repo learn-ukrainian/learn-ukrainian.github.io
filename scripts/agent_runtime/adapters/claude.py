@@ -329,7 +329,7 @@ class ClaudeAdapter:
     """Adapter for the ``claude`` CLI in print mode (local binary preferred)."""
 
     name: str = "claude"
-    default_model: str = "claude-sonnet-5"
+    default_model: str = "claude-sonnet-5-5"
     # Operator 2026-08-13: headless/print defaults to high when the caller
     # omits effort; interactive start-claude.sh keeps empty (last session).
     default_effort: str = "high"

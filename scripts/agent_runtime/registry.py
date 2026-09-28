@@ -73,7 +73,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "claude": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
-        "default_model": "claude-sonnet-5",
+        "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
             {
@@ -88,7 +88,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "claude-desktop": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
-        "default_model": "claude-sonnet-5",
+        "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
             {
@@ -103,7 +103,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "claude-infra": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
-        "default_model": "claude-sonnet-5",
+        "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
             {
@@ -117,7 +117,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "claude-monitor": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
-        "default_model": "claude-sonnet-5",
+        "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
             {

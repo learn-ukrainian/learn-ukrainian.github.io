@@ -401,7 +401,7 @@ class ModuleWorld(World):
                 review_id=review_id,
             ),
         )
-        self.task("plan-review-claude", "claude", "claude-sonnet-5")
+        self.task("plan-review-claude", "claude", "claude-sonnet-5-5")
         recorded = run_main(
             record.main,
             [
