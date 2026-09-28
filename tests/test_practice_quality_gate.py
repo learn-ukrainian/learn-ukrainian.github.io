@@ -1,6 +1,8 @@
 """Unit tests for Practice Quality Gate (Issue #7944)."""
 
+import inspect
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -15,6 +17,18 @@ from scripts.audit.practice_quality_gate import (
     audit_teacher_cloze_deck,
     run_all_practice_audits,
 )
+
+
+def _hide_sources_db(monkeypatch, tmp_path: Path) -> None:
+    """Simulate CI's absent gitignored database, even on a host that has it."""
+    from scripts.audit import practice_quality_gate
+
+    monkeypatch.setattr(practice_quality_gate, "DEFAULT_SOURCES_DB", tmp_path / "missing-sources.db")
+
+    def reject_sources(*_args, **_kwargs):
+        raise AssertionError("snapshot-only audit attempted to open sources.db")
+
+    monkeypatch.setattr(practice_quality_gate, "_SourceRows", reject_sources)
 
 
 def test_audit_teacher_cloze_validates_blank_count(tmp_path: Path):
@@ -143,6 +157,8 @@ def test_audit_sentence_inventory_intentional_errors(tmp_path: Path):
 def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
     """Verify that unattested Ukrainian words in error-correction drills are flagged by VESUM."""
     from scripts.audit import practice_quality_gate
+
+    _hide_sources_db(monkeypatch, tmp_path)
 
     deck = {
         "drills": [
@@ -476,6 +492,33 @@ def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
     assert [(v["item"], v["type"]) for v in violations] == [("sources_db", "SOURCE_DB_INVALID")]
 
 
+def test_default_error_correction_audit_uses_snapshot_with_no_sources_db(tmp_path: Path, monkeypatch):
+    """CI must audit the committed deck without resolving a local sources.db."""
+    from scripts.audit import practice_quality_gate
+
+    _hide_sources_db(monkeypatch, tmp_path)
+    assert inspect.signature(audit_error_correction_deck).parameters["sources_db"].default is None
+    assert audit_error_correction_deck(
+        practice_quality_gate.PROJECT_ROOT / "site/src/data/practice-error-corrections.json",
+        vesum_db=None,
+    ) == []
+
+
+def test_explicit_sources_db_flows_through_aggregate_and_cli(tmp_path: Path, monkeypatch, capsys):
+    """An invalid explicit path must fail both production entry points."""
+    from scripts.audit import practice_quality_gate
+
+    missing_sources = tmp_path / "missing-sources.db"
+    results = run_all_practice_audits(sources_db=missing_sources)
+    assert [(v["item"], v["type"]) for v in results["error_corrections"]] == [
+        ("sources_db", "SOURCE_DB_INVALID")
+    ]
+
+    monkeypatch.setattr(sys, "argv", ["practice_quality_gate.py", "--sources-db", str(missing_sources)])
+    assert practice_quality_gate.main() == 1
+    assert "[SOURCE_DB_INVALID] sources_db" in capsys.readouterr().out
+
+
 def test_one_rows_error_with_another_rows_correction_fails(tmp_path: Path):
     """Round 4 probe 1: err_0005's error with err_0004's correction passed — both phrases occur in the source text."""
     deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
@@ -603,10 +646,11 @@ def test_audit_error_correction_checks_typed_answers(tmp_path: Path):
     ]
 
 
-def test_production_culture_deck_passes_error_correction_gate():
+def test_production_culture_deck_passes_error_correction_gate(tmp_path: Path, monkeypatch):
     """The bundled Culture-of-Speech deck is what learners play; audit it directly."""
     from scripts.audit.practice_quality_gate import DEFAULT_VESUM_DB, PROJECT_ROOT
 
+    _hide_sources_db(monkeypatch, tmp_path)
     vesum_db = DEFAULT_VESUM_DB if Path(DEFAULT_VESUM_DB).exists() else None
     violations = audit_error_correction_deck(
         PROJECT_ROOT / "site/src/data/practice-error-corrections.json", vesum_db=vesum_db
@@ -1083,8 +1127,9 @@ def test_audit_practice_shards_empty_option_label_fails(tmp_path: Path):
     assert any(v["type"] == "EMPTY_OPTION_LABEL" and "p_empty_label" in v["item"] for v in violations)
 
 
-def test_production_practice_quality_gate_passes():
+def test_production_practice_quality_gate_passes(tmp_path: Path, monkeypatch):
     """Verify that current repository practice datasets pass with 0 violations."""
+    _hide_sources_db(monkeypatch, tmp_path)
     results = run_all_practice_audits()
     total_violations = sum(len(v) for v in results.values())
     assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"

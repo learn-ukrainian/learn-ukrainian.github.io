@@ -19,6 +19,7 @@ Enforces:
   correction, and their direction. The committed evidence snapshot must match each
   drill (row id, error and correction span strings); with sources.db the row's SHA-256,
   the text at both spans and the extractor's own pairing of that row are re-verified.
+  CI uses the committed evidence snapshot; pass ``--sources-db`` to verify source rows.
   Typed ``answers`` accept the correction and its listed readings, never the error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
@@ -494,13 +495,14 @@ def _typed_answer_violations(
 def audit_error_correction_deck(
     path: Path | str,
     vesum_db: Path | str | None = DEFAULT_VESUM_DB,
-    sources_db: Path | str | None = DEFAULT_SOURCES_DB,
+    sources_db: Path | str | None = None,
     evidence_path: Path | str = DEFAULT_ERROR_CORRECTION_EVIDENCE,
 ) -> list[dict[str, Any]]:
     """Audit error-correction dataset for schema, substring match, and pedagogical validity.
 
-    Every drill must match its ``evidence_path`` snapshot entry; with ``sources_db`` the
-    snapshot and the drill's spans are re-verified against the source row.
+    Every drill must match its ``evidence_path`` snapshot entry. The default is
+    snapshot-only CI mode; an explicitly supplied ``sources_db`` also verifies
+    the snapshot and drill spans against the source row and must be valid.
     """
     violations: list[dict[str, Any]] = []
     p = Path(path)
@@ -1187,6 +1189,7 @@ def run_all_practice_audits(
     sentence_inventory: Path | str = DEFAULT_SENTENCE_INVENTORY,
     vesum_db: Path | str | None = DEFAULT_VESUM_DB,
     *,
+    sources_db: Path | str | None = None,
     all_modes: bool = False,
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
     verify_vesum: bool = False,
@@ -1200,7 +1203,7 @@ def run_all_practice_audits(
         {
             "teacher_cloze": audit_teacher_cloze_deck(teacher_cloze, vesum_db=vesum_db if verify_vesum else None),
             "error_corrections": audit_error_correction_deck(
-                error_corrections, vesum_db=vesum_db if verify_vesum else None
+                error_corrections, vesum_db=vesum_db if verify_vesum else None, sources_db=sources_db
             ),
             "sentence_inventory": audit_sentence_inventory(sentence_inventory),
         }
@@ -1231,19 +1234,34 @@ def run_all_practice_audits(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Unified Practice Hub quality assurance gate (Issues #7944, #8276)")
-    parser.add_argument("--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE))
-    parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS))
-    parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY))
-    parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR))
-    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB))
-    parser.add_argument("--all-modes", action="store_true", help="Audit all practice shards across all 10 modes")
-    parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM")
-    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One")
-    parser.add_argument(
-        "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation"
+    parser = argparse.ArgumentParser(
+        description=(
+            "Audit Practice Hub assets for learner-visible quality violations.\n"
+            "Run for committed snapshot checks in CI; pass --sources-db for local source-row verification."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/audit/practice_quality_gate.py\n"
+            "  .venv/bin/python scripts/audit/practice_quality_gate.py --sources-db data/sources.db\n"
+            "Outputs: Prints violations; writes no files.\n"
+            "Exit codes: 0 = no violations; 1 = violations.\n"
+            "Related: Issues #7944, #8276, #8723; committed error-correction evidence snapshot."
+        ),
     )
-    parser.add_argument("--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure")
+    parser.add_argument("--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE), help="Teacher cloze JSON (default: bundled deck)")
+    parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS), help="Error-correction JSON (default: registry deck)")
+    parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY), help="Sentence inventory JSON (default: bundled inventory)")
+    parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR), help="Practice shard directory (default: site/public/lexicon)")
+    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB), help="VESUM database (default: data/vesum.db; used with --verify-vesum)")
+    parser.add_argument("--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)")
+    parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
+    parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)")
+    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One (default: off)")
+    parser.add_argument(
+        "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation (default: 5)"
+    )
+    parser.add_argument("--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure (default: off)")
     args = parser.parse_args()
 
     # When --all-modes is passed, default verify_vesum to True if not explicitly overridden
@@ -1255,6 +1273,7 @@ def main() -> int:
         error_corrections=args.error_corrections,
         sentence_inventory=args.sentence_inventory,
         vesum_db=args.vesum_db,
+        sources_db=args.sources_db,
         all_modes=args.all_modes,
         shards_dir=args.shards_dir,
         verify_vesum=verify_vesum,
