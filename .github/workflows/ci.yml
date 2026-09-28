@@ -513,6 +513,16 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
           fi
+      - name: List failing tests in job summary
+        # Reads the JUnit files the Run pytest step already wrote (#9063);
+        # never re-runs tests and can never change the shard's result.
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        continue-on-error: true
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          .venv/bin/python -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml \
+            --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY" || true
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
         run: |

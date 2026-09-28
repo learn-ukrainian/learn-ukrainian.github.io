@@ -67,3 +67,76 @@ def parse_junit(paths: list[Path]) -> list[TestResult]:
             by_node[node_id] = TestResult(node_id, outcome, message, reruns, path)
         results.extend(by_node.values())
     return results
+
+
+SUMMARY_ROW_CAP = 50
+_MESSAGE_LIMIT = 200
+_TEST_ID_LIMIT = 300
+
+
+def _cell(text: str) -> str:
+    """Make text safe inside one GitHub-flavoured Markdown table cell."""
+    for raw, safe in (("\\", "\\\\"), ("|", "\\|"), ("`", "\\`"), ("<", "&lt;"), (">", "&gt;")):
+        text = text.replace(raw, safe)
+    return text
+
+
+def _first_line(message: str) -> str:
+    line = next((line.strip() for line in message.splitlines() if line.strip()), "")
+    return line if len(line) <= _MESSAGE_LIMIT else line[: _MESSAGE_LIMIT - 1] + "…"
+
+
+def _test_id_cell(node_id: str) -> str:
+    """One-line, length-bounded, table-safe test ID (parametrize IDs are arbitrary text)."""
+    flat = " ".join(node_id.split())
+    if len(flat) > _TEST_ID_LIMIT:
+        flat = flat[: _TEST_ID_LIMIT - 1] + "…"
+    return _cell(flat)
+
+
+def render_failure_summary(paths: list[Path], *, title: str = "pytest", cap: int = SUMMARY_ROW_CAP) -> str:
+    """Markdown for a job summary: failing/erroring tests, or one line when green.
+
+    Skipped tests are ignored. Missing, empty, or unreadable JUnit files are
+    reported in a single line and never raise, so the summary step cannot
+    change the shard's result.
+    """
+    existing = [path for path in paths if path.is_file() and path.stat().st_size > 0]
+    if not existing:
+        return f"{title}: no JUnit results to summarise.\n"
+    try:
+        results = parse_junit(existing)
+    except (ValueError, ElementTree.ParseError) as exc:
+        return f"{title}: JUnit results unreadable ({_cell(_first_line(str(exc)))}).\n"
+    bad = [result for result in results if result.outcome in ("failed", "error")]
+    if not bad:
+        return f"{title}: {len(results)} tests, no failures.\n"
+    lines = [
+        f"### {_cell(title)}: {len(bad)} failing of {len(results)} tests",
+        "",
+        "| Test | Outcome | Message |",
+        "| --- | --- | --- |",
+    ]
+    lines.extend(
+        f"| {_test_id_cell(result.node_id)} | {result.outcome} | {_cell(_first_line(result.message))} |"
+        for result in bad[:cap]
+    )
+    if len(bad) > cap:
+        lines.extend(["", f"and {len(bad) - cap} more"])
+    return "\n".join(lines) + "\n"
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Render failing pytest tests from JUnit XML as Markdown.")
+    parser.add_argument("paths", nargs="*", type=Path, help="JUnit XML files (missing files are tolerated)")
+    parser.add_argument("--title", default="pytest")
+    parser.add_argument("--cap", type=int, default=SUMMARY_ROW_CAP)
+    args = parser.parse_args(argv)
+    print(render_failure_summary(args.paths, title=args.title, cap=args.cap), end="")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

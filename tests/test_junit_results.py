@@ -7,7 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ci.junit_results import parse_junit
+from scripts.ci.junit_results import SUMMARY_ROW_CAP, parse_junit, render_failure_summary
+from scripts.ci.junit_results import main as junit_main
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN
 
 
@@ -97,3 +98,83 @@ def test_thread_timeout_exits_without_rerun(tmp_path: Path):
     assert "Timeout" in result.stdout
     assert "RERUN" not in result.stdout
     assert not xml.exists()  # pytest-timeout's thread method exits before JUnit serialization.
+
+
+def _write_summary_junit(path: Path) -> Path:
+    path.write_text(
+        '<testsuites><testsuite name="pytest">'
+        '<testcase classname="tests.test_a" name="test_ok" file="tests/test_a.py"/>'
+        '<testcase classname="tests.test_a" name="test_skip" file="tests/test_a.py"><skipped message="why"/></testcase>'
+        '<testcase classname="tests.test_a.TestX" name="test_bad[a|b]" file="tests/test_a.py">'
+        '<failure message="assert 1 == 2&#10;  +  where 1 = f()">long traceback</failure></testcase>'
+        '<testcase classname="tests.test_a" name="test_err" file="tests/test_a.py">'
+        '<error message="&lt;boom&gt; `x`">trace</error></testcase>'
+        '</testsuite></testsuites>',
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_summary_lists_failures_and_errors_only(tmp_path: Path):
+    text = render_failure_summary([_write_summary_junit(tmp_path / "j.xml")], title="pytest (3)")
+    assert "2 failing of 4 tests" in text
+    assert "tests/test_a.py::TestX::test_bad[a\\|b] | failed | assert 1 == 2 |" in text
+    assert "tests/test_a.py::test_err | error | &lt;boom&gt; \\`x\\` |" in text
+    assert "test_ok" not in text and "test_skip" not in text
+    assert "traceback" not in text
+
+
+def test_summary_green_is_one_line(tmp_path: Path):
+    path = tmp_path / "green.xml"
+    path.write_text(
+        '<testsuite><testcase classname="tests.test_a" name="test_ok" file="tests/test_a.py"/>'
+        '<testcase classname="tests.test_a" name="test_skip" file="tests/test_a.py"><skipped/></testcase></testsuite>',
+        encoding="utf-8",
+    )
+    assert render_failure_summary([path]) == "pytest: 2 tests, no failures.\n"
+
+
+def test_summary_caps_rows_and_reports_remainder(tmp_path: Path):
+    cases = "".join(
+        f'<testcase classname="tests.test_a" name="test_{i}" file="tests/test_a.py"><failure message="m{i}"/></testcase>'
+        for i in range(SUMMARY_ROW_CAP + 7)
+    )
+    path = tmp_path / "many.xml"
+    path.write_text(f"<testsuite>{cases}</testsuite>", encoding="utf-8")
+    text = render_failure_summary([path])
+    assert text.count("| failed |") == SUMMARY_ROW_CAP
+    assert text.rstrip().endswith("and 7 more")
+
+
+def test_summary_tolerates_missing_empty_and_corrupt_files(tmp_path: Path):
+    empty = tmp_path / "empty.xml"
+    empty.write_text("", encoding="utf-8")
+    corrupt = tmp_path / "corrupt.xml"
+    corrupt.write_text("<testsuite><testcase", encoding="utf-8")
+    assert render_failure_summary([tmp_path / "absent.xml", empty]) == "pytest: no JUnit results to summarise.\n"
+    assert render_failure_summary([]) == "pytest: no JUnit results to summarise.\n"
+    unreadable = render_failure_summary([corrupt])
+    assert unreadable.startswith("pytest: JUnit results unreadable") and unreadable.count("\n") == 1
+
+
+def test_summary_cli_never_fails_on_missing_input(tmp_path: Path, capsys):
+    assert junit_main([str(tmp_path / "nope.xml"), "--title", "pytest (1)"]) == 0
+    assert capsys.readouterr().out == "pytest (1): no JUnit results to summarise.\n"
+
+
+def test_summary_test_id_is_one_line_and_length_bounded(tmp_path: Path):
+    long_param = "x" * 5000
+    path = tmp_path / "ids.xml"
+    path.write_text(
+        "<testsuite>"
+        '<testcase classname="tests.test_a" name="test_nl[a&#10;b|c]" file="tests/test_a.py"><failure message="m"/></testcase>'
+        f'<testcase classname="tests.test_a" name="test_long[{long_param}]" file="tests/test_a.py"><failure message="m"/></testcase>'
+        "</testsuite>",
+        encoding="utf-8",
+    )
+    text = render_failure_summary([path])
+    rows = [line for line in text.splitlines() if line.startswith("| tests/")]
+    assert len(rows) == 2, text
+    assert "tests/test_a.py::test_nl[a b\\|c] | failed | m |" in rows[0]
+    assert "…" in rows[1] and len(rows[1]) < 400
+    assert long_param not in text
