@@ -303,8 +303,7 @@ class ClassifierTests(unittest.TestCase):
         self.assertIn("docs_reads_content=false", stdout)
 
     def test_merge_group_script_and_test_forces_full(self):
-        # D1 (#8399): what would be `selected` on a pull request is full on
-        # the queue.
+        # #9073: a selected PR runs every required Python shard in the queue.
         tree = _tree(
             "scripts/delegate.py",
             "tests/test_delegate.py",
@@ -313,9 +312,74 @@ class ClassifierTests(unittest.TestCase):
         paths = ["scripts/delegate.py", "tests/test_delegate.py"]
         expected = ["tests/test_ci_shard_partition.py", "tests/test_delegate.py"]
         self.assert_selected(self.classify(paths, tree_paths=tree), expected)
-        self.assert_selected(
-            self.classify(paths, event="merge_group", tree_paths=tree),
-            expected,
+        self.assert_full(self.classify(paths, event="merge_group", tree_paths=tree))
+
+    def test_merge_group_code_classes_run_full_without_tree_lookup(self):
+        # Each code class and an unknown path must run full even when a PR
+        # could select a single test or the queue cannot read the Git tree.
+        for path in (
+            "scripts/example.py",
+            "tests/test_example.py",
+            ".github/workflows/ci.yml",
+            "pyproject.toml",
+            "requirements-dev.txt",
+            "unknown/path.bin",
+        ):
+            with (
+                self.subTest(path=path),
+                patch.object(scope, "git_tree_paths", side_effect=OSError("unavailable")) as tree,
+            ):
+                result = scope.classify(
+                    [path],
+                    event="merge_group",
+                    labels=[],
+                    shard_count=4,
+                    denominator=load_denominator()["paths"],
+                )
+                self.assertEqual(result.pop("preflight"), "false")
+                self.assert_full(
+                    result,
+                    frontend="true" if path == ".github/workflows/ci.yml" else "false",
+                )
+                tree.assert_not_called()
+
+    def test_merge_group_code_inside_broad_content_docs_roots_runs_full(self):
+        # These used to enter the docs/content classes despite being code.
+        for path in (
+            "curriculum/l1-uk/tool.py",
+            "wiki/tools/preview.ts",
+            "site/scripts/check.py",
+            "packages/activity-kit/scripts/build.sh",
+        ):
+            with self.subTest(path=path):
+                self.assert_full(
+                    self.classify([path], event="merge_group"),
+                    frontend="true" if path.startswith(("site/", "packages/")) else "false",
+                )
+
+    def test_merge_group_non_code_classes_keep_their_tiers(self):
+        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+        self.assert_docs(
+            self.classify(["wiki/figures/example.md"], event="merge_group"),
+            reads_content="true",
+        )
+        self.assert_content(
+            self.classify(["site/src/content/docs/a1/module/1.mdx"], event="merge_group")
+        )
+        self.assert_frontend_only(
+            self.classify(["site/src/components/X.astro"], event="merge_group")
+        )
+        self.assert_frontend_only(
+            self.classify(["packages/activity-kit/src/index.ts"], event="merge_group")
+        )
+
+    def test_merge_group_mixed_frontend_and_code_runs_full_with_frontend(self):
+        self.assert_full(
+            self.classify(
+                ["site/src/components/X.astro", "tests/test_example.py"],
+                event="merge_group",
+            ),
+            frontend="true",
         )
 
     def test_merge_group_mixed_forces_full(self):

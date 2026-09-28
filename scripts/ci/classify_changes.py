@@ -44,6 +44,7 @@ _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+_QUEUE_CODE_SUFFIXES = (".py", ".js", ".jsx", ".ts", ".tsx", ".sh")
 
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
 # the full tier on both events and is excluded from the docs exemption; the
@@ -407,7 +408,13 @@ def classify_tier(
     tree_paths: Iterable[str] | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, str]:
-    """Unknown paths run every pytest shard; only explicit docs/content may skip."""
+    """Classify PR paths and require full Python coverage for queue code changes.
+
+    ``full`` runs every required Python test except ``slow`` and
+    ``atlas_release``; those markers run only nightly. On ``merge_group``,
+    docs-only, content-only, and frontend-only changes retain their #8437
+    classes. Every other path set, including uncertain paths, runs ``full``.
+    """
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
 
@@ -416,12 +423,22 @@ def classify_tier(
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
-    # Operator 2026-09-21 (#8437): pull_request and merge_group use the same
-    # path classes. A docs or backend-only change must not rebuild the site,
-    # and a frontend-only change must not run the Python shards. The nightly
-    # schedule and an unknown event still enter through the full return above.
+    # A Python or shell file is not frontend-only merely because it lives
+    # under site/ or packages/activity-kit/.
+    if event == "merge_group" and any(
+        _norm(path).endswith((".py", ".sh")) for path in paths
+    ):
+        return _full(shard_count, frontend="true" if frontend else "false")
+    # #8437: docs, content, and frontend-only changes keep their path classes
+    # on both events. Frontend continues to follow its existing denominator.
     if all(is_pure_frontend_path(path) for path in paths):
         return _frontend_only()
+    # The broad curriculum/wiki docs/content exemptions can include code files
+    # outside the known code-imported set. They also need the queue's full gate.
+    if event == "merge_group" and any(
+        _norm(path).endswith(_QUEUE_CODE_SUFFIXES) for path in paths
+    ):
+        return _full(shard_count, frontend="true" if frontend else "false")
     if all(is_content_class_path(path) for path in paths) and any(
         _norm(path).startswith("site/src/content/docs/") for path in paths
     ):
@@ -436,6 +453,11 @@ def classify_tier(
         # the docs lane runs no reads_content tests otherwise, so an edit that
         # breaks a test reading those live trees would merge green.
         return _docs(reads_content=has_reads_content_root_path(paths))
+
+    # #9073 (D4): the queue is the full Python backstop for code and unknown
+    # paths. Do this before PR candidate selection, including tree lookups.
+    if event == "merge_group":
+        return _full(shard_count, frontend="true" if frontend else "false")
 
     tree: set[str] | None
     if tree_paths is not None:
