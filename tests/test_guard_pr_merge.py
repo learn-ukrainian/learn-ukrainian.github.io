@@ -74,6 +74,30 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
     assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
 
 
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_merge_visible(monkeypatch, opener, closer):
+    command = f"cat {opener}\ngh pr merge 5 --admin\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
+    command = "cat <<$'EOF'\ncat <<SAFE\ngh pr merge 5 --admin\nSAFE\nEOF"
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
 def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)

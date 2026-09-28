@@ -70,6 +70,30 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
     assert guard.main() == 2
 
 
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_branch_switch_visible(repos, opener, closer):
+    command = f"cat {opener}\ngit checkout -b x\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(repos):
+    command = "cat <<$'EOF'\ncat <<SAFE\ngit checkout -b x\nSAFE\nEOF"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
 def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)

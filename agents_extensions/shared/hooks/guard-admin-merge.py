@@ -32,7 +32,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import heredoc_delimiter, split_quote_preserving
+    from shell_shlex import skippable_heredoc_delimiters
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -127,40 +127,10 @@ def _flag_enabled(args: list[str], name: str) -> bool:
 # in sync.
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
-    """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
-    ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
-    try:
-        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_tok = ""
-        if j < len(tokens):
-            nxt = tokens[j]
-            if nxt == "-":
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_tok = tokens[j]
-            elif nxt.startswith("-") and len(nxt) > 1:
-                strip_tabs = True
-                delim_tok = nxt[1:]
-            else:
-                delim_tok = nxt
-        delimiter = heredoc_delimiter(delim_tok)
-        if delimiter:
-            delimiters.append((delimiter, strip_tabs))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    parsed = skippable_heredoc_delimiters(line)
+    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
 
 
 def _strip_heredoc_bodies(command: str) -> str:
@@ -181,6 +151,9 @@ def _strip_heredoc_bodies(command: str) -> str:
         kept.append(lines[i])
         i += 1
         pending = _heredoc_delimiters(lines[i - 1])
+        if pending is None:
+            kept.extend(lines[i:])
+            break
         if not pending:
             continue
         body_start = i

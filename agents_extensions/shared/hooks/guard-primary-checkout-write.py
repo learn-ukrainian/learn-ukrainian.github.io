@@ -145,7 +145,7 @@ from typing import Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import heredoc_delimiter, split_quote_preserving
+    from shell_shlex import skippable_heredoc_delimiters
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -305,38 +305,9 @@ _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
 _REDIRECT_OPS = _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
-    try:
-        tokens = split_quote_preserving(line, punctuation_chars=True, whitespace=" \t\n")
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_tok = ""
-        if j < len(tokens):
-            nxt = tokens[j]
-            if nxt == "-":  # spaced: << - DELIM
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_tok = tokens[j]
-            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
-                strip_tabs = True
-                delim_tok = nxt[1:]
-            else:
-                delim_tok = nxt
-        delimiter = heredoc_delimiter(delim_tok)
-        if delimiter:
-            delimiters.append((delimiter, strip_tabs, delim_tok != delimiter))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    return skippable_heredoc_delimiters(line)
 
 
 def _strip_heredoc_bodies(command: str) -> str:
@@ -364,6 +335,9 @@ def _strip_heredoc_bodies(command: str) -> str:
         kept.append(lines[i])
         i += 1
         pending = _heredoc_delimiters(_strip_shell_comments(lines[i - 1]))
+        if pending is None:
+            kept.extend(lines[i:])
+            break
         if not pending:
             continue
         body_start = i

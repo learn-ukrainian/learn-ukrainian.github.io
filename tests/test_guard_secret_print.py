@@ -233,21 +233,31 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
     )
 
 
-@pytest.mark.parametrize("word,delimiter", [
-    (r"'EO\F'", r"EO\F"),
-    (r'"EO\"F"', 'EO"F'),
-    (r'"EO\\F"', r'EO\F'),
-    (r'"EO\$F"', 'EO$F'),
-    (r'"EO\`F"', 'EO`F'),
-    (r'"EO\qF"', r'EO\qF'),
-    (r'EO\F', 'EOF'),
-    (r"EO\'F", "EO'F"),
+def test_issue_9088_quoted_identifier_heredoc_body_is_inert(monkeypatch):
+    assert _run(monkeypatch, "cat <<'EOF'\ncat .env\necho $GH_TOKEN\nEOF") == 0
+
+
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
 ])
-def test_issue_9088_bash_quote_removal_for_heredoc(word, delimiter):
-    assert guard.heredoc_delimiter(word) == delimiter
-    assert guard._strip_heredoc_bodies(f"cat <<{word}\nnote\n{delimiter}\ncat .env") == (
-        f"cat <<{word}\ncat .env"
-    )
+def test_issue_9088_exotic_heredoc_keeps_secret_dump_visible(monkeypatch, opener, closer):
+    command = f"cat {opener}\ncat .env\necho $GH_TOKEN\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
+    command = "cat <<$'EOF'\ncat <<SAFE\ncat .env\nSAFE\nEOF"
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
 
 
 def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
