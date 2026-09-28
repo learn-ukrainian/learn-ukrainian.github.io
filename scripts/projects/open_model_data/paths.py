@@ -87,6 +87,16 @@ def open_model_classes() -> dict[str, str]:
     return classes
 
 
+def _classified_child_classes(relative: str) -> set[str]:
+    """Return the classes of rows under a relative directory, if any."""
+    classes = open_model_classes()
+    normalized = relative.strip("/")
+    if not normalized:
+        return set(classes.values())
+    prefix = normalized + "/"
+    return {classes[item] for item in classes if item.startswith(prefix)}
+
+
 def open_model_class(relative: str) -> str | None:
     """Return K or A when the relative path, or a single-class directory, is classified."""
     classes = open_model_classes()
@@ -96,8 +106,7 @@ def open_model_class(relative: str) -> str | None:
     found = classes.get(normalized)
     if found is not None:
         return found
-    prefix = normalized + "/"
-    child_classes = {classes[item] for item in classes if item.startswith(prefix)}
+    child_classes = _classified_child_classes(normalized)
     if child_classes == {"K"}:
         return "K"
     if child_classes == {"A"}:
@@ -124,8 +133,10 @@ def resolve_open_model_path(path: str | Path, *, repo: Path | None = None) -> Pa
     K members live under ``registry/projects/open_model_data``. A members stay
     under ``data/projects/open_model_data``. Logical ``data/`` strings recorded
     in frozen contracts are unchanged; only the filesystem location moves.
-    Mixed directories keep the caller's prefix. Paths outside the tree join
-    ``repo`` when they are relative.
+    A single-class directory follows that class. A mixed directory, including
+    the tree root, keeps the caller's prefix. A file path that is not a
+    classification-table row raises ``ValueError`` instead of staying on the
+    caller's prefix. Paths outside the tree join ``repo`` when they are relative.
     """
     raw = Path(path)
     split = _open_model_split(raw.as_posix())
@@ -139,8 +150,10 @@ def resolve_open_model_path(path: str | Path, *, repo: Path | None = None) -> Pa
         chosen = REGISTRY_OPEN_MODEL_PREFIX
     elif klass == "A":
         chosen = LOGICAL_OPEN_MODEL_PREFIX
-    else:
+    elif not relative.strip("/") or _classified_child_classes(relative):
         chosen = marker
+    else:
+        raise ValueError(f"unclassified open-model file path {relative.strip('/')!r} is not in classification-v1.tsv")
     tail = f"{chosen}/{relative}" if relative else chosen
     if raw.is_absolute() or head not in {"", "."}:
         prefix = head

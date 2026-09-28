@@ -28,6 +28,28 @@ def test_fixture_records_validate_and_keep_admission_closed() -> None:
     assert all(record["eligibility"]["potential_training_admission"] is False for record in records)
 
 
+def test_fixture_mode_opens_default_schema(tmp_path: Path) -> None:
+    output_dir = tmp_path / "default-schema"
+    assert inventory.DEFAULT_SCHEMA.is_file()
+    assert (
+        inventory.main(
+            [
+                "--fixture-records",
+                str(FIXTURE),
+                "--repo-root",
+                str(ROOT),
+                "--snapshot-date",
+                "2026-07-31",
+                "--output-dir",
+                str(output_dir),
+            ]
+        )
+        == 0
+    )
+    assert (output_dir / inventory.LEDGER_NAME).is_file()
+    assert "registry/projects/open_model_data" in inventory.DEFAULT_SCHEMA.as_posix()
+
+
 def test_fixture_mode_is_byte_stable(tmp_path: Path) -> None:
     first = tmp_path / "first"
     second = tmp_path / "second"

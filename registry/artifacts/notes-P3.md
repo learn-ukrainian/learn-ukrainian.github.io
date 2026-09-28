@@ -3,7 +3,8 @@
 ## Status
 
 P3a — migration complete (1,125 rows), producer routing done, consumer
-census 3,166 checked / 0 blank (round 8). P3b residuals:
+census 3,166 checked / 0 blank (round 8). Round 9 routes K-file defaults
+that tests had overridden and guards new K literals. P3b residuals:
 `v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`, and
 `v4_production_shards_assembly.py` native archive regeneration (owner:
 claude-infra). P3 completion: NO (P3a). P3a ready for review: YES.
@@ -74,8 +75,16 @@ dispatch worktrees. Run from each checkout with its contracted interpreter:
 
 ```sh
 /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --phase P3
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --phase P3
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_archive_payload
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_component_payload
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_evidence_indexes
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_other_indexes
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_release_payload
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts verify --group open_model_study_outputs
 ```
+
+`verify` has no `--phase` flag. Hydrate accepts `--phase P3`; each verify
+checks one A group.
 
 The driver/reviewer held-out check compares the table's pre-untrack hashes,
 manifest hashes, store objects, and post-hydrate disk bytes for all 412 A rows;
@@ -380,6 +389,20 @@ evidence 10, other 49, release 233, and study 23. The migration audit
 printed `rows=1125 K=713 K_bytes=12942226 A=412 A_bytes=637987720 errors=0`.
 P3a ready for review: YES. P3 completion remains NO while the three P3b
 archive residuals are open.
+
+## Round 9 default routes
+
+Round 9 fixes CLI and function defaults that still joined moved K files
+under `data/projects/open_model_data/` at import time. Those defaults now
+call `resolve_open_model_path()`, so a bare invocation opens the registry
+file. `resolve_open_model_path()` raises `ValueError` for a file path that
+is not a classification-table row. Mixed directory prefixes, including
+`components/decolonization`, keep the caller's prefix. Frozen logical keys
+(Decision G/H), review-dossier locators, classification-table directory
+globs, and packaged v4-runtime resource names stay the pre-migration
+`data/` string. `tests/projects/open_model_data/test_k_path_literal_guard.py`
+fails if a new production literal names a K path outside that allowlist or
+outside the resolver. No A file and no P3 manifest changed.
 
 ## Unresolved P3a gates at this checkpoint
 

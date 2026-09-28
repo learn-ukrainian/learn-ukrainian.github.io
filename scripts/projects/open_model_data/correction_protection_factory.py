@@ -24,6 +24,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
@@ -36,9 +37,15 @@ MODEL_LANE_SCHEMA = CONTRACTS / "correction_protection_model_lane_v1.schema.json
 RELEASE_SCHEMA = CONTRACTS / "correction_protection_release_receipt_v1.schema.json"
 PHASE2_SCHEMA = CONTRACTS / "prepared_data_complement_record_v1.schema.json"
 
-DEFAULT_THRESHOLDS = ROOT / "data/projects/open_model_data/detector/correction_protection_thresholds_v1.json"
-DEFAULT_KNOWN_ANSWERS = ROOT / "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json"
-DEFAULT_PHASE2_RECEIPT = ROOT / "data/projects/open_model_data/evidence/prepared_data_complement_receipt_v1.json"
+DEFAULT_THRESHOLDS = resolve_open_model_path(
+    "data/projects/open_model_data/detector/correction_protection_thresholds_v1.json"
+)
+DEFAULT_KNOWN_ANSWERS = resolve_open_model_path(
+    "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json"
+)
+DEFAULT_PHASE2_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/evidence/prepared_data_complement_receipt_v1.json"
+)
 DEFAULT_EVAL_ARTIFACTS = (
     ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json",
     ROOT / "data/projects/ua_eval_harness/evalset_v1.jsonl",
@@ -1285,7 +1292,7 @@ def build_manifest_and_receipt(
     return manifest, receipt
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("candidate", "build"))
     parser.add_argument("--phase2-input", type=Path, required=True)
@@ -1300,7 +1307,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--comparison-full-output-dir", type=Path)
     parser.add_argument("--manifest-output", type=Path)
     parser.add_argument("--receipt-output", type=Path)
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
 def main() -> None:

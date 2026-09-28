@@ -32,6 +32,7 @@ from tokenizers import Tokenizer
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import silver_evidence_factory as silver
 from scripts.projects.open_model_data import validate_source_records as source_record_contract
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.verification.vesum import verify_words
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -41,13 +42,17 @@ SILVER_SCHEMA = CONTRACTS / "language_contact_silver_record_v1.schema.json"
 PAYLOAD_RECEIPT_SCHEMA = CONTRACTS / "source_payload_preparation_receipt_v1.schema.json"
 TOKENIZER_RECEIPT_SCHEMA = CONTRACTS / "tokenizer_diagnostics_v1.schema.json"
 PRODUCTION_RECEIPT_SCHEMA = CONTRACTS / "model_ready_view_production_v1.schema.json"
-DEFAULT_DETECTOR_RECEIPT = ROOT / "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
-DEFAULT_SILVER_RECEIPT = ROOT / "data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"
-DEFAULT_ADMISSION_RECEIPT = (
-    ROOT / "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json"
+DEFAULT_DETECTOR_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
 )
-DEFAULT_OPERATOR_PACKET = (
-    ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json"
+DEFAULT_SILVER_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/silver/language_contact_silver_receipt_v1.json"
+)
+DEFAULT_ADMISSION_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json"
+)
+DEFAULT_OPERATOR_PACKET = resolve_open_model_path(
+    "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json"
 )
 WORD_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[’ʼ'][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*", re.UNICODE)
 BYTE_TOKEN_RE = re.compile(r"^<0x[0-9A-F]{2}>$")

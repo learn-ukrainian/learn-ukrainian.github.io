@@ -75,6 +75,21 @@ def test_resolve_open_model_path_follows_classification(tmp_path: Path) -> None:
     assert resolve_open_model_path("data/sources.db", repo=tmp_path) == tmp_path / "data/sources.db"
     mixed = resolve_open_model_path("data/projects/open_model_data/canary", repo=tmp_path)
     assert mixed == tmp_path / "data/projects/open_model_data/canary"
+    decolonization = resolve_open_model_path("data/projects/open_model_data/components/decolonization", repo=tmp_path)
+    assert decolonization == tmp_path / "data/projects/open_model_data/components/decolonization"
+
+
+def test_resolve_open_model_path_rejects_unclassified_file(tmp_path: Path) -> None:
+    """A file absent from the classification table fails; directory prefixes still resolve."""
+    missing = "data/projects/open_model_data/inventory/not_in_classification_table.json"
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(missing)
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(missing, repo=tmp_path)
+    absolute = tmp_path / missing
+    with pytest.raises(ValueError, match="unclassified open-model file path"):
+        resolve_open_model_path(absolute)
+    assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
 
 
 def test_tombstone_exists_in_archived_uldr_v1() -> None:

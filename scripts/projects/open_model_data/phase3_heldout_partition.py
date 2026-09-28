@@ -33,7 +33,7 @@ from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
-from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR, resolve_open_model_path
 from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -383,7 +383,7 @@ def reconstruct_ua_gec_rows(
 
 
 def _artifact_binding(logical_path: str, *, root: Path = ROOT) -> dict[str, str]:
-    path = root / logical_path
+    path = resolve_open_model_path(logical_path, repo=root)
     require(path.is_file(), f"missing binding artifact: {logical_path}")
     return {"logical_path": logical_path, "sha256": sha256_file(path)}
 
@@ -531,7 +531,7 @@ def build_public_canary_exclusion_manifest(*, root: Path = ROOT) -> tuple[dict[s
     bindings = [_artifact_binding(path, root=root) for path in PUBLIC_CANARY_ARTIFACTS]
     surfaces: list[str] = []
     for logical in PUBLIC_CANARY_ARTIFACTS:
-        _collect_string_surfaces(read_json(root / logical), surfaces)
+        _collect_string_surfaces(read_json(resolve_open_model_path(logical, repo=root)), surfaces)
     fingerprints: set[str] = set()
     for surface in surfaces:
         try:

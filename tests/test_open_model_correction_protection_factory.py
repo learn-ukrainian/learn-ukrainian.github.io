@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import correction_protection_factory as factory
@@ -18,6 +19,40 @@ MODEL_LANES = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_mod
 
 def _json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_cli_defaults_open_registry_inputs(tmp_path: Path) -> None:
+    phase2_input = tmp_path / "phase2.jsonl"
+    args = factory.parse_args(
+        [
+            "candidate",
+            "--phase2-input",
+            str(phase2_input),
+            "--full-output-dir",
+            str(tmp_path / "full"),
+            "--public-output-dir",
+            str(tmp_path / "public"),
+            "--index-output",
+            str(tmp_path / "index.json"),
+        ]
+    )
+    assert args.thresholds == factory.DEFAULT_THRESHOLDS
+    assert args.known_answers == factory.DEFAULT_KNOWN_ANSWERS
+    assert args.phase2_receipt == factory.DEFAULT_PHASE2_RECEIPT
+    for path in (args.thresholds, args.known_answers, args.phase2_receipt):
+        assert path.is_file()
+        assert "registry/projects/open_model_data" in path.as_posix()
+
+    with pytest.raises(FileNotFoundError):
+        factory.build_artifacts(
+            phase2_input=phase2_input,
+            phase2_receipt_path=args.phase2_receipt,
+            thresholds_path=args.thresholds,
+            known_answers_path=args.known_answers,
+            full_output_root=args.full_output_dir,
+            public_output_root=args.public_output_dir,
+            model_evidence_path=None,
+        )
 
 
 def test_known_answers_cover_all_categories_and_frozen_minima() -> None:

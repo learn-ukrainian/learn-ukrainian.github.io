@@ -81,6 +81,15 @@ def _fixture_gate(path: Path, counts: dict) -> dict:
     }
 
 
+def test_load_gate_opens_default_path():
+    document, gate_sha256 = live_gate.load_gate()
+
+    assert live_gate.DEFAULT_GATE_PATH == GATE_PATH
+    assert live_gate.DEFAULT_GATE_PATH.is_file()
+    assert gate_sha256 == live_gate.EXPECTED_GATE_SHA256
+    assert document["requested_sources"] == list(live_gate.REQUESTED_SOURCES)
+
+
 def test_tracked_gate_is_exact_and_single_use():
     document, gate_sha256 = live_gate.load_gate(GATE_PATH)
 

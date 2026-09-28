@@ -22,6 +22,32 @@ from scripts.projects.open_model_data.validate_source_records import validate_pa
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_cli_default_config_opens_registry_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    opened: list[Path] = []
+    real_read = admission._read_json
+
+    def spy(path: Path) -> dict:
+        opened.append(Path(path))
+        if Path(path) == admission.DEFAULT_CONFIG:
+            return real_read(path)
+        raise admission.AdmissionError("stop-after-config")
+
+    monkeypatch.setattr(admission, "_read_json", spy)
+    with pytest.raises(SystemExit) as caught:
+        admission.main(
+            [
+                "--manifest-output",
+                str(tmp_path / "manifest.json"),
+                "--receipt-output",
+                str(tmp_path / "receipt.json"),
+            ]
+        )
+    assert caught.value.code == 2
+    assert opened[0] == admission.DEFAULT_CONFIG
+    assert admission.DEFAULT_CONFIG.is_file()
+    assert "registry/projects/open_model_data" in admission.DEFAULT_CONFIG.as_posix()
+
+
 def _json(path: Path, value: object) -> None:
     path.write_text(admission.canonical_json(value) + "\n", encoding="utf-8")
 

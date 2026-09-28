@@ -35,9 +35,13 @@ from scripts.projects.open_model_data.model_view_exporter import (
     build_exclusion_registry,
     registry_receipt,
 )
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.validate_source_records import validate_path as validate_source_record_path
 
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
+DEFAULT_CONFIG = resolve_open_model_path(
+    "data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json"
+)
 CONFIG_SCHEMA = CONTRACTS / "corpus_admission_config_v1.schema.json"
 EVIDENCE_SCHEMA = CONTRACTS / "corpus_admission_evidence_v1.schema.json"
 OPERATOR_PACKET_SCHEMA = CONTRACTS / "corpus_admission_operator_packet_v1.schema.json"
@@ -898,7 +902,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--config",
         type=Path,
-        default=ROOT / "data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json",
+        default=DEFAULT_CONFIG,
     )
     parser.add_argument("--input-root", type=Path, default=ROOT)
     parser.add_argument("--manifest-output", type=Path, required=True)
