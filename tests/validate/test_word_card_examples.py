@@ -1,9 +1,13 @@
-"""Word-card v1 schema (#8978, round 2): the worked examples validate, their ids are reproducible,
-removing one source recomputes a field's surviving value and quality state (AC-03), and the
-resolver behaves per the contract in the cases the design review reproduced (declared doublet
-alone, doublet plus one member, worst extraction confidence, rejected-only assertion).
+"""Word-card v1 schema (#8978, round 3): the worked examples validate, their ids are reproducible,
+removing one source recomputes a field's surviving value and quality state (AC-03), the resolver
+behaves per the contract in the cases the design review reproduced (declared doublet alone, doublet
+plus one member, worst extraction confidence, rejected-only assertion, disjoint declarations, reviewed
+overlay variant), evidence is counted per proposition, assembly refuses unallocated ids, the build
+manifest hashes every input, source records have a persistent identity with an ambiguous hold, the
+card version covers admission state, and invalidation walks source -> generated assertion -> consumer.
 
-Spec: docs/atlas/word-cards/schema.md (§8 field resolution, §7.2 links, §12 suppression), worked-examples.md.
+Spec: docs/atlas/word-cards/schema.md (§8 field resolution, §7.2 links, §11 derivations, §12 suppression,
+§13 build contract), worked-examples.md.
 """
 
 from __future__ import annotations
@@ -11,6 +15,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -106,8 +111,11 @@ def test_generator_reproduces_committed_examples(gen) -> None:
         assert obj == json.loads((EXAMPLES / "companion" / f"{name}.json").read_text(encoding="utf-8")), name
 
 
-def test_source_record_keys_are_content_derived_not_row_ids() -> None:
-    """Every ULIF/VESUM entry assertion carries a durable source_record_key that is not the local row id (§12.1)."""
+def test_source_record_identity_is_persistent_not_a_row_id_or_a_content_key() -> None:
+    """Every ULIF/VESUM entry assertion carries a persistent `sr_` source_record_id allocated in the identity
+    registry, plus the strongest alias as source_record_key; neither is the local row id (§12.1)."""
+    registry = json.loads((EXAMPLES / "companion" / "identity-registry.json").read_text(encoding="utf-8"))
+    records = {r["source_record_id"]: r for r in registry["source_records"]}
     seen = 0
     for path in _example_files():
         for a in _card(path.stem)["assertions"]:
@@ -115,8 +123,11 @@ def test_source_record_keys_are_content_derived_not_row_ids() -> None:
                 continue
             if a["locator"].startswith(("ulif:entry:", "vesum:entry:")):
                 seen += 1
+                assert re.fullmatch(r"sr_[0-9a-hjkmnp-tv-z]{12}", a["source_record_id"]), a["locator"]
+                rec = records[a["source_record_id"]]
+                assert rec["source_id"] == a["source_id"]
+                assert a["source_record_key"] in {al["key"] for al in rec["aliases"]}
                 assert ":entry:" not in a["source_record_key"], a["locator"]
-                assert a["source_record_key"].startswith(a["source_id"] + ":record:")
     assert seen > 20
 
 
@@ -428,15 +439,398 @@ def test_unsplit_source_row_does_not_vote(gen) -> None:
     assert {"assertion_id": vesum[0]["assertion_id"], "reason": "mapping low"} in stress["non_voting"]
 
 
-def test_public_projection_carries_suppressed_assertions_as_tombstones(gen, validator: Draft202012Validator) -> None:
+def test_public_projection_recomputes_and_carries_suppressed_assertions_as_tombstones(
+    gen, validator: Draft202012Validator
+) -> None:
+    """The withdrawn value must be gone from the COMPLETE public output (fields, values, senses, links,
+    assertions), not only from the assertion list: the projection recomputes before it tombstones (§12.3)."""
     vriady = _card("vriady-hody-conflict")
+    assert vriady["fields"]["stress"]["state"] == "conflict"
+    before_version = vriady["build"]["card_version"]
     vriady["assertions"] = _suppress(vriady, "ukrainian_word_stress", "stress")
     public = gen.public_projection(vriady)
     stones = [a for a in public["assertions"] if a["status"] == "suppressed"]
     assert stones == [
         {"assertion_id": stones[0]["assertion_id"], "status": "suppressed", "suppression_ref": "sup-example-takedown"}
     ]
-    assert "вряди́-го́ди" not in json.dumps([a for a in public["assertions"]], ensure_ascii=False).replace(
-        "вряди́-годи́", ""
-    )
+    whole = json.dumps(public, ensure_ascii=False)
+    assert "вряди́-го́ди" not in whole.replace("вряди́-годи́", ""), "withdrawn value leaked into the public output"
+    assert stones[0]["assertion_id"] not in json.dumps(public["fields"], ensure_ascii=False)
+    stress = public["fields"]["stress"]
+    assert stress["state"] == "single-source" and [v["value_norm"] for v in stress["values"]] == ["вряди́-годи́"]
+    assert public["build"]["card_version"] != before_version, "a withdrawal is a consumer-visible change"
     assert not _errors(validator, public)
+
+
+def test_public_projection_of_an_untouched_card_is_the_card(gen) -> None:
+    castle = _card("zamok-castle")
+    public = gen.public_projection(castle)
+    assert public == castle, "recomputation is deterministic: no suppression -> identical projection and version"
+
+
+# ---------------------------------------------------------------- registry vs build (Astra r2 gap 1)
+
+
+def test_assembly_refuses_ids_the_frozen_registry_does_not_allocate(gen) -> None:
+    identity = {"confidence": "high", "method": "unique_match", "source_keys": []}
+    key = {"spelling": "x", "pos": "noun"}
+    with pytest.raises(gen.MissingAllocation):
+        gen.card("wc_zzzzzzzzzzzz", "lexeme", key, identity, [], [], [], [])
+    with pytest.raises(gen.MissingAllocation):  # an allocated card with an unallocated sense
+        gen.card(gen.VRIADY, "lexeme", key, identity, [gen.sense("ws_zzzzzzzzzzzz", 1, [])], [], [], [])
+    registry = json.loads((EXAMPLES / "companion" / "identity-registry.json").read_text(encoding="utf-8"))
+    allocated = {e["card_id"]: {s["sense_id"] for s in e["senses"]} for e in registry["entries"]}
+    for path in _example_files():
+        card = _card(path.stem)
+        assert card["card_id"] in allocated
+        assert {s["sense_id"] for s in card["senses"]} <= allocated[card["card_id"]]
+
+
+def test_build_manifest_hashes_every_input_and_covers_every_used_source(gen) -> None:
+    """S, V, I and O entries carry a 64-hex content hash; I and O hashes recompute from the committed
+    companion files; every assertion's source is read from an input that is in the manifest (§13)."""
+    inputs = _card("zamok-castle")["build"]["inputs"]
+    for group in ("S", "V", "I", "O"):
+        assert inputs[group], group
+        for name, entry in inputs[group].items():
+            assert re.fullmatch(r"[0-9a-f]{64}", entry["content_sha256"]), f"{group}.{name}"
+    for group, name, companion in (
+        ("I", "identity_registry", "identity-registry"),
+        ("O", "overlay", "overlay"),
+        ("O", "suppressions", "suppression-selectors"),
+    ):
+        committed = json.loads((EXAMPLES / "companion" / f"{companion}.json").read_text(encoding="utf-8"))
+        assert inputs[group][name]["content_sha256"] == gen.sha256_of(committed), f"{group}.{name}"
+    assert inputs["R"]["register"]["content_sha256"] == gen.REGISTER_SHA256
+    used = set()
+    for path in _example_files():
+        for a in _card(path.stem)["assertions"]:
+            used.add(a["source_id"])
+            group, name = gen.SOURCE_INPUT[a["source_id"]]
+            assert name in inputs[group], f"{a['source_id']} -> {group}.{name} missing from the manifest"
+    assert {"frazeolohichnyi", "wiktionary", "ulif", "vesum", "puls"} <= used
+
+
+# ---------------------------------------------------------------- source-record identity (Astra r2 gap 3)
+
+
+def test_legacy_record_key_collides_and_correspondence_holds_ambiguous(gen) -> None:
+    """Read-only on 2026-09-28: ULIF rows 3 and 98008 (ключ homonyms 1 and 2) have identical query, headword
+    and grammatical label, so the r2 key `query#headword#label` is shared. Correspondence through that alias
+    alone is an explicit ambiguous hold; a stronger alias (register_position) decides uniquely."""
+    rec3, rec98008 = gen.SOURCE_RECORD_BY_HEAD["ulif:entry:3"], gen.SOURCE_RECORD_BY_HEAD["ulif:entry:98008"]
+    legacy = {a["kind"]: a["key"] for a in rec3["aliases"]}["query_headword_label"]
+    assert legacy == {a["kind"]: a["key"] for a in rec98008["aliases"]}["query_headword_label"]
+    assert rec3["source_record_id"] != rec98008["source_record_id"]
+    new_snapshot = [  # a reharvest that renumbered the rows and lost the register position
+        {"locator": "ulif:entry:900001", "aliases": {"query_headword_label": legacy}},
+        {"locator": "ulif:entry:900002", "aliases": {"query_headword_label": legacy}},
+    ]
+    held = gen.correspond(rec3, new_snapshot)
+    assert held["status"] == "ambiguous" and held["candidates"] == ["ulif:entry:900001", "ulif:entry:900002"]
+    selector = {"kind": "source_record", "source_id": "ulif", "source_record_id": rec3["source_record_id"]}
+    assert gen.selector_targets(selector, held) == ["ulif:entry:900001", "ulif:entry:900002"]  # suppress all
+    with_register = [
+        dict(r, aliases={**r["aliases"], "register_position": rp})
+        for r, rp in zip(new_snapshot, ("ulif:register:3662:14", "ulif:register:3662:15"), strict=True)
+    ]
+    unique = gen.correspond(rec3, with_register)
+    assert unique == {"status": "unique", "matched_by": "register_position", "locator": "ulif:entry:900001"}
+    assert (
+        gen.correspond(rec3, [])["status"] == "missing" and gen.selector_targets(selector, {"status": "missing"}) == []
+    )
+
+
+def test_content_selector_survives_a_normaliser_change(gen) -> None:
+    vriady = _card("vriady-hody-conflict")
+    uws = next(a for a in vriady["assertions"] if a["source_id"] == "ukrainian_word_stress")
+    selector = json.loads((EXAMPLES / "companion" / "suppression-selectors.json").read_text(encoding="utf-8"))[
+        "entries"
+    ][1]["selector"]
+    assert selector["normaliser_version"] == "norm-v1" and gen.content_selector_matches(selector, uws)
+    # under a later normaliser the assertion's value_norm would change (accents dropped) ...
+    renormalised = dict(uws, value_norm=gen.normalise(uws["value"], "norm-v2-hypothetical"))
+    assert renormalised["value_norm"] != uws["value_norm"]
+    # ... and the selector still matches, because it re-normalises the raw value with its pinned version
+    assert gen.content_selector_matches(selector, renormalised)
+    assert not gen.content_selector_matches(selector, next(a for a in vriady["assertions"] if a["source_id"] == "ulif"))
+
+
+def test_suppression_schema_rejects_an_empty_fallback_and_an_unpinned_selector() -> None:
+    schema = json.loads((SCHEMAS / COMPANIONS["suppression-selectors"]).read_text(encoding="utf-8"))
+    v = Draft202012Validator(schema)
+    committed = json.loads((EXAMPLES / "companion" / "suppression-selectors.json").read_text(encoding="utf-8"))
+    assert not _errors(v, committed)
+    by_kind = {e["selector"]["kind"]: e for e in committed["entries"]}
+    bad = copy.deepcopy(committed)
+    bad["entries"] = [copy.deepcopy(by_kind["assertion_id"])]
+    bad["entries"][0]["selector"]["fallback"] = {}
+    assert _errors(v, bad), "fallback: {} must be rejected"
+    bad["entries"][0]["selector"]["fallback"] = {"kind": "assertion_content", "source_id": "kaikki"}
+    assert _errors(v, bad), "a partial fallback must be rejected"
+    bad = copy.deepcopy(committed)
+    bad["entries"] = [copy.deepcopy(by_kind["assertion_content"])]
+    del bad["entries"][0]["selector"]["normaliser_version"]
+    assert _errors(v, bad), "a content selector without normaliser_version must be rejected"
+    bad = copy.deepcopy(committed)
+    bad["entries"] = [copy.deepcopy(by_kind["source_record"])]
+    bad["entries"][0]["selector"] = {"kind": "source_record", "source_id": "ulif", "source_record_key": "ulif:record:x"}
+    assert _errors(v, bad), "a source_record selector keyed by a derived key must be rejected"
+
+
+# ---------------------------------------------------------------- per-proposition evidence (Astra r2 gap 4)
+
+
+def test_keyed_evidence_is_per_proposition_not_pooled_across_slots(gen) -> None:
+    """One evidenced slot plus one ambiguous-only slot: the evidenced slot says so, the ambiguous slot says so,
+    and the field-level summary is false (never true because another slot was evidenced)."""
+    rod = gen.A(
+        "card",
+        SUBJECT,
+        "paradigm",
+        ["родовий", "за́мку"],
+        value_norm="rod.sg=замку",
+        source="ulif",
+        snapshot=gen.ULIF_SNAP,
+        locator="ulif:x rows[1]",
+    )
+    rod_v = gen.A(
+        "card",
+        SUBJECT,
+        "paradigm",
+        {"v_rod_sg": "замку"},
+        value_norm="rod.sg=замку",
+        source="vesum",
+        snapshot=gen.VESUM_SNAP,
+        locator="vesum:x forms",
+    )
+    dav = gen.A(
+        "card",
+        SUBJECT,
+        "paradigm",
+        {"v_dav_sg": "замкові"},
+        value_norm="dav.sg=замкові",
+        source="kaikki",
+        snapshot=gen.ATLAS0_SNAP,
+        locator="atlas0:x forms",
+        mapping={"confidence": "medium", "basis": "spelling", "ambiguous": True},
+    )
+    res = gen.resolve([rod, rod_v, dav], "paradigm", SUBJECT)
+    assert res["propositions"]["rod.sg"] == {
+        "state": "verified",
+        "selected": rod["assertion_id"],
+        "mapping_evidenced": True,
+        "independence_groups_evidenced": 2,
+    }
+    assert res["propositions"]["dav.sg"]["mapping_evidenced"] is False
+    assert res["propositions"]["dav.sg"]["independence_groups_evidenced"] == 0
+    assert res["mapping_evidenced"] is False and res["independence_groups_evidenced"] == 0
+    assert {v["value_norm"]: v["mapping_evidenced"] for v in res["values"]} == {
+        "rod.sg=замку": True,
+        "dav.sg=замкові": False,
+    }
+
+
+def test_every_value_entry_carries_its_own_evidence() -> None:
+    castle, kliuch = _card("zamok-castle"), _card("kliuch-1")
+    for card in (castle, kliuch):
+        for f in list(card["fields"].values()) + [f for s in card["senses"] for f in s["fields"].values()]:
+            for v in f["values"]:
+                assert {"mapping_evidenced", "independence_groups_evidenced"} <= set(v)
+    # text class: the shown gloss is its own proposition
+    assert castle["fields"]["english_gloss"]["values"][0]["mapping_evidenced"] is True  # kaikki, basis sense
+    assert kliuch["fields"]["english_gloss"]["mapping_evidenced"] is False  # kaikki, spelling-ambiguous
+    # scalar class: ключ stress is one proposition stated by ULIF (evidenced) and kaikki (ambiguous)
+    (stress,) = kliuch["fields"]["stress"]["values"]
+    assert stress["mapping_evidenced"] is True and stress["independence_groups_evidenced"] == 1
+
+
+# ---------------------------------------------------------------- resolver: declarations and overlay (Astra r2 gap 5)
+
+
+def _declared(gen, value_norm, source, locator):
+    snap = gen.VESUM_SNAP if source == "vesum" else gen.ULIF_SNAP
+    return gen.A(
+        "card",
+        SUBJECT,
+        "stress",
+        value_norm.replace("|", "; "),
+        value_norm=value_norm,
+        source=source,
+        snapshot=snap,
+        locator=locator,
+        xconf="medium",
+    )
+
+
+def test_disjoint_or_unequal_tier1_declarations_are_a_conflict(gen) -> None:
+    a_b = _declared(gen, "а́|б", "vesum", "vesum:x comment")
+    c_d = _declared(gen, "в|г", "ulif", "ulif:x headword")
+    res = gen.resolve([a_b, c_d], "stress", SUBJECT)
+    assert res["state"] == "conflict" and res["selected"] is None
+    assert {v["value_norm"] for v in res["values"]} == {"а́|б", "в|г"}
+    a_b_c = _declared(gen, "а́|б|в", "ulif", "ulif:y headword")
+    assert gen.resolve([a_b, a_b_c], "stress", SUBJECT)["state"] == "conflict", "partial overlap is not agreement"
+    assert gen.resolve([a_b, a_b_c, _member(gen, "а́")], "stress", SUBJECT)["state"] == "conflict"
+
+
+def test_equal_tier1_declarations_corroborate_a_variant(gen) -> None:
+    a_b = _declared(gen, "а́|б", "vesum", "vesum:x comment")
+    same = _declared(gen, "а́|б", "ulif", "ulif:x headword")
+    res = gen.resolve([a_b, same, _member(gen, "а́", source="kaikki")], "stress", SUBJECT)
+    assert res["state"] == "variant" and res["independence_groups_agreeing"] == 3
+    assert len(res["selected"]) == 3
+
+
+def test_reviewed_overlay_variant_resolves_conflicting_scalars(gen) -> None:
+    """§8.2 rule 4: two disagreeing single values (or disagreeing declarations) become `variant` only through a
+    reviewed, cited language-lane overlay entry naming the members; an overlay that does not cover an observed
+    value leaves the field in conflict."""
+    ulif = _member(gen, "вряди́-годи́")
+    uws = _member(gen, "вряди́-го́ди", source="kaikki")
+    assert gen.resolve([ulif, uws], "stress", SUBJECT)["state"] == "conflict"
+    overlay = {"kind": "variant", "overlay_id": "ovl-2026-09-28-0009", "members": ["вряди́-годи́", "вряди́-го́ди"]}
+    res = gen.resolve([ulif, uws], "stress", SUBJECT, overlay=overlay)
+    assert res["state"] == "variant" and res["resolution_ref"] == "ovl-2026-09-28-0009"
+    assert sorted(res["selected"]) == sorted([ulif["assertion_id"], uws["assertion_id"]])
+    declared = [v for v in res["values"] if v.get("declared_set")]
+    assert declared == [
+        {
+            "value_norm": "вряди́-го́ди|вряди́-годи́",
+            "assertion_ids": [],
+            "independence_groups": [],
+            "mapping_evidenced": False,
+            "independence_groups_evidenced": 0,
+            "declared_set": True,
+            "declared_by": "ovl-2026-09-28-0009",
+        }
+    ]
+    narrow = {"kind": "variant", "overlay_id": "ovl-2026-09-28-0010", "members": ["вряди́-годи́", "x"]}
+    assert gen.resolve([ulif, uws], "stress", SUBJECT, overlay=narrow)["state"] == "conflict"
+    # disagreeing tier-1 declarations are resolved the same way
+    a_b, c_d = _declared(gen, "а́|б", "vesum", "vesum:x comment"), _declared(gen, "в|г", "ulif", "ulif:x headword")
+    wide = {"kind": "variant", "overlay_id": "ovl-2026-09-28-0011", "members": ["а́", "б", "в", "г"]}
+    assert gen.resolve([a_b, c_d], "stress", SUBJECT, overlay=wide)["state"] == "variant"
+
+
+def test_overlay_schema_requires_members_for_variant() -> None:
+    schema = json.loads((SCHEMAS / COMPANIONS["overlay"]).read_text(encoding="utf-8"))
+    v = Draft202012Validator(schema)
+    entry = {
+        "overlay_id": "ovl-2026-09-28-0009",
+        "kind": "variant",
+        "card_id": "wc_x2j5n8sd1vpc",
+        "field": "stress",
+        "author": "human",
+        "lane": "language",
+        "date": "2026-09-28",
+        "evidence": "…",
+        "members": ["a", "b"],
+    }
+    assert not _errors(v, {"schema_version": "1", "entries": [entry]})
+    assert _errors(v, {"schema_version": "1", "entries": [{k: x for k, x in entry.items() if k != "members"}]})
+    assert _errors(v, {"schema_version": "1", "entries": [dict(entry, members=["a"])]})
+    assert _errors(v, {"schema_version": "1", "entries": [dict(entry, lane="design")]})
+
+
+# ---------------------------------------------------------------- versions and derivations (Astra r2 gap 6)
+
+
+def test_card_version_covers_identity_and_admission_state(gen) -> None:
+    castle = _card("zamok-castle")
+    base = gen.card_version(castle)
+    assert base == castle["build"]["card_version"]
+    changed = copy.deepcopy(castle)
+    changed["identity"]["confidence"] = "unresolved"
+    assert gen.card_version(changed) != base, "identity confidence is consumer-relevant"
+    changed = copy.deepcopy(castle)
+    changed["quality"]["practice_eligibility"][0]["eligible"] = True
+    assert gen.card_version(changed) != base, "eligibility is admission state"
+    changed = copy.deepcopy(castle)
+    changed["quality"]["linguistic_review"] = {"status": "reviewed", "lane": "gemini-agy"}
+    assert gen.card_version(changed) != base, "review state is admission state"
+    changed = copy.deepcopy(castle)
+    changed["build"]["build_id"] = "another-build"
+    assert gen.card_version(changed) == base, "only the build block is outside the version"
+
+
+def test_derivation_id_includes_rules_version_and_configuration(gen) -> None:
+    inputs = {"assertion_ids": ["wa_" + "0" * 24], "card_ids": [], "card_versions": {}}
+    base = gen.derivation_id("g", "1", "rules-v1-draft", "a" * 64, inputs, "exercise", "k")
+    assert base != gen.derivation_id("g", "1", "rules-v2", "a" * 64, inputs, "exercise", "k")
+    assert base != gen.derivation_id("g", "1", "rules-v1-draft", "b" * 64, inputs, "exercise", "k")
+    assert base != gen.derivation_id("g", "1", "rules-v1-draft", "a" * 64, inputs, "exercise", "k2")
+    derivations = json.loads((EXAMPLES / "companion" / "derivations.json").read_text(encoding="utf-8"))["entries"]
+    for d in derivations:
+        assert d["derived_id"] == gen.derivation_id(
+            d["generator"],
+            d["generator_version"],
+            d["rules_version"],
+            d["configuration"]["sha256"],
+            d["inputs"],
+            d["output"]["kind"],
+            d["output"]["key"],
+        )
+
+
+def test_invalidation_walks_source_to_generated_assertion_to_consumer(gen) -> None:
+    """GRAC frequency (source) -> estimator derivation -> generated cefr assertion -> page and exercise records.
+    Suppressing the frequency assertion must reach every node, through the explicit producer link."""
+    armour = _card("bronia-armour")
+    derivations = json.loads((EXAMPLES / "companion" / "derivations.json").read_text(encoding="utf-8"))["entries"]
+    by_id = {a["assertion_id"]: a for a in armour["assertions"]}
+    freq = next(a for a in armour["assertions"] if a["field"] == "frequency")
+    cefr = next(a for a in armour["assertions"] if a["field"] == "cefr")
+    estimator = next(d for d in derivations if d["kind"] == "generated_assertion")
+    assert cefr["producer"]["derived_id"] == estimator["derived_id"]  # assertion -> producing derivation
+    assert estimator["output"] == {
+        "kind": "assertion",
+        "key": cefr["assertion_id"],
+        "content_sha256": gen.sha256_of(cefr),
+    }
+    assert estimator["inputs"]["assertion_ids"] == [freq["assertion_id"]]  # derivation -> source assertion
+    consumers = [d for d in derivations if cefr["assertion_id"] in d["inputs"]["assertion_ids"]]
+    assert {d["kind"] for d in consumers} == {"atlas_page", "exercise"}
+    suppressed, invalidated = gen.transitive_invalidation({freq["assertion_id"]}, derivations, "sup-test")
+    assert suppressed == {freq["assertion_id"], cefr["assertion_id"]}
+    assert set(invalidated) == {d["derived_id"] for d in derivations} and set(invalidated.values()) == {"sup-test"}
+    # a suppression outside the chain reaches only its direct consumer (the page reads every active assertion)
+    other = next(a["assertion_id"] for a in armour["assertions"] if a["field"] == "gender")
+    page = next(d for d in derivations if d["kind"] == "atlas_page")
+    assert gen.transitive_invalidation({other}, derivations, "sup-x") == ({other}, {page["derived_id"]: "sup-x"})
+    assert all(i in by_id for d in derivations for i in d["inputs"]["assertion_ids"])
+
+
+def test_companion_derivations_agree_with_eligibility_and_carry_real_digests() -> None:
+    derivations = json.loads((EXAMPLES / "companion" / "derivations.json").read_text(encoding="utf-8"))["entries"]
+    armour = _card("bronia-armour")
+    for d in derivations:
+        assert d["output"]["content_sha256"] != "0" * 64
+        assert d["configuration"]["sha256"] != "0" * 64
+    exercise = next(d for d in derivations if d["kind"] == "exercise")
+    stress_mode = next(e for e in armour["quality"]["practice_eligibility"] if e["mode"] == "stress")
+    assert stress_mode["eligible"] is False
+    assert exercise["status"] == "draft" and exercise["unpublished_reason"]
+    page = next(d for d in derivations if d["kind"] == "atlas_page")
+    assert page["status"] == "active" and page["inputs"]["card_versions"] == {
+        armour["card_id"]: armour["build"]["card_version"]
+    }
+
+
+# ---------------------------------------------------------------- schema contradictions named in the r2 review
+
+
+def test_review_objects_accept_approved_for_only_when_reviewed(validator: Draft202012Validator) -> None:
+    castle = _card("zamok-castle")
+    curated = next(a for a in castle["assertions"] if a["source_id"] == "atlas_curated")
+    assert curated["review"]["status"] == "reviewed"
+    ok = copy.deepcopy(castle)
+    next(a for a in ok["assertions"] if a["source_id"] == "atlas_curated")["review"]["approved_for"] = ["meaning"]
+    ok["quality"]["linguistic_review"] = {"status": "reviewed", "lane": "human", "approved_for": ["stress"]}
+    assert not _errors(validator, ok)
+    bad = copy.deepcopy(castle)
+    next(a for a in bad["assertions"] if a["source_id"] == "ulif")["review"]["approved_for"] = ["meaning"]
+    assert _errors(validator, bad), "approved_for with status none must be rejected"
+    bad = copy.deepcopy(ok)
+    next(a for a in bad["assertions"] if a["source_id"] == "atlas_curated")["review"]["approved_for"] = []
+    assert _errors(validator, bad), "an empty approved_for must be rejected"

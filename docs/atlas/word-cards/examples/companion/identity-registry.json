@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "registry_version": 1,
+  "registry_version": 2,
   "entries": [
     {
       "card_id": "wc_0a1b2c3d4e5f",
@@ -304,6 +304,557 @@
       "senses": []
     }
   ],
+  "source_records": [
+    {
+      "source_record_id": "sr_dqmsze7nh4sb",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:2795:9",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:dee17911141621fa3def7efc59930a459c9b0f4f4916241ef2d910b40b469daf",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:замок#За́мок#іменник чоловічого роду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:76791",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:2795:10",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:75145ac6e52cdf0a7ecaf07ee737c2c5b06be65f9a5a0824c6db426c832ab06f",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:замок#за́мок#іменник чоловічого роду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:76792",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_0wn9a46h365p",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:2795:11",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:89baa95b7e74f07a32005d6f8a0ce5d4d6d250656ab653decedcf7ae1d4255cd",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:замок#замо́к#",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:76793",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_pcmmgx2m5f9c",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:3662:14",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:bc9c727ed53928b9d5deb0803f77a0960b3bda0b8e081b3a80879491959ff6fa",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:ключ#ключ#іменник чоловічого роду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "note": "shared with the other ключ homonym (ULIF rows 3 and 98008): never decides alone"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:3",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_sv6z814hxhsr",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:3662:15",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:fc5fb55c292c5521ed326d6e375ae80666772d8b5e3190fbde4c904aa4262d09",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:ключ#ключ#іменник чоловічого роду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "note": "shared with the other ключ homonym (ULIF rows 3 and 98008): never decides alone"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:98008",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_egbw711c2bf4",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:730:6",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:656cdc289b9052a73f3a8f957dcb8d891ec6029e670bef8773dc60824303522b",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:броня#бро́ня#іменник жіночого роду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:29074",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_wh0d40xcw8vy",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:730:7",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:bbb7efa5f4b1cb811bc55c0a035edd86b674b1c551f0305814b80c6609c3212e",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:броня#броня́#",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:29075",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_w5bxefycrmvg",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:1544:0",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:0b5949950b192c7f3127f5d92815f34d7be1328ddfe3b034994adb7c5c06f6b3",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:вряди-годи#вряди́-годи́#прислівник",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:47595",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_z2w5sqmx80fk",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:970:9",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:a29d4abd9102baa3318d6553f2819f7d060e19498306d2aed8c9ec77dd594b58",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:вибігати#вибіга́ти#дієслово недоконаного виду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:34097",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_txcghnzr3nj5",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:970:11",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:065f29c6b17051244dab50d0b544c820f18d3c4110962ac44405e72fca0dc45c",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:вибігти#ви́бігти#дієслово доконаного виду",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:34099",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_efe42b8ah7ym",
+      "source_id": "ulif",
+      "aliases": [
+        {
+          "kind": "register_position",
+          "key": "ulif:register:6547:18",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "content",
+          "key": "ulif:content:b35e59c472664df5be07c533f0df28d4d226071abdf143d539d78c3b1982d89c",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        },
+        {
+          "kind": "query_headword_label",
+          "key": "ulif:record:повітряний##",
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+          "locator": "ulif:entry:170125",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_gjs6vztx85mn",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:Замок/noun/noun:inanim:m:v_naz:prop:geo",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:128971",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_qcwb63zan4b1",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:128972",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:128973",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_z4ha0qqt3mpk",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:ключ/noun/noun:inanim:m:v_naz",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:168409",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_my9e45as38mk",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:броня/noun/noun:inanim:f:v_naz",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:30497",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_apm7wq76484y",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:вряди-годи/adv/adv",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:67854",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_3jcc2h8099jm",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:вибігати/verb/verb:imperf:inf",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:40937",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_kk9wkr0nfxsk",
+      "source_id": "vesum",
+      "aliases": [
+        {
+          "kind": "vesum_entry_form",
+          "key": "vesum:record:вибігти/verb/verb:perf:inf",
+          "snapshot_id": "vesum@53923150073b4fc7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "vesum@53923150073b4fc7",
+          "locator": "vesum:entry:40942",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_3bzzw6z5fk2n",
+      "source_id": "puls",
+      "aliases": [
+        {
+          "kind": "table_row",
+          "key": "puls:record:замок/іменник/A2",
+          "snapshot_id": "sources.db@2026-09-28"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "sources.db@2026-09-28",
+          "locator": "sources.puls_cefr:id:4340",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_ax397gb5swcz",
+      "source_id": "puls",
+      "aliases": [
+        {
+          "kind": "table_row",
+          "key": "puls:record:ключ/іменник/A2",
+          "snapshot_id": "sources.db@2026-09-28"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "sources.db@2026-09-28",
+          "locator": "sources.puls_cefr:id:3768",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_tx40fh5as2ae",
+      "source_id": "frazeolohichnyi",
+      "aliases": [
+        {
+          "kind": "table_row",
+          "key": "frazeolohichnyi:record:будувати повітряні замки",
+          "snapshot_id": "sources.db@2026-09-28"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "sources.db@2026-09-28",
+          "locator": "sources.frazeolohichnyi:id:568",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_67sm7v0b3338",
+      "source_id": "wiktionary",
+      "aliases": [
+        {
+          "kind": "table_row",
+          "key": "wiktionary:record:броня",
+          "snapshot_id": "sources.db@2026-09-28"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "sources.db@2026-09-28",
+          "locator": "sources.wiktionary:id:11318",
+          "status": "unique",
+          "matched_by": "mint"
+        }
+      ]
+    }
+  ],
   "events": [
     {
       "event_id": "ie_0001",
@@ -327,6 +878,12 @@
         "wc_c2v8n5rt6yhq"
       ],
       "evidence": "ulif:entry:76792 родовий за́мку vs ulif:entry:76793 родовий замка́; vesum:entry:128973 xp2 vs 128972 xp1; site/src/lib/lexicon/curated-heteronyms.ts замок (за́мок castle / замо́к lock)"
+    },
+    {
+      "event_id": "ie_0003",
+      "kind": "source_record_mint",
+      "build_id": "allocate-2026-09-28-r3",
+      "evidence": "ulif register_position unique over 262,788 checked rows; content_sha256 257,539 distinct; query#headword#label collides in 4,276 groups (8,814 rows), e.g. ULIF rows 3 and 98008 ключ"
     }
   ]
 }

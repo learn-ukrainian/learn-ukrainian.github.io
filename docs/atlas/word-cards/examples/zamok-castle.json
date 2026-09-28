@@ -88,7 +88,9 @@
               "assertion_ids": [
                 "wa_fe97882f7c0840d052a95a63"
               ],
-              "independence_groups": []
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
             }
           ],
           "independence_groups_agreeing": 0,
@@ -108,7 +110,9 @@
               ],
               "independence_groups": [
                 "G-ULIF"
-              ]
+              ],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 1
             }
           ],
           "independence_groups_agreeing": 1,
@@ -140,7 +144,9 @@
               "assertion_ids": [
                 "wa_a8d8a95109e94b86fb033937"
               ],
-              "independence_groups": []
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
             }
           ],
           "independence_groups_agreeing": 0,
@@ -158,7 +164,9 @@
               "assertion_ids": [
                 "wa_5514bbbe5cd05ea322593a0a"
               ],
-              "independence_groups": []
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
             }
           ],
           "independence_groups_agreeing": 0,
@@ -197,7 +205,9 @@
               ],
               "independence_groups": [
                 "G-ULIF"
-              ]
+              ],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 1
             },
             {
               "value_norm": "[\"фортеця\", \"бастіон\", \"цитадель\", \"шато\"]",
@@ -206,7 +216,9 @@
               ],
               "independence_groups": [
                 "G-KARAVANSKY"
-              ]
+              ],
+              "mapping_evidenced": false,
+              "independence_groups_evidenced": 0
             }
           ],
           "independence_groups_agreeing": 1,
@@ -274,7 +286,9 @@
           ],
           "independence_groups": [
             "G-PULS"
-          ]
+          ],
+          "mapping_evidenced": false,
+          "independence_groups_evidenced": 0
         }
       ],
       "independence_groups_agreeing": 1,
@@ -294,7 +308,9 @@
           ],
           "independence_groups": [
             "G-WIKI"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1
         }
       ],
       "independence_groups_agreeing": 1,
@@ -317,7 +333,9 @@
           "independence_groups": [
             "G-ULIF",
             "G-VESUM"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
         }
       ],
       "independence_groups_agreeing": 2,
@@ -341,10 +359,20 @@
           "independence_groups": [
             "G-ULIF",
             "G-VESUM"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
         }
       ],
       "independence_groups_agreeing": 2,
+      "propositions": {
+        "rod.sg": {
+          "state": "verified",
+          "selected": "wa_47af2911b67d7e2cb2d9209c",
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      },
       "mapping_evidenced": true,
       "independence_groups_evidenced": 2,
       "comparison": "keyed",
@@ -363,7 +391,9 @@
           "independence_groups": [
             "G-ULIF",
             "G-VESUM"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
         }
       ],
       "independence_groups_agreeing": 2,
@@ -385,7 +415,9 @@
           "independence_groups": [
             "G-ULIF",
             "G-VESUM"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
         }
       ],
       "independence_groups_agreeing": 2,
@@ -409,7 +441,9 @@
             "G-ULIF",
             "G-VESUM",
             "G-WIKI"
-          ]
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 3
         }
       ],
       "independence_groups_agreeing": 3,
@@ -449,6 +483,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
       "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
     },
     {
@@ -480,7 +515,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_5888b96f6142b2da61ca2973",
@@ -511,7 +547,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_af42ba8e1e4cece8a46a08cd",
@@ -542,6 +579,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
       "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
     },
     {
@@ -608,6 +646,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
       "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
     },
     {
@@ -639,7 +678,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_64985b25438a5551c8f8efa4",
@@ -670,6 +710,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
       "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
     },
     {
@@ -701,7 +742,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_47af2911b67d7e2cb2d9209c",
@@ -748,7 +790,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_f94ea907ae57ba79666f24f7",
@@ -785,6 +828,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
       "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
     },
     {
@@ -816,6 +860,7 @@
       "independence_group": "G-PULS",
       "tier": 2,
       "status": "active",
+      "source_record_id": "sr_3bzzw6z5fk2n",
       "source_record_key": "puls:record:замок/іменник/A2",
       "mapping": {
         "confidence": "medium",
@@ -960,7 +1005,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     },
     {
       "assertion_id": "wa_275fd1703539997d6e631037",
@@ -1096,7 +1142,8 @@
       "independence_group": "G-ULIF",
       "tier": 1,
       "status": "active",
-      "source_record_key": "ulif:record:замок#за́мок#іменник чоловічого роду"
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
     }
   ],
   "quality": {
@@ -1138,29 +1185,84 @@
   },
   "overlay_applied": [],
   "build": {
-    "build_id": "example-2026-09-28-r2",
+    "build_id": "example-2026-09-28-r3",
     "rules_version": "rules-v1-draft",
     "inputs": {
       "S": {
-        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
-        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
-        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+        "ulif": {
+          "ref": "sources.ulif_dictua_entries + ulif_dictua_sections",
+          "content_sha256": "fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+          "note": "sorted content_sha256 of the 262,788 checked rows; sections are parsed from the same responses"
+        },
+        "puls": {
+          "ref": "sources.puls_cefr",
+          "content_sha256": "98fc5be3e986f944fcf84cad34325ecbf770d22fc2dc54caa4b548f06e7f6b5a",
+          "note": "5,939 rows, canonical-row recipe"
+        },
+        "frazeolohichnyi": {
+          "ref": "sources.frazeolohichnyi",
+          "content_sha256": "9889123be2ce073528ee038c66824ba35af118d2b702b4e8cb0723156015f108",
+          "note": "24,683 rows, canonical-row recipe"
+        },
+        "wiktionary": {
+          "ref": "sources.wiktionary",
+          "content_sha256": "ead3e1bc521293fde1cdbc3767d0131aca41e6b2e1701e93de17f919e3a89d69",
+          "note": "50,278 rows, canonical-row recipe"
+        },
+        "atlas0": {
+          "ref": "data/atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00",
+          "content_sha256": "fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca",
+          "note": "frozen file; source of the migrated kaikki, vts, slovnyk_me, synonyms_karavansky, ukrainian_word_stress, grac, grac_estimate and course_authored assertions"
+        },
+        "atlas_curated": {
+          "ref": "site/src/lib/lexicon/curated-heteronyms.ts",
+          "content_sha256": "14d56cb53fdf14dd7e8b0155a2f1770f740cff93b3e10f8f0eb5bfb67be72f99",
+          "note": "420-lemma side file (retired into the overlay at M2)"
+        }
       },
       "V": {
-        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+        "vesum": {
+          "ref": "data/vesum.db vesum_build_metadata.canonical_jsonl_sha256",
+          "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+          "note": "schema_version vesum-reingest-v1"
+        }
       },
       "I": {
-        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+        "identity_registry": {
+          "ref": "examples/companion/identity-registry.json",
+          "version": "registry_version 2",
+          "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253",
+          "note": "frozen before assembly; assembly refuses ids it does not allocate"
+        }
       },
       "O": {
-        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+        "overlay": {
+          "ref": "examples/companion/overlay.json",
+          "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a",
+          "note": "one split entry"
+        },
+        "suppressions": {
+          "ref": "examples/companion/suppression-selectors.json",
+          "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61",
+          "note": "three selectors"
+        }
       },
       "R": {
-        "rules": "rules-v1-draft",
-        "normaliser": "norm-v1",
-        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+        "rules": {
+          "ref": "resolve() in build_examples.py",
+          "version": "rules-v1-draft"
+        },
+        "normaliser": {
+          "ref": "normalise() in build_examples.py",
+          "version": "norm-v1"
+        },
+        "register": {
+          "ref": "docs/sources/permissions-register.yaml",
+          "version": "schema_version 2, register_date 2026-09-28",
+          "content_sha256": "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+        }
       }
     },
-    "card_version": "cv_ed675823ab724f3772444a5d"
+    "card_version": "cv_2d1b96ac6eef9f9b5e71f2ea"
   }
 }

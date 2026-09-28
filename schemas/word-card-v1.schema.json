@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/word-card-v1.schema.json",
   "title": "Word card v1 (#8978 / #8334)",
-  "description": "One assembled word card: an opaque stable id, senses, canonical typed links, every retained assertion with its source locator and durable source-record key, and the materialised field resolutions with their quality state. Spec: docs/atlas/word-cards/schema.md (r2). Cards are derived: atlas.db = build(S sources, V vesum, I identity registry, O overlay, R rules). Companion schemas: word-card-identity-registry-v1, word-card-overlay-v1, word-card-suppression-v1, word-card-derivation-v1.",
+  "description": "One assembled word card: an opaque stable id, senses, canonical typed links, every retained assertion with its source locator and persistent source-record identity, and the materialised field resolutions with per-proposition evidence and quality state. Spec: docs/atlas/word-cards/schema.md (r3). Cards are derived: atlas.db = build(S sources, V vesum, I frozen identity registry, O overlay, R rules); assembly never mints ids. Companion schemas: word-card-identity-registry-v1, word-card-overlay-v1, word-card-suppression-v1, word-card-derivation-v1.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -189,31 +189,7 @@
           "$ref": "#/$defs/extraction_confidence"
         },
         "linguistic_review": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status"
-          ],
-          "properties": {
-            "status": {
-              "enum": [
-                "none",
-                "sampled",
-                "reviewed",
-                "rejected"
-              ]
-            },
-            "lane": {
-              "type": "string"
-            },
-            "record": {
-              "type": "string"
-            },
-            "date": {
-              "type": "string",
-              "format": "date"
-            }
-          }
+          "$ref": "#/$defs/review"
         },
         "practice_eligibility": {
           "type": "array",
@@ -275,7 +251,7 @@
         "card_version": {
           "type": "string",
           "pattern": "^cv_[0-9a-f]{24}$",
-          "description": "sha256 of the card's public content (identity, senses, links, fields); derivations pin it."
+          "description": "sha256 over everything a consumer can read from the public card (every top-level property except `build`): identity and key, state and successors, senses, links, fields, retained assertions as projected, quality incl. eligibility and review, overlay applied. Derivations pin it (schema.md §11)."
         },
         "inputs": {
           "type": "object",
@@ -287,36 +263,41 @@
             "O",
             "R"
           ],
-          "description": "Content hashes of every build input (schema.md §13): S source snapshots, V VESUM, I identity registry, O overlay, R rules + normaliser + register content.",
+          "description": "Every build input by content hash (schema.md §13): S source snapshots, V VESUM, I the frozen identity registry, O overlay batches + suppression selectors, R rules + normaliser (versions) + register content (hash). S, V, I and O entries require a content hash; R entries require a version or a hash.",
           "properties": {
             "S": {
               "type": "object",
+              "minProperties": 1,
               "additionalProperties": {
-                "type": "string"
+                "$ref": "#/$defs/hashed_input"
               }
             },
             "V": {
               "type": "object",
+              "minProperties": 1,
               "additionalProperties": {
-                "type": "string"
+                "$ref": "#/$defs/hashed_input"
               }
             },
             "I": {
               "type": "object",
+              "minProperties": 1,
               "additionalProperties": {
-                "type": "string"
+                "$ref": "#/$defs/hashed_input"
               }
             },
             "O": {
               "type": "object",
+              "minProperties": 1,
               "additionalProperties": {
-                "type": "string"
+                "$ref": "#/$defs/hashed_input"
               }
             },
             "R": {
               "type": "object",
+              "minProperties": 1,
               "additionalProperties": {
-                "type": "string"
+                "$ref": "#/$defs/versioned_input"
               }
             }
           }
@@ -698,36 +679,16 @@
             "produced_at": {
               "type": "string",
               "format": "date-time"
+            },
+            "derived_id": {
+              "type": "string",
+              "pattern": "^wd_[0-9a-f]{24}$",
+              "description": "For generated/estimated assertions: the derivation record (word-card-derivation-v1) that produced this assertion; its inputs are the assertions read, so invalidation walks source -> generated assertion -> consumer (schema.md §11, §12.2)."
             }
           }
         },
         "review": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status"
-          ],
-          "properties": {
-            "status": {
-              "enum": [
-                "none",
-                "sampled",
-                "reviewed",
-                "rejected"
-              ]
-            },
-            "lane": {
-              "type": "string",
-              "description": "Reviewing lane (gemini-agy, gpt-codex, claude, human)."
-            },
-            "record": {
-              "type": "string"
-            },
-            "date": {
-              "type": "string",
-              "format": "date"
-            }
-          }
+          "$ref": "#/$defs/review"
         },
         "licence_ref": {
           "type": "object",
@@ -797,9 +758,121 @@
             }
           }
         },
+        "source_record_id": {
+          "type": "string",
+          "pattern": "^sr_[0-9a-hjkmnp-tv-z]{12}$",
+          "description": "Persistent identity of the source record this assertion was extracted from (schema.md §12.1; allocated in the identity registry's source_records with its aliases and per-snapshot correspondence). Suppression selectors key on it."
+        },
         "source_record_key": {
           "type": "string",
-          "description": "Durable, content-derived key of the source record (schema.md §12.1), e.g. ulif:record:замок#замо́к#, vesum:record:замок/noun/noun:inanim:m:v_naz:xp1. Never a local row id; suppression selectors and reharvest correspondence use it."
+          "description": "The strongest alias of the source record at extraction time (e.g. ulif:register:2795:11, vesum:record:замок/noun/noun:inanim:m:v_naz:xp1): matching evidence for correspondence into a new snapshot, never the identity itself and never a local row id."
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "none",
+            "sampled",
+            "reviewed",
+            "rejected"
+          ]
+        },
+        "lane": {
+          "type": "string",
+          "description": "Reviewing lane (gemini-agy, gpt-codex, claude, human)."
+        },
+        "record": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "approved_for": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Practice modes a sanctioned independent language reviewer approved this assertion for (schema.md §9.1, Q5). Keeps lineage and tier; only valid with status `reviewed`."
+        }
+      },
+      "if": {
+        "required": [
+          "approved_for"
+        ]
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "reviewed"
+          }
+        }
+      }
+    },
+    "hashed_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "content_sha256"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "versioned_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "content_sha256"
+          ]
+        },
+        {
+          "required": [
+            "version"
+          ]
+        }
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
         }
       }
     },
@@ -842,13 +915,16 @@
         },
         "values": {
           "type": "array",
+          "description": "One entry per proposition (`field = value_norm`, or `field ∈ set` for a declared set) with its own evidence: a proposition is evidenced when at least one assertion stating it maps to this card unambiguously, and corroboration among evidenced assertions is counted on that proposition alone (schema.md §8.2 rule 7).",
           "items": {
             "type": "object",
             "additionalProperties": false,
             "required": [
               "value_norm",
               "assertion_ids",
-              "independence_groups"
+              "independence_groups",
+              "mapping_evidenced",
+              "independence_groups_evidenced"
             ],
             "properties": {
               "value_norm": {
@@ -866,9 +942,71 @@
                   "type": "string"
                 }
               },
+              "mapping_evidenced": {
+                "type": "boolean"
+              },
+              "independence_groups_evidenced": {
+                "type": "integer",
+                "minimum": 0
+              },
               "declared_set": {
                 "type": "boolean",
-                "description": "This value is a doublet declared by one tier-1 source (a|b), not an observed single value."
+                "description": "This value is a doublet declared by one tier-1 source (a|b) or by a reviewed overlay `variant` entry, not an observed single value."
+              },
+              "declared_by": {
+                "type": "string",
+                "description": "overlay id when the set was declared by a reviewed language-lane `variant` entry (schema.md §8.2 rule 4)."
+              }
+            }
+          }
+        },
+        "propositions": {
+          "type": "object",
+          "description": "Keyed fields only (paradigm): the resolution per slot. An item that consumes one slot reads this slot's `mapping_evidenced` and corroboration, never the field-level summary (which is the conjunction / minimum over slots).",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "mapping_evidenced",
+              "independence_groups_evidenced"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "verified",
+                  "single-source",
+                  "variant",
+                  "conflict",
+                  "unverified",
+                  "suppressed"
+                ]
+              },
+              "selected": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/assertion_id"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/assertion_id"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mapping_evidenced": {
+                "type": "boolean"
+              },
+              "independence_groups_evidenced": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resolution_ref": {
+                "type": "string"
               }
             }
           }
@@ -899,12 +1037,12 @@
         },
         "mapping_evidenced": {
           "type": "boolean",
-          "description": "True when at least one voting assertion for the shown value maps to this card on an unambiguous basis. Eligibility rules (#8983) read this, never the bare state."
+          "description": "Field-level summary: every shown proposition is evidenced (for keyed fields: every slot). Eligibility rules (#8983) read the proposition an item consumes (values[] / propositions{}), and this summary only when the item consumes the whole field; never the bare state."
         },
         "independence_groups_evidenced": {
           "type": "integer",
           "minimum": 0,
-          "description": "Independent groups among unambiguously mapped assertions for the shown value."
+          "description": "The weakest shown proposition's count of independent groups among its unambiguously mapped assertions."
         },
         "non_voting": {
           "type": "array",

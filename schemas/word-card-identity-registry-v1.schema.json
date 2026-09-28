@@ -2,13 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/word-card-identity-registry-v1.schema.json",
   "title": "Word-card identity registry v1 (#8978 / #8334)",
-  "description": "Versioned build input I (schema.md §13): every card and sense id ever minted, its matching evidence at creation, and the lineage events (mint, split, merge, retire). The build reads ids from here and mints only for keys with no entry; ids are never reused.",
+  "description": "Frozen build input I (schema.md §5, §13): every card, sense and source-record id ever minted, its matching evidence at creation, and the lineage events (mint, split, merge, retire, source_record_mint). Allocation is a separate committed step (`allocate`); assembly (`build`) reads this registry, never writes it, and fails on any id it does not allocate; ids are never reused.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "registry_version",
     "entries",
+    "source_records",
     "events"
   ],
   "properties": {
@@ -18,12 +19,19 @@
     "registry_version": {
       "type": "integer",
       "minimum": 1,
-      "description": "Monotonic; bumped by every committed change."
+      "description": "Monotonic; bumped by every committed allocation step."
     },
     "entries": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/entry"
+      }
+    },
+    "source_records": {
+      "type": "array",
+      "description": "Persistent source-record identities (schema.md §12.1): the identity is the minted `sr_` id; the keys used to find the record again in a new snapshot are aliases with a kind and the snapshot they were observed in; correspondence per snapshot is unique, an explicit ambiguous hold, or missing.",
+      "items": {
+        "$ref": "#/$defs/source_record"
       }
     },
     "events": {
@@ -45,6 +53,141 @@
     "assertion_id": {
       "type": "string",
       "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "source_record_id": {
+      "type": "string",
+      "pattern": "^sr_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "source_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_record_id",
+        "source_id",
+        "aliases",
+        "correspondence"
+      ],
+      "properties": {
+        "source_record_id": {
+          "$ref": "#/$defs/source_record_id"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "key",
+              "snapshot_id"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "uid",
+                  "register_position",
+                  "content",
+                  "query_headword_label",
+                  "vesum_entry_form",
+                  "table_row"
+                ],
+                "description": "Tried from strongest to weakest at correspondence time: the source's own id (ULIF uid, once extracted), the ULIF register position (page:row; unique over all 262,788 checked rows on 2026-09-28), the row content digest (not unique: 257,539 distinct over 262,788), the query#headword#label key (collides in 4,276 groups / 8,814 rows; e.g. ULIF rows 3 and 98008 ключ), the VESUM lemma/pos/lemma-form-tags key, a canonical table-row key."
+              },
+              "key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "snapshot_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "correspondence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "snapshot_id",
+              "status"
+            ],
+            "properties": {
+              "snapshot_id": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "unique",
+                  "ambiguous",
+                  "missing"
+                ]
+              },
+              "locator": {
+                "type": "string"
+              },
+              "matched_by": {
+                "type": "string"
+              },
+              "candidates": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hold": {
+                "type": "string"
+              },
+              "settled_by": {
+                "type": "string",
+                "description": "overlay identity entry that settled an ambiguous hold."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "unique"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "locator"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "ambiguous"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "candidates",
+                    "hold"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
     },
     "entry": {
       "type": "object",
@@ -190,7 +333,8 @@
             "retire",
             "sense_mint",
             "sense_merge",
-            "sense_split"
+            "sense_split",
+            "source_record_mint"
           ]
         },
         "build_id": {

@@ -2,31 +2,100 @@
   "schema_version": "1",
   "entries": [
     {
-      "derived_id": "wd_0f820d5993191aeaf6d3c3dd",
+      "derived_id": "wd_896c5dfc37686d453da2f870",
+      "kind": "generated_assertion",
+      "generator": "grac_frequency_cefr_estimator",
+      "generator_version": "atlas0",
+      "rules_version": "rules-v1-draft",
+      "configuration": {
+        "ref": "atlas0 GRAC-frequency band settings (migrated; not recorded separately, pinned by the atlas0 file)",
+        "sha256": "fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca"
+      },
+      "build_id": "example-2026-09-28-r3",
+      "inputs": {
+        "assertion_ids": [
+          "wa_9583841043b5d01a4889bd57"
+        ],
+        "card_ids": [],
+        "card_versions": {}
+      },
+      "output": {
+        "kind": "assertion",
+        "key": "wa_311203c9f1e8670c3234e22a",
+        "content_sha256": "19819fb293a44d00998de514641e66652519445e2b6bfb72cc80a32c0a1c3c1d"
+      },
+      "status": "active"
+    },
+    {
+      "derived_id": "wd_76142e88d82de29f139c7e7d",
+      "kind": "atlas_page",
+      "generator": "export_runtime_shards",
+      "generator_version": "example",
+      "rules_version": "rules-v1-draft",
+      "configuration": {
+        "ref": "export_runtime_shards.py settings (example)",
+        "sha256": "ec7ae724fd94fd84fbe29fd752f5319182022f155eb6187976dc6c36b91ca28c"
+      },
+      "build_id": "example-2026-09-28-r3",
+      "inputs": {
+        "assertion_ids": [
+          "wa_16d8b8b80ac520680312e5e0",
+          "wa_30d83f9ea2eaa4614166f6b7",
+          "wa_311203c9f1e8670c3234e22a",
+          "wa_324f4d6e8ad470fbf717e223",
+          "wa_476d1f726a24ccaf196ed88a",
+          "wa_6fb83567e7dbee1f07ec2a9b",
+          "wa_9583841043b5d01a4889bd57",
+          "wa_a84cf259af9ac6c370876770",
+          "wa_f332c804697af049c31dd2fd",
+          "wa_f4319431736056a08783f509"
+        ],
+        "card_ids": [
+          "wc_v5r2b9nx3cfk"
+        ],
+        "card_versions": {
+          "wc_v5r2b9nx3cfk": "cv_bb32fe6bb6196a5c3d87a1d9"
+        }
+      },
+      "output": {
+        "kind": "atlas_page",
+        "key": "/lexicon/wc_v5r2b9nx3cfk/",
+        "content_sha256": "f827e46d41666720f960a7446e3703f1393bf54d586c0b33706d04c587a09f12"
+      },
+      "status": "active",
+      "note": "pages are produced for every card, eligible or not (thin cards are never hidden)"
+    },
+    {
+      "derived_id": "wd_7ea0651c8bfee71f360afac2",
       "kind": "exercise",
       "generator": "stress_item",
       "generator_version": "example",
       "rules_version": "rules-v1-draft",
-      "build_id": "example-2026-09-28-r2",
+      "configuration": {
+        "ref": "stress_item generator settings (example)",
+        "sha256": "85707d7fb306ce8571900f5d9bf0cf412179704d3e3f75771267cbc4d60863f9"
+      },
+      "build_id": "example-2026-09-28-r3",
       "inputs": {
         "assertion_ids": [
-          "wa_5888b96f6142b2da61ca2973",
-          "wa_af42ba8e1e4cece8a46a08cd",
-          "wa_ee4ce52d28ed6153c5214c8c"
+          "wa_16d8b8b80ac520680312e5e0",
+          "wa_311203c9f1e8670c3234e22a",
+          "wa_f332c804697af049c31dd2fd"
         ],
         "card_ids": [
-          "wc_7k3m9q2xw4pd"
+          "wc_v5r2b9nx3cfk"
         ],
         "card_versions": {
-          "wc_7k3m9q2xw4pd": "cv_ed675823ab724f3772444a5d"
+          "wc_v5r2b9nx3cfk": "cv_bb32fe6bb6196a5c3d87a1d9"
         }
       },
       "output": {
         "kind": "exercise",
-        "key": "practice/stress/wc_7k3m9q2xw4pd/1",
-        "content_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        "key": "practice/stress/wc_v5r2b9nx3cfk/1",
+        "content_sha256": "03593b40e5752d87d0ec87cba7330465b716c23088024bd902978b3adb4c5158"
       },
-      "status": "active"
+      "status": "draft",
+      "unpublished_reason": "card ineligible in mode stress (identity medium; cefr is an unevidenced estimate): the generator records what it would publish, nothing is published"
     }
   ]
 }

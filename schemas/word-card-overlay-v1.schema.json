@@ -77,6 +77,16 @@
         "assertion_id": {
           "$ref": "#/$defs/assertion_id"
         },
+        "members": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "`variant` entries: the declared set of permitted values (value_norm forms). The resolver shows `variant` only when every observed value and every tier-1 declared set lies inside it (schema.md §8.2 rule 4); a reviewed language-lane entry is the only way besides a tier-1 declaring source."
+        },
         "author": {
           "type": "string"
         },
@@ -157,6 +167,27 @@
               "field",
               "assertion_id"
             ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "variant"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "card_id",
+              "field",
+              "members"
+            ],
+            "properties": {
+              "lane": {
+                "const": "language"
+              }
+            }
           }
         }
       ]

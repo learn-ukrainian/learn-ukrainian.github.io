@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/word-card-suppression-v1.schema.json",
   "title": "Word-card suppression selectors v1 (#8978 / #8980)",
-  "description": "Persistent suppression selectors (schema.md §12.1). A selector matches on a source, a durable source-record key or assertion content, never on a local row id or a content-addressed assertion id alone, so it keeps applying across reharvest, re-normalisation, remapping and rollback.",
+  "description": "Persistent suppression selectors (schema.md §12.1). A selector matches on a source, a persistent source-record identity (found in each snapshot by correspondence; an ambiguous correspondence suppresses every candidate), or assertion content pinned to a normaliser version, never on a local row id or a content-addressed assertion id alone, so it keeps applying across reharvest, re-normalisation, remapping and rollback.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -32,6 +32,47 @@
     "assertion_id": {
       "type": "string",
       "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "source_record_id": {
+      "type": "string",
+      "pattern": "^sr_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_content_selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "source_id",
+        "field",
+        "subject_spelling",
+        "normaliser_version"
+      ],
+      "properties": {
+        "kind": {
+          "const": "assertion_content"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_spelling": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_norm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normaliser_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The normaliser version `value_norm` was written under. A build whose normaliser differs matches by re-normalising the assertion's raw value with THIS version (every version stays available in R), so the selector never silently stops matching; a selector whose match set becomes empty fails the build until it is re-pinned (schema.md §12.1)."
+        }
+      }
     },
     "entry": {
       "type": "object",
@@ -82,7 +123,8 @@
               "required": [
                 "kind",
                 "source_id",
-                "source_record_key"
+                "source_record_id",
+                "on_ambiguous"
               ],
               "properties": {
                 "kind": {
@@ -91,37 +133,22 @@
                 "source_id": {
                   "type": "string"
                 },
-                "source_record_key": {
-                  "type": "string"
+                "source_record_id": {
+                  "$ref": "#/$defs/source_record_id",
+                  "description": "Persistent record identity from the identity registry's source_records; located in every snapshot through the registry's correspondence, never by re-deriving a key."
+                },
+                "alias_at_creation": {
+                  "type": "string",
+                  "description": "The strongest alias when the selector was written (human-readable context only; matching goes through the registry)."
+                },
+                "on_ambiguous": {
+                  "const": "suppress_all_candidates",
+                  "description": "When the record's correspondence in a snapshot is an ambiguous hold, every candidate is suppressed until a language-lane overlay identity entry settles the correspondence (fail closed; historical inputs never resurrect withdrawn content)."
                 }
               }
             },
             {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "kind",
-                "source_id",
-                "field",
-                "subject_spelling"
-              ],
-              "properties": {
-                "kind": {
-                  "const": "assertion_content"
-                },
-                "source_id": {
-                  "type": "string"
-                },
-                "field": {
-                  "type": "string"
-                },
-                "subject_spelling": {
-                  "type": "string"
-                },
-                "value_norm": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/$defs/assertion_content_selector"
             },
             {
               "type": "object",
@@ -139,8 +166,8 @@
                   "$ref": "#/$defs/assertion_id"
                 },
                 "fallback": {
-                  "type": "object",
-                  "description": "An assertion_content selector applied when the id no longer exists after re-normalisation."
+                  "$ref": "#/$defs/assertion_content_selector",
+                  "description": "A complete assertion_content selector applied when the id no longer exists (re-normalisation, re-extraction). An empty or partial fallback is invalid."
                 }
               }
             }
