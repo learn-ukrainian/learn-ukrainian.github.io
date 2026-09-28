@@ -546,6 +546,13 @@ class ClassifierTests(unittest.TestCase):
                     self.assert_full(self.classify([path]), frontend="true")
         self.assert_frontend_only(self.classify(["packages/activity-kit/src/index.ts"]))
 
+    def test_practice_deck_only_runs_frontend_with_or_without_full_ci(self):
+        deck = "registry/practice/noun_mechanics_deck.json"
+        for event in ("pull_request", "merge_group"):
+            for labels in ([], ["full-ci"]):
+                with self.subTest(event=event, labels=labels):
+                    self.assert_full(self.classify([deck], event=event, labels=labels), frontend="true")
+
     def test_event_and_label_overrides(self):
         # Only pull_request and merge_group classify by changed paths (#8399);
         # every other event forces the full tier including frontend.
