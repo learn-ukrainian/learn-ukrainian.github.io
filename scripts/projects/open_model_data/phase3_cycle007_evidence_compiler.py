@@ -44,6 +44,7 @@ from urllib.parse import urlparse
 from scripts.api.occupancy_local import occupancy_marker_scope
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
 SIDECAR_SCHEMA_VERSION = "phase3_cycle007_evidence_sidecar_v1"
@@ -67,6 +68,7 @@ def _russian_shadow_source_version(check_ru_morph_path: Path = DEFAULT_CHECK_RU_
     per process, not once per row.
     """
     return contract.sha256_file(check_ru_morph_path)
+
 
 ANTONENKO_SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
 
@@ -501,12 +503,8 @@ _SUCCESS_ENVELOPES_BY_TOOL: dict[str, re.Pattern[str]] = {
     "search_ua_gec_errors": re.compile(
         r'^Found (?P<count>[1-9][0-9]*) human-annotated error pairs for: "(?P<query>.+)"$'
     ),
-    "search_heritage": re.compile(
-        r'^Found (?P<count>[1-9][0-9]*) heritage evidence row\(s\) for: "(?P<query>.+)"$'
-    ),
-    "search_slovnyk_me": re.compile(
-        r'^Found (?P<count>[1-9][0-9]*) slovnyk\.me result\(s\) for: "(?P<query>.+)"$'
-    ),
+    "search_heritage": re.compile(r'^Found (?P<count>[1-9][0-9]*) heritage evidence row\(s\) for: "(?P<query>.+)"$'),
+    "search_slovnyk_me": re.compile(r'^Found (?P<count>[1-9][0-9]*) slovnyk\.me result\(s\) for: "(?P<query>.+)"$'),
     "query_pravopys": re.compile(r"^\*\*Pravopys section [1-9][0-9]*\*\*$"),
 }
 
@@ -769,9 +767,7 @@ class LocalMcpSourcesClient:
         """Return a text-free commitment to the actual ordered MCP calls."""
         return {
             "schema_version": "phase3_cycle007_mcp_transport_attestation_v1",
-            "transport": (
-                "streamable_http" if isinstance(self._transport, RealMcpToolTransport) else "synthetic"
-            ),
+            "transport": ("streamable_http" if isinstance(self._transport, RealMcpToolTransport) else "synthetic"),
             "endpoint_sha256": contract.sha256_text(self._endpoint_url),
             "required_tool_set_sha256": contract.sha256_value(sorted(REQUIRED_TOOL_NAMES)),
             "tool_call_count": self._tool_call_count,
@@ -798,7 +794,12 @@ class LocalMcpSourcesClient:
             raise LocalMcpSourcesClientError("malformed_response:verify_words")
         header = _VERIFY_WORDS_HEADER_RE.fullmatch(lines[0])
         summary = _VERIFY_WORDS_SUMMARY_RE.fullmatch(lines[1])
-        if header is None or summary is None or int(header["count"]) != len(words) or int(summary["count"]) != len(words):
+        if (
+            header is None
+            or summary is None
+            or int(header["count"]) != len(words)
+            or int(summary["count"]) != len(words)
+        ):
             raise LocalMcpSourcesClientError("malformed_response:verify_words")
         found_words: set[str] = set()
         for expected_word, line in zip(words, lines[2:], strict=True):
@@ -1089,7 +1090,9 @@ def bind_phenomenon_scoped_evidence(
     table) but gets a fresh, phenomenon-bound ``evidence_id`` since
     ``phenomenon_id`` is part of the identity hash.
     """
-    contract.require(phenomenon_id in contract.RESIDUAL_PHENOMENON_TAXONOMY, f"unknown phenomenon_id: {phenomenon_id!r}")
+    contract.require(
+        phenomenon_id in contract.RESIDUAL_PHENOMENON_TAXONOMY, f"unknown phenomenon_id: {phenomenon_id!r}"
+    )
     bound: list[dict[str, Any]] = []
     for record in row_level_records:
         if record["channel"] not in _PHENOMENON_SCOPABLE_CHANNELS:
@@ -1404,18 +1407,14 @@ PRAVOPYS_2026_PDF_SHA256 = "e593956bfba6737d991a76fa86970db9c10a5cd7fd8895bae67f
 PRAVOPYS_2019_PDF_SHA256 = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
 PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256 = "5da6f60e1cf5527fd98e44b4396472d871d359cd6b9dc76e3806c73a15c2b827"
 PRAVOPYS_2026_DECISION_LOCATOR = (
-    "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/"
-    "rishennia-47-vid-1-bereznia"
+    "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/rishennia-47-vid-1-bereznia"
 )
 PRAVOPYS_2026_DOWNLOAD_LOCATOR = (
-    "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/"
-    "sdm-ukrayinskii-pravopis-vidannia.pdf"
+    "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/sdm-ukrayinskii-pravopis-vidannia.pdf"
 )
-PRAVOPYS_2019_DOWNLOAD_LOCATOR = (
-    "https://mon.gov.ua/storage/app/media/zagalna%20serednya/05062019-onovl-pravo.pdf"
-)
-DEFAULT_PRAVOPYS_CONTEXT_RECEIPT = (
-    ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
+PRAVOPYS_2019_DOWNLOAD_LOCATOR = "https://mon.gov.ua/storage/app/media/zagalna%20serednya/05062019-onovl-pravo.pdf"
+DEFAULT_PRAVOPYS_CONTEXT_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
 )
 
 # The one frozen family/source provenance value (phase3_source_universe.py
@@ -2475,21 +2474,22 @@ def _validate_cycle007_materialization(
     )
     contract.require(custody.get("packet_size") == materializer.PACKET_SIZE, "custody_binding_drift")
     contract.require(
-        all(custody.get(field) is False for field in (
-            "provider_artifacts_copied",
-            "labels_copied",
-            "responses_copied",
-            "prompts_generated",
-            "evidence_sidecars_generated",
-        )),
+        all(
+            custody.get(field) is False
+            for field in (
+                "provider_artifacts_copied",
+                "labels_copied",
+                "responses_copied",
+                "prompts_generated",
+                "evidence_sidecars_generated",
+            )
+        ),
         "custody_binding_drift",
     )
 
     source_manifest_raw = materializer._read_regular(source_manifest_path, "source_binding_drift")
     expected_source_manifest_sha256 = (
-        materializer.digest(source_manifest_raw)
-        if fixture
-        else materializer.SOURCE_MANIFEST_SHA256
+        materializer.digest(source_manifest_raw) if fixture else materializer.SOURCE_MANIFEST_SHA256
     )
     contract.require(
         materializer.digest(source_manifest_raw) == expected_source_manifest_sha256
@@ -2505,15 +2505,12 @@ def _validate_cycle007_materialization(
         "source_binding_drift",
     )
     source_records = materializer._expected_order(source_manifest, fixture)
-    source_records_by_key = {
-        (record["lane"], record["packet_index"]): record for record in source_records
-    }
+    source_records_by_key = {(record["lane"], record["packet_index"]): record for record in source_records}
     if not fixture:
         contract.require(
             custody.get("source_custody_receipt_raw_sha256") == materializer.SOURCE_CUSTODY_SHA256
             and custody.get("source_label_manifest_raw_sha256") == materializer.SOURCE_MANIFEST_SHA256
-            and custody.get("amendment_reference")
-            == "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
+            and custody.get("amendment_reference") == "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
             "custody_binding_drift",
         )
 
@@ -2606,9 +2603,7 @@ def _validate_cycle007_materialization(
         for reconstructed_row in reconstructed_source_packet["rows"]:
             if "evaluation_cycle_id" in reconstructed_row:
                 reconstructed_row["evaluation_cycle_id"] = materializer.CYCLE005
-        source_digest_candidates = {
-            materializer.digest(materializer.canonical(reconstructed_source_packet))
-        }
+        source_digest_candidates = {materializer.digest(materializer.canonical(reconstructed_source_packet))}
         legacy_source_packet = copy.deepcopy(reconstructed_source_packet)
         for legacy_row in legacy_source_packet["rows"]:
             legacy_row.pop("source_text_sha256", None)
@@ -2635,9 +2630,7 @@ def _validate_cycle007_materialization(
             unit_id = row.get("unit_id")
             unit_sha256 = row.get("unit_sha256")
             contract.require(
-                isinstance(unit_id, str)
-                and bool(unit_id)
-                and _is_sha256(unit_sha256),
+                isinstance(unit_id, str) and bool(unit_id) and _is_sha256(unit_sha256),
                 "packet_binding_drift",
             )
             identity = (unit_id, unit_sha256)
@@ -2667,8 +2660,7 @@ def _validate_cycle007_materialization(
     contract.require(all(next_index[lane] > 1 for lane in materializer.LANE_ORDER), "packet_order_failure")
     if not fixture:
         contract.require(
-            {lane: next_index[lane] - 1 for lane in materializer.LANE_ORDER}
-            == materializer.REAL_PACKET_COUNTS,
+            {lane: next_index[lane] - 1 for lane in materializer.LANE_ORDER} == materializer.REAL_PACKET_COUNTS,
             "packet_order_failure",
         )
         contract.require(
@@ -2739,12 +2731,9 @@ def compile_cycle007_package(
     denominator; a smaller synthetic run requires ``fixture=True``.
     """
     if not fixture and (
-        not isinstance(client, LocalMcpSourcesClient)
-        or not isinstance(client._transport, RealMcpToolTransport)
+        not isinstance(client, LocalMcpSourcesClient) or not isinstance(client._transport, RealMcpToolTransport)
     ):
-        raise contract.EvidenceContractError(
-            "real package compile requires the reviewed streamable-HTTP MCP transport"
-        )
+        raise contract.EvidenceContractError("real package compile requires the reviewed streamable-HTTP MCP transport")
 
     packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
         package_dir,

@@ -10,18 +10,13 @@ import pytest
 from scripts.projects.open_model_data import (
     inventory_existing_assets as inventory,
 )
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = (
-    ROOT
-    / "tests/fixtures/open_model_data/existing_asset_inventory_records.json"
-)
-SCHEMA = (
-    ROOT
-    / "data/projects/open_model_data/inventory/existing_asset_inventory_v1.schema.json"
-)
+FIXTURE = ROOT / "tests/fixtures/open_model_data/existing_asset_inventory_records.json"
+SCHEMA = resolve_open_model_path("data/projects/open_model_data/inventory/existing_asset_inventory_v1.schema.json")
 
 
 def test_fixture_records_validate_and_keep_admission_closed() -> None:
@@ -30,10 +25,7 @@ def test_fixture_records_validate_and_keep_admission_closed() -> None:
 
     inventory.validate_records(records, schema)
 
-    assert all(
-        record["eligibility"]["potential_training_admission"] is False
-        for record in records
-    )
+    assert all(record["eligibility"]["potential_training_admission"] is False for record in records)
 
 
 def test_fixture_mode_is_byte_stable(tmp_path: Path) -> None:
@@ -83,9 +75,7 @@ def test_overlap_views_are_excluded_from_distinct_totals() -> None:
         repo_head="2" * 40,
     )
 
-    human = summary["distinct_content_totals"]["by_origin_class"][
-        "human_authored_source"
-    ]
+    human = summary["distinct_content_totals"]["by_origin_class"]["human_authored_source"]
     assert human["lexical_words"] == 5
     assert human["content_units_by_unit_label"] == {"database_rows": 2}
 
@@ -102,10 +92,8 @@ def test_validation_rejects_training_admission_and_personal_paths() -> None:
 
 
 def test_committed_summary_matches_ledger_hash() -> None:
-    ledger = ROOT / "data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl"
-    summary_path = (
-        ROOT / "data/projects/open_model_data/inventory/aggregate_summary_v1.json"
-    )
+    ledger = resolve_open_model_path("data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl")
+    summary_path = resolve_open_model_path("data/projects/open_model_data/inventory/aggregate_summary_v1.json")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
 
     assert summary["ledger_sha256"] == inventory.sha256_file(ledger)

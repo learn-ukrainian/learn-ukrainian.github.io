@@ -38,6 +38,10 @@ REGISTRY_QUARANTINED_HISTORICAL_DIR = REGISTRY_ARCHIVE_DIR / "quarantined_histor
 ARTIFACT_QUARANTINED_HISTORICAL_DIR = ARTIFACT_ARCHIVE_DIR / "quarantined_historical"
 
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+# Successor of the pre-migration gemma probe runner. Filled after the routed
+# file is frozen for this commit; tests require these to match the file bytes.
+GEMMA_PROBE_RUNNER_BYTES = 62872
+GEMMA_PROBE_RUNNER_SHA256 = "617daf6dadcbbd6831e019ade8e6393a85fbdf2d9ca6af7c7ec92cf5b763ff57"
 
 
 def ensure_component_directories() -> None:

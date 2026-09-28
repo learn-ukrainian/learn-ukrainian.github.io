@@ -12,10 +12,17 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data import v4_provenance_restoration as restoration
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[1]
-RESTORATION_CONFIG = ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
-RESTORATION_CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
+
+
+def _open_model(relative: str, root: Path | None = None) -> Path:
+    return resolve_open_model_path(f"data/projects/open_model_data/{relative}", repo=root)
+
+
+RESTORATION_CONFIG = _open_model("provenance/v4_provenance_restoration_config_v1.json")
+RESTORATION_CONTRACT = _open_model("contracts/v4_provenance_restoration_v1.schema.json")
 EXCLUDED = (
     "anna-ohoiko-1000-words-2nd-ed",
     "anna-ohoiko-500-verbs",
@@ -38,8 +45,28 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
         connection.executemany(
             "INSERT INTO literary_texts (source_file, work_id, source_url, title, author, year, genre, language_period, text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("lit", "book", "https://example.test/book.pdf#page=1", "Book", "Author", 1900, "poetry", "modern", "LITERARY SECRET"),
-                ("lit", "book", "https://example.test/book.pdf#page=2", "Book", "Author", 1900, "poetry", "modern", "LITERARY SECRET"),
+                (
+                    "lit",
+                    "book",
+                    "https://example.test/book.pdf#page=1",
+                    "Book",
+                    "Author",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
+                (
+                    "lit",
+                    "book",
+                    "https://example.test/book.pdf#page=2",
+                    "Book",
+                    "Author",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
             ],
         )
         connection.execute(
@@ -76,9 +103,7 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
             "INSERT INTO wikipedia VALUES (?, ?, ?, ?)",
             ("2026-01-01T00:00:00Z", "Page", "https://uk.wikipedia.org/wiki/Page", "WIKI SECRET"),
         )
-    config = json.loads(
-        (ROOT / "data/projects/open_model_data/evidence/source_work_locator_config_v1.json").read_text()
-    )
+    config = json.loads(_open_model("evidence/source_work_locator_config_v1.json").read_text())
     config_path = tmp_path / "config.json"
     config_path.write_text(json.dumps(config), encoding="utf-8")
     return config_path, tmp_path
@@ -93,9 +118,7 @@ def _build(tmp_path: Path) -> tuple[Path, list[dict]]:
 
 def test_config_is_valid_under_embedded_schema(tmp_path: Path) -> None:
     config, _root = _fixture(tmp_path)
-    schema = json.loads(
-        (ROOT / "data/projects/open_model_data/contracts/source_work_locator_v1.schema.json").read_text()
-    )
+    schema = json.loads(_open_model("contracts/source_work_locator_v1.schema.json").read_text())
     Draft202012Validator({"$ref": "#/$defs/config", "$defs": schema["$defs"]}).validate(json.loads(config.read_text()))
 
 
@@ -201,7 +224,16 @@ def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> No
 
 @pytest.mark.parametrize(
     "mutation",
-    ["row_length", "family_index", "source_values", "publication_index", "malformed", "unterminated", "nul", "non_utf8"],
+    [
+        "row_length",
+        "family_index",
+        "source_values",
+        "publication_index",
+        "malformed",
+        "unterminated",
+        "nul",
+        "non_utf8",
+    ],
 )
 def test_compact_row_tampering_fails_closed(tmp_path: Path, mutation: str) -> None:
     config, root = _fixture(tmp_path)
@@ -389,9 +421,7 @@ def test_invalid_row_unknown_field_is_rejected_by_contract(tmp_path: Path) -> No
     _output, rows = _build(tmp_path)
     row = dict(rows[0])
     row["text"] = "forbidden"
-    schema = json.loads(
-        (ROOT / "data/projects/open_model_data/contracts/source_work_locator_v1.schema.json").read_text()
-    )
+    schema = json.loads(_open_model("contracts/source_work_locator_v1.schema.json").read_text())
     assert list(Draft202012Validator(schema).iter_errors(row))
 
 
@@ -411,10 +441,10 @@ def test_atomic_publication_failure_preserves_prior_index(tmp_path: Path, monkey
 
 
 def _write_restoration_inputs(root: Path, snapshot: Path) -> None:
-    evidence = root / "data/projects/open_model_data/evidence"
-    evidence.mkdir(parents=True, exist_ok=True)
-    (evidence / "source_work_locator_index_v1.compact.jsonl").write_bytes(snapshot.read_bytes())
-    inventory = root / "data/projects/open_model_data/inventory"
+    evidence = _open_model("evidence/source_work_locator_index_v1.compact.jsonl", root)
+    evidence.parent.mkdir(parents=True, exist_ok=True)
+    evidence.write_bytes(snapshot.read_bytes())
+    inventory = _open_model("inventory/recovery_ledger_v1.jsonl", root).parent
     inventory.mkdir(parents=True, exist_ok=True)
     records = [
         {"asset_id": "drive.literary_raw_reconciliation", "details": {"database_only": [], "raw_only": []}},
@@ -436,7 +466,7 @@ def _restore(tmp_path: Path) -> tuple[list[dict], Path]:
     locators.build(config_path=config, input_root=root, output=snapshot)
     _write_restoration_inputs(root, snapshot)
     restoration.build(config_path=RESTORATION_CONFIG, input_root=root, output_root=root)
-    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
+    index = _open_model("provenance/v4_provenance_restoration_index_v1.jsonl", root)
     lines = index.read_text(encoding="utf-8").splitlines()
     return [json.loads(line) for line in lines[1:]], index
 
@@ -449,11 +479,7 @@ def test_restoration_rows_pass_schema_and_retain_stable_ids(tmp_path: Path) -> N
     _output, snapshot_rows = _build(tmp_path / "snapshot-source")
     snapshot_by_locator = {row["locator_id"]: row for row in snapshot_rows}
     restored = {row["locator_id"]: row for row in rows}
-    expected = {
-        row["locator_id"]
-        for row in snapshot_rows
-        if row["source_family"] in ("literary", "public_textbooks")
-    }
+    expected = {row["locator_id"] for row in snapshot_rows if row["source_family"] in ("literary", "public_textbooks")}
     assert set(restored) == expected
     for locator_id, row in restored.items():
         source = snapshot_by_locator[locator_id]
