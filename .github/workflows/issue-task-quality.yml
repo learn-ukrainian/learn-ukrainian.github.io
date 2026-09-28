@@ -10,11 +10,15 @@ concurrency:
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   comment:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Job-scoped (zizmor excessive-permissions): only this job comments on issues.
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

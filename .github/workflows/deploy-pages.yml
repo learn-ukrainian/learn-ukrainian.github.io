@@ -26,6 +26,7 @@ jobs:
     name: Determine automatic deployment eligibility
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       deploy: ${{ steps.classify.outputs.deploy }}
     steps:
@@ -126,6 +127,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: ./site

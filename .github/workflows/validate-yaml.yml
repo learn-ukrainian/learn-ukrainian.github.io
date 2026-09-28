@@ -23,10 +23,15 @@ on:
       - 'scripts/validate/**/*.py'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   validate-activities:
     name: Activities & Vocab
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       actions: write
@@ -120,6 +125,7 @@ jobs:
   validate-plans:
     name: Curriculum Plans
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       actions: write
@@ -258,6 +264,7 @@ jobs:
   schema-check:
     name: Schema JSON Syntax
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
