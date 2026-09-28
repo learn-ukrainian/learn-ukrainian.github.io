@@ -1661,8 +1661,8 @@ def _review_result_text(content: list[TextContent]) -> str:
     return "\n".join(block.text for block in content) if content else ""
 
 
-def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextContent]:
-    line = f"receipt: {receipt_id}"
+def _with_receipt(content: list[TextContent], receipt_id: str, outcome: str | None = None) -> list[TextContent]:
+    line = f"receipt: {receipt_id}" if outcome is None else f"receipt: {receipt_id} (outcome: {outcome})"
     if not content:
         return [TextContent(type="text", text=line)]
     updated = list(content)
@@ -1674,28 +1674,38 @@ def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextConte
 
 def _review_record(
     recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
-) -> tuple[list[TextContent], bool, str | None]:
-    """Append the full tool result and return (content, recording_error, receipt_id).
+) -> tuple[list[TextContent], bool, str | None, str | None]:
+    """Append the full tool result and return (content, recording_error, receipt_id, outcome).
 
-    ``receipt_id`` is None exactly when recording failed.
+    ``receipt_id`` is None exactly when recording failed. ``outcome`` is the
+    search-outcome name the validator accepts for the stored record; the facts
+    are classified once, stored, and mapped to that name, so the seat copies
+    it instead of deriving it. None when no outcome name applies (refused call).
     """
     from scripts.review.receipts.ledger import freeze_arguments
+    from scripts.review.receipts.outcomes import classify_outcome, search_outcome
 
     try:
+        result_text = _review_result_text(content)
+        facts = classify_outcome(name, status, result_text)
         receipt_id = recorder.record(
             tool=name,
             arguments=freeze_arguments(arguments),
             status=status,
-            result=_review_result_text(content),
+            result=result_text,
             server_version=_review_server_version(),
+            outcome_facts=facts,
         )
+        outcome = search_outcome(status, facts)
     except Exception as exc:
-        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True, None
-    return _with_receipt(content, receipt_id), False, receipt_id
+        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True, None, None
+    return _with_receipt(content, receipt_id, outcome), False, receipt_id, outcome
 
 
-def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str | None) -> dict[str, Any] | None:
-    """Copy the typed outcome with a top-level ``receipt`` so the structured channel carries it.
+def _outcome_with_receipt(
+    typed_outcome: dict[str, Any] | None, receipt_id: str | None, outcome: str | None = None
+) -> dict[str, Any] | None:
+    """Copy the typed outcome with a top-level ``receipt`` (and ``receipt_outcome``) so the structured channel carries them.
 
     MCP clients present ``structuredContent`` to the model when it is set, so
     the text-only ``receipt:`` line would never reach the seat. The recorded
@@ -1703,7 +1713,10 @@ def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str 
     """
     if typed_outcome is None or not isinstance(typed_outcome, dict) or receipt_id is None:
         return typed_outcome
-    return {**typed_outcome, "receipt": receipt_id}
+    carried = {"receipt": receipt_id}
+    if outcome is not None:
+        carried["receipt_outcome"] = outcome
+    return {**typed_outcome, **carried}
 
 
 def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool] | None:
@@ -1717,7 +1730,7 @@ def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) 
         return [TextContent(type="text", text=text)], True
     if name not in REVIEW_TOOLS:
         text = f"Tool {name} is not in the review tool list."
-        content, _rec_err, _receipt = _review_record(
+        content, _rec_err, _receipt, _outcome = _review_record(
             recorder, name, arguments, [TextContent(type="text", text=text)], status="refused"
         )
         return content, True
@@ -1815,17 +1828,21 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
         if recorder is not None and recorder.mode == "on":
-            result, rec_err, receipt_id = _review_record(recorder, name, review_arguments, result, status="ok")
+            result, rec_err, receipt_id, receipt_outcome = _review_record(
+                recorder, name, review_arguments, result, status="ok"
+            )
             if rec_err:
                 return result, True, None
-            typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id)
+            typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id, receipt_outcome)
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
-            content, _rec_err, _receipt = _review_record(recorder, name, review_arguments, content, status="error")
+            content, _rec_err, _receipt, _outcome = _review_record(
+                recorder, name, review_arguments, content, status="error"
+            )
         return content, True, None
 
 

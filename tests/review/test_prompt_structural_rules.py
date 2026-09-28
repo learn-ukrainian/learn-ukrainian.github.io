@@ -65,7 +65,10 @@ RULES: dict[str, tuple[str, dict[str, str]]] = {
     codes.EVIDENCE_BRANCH_COUNT: ("exactly one evidence branch", _everywhere(_EVIDENCE)),
     codes.UNSUPPORTED_SEVERITY_ABOVE_MINOR: ("has severity MINOR", _everywhere(_EVIDENCE)),
     codes.UNSUPPORTED_WITHOUT_SEARCHES: ("lists at least one search", _everywhere(_EVIDENCE)),
-    codes.OUTCOME_NOT_IN_LEDGER: ("what the stored status and result of its receipt show", _everywhere(_EVIDENCE)),
+    codes.OUTCOME_NOT_IN_LEDGER: (
+        "Each search `outcome` is the value printed beside its receipt",
+        _everywhere(_EVIDENCE),
+    ),
     codes.RECEIPT_NOT_IN_LEDGER: ("Every receipt a finding cites", _everywhere(_RESOLVE)),
     codes.EVIDENCE_RECEIPT_INVALID: (
         "has `status: ok` and comes from a tool in the review tool list",
