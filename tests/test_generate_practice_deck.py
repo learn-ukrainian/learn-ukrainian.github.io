@@ -28,6 +28,7 @@ from scripts.audit.generate_practice_deck import (
     _cloze_blank_context_agrees,
     _declension_category,
     _eligible_decoys,
+    _emitted_lemma_ids,
     _heritage_availability_level,
     _meaning_mc_eligible,
     _option_strategy_for_level,
@@ -62,6 +63,7 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_pair,
     validate_synonym_item,
     write_aspect_residual_report,
+    write_pos_residual_report,
     write_shards,
 )
 
@@ -1046,6 +1048,29 @@ def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path)
     }
 
 
+def test_pos_residual_filter_reads_emitted_lexemes_not_an_items_field() -> None:
+    """The shard payload stores `lexemes`, so an `items` lookup falsely reports zero residuals."""
+    shards = {"A2": {"lexemes": {"lexemes": [{"lemmaId": "святий"}, {"lemmaId": "вчений"}]}}}
+
+    assert _emitted_lemma_ids(shards) == {"святий", "вчений"}
+
+
+def test_write_pos_residual_report_names_morphology_mismatch(tmp_path: Path) -> None:
+    report = tmp_path / "pos-residuals.json"
+
+    write_pos_residual_report(
+        report,
+        [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
+    )
+
+    assert json.loads(report.read_text(encoding="utf-8")) == {
+        "schema": "atlas-practice-pos-residuals-v1",
+        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
+        "count": 1,
+        "lexemes": [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
+    }
+
+
 def test_vesum_aspect_lookup_drops_biaspectual_combined_tag() -> None:
     verifier = JsonVesumVerifier(
         {
@@ -1171,8 +1196,8 @@ def test_a2_classify_items_do_not_raise_english_labels() -> None:
     assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
-def test_classify_pos_set_keys_only_the_displayed_reading_of_a_multi_pos_lemma() -> None:
-    """#8729: VESUM also knows «проте» as an adverb, but the card shows the conjunction."""
+def test_classify_withholds_pos_when_enrichment_analysis_disagrees_with_displayed_reading() -> None:
+    """#8729: VESUM knows both readings of «проте»; morphology selects the other one."""
     entry = {
         "lemma": "проте",
         "pos": "conjunction",
@@ -1192,11 +1217,7 @@ def test_classify_pos_set_keys_only_the_displayed_reading_of_a_multi_pos_lemma()
         entry, lexeme, vesum_evidence=VesumLemmaEvidence(frozenset({"adverb", "conjunction"}))
     )
 
-    pos_sets = [item for item in classify[0]["sets"] if item["setId"] == "pos"]
-    assert len(pos_sets) == 1
-    assert pos_sets[0]["answer"] == "conjunction"
-    assert "answers" not in pos_sets[0]
-    assert pos_sets[0]["answerLabelUk"] == "сполучник"
+    assert classify == []
 
 
 def test_classify_emits_every_attested_reading_the_displayed_pos_names() -> None:

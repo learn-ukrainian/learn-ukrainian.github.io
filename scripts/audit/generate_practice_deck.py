@@ -2694,6 +2694,7 @@ def _build_classify_items(
     vesum_aspect: str | None = None,
     vesum_evidence: VesumLemmaEvidence | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Grammar sets for the sense the learner sees (#8729).
 
@@ -2706,7 +2707,8 @@ def _build_classify_items(
     ``pos`` alone can name the wrong reading («неминуче» filed as a noun,
     glossed «inevitably»), so a grammar key also needs the enrichment analysis
     to be of the displayed reading and to agree with VESUM.  The POS set keys
-    the displayed readings VESUM attests.  No reliable key means no set; an
+    the displayed readings VESUM attests only when the enrichment analysis
+    agrees with a displayed reading.  No reliable key means no set; an
     item with no sets is withheld.
     """
     if not _normalize_cefr(lexeme.get("cefr")):
@@ -2725,15 +2727,27 @@ def _build_classify_items(
                     "reason": "missing_morphology",
                 }
             )
+        if pos_residuals is not None and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+            pos_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": "missing_morphology",
+                }
+            )
         return []
     evidence = vesum_evidence or VesumLemmaEvidence()
     labels = _morph_labels(morphology)
     pos_buckets = [bucket for bucket in displayed_pos if bucket in evidence.pos]
+    # The enrichment POS must be explicit: falling back to entry.pos would
+    # merely repeat the displayed claim instead of checking its analysis.
+    morph_pos = next(iter(_normalize_pos_buckets(morphology.get("pos"))), "")
+    pos_reading_matches = morph_pos in pos_buckets or (morph_pos == "noun" and "pronoun" in pos_buckets)
     # Gender and aspect belong to one reading: a display naming several
     # («adverb, preposition») has none to key.
     reading = pos_buckets[0] if len(displayed_pos) == 1 and pos_buckets else ""
     # VESUM files personal pronouns as nouns, so a noun analysis is the pronoun's own.
-    morph_pos = _morph_pos(entry, morphology)
     if morph_pos != reading and not (reading == "pronoun" and morph_pos == "noun"):
         reading = ""
     sets: list[dict[str, Any]] = []
@@ -2774,9 +2788,19 @@ def _build_classify_items(
             }
         )
     if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
-        pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
-        if pos_set:
-            sets.append(pos_set)
+        if pos_reading_matches:
+            pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
+            if pos_set:
+                sets.append(pos_set)
+        elif pos_residuals is not None:
+            pos_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": "morphology_pos_mismatch" if pos_buckets else "vesum_displayed_pos_unattested",
+                }
+            )
     if not sets:
         return []
     item: dict[str, Any] = {
@@ -5226,6 +5250,7 @@ def build_practice_shards(
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
@@ -5372,6 +5397,7 @@ def build_practice_shards(
             vesum_aspect=vesum_aspects.get(lexeme["lemmaPlain"]),
             vesum_evidence=vesum_evidence.get(lexeme["lemmaPlain"]),
             aspect_residuals=aspect_residuals,
+            pos_residuals=pos_residuals,
         )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         paradigm_items = _build_paradigm_items(lexeme)
@@ -6831,6 +6857,28 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
     path.write_bytes(_json_bytes(payload))
 
 
+def write_pos_residual_report(path: Path, residuals: list[dict[str, str]]) -> None:
+    """Write named source-gate reasons for withheld A2--C1 POS cards."""
+    payload = {
+        "schema": "atlas-practice-pos-residuals-v1",
+        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
+        "count": len(residuals),
+        "lexemes": sorted(residuals, key=lambda row: (row["cefr"], row["lemmaId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
+def _emitted_lemma_ids(shards: dict[str, dict[str, dict[str, Any]]]) -> set[str]:
+    """Return IDs from the lexeme shard after size budgets are applied."""
+    return {
+        str(lexeme["lemmaId"])
+        for level_shards in shards.values()
+        for lexeme in level_shards.get("lexemes", {}).get("lexemes", [])
+        if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Generate deterministic Word Atlas practice shards from admitted lexemes. "
@@ -6971,6 +7019,11 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
     )
     parser.add_argument(
+        "--pos-residual-report",
+        type=Path,
+        help="Write named A2-C1 lexemes with no POS set (default: none; e.g. batch_state/pos-residuals.json).",
+    )
+    parser.add_argument(
         "--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none)."
     )
     parser.add_argument(
@@ -7066,6 +7119,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_enabled=not args.disable_cloze,
     )
     aspect_residuals: list[dict[str, str]] = []
+    pos_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -7079,6 +7133,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
+        pos_residuals=pos_residuals,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
@@ -7130,25 +7185,28 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
-    if args.aspect_residual_report:
-        emitted_lemma_ids = {
-            str(item.get("lemmaId"))
-            for level_shards in shards.values()
-            for item in level_shards.get("lexemes", {}).get("items", [])
-            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
-        }
-        aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
-        write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
-        print(
-            "aspect residuals "
-            + json.dumps(
-                {
-                    "count": len(aspect_residuals),
-                    "report": str(args.aspect_residual_report),
-                },
-                ensure_ascii=False,
+    if args.aspect_residual_report or args.pos_residual_report:
+        emitted_lemma_ids = _emitted_lemma_ids(shards)
+        if args.aspect_residual_report:
+            aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
+            print(
+                "aspect residuals "
+                + json.dumps(
+                    {"count": len(aspect_residuals), "report": str(args.aspect_residual_report)},
+                    ensure_ascii=False,
+                )
             )
-        )
+        if args.pos_residual_report:
+            pos_residuals = [residual for residual in pos_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_pos_residual_report(args.pos_residual_report, pos_residuals)
+            print(
+                "pos residuals "
+                + json.dumps(
+                    {"count": len(pos_residuals), "report": str(args.pos_residual_report)},
+                    ensure_ascii=False,
+                )
+            )
     written = write_shards(shards, args.out_dir)
     for path in written:
         print(path)

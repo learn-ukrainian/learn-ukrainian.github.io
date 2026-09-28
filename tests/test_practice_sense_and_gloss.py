@@ -100,6 +100,20 @@ VESUM_ROWS: dict[str, list[dict[str, str]]] = {
         {"lemma": "лютий", "pos": "adj", "tags": "adj:m:v_naz:compb"},
         {"lemma": "лютий", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
     ],
+    # sources.inspect_words, VESUM source version 53923150073b4fc7 (2026-09-28):
+    # each exact lemma has both an adjective and a noun nominative analysis.
+    "святий": [
+        {"lemma": "святий", "pos": "adj", "tags": "adj:m:v_naz:compb"},
+        {"lemma": "святий", "pos": "noun", "tags": "noun:anim:m:v_naz"},
+    ],
+    "вчений": [
+        {"lemma": "вчений", "pos": "adj", "tags": "adj:m:v_naz:adjp:pasv:imperf"},
+        {"lemma": "вчений", "pos": "noun", "tags": "noun:anim:m:v_naz"},
+    ],
+    "психічний": [
+        {"lemma": "психічний", "pos": "adj", "tags": "adj:m:v_naz"},
+        {"lemma": "психічний", "pos": "noun", "tags": "noun:anim:m:v_naz"},
+    ],
 }
 
 
@@ -137,7 +151,7 @@ def test_classify_never_keys_noun_grammar_for_a_displayed_preposition() -> None:
     )
 
     assert "до" not in classify
-    assert _set_answers(classify["коло"]) == {"pos": ["preposition"]}
+    assert "коло" not in classify
 
 
 def test_classify_withholds_an_ordinal_whose_only_analysis_is_the_heel_noun() -> None:
@@ -158,12 +172,12 @@ def test_classify_withholds_an_ordinal_whose_only_analysis_is_the_heel_noun() ->
     assert "п'ята" not in classify
 
 
-def test_classify_keys_the_numeral_not_the_fish_noun_for_kilka() -> None:
+def test_classify_withholds_the_numeral_when_morphology_is_the_fish_noun_for_kilka() -> None:
     classify = _classify_by_lemma(
         [_entry("кілька", "numeral", "several", "B1", morphology={"pos": "іменник", "forms": _noun_forms("жін.")})]
     )
 
-    assert _set_answers(classify["кілька"]) == {"pos": ["numeral"]}
+    assert "кілька" not in classify
 
 
 def test_classify_keeps_noun_gender_when_morphology_is_the_displayed_noun() -> None:
@@ -181,6 +195,63 @@ def test_classify_keys_no_gender_for_a_noun_vesum_does_not_attest() -> None:
     )
 
     assert "столик" not in classify
+
+
+@pytest.mark.parametrize(
+    ("lemma", "gloss", "level"),
+    [("святий", "holy", "A2"), ("вчений", "learned", "A2"), ("психічний", "mental", "B1")],
+)
+def test_classify_withholds_noun_pos_when_displayed_sense_has_adjective_morphology(
+    lemma: str, gloss: str, level: str
+) -> None:
+    """The exact lemma's VESUM noun analysis cannot license this adjective sense's noun key."""
+    classify = _classify_by_lemma(
+        [_entry(lemma, "noun", gloss, level, morphology={"pos": "прикметник", "forms": [{"label": "чол., називний"}]})]
+    )
+
+    assert lemma not in classify
+
+
+@pytest.mark.parametrize("lemma", ["святий", "вчений", "психічний"])
+def test_classify_names_pos_mismatch_residual_for_adjectival_morphology(lemma: str) -> None:
+    entry = _entry(lemma, "noun", "adjectival sense", "B1", morphology={"pos": "прикметник"})
+    evidence = _vesum_lemma_evidence([lemma], JsonVesumVerifier(VESUM_ROWS))[lemma]
+    residuals: list[dict[str, str]] = []
+
+    assert (
+        _build_classify_items(
+            entry,
+            {"lemmaId": lemma, "lemma": lemma, "cefr": "B1"},
+            vesum_evidence=evidence,
+            pos_residuals=residuals,
+        )
+        == []
+    )
+    assert residuals == [{"lemmaId": lemma, "lemma": lemma, "cefr": "B1", "reason": "morphology_pos_mismatch"}]
+
+
+def test_classify_keeps_attested_noun_pos_when_morphology_is_noun() -> None:
+    lemma = "святий"
+    classify = _classify_by_lemma([_entry(lemma, "noun", "saint", "B1", morphology={"pos": "іменник"})])
+
+    assert _set_answers(classify[lemma]) == {"pos": ["noun"]}
+
+
+def test_classify_does_not_reuse_displayed_pos_as_missing_morphology_pos() -> None:
+    entry = _entry("святий", "noun", "holy", "B1", morphology={"forms": [{"label": "чол., називний"}]})
+    evidence = _vesum_lemma_evidence(["святий"], JsonVesumVerifier(VESUM_ROWS))["святий"]
+    residuals: list[dict[str, str]] = []
+
+    assert (
+        _build_classify_items(
+            entry,
+            {"lemmaId": "святий", "lemma": "святий", "cefr": "B1"},
+            vesum_evidence=evidence,
+            pos_residuals=residuals,
+        )
+        == []
+    )
+    assert residuals[0]["reason"] == "morphology_pos_mismatch"
 
 
 def test_classify_binds_noun_gender_to_the_displayed_sense() -> None:
