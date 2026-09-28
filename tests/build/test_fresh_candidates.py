@@ -97,10 +97,14 @@ def test_noun_case_candidates_keep_all_analyses(words: dict) -> None:
     item = _item("W-101", "книгу", "noun:inanim:f:v_zna", "Case", {"Case": "Acc", "Number": "Sing"}, ["книгу", "книга"])
     offered = item_candidates(item, words, "fill-in")
     assert offered == item_candidates(item, words, "fill-in")
-    assert _surfaces(offered) == ["книга", "книгу"]
-    assert {candidate["form"]: candidate["admitted"] for candidate in offered} == {"книга": False, "книгу": True}
-    assert [analysis["admits_requires"] for analysis in offered[1]["analyses"]] == [True]
-    assert "книги" not in _surfaces(offered)  # An accusative plural analysis shares the taught case.
+    assert _surfaces(offered) == ["книга", "книги", "книгу"]
+    assert {candidate["form"]: candidate["admitted"] for candidate in offered} == {
+        "книга": False,
+        "книги": False,
+        "книгу": True,
+    }
+    assert [analysis["admits_requires"] for analysis in offered[2]["analyses"]] == [True]
+    assert [analysis["admits_requires"] for analysis in offered[1]["analyses"]] == [False, False]
     ambiguous = next(candidate for candidate in record_candidates(words["words"][0]) if candidate["form"] == "книги")
     assert len(ambiguous["analyses"]) == 2
     assert all(candidate["record"] == "W-101" for candidate in offered)
@@ -138,8 +142,8 @@ def test_analytic_future_uses_single_auxiliary_or_infinitive_forms(words: dict) 
         "W-103", "буду", "verb:imperf:futr:s:1", "Person", {"Person": "1", "Number": "Sing"}, ["буду", "буде"]
     )
     aux = item_candidates(auxiliary, words, "fill-in")
-    assert _surfaces(aux) == ["буде", "будеш", "буду"]
-    assert "будемо" not in _surfaces(aux)  # Same taught person as the key.
+    assert _surfaces(aux) == ["буде", "будемо", "будеш", "буду"]
+    assert "будемо" in _surfaces(aux)  # Number contradicts the slot although Person agrees.
     _assert_no_stress_leak(_surfaces(aux), words["words"])
     infinitive = _item("W-102", "читати", "verb:imperf:inf", "VerbForm", {"VerbForm": "Inf"}, ["читати", "читаю"])
     infinitive_candidates = item_candidates(infinitive, words, "fill-in")
@@ -210,14 +214,14 @@ def test_composite_and_writer_option_outside_generated_candidates_fail(words: di
     lesson = {"activities": [{"id": "a1", "type": "fill-in"}]}
     draft = {"lesson": {"module": "a1/fixture", "n": 1}, "activities": [{"id": "a1", "items": [item]}]}
     assert check_4_activities(draft, lesson, words, {}, level="a1")[0]["status"] == "passed"
-    for outsider in ("буду читати", "будемо"):
+    for outsider in ("буду читати", "бути"):
         item["options"] = ["буду", outsider]
         row, _ = check_4_activities(draft, lesson, words, {}, level="a1")
         assert row["status"] == "failed" and row["layer"] == "writer"
         assert row["reason"] == (
             "form_choice_options_invalid" if outsider == "буду читати" else "form_candidate_not_generated"
         )
-        if outsider == "будемо":
+        if outsider == "бути":
             assert row["code"] == "form_candidate_not_generated"
     item["options"] = ["буду", "буде"]
 
@@ -287,8 +291,13 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
     bank = prompt.split("## Form-choice candidate bank", 1)[1]
     assert "`W-102`: `читати`" in bank
     assert "VerbForm=Inf" in bank
-    assert "Each distractor differs from the key in `tests_feature`" in prompt
-    assert "carries no value of `tests_feature` and is excluded by another required group it carries" in prompt
+    rule = "Each distractor must be a form that the sentence rules out by a feature the form itself carries."
+    assert rule in prompt
+    assert (
+        "`tests_feature` names one focus group; the reviewer judges whether the distractors really make the learner choose along that focus."
+        in prompt
+    )
+    assert "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender`" in prompt
     _assert_no_stress_leak([bank], [record])
     assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md").passed
     pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})

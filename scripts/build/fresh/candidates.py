@@ -106,10 +106,6 @@ def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: 
     key = next((c for c in record_candidates(key_record) if c["form"] == key_text), None)
     if key is None or classify_form_analyses((a["features"] for a in key["analyses"]), requires) != "admitted":
         return []
-    key_values = _group_values(key, group)
-    if not key_values:
-        return []
-
     offered: list[dict[str, Any]] = []
     for record_id in sorted(rid for rid in set(bound_ids) if isinstance(rid, str)):
         record = records.get(record_id)
@@ -119,12 +115,7 @@ def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: 
             classification = classify_form_analyses((a["features"] for a in candidate["analyses"]), requires)
             admitted = classification == "admitted"
             values = _group_values(candidate, group)
-            if (record_id, candidate["form"]) == (key_id, key_text):
-                include = True
-            else:
-                include = classification == "excluded" and (
-                    (bool(values) and values.isdisjoint(key_values)) or not values
-                )
+            include = (record_id, candidate["form"]) == (key_id, key_text) or classification == "excluded"
             if include:
                 required = {f"{name}={value}" for name, value in requires.items()}
                 analyses = [

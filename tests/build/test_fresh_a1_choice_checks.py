@@ -13,7 +13,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.build.fresh.runner import check_7_a1_choices
+from scripts.build.fresh.candidates import item_candidates
+from scripts.build.fresh.runner import check_4_activities, check_7_a1_choices
 from scripts.curriculum.resolver import receipts
 
 
@@ -101,6 +102,41 @@ WORK = _record(
     "працювати",
     [("працюємо", "verb:imperf:pres:p:1"), ("працювали", "verb:imperf:past:p")],
 )
+BLUE = _record(
+    13,
+    "синій",
+    [
+        ("синя", "adj:f:v_naz:compb"),
+        ("синій", "adj:m:v_naz:compb"),
+        ("синій", "adj:m:v_zna:rinanim:compb"),
+        ("синій", "adj:m:v_kly:compb"),
+        ("синій", "adj:f:v_dav:compb"),
+        ("синій", "adj:f:v_mis:compb"),
+    ],
+)
+BLUE_VERB = _record(14, "синіти", [("синій", "verb:imperf:impr:s:2")])
+PORRIDGE = _record(
+    15,
+    "каша",
+    [
+        ("кашу", "noun:inanim:f:v_zna"),
+        ("каші", "noun:inanim:f:v_rod"),
+        ("каші", "noun:inanim:f:v_dav"),
+        ("каші", "noun:inanim:f:v_mis"),
+        ("каші", "noun:inanim:p:v_naz"),
+        ("каші", "noun:inanim:p:v_zna"),
+        ("каші", "noun:inanim:p:v_kly"),
+    ],
+)
+FUTURE_BE = _record(
+    16,
+    "бути",
+    [
+        ("будуть", "verb:imperf:futr:p:3"),
+        ("будемо", "verb:imperf:futr:p:1"),
+        ("буде", "verb:imperf:futr:s:3"),
+    ],
+)
 
 
 def _check(
@@ -156,6 +192,78 @@ def test_book_plural_accusative_needs_singular_demand(tmp_path: Path) -> None:
     item["requires"] = {"Case": "Acc"}
     item["tests_feature"] = "Case"
     assert _check(tmp_path, item, BOOK)["code"] == "form_not_unique_for_requires"
+
+
+@pytest.mark.parametrize(
+    ("record", "options", "requires", "focus", "sentence", "other_records"),
+    [
+        (
+            BLUE,
+            ["синя", "синій"],
+            {"Gender": "Fem", "Number": "Sing", "Case": "Nom"},
+            "Gender",
+            "Ця книга ___",
+            [BLUE_VERB],
+        ),
+        (
+            PORRIDGE,
+            ["кашу", "каші"],
+            {"Case": "Acc", "Number": "Sing", "Gender": "Fem"},
+            "Case",
+            "Я їм одну ___",
+            [],
+        ),
+        (
+            FUTURE_BE,
+            ["будуть", "будемо", "буде"],
+            {"Person": "3", "Number": "Plur", "VerbForm": "Fin"},
+            "Person",
+            "Вони ___",
+            [],
+        ),
+    ],
+)
+def test_excluded_distractors_are_offered_and_pass_check_7(
+    tmp_path: Path,
+    record: dict,
+    options: list[str],
+    requires: dict[str, str],
+    focus: str,
+    sentence: str,
+    other_records: list[dict],
+) -> None:
+    item = _form(options, record, requires, taught=focus)
+    item["sentence"] = sentence
+    item["option_why"] = ["Fits the slot."] + ["Conflicts with the slot."] * (len(options) - 1)
+    offered = {
+        candidate["form"]: candidate for candidate in item_candidates(item, {"words": [record, *other_records]}, "quiz")
+    }
+    assert set(options) <= offered.keys()
+    assert offered[options[0]]["admitted"] is True
+    assert all(offered[option]["admitted"] is False for option in options[1:])
+    draft = {"activities": [{"id": "a1", "items": [item]}]}
+    lesson = {"activities": [{"id": "a1", "type": "quiz"}]}
+    assert (
+        check_4_activities(draft, lesson, {"words": [record, *other_records]}, {}, level="a1")[0]["status"] == "passed"
+    )
+    assert _check(tmp_path, item, record, extra_records=other_records)["status"] == "passed"
+
+
+@pytest.mark.parametrize(
+    ("record", "options", "requires"),
+    [
+        (COST, ["коштує", "коштувала"], {"Person": "3", "Number": "Sing", "VerbForm": "Fin"}),
+        (WORK, ["працюємо", "працювали"], {"Person": "1", "Number": "Plur", "VerbForm": "Fin"}),
+    ],
+)
+def test_tense_only_distractor_is_not_offered_and_fails_check_7(
+    tmp_path: Path, record: dict, options: list[str], requires: dict[str, str]
+) -> None:
+    item = _form(options, record, requires, taught="Person")
+    offered = {candidate["form"] for candidate in item_candidates(item, {"words": [record]}, "quiz")}
+    assert options[0] in offered
+    assert options[1] not in offered
+    assert _check(tmp_path, item, record)["code"] == "form_option_missing_required_group"
 
 
 @pytest.mark.parametrize(

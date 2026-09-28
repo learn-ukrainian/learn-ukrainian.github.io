@@ -211,9 +211,12 @@ def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str,
     lines = [
         "## Form-choice candidate bank",
         "",
-        "Use one form from its bound record per option. State the complete slot `requires`; "
-        "choose one admitted key. Each distractor differs from the key in `tests_feature`, "
-        "or carries no value of `tests_feature` and is excluded by another required group it carries. "
+        "Use one form from its bound record per option. State the complete slot `requires`. "
+        "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender` "
+        "because plural forms carry no gender. Choose one admitted key. Each distractor must be "
+        "a form that the sentence rules out by a feature the form itself carries. "
+        "`tests_feature` names one focus group; the reviewer judges whether the distractors "
+        "really make the learner choose along that focus. "
         "The engine generates the item-specific subset and checks every written option.",
         "",
     ]
