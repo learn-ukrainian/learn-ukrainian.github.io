@@ -178,7 +178,7 @@ def test_mcp_identity_accepts_default_state_identity_and_hashes_every_field(monk
         "vesum_db_sha256": "c" * 64,
         "vesum_db_bytes": 456,
     }
-    calls: list[str] = []
+    calls: list[tuple[str, dict[str, Any]]] = []
     replies = iter(
         [
             {"result": {"serverInfo": {"name": "Sources"}}},
@@ -192,14 +192,15 @@ def test_mcp_identity_accepts_default_state_identity_and_hashes_every_field(monk
     )
 
     def request(_url: str, payload: dict[str, Any], _timeout: int, _session: str | None = None):
-        calls.append(payload["method"])
+        calls.append((payload["method"], payload))
         return next(replies), "session"
 
     monkeypatch.setattr(adapters, "_mcp_request", request)
     tools, identity_sha = adapters._mcp_list_tools("https://sources.invalid/mcp", 5)
     assert [tool["name"] for tool in tools] == ["verify_word", "mcp_server_identity"]
     assert identity_sha == adapters.digest(identity)
-    assert calls == ["initialize", "notifications/initialized", "tools/list", "tools/call"]
+    assert [method for method, _payload in calls] == ["initialize", "notifications/initialized", "tools/list", "tools/call"]
+    assert calls[-1][1]["params"]["arguments"] == {}
 
 
 def test_mcp_identity_rejects_unknown_fields() -> None:

@@ -82,9 +82,36 @@ def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources
     data = tmp_path / "data"
     data.mkdir()
     sources_db = data / "sources.db"
-    sources_db.write_bytes(b"sources-db")
+    sources_db.write_bytes(b"SQLite format 3\x00" + b"\x00" * (1024 * 1024 - 16))
     (data / "vesum.db").write_bytes(b"vesum-db")
     server_module._FILE_HASH_CACHE.clear()
+    original_path_open = Path.open
+    header_bytes_read = 0
+
+    class HeaderOnlyReader:
+        def __init__(self, stream):
+            self._stream = stream
+
+        def __enter__(self):
+            self._stream.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self._stream.__exit__(*args)
+
+        def read(self, size=-1):
+            nonlocal header_bytes_read
+            assert size >= 0 and header_bytes_read + size <= 20, "sources.db body read exceeded the 20-byte header"
+            result = self._stream.read(size)
+            header_bytes_read += len(result)
+            return result
+
+    def guarded_path_open(path, *args, **kwargs):
+        stream = original_path_open(path, *args, **kwargs)
+        if Path(path).resolve() == sources_db.resolve():
+            return HeaderOnlyReader(stream)
+        return stream
+
     with patch.object(server_module, "PROJECT_ROOT", tmp_path):
         with (
             patch.object(
@@ -93,9 +120,11 @@ def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources
                 side_effect=AssertionError("default must not read sources.db body"),
             ),
             patch.object(server_module, "_sha256_of_file", wraps=server_module._sha256_of_file) as cached_hash,
+            patch.object(Path, "open", new=guarded_path_open),
         ):
             result = _run(server_module.handle_mcp_server_identity({}))
     assert sources_db not in [call.args[0] for call in cached_hash.call_args_list]
+    assert header_bytes_read == 20
     payload = json.loads(result[0].text)
     assert "sources_db_sha256" not in payload
     assert payload["sources_db_meta_identity"]["scheme"] == "file-meta-v1"
@@ -113,14 +142,30 @@ def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime
     (data / "vesum.db").write_bytes(b"vesum-db")
     original_mtime = sources_db.stat().st_mtime_ns
     server_module._FILE_HASH_CACHE.clear()
+    source_key = sources_db.resolve()
+    stat = sources_db.stat()
+    poisoned_key = (str(source_key), stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size, stat.st_ino)
+    server_module._FILE_HASH_CACHE[poisoned_key] = "0" * 64
     with patch.object(server_module, "PROJECT_ROOT", tmp_path):
-        first = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+        try:
+            first = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+        finally:
+            server_module._FILE_HASH_CACHE.pop(poisoned_key, None)
+        assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
         sources_db.write_bytes(b"sources-db-v2")
         os.utime(sources_db, ns=(original_mtime, original_mtime))
         second = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+    assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
     assert first["sources_db_sha256"] == hashlib.sha256(b"sources-db-v1").hexdigest()
     assert second["sources_db_sha256"] == hashlib.sha256(b"sources-db-v2").hexdigest()
     assert first["sources_db_sha256"] != second["sources_db_sha256"]
+
+
+def test_mcp_server_identity_rejects_non_boolean_hash_option(server_module):
+    result = _run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": "true"}))
+    payload = json.loads(result[0].text)
+    assert payload["error_code"] == "invalid_input"
+    assert payload["error"] == "invalid_input: include_sources_db_sha256 must be a boolean."
 
 
 def test_verify_stress_summary_is_one_line_and_result_is_kept(server_module):

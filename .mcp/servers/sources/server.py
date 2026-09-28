@@ -2190,6 +2190,15 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     The default sources.db identity is file metadata, not content. A caller
     must explicitly request its full content hash; that hash bypasses cache.
     """
+    if "include_sources_db_sha256" in args and not isinstance(args["include_sources_db_sha256"], bool):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: include_sources_db_sha256 must be a boolean.",
+            "expected_arguments": ["include_sources_db_sha256"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
     server_path = Path(__file__).resolve()
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
