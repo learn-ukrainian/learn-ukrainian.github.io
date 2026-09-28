@@ -13287,7 +13287,7 @@ def test_dispatch_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch, 
     assert lines[1] == "env-nonce-123456"
 
 
-def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch):
+def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, tmp_path, monkeypatch):
     """#7168: _run_worker consumes LU_RUNTIME_RUN_NONCE from environment."""
     from unittest.mock import patch
 
@@ -13330,7 +13330,7 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch):
             agent="codex",
             prompt="hello",
             mode="read-only",
-            cwd_str=str(delegate._REPO_ROOT),
+            cwd_str=str(tmp_path),
             model="gpt-5.6-luna",
             hard_timeout=60,
             run_nonce=None,
