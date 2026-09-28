@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import re
 import sqlite3
@@ -48,7 +49,10 @@ def _without_ledger_disk_sync(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _html(name: str) -> str:
-    return (FIXTURES / name).read_text(encoding="utf-8")
+    path = FIXTURES / name
+    if name.endswith(".gz"):
+        return gzip.decompress(path.read_bytes()).decode("utf-8")
+    return path.read_text(encoding="utf-8")
 
 
 def _noop_sleep(_seconds: float) -> None:
@@ -1006,6 +1010,134 @@ class ShiftedWindowServer:
             word = self.words[start + index]
             return HttpResult(200, _entry_html(word, "synthetic", f"ENTRY-{start + index}", register_size=100), {})
         return HttpResult(200, "<html></html>", {})
+
+
+def test_recorded_ulif_tail_exposes_printed_size_mismatch() -> None:
+    """Captured 2026-09-28 windows add 40 positions where ULIF prints 37."""
+    first = parse_register_list(_html("ulif-tail-window-1.html.gz"))
+    second = parse_register_list(_html("ulif-tail-window-2.html.gz"))
+    repeated = parse_register_list(_html("ulif-tail-window-3.html.gz"))
+    assert [row["stressed"] for row in second] == [row["stressed"] for row in repeated]
+    assert [row["stressed"] for row in first[-5:]] == [row["stressed"] for row in second[:5]]
+    assert ulif_walk._register_size(_html("ulif-tail-window-2.html.gz")) == 262812
+    with pytest.raises(ulif_walk.SessionInvalid, match="at_least_262815_printed_262812"):
+        ulif_walk._tail_window_advance(first, second, start_global=262770, register_size=262812, page_num=10512)
+
+
+def test_mid_register_overlap_still_fails() -> None:
+    first = parse_register_list(_html("ulif-tail-window-1.html.gz"))
+    second = parse_register_list(_html("ulif-tail-window-2.html.gz"))
+    with pytest.raises(ulif_walk.SessionInvalid, match="register_overlap"):
+        ulif_walk._tail_window_advance(first, second, start_global=20, register_size=100, page_num=2)
+
+
+def test_single_repeated_tail_headword_is_not_assumed_to_be_an_overlap() -> None:
+    first = [{"stressed": "synthetic-a"}, {"stressed": "synthetic-homonym"}]
+    second = [{"stressed": "synthetic-homonym"}, {"stressed": "synthetic-z"}]
+    with pytest.raises(ulif_walk.SessionInvalid, match="register_overlap"):
+        ulif_walk._tail_window_advance(first, second, start_global=58, register_size=61, page_num=3)
+
+
+@pytest.mark.parametrize("straddle", ["none", "page", "window"])
+def test_synthetic_tail_clamp_stores_positions_once_and_completes(tmp_path: Path, straddle: str) -> None:
+    """Recorded overlap, with a synthetic corrected size and optional boundary homonyms."""
+    first_words = [row["stressed"] for row in parse_register_list(_html("ulif-tail-window-1.html.gz"))]
+    last_words = [row["stressed"] for row in parse_register_list(_html("ulif-tail-window-2.html.gz"))]
+    if straddle == "page":
+        last_words[9:11] = ["synthetic-homonym", "synthetic-homonym"]
+    elif straddle == "window":
+        first_words[-1] = last_words[4] = last_words[5] = "synthetic-seam"
+    windows = [
+        _register_html(first_words, "TAIL-1", register_size=65),
+        _register_html(last_words, "TAIL-2", register_size=65),
+    ]
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    next_requests: list[str] = []
+    try:
+        prior_words = [f"synthetic-{index:02d}" for index in range(20)] + first_words[:5]
+        ledger.ensure_page(1, start_headword=prior_words[0], end_headword=prior_words[-1], row_count=25)
+        for index, word in enumerate(prior_words):
+            ledger.ensure_row(
+                1,
+                index,
+                select_arg=f"Select${index}",
+                stressed_headword=word,
+                normalized_spelling=normalize_ulif_spelling(word),
+            )
+            ledger.mark_row(1, index, "completed")
+        ledger.mark_page(1, "completed")
+        ledger.set_meta("register_size", "65")
+
+        def transport(method: str, data: dict[str, str] | None) -> HttpResult:
+            assert method == "POST" and data is not None
+            viewstate = data["__VIEWSTATE"]
+            if "ctl00$ContentPlaceHolder1$nextpage.x" in data:
+                next_requests.append(viewstate)
+                assert viewstate in ("TAIL-1", "TAIL-2")
+                return HttpResult(200, windows[1], {})
+            assert data["__EVENTTARGET"] == ulif_walk.GRID_TARGET
+            index = int(data["__EVENTARGUMENT"].split("$")[1])
+            word = (first_words if viewstate == "TAIL-1" else last_words)[index]
+            return HttpResult(200, _entry_html(word, "synthetic", f"ENTRY-{viewstate}-{index}", register_size=65), {})
+
+        client = ulif_walk.PoliteClient(transport, delay_seconds=1, sleep=_noop_sleep)
+        code, reason, completed = ulif_walk._walk_shifted_windows(
+            client,
+            ledger,
+            cache,
+            first_page=2,
+            first_html=windows[0],
+            offset=5,
+            start_headword="а",
+            max_pages=None,
+            quiet=True,
+            base_requests=0,
+            started_at=0,
+            clock=lambda: 0.0,
+        )
+        assert (code, reason, completed) == (EXIT_OK, "finished", 2)
+        assert next_requests == ["TAIL-1", "TAIL-2"]
+        assert [ledger.get_page(page)["row_count"] for page in (2, 3)] == [25, 15]
+        assert [len(ledger.page_rows(page)) for page in (1, 2, 3)] == [25, 25, 15]
+        assert ledger.walk_counts()["entries_stored"] == 65
+        assert "complete=yes" in status_text(ledger, delay_seconds=1)
+        ledger.set_meta("register_size", "64")
+        assert "complete=no" in status_text(ledger, delay_seconds=1)
+        ledger.set_meta("register_size", "65")
+        entry_positions = [
+            row[0]
+            for row in ledger.conn.execute("SELECT register_position FROM responses WHERE role='entry' ORDER BY id")
+        ]
+        assert entry_positions == [f"{page}:{index}" for page, count in ((2, 25), (3, 15)) for index in range(count)]
+        if straddle == "page":
+            rows = ledger.completed_rows_for_spelling("synthetic-homonym")
+            assert [(row["page_num"], row["row_index"], row["homonym_index"]) for row in rows] == [
+                (2, 24, 1),
+                (3, 0, 2),
+            ]
+            assert (
+                ledger.conn.execute(
+                    "SELECT straddled_boundary FROM spellings WHERE spelling='synthetic-homonym'"
+                ).fetchone()[0]
+                == 1
+            )
+        elif straddle == "window":
+            rows = ledger.completed_rows_for_spelling("synthetic-seam")
+            assert [(row["page_num"], row["row_index"], row["homonym_index"]) for row in rows] == [
+                (2, 19, 1),
+                (2, 20, 2),
+            ]
+            assert tuple(
+                ledger.conn.execute(
+                    "SELECT state, entry_count FROM spellings WHERE spelling='synthetic-seam'"
+                ).fetchone()
+            ) == ("stored", 2)
+    finally:
+        cache.close()
+        ledger.close()
 
 
 def _seed_shifted_ledger(state_dir: Path) -> None:

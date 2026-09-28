@@ -823,7 +823,7 @@ def status_text(
 
         if pages_total == 0 and pages_done == 0:
             complete = "not_started"
-        elif pages_total > 0 and pages_done >= pages_total:
+        elif pages_total > 0 and pages_done == pages_total and reg_size.isdigit() and entries_stored == int(reg_size):
             complete = "yes"
         else:
             complete = "no"
@@ -2905,6 +2905,52 @@ def _verify_register_continuity(
             raise SessionInvalid(f"page_{page_num}_register_overlap")
 
 
+def _tail_window_advance(
+    preceding: Sequence[Mapping[str, Any]],
+    following: Sequence[Mapping[str, Any]],
+    *,
+    start_global: int,
+    register_size: int | None,
+    page_num: int,
+) -> int:
+    """Return a tail window's stride when its overlap ends at the printed size.
+
+    ASPX can clamp a next-page request to the final 25-row window while still
+    displaying the next control. Only the exact register-size boundary permits
+    this adjustment; a drifted count or an interior overlap remains an error.
+    """
+    stride = len(preceding)
+    if register_size is None or start_global + stride + len(following) <= register_size:
+        _verify_register_continuity(preceding, following, page_num)
+        return stride
+
+    previous_words = [str(row["stressed"]) for row in preceding]
+    following_words = [str(row["stressed"]) for row in following]
+    overlap = max(
+        (
+            size
+            for size in range(1, min(len(previous_words), len(following_words)))
+            if previous_words[-size:] == following_words[:size]
+        ),
+        default=0,
+    )
+    if not overlap:
+        raise SessionInvalid(f"page_{page_num}_register_size_mismatch")
+    # One repeated headword may be the next homonym, not a repeated position.
+    min_overlap = (
+        6
+        if len(following_words) > 1
+        and normalize_ulif_spelling(following_words[0]) == normalize_ulif_spelling(following_words[1])
+        else 2
+    )
+    if overlap < min_overlap:
+        raise SessionInvalid(f"page_{page_num}_register_overlap")
+    observed_end = start_global + stride - overlap + len(following)
+    if observed_end != register_size:
+        raise SessionInvalid(f"page_{page_num}_register_size_mismatch: at_least_{observed_end}_printed_{register_size}")
+    return stride - overlap
+
+
 def _verify_first_unrecorded_page(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
     """Check each new page's first row against its immediate predecessor."""
     for index in range(len(rows)):
@@ -3197,6 +3243,11 @@ def _walk_shifted_windows(
             tokens = _tokens(html)
             if not rows or tokens is None or _validation_failure(html):
                 raise SessionInvalid(f"page_{target_page}_viewstate")
+            register_size = _register_size(html)
+            if register_size is not None and start_global + len(rows) > register_size:
+                raise SessionInvalid(
+                    f"page_{target_page}_register_size_mismatch: at_least_{start_global + len(rows)}_printed_{register_size}"
+                )
             _verify_known_window_rows(ledger, rows, start_global)
             _verify_first_unrecorded_page(ledger, rows, start_global)
 
@@ -3234,7 +3285,32 @@ def _walk_shifted_windows(
                     if index == REGISTER_PAGE_SIZE - 1
                 }
             )
+            at_register_end = register_size is not None and start_global + len(rows) == register_size
             has_next = _has_control(html, PAGE_BUTTONS["next"])
+            if at_register_end and has_next:
+                probe_fields = _form_fields(
+                    tokens,
+                    spelling=str(rows[-1]["unstressed"]),
+                    extra=_image_click(PAGE_BUTTONS["next"]),
+                )
+                probe_html, probe_request = client.exchange("POST", probe_fields)
+                _keep_walk(
+                    ledger,
+                    cache,
+                    "",
+                    f"page:terminal-probe:{target_page}",
+                    probe_html,
+                    probe_request,
+                    current_page=target_page,
+                )
+                probe_rows = parse_register_list(probe_html)
+                if not probe_rows or _tokens(probe_html) is None or _validation_failure(probe_html):
+                    raise SessionInvalid(f"page_{target_page}_invalid_terminal_probe")
+                listing = [(row["stressed"], row["select"]) for row in rows]
+                probed_listing = [(row["stressed"], row["select"]) for row in probe_rows]
+                if listing != probed_listing:
+                    raise SessionInvalid(f"page_{target_page}_register_size_mismatch: next_window_after_printed_end")
+                has_next = False
             if not has_next and not any(position is not None for position in positions):
                 raise ResumeMismatchError(f"page {target_page} absent from terminal window")
             if not has_next and positions:
@@ -3323,13 +3399,20 @@ def _walk_shifted_windows(
                 raise SessionInvalid(f"page_{target_page}_invalid_next_page")
             if next_html == html:
                 raise SessionInvalid(f"page_{target_page}_repeated_window")
-            _verify_register_continuity(rows, next_rows, target_page)
+            advance = _tail_window_advance(
+                rows,
+                next_rows,
+                start_global=start_global,
+                register_size=_register_size(next_html),
+                page_num=target_page,
+            )
+            first_new_row = next_rows[len(rows) - advance]
             if normalize_ulif_spelling(str(rows[-1]["unstressed"])) != normalize_ulif_spelling(
-                str(next_rows[0]["unstressed"])
+                str(first_new_row["unstressed"])
             ):
                 _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
             html = next_html
-            start_global += len(rows)
+            start_global += advance
         except ResumeMismatchError as exc:
             ledger.mark_page(target_page, "error", error="resume_mismatch")
             print(f"stopping: resume_mismatch on page {target_page} ({exc})", file=sys.stderr)
