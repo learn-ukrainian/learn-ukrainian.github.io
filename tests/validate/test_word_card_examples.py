@@ -517,10 +517,14 @@ def test_build_manifest_hashes_every_input_and_covers_every_used_source(gen) -> 
 def test_legacy_record_key_collides_and_correspondence_holds_ambiguous(gen) -> None:
     """Read-only on 2026-09-28: ULIF rows 3 and 98008 (ключ homonyms 1 and 2) have identical query, headword
     and grammatical label, so the r2 key `query#headword#label` is shared. Correspondence through that alias
-    alone is an explicit ambiguous hold; a stronger alias (register_position) decides uniquely."""
+    alone is an explicit ambiguous hold. `register_position` (continuity across harvests untested, Q-I6) never
+    decides alone into a new snapshot: it is `held` until a content alias corroborates the row, and it never
+    wins over contradictory content evidence; every historical alias of a kind keeps finding the row."""
     rec3, rec98008 = gen.SOURCE_RECORD_BY_HEAD["ulif:entry:3"], gen.SOURCE_RECORD_BY_HEAD["ulif:entry:98008"]
-    legacy = {a["kind"]: a["key"] for a in rec3["aliases"]}["query_headword_label"]
-    assert legacy == {a["kind"]: a["key"] for a in rec98008["aliases"]}["query_headword_label"]
+    al3 = {a["kind"]: a["key"] for a in rec3["aliases"]}
+    al98008 = {a["kind"]: a["key"] for a in rec98008["aliases"]}
+    legacy = al3["query_headword_label"]
+    assert legacy == al98008["query_headword_label"]
     assert rec3["source_record_id"] != rec98008["source_record_id"]
     new_snapshot = [  # a reharvest that renumbered the rows and lost the register position
         {"locator": "ulif:entry:900001", "aliases": {"query_headword_label": legacy}},
@@ -534,11 +538,68 @@ def test_legacy_record_key_collides_and_correspondence_holds_ambiguous(gen) -> N
         dict(r, aliases={**r["aliases"], "register_position": rp})
         for r, rp in zip(new_snapshot, ("ulif:register:3662:14", "ulif:register:3662:15"), strict=True)
     ]
-    unique = gen.correspond(rec3, with_register)
+    # position alone singles out 900001, but its continuity into a new harvest is unproven -> held, both suppressed
+    position_only = gen.correspond(rec3, with_register)
+    assert position_only["status"] == "held" and position_only["matched_by"] == "register_position"
+    assert gen.selector_targets(selector, position_only) == ["ulif:entry:900001", "ulif:entry:900002"]
+    # the same rows re-read in the snapshot the position was observed in: direct observation, unique
+    assert gen.correspond(rec3, with_register, snapshot_id=gen.ULIF_SNAP) == {
+        "status": "unique",
+        "matched_by": "register_position",
+        "locator": "ulif:entry:900001",
+    }
+    # corroborated by the content digest: unique
+    with_content = [
+        dict(r, aliases={**r["aliases"], "content": c})
+        for r, c in zip(with_register, (al3["content"], al98008["content"]), strict=True)
+    ]
+    unique = gen.correspond(rec3, with_content)
     assert unique == {"status": "unique", "matched_by": "register_position", "locator": "ulif:entry:900001"}
+    assert gen.selector_targets(selector, unique) == ["ulif:entry:900001"]
+    # Astra r3 regression (a): a reharvest keeps both records' content but SWAPS their register positions.
+    # A unique position match must not win over contradictory content evidence: hold, never row 98008 alone.
+    swapped = [
+        dict(r, aliases={**r["aliases"], "content": c})
+        for r, c in zip(with_register, (al98008["content"], al3["content"]), strict=True)
+    ]
+    conflict = gen.correspond(rec3, swapped)
+    assert conflict["status"] == "held" and "conflicting identity evidence" in conflict["hold"]
+    assert gen.selector_targets(selector, conflict) == ["ulif:entry:900001", "ulif:entry:900002"]
+    assert "ulif:entry:900002" in gen.selector_targets(selector, conflict)  # row 3's content is still covered
+    # Astra r3 regression (b): a corrected header APPENDS an alias; every historical alias of the kind is kept,
+    # so a candidate still carrying the old key (or the old content digest) corresponds instead of `missing`.
+    corrected = copy.deepcopy(rec3)
+    corrected["aliases"] += [
+        {
+            "kind": "query_headword_label",
+            "key": "ulif:record:ключ#ключ¹#іменник чоловічого роду",
+            "snapshot_id": "ulif@next",
+        },
+        {"kind": "content", "key": "ulif:content:" + "0" * 64, "snapshot_id": "ulif@next"},
+    ]
+    assert gen.correspond(
+        corrected, [{"locator": "ulif:entry:900001", "aliases": {"query_headword_label": legacy}}]
+    ) == {
+        "status": "unique",
+        "matched_by": "query_headword_label",
+        "locator": "ulif:entry:900001",
+    }
+    assert gen.correspond(corrected, [{"locator": "ulif:entry:900001", "aliases": {"content": al3["content"]}}]) == {
+        "status": "unique",
+        "matched_by": "content",
+        "locator": "ulif:entry:900001",
+    }
+    assert gen.correspond(corrected, with_content)["locator"] == "ulif:entry:900001"  # the old aliases still agree
     assert (
         gen.correspond(rec3, [])["status"] == "missing" and gen.selector_targets(selector, {"status": "missing"}) == []
     )
+    # the registry schema admits every status the reference implementation can return
+    schema = json.loads((SCHEMAS / COMPANIONS["identity-registry"]).read_text(encoding="utf-8"))
+    statuses = schema["$defs"]["source_record"]["properties"]["correspondence"]["items"]["properties"]["status"]["enum"]
+    assert {"unique", "ambiguous", "held", "missing"} == set(statuses)
+    v = Draft202012Validator(schema["$defs"]["source_record"]["properties"]["correspondence"]["items"])
+    for result in (held, position_only, conflict, unique):
+        assert not list(v.iter_errors({"snapshot_id": "ulif@next", **result})), result
 
 
 def test_content_selector_survives_a_normaliser_change(gen) -> None:
@@ -685,7 +746,9 @@ def test_equal_tier1_declarations_corroborate_a_variant(gen) -> None:
 def test_reviewed_overlay_variant_resolves_conflicting_scalars(gen) -> None:
     """§8.2 rule 4: two disagreeing single values (or disagreeing declarations) become `variant` only through a
     reviewed, cited language-lane overlay entry naming the members; an overlay that does not cover an observed
-    value leaves the field in conflict."""
+    value leaves the field in conflict. Rule 7 (Astra r3): the overlay-declared set is a shown proposition
+    with no source assertion behind it, so the field-level flags are the conjunction / minimum over ALL shown
+    propositions including it — false / 0 — while each member entry keeps its own evidence."""
     ulif = _member(gen, "вряди́-годи́")
     uws = _member(gen, "вряди́-го́ди", source="kaikki")
     assert gen.resolve([ulif, uws], "stress", SUBJECT)["state"] == "conflict"
@@ -705,12 +768,30 @@ def test_reviewed_overlay_variant_resolves_conflicting_scalars(gen) -> None:
             "declared_by": "ovl-2026-09-28-0009",
         }
     ]
+    # every shown proposition is aggregated: the two members are evidenced (1 group each), the declaration is not
+    members = [v for v in res["values"] if not v.get("declared_set")]
+    assert len(members) == 2 and all(
+        v["mapping_evidenced"] and v["independence_groups_evidenced"] == 1 for v in members
+    )
+    shown = members + declared
+    assert res["mapping_evidenced"] is False and not all(v["mapping_evidenced"] for v in shown)
+    assert res["independence_groups_evidenced"] == min(v["independence_groups_evidenced"] for v in shown) == 0
+    # by contrast, a tier-1 declaring source is an assertion stating the set: the whole field is evidenced
+    by_source = gen.resolve([_doublet(gen), _member(gen, "броня́")], "stress", SUBJECT)
+    assert by_source["state"] == "variant" and by_source["mapping_evidenced"] is True
+    assert (
+        by_source["independence_groups_evidenced"]
+        == min(v["independence_groups_evidenced"] for v in by_source["values"])
+        == 1
+    )
     narrow = {"kind": "variant", "overlay_id": "ovl-2026-09-28-0010", "members": ["вряди́-годи́", "x"]}
     assert gen.resolve([ulif, uws], "stress", SUBJECT, overlay=narrow)["state"] == "conflict"
-    # disagreeing tier-1 declarations are resolved the same way
+    # disagreeing tier-1 declarations are resolved the same way; the overlay declaration still keeps the field unevidenced
     a_b, c_d = _declared(gen, "а́|б", "vesum", "vesum:x comment"), _declared(gen, "в|г", "ulif", "ulif:x headword")
     wide = {"kind": "variant", "overlay_id": "ovl-2026-09-28-0011", "members": ["а́", "б", "в", "г"]}
-    assert gen.resolve([a_b, c_d], "stress", SUBJECT, overlay=wide)["state"] == "variant"
+    wide_res = gen.resolve([a_b, c_d], "stress", SUBJECT, overlay=wide)
+    assert wide_res["state"] == "variant"
+    assert wide_res["mapping_evidenced"] is False and wide_res["independence_groups_evidenced"] == 0
 
 
 def test_overlay_schema_requires_members_for_variant() -> None:

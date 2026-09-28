@@ -105,10 +105,15 @@ SPLIT_OVERLAY = {
 #   - ULIF `content_sha256` is NOT unique: 257,539 distinct values over 262,788 rows.
 #   - the r2 key `query#headword#grammatical_label` is NOT unique: 4,276 key groups covering 8,814 checked rows
 #     collide; rows 3 and 98008 (`ключ` homonyms 1 and 2) share `ключ#ключ#іменник чоловічого роду`.
-# Correspondence (§12.1, `correspond()`): alias kinds are tried in order of strength; the first kind that
-# yields exactly one candidate decides; a kind that yields several candidates is an explicit AMBIGUOUS hold
-# (a suppression then applies to every candidate until adjudicated), never a fall-through to a weaker key.
+# Correspondence (§12.1, `correspond()`): every alias kind is evaluated against the new snapshot, with EVERY
+# historical key of a kind kept (a corrected header appends an alias; the old key still finds the row). A row
+# corresponds only if it is consistent with every kind that hits: exactly one such row is `unique`; several are an
+# explicit AMBIGUOUS hold; kinds that hit different rows are a CONFLICT hold (`held`). `register_position` is a
+# layout key whose continuity across harvests is untested (Q-I6): it never decides alone into another snapshot —
+# it needs a content-side alias that singles out the same row, or to have been observed in that snapshot — else
+# `held`. Under any hold a suppression applies to every candidate until a lane adjudicates; never a guess.
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
+POSITION_KINDS = frozenset({"register_position"})  # layout evidence; continuity across harvests unproven (Q-I6)
 
 # locator head -> (aliases as {kind: key}, note)
 SOURCE_RECORD_ALIASES = {
@@ -222,34 +227,67 @@ for _head in ("ulif:entry:3", "ulif:entry:98008"):
             _alias["note"] = "shared with the other ключ homonym (ULIF rows 3 and 98008): never decides alone"
 
 
-def correspond(record: dict, candidates: list[dict]) -> dict:
-    """Find `record` among the rows of a new snapshot (schema.md §12.1). `candidates` are rows of the new
-    snapshot as {locator, aliases: {kind: key}}. Alias kinds are tried from strongest to weakest; the first
-    kind with exactly one hit decides; several hits on one kind is an explicit `ambiguous` hold (every
-    candidate is treated as the record for suppression purposes until a lane adjudicates); no hit on any
-    kind is `missing`."""
-    mine = {a["kind"]: a["key"] for a in record["aliases"]}
+_HOLD_TAIL = "suppression applies to every candidate; correspondence needs an overlay identity entry"
+
+
+def correspond(record: dict, candidates: list[dict], snapshot_id: str | None = None) -> dict:
+    """Find `record` among the rows of a snapshot (schema.md §12.1). `candidates` are rows of that snapshot as
+    {locator, aliases: {kind: key}}; `snapshot_id` names the snapshot they come from (None = a new harvest).
+
+    Every alias kind is evaluated, and every historical key of a kind counts (a corrected header APPENDS an
+    alias, so a row still carrying the old key is found). The rows consistent with every kind that hits are
+    the candidates: exactly one is `unique`; several are an explicit `ambiguous` hold; kinds that hit different
+    rows (register position says one row, content another) are a conflict `held`. `register_position` is layout
+    evidence whose continuity across harvests is unproven (Q-I6): it decides only when a content-side kind
+    singles out the same row, or when it was observed in `snapshot_id` itself; a row that only the position
+    singles out is `held`. Under every hold a suppression applies to every candidate until a language-lane
+    overlay `identity` entry settles the correspondence. No hit on any kind is `missing`."""
+    mine: dict[str, dict[str, set[str]]] = {}  # kind -> key -> snapshots the key was observed in
+    for a in record["aliases"]:
+        mine.setdefault(a["kind"], {}).setdefault(a["key"], set()).add(a["snapshot_id"])
+    hits: dict[str, set[str]] = {}
     for kind in ALIAS_ORDER:
-        if kind not in mine:
-            continue
-        hits = [c["locator"] for c in candidates if c["aliases"].get(kind) == mine[kind]]
-        if len(hits) == 1:
-            return {"status": "unique", "matched_by": kind, "locator": hits[0]}
-        if len(hits) > 1:
-            return {
-                "status": "ambiguous",
-                "matched_by": kind,
-                "candidates": sorted(hits),
-                "hold": "suppression applies to every candidate; correspondence needs an overlay identity entry",
-            }
-    return {"status": "missing"}
+        found = {c["locator"] for c in candidates if c["aliases"].get(kind) in mine.get(kind, {})}
+        if found:
+            hits[kind] = found
+    if not hits:
+        return {"status": "missing"}
+    strongest = next(kind for kind in ALIAS_ORDER if kind in hits)
+    everything = sorted(set().union(*hits.values()))
+    consistent = set.intersection(*hits.values())
+    if not consistent:
+        evidence = "; ".join(f"{kind} -> {', '.join(sorted(rows))}" for kind, rows in hits.items())
+        return {
+            "status": "held",
+            "matched_by": strongest,
+            "candidates": everything,
+            "hold": f"conflicting identity evidence ({evidence}); {_HOLD_TAIL}",
+        }
+    if len(consistent) > 1:
+        return {"status": "ambiguous", "matched_by": strongest, "candidates": sorted(consistent), "hold": _HOLD_TAIL}
+    (locator,) = consistent
+    content_hits = [rows for kind, rows in hits.items() if kind not in POSITION_KINDS]
+    singled_out_by_content = bool(content_hits) and set.intersection(*content_hits) == {locator}
+    row = next(c for c in candidates if c["locator"] == locator)
+    observed_here = snapshot_id is not None and any(
+        snapshot_id in mine[kind].get(row["aliases"].get(kind), set()) for kind in hits if kind in POSITION_KINDS
+    )
+    if not singled_out_by_content and not observed_here:
+        return {
+            "status": "held",
+            "matched_by": strongest,
+            "candidates": everything,
+            "hold": f"only register_position singles out {locator}; position continuity across harvests is "
+            f"unproven (Q-I6) and no content alias corroborates it; {_HOLD_TAIL}",
+        }
+    return {"status": "unique", "matched_by": strongest, "locator": locator}
 
 
 def selector_targets(selector: dict, correspondence: dict) -> list[str]:
     """Locators a `source_record` selector suppresses in a snapshot, given the record's correspondence there."""
     if correspondence["status"] == "unique":
         return [correspondence["locator"]]
-    if correspondence["status"] == "ambiguous":
+    if correspondence["status"] in ("ambiguous", "held"):
         return list(correspondence["candidates"])
     return []
 
@@ -876,6 +914,8 @@ def _resolve_scalar(voting: list[dict], overlay: dict | None) -> dict:
     declared_sets = {frozenset(vn.split("|")) for vn in by_decl}
     # Reviewed overlay `variant` (§8.2 rule 4, §12): the language lane declares the set with evidence; it resolves
     # both conflicting single values and disagreeing tier-1 declarations. Every observed value must be a member.
+    # The declared entry is a shown proposition with no source assertion behind it: it stays unevidenced and
+    # therefore keeps the field-level `mapping_evidenced` false (rule 7; review never promotes, Q5).
     if overlay and overlay.get("kind") == "variant":
         members_declared = set(overlay["members"])
         vn = "|".join(sorted(members_declared))
@@ -958,8 +998,11 @@ def _shown_entries(res: dict) -> list[dict]:
 
 
 def _evidence_of(res: dict) -> dict:
-    """Field-level evidence = every shown proposition is evidenced; corroboration = the weakest shown one."""
-    shown = [v for v in _shown_entries(res) if v["assertion_ids"]]
+    """Field-level evidence = every shown proposition is evidenced; corroboration = the weakest shown one.
+    EVERY shown proposition counts, including an overlay-declared set (`declared_by`) that no source assertion
+    states (Astra r3): it is unevidenced, so a field whose only declaration is an overlay is not evidenced as a
+    whole and its minimum corroboration is 0; an item that consumes one member reads that member's entry."""
+    shown = _shown_entries(res)
     return {
         "mapping_evidenced": bool(shown) and all(v["mapping_evidenced"] for v in shown),
         "independence_groups_evidenced": min((v["independence_groups_evidenced"] for v in shown), default=0),
