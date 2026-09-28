@@ -216,14 +216,14 @@ def test_remote_head_change_prevents_push_and_local_deletion(repo: Path, monkeyp
 
     monkeypatch.setattr(sweep, "_origin_head", moved)
     item = only(repo, "codex/moved-remotely", apply=True)
-    assert item.classification == "report-only"
+    assert item.classification == "skipped-moved"
     assert "changed" in item.reason
     assert git(repo, "ls-remote", "--heads", "origin", "codex/moved-remotely")
     assert git(repo, "branch", "--list", "codex/moved-remotely")
 
 
 def test_remote_deletion_passes_one_validated_refspec(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    branch(repo, "pr-123")
+    sha = branch(repo, "pr-123")
     calls: list[tuple[str, ...]] = []
     original = sweep._git
 
@@ -235,4 +235,50 @@ def test_remote_deletion_passes_one_validated_refspec(repo: Path, monkeypatch: p
     monkeypatch.setattr(sweep, "_git", capture)
     item = only(repo, "pr-123", apply=True)
     assert item.classification == "delete-ancestor"
-    assert calls == [("push", "origin", "--delete", "pr-123")]
+    assert calls == [(
+        "push", "--porcelain", f"--force-with-lease=refs/heads/pr-123:{sha}",
+        "origin", ":refs/heads/pr-123",
+    )]
+
+
+def test_remote_advance_during_push_preserves_both_refs(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    old_sha = branch(repo, "codex/racing")
+    tree = git(repo, "rev-parse", "main^{tree}")
+    new_sha = git(repo, "commit-tree", tree, "-p", old_sha, "-m", "new remote work")
+    original = sweep._git
+    pushes: list[tuple[str, ...]] = []
+
+    def advance_before_push(root: Path, *args: str, **kwargs):
+        if args[0] == "push":
+            pushes.append(args)
+            git(repo, "push", "origin", f"{new_sha}:refs/heads/codex/racing")
+        return original(root, *args, **kwargs)
+
+    monkeypatch.setattr(sweep, "_git", advance_before_push)
+    item = only(repo, "codex/racing", apply=True)
+    assert item.classification == "skipped-moved"
+    assert not item.remote_deleted and not item.local_deleted
+    assert git(repo, "ls-remote", "--heads", "origin", "codex/racing").split()[0] == new_sha
+    assert git(repo, "rev-parse", "refs/heads/codex/racing") == old_sha
+    assert pushes == [(
+        "push", "--porcelain", f"--force-with-lease=refs/heads/codex/racing:{old_sha}",
+        "origin", ":refs/heads/codex/racing",
+    )]
+
+
+def test_remote_disappears_after_classification_allows_local_deletion(
+    repo: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    branch(repo, "codex/absent")
+    original = sweep._origin_head
+
+    def disappear(root: Path, name: str) -> str | None:
+        if name == "codex/absent":
+            git(repo, "push", "origin", "--delete", name)
+        return original(root, name)
+
+    monkeypatch.setattr(sweep, "_origin_head", disappear)
+    item = only(repo, "codex/absent", apply=True)
+    assert item.classification == "delete-ancestor"
+    assert not item.remote_deleted and item.local_deleted
+    assert not git(repo, "branch", "--list", "codex/absent")

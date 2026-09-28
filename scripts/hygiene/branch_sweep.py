@@ -253,14 +253,22 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
     if branch.remote_sha:
         try:
             live = _origin_head(repo, name)
-            if live != branch.remote_sha:
-                return replace(verdict, classification="report-only", reason="origin head changed or disappeared")
-            result = _git(repo, "push", "origin", "--delete", name, timeout=60)
-            if result.returncode:
-                return replace(verdict, classification="report-only", reason=f"remote deletion failed: {result.stderr.strip()}")
-            verdict = replace(verdict, remote_deleted=True)
-            if _origin_head(repo, name) is not None:
-                return replace(verdict, classification="report-only", reason="origin head remains after deletion")
+            if live is not None:
+                if live != branch.remote_sha:
+                    return replace(verdict, classification="skipped-moved", reason="origin head changed")
+                result = _git(
+                    repo, "push", "--porcelain",
+                    f"--force-with-lease=refs/heads/{name}:{branch.remote_sha}",
+                    "origin", f":refs/heads/{name}", timeout=60,
+                )
+                if result.returncode:
+                    output = (result.stdout + "\n" + result.stderr).strip()
+                    if "[rejected]" in output and "(stale info)" in output:
+                        return replace(verdict, classification="skipped-moved", reason="origin head changed during deletion")
+                    return replace(verdict, classification="report-only", reason=f"remote deletion failed: {output}")
+                verdict = replace(verdict, remote_deleted=True)
+                if _origin_head(repo, name) is not None:
+                    return replace(verdict, classification="report-only", reason="origin head remains after deletion")
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             return replace(verdict, classification="report-only", reason=f"remote verification failed: {exc}")
     if branch.local_sha:
