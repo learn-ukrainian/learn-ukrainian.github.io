@@ -299,15 +299,20 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="mcp_server_identity",
             description=(
-                "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
-                "its actual sources.db, and its actual vesum.db — never a path or content. "
-                "A client can compare these endpoint-reported hashes against the exact locally "
-                "reviewed files it expects to prove the endpoint is backed by the same reviewed "
-                "code/data, not merely files that happen to exist on the caller's own filesystem."
+                "Return public-safe identities for the running server.py, sources.db, and vesum.db. "
+                "By default sources_db_meta_identity is a file-meta-v1 state identity (size, "
+                "mtime, journal mode, and WAL metadata), not a content hash and never a database-body read. "
+                "Set include_sources_db_sha256=true to request a fresh full content hash of sources.db. "
+                "No filesystem paths are returned."
             ),
             inputSchema={
                 "type": "object",
-                "properties": {},
+                "properties": {
+                    "include_sources_db_sha256": {
+                        "type": "boolean",
+                        "description": "Compute and return a fresh full content hash for sources.db.",
+                    },
+                },
             },
         ),
         _tool(
@@ -2134,9 +2139,8 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
 # Cache key: (resolved path, mtime_ns, ctime_ns, size, inode).
 # The required identity is (resolved path, st_size, st_mtime_ns); ctime and
 # inode are included so a same-size, same-mtime replace still recomputes.
-# ``mcp_server_identity`` hashes server code, sources.db, and vesum.db
-# through this same cache. The lock stops concurrent cold calls from
-# re-reading a multi-gigabyte file.
+# ``mcp_server_identity`` hashes server code and vesum.db through this cache.
+# The multi-gigabyte sources.db content hash is opt-in and always fresh.
 _FILE_HASH_CACHE: dict[tuple[str, int, int, int, int], str] = {}
 _FILE_HASH_LOCK = threading.Lock()
 
@@ -2183,27 +2187,41 @@ def _sha256_of_file(path: Path) -> str:
 async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     """Endpoint identity attestation (Cycle 007 evidence-foundation fixes v3, item 1).
 
-    Public-safe exact identity hashes only — never a path or file content.
-    Callers (``LocalMcpSourcesClient.server_identity()``) compare these
-    endpoint-reported values against the exact locally reviewed files they
-    expect; this handler must never merely echo back whatever a client
-    claims — it hashes the server's own actual running files.
+    The default sources.db identity is file metadata, not content. A caller
+    must explicitly request its full content hash; that hash bypasses cache.
     """
     server_path = Path(__file__).resolve()
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
 
     def _identity() -> dict[str, Any]:
+        from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
+
+        meta_digest, meta = sources_db_meta_identity(sources_db_path)
         return {
             "server_code_sha256": _sha256_of_file(server_path),
-            "sources_db_sha256": _sha256_of_file(sources_db_path),
+            "sources_db_meta_identity": {"scheme": meta["scheme"], "sha256": meta_digest},
             "sources_db_bytes": sources_db_path.stat().st_size,
             "vesum_db_sha256": _sha256_of_file(vesum_db_path),
             "vesum_db_bytes": vesum_db_path.stat().st_size,
+            **(
+                {"sources_db_sha256": _sha256_of_file_fresh(sources_db_path)}
+                if args.get("include_sources_db_sha256") is True
+                else {}
+            ),
         }
 
     payload = await asyncio.to_thread(_identity)
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+
+def _sha256_of_file_fresh(path: Path) -> str:
+    """Hash a file body without consulting or populating the shared hash cache."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _is_archaic(tags):
