@@ -661,7 +661,7 @@ def test_step_ids_on_units_in_expanded_document():
 
 def test_build_slovnyk_and_resursy_tabs(monkeypatch):
     """Verify build_slovnyk_tab and build_resursy_tab structure and content."""
-    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma, **_sense: f"/lexicon/{lemma}/")
     w1_forms = [
         {
             "form": "добрий",
@@ -1007,7 +1007,7 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
         },
     )()
 
-    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma, **_sense: f"/lexicon/{lemma}/")
     monkeypatch.setattr("scripts.build.fresh.assemble.resolve", lambda *args, **kwargs: stream_with_open)
 
     rep = assemble_lesson(
@@ -1084,7 +1084,7 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
 
 def test_slovnyk_selected_sense_and_forms_and_pending_stress(monkeypatch):
     """Major 5: Selected sense, taught forms, lemma stress from lemma form, pending prints no stress."""
-    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma, **_sense: f"/lexicon/{lemma}/")
     # Word 1 has pending stress on lemma form
     w1_forms = [
         {
