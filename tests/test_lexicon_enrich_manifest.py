@@ -5356,6 +5356,17 @@ def test_offline_gate_never_preserves_soviet_cited_section(monkeypatch) -> None:
     assert entry["gate_provenance"]["synonyms"] == manifest_io.SOURCE_WITHDRAWN_UNVERIFIED
 
 
+def test_new_enrichment_fails_closed_on_unflagged_soviet_citation(monkeypatch) -> None:
+    with pytest.raises(ValueError, match=r"newly enriched entry.*unflagged СУМ-11"):
+        _run_synonyms_gate(
+            monkeypatch,
+            offline=False,
+            cache={"lookups": {"synonyms": {"text": "x"}}},
+            new_synonyms={"items": ["джерело"], "source": "СУМ-11"},
+            existing_synonyms={},
+        )
+
+
 def test_cites_soviet_dictionary_detects_label_variants() -> None:
     from scripts.lexicon.source_attribution import cites_soviet_dictionary
 

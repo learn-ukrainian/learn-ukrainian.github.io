@@ -91,6 +91,72 @@ def soviet_citation_learner_violation(payload: object) -> str | None:
     return None
 
 
+def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Project a legacy entry without unsafe citations and count withdrawn evidence.
+
+    A cited section is withheld as a unit: its learner items cannot be assigned
+    independently to the remaining sources in a compound attribution string.
+    The published manifest is never changed by this build-time projection.
+    """
+    projected = dict(entry)
+    by_section: dict[str, int] = {}
+
+    def withdraw(name: str, value: object) -> None:
+        citations = len(SOVIET_DICTIONARY_CITATION_RE.findall(
+            json.dumps(value, ensure_ascii=False, default=str)
+        ))
+        if not citations:
+            raise ValueError(f"cannot count withheld СУМ-11 citations in {name}")
+        by_section[name] = by_section.get(name, 0) + citations
+
+    for container_name in ("sections", "enrichment"):
+        container = projected.get(container_name)
+        if not isinstance(container, dict):
+            continue
+        clean = dict(container)
+        for name, value in container.items():
+            if name == "sources" and isinstance(value, list):
+                kept = []
+                for source in value:
+                    if cites_soviet_dictionary(source):
+                        withdraw(f"{container_name}.sources", source)
+                    else:
+                        kept.append(source)
+                clean[name] = kept
+            elif soviet_citation_learner_violation({"sections": {name: value}}):
+                withdraw(name, value)
+                clean.pop(name)
+        projected[container_name] = clean
+
+    for name, value in entry.items():
+        if name in {"sections", "enrichment", "gate_provenance"}:
+            continue
+        if name == "source_provenance" and isinstance(value, list):
+            kept = []
+            for source in value:
+                if soviet_citation_learner_violation({name: source}):
+                    withdraw(name, source)
+                else:
+                    kept.append(source)
+            projected[name] = kept
+        elif soviet_citation_learner_violation({name: value}):
+            withdraw(name, value)
+            projected.pop(name)
+
+    if by_section:
+        provenance = dict(projected.get("gate_provenance") or {})
+        for name in by_section:
+            provenance[name] = "source-withdrawn-unverified"
+        projected["gate_provenance"] = provenance
+    if soviet_citation_learner_violation(projected):
+        raise ValueError("cannot compute a safe СУМ-11 citation withholding projection")
+    return projected, {
+        "entries_touched": int(bool(by_section)),
+        "citations_withheld": sum(by_section.values()),
+        "by_section": by_section,
+    }
+
+
 SLOVNYK_DICT_PATH_RE = re.compile(
     r"https?://(?:www\.)?slovnyk\.me/dict/(?P<slug>[^/]+)/(?P<word>[^/?#]+)",
     re.IGNORECASE,

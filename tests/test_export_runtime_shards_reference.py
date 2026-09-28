@@ -66,7 +66,7 @@ def test_replay_records_and_search_rows_match_reference_loaders(edge_db: Path, f
             conn.close()
 
 
-def test_export_rejects_legacy_soviet_citation_in_learner_card(tmp_path: Path) -> None:
+def test_export_withholds_legacy_soviet_citation_in_shard(tmp_path: Path) -> None:
     conn = sqlite3.connect(_make_source_db(tmp_path / "legacy.db"))
     conn.row_factory = sqlite3.Row
     row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
@@ -78,12 +78,25 @@ def test_export_rejects_legacy_soviet_citation_in_learner_card(tmp_path: Path) -
         (json.dumps(payload, ensure_ascii=False), row[0]),
     )
     conn.commit()
-    with pytest.raises(ExportError, match="СУМ-11 citation outside"):
-        EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
     conn.close()
+    out = tmp_path / "out"
+    report = _export(tmp_path / "legacy.db", out)
+    assert report["sovietCitationWithholding"] == {
+        "entries_touched": 1, "citations_withheld": 1, "by_section": {"synonyms": 1}
+    }
+    version = out / "atlas" / "versions" / report["dataVersion"]
+    records = [
+        record
+        for path in (version / "entries").glob("*.json.gz")
+        for record in json.loads(gzip.decompress(path.read_bytes()))["records"]
+    ]
+    emitted = next(record["entry"] for record in records if record["slug"] == row[0])
+    assert "СУМ-11" not in json.dumps(emitted, ensure_ascii=False)
+    assert "synonyms" not in emitted.get("sections", {})
+    assert emitted["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
 
 
-def test_export_rejects_unmarked_contrast_citation(tmp_path: Path) -> None:
+def test_export_withholds_unmarked_contrast_citation(tmp_path: Path) -> None:
     conn = sqlite3.connect(_make_source_db(tmp_path / "unmarked.db"))
     conn.row_factory = sqlite3.Row
     row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
@@ -98,8 +111,9 @@ def test_export_rejects_unmarked_contrast_citation(tmp_path: Path) -> None:
         (json.dumps(payload, ensure_ascii=False), row[0]),
     )
     conn.commit()
-    with pytest.raises(ExportError, match="russification marker"):
-        EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
+    record = EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
+    assert "soviet_colonization_context" not in record["entry"]
+    assert record["entry"]["gate_provenance"]["soviet_colonization_context"] == "source-withdrawn-unverified"
     conn.close()
 
 

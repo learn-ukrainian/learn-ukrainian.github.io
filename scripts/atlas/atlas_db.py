@@ -382,20 +382,18 @@ def migrate_manifest(
     curated_aliases_path: Path = DEFAULT_CURATED_ALIASES,
 ) -> dict[str, int]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    entries = manifest.get("entries", [])
-    from scripts.lexicon.source_attribution import soviet_citation_learner_violation
+    from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
-    for entry in entries:
-        violation = soviet_citation_learner_violation(entry)
-        label = entry.get("url_slug") or entry.get("lemma")
-        if violation == "outside soviet_colonization_context":
-            raise ValueError(
-                f"СУМ-11 citation outside soviet_colonization_context in manifest entry {label!r}"
-            )
-        if violation == "missing russification marker":
-            raise ValueError(
-                f"СУМ-11 citation without a russification marker in manifest entry {label!r}"
-            )
+    entries = []
+    withholding: dict[str, Any] = {"entries_touched": 0, "citations_withheld": 0, "by_section": {}}
+    for entry in manifest.get("entries", []):
+        projected, report = withhold_legacy_soviet_citations(entry)
+        entries.append(projected)
+        withholding["entries_touched"] += report["entries_touched"]
+        withholding["citations_withheld"] += report["citations_withheld"]
+        for section, count in report["by_section"].items():
+            by_section = withholding["by_section"]
+            by_section[section] = by_section.get(section, 0) + count
     if db_path.exists():
         db_path.unlink()
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -564,6 +562,7 @@ def migrate_manifest(
     )
     conn.commit()
     counts["by_type"] = by_type  # type: ignore[assignment]
+    counts["soviet_citation_withholding"] = withholding  # type: ignore[assignment]
     conn.close()
     return counts
 

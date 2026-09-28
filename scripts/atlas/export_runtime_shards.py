@@ -53,7 +53,7 @@ if __package__ is None or __package__ == "":
 
 from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for_hash
 from scripts.etymology.transliterate import transliterate
-from scripts.lexicon.source_attribution import soviet_citation_learner_violation
+from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
 SCHEMA_VERSION = 1
 ENTRY_SHARD_SCHEMA = "atlas-entry-shard"
@@ -459,6 +459,7 @@ class EntryReplay:
     ) -> None:
         self._conn = conn
         self._practice_levels_by_slug = practice_levels_by_slug
+        self.withholding: dict[str, Any] = {"entries_touched": 0, "citations_withheld": 0, "by_section": {}}
         self._component_targets = build_component_link_targets(
             conn.execute(
                 """SELECT display_head, slug
@@ -499,11 +500,15 @@ class EntryReplay:
         entry = json.loads(row["payload_json"])
         if not isinstance(entry, dict):
             raise ExportError(f"payload_json for {row['slug']!r} is not an object")
-        violation = soviet_citation_learner_violation(entry)
-        if violation == "outside soviet_colonization_context":
-            raise ExportError(f"СУМ-11 citation outside soviet_colonization_context for {row['slug']!r}")
-        if violation == "missing russification marker":
-            raise ExportError(f"СУМ-11 citation without a russification marker for {row['slug']!r}")
+        try:
+            entry, withdrawn = withhold_legacy_soviet_citations(entry)
+        except ValueError as exc:
+            raise ExportError(f"СУМ-11 citation withholding failed for {row['slug']!r}: {exc}") from exc
+        self.withholding["entries_touched"] += withdrawn["entries_touched"]
+        self.withholding["citations_withheld"] += withdrawn["citations_withheld"]
+        for section, count in withdrawn["by_section"].items():
+            by_section = self.withholding["by_section"]
+            by_section[section] = by_section.get(section, 0) + count
         # Authoritative entry_type from articles (SSOT). form_of routes → null.
         entry["entry_type"] = row["entry_type"]
         _assert_cefr_consistent(row["slug"], row["cefr"], entry)
@@ -2446,6 +2451,10 @@ def export_runtime_shards(
             hasher.add_entry(record)
             route_meta.append((slug_digest(record["slug"]), record["slug"]))
             article_kinds += record["kind"] == "article"
+        withholding = {
+            **replay.withholding,
+            "by_section": dict(sorted(replay.withholding["by_section"].items())),
+        }
         if len(route_meta) != counts["publicRoutes"]:
             raise ExportError("entry record count drifted from public route count")
         if article_kinds != counts["articles"]:
@@ -2564,6 +2573,7 @@ def export_runtime_shards(
                 "dataVersion": data_version,
                 "generatedAt": generated_at,
                 "counts": manifest["counts"],
+                "sovietCitationWithholding": withholding,
                 "entryShardBytes": sorted(leaf_sizes),
                 "entryShardIds": sorted(entry_descriptors),
                 "outDir": str(base_root),

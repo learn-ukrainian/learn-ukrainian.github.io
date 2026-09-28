@@ -29,6 +29,7 @@ from scripts.lexicon.source_attribution import (
     official_url_from_mirror,
     remap_mirror_source_string,
     soviet_citation_learner_violation,
+    withhold_legacy_soviet_citations,
 )
 from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
 
@@ -48,6 +49,26 @@ def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
     assert soviet_citation_learner_violation(unmarked) == "missing russification marker"
     assert soviet_citation_learner_violation(synonym) == "outside soviet_colonization_context"
     assert soviet_citation_learner_violation({"sections": {"synonyms": {"source": "СУМ-20"}}}) is None
+
+
+def test_legacy_withholding_counts_sections_and_preserves_marked_context() -> None:
+    original = {
+        "lemma": "слово",
+        "sections": {"synonyms": {"items": ["назва"], "source": "СУМ-20 + СУМ-11"}},
+        "enrichment": {"sources": ["СУМ-20", "СУМ-11"]},
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True},
+    }
+    projected, report = withhold_legacy_soviet_citations(original)
+    assert report == {
+        "entries_touched": 1,
+        "citations_withheld": 2,
+        "by_section": {"synonyms": 1, "enrichment.sources": 1},
+    }
+    assert original["sections"]["synonyms"]["source"] == "СУМ-20 + СУМ-11"
+    assert projected["sections"] == {}
+    assert projected["enrichment"]["sources"] == ["СУМ-20"]
+    assert projected["soviet_colonization_context"] == original["soviet_colonization_context"]
+    assert projected["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
 
 
 def test_soviet_marker_must_be_explicit_on_each_direct_contrast_citation() -> None:

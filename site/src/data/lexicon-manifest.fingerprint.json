@@ -175,7 +175,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "008486cefa0f721e3d6a9c7c1cace2b69e3906d9cb1fa8f324125a5185b2ac4f"
+        "sha256": "2514bbfeb7926818c74b8c124571a709960c72b3a147259cabbdcce016ce9e86"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -347,7 +347,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "6003df2094b593b1849bbf8051004a072192b3b930d00338f7a28442e36e1500"
+        "sha256": "d42f89e3d100d18a027d0b2a106178ccb367e1dde217467d18ea468cabc11de3"
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",

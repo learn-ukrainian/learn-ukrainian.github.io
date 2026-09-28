@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import sqlite3
 
@@ -9,6 +10,7 @@ import pytest
 import yaml
 
 from scripts.atlas import atlas_db
+from scripts.atlas.export_runtime_shards import export_runtime_shards
 
 
 def _manifest(tmp_path):
@@ -78,7 +80,7 @@ def test_migration_shapes_and_gates(tmp_path):
     conn.close()
 
 
-def test_migration_rejects_soviet_citation_before_replacing_database(tmp_path):
+def test_migration_withholds_legacy_soviet_citation(tmp_path):
     manifest = _manifest(tmp_path)
     db = tmp_path / "atlas.db"
     db.write_bytes(b"existing database")
@@ -86,13 +88,30 @@ def test_migration_rejects_soviet_citation_before_replacing_database(tmp_path):
     entries["entries"][0]["sections"] = {
         "synonyms": {"items": ["стяг"], "source": "СУМ-11"}
     }
+    entries["generated_at"] = "2026-01-02T03:04:05+00:00"
     manifest.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
-    with pytest.raises(ValueError, match="СУМ-11 citation outside"):
-        atlas_db.migrate_manifest(manifest, db)
-    assert db.read_bytes() == b"existing database"
+    counts = atlas_db.migrate_manifest(manifest, db)
+    report = counts["soviet_citation_withholding"]
+    assert report == {"entries_touched": 1, "citations_withheld": 1, "by_section": {"synonyms": 1}}
+    with sqlite3.connect(db) as conn:
+        payload = json.loads(conn.execute(
+            "SELECT payload_json FROM article_payloads WHERE slug='прапор'"
+        ).fetchone()[0])
+        assert "synonyms" not in payload.get("sections", {})
+        assert payload["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
+    out = tmp_path / "runtime"
+    report = export_runtime_shards(db_path=db, out_dir=out, include_decks=False)
+    shard_dir = out / "atlas" / "versions" / report["dataVersion"] / "entries"
+    records = [
+        record
+        for shard in shard_dir.glob("*.json.gz")
+        for record in json.loads(gzip.decompress(shard.read_bytes()))["records"]
+    ]
+    exported = next(record["entry"] for record in records if record["slug"] == "прапор")
+    assert "СУМ-11" not in json.dumps(exported, ensure_ascii=False)
 
 
-def test_migration_rejects_unmarked_contrast_citation(tmp_path):
+def test_migration_withholds_unmarked_contrast_citation(tmp_path):
     manifest = _manifest(tmp_path)
     db = tmp_path / "atlas.db"
     db.write_bytes(b"existing database")
@@ -102,9 +121,13 @@ def test_migration_rejects_unmarked_contrast_citation(tmp_path):
     }
     entries["entries"][0]["red_flag"] = True
     manifest.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
-    with pytest.raises(ValueError, match="russification marker"):
-        atlas_db.migrate_manifest(manifest, db)
-    assert db.read_bytes() == b"existing database"
+    counts = atlas_db.migrate_manifest(manifest, db)
+    assert counts["soviet_citation_withholding"]["by_section"] == {"soviet_colonization_context": 1}
+    with sqlite3.connect(db) as conn:
+        payload = json.loads(conn.execute(
+            "SELECT payload_json FROM article_payloads WHERE slug='прапор'"
+        ).fetchone()[0])
+        assert "soviet_colonization_context" not in payload
 
 
 def test_alias_helpers():

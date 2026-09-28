@@ -115,6 +115,7 @@ from scripts.lexicon.source_attribution import (
     join_academic_source_labels,
     normalize_academic_label,
     remap_url_list,
+    soviet_citation_learner_violation,
 )
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
 from scripts.storage.paths import artifact_path
@@ -8293,6 +8294,9 @@ def enrich_entry(
     else:
         entry.pop("wiki_reference", None)
 
+    violation = soviet_citation_learner_violation(entry)
+    if violation:
+        raise ValueError(f"newly enriched entry {lemma!r} has an unflagged СУМ-11 citation: {violation}")
     return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
 
 
