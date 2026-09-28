@@ -78,7 +78,9 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     job = warm["jobs"]["warm"]
     assert job["runs-on"] == workflow["jobs"]["pytest"]["runs-on"]
     assert job["timeout-minutes"] == 15
-    checkout = job["steps"][0]
+    checkout = next(
+        step for step in job["steps"] if str(step.get("uses", "")).startswith("actions/checkout@")
+    )
     ci_checkout = next(
         step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/checkout@")
     )
@@ -109,6 +111,26 @@ def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
     assert "grep -Fx" in script
     assert "exit 1" in script
     assert "gh cache delete" not in script
+
+
+def test_warm_workflow_rejects_dispatch_on_other_refs_before_warming() -> None:
+    # #9101: workflow_dispatch runs on any branch, where nothing saves and
+    # verify would search main for that branch's key. Reject it first (red,
+    # obvious) instead of skipping verify; main runs must pass through.
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    triggers = warm.get("on", warm.get(True))
+    assert "workflow_dispatch" in triggers
+    steps = warm["jobs"]["warm"]["steps"]
+    guard = steps[0]
+    assert guard["if"] == "github.ref != 'refs/heads/main'"
+    assert guard["env"]["REF"] == "${{ github.ref }}"
+    assert "exit 1" in guard["run"]
+    assert "main" in guard["run"]
+    # Nothing that installs or saves runs before the guard, and verify cannot
+    # run once warm has failed.
+    assert "uses" not in guard
+    assert warm["jobs"]["verify"]["needs"] == "warm"
+    assert "if" not in warm["jobs"]["verify"]
 
 
 def test_every_uv_cache_action_is_pinned_to_a_full_sha() -> None:

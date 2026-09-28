@@ -17,6 +17,13 @@ name: Warm uv cache
 # The `verify` job fails the run when main has no entry for the current lock
 # after the save, so a missing or evicted entry is a red run, not a silent
 # fall back to PyPI.
+#
+# workflow_dispatch is allowed on any branch, but only a run on main can
+# save (python-ci-env) or be verified against main's entry. A dispatch on
+# another ref is rejected by the first step of `warm`, before anything is
+# installed: a red run makes the mistake obvious (a skipped `verify` would
+# look like success), and the check keys on github.ref, so a run on main is
+# never affected.
 
 on:
   push:
@@ -56,6 +63,13 @@ jobs:
     outputs:
       uv-cache-key: ${{ steps.python-ci-env.outputs.uv-cache-key }}
     steps:
+      - name: Require refs/heads/main
+        if: github.ref != 'refs/heads/main'
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          echo "::error title=uv cache warm runs on main only::Dispatched on ${REF}. Only refs/heads/main saves the uv cache and can be verified against main's entry; rerun with --ref main."
+          exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
