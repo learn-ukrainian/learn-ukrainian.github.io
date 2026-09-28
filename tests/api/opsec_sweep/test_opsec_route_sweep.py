@@ -57,7 +57,6 @@ FROZEN_IDS = frozenset(
         "fleet-workers-host-id",
         "occupancy-host-id",
         "health-instance-host",
-        "dashboard-index-localhost",
         "dashboard-work-loopback",
     }
 )

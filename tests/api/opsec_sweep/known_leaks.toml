@@ -3,6 +3,20 @@
 # change in PR-B; do not add compatibility path fields to make a finding fit.
 # Renewed 2026-09-23 to unblock CI; burn-down tracked in #8542. Every row cites
 # its open tracking `issue` (checked against tracking_issues.toml).
+#
+# #8542 residual (stop policy): dashboard-index-localhost was burned down
+# (dashboards/index.html now derives its footer label from location.host).
+# The remaining four rows echo an already-validated opaque self host id
+# (occupancy_sanitize.opaque_host_id) that real consumers depend on verbatim:
+# fleet.html/orient.html/epics.html/epics-map.html read host_id from
+# GET /api/fleet/workers/v1 and GET /api/occupancy to label per-host activity;
+# tests/test_api_endpoints.py::test_health_respects_lu_monitor_host_id requires
+# GET /api/health's instance.host to echo LU_MONITOR_HOST_ID verbatim (even a
+# non-opaque value) for operator diagnostics; dashboard:work.html's loopback
+# 127.0.0.1:8769 URL is a fixed, ADR-019-approved constant for the browser-local
+# private adapter (tests/test_work_dashboard_private_integration.py pins the
+# literal string). Redacting any of the four would break a real, tested
+# consumer, so they stay with a renewed expiry citing #8542 per its stop policy.
 version = 1
 
 [[known_leaks]]
@@ -26,14 +40,6 @@ id = "health-instance-host"
 operation = "GET /api/health"
 field = "body.instance.host"
 owner = "monitor-core"
-expiry = "2026-10-21"
-issue = 8542
-
-[[known_leaks]]
-id = "dashboard-index-localhost"
-operation = "dashboard:index.html"
-field = "body"
-owner = "monitor-dashboard"
 expiry = "2026-10-21"
 issue = 8542
 
