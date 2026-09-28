@@ -25,6 +25,7 @@ jobs:
     # Job-scoped (zizmor excessive-permissions): only this job files/updates
     # the failure-tracking issue.
     permissions:
+      actions: read
       contents: read
       issues: write
     steps:
@@ -128,6 +129,33 @@ jobs:
             -m 'slow and not atlas_release' \
             --junitxml=ci-artifacts/slow-junit.xml \
             2>&1 | tee ci-artifacts/slow.log
+
+      - name: Exercise quarantined tests without reruns
+        if: always()
+        env:
+          LU_FLAKE_DISABLE_RERUN: '1'
+        run: |
+          set -euo pipefail
+          mapfile -t nodeids < <(.venv/bin/python -c 'from scripts.ci.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
+          if (( ${#nodeids[@]} )); then
+            mkdir -p ci-artifacts
+            .venv/bin/python -m pytest "${nodeids[@]}" --strict-markers \
+              --timeout=120 --timeout-method=thread \
+              --junitxml=ci-artifacts/quarantine-junit.xml
+          fi
+
+      - name: Build flake ledger and update expired fix issues
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          reports=(--nightly-junit ci-artifacts/slow-junit.xml)
+          if [[ -f ci-artifacts/quarantine-junit.xml ]]; then
+            reports+=(--nightly-junit ci-artifacts/quarantine-junit.xml)
+          fi
+          .venv/bin/python scripts/ci/flake_ledger.py "${reports[@]}" \
+            --fetch-queue --output ci-artifacts/flake-ledger.json
 
       - name: Upload slow pytest evidence
         if: always()

@@ -35,6 +35,7 @@ regex>=2026.5.9  # scripts/build/activity_renderer.py (Unicode-property patterns
 pytest>=9.1.1
 pytest-cov>=7.0
 pytest-timeout>=2.4.0
+pytest-rerunfailures>=16.7  # #9067: quarantined node ids only
 
 # Linting
 ruff>=0.15.21
