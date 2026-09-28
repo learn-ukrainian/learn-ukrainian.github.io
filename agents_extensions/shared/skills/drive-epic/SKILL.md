@@ -215,9 +215,9 @@ stale in-context snapshot. For per-lane budget health before dispatch:
 `scripts/delegate.py dispatch --check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1`)
 (+ `/api/state/routing-budget` for subscription lanes).
 **Pre-dispatch pace check (binding):** read `.venv/bin/python -m scripts.fleet.usage show`
-(or the `capacity_pick` pace column) before every implement dispatch — a lane at/ahead
-of pace or in deficit (`will_last_to_reset=False`) is not a dispatch target while a
-cool lane has reserve.
+(or the `capacity_pick` pace column) before every implement dispatch — a deficit is
+visible pace, projected to run out before reset, and more than 2 points ahead of pace
+(near_cap ≥ 90% unchanged), and is not a dispatch target while a cool lane has reserve.
 
 ### 2. Pick the next unblocked action
 

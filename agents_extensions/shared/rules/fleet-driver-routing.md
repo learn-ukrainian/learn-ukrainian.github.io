@@ -75,7 +75,8 @@ slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
 
 **Refuse deficit when cooler seats exist.** Do **not** habit-route to Codex (or any
 subscription lane) while `usage show` / `routing-budget` shows hot / near_cap /
-deficit (`will_last_to_reset=False`) or a thinning reserve **and** `capacity_pick`
+deficit (visible pace, projected to run out before reset, and more than 2 points
+ahead of pace; near_cap ≥ 90% unchanged) or a thinning reserve **and** `capacity_pick`
 lists cool/idle free seats
 (Cursor, AGY, GLM, Kimi, …). `--check-budget` hard-subs when
 `dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
