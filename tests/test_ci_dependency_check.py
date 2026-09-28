@@ -10,6 +10,7 @@ from scripts.audit.check_ci_dependencies import unexpected_diagnostics
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
+_WARM = _REPO_ROOT / ".github/workflows/uv-cache-warm.yml"
 _ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
 
 
@@ -37,6 +38,58 @@ def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
     assert script.index("scripts/audit/check_ci_dependencies.py") < script.index(
         "build_assets.py"
     )
+
+
+def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
+    # #9095: merge_group restores only a cache saved on the default branch.
+    # setup-uv matches the requirements-lock.txt key exactly, and save-cache
+    # `auto` does not write on merge_group. The warm workflow is that writer.
+    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
+    pytest_steps = workflow["jobs"]["pytest"]["steps"]
+    action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
+    uv = next(step for step in action["runs"]["steps"] if step.get("name") == "Set up uv")
+    assert uv["with"]["save-cache"] == "auto"
+    assert uv["with"]["enable-cache"] is True
+    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
+    assert uv["with"].get("prune-cache", False) is False
+
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    triggers = warm.get("on", warm.get(True))
+    assert triggers["push"] == {
+        "branches": ["main"],
+        "paths": [
+            "requirements-lock.txt",
+            ".python-version",
+            ".github/actions/python-ci-env/**",
+            ".github/workflows/uv-cache-warm.yml",
+        ],
+    }
+    assert "pull_request" not in triggers
+    assert "merge_group" not in triggers
+    assert triggers["schedule"] == [{"cron": "30 4 * * *"}]
+    assert warm["permissions"] == {"contents": "read"}
+    assert warm["concurrency"]["cancel-in-progress"] is False
+    assert warm["env"]["UV_HTTP_RETRIES"] == workflow["env"]["UV_HTTP_RETRIES"]
+    assert warm["env"]["PIP_RETRIES"] == workflow["env"]["PIP_RETRIES"]
+
+    job = warm["jobs"]["warm"]
+    assert job["runs-on"] == workflow["jobs"]["pytest"]["runs-on"]
+    assert job["timeout-minutes"] == 15
+    checkout = job["steps"][0]
+    ci_checkout = next(
+        step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/checkout@")
+    )
+    assert checkout["uses"] == ci_checkout["uses"]
+    assert checkout["with"]["persist-credentials"] is False
+    setup = next(
+        step for step in job["steps"] if str(step.get("uses", "")).startswith("actions/setup-python@")
+    )
+    ci_setup = next(
+        step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/setup-python@")
+    )
+    assert setup["uses"] == ci_setup["uses"]
+    assert setup["with"] == {"python-version-file": ".python-version"}
+    assert any(step.get("uses") == "./.github/actions/python-ci-env" for step in job["steps"])
 
 
 def test_ci_retry_settings_cover_uv_and_pip() -> None:
