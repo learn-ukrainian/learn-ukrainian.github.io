@@ -1411,7 +1411,7 @@ def _minimal_dispatch_args(task_id: str, **overrides):
         "prompt_file": None,
         "mode": "read-only",
         "model": None,
-        "cwd": None,
+        "cwd": str(delegate._REPO_ROOT),
         "worktree": None,
         "hard_timeout": 3600,
     }
@@ -1470,7 +1470,7 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
     )
@@ -1507,7 +1507,7 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys)
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
     )
@@ -1718,6 +1718,7 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
             "0.50",
         ]
     )
+    args.cwd = str(delegate._REPO_ROOT)
     captured: dict[str, list[str]] = {}
 
     class _FakeStdin:
@@ -1753,6 +1754,7 @@ def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, caps
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "claude", "--task-id", "isolation-fallback", "--prompt", "hi"]
     )
+    args.cwd = str(delegate._REPO_ROOT)
     captured: dict[str, object] = {}
 
     class _FakeStdin:
@@ -1802,7 +1804,7 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -1866,7 +1868,7 @@ def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeyp
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6598,7 +6600,7 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6644,7 +6646,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6710,7 +6712,7 @@ def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6764,7 +6766,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6813,6 +6815,7 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
             "test",
         ],
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -6851,6 +6854,7 @@ def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_d
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "codex", "--task-id", "prompt-sha", "--prompt-file", str(prompt_file)]
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -6875,6 +6879,8 @@ def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra_args]
     )
+    if "--worktree" not in extra_args:
+        args.cwd = str(delegate._REPO_ROOT)
     assert delegate.cmd_dispatch(args) == 0
     state = delegate._read_state(delegate._state_path(task_id))
     assert state is not None
@@ -6891,7 +6897,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     assert state["prompt_blocks"] == []
     assert state["effective_prompt_sha256"] == source
 
-    # a read-only dispatch without --worktree (the adjudication contract) appends nothing
+    # an explicit primary checkout read-only dispatch appends nothing
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
     assert state["prompt_blocks"] == []
@@ -6963,6 +6969,7 @@ def test_dispatch_persists_and_forwards_output_schema(
             str(schema_path),
         ]
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -7114,7 +7121,7 @@ def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -13460,6 +13467,7 @@ def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkey
             "test",
         ],
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     with pytest.raises(RuntimeError, match="atomic write disk error"):
         delegate.cmd_dispatch(args)
@@ -13592,7 +13600,7 @@ def test_dispatch_emits_run_nonce_in_summary_and_stdout(tmp_tasks_dir, monkeypat
     args = _write_args(
         task_id="live-summary-nonce",
         mode="read-only",
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
     )
     rc = delegate.cmd_dispatch(args)

@@ -426,7 +426,7 @@ def test_dispatch_survives_runtime_tmp_backfill_write_failure(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,

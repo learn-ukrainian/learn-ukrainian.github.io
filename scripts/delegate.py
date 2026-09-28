@@ -2907,6 +2907,10 @@ def _resolve_verified_worktree_path(path: Path) -> Path | None:
     """
     wc = _load_worktree_containment()
     target = wc.canonicalize(path)
+    if target == wc.canonicalize(_REPO_ROOT):
+        # The exact primary root cannot be an added worktree. This common
+        # explicit --cwd path needs no git subprocess before worker spawn.
+        return None
     start = target if target.exists() else target.parent
     try:
         main_root = wc.resolve_main_root(start)
@@ -8775,16 +8779,15 @@ def _dispatch(
         print(acp_runtime_error, file=sys.stderr)
         return 2
 
-    if (
-        args.mode == "read-only"
-        and worktree_arg
-        and worktree_arg != "auto"
-        and _load_worktree_containment().is_primary_checkout(
-            _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
-        )
-    ):
-        print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
-        return 2
+    if args.mode == "read-only" and worktree_arg and worktree_arg != "auto":
+        candidate = _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
+        primary_root = target_repo_root.resolve()
+        if candidate == primary_root or (
+            candidate.is_relative_to(primary_root)
+            and not candidate.is_relative_to(primary_root / ".worktrees")
+        ):
+            print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
+            return 2
 
     # Write-capable modes (workspace-write / danger) must resolve to a verified
     # added worktree — never the primary checkout (#4445). An explicit read-only
@@ -9284,7 +9287,7 @@ def _dispatch(
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
     resolved_worktree_raw: str | None = None
-    if worktree_arg:
+    if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
         resolved_worktree_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
             if worktree_arg == "auto"
@@ -9414,9 +9417,9 @@ def _dispatch(
         dry_run_branch: str | None = None
         dry_run_worktree_telemetry: dict[str, Any] = {}
         if detached_read_only:
-            assert resolved_worktree_raw is not None
-            dry_run_worktree = _normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root)
-            dry_run_worktree_telemetry["base_sha"] = resolved_worktree_base_sha
+            # A dry-run describes the eventual checkout without fetching the
+            # base or creating a worktree. Both can spawn git subprocesses.
+            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
         elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
