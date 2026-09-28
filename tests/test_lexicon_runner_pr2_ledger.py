@@ -19,6 +19,7 @@ from scripts.lexicon.runner.ledger import (
     compute_run_fingerprint,
 )
 from scripts.lexicon.runner.split import child_chunk_id
+from tests.helpers.lexicon_runner_fixtures import lexicon_slovnyk_offline as lexicon_slovnyk_offline
 from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"

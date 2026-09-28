@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.lexicon_runner_fixtures import lexicon_slovnyk_offline as lexicon_slovnyk_offline
 from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 ROOT = Path(__file__).resolve().parents[1]

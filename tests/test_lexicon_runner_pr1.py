@@ -40,6 +40,7 @@ from scripts.lexicon.runner.stream_manifest import (
     stream_manifest_entries_json,
 )
 from scripts.lexicon.runner.worker import run_capped_worker
+from tests.helpers.lexicon_runner_fixtures import lexicon_slovnyk_offline as lexicon_slovnyk_offline
 from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"
