@@ -44,6 +44,7 @@ from practice_linguistic import (
     check_cloze_item,
     check_inventory_prompt_level,
     check_stress_item,
+    check_unique_answer_evidence,
     identity_blank_case,
     index_from_generator_candidates,
 )
@@ -2109,6 +2110,7 @@ def _build_cloze_items(
                         "clozeId": cloze_id,
                         "lemma": lexeme["lemma"],
                         "level": lexeme["cefr"],
+                        "mechanism": "lexical" if rule_id == LEXICAL_INSERTION_RULE_ID else "case-labelled",
                         "rule": finding.rule_id,
                         "reason": finding.message,
                         "sentence": sentence,
@@ -5149,6 +5151,22 @@ def build_practice_shards(
             option_errors = validate_option_set(item)
             if option_errors:
                 continue
+            uniqueness_findings = check_unique_answer_evidence(item, verifier, item_id=item["clozeId"])
+            if uniqueness_findings:
+                if cloze_withheld is not None:
+                    cloze_withheld.extend(
+                        {
+                            "clozeId": item["clozeId"],
+                            "lemma": lexeme["lemma"],
+                            "level": lexeme["cefr"],
+                            "mechanism": "case-labelled",
+                            "rule": finding.rule_id,
+                            "reason": finding.message,
+                            "sentence": item["sentence"],
+                        }
+                        for finding in uniqueness_findings
+                    )
+                continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
         stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
@@ -6623,13 +6641,34 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
     path.write_bytes(_json_bytes(payload))
 
 
-def write_cloze_withheld_report(path: Path, withheld: list[dict[str, str]]) -> None:
-    """Write cloze candidates the linguistic/prompt gates withheld, with reasons."""
+def write_cloze_withheld_report(
+    path: Path,
+    withheld: list[dict[str, str]],
+    shards: dict[str, dict[str, dict[str, Any]]],
+) -> None:
+    """Write distinct candidate exclusions and emitted counts by mechanism."""
     by_level_rule = Counter((row["level"], row["rule"]) for row in withheld)
+    excluded = {(row["level"], row["mechanism"], row["clozeId"]) for row in withheld}
+    withheld_counts = Counter((level, mechanism) for level, mechanism, _ in excluded)
+    admitted_counts = Counter(
+        (level, "lexical" if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID else "case-labelled")
+        for level, level_shards in shards.items()
+        for item in level_shards["cloze"]["cloze"]
+    )
     payload = {
         "schema": "atlas-practice-cloze-withheld-v1",
         "count": len(withheld),
         "byLevelRule": {f"{level}:{rule}": count for (level, rule), count in sorted(by_level_rule.items())},
+        "byLevelMechanism": {
+            level: {
+                mechanism: {
+                    "admitted": admitted_counts[level, mechanism],
+                    "withheld": withheld_counts[level, mechanism],
+                }
+                for mechanism in ("case-labelled", "converted-form", "lexical")
+            }
+            for level in shards
+        },
         "items": sorted(withheld, key=lambda row: (row["level"], row["rule"], row["clozeId"])),
     }
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -6892,9 +6931,6 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         aspect_residuals=aspect_residuals,
         cloze_withheld=cloze_withheld,
     )
-    if args.cloze_withheld_report:
-        write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld)
-        print(f"cloze withheld {len(cloze_withheld)} -> {args.cloze_withheld_report}")
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
         eligible_by_level: dict[str, set[str]] = {}
@@ -6945,6 +6981,9 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
+    if args.cloze_withheld_report:
+        write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld, shards)
+        print(f"cloze withheld {len(cloze_withheld)} findings -> {args.cloze_withheld_report}")
     if args.aspect_residual_report:
         emitted_lemma_ids = {
             str(item.get("lemmaId"))

@@ -463,6 +463,18 @@ def _fixture_lexemes() -> list[dict[str, object]]:
     return [lexeme for lexeme in lexemes if lexeme]
 
 
+def _fixture_cloze_candidates(lemma_id: str = "knyha") -> list[dict[str, Any]]:
+    lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == lemma_id)
+    rows = [row for row in read_cloze_sources(CLOZE_SOURCES) if row["lemmaId"] == lemma_id]
+    return _build_cloze_items(
+        lexeme,
+        rows,
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        "fixture",
+    )
+
+
 def _fixture_heritage_pair() -> dict[str, object]:
     return read_heritage_pairs(HERITAGE_PAIRS)[0]
 
@@ -487,9 +499,9 @@ def test_fixture_build_emits_sharded_schema() -> None:
         assert a1[mode]["schema"] == f"atlas-practice-{mode}"
     assert a1["index"]["fixtureNote"] == "fixture sample"
     assert a1["index"]["counts"]["lexemes"] == 7
-    assert a1["index"]["counts"]["cloze"] == 2
-    assert a1["index"]["counts"]["clozeCoverage"] == 0.2857
-    assert a1["index"]["counts"]["modeCounts"]["cloze"] == 2
+    assert a1["index"]["counts"]["cloze"] == 0
+    assert a1["index"]["counts"]["clozeCoverage"] == 0
+    assert a1["index"]["counts"]["modeCounts"]["cloze"] == 0
 
     lexeme = next(item for item in a1["lexemes"]["lexemes"] if item["lemmaId"] == "knyha")
     assert lexeme["lemma"] == "книга"
@@ -497,8 +509,7 @@ def test_fixture_build_emits_sharded_schema() -> None:
     assert lexeme["paradigm"]["cases"]["accusative"]["singular"] == "книгу"
     assert lexeme["heritage"] == "inherited"
     assert lexeme["severity"] == "standard"
-    misto_cloze = next(item for item in a1["cloze"]["cloze"] if item["lemmaId"] == "misto")
-    assert misto_cloze["clozeId"] == "misto:fixture:1"
+    assert a1["cloze"]["cloze"] == []
 
 
 def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
@@ -506,7 +517,7 @@ def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
     cloze = shards["A1"]["cloze"]["cloze"]
     cloze_lemma_ids = {item["lemmaId"] for item in cloze}
 
-    assert cloze_lemma_ids == {"knyha", "misto"}
+    assert cloze_lemma_ids == set()
     assert "robota" not in cloze_lemma_ids
 
     entries = read_manifest(MANIFEST)
@@ -524,12 +535,17 @@ def test_curated_cloze_derives_missing_target_form_from_paradigm() -> None:
     candidate = next(row for row in cloze_sources if row["lemmaId"] == "knyha")
     candidate.pop("form")
 
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
-
-    cloze = next(item for item in shards["A1"]["cloze"]["cloze"] if item["lemmaId"] == "knyha")
-    assert cloze["blankCase"] == "accusative"
-    assert cloze["number"] == "singular"
-    assert cloze["form"] == "книгу"
+    lexeme = _build_lexeme(next(entry for entry in entries if entry["url_slug"] == "knyha"), verifier)
+    assert lexeme is not None
+    candidates = _build_cloze_items(lexeme, [candidate], allowlist, verifier, "fixture")
+    assert len(candidates) == 1
+    assert candidates[0]["blankCase"] == "accusative"
+    assert candidates[0]["number"] == "singular"
+    assert candidates[0]["form"] == "книгу"
+    withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=withheld)
+    assert shards["A1"]["cloze"]["cloze"] == []
+    assert any(row["clozeId"] == candidates[0]["clozeId"] and row["reason"] == "no_unique_answer_evidence" for row in withheld)
 
 
 def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
@@ -1910,8 +1926,15 @@ def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
 
 
 def test_option_set_validator_rejects_phrase_labels() -> None:
-    cloze = json.loads(json.dumps(_build()["A1"]["cloze"]["cloze"][0]))
-    cloze["options"][1]["label"] = "and yours? formal"
+    cloze = {
+        "form": "книгу",
+        "options": [
+            {"label": "книгу", "kind": "answer"},
+            {"label": "and yours? formal", "kind": "decoy"},
+            {"label": "книзі", "kind": "decoy"},
+            {"label": "книгою", "kind": "decoy"},
+        ],
+    }
 
     assert "option labels must not be phrase glosses" in validate_option_set(cloze)
 
@@ -2136,7 +2159,21 @@ def test_shard_json_is_compact_and_budget_matches_written_bytes(tmp_path: Path) 
 
 def test_cloze_emit_compacts_builder_diagnostics_without_dropping_runtime_fields() -> None:
     shards = _build()
-    cloze_items = shards["A1"]["cloze"]["cloze"]
+    cloze_items = [
+        {
+            "clozeId": f"fixture:{index}",
+            "lemmaId": "knyha",
+            "lemma": "книга",
+            "form": "книгу",
+            "number": "singular",
+            "cefr": "A1",
+            "options": [
+                {"optionId": f"fixture:{index}:answer", "label": "книгу", "lemmaId": "knyha", "kind": "answer", "case": "accusative", "pos": "noun", "strategy": "no-pair"}
+            ],
+        }
+        for index in range(2)
+    ]
+    shards["A1"]["cloze"]["cloze"] = cloze_items
     retained_alt = cloze_items[0]
     dropped_alt = cloze_items[1]
     retained_alt["acceptedAlt"] = ["книгу"]
@@ -2677,18 +2714,21 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
             },
         },
     ]
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
+    before_withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=before_withheld)
     cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
     assert "knyha" not in cloze_ids
+    assert not any(row["lemma"] == "книга" for row in before_withheld)
 
     for entry in entries:
         if entry["lemma"] == "книга":
             entry["surface_admission"]["cloze"] = True
             break
 
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
-    cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
-    assert "knyha" in cloze_ids
+    after_withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=after_withheld)
+    assert shards["A1"]["cloze"]["cloze"] == []
+    assert any(row["lemma"] == "книга" and row["reason"] == "no_unique_answer_evidence" for row in after_withheld)
 
 
 def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
@@ -2751,23 +2791,31 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     from scripts.practice.creation_review import CreationReview, frame_identity
 
     creation_review = CreationReview(frozenset({frame_identity("cloze", "Моя ___ у школі.", "книга", "книга")}))
-    shards = build_practice_shards(
-        read_manifest(MANIFEST),
-        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
-        JsonVesumVerifier(vesum),
-        candidates,
-        BuildConfig(),
-        creation_review=creation_review,
+    allowlist = ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}])
+    verifier = JsonVesumVerifier(vesum)
+    lexeme = _build_lexeme(next(row for row in read_manifest(MANIFEST) if row["url_slug"] == "knyha"), verifier)
+    assert lexeme is not None
+    candidates_before_options = _build_cloze_items(
+        lexeme, candidates, allowlist, verifier, "fixture", creation_review=creation_review
     )
-    cloze = next(item for item in shards["A1"]["cloze"]["cloze"] if item["clozeId"] == "knyha:inventory:1")
+    assert len(candidates_before_options) == 1
+    cloze = candidates_before_options[0]
     assert cloze["blankCase"] == "nominative"
     assert cloze["number"] == "singular"
     assert "clozeEn" not in cloze
     assert cloze["caseRule"]["feedback"] == "словникова форма: книга"
-    labels = [option["label"] for option in cloze["options"]]
-    assert len(labels) == len(set(labels)) == 4
-    assert {option["strategy"] for option in cloze["options"]} == {"no-pair"}
-    assert validate_option_set(cloze) == []
+    withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        allowlist,
+        verifier,
+        candidates,
+        BuildConfig(),
+        creation_review=creation_review,
+        cloze_withheld=withheld,
+    )
+    assert shards["A1"]["cloze"]["cloze"] == []
+    assert any(row["clozeId"] == "knyha:inventory:1" and row["reason"] == "no_unique_answer_evidence" for row in withheld)
     assert cloze["provenance"] == {
         "status": "sentence_inventory",
         "path": str(inventory_path),
@@ -2891,7 +2939,9 @@ def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Pat
     assert _build_cloze_items(lexeme, candidates, allowlist, verifier, "deck-v6") == []
 
     curated = [{**candidates[0], "curated": True}]
-    assert len(_build_cloze_items(lexeme, curated, allowlist, verifier, "deck-v6")) == 1
+    withheld: list[dict[str, str]] = []
+    assert _build_cloze_items(lexeme, curated, allowlist, verifier, "deck-v6", withheld=withheld) == []
+    assert any(row["reason"] == "no_unique_answer_evidence" for row in withheld)
 
 
 def test_sentence_inventory_rejects_controls_pua_and_prefers_language_sources(
@@ -3242,22 +3292,11 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
         cloze_withheld=withheld,
     )
 
-    assert withheld == []
-    for level, lemma_id, pos, locator in (
-        ("A1", "selo", "noun", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
-        ("A2", "oberezhno", "adverb", "10-klas-ukrmova-karaman-2018_s0334"),
-    ):
-        cloze = next(item for item in shards[level]["cloze"]["cloze"] if item["lemmaId"] == lemma_id)
-        assert cloze["provenance"]["status"] == "sentence_inventory"
-        assert cloze["attribution"] == {"source": "textbook", "label": "Ukrainian school textbook", "locator": locator}
-        # A nominative/accusative-syncretic noun and a caseless adverb cannot
-        # prove a case from their dictionary spelling (#8726).
-        assert "blankCase" not in cloze
-        assert cloze["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
-        assert all("case" not in option for option in cloze["options"])
-        assert len(cloze["options"]) == 4
-        assert {option["pos"] for option in cloze["options"]} == {pos}
-        assert validate_option_set(cloze) == []
+    assert all(not shard["cloze"]["cloze"] for shard in shards.values())
+    assert {(row["clozeId"], row["reason"]) for row in withheld} == {
+        ("selo:inventory:1", "no_unique_answer_evidence"),
+        ("oberezhno:inventory:2", "no_unique_answer_evidence"),
+    }
 
     assert generate_practice_deck._option_pos_bucket("pronoun") == "pronoun"
     assert generate_practice_deck._option_pos_bucket("adverb") == "adverb"
@@ -3417,7 +3456,7 @@ def test_sentence_inventory_blanks_standalone_form_not_hyphenated_compound(tmp_p
 
 
 def test_cloze_output_preserves_sentence_cefr() -> None:
-    cloze = _build()["A1"]["cloze"]["cloze"][0]
+    cloze = _fixture_cloze_candidates()[0]
 
     assert cloze["cefr"] == "A1"
 
@@ -3433,15 +3472,17 @@ def test_cloze_decoys_support_ukrainian_case_keys() -> None:
         if isinstance(cases, dict) and "locative" in cases:
             cases["місцевий"] = cases.pop("locative")
 
-    shards = build_practice_shards(
-        entries,
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    lexeme = _build_lexeme(next(row for row in entries if row["url_slug"] == "knyha"), verifier)
+    assert lexeme is not None
+    cards = _build_cloze_items(
+        lexeme,
+        [row for row in read_cloze_sources(CLOZE_SOURCES) if row["lemmaId"] == "knyha"],
         ReviewedSourceAllowlist.from_path(ALLOWLIST),
-        JsonVesumVerifier.from_path(VESUM),
-        read_cloze_sources(CLOZE_SOURCES),
-        BuildConfig(),
+        verifier,
+        "fixture",
     )
-
-    assert shards["A1"]["cloze"]["cloze"]
+    assert cards and cards[0]["form"] == "книгу"
 
 
 def test_cloze_decoys_do_not_exceed_answer_cefr() -> None:
@@ -3494,15 +3535,20 @@ def _tatoeba_cloze_source() -> dict[str, object]:
 
 
 def test_tatoeba_cloze_preserves_attribution_metadata() -> None:
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == "knyha")
+    source = _tatoeba_cloze_source()
+    cloze = _build_cloze_items(
+        lexeme, [source], ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]), verifier, "fixture"
+    )[0]
     shards = build_practice_shards(
         read_manifest(MANIFEST),
         ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
-        JsonVesumVerifier.from_path(VESUM),
-        [_tatoeba_cloze_source()],
+        verifier,
+        [source],
         BuildConfig(),
     )
-
-    cloze = shards["A1"]["cloze"]["cloze"][0]
+    assert shards["A1"]["cloze"]["cloze"] == []
 
     assert cloze["provenance"]["license"] == "CC-BY 2.0 FR"
     assert cloze["provenance"]["author"] == "uk-author"
@@ -3523,15 +3569,19 @@ def test_tatoeba_cloze_uses_path_sentence_id_when_field_missing() -> None:
     assert isinstance(source["provenance"], dict)
     source["provenance"].pop("sentenceId")
 
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == "knyha")
+    cloze = _build_cloze_items(
+        lexeme, [source], ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]), verifier, "fixture"
+    )[0]
     shards = build_practice_shards(
         read_manifest(MANIFEST),
         ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
-        JsonVesumVerifier.from_path(VESUM),
+        verifier,
         [source],
         BuildConfig(),
     )
-
-    cloze = shards["A1"]["cloze"]["cloze"][0]
+    assert shards["A1"]["cloze"]["cloze"] == []
     assert cloze["provenance"]["sentenceId"] == 101
     assert cloze["attribution"]["uk"]["sentenceId"] == 101
 
@@ -4906,14 +4956,10 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     )
 
     emitted = {item["clozeId"]: item for level in shards.values() for item in level["cloze"]["cloze"]}
-    selo = emitted["село:inventory:6"]
-    assert "blankCase" not in selo
-    assert selo["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
-    assert "словникова форма" not in json.dumps(selo, ensure_ascii=False)
-    assert all("case" not in option for option in selo["options"])
-    assert validate_option_set(selo) == []
-
-    assert set(emitted) == {"село:inventory:6"}
+    assert emitted == {}
+    assert ("село:inventory:6", "no_unique_answer_evidence") in {
+        (row["clozeId"], row["reason"]) for row in withheld
+    }
     assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_context"} == {
         ("відповісти:inventory:2", "capitalized_mid_sentence"),
         ("вразити:inventory:3", "list_fragment"),
@@ -5063,7 +5109,7 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
     )
 
     emitted = {item["clozeId"] for level in shards.values() for item in level["cloze"]["cloze"]}
-    assert emitted == {"село:inventory:3"}
+    assert emitted == set()
     assert {(row["clozeId"], row["rule"], row["level"], row["reason"]) for row in withheld} == {
         (
             "її:inventory:1",
@@ -5073,4 +5119,27 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
             "бічному, ребру",
         ),
         ("автобус:inventory:2", "inventory_prompt_level", "A1", "above A1: приїхав"),
+        ("село:inventory:3", "cloze_unique_answer_evidence", "A1", "no_unique_answer_evidence"),
+        ("її:inventory:1", "cloze_unique_answer_evidence", "A1", "no_unique_answer_evidence"),
+        ("автобус:inventory:2", "cloze_unique_answer_evidence", "A1", "no_unique_answer_evidence"),
     }
+
+
+def test_cloze_withheld_report_counts_distinct_items_by_mechanism(tmp_path: Path) -> None:
+    path = tmp_path / "withheld.json"
+    withheld = [
+        {"clozeId": "lexical-1", "lemma": "x", "level": "A1", "mechanism": "lexical", "rule": rule, "reason": rule, "sentence": "___"}
+        for rule in ("cloze_unique_answer_evidence", "inventory_prompt_level")
+    ]
+    shards = {
+        "A1": {"cloze": {"cloze": [{"caseRule": {"ruleId": "nominative_identification"}}]}},
+        "A2": {"cloze": {"cloze": []}},
+    }
+    generate_practice_deck.write_cloze_withheld_report(path, withheld, shards)
+    report = json.loads(path.read_text(encoding="utf-8"))
+    assert report["byLevelMechanism"]["A1"] == {
+        "case-labelled": {"admitted": 1, "withheld": 0},
+        "converted-form": {"admitted": 0, "withheld": 0},
+        "lexical": {"admitted": 0, "withheld": 1},
+    }
+    assert report["byLevelMechanism"]["A2"]["lexical"] == {"admitted": 0, "withheld": 0}

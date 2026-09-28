@@ -61,6 +61,7 @@ RULE_DISTRACTOR_DISTINCT = "distractor_uniqueness"
 RULE_CASE_LABEL = "case_label_determinate"
 RULE_PROMPT_CONTEXT = "inventory_prompt_context"
 RULE_PROMPT_LEVEL = "inventory_prompt_level"
+RULE_UNIQUE_ANSWER = "cloze_unique_answer_evidence"
 
 # Identity clozes blank the dictionary form itself.  Only the first rule names
 # a case (nominative, when context proves it); the second is a case-free word
@@ -94,6 +95,11 @@ _DRILL_NOTATION_RE = re.compile(r"[^\W\d_]\.\.[^\W\d_]|\+\s*[^\W\d_]|\s\+\s|=")
 _SENTENCE_BOUNDARY_BEFORE_RE = re.compile(r"(?:^|[.!?…:;—–\-«\"“„(])\s*$")
 _LIST_ITEM_MAX_WORDS = 2
 _LIST_MIN_ITEMS = 3
+
+# ULIF DictUA lists «будь ласка» as a single «сполука» (register 751:17);
+# the A1 formula list in the sounds-letters-and-hello knowledge packet places
+# it at A1. Its component «ласка» is not the vocabulary load of the formula.
+_A1_FORMULAS = frozenset({("будь", "ласка")})
 
 
 class VesumVerifier(Protocol):
@@ -860,6 +866,10 @@ def inventory_prompt_defect(
     a mid-sentence capital on a common noun (UI chrome, titles, proper-name
     homographs) and a frame with no content word to decide the answer.
     """
+    if sentence.count("«") != sentence.count("»") or sentence.count("\"") % 2:
+        return "unbalanced_quotes"
+    if sentence.count("“") + sentence.count("„") != sentence.count("”"):
+        return "unbalanced_quotes"
     if _DRILL_NOTATION_RE.search(sentence):
         return "drill_notation"
     if _DEFINITION_BLANK_RE.search(sentence):
@@ -874,6 +884,26 @@ def inventory_prompt_defect(
         return "metalinguistic_mention"
     if _is_list_fragment(sentence):
         return "list_fragment"
+    # A subordinate clause ending in a pronoun needs its own predicate here;
+    # the matrix-clause verb does not repair an adverb-only extracted fragment.
+    if "___" in sentence and any(
+        str(match.get("pos") or "") == "adv" for match in verified_surface_matches(form, verifier)
+    ):
+        after_marker = re.split(r"\bщоб\b", sentence, flags=re.IGNORECASE)
+        if len(after_marker) > 1 and "___" in after_marker[-1]:
+            clause = after_marker[-1].split("?", 1)[0].split("!", 1)[0].split(".", 1)[0]
+            before_blank, after_blank = clause.split("___", 1)
+            trailing = _WORD_RE.findall(after_blank)
+            tokens = _WORD_RE.findall(before_blank + " " + form + " " + after_blank)
+            if trailing and any(
+                "pron" in str(match.get("tags") or "").split(":")
+                for match in verified_surface_matches(trailing[0], verifier)
+            ) and not any(
+                str(match.get("pos") or "") == "verb"
+                for token in tokens
+                for match in verified_surface_matches(token, verifier)
+            ):
+                return "verbless_subordinate_fragment"
     before = sentence.split("___", 1)[0]
     if form[:1].isupper() and not _SENTENCE_BOUNDARY_BEFORE_RE.search(before):
         target = plain(lemma_plain)
@@ -917,11 +947,9 @@ def check_inventory_prompt_context(
 # Atlas lexicon's own CEFR (PULS, else the GRAC-frequency estimate: the same
 # ``enrichment.cefr`` that levels the cards).  Every rated context word must be
 # at or below the card's level; no above-level word is tolerated.  Coverage
-# research does not support a one-word allowance in a cloze sentence: one
-# unknown word in 10–20 running words is 90–95% coverage, at or below
-# Laufer's (1989) 95% floor and short of the 98% Hu & Nation (2000) found for
-# adequate unassisted comprehension, and a cloze learner must also infer the
-# blank from that same context.  A word VESUM cannot analyse has no level
+# research on longer passages does not validate a permissive threshold for
+# short cloze prompts. One unknown context word can determine the answer, so
+# the short-prompt gate remains zero-tolerance. A word VESUM cannot analyse has no level
 # evidence and counts as above level (withheld, not assumed in-level).
 PROMPT_LEVEL_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 _LEVEL_FUNCTION_POS = frozenset({"prep", "conj", "part", "intj"})
@@ -971,11 +999,52 @@ def prompt_words_above_level(
     if card_level not in PROMPT_LEVEL_ORDER:
         return []
     card_rank = PROMPT_LEVEL_ORDER.index(card_level)
-    return [
-        token
-        for token in _WORD_RE.findall(sentence.replace("___", " "))
-        if _prompt_word_above_level(token, card_rank, lemma_levels, verifier)
-    ]
+    tokens = _WORD_RE.findall(sentence.replace("___", " "))
+    above: list[str] = []
+    index = 0
+    while index < len(tokens):
+        if index + 1 < len(tokens) and tuple(plain(token) for token in tokens[index : index + 2]) in _A1_FORMULAS:
+            index += 2
+            continue
+        if _prompt_word_above_level(tokens[index], card_rank, lemma_levels, verifier):
+            above.append(tokens[index])
+        index += 1
+    return above
+
+
+def check_unique_answer_evidence(
+    item: dict[str, Any], verifier: VesumVerifier, *, item_id: str
+) -> list[Finding]:
+    """Require the rendered grammatical task to select exactly one VESUM form.
+
+    Source attestation, part-of-speech, and corpus absence cannot exclude a
+    second rendered option. Lexical insertion has no positive-evidence rule yet.
+    A case-labelled card is admitted only if its sourced case excludes every
+    distractor's VESUM analyses, including syncretic forms.
+    """
+    case_rule = item.get("caseRule")
+    if isinstance(case_rule, dict) and case_rule.get("ruleId") == LEXICAL_INSERTION_RULE_ID:
+        return [Finding(RULE_UNIQUE_ANSWER, item_id, "no_unique_answer_evidence")]
+    options = item.get("options")
+    if not isinstance(options, list):
+        # The generator calls this gate once before option construction and
+        # once after. Its final option set must pass the second call.
+        return []
+    required_case = normalize_case_name(_clean(case_rule.get("case"))) if isinstance(case_rule, dict) else None
+    matching: list[str] = []
+    if not required_case:
+        return [Finding(RULE_UNIQUE_ANSWER, item_id, "no_unique_answer_evidence")]
+    for option in options:
+        if not isinstance(option, dict) or not (label := _clean(option.get("label"))):
+            return [Finding(RULE_UNIQUE_ANSWER, item_id, "no_unique_answer_evidence")]
+        analyses = verified_surface_matches(label, verifier)
+        if not analyses:
+            return [Finding(RULE_UNIQUE_ANSWER, item_id, "no_unique_answer_evidence")]
+        if any(required_case in match_cases(match) for match in analyses):
+            matching.append(str(option.get("kind") or ""))
+    if matching != ["answer"]:
+        return [Finding(RULE_UNIQUE_ANSWER, item_id, "no_unique_answer_evidence")]
+    return []
 
 
 def check_inventory_prompt_level(
@@ -1122,6 +1191,7 @@ def check_cloze_item(
     findings.extend(check_cloze_blank_count(item_id, sentence_clean))
     findings.extend(check_intentional_error_quarantine(item_id, sentence_clean))
     findings.extend(check_options_uniqueness(item_id, item.get("options")))
+    findings.extend(check_unique_answer_evidence(item, verifier, item_id=item_id))
     findings.extend(check_source_attested_blank(item, source_index, item_id=item_id))
     findings.extend(
         check_identity_rule_consistency(item, item_id=item_id, lemma_plain=lemma_plain)

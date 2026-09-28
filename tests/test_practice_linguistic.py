@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.generate_practice_deck import JsonVesumVerifier
 from scripts.audit.practice_linguistic import (
     RULE_BLANK_COUNT,
@@ -17,16 +19,19 @@ from scripts.audit.practice_linguistic import (
     RULE_PROMPT_CONTEXT,
     RULE_PROMPT_LEVEL,
     RULE_STRESS,
+    RULE_UNIQUE_ANSWER,
     check_cloze_blank_count,
     check_cloze_item,
     check_homograph_oblique,
     check_identity_rule_consistency,
     check_intentional_error_quarantine,
+    check_inventory_prompt_context,
     check_inventory_prompt_level,
     check_leading_quiz,
     check_nominative_only_after_prep,
     check_options_uniqueness,
     check_stress_item,
+    check_unique_answer_evidence,
     identity_blank_case,
     index_from_generator_candidates,
     inventory_prompt_defect,
@@ -464,7 +469,9 @@ def test_case_label_gate_rejects_published_nominative_label_after_do() -> None:
     repaired = {
         key: value for key, value in _PUBLISHED_UZBICHCHYA.items() if key != "blankCase"
     } | {"caseRule": {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}}
-    assert check_cloze_item(repaired, verifier, lemma_plain="узбіччя", check_agreement=False) == []
+    assert [(f.rule_id, f.message) for f in check_cloze_item(repaired, verifier, lemma_plain="узбіччя", check_agreement=False)] == [
+        (RULE_UNIQUE_ANSWER, "no_unique_answer_evidence")
+    ]
 
     mislabelled_insertion = {**repaired, "blankCase": "genitive"}
     assert any(
@@ -503,6 +510,140 @@ def test_inventory_prompt_defect_rejects_issue_8724_examples() -> None:
     assert inventory_prompt_defect(_PUBLISHED_UZBICHCHYA["sentence"], "узбіччя", "узбіччя", verifier) is None
 
 
+@pytest.mark.parametrize(
+    ("cloze_id", "sentence", "form", "other"),
+    [
+        ("там:inventory:4467", "Казав же я йому, що нікого ___ немає.", "там", "ще"),
+        ("сімнадцять:inventory:4451", "Бурлаці ж їх дісталося аж ___!", "сімнадцять", "двадцять"),
+        ("пошкодження:inventory:3379", "Ці ___ можуть бути різними.", "пошкодження", "тіла"),
+        ("поснідати:inventory:3320", "Тоді написало ще: «___.", "Поснідати", "Віддавати"),
+        ("досхочу:inventory:1137", "Хочеш, щоб він ___ тебе?", "досхочу", "мовчки"),
+        ("п-ятдесят:inventory:2886", "П’ять, сім, тринадцять, ___ три...", "п'ятдесят", "тридцять"),
+        ("цікавіший:inventory:4859", "А вчитель був ___.", "цікавіший", "веселий"),
+        ("суші:inventory:4426", "Мій чоловік любить ___.", "суші", "пиво"),
+        ("урожай:inventory:4671", "Швидше збирай ___.", "урожай", "посуд"),
+        ("теща:inventory:4514", "Ти знаєш, що таке ___?", "теща", "тіло"),
+        ("дехто:inventory:993", "___ щастям своїм платив.", "дехто", "хтось"),
+        ("прикольно:inventory:3491", "Звучить досить ___.", "прикольно", "банально"),
+        ("клоун:inventory:1865", "___ роздає цукерки.", "клоун", "Тарас"),
+        ("мовчки:inventory:2284", "Той дивиться на його ___.", "мовчки", "радо"),
+    ],
+)
+def test_review_r4_lexical_insertions_require_positive_unique_answer_evidence(
+    cloze_id: str, sentence: str, form: str, other: str
+) -> None:
+    item = {
+        "clozeId": cloze_id,
+        "sentence": sentence,
+        "form": form,
+        "lemma": form,
+        "caseRule": {"ruleId": "lexical_insertion", "trigger": "lexical insertion"},
+        "options": [
+            {"label": form, "kind": "answer"},
+            {"label": other, "kind": "distractor"},
+        ],
+        "provenance": {"status": "sentence_inventory", "path": "inventory.json", "locator": cloze_id},
+    }
+    findings = check_cloze_item(item, _verifier(), lemma_plain=form, check_agreement=False)
+    assert any(f.rule_id == RULE_UNIQUE_ANSWER and f.message == "no_unique_answer_evidence" for f in findings)
+
+
+def test_review_r4_corrupt_inventory_frames_are_rejected() -> None:
+    verifier = JsonVesumVerifier(
+        {
+            "хочеш": [{"lemma": "хотіти", "pos": "verb", "tags": "verb:pres:s:2"}],
+            "щоб": [{"lemma": "щоб", "pos": "conj", "tags": "conj"}],
+            "він": [{"lemma": "він", "pos": "noun", "tags": "noun:pron:v_naz"}],
+            "досхочу": [{"lemma": "досхочу", "pos": "adv", "tags": "adv"}],
+            "тебе": [{"lemma": "ти", "pos": "noun", "tags": "noun:pron:v_zna"}],
+        }
+    )
+    assert inventory_prompt_defect("Хочеш, щоб він ___ тебе?", "досхочу", "досхочу", verifier) == (
+        "verbless_subordinate_fragment"
+    )
+    assert inventory_prompt_defect("Тоді написало ще: «___.", "поснідати", "поснідати", verifier) == (
+        "unbalanced_quotes"
+    )
+    for cloze_id, sentence, form, reason in (
+        ("досхочу:inventory:1137", "Хочеш, щоб він ___ тебе?", "досхочу", "verbless_subordinate_fragment"),
+        ("поснідати:inventory:3320", "Тоді написало ще: «___.", "поснідати", "unbalanced_quotes"),
+    ):
+        item = {
+            "clozeId": cloze_id,
+            "sentence": sentence,
+            "form": form,
+            "lemma": form,
+            "provenance": {"status": "sentence_inventory", "path": "inventory.json"},
+        }
+        assert [(f.rule_id, f.message) for f in check_inventory_prompt_context(item, verifier, item_id=cloze_id)] == [
+            (RULE_PROMPT_CONTEXT, reason)
+        ]
+
+
+@pytest.mark.parametrize(
+    ("cloze_id", "sentence", "form", "decoy", "form_tags", "decoy_tags"),
+    [
+        ("дехто:inventory:993", "___ щастям своїм платив.", "дехто", "хтось", "noun:anim:m:v_naz:pron:ind", "noun:anim:m:v_naz:pron:ind"),
+        ("теща:inventory:4514", "Ти знаєш, що таке ___?", "теща", "тіло", "noun:anim:f:v_naz", "noun:inanim:n:v_naz"),
+        ("клоун:inventory:1865", "___ роздає цукерки.", "клоун", "Тарас", "noun:anim:m:v_naz", "noun:anim:m:v_naz:prop:fname"),
+    ],
+)
+def test_review_r4_case_label_does_not_certify_unique_answer(
+    cloze_id: str, sentence: str, form: str, decoy: str, form_tags: str, decoy_tags: str
+) -> None:
+    # Analyses copied from VESUM; each reviewer decoy satisfies the displayed nominative case.
+    verifier = JsonVesumVerifier(
+        {
+            form: [{"lemma": form, "pos": "noun", "tags": form_tags}],
+            decoy: [{"lemma": decoy, "pos": "noun", "tags": decoy_tags}],
+        }
+    )
+    item = {
+        "clozeId": cloze_id,
+        "sentence": sentence,
+        "form": form,
+        "lemma": form,
+        "blankCase": "nominative",
+        "caseRule": {"ruleId": "nominative_identification", "case": "nominative"},
+        "options": [
+            {"kind": "answer", "label": form, "case": "nominative"},
+            {"kind": "decoy-lemma", "label": decoy, "case": "nominative"},
+        ],
+    }
+    findings = check_cloze_item(item, verifier, lemma_plain=form, check_agreement=False)
+    assert any(f.rule_id == RULE_UNIQUE_ANSWER and f.message == "no_unique_answer_evidence" for f in findings)
+
+
+def test_case_rule_certifies_only_a_distinct_vesum_case_option() -> None:
+    # These four forms and tags are copied from the VESUM «книга» paradigm.
+    verifier = JsonVesumVerifier(
+        {
+            "книгу": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_zna"}],
+            "книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+            "книзі": [
+                {"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_dav"},
+                {"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_mis"},
+            ],
+            "книгою": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_oru"}],
+            "тіло": [{"lemma": "тіло", "pos": "noun", "tags": "noun:inanim:n:v_zna"}],
+        }
+    )
+    item = {
+        "caseRule": {"ruleId": "accusative_direct_object", "case": "accusative"},
+        "options": [
+            {"kind": "answer", "label": "книгу"},
+            {"kind": "decoy", "label": "книга"},
+            {"kind": "decoy", "label": "книзі"},
+            {"kind": "decoy", "label": "книгою"},
+        ],
+    }
+    assert check_unique_answer_evidence(item, verifier, item_id="form-case") == []
+    item["options"][1]["label"] = "тіло"
+    assert [(f.rule_id, f.message) for f in check_unique_answer_evidence(item, verifier, item_id="form-case")] == [
+        (RULE_UNIQUE_ANSWER, "no_unique_answer_evidence")
+    ]
+
+
 def test_prompt_context_gate_applies_only_to_inventory_sentences() -> None:
     verifier = JsonVesumVerifier(_ISSUE_VESUM)
     stub = {
@@ -514,9 +655,14 @@ def test_prompt_context_gate_applies_only_to_inventory_sentences() -> None:
         "provenance": {"status": "sentence_inventory", "path": "inventory.json", "locator": "x"},
     }
     findings = check_cloze_item(stub, verifier, lemma_plain="медіаграмотність", check_agreement=False)
-    assert [(finding.rule_id, finding.message) for finding in findings] == [(RULE_PROMPT_CONTEXT, "context_free_stub")]
+    assert [(finding.rule_id, finding.message) for finding in findings] == [
+        (RULE_UNIQUE_ANSWER, "no_unique_answer_evidence"),
+        (RULE_PROMPT_CONTEXT, "context_free_stub"),
+    ]
     reviewed = {**stub, "provenance": {"status": "reviewed", "path": "curated.json"}}
-    assert check_cloze_item(reviewed, verifier, lemma_plain="медіаграмотність", check_agreement=False) == []
+    assert [(f.rule_id, f.message) for f in check_cloze_item(reviewed, verifier, lemma_plain="медіаграмотність", check_agreement=False)] == [
+        (RULE_UNIQUE_ANSWER, "no_unique_answer_evidence")
+    ]
 
 
 def _level_verifier() -> JsonVesumVerifier:
@@ -553,6 +699,21 @@ def test_prompt_level_counts_unrated_and_higher_content_words() -> None:
     assert prompt_words_above_level("___ призми ребру.", "B1", LEVELS, verifier) == ["призми"]
     # A homograph takes its lowest rated lemma.
     assert prompt_words_above_level("___ грані.", "A1", LEVELS, verifier) == []
+
+
+def test_review_r4_a1_politeness_formula_is_one_levelled_unit() -> None:
+    verifier = JsonVesumVerifier(
+        {
+            "сік": [{"lemma": "сік", "pos": "noun", "tags": "noun:inanim:m:v_naz"}],
+            "будь": [{"lemma": "бути", "pos": "verb", "tags": "verb:imper"}],
+            "ласка": [{"lemma": "ласка", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+        }
+    )
+    levels = {"сік": "A1", "бути": "A1", "ласка": "B1"}
+    assert prompt_words_above_level("___ сік, будь ласка.", "A1", levels, verifier) == []
+    assert prompt_words_above_level("___ сік, ласка.", "A1", levels, verifier) == ["ласка"]
+    item = {"sentence": "___ сік, будь ласка.", "provenance": {"status": "sentence_inventory"}}
+    assert check_inventory_prompt_level(item, "A1", levels, verifier, item_id="яблучний:inventory:5035") == []
 
 
 def test_prompt_level_counts_a_word_vesum_cannot_resolve_as_above_level() -> None:
