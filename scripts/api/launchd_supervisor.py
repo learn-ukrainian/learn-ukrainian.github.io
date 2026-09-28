@@ -171,6 +171,8 @@ def render_plist(*, repo_root: Path) -> bytes:
 
 
 def _validate_runtime(repo_root: Path) -> None:
+    # Intentional: the LaunchAgent is bound to this repo_root, which may not
+    # be the process's primary checkout.
     interpreter = repo_root / ".venv" / "bin" / "python"
     supervisor = repo_root / "scripts" / "api" / "launchd_supervisor.py"
     wrapper = wrapper_path(repo_root)
@@ -461,6 +463,8 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     environment["PYTHONPATH"] = str(launch_dir) + os.pathsep + environment.get("PYTHONPATH", "")
     command = [
+        # Intentional: uvicorn uses the interpreter of the checkout this
+        # supervisor was installed for, rendered even when the file is absent.
         str(repo_root / ".venv" / "bin" / "python"),
         "-B",
         "-m",

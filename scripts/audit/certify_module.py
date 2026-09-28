@@ -20,7 +20,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 MDX_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
@@ -30,8 +29,11 @@ if str(PROJECT_ROOT) not in sys.path:
 from manifest_utils import get_module_by_number, get_modules_for_level, load_manifest, parse_numbered_slug
 
 from scripts.audit import check_mdx_source_parity
+from scripts.common.repo_root import project_interpreter
 from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.validate import validate_plans as plan_yaml_validator
+
+VENV_PYTHON = project_interpreter()
 
 QG_ARTIFACT_NAMES = frozenset({"llm_qg.json", "python_qg.json"})
 QG_ARTIFACT_GLOBS = (

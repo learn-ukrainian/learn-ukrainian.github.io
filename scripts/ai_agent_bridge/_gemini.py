@@ -22,6 +22,7 @@ from agent_runtime.errors import (
 )
 from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import PRO_MODEL
+from common.repo_root import project_interpreter
 from secret_redactor import redact_text
 
 from ._ask_lifecycle import record_ask_failure, register_ask
@@ -313,7 +314,7 @@ def _launch_gemini_background(
 
     try:
         # Use .venv/bin/python explicitly to avoid wrong interpreter
-        venv_python = str(Path(__file__).parents[2] / ".venv" / "bin" / "python")
+        venv_python = str(project_interpreter())
         bridge_cmd = [
             venv_python,
             str(Path(__file__).parent / "__main__.py"),

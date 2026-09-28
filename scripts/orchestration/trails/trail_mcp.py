@@ -9,14 +9,19 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
 from mcp.server.mcpserver import MCPServer
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.common.repo_root import project_interpreter
+
 TRAIL_RUNNER = PROJECT_ROOT / "scripts" / "orchestration" / "trail_runner.py"
-PYTHON_BIN = PROJECT_ROOT / ".venv" / "bin" / "python"
+PYTHON_BIN = project_interpreter()
 _RUNNER_TIMEOUT_SECONDS = 90
 
 mcp = MCPServer(

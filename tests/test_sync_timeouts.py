@@ -66,6 +66,11 @@ def test_generate_readings_timeout_returns_nonzero_and_prints_error(
     calls: list[dict[str, Any]] = []
     monkeypatch.setattr(promote_module.subprocess, "run", _raise_timeout(calls))
     source = promote_module.SourceSpec(build_ref="", level="folk", slug="test-module")
+    # This temp repo is the checkout under test. It needs its own interpreter
+    # file so resolution finishes and the mocked subprocess can time out.
+    interpreter = tmp_path / ".venv" / "bin" / "python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text("", encoding="utf-8")
 
     status, written = promote_module._run_generate_readings(tmp_path, source)
 

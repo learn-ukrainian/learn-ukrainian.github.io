@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
 
 
 def test_main_checkout_root_resolves_primary_checkout_from_worktree(tmp_path):
@@ -152,3 +152,348 @@ def test_bridge_monitor_cache_project_root_resolves_to_primary_in_worktree(wt_la
     )
     resolved_project_root = Path(proc.stdout.strip())
     assert resolved_project_root.resolve() == main_repo.resolve()
+
+
+def _write_venv_python(checkout: Path, name: str = "python") -> Path:
+    interpreter = checkout / ".venv" / "bin" / name
+    interpreter.parent.mkdir(parents=True, exist_ok=True)
+    interpreter.write_text("", encoding="utf-8")
+    return interpreter
+
+
+def _link_worktree(primary: Path, worktree: Path) -> None:
+    git_dir = primary / ".git" / "worktrees" / "task"
+    git_dir.mkdir(parents=True, exist_ok=True)
+    worktree.mkdir(parents=True, exist_ok=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+
+
+def test_project_interpreter_rejects_another_checkouts_venv(tmp_path, monkeypatch):
+    """An explicit root must not inherit a different checkout's interpreter.
+
+    ``scripts.api.batch_router`` passes ``live_repo_root`` to
+    ``project_interpreter`` (the dispatcher scan command). A missing checkout
+    used to accept any running ``sys.executable`` ending in ``.venv/bin/python``,
+    so ``project_interpreter(Path("/no-such-checkout"))`` returned this repo's
+    interpreter.
+    """
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_accepts_running_python3_of_the_requested_checkout(tmp_path, monkeypatch):
+    requested = tmp_path / "requested"
+    python3 = _write_venv_python(requested, "python3")
+    monkeypatch.setattr(sys, "executable", str(python3))
+
+    assert project_interpreter(requested) == python3
+
+
+def test_project_interpreter_accepts_running_python3_of_the_primary_checkout(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    python3 = _write_venv_python(primary, "python3")
+    monkeypatch.setattr(sys, "executable", str(python3))
+
+    assert project_interpreter(worktree) == python3
+
+
+def _toolchain_python(tmp_path: Path) -> Path:
+    toolchain = tmp_path / "toolchain" / "python3.12"
+    toolchain.parent.mkdir(parents=True, exist_ok=True)
+    toolchain.write_text("", encoding="utf-8")
+    return toolchain
+
+
+def _symlink_venv_python(checkout: Path, target: Path, name: str = "python3.12") -> Path:
+    interpreter = checkout / ".venv" / "bin" / name
+    interpreter.parent.mkdir(parents=True, exist_ok=True)
+    interpreter.symlink_to(target)
+    return interpreter
+
+
+def _symlink_checkout_venv_to_store(checkout: Path, store: Path, toolchain: Path) -> Path:
+    """Point ``checkout/.venv`` at ``store`` and return the ``python3.12`` entry.
+
+    The store has no ``bin/python``, so resolution cannot stop at the early
+    ``.venv/bin/python`` match and has to classify ``sys.executable``.
+    """
+    entry = store / "bin" / "python3.12"
+    entry.parent.mkdir(parents=True)
+    entry.symlink_to(toolchain)
+    checkout.mkdir(parents=True, exist_ok=True)
+    venv = checkout / ".venv"
+    venv.symlink_to(os.path.relpath(store, checkout))
+    executable = venv / "bin" / "python3.12"
+    assert venv.is_symlink()
+    assert executable.parent.parent.name == ".venv"
+    assert not (store / "bin" / "python").exists()
+    assert Path(os.path.realpath(executable.parent)).parent == store.resolve()
+    return executable
+
+
+def test_project_interpreter_rejects_another_checkouts_versioned_python(tmp_path, monkeypatch):
+    """A missing checkout must not inherit another checkout's ``python3.12``.
+
+    The ownership check used to allow only ``python`` and ``python3``, so
+    ``.venv/bin/python3.12`` was returned as if it were a hosted interpreter.
+    """
+    foreign = _write_venv_python(tmp_path / "other-checkout", "python3.12")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_a_versioned_symlink_out_of_another_checkouts_venv(tmp_path, monkeypatch):
+    """``python3.12`` still belongs to its venv when the file is a symlink to the toolchain."""
+    foreign = _symlink_venv_python(tmp_path / "other-checkout", _toolchain_python(tmp_path))
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_a_symlink_that_resolves_into_another_checkouts_venv(tmp_path, monkeypatch):
+    """A symlink outside ``.venv/bin`` counts when its target is that entrypoint."""
+    foreign = _write_venv_python(tmp_path / "other-checkout", "python3.12")
+    alias = tmp_path / "runner"
+    alias.symlink_to(Path("other-checkout") / ".venv" / "bin" / "python3.12")
+    assert alias.resolve() == foreign.resolve()
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_an_alias_directory_of_another_checkouts_venv(tmp_path, monkeypatch):
+    """``venv-alias -> other/.venv`` still names that foreign interpreter.
+
+    The entrypoint's own components are ``venv-alias/bin``, not ``.venv/bin``.
+    ``python3.12`` is a symlink to the toolchain, so resolving the file itself
+    would drop ``.venv``. Only the parent directory is resolved.
+    """
+    foreign_root = tmp_path / "other-checkout"
+    _symlink_venv_python(foreign_root, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("other-checkout") / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    assert executable.parent.parent.name != ".venv"
+    assert Path(os.path.realpath(executable.parent)) == (foreign_root / ".venv" / "bin").resolve()
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_a_foreign_venv_symlinked_to_a_store(tmp_path, monkeypatch):
+    """``foreign-checkout/.venv -> venv-store`` still names that foreign checkout.
+
+    Resolving the parent first lands in ``venv-store/bin`` and drops ``.venv``,
+    so the path as given has to be classified too. ``python3.12`` is a symlink
+    to the toolchain; following that file would drop ``.venv`` as well.
+    """
+    foreign = tmp_path / "foreign-checkout"
+    executable = _symlink_checkout_venv_to_store(foreign, tmp_path / "venv-store", _toolchain_python(tmp_path))
+    assert os.readlink(foreign / ".venv") == os.path.relpath(tmp_path / "venv-store", foreign)
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_when_parent_resolution_names_another_checkout(tmp_path, monkeypatch):
+    """View U may name the requested checkout while view R names a foreign one.
+
+    ``requested/.venv`` points at ``foreign/.venv``. The unresolved path names
+    the requested checkout; parent resolution names the foreign checkout. Any
+    foreign owner is refused.
+    """
+    foreign = tmp_path / "foreign-checkout"
+    _symlink_venv_python(foreign, _toolchain_python(tmp_path))
+    requested = tmp_path / "requested"
+    requested.mkdir()
+    (requested / ".venv").symlink_to(Path("..") / "foreign-checkout" / ".venv")
+    executable = requested / ".venv" / "bin" / "python3.12"
+    assert executable.parent.parent.name == ".venv"
+    assert Path(os.path.realpath(executable.parent)) == (foreign / ".venv" / "bin").resolve()
+    assert not (requested / ".venv" / "bin" / "python").exists()
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(requested)
+
+
+def test_project_interpreter_accepts_running_python3_12_of_the_requested_checkout(tmp_path, monkeypatch):
+    """The requested checkout's own versioned entrypoint is accepted."""
+    requested = tmp_path / "requested"
+    python312 = _symlink_venv_python(requested, _toolchain_python(tmp_path))
+    monkeypatch.setattr(sys, "executable", str(python312))
+
+    assert project_interpreter(requested) == python312
+
+
+def test_project_interpreter_accepts_running_python3_12_of_the_primary_checkout(tmp_path, monkeypatch):
+    """A linked worktree may run on the primary checkout's ``python3.12``."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    python312 = _symlink_venv_python(primary, _toolchain_python(tmp_path))
+    monkeypatch.setattr(sys, "executable", str(python312))
+
+    assert project_interpreter(worktree) == python312
+
+
+def test_project_interpreter_accepts_a_symlink_into_the_requested_checkouts_venv(tmp_path, monkeypatch):
+    """A symlink that resolves into the requested checkout's ``.venv/bin`` is accepted."""
+    requested = tmp_path / "requested"
+    python312 = _write_venv_python(requested, "python3.12")
+    alias = tmp_path / "runner"
+    alias.symlink_to(python312)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    assert project_interpreter(requested) == alias
+
+
+def test_project_interpreter_accepts_an_alias_directory_of_the_requested_checkouts_venv(tmp_path, monkeypatch):
+    """A directory symlink onto the requested checkout's ``.venv`` is accepted.
+
+    The checkout path is compared after the same parent-directory resolution,
+    so a symlink in that checkout's parent still matches.
+    """
+    real_parent = tmp_path / "real-parent"
+    linked_parent = tmp_path / "linked-parent"
+    real_parent.mkdir()
+    linked_parent.symlink_to(real_parent)
+    requested = linked_parent / "requested"
+    _symlink_venv_python(requested, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("linked-parent") / "requested" / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    assert executable.parent.parent.name != ".venv"
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(requested) == executable
+
+
+def test_project_interpreter_accepts_an_alias_directory_of_the_primary_checkout(tmp_path, monkeypatch):
+    """A linked worktree may run through a directory symlink onto the primary ``.venv``."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    _symlink_venv_python(primary, _toolchain_python(tmp_path))
+    alias = tmp_path / "venv-alias"
+    alias.symlink_to(Path("primary") / ".venv")
+    executable = alias / "bin" / "python3.12"
+    assert alias.is_symlink()
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(worktree) == executable
+
+
+def test_project_interpreter_accepts_the_requested_venv_symlinked_to_a_store(tmp_path, monkeypatch):
+    """The requested checkout's ``.venv -> venv-store`` is still that checkout.
+
+    Parent resolution drops ``.venv``, but the path as given names the
+    requested checkout, and the store directory is not itself a ``.venv``.
+    """
+    requested = tmp_path / "requested"
+    executable = _symlink_checkout_venv_to_store(
+        requested, tmp_path / "requested-venv-store", _toolchain_python(tmp_path)
+    )
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(requested) == executable
+
+
+def test_project_interpreter_accepts_the_worktree_venv_symlinked_to_a_store(tmp_path, monkeypatch):
+    """A linked worktree's own ``.venv -> venv-store`` is accepted when the primary has none."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    executable = _symlink_checkout_venv_to_store(
+        worktree, tmp_path / "worktree-venv-store", _toolchain_python(tmp_path)
+    )
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(worktree) == executable
+
+
+def test_project_interpreter_accepts_the_primary_venv_symlinked_to_a_store(tmp_path, monkeypatch):
+    """A linked worktree may run the primary ``.venv`` when that directory points at a store."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    executable = _symlink_checkout_venv_to_store(primary, tmp_path / "primary-venv-store", _toolchain_python(tmp_path))
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    assert project_interpreter(worktree) == executable
+
+
+def test_project_interpreter_accepts_hosted_python3_12(tmp_path, monkeypatch):
+    """A versioned interpreter outside any checkout ``.venv/bin`` is the CI fallback."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.8" / "x64" / "bin" / "python3.12"
+    hosted.parent.mkdir(parents=True)
+    hosted.write_text("", encoding="utf-8")
+    alias = tmp_path / "hosted-alias"
+    alias.symlink_to(hosted)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    assert project_interpreter(checkout) == alias
+
+
+def test_project_interpreter_accepts_the_requested_worktree_venv_when_primary_has_none(tmp_path, monkeypatch):
+    """(b) When the primary checkout has no ``.venv``, the worktree's own interpreter is used."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    local = _write_venv_python(worktree)
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    assert project_interpreter(worktree) == local
+
+
+def test_project_interpreter_prefers_the_primary_checkout_venv(tmp_path, monkeypatch):
+    """(a) The primary checkout's ``.venv/bin/python`` wins when the worktree also has one."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    primary_python = _write_venv_python(primary)
+    _write_venv_python(worktree)
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    assert project_interpreter(worktree) == primary_python
+
+
+def test_project_interpreter_uses_the_primary_venv_when_the_checkout_has_none(tmp_path, monkeypatch):
+    """(a) A linked worktree with no ``.venv`` uses the primary checkout's interpreter."""
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    primary_python = _write_venv_python(primary)
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    assert project_interpreter(worktree) == primary_python
+
+
+def test_project_interpreter_uses_sys_executable_when_no_project_venv_exists(tmp_path, monkeypatch):
+    """(c) CI: no ``.venv`` anywhere, and ``sys.executable`` is not inside a checkout ``.venv``."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    ci_python = tmp_path / "hostedtoolcache" / "Python" / "3.12.8" / "x64" / "bin" / "python"
+    ci_python.parent.mkdir(parents=True)
+    ci_python.write_text("", encoding="utf-8")
+    monkeypatch.setattr(sys, "executable", str(ci_python))
+
+    assert project_interpreter(checkout) == ci_python

@@ -18,11 +18,13 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from agent_runtime.json_parse import extract_json_object
+from common.repo_root import project_interpreter
+
+VENV_PYTHON = project_interpreter()
 
 # Structured prompt that returns JSON (reliable parsing)
 NATURALNESS_PROMPT = """Evaluate the naturalness of this Ukrainian educational text.

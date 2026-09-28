@@ -78,13 +78,17 @@ import re
 import shlex
 import stat
 import subprocess
-import sys
 from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+try:
+    from scripts.common.repo_root import project_interpreter
+except ImportError:
+    from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
 
 from ..binary_resolve import resolve_agent_binary
 from ..result import ParseResult
@@ -361,9 +365,10 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     server = servers[0]
     if set(server) != {"name", "command", "args", "env"} or server.get("name") != "sealed_review":
         raise AcpxShadowRefusalError(f"{adapter_label}: only the sealed_review server is permitted")
-    expected_python = str(_REPO_ROOT / ".venv" / "bin" / "python")
-    if not (_REPO_ROOT / ".venv" / "bin" / "python").is_file() and sys.executable.endswith("/.venv/bin/python"):
-        expected_python = str(Path(sys.executable))
+    try:
+        expected_python = str(project_interpreter())
+    except FileNotFoundError:
+        expected_python = ""
     args = server.get("args")
     if server.get("command") != expected_python or server.get("env") != []:
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
