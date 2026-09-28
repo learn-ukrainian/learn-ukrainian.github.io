@@ -142,10 +142,26 @@ read order: **private #349 → private open PRs → public PRs linked from #4542
 Public #4542 is charter + bare pointer — never generate or mirror a public checklist
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
 remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
-status feed. Operator-only host mutation (private #360, #212) is **ESCALATE**, not
-solo action, on missing GO. If #349 and any other queue view disagree, **#349 wins** —
-correct the other view the same session. Full contract:
-`docs/runbooks/hramatka-driver-queue.md`.
+status feed. Host actions on the Hramatka host follow item 10's split: routine
+maintenance there is driver work, done then reported, and it includes using
+sudo where the host requires it — pull merged `main`; restart an updated or
+broken service (system or user unit) after checking no active dispatch depends
+on it; install or enable a reviewed systemd unit or timer that lives in the
+repo; clean agent-generated caches, logs, and worktrees; install OS packages a
+reviewed repo change needs. A production release rollover on the live-serving
+host (running `hramatka/ops/deploy.sh` or anything that swaps live
+`/opt/hramatka/current`, including rebuilding or swapping the read-only release
+checkout — private #360 class) is a **production cutover** and needs a
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count, and the private deploy runbook (including the
+sudo steps inside it) applies only after that GO (it stays **ESCALATE** without
+that present-tense GO). Host access and security configuration stays
+operator-only (**ESCALATE**, not solo) — sshd configuration (e.g.
+`PermitRootLogin`), sudoers, user accounts, SSH keys and other credentials, and
+firewall changes that could cut off operator access — because of lock-out risk
+and because accounts/credentials are an operator stop condition. If #349 and
+any other queue view disagree, **#349 wins** — correct the other view the same
+session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.
@@ -614,9 +630,10 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | Kind | Driver owns? |
 | --- | --- |
 | **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
-| **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees) | **Yes** — do it, then report. Never ask the operator |
+| **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees; install OS packages a reviewed repo change needs), including sudo where the host needs it | **Yes** — do it, then report. Never ask the operator |
 | **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
+| **Host access / security configuration** (sshd configuration such as `PermitRootLogin`, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
 
 Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced

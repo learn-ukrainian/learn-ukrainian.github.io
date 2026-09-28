@@ -21,9 +21,7 @@ Mode → ``--permission-mode``:
 - ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
   plus the tracked fleet PreToolUse guards through the hook bridge
-- ``danger``          → ``bypassPermissions`` + ``--always-approve``
-  (unattended full autonomy within the dispatch worktree)
-  plus the same fleet PreToolUse guards
+- ``danger``          → the same argv as ``workspace-write`` (#9008)
 
 Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
@@ -40,6 +38,16 @@ Write sessions install the fleet PreToolUse guards (primary-checkout write,
 secret-print, merge, and the rest of the tracked worker set) through the same
 hook bridge. They do not load the reviewer publish guard or the read-only Git
 push rewrite. Read-only reviewer sessions stay as #8945 shipped them.
+
+Issue #9008: ``danger`` keeps that argv. Claude loads the same fleet guards
+on both write modes; ``workspace-write`` is ``dontAsk`` plus an allow list and
+``danger`` is ``--dangerously-skip-permissions``. Grok 1.0.41 has no
+skip-permissions flag. ``bypassPermissions`` is its always-approve mode, and
+hooks still run there. ``dontAsk`` allows only pre-approved tools, and
+``auto`` leaves ``yolo_mode`` false, so a headless worker cannot push.
+The operator-accepted bypass therefore stays the write mode for both, and
+``danger`` keeps ``lu-write-worker`` so the fleet guards stay on. The shared
+argv is pinned by ``test_danger_argv_matches_workspace_write``.
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.

@@ -34,6 +34,8 @@ def test_backup_service_contract() -> None:
     assert "IOSchedulingClass=idle" in service
     assert "TimeoutStartSec=" in service
     assert "run_scheduled_backup.sh" in service
+    assert "[Install]" not in service
+    assert "After=network.target" not in service
     dropin = (PACKAGING / "dropins/learn-ukrainian-backup.service.d/data-volume.conf").read_text(encoding="utf-8")
     assert (
         "data_volume_guard.sh -- /usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh\n"
@@ -54,6 +56,8 @@ def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     assert "Type=oneshot" in service
     assert "run_scheduled_backup.sh retention" in service
     assert "EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env" in service
+    assert "[Install]" not in service
+    assert "After=network.target" not in service
     dropin = (PACKAGING / "dropins/learn-ukrainian-backup-retention.service.d/data-volume.conf").read_text(
         encoding="utf-8"
     )

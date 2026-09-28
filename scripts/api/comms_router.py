@@ -1514,7 +1514,15 @@ async def get_channel_endpoint(name: str, ctx: MonitorContext = Depends(get_ctx)
             context_preview = ctx_path.read_text("utf-8")[:2000]
             context_sha = _ch.context_sha256(ctx_path)
     except Exception as exc:
-        logger.warning("channel %s context preview failed: %s", safe_name, exc)
+        # CodeQL py/log-injection (#491): `name` reaches this log through
+        # safe_name, and the exception text can echo that path. The kebab-case
+        # check is not a CodeQL newline sanitizer. Log a stripped token and
+        # the exception type, never the exception text.
+        logger.warning(
+            "channel %s context preview failed: %s",
+            safe_name.replace("\r\n", "").replace("\n", "").replace("\r", ""),
+            type(exc).__name__,
+        )
         context_errors.append(f"context_preview: {type(exc).__name__}")
 
     payload = {

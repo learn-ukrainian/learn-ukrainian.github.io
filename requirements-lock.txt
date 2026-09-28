@@ -51,7 +51,7 @@ fsspec==2026.1.0
 ftfy==6.3.1
 google-auth==2.49.2
 google-genai==1.65.0
-greenlet==3.5.5
+greenlet==3.5.6
 grpcio==1.82.1
 h11==0.16.0
 h2==4.4.1
@@ -134,8 +134,8 @@ pyasn1_modules==0.4.2
 pycookiecheat==0.8.0
 pycparser==3.0
 pydantic-settings==2.15.0
-pydantic==2.13.4
-pydantic_core==2.46.4
+pydantic==2.13.5
+pydantic_core==2.46.5
 pyee==13.0.1
 Pygments==2.21.0
 PyJWT==2.14.0
@@ -183,7 +183,7 @@ setuptools==84.0.0
 shellingham==1.5.4
 six==1.17.0
 sniffio==1.3.1
-soupsieve==2.9
+soupsieve==2.9.2
 sqlite-vec==0.1.9
 sse-starlette==3.4.8
 stanza==1.13.0
@@ -223,10 +223,10 @@ Werkzeug==3.1.8
 wheel==0.48.0
 xxhash==3.7.0
 yamllint==1.38.0
-yarl==1.24.2
+yarl==1.25.1
 youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
-zeroconf==0.150.0
+zeroconf==0.151.3
 zlib-state==0.1.12
 
 # Repository runtime dependency; install requirements from the repository root.

@@ -9,7 +9,9 @@ rules:
       - gemini-plan-execute.yml:49
   self-repository:
     ignore:
-      # content-ci.yml:27 — `$/` is correct (zizmor 1.30 / GH Actions 2026-07-30),
-      # but our pinned actionlint 1.7.12 rejects it (rhysd/actionlint#732 still open).
-      # Keep `./` until actionlint ships `$/` support, then migrate and drop this ignore.
-      - content-ci.yml:27
+      # content-ci.yml:29 — `$/` is the form zizmor wants (zizmor 1.30 /
+      # GitHub Actions, 2026-07-30), but pinned actionlint 1.7.12 rejects it
+      # (rhysd/actionlint#711 still open; 1.7.12 remains the latest release).
+      # Keep `./` until actionlint accepts `$/`, then migrate and drop this ignore.
+      # The previous ignore named line 27; the step moved and alert #460 stayed open.
+      - content-ci.yml:29
