@@ -8,7 +8,7 @@ Sources:
 - registry/lt_replacements.json (LanguageTool / curated replacement map)
 - registry/lexicon/heritage_pairs.yaml & heritage_pairs.wave1-calque.yaml (UA-GEC & curated pairs)
 - scripts/lexicon/calque_corrections.py (active participle / calque authority)
-- data/sources.db (textbooks_fts, style_guide, ua_gec_errors, sum11, grinchenko)
+- data/sources.db (textbooks_fts, style_guide, ua_gec_errors, grinchenko)
 - data/vesum.db (VESUM morphological validation)
 
 Versioning Contract:

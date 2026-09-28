@@ -86,9 +86,9 @@ SPACE_COLLAPSE_DECISIONS = (
 
 # #6370 residual-27 (2026-08-18): entry_type per docs/runbooks/word-atlas-entry-model.md
 # tie-breakers. Evidence is a deterministic dictionary/VESUM lookup (#M-4):
-#   - виходити заміж: СУМ-11 lists "виходити (вийти) заміж" as a fixed collocation
-#     under за́між (mcp__sources__search_definitions) — literal-but-fixed formula,
-#     not figurative -> expression.
+#   - виходити заміж: ВТС lists "Виходити заміж — брати шлюб, одружуватися з
+#     ким-небудь (про дівчину, жінку)" as a fixed collocation under за́між
+#     (slovnyk.me vts cache) — literal-but-fixed formula, not figurative -> expression.
 #   - час від часу: Фразеологічний словник (ULIF) lists it verbatim as an idiom
 #     (mcp__sources__search_idioms) -> phraseologism.
 #   - the remaining six have no idiom/proverb/formula dictionary evidence, so per

@@ -124,7 +124,6 @@ def _refresh_entry(
         entry,
         conn,
         kaikki_lookup,
-        has_sum11_flags=enrich_manifest._sum11_has_flag_columns(conn),
     )
 
 

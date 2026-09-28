@@ -25,30 +25,6 @@ def _completed(
     )
 
 
-def test_anchor_curation_evidence_audit_entries_timeout() -> None:
-    from scripts.lexicon import anchor_curation_evidence as ace
-
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="lemma\tcefr\tslug\tbucket\n")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        with pytest.raises(RuntimeError, match="unexpected search_no_visible_gloss count"):
-            ace.audit_entries()
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == ace.DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(list(ace.AUDIT_COMMAND), ace.DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(RuntimeError, match="Atlas richness audit timed out"):
-            ace.audit_entries()
-
-
 def test_check_manifest_vocabulary_coverage_changed_vocab_modules_timeout(tmp_path: Path) -> None:
     from scripts.lexicon import check_manifest_vocabulary_coverage as cmvc
 

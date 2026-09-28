@@ -110,6 +110,7 @@ from scripts.lexicon.source_attribution import (
     VTS_SHORT_LABEL,
     WIKIDATA_LABEL,
     attach_official_url,
+    cites_soviet_dictionary,
     join_academic_source_labels,
     normalize_academic_label,
     remap_url_list,
@@ -542,7 +543,7 @@ _WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
 # members dressed as opposites (дочка→матка, він→ми), wrong-sense opposites
 # (газ→гальмо, ім'я→неслава) and Russian contamination (не→да). Mirror the #3168
 # _WRONG_SENSE_SYNONYMS lesson: curated per-lemma filter, NEVER a global stoplist.
-# Two layers, both verified via the sources MCP (СУМ-11 / VESUM / russian_shadow):
+# Two layers, both checked via the sources MCP (VESUM / russian_shadow):
 #   _DROP_ANTONYM_LEMMAS — lemmas whose ENTIRE antonym set is noise:
 #     а→зет (letter-name sequence); брат (no lexical antonym — сестра is the
 #     gendered pair, not an opposite); він→ми (pronoun paradigm, not opposition —
@@ -555,11 +556,11 @@ _WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
 #     (same family as #3168 — стежка is a co-hyponym; obstacle terms aren't
 #     opposites of a path).
 #   _WRONG_ANTONYMS — per-lemma term drops where SOME opposites survive:
-#     дочка: keep син; drop the мати-variants + матка (СУМ-11 "плідна самиця" /
-#       uterus / queen bee, not a daughter-opposite) + батько/падчірка (relatives);
+#     дочка: keep син; drop the мати-variants + матка (female-animal / uterus /
+#       queen-bee senses, not a daughter-opposite) + батько/падчірка (relatives);
 #     друг: keep ворог/недруг; drop екс (slang) + нелюб (archaic, off-sense);
-#     село: keep місто; drop міщанство/град + город (СУМ-11 modern sense =
-#       kitchen-garden, NOT city — false friend with Russian город);
+#     село: keep місто; drop міщанство/град + город (СУМ-20 / ВТС sense =
+#       kitchen-garden plot, NOT city — false friend with Russian город);
 #     тло: keep фігура (figure↔ground); drop сильвета/сильветка (silhouette).
 _DROP_ANTONYM_LEMMAS: frozenset[str] = frozenset(
     {
@@ -3963,59 +3964,18 @@ def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], s
                     _add_candidate(out, seen, lemma, candidate)
 
 
-def _synonyms_from_sum11(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
-    allowed = _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())
-    if not allowed:
-        return
-    for variant in _split_lemma_variants(lemma):
-        row = conn.execute(
-            "SELECT definition FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if not row:
-            continue
-        haystack = clean_html_entities(row[0]).casefold()
-        for candidate in allowed:
-            if _contains_whole_token(haystack, candidate.casefold()):
-                _add_candidate(out, seen, lemma, candidate)
-
-
 def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
     """Return source-attested synonyms for the lemma's A1 sense, capped at six."""
     out: list[str] = []
     seen: set[str] = set()
     _synonyms_from_balla(conn, lemma, out, seen)
-    # СУМ-11 synonym verification removed — decolonization decision 2026-06-26.
-    # We do not read the Soviet-era dictionary for any purpose.
     return out[:6]
-
-
-def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:
-    cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}
-    return {"sovietization_risk", "sovietization_keywords"}.issubset(cols)
-
-
-def _split_sum11_keywords(raw: object) -> list[str]:
-    return [part.strip() for part in str(raw or "").split(",") if part.strip()]
-
-
-def _sum11_row_flags(row: tuple, *, has_flag_columns: bool) -> tuple[int, list[str]]:
-    if has_flag_columns:
-        try:
-            return int(row[2] or 0), _split_sum11_keywords(row[3])
-        except (IndexError, TypeError, ValueError):
-            return 0, []
-
-    from scripts.audit.sum11_sovietization_scan import classify_entry
-
-    return classify_entry(str(row[0] or ""), str(row[1] or ""))
 
 
 def _meaning(
     conn: sqlite3.Connection,
     lemma: str,
     *,
-    has_sum11_flags: bool | None = None,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
 ) -> dict | None:
     """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → kaikki fallback.
@@ -4081,7 +4041,7 @@ def _extract_first_sense_from_definition(text: str) -> str:
 
 
 # --- «див.» cross-reference resolution (issue #4220) ------------------------
-# Dictionary sources (СУМ-11/СУМ-20/ВТС) sometimes define a lemma ONLY by a
+# Dictionary sources (СУМ-20/ВТС) sometimes define a lemma ONLY by a
 # cross-reference — «ЗАХОВАТИ див. заховувати» — so the atlas card ships with no
 # usable meaning (58 grow rows deferred as flag:gloss-unresolved in the #4888
 # ledger). When a built card's body reduces to a bare «див. X», resolve it ONE
@@ -4193,7 +4153,7 @@ def _definition_synonym_targets(body: str, lemma: str) -> list[tuple[str, str]]:
 def _definition_antonym_targets(body: str) -> list[tuple[str, str]]:
     """Extract explicit ``протилежне`` / ``прот.`` lemma pointers.
 
-    СУМ-20 and СУМ-11 spell the relation as ``протилежне X``; VTS abbreviates
+    СУМ-20 spells the relation as ``протилежне X``; VTS abbreviates
     it as ``прот. X``. A target is accepted only when it ends at a definition
     boundary, and ``протилежне до`` is deliberately excluded because it is
     ordinary prose rather than a lexicographer's antonym pointer.
@@ -4475,55 +4435,6 @@ def _vts_definition_card(
     return card
 
 
-def _sum11_definition_card(
-    conn: sqlite3.Connection,
-    lemma: str,
-    *,
-    has_sum11_flags: bool,
-    resolve_xref: bool = True,
-) -> dict[str, Any] | None:
-    sum11_fields = "definition, text"
-    if has_sum11_flags:
-        sum11_fields += ", sovietization_risk, sovietization_keywords"
-    for variant in _split_lemma_variants(lemma):
-        row = conn.execute(
-            f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if not row or not row[0]:
-            continue
-        risk, keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
-        text = _definition_body(row[0])
-        if not text:
-            return None
-        card: dict[str, Any] = {
-            "id": "sum11-flagged" if risk > 0 else "sum11",
-            "source": "СУМ-11",
-            "source_pill": "СУМ-11",
-            "note": f"радянське видання · лише контраст · risk={risk}",
-            "definitions": [text],
-            "sovietization_risk": risk,
-            "verification_authority": False,
-        }
-        if keywords:
-            card["sovietization_keywords"] = keywords
-            card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
-        elif risk > 0:
-            card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
-        if resolve_xref:
-            resolved = _resolve_definition_xref(
-                card,
-                lemma,
-                lambda target: _sum11_definition_card(
-                    conn, target, has_sum11_flags=has_sum11_flags, resolve_xref=False
-                ),
-            )
-            if resolved is not None:
-                return resolved
-        return card
-    return None
-
-
 def _grinchenko_definition_row(conn: sqlite3.Connection, lemma: str) -> str | None:
     """Return the attested headword spelling if ``lemma`` exists in Грінченко, else None."""
     for variant in _split_lemma_variants(lemma):
@@ -4632,7 +4543,6 @@ def _definition_cards(
     conn: sqlite3.Connection,
     lemma: str,
     *,
-    has_sum11_flags: bool,
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     # СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization
@@ -4686,7 +4596,6 @@ def _dictionary_definition_rows(
     conn: sqlite3.Connection,
     lemma: str,
     *,
-    has_sum11_flags: bool,
     cache: dict[str, Any] | None = None,
     include_grinchenko: bool = False,
 ) -> list[dict[str, Any]]:
@@ -4758,7 +4667,6 @@ def _definition_pointer_relations(
     conn: sqlite3.Connection,
     lemma: str,
     *,
-    has_sum11_flags: bool,
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Vein 1: lexicographer-authored ``Те саме, що`` / ``див.`` relations."""
@@ -4766,7 +4674,6 @@ def _definition_pointer_relations(
     for row in _dictionary_definition_rows(
         conn,
         lemma,
-        has_sum11_flags=has_sum11_flags,
         cache=cache,
     ):
         for target, pattern in _definition_synonym_targets(str(row["text"]), lemma):
@@ -4836,8 +4743,6 @@ def _manifest_relation_aliases(manifest: dict[str, Any]) -> dict[str, str]:
 def _definition_pointer_relations_by_headword(
     conn: sqlite3.Connection,
     manifest: dict[str, Any],
-    *,
-    has_sum11_flags: bool,
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute pointer relations and safe reciprocal manifest-headword pairs."""
     headwords = _manifest_headwords(manifest)
@@ -4850,7 +4755,6 @@ def _definition_pointer_relations_by_headword(
         relations = _definition_pointer_relations(
             conn,
             lemma,
-            has_sum11_flags=has_sum11_flags,
         )
         if relations:
             by_headword.setdefault(source_key, []).extend(relations)
@@ -4869,7 +4773,6 @@ def _definition_antonym_relations(
     conn: sqlite3.Connection,
     lemma: str,
     *,
-    has_sum11_flags: bool,
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Lexicographer-authored antonym pointers, VESUM-gated at both ends."""
@@ -4881,7 +4784,6 @@ def _definition_antonym_relations(
     for row in _dictionary_definition_rows(
         conn,
         lemma,
-        has_sum11_flags=has_sum11_flags,
         cache=cache,
     ):
         for target, pattern in _definition_antonym_targets(str(row["text"])):
@@ -4904,8 +4806,6 @@ def _definition_antonym_relations(
 def _definition_antonym_relations_by_headword(
     conn: sqlite3.Connection,
     manifest: dict[str, Any],
-    *,
-    has_sum11_flags: bool,
 ) -> dict[str, list[dict[str, Any]]]:
     """Precompute explicit antonym pointers and symmetric manifest-headword pairs."""
     headwords = _manifest_headwords(manifest)
@@ -4918,7 +4818,6 @@ def _definition_antonym_relations_by_headword(
         relations = _definition_antonym_relations(
             conn,
             lemma,
-            has_sum11_flags=has_sum11_flags,
         )
         if relations:
             by_headword.setdefault(source_key, []).extend(relations)
@@ -8068,7 +7967,6 @@ def enrich_entry(
     conn,
     kaikki_lookup,
     *,
-    has_sum11_flags,
     pointer_synonym_relations: list[dict[str, Any]] | None = None,
     pointer_antonym_relations: list[dict[str, Any]] | None = None,
     pointer_homonym_relations: list[dict[str, Any]] | None = None,
@@ -8093,7 +7991,6 @@ def enrich_entry(
     definition_cards = _definition_cards(
         conn,
         lemma,
-        has_sum11_flags=has_sum11_flags,
         cache=slovnyk_cache,
     )
     sum20_card = next((c for c in definition_cards if c.get("id") == "sum20"), None)
@@ -8147,7 +8044,11 @@ def enrich_entry(
     # BEFORE recomputing so a gate that did not run can restore its confirmed content
     # instead of silently overwriting it with an offline-empty recomputation.
     existing_sections = entry.get("sections")
-    baseline_sections = existing_sections if isinstance(existing_sections, dict) else {}
+    published_sections = existing_sections if isinstance(existing_sections, dict) else {}
+    # A published section that cites Soviet-era evidence is never a preserve baseline
+    # (#8990, rule #M-6): the recompute wins, or the section stays held when it cannot run.
+    soviet_withheld = {name for name, section in published_sections.items() if cites_soviet_dictionary(section)}
+    baseline_sections = {name: section for name, section in published_sections.items() if name not in soviet_withheld}
     # mphdict synonym groups are a local primary source.  A missing database is
     # the only did-not-run state; a present database with no matching set is an
     # authoritative empty result and may retract stale legacy chips.
@@ -8172,6 +8073,9 @@ def enrich_entry(
 
     def _apply_section(name: str, new_section: dict[str, Any] | None, *, gate_ran: bool) -> None:
         resolved, outcome = _resolve_gated_section(new_section, baseline_sections.get(name), gate_ran=gate_ran)
+        if name in soviet_withheld and _section_loses_items(published_sections[name], resolved):
+            # Items resting on withheld Soviet-era evidence are retracted, not regressed.
+            outcome = GATE_REJECTED
         if resolved:
             sections[name] = resolved
         if outcome:
@@ -8194,7 +8098,6 @@ def enrich_entry(
         else _definition_pointer_relations(
             conn,
             lemma,
-            has_sum11_flags=has_sum11_flags,
             cache=slovnyk_cache,
         )
     )
@@ -8217,7 +8120,6 @@ def enrich_entry(
         else _definition_antonym_relations(
             conn,
             lemma,
-            has_sum11_flags=has_sum11_flags,
             cache=slovnyk_cache,
         )
     )
@@ -8318,12 +8220,11 @@ def enrich_entry(
         morphology=morph,
         definition_cards=definition_cards,
     )
-    meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
+    meaning = _meaning(conn, lemma, kaikki_lookup=kaikki_lookup)
     if not meaning and fallback_base:
         meaning = _meaning(
             conn,
             fallback_base,
-            has_sum11_flags=has_sum11_flags,
             kaikki_lookup=kaikki_lookup,
         )
         if meaning:
@@ -8459,7 +8360,6 @@ def enrich(
     enriched = 0
     entries: list[dict[str, Any]] = []
     try:
-        has_sum11_flags = _sum11_has_flag_columns(conn)
         balla_art = build_balla_reverse_side_db(
             conn,
             side_dir / "balla_reverse.sqlite",
@@ -8507,12 +8407,8 @@ def enrich(
         extract_and_close_relations(
             entries=entries,
             extractors={
-                "synonym": lambda entry: _definition_pointer_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11_flags
-                ),
-                "antonym": lambda entry: _definition_antonym_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11_flags
-                ),
+                "synonym": lambda entry: _definition_pointer_relations(conn, str(entry.get("lemma") or "")),
+                "antonym": lambda entry: _definition_antonym_relations(conn, str(entry.get("lemma") or "")),
                 "homonym": lambda entry: _homonym_relations(conn, str(entry.get("lemma") or "")),
                 "paronym": lambda entry: _paronym_relations(conn, str(entry.get("lemma") or "")),
             },
@@ -8537,7 +8433,6 @@ def enrich(
                 entry,
                 conn,
                 kaikki_lookup,
-                has_sum11_flags=has_sum11_flags,
                 pointer_synonym_relations=[
                     *pointer_synonym_relations.get(entry_key or "", []),
                     *corpus_for_entry.get("synonym", []),

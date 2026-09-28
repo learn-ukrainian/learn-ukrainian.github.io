@@ -101,7 +101,6 @@ def run_canary_check(
     *,
     canary_controls: dict[str, list[dict[str, Any]]] | None = None,
     canary_lemmas: list[str] | None = None,
-    has_sum11_flags: bool = False,
 ) -> dict[str, Any]:
     """Pre-flight positive control canary check on known-good control entries.
 
@@ -127,7 +126,6 @@ def run_canary_check(
                 entry,
                 conn,
                 kaikki_lookup,
-                has_sum11_flags=has_sum11_flags,
             )
             coverage = _entry_layer_coverage(entry)
             lemma_key = f"{ctrl['lemma']}:{layer}"
@@ -580,14 +578,11 @@ def _reenrich_full_entry(
     conn: sqlite3.Connection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
-    *,
-    has_sum11_flags: bool,
 ) -> None:
     enrich_manifest.enrich_entry(
         entry,
         conn,
         kaikki_lookup,
-        has_sum11_flags=has_sum11_flags,
     )
 
 
@@ -650,7 +645,6 @@ def reenrich_thin_entries(
         sha256 = hashlib.sha256(json.dumps(slugs, ensure_ascii=False).encode("utf-8")).hexdigest()
         snapshot_info = {"count": len(slugs), "sha256": sha256}
 
-    has_sum11_flags = enrich_manifest._sum11_has_flag_columns(conn)
     original_wiki_reference = enrich_manifest._wiki_reference
     original_slovnyk_cache = enrich_manifest._slovnyk_cache
     original_fetch_slovnyk = enrich_manifest._fetch_slovnyk_entry
@@ -689,7 +683,6 @@ def reenrich_thin_entries(
                     conn,
                     entry,
                     kaikki_lookup,
-                    has_sum11_flags=has_sum11_flags,
                 )
             else:
                 _reenrich_translation_only(
@@ -902,11 +895,9 @@ def main() -> int:
         return 0
 
     with sqlite3.connect(sources_db) as conn:
-        has_flags = enrich_manifest._sum11_has_flag_columns(conn)
-
         if args.canary or (args.target == "full-catalog" and not slug_filter):
             lemmas = [s.strip() for s in args.canary_lemmas.split(",")] if args.canary_lemmas else None
-            canary_res = run_canary_check(conn, kaikki_lookup, canary_lemmas=lemmas, has_sum11_flags=has_flags)
+            canary_res = run_canary_check(conn, kaikki_lookup, canary_lemmas=lemmas)
             if not canary_res["success"]:
                 print(
                     json.dumps(

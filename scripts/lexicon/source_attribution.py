@@ -8,6 +8,7 @@ internal ``mirror_source_url`` / ``mirror_source_urls`` fields.
 
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 from urllib.parse import quote, unquote, urlparse
@@ -24,6 +25,16 @@ MIRROR_URL_PATTERN = re.compile(
     r"https?://(?:www\.)?(?:slovnyk\.me|goroh\.pp\.ua|sum\.in\.ua)(?:/[^\s\"'<>]*)?",
     re.IGNORECASE,
 )
+# Soviet-era СУМ-11 is contrast-only (rule #M-6): published evidence citing it is
+# never carried forward into a rebuilt section or a filled Atlas row.
+SOVIET_DICTIONARY_CITATION_RE = re.compile(r"(?:СУМ|SUM)[-‐‑‒–— ]?11", re.IGNORECASE)
+
+
+def cites_soviet_dictionary(payload: object) -> bool:
+    """True when ``payload`` (any JSON-serializable value) cites the Soviet-era dictionary."""
+    return bool(SOVIET_DICTIONARY_CITATION_RE.search(json.dumps(payload, ensure_ascii=False, default=str)))
+
+
 SLOVNYK_DICT_PATH_RE = re.compile(
     r"https?://(?:www\.)?slovnyk\.me/dict/(?P<slug>[^/]+)/(?P<word>[^/?#]+)",
     re.IGNORECASE,

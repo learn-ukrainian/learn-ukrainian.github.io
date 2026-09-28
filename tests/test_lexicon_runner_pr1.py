@@ -473,8 +473,8 @@ def test_relation_closure_matches_legacy_by_headword(
             lambda lemma: _cache_from_slice(conn, lemma),
         )
         manifest = {"entries": entries}
-        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=False)
-        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=False)
+        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest)
+        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest)
         headwords = em._manifest_headwords(manifest)
         extract_and_close_relations(
             entries=entries,
@@ -482,13 +482,11 @@ def test_relation_closure_matches_legacy_by_headword(
                 "synonym": lambda entry: em._definition_pointer_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
             },
@@ -557,13 +555,11 @@ def test_500_lemma_equivalence_cefr_and_relations(
                 "synonym": lambda entry: em._definition_pointer_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "homonym": lambda entry: em._homonym_relations(conn, str(entry.get("lemma") or "")),

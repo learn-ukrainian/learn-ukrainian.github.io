@@ -80,7 +80,7 @@ def test_section_mapping_writes_local_rows_and_honest_uncovered(tmp_path, monkey
     db_path = _build_atlas_db(tmp_path)
     sources_db_path = _empty_sources_db(tmp_path)
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags, **_kwargs):
+    def fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
         if entry["lemma"] == "прапор":
             entry["heritage_status"] = {
                 "classification": "standard",
@@ -126,7 +126,7 @@ def test_idempotent_rerun_skips_existing_sections(tmp_path, monkeypatch):
     db_path = _build_atlas_db(tmp_path)
     sources_db_path = _empty_sources_db(tmp_path)
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags, **_kwargs):
+    def fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
         entry["enrichment"] = {"stress": {"form": f"{entry['lemma']}́", "source": "stress fixture"}}
         entry["heritage_status"] = {"classification": "unknown"}
         return True
@@ -148,7 +148,7 @@ def test_refresh_replaces_existing_section_payload(tmp_path, monkeypatch):
     db_path = _build_atlas_db(tmp_path)
     sources_db_path = _empty_sources_db(tmp_path)
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags, **_kwargs):
+    def fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
         entry["enrichment"] = {"meaning": {"definitions": ["оновлено"], "source": "refresh fixture"}}
         entry["heritage_status"] = {"classification": "unknown"}
         return True
@@ -163,6 +163,53 @@ def test_refresh_replaces_existing_section_payload(tmp_path, monkeypatch):
         "source": "refresh fixture",
     }
     assert rows[("прапор", "meaning")]["phase"] == "local"
+
+
+def _soviet_cited_entries() -> list[dict[str, Any]]:
+    return [
+        {
+            "lemma": "абрикос",
+            "url_slug": "абрикос",
+            "gloss": "apricot",
+            "pos": "noun",
+            "primary_source": "fixture",
+            "sections": {
+                "synonyms": {"items": ["абрикоса"], "source": "СУМ-11: Те саме, що → абрикоса"},
+            },
+        },
+        {
+            "lemma": "великий",
+            "url_slug": "великий",
+            "gloss": "big",
+            "pos": "adj",
+            "primary_source": "fixture",
+            "sections": {
+                "antonyms": {"items": ["малий"], "source": "СУМ-11: протилежне → малий"},
+            },
+        },
+    ]
+
+
+def test_soviet_cited_rows_are_recomputed_or_deleted(tmp_path, monkeypatch):
+    """#8990: a stored row citing СУМ-11 is never kept as existing, even without --refresh."""
+    db_path = _build_atlas_db(tmp_path, _soviet_cited_entries())
+    assert ("абрикос", "synonyms") in _rows(db_path)
+    assert ("великий", "antonyms") in _rows(db_path)
+
+    def fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
+        if entry["lemma"] == "абрикос":
+            entry["sections"] = {"synonyms": {"items": ["абрикоса"], "source": "СУМ-20: Те саме, що → абрикоса"}}
+        entry["heritage_status"] = {"classification": "unknown"}
+        return True
+
+    monkeypatch.setattr(fill_local, "enrich_entry", fake_enrich_entry)
+    fill_local.fill_local(db_path, _empty_sources_db(tmp_path), _empty_kaikki_lookup(tmp_path))
+    rows = _rows(db_path)
+
+    assert json.loads(rows[("абрикос", "synonyms")]["payload_json"])["source"] == "СУМ-20: Те саме, що → абрикоса"
+    assert rows[("абрикос", "synonyms")]["phase"] == "local"
+    assert ("великий", "antonyms") not in rows
+    assert not any("СУМ-11" in (row["source"] or "") + row["payload_json"] for row in rows.values())
 
 
 def test_phase1_offline_guard_blocks_slovnyk_wikipedia_and_grac_network(tmp_path, monkeypatch):
@@ -180,7 +227,7 @@ def test_phase1_offline_guard_blocks_slovnyk_wikipedia_and_grac_network(tmp_path
     monkeypatch.setattr(enrich_manifest, "_WIKI_REFERENCE_CACHE_DIRTY", False)
     enrich_manifest.query_wikipedia.cache_clear()
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags, **_kwargs):
+    def fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
         assert enrich_manifest._fetch_slovnyk_entry("немає", "немає", "vts") is None
         assert enrich_manifest._cached_wikipedia_summary("Тестова стаття без кешу") is None
         assert enrich_manifest._fetch_grac_frequency_batch(["немає"]) == {"немає": None}
@@ -214,7 +261,6 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
         conn,
         kaikki_lookup,
         *,
-        has_sum11_flags,
         pointer_synonym_relations=None,
         pointer_antonym_relations=None,
         pointer_homonym_relations=None,
@@ -323,7 +369,6 @@ def test_enrich_entry_merges_pointer_synonym_relations(monkeypatch):
         entry,
         conn,
         {},
-        has_sum11_flags=False,
         pointer_synonym_relations=[
             {
                 "item": "синонім-вказівник",
