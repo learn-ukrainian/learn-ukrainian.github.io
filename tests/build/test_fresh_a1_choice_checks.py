@@ -72,6 +72,35 @@ BIG = _record(
         ("великому", "adj:n:v_dav:compb"),
     ],
 )
+BREAKFAST = _record(
+    7,
+    "поснідати",
+    [
+        ("поснідала", "verb:perf:past:f"),
+        ("поснідали", "verb:perf:past:p"),
+        ("поснідав", "verb:perf:past:m"),
+    ],
+)
+WATCH = _record(8, "дивитися", [("дивився", "verb:rev:imperf:past:m"), ("дивилися", "verb:rev:imperf:past:p")])
+GIVE = _record(
+    9,
+    "дати",
+    [
+        ("дай", "verb:perf:impr:s:2"),
+        ("дати", "verb:perf:inf"),
+        ("дайте", "verb:perf:impr:p:2"),
+    ],
+)
+COST = _record(
+    10,
+    "коштувати",
+    [("коштує", "verb:imperf:pres:s:3"), ("коштувала", "verb:imperf:past:f")],
+)
+WORK = _record(
+    11,
+    "працювати",
+    [("працюємо", "verb:imperf:pres:p:1"), ("працювали", "verb:imperf:past:p")],
+)
 
 
 def _check(
@@ -127,6 +156,77 @@ def test_book_plural_accusative_needs_singular_demand(tmp_path: Path) -> None:
     item["requires"] = {"Case": "Acc"}
     item["tests_feature"] = "Case"
     assert _check(tmp_path, item, BOOK)["code"] == "form_not_unique_for_requires"
+
+
+@pytest.mark.parametrize(
+    ("record", "options", "requires", "taught", "expected"),
+    [
+        (
+            BREAKFAST,
+            ["поснідала", "поснідали"],
+            {"Gender": "Fem", "Number": "Sing", "VerbForm": "Fin"},
+            "Gender",
+            "passed",
+        ),
+        (
+            BREAKFAST,
+            ["поснідала", "поснідав"],
+            {"Gender": "Fem", "Number": "Sing", "VerbForm": "Fin"},
+            "Gender",
+            "passed",
+        ),
+        (WATCH, ["дивився", "дивилися"], {"Gender": "Masc", "Number": "Sing", "VerbForm": "Fin"}, "Gender", "passed"),
+        (GIVE, ["дай", "дати"], {"Number": "Sing", "Person": "2", "VerbForm": "Fin"}, "Number", "passed"),
+        (GIVE, ["дай", "дайте"], {"Number": "Sing", "Person": "2", "VerbForm": "Fin"}, "Number", "passed"),
+        (
+            COST,
+            ["коштує", "коштувала"],
+            {"Person": "3", "Number": "Sing"},
+            "Person",
+            "form_option_missing_required_group",
+        ),
+        (
+            WORK,
+            ["працюємо", "працювали"],
+            {"Person": "1", "Number": "Plur"},
+            "Person",
+            "form_option_missing_required_group",
+        ),
+        (READ, ["читаю", "читав"], {"Person": "1", "Number": "Sing"}, "Person", "form_option_missing_required_group"),
+    ],
+)
+def test_carried_feature_exclusion_and_key_swaps(
+    tmp_path: Path, record: dict, options: list[str], requires: dict[str, str], taught: str, expected: str
+) -> None:
+    item = _form(options, record, requires, taught=taught)
+    row = _check(tmp_path, item, record)
+    if expected == "passed":
+        assert row["status"] == "passed"
+    else:
+        assert row["code"] == expected
+    item["correct"] = 1
+    swapped = _check(tmp_path, item, record)
+    assert swapped["code"] == (
+        "form_not_unique_for_requires" if expected == "passed" else "form_option_missing_required_group"
+    )
+
+
+def test_one_noncontradicting_analysis_makes_distractor_undecidable(tmp_path: Path) -> None:
+    # Both tags for «дати» are sourced VESUM analyses of that surface. This synthetic
+    # bound record forces the checker to consider the noun homograph too.
+    mixed = _record(
+        12,
+        "дати",
+        [
+            ("дайте", "verb:perf:impr:p:2"),
+            ("дати", "verb:perf:inf"),
+            ("дати", "noun:inanim:p:v_naz"),
+        ],
+    )
+    item = _form(["дайте", "дати"], mixed, {"Person": "2", "Number": "Plur", "VerbForm": "Fin"}, taught="Person")
+    assert _check(tmp_path, item, mixed)["code"] == "form_option_missing_required_group"
+    item["correct"] = 1
+    assert _check(tmp_path, item, mixed)["code"] == "form_option_missing_required_group"
 
 
 @pytest.mark.parametrize(

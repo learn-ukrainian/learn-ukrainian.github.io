@@ -212,7 +212,8 @@ def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str,
         "## Form-choice candidate bank",
         "",
         "Use one form from its bound record per option. State the complete slot `requires`; "
-        "choose one admitted key and distractors that differ in `tests_feature`. "
+        "choose one admitted key. Each distractor differs from the key in `tests_feature`, "
+        "or carries no value of `tests_feature` and is excluded by another required group it carries. "
         "The engine generates the item-specific subset and checks every written option.",
         "",
     ]

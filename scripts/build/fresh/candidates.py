@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
+from collections.abc import Collection, Iterable
+from typing import Any, Literal
 
 from scripts.curriculum.evidence.tags import to_oracle
 from scripts.curriculum.resolver.narrow import learner_usable
@@ -29,9 +30,24 @@ def record_candidates(record: dict[str, Any]) -> list[dict[str, Any]]:
     return [by_form[surface] for surface in sorted(by_form)]
 
 
-def _admitted(candidate: dict[str, Any], requires: dict[str, str]) -> bool:
+def classify_form_analyses(
+    analyses: Iterable[Collection[str]], requires: dict[str, str]
+) -> Literal["admitted", "excluded", "undecidable"]:
+    """Classify all oracle analyses of one bound form against the slot demand."""
     required = {f"{group}={value}" for group, value in requires.items()}
-    return any(required <= set(analysis["features"]) for analysis in candidate["analyses"])
+    seen = False
+    all_contradict = True
+    for features in analyses:
+        seen = True
+        atoms = set(features)
+        if required <= atoms:
+            return "admitted"
+        if not any(
+            any(atom.startswith(f"{group}=") and atom != f"{group}={value}" for atom in atoms)
+            for group, value in requires.items()
+        ):
+            all_contradict = False
+    return "excluded" if seen and all_contradict else "undecidable"
 
 
 def _group_values(candidate: dict[str, Any], group: str) -> set[str]:
@@ -55,7 +71,7 @@ def option_record_bindings(item: dict[str, Any], activity_type: str) -> list[Any
 
 
 def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: str) -> list[dict[str, Any]]:
-    """Offer the key and only distractors excluded in the taught feature.
+    """Offer the key and distractors excluded by a carried required feature.
 
     The complete slot demand is authored and independently confirmed elsewhere.
     This function never infers it from the sentence or an answer tag.
@@ -88,7 +104,7 @@ def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: 
     if key_record is None:
         return []
     key = next((c for c in record_candidates(key_record) if c["form"] == key_text), None)
-    if key is None or not _admitted(key, requires):
+    if key is None or classify_form_analyses((a["features"] for a in key["analyses"]), requires) != "admitted":
         return []
     key_values = _group_values(key, group)
     if not key_values:
@@ -100,12 +116,15 @@ def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: 
         if record is None:
             continue
         for candidate in record_candidates(record):
-            admitted = _admitted(candidate, requires)
+            classification = classify_form_analyses((a["features"] for a in candidate["analyses"]), requires)
+            admitted = classification == "admitted"
             values = _group_values(candidate, group)
             if (record_id, candidate["form"]) == (key_id, key_text):
                 include = True
             else:
-                include = not admitted and bool(values) and values.isdisjoint(key_values)
+                include = classification == "excluded" and (
+                    (bool(values) and values.isdisjoint(key_values)) or not values
+                )
             if include:
                 required = {f"{name}={value}" for name, value in requires.items()}
                 analyses = [

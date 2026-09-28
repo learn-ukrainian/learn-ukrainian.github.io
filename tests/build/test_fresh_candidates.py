@@ -150,6 +150,61 @@ def test_analytic_future_uses_single_auxiliary_or_infinitive_forms(words: dict) 
     assert _surfaces(item_candidates(auxiliary, words, "fill-in")) == _surfaces(aux)
 
 
+def test_candidate_generator_uses_carried_required_group_and_rejects_undecidable() -> None:
+    watch = make_word_record(
+        201,
+        "дивитися",
+        pos="verb",
+        forms=[_form("дивився", "verb:rev:imperf:past:m"), _form("дивилися", "verb:rev:imperf:past:p")],
+    )
+    give = make_word_record(
+        202,
+        "дати",
+        pos="verb",
+        forms=[
+            _form("дай", "verb:perf:impr:s:2"),
+            _form("дати", "verb:perf:inf"),
+            _form("дайте", "verb:perf:impr:p:2"),
+        ],
+    )
+    cost = make_word_record(
+        203,
+        "коштувати",
+        pos="verb",
+        forms=[_form("коштує", "verb:imperf:pres:s:3"), _form("коштувала", "verb:imperf:past:f")],
+    )
+    cases = [
+        (
+            watch,
+            "дивився",
+            "verb:rev:imperf:past:m",
+            "Gender",
+            {"Gender": "Masc", "Number": "Sing", "VerbForm": "Fin"},
+            "дивилися",
+            True,
+        ),
+        (
+            give,
+            "дай",
+            "verb:perf:impr:s:2",
+            "Number",
+            {"Number": "Sing", "Person": "2", "VerbForm": "Fin"},
+            "дати",
+            True,
+        ),
+        (cost, "коштує", "verb:imperf:pres:s:3", "Person", {"Person": "3", "Number": "Sing"}, "коштувала", False),
+    ]
+    for record, answer, tags, group, requires, distractor, expected in cases:
+        item = _item(record["id"], answer, tags, group, requires, [answer, distractor])
+        offered = _surfaces(item_candidates(item, {"words": [record]}, "fill-in"))
+        assert (distractor in offered) is expected
+        assert answer in offered
+        if expected:
+            lesson = {"activities": [{"id": "a1", "type": "fill-in"}]}
+            draft = {"lesson": {"module": "a1/fixture", "n": 1}, "activities": [{"id": "a1", "items": [item]}]}
+            assert check_4_activities(draft, lesson, {"words": [record]}, {}, level="a1")[0]["status"] == "passed"
+
+
 def test_composite_and_writer_option_outside_generated_candidates_fail(words: dict) -> None:
     item = _item("W-103", "буду", "verb:imperf:futr:s:1", "Person", {"Person": "1", "Number": "Sing"}, ["буду", "буде"])
     lesson = {"activities": [{"id": "a1", "type": "fill-in"}]}
@@ -187,8 +242,7 @@ def test_pending_stress_guard_catches_stressed_candidate(monkeypatch: pytest.Mon
 
 
 def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
-    store = yaml.safe_load((ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text(encoding="utf-8"))
-    record = next(record for record in store["words"] if record["id"] == "W-001")
+    record = words["words"][1]
     plan = {
         "slug": "fixture",
         "title": "Fixture",
@@ -202,7 +256,7 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
         "activities": [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Form"}],
         "inventory": {
             "vocabulary": {
-                "core": [{"evidence": "W-001", "lemma": record["lemma"], "forms": []}],
+                "core": [{"evidence": "W-102", "lemma": record["lemma"], "forms": []}],
                 "incidental": [],
                 "recycled": [],
             },
@@ -223,7 +277,7 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
     }
     prompt = render_lesson_prompt(
         plan,
-        {"W-001": record},
+        {"W-102": record},
         state,
         compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
         level="a1",
@@ -231,8 +285,10 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
         lesson_n=1,
     )
     bank = prompt.split("## Form-choice candidate bank", 1)[1]
-    assert "`W-001`: `я`" in bank
-    assert "Case=Nom" in bank
+    assert "`W-102`: `читати`" in bank
+    assert "VerbForm=Inf" in bank
+    assert "Each distractor differs from the key in `tests_feature`" in prompt
+    assert "carries no value of `tests_feature` and is excluded by another required group it carries" in prompt
     _assert_no_stress_leak([bank], [record])
     assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md").passed
     pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})

@@ -61,7 +61,7 @@ from scripts.build.fresh.assemble import (
     check_9_stress_and_render,
     check_11_render,
 )
-from scripts.build.fresh.candidates import item_candidates, option_record_bindings
+from scripts.build.fresh.candidates import classify_form_analyses, item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
@@ -377,15 +377,12 @@ def check_7_a1_choices(
                     for rec, text in zip(bound, texts, strict=True)
                 ):
                     return bad("form_option_without_analysis", aid, index)
-                for rec, text in zip(bound, texts, strict=True):
-                    analyses = _analyses(rec, text)
-                    if any(
-                        not any(any(atom.startswith(f"{group}=") for atom in analysis) for analysis in analyses)
-                        for group in demand
-                    ):
-                        return bad("form_option_missing_required_group", aid, index)
-                admitted = [_admitted(_analyses(rec, text), demand) for rec, text in zip(bound, texts, strict=True)]
-                if admitted != [i == key for i in range(len(options))]:
+                classifications = [
+                    classify_form_analyses(_analyses(rec, text), demand) for rec, text in zip(bound, texts, strict=True)
+                ]
+                if "undecidable" in classifications:
+                    return bad("form_option_missing_required_group", aid, index)
+                if [state == "admitted" for state in classifications] != [i == key for i in range(len(options))]:
                     return bad("form_not_unique_for_requires", aid, index)
                 status = receipts.requirement_status(
                     receipt_doc,
