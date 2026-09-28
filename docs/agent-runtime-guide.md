@@ -455,17 +455,16 @@ Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
 `hashline_edit` belongs to Grok's hashline file bundle
 (`hashline_read`, `hashline_edit`, `hashline_grep`). That bundle replaces the
 standard bundle (`read_file`, `search_replace`, `grep`); one session does not
-offer both. The selector is `[toolset] file_toolset = "hashline"` in the
-active Grok home's `config.toml`. A `GROK_CONFIG` overlay of the same key does
-not select it: a headless `grok` process given
-`GROK_CONFIG={"toolset":{"file_toolset":"hashline"}}` still offered
-`search_replace` and not `hashline_edit`. Delegate's env sanitizer also drops
-`GROK_CONFIG` and `GROK_HOME` — neither name is on the Grok allowlist, and the
-adapter does not add them to `env_overrides` — but that drop is not why the
-overlay stays on the standard bundle. The overlay already fails when it is
-handed straight to the `grok` process. A live hashline session uses a
-temporary `GROK_HOME` whose `config.toml` sets `file_toolset`. The
-write-worker matcher still names `hashline_edit`, and the primary-checkout
+offer both. The file toolset is selected by `[toolset] file_toolset` in the
+Grok home `config.toml` (preserved probe: `batch_state/probe-evidence/9008/`,
+where that file sets `file_toolset = "hashline"`). Delegate's environment
+sanitizer drops `GROK_HOME` and `GROK_CONFIG`: `build_agent_env` in
+`scripts/agent_runtime/env_sanitize.py` (lines 421-439) copies a name only
+from an allowlist, and neither name is on `_SAFE_NAME_ALLOWLIST` (line 37),
+`_SAFE_VALUE_NAME_ALLOWLIST` (line 68), `_PROVIDER_SECRET_ALLOWLIST`
+(line 78), or `_PROVIDER_SAFE_NAME_ALLOWLIST` (line 108). A live hashline
+session uses a temporary `GROK_HOME` whose `config.toml` sets `file_toolset`.
+The write-worker matcher still names `hashline_edit`, and the primary-checkout
 guard blocks that tool the same way it blocks `search_replace`.
 
 Issue #9008 keeps `danger` on the same argv as `workspace-write`:
