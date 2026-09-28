@@ -1782,3 +1782,14 @@ class TestWikipediaPravopysHeritageOutage:
 
     def test_heritage_real_miss_is_unchanged(self, server_module):
         assert self._heritage(server_module, [], []).startswith("No heritage evidence found")
+
+
+def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
+    """#9005 r4: the structured envelope of an unreachable Правопис is status=error, not the miss status."""
+    unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
+    with patch("rag.source_query.pravopys_section", return_value=unavailable):
+        result = _run(server_module.handle_query_pravopys({"topic": "3"}))
+    assert isinstance(result, tuple)
+    _content, envelope = result
+    assert envelope["status"] == "error"
+    assert envelope["error_code"] == "source_unavailable"

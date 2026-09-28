@@ -175,6 +175,28 @@ def wikipedia_summary(title: str, *, raise_unavailable: bool = False) -> dict[st
     return None
 
 
+#: MediaWiki Action API error codes that mean "no such page / section / title" — a real miss (#9005).
+#: Every other error code (readonly, ratelimited, unknownerror, internal_api_error_*, …) is an outage.
+WIKI_API_MISS_CODES = frozenset(
+    {"missingtitle", "nosuchsection", "invalidtitle", "nosuchpageid", "pagecannotexist", "missingparam"}
+)
+
+
+def _wiki_api_error(data: object, *, raise_unavailable: bool) -> bool:
+    """True when ``data`` is a MediaWiki error document (the caller then returns its miss value).
+
+    A miss code returns True; any other error code raises ``WikipediaUnavailableError`` when
+    ``raise_unavailable`` is set (an HTTP 200 error document is not a negative result), else True.
+    """
+    if not isinstance(data, dict) or "error" not in data:
+        return False
+    error = data.get("error")
+    code = str(error.get("code", "")) if isinstance(error, dict) else ""
+    if raise_unavailable and code not in WIKI_API_MISS_CODES:
+        raise WikipediaUnavailableError(f"API error {code or 'unknown'}")
+    return True
+
+
 def _wiki_outage_reason(exc: BaseException) -> str:
     status = getattr(getattr(exc, "response", None), "status_code", None)
     return f"HTTP {status}" if status else type(exc).__name__
@@ -197,7 +219,10 @@ def wikipedia_search(query: str, limit: int = 5, *, raise_unavailable: bool = Fa
     try:
         r = _get(WIKI_API, params=params)
         r.raise_for_status()
-        results = r.json().get("query", {}).get("search", [])
+        data = r.json()
+        if _wiki_api_error(data, raise_unavailable=raise_unavailable):
+            return []
+        results = data.get("query", {}).get("search", [])
         return [
             {
                 "title": item["title"],
@@ -227,7 +252,7 @@ def wikipedia_sections(title: str, *, raise_unavailable: bool = False) -> list[d
         r = _get(WIKI_API, params=params)
         r.raise_for_status()
         data = r.json()
-        if "error" in data:
+        if _wiki_api_error(data, raise_unavailable=raise_unavailable):
             return None
         return data.get("parse", {}).get("sections", [])
     except (requests.RequestException, ValueError) as exc:
@@ -259,6 +284,8 @@ def wikipedia_extract(
         r = _get(WIKI_API, params=params)
         r.raise_for_status()
         data = r.json()
+        if _wiki_api_error(data, raise_unavailable=raise_unavailable):
+            return None
         pages = data.get("query", {}).get("pages", {})
         # MediaWiki returns pages keyed by page ID; -1 means not found
         for page_id, page in pages.items():
@@ -300,7 +327,7 @@ def wikipedia_section_text(
         r = _get(WIKI_API, params=params)
         r.raise_for_status()
         data = r.json()
-        if "error" in data:
+        if _wiki_api_error(data, raise_unavailable=raise_unavailable):
             return None
         wikitext = data.get("parse", {}).get("wikitext", {}).get("*", "")
         # Strip common wikitext markup for readability

@@ -3283,7 +3283,12 @@ async def handle_query_pravopys(args: dict):
             "the site could not be reached; this is not a negative result (#9005)."
         )
         envelope = build_search_envelope(
-            tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose
+            tool="query_pravopys",
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            status="error",
+            error_code="source_unavailable",
         )
         return [TextContent(type="text", text=prose)], envelope
 

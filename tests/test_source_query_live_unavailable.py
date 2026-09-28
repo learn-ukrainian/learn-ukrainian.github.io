@@ -304,3 +304,42 @@ def test_search_heritage_reports_live_slovnyk_outages(monkeypatch):
     outages: list[dict] = []
     sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
     assert outages and all(o["error"] == "HTTP 403" for o in outages)
+
+
+# --- Wikipedia HTTP 200 error documents (#9005 r4: Grok r2) ------------------------------------
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda sq, **kw: sq.wikipedia_search("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_sections("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_extract("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_section_text("тест", 1, **kw),
+    ],
+    ids=["search", "sections", "extract", "section_text"],
+)
+@pytest.mark.parametrize("code", ["readonly", "ratelimited", "unknownerror"])
+def test_wikipedia_api_error_document_is_unavailable(monkeypatch, call, code):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, DummyResponse(200, data={"error": {"code": code, "info": "x"}}))
+    with pytest.raises(sq.WikipediaUnavailableError, match=code):
+        call(sq, raise_unavailable=True)
+    assert call(sq) in (None, [])
+
+
+@pytest.mark.parametrize(
+    "call, code",
+    [
+        (lambda sq, **kw: sq.wikipedia_sections("тест", **kw), "missingtitle"),
+        (lambda sq, **kw: sq.wikipedia_section_text("тест", 9, **kw), "nosuchsection"),
+        (lambda sq, **kw: sq.wikipedia_extract("тест", **kw), "missingtitle"),
+    ],
+    ids=["sections-missingtitle", "section-nosuchsection", "extract-missingtitle"],
+)
+def test_wikipedia_api_miss_codes_stay_misses(monkeypatch, call, code):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, DummyResponse(200, data={"error": {"code": code, "info": "x"}}))
+    assert call(sq, raise_unavailable=True) in (None, [])
