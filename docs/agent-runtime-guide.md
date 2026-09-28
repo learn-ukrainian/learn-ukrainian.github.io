@@ -642,6 +642,10 @@ Two layouts are currently supported:
 | flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
 | custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
 
+Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
+subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into
+the primary checkout; `--worktree <primary-checkout>` is refused.
+
 `delegate.py list` and `delegate.py status` print a deprecation notice
 when they encounter a flat-layout worktree.
 

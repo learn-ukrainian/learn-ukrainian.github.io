@@ -148,6 +148,8 @@ def _dispatch_args(*extra: str):
             "no-op",
             "--mode",
             "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
             *extra,
         ]
     )
@@ -297,7 +299,9 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fail_if_spawned)
 
-    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--dry-run"))
+    args = _dispatch_args("--check-budget", "--dry-run")
+    args.cwd = None  # Exercise the new default without allowing any git or worker spawn.
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     captured = capsys.readouterr()
@@ -307,6 +311,8 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert len(lines[1]) == 16
     assert int(lines[1], 16) >= 0
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert state["worktree_path"] is not None
+    assert not Path(state["worktree_path"]).exists()
     assert lines[1] == state["run_nonce"]
     assert "ROUTING WARNING" in captured.err
 
@@ -362,13 +368,6 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     args = _dispatch_args("--language-lane")
     args.agent = agent
-    if agent == "agy":
-        # AGY read-only dispatch now auto-pins a worktree. Keep this routing
-        # test at the dry-run boundary: a blanket Popen fake cannot service
-        # the subprocess.run git fetch needed to create that worktree.
-        args.dry_run = True
-        monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: "0" * 40)
-
     assert delegate.cmd_dispatch(args) == 0
 
 
@@ -673,6 +672,8 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-hot",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -728,6 +729,8 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -832,6 +835,8 @@ def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, caps
                 "codex",
                 "--task-id",
                 "budget-real-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -1309,6 +1314,8 @@ def _codex_dispatch(*extra: str):
             "noop",
             "--mode",
             "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
             "--check-budget",
             *extra,
         ]

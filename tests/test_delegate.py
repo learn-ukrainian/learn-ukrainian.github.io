@@ -1411,7 +1411,7 @@ def _minimal_dispatch_args(task_id: str, **overrides):
         "prompt_file": None,
         "mode": "read-only",
         "model": None,
-        "cwd": None,
+        "cwd": str(delegate._REPO_ROOT),
         "worktree": None,
         "hard_timeout": 3600,
     }
@@ -1470,7 +1470,7 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
     )
@@ -1507,7 +1507,7 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys)
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
     )
@@ -1718,6 +1718,7 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
             "0.50",
         ]
     )
+    args.cwd = str(delegate._REPO_ROOT)
     captured: dict[str, list[str]] = {}
 
     class _FakeStdin:
@@ -1753,6 +1754,7 @@ def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, caps
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "claude", "--task-id", "isolation-fallback", "--prompt", "hi"]
     )
+    args.cwd = str(delegate._REPO_ROOT)
     captured: dict[str, object] = {}
 
     class _FakeStdin:
@@ -1802,7 +1804,7 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -1866,7 +1868,7 @@ def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeyp
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6598,7 +6600,7 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6644,7 +6646,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6710,7 +6712,7 @@ def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6764,7 +6766,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -6813,6 +6815,7 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
             "test",
         ],
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -6851,6 +6854,7 @@ def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_d
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "codex", "--task-id", "prompt-sha", "--prompt-file", str(prompt_file)]
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -6875,6 +6879,8 @@ def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra_args]
     )
+    if "--worktree" not in extra_args:
+        args.cwd = str(delegate._REPO_ROOT)
     assert delegate.cmd_dispatch(args) == 0
     state = delegate._read_state(delegate._state_path(task_id))
     assert state is not None
@@ -6891,7 +6897,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     assert state["prompt_blocks"] == []
     assert state["effective_prompt_sha256"] == source
 
-    # a read-only dispatch without --worktree (the adjudication contract) appends nothing
+    # an explicit primary checkout read-only dispatch appends nothing
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
     assert state["prompt_blocks"] == []
@@ -6963,6 +6969,7 @@ def test_dispatch_persists_and_forwards_output_schema(
             str(schema_path),
         ]
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     assert delegate.cmd_dispatch(args) == 0
 
@@ -7114,7 +7121,7 @@ def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -7155,9 +7162,6 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    # The #8516 agy read-only target guard shells out to git, which fake Popen
-    # breaks; it is pinned by its own dedicated tests.
-    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
     monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
@@ -7219,9 +7223,6 @@ def test_dispatch_agy_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    # The #8516 agy read-only target guard shells out to git, which fake Popen
-    # breaks; it is pinned by its own dedicated tests.
-    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
     monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
@@ -7279,9 +7280,6 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    # The #8516 agy read-only target guard shells out to git, which fake Popen
-    # breaks; it is pinned by its own dedicated tests.
-    monkeypatch.setattr(delegate, "_resolve_agy_read_only_target_error", lambda **kwargs: None)
     monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
@@ -9163,63 +9161,8 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     assert "primary checkout" in err
 
 
-# --- _resolve_agy_read_only_target_error / auto-pin unit tests (#8516 AC-01) -
-
-
-def test_read_only_agy_target_guard_allows_unspecified_or_auto_worktree():
-    assert delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=None) is None
-    assert delegate._resolve_agy_read_only_target_error(worktree_arg="auto", cwd_arg=None) is None
-
-
-def test_read_only_agy_target_guard_rejects_primary_cwd(tmp_path):
-    main, _ = _init_repo_with_worktree(tmp_path)
-    err = delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(main))
-    assert err is not None
-    assert "primary checkout" in err
-    assert "#8516" in err
-
-
-def test_read_only_agy_target_guard_rejects_subdir_of_primary_cwd(tmp_path):
-    main, _ = _init_repo_with_worktree(tmp_path)
-    subdir = main / "pkg"
-    subdir.mkdir()
-    err = delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(subdir))
-    assert err is not None
-    assert "primary checkout" in err
-
-
-def test_read_only_agy_target_guard_rejects_explicit_worktree_at_primary(tmp_path):
-    main, _ = _init_repo_with_worktree(tmp_path)
-    err = delegate._resolve_agy_read_only_target_error(worktree_arg=str(main), cwd_arg=None)
-    assert err is not None
-    assert "primary checkout" in err
-
-
-def test_read_only_agy_target_guard_allows_added_worktree_cwd(tmp_path):
-    _, dispatch_wt = _init_repo_with_worktree(tmp_path)
-    assert delegate._resolve_agy_read_only_target_error(worktree_arg=None, cwd_arg=str(dispatch_wt)) is None
-
-
-def test_read_only_agy_auto_worktree_pin_scoping():
-    """The auto-pin fires only for agy + read-only + default repo + no explicit target."""
-    assert delegate._agy_read_only_requires_auto_worktree(
-        agent="agy", mode="read-only", worktree_arg=None, cwd_arg=None, repo_default=True
-    )
-    for agent, mode, worktree_arg, cwd_arg, repo_default in [
-        ("codex", "read-only", None, None, True),  # other lanes unchanged (AC-03)
-        ("agy", "workspace-write", None, None, True),  # write modes have their own guard
-        ("agy", "read-only", "auto", None, True),  # explicit --worktree
-        ("agy", "read-only", None, "/somewhere", True),  # explicit --cwd
-        ("agy", "read-only", None, None, False),  # sibling --repo has its own rule
-    ]:
-        assert not delegate._agy_read_only_requires_auto_worktree(
-            agent=agent, mode=mode, worktree_arg=worktree_arg, cwd_arg=cwd_arg, repo_default=repo_default
-        )
-
-
-def test_read_only_agy_dispatch_auto_pins_worktree_end_to_end(tmp_tasks_dir, monkeypatch, capsys):
-    """#8516 AC-01: cmd_dispatch routes a target-less agy read-only dispatch
-    into worktree creation; other lanes are untouched."""
+def test_read_only_dispatch_auto_pins_detached_worktree(tmp_tasks_dir, monkeypatch, capsys):
+    """Every target-less read-only lane reaches detached worktree creation."""
     import argparse
     import contextlib
 
@@ -9253,41 +9196,23 @@ def test_read_only_agy_dispatch_auto_pins_worktree_end_to_end(tmp_tasks_dir, mon
     monkeypatch.setattr(delegate, "worktree_lock", _null_lock)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
 
-    agy_args = argparse.Namespace(
-        agent="agy",
-        task_id="agy-read-only-pin-probe",
-        prompt="test",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-        allow_merge=False,
-    )
-    rc = delegate.cmd_dispatch(agy_args)
-    captured = capsys.readouterr()
-    assert rc == 1  # sentinel aborts after the pin routed into worktree creation
-    assert ensure_calls and ensure_calls[0]["agent"] == "agy"
-    assert "#8516" in captured.err
-    assert "sentinel: worktree creation reached" in captured.err
-
-    ensure_calls.clear()
-    codex_args = argparse.Namespace(
-        agent="codex",
-        task_id="codex-read-only-no-pin-probe",
-        prompt="test",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-        allow_merge=False,
-    )
-    rc = delegate.cmd_dispatch(codex_args)
-    assert rc == 0  # fake Popen "ran" the worker without any worktree creation
-    assert ensure_calls == []
+    for agent in ("agy", "codex"):
+        args = argparse.Namespace(
+            agent=agent,
+            task_id=f"{agent}-read-only-pin-probe",
+            prompt="test",
+            prompt_file=None,
+            mode="read-only",
+            model=None,
+            cwd=None,
+            worktree=None,
+            hard_timeout=3600,
+            allow_merge=False,
+        )
+        assert delegate.cmd_dispatch(args) == 1
+        assert ensure_calls[-1]["agent"] == agent
+        assert ensure_calls[-1]["detached"] is True
+        assert "sentinel: worktree creation reached" in capsys.readouterr().err
 
 
 def _add_acp_runtime(main: Path) -> Path:
@@ -9717,15 +9642,19 @@ def test_dirty_primary_guard_rejects_tracked_modified_receipt(tmp_path, monkeypa
 # --- cmd_dispatch end-to-end tests ------------------------------------------
 
 
-def test_dispatch_read_only_allows_repo_root(tmp_tasks_dir, monkeypatch):
-    """Read-only preflight from the primary checkout stays allowed."""
+@pytest.mark.parametrize("agent", ["codex", "agy"])
+def test_dispatch_read_only_explicit_primary_cwd(tmp_tasks_dir, monkeypatch, agent):
+    """An explicit primary cwd retains the previous dispatch target."""
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
-    args = _write_args(task_id="ro-root", mode="read-only", cwd=None, worktree=None)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
+    args = _write_args(
+        task_id=f"ro-root-{agent}", agent=agent, mode="read-only", cwd=str(delegate._REPO_ROOT), worktree=None
+    )
 
     rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
-    state = delegate._read_state(delegate._state_path("ro-root"))
+    state = delegate._read_state(delegate._state_path(f"ro-root-{agent}"))
     assert state is not None
     assert state["cwd"] == str(delegate._REPO_ROOT)
 
@@ -9741,7 +9670,8 @@ def test_dispatch_read_only_allows_dirty_primary_checkout(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
-    args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=None, worktree=None)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
+    args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=str(main), worktree=None)
 
     rc = delegate.cmd_dispatch(args)
 
@@ -9749,6 +9679,44 @@ def test_dispatch_read_only_allows_dirty_primary_checkout(
     state = delegate._read_state(delegate._state_path("ro-dirty-main"))
     assert state is not None
     assert state["cwd"] == str(main)
+
+
+def test_default_read_only_dispatch_uses_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    _patch_worker_popen(monkeypatch)
+    base_sha = delegate._resolve_sha(main)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
+    args = _write_args(task_id="ro-detached", mode="read-only", cwd=None, worktree=None)
+
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("ro-detached"))
+    assert state is not None
+    worktree = Path(state["worktree_path"])
+    assert worktree == main / ".worktrees" / "dispatch" / "codex" / "ro-detached"
+    assert state["cwd"] == str(worktree)
+    assert state["worktree_branch"] is None
+    assert state["worktree_base_sha"] == base_sha
+    head = subprocess.run(
+        ["git", "-C", str(worktree), "symbolic-ref", "--quiet", "HEAD"],
+        capture_output=True,
+        text=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
+    assert head.returncode == 1
+
+
+def test_read_only_primary_opt_in_requires_cwd(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    args = _write_args(task_id="ro-primary-worktree", mode="read-only", worktree=str(main))
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert "pass --cwd explicitly" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("ro-primary-worktree")) is None
 
 
 def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
@@ -10887,8 +10855,18 @@ def _run_settle_reap_worker(
     commits_ahead: int | None = None,
     worktree_reused: bool | None = False,
     sibling_records: dict[str, Any] | None = None,
+    detached: bool = False,
 ):
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    if detached:
+        subprocess.run(
+            ["git", "-C", str(worktree), "switch", "--detach"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        branch = None
     if dirty:
         (worktree / "leak.txt").write_text("uncommitted\n", encoding="utf-8")
     state_path = delegate._state_path(task_id)
@@ -10967,6 +10945,22 @@ def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir,
     assert state["worktree_reap"]["branch"] == branch
     assert not worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-detached",
+        mode="read-only",
+        detached=True,
+    )
+    assert branch is None
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["branch"] is None
+    assert not worktree.exists()
 
 
 def test_read_only_dirty_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -13473,6 +13467,7 @@ def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkey
             "test",
         ],
     )
+    args.cwd = str(delegate._REPO_ROOT)
 
     with pytest.raises(RuntimeError, match="atomic write disk error"):
         delegate.cmd_dispatch(args)
@@ -13605,7 +13600,7 @@ def test_dispatch_emits_run_nonce_in_summary_and_stdout(tmp_tasks_dir, monkeypat
     args = _write_args(
         task_id="live-summary-nonce",
         mode="read-only",
-        cwd=None,
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
     )
     rc = delegate.cmd_dispatch(args)
