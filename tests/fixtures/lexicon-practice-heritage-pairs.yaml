@@ -22,3 +22,10 @@ pairs:
         answer_form: книгу
         calque_form: кнігу
         origin: fixture-frame
+        normativeJudgment:
+          locator: antonenko-davydovych-yak-my-hovorymo_p999
+          passageSha256: fee496794603747fc9bab31ea3ebd0255543d02caf2aadb4a1f3a90ce6fe74ad
+          sentenceSha256: 65c10da0f0c5695b28604def63a07dc0ea4c15e14f198a471732ecc6ea09256e
+          endorsedForm: книгу
+          rejectedForm: кнігу
+          sense: the object of reading a book

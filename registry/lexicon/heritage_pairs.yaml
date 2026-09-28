@@ -31,10 +31,24 @@ pairs:
     answer_form: охочі
     calque_form: бажаючі
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p099
+      passageSha256: c5f29f2633d151184c7fc2f62971054521d987e6cd2c62408a9aaa2eaa6c85d9
+      sentenceSha256: c95c10d621b0a11eaa9ff706baab0f26ce274d14770c7ab37215b3bc8946fff3
+      endorsedForm: охочі
+      rejectedForm: бажаючі
+      sense: people willing to participate
   - sentence_with_slot: Кожен ___ може записатися на безплатний курс.
     answer_form: охочий
     calque_form: бажаючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p099
+      passageSha256: c5f29f2633d151184c7fc2f62971054521d987e6cd2c62408a9aaa2eaa6c85d9
+      sentenceSha256: c54aae8bfcc50d9fc57906257eca1402779e77ba5abd9783d3cffa55da8433e2
+      endorsedForm: охочий
+      rejectedForm: бажаючий
+      sense: people willing to participate
 - calqueLabel: благополучний
   calqueSurfaces:
   - благополучний
@@ -192,11 +206,25 @@ pairs:
     answer_form: краєвид
     calque_form: вид
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 269a813755b00132e551e9035ed1da7ae9be799977ff5adb40813feef7f74919
+      sentenceSha256: 61afd527a781b0bf605a9ad53e4895e7b39457014ad8403096011ff3e3ee5ae8
+      endorsedForm: краєвид
+      rejectedForm: вид
+      sense: a landscape seen from a place
     disambiguated: true
   - sentence_with_slot: З балкона ми побачили широкий ___ на річку.
     answer_form: краєвид
     calque_form: вид
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 269a813755b00132e551e9035ed1da7ae9be799977ff5adb40813feef7f74919
+      sentenceSha256: c281b55b684e7e2d9521e393d13389ffc86a29abe13433e8ecd90eb7cd32f710
+      endorsedForm: краєвид
+      rejectedForm: вид
+      sense: a landscape seen from a place
     disambiguated: true
 - calqueLabel: виключення
   calqueSurfaces:
@@ -262,11 +290,25 @@ pairs:
     answer_form: суто
     calque_form: виключно
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p110
+      passageSha256: 0aa4aa4daa427e08bbe1593ba8f6f229f59f513dd391d43fdb06554cea4cfabd
+      sentenceSha256: a6dd6f3f65fee60d4dbf5a1ca8ee6edf87607fa0be35e406a50e17ba70bd8947
+      endorsedForm: суто
+      rejectedForm: виключно
+      sense: an exclusively technical or work-related matter
     disambiguated: true
   - sentence_with_slot: Розмова була ___ робочою.
     answer_form: суто
     calque_form: виключно
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p110
+      passageSha256: 0aa4aa4daa427e08bbe1593ba8f6f229f59f513dd391d43fdb06554cea4cfabd
+      sentenceSha256: 5920313df599c50a7f10cd859b50451bb1eaf13248dc6504447d31d163c84e06
+      endorsedForm: суто
+      rejectedForm: виключно
+      sense: an exclusively technical or work-related matter
     disambiguated: true
 - calqueLabel: вирішення
   calqueSurfaces:
@@ -361,11 +403,25 @@ pairs:
     answer_form: увімкни
     calque_form: включи
     origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p075
+      passageSha256: 9e5048fc8ce344c5e327c9cc9b2d832c914f5d46ff21dda38d9c5bfa343ec971
+      sentenceSha256: 3ca90538f42857bff668a904bd87da9b9bdc492d497c649e91d3f7184a4df109
+      endorsedForm: увімкни
+      rejectedForm: включи
+      sense: switching on electrical power
     disambiguated: true
   - sentence_with_slot: Я забув ___ ноутбук перед уроком.
     answer_form: увімкнути
     calque_form: включити
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p075
+      passageSha256: 9e5048fc8ce344c5e327c9cc9b2d832c914f5d46ff21dda38d9c5bfa343ec971
+      sentenceSha256: 7b5e181f6567df3ae88c882d36937bafc38c5db19592e0741cdad21a9b2699f8
+      endorsedForm: увімкнути
+      rejectedForm: включити
+      sense: switching on electrical power
     disambiguated: true
 - calqueLabel: відкривати
   calqueSurfaces:
@@ -402,11 +458,25 @@ pairs:
     answer_form: відчиняти
     calque_form: відкривати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p074
+      passageSha256: 78d8500720c4daebece256b7ba3b83fa195f573c06e83999ef58394e606e5015
+      sentenceSha256: aee7cdf0c0f4c0ba7bde56abd038945a2689fde88c1fb47bd8ce159beea16e70
+      endorsedForm: відчиняти
+      rejectedForm: відкривати
+      sense: physically opening a window or door
     disambiguated: true
   - sentence_with_slot: Оленка тихо ___ двері до класу.
     answer_form: відчиняє
     calque_form: відкриває
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p074
+      passageSha256: 78d8500720c4daebece256b7ba3b83fa195f573c06e83999ef58394e606e5015
+      sentenceSha256: 03cfeec5199a1de8918eba8d99a7bb540fc0e8d93fb05ebd669aa3ae4f7e25ca
+      endorsedForm: відчиняє
+      rejectedForm: відкриває
+      sense: physically opening a window or door
     disambiguated: true
 - calqueLabel: відносно
   calqueSurfaces:
@@ -441,11 +511,25 @@ pairs:
     answer_form: щодо
     calque_form: відносно
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 309cbae934fd2bffa40afb6b4a4d98db9fa253a9734244d8f3335f275198e8fb
+      sentenceSha256: 14ccaa5e6531fd5c65ad8e9d39f41dd734c30e5055777f2649943287ebc61e92
+      endorsedForm: щодо
+      rejectedForm: відносно
+      sense: concerning a stated topic
     disambiguated: true
   - sentence_with_slot: Учитель дав пораду ___ підготовки до іспиту.
     answer_form: щодо
     calque_form: відносно
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 309cbae934fd2bffa40afb6b4a4d98db9fa253a9734244d8f3335f275198e8fb
+      sentenceSha256: c851204e969df619180380df69fe8fe5be3fd1e4b418446c7c0f89990fb8f3de
+      endorsedForm: щодо
+      rejectedForm: відносно
+      sense: concerning a stated topic
     disambiguated: true
 - calqueLabel: відношення
   calqueSurfaces:
@@ -483,11 +567,25 @@ pairs:
     answer_form: ставлення
     calque_form: відношення
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 68c6d0cc1c219d2de7611499dbf571e85061bb55f4a0953fcafcabe1e7f3dc6f
+      sentenceSha256: cad3cb6a88e8716c7428dff8a95966b9237199ac43fd3086b8404207d7d2e495
+      endorsedForm: ставлення
+      rejectedForm: відношення
+      sense: attitude toward people
     disambiguated: true
   - sentence_with_slot: Добре ___ до клієнтів важливе для кав’ярні.
     answer_form: ставлення
     calque_form: відношення
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 68c6d0cc1c219d2de7611499dbf571e85061bb55f4a0953fcafcabe1e7f3dc6f
+      sentenceSha256: 75a21208d2a88f38454afa73bb580843e08452337139dcfb205f0c3491ea4f7b
+      endorsedForm: ставлення
+      rejectedForm: відношення
+      sense: attitude toward people
     disambiguated: true
 - calqueLabel: відправити
   calqueSurfaces:
@@ -616,11 +714,25 @@ pairs:
     answer_form: правильна
     calque_form: вірна
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p051
+      passageSha256: 7681f517cd8d874d759f1f87ffbf160ec97ca6e41e56f5608149bab852a6be63
+      sentenceSha256: 9cf8bccb17d6b7ab668a533dfc0bab5e217ddd987f5fc58a2de2cd7a88536a9e
+      endorsedForm: правильна
+      rejectedForm: вірна
+      sense: a correct answer or choice
     disambiguated: true
   - sentence_with_slot: Оберіть ___ варіант у тесті.
     answer_form: правильний
     calque_form: вірний
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p051
+      passageSha256: 7681f517cd8d874d759f1f87ffbf160ec97ca6e41e56f5608149bab852a6be63
+      sentenceSha256: 9714264d185c0ce75291d42a75cc77afc440d3941950133e73b1eb81ad14383b
+      endorsedForm: правильний
+      rejectedForm: вірний
+      sense: a correct answer or choice
     disambiguated: true
 - calqueLabel: говоритися
   calqueSurfaces:
@@ -794,6 +906,13 @@ pairs:
     answer_form: інший
     calque_form: другий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 1ac6b3a3e1555c67c6c06b87f89ff35eba329b65beef5bbdbe8152c88e7a5866
+      sentenceSha256: 80f5dd4137b80a509a0bb20e33313cde2ebba285a18fd1a2892febb12fad0678
+      endorsedForm: інший
+      rejectedForm: другий
+      sense: a different choice among alternatives
     disambiguated: true
     distractors:
     - кожний
@@ -802,6 +921,13 @@ pairs:
     answer_form: інший
     calque_form: другий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 1ac6b3a3e1555c67c6c06b87f89ff35eba329b65beef5bbdbe8152c88e7a5866
+      sentenceSha256: 72b8ae7db06c0c78fb5b36bd015e0ee5f8ebfa12d9391e49834a51dcac2e9044
+      endorsedForm: інший
+      rejectedForm: другий
+      sense: a different choice among alternatives
     disambiguated: true
     distractors:
     - кожний
@@ -1090,6 +1216,13 @@ pairs:
     answer_form: будь-який
     calque_form: любий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p058
+      passageSha256: f3049ffa20c3bbf6bf060b19225154e869175e711a09c72e437ef036ca5fe9b8
+      sentenceSha256: 30db3ea93cad336a2621db8bfbcf25eba249df2880052cee54e8317b67f42281
+      endorsedForm: будь-який
+      rejectedForm: любий
+      sense: any choice without restriction
     disambiguated: true
     distractors:
     - кожний
@@ -1098,6 +1231,13 @@ pairs:
     answer_form: будь-який
     calque_form: любий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p058
+      passageSha256: f3049ffa20c3bbf6bf060b19225154e869175e711a09c72e437ef036ca5fe9b8
+      sentenceSha256: bf2c01aaa63d653c73dc871ff719048753eb1827fc42c634da002934f8aca1d6
+      endorsedForm: будь-який
+      rejectedForm: любий
+      sense: any choice without restriction
     disambiguated: true
     distractors:
     - кожний
@@ -1167,11 +1307,25 @@ pairs:
     answer_form: є
     calque_form: мається
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p086
+      passageSha256: 0c69ccaf13415729a6f6f748d479ba9fd41275499f36b28088e723b45a4016d5
+      sentenceSha256: c3b9b7f0fb51a833045c650e307c17de1db6011012cee427c94375d14c08161b
+      endorsedForm: є
+      rejectedForm: мається
+      sense: the existence or availability of something
     disambiguated: true
   - sentence_with_slot: На сайті ___ вся потрібна інформація.
     answer_form: є
     calque_form: мається
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p086
+      passageSha256: 0c69ccaf13415729a6f6f748d479ba9fd41275499f36b28088e723b45a4016d5
+      sentenceSha256: 0d043b0de28fc1af8db3e4de318408d00f62fac7eea04cc855e7ae364348a27d
+      endorsedForm: є
+      rejectedForm: мається
+      sense: the existence or availability of something
     disambiguated: true
 - calqueLabel: надо
   calqueSurfaces:
@@ -1467,11 +1621,25 @@ pairs:
     answer_form: обслуговування
     calque_form: обслугу
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p033
+      passageSha256: 20c98b5cf3f8a3838229dc320d2b7fa8a5b73678ba3bebff4303d0317176803d
+      sentenceSha256: 5aaa30764a840b724fda0a6f26eb2c9ddc52d1953505206b2c940cb4c51ccb4a
+      endorsedForm: обслуговування
+      rejectedForm: обслугу
+      sense: the act of serving a customer
     disambiguated: true
   - sentence_with_slot: Курс навчає стандартів ___ клієнтів.
     answer_form: обслуговування
     calque_form: обслуги
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p033
+      passageSha256: 20c98b5cf3f8a3838229dc320d2b7fa8a5b73678ba3bebff4303d0317176803d
+      sentenceSha256: e96c115914a3da6e1823dbe3b1b12359fbd0c944bdfbe6c9f894a1e673e615a0
+      endorsedForm: обслуговування
+      rejectedForm: обслуги
+      sense: the act of serving a customer
     disambiguated: true
 - calqueLabel: палатка
   calqueSurfaces:
@@ -1531,10 +1699,24 @@ pairs:
     answer_form: панівний
     calque_form: пануючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 921b693492e39663304c0c31b2ea5619f2c80ca69b11d498cfaf1cbb60871c68
+      sentenceSha256: 055d56f86d8f919878534e7e912bec98839b8fab7ebd54da190e60f075c90f3c
+      endorsedForm: панівний
+      rejectedForm: пануючий
+      sense: a prevailing view or idea
   - sentence_with_slot: Це була ___ думка в команді.
     answer_form: панівна
     calque_form: пануюча
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 921b693492e39663304c0c31b2ea5619f2c80ca69b11d498cfaf1cbb60871c68
+      sentenceSha256: a96f2e009ff7855b6cdffd30edee4bdaf1fc951d93a5efe12da561d2eb8e3e52
+      endorsedForm: панівна
+      rejectedForm: пануюча
+      sense: a prevailing view or idea
 - calqueLabel: папа
   calqueSurfaces:
   - папа
@@ -1599,11 +1781,25 @@ pairs:
     answer_form: кілька
     calque_form: пару
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 13b5b46fe937e9706e51a0551f9850d1317876880e4a1ce5c31ec5d3b8ab701d
+      sentenceSha256: c071f625aab0494ea11c6be53f077d769d898a7a9d082385644d05f192c111f9
+      endorsedForm: кілька
+      rejectedForm: пару
+      sense: an indefinite small number
     disambiguated: true
   - sentence_with_slot: Я маю ___ запитань до вчителя.
     answer_form: кілька
     calque_form: пару
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 13b5b46fe937e9706e51a0551f9850d1317876880e4a1ce5c31ec5d3b8ab701d
+      sentenceSha256: 9bfe2c8ccc1f32007843a42e16fabd5a724ab658d001cfb7a8e83b92bcde4486
+      endorsedForm: кілька
+      rejectedForm: пару
+      sense: an indefinite small number
     disambiguated: true
 - calqueLabel: передня
   calqueSurfaces:
@@ -1668,11 +1864,25 @@ pairs:
     answer_form: листування
     calque_form: переписку
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p035
+      passageSha256: 72227e3bdc204091bcc027dff179ad9e088e93e5b691dbd028fdbeba895bc2e7
+      sentenceSha256: 9ddf45a438f0c149ef6bcf285d32e1773e817f6f94d06a4b7d00d1bf62411eed
+      endorsedForm: листування
+      rejectedForm: переписку
+      sense: correspondence between people
     disambiguated: true
   - sentence_with_slot: Через ___ друзі краще пізнали одне одного.
     answer_form: листування
     calque_form: переписку
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p035
+      passageSha256: 72227e3bdc204091bcc027dff179ad9e088e93e5b691dbd028fdbeba895bc2e7
+      sentenceSha256: a05a898b4ca3f8d459dae24dc1d53e59a5066ec45a9ffa36599847c6e6685dca
+      endorsedForm: листування
+      rejectedForm: переписку
+      sense: correspondence between people
     disambiguated: true
 - calqueLabel: пол
   calqueSurfaces:
@@ -1793,10 +2003,24 @@ pairs:
     answer_form: початківець
     calque_form: початкуючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: aac4f6ddf362fb985887687675dbfc0dda68d333a5f04b050837beba932f0f4b
+      sentenceSha256: ba55e96fa7e3a025ada5712901bc3f270f4b5183b27c1bf245fb382c5c3142e5
+      endorsedForm: початківець
+      rejectedForm: початкуючий
+      sense: a person beginning an artistic activity
   - sentence_with_slot: На курс записався один ___.
     answer_form: початківець
     calque_form: початкуючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: aac4f6ddf362fb985887687675dbfc0dda68d333a5f04b050837beba932f0f4b
+      sentenceSha256: f86927fe4ec1d697b0a32d61cb972cfa0e1fd2f5f0362963acc64175b8a38533
+      endorsedForm: початківець
+      rejectedForm: початкуючий
+      sense: a person beginning an artistic activity
 - calqueLabel: працюючий
   calqueSurfaces:
   - працюючий
@@ -1828,10 +2052,24 @@ pairs:
     answer_form: працівник
     calque_form: працюючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 83e3ec99206c593e4876e33858661d2ca49796392624047d83335197be498192
+      sentenceSha256: b1015a9541585c8eac5a094ad541b5073a435e5977ec52b1c8271570b52b12c1
+      endorsedForm: працівник
+      rejectedForm: працюючий
+      sense: an employed person
   - sentence_with_slot: У відділі бракує одного ___.
     answer_form: працівника
     calque_form: працюючого
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 83e3ec99206c593e4876e33858661d2ca49796392624047d83335197be498192
+      sentenceSha256: cd12b008c400a3872c2edd46efa5ce296eefb9e2849102f7536fcca5abbf86a5
+      endorsedForm: працівника
+      rejectedForm: працюючого
+      sense: an employed person
 - calqueLabel: приймати
   calqueSurfaces:
   - приймати
@@ -1866,11 +2104,25 @@ pairs:
     answer_form: брати
     calque_form: приймати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p165
+      passageSha256: a52354dbc790d1241a3b4da99bb9231e21668458d169ac76344277e407fa0708
+      sentenceSha256: 62509dc713f3a0b376141b65279fa430e3cdb769c1a3573610397c9397bce931
+      endorsedForm: брати
+      rejectedForm: приймати
+      sense: taking part in an activity
     disambiguated: true
   - sentence_with_slot: Учні будуть ___ участь у проєкті.
     answer_form: брати
     calque_form: приймати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p165
+      passageSha256: a52354dbc790d1241a3b4da99bb9231e21668458d169ac76344277e407fa0708
+      sentenceSha256: 56b4fc1c3725531c961def0a26ff739120dad5d831f66a88dbf3061e67839ea2
+      endorsedForm: брати
+      rejectedForm: приймати
+      sense: taking part in an activity
     disambiguated: true
 - calqueLabel: присвоїти
   calqueSurfaces:
@@ -1903,11 +2155,25 @@ pairs:
     answer_form: надати
     calque_form: присвоїти
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p092
+      passageSha256: a2304e2cd173722446ed4112f840d77dd7094f3164f6525cc131a04291702ad4
+      sentenceSha256: 4359a7b02bfa885e60618d507cade412200aadf4f16bb04ef5e9a997d79f4750
+      endorsedForm: надати
+      rejectedForm: присвоїти
+      sense: officially granting a status or title
     disambiguated: true
   - sentence_with_slot: Комісія може ___ звання переможця команді.
     answer_form: надати
     calque_form: присвоїти
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p092
+      passageSha256: a2304e2cd173722446ed4112f840d77dd7094f3164f6525cc131a04291702ad4
+      sentenceSha256: 9fef8a1db17b2cff29cd92eb23b264c3dae263a290aaebeebaf1056ac424b67a
+      endorsedForm: надати
+      rejectedForm: присвоїти
+      sense: officially granting a status or title
     disambiguated: true
 - calqueLabel: пробка
   calqueSurfaces:
@@ -2002,11 +2268,25 @@ pairs:
     answer_form: передплату
     calque_form: підписку
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p035
+      passageSha256: 9b05a7c2c6952ef2aa894c1aa1e2490c4eb2b0a1e0ea86943faebb6853dcafff
+      sentenceSha256: 3e60dfd1a7dd09eec54146fdc43146f86ae53981260285bc1721cc3bc4b03560
+      endorsedForm: передплату
+      rejectedForm: підписку
+      sense: a prepaid newspaper or magazine subscription
     disambiguated: true
   - sentence_with_slot: Річна ___ на газету коштує недорого.
     answer_form: передплата
     calque_form: підписка
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p035
+      passageSha256: 9b05a7c2c6952ef2aa894c1aa1e2490c4eb2b0a1e0ea86943faebb6853dcafff
+      sentenceSha256: 80ae63ca744f53b134bc222d186eebe911efb8b035a74647cbcd2ce54a7d2a5b
+      endorsedForm: передплата
+      rejectedForm: підписка
+      sense: a prepaid newspaper or magazine subscription
     disambiguated: true
 - calqueLabel: розповсюджувати
   calqueSurfaces:
@@ -2044,11 +2324,25 @@ pairs:
     answer_form: поширювати
     calque_form: розповсюджувати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p090
+      passageSha256: 02676d377eefca09c617b72366d3b9e0d227affb79f8f8952ea4e9e9329280db
+      sentenceSha256: 7f311b8428a2ae40b4c39427eb91d06e0c65f99432cdac616a7ce30ab589564d
+      endorsedForm: поширювати
+      rejectedForm: розповсюджувати
+      sense: ideas or rumours spreading through a group
     disambiguated: true
   - sentence_with_slot: Цей блог швидко ___ корисні ідеї.
     answer_form: поширює
     calque_form: розповсюджує
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p090
+      passageSha256: 02676d377eefca09c617b72366d3b9e0d227affb79f8f8952ea4e9e9329280db
+      sentenceSha256: acced33565a0cbbd0ed6a42520c03ae2b051a7c4a59261823699b36937ddf226
+      endorsedForm: поширює
+      rejectedForm: розповсюджує
+      sense: ideas or rumours spreading through a group
     disambiguated: true
 - calqueLabel: слідуючий
   calqueSurfaces:
@@ -2112,11 +2406,25 @@ pairs:
     answer_form: річ
     calque_form: справа
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p044
+      passageSha256: 539597690d63f5eaad1d4e181168ddf5f65384e688f9b4e4ceae58bac976e1b4
+      sentenceSha256: 87f25ac228813a48c4edebb1344d6241414640cec956697611ce58ca1ff741ca
+      endorsedForm: річ
+      rejectedForm: справа
+      sense: the point or matter in question
     disambiguated: true
   - sentence_with_slot: Не в тому ___, хто почав розмову.
     answer_form: річ
     calque_form: справа
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p044
+      passageSha256: 539597690d63f5eaad1d4e181168ddf5f65384e688f9b4e4ceae58bac976e1b4
+      sentenceSha256: 2ea67f09d5ac9b18b412e492c941085d7b7107f255db4b411bd2757f9a58d004
+      endorsedForm: річ
+      rejectedForm: справа
+      sense: the point or matter in question
     disambiguated: true
 - calqueLabel: співпадіння
   calqueSurfaces:
@@ -2552,6 +2860,13 @@ pairs:
     answer_form: зворушливу
     calque_form: хвилюючу
     origin: authored-codex-2026-08-03
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p103
+      passageSha256: 7f851fae71dbf4ad529d7656d22209c42957b14d303b7071ad25a0d4c279d640
+      sentenceSha256: 9c0b1fcb3ee95b34f15523c0a4dc4530f2911ece5be622ab7f83bbc35f3cb8ca
+      endorsedForm: зворушливу
+      rejectedForm: хвилюючу
+      sense: a story that moves its listener
 - calqueLabel: діючий
   calqueSurfaces:
   - діючий
@@ -2804,6 +3119,13 @@ pairs:
     answer_form: захід
     calque_form: міроприємство
     origin: authored-codex-2026-08-03
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p031
+      passageSha256: 37cf1d56c84af3117a46e7e8c358c42bb0456ce8f1fb3234fe52e1705ab461a0
+      sentenceSha256: 1de736017d602fd418ddeb6aa429e8c6891f6ba5c00cc237366c5476dedbf303
+      endorsedForm: захід
+      rejectedForm: міроприємство
+      sense: an organized charitable event
 - calqueLabel: уверх
   calqueSurfaces:
   - уверх

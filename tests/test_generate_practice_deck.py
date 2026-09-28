@@ -490,7 +490,9 @@ FIXTURE_PASSAGES = JsonSourcePassages(
     {
         "antonenko-davydovych-yak-my-hovorymo_p999": 'Фіктивна сторінка. Кажуть "читаю кнігу", а треба "читаю книгу".',
         "antonenko-davydovych-yak-my-hovorymo_p998": 'Фіктивна сторінка. Не "надо", а "треба".',
-        "5-klas-ukrmova-fixture-2000_s0001": "Адресант надсилає; адресат отримує.",
+        "5-klas-ukrmova-fixture-2000_s0001": (
+            "Адресант — той, хто адресує, надсилає лист; адресат — той, хто отримує лист, посилку."
+        ),
         "5-klas-ukrmova-fixture-2000_s0002": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
     }
 )
@@ -3607,6 +3609,7 @@ def test_heritage_curated_distractors_win() -> None:
                 "answer_form": "книгу",
                 "calque_form": "кнігу",
                 "origin": "test-frame",
+                "normativeJudgment": _fixture_heritage_pair()["frames"][0]["normativeJudgment"],
                 "distractors": ["місто", "яблуко"],
             }
         ],
@@ -3660,6 +3663,14 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
                 "answer_form": "треба",
                 "calque_form": "надо",
                 "origin": "test-frame",
+                "normativeJudgment": {
+                    "locator": "antonenko-davydovych-yak-my-hovorymo_p998",
+                    "passageSha256": "16482fb4c4b34f0a28a6dd281bc24c68fd8585933df26c9e0ca4e59172bffb23",
+                    "sentenceSha256": "9c8d3070cbbd4b83d1fd821643c3f245e219b4a225e11faf1181d531be731695",
+                    "endorsedForm": "треба",
+                    "rejectedForm": "надо",
+                    "sense": "the necessity to prepare something",
+                },
                 "distractors": ["можна", "варто"],
             }
         ],
@@ -3718,10 +3729,13 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
     pair = {
         "slugA": "адресант",
         "slugB": "адресат",
-        "distinction_gloss_uk": "Адресант надсилає; адресат отримує.",
+        "distinction_gloss_uk": "Адресант — той, хто адресує, надсилає лист; адресат — той, хто отримує лист, посилку.",
         "citations": ["fixture-test"],
         "glossSources": [
-            {"locator": "5-klas-ukrmova-fixture-2000_s0001", "passage": "Адресант надсилає; адресат отримує."}
+            {
+                "locator": "5-klas-ukrmova-fixture-2000_s0001",
+                "passage": "Адресант — той, хто адресує, надсилає лист; адресат — той, хто отримує лист, посилку.",
+            }
         ],
         "frames": [
             {
@@ -3739,7 +3753,7 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = _gloss_verifier("надсилає", "отримує")
+    verifier = _gloss_verifier("той", "хто", "адресує", "надсилає", "лист", "отримує", "посилку")
     shards = build_practice_shards(
         entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair], source_passages=FIXTURE_PASSAGES
     )
@@ -4946,6 +4960,42 @@ def test_heritage_passage_must_name_this_frames_calque_and_correction(capsys: py
     assert _heritage_frame_support(supported["frames"][0], [{"passage": "Кажуть «кнігу»."}], None) is None
 
 
+def test_heritage_reversed_passage_cannot_key_the_form_it_rejects(capsys: pytest.CaptureFixture[str]) -> None:
+    """A passage endorsing «кнігу» cannot support a card keyed «книгу»."""
+    locator = "antonenko-davydovych-yak-my-hovorymo_p999"
+    reversed_passage = 'Кажуть "читаю книгу", а треба "читаю кнігу".'
+    pair = _book_pair(
+        normativeSupport=[{"locator": locator, "passage": reversed_passage}],
+        frames=[_fixture_heritage_pair()["frames"][0]],
+    )
+    passages = JsonSourcePassages({locator: reversed_passage})
+
+    assert _build_heritage_items(pair, _fixture_lexemes()[0], _fixture_lexemes(), "deck-v1", source_passages=passages) == []
+    assert "frame 1 withheld (passage does not support this correction)" in capsys.readouterr().err
+
+
+def test_heritage_reviewed_judgment_is_bound_to_the_exact_frame() -> None:
+    frame = _fixture_heritage_pair()["frames"][0]
+    changed = {**frame, "sentence_with_slot": frame["sentence_with_slot"] + "!"}
+    verified, errors = verified_source_passages(
+        FIXTURE_HERITAGE_SUPPORT, HERITAGE_NORMATIVE_SOURCES, FIXTURE_PASSAGES, field="normativeSupport"
+    )
+    assert errors == []
+    assert _heritage_frame_support(changed, verified, None) is None
+
+
+def test_heritage_judgment_cannot_reverse_the_answer_and_error() -> None:
+    pair = _fixture_heritage_pair()
+    frame = pair["frames"][0]
+    frame["normativeJudgment"] = {
+        **frame["normativeJudgment"],
+        "endorsedForm": frame["calque_form"],
+        "rejectedForm": frame["answer_form"],
+    }
+    lexemes = _fixture_lexemes()
+    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
+
+
 def _live_source_checkers() -> tuple[Any, Any]:
     """Real sources.db / VESUM for live-registry provenance checks (skipped where the data is not hydrated)."""
     sources_db = Path(os.environ.get("LU_SOURCES_DB", "data/sources.db"))
@@ -5256,11 +5306,25 @@ def test_paronym_gloss_provenance_rejects_reconstructed_swapped_and_paraphrased_
         "'тактовний'"
     ]
     unshaped = _sourced_taktovnyi_pair("Слова тактичний і тактовний різні.")
-    assert errors(unshaped) == ["gloss clause 'Слова тактичний і тактовний різні.' is not '<paronym> — <definition>'"]
+    assert errors(unshaped) == [
+        "gloss clause 'Слова тактичний і тактовний різні.' is not '<paronym> — <definition>'",
+        "gloss missing sourced meaning for 'тактичний'",
+        "gloss missing sourced meaning for 'тактовний'",
+    ]
     # No sources database: fail closed.
     assert paronym_gloss_provenance_errors(_sourced_taktovnyi_pair(), None) == [
         f"glossSources[0] locator {_ZABOLOTNYI_S0200!r} is not readable from the sources database"
     ]
+
+
+def test_paronym_one_sided_gloss_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
+    """A source-backed definition of only «тактичний» cannot explain either card."""
+    pair = _sourced_taktovnyi_pair("Тактичний — який стосується тактики.")
+    assert paronym_gloss_provenance_errors(pair, JsonSourcePassages(_TAKTOVNYI_CHUNKS)) == [
+        "gloss missing sourced meaning for 'тактовний'"
+    ]
+    assert _build_taktovnyi(pair) == []
+    assert "paronym gloss-provenance gate: withheld" in capsys.readouterr().err
 
 
 def test_paronym_source_linked_gloss_ships() -> None:
@@ -5270,16 +5334,28 @@ def test_paronym_source_linked_gloss_ships() -> None:
     assert {item["distinction_gloss_uk"] for item in items} == {_TAKTOVNYI_SOURCED_GLOSS}
 
 
-def test_live_paronym_gloss_sources_are_verbatim_and_clean() -> None:
+def test_live_paronym_gloss_sources_are_verbatim_and_two_sided_or_withheld() -> None:
     passages, verifier = _live_source_checkers()
     sourced = [pair for pair in read_paronym_pairs(PARONYM_REGISTRY) if pair.get("glossSources")]
     assert sourced
+    withheld = {
+        ("вистава", "виставка"),
+        ("усмішка", "посмішка"),
+        ("книжковий", "книжний"),
+        ("уява", "уявлення"),
+    }
+    observed_withheld = set()
     for pair in sourced:
-        assert paronym_gloss_provenance_errors(pair, passages) == [], (pair["slugA"], pair["slugB"])
+        errors = paronym_gloss_provenance_errors(pair, passages)
+        key = (pair["slugA"], pair["slugB"])
+        if errors:
+            assert any("gloss missing sourced meaning" in error for error in errors), key
+            observed_withheld.add(key)
         assert (
             explanation_language_errors(pair["distinction_gloss_uk"], verifier, allowed=[pair["slugA"], pair["slugB"]])
             == []
-        ), (pair["slugA"], pair["slugB"])
+        ), key
+    assert observed_withheld == withheld
     taktovnyi = next(pair for pair in sourced if pair["slugA"] == "тактичний")
     assert "вежливий" not in taktovnyi["distinction_gloss_uk"]
 

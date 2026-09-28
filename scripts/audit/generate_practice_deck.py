@@ -181,16 +181,18 @@ HERITAGE_DEFAULT_AVAILABILITY = "B1"
 # dictionary membership, synonymy and bare article titles are not evidence for
 # it (#8727; Astra stop-policy ruling 2026-09-28): a pair needs an exact
 # passage from a normative style guide, copied verbatim into
-# `normativeSupport` with the page chunk it comes from. Map: chunk-id pattern
-# -> learner-facing source label (edition + page).
+# `normativeSupport` with the page chunk it comes from. Each admitted frame
+# also needs a `normativeJudgment` naming the endorsed and rejected forms, the
+# frame's sense, and digests of the reviewed passage and sentence. Map:
+# chunk-id pattern -> learner-facing source label (edition + page).
 HERITAGE_NORMATIVE_SOURCES: dict[str, str] = {
     r"antonenko-davydovych-yak-my-hovorymo_p(?P<page>\d{3})": (
         "Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. {page}"
     ),
 }
-# Learner-facing paronym explanations must be copied from a source: every
-# `glossSources` locator is a Ukrainian-language textbook or style-guide chunk
-# in data/sources.db (#8728).
+# Each paronym explanation needs a sourced definition for both contrasted
+# words. Every `glossSources` locator is a Ukrainian-language textbook or
+# style-guide chunk in data/sources.db (#8728).
 PARONYM_GLOSS_SOURCES: dict[str, str] = {
     **HERITAGE_NORMATIVE_SOURCES,
     r"(?P<book>\d{1,2}-klas-(?:ukrmova|ukrajinska-mova|ukrayinska-mova)-[a-z0-9-]+)_s(?P<page>\d{4})": (
@@ -3956,16 +3958,32 @@ def _heritage_frame_support(
     supports: list[dict[str, str]],
     verifier: VesumVerifier | None,
 ) -> dict[str, str] | None:
-    """Return the verified passage that names this frame's calque AND its correction.
+    """Return the passage bound to a reviewed, frame-specific directional judgment.
 
-    A passage about another word, or one that only names the calque, does not
-    support this particular correction (#8727).
+    Form occurrence alone does not say which form the source endorses. The
+    judgment records that direction and the frame's sense; its digests lock the
+    judgment to the exact passage and exercise sentence the curator reviewed (#8727).
     """
     calque_form = _clean_text(frame.get("calque_form"))
     answer_form = _clean_text(frame.get("answer_form"))
-    if not calque_form or not answer_form:
+    judgment = frame.get("normativeJudgment")
+    if not calque_form or not answer_form or not isinstance(judgment, dict):
+        return None
+    sentence = _clean_text(frame.get("sentence_with_slot")) or ""
+    sentence_digest = hashlib.sha256(_normalize_source_text(sentence).encode("utf-8")).hexdigest()
+    if (
+        _clean_text(judgment.get("endorsedForm")) != answer_form
+        or _clean_text(judgment.get("rejectedForm")) != calque_form
+        or not _clean_text(judgment.get("sense"))
+        or _clean_text(judgment.get("sentenceSha256")) != sentence_digest
+    ):
         return None
     for support in supports:
+        if support.get("locator") != _clean_text(judgment.get("locator")):
+            continue
+        passage_digest = hashlib.sha256(_normalize_source_text(support["passage"]).encode("utf-8")).hexdigest()
+        if passage_digest != _clean_text(judgment.get("passageSha256")):
+            continue
         if _passage_names_form(support["passage"], calque_form, verifier) and _passage_names_form(
             support["passage"], answer_form, verifier
         ):
@@ -4198,7 +4216,8 @@ def _build_heritage_items(
         if support is None:
             print(
                 f"WARN: heritage_pair {pair_label!r} frame {index} withheld (passage does not support this "
-                f"correction): no verified passage names both {calque_form!r} and {answer_form!r}",
+                f"correction): no reviewed same-sense judgment binds {calque_form!r} to {answer_form!r} "
+                "on this verified passage",
                 file=sys.stderr,
             )
             continue
@@ -4670,11 +4689,9 @@ def _definition_follows_head(passage: str, head: str, definition: str, others: l
 def paronym_gloss_provenance_errors(pair: dict[str, Any], passages: SourcePassages | None) -> list[str]:
     """Explain why a paronym explanation is not copied from its cited source, or [] when it is.
 
-    ``distinction_gloss_uk`` ships only when every ``<word> — <definition>``
-    clause is copied verbatim from a verified ``glossSources`` passage that
-    gives that definition for that word (not for its paronym), or when the
-    whole gloss is such a passage naming both words (#8728). Model-curated
-    wording without a precise source locator is withheld.
+    ``distinction_gloss_uk`` ships only when both contrasted words have their
+    own ``<word> — <definition>`` clause, each independently located in a
+    verified ``glossSources`` passage that defines that word (#8728).
     """
     gloss = _clean_text(pair.get("distinction_gloss_uk"))
     if not gloss:
@@ -4685,11 +4702,9 @@ def paronym_gloss_provenance_errors(pair: dict[str, Any], passages: SourcePassag
     if not supports:
         return errors
     slugs = [slug for slug in (_clean_text(pair.get("slugA")), _clean_text(pair.get("slugB"))) if slug]
-    normalized = [_normalize_source_text(support["passage"]) for support in supports]
-    whole = _normalize_source_text(gloss).strip(" .;:")
-    if any(whole in passage and all(_whole_word(slug).search(passage) for slug in slugs) for passage in normalized):
-        return []
+    normalized = [(support["locator"], _normalize_source_text(support["passage"])) for support in supports]
     problems: list[str] = []
+    clause_heads: set[str] = set()
     # Clauses start at a contrasted word followed by a dash; a copied
     # definition may itself contain «;».
     heads = "|".join(re.escape(slug) for slug in slugs)
@@ -4701,10 +4716,18 @@ def paronym_gloss_provenance_errors(pair: dict[str, Any], passages: SourcePassag
         if not match or head not in {_plain(slug) for slug in slugs}:
             problems.append(f"gloss clause {clause!r} is not '<paronym> — <definition>'")
             continue
+        clause_heads.add(head)
         definition = _normalize_source_text(match["definition"]).strip(" .;:")
         others = [slug for slug in slugs if _plain(slug) != head]
-        if not any(_definition_follows_head(passage, head, definition, others) for passage in normalized):
+        matching_locator = next(
+            (locator for locator, passage in normalized if _definition_follows_head(passage, head, definition, others)),
+            None,
+        )
+        if not definition or matching_locator is None:
             problems.append(f"gloss clause {clause!r} is not copied from a glossSources passage defining {head!r}")
+    for slug in slugs:
+        if _plain(slug) not in clause_heads:
+            problems.append(f"gloss missing sourced meaning for {slug!r}")
     return problems
 
 
