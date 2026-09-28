@@ -326,20 +326,56 @@ def test_coordinator_warms_grac_before_cefr_seal(
     assert sum(1 for row in sealed.values() if int(row["rank"]) >= 1) > 0
 
 
-def test_runner_spawns_use_repo_venv_python() -> None:
-    """AGENTS.md: worker/self-test spawns must use ROOT/.venv/bin/python, not sys.executable."""
+def test_runner_spawns_use_primary_project_interpreter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Self-test and worker spawns use the primary checkout interpreter.
+
+    A primary checkout uses its own ``.venv/bin/python``. A linked worktree
+    uses that same primary interpreter, not a worktree-local virtualenv.
+    ``sys.executable`` is only a fallback when it is a project interpreter.
+    """
+    import inspect
+
+    from scripts.common.repo_root import main_checkout_root
     from scripts.lexicon.runner import memory as memory_mod
     from scripts.lexicon.runner import worker as worker_mod
 
-    expected = worker_mod.ROOT / ".venv" / "bin" / "python"
-    assert expected == worker_mod.VENV_PYTHON
-    assert expected == memory_mod.VENV_PYTHON
-    for rel in (
-        "scripts/lexicon/runner/worker.py",
-        "scripts/lexicon/runner/memory.py",
-    ):
-        text = Path(rel).read_text(encoding="utf-8")
-        assert "sys.executable" not in text, f"{rel} must not spawn via sys.executable"
+    live = main_checkout_root(memory_mod.ROOT) / ".venv" / "bin" / "python"
+    assert live.is_file()
+    assert live == memory_mod.VENV_PYTHON
+    assert live == worker_mod.VENV_PYTHON
+    for fn in (memory_mod.run_startup_self_test, worker_mod.run_capped_worker):
+        assert "sys.executable" not in inspect.getsource(fn)
+
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    primary_python = primary / ".venv" / "bin" / "python"
+    primary_python.parent.mkdir(parents=True)
+    primary_python.write_text("", encoding="utf-8")
+    assert memory_mod.project_interpreter(primary) == primary_python
+
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    git_dir = primary / ".git" / "worktrees" / "task"
+    git_dir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+    local_python = worktree / ".venv" / "bin" / "python"
+    local_python.parent.mkdir(parents=True)
+    local_python.write_text("", encoding="utf-8")
+    assert memory_mod.project_interpreter(worktree) == primary_python
+
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    fallback = tmp_path / "running" / ".venv" / "bin" / "python"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("", encoding="utf-8")
+    monkeypatch.setattr(memory_mod.sys, "executable", str(fallback))
+    assert memory_mod.project_interpreter(bare) == fallback
+
+    monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
+    with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+        memory_mod.project_interpreter(bare)
 
 
 def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:

@@ -12,6 +12,7 @@ from typing import Any
 
 from scripts.lexicon.runner.contracts import ErrorCode, WorkerResult
 from scripts.lexicon.runner.memory import (
+    VENV_PYTHON,
     MemoryPolicy,
     apply_worker_memory_limit,
     classify_oom_exit,
@@ -19,7 +20,6 @@ from scripts.lexicon.runner.memory import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
-VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 
 
 def _worker_main(payload: dict[str, Any], result_path: str) -> None:
