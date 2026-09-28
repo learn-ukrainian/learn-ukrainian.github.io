@@ -33,6 +33,18 @@ import re
 import shlex
 import sys
 
+# Use the sibling helper in either the source tree or a deployed hook copy.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from shell_shlex import (
+        skippable_heredoc_delimiters,
+        split_quote_preserving,
+        strip_skippable_heredoc_bodies,
+    )
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
 SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
@@ -156,15 +168,8 @@ def _tokenize(command: str) -> list[str]:
             _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
         )
         protected, parameters = _protect_parameters(executable)
-        lexer = shlex.shlex(
-            protected,
-            posix=False,
-            punctuation_chars="();&|<>\n",
-        )
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t"
-        lexer.commenters = ""
-        return [_restore_parameters(token, parameters) for token in lexer]
+        tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
+        return [_restore_parameters(token, parameters) for token in tokens]
     except ValueError:
         return ["__UNDECIDABLE_SECRET_COMMAND__"]
 
@@ -277,70 +282,15 @@ def _is_assignment(token: str) -> bool:
     return bool(_ASSIGNMENT_RE.match(_strip_quotes(token)))
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
-    try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t\n"
-        lexer.commenters = ""
-        tokens = list(lexer)
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_token = ""
-        if j < len(tokens):
-            if tokens[j] == "-":
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_token = tokens[j]
-            elif tokens[j].startswith("-") and len(tokens[j]) > 1:
-                strip_tabs = True
-                delim_token = tokens[j][1:]
-            else:
-                delim_token = tokens[j]
-        if delim_token:
-            delimiter = _strip_quotes(delim_token)
-            if delimiter:
-                delimiters.append((delimiter, strip_tabs, delim_token != delimiter))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    return skippable_heredoc_delimiters(line)
 
 
 def _strip_heredoc_bodies(command: str) -> str:
-    if "<<" not in command:
-        return command
-
-    kept: list[str] = []
-    lines = command.split("\n")
-    i = 0
-    while i < len(lines):
-        kept.append(lines[i])
-        pending = _heredoc_delimiters(_strip_shell_comments(lines[i]))
-        i += 1
-        body_start = i
-        substitutions: list[str] = []
-        while pending and i < len(lines):
-            delimiter, strip_tabs, quoted = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            elif not quoted:
-                substitutions.extend(_substitution_fragments(lines[i]))
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-        else:
-            kept.extend(substitutions)
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(
+        command, opener_transform=_strip_shell_comments, body_substitutions=_substitution_fragments
+    )
 
 
 def _substitution_fragments(line: str) -> list[str]:
@@ -1039,7 +989,10 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
         reason = _scan_command(body, set(copied), dict(named), depth=depth + 1)
         if reason:
             return reason
-    for pipeline in _pipelines(executable):
+    # _pipelines tokenizes and strips here-doc bodies itself. Passing the
+    # already decoded text would strip a second time and could turn an exotic
+    # delimiter into an identifier before its body is scanned.
+    for pipeline in _pipelines(command):
         for segment in pipeline:
             for body in _substitution_bodies(" ".join(segment)):
                 reason = _scan_command(body, set(copied), dict(named), depth=depth + 1)

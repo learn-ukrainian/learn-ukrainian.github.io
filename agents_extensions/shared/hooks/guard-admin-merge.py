@@ -30,6 +30,13 @@ import shlex
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> the guard reads
 # every check state as undeterminable and fail-closes, blocking the legitimate
@@ -120,49 +127,10 @@ def _flag_enabled(args: list[str], name: str) -> bool:
 # in sync.
 
 
-def _strip_quotes(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
-    """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
-    ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
-    try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.commenters = ""
-        tokens = list(lexer)
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_tok = ""
-        if j < len(tokens):
-            nxt = tokens[j]
-            if nxt == "-":
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_tok = tokens[j]
-            elif nxt.startswith("-") and len(nxt) > 1:
-                strip_tabs = True
-                delim_tok = nxt[1:]
-            else:
-                delim_tok = nxt
-        delimiter = _strip_quotes(delim_tok)
-        if delimiter:
-            delimiters.append((delimiter, strip_tabs))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    parsed = skippable_heredoc_delimiters(line)
+    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
 
 
 def _strip_heredoc_bodies(command: str) -> str:
@@ -172,29 +140,7 @@ def _strip_heredoc_bodies(command: str) -> str:
     opener must not make trailing real `gh pr merge --admin` vanish. Only a
     heredoc that actually closes has its body + closer dropped.
     """
-    if "<<" not in command:
-        return command
-
-    lines = command.splitlines()
-    kept: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        kept.append(lines[i])
-        i += 1
-        pending = _heredoc_delimiters(lines[i - 1])
-        if not pending:
-            continue
-        body_start = i
-        while i < n and pending:
-            delimiter, strip_tabs = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(command)
 
 
 def _join_line_continuations(text: str) -> str:
