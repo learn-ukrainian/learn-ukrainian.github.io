@@ -452,6 +452,19 @@ hook and push rewrite on `auto`. Matchers for the write worker also name the
 Grok tool ids `run_terminal_command`, `write`, `search_replace`, and
 `hashline_edit`, which the Claude matcher aliases do not all cover.
 
+Issue #9008 keeps `danger` on the same argv as `workspace-write`:
+`bypassPermissions`, `--always-approve`, and the `lu-write-worker` agent.
+Claude loads the fleet PreToolUse guards for both write modes. Its
+`workspace-write` mode is `dontAsk` plus an allow list, and its `danger` mode
+is `--dangerously-skip-permissions`. Grok 1.0.41 has no
+`--dangerously-skip-permissions` flag. `bypassPermissions` is Grok's
+always-approve mode, and the fleet hooks still run under it. `dontAsk` allows
+only pre-approved tools, and an explicit `auto` permission mode leaves
+`yolo_mode` false, so a headless worker cannot push its branch. The operator
+accepted `bypassPermissions` for Grok write workers (#8965). `danger` keeps
+the write-guard agent, so the fleet guards stay on that mode too.
+`test_danger_argv_matches_workspace_write` pins the shared argv.
+
 ## Weak-driver trail isolation (P5)
 
 Trail drivers are never given a shell, workspace writes, GitHub mutation, or
