@@ -147,7 +147,7 @@ check_pair() {
     fi
 
     local diff_out
-    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" || true)
+    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"

@@ -114,6 +114,37 @@ echo "cache" > "$TEST_DIR/dst6/hooks/__pycache__/x.cpython-314.pyc"
 echo "loose" > "$TEST_DIR/dst6/hooks/legacy.pyc"
 check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode" >/dev/null 2>&1
 _assert_rc "bytecode cache → rc 0" "0" "$?"
+echo "notes" > "$TEST_DIR/dst6/hooks/__pycache__/notes.txt"
+rc=0
+out=$(check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "inside-cache" 2>&1) || rc=$?
+_assert_rc "non-bytecode file inside __pycache__ → rc 1" "1" "$rc"
+if echo "$out" | grep -q "hooks/__pycache__/notes.txt"; then
+    echo "  ✓ names notes.txt inside the cache directory"
+    PASS=$((PASS + 1))
+else
+    echo "  ✗ did not name notes.txt"
+    echo "    output: $out"
+    FAIL=$((FAIL + 1))
+fi
+kept=$(printf '%s\n' "Only in $TEST_DIR/dst6/hooks: __pycache__" | filter_pycache_only_diff)
+_assert_eq "cache dir containing notes.txt stays in the diff" "Only in $TEST_DIR/dst6/hooks: __pycache__" "$kept"
+rm -f "$TEST_DIR/dst6/hooks/__pycache__/notes.txt"
+dropped=$(printf '%s\n' "Only in $TEST_DIR/dst6/hooks: __pycache__" | filter_pycache_only_diff)
+_assert_eq "pyc-only cache dir is dropped from the diff" "" "$dropped"
+mkdir -p "$TEST_DIR/dst6/foo__pycache__"
+echo "settings" > "$TEST_DIR/dst6/foo__pycache__/settings.json"
+rc=0
+out=$(check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "fake-cache-name" 2>&1) || rc=$?
+_assert_rc "foo__pycache__ is not bytecode → rc 1" "1" "$rc"
+if echo "$out" | grep -q "foo__pycache__"; then
+    echo "  ✓ names foo__pycache__"
+    PASS=$((PASS + 1))
+else
+    echo "  ✗ did not name foo__pycache__"
+    echo "    output: $out"
+    FAIL=$((FAIL + 1))
+fi
+rm -rf "$TEST_DIR/dst6/foo__pycache__"
 echo "mystery" > "$TEST_DIR/dst6/hooks/never-tracked.py"
 check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode-plus-file" >/dev/null 2>&1
 _assert_rc "real file beside bytecode → rc 1" "1" "$?"

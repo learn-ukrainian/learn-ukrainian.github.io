@@ -112,6 +112,9 @@ write_current_shared_agent_paths() {
                 echo "Cannot record unsafe shared source path: $path" >&2
                 exit 1
             }
+            # A *.pyc or __pycache__ directory is not deploy-owned. Recording it
+            # lets a later reap delete the cache the rsync exclude retained.
+            bytecode_cache_path "${path#./}" && continue
             printf '%s\t%s\n' "$kind" "${path#./}"
         done
     done
@@ -238,6 +241,7 @@ check_orphans() {
             return 1
         fi
         orphan="${path#"$dst"/}"
+        bytecode_cache_path "$orphan" && continue
         [[ -e "$src/$orphan" || -L "$src/$orphan" ]] && continue
         local matched=false
         for d in $declared; do
@@ -367,7 +371,7 @@ diff_dirs() {
         diff_args+=(--exclude="$bytecode_pattern")
     done
     local diff_out
-    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null || true)
+    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
         echo "  $label:"
         echo "$diff_out" | head -30 | sed 's/^/    /'

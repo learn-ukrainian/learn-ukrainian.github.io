@@ -87,17 +87,38 @@ CODEX_DISCOVERY_EXCLUDES="skills"
 
 # Interpreter cache written beside deployed hooks and skill scripts (#9108).
 # These are not declared runtime state and must stay out of every ORPHAN_PATHS_*
-# list. Deploy excludes them from copy and from --delete, and the orphan
-# preflight ignores them. CPython recompiles a __pycache__ entry when the
-# paired .py mtime or size changes, so retaining the cache does not shadow
-# an updated source module.
-BYTECODE_CACHE_EXCLUDES=(__pycache__ '*.pyc')
+# list. Only the *.pyc file is excluded from copy and from --delete. The
+# __pycache__ directory itself stays visible so a non-bytecode file inside it
+# still fails closed. A directory named foo__pycache__ is not cache.
+# CPython recompiles a *.pyc when the paired .py mtime or size changes, so a
+# retained cache does not shadow an updated source module.
+BYTECODE_CACHE_EXCLUDES=('*.pyc')
 
-# True for a destination-relative interpreter cache path.
+# True for a *.pyc file or for the __pycache__ directory entry itself.
+# hooks/__pycache__/notes.txt and foo__pycache__/settings.json are not cache.
 bytecode_cache_path() {
-    local relative="$1"
-    case "$relative" in
-        *.pyc | *__pycache__/* | __pycache__) return 0 ;;
+    local base="${1##*/}"
+    case "$base" in
+        *.pyc | __pycache__) return 0 ;;
     esac
     return 1
+}
+
+# Drop "Only in …: __pycache__" when that directory contains nothing but *.pyc.
+# A notes.txt inside it keeps the diff line.
+filter_pycache_only_diff() {
+    local line parent dir
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        case "$line" in
+            "Only in "*": __pycache__")
+                parent="${line#"Only in "}"
+                parent="${parent%": __pycache__"}"
+                dir="$parent/__pycache__"
+                if [[ -d "$dir" ]] && ! find "$dir" -mindepth 1 ! -name '*.pyc' -print -quit | grep -q .; then
+                    continue
+                fi
+                ;;
+        esac
+        printf '%s\n' "$line"
+    done
 }

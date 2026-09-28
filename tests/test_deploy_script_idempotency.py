@@ -229,6 +229,7 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     ),
     "test_codex_orphan_is_caught": (),
     "test_bytecode_cache_is_not_an_orphan_and_is_not_declared": (),
+    "test_agent_reaper_keeps_bytecode_from_an_old_manifest": (),
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
@@ -1346,6 +1347,35 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
     assert "undeclared orphan 'stale-only.txt'" in third_output
     assert "undeclared orphan 'hooks/__pycache__/x.cpython-314.pyc'" not in third_output
     assert (repo / ".claude" / "hooks" / "__pycache__" / "x.cpython-314.pyc").read_bytes() == marker
+
+
+def test_agent_reaper_keeps_bytecode_from_an_old_manifest(tmp_path: Path) -> None:
+    """An older .agent manifest must not reap a *.pyc the rsync exclude retained."""
+    repo = _init_checkout(tmp_path)
+    kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
+    kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    kept.chmod(0o755)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stdout + first.stderr
+
+    cache = repo / ".agent" / "hooks" / "__pycache__" / "kept.cpython-314.pyc"
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_bytes(b"keep-this-cache\n")
+    manifest = repo / ".deploy-state" / "shared-to-agent.manifest"
+    assert manifest.is_file()
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8")
+        + "d\thooks/__pycache__\n"
+        + "f\thooks/__pycache__/kept.cpython-314.pyc\n",
+        encoding="utf-8",
+    )
+    # A real source change is required. "No changes" returns before the reap.
+    kept.write_text("#!/bin/sh\nexit 0\n# redeploy\n", encoding="utf-8")
+    second = _run(repo, DEPLOY_SCRIPT)
+    assert second.returncode == 0, second.stdout + second.stderr
+    assert cache.read_bytes() == b"keep-this-cache\n"
+    recorded = manifest.read_text(encoding="utf-8")
+    assert "kept.cpython-314.pyc" not in recorded
 
 
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:
