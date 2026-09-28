@@ -103,7 +103,9 @@ class SyntheticCustodyBundle:
 
 
 @pytest.fixture
-def synthetic_bundle(tmp_path: Path) -> SyntheticCustodyBundle:
+def synthetic_bundle(
+    tmp_path: Path, requires_sources_db: Path, requires_textbook_chunks: Path
+) -> SyntheticCustodyBundle:
     base = _get_synthetic_custody_dir()
     in_dir = tmp_path / "in"
     out_dir = tmp_path / "out"
@@ -132,19 +134,32 @@ def test_config_passes_schema() -> None:
 
 
 @pytest.fixture
-def requires_textbook_chunks() -> Path:
+def requires_textbook_chunks(requires_sources_db: Path) -> Path:
     candidate = Path("data/textbook_chunks")
+    if candidate.is_dir():
+        return candidate
+    candidate = requires_sources_db.parent / "textbook_chunks"
     if candidate.is_dir():
         return candidate
     pytest.skip("requires data/textbook_chunks corpus directory (not provisioned in CI)")
 
 
 def test_verify_passes_on_committed_artifacts(
-    repo_root: Path,
+    tmp_path: Path,
     requires_sources_db: Path,
     requires_textbook_chunks: Path,
 ) -> None:
-    assert custody.verify(CONFIG_PATH, input_root=repo_root, output_root=repo_root, require_database=True) is True
+    hydrated_root = requires_sources_db.parent.parent
+    output_root = tmp_path / "out"
+    custody_dir = output_root / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+    shutil.copyfile(
+        hydrated_root / "data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+        custody_dir / "v4_source_custody_access_index_v1.jsonl",
+    )
+    for filename in ("v4_source_custody_missing_report_v1.json", "v4_source_custody_access_receipt_v1.json"):
+        shutil.copyfile(REGISTRY_CUSTODY_DIR / filename, custody_dir / filename)
+    assert custody.verify(CONFIG_PATH, input_root=hydrated_root, output_root=output_root, require_database=True) is True
 
 
 # Reject-sample needle: production scripts/docs must not bake this host checkout path.
@@ -1078,9 +1093,11 @@ def test_validate_cohort_spec_enforces_compatible_resolver_and_lineage_rule() ->
         )
 
 
-def test_verify_detects_incompatible_cohort_lineage_rule_in_config(
-    synthetic_bundle: SyntheticCustodyBundle, tmp_path: Path
-) -> None:
+def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
     # Tamper config so literary specifies native_pdf_text
     config_data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     for c in config_data["cohorts"]:
@@ -1090,7 +1107,7 @@ def test_verify_detects_incompatible_cohort_lineage_rule_in_config(
     tampered_config.write_text(json.dumps(config_data), encoding="utf-8")
 
     with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_digital_source'"):
-        synthetic_bundle.verify(tampered_config)
+        custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
 
 
 def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(
