@@ -146,7 +146,6 @@ from typing import Optional
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from shell_shlex import (
-        has_multiline_quoted_heredoc,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
@@ -680,8 +679,6 @@ def _tokenize(command: str) -> list[str]:
     ``_expand_word`` turns tokens into the text the guard classifies.
     """
     try:
-        if has_multiline_quoted_heredoc(command):
-            raise ValueError("ambiguous multiline quoted here-doc")
         lexer = shlex.shlex(
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(

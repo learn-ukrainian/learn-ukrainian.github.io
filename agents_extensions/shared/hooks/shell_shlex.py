@@ -15,20 +15,59 @@ _HEREDOC_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 
 
 def collapse_line_continuations(command: str) -> str:
-    """Apply Bash's backslash-newline removal before finding here-doc openers."""
+    """Join Bash continuations while respecting physical-line comments."""
     out: list[str] = []
     quote = ""
+    outer_quote = ""
+    substitution_depth = 0
+    backticks = False
+    comment = False
+    word_start = True
     i = 0
     while i < len(command):
         char = command[i]
+        if comment:
+            out.append(char)
+            if char == "\n":
+                comment = False
+                word_start = True
+            i += 1
+            continue
         if char == "\\" and quote != "'" and i + 1 < len(command):
             following = command[i + 1]
             if following != "\n":
                 out.extend((char, following))
+                word_start = False
             i += 2
             continue
-        if char in "\"'" and (not quote or quote == char):
-            quote = "" if quote else char
+        if char == "'" and quote != '"' and not backticks:
+            quote = "" if quote == "'" else "'"
+            word_start = False
+        elif char == '"' and quote != "'" and not backticks:
+            quote = "" if quote == '"' else '"'
+            word_start = False
+        elif char == "`" and quote != "'":
+            backticks = not backticks
+            word_start = False
+        elif quote != "'" and not backticks and command.startswith("$(", i):
+            if not substitution_depth:
+                outer_quote = quote
+                quote = ""
+            substitution_depth += 1
+            out.append("$(")
+            word_start = False
+            i += 2
+            continue
+        elif substitution_depth and not quote and not backticks and char == "(":
+            substitution_depth += 1
+        elif substitution_depth and not quote and not backticks and char == ")":
+            substitution_depth -= 1
+            if not substitution_depth:
+                quote = outer_quote
+        elif not quote and not backticks:
+            if char == "#" and word_start:
+                comment = True
+            word_start = char in " \t\n;&|()"
         out.append(char)
         i += 1
     return "".join(out)
@@ -87,38 +126,70 @@ def strip_shell_comments(command: str) -> str:
     return "".join(out)
 
 
-def _body_substitutions(line: str) -> list[str]:
-    """Expose executable substitutions from an unquoted here-doc body."""
+def _body_substitutions(body: str) -> list[str] | None:
+    """Expose complete substitutions, including ones spanning body lines.
+
+    A substitution we cannot close leaves the entire body visible to guards.
+    """
     found: list[str] = []
     i = 0
-    while i < len(line):
-        if line[i] == "\\":
+    while i < len(body):
+        if body[i] == "\\":
             i += 2
             continue
-        if line.startswith("$((", i):
+        if body.startswith("$((", i):
             i += 3
             continue
-        if line.startswith("$(", i):
+        if body.startswith("$(", i):
             start = i
             depth = 1
+            quote = ""
+            backticks = False
+            comment = False
+            word_start = True
             i += 2
-            while i < len(line) and depth:
-                if line[i] == "\\":
-                    i += 2
+            while i < len(body) and depth:
+                char = body[i]
+                if comment:
+                    if char == "\n":
+                        comment = False
+                        word_start = True
+                    i += 1
                     continue
-                if line[i] == "(":
-                    depth += 1
-                elif line[i] == ")":
-                    depth -= 1
+                if char == "\\" and quote != "'":
+                    i += 2
+                    word_start = False
+                    continue
+                if char == "'" and quote != '"' and not backticks:
+                    quote = "" if quote == "'" else "'"
+                    word_start = False
+                elif char == '"' and quote != "'" and not backticks:
+                    quote = "" if quote == '"' else '"'
+                    word_start = False
+                elif char == "`" and quote != "'":
+                    backticks = not backticks
+                    word_start = False
+                elif not quote and not backticks:
+                    if char == "#" and word_start:
+                        comment = True
+                    elif char == "(":
+                        depth += 1
+                    elif char == ")":
+                        depth -= 1
+                    word_start = char in " \t\n;&|()"
                 i += 1
-            found.append(line[start:i])
+            if depth:
+                return None
+            found.append(body[start:i])
             continue
-        if line[i] == "`":
+        if body[i] == "`":
             start = i + 1
             i += 1
-            while i < len(line) and line[i] != "`":
-                i += 2 if line[i] == "\\" else 1
-            found.append("$(" + line[start:i] + ")")
+            while i < len(body) and body[i] != "`":
+                i += 2 if body[i] == "\\" else 1
+            if i >= len(body):
+                return None
+            found.append("$(" + body[start:i] + ")")
             i += 1
             continue
         i += 1
@@ -172,6 +243,14 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
             contexts.append("arithmetic")
             index += 3
             continue
+        if line.startswith("$[", index):
+            contexts.append("arithmetic_bracket")
+            index += 2
+            continue
+        if char == "[" and re.search(r"[A-Za-z_][A-Za-z0-9_]*\Z", line[:index]):
+            contexts.append("arithmetic_bracket")
+            index += 1
+            continue
         if line.startswith("${", index):
             contexts.append("parameter")
             index += 2
@@ -192,6 +271,10 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
             contexts.pop()
             index += 1
             continue
+        if contexts and contexts[-1] == "arithmetic_bracket" and char == "]":
+            contexts.pop()
+            index += 1
+            continue
         if contexts and contexts[-1] == "command" and char == ")":
             contexts.pop()
             index += 1
@@ -206,7 +289,7 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
         if not line.startswith("<<", index):
             index += 1
             continue
-        if contexts and contexts[-1] in {"arithmetic", "parameter"}:
+        if contexts and contexts[-1] in {"arithmetic", "arithmetic_bracket", "parameter"}:
             arithmetic_shift = True
             index += 2
             continue
@@ -245,7 +328,7 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
     # on the same command line.
     return (
         None
-        if ambiguous or (arithmetic_shift and delimiters) or any(c in {"arithmetic", "parameter"} for c in contexts)
+        if ambiguous or (arithmetic_shift and delimiters) or any(c in {"arithmetic", "arithmetic_bracket", "parameter"} for c in contexts)
         else delimiters
     )
 
@@ -264,39 +347,11 @@ def _quote_after(line: str, initial_quote: str) -> str:
     return quote
 
 
-def has_multiline_quoted_heredoc(command: str) -> bool:
-    """Whether a `<<` occurs inside a quote opened on an earlier line.
-
-    Such input was already undecidable to the deeper write and secret scanners.
-    Keep their conservative refusal even after the shared pipeline preserves
-    the line correctly for guards that can still recognize their own payload.
-    """
-    quote = ""
-    saw_quoted_opener = False
-    lines = collapse_line_continuations(command).split("\n")
-    for number, line in enumerate(lines):
-        opened_before_line = bool(quote)
-        i = 0
-        while i < len(line):
-            char = line[i]
-            if char == "\\" and quote != "'":
-                i += 2
-                continue
-            if char in "\"'" and (not quote or quote == char):
-                quote = "" if quote else char
-            elif opened_before_line and quote and line.startswith("<<", i):
-                saw_quoted_opener = True
-            i += 1
-        if saw_quoted_opener and not quote and any(rest.strip() for rest in lines[number + 1 :]):
-            return True
-    return False
-
-
 def strip_skippable_heredoc_bodies(
     command: str,
     *,
     opener_transform: Callable[[str], str] | None = None,
-    body_substitutions: Callable[[str], list[str]] | None = None,
+    body_substitutions: Callable[[str], list[str] | None] | None = None,
 ) -> str:
     """Skip only closed, unambiguous here-doc bodies in all hook guards.
 
@@ -322,15 +377,27 @@ def strip_skippable_heredoc_bodies(
             break
         body_start = index
         substitutions: list[str] = []
+        undecidable_body = False
         while pending and index < len(lines):
             delimiter, strip_tabs, quoted = pending[0]
-            candidate = lines[index].lstrip("\t") if strip_tabs else lines[index]
-            if candidate == delimiter:
-                pending.pop(0)
-            elif not quoted and body_substitutions:
-                substitutions.extend(body_substitutions(lines[index]))
+            part_start = index
+            while index < len(lines):
+                candidate = lines[index].lstrip("\t") if strip_tabs else lines[index]
+                if candidate == delimiter:
+                    break
+                index += 1
+            if index == len(lines):
+                break
+            if not quoted and body_substitutions:
+                body = "\n".join(lines[part_start:index])
+                extracted = body_substitutions(body)
+                if extracted is None:
+                    undecidable_body = True
+                else:
+                    substitutions.extend(extracted)
+            pending.pop(0)
             index += 1
-        if pending:
+        if pending or undecidable_body:
             kept.extend(lines[body_start:index])
         else:
             kept.extend(substitutions)

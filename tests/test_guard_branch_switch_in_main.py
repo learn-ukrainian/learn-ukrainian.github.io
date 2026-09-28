@@ -56,6 +56,13 @@ guard = _load_hook()
     ": <<EOF\n`{payload}`\nEOF",
     "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
     ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
 ])
 def test_issue_9102_executable_payload_stays_visible(repos, shape):
     command = shape.replace("{payload}", "git checkout -b feature")

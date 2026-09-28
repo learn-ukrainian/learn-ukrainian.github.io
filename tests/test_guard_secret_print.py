@@ -25,6 +25,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.test_guard_benign_corpus import BENIGN_COMMANDS
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-secret-print.py"
 
@@ -38,6 +40,11 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+
+@pytest.mark.parametrize("command", BENIGN_COMMANDS)
+def test_issue_9102_benign_corpus_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
 
 
 def _run(monkeypatch, command: str, *, env_override: bool = False) -> int:
@@ -231,6 +238,13 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     ": <<EOF\n`{payload}`\nEOF",
     "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
     ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
 ])
 def test_issue_9102_executable_payload_stays_visible(monkeypatch, shape):
     assert _run(monkeypatch, shape.replace("{payload}", "cat .env")) == 2

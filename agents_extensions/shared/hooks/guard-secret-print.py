@@ -37,7 +37,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from shell_shlex import (
-        has_multiline_quoted_heredoc,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         split_quote_preserving,
@@ -166,8 +165,6 @@ def _collapse_shell_line_continuations(command: str) -> str:
 
 def _tokenize(command: str) -> list[str]:
     try:
-        if has_multiline_quoted_heredoc(command):
-            raise ValueError("ambiguous multiline quoted here-doc")
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
         protected, parameters = _protect_parameters(executable)
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
@@ -987,8 +984,6 @@ def _shell_script(args: list[str]) -> list[str]:
 def _scan_command(command: str, copied: set[str], named: dict[str, str] | None = None, *, depth: int = 0) -> str | None:
     if depth >= 12:
         return "shell recursion limit reached while scanning for secret output"
-    if has_multiline_quoted_heredoc(command):
-        return "shell command could not be parsed safely"
     if named is None:
         named = {}
     executable = _decode_ansi_c_quotes(preprocess_shell_command(command))

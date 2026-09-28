@@ -34,6 +34,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.test_guard_benign_corpus import BENIGN_COMMANDS
+
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -65,6 +67,14 @@ def _load_hook():
 hook = _load_hook()
 
 
+@pytest.mark.parametrize("command", BENIGN_COMMANDS)
+def test_issue_9102_benign_corpus_allowed_in_dispatch(repo: Path, command: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}}
+    result = _run(dispatch, payload)
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("shape", [
     "echo $((1 << EOF))\n{payload}\nEOF",
     "((1 << EOF))\n{payload}\nEOF",
@@ -76,6 +86,13 @@ hook = _load_hook()
     ": <<EOF\n`{payload}`\nEOF",
     "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
     ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
 ])
 def test_issue_9102_executable_payload_stays_visible(repo: Path, shape):
     command = shape.replace("{payload}", "tee AGENTS.md")
