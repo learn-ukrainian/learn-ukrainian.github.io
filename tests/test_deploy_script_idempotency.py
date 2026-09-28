@@ -602,6 +602,7 @@ def _delete_source_file(repo: Path, relative: Path) -> bytes:
     return original
 
 
+@pytest.mark.repo_wide
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
     repo = _init_checkout(tmp_path, full_tree=True)
@@ -1382,6 +1383,7 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     assert "pipeline.md" in combined_output
 
 
+@pytest.mark.repo_wide
 def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
     """Walk every top-level skill, including ``*-epic`` names and one nested script.
 

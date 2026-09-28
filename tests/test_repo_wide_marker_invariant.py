@@ -256,6 +256,50 @@ NOT_REPO_WIDE = {
     ),
 }
 
+# These deploy tests copy only named source paths into isolated temporary
+# checkouts. The heuristic follows _init_checkout into its conditional
+# whole-tree and skill-discovery branches, but these callers take neither.
+# They assert deployment behavior in the temporary tree, not an invariant
+# across the live repository. Keep each name explicit so the registry's
+# stale-entry check catches a renamed or removed test.
+NOT_REPO_WIDE.update({
+    f"tests/test_deploy_script_idempotency.py::{name}": (
+        "Copies declared source paths into a temporary checkout; the scanning "
+        "helper's whole-tree branch is not taken by this test."
+    )
+    for name in (
+        "test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees",
+        "test_codex_legacy_migration_preserves_modified_content",
+        "test_agent_manifest_rejects_symlinked_intermediate_component",
+        "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills",
+        "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
+        "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
+        "test_agent_manifest_reaps_legitimate_nested_file",
+        "test_codex_legacy_migration_recognizes_committed_source_before_edits",
+        "test_codex_legacy_python_cache_does_not_block_driver_deployment",
+        "test_agent_transient_briefs_are_preserved",
+        "test_gemini_shared_skill_name_collision_fails_closed",
+        "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
+        "test_tracked_mirror_drift_is_detected_before_deploy",
+        "test_second_deploy_is_noop_for_codex_target",
+        "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
+        "test_tracked_mirror_resolves_each_deploy_source",
+        "test_claude_epic_dirs_are_preserved",
+        "test_tracked_agents_skill_declared_orphan_is_skipped",
+        "test_tracked_claude_glob_orphan_is_skipped",
+        "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
+        "test_drift_is_caught",
+        "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
+        "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact",
+        "test_codex_orphan_is_caught",
+        "test_codex_legacy_migration_works_after_updated_sources_are_committed",
+        "test_missing_codex_hooks_json_is_drift",
+        "test_agent_overlay_write_stays_in_held_directory_after_root_swap",
+        "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
+        "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
+    )
+})
+
 # Repository-root path constants. A walk rooted at one of these (or a join into
 # tests/scripts/agents_extensions) is repo-wide, not a temp fixture. The
 # ``*_ROOT`` suffix and ``Path(__file__).parents[n]`` cover the inline forms.
