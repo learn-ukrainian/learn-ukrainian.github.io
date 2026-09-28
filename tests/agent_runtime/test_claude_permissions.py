@@ -34,10 +34,146 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     assert all(Path(command).is_file() for command in commands)
     assert str(tracked_hooks / "guard-reviewer-publish.py") not in commands
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
-    assert "--permission-mode" not in plan.cmd
-    assert "--allowedTools" not in plan.cmd
     assert "--disallowedTools" not in plan.cmd
-    assert ("--dangerously-skip-permissions" in plan.cmd) is (mode == "danger")
+    if mode == "workspace-write":
+        # Headless print mode denies approval-requiring tools. dontAsk plus the
+        # worker allow list is the documented non-interactive mode. Danger keeps
+        # its own flag and must not grow a --permission-mode.
+        assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
+        granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+        assert granted == [
+            "Bash", "Read", "Edit", "Write",
+            "Grep", "Glob", "LS", "WebFetch", "WebSearch",
+        ]
+        assert "NotebookEdit" not in granted
+        assert not any(name.startswith("mcp__") for name in granted)
+        assert plan.cmd.count("--allowedTools") == 1
+        assert "--dangerously-skip-permissions" not in plan.cmd
+    else:
+        assert "--permission-mode" not in plan.cmd
+        assert "--allowedTools" not in plan.cmd
+        assert ("--dangerously-skip-permissions" in plan.cmd) is (mode == "danger")
+
+
+def test_workspace_write_keeps_explicit_allowed_tools(tmp_path: Path) -> None:
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={"allowed_tools": "mcp__sources__*"},
+    )
+    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
+    assert plan.cmd.count("--allowedTools") == 1
+    assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == "mcp__sources__*"
+    assert "Bash" not in plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    assert "--disallowedTools" not in plan.cmd
+    assert "--dangerously-skip-permissions" not in plan.cmd
+
+
+def test_workspace_write_names_mcp_servers_from_config(tmp_path: Path) -> None:
+    config = tmp_path / "mcp.json"
+    config.write_text(
+        json.dumps({"mcpServers": {"sources": {}, "other_tool": {}}}),
+        encoding="utf-8",
+    )
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={"mcp_config_path": str(config)},
+    )
+    granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    assert "mcp__sources__*" in granted
+    assert "mcp__other_tool__*" in granted
+    assert "mcp__sources" not in granted
+    assert "NotebookEdit" not in granted
+
+
+def test_workspace_write_mcp_config_comes_from_worker_cwd(tmp_path: Path) -> None:
+    (tmp_path / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"worker_only": {}}}),
+        encoding="utf-8",
+    )
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=None, tool_config=None,
+    )
+    granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    assert "mcp__worker_only__*" in granted
+    assert "mcp__sources__*" not in granted
+
+
+def test_explicit_mcp_config_path_wins_over_worker_cwd(tmp_path: Path) -> None:
+    (tmp_path / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"from_cwd": {}}}),
+        encoding="utf-8",
+    )
+    explicit = tmp_path / "explicit.json"
+    explicit.write_text(
+        json.dumps({"mcpServers": {"from_explicit": {}}}),
+        encoding="utf-8",
+    )
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={"mcp_config_path": str(explicit)},
+    )
+    granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    assert "mcp__from_explicit__*" in granted
+    assert "mcp__from_cwd__*" not in granted
+
+    missing = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={"mcp_config_path": str(tmp_path / "absent.json")},
+    )
+    missing_granted = missing.cmd[missing.cmd.index("--allowedTools") + 1].split(",")
+    assert "mcp__from_cwd__*" not in missing_granted
+    assert not any(name.startswith("mcp__") for name in missing_granted)
+
+
+def test_workspace_write_rejects_invalid_mcp_config(tmp_path: Path) -> None:
+    (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")
+    with pytest.raises(ValueError, match="invalid JSON"):
+        ClaudeAdapter().build_invocation(
+            prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+            task_id=None, session_id=None, tool_config=None,
+        )
+
+    shaped = tmp_path / "shaped"
+    shaped.mkdir()
+    (shaped / ".mcp.json").write_text("[]", encoding="utf-8")
+    with pytest.raises(ValueError, match="mcpServers"):
+        ClaudeAdapter().build_invocation(
+            prompt="inspect", mode="workspace-write", cwd=shaped, model=None,
+            task_id=None, session_id=None, tool_config=None,
+        )
+
+
+def test_workspace_write_rejects_unreadable_mcp_config(tmp_path: Path) -> None:
+    config = tmp_path / ".mcp.json"
+    config.write_text('{"mcpServers": {}}\n', encoding="utf-8")
+    config.chmod(0)
+    try:
+        with pytest.raises(ValueError, match="unreadable"):
+            ClaudeAdapter().build_invocation(
+                prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+                task_id=None, session_id=None, tool_config=None,
+            )
+    finally:
+        config.chmod(0o644)
+
+
+def test_workspace_write_rejects_inexpressible_mcp_server_name(tmp_path: Path) -> None:
+    config = tmp_path / "mcp.json"
+    config.write_text(
+        json.dumps({"mcpServers": {"ok": {}, "bad,name": {}}}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="cannot be expressed"):
+        ClaudeAdapter().build_invocation(
+            prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
+            task_id=None, session_id=None,
+            tool_config={"mcp_config_path": str(config)},
+        )
 
 
 def test_reviewer_tools_opt_in_installs_profile(tmp_path: Path) -> None:

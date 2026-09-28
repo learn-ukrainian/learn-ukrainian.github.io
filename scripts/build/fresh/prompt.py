@@ -28,6 +28,7 @@ from typing import Any
 import jinja2
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from scripts.build.fresh.candidates import record_candidates
 from scripts.build.fresh.draft_schema import (
     activity_definitions,
     activity_payload_schema,
@@ -203,6 +204,33 @@ def extract_plan_citations(plan_entry: dict[str, Any]) -> set[str]:
     return cited
 
 
+def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str, Any]) -> str:
+    """Show only cited store forms; the item demand selects the usable subset."""
+    if not any(act.get("type") in {"fill-in", "quiz", "multiple-choice"} for act in plan_entry.get("activities", [])):
+        return ""
+    lines = [
+        "## Form-choice candidate bank",
+        "",
+        "Use one form from its bound record per option. State the complete slot `requires`; "
+        "choose one admitted key and distractors that differ in `tests_feature`. "
+        "The engine generates the item-specific subset and checks every written option.",
+        "",
+    ]
+    found = False
+    for record_id, record in sorted(cited_records.items()):
+        if not record_id.startswith("W-") or not isinstance(record, dict):
+            continue
+        for candidate in record_candidates({**record, "id": record_id}):
+            analyses = "; ".join(
+                f"{analysis['tags']} [{', '.join(analysis['features'])}]" for analysis in candidate["analyses"]
+            )
+            lines.append(f"- `{record_id}`: `{candidate['form']}` — {analyses}")
+            found = True
+    if not found:
+        return ""
+    return "\n".join(lines) + "\n"
+
+
 def render_lesson_prompt(
     plan_entry: dict[str, Any],
     cited_records: dict[str, Any],
@@ -274,7 +302,8 @@ def render_lesson_prompt(
         lesson_lock_entry_sha256=lesson_lock_entry_sha256,
         learner_state_sha256=learner_state_sha256,
     )
-    return rendered
+    candidates = _render_form_candidates(pe, cited_records)
+    return rendered + ("\n" + candidates if candidates else "")
 
 
 def render_recap_prompt(
@@ -350,7 +379,8 @@ def render_recap_prompt(
         lesson_lock_entry_sha256=lesson_lock_entry_sha256,
         learner_state_sha256=learner_state_sha256,
     )
-    return rendered
+    candidates = _render_form_candidates(pe, cited_records)
+    return rendered + ("\n" + candidates if candidates else "")
 
 
 def check_rendered_prompt(

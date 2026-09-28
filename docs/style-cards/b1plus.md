@@ -117,8 +117,8 @@ order. One thing at a time. The `job`, the `rationale` and the word target are t
 
 ## 7. The language rule (§6)
 
-Narration is in the language the immersion payload gives for the position and the field role. Narration is Ukrainian, so the quoted-term span `{{uk:…}}` has no place; a Ukrainian sentence never embeds English except a gloss reference `{{gloss:W-…}}` for an incidental word.
-A Ukrainian sentence never embeds English except a gloss reference. Mixed sentences outside those two spans fail. The
+Every sentence is in one language (operator direction 2026-09-27; writer contract §6). Narration is Ukrainian, so the quoted-term span `{{uk:…}}` has no place.
+A Ukrainian sentence never embeds English except a gloss reference `{{gloss:W-…}}`. Mixed sentences outside those two spans fail. The
 immersion payload (permitted languages per field role, the band's structural targets, the advisory share) is the rule;
 this card only describes the band's posture.
 

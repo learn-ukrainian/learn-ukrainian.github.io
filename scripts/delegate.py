@@ -7786,10 +7786,12 @@ def _run_worker(
         substitution = result_substitution
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
+    runtime_substitution = substitution
+    substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
     cursor_model_state = _cursor_model_state(
         agent=agent,
         result=result,
-        substitution=substitution,
+        substitution=runtime_substitution if isinstance(runtime_substitution, dict) else None,
     )
 
     final_state.update(
@@ -8006,6 +8008,7 @@ def _record_worktree_prep_failure(
     returncode_reason: str = "worktree preparation failed",
     worktree_prep_cleanup: dict[str, Any] | None = None,
     worktree_prep: dict[str, Any] | None = None,
+    substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
@@ -8078,7 +8081,7 @@ def _record_worktree_prep_failure(
         "returncode_reason": returncode_reason,
         "last_error": _first_error_line(error_str) or error_str,
         "exit_code": None,
-        "substitution": None,
+        "substitution": substitution,
         "agent_alias_note": agent_alias_note,
     }
     if requested_harness is not None:
@@ -8125,6 +8128,7 @@ def _record_forward_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when VPS forward dispatch is refused."""
     return _record_worktree_prep_failure(
@@ -8152,6 +8156,7 @@ def _record_forward_failure(
         initial_response_timeout=initial_response_timeout,
         max_budget_usd=max_budget_usd,
         returncode_reason="forward configuration failed",
+        substitution=substitution,
     )
 
 
@@ -8667,6 +8672,41 @@ def _dispatch(
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
+    if review_attempt:
+        # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
+        # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
+        from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+
+        try:
+            prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        except AttemptIdsUnreadableError as err:
+            print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
+            return 2
+        if prompt_review_id is None or prompt_attempt_id is None:
+            # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
+            # ledger this dispatch prepares — the failure #8996 was filed for.
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
+                "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
+        id_mismatches = [
+            f"{name} prompt={found!r} dispatch={expected!r}"
+            for name, found, expected in (
+                ("review_id", prompt_review_id, review_id),
+                ("attempt_id", prompt_attempt_id, attempt_id),
+            )
+            if found != expected
+        ]
+        if id_mismatches:
+            print(
+                "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
+                f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
+                file=sys.stderr,
+            )
+            return 2
+
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
         if dor_error:
@@ -8722,6 +8762,9 @@ def _dispatch(
     # gemini ~99% remaining the same night `--agent gemini` failed with
     # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
     # not this — there is no CLI left to force.
+    original_agent = args.agent
+    original_model = getattr(args, "model", None)
+    model_resolution: dict[str, Any] = {}
     agent_alias_note: str | None = None
     retired_target = resolve_retired_agent_alias(args.agent)
     requested_agent = args.agent
@@ -8732,9 +8775,24 @@ def _dispatch(
                 file=sys.stderr,
             )
             return 2
+        try:
+            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="retired-cli",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=retired_target,
+            actual_model=retired_model,
+            how=retired_how,
+        )
         agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
         print(
             f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
+            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
             f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
             file=sys.stderr,
         )
@@ -8754,15 +8812,48 @@ def _dispatch(
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
+                _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    provider="openrouter",
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
                 if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
+                else _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
             )
         except BudgetGuardRefuseError as exc:
             print(f"❌ {exc}", file=sys.stderr)
             return 2
     else:
         dispatch_agent = requested_agent
+
+    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
+    if dispatch_agent != original_agent and agent_substitution is None:
+        try:
+            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=dispatch_agent,
+            actual_model=chosen_model,
+            how=chosen_how,
+        )
+        agent_substitution = model_resolution["record"]
+    if agent_substitution is not None:
+        args.model = agent_substitution["actual_model"]
 
     if language_lane and dispatch_agent not in _LANGUAGE_LANES:
         print(
@@ -8822,18 +8913,6 @@ def _dispatch(
                     file=sys.stderr,
                 )
                 return 2
-
-    explicit_model = getattr(args, "model", None)
-    if (
-        explicit_model
-        and dispatch_agent != requested_agent
-        and _adapter_rejects_model(dispatch_agent, str(explicit_model))
-    ):
-        print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
-            file=sys.stderr,
-        )
-        args.model = None
 
     from agent_runtime.telemetry import _resolve_model_from_defaults
 
@@ -8932,6 +9011,7 @@ def _dispatch(
                         ),
                         max_budget_usd=getattr(args, "max_budget_usd", None),
                         output_schema_path=getattr(args, "output_schema", None),
+                        substitution=agent_substitution,
                     )
                     refusal_msg = format_forward_config_refusal(forward_error, host_id=host_id)
                     print(refusal_msg, file=sys.stderr)
@@ -9030,6 +9110,7 @@ def _dispatch(
                     silence_timeout=silence_timeout,
                     initial_response_timeout=initial_response_timeout,
                     max_budget_usd=max_budget_usd,
+                    substitution=agent_substitution,
                 )
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
@@ -9178,7 +9259,7 @@ def _dispatch(
                 "returncode_reason": None,
                 "last_error": None,
                 "exit_code": None,
-                "substitution": None,
+                "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
             if requested_harness is not None:
@@ -9346,6 +9427,7 @@ def _dispatch(
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                substitution=agent_substitution,
                 worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
                 worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
             )
@@ -9446,6 +9528,7 @@ def _dispatch(
             silence_timeout=silence_timeout,
             initial_response_timeout=initial_response_timeout,
             max_budget_usd=max_budget_usd,
+            substitution=agent_substitution,
         )
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
@@ -9540,7 +9623,7 @@ def _dispatch(
             "returncode_reason": None,
             "last_error": None,
             "exit_code": None,
-            "substitution": None,
+            "substitution": agent_substitution,
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
@@ -10020,8 +10103,8 @@ def _discard_model_probe_output(plan: object) -> None:
         return
 
 
-def _adapter_rejects_model(agent: str, model: str) -> bool:
-    """True when the target adapter refuses this explicit model before spawn.
+def _adapter_model_rejection(agent: str, model: str) -> str | None:
+    """Return the adapter's refusal text, or None when this model is not refused.
 
     A successful probe is not a rejection. Any error other than the adapter's
     model ValueError is inconclusive: keep the explicit model instead of
@@ -10033,7 +10116,7 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
     entry = get_agent_entry(agent)
     spec = str(entry.get("adapter") or "")
     if ":" not in spec:
-        return False
+        return None
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
@@ -10049,15 +10132,150 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
         )
     except ValueError as exc:
         text = str(exc)
-        return model in text and ("rejected" in text or "unsupported" in text.lower())
+        if model in text and ("rejected" in text or "unsupported" in text.lower()):
+            return text
+        return None
     except Exception as exc:
         print(
             f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
             file=sys.stderr,
         )
-        return False
+        return None
     _discard_model_probe_output(plan)
-    return False
+    return None
+
+
+def _adapter_rejects_model(agent: str, model: str) -> bool:
+    """True when the target adapter refuses this explicit model before spawn."""
+    return _adapter_model_rejection(agent, model) is not None
+
+
+def _lane_default_model(agent: str) -> str | None:
+    """Registry default for ``agent`` — the dispatch pin, not the seat identity."""
+    from agent_runtime.telemetry import _default_model_for
+
+    return _default_model_for(agent)
+
+
+def _load_budget_substitution_table() -> dict[str, dict[str, str]]:
+    from scripts.review.model_catalog import ModelCatalogError, budget_substitution_table, load_model_catalog
+
+    try:
+        return budget_substitution_table(load_model_catalog())
+    except ModelCatalogError as exc:
+        raise BudgetGuardRefuseError(
+            f"ROUTING REFUSED: model catalog cannot resolve a substitution model: {exc}"
+        ) from exc
+
+
+def _substitution_model_admitted(agent: str, model: str) -> bool:
+    """True when ``model`` is a catalog-or-invocation model for ``agent`` and the adapter does not reject it."""
+    from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, substitution_model_admitted
+
+    try:
+        admitted = substitution_model_admitted(load_model_catalog(), agent, model)
+    except ModelCatalogError as exc:
+        raise BudgetGuardRefuseError(
+            f"ROUTING REFUSED: model catalog cannot resolve a substitution model: {exc}"
+        ) from exc
+    if not admitted:
+        return False
+    return not _adapter_rejects_model(agent, model)
+
+
+def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -> tuple[str, str]:
+    """Map ``explicit_model`` onto ``target_agent``, or use that lane's registry default.
+
+    A mapping row wins when the substitute admits the mapped model. With no
+    explicit model, or an explicit model the substitute adapter does not
+    reject, dispatch uses that lane's registry default. An explicit model
+    with no mapping row that the adapter rejects is refused before spawn:
+    the default must not hide that refusal (retired alias and budget guard).
+
+    Returns ``(model, "mapped"|"catalog-default")``. Raises BudgetGuardRefuseError
+    when the explicit model is rejected, or neither a mapped model nor the
+    default is valid for the substitute.
+    """
+    table = _load_budget_substitution_table().get(target_agent, {})
+    mapped = table.get(explicit_model) if explicit_model else None
+    default = _lane_default_model(target_agent)
+    if mapped and _substitution_model_admitted(target_agent, mapped):
+        return mapped, "mapped"
+    if explicit_model and mapped is None:
+        rejection = _adapter_model_rejection(target_agent, explicit_model)
+        if rejection:
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: substitute "
+                f"--agent {target_agent} rejects explicit --model {explicit_model} "
+                f"({rejection}). Refusing before spawn."
+            )
+    if default and _substitution_model_admitted(target_agent, default):
+        return default, "catalog-default"
+    raise BudgetGuardRefuseError(
+        "ROUTING REFUSED: no valid model for substitute "
+        f"--agent {target_agent} "
+        f"(requested --model {explicit_model or '(none)'}; "
+        f"mapped {mapped or '(none)'}; "
+        f"catalog default {default or '(none)'}). "
+        "Refusing before spawn."
+    )
+
+
+def _substitution_model_phrase(chosen: str, how: str, explicit_model: str | None) -> str:
+    if how == "mapped":
+        return f"--model {chosen} (mapped from {explicit_model})"
+    if explicit_model:
+        return f"--model {chosen} (catalog default; {explicit_model} has no mapping)"
+    return f"--model {chosen} (catalog default)"
+
+
+def _remember_agent_substitution(
+    sink: dict[str, Any] | None,
+    *,
+    source: str,
+    requested_agent: str,
+    requested_model: str | None,
+    actual_agent: str,
+    actual_model: str,
+    how: str,
+) -> None:
+    if sink is None:
+        return
+    sink["applied"] = True
+    sink["model"] = actual_model
+    sink["record"] = {
+        "kind": "agent-substitution",
+        "substituted": True,
+        "source": source,
+        "requested_agent": requested_agent,
+        "actual_agent": actual_agent,
+        "requested_model": requested_model,
+        "actual_model": actual_model,
+        "actual_model_known": True,
+        "model_resolution": how,
+    }
+
+
+def _applied_agent_substitution(resolution: dict[str, Any], dispatch_agent: str) -> dict[str, Any] | None:
+    if not resolution.get("applied"):
+        return None
+    record = resolution.get("record")
+    if not isinstance(record, dict) or record.get("actual_agent") != dispatch_agent:
+        return None
+    return record
+
+
+def _merge_agent_substitution(prior: Any, runtime: Any) -> Any:
+    """Keep a dispatch agent-substitution when later runtime attribution arrives."""
+    if not isinstance(prior, dict) or prior.get("kind") != "agent-substitution":
+        return runtime
+    if not isinstance(runtime, dict):
+        return prior
+    if runtime.get("kind") == "agent-substitution":
+        return runtime
+    merged = dict(prior)
+    merged["runtime_attribution"] = runtime
+    return merged
 
 
 def _resolve_agent_with_budget_guard(
@@ -10065,6 +10283,9 @@ def _resolve_agent_with_budget_guard(
     *,
     provider: str | None = None,
     language_lane: bool = False,
+    requested_model: str | None = None,
+    model_resolution: dict[str, Any] | None = None,
+    origin_agent: str | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -10219,14 +10440,28 @@ def _resolve_agent_with_budget_guard(
                 is_stale=is_stale,
                 records_loaded=records_loaded,
                 reset_reserve=reserve,
+                requested_model=requested_model,
+                model_resolution=model_resolution,
+                origin_agent=origin_agent or requested,
             )
+        chosen, how = _resolve_substitution_model(sub, requested_model)
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+            f"{_substitution_model_phrase(chosen, how, requested_model)} "
             f"({reason}; "
             f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks). "
             "Substitution noted for operator contract / review independence."
         )
         print(note, file=sys.stderr)
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how=how,
+        )
         if burn is not None:
             print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
         return sub
@@ -10249,10 +10484,15 @@ def _language_lane_substitute(
     is_stale: bool,
     records_loaded: int,
     reset_reserve: dict[str, Any] | None = None,
+    requested_model: str | None = None,
+    model_resolution: dict[str, Any] | None = None,
+    origin_agent: str | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
     seen = {seat}
+    current_model = requested_model
+    origin = origin_agent or requested
     while True:
         info = agents.get(seat, {}) or {}
         status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
@@ -10282,11 +10522,23 @@ def _language_lane_substitute(
                 f"Language work on --agent {requested} cannot move to "
                 f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
+        chosen, how = _resolve_substitution_model(nxt, current_model)
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
+            f"{_substitution_model_phrase(chosen, how, current_model)} "
             f"({why}; language-lane fallback stays inside claude, codex, agy).",
             file=sys.stderr,
         )
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=origin,
+            requested_model=requested_model,
+            actual_agent=nxt,
+            actual_model=chosen,
+            how=how,
+        )
+        current_model = chosen
         seen.add(nxt)
         seat = nxt
         if len(seen) > len(_LANGUAGE_LANES):
