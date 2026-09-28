@@ -8409,9 +8409,16 @@ def test_augment_prompt_test_scope_for_write_modes(mode):
     assert "never `-n auto` or `-n` above 2" in text
     assert "Run tests in the foreground and wait for them" in text
     assert "never end the turn while a test runs in the background" in text
-    assert "gh workflow run ci.yml --ref <your branch>" in text
-    assert "report the run URL instead of a local full run" in text
-    assert "e.g. a baseline capture" in text
+    assert "imports a changed shared helper" in text
+    assert "The full suite runs in the PR's CI" in text
+    assert "again in the merge queue on the merged tree" in text
+    assert "that is the proof; do not trigger extra full runs" in text
+    assert "gh workflow run ci.yml --ref <branch>" in text
+    assert "only when the brief explicitly asks for it" in text
+    assert "a branch with no PR yet, a baseline capture, or diagnosis" in text
+    assert "after pushing, trigger it" not in text
+    assert "when the brief asks for full-suite proof" not in text
+    assert "report the run URL instead of a local full run" not in text
     assert "Cite CI run ids" not in text
     preamble, _, user_prompt = text.rpartition(prompt)
     assert preamble.endswith("\n")

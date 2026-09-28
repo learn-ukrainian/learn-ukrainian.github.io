@@ -430,12 +430,14 @@ Then dispatch with a numbered brief
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
-The brief's test step names only the test files that cover the changed files; never
+The brief's test step names only the test files that cover the changed files,
+including tests of code that imports a changed shared helper; never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
-or `-n` above 2, run those tests in the foreground and wait, and when the brief asks
-for full-suite proof trigger `gh workflow run ci.yml --ref <branch>` and report the
-run URL instead of a local full run — a brief may override this explicitly (e.g. a
-baseline capture).
+or `-n` above 2, and run those tests in the foreground and wait. The full suite
+runs in the PR's CI (and again in the merge queue on the merged tree) — that is
+the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
+only when the brief explicitly asks for it (a branch with no PR yet, a baseline
+capture, or diagnosis).
 
 ### 4a. Required live-driver inbox drain — immediately before dispatch
 

@@ -6663,19 +6663,23 @@ def _augment_prompt_with_worktree(
             "This line is optional — its absence never fails the dispatch.\n"
         )
     # #9057: every worktree dispatch carries one test-scope rule. Write modes
-    # run only the tests for files they changed; review modes cite CI.
+    # run only the tests for files they changed, including importers of a
+    # changed shared helper; review modes cite CI. The PR's own CI, and the
+    # merge queue on the merged tree, are the full-suite proof — a dispatch
+    # `gh workflow run` does not satisfy the PR's required check.
     if mode in _WRITE_CAPABLE_MODES:
         test_scope = (
             "\n[test scope]\n"
-            "Run only the tests that cover the files you changed, and name those test files explicitly.\n"
+            "Run only the tests that cover the files you changed, including tests of "
+            "code that imports a changed shared helper, and name those test files explicitly.\n"
             "Never collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`); "
             "never `-n auto` or `-n` above 2.\n"
             "Run tests in the foreground and wait for them "
             "(never end the turn while a test runs in the background).\n"
-            "The full suite runs once on GitHub — after pushing, trigger it with "
-            "`gh workflow run ci.yml --ref <your branch>` when the brief asks for full-suite proof, "
-            "and report the run URL instead of a local full run.\n"
-            "A brief may override this explicitly (e.g. a baseline capture) — follow the brief then.\n"
+            "The full suite runs in the PR's CI (and again in the merge queue on the merged "
+            "tree) — that is the proof; do not trigger extra full runs. "
+            "Use `gh workflow run ci.yml --ref <branch>` only when the brief explicitly asks "
+            "for it (a branch with no PR yet, a baseline capture, or diagnosis).\n"
         )
     else:
         test_scope = (
