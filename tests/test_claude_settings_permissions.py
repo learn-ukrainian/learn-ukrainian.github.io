@@ -81,6 +81,60 @@ def test_allow_list_has_no_push_or_switch_rule() -> None:
     assert not any(p.startswith("git switch") for p in allow)
 
 
+def test_branch_sweep_and_read_only_branch_probes_are_allowed() -> None:
+    allow = _permissions()["allow"]
+    assert {
+        "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
+        "Bash(git for-each-ref *)",
+    } <= set(allow)
+    assert _decide(".venv/bin/python -m scripts.hygiene.branch_sweep --json") == "allow"
+    assert _decide("git for-each-ref refs/remotes/origin") == "allow"
+    assert not any(pattern.startswith("git push") for pattern in _bash_patterns(allow))
+
+
+@pytest.mark.parametrize("command", [
+    "git ls-remote",
+    "git ls-remote --heads origin",
+    "git ls-remote --upload-pack='sh -c id' .",
+    "git ls-remote --receive-pack='sh -c id' .",
+    "git ls-remote -u 'sh -c id' .",
+    "git -c protocol.version=2 ls-remote .",
+    "git pull --upload-pack='sh -c id' origin",
+    "git clone --upload-pack='sh -c id' . /tmp/copy",
+    "git archive --remote=. --exec='sh -c id' HEAD",
+    "git submodule update --remote",
+    "git -c protocol.ext.allow=always fetch origin",
+    "git push",
+    "git push origin HEAD:codex/x",
+])
+def test_no_allow_rule_admits_other_git_transport_or_push(command: str) -> None:
+    allow = _bash_patterns(_permissions()["allow"])
+    assert not any(_matches(pattern, command) for pattern in allow), command
+
+
+@pytest.mark.parametrize("command", [
+    "git fetch origin",
+    "git fetch -q origin main",
+    "git fetch --prune origin",
+])
+def test_routine_git_fetch_is_allowed(command: str) -> None:
+    assert _decide(command) == "allow"
+
+
+@pytest.mark.parametrize("command", [
+    "git fetch --upload-pack='touch x; git-upload-pack' origin",
+    "git fetch origin --upload-pack=x",
+    "git fetch origin --upload-pack",
+    "git fetch --upload-pack x origin",
+    # Git accepts unique long-option abbreviations, including --upl.
+    "git fetch --upl='touch x; git-upload-pack' origin",
+])
+def test_exec_capable_git_fetch_option_is_denied(command: str) -> None:
+    allow = _bash_patterns(_permissions()["allow"])
+    assert any(_matches(pattern, command) for pattern in allow), command
+    assert _decide(command) == "deny"
+
+
 def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
     allow = _permissions()["allow"]
     assert "Bash" not in allow
@@ -198,8 +252,9 @@ def test_rule_precedence(command: str, expected: str | None) -> None:
     "command",
     [
         # `git push`/`git switch` no longer match any allow rule at all
-        # (#9030 round-2) — the cases below are the only remaining real
-        # allow/deny overlaps in the settings.
+        # (#9030 round-2); fetch execution options now exercise deny precedence.
+        "git fetch --upload-pack=x origin",
+        "git fetch origin --upl=x",
         "gh pr merge 1 --admin --squash",
         "sudo systemctl link /tmp/x.service",
         "sudo systemctl --user link x",
