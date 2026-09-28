@@ -247,6 +247,19 @@ def test_transient_error_is_not_persisted_as_a_negative_cache(tmp_path, monkeypa
     assert not db_path.exists(), "transient failures must not create cache entries"
 
 
+def test_legacy_ulif_paradigm_reports_unavailable_not_no_paradigm(tmp_path, monkeypatch):
+    """A DictUA outage must not collapse into the same shape as a real miss (#9005)."""
+    db_path = tmp_path / "sources.db"
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
+
+    def offline(*args, **kwargs):
+        raise requests.ConnectionError("offline")
+
+    monkeypatch.setattr(source_query, "_get", offline)
+
+    assert source_query.ulif_paradigm("привіт") == {"status": "unavailable", "word": "привіт"}
+
+
 def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monkeypatch):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)

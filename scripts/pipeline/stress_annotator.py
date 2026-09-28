@@ -326,7 +326,7 @@ def annotate_stress(
     - Heteronyms / not-found: sentence Stressifier, then collapse duals
     - Add a focused second pass for DialogueBox uk="..." values
     """
-    from scripts.verification.stress import transfer_stress_marks
+    from scripts.verification.stress import pending_stress_reason, transfer_stress_marks
 
     skip_ranges = _build_skip_mask(text, protected_ranges)
     matches = list(_CYRILLIC_WORD_RE.finditer(text))
@@ -338,6 +338,13 @@ def annotate_stress(
             continue
         word = _APOSTROPHE_RE.sub("'", match.group(1))
         if _count_syllables(_strip_surface_stress(word)) < 2:
+            continue
+        # A pending form has no authoritative accent. Remove any old mark and
+        # keep it out of the sentence Stressifier fallback as well.
+        clean = _strip_surface_stress(word)
+        if pending_stress_reason(clean) or pending_stress_reason(clean.lower()):
+            if clean != word:
+                replacements[match.start(1)] = _restore_apostrophes(clean, match.group(1))
             continue
         chosen = _oracle_choice(word)
         if chosen is None:

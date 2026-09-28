@@ -16,6 +16,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.common.repo_root import project_interpreter
+except ImportError:
+    from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TRAIL_MCP_SERVER_NAME = "trail"
 TRAIL_TOOL_NAMES: tuple[str, ...] = ("trail_status", "trail_step", "trail_summon")
@@ -86,7 +91,7 @@ def _profile_for_agent(agent_name: str, tool_config: Mapping[str, Any]) -> str:
 
 def _write_private_mcp_config(root: Path) -> Path:
     """Write the sole admitted stdio MCP server without using ambient config."""
-    python_bin = PROJECT_ROOT / ".venv" / "bin" / "python"
+    python_bin = project_interpreter()
     mcp_server = PROJECT_ROOT / "scripts" / "orchestration" / "trails" / "trail_mcp.py"
     if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
         raise TrailIsolationError(f"trail isolation requires executable {python_bin}")
@@ -198,7 +203,7 @@ def assert_trail_isolation_config(tool_config: Mapping[str, Any], *, profile: st
         raise TrailIsolationError("trail isolation MCP configuration is invalid JSON") from exc
     servers = payload.get("mcpServers") if isinstance(payload, dict) else None
     server = servers.get(TRAIL_MCP_SERVER_NAME) if isinstance(servers, dict) else None
-    expected_python = PROJECT_ROOT / ".venv" / "bin" / "python"
+    expected_python = project_interpreter()
     expected_server = PROJECT_ROOT / "scripts" / "orchestration" / "trails" / "trail_mcp.py"
     if not isinstance(server, dict) or set(servers) != {TRAIL_MCP_SERVER_NAME}:
         raise TrailIsolationError("trail isolation MCP configuration exposes an unexpected server")

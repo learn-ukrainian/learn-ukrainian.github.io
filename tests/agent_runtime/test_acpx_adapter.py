@@ -2228,7 +2228,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
 @pytest.mark.parametrize(
     ("adapter_class", "participant", "acpx_agent", "fixed_model", "auth_env"),
     [
-        (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5", None),
+        (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
         (AcpxCursorShadowAdapter, "cursor", "cursor", None, None),
@@ -2422,7 +2422,7 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
     assert ("--max-turns", "8") in pairs
 
 
-@pytest.mark.parametrize("model", ["claude-sonnet-5", "claude-fable-5"])
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5", "claude-fable-5"])
 def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch, model):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")

@@ -1154,7 +1154,7 @@ _UNDECLARED_SUFFIX = ": undeclared unverified stress"
 def split_attested_undeclared(wrong: list[str]) -> tuple[list[str], list[str]]:
     """Alphabet slugs: (still blocking, VESUM-attested undeclared forms).
 
-    The stress dictionary lacks many inflected forms (``ньо́го``, ``Мар'я́ною``).
+    The stress dictionary lacks some inflected forms (for example, ``Мар'я́ною``).
     When VESUM resolves the form to a lemma it is a real word, not a typo, so
     it warns instead of blocking. A misspelling (``вчі́тель``) has no analysis.
     """

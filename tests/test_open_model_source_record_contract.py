@@ -10,9 +10,11 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/projects/open_model_data/validate_source_records.py"
-EXAMPLE = ROOT / "data/projects/open_model_data/contracts/source_record_v1.example.json"
+EXAMPLE = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/source_record_v1.example.json"
 OLD_CANDIDATE = ROOT / "data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl"
 SPEC = importlib.util.spec_from_file_location("source_record_contract", SCRIPT)
 CONTRACT = importlib.util.module_from_spec(SPEC)
@@ -33,9 +35,7 @@ def test_schema_and_synthetic_example_are_admitted() -> None:
     assert committed_receipt["input_kind"] == "source_record_v1"
     assert committed_receipt["admitted_records"] == 1
     assert committed_receipt["rejected_records"] == 0
-    assert committed_receipt["results"] == [
-        {"admitted": True, "record_id": "record.synthetic-001", "reasons": []}
-    ]
+    assert committed_receipt["results"] == [{"admitted": True, "record_id": "record.synthetic-001", "reasons": []}]
     record = example_record()
     assert list(Draft202012Validator(schema).iter_errors(record)) == []
     result = CONTRACT.validate_record(record, Draft202012Validator(schema), schema_hash)
@@ -59,7 +59,11 @@ def test_source_family_is_required_and_not_reconstructed_from_record_id() -> Non
 def test_fail_closed_unknown_conflicting_rejected_and_evaluation_only() -> None:
     schema, schema_hash = CONTRACT.load_schema()
     validator = Draft202012Validator(schema)
-    for status, expected in (("unknown", "license_status_unknown"), ("conflicting", "license_status_conflicting"), ("denied", "license_status_denied")):
+    for status, expected in (
+        ("unknown", "license_status_unknown"),
+        ("conflicting", "license_status_conflicting"),
+        ("denied", "license_status_denied"),
+    ):
         record = example_record()
         record["rights"]["license"]["status"] = status
         record["rights"]["license"]["license_expression"] = None
@@ -77,10 +81,15 @@ def test_granted_license_requires_exact_terms_receipt() -> None:
     validator = Draft202012Validator(schema)
     missing_expression = example_record()
     missing_expression["rights"]["license"]["license_expression"] = None
-    assert "license_expression_missing" in CONTRACT.validate_record(missing_expression, validator, schema_hash)["reasons"]
+    assert (
+        "license_expression_missing" in CONTRACT.validate_record(missing_expression, validator, schema_hash)["reasons"]
+    )
     missing_receipt = example_record()
     missing_receipt["evidence"][0]["sha256"] = None
-    assert "license_exact_terms_receipt_incomplete" in CONTRACT.validate_record(missing_receipt, validator, schema_hash)["reasons"]
+    assert (
+        "license_exact_terms_receipt_incomplete"
+        in CONTRACT.validate_record(missing_receipt, validator, schema_hash)["reasons"]
+    )
     duplicate_receipt = example_record()
     duplicate_receipt["evidence"].append(copy.deepcopy(duplicate_receipt["evidence"][0]))
     assert "duplicate_evidence_id" in CONTRACT.validate_record(duplicate_receipt, validator, schema_hash)["reasons"]
@@ -91,21 +100,24 @@ def test_provenance_urls_are_validated_without_optional_format_packages() -> Non
     validator = Draft202012Validator(schema)
     invalid_acquisition = example_record()
     invalid_acquisition["acquisition"]["source_or_catalog_url"] = "not a url"
-    assert "acquisition_source_or_catalog_url_invalid" in CONTRACT.validate_record(
-        invalid_acquisition, validator, schema_hash
-    )["reasons"]
+    assert (
+        "acquisition_source_or_catalog_url_invalid"
+        in CONTRACT.validate_record(invalid_acquisition, validator, schema_hash)["reasons"]
+    )
     invalid_evidence = example_record()
     invalid_evidence["evidence"][0]["url"] = "https://named-user@example.invalid/terms"
-    assert "evidence_url_invalid" in CONTRACT.validate_record(invalid_evidence, validator, schema_hash)[
-        "reasons"
-    ]
+    assert "evidence_url_invalid" in CONTRACT.validate_record(invalid_evidence, validator, schema_hash)["reasons"]
 
 
 def test_derived_requires_complete_lineage_and_schema_hash() -> None:
     schema, schema_hash = CONTRACT.load_schema()
     validator = Draft202012Validator(schema)
     derived = example_record()
-    derived["derivation"] = {"kind": "derived", "parent_content_sha256": "a" * 64, "transform_receipt_id": "receipt.synthetic-transform"}
+    derived["derivation"] = {
+        "kind": "derived",
+        "parent_content_sha256": "a" * 64,
+        "transform_receipt_id": "receipt.synthetic-transform",
+    }
     assert CONTRACT.validate_record(derived, validator, schema_hash)["admitted"] is True
     incomplete = copy.deepcopy(derived)
     incomplete["derivation"]["transform_receipt_id"] = None
@@ -120,19 +132,22 @@ def test_remaining_fail_closed_admission_reasons() -> None:
     validator = Draft202012Validator(schema)
     source_with_lineage = example_record()
     source_with_lineage["derivation"]["parent_content_sha256"] = "a" * 64
-    assert "source_record_has_derivation_lineage" in CONTRACT.validate_record(
-        source_with_lineage, validator, schema_hash
-    )["reasons"]
+    assert (
+        "source_record_has_derivation_lineage"
+        in CONTRACT.validate_record(source_with_lineage, validator, schema_hash)["reasons"]
+    )
     missing_evidence_reference = example_record()
     missing_evidence_reference["rights"]["copyright"]["evidence_ids"] = ["evidence.missing"]
-    assert "copyright_evidence_reference_missing" in CONTRACT.validate_record(
-        missing_evidence_reference, validator, schema_hash
-    )["reasons"]
+    assert (
+        "copyright_evidence_reference_missing"
+        in CONTRACT.validate_record(missing_evidence_reference, validator, schema_hash)["reasons"]
+    )
     missing_terms_receipt = example_record()
     missing_terms_receipt["rights"]["license"]["license_terms_evidence_id"] = "evidence.missing"
-    assert "license_exact_terms_evidence_missing" in CONTRACT.validate_record(
-        missing_terms_receipt, validator, schema_hash
-    )["reasons"]
+    assert (
+        "license_exact_terms_evidence_missing"
+        in CONTRACT.validate_record(missing_terms_receipt, validator, schema_hash)["reasons"]
+    )
     unresolved = example_record()
     unresolved["review"]["unresolved"] = True
     assert "review_unresolved" in CONTRACT.validate_record(unresolved, validator, schema_hash)["reasons"]
@@ -208,20 +223,26 @@ def test_private_permission_does_not_grant_redistribution(status, operation):
 
 
 @pytest.mark.parametrize("operation", CONTRACT.RIGHTS_BY_OPERATION)
-@pytest.mark.parametrize("mutation", [
-    lambda r: r["rights"]["model_training"].update(status="denied"),
-    lambda r: r["rights"]["model_training"].update(evidence_ids=["evidence.other-source"]),
-    lambda r: r.pop("work_id"),
-    lambda r: r.pop("source_id"),
-    lambda r: r["review"].update(unresolved=True),
-    lambda r: r["usage"].update(role="excluded"),
-])
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda r: r["rights"]["model_training"].update(status="denied"),
+        lambda r: r["rights"]["model_training"].update(evidence_ids=["evidence.other-source"]),
+        lambda r: r.pop("work_id"),
+        lambda r: r.pop("source_id"),
+        lambda r: r["review"].update(unresolved=True),
+        lambda r: r["usage"].update(role="excluded"),
+    ],
+)
 def test_operations_preserve_permission_provenance_and_clearance_gates(operation, mutation):
     schema, schema_hash = CONTRACT.load_schema()
     record = example_record()
     mutation(record)
     assert not CONTRACT.validate_record(
-        record, Draft202012Validator(schema), schema_hash, operation=operation,
+        record,
+        Draft202012Validator(schema),
+        schema_hash,
+        operation=operation,
     )["admitted"]
 
 

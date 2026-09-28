@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import json
 import re
 import sqlite3
@@ -44,8 +45,52 @@ from scripts.projects.open_model_data.decolonization_language_reviews import (
     INDEPENDENT_LANGUAGE_REVIEWS,
     compute_case_content_sha256,
 )
-from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR, REGISTRY_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import write_artifact_set
+
+_COMPONENT_GROUP = "open_model_component_payload"
+_DECOLONIZATION_REL = "projects/open_model_data/components/decolonization"
+
+
+def _managed_decolonization_destination(output_dir: Path) -> bool:
+    data = REPO_ROOT / "data" / _DECOLONIZATION_REL
+    registry = REPO_ROOT / "registry" / _DECOLONIZATION_REL
+    lexical = output_dir.absolute()
+    resolved = output_dir.resolve()
+    if lexical != resolved and (lexical in {data, registry} or resolved in {data, registry}):
+        raise ValueError(f"managed decolonization output reached through a symlink: {output_dir}")
+    if lexical in {data, registry}:
+        return True
+    if lexical.is_relative_to(REPO_ROOT / "data/projects/open_model_data") or lexical.is_relative_to(
+        REPO_ROOT / "registry/projects/open_model_data"
+    ):
+        raise ValueError(f"unsupported managed decolonization output directory: {output_dir}")
+    return False
+
+
+def _publish_decolonization_outputs(payloads: dict[str, bytes], companions: dict[str, bytes]) -> None:
+    manifest = storage_paths.load_manifest(_COMPONENT_GROUP, REPO_ROOT)
+    prior = {entry["path"][5:]: entry["sha256"] for entry in manifest["entries"]}
+    prefix = f"{_DECOLONIZATION_REL}/"
+    write_artifact_set(
+        REPO_ROOT,
+        _COMPONENT_GROUP,
+        "build_decolonization_cases.py",
+        {prefix + name: (lambda target, data=data: target.write_bytes(data)) for name, data in payloads.items()},
+        expected_hashes={prefix + name: prior.get(prefix + name) for name in payloads},
+        expected_members=set(prior),
+        companions={
+            f"registry/{prefix}{name}": (
+                storage_paths.hash_file(REPO_ROOT / f"registry/{prefix}{name}")
+                if (REPO_ROOT / f"registry/{prefix}{name}").exists()
+                else None,
+                lambda target, data=data: target.write_bytes(data),
+            )
+            for name, data in companions.items()
+        },
+    )
 
 
 @dataclass
@@ -65,10 +110,34 @@ class DecolonizationCase:
 
 UA_GEC_RECORD_MAP: dict[str, dict[str, Any]] = {
     "decol_lex_012": {"id": 5921, "error": "гусь", "correct": "гусак", "error_type": "F/Calque", "doc_id": "1068"},
-    "decol_lex_014": {"id": 6593, "error": "буфетчик", "correct": "буфетник", "error_type": "F/Calque", "doc_id": "1315"},
-    "decol_lex_017": {"id": 6687, "error": "відправитися", "correct": "вирушити", "error_type": "F/Calque", "doc_id": "1345"},
-    "decol_lex_028": {"id": 5134, "error": "бормотати", "correct": "бурмотіти", "error_type": "F/Calque", "doc_id": "0736"},
-    "decol_syn_029": {"id": 3127, "error": "дозволяє", "correct": "дає змогу", "error_type": "F/Calque", "doc_id": "0029"},
+    "decol_lex_014": {
+        "id": 6593,
+        "error": "буфетчик",
+        "correct": "буфетник",
+        "error_type": "F/Calque",
+        "doc_id": "1315",
+    },
+    "decol_lex_017": {
+        "id": 6687,
+        "error": "відправитися",
+        "correct": "вирушити",
+        "error_type": "F/Calque",
+        "doc_id": "1345",
+    },
+    "decol_lex_028": {
+        "id": 5134,
+        "error": "бормотати",
+        "correct": "бурмотіти",
+        "error_type": "F/Calque",
+        "doc_id": "0736",
+    },
+    "decol_syn_029": {
+        "id": 3127,
+        "error": "дозволяє",
+        "correct": "дає змогу",
+        "error_type": "F/Calque",
+        "doc_id": "0029",
+    },
 }
 
 ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
@@ -97,9 +166,38 @@ ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
 
 
 STOP_WORDS = {
-    "в", "у", "на", "по", "до", "за", "з", "із", "зі", "та", "і", "й", "чи",
-    "що", "як", "не", "б", "би", "ж", "же", "про", "від", "од", "при", "під",
-    "над", "перед", "для", "без", "через", "після", "біля",
+    "в",
+    "у",
+    "на",
+    "по",
+    "до",
+    "за",
+    "з",
+    "із",
+    "зі",
+    "та",
+    "і",
+    "й",
+    "чи",
+    "що",
+    "як",
+    "не",
+    "б",
+    "би",
+    "ж",
+    "же",
+    "про",
+    "від",
+    "од",
+    "при",
+    "під",
+    "над",
+    "перед",
+    "для",
+    "без",
+    "через",
+    "після",
+    "біля",
 }
 
 
@@ -115,9 +213,7 @@ def get_vesum_lemmas(word: str, v_cur: sqlite3.Cursor) -> set[str]:
     return {r[0] for r in rows}
 
 
-def query_vesum_evidence(
-    term: str, proper_list: list[str], v_cur: sqlite3.Cursor
-) -> dict[str, Any]:
+def query_vesum_evidence(term: str, proper_list: list[str], v_cur: sqlite3.Cursor) -> dict[str, Any]:
     """Query authentic morphological and lemma facts directly from VESUM.
 
     Fails closed: requires EVERY constituent token of at least one candidate
@@ -138,21 +234,25 @@ def query_vesum_evidence(
                 (t, t),
             ).fetchone()
             if row:
-                attested_details.append({
-                    "token": t,
-                    "lemma": row[0],
-                    "pos": row[1],
-                    "tags": row[2],
-                    "entry_id": row[3],
-                })
+                attested_details.append(
+                    {
+                        "token": t,
+                        "lemma": row[0],
+                        "pos": row[1],
+                        "tags": row[2],
+                        "entry_id": row[3],
+                    }
+                )
             elif t in STOP_WORDS:
-                attested_details.append({
-                    "token": t,
-                    "lemma": t,
-                    "pos": "functional",
-                    "tags": "functional_word",
-                    "entry_id": "functional_lexicon",
-                })
+                attested_details.append(
+                    {
+                        "token": t,
+                        "lemma": t,
+                        "pos": "functional",
+                        "tags": "functional_word",
+                        "entry_id": "functional_lexicon",
+                    }
+                )
             else:
                 all_attested = False
                 break
@@ -481,7 +581,9 @@ def query_source_evidence(
 
         # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
-            dictua_keys = list(dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else [])))
+            dictua_keys = list(
+                dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else []))
+            )
             for k in dictua_keys:
                 try:
                     s_cur.execute(
@@ -557,11 +659,7 @@ def query_source_evidence(
 
         # For multi-word phrase cases, the record MUST substantiate the phrase itself
         if is_phrase:
-            phrase_attested = (
-                t_clean in text_low
-                or t_clean in text_clean
-                or t_clean in head_low
-            )
+            phrase_attested = t_clean in text_low or t_clean in text_clean or t_clean in head_low
             if not phrase_attested:
                 raise ValueError(
                     f"Retrieved lexical record {rec_id_val} ('{rec_head}') does not substantiate claimed phrase '{term}' (matching headword lacks the phrase)"
@@ -776,7 +874,15 @@ def make_reviewer_confirmation(
         raise ValueError(f"Case '{case_id}' missing review_dossier_locator in language review record")
 
     # Resolve dossier file on disk
-    dossier_path = PROJECT_ROOT / locator
+    logical_prefix = Path("data/projects/open_model_data/components/decolonization")
+    logical_locator = Path(locator)
+    if (
+        logical_locator.is_absolute()
+        or ".." in logical_locator.parts
+        or not logical_locator.is_relative_to(logical_prefix)
+    ):
+        raise ValueError(f"Invalid review dossier locator for case '{case_id}': {locator}")
+    dossier_path = REGISTRY_DECOLONIZATION_DIR / logical_locator.relative_to(logical_prefix)
     if not dossier_path.is_file():
         raise ValueError(
             f"Review dossier file not found at '{dossier_path}' for case '{case_id}'. Unverified review receipt."
@@ -806,12 +912,10 @@ def make_reviewer_confirmation(
 
     accredited_info = ACCREDITED_INDEPENDENT_REVIEWERS[reviewer_id]
     if reviewer_family != accredited_info["reviewer_family"]:
-        raise ValueError(
-            f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'"
-        )
+        raise ValueError(f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'")
 
     # Validate against signed human acceptance review signoff (Fail closed on unapproved / defective / incomplete signoff)
-    signoff_path = PROJECT_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    signoff_path = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     if not signoff_path.is_file():
         raise ValueError(f"Missing acceptance review signoff file at '{signoff_path}'")
     try:
@@ -849,54 +953,38 @@ def make_reviewer_confirmation(
     # Zero BLOCKER defects tolerated
     blockers = signoff_data.get("blocker_defect_count")
     if type(blockers) is not int or isinstance(blockers, bool) or blockers != 0:
-        raise ValueError(
-            f"Signoff contains {blockers!r} unresolved BLOCKER defect(s). Approval requires 0 blockers."
-        )
+        raise ValueError(f"Signoff contains {blockers!r} unresolved BLOCKER defect(s). Approval requires 0 blockers.")
 
     # Minor defect cap
     minors = signoff_data.get("minor_defect_count")
     if type(minors) is not int or isinstance(minors, bool) or minors < 0 or minors > 5:
-        raise ValueError(
-            f"Signoff minor_defect_count ({minors!r}) exceeds allowable tolerance limit (<= 5)."
-        )
+        raise ValueError(f"Signoff minor_defect_count ({minors!r}) exceeds allowable tolerance limit (<= 5).")
 
     # Digest and date binding
     d_sha = str(signoff_data.get("dataset_sha256") or "").strip()
     if len(d_sha) != 64 or not all(c in "0123456789abcdefABCDEF" for c in d_sha):
-        raise ValueError(
-            f"Signoff dataset_sha256 '{d_sha}' is missing or not a valid 64-character hex digest"
-        )
+        raise ValueError(f"Signoff dataset_sha256 '{d_sha}' is missing or not a valid 64-character hex digest")
 
     p_sha = str(signoff_data.get("profile_sha256") or "").strip()
     if len(p_sha) != 64 or not all(c in "0123456789abcdefABCDEF" for c in p_sha):
-        raise ValueError(
-            f"Signoff profile_sha256 '{p_sha}' is missing or not a valid 64-character hex digest"
-        )
+        raise ValueError(f"Signoff profile_sha256 '{p_sha}' is missing or not a valid 64-character hex digest")
 
     s_date = str(signoff_data.get("signoff_date") or "").strip()
     if not s_date or not re.match(r"^\d{4}-\d{2}-\d{2}$", s_date):
-        raise ValueError(
-            f"Signoff signoff_date '{s_date}' is missing or invalid date format (expected YYYY-MM-DD)"
-        )
+        raise ValueError(f"Signoff signoff_date '{s_date}' is missing or invalid date format (expected YYYY-MM-DD)")
     try:
         datetime.date.fromisoformat(s_date)
     except ValueError as exc:
-        raise ValueError(
-            f"Signoff signoff_date '{s_date}' is not a valid calendar date: {exc}"
-        ) from exc
+        raise ValueError(f"Signoff signoff_date '{s_date}' is not a valid calendar date: {exc}") from exc
 
     if dossier.get("review_receipt_id") != receipt_id:
         raise ValueError(
             f"Dossier receipt ID '{dossier.get('review_receipt_id')}' mismatch with registry receipt ID '{receipt_id}'"
         )
     if dossier.get("reviewer_id") != reviewer_id or dossier.get("reviewer_id") not in ACCREDITED_INDEPENDENT_REVIEWERS:
-        raise ValueError(
-            f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch or not accredited"
-        )
+        raise ValueError(f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch or not accredited")
     if dossier.get("reviewer_family") != reviewer_family:
-        raise ValueError(
-            f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not '{reviewer_family}'"
-        )
+        raise ValueError(f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not '{reviewer_family}'")
     if dossier.get("verdict") != "APPROVED" or dossier.get("status") != "confirmed":
         raise ValueError(
             f"Dossier status/verdict ({dossier.get('status')}/{dossier.get('verdict')}) is not confirmed/APPROVED"
@@ -1016,9 +1104,7 @@ def build_all_cases() -> list[DecolonizationCase]:
     if ulif_path.is_file():
         s_cur.execute(f"ATTACH DATABASE 'file:{ulif_path}?mode=ro' AS ulif_all")
 
-    style_guide_cache = s_cur.execute(
-        "SELECT id, word, section, page, text, excerpt_full FROM style_guide"
-    ).fetchall()
+    style_guide_cache = s_cur.execute("SELECT id, word, section, page, text, excerpt_full FROM style_guide").fetchall()
 
     cases: list[DecolonizationCase] = []
 
@@ -1105,15 +1191,36 @@ def generate_dataset_records(cases: list[DecolonizationCase]) -> tuple[list[dict
     return train_records, eval_records
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Build Decolonization Dataset (#8340)")
-    parser.add_argument("--output-dir", type=Path, default=DECOLONIZATION_DIR, help="Target component directory")
-    parser.add_argument("--check", "--dry-run", dest="check", action="store_true", help="Validate dataset generation in memory without writing to disk")
-    args = parser.parse_args()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Build and validate the decolonization dataset. Use --check to validate without publication.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir /tmp/decolonization-export\n"
+            "Outputs: managed A payloads and K companions as one transaction, or an explicit external directory.\n"
+            "Exit codes: 0 = success; nonzero = validation or publication failed.\n"
+            "Related: issues #8340 and #8809."
+        ),
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=ARTIFACT_DECOLONIZATION_DIR,
+        help="Target component directory (default: managed decolonization component).",
+    )
+    parser.add_argument(
+        "--check",
+        "--dry-run",
+        dest="check",
+        action="store_true",
+        help="Validate dataset generation in memory without writing to disk",
+    )
+    args = parser.parse_args(argv)
 
     out_dir = args.output_dir
-    if not args.check:
-        out_dir.mkdir(parents=True, exist_ok=True)
+    managed = _managed_decolonization_destination(out_dir) if not args.check else False
 
     print(f"Building decolonization dataset at {out_dir}...")
     cases = build_all_cases()
@@ -1127,30 +1234,22 @@ def main() -> int:
         print("Dry-run/check validation passed: all 250 cases and 500 records verified successfully in memory.")
         return 0
 
-    # 1. Write cases.json catalog
+    # Prepare all outputs before any managed pathname can change.
     cases_file = out_dir / "cases.json"
-    with cases_file.open("w", encoding="utf-8") as f:
-        json.dump([asdict(c) for c in cases], f, ensure_ascii=False, indent=2)
-        f.write("\n")
-    print(f"Wrote cases catalog: {cases_file}")
+    cases_bytes = (json.dumps([asdict(c) for c in cases], ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
-    # 2. Write train JSONL
     train_file = out_dir / "decolonization_train.jsonl"
-    with train_file.open("w", encoding="utf-8") as f:
-        for r in train_recs:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"Wrote train set: {train_file} ({len(train_recs)} records)")
+    train_bytes = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in train_recs).encode("utf-8")
 
-    # 3. Write eval JSONL
     eval_file = out_dir / "decolonization_eval.jsonl"
-    with eval_file.open("w", encoding="utf-8") as f:
-        for r in eval_recs:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"Wrote eval set: {eval_file} ({len(eval_recs)} records)")
+    eval_bytes = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in eval_recs).encode("utf-8")
 
-    # 4. Write manifest.json
     manifest = {
         "dataset_name": "decolonization_v1",
+        "payload_sha256": {
+            "decolonization_train.jsonl": hashlib.sha256(train_bytes).hexdigest(),
+            "decolonization_eval.jsonl": hashlib.sha256(eval_bytes).hexdigest(),
+        },
         "version": "1.0.0",
         "task_type": "correction",
         "has_evaluation_split": True,
@@ -1170,7 +1269,21 @@ def main() -> int:
         },
     }
     manifest_file = out_dir / "manifest.json"
-    manifest_file.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    manifest_bytes = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    if managed:
+        _publish_decolonization_outputs(
+            {"decolonization_train.jsonl": train_bytes, "decolonization_eval.jsonl": eval_bytes},
+            {"cases.json": cases_bytes, "manifest.json": manifest_bytes},
+        )
+    else:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        cases_file.write_bytes(cases_bytes)
+        train_file.write_bytes(train_bytes)
+        eval_file.write_bytes(eval_bytes)
+        manifest_file.write_bytes(manifest_bytes)
+    print(f"Wrote cases catalog: {cases_file}")
+    print(f"Wrote train set: {train_file} ({len(train_recs)} records)")
+    print(f"Wrote eval set: {eval_file} ({len(eval_recs)} records)")
     print(f"Wrote manifest: {manifest_file}")
 
     return 0

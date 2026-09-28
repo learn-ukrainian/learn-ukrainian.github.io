@@ -1,0 +1,54 @@
+# Culture-of-Speech error-editing pairs withheld after language review (#8723).
+#
+# The extractor (scripts/practice/extract_textbook_error_corrections.py) drops every
+# pair listed here, keyed by its text (error + correct, case-insensitive) so the
+# withhold survives regeneration and renumbering; the practice quality gate fails if
+# a listed pair reappears in the deck. The `id` is the drill id the review saw.
+#
+# Codes: WRONG_ERROR (the "error" is normative), WRONG_FIX (the correction is not
+# normative), CONTESTED (sources disagree; not taught as an error).
+withheld:
+  - error: пригадувати особливості
+    correct: пам’ятати особливості
+    code: WRONG_ERROR
+    reason: «Пригадувати особливості» is normative.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0013
+  - error: є в продажі
+    correct: є в продажу (поступила в продаж)
+    code: WRONG_FIX
+    reason: >-
+      The correction contains «поступила в продаж» (non-normative; «надійшла в продаж»)
+      and a parenthetical variant that is not parallel to the main form.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0016
+  - error: дотримувати правил
+    correct: дотримуватися правил
+    code: WRONG_ERROR
+    reason: «Дотримувати правил» and «дотримуватися правил» are both normative.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0127
+  - error: деякі навчаються
+    correct: дехто (з нас) навчаються
+    code: WRONG_FIX
+    reason: «Дехто» requires the singular «навчається»; «дехто (з нас) навчаються» is ungrammatical.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0170
+  - error: відпочивати на морі
+    correct: відпочивати біля моря
+    code: CONTESTED
+    reason: «Відпочивати на морі» is normative (Пономарів, Городенська); not taught as an error.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0248
+  - error: сподіватися кращого
+    correct: сподіватися на краще
+    code: WRONG_ERROR
+    reason: «Сподіватися кращого» is normative.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0408
+  - error: оволодівати знання
+    correct: оволодівати знаннями
+    code: CONTESTED
+    reason: «Оволодівати знаннями» vs «опановувати (знання)» is contested; not taught as an error.
+    reviewer: gemini-3.8-flash-high (review-8723-lang)
+    id: err_0409

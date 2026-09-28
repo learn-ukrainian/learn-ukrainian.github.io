@@ -270,6 +270,8 @@ def _main_checkout_root(repo_root: Path) -> Path:
 
 
 def _python_executable(repo_root: Path) -> Path:
+    # Intentional: main checkout first, then this repo's path even if missing,
+    # so the caller can report it. Not project_interpreter()'s FileNotFoundError.
     main_checkout = _main_checkout_root(repo_root)
     main_python = main_checkout / ".venv" / "bin" / "python"
     if main_python.exists():

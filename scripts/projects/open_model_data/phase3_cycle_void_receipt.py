@@ -23,7 +23,7 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
 CYCLE_ID = "phase3-v2-1-evaluation-cycle-001"
 EXPECTED_INDICES = tuple((*range(1, 21), 24, 45, 776))
 EXPECTED_AUTHOR_PACKET_COUNT = 918
@@ -99,9 +99,7 @@ def _read_json(root: Path, path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def _assert_exact_directory(
-    root: Path, directory: Path, expected_names: set[str], label: str
-) -> None:
+def _assert_exact_directory(root: Path, directory: Path, expected_names: set[str], label: str) -> None:
     _reject_symlink_components(root, directory, label)
     require(directory.is_dir() and not directory.is_symlink(), f"{label} is not a directory")
     require(stat.S_IMODE(directory.stat().st_mode) == 0o700, f"{label} mode must be 0700")
@@ -115,11 +113,18 @@ def _manifest(root: Path) -> dict[str, Any]:
     path = root / "manifest.json"
     manifest = _read_json(root, path, "manifest")
     require(manifest.get("schema_version") == "phase3_source_production_manifest_v1", "manifest schema drift")
-    require(manifest.get("manifest_sha256") == sha256_value({key: value for key, value in manifest.items() if key != "manifest_sha256"}), "manifest self-hash drift")
+    require(
+        manifest.get("manifest_sha256")
+        == sha256_value({key: value for key, value in manifest.items() if key != "manifest_sha256"}),
+        "manifest self-hash drift",
+    )
     bindings = manifest.get("bindings")
     denominator = manifest.get("denominator")
     require(isinstance(bindings, Mapping) and bindings.get("evaluation_cycle_id") == CYCLE_ID, "manifest cycle drift")
-    require(isinstance(denominator, Mapping) and denominator.get("heldout_labels") == EXPECTED_HELDOUT_LABELS, "manifest heldout-label denominator drift")
+    require(
+        isinstance(denominator, Mapping) and denominator.get("heldout_labels") == EXPECTED_HELDOUT_LABELS,
+        "manifest heldout-label denominator drift",
+    )
     entries = manifest.get("author_packets")
     require(
         isinstance(entries, list)
@@ -128,7 +133,10 @@ def _manifest(root: Path) -> dict[str, Any]:
         "author packet count drift",
     )
     expected_indices = list(range(1, EXPECTED_AUTHOR_PACKET_COUNT + 1))
-    require([entry.get("packet_index") if isinstance(entry, Mapping) else None for entry in entries] == expected_indices, "manifest packet index order drift")
+    require(
+        [entry.get("packet_index") if isinstance(entry, Mapping) else None for entry in entries] == expected_indices,
+        "manifest packet index order drift",
+    )
     require(all(isinstance(entry, Mapping) for entry in entries), "manifest packet entries drift")
     return manifest
 
@@ -160,9 +168,7 @@ def _verify_author_tree(root: Path, manifest: Mapping[str, Any]) -> None:
     _assert_exact_directory(root, author / "incoming", expected_raw, "author incoming")
     _assert_exact_directory(root, author / "invocations", expected_json, "author invocations")
     _assert_exact_directory(root, author / "responses", expected_json, "author responses")
-    expected_logs = {
-        f"{index:05d}.{suffix}" for index in EXPECTED_INDICES for suffix in ("stdout", "stderr")
-    }
+    expected_logs = {f"{index:05d}.{suffix}" for index in EXPECTED_INDICES for suffix in ("stdout", "stderr")}
     _assert_exact_directory(root, author / "provider-logs", expected_logs, "author provider logs")
     packets = author / "packets"
     _reject_symlink_components(root, packets, "author packets")

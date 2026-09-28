@@ -308,6 +308,7 @@ def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp
                 "primary_used_pct": 70.0,
                 "weekly_used_pct": 80.0,
                 "weekly_pace_delta_pct": 10.0,
+                "weekly_expected_pct": 70.0,
                 "will_last_to_reset": False,
                 "windows": {"primary": {"remaining_pct": 20.0, "window_minutes": 300}},
                 "stale": False,

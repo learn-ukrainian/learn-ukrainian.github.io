@@ -12,9 +12,10 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_live_ingest_gate as live_gate
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_live_ingest_gate_v1.json"
+GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_live_ingest_gate_v1.json"
 
 
 def _gate() -> dict:
@@ -23,9 +24,7 @@ def _gate() -> dict:
 
 def _reseal(gate: dict) -> dict:
     body = {key: value for key, value in gate.items() if key != "receipt_sha256"}
-    gate["receipt_sha256"] = hashlib.sha256(
-        (live_gate.canonical_json(body) + "\n").encode("utf-8")
-    ).hexdigest()
+    gate["receipt_sha256"] = hashlib.sha256((live_gate.canonical_json(body) + "\n").encode("utf-8")).hexdigest()
     return gate
 
 
@@ -80,6 +79,15 @@ def _fixture_gate(path: Path, counts: dict) -> dict:
             "journal_mode": "wal",
         }
     }
+
+
+def test_load_gate_opens_default_path():
+    document, gate_sha256 = live_gate.load_gate()
+
+    assert live_gate.DEFAULT_GATE_PATH == GATE_PATH
+    assert live_gate.DEFAULT_GATE_PATH.is_file()
+    assert gate_sha256 == live_gate.EXPECTED_GATE_SHA256
+    assert document["requested_sources"] == list(live_gate.REQUESTED_SOURCES)
 
 
 def test_tracked_gate_is_exact_and_single_use():

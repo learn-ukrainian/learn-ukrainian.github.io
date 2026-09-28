@@ -27,12 +27,13 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.projects.open_model_data import model_view_exporter as exporter
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 INPUT_SCHEMA = CONTRACTS / "portable_corpus_record_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "foundry_run_receipt_v1.schema.json"
-DETECTOR_CONFIG = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
+DETECTOR_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "detector/language_contact_config_v1.json"
 DEFAULT_V011_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 DEFAULT_V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
 TOOL_VERSION = "1.0.0"
@@ -386,12 +387,7 @@ def _learning_allowed(record: Mapping[str, Any], contaminated: bool) -> bool:
 
 def _mask_spans(evidence: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     maskable = [item for item in evidence if item["route"] in {"candidate_error", "unresolved"}]
-    spans = sorted(
-        {
-            (int(item["start_char"]), int(item["end_char"]), str(item["track"]))
-            for item in maskable
-        }
-    )
+    spans = sorted({(int(item["start_char"]), int(item["end_char"]), str(item["track"])) for item in maskable})
     return [{"start_char": start, "end_char": end, "reason": track} for start, end, track in spans]
 
 
@@ -892,7 +888,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ukrainian-data-foundry", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     prepare_parser = subparsers.add_parser("prepare", help="prepare deterministic model-ready views")
-    prepare_parser.add_argument("--input", type=Path, required=True, help="consumer-owned portable_corpus_record_v1 JSONL")
+    prepare_parser.add_argument(
+        "--input", type=Path, required=True, help="consumer-owned portable_corpus_record_v1 JSONL"
+    )
     prepare_parser.add_argument("--output-dir", type=Path, required=True)
     prepare_parser.add_argument("--max-records", type=int, default=10_000)
     prepare_parser.add_argument("--evaluation-artifact", type=Path, action="append", default=[])

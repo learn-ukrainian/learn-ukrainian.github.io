@@ -49,6 +49,7 @@ if _LOCAL_REPO_ROOT not in sys.path:
 
 try:
     from scripts import context_canary
+    from scripts.common.repo_root import project_interpreter
     from scripts.orchestration import task_identity, thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
@@ -71,6 +72,7 @@ except ImportError as exc:
     import context_canary
     import task_identity
     import thread_handoff_canary
+    from common.repo_root import project_interpreter
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
     from orchestration.task_family import rollover_registry as task_family_rollover_registry
@@ -2777,7 +2779,7 @@ def request_claudex_rollover(
     supervisor_script = Path(__file__).with_name("claudex_supervisor.py")
     result = run_command(
         [
-            os.fspath(repo_root / ".venv/bin/python"),
+            os.fspath(project_interpreter(repo_root)),
             os.fspath(supervisor_script),
             "request-rollover",
             "--state-root",

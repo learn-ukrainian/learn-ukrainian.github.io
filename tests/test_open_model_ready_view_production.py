@@ -50,9 +50,7 @@ def continued_pretraining_row(text: str, *, representation: str) -> dict[str, An
         "payload": {
             "text": text,
             "text_sha256": text_sha256,
-            "character_mask_spans": [
-                {"start_char": 0, "end_char": len("Українська"), "reason": "context_uncertain"}
-            ],
+            "character_mask_spans": [{"start_char": 0, "end_char": len("Українська"), "reason": "context_uncertain"}],
         },
         "permitted_destination": "continued_pretraining",
         "denied_destinations": [
@@ -248,6 +246,92 @@ def test_blocked_silver_lane_is_empty_without_human_dependency() -> None:
     }
 
 
+def test_cli_defaults_open_registry_receipts(tmp_path: Path) -> None:
+    missing = tmp_path / "missing"
+    prepare_args = production.build_parser().parse_args(
+        [
+            "prepare-payloads",
+            "--source-records",
+            str(missing),
+            "--sources-db",
+            str(missing),
+            "--detector-candidates",
+            str(missing),
+            "--silver-records",
+            str(missing),
+            "--output",
+            str(tmp_path / "payloads.jsonl"),
+            "--receipt-output",
+            str(tmp_path / "payload-receipt.json"),
+        ]
+    )
+    assemble_args = production.build_parser().parse_args(
+        [
+            "assemble-production-receipt",
+            "--source-records",
+            str(missing),
+            "--detector-candidates",
+            str(missing),
+            "--silver-records",
+            str(missing),
+            "--payload",
+            str(missing),
+            "--payload-receipt",
+            str(missing),
+            "--faithful-view",
+            str(missing),
+            "--faithful-view-receipt",
+            str(missing),
+            "--modern-view",
+            str(missing),
+            "--modern-view-receipt",
+            str(missing),
+            "--heldout-view",
+            str(missing),
+            "--heldout-view-receipt",
+            str(missing),
+            "--tokenizer-diagnostics",
+            str(missing),
+            "--faithful-recipe",
+            str(missing),
+            "--modern-recipe",
+            str(missing),
+            "--output",
+            str(tmp_path / "production.json"),
+        ]
+    )
+    defaults = (
+        production.DEFAULT_DETECTOR_RECEIPT,
+        production.DEFAULT_SILVER_RECEIPT,
+        production.DEFAULT_ADMISSION_RECEIPT,
+        production.DEFAULT_OPERATOR_PACKET,
+    )
+    for args in (prepare_args, assemble_args):
+        assert (
+            args.detector_receipt,
+            args.silver_receipt,
+            args.admission_receipt,
+            args.operator_packet,
+        ) == defaults
+    for path in defaults:
+        assert path.is_file()
+        assert "registry/projects/open_model_data" in path.as_posix()
+        production.read_json(path)
+    with pytest.raises(production.ProductionError, match="detector candidate artifact is missing"):
+        production.prepare_payloads(
+            source_records_path=prepare_args.source_records,
+            sources_db=prepare_args.sources_db,
+            detector_candidates_path=prepare_args.detector_candidates,
+            silver_records_path=prepare_args.silver_records,
+            output=prepare_args.output,
+            receipt_output=prepare_args.receipt_output,
+            detector_receipt_path=prepare_args.detector_receipt,
+            silver_receipt_path=prepare_args.silver_receipt,
+            admission_receipt_path=prepare_args.admission_receipt,
+            operator_packet_path=prepare_args.operator_packet,
+        )
+
+
 def test_word_regex_keeps_ukrainian_apostrophe_forms() -> None:
     assert [item.group(0) for item in re.finditer(production.WORD_RE, "п'ять п’ять пʼять")] == [
         "п'ять",
@@ -375,9 +459,7 @@ def test_tokenizer_diagnostics_runs_real_entry_point(
     monkeypatch.setattr(
         production,
         "verify_words",
-        lambda words, *, db_path: {
-            word: [{"lemma": word, "pos": "noun", "tags": ""}] for word in words
-        },
+        lambda words, *, db_path: {word: [{"lemma": word, "pos": "noun", "tags": ""}] for word in words},
     )
 
     receipt = production.tokenizer_diagnostics(
@@ -408,10 +490,7 @@ def test_assemble_production_receipt_uses_payload_scoped_protection_counts(
     }
     for path in paths.values():
         path.write_text("{}\n", encoding="utf-8")
-    artifacts = {
-        name: artifact(path, 30 if name == "silver" else 1)
-        for name, path in paths.items()
-    }
+    artifacts = {name: artifact(path, 30 if name == "silver" else 1) for name, path in paths.items()}
 
     receipt_paths = {
         name: tmp_path / f"{name}-receipt.json"

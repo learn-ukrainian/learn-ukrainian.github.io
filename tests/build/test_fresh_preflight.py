@@ -354,7 +354,12 @@ def test_preflight_paradigm_need(clean_word_store, clean_pack):
     }
     res_pending = preflight_lesson(plan_entry, pack=clean_pack, word_store=pending_store)
     assert res_pending.passed is False
-    assert any(g.need == "word_form" and "pending stress" in g.detail for g in res_pending.gaps)
+    assert any(
+        g.need == "cited_form_stress_pending"
+        and "word_store:" in g.detail
+        and "'слово' (noun:inanim:n:v_naz)" in g.detail
+        for g in res_pending.gaps
+    )
 
 
 def test_preflight_cited_forms_pending_stress(clean_pack):
@@ -368,10 +373,15 @@ def test_preflight_cited_forms_pending_stress(clean_pack):
                     {
                         "form": "тест",
                         "tags": "noun:inanim:m:v_naz",
-                        "stressed": None,
                         "stress_source": "pending",
                         "learner": True,
-                    }
+                    },
+                    {
+                        "form": "теста",
+                        "tags": "noun:inanim:m:v_rod",
+                        "stress_source": "pending",
+                        "learner": True,
+                    },
                 ],
             }
         ]
@@ -379,12 +389,15 @@ def test_preflight_cited_forms_pending_stress(clean_pack):
     plan_entry = {
         "steps": [{"id": "s1"}],
         "inventory": {
-            "vocabulary": {"core": [{"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz"]}]}
+            "vocabulary": {"core": [{"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz", "noun:inanim:m:v_rod"]}]}
         },
     }
     res = preflight_lesson(plan_entry, pack=clean_pack, word_store=store_pending)
     assert res.passed is False
-    assert any(g.need == "word_form" and "pending stress" in g.detail for g in res.gaps)
+    assert [g.need for g in res.gaps] == ["cited_form_stress_pending"] * 2
+    assert all(g.detail.startswith("word_store: cited form") for g in res.gaps)
+    assert "'тест' (noun:inanim:m:v_naz)" in res.gaps[0].detail
+    assert "'теста' (noun:inanim:m:v_rod)" in res.gaps[1].detail
 
 
 def test_homograph_list_restricted_to_lesson_words(clean_pack):

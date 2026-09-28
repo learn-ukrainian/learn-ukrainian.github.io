@@ -11,6 +11,7 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as em
 from scripts.lexicon.runner.contracts import ChunkSpec, ChunkState, ErrorCode, OomSplitChildren
+from scripts.lexicon.runner.generate_pr1_fixture import load_slovnyk_cache
 from scripts.lexicon.runner.memory import (
     require_hard_cap_protection,
     run_startup_self_test,
@@ -39,6 +40,8 @@ from scripts.lexicon.runner.stream_manifest import (
     stream_manifest_entries_json,
 )
 from scripts.lexicon.runner.worker import run_capped_worker
+from tests.helpers.lexicon_runner_fixtures import lexicon_slovnyk_offline as lexicon_slovnyk_offline
+from tests.helpers.lexicon_runner_fixtures import sources_slice
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "lexicon" / "runner_pr1"
 
@@ -57,31 +60,12 @@ def test_kaikki_side_db_refuses_unreadable_or_malformed_input(tmp_path: Path, co
     assert output.read_bytes() == b"previous output"
 
 
-def _ensure_fixture() -> None:
-    needed = (
-        FIXTURE / "baseline.sha256",
-        FIXTURE / "baseline_enriched.json",
-        FIXTURE / "sources_slice.sqlite",
-        FIXTURE / "slice_input.json",
-        FIXTURE / "grac_frequency_slice.json",
-    )
-    if not all(path.is_file() for path in needed):
-        from scripts.lexicon.runner.generate_pr1_fixture import main as gen
-
-        # Explicit offline for fixture regen; do not rely on import-time env
-        # mutation (and undo after so later tests keep a clean process env).
-        with pytest.MonkeyPatch.context() as mp:
-            mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
-            assert gen() == 0
-        assert all(path.is_file() for path in needed)
-
-
 @pytest.fixture(scope="module")
 def fixture_paths(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
-    _ensure_fixture()
+    sources_dir = tmp_path_factory.mktemp("runner_pr1_sources")
     return {
         "input": FIXTURE / "slice_input.json",
-        "sources": FIXTURE / "sources_slice.sqlite",
+        "sources": sources_slice(sources_dir),
         "grac": FIXTURE / "grac_frequency_slice.json",
         "kaikki": FIXTURE / "kaikki_slice.json",
         "baseline": FIXTURE / "baseline_enriched.json",
@@ -326,20 +310,133 @@ def test_coordinator_warms_grac_before_cefr_seal(
     assert sum(1 for row in sealed.values() if int(row["rank"]) >= 1) > 0
 
 
-def test_runner_spawns_use_repo_venv_python() -> None:
-    """AGENTS.md: worker/self-test spawns must use ROOT/.venv/bin/python, not sys.executable."""
+def test_runner_spawns_use_primary_project_interpreter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Self-test and worker spawns use the primary checkout interpreter.
+
+    A primary checkout uses its own ``.venv/bin/python``. A linked worktree
+    uses that same primary interpreter even when the worktree has a local
+    virtualenv. When neither checkout has a ``.venv``, ``sys.executable``
+    is accepted unless it lives in some other checkout's ``.venv``.
+    """
+    import inspect
+
+    from scripts.common.repo_root import main_checkout_root
     from scripts.lexicon.runner import memory as memory_mod
     from scripts.lexicon.runner import worker as worker_mod
 
-    expected = worker_mod.ROOT / ".venv" / "bin" / "python"
-    assert expected == worker_mod.VENV_PYTHON
-    assert expected == memory_mod.VENV_PYTHON
-    for rel in (
-        "scripts/lexicon/runner/worker.py",
-        "scripts/lexicon/runner/memory.py",
-    ):
-        text = Path(rel).read_text(encoding="utf-8")
-        assert "sys.executable" not in text, f"{rel} must not spawn via sys.executable"
+    live = main_checkout_root(memory_mod.ROOT) / ".venv" / "bin" / "python"
+    assert live.is_file()
+    assert live == memory_mod.project_interpreter()
+    for fn in (memory_mod.run_startup_self_test, worker_mod.run_capped_worker):
+        source = inspect.getsource(fn)
+        assert "sys.executable" not in source
+        assert "project_interpreter()" in source
+
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    primary_python = primary / ".venv" / "bin" / "python"
+    primary_python.parent.mkdir(parents=True)
+    primary_python.write_text("", encoding="utf-8")
+    assert memory_mod.project_interpreter(primary) == primary_python
+
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    git_dir = primary / ".git" / "worktrees" / "task"
+    git_dir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+    local_python = worktree / ".venv" / "bin" / "python"
+    local_python.parent.mkdir(parents=True)
+    local_python.write_text("", encoding="utf-8")
+    assert memory_mod.project_interpreter(worktree) == primary_python
+
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    foreign = tmp_path / "running" / ".venv" / "bin" / "python"
+    foreign.parent.mkdir(parents=True)
+    foreign.write_text("", encoding="utf-8")
+    monkeypatch.setattr(memory_mod.sys, "executable", str(foreign))
+    with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+        memory_mod.project_interpreter(bare)
+
+    monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
+    assert memory_mod.project_interpreter(bare) == Path("/usr/bin/python3")
+
+
+def test_import_succeeds_when_project_interpreter_resolution_would_fail() -> None:
+    """Importing memory and worker does not resolve the project interpreter.
+
+    A fresh interpreter hides every ``.venv/bin/python`` and points
+    ``sys.executable`` at another checkout's ``.venv/bin/python``. Import
+    still succeeds. The spawn paths raise the same ``FileNotFoundError``
+    when they resolve.
+    """
+    import subprocess
+    import sys
+    import textwrap
+
+    repo = Path(__file__).resolve().parents[1]
+    script = textwrap.dedent(
+        """\
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        sys.executable = "/tmp/foreign-checkout/.venv/bin/python"
+        real_is_file = Path.is_file
+
+        def hide_project_venv(self: Path) -> bool:
+            if self.parts[-3:] == (".venv", "bin", "python"):
+                return False
+            return real_is_file(self)
+
+        Path.is_file = hide_project_venv
+
+        import scripts.lexicon.runner.memory as memory
+        import scripts.lexicon.runner.worker as worker
+
+        try:
+            memory.project_interpreter()
+        except FileNotFoundError as exc:
+            message = str(exc)
+        else:
+            raise SystemExit("project_interpreter() did not fail")
+        if "project interpreter not found" not in message:
+            raise SystemExit(message)
+
+        try:
+            memory.run_startup_self_test(test_max_bytes=1024)
+        except FileNotFoundError as exc:
+            spawn_message = str(exc)
+        else:
+            raise SystemExit("run_startup_self_test did not fail")
+        if "project interpreter not found" not in spawn_message:
+            raise SystemExit(spawn_message)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            try:
+                worker.run_capped_worker(
+                    {"chunk_id": "import-probe", "job": "enrich"},
+                    result_path=Path(tmp) / "result.json",
+                )
+            except FileNotFoundError as exc:
+                worker_message = str(exc)
+            else:
+                raise SystemExit("run_capped_worker did not fail")
+        if "project interpreter not found" not in worker_message:
+            raise SystemExit(worker_message)
+        """
+    )
+    completed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert completed.returncode == 0, completed.stderr + completed.stdout
 
 
 def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:
@@ -357,6 +454,11 @@ def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:
         _try_set_rlimit_as(resource.RLIM_INFINITY)
 
 
+def _cache_from_slice(conn: sqlite3.Connection, lemma: str) -> dict:
+    """СУМ-20 cache document stored in the temp sources slice."""
+    return load_slovnyk_cache(conn, lemma)
+
+
 def test_relation_closure_matches_legacy_by_headword(
     tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -365,19 +467,29 @@ def test_relation_closure_matches_legacy_by_headword(
 
     conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
     try:
-        has_sum11 = em._sum11_has_flag_columns(conn)
+        monkeypatch.setattr(
+            em,
+            "_read_cached_slovnyk_rows",
+            lambda lemma: _cache_from_slice(conn, lemma),
+        )
         manifest = {"entries": entries}
-        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
-        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=has_sum11)
+        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=False)
+        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=False)
         headwords = em._manifest_headwords(manifest)
         extract_and_close_relations(
             entries=entries,
             extractors={
                 "synonym": lambda entry: em._definition_pointer_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
             },
             headwords=headwords,
@@ -393,13 +505,16 @@ def test_relation_closure_matches_legacy_by_headword(
     closed_ant = load_closed_relations_by_headword(tmp_path / "rel.sqlite", kind="antonym")
     assert closed_syn == legacy_syn
     assert closed_ant == legacy_ant
+    assert len(closed_syn) == 100
+    assert sum(len(edges) for edges in closed_syn.values()) == 200
+    assert len(closed_ant) == 50
+    assert sum(len(edges) for edges in closed_ant.values()) == 50
 
 
 def test_500_lemma_equivalence_cefr_and_relations(
-    fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Record-equivalent CEFR + reciprocal relations vs committed legacy baseline."""
-    _ensure_fixture()
     baseline = json.loads(fixture_paths["baseline"].read_text(encoding="utf-8"))
     expected_sha = fixture_paths["baseline_sha"].read_text(encoding="utf-8").strip()
     actual_sha = hashlib.sha256(fixture_paths["baseline"].read_bytes()).hexdigest()
@@ -411,8 +526,8 @@ def test_500_lemma_equivalence_cefr_and_relations(
     em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
     em._GRAC_FREQUENCY_CACHE_DATA = grac
 
-    tmp_cefr = fixture_paths["input"].parent / "_tmp_cefr.sqlite"
-    tmp_rel = fixture_paths["input"].parent / "_tmp_rel.sqlite"
+    tmp_cefr = tmp_path / "cefr.sqlite"
+    tmp_rel = tmp_path / "rel.sqlite"
     conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
     try:
         sealed_cefr_precompute(
@@ -435,16 +550,21 @@ def test_500_lemma_equivalence_cefr_and_relations(
             > 0
         )
 
-        has_sum11 = em._sum11_has_flag_columns(conn)
         headwords = em._manifest_headwords({"entries": entries})
         extract_and_close_relations(
             entries=entries,
             extractors={
                 "synonym": lambda entry: em._definition_pointer_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
-                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11
+                    conn,
+                    str(entry.get("lemma") or ""),
+                    has_sum11_flags=False,
+                    cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "homonym": lambda entry: em._homonym_relations(conn, str(entry.get("lemma") or "")),
                 "paronym": lambda entry: em._paronym_relations(conn, str(entry.get("lemma") or "")),
@@ -460,6 +580,3 @@ def test_500_lemma_equivalence_cefr_and_relations(
             assert closed == baseline["relations"][kind], kind
     finally:
         conn.close()
-        for path in (tmp_cefr, tmp_rel):
-            if path.exists():
-                path.unlink()

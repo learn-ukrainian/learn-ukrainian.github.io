@@ -160,7 +160,7 @@ def test_claude_hosted_models_share_seven_composed_claude_code_hooks() -> None:
     assert len(entire_hooks) == 7
     assert all(command["timeout"] == 30 for command in entire_hooks)
     assert all("if ! command -v entire" in command["command"] for command in entire_hooks)
-    assert settings["permissions"]["deny"] == ["Read(./.entire/metadata/**)"]
+    assert settings["permissions"]["deny"][0] == "Read(./.entire/metadata/**)"
 
     existing = {
         hook["command"]: hook

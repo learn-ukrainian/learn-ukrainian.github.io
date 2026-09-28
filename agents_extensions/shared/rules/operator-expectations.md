@@ -155,11 +155,23 @@ tie-breakers.
     drive decided work to one complete, user-visible outcome. "One PR to one concern" is a
     scope-mixing guard, not license to pause mid-implementation and re-ask — files that
     outcome touches stay in the same PR; only a genuinely separate user-visible outcome goes
-    in a different PR. **Stop and get approval** for: the operator's accounts/credentials;
-    deploys only they trigger; system-config changes without a present-tense go; **and any
+    in a different PR. **Stop and get approval** for: the operator's accounts and credentials;
+    production, Pages, or public cutover; HA, Patroni, a new VPS, or a fenced cutover;
+    deleting bulk corpus or Drive/SMB payloads; paid-plan changes; **and any
     NEW architecture, process, or working-model decision that has not already been ordered**
     (see item 12 — item 12 governs *inventing* new design, not re-opening approval on work
-    already ordered or cleared).
+    already ordered or cleared). Agent-system PRs (agent definitions, skills, rules, hooks,
+    launchers, settings sources) land like every other PR: independent cross-family review
+    at the exact head, CI Gate green on that head, then the driver enqueues, runs
+    `merge_closeout`, and deploys with `npm run agents:deploy`. Never ask the operator to
+    approve, merge, or deploy them. Routine host maintenance is driver work, done then
+    reported, including with sudo where the host requires it: pull merged `main`, restart
+    an updated or broken service after checking no active dispatch depends on it, install
+    or enable a reviewed systemd user unit or timer that lives in the repo, and clean
+    agent-generated caches, logs, and worktrees. Host access and security configuration
+    (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall
+    changes that could cut off operator access) stays operator-only — lock-out risk, and
+    accounts/credentials are an operator stop condition.
 11. **Repo mechanics are part of the contract.** The hard gates codified in `AGENTS.md` and
     `/api/rules` bind as if written here — notably: dispatch worktree subtree layout
     (`.worktrees/dispatch/<agent>/<task>/`); project interpreter for shell/production

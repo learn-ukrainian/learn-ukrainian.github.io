@@ -8,11 +8,15 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_path
+
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
@@ -89,11 +93,19 @@ def test_a2_source_operation_schema_and_v4_control_binding() -> None:
     assert _errors(changed)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/inventory/aggregate_summary_v1.json",
+)
 def test_a2_source_operation_bindings_match_the_exact_inventory_inputs() -> None:
     receipt = _receipt()
 
     for binding in receipt["bindings"].values():
-        bound_path = ROOT / binding["path"]
+        logical = binding["path"]
+        if logical.startswith("data/projects/open_model_data/inventory/"):
+            bound_path = artifact_path("open_model_other_indexes", logical.removeprefix("data/"), repo=ROOT)
+        else:
+            bound_path = REGISTRY_OPEN_MODEL_DATA_DIR / logical.removeprefix("data/projects/open_model_data/")
         assert bound_path.is_file()
         assert hashlib.sha256(bound_path.read_bytes()).hexdigest() == binding["sha256"]
 
@@ -104,14 +116,8 @@ def test_a2_source_operation_bindings_match_the_exact_inventory_inputs() -> None
 
 def test_a2_source_operation_preserves_all_eight_frozen_strata_with_residuals() -> None:
     receipt = _receipt()
-    denominator = {
-        entry["stratum"]: entry["frozen_slots"]
-        for entry in receipt["frozen_denominator"]["strata"]
-    }
-    coverage = {
-        entry["stratum"]: entry
-        for entry in receipt["stratum_coverage_map"]
-    }
+    denominator = {entry["stratum"]: entry["frozen_slots"] for entry in receipt["frozen_denominator"]["strata"]}
+    coverage = {entry["stratum"]: entry for entry in receipt["stratum_coverage_map"]}
     residuals = {entry["residual_id"]: entry for entry in receipt["residuals"]}
 
     assert receipt["frozen_denominator"]["total_slots"] == 100
@@ -119,11 +125,7 @@ def test_a2_source_operation_preserves_all_eight_frozen_strata_with_residuals() 
     assert set(coverage) == set(EXPECTED_QUOTAS)
     assert sum(entry["frozen_slots"] for entry in coverage.values()) == 100
 
-    empty_support = {
-        stratum
-        for stratum, entry in coverage.items()
-        if not entry["supporting_existing_source_unit_ids"]
-    }
+    empty_support = {stratum for stratum, entry in coverage.items() if not entry["supporting_existing_source_unit_ids"]}
     assert empty_support == {"dialect_regional", "mixing", "abstention"}
 
     for stratum, entry in coverage.items():
@@ -171,8 +173,7 @@ def test_a2_source_operation_ledger_is_per_unit_and_per_operation() -> None:
     assert receipt["safety_assertions"]["unknown_operations_global_block"] is False
     for source_unit, _operation, _decision in unknown_or_denied:
         assert any(
-            decision["value"] in {"allowed", "scope_bound"}
-            for decision in source_unit["operation_rights"].values()
+            decision["value"] in {"allowed", "scope_bound"} for decision in source_unit["operation_rights"].values()
         )
 
 

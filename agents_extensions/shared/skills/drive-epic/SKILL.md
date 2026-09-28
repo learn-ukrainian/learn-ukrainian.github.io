@@ -142,10 +142,26 @@ read order: **private #349 → private open PRs → public PRs linked from #4542
 Public #4542 is charter + bare pointer — never generate or mirror a public checklist
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
 remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
-status feed. Operator-only host mutation (private #360, #212) is **ESCALATE**, not
-solo action, on missing GO. If #349 and any other queue view disagree, **#349 wins** —
-correct the other view the same session. Full contract:
-`docs/runbooks/hramatka-driver-queue.md`.
+status feed. Host actions on the Hramatka host follow item 10's split: routine
+maintenance there is driver work, done then reported, and it includes using
+sudo where the host requires it — pull merged `main`; restart an updated or
+broken service (system or user unit) after checking no active dispatch depends
+on it; install or enable a reviewed systemd unit or timer that lives in the
+repo; clean agent-generated caches, logs, and worktrees; install OS packages a
+reviewed repo change needs. A production release rollover on the live-serving
+host (running `hramatka/ops/deploy.sh` or anything that swaps live
+`/opt/hramatka/current`, including rebuilding or swapping the read-only release
+checkout — private #360 class) is a **production cutover** and needs a
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count, and the private deploy runbook (including the
+sudo steps inside it) applies only after that GO (it stays **ESCALATE** without
+that present-tense GO). Host access and security configuration stays
+operator-only (**ESCALATE**, not solo) — sshd configuration (e.g.
+`PermitRootLogin`), sudoers, user accounts, SSH keys and other credentials, and
+firewall changes that could cut off operator access — because of lock-out risk
+and because accounts/credentials are an operator stop condition. If #349 and
+any other queue view disagree, **#349 wins** — correct the other view the same
+session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.
@@ -199,9 +215,9 @@ stale in-context snapshot. For per-lane budget health before dispatch:
 `scripts/delegate.py dispatch --check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1`)
 (+ `/api/state/routing-budget` for subscription lanes).
 **Pre-dispatch pace check (binding):** read `.venv/bin/python -m scripts.fleet.usage show`
-(or the `capacity_pick` pace column) before every implement dispatch — a lane at/ahead
-of pace or in deficit (`will_last_to_reset=False`) is not a dispatch target while a
-cool lane has reserve.
+(or the `capacity_pick` pace column) before every implement dispatch — a deficit is
+visible pace, projected to run out before reset, and more than 2 points ahead of pace
+(near_cap ≥ 90% unchanged), and is not a dispatch target while a cool lane has reserve.
 
 ### 2. Pick the next unblocked action
 
@@ -414,6 +430,14 @@ Then dispatch with a numbered brief
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
+The brief's test step names only the test files that cover the changed files,
+including tests of code that imports a changed shared helper; never
+collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
+or `-n` above 2, and run those tests in the foreground and wait. The full suite
+runs in the PR's CI (and again in the merge queue on the merged tree) — that is
+the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
+only when the brief explicitly asks for it (a branch with no PR yet, a baseline
+capture, or diagnosis).
 
 ### 4a. Required live-driver inbox drain — immediately before dispatch
 
@@ -507,6 +531,10 @@ Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
 stale — re-run exact-head CF before any enqueue.
 
+Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
+most the specific tests that reproduce a finding you are checking, and cite CI run
+ids for suite results.
+
 ### 7. Merge discipline
 
 PRs only — never commit or merge to `main` directly.
@@ -571,11 +599,13 @@ exact-head CF review if the head moved, then re-queue — same hour, never left
 overnight. Do not stand up a bot or recovery workflow for this; it is driver work
 like any other red CI.
 
-**Before enqueue: cover the whole repo (#8692, fix #8707).** If the PR's own CI ran only
-the selected tier and the PR touches `tests/`, lint config, or anything repo-wide, add
-the `full-ci` label first so the queue run covers every shard. #8692 merged on shard 1
-alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5 h and
-dequeued unrelated PRs (#8691 ×3, #8693 ×2).
+**Before enqueue: use `full-ci` only for a classifier blind spot (#9066).** Do not
+add the label by habit when a PR touches `tests/` or runs the selected tier.
+The merge queue runs the full required Python tier for code, frontend-only,
+and docs changes outside curriculum/wiki (#9073); the selected tier runs
+repo-wide tests (#8707). Add `full-ci` only when a change affects tests the
+path classifier cannot see, and explain why in the PR. #8692 exposed the old
+gap when a shard-3 lint test escaped.
 
 **Before opening a PR that touches launchers or hooks, run every real-launcher test
 (2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
@@ -614,13 +644,14 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | Kind | Driver owns? |
 | --- | --- |
 | **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
-| **Host pull / service restart** in epic/issue scope | **Only on present-tense operator trigger** — issue text sets scope, not authorization |
+| **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees; install OS packages a reviewed repo change needs), including sudo where the host needs it | **Yes** — do it, then report. Never ask the operator |
 | **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
+| **Host access / security configuration** (sshd configuration such as `PermitRootLogin`, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
 
-Missing local proof on a user-visible API/UI change is incomplete closeout. Issue/PR wording
-never substitutes for operator-triggered deploys or present-tense GO (operator contract
-item 10). Claiming prod HA without that GO is out of scope.
+Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
+never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
+cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
@@ -654,6 +685,7 @@ After `MERGED`, follow the numbered order below: reaper first, then branch delet
    a pull request head; the hygiene sweep deletes them when they have no open PR,
    and a later review round deletes the earlier round's branch. Do not leave those
    refs behind. Then run `git fetch --prune`.
+   Use `.venv/bin/python -m scripts.hygiene.branch_sweep --json` for the session branch sweep; add `--apply` only after reviewing its receipts.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
@@ -777,10 +809,10 @@ not the utilization half.
 | Seat | Delta |
 | --- | --- |
 | **Grok 4.6** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a 4.6 quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
-| **Sonnet-5** | You are authority-capable (near-Opus judgment, 1M window) → make the judgment call and escalate **less**; still escalate the genuinely architecture/process class (below). CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
+| **Sonnet 5.5** | Use this practical seat for well-scoped work, bug fixes, and polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts; keep Ukrainian curriculum content with sanctioned language lanes (Fable 5.1 for Claude). Route security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) to Opus 5.5 or Codex Sol, never Sonnet 5.5. Escalate hard, open-ended judgment to Opus 5.5 and designated authority decisions to Fable 5.1. CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
 | **Gemini / AGY (gemini-3.8-flash-high)** | Ukrainian work and well-defined implementation with a complete one-unit brief and acceptance criteria. MCP-leading tool use supports bounded execution. Do not self-decompose into serial micro-PRs; the accountable orchestrator owns sequencing. |
 | **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Kimi cannot be a read-only review seat via `ask-kimi --type review` / `delegate.py --mode read-only` (the tooling refuses because headless Kimi auto-approves mutations), so pick another family for cross-family review; still a good implementer and non-Ukrainian design consult; drive when assigned. |
-| **Claude (when driving a track)** | Use **Opus 5.5** for hard Claude-lane coding and deep code review where relevant; use **Sonnet 5** for routine track work. Fable 5.1 remains the advisor and authority seat. |
+| **Claude (when driving a track)** | Use **Opus 5.5** for hard Claude-lane coding, deep code review where relevant, and security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions); use **Sonnet 5.5** for well-scoped everyday track work, bug fixes, and polished English deliverables; keep Ukrainian curriculum content with sanctioned language lanes (**Fable 5.1** for Claude). Fable 5.1 remains the advisor and authority seat. |
 | **Claude Fable 5.1 (when in the driver seat)** | Apply the Fable 5.1 section of the `claude-api` skill's migration guide (`shared/model-migration.md`) and the fleet effort topology in `docs/best-practices/fleet-shared-doctrine.md` § Fable 5.1 `/effort`. Essentials: thinking is always on (never send `thinking: disabled`); default **`high`**, step to **`medium`/`low`** for routine (do not keep an Opus/`xhigh` habit); **`xhigh`** for hard multi-file / long autonomous turns **and** for curriculum/linguistic skills that pin `effort: xhigh` (do not step those down); **`max` almost never**. Long deliverables stay at **`high`** unless a measured quality gain says otherwise; at `xhigh`/`max` leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort); low searches less (bump for retrieval); effort ≠ shorter replies. Keep test-before-report and progress-grounding (Opus 5 “delete verification scaffolding” does not apply); delegate independent subtasks asynchronously; no context-budget countdowns; final summaries re-ground (outcome first, plain identifiers). Corrections: state plainly and briefly, then continue. |
 | **Claude Opus 5 (when in the driver seat)** | Apply the Opus 5 section of the same migration guide. Thinking stays on; control cost with `effort` (`medium`/`low` for routine driving). Disabling thinking on Opus 5 can turn tool calls into plain text and leak internal tags, and a Claude Code seat cannot set it anyway. |
 | **Codex / GPT-6** | Sol @ `high` handles coding and review; Luna @ `high` handles routine bounded work and scouting; Astra @ `high` is reserved for hard consequential advisory judgment. The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits. |

@@ -20,13 +20,14 @@ from typing import Any
 import yaml
 from build.io_utils import write_text_atomic
 from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
+from common.repo_root import project_interpreter
 from common.thresholds import STYLE_REVIEW_TARGET
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 PLAN_PATCH_TAG = "PLAN_PATCH"
 PLAN_PATCH_ALLOWED_ROOTS = frozenset(
     {

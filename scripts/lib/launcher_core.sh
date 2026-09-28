@@ -124,6 +124,16 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
+# Project interpreter for helper modules, resolved from LC_ROOT by the shared
+# resolver (primary checkout's .venv; never trusts a worktree gitfile, #9118).
+# LC_DURABLE_HELPER_ROOT is NOT used: it comes from an unhardened git
+# common-dir lookup. The resolver prints its own error; callers exit 3.
+launcher_project_python() {
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$LC_ROOT/scripts/lib/project_interpreter.sh"
+  project_interpreter_resolve "$LC_ROOT"
+}
+
 launcher_require_binary() {
   local binary="$1"
   local error_message="$2"
@@ -429,7 +439,7 @@ launcher_normalize_model() {
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
     claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
-    claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
+    claude:sonnet) LC_MODEL='claude-sonnet-5-5' ;;
     claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
     claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
@@ -548,7 +558,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)

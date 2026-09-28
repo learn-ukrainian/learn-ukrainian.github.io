@@ -41,7 +41,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import (
 
 ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/phase3_historical_materialization_receipt_v1.schema.json"
+    ROOT / "registry/projects/open_model_data/contracts/phase3_historical_materialization_receipt_v1.schema.json"
 )
 
 UD_COLLECTION_ID = "ud-old-east-slavic-ruthenian-05a029e00ccf"
@@ -269,7 +269,9 @@ def _ud_surface(sentence: UdSentence) -> tuple[str, list[tuple[int, int]]]:
 def _ud_tokens(sentence: UdSentence, text: str, spans: Sequence[tuple[int, int]]) -> list[dict[str, Any]]:
     tokens: list[dict[str, Any]] = []
     for index, (source_token, (start, end)) in enumerate(zip(sentence.tokens, spans, strict=True), start=1):
-        _require(text[start:end] == source_token.form, f"stale UD token span: {sentence.sent_id}:{source_token.token_id}")
+        _require(
+            text[start:end] == source_token.form, f"stale UD token span: {sentence.sent_id}:{source_token.token_id}"
+        )
         has_lexical_character = any(
             unicodedata.category(char)[0] in {"L", "N", "M"} or char == "_" for char in source_token.form
         )
@@ -303,7 +305,9 @@ def _ud_analyses(sentence: UdSentence, text: str, spans: Sequence[tuple[int, int
             seen.add(head)
             head = heads[head]
     for index, (source_token, (start, end)) in enumerate(zip(sentence.tokens, spans, strict=True), start=1):
-        _require(text[start:end] == source_token.form, f"stale UD analysis span: {sentence.sent_id}:{source_token.token_id}")
+        _require(
+            text[start:end] == source_token.form, f"stale UD analysis span: {sentence.sent_id}:{source_token.token_id}"
+        )
         token_ids = [f"tok:{index:06d}"]
         analyses.append(
             {

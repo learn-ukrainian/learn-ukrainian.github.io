@@ -18,6 +18,7 @@ import sys
 import threading
 import weakref
 from collections.abc import Collection, Generator
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
@@ -27,6 +28,7 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
@@ -36,6 +38,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 def _loaded_module(*parts: str):
     """Find an already imported module without making it a fixture import."""
     return sys.modules.get(".".join(parts))
+
 
 # Identity a launched agent session carries (#8778). A test that inherits it
 # keys hook dedupe, leases, and telemetry on the operator's live session.
@@ -323,10 +326,14 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
 _CONTENT_TREE_PATHSPECS = ("curriculum/", "site/src/content/")
 _CONTENT_TREE_GIT_TIMEOUT_S = 60
 _CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
+# Sealed lexicon fixtures (#9001). A missing gitignored sqlite must not make a
+# test rewrite tracked files under this tree.
+_LEXICON_FIXTURE_PATHSPEC = "tests/fixtures/lexicon/"
+_LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
 
 
-def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
-    """``git status --porcelain`` lines for the content trees, or None outside git."""
+def _git_pathspec_snapshot(root: Path, pathspecs: tuple[str, ...]) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for ``pathspecs``, or None outside git."""
     git_args = ["git", "-C", str(root)]
     try:
         top = subprocess.run(
@@ -339,7 +346,7 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
         if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
             return None
         status = subprocess.run(
-            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *_CONTENT_TREE_PATHSPECS],
+            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *pathspecs],
             capture_output=True,
             text=True,
             timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
@@ -350,6 +357,11 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
     if status.returncode != 0:
         return None
     return frozenset(line for line in status.stdout.splitlines() if line.strip())
+
+
+def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for the content trees, or None outside git."""
+    return _git_pathspec_snapshot(root, _CONTENT_TREE_PATHSPECS)
 
 
 def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> tuple[list[str], list[str]]:
@@ -368,6 +380,11 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     if hasattr(config, "workerinput"):
         return
     setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
+    setattr(
+        config,
+        _LEXICON_FIXTURE_SNAPSHOT_KEY,
+        _git_pathspec_snapshot(_REPO_ROOT, (_LEXICON_FIXTURE_PATHSPEC,)),
+    )
 
 
 def _enforce_content_tree_clean(session: pytest.Session) -> None:
@@ -391,12 +408,36 @@ def _enforce_content_tree_clean(session: pytest.Session) -> None:
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
+def _enforce_lexicon_fixture_seal(session: pytest.Session) -> None:
+    """Fail the session if tracked lexicon fixtures changed (#9001)."""
+    before = getattr(session.config, _LEXICON_FIXTURE_SNAPSHOT_KEY, None)
+    added, removed = _content_tree_changes(
+        before,
+        _git_pathspec_snapshot(_REPO_ROOT, (_LEXICON_FIXTURE_PATHSPEC,)),
+    )
+    if not added and not removed:
+        return
+    print(
+        "lexicon fixture seal: git status under tests/fixtures/lexicon/ changed during "
+        "the test session. Sealed tracked fixtures must not be rewritten; generate "
+        "gitignored inputs in tmp_path (#9001):"
+    )
+    for label, lines in (("added", added), ("removed", removed)):
+        if lines:
+            print(f"  status entries {label} since session start:")
+            for line in lines:
+                print(f"    {line}")
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
     _enforce_content_tree_clean(session)
+    _enforce_lexicon_fixture_seal(session)
 
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
@@ -1500,7 +1541,14 @@ def _item_repo_rel(item: pytest.Item) -> str:
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Skip tests whose sparse-excluded tree is not in this worktree."""
-    del config
+    selected = rerun_node_ids(
+        load_registry(),
+        today=datetime.now(UTC).date(),
+        event_name="schedule" if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1" else os.environ.get("GITHUB_EVENT_NAME"),
+    )
+    for item in items:
+        if item.nodeid in selected:
+            item.add_marker(pytest.mark.flaky(reruns=1, rerun_except=[TIMEOUT_PATTERN]))
     missing = _sparse_missing_trees()
     if not missing:
         return
@@ -1515,8 +1563,57 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
             item.add_marker(pytest.mark.skip(reason=reason))
 
 
+class _FlakeRerunReporter:
+    """Keep successful reruns visible in both xunit2 and the Actions summary."""
+
+    def __init__(self, config: pytest.Config) -> None:
+        self.config = config
+        self.first_failures: set[str] = set()
+        self.call_passed: set[str] = set()
+        self.recovered: set[str] = set()
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
+        if report.outcome == "rerun":
+            self.first_failures.add(report.nodeid)
+            self.call_passed.discard(report.nodeid)
+        elif report.when == "call" and report.passed:
+            self.call_passed.add(report.nodeid)
+        elif report.when == "teardown" and report.passed and report.nodeid in self.first_failures and report.nodeid in self.call_passed:
+            self.recovered.add(report.nodeid)
+            from _pytest.junitxml import xml_key
+
+            xml = self.config.stash.get(xml_key, None)
+            if xml is not None:
+                reporter = xml.node_reporter(report)
+                reporter.add_property("flake.reruns", "1")
+
+    def pytest_terminal_summary(self, terminalreporter: pytest.TerminalReporter) -> None:
+        if not self.recovered:
+            return
+        lines = ["### Quarantined tests recovered by one rerun", ""]
+        for node_id in sorted(self.recovered):
+            lines.append(f"- `{node_id}`: first attempt failed, rerun passed")
+        lines.append("")
+        summary = "\n".join(lines)
+        terminalreporter.write_sep("=", "quarantined reruns")
+        terminalreporter.write(summary)
+        summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary_path:
+            with open(summary_path, "a", encoding="utf-8") as output:
+                output.write(summary)
+
+
 def pytest_configure(config: pytest.Config) -> None:
+    load_registry()
+    if config.getoption("reruns", default=0):
+        raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
+    config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
     _install_socket_guard()
+    config.addinivalue_line(
+        "markers",
+        "flaky(reruns, rerun_except): quarantine marker; pytest-rerunfailures enforces reruns when installed",
+    )
     config.addinivalue_line(
         "markers",
         "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "

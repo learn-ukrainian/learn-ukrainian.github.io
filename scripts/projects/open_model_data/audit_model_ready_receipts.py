@@ -10,6 +10,7 @@ import argparse
 import copy
 import hashlib
 import json
+import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,11 +18,16 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
-CONTRACTS = DATA / "contracts"
 EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
-SCHEMA_PATH = CONTRACTS / "model_ready_product_audit_v1.schema.json"
+SCHEMA_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/model_ready_product_audit_v1.schema.json"
+)
 
 
 class AuditError(ValueError):
@@ -50,28 +56,34 @@ class AuditInputs:
     schema: Path
 
 
+def _open_model_file(root: Path, relative: str) -> Path:
+    """Resolve one logical open-model path against ``root``."""
+    return resolve_open_model_path(f"data/projects/open_model_data/{relative}", repo=root)
+
+
 def default_inputs(root: Path = ROOT) -> AuditInputs:
-    data = root / "data/projects/open_model_data"
-    contracts = data / "contracts"
+    def om(relative: str) -> Path:
+        return _open_model_file(root, relative)
+
     return AuditInputs(
         producer=root / "scripts/projects/open_model_data/audit_model_ready_receipts.py",
         mutation_tests=root / "tests/test_model_ready_receipt_audit.py",
-        production=data / "model_views/model_ready_view_production_v1.json",
-        silver=data / "silver/language_contact_silver_receipt_v1.json",
-        faithful_cpt=data / "model_views/wikipedia_faithful_cpt_export_receipt_v1.json",
-        modern_cpt=data / "model_views/wikipedia_modern_cpt_export_receipt_v1.json",
-        heldout_evaluation=data / "model_views/heldout_evaluation_export_receipt_v1.json",
-        silver_contract=contracts / "language_contact_silver_record_v1.schema.json",
-        correction_contract=contracts / "correction_record_v1.schema.json",
-        correction_view_contract=contracts / "correction_instruction_view_v1.schema.json",
-        preference_contract=contracts / "preference_view_v1.schema.json",
-        quality_contract=contracts / "quality_filter_view_v1.schema.json",
-        inventory=data / "inventory/aggregate_summary_v1.json",
-        capability_policy=data / "evidence/source_capability_policy_v1.json",
-        capability_policy_schema=contracts / "source_capability_policy_v1.schema.json",
-        source_record_contract=contracts / "source_record_v1.schema.json",
+        production=om("model_views/model_ready_view_production_v1.json"),
+        silver=om("silver/language_contact_silver_receipt_v1.json"),
+        faithful_cpt=om("model_views/wikipedia_faithful_cpt_export_receipt_v1.json"),
+        modern_cpt=om("model_views/wikipedia_modern_cpt_export_receipt_v1.json"),
+        heldout_evaluation=om("model_views/heldout_evaluation_export_receipt_v1.json"),
+        silver_contract=om("contracts/language_contact_silver_record_v1.schema.json"),
+        correction_contract=om("contracts/correction_record_v1.schema.json"),
+        correction_view_contract=om("contracts/correction_instruction_view_v1.schema.json"),
+        preference_contract=om("contracts/preference_view_v1.schema.json"),
+        quality_contract=om("contracts/quality_filter_view_v1.schema.json"),
+        inventory=om("inventory/aggregate_summary_v1.json"),
+        capability_policy=om("evidence/source_capability_policy_v1.json"),
+        capability_policy_schema=om("contracts/source_capability_policy_v1.schema.json"),
+        source_record_contract=om("contracts/source_record_v1.schema.json"),
         exporter=root / "scripts/projects/open_model_data/model_view_exporter.py",
-        schema=contracts / "model_ready_product_audit_v1.schema.json",
+        schema=om("contracts/model_ready_product_audit_v1.schema.json"),
     )
 
 
@@ -108,10 +120,19 @@ def artifact(path: Path) -> dict[str, Any]:
     return {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
 
 
+def _logical_input_key(path: Path, root: Path) -> str:
+    """Keep the frozen receipt's logical ``data/`` spelling for a resolved path."""
+    relative = path.relative_to(root).as_posix()
+    registry = "registry/projects/open_model_data/"
+    if relative.startswith(registry):
+        return "data/projects/open_model_data/" + relative[len(registry) :]
+    return relative
+
+
 def input_artifacts(inputs: AuditInputs) -> dict[str, dict[str, Any]]:
     root = inputs.production.parents[4]
     entries = {
-        path.relative_to(root).as_posix(): artifact(path)
+        _logical_input_key(path, root): artifact(path)
         for path in (
             inputs.producer,
             inputs.mutation_tests,
@@ -176,7 +197,9 @@ def _validate_source_evidence(
 ) -> None:
     require(production.get("schema_version") == "model_ready_view_production_v1", "unexpected production receipt")
     require(silver.get("schema_version") == "language_contact_silver_receipt_v1", "unexpected silver receipt")
-    require(faithful.get("view_kind") == modern.get("view_kind") == "continued_pretraining", "CPT receipt kind mismatch")
+    require(
+        faithful.get("view_kind") == modern.get("view_kind") == "continued_pretraining", "CPT receipt kind mismatch"
+    )
     require(heldout.get("view_kind") == "heldout_evaluation", "heldout receipt kind mismatch")
     wikipedia = next(
         (scope for scope in capability_policy["family_defaults"] if scope.get("source_family") == "wikipedia"),
@@ -214,23 +237,38 @@ def _validate_source_evidence(
         )
     require(heldout["counts"]["exported_records"] == 691, "heldout evaluation record count mismatch")
     public_inventory = inventory["distinct_content_totals"]["by_data_boundary"]["public_or_external_source"]
-    require(public_inventory["content_units_by_unit_label"]["database_rows"] == 189_150, "inventory database-row count mismatch")
+    require(
+        public_inventory["content_units_by_unit_label"]["database_rows"] == 189_150,
+        "inventory database-row count mismatch",
+    )
     require(public_inventory["lexical_words"] == 50_298_925, "inventory lexical-word count mismatch")
-    require(inventory["safety_assertions"]["potential_training_admission_assets"] == 0, "historical inventory gate mismatch")
-    require(inventory["eligibility_views"]["potential_training_admission"] == [], "historical inventory eligibility view changed")
+    require(
+        inventory["safety_assertions"]["potential_training_admission_assets"] == 0, "historical inventory gate mismatch"
+    )
+    require(
+        inventory["eligibility_views"]["potential_training_admission"] == [],
+        "historical inventory eligibility view changed",
+    )
     require(silver["output"]["records"] == 739_503, "silver record count mismatch")
     require(sum(silver["counts"]["by_disposition"].values()) == 739_503, "silver disposition arithmetic mismatch")
     for name in ("by_evidence_grade", "by_source_family", "by_period", "by_genre", "by_register"):
         require(sum(silver["counts"][name].values()) == 739_503, f"silver {name} arithmetic mismatch")
-    require(silver["claims"] == {
-        "export_admission_created": False,
-        "human_gold_created": False,
-        "human_review_claimed": False,
-        "precision_or_recall_claimed": False,
-        "publication_performed": False,
-        "training_performed": False,
-    }, "silver safety claims changed")
-    require(production["evaluation_firewall"]["heldout_evaluation_view"]["artifact"]["records"] == 691, "evaluation binding mismatch")
+    require(
+        silver["claims"]
+        == {
+            "export_admission_created": False,
+            "human_gold_created": False,
+            "human_review_claimed": False,
+            "precision_or_recall_claimed": False,
+            "publication_performed": False,
+            "training_performed": False,
+        },
+        "silver safety claims changed",
+    )
+    require(
+        production["evaluation_firewall"]["heldout_evaluation_view"]["artifact"]["records"] == 691,
+        "evaluation binding mismatch",
+    )
     require(production["evaluation_firewall"]["exact_overlap_count"] == 0, "evaluation exact overlap is nonzero")
     require(production["evaluation_firewall"]["near_overlap_count"] == 0, "evaluation near overlap is nonzero")
     for lane_name, lane in production["silver_lanes"].items():
@@ -241,8 +279,30 @@ def _validate_source_evidence(
         require(lane["blocked_reasons"] == ["no_eligible_records"], f"{lane_name} reason mismatch")
         _empty_artifact(lane["artifact"], f"{lane_name} artifact")
         _empty_artifact(lane["receipt"], f"{lane_name} receipt")
-    require(_contract_const(contracts["silver"], "properties", "claim_boundary", "properties", "model_training_or_export_eligible", "const") is False, "silver contract no longer denies export eligibility")
-    require(_contract_const(contracts["correction"], "properties", "export_control", "properties", "model_training_or_export_eligible", "const") is False, "correction contract no longer denies export eligibility")
+    require(
+        _contract_const(
+            contracts["silver"],
+            "properties",
+            "claim_boundary",
+            "properties",
+            "model_training_or_export_eligible",
+            "const",
+        )
+        is False,
+        "silver contract no longer denies export eligibility",
+    )
+    require(
+        _contract_const(
+            contracts["correction"],
+            "properties",
+            "export_control",
+            "properties",
+            "model_training_or_export_eligible",
+            "const",
+        )
+        is False,
+        "correction contract no longer denies export eligibility",
+    )
     require(
         _contract_const(contracts["correction_view"], "properties", "eligibility", "$ref") == "#/$defs/eligibility",
         "unexpected correction-view contract",
@@ -273,18 +333,35 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
         "preference": read_json(inputs.preference_contract),
         "quality": read_json(inputs.quality_contract),
     }
-    _validate_source_evidence(production, silver, faithful, modern, heldout, inventory, capability_policy, source_record_contract, contracts)
+    _validate_source_evidence(
+        production, silver, faithful, modern, heldout, inventory, capability_policy, source_record_contract, contracts
+    )
     direct_inputs = input_artifacts(inputs)
     source_counts = silver["counts"]
     lanes = production["silver_lanes"]
     payloads = {
-        "faithful_continued_pretraining": {"logical_path": "data/projects/open_model_data/model_views/wikipedia_faithful_cpt_view_v1.jsonl", "state": "not_present_in_checkout", "receipt_artifact": strict_artifact(faithful["output"])},
-        "modern_continued_pretraining": {"logical_path": "data/projects/open_model_data/model_views/wikipedia_modern_cpt_view_v1.jsonl", "state": "not_present_in_checkout", "receipt_artifact": strict_artifact(modern["output"])},
-        "heldout_evaluation": {"logical_path": "data/projects/open_model_data/model_views/heldout_evaluation_view_v1.jsonl", "state": "not_present_in_checkout", "receipt_artifact": strict_artifact(heldout["output"])},
+        "faithful_continued_pretraining": {
+            "logical_path": "data/projects/open_model_data/model_views/wikipedia_faithful_cpt_view_v1.jsonl",
+            "state": "not_present_in_checkout",
+            "receipt_artifact": strict_artifact(faithful["output"]),
+        },
+        "modern_continued_pretraining": {
+            "logical_path": "data/projects/open_model_data/model_views/wikipedia_modern_cpt_view_v1.jsonl",
+            "state": "not_present_in_checkout",
+            "receipt_artifact": strict_artifact(modern["output"]),
+        },
+        "heldout_evaluation": {
+            "logical_path": "data/projects/open_model_data/model_views/heldout_evaluation_view_v1.jsonl",
+            "state": "not_present_in_checkout",
+            "receipt_artifact": strict_artifact(heldout["output"]),
+        },
     }
     input_root = inputs.production.parents[4]
     for payload in payloads.values():
-        require(not (input_root / payload["logical_path"]).exists(), f"payload availability changed: {payload['logical_path']}")
+        require(
+            not (input_root / payload["logical_path"]).exists(),
+            f"payload availability changed: {payload['logical_path']}",
+        )
     material = {
         "schema_version": "model_ready_product_audit_v1",
         "direct_inputs": direct_inputs,
@@ -315,12 +392,32 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
                 "interpretation": "The historical Wikipedia CPT artifacts are frozen and distinct from current source-family eligibility.",
             },
             "continued_pretraining": {
-                "faithful": {"historical_artifact_records": 1028, "record_learning_eligible": False, "selectable": False, "operation_training_authorized": False},
-                "modern": {"historical_artifact_records": 1028, "record_learning_eligible": False, "selectable": False, "operation_training_authorized": False},
+                "faithful": {
+                    "historical_artifact_records": 1028,
+                    "record_learning_eligible": False,
+                    "selectable": False,
+                    "operation_training_authorized": False,
+                },
+                "modern": {
+                    "historical_artifact_records": 1028,
+                    "record_learning_eligible": False,
+                    "selectable": False,
+                    "operation_training_authorized": False,
+                },
             },
             "silver": {
                 "records": 739_503,
-                "distributions": {name: source_counts[name] for name in ("by_disposition", "by_evidence_grade", "by_source_family", "by_period", "by_genre", "by_register")},
+                "distributions": {
+                    name: source_counts[name]
+                    for name in (
+                        "by_disposition",
+                        "by_evidence_grade",
+                        "by_source_family",
+                        "by_period",
+                        "by_genre",
+                        "by_register",
+                    )
+                },
                 "record_learning_or_export_eligible": False,
                 "lanes": copy.deepcopy(lanes),
             },
@@ -364,7 +461,9 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
             "source_family_rights_state_input",
         ],
     }
-    material["audit_id"] = "model-ready-product-audit:" + hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+    material["audit_id"] = (
+        "model-ready-product-audit:" + hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+    )
     validate_receipt(material, inputs.schema, inputs)
     return material
 
@@ -386,7 +485,9 @@ def validate_receipt(
     expected_id_material = dict(value)
     audit_id = expected_id_material.pop("audit_id", None)
     require(isinstance(audit_id, str), "audit ID missing")
-    expected_id = "model-ready-product-audit:" + hashlib.sha256(canonical_json(expected_id_material).encode("utf-8")).hexdigest()
+    expected_id = (
+        "model-ready-product-audit:" + hashlib.sha256(canonical_json(expected_id_material).encode("utf-8")).hexdigest()
+    )
     require(audit_id == expected_id, "audit ID does not bind receipt content")
     if inputs is not None:
         require(value["direct_inputs"] == input_artifacts(inputs), "direct input hashes do not match current files")
@@ -427,7 +528,14 @@ def validate_receipt(
             value["product_truth"]["silver"]["distributions"]
             == {
                 name: source_silver["counts"][name]
-                for name in ("by_disposition", "by_evidence_grade", "by_source_family", "by_period", "by_genre", "by_register")
+                for name in (
+                    "by_disposition",
+                    "by_evidence_grade",
+                    "by_source_family",
+                    "by_period",
+                    "by_genre",
+                    "by_register",
+                )
             },
             "silver distributions do not match the direct receipt",
         )
@@ -437,13 +545,30 @@ def validate_receipt(
         )
     invariants = value["invariants"]
     truth = value["product_truth"]
-    require(truth["continued_pretraining"]["faithful"]["historical_artifact_records"] == invariants["faithful_cpt_historical_records"], "faithful count invariant mismatch")
-    require(truth["corpus_inventory"]["historical_wikipedia_cpt_rows"] == invariants["faithful_cpt_historical_records"], "inventory/CPT distinction mismatch")
-    require(truth["continued_pretraining"]["modern"]["historical_artifact_records"] == invariants["modern_cpt_historical_records"], "modern count invariant mismatch")
+    require(
+        truth["continued_pretraining"]["faithful"]["historical_artifact_records"]
+        == invariants["faithful_cpt_historical_records"],
+        "faithful count invariant mismatch",
+    )
+    require(
+        truth["corpus_inventory"]["historical_wikipedia_cpt_rows"] == invariants["faithful_cpt_historical_records"],
+        "inventory/CPT distinction mismatch",
+    )
+    require(
+        truth["continued_pretraining"]["modern"]["historical_artifact_records"]
+        == invariants["modern_cpt_historical_records"],
+        "modern count invariant mismatch",
+    )
     for view in truth["continued_pretraining"].values():
-        require(view["record_learning_eligible"] is False and view["selectable"] is False, "frozen CPT view became selectable")
+        require(
+            view["record_learning_eligible"] is False and view["selectable"] is False,
+            "frozen CPT view became selectable",
+        )
     require(truth["silver"]["records"] == invariants["silver_records"], "silver count invariant mismatch")
-    require(truth["heldout_evaluation"]["records"] == invariants["heldout_evaluation_records"], "evaluation count invariant mismatch")
+    require(
+        truth["heldout_evaluation"]["records"] == invariants["heldout_evaluation_records"],
+        "evaluation count invariant mismatch",
+    )
     for distribution in truth["silver"]["distributions"].values():
         require(sum(distribution.values()) == truth["silver"]["records"], "silver distribution does not sum to records")
     for lane in truth["silver"]["lanes"].values():
@@ -454,7 +579,10 @@ def validate_receipt(
     require(explanation["blocked_records"] == truth["silver"]["records"], "empty-lane count mismatch")
     require(explanation["reclassification_performed"] is False, "empty-lane audit reclassified data")
     require(value["public_release_and_redistribution"]["status"] == "unknown", "release status must remain unknown")
-    require(value["public_release_and_redistribution"]["redistribution_permission_evidence"] == "unknown", "permission evidence must remain unknown")
+    require(
+        value["public_release_and_redistribution"]["redistribution_permission_evidence"] == "unknown",
+        "permission evidence must remain unknown",
+    )
     require(all(flag is False for flag in value["safety_claims"].values()), "safety claim became true")
 
 
@@ -473,7 +601,9 @@ def main(argv: list[str] | None = None) -> int:
         rendered = canonical_json(receipt) + "\n"
         if args.verify_existing:
             require(args.output.is_file(), f"canonical receipt is missing: {args.output}")
-            require(args.output.read_text(encoding="utf-8") == rendered, "canonical receipt differs from current inputs")
+            require(
+                args.output.read_text(encoding="utf-8") == rendered, "canonical receipt differs from current inputs"
+            )
         else:
             write_receipt(args.output, receipt)
     except AuditError as exc:

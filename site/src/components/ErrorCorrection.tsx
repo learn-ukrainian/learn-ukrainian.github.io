@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 import {
@@ -48,6 +48,18 @@ export interface ErrorCorrectionItemProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  /**
+   * `type` makes step 2 a typed answer (checked against `acceptedAnswers`) instead
+   * of option chips — for decks whose only options are the error and its
+   * correction, where the one remaining chip would give the answer away.
+   */
+  fixMode?: 'choose' | 'type';
+  /**
+   * Corrections a typed answer may match (default: `correctForm`).
+   * @schemaDescription Accepted typed corrections for this item.
+   * @ukrainianText true
+   */
+  acceptedAnswers?: string[];
   /** Called once after a complete answer; false includes reveal-only completion. */
   onComplete?: (correct: boolean) => void;
   /** Lets a host lock this item after it has recorded the result. */
@@ -78,6 +90,29 @@ export function cleanErrorToken(word: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+/**
+ * Comparison key for a typed correction: case, apostrophe variants, stress
+ * marks, spacing around `, ; :` and final punctuation (including a trailing
+ * `, ; :`) do not make an answer wrong.
+ */
+export function normalizeTypedCorrection(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/\u0301/g, '')
+    .normalize('NFC')
+    .replace(/['ʼʹ`‘]/g, '’')
+    .toLocaleLowerCase('uk')
+    .replace(/\s*([,;:])\s*/g, '$1 ')
+    .replace(/\s+/g, ' ')
+    .replace(/[\s.!?…,;:]+$/u, '')
+    .trim();
+}
+
+export function isAcceptedTypedCorrection(typed: string, acceptedAnswers: readonly string[]): boolean {
+  const key = normalizeTypedCorrection(typed);
+  return key !== '' && acceptedAnswers.some((answer) => normalizeTypedCorrection(answer) === key);
+}
+
 export function ErrorCorrectionItem({
   sentence,
   errorWord,
@@ -86,9 +121,12 @@ export function ErrorCorrectionItem({
   explanation,
   optionWhy,
   isUkrainian,
+  fixMode = 'choose',
+  acceptedAnswers,
   onComplete,
   disabled = false,
 }: ErrorCorrectionItemProps) {
+  const typedFix = fixMode === 'type';
   // Shuffle options on mount, minus the error the learner already spotted.
   // Original (pre-filter, pre-shuffle) indices are kept alongside each entry
   // so per-option feedback (aligned by original index) survives both steps.
@@ -102,7 +140,14 @@ export function ErrorCorrectionItem({
   const [selectedFix, setSelectedFix] = useState<string | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
   const [revealedCorrection, setRevealedCorrection] = useState(false);
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const [typedCorrect, setTypedCorrect] = useState(false);
   const completionReportedRef = useRef(false);
+  const typedInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typedFix && step === 'fix') typedInputRef.current?.focus();
+  }, [typedFix, step]);
 
   const complete = (correct: boolean) => {
     setStep('complete');
@@ -167,8 +212,19 @@ export function ErrorCorrectionItem({
     complete(fix === correctForm);
   };
 
+  const handleTypedSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (disabled || step !== 'fix' || !typedAnswer.trim()) return;
+
+    const correct = isAcceptedTypedCorrection(typedAnswer, acceptedAnswers ?? [correctForm]);
+    setRevealedCorrection(false);
+    setTypedCorrect(correct);
+    setSelectedFix(typedAnswer.trim());
+    complete(correct);
+  };
+
   const handleRevealCorrection = () => {
-    if (disabled || step !== 'fix' || shuffledOptions.length > 0) return;
+    if (disabled || step !== 'fix' || (!typedFix && shuffledOptions.length > 0)) return;
 
     setRevealedCorrection(true);
     setSelectedFix(correctForm);
@@ -182,10 +238,12 @@ export function ErrorCorrectionItem({
     setSelectedFix(null);
     setWrongAttempts([]);
     setRevealedCorrection(false);
+    setTypedAnswer('');
+    setTypedCorrect(false);
     completionReportedRef.current = false;
   };
 
-  const isFixCorrect = selectedFix === correctForm;
+  const isFixCorrect = typedFix ? typedCorrect : selectedFix === correctForm;
   const isNoErrorCorrect = errorWord === null && step === 'complete';
   const isCorrectionShown = revealedCorrection && step === 'complete';
   const selectedFixOrigIndex = selectedFix !== null
@@ -196,10 +254,16 @@ export function ErrorCorrectionItem({
   const correctFixWhy = correctFixOrigIndex >= 0 ? optionWhy?.[correctFixOrigIndex] : undefined;
 
   const step1Label = isUkrainian ? 'Крок 1: Знайдіть помилку' : 'Step 1: Find the error';
-  const step2Label = isUkrainian ? 'Крок 2: Оберіть правильну форму' : 'Step 2: Choose the correct form';
+  const step2Label = typedFix
+    ? (isUkrainian ? 'Крок 2: Напишіть правильну форму' : 'Step 2: Type the correct form')
+    : (isUkrainian ? 'Крок 2: Оберіть правильну форму' : 'Step 2: Choose the correct form');
   const completeLabel = isUkrainian ? 'Завершено' : 'Complete';
   const noErrorLabel = isUkrainian ? '✓ У цьому реченні немає помилок' : '✓ No error in this sentence';
-  const fixPromptLabel = isUkrainian ? 'Оберіть правильну форму для' : 'Choose the correct form for';
+  const fixPromptLabel = typedFix
+    ? (isUkrainian ? 'Напишіть правильну форму замість' : 'Type the correct form for')
+    : (isUkrainian ? 'Оберіть правильну форму для' : 'Choose the correct form for');
+  const typedInputLabel = isUkrainian ? 'Ваше виправлення' : 'Your correction';
+  const checkLabel = isUkrainian ? 'Перевірити' : 'Check';
   const revealCorrectionLabel = isUkrainian ? 'Показати виправлення' : 'Show correction';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
@@ -228,7 +292,8 @@ export function ErrorCorrectionItem({
             return <span key={idx}>{word}</span>;
           }
 
-          // For complete step, show strikethrough for all error words, replacement after last error word
+          // For complete step, strike through the error words and show the correct form after
+          // the last one; the learner's own (possibly wrong) attempt stays in the feedback.
           const isLastErrorWord = errorWord && isError && idx === words.findLastIndex(w => {
             const cw = cleanErrorToken(w);
             return errorWords.includes(cw.toLowerCase());
@@ -256,7 +321,7 @@ export function ErrorCorrectionItem({
               {step === 'complete' && isError ? (
                 <>
                   <s>{word}</s>
-                  {isLastErrorWord && selectedFix ? ` ${selectedFix}` : ''}
+                  {isLastErrorWord ? ` ${correctForm}` : ''}
                 </>
               ) : (
                 word
@@ -278,8 +343,48 @@ export function ErrorCorrectionItem({
         </button>
       )}
 
+      {/* Typed correction - fix step of a typed item */}
+      {step === 'fix' && typedFix && (
+        <form className={styles.fixOptions} data-activity="error-correction-typed-fix" onSubmit={handleTypedSubmit}>
+          <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
+          <div className={styles.optionChips}>
+            <input
+              ref={typedInputRef}
+              className={styles.textInput}
+              type="text"
+              lang="uk"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              aria-label={typedInputLabel}
+              data-activity="error-correction-typed-input"
+              value={typedAnswer}
+              onChange={(e) => setTypedAnswer(e.target.value)}
+              disabled={disabled}
+            />
+            <button
+              type="submit"
+              className={styles.chip}
+              data-activity="error-correction-typed-check"
+              disabled={disabled || !typedAnswer.trim()}
+            >
+              {checkLabel}
+            </button>
+            <button
+              type="button"
+              className={styles.chip}
+              data-activity="error-correction-reveal"
+              onClick={handleRevealCorrection}
+              disabled={disabled}
+            >
+              {revealCorrectionLabel}
+            </button>
+          </div>
+        </form>
+      )}
+
       {/* Options - only in fix step */}
-      {step === 'fix' && shuffledOptions.length > 0 && (
+      {step === 'fix' && !typedFix && shuffledOptions.length > 0 && (
         <div className={styles.fixOptions} data-activity="error-correction-fix-options">
           <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
           <div className={styles.optionChips}>
@@ -299,7 +404,7 @@ export function ErrorCorrectionItem({
       )}
 
       {/* Sentence-level rewrites can intentionally omit multiple-choice chips. */}
-      {step === 'fix' && shuffledOptions.length === 0 && (
+      {step === 'fix' && !typedFix && shuffledOptions.length === 0 && (
         <div className={styles.fixOptions} data-activity="error-correction-reveal-panel">
           <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
           <div className={styles.optionChips}>
@@ -333,7 +438,14 @@ export function ErrorCorrectionItem({
             ) : isFixCorrect ? (
               `✓ ${isUkrainian ? 'Правильно!' : 'Correct!'} "${errorWord}" → "${correctForm}"`
             ) : (
-              `${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`
+              <>
+                {selectedFix && (
+                  <div data-activity="error-correction-learner-answer">
+                    {isUkrainian ? 'Ваша відповідь:' : 'Your answer:'} "{selectedFix}"
+                  </div>
+                )}
+                {`${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`}
+              </>
             )}
             {optionWhy && !isNoErrorCorrect && !isCorrectionShown ? (
               <>

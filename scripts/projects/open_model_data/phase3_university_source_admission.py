@@ -20,8 +20,10 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 REVIEW_SCHEMA_PATH = DATA / "contracts/phase3_university_source_admission_review_v1.schema.json"
 GATE_SCHEMA_PATH = DATA / "contracts/phase3_university_source_admission_gate_v1.schema.json"
 

@@ -12,57 +12,73 @@ import hashlib
 import json
 import re
 import subprocess
-from collections.abc import Mapping, Sequence
+import tempfile
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
-DEFAULT_EVIDENCE_DIR = DATA / "evidence/source_universe_v1"
-SCHEMA_PATH = DATA / "contracts/phase3_source_universe_freeze_v1.schema.json"
+DEFAULT_EVIDENCE_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/source_universe_v1"
+SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_source_universe_freeze_v1.schema.json"
 RECEIPT_FILE = "source-universe-freeze-receipt.json"
 STRUCTURAL_FILE = "lexical_structural_freeze_v1.json"
 GIT_SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
-LEDGER_FAMILIES = frozenset({
-    "antonenko_style_guide",
-    "antonenko_textbook_representation",
-    "calque_inventory",
-    "ua_gec",
-    "school_textbooks",
-    "pravopys_2019_complete",
-    "pravopys_2026_complete",
-    "other_normative_style_inventory",
-})
-LEXICAL_FAMILIES = frozenset({
-    "lexical_balla_en_uk",
-    "lexical_dmklinger_uk_en",
-    "lexical_esum_cognate_forms",
-    "lexical_esum_etymology",
-    "lexical_frazeolohichnyi",
-    "lexical_grinchenko",
-    "lexical_puls_cefr",
-    "lexical_sum11",
-    "lexical_ukrajinet",
-    "lexical_wiktionary",
-    "lexical_ulif",
-    "lexical_vesum",
-    "lexical_r2u",
-})
-ALL_FAMILIES = LEDGER_FAMILIES | LEXICAL_FAMILIES
-PAYLOAD_FILES = frozenset(
-    {f"{family_id}.units.jsonl" for family_id in LEDGER_FAMILIES} | {STRUCTURAL_FILE}
+LEDGER_FAMILIES = frozenset(
+    {
+        "antonenko_style_guide",
+        "antonenko_textbook_representation",
+        "calque_inventory",
+        "ua_gec",
+        "school_textbooks",
+        "pravopys_2019_complete",
+        "pravopys_2026_complete",
+        "other_normative_style_inventory",
+    }
 )
+LEXICAL_FAMILIES = frozenset(
+    {
+        "lexical_balla_en_uk",
+        "lexical_dmklinger_uk_en",
+        "lexical_esum_cognate_forms",
+        "lexical_esum_etymology",
+        "lexical_frazeolohichnyi",
+        "lexical_grinchenko",
+        "lexical_puls_cefr",
+        "lexical_sum11",
+        "lexical_ukrajinet",
+        "lexical_wiktionary",
+        "lexical_ulif",
+        "lexical_vesum",
+        "lexical_r2u",
+    }
+)
+ALL_FAMILIES = LEDGER_FAMILIES | LEXICAL_FAMILIES
+PAYLOAD_FILES = frozenset({f"{family_id}.units.jsonl" for family_id in LEDGER_FAMILIES} | {STRUCTURAL_FILE})
 EXPECTED_FILES = PAYLOAD_FILES | {RECEIPT_FILE}
-BASE_LEDGER_FIELDS = frozenset({
-    "family_id", "unit_id", "unit_sha256", "ordinal", "locator",
-    "duplicate_group_id", "parse_status", "rights", "provenance",
-})
+REGISTRY_FILES = frozenset({RECEIPT_FILE, STRUCTURAL_FILE})
+BASE_LEDGER_FIELDS = frozenset(
+    {
+        "family_id",
+        "unit_id",
+        "unit_sha256",
+        "ordinal",
+        "locator",
+        "duplicate_group_id",
+        "parse_status",
+        "rights",
+        "provenance",
+    }
+)
 BINDING_FIELDS = ["unit_id", "unit_sha256", "duplicate_group_id", "parse_status", "provenance"]
 
 
@@ -115,7 +131,7 @@ def _schema_validate(receipt: Mapping[str, Any], schema_path: Path) -> None:
         raise IntegrityError(f"receipt schema violation at {location}: {exc.message}") from exc
 
 
-def _directory_files(evidence_dir: Path) -> dict[str, Path]:
+def _directory_files(evidence_dir: Path, *, expected: frozenset[str] = EXPECTED_FILES) -> dict[str, Path]:
     require(evidence_dir.is_dir() and not evidence_dir.is_symlink(), "evidence directory is not a real directory")
     files: dict[str, Path] = {}
     try:
@@ -126,7 +142,7 @@ def _directory_files(evidence_dir: Path) -> dict[str, Path]:
         require(not path.is_symlink(), f"symlinked evidence artifact: {path.name}")
         require(path.is_file(), f"non-file evidence artifact: {path.name}")
         files[path.name] = path
-    require(set(files) == EXPECTED_FILES, "evidence directory file set differs from the frozen 10 artifacts")
+    require(set(files) == expected, "evidence directory file set differs from the frozen artifacts")
     return files
 
 
@@ -136,7 +152,9 @@ def _validate_manifest(receipt: Mapping[str, Any], files: Mapping[str, Path]) ->
     payloads = manifest["payloads"]
     require(isinstance(payloads, list), "receipt payload manifest is not a list")
     paths = [item.get("path") for item in payloads if isinstance(item, Mapping)]
-    require(len(paths) == len(payloads) and len(set(paths)) == len(paths), "receipt payload paths are duplicated or invalid")
+    require(
+        len(paths) == len(payloads) and len(set(paths)) == len(paths), "receipt payload paths are duplicated or invalid"
+    )
     require(set(paths) == PAYLOAD_FILES, "receipt payload paths differ from the frozen payload set")
     require(payloads == sorted(payloads, key=lambda item: item["path"]), "receipt payload manifest is not canonical")
     require(
@@ -163,16 +181,29 @@ def _validate_record(record: object, family_id: str, ordinal: int, ledger_name: 
     for key in ("unit_sha256", "duplicate_group_id"):
         value = record[key]
         if key == "duplicate_group_id":
-            require(isinstance(value, str) and value.startswith(f"duplicate.{family_id}.") and SHA256.fullmatch(value.rsplit(".", 1)[-1]) is not None, f"invalid duplicate group: {ledger_name}:{ordinal}")
+            require(
+                isinstance(value, str)
+                and value.startswith(f"duplicate.{family_id}.")
+                and SHA256.fullmatch(value.rsplit(".", 1)[-1]) is not None,
+                f"invalid duplicate group: {ledger_name}:{ordinal}",
+            )
         else:
             _require_sha(value, f"{ledger_name}:{ordinal}:{key}")
-    require(isinstance(record["unit_id"], str) and record["unit_id"].startswith(f"unit.{family_id}.") and SHA256.fullmatch(record["unit_id"].rsplit(".", 1)[-1]) is not None, f"invalid unit identifier: {ledger_name}:{ordinal}")
+    require(
+        isinstance(record["unit_id"], str)
+        and record["unit_id"].startswith(f"unit.{family_id}.")
+        and SHA256.fullmatch(record["unit_id"].rsplit(".", 1)[-1]) is not None,
+        f"invalid unit identifier: {ledger_name}:{ordinal}",
+    )
     if "normalized_text_sha256" in record:
         _require_sha(record["normalized_text_sha256"], f"{ledger_name}:{ordinal}:normalized_text_sha256")
     _validate_rights(record["rights"], ledger_name, ordinal)
     _validate_provenance(record["provenance"], ledger_name, ordinal)
     _validate_locator(record["locator"], family_id, ledger_name, ordinal)
-    require(isinstance(record["parse_status"], str) and record["parse_status"], f"invalid parse status: {ledger_name}:{ordinal}")
+    require(
+        isinstance(record["parse_status"], str) and record["parse_status"],
+        f"invalid parse status: {ledger_name}:{ordinal}",
+    )
 
 
 def _validate_rights(value: object, ledger_name: str, ordinal: int) -> None:
@@ -185,32 +216,65 @@ def _validate_rights(value: object, ledger_name: str, ordinal: int) -> None:
 
 
 def _validate_provenance(value: object, ledger_name: str, ordinal: int) -> None:
-    require(isinstance(value, Mapping) and set(value) == {"input_sha256", "unit_grain"}, f"unexpected provenance shape: {ledger_name}:{ordinal}")
+    require(
+        isinstance(value, Mapping) and set(value) == {"input_sha256", "unit_grain"},
+        f"unexpected provenance shape: {ledger_name}:{ordinal}",
+    )
     _require_sha(value["input_sha256"], f"{ledger_name}:{ordinal}:provenance")
-    require(isinstance(value["unit_grain"], str) and value["unit_grain"], f"invalid unit grain: {ledger_name}:{ordinal}")
+    require(
+        isinstance(value["unit_grain"], str) and value["unit_grain"], f"invalid unit grain: {ledger_name}:{ordinal}"
+    )
 
 
 def _validate_locator(value: object, family_id: str, ledger_name: str, ordinal: int) -> None:
-    require(isinstance(value, Mapping) and isinstance(value.get("kind"), str), f"invalid locator: {ledger_name}:{ordinal}")
+    require(
+        isinstance(value, Mapping) and isinstance(value.get("kind"), str), f"invalid locator: {ledger_name}:{ordinal}"
+    )
     kind = value["kind"]
     if kind == "sqlite_row":
-        require(set(value) == {"kind", "table", "primary_key_fields", "primary_key_sha256"}, f"unexpected SQLite locator shape: {ledger_name}:{ordinal}")
+        require(
+            set(value) == {"kind", "table", "primary_key_fields", "primary_key_sha256"},
+            f"unexpected SQLite locator shape: {ledger_name}:{ordinal}",
+        )
         require(isinstance(value["table"], str) and value["table"], f"invalid SQLite table: {ledger_name}:{ordinal}")
-        require(isinstance(value["primary_key_fields"], list) and value["primary_key_fields"] and all(isinstance(item, str) and item for item in value["primary_key_fields"]), f"invalid SQLite primary key fields: {ledger_name}:{ordinal}")
+        require(
+            isinstance(value["primary_key_fields"], list)
+            and value["primary_key_fields"]
+            and all(isinstance(item, str) and item for item in value["primary_key_fields"]),
+            f"invalid SQLite primary key fields: {ledger_name}:{ordinal}",
+        )
         _require_sha(value["primary_key_sha256"], f"{ledger_name}:{ordinal}:primary key")
     elif kind == "python_mapping_entry":
-        require(family_id == "calque_inventory" and set(value) == {"kind", "collection", "entry_id_sha256"}, f"unexpected mapping locator shape: {ledger_name}:{ordinal}")
-        require(isinstance(value["collection"], str) and value["collection"], f"invalid mapping collection: {ledger_name}:{ordinal}")
+        require(
+            family_id == "calque_inventory" and set(value) == {"kind", "collection", "entry_id_sha256"},
+            f"unexpected mapping locator shape: {ledger_name}:{ordinal}",
+        )
+        require(
+            isinstance(value["collection"], str) and value["collection"],
+            f"invalid mapping collection: {ledger_name}:{ordinal}",
+        )
         _require_sha(value["entry_id_sha256"], f"{ledger_name}:{ordinal}:entry id")
     elif kind == "pdf_numbered_hierarchy":
-        require(family_id.startswith("pravopys_") and set(value) == {"kind", "edition_sha256", "page", "line", "end_page", "end_line", "section_path"}, f"unexpected PDF locator shape: {ledger_name}:{ordinal}")
+        require(
+            family_id.startswith("pravopys_")
+            and set(value) == {"kind", "edition_sha256", "page", "line", "end_page", "end_line", "section_path"},
+            f"unexpected PDF locator shape: {ledger_name}:{ordinal}",
+        )
         _require_sha(value["edition_sha256"], f"{ledger_name}:{ordinal}:edition")
-        require(all(isinstance(value[name], int) and value[name] >= 1 for name in ("page", "line", "end_page", "end_line")), f"invalid PDF locator bounds: {ledger_name}:{ordinal}")
+        require(
+            all(isinstance(value[name], int) and value[name] >= 1 for name in ("page", "line", "end_page", "end_line")),
+            f"invalid PDF locator bounds: {ledger_name}:{ordinal}",
+        )
         require(
             (value["end_page"], value["end_line"]) >= (value["page"], value["line"]),
             f"inverted PDF locator bounds: {ledger_name}:{ordinal}",
         )
-        require(isinstance(value["section_path"], list) and value["section_path"] and all(isinstance(item, str) and item for item in value["section_path"]), f"invalid PDF section path: {ledger_name}:{ordinal}")
+        require(
+            isinstance(value["section_path"], list)
+            and value["section_path"]
+            and all(isinstance(item, str) and item for item in value["section_path"]),
+            f"invalid PDF section path: {ledger_name}:{ordinal}",
+        )
     else:
         raise IntegrityError(f"unexpected locator kind: {ledger_name}:{ordinal}")
 
@@ -239,27 +303,60 @@ def _validate_ledgers(receipt_families: Mapping[str, Mapping[str, Any]], files: 
 def _validate_structural(receipt_families: Mapping[str, Mapping[str, Any]], files: Mapping[str, Path]) -> None:
     path = files[STRUCTURAL_FILE]
     structural = read_json(path)
-    require(set(structural) == {"schema_version", "text_free", "families"}, "unexpected lexical structural receipt shape")
-    require(structural["schema_version"] == "lexical_structural_freeze_v1" and structural["text_free"] is True, "lexical structural receipt is not text-free")
+    require(
+        set(structural) == {"schema_version", "text_free", "families"}, "unexpected lexical structural receipt shape"
+    )
+    require(
+        structural["schema_version"] == "lexical_structural_freeze_v1" and structural["text_free"] is True,
+        "lexical structural receipt is not text-free",
+    )
     families = structural["families"]
     require(isinstance(families, list), "lexical structural families is not a list")
     summaries: dict[str, Mapping[str, Any]] = {}
     for summary in families:
         require(isinstance(summary, Mapping), "lexical structural family is not an object")
-        require(set(summary) == {"family_id", "unit_count", "ordered_rolling_sha256", "parse_status_counts", "binding_fields", "provenance"}, "unexpected lexical structural family shape")
+        require(
+            set(summary)
+            == {
+                "family_id",
+                "unit_count",
+                "ordered_rolling_sha256",
+                "parse_status_counts",
+                "binding_fields",
+                "provenance",
+            },
+            "unexpected lexical structural family shape",
+        )
         family_id = summary["family_id"]
         require(isinstance(family_id, str) and family_id not in summaries, "duplicate lexical structural family")
         summaries[family_id] = summary
         require(summary["binding_fields"] == BINDING_FIELDS, f"lexical binding fields mismatch: {family_id}")
-        require(isinstance(summary["unit_count"], int) and summary["unit_count"] > 0, f"invalid lexical count: {family_id}")
+        require(
+            isinstance(summary["unit_count"], int) and summary["unit_count"] > 0, f"invalid lexical count: {family_id}"
+        )
         _require_sha(summary["ordered_rolling_sha256"], f"lexical universe: {family_id}")
         parse_counts = summary["parse_status_counts"]
-        require(isinstance(parse_counts, Mapping) and parse_counts and all(isinstance(key, str) and key and isinstance(value, int) and value >= 0 for key, value in parse_counts.items()), f"invalid lexical parse counts: {family_id}")
+        require(
+            isinstance(parse_counts, Mapping)
+            and parse_counts
+            and all(
+                isinstance(key, str) and key and isinstance(value, int) and value >= 0
+                for key, value in parse_counts.items()
+            ),
+            f"invalid lexical parse counts: {family_id}",
+        )
         require(sum(parse_counts.values()) == summary["unit_count"], f"lexical parse count mismatch: {family_id}")
         provenance = summary["provenance"]
-        require(isinstance(provenance, Mapping) and set(provenance) in ({"input_sha256", "unit_grain"}, {"input_sha256", "unit_grain", "cache_id_sha256"}), f"unexpected lexical provenance shape: {family_id}")
+        require(
+            isinstance(provenance, Mapping)
+            and set(provenance) in ({"input_sha256", "unit_grain"}, {"input_sha256", "unit_grain", "cache_id_sha256"}),
+            f"unexpected lexical provenance shape: {family_id}",
+        )
         _require_sha(provenance["input_sha256"], f"lexical provenance: {family_id}")
-        require(isinstance(provenance["unit_grain"], str) and provenance["unit_grain"], f"invalid lexical unit grain: {family_id}")
+        require(
+            isinstance(provenance["unit_grain"], str) and provenance["unit_grain"],
+            f"invalid lexical unit grain: {family_id}",
+        )
         if "cache_id_sha256" in provenance:
             _require_sha(provenance["cache_id_sha256"], f"lexical cache identifier: {family_id}")
     require(set(summaries) == LEXICAL_FAMILIES, "lexical structural family set mismatch")
@@ -268,9 +365,14 @@ def _validate_structural(receipt_families: Mapping[str, Mapping[str, Any]], file
         family = receipt_families[family_id]
         summary = summaries[family_id]
         require(family["structural_receipt_file"] == STRUCTURAL_FILE, f"structural filename mismatch: {family_id}")
-        require(family["structural_receipt_sha256"] == structural_hash, f"structural receipt hash mismatch: {family_id}")
+        require(
+            family["structural_receipt_sha256"] == structural_hash, f"structural receipt hash mismatch: {family_id}"
+        )
         require(family["unit_count"] == summary["unit_count"], f"structural unit count mismatch: {family_id}")
-        require(family["structural_universe_sha256"] == summary["ordered_rolling_sha256"], f"structural universe hash mismatch: {family_id}")
+        require(
+            family["structural_universe_sha256"] == summary["ordered_rolling_sha256"],
+            f"structural universe hash mismatch: {family_id}",
+        )
 
 
 def _validate_families(receipt: Mapping[str, Any], files: Mapping[str, Path]) -> None:
@@ -285,10 +387,23 @@ def _validate_families(receipt: Mapping[str, Any], files: Mapping[str, Path]) ->
     require(set(families) == ALL_FAMILIES, "receipt family set must be exactly 8 ledger and 13 lexical families")
     for family_id in LEDGER_FAMILIES:
         family = families[family_id]
-        require(set(family) == {"family_id", "unit_count", "ledger_sha256", "ledger_file"}, f"ledger receipt shape mismatch: {family_id}")
+        require(
+            set(family) == {"family_id", "unit_count", "ledger_sha256", "ledger_file"},
+            f"ledger receipt shape mismatch: {family_id}",
+        )
     for family_id in LEXICAL_FAMILIES:
         family = families[family_id]
-        require(set(family) == {"family_id", "unit_count", "structural_receipt_file", "structural_receipt_sha256", "structural_universe_sha256"}, f"lexical receipt shape mismatch: {family_id}")
+        require(
+            set(family)
+            == {
+                "family_id",
+                "unit_count",
+                "structural_receipt_file",
+                "structural_receipt_sha256",
+                "structural_universe_sha256",
+            },
+            f"lexical receipt shape mismatch: {family_id}",
+        )
     _validate_ledgers(families, files)
     _validate_structural(families, files)
 
@@ -309,18 +424,53 @@ def _git_bytes(repo_root: Path, arguments: Sequence[str], label: str) -> bytes:
 
 def _validate_freezer_binding(receipt: Mapping[str, Any], repo_root: Path) -> None:
     merged_main_sha = receipt["merged_main_sha"]
-    require(isinstance(merged_main_sha, str) and GIT_SHA40.fullmatch(merged_main_sha) is not None, "merged main SHA must be 40 lowercase hex characters")
+    require(
+        isinstance(merged_main_sha, str) and GIT_SHA40.fullmatch(merged_main_sha) is not None,
+        "merged main SHA must be 40 lowercase hex characters",
+    )
     _git_bytes(repo_root, ["merge-base", "--is-ancestor", merged_main_sha, "origin/main"], "merged-main ancestry")
     freezer = receipt["freezer"]
     require(isinstance(freezer, Mapping), "freezer binding is not an object")
     script_path = freezer["script_path"]
-    require(isinstance(script_path, str) and script_path and not Path(script_path).is_absolute() and ".." not in Path(script_path).parts, "unsafe freezer script path")
+    require(
+        isinstance(script_path, str)
+        and script_path
+        and not Path(script_path).is_absolute()
+        and ".." not in Path(script_path).parts,
+        "unsafe freezer script path",
+    )
     script = _git_bytes(repo_root, ["show", f"{merged_main_sha}:{script_path}"], "freezer script")
     require(sha256_bytes(script) == freezer["script_sha256"], "freezer script hash mismatch")
 
 
-def validate(evidence_dir: Path = DEFAULT_EVIDENCE_DIR, *, schema_path: Path = SCHEMA_PATH, repo_root: Path = ROOT) -> dict[str, Any]:
+@contextmanager
+def verified_source_universe_dir(*, repo_root: Path = ROOT) -> Iterator[Path]:
+    """Stage the mixed K/A freeze from one verified artifact snapshot."""
+    snapshot = artifact_set("open_model_evidence_indexes", repo=repo_root)
+    registry_dir = repo_root / DEFAULT_EVIDENCE_DIR.relative_to(ROOT)
+    artifact_dir = repo_root / "data/projects/open_model_data/evidence/source_universe_v1"
+    _directory_files(registry_dir, expected=REGISTRY_FILES)
+    _directory_files(artifact_dir, expected=EXPECTED_FILES - REGISTRY_FILES)
+    with tempfile.TemporaryDirectory(prefix="phase3-source-universe-") as staging:
+        staged = Path(staging)
+        for name in EXPECTED_FILES:
+            if name in REGISTRY_FILES:
+                payload = (registry_dir / name).read_bytes()
+            else:
+                member = f"projects/open_model_data/evidence/source_universe_v1/{name}"
+                require(member in snapshot.artifacts, f"missing managed freeze member: {name}")
+                payload = snapshot.artifacts[member]
+            (staged / name).write_bytes(payload)
+        yield staged
+
+
+def validate(
+    evidence_dir: Path = DEFAULT_EVIDENCE_DIR, *, schema_path: Path = SCHEMA_PATH, repo_root: Path = ROOT
+) -> dict[str, Any]:
     """Validate a published freeze directory without assigning a coverage verdict."""
+    if evidence_dir == DEFAULT_EVIDENCE_DIR:
+        with verified_source_universe_dir(repo_root=repo_root) as staged:
+            return validate(staged, schema_path=schema_path, repo_root=repo_root)
     files = _directory_files(evidence_dir)
     receipt = read_json(files[RECEIPT_FILE])
     _schema_validate(receipt, schema_path)

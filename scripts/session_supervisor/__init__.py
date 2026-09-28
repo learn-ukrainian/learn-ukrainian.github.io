@@ -524,6 +524,23 @@ def _add_driver_identity(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--host-id", default=None)
 
 
+def _resolve_default_host_id() -> str:
+    """Return this process's resolved opaque host id, never the raw env string.
+
+    `scripts/delegate.py`'s Cursor self-dispatch guard resolves
+    ``LU_MONITOR_HOST_ID`` through the same function before comparing it
+    against a lease's stored ``holder_host_id``. Storing the raw env value
+    here instead would let a non-opaque ``LU_MONITOR_HOST_ID`` (e.g. a raw
+    hostname) collapse to ``"local"`` only on the delegate side, making an
+    unrelated lease look like a self-dispatch mismatch.
+    """
+    try:
+        from scripts.api.occupancy_local import resolve_launcher_host_id
+    except ImportError:
+        from api.occupancy_local import resolve_launcher_host_id
+    return resolve_launcher_host_id()
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run one lifecycle action and render only JSON to stdout."""
     args = build_parser().parse_args(argv)
@@ -545,7 +562,7 @@ def main(argv: list[str] | None = None) -> int:
                 instance_id=args.instance_id,
                 process_id=args.process_id,
                 task_id=args.task_id,
-                host_id=None if args.local else (args.host_id or os.environ.get("LU_MONITOR_HOST_ID", "local")),
+                host_id=None if args.local else (args.host_id or _resolve_default_host_id()),
             )
             lease = supervisor.open_driver(
                 role=args.role,

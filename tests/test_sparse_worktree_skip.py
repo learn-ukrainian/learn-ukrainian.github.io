@@ -103,10 +103,18 @@ def test_sparse_on_skips_top_level_open_model_readers() -> None:
         "tests/test_open_model_foundry_cli.py",
         sparse_enabled=True,
         missing_trees=frozenset({"data/projects"}),
-        item_name="test_example_runs_end_to_end_without_model_or_private_database",
+        item_name="test_exact_eval_text_is_denied_from_every_learning_view",
     )
     assert reason is not None
     assert "--sparse-include data/projects" in reason
+
+    registry_only = _conftest().sparse_missing_tree_skip_reason(
+        "tests/test_open_model_foundry_cli.py",
+        sparse_enabled=True,
+        missing_trees=frozenset({"data/projects"}),
+        item_name="test_example_runs_end_to_end_without_model_or_private_database",
+    )
+    assert registry_only is None
 
     untouched = _conftest().sparse_missing_tree_skip_reason(
         "tests/test_open_model_data_timeouts.py",

@@ -17,6 +17,7 @@ from scripts.audit.llm_qg_store import (
     latest_llm_qg,
     record_llm_qg,
 )
+from scripts.common.git_context import sanitized_git_env
 
 
 def _module(tmp_path: Path) -> Path:
@@ -468,12 +469,16 @@ def test_repository_root_failure_degrades_gracefully(monkeypatch) -> None:
 
 
 def _git_cmd(cwd: Path, *args: str) -> None:
-    subprocess.run(
-        ["git", "-C", str(cwd), *args],
-        check=True,
+    command = ["git", "-C", str(cwd), *args]
+    result = subprocess.run(
+        command,
         capture_output=True,
         text=True,
         timeout=30,
+        env=sanitized_git_env(),
+    )
+    assert result.returncode == 0, (
+        f"{command!r} exited {result.returncode}; stderr: {result.stderr}"
     )
 
 
@@ -527,8 +532,15 @@ def test_circuit_state_path_shared_in_linked_worktree(
     assert llm_qg_store.circuit_state_path() == custom_circuit
 
 
-def test_discover_worktree_dbs(tmp_path: Path) -> None:
+@pytest.mark.parametrize("hostile_git_env", [False, True])
+def test_discover_worktree_dbs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hostile_git_env: bool
+) -> None:
     from scripts.audit import llm_qg_store
+
+    if hostile_git_env:
+        for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"):
+            monkeypatch.setenv(name, "/dev/null")
 
     primary = tmp_path / "primary"
     primary.mkdir()
@@ -1093,4 +1105,3 @@ def test_parse_iso_timestamp_normalization() -> None:
     assert t4 > t1
     assert _parse_iso_timestamp(None) == 0.0
     assert _parse_iso_timestamp("invalid") == 0.0
-

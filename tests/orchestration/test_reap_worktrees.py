@@ -1146,6 +1146,15 @@ def test_squash_merge_branch_force_delete(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    # #8998: on a loaded CI runner, the locked region's default 5s-per-call /
+    # 25s-region budget (production values, tuned for a live dispatch host)
+    # can be outrun by an otherwise-harmless slow git subprocess, flipping
+    # this assertion's "removed" to a timeout "skipped" (see the sibling
+    # tests below at line ~4199 that shrink these same knobs to deliberately
+    # hit that path). Widen them here so the assertion tracks the reaper's
+    # actual decision, not host git-call latency.
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 60.0)
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 300.0)
     repo = init_repo(tmp_path)
     worktree_path = add_worktree(repo, "codex/squash-merged")
 
@@ -2376,14 +2385,12 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
         monkeypatch,
         rest=_gh_stdout(
             json.dumps(
-                [
-                    {
-                        "number": 8536,
-                        "state": "closed",
-                        "merged_at": "2026-09-22T10:00:00Z",
-                        "head": {"sha": "rest-sha"},
-                    }
-                ]
+                [[{
+                    "number": 8536,
+                    "state": "closed",
+                    "merged_at": "2026-09-22T10:00:00Z",
+                    "head": {"sha": "rest-sha"},
+                }]]
             )
         ),
         graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
@@ -2394,6 +2401,24 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
     assert error is None
     assert [(s.number, s.state, s.head_sha) for s in states] == [(8536, "MERGED", "rest-sha")]
     assert all(call[1] == "api" for call in calls)
+
+
+def test_query_pr_states_rest_pages_preserve_later_closed_head(monkeypatch) -> None:
+    first = [
+        {"number": number, "state": "closed", "merged_at": None, "head": {"sha": f"sha-{number}"}}
+        for number in range(1, 101)
+    ]
+    later = [{"number": 101, "state": "closed", "merged_at": None, "head": {"sha": "held-head"}}]
+    calls = _patch_gh_transports(
+        monkeypatch, rest=_gh_stdout(json.dumps([first, later])), graphql=_gh_stdout("down", returncode=1),
+    )
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert error is None
+    assert len(states) == 101
+    assert states[-1].state == "CLOSED" and states[-1].head_sha == "held-head"
+    assert "--paginate" in calls[0] and "--slurp" in calls[0]
 
 
 def test_query_pr_states_falls_back_to_graphql_when_rest_fails(monkeypatch) -> None:

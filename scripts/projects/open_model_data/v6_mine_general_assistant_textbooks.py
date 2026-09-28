@@ -43,6 +43,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 
 def resolve_data_path(rel_path: str) -> Path:
     """Resolve a relative data path, falling back to git common dir for gitignored files."""
@@ -69,8 +71,12 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v06_general_assistant"
 
-SCHEMA_EVAL_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_general_assistant_eval_record.schema.json"
-SCHEMA_RECEIPT_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_general_assistant_release_receipt.schema.json"
+SCHEMA_EVAL_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_general_assistant_eval_record.schema.json"
+)
+SCHEMA_RECEIPT_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/v1_general_assistant_release_receipt.schema.json"
+)
 
 # Strict 22 held-out textbooks for evaluation firewall (0% train/eval text leakage)
 HELD_OUT_TEXTBOOKS = [

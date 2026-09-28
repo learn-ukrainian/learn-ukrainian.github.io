@@ -1999,7 +1999,10 @@ V04B_DIR = BASELINES_DIR / "archive" / "quarantined_historical" / "uldr_v04b_mid
 V05_DIR = BASELINES_DIR / "release" / "uldr_v05_grammar_valency"
 
 
-@pytest.mark.skipif(not V04A_DIR.is_dir(), reason="uldr_v04a not on local disk")
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04a_kyivan_rus/sft/sft_shard_001_of_030.jsonl",
+)
 def test_reproduces_v04a_kyivan_rus_findings(default_thresholds, normalizer):
     """Verify reproduction of findings on uldr_v04a (#8103): 467 date contradictions, top-5 query 94.1%."""
     shards = sorted(V04A_DIR.glob("sft/*.jsonl"))
@@ -2015,7 +2018,10 @@ def test_reproduces_v04a_kyivan_rus_findings(default_thresholds, normalizer):
     assert c_res.metrics["contradiction_count"] >= 467
 
 
-@pytest.mark.skipif(not V04B_DIR.is_dir(), reason="uldr_v04b not on local disk")
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/sft/sft_shard_001_of_030.jsonl",
+)
 def test_reproduces_v04b_middle_ukrainian_findings(default_thresholds):
     """Verify reproduction of findings on uldr_v04b (#8105): 142 reasoning patterns, 20 cover 98.8%."""
     shards = sorted(V04B_DIR.glob("sft/*.jsonl"))
@@ -2030,7 +2036,10 @@ def test_reproduces_v04b_middle_ukrainian_findings(default_thresholds):
     assert f_res.metrics["query"]["top5"] == pytest.approx(0.902, abs=0.005)
 
 
-@pytest.mark.skipif(not V05_DIR.is_dir(), reason="uldr_v05 not on local disk")
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v05_grammar_valency/sft/sft_shard_001_of_070.jsonl",
+)
 def test_reproduces_v05_grammar_valency_findings(default_thresholds):
     """Verify reproduction of findings on uldr_v05 (#8143): 32,629 controls, 2,371 corrections, 13 queries."""
     shards = sorted(V05_DIR.glob("sft/*.jsonl"))

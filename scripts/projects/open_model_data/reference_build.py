@@ -31,10 +31,11 @@ if str(ROOT) not in sys.path:
 from scripts.projects.open_model_data import correction_factory, profile_corpus
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import validate_source_records as source_contract
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.ua_eval_harness import evaluate_model
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
-DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/reference/reference_build_config_v1.json"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
+DEFAULT_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "reference/reference_build_config_v1.json"
 CONFIG_SCHEMA = CONTRACTS / "reference_build_config_v1.schema.json"
 MANIFEST_SCHEMA = CONTRACTS / "reference_build_manifest_v1.schema.json"
 OBSERVATION_SCHEMA = CONTRACTS / "reference_build_observation_v1.schema.json"
@@ -151,6 +152,10 @@ def validate_schema(value: Any, schema_path: Path, *, label: str) -> None:
 def resolve_path(value: str) -> Path:
     path = Path(value)
     require(not path.is_absolute(), f"reference config path must be relative: {value}")
+    legacy_base = Path("data/projects/open_model_data")
+    if path.is_relative_to(legacy_base):
+        # The frozen config retains logical names for its two classified K inputs.
+        path = REGISTRY_OPEN_MODEL_DATA_DIR.relative_to(ROOT) / path.relative_to(legacy_base)
     resolved = (ROOT / path).resolve()
     require(ROOT.resolve() in resolved.parents, f"reference config path escapes repository: {value}")
     require(resolved.is_file(), f"reference input is missing: {value}")

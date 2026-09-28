@@ -19,7 +19,7 @@ from jsonschema import Draft202012Validator, ValidationError
 from scripts.projects.open_model_data import phase3_historical_protection_channels as protection
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 ARTIFACT = DATA / "admission/phase3_historical_protection_channels_v1.json"
 SCHEMA = DATA / "contracts/phase3_historical_protection_channels_v1.schema.json"
 SHA256 = "a" * 64
@@ -156,7 +156,10 @@ def test_all_required_upstream_bindings_are_exact_and_hash_bound() -> None:
     contract = _contract()
     assert {key: value["sha256"] for key, value in contract["bindings"].items()} == EXPECTED_BINDINGS
     assert contract["controlling_outcome_sha256"] == protection.OUTCOME_SHA256
-    assert contract["input_state"]["p2_composite_input_sha256"] == "83b59c6b62fff0beaf68dec7c3ca40b70033693dc19c50f26d27c553265352b0"
+    assert (
+        contract["input_state"]["p2_composite_input_sha256"]
+        == "83b59c6b62fff0beaf68dec7c3ca40b70033693dc19c50f26d27c553265352b0"
+    )
     assert contract["heldout_contract"]["firewall_artifact_sha256"] == EXPECTED_BINDINGS["scope_circularity_firewall"]
 
 
@@ -226,9 +229,12 @@ def test_dialect_amendment_and_historical_channels_do_not_change_denominator() -
         "partial_denominator_permitted": False,
         "cell_status_counts": {"coverage_blocked": 14, "not_applicable_with_evidence": 2},
     }
-    assert protection.validate_source_channel(
-        next(item for item in contract["channels"] if item["channel_id"] == "old_east_slavic_kyivan_rus"), contract
-    ) is True
+    assert (
+        protection.validate_source_channel(
+            next(item for item in contract["channels"] if item["channel_id"] == "old_east_slavic_kyivan_rus"), contract
+        )
+        is True
+    )
 
 
 def test_current_review_and_heldout_states_are_explicitly_non_admitting() -> None:
@@ -298,7 +304,12 @@ def test_binding_digest_mutation_fails_closed(binding: str) -> None:
 
 @pytest.mark.parametrize(
     "field",
-    ["historical_forms_protected", "modern_correction_eligible", "old_east_slavic_is_modern_russian", "historical_ruskyi_auto_mapped_to_modern_russian"],
+    [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "old_east_slavic_is_modern_russian",
+        "historical_ruskyi_auto_mapped_to_modern_russian",
+    ],
 )
 def test_non_erasure_boolean_mutations_fail_closed(field: str) -> None:
     contract = _contract()
@@ -306,14 +317,32 @@ def test_non_erasure_boolean_mutations_fail_closed(field: str) -> None:
     assert protection.validate_contract_integrity(contract) is False
 
 
-@pytest.mark.parametrize("field", ["p1_base_required_cells", "p1_composite_required_cells", "p2_rule_slots_R", "source_units", "unknown_rights_blockers"])
+@pytest.mark.parametrize(
+    "field",
+    [
+        "p1_base_required_cells",
+        "p1_composite_required_cells",
+        "p2_rule_slots_R",
+        "source_units",
+        "unknown_rights_blockers",
+    ],
+)
 def test_denominator_shrinkage_fails_closed(field: str) -> None:
     contract = _contract()
     contract["denominator"][field] = 1 if contract["denominator"][field] == 0 else 0
     assert protection.validate_contract_integrity(contract) is False
 
 
-@pytest.mark.parametrize("field", ["source_rows_emitted", "historical_protected_rows_admitted", "rusyn_rows_admitted", "provider_calls", "training_rows"])
+@pytest.mark.parametrize(
+    "field",
+    [
+        "source_rows_emitted",
+        "historical_protected_rows_admitted",
+        "rusyn_rows_admitted",
+        "provider_calls",
+        "training_rows",
+    ],
+)
 def test_zero_counter_mutations_fail_closed(field: str) -> None:
     contract = _contract()
     contract["zero_counters"][field] = 1
@@ -393,7 +422,9 @@ def test_unknown_dimension_set_is_exact_for_every_nonsemantic_route(bad_dimensio
             Draft202012Validator(_record_schema()).validate(record)
 
 
-@pytest.mark.parametrize("channel_id", [item["channel_id"] for item in protection._channels() if item["source_unit_ids"]])
+@pytest.mark.parametrize(
+    "channel_id", [item["channel_id"] for item in protection._channels() if item["source_unit_ids"]]
+)
 def test_semantic_protected_records_remain_non_admitting_until_review(channel_id: str) -> None:
     record = _protected_record(channel_id)
     assert protection.validate_disposition_shape(record) is False
@@ -434,14 +465,24 @@ def test_missing_period_region_register_or_recension_fails_closed(record_kind: s
         assert protection.validate_disposition_shape(mutated) is False
 
 
-@pytest.mark.parametrize("field", ["historical_forms_protected", "modern_correction_eligible", "old_east_slavic_is_modern_russian", "historical_ruskyi_auto_mapped_to_modern_russian"])
+@pytest.mark.parametrize(
+    "field",
+    [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "old_east_slavic_is_modern_russian",
+        "historical_ruskyi_auto_mapped_to_modern_russian",
+    ],
+)
 def test_record_non_erasure_mutations_fail_closed(field: str) -> None:
     record = _protected_record("old_east_slavic_kyivan_rus")
     record["protection_invariants"][field] = not protection.NON_ERASURE_INVARIANTS[field]
     assert protection.validate_disposition_shape(record) is False
 
 
-@pytest.mark.parametrize("mutation", [{"single_label_forced": True}, {"mixed_layers_allowed": False}, {"language_layer_ids": []}])
+@pytest.mark.parametrize(
+    "mutation", [{"single_label_forced": True}, {"mixed_layers_allowed": False}, {"language_layer_ids": []}]
+)
 def test_mixed_layer_collapse_or_forced_single_label_fails_closed(mutation: dict[str, Any]) -> None:
     record = _protected_record("church_slavonic_recension")
     record.update(mutation)
@@ -551,3 +592,11 @@ def test_generator_check_is_byte_exact_and_does_not_rewrite_artifact() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert ARTIFACT.read_bytes() == before
+
+
+def test_frozen_generator_provenance_cannot_be_rehashed_away() -> None:
+    contract = _contract()
+    assert contract["generator"]["sha256"] == protection.FROZEN_GENERATOR_SHA256
+    contract["generator"]["sha256"] = "0" * 64
+    contract["receipt_sha256"] = protection._receipt_sha256(contract)
+    assert protection.validate_contract_integrity(contract) is False

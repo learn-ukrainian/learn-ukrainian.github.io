@@ -21,11 +21,10 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as assignment
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-REAL_RECEIPT_PATH = (
-    ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
-)
+REAL_RECEIPT_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 
 
 @functools.cache
@@ -100,12 +99,14 @@ def _fresh_receipt(salt: bytes, family_ids: list[str]) -> dict:
 @pytest.fixture(autouse=True)
 def _fixed_synthetic_provenance_resources():
     from _v4_provenance_resource_fixture import synthetic_resources
+
     with synthetic_resources():
         yield
 
 
 def _write_receipt(tmp_path: Path, receipt: dict) -> Path:
     from _v4_provenance_resource_fixture import ACTIVE
+
     ACTIVE.get().install_seal(receipt, tmp_path)
     receipt_path = tmp_path / "receipt.json"
     receipt_path.write_text(json.dumps(receipt))
@@ -228,16 +229,15 @@ def test_a3_heldout_assignment_rerun_verifies_and_never_regenerates(
     assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir)])
     assert membership_path.stat().st_mtime_ns == first_write_mtime
     printed = json.loads(capsys.readouterr().out)
-    assert printed["salt_commitment_sha256"] == receipt["heldout_partition_seal"]["assignment_algorithm"][
-        "salt_commitment_sha256"
-    ]
+    assert (
+        printed["salt_commitment_sha256"]
+        == receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"]
+    )
 
     # --generate against an existing artifact is also refused -- it must not
     # draw a fresh salt and overwrite the sealed one.
     with pytest.raises(assignment.AssignmentError, match="already exists"):
-        assignment.main(
-            ["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"]
-        )
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
     assert membership_path.stat().st_mtime_ns == first_write_mtime
 
 
@@ -315,13 +315,9 @@ def test_a3_heldout_assignment_rerun_detects_commitment_drift_against_receipt(tm
     "mutate",
     [
         lambda receipt: receipt.__setitem__("controlling_outcome_sha256", "9" * 64),
-        lambda receipt: receipt["bindings"]["assignment_algorithm_implementation"].__setitem__(
-            "sha256", "9" * 64
-        ),
+        lambda receipt: receipt["bindings"]["assignment_algorithm_implementation"].__setitem__("sha256", "9" * 64),
         lambda receipt: receipt["source_family_registry"]["families"].append({"family_id": "fam-extra"}),
-        lambda receipt: receipt["heldout_partition_seal"].__setitem__(
-            "reseal_required_on", ["some_other_trigger"]
-        ),
+        lambda receipt: receipt["heldout_partition_seal"].__setitem__("reseal_required_on", ["some_other_trigger"]),
         # A builder role's held-out visibility flipped to true -- the exact
         # CF probe that motivated binding access_firewall into the receipt
         # binding context. heldout_count is deliberately left unmutated so
@@ -361,9 +357,10 @@ def test_a3_heldout_assignment_rerun_detects_binding_context_drift(tmp_path: Pat
     mutate(drifted)
     # The commitment hashes are untouched by the mutation -- only the
     # binding context changed.
-    assert drifted["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] == receipt[
-        "heldout_partition_seal"
-    ]["assignment_algorithm"]["salt_commitment_sha256"]
+    assert (
+        drifted["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"]
+        == receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"]
+    )
 
     with pytest.raises(assignment.AssignmentError, match="binding drift"):
         assignment.verify_against_receipt(membership_path, drifted, FAMILY_IDS)
@@ -481,9 +478,7 @@ def test_a3_heldout_assignment_load_refuses_symlinked_artifact(tmp_path: Path) -
     private_dir = tmp_path / "private"
     private_dir.mkdir(mode=0o700)
     decoy = tmp_path / "decoy.json"
-    decoy.write_text(
-        json.dumps({"salt_hex": "00" * 32, "membership": {}, "algorithm_descriptor_sha256": "x"})
-    )
+    decoy.write_text(json.dumps({"salt_hex": "00" * 32, "membership": {}, "algorithm_descriptor_sha256": "x"}))
     os.chmod(decoy, 0o600)
     membership_path = private_dir / assignment.MEMBERSHIP_FILENAME
     membership_path.symlink_to(decoy)
@@ -724,9 +719,9 @@ def test_a3_heldout_main_refuses_draft_receipt_where_declared_family_count_disag
 
 def test_a3_heldout_main_refuses_receipt_with_duplicate_family_ids(tmp_path: Path) -> None:
     receipt = _receipt_shape(FAMILY_IDS)
-    receipt["source_family_registry"]["families"][1]["family_id"] = receipt["source_family_registry"]["families"][
-        0
-    ]["family_id"]
+    receipt["source_family_registry"]["families"][1]["family_id"] = receipt["source_family_registry"]["families"][0][
+        "family_id"
+    ]
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
 
@@ -851,9 +846,10 @@ def test_a3_heldout_assignment_migrate_upgrades_legacy_artifact_in_place(
 
     assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
     printed = json.loads(capsys.readouterr().out)
-    assert printed["salt_commitment_sha256"] == receipt["heldout_partition_seal"]["assignment_algorithm"][
-        "salt_commitment_sha256"
-    ]
+    assert (
+        printed["salt_commitment_sha256"]
+        == receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"]
+    )
 
     assert not assignment.is_legacy_artifact(membership_path)
     upgraded = assignment.load_private_artifact(membership_path)
@@ -893,9 +889,7 @@ def test_a3_heldout_assignment_migrate_refuses_generate_combined(tmp_path: Path)
     receipt_path = _write_receipt(tmp_path, _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS))
 
     with pytest.raises(assignment.AssignmentError, match="mutually exclusive"):
-        assignment.main(
-            ["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate", "--generate"]
-        )
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate", "--generate"])
 
 
 def test_a3_heldout_assignment_migrate_refuses_tampered_legacy_membership(tmp_path: Path) -> None:
@@ -965,7 +959,9 @@ def test_explicit_private_fixture_directory_is_independent_of_checkout(tmp_path,
     unrelated = tmp_path / "unrelated-working-directory"
     unrelated.mkdir()
     monkeypatch.chdir(unrelated)
-    _generate(monkeypatch, ["--receipt", str(receipt), "--private-dir", str(private), "--generate"], salt_hex=salt.hex())
+    _generate(
+        monkeypatch, ["--receipt", str(receipt), "--private-dir", str(private), "--generate"], salt_hex=salt.hex()
+    )
     assert (private / assignment.MEMBERSHIP_FILENAME).is_file()
     assert not (unrelated / "batch_state").exists()
 
@@ -973,6 +969,7 @@ def test_explicit_private_fixture_directory_is_independent_of_checkout(tmp_path,
 def test_package_validation_does_not_invoke_git(tmp_path, monkeypatch) -> None:
     def unavailable(*args, **kwargs):
         raise AssertionError("package validation must not invoke a process")
+
     monkeypatch.setattr(subprocess, "run", unavailable)
     monkeypatch.chdir(tmp_path)
     assignment.validate_receipt_independently(json.loads(assignment.DEFAULT_RECEIPT.read_bytes()))

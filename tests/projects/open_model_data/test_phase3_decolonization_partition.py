@@ -16,6 +16,9 @@ from pathlib import Path
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -31,14 +34,34 @@ from scripts.projects.open_model_data.phase3_decolonization_partition import (
     verify_manifest,
 )
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-PARTITIONS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "partitions"
+CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+PARTITIONS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization" / "partitions"
 
 MANIFEST_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_partition_manifest.schema.json"
 MANIFEST_FILE = PARTITIONS_DIR / "decolonization_partition_manifest.json"
 TRAIN_CUSTODY_FILE = PARTITIONS_DIR / "train_source_custody.json"
 HELDOUT_SUITE_FILE = PARTITIONS_DIR / "heldout_evaluation_suite_1000.jsonl"
 MINHASH_REPORT_FILE = PARTITIONS_DIR / "minhash_dedup_summary.json"
+
+
+@pytest.fixture(scope="module")
+def _verified_partition_bundle(tmp_path_factory: pytest.TempPathFactory) -> None:
+    """Use one verified A/K generation for the historical partition tests."""
+    global PARTITIONS_DIR, MANIFEST_FILE, TRAIN_CUSTODY_FILE, HELDOUT_SUITE_FILE, MINHASH_REPORT_FILE
+    snapshot = artifact_set("open_model_other_indexes")
+    stage = tmp_path_factory.mktemp("partition-bundle")
+    for name in ("decolonization_partition_manifest.json", "train_source_custody.json", "minhash_dedup_summary.json"):
+        (stage / name).write_bytes(
+            snapshot.companions[f"registry/projects/open_model_data/decolonization/partitions/{name}"]
+        )
+    (stage / "heldout_evaluation_suite_1000.jsonl").write_bytes(
+        snapshot.artifacts["projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"]
+    )
+    PARTITIONS_DIR = stage
+    MANIFEST_FILE = stage / "decolonization_partition_manifest.json"
+    TRAIN_CUSTODY_FILE = stage / "train_source_custody.json"
+    HELDOUT_SUITE_FILE = stage / "heldout_evaluation_suite_1000.jsonl"
+    MINHASH_REPORT_FILE = stage / "minhash_dedup_summary.json"
 
 
 @pytest.fixture(scope="module")
@@ -84,6 +107,10 @@ def requires_vesum_db() -> Path:
     return DEFAULT_VESUM_DB
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_partition_manifest_integrity(manifest_schema: dict) -> None:
     """Verify partition manifest matches Draft2020-12 schema and files match exact SHA-256."""
     assert MANIFEST_FILE.is_file(), f"Missing manifest: {MANIFEST_FILE}"
@@ -108,6 +135,10 @@ def test_partition_manifest_integrity(manifest_schema: dict) -> None:
         assert actual_sha == fmeta["sha256"], f"SHA256 mismatch for {key}: expected {fmeta['sha256']}, got {actual_sha}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_source_custody_invariants() -> None:
     """Verify custody rules: UA-GEC test protected, ZNO and style-guide Train-only."""
     with MANIFEST_FILE.open("r", encoding="utf-8") as f:
@@ -149,6 +180,10 @@ def test_root_family_derivational_extraction_unit() -> None:
     assert buy_roots.pop() == "куп"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_preserve_cases_verbatim_target_and_vesum_attestation(requires_vesum_db: Path) -> None:
     """Verify that all 600 PRESERVE cases contain target_term verbatim and are attested in VESUM."""
     assert HELDOUT_SUITE_FILE.is_file(), f"Missing held-out suite: {HELDOUT_SUITE_FILE}"
@@ -182,6 +217,10 @@ def test_preserve_cases_verbatim_target_and_vesum_attestation(requires_vesum_db:
     v_conn.close()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_derivational_closure_independent_zero_leakage(requires_sources_db: Path, requires_vesum_db: Path) -> None:
     """Independently recompute root families and verify zero root overlap between train and held-out unseen."""
     with MANIFEST_FILE.open("r", encoding="utf-8") as f:
@@ -254,6 +293,10 @@ def test_derivational_closure_independent_zero_leakage(requires_sources_db: Path
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_ua_gec_test_split_strict_zero_leakage(requires_sources_db: Path) -> None:
     """Verify that official UA-GEC test split is 100% excluded from held-out suite and training partition."""
     s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
@@ -282,6 +325,10 @@ def test_ua_gec_test_split_strict_zero_leakage(requires_sources_db: Path) -> Non
             assert f":{t_doc}" not in source, f"Protected UA-GEC test doc_id {t_doc} found in held-out case: {c}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_minhash_near_duplicate_zero_collisions() -> None:
     """Verify MinHash / token Jaccard deduplication report and verify real LSH parameters."""
     assert MINHASH_REPORT_FILE.is_file(), f"Missing MinHash report: {MINHASH_REPORT_FILE}"
@@ -300,6 +347,10 @@ def test_minhash_near_duplicate_zero_collisions() -> None:
     assert report["status"] == "PASS"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_independent_minhash_cross_split_verification(requires_sources_db: Path) -> None:
     """Independently re-run MinHash signatures and token Jaccard on a cross-split sample across all sources."""
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
@@ -351,6 +402,10 @@ def test_independent_minhash_cross_split_verification(requires_sources_db: Path)
             )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_heldout_suite_exact_allocation_and_statistical_power() -> None:
     """Verify held-out suite has exactly 600 PRESERVE + 400 CORRECT cases and HER <= 1.0% power."""
     assert HELDOUT_SUITE_FILE.is_file(), f"Missing held-out suite: {HELDOUT_SUITE_FILE}"
@@ -392,6 +447,10 @@ def test_heldout_suite_exact_allocation_and_statistical_power() -> None:
     assert bound < 0.010, f"Statistical bound {bound} does not satisfy HER <= 1.0% gate"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
+)
+@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_partition_cli_verify_only() -> None:
     """Verify that verify_manifest function returns True on disk artifacts."""
     assert verify_manifest(PARTITIONS_DIR) is True

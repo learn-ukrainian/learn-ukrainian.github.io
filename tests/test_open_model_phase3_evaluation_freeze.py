@@ -9,9 +9,10 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_freeze as freeze
 from scripts.projects.open_model_data import phase3_near_duplicate as near
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json"
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_evaluation_freeze_bundle_v1.schema.json"
 
 
 def _text(family: str, ordinal: int) -> str:
@@ -80,20 +81,23 @@ def test_full_denominator_partition_is_label_blind_exact_and_share_bounded() -> 
         assert counts["sealed_evaluation"] <= counts["family_total"] // 5
         assert counts["sealed_evaluation"] + counts["author_cleared"] + counts["quarantined"] == counts["family_total"]
     all_private_rows = [*result["partition_rows"], *result["clearance_rows"], *result["quarantine_rows"]]
-    assert all("source_text" not in row and "source_record" not in row and "frozen_locator" not in row for row in all_private_rows)
-    assert any(row["reason"] == "prior_exposure" and row["unit_id"] == "unit.ua_gec.0" for row in result["quarantine_rows"])
+    assert all(
+        "source_text" not in row and "source_record" not in row and "frozen_locator" not in row
+        for row in all_private_rows
+    )
+    assert any(
+        row["reason"] == "prior_exposure" and row["unit_id"] == "unit.ua_gec.0" for row in result["quarantine_rows"]
+    )
 
 
 def test_heldout_neighbour_firewall_detects_exact_and_near_but_not_unrelated() -> None:
     sealed = [{"source_text": "питомий український вислів для точної перевірки"}]
     index = freeze._surface_index(sealed)
     assert freeze._heldout_neighbour({"source_text": sealed[0]["source_text"]}, index) is True
-    assert freeze._heldout_neighbour(
-        {"source_text": "питомий український вислів для точної перевірки!"}, index
-    ) is True
-    assert freeze._heldout_neighbour(
-        {"source_text": "цілком інший матеріал без спільного формулювання"}, index
-    ) is False
+    assert freeze._heldout_neighbour({"source_text": "питомий український вислів для точної перевірки!"}, index) is True
+    assert (
+        freeze._heldout_neighbour({"source_text": "цілком інший матеріал без спільного формулювання"}, index) is False
+    )
 
 
 def test_public_schema_is_closed_and_contains_no_private_identity_fields() -> None:

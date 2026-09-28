@@ -139,8 +139,14 @@ def test_deeply_nested_checkpoint_json_surfaces_recursion_error(
 
 
 def test_dispatcher_scan_timeout_returns_degraded_response(
-    batch_client: TestClient, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, batch_client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # The fixture checkout is not this process's repo. The scan must resolve
+    # that checkout's interpreter, not inherit sys.executable.
+    interpreter = tmp_path / ".venv" / "bin" / "python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text("", encoding="utf-8")
+
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["scan"], timeout=DISPATCHER_SCAN_TIMEOUT_S)
 

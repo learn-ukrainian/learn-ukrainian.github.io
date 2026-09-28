@@ -180,8 +180,15 @@ def test_ulp_lesson_10_replay(real, store):
     assert by_class[codes.LEMMA_OUTSIDE_STATE] == ["Огойко"]
     outside = next(t for t in cyrillic if t["class"] == codes.LEMMA_OUTSIDE_STATE)
     assert outside["surface"] == codes.PROPER_NOUN
-    # Zero-vowel prepositions are now resolved as stress-free by the word builder.
-    assert codes.PENDING_STRESS not in by_class
+    # The two Його tokens cannot print stress without an approved source.
+    assert by_class[codes.PENDING_STRESS] == ["Його", "Його"]
+    for token in (t for t in cyrillic if t["class"] == codes.PENDING_STRESS):
+        assert token["selected"] is None
+        assert token["readings"] and all(
+            r["stressed"] is None and r["stress_source"] == "pending" for r in token["readings"]
+        )
+        assert "pending" in token["message"]
+    # Zero-vowel prepositions remain resolved as stress-free by the word builder.
     assert sorted(t["token"] for t in cyrillic if t["token"] in {"в", "з"} and t["class"] == codes.RESOLVED) == [
         "в",
         "в",
@@ -194,6 +201,7 @@ def test_ulp_lesson_10_replay(real, store):
         codes.STRESS_OPEN,
         codes.STRESS_CERTAIN_IDENTITY_OPEN,
         codes.LEMMA_OUTSIDE_STATE,
+        codes.PENDING_STRESS,
     }
     zaraz = next(t for t in cyrillic if t["token"] == "зараз")
     noun_group = src.ulif_entries(["зараза"]).raw["зараза"]

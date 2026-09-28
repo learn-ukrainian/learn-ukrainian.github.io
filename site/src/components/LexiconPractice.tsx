@@ -4393,9 +4393,11 @@ function LexiconPracticeIsland({
         labelUk = caseLabel;
         labelEn = translateGrammarTerm(caseLabel);
       } else {
+        // Identity inserts name the dictionary form only when the deck rule
+        // does; a case-free `lexical_insertion` card gets no label (#8726).
         const triggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
-        labelUk = triggerLabel || 'словникова форма';
-        labelEn = 'dictionary form';
+        labelUk = triggerLabel;
+        labelEn = triggerLabel ? 'dictionary form' : '';
       }
 
       setClozeFeedback({

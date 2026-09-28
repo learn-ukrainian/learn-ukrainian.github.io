@@ -8,8 +8,9 @@ import sys
 import tempfile
 import types
 import urllib.error
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
@@ -19,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 import pytest
+
+from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 
 
 @pytest.fixture(autouse=True)
@@ -145,6 +148,8 @@ def _dispatch_args(*extra: str):
             "no-op",
             "--mode",
             "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
             *extra,
         ]
     )
@@ -294,7 +299,9 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fail_if_spawned)
 
-    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--dry-run"))
+    args = _dispatch_args("--check-budget", "--dry-run")
+    args.cwd = None  # Exercise the new default without allowing any git or worker spawn.
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     captured = capsys.readouterr()
@@ -304,6 +311,8 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert len(lines[1]) == 16
     assert int(lines[1], 16) >= 0
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert state["worktree_path"] is not None
+    assert not Path(state["worktree_path"]).exists()
     assert lines[1] == state["run_nonce"]
     assert "ROUTING WARNING" in captured.err
 
@@ -359,7 +368,6 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     args = _dispatch_args("--language-lane")
     args.agent = agent
-
     assert delegate.cmd_dispatch(args) == 0
 
 
@@ -435,12 +443,12 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
     assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True) == "codex"
 
 
-def test_adapter_rejects_foreign_model_after_substitution():
-    temp_root = Path(tempfile.gettempdir())
-    before = set(temp_root.glob("codex-runtime-*.txt"))
+def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path):
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
     assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
-    assert set(temp_root.glob("codex-runtime-*.txt")) <= before
+    assert not list(tmp_path.glob("codex-runtime-*.txt"))
 
 
 def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
@@ -664,6 +672,8 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-hot",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -681,7 +691,7 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
 
 
 def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
-    """will_last_to_reset=False (deficit) → hard auto-sub even if status is warm."""
+    """Visible pace deficit (won't last, delta outside the on-pace band) hard-subs even if status is warm."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(
@@ -697,7 +707,12 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
                 "codex": {
                     "status": "warm",
                     "burn_pct_7d": 55.0,
-                    "codexbar": {"will_last_to_reset": False, "pace_summary": "won't last"},
+                    "codexbar": {
+                        "will_last_to_reset": False,
+                        "weekly_pace_delta_pct": 12.0,
+                        "weekly_expected_pct": 40.0,
+                        "pace_summary": "won't last",
+                    },
                 },
                 "cursor": {"status": "cool", "burn_pct_7d": 5.0},
             },
@@ -714,6 +729,8 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -726,6 +743,113 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" in err
+    assert "will_last_to_reset=False" in err
+
+
+def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_path, capsys):
+    """Freshly reset Claude (1% used, delta +0.49, will_last false, status hot) stays on Claude."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {
+                "primary_agent_for_code": "codex",
+                "rationale": "claude marked hot by early-window pace",
+                "warnings": [],
+            },
+            "agents": {
+                "claude": {
+                    "status": "hot",
+                    "interactive": {"status": "hot", "burn_pct_7d": 1.0},
+                    "burn_pct_7d": 1.0,
+                    "remaining_pct": 99,
+                    "resets_at": "2026-10-05T06:59:59Z",
+                    "codexbar": {
+                        "weekly_used_pct": 1.0,
+                        "weekly_pace_delta_pct": 0.49,
+                        "will_last_to_reset": False,
+                        "pace_summary": "0% in deficit | Expected 1% used",
+                    },
+                },
+                "codex": {"status": "hot", "burn_pct_7d": 70.0},
+            },
+            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert delegate._resolve_agent_with_budget_guard("claude") == "claude"
+
+
+def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, capsys):
+    """25% used and projected to run out 2 days before reset still substitutes."""
+    now = datetime(2026, 9, 28, 12, 0, tzinfo=UTC)
+    resets_at = (now + timedelta(days=5.75)).isoformat().replace("+00:00", "Z")
+    pace = compute_usage_pace(25.0, resets_at, now=now)
+    assert pace is not None
+    assert pace["will_last_to_reset"] is False
+    assert pace["delta_pct"] > 2
+    assert pace_is_deficit(pace) is True
+    runs_out_days_early = ((5.75 * 86400) - pace["eta_seconds"]) / 86400
+    assert abs(runs_out_days_early - 2) < 0.05
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": "cursor", "rationale": "codex deficit", "warnings": []},
+            "agents": {
+                "codex": {
+                    "status": "warm",
+                    "burn_pct_7d": 25.0,
+                    "remaining_pct": 75.0,
+                    "codexbar": {
+                        "weekly_used_pct": 25.0,
+                        "weekly_pace_delta_pct": pace["delta_pct"],
+                        "weekly_expected_pct": pace["expected_pct"],
+                        "will_last_to_reset": False,
+                        "pace_summary": "runs out 2d before reset",
+                    },
+                },
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
+            "diagnostics": {"records_loaded": 4, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "budget-real-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
+                "--prompt",
+                "no-op",
+                "--mode",
+                "read-only",
+                "--check-budget",
+            ]
+        )
+    )
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in err
+    assert "codex" in err and "cursor" in err
     assert "will_last_to_reset=False" in err
 
 
@@ -1144,3 +1268,298 @@ def test_check_budget_empty_prepaid_refuses_before_spawn(monkeypatch, tmp_path, 
     assert f"ROUTING REFUSED: prepaid {prepaid} status=near_cap" in message
     print(f"check-budget fixture {prepaid}: exit={result}, worker_spawns={len(spawned)}")
     print(message.strip())
+
+
+def _codex_cursor_budget(*, codex_status: str) -> dict:
+    hot = codex_status == "hot"
+    return {
+        "recommendation": {
+            "primary_agent_for_code": "cursor" if hot else "codex",
+            "rationale": "fixture",
+            "warnings": [],
+        },
+        "agents": {
+            "codex": {"status": codex_status, "burn_pct_7d": 95.0 if hot else 10.0},
+            "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            "claude": {"status": "cool", "burn_pct_7d": 10.0},
+        },
+        "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+    }
+
+
+def _capture_worker_commands(monkeypatch, tmp_path) -> list[list[str]]:
+    commands: list[list[str]] = []
+
+    def fake_popen(cmd, *_args, **_kwargs):
+        commands.append([str(part) for part in cmd])
+        return _FakeProc()
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="hot"))
+    return commands
+
+
+def _codex_dispatch(*extra: str):
+    return delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "probe-8855",
+            "--prompt",
+            "noop",
+            "--mode",
+            "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
+            "--check-budget",
+            *extra,
+        ]
+    )
+
+
+def _worker_argv(commands: list[list[str]]) -> list[str]:
+    worker = [command for command in commands if "_worker" in command]
+    assert worker, commands
+    return worker[-1]
+
+
+def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, capsys):
+    """AC-01: codex → cursor with gpt-6-sol uses the cursor dispatch pin, on the line and in the task JSON."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE: --agent codex → cursor" in err
+    assert "--model grok-4.7 (catalog default; gpt-6-sol has no mapping)" in err
+    argv = _worker_argv(commands)
+    assert "--agent" in argv and argv[argv.index("--agent") + 1] == "cursor"
+    assert "--model" in argv and argv[argv.index("--model") + 1] == "grok-4.7"
+    assert "gpt-6-sol" not in argv
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "cursor"
+    assert state["substitution"] == {
+        "kind": "agent-substitution",
+        "substituted": True,
+        "source": "budget-guard",
+        "requested_agent": "codex",
+        "actual_agent": "cursor",
+        "requested_model": "gpt-6-sol",
+        "actual_model": "grok-4.7",
+        "actual_model_known": True,
+        "model_resolution": "catalog-default",
+    }
+
+
+def test_budget_sub_without_explicit_model_uses_catalog_default(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch())
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model grok-4.7 (catalog default)" in err
+    assert "has no mapping" not in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["requested_model"] is None
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["model_resolution"] == "catalog-default"
+
+
+def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "not-a-fleet-model"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model grok-4.7 (catalog default; not-a-fleet-model has no mapping)" in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["requested_model"] == "not-a-fleet-model"
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["model_resolution"] == "catalog-default"
+
+
+def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "claude-opus-5-5"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model claude-opus-5-5-high (mapped from claude-opus-5-5)" in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "claude-opus-5-5-high"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["model_resolution"] == "mapped"
+    assert state["substitution"]["actual_model"] == "claude-opus-5-5-high"
+
+
+def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, tmp_path, capsys):
+    """Hot claude → codex: an explicit model Codex rejects, with no mapping row, never spawns."""
+    commands: list[list[str]] = []
+
+    def fake_popen(cmd, *_args, **_kwargs):
+        commands.append([str(part) for part in cmd])
+        return _FakeProc()
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture", "warnings": []},
+            "agents": {
+                "claude": {
+                    "status": "hot",
+                    "burn_pct_7d": 95.0,
+                    "interactive": {"status": "hot", "burn_pct_7d": 95.0},
+                },
+                "codex": {"status": "cool", "burn_pct_7d": 10.0},
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
+            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "claude",
+                "--task-id",
+                "probe-8855-reject",
+                "--prompt",
+                "noop",
+                "--mode",
+                "read-only",
+                "--check-budget",
+                "--model",
+                "claude-fable-5-1",
+            ]
+        )
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "rejects explicit --model claude-fable-5-1" in err
+    assert "CodexAdapter: model='claude-fable-5-1' rejected" in err
+    assert "Refusing before spawn." in err
+    assert "catalog default" not in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert not any("_worker" in command for command in commands)
+    assert not (tmp_path / "tasks" / "probe-8855-reject.json").exists()
+
+
+def test_budget_sub_refuses_before_spawn_when_no_model_is_valid(monkeypatch, tmp_path, capsys):
+    """AC-02: neither the mapped model nor the catalog default is valid → no task, no worker."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "not-a-fleet-model")
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "ROUTING REFUSED: no valid model for substitute --agent cursor" in err
+    assert "Refusing before spawn." in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert not any("_worker" in command for command in commands)
+    assert not (tmp_path / "tasks" / "probe-8855.json").exists()
+
+
+def test_dispatch_without_substitution_keeps_explicit_model(monkeypatch, tmp_path, capsys):
+    """AC-03: a cool lane keeps the caller's --model and writes no substitution."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="cool"))
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--agent") + 1] == "codex"
+    assert argv[argv.index("--model") + 1] == "gpt-6-sol"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "codex"
+    assert state["substitution"] is None
+
+
+def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch, tmp_path):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    task_id = "budget-sub-survives"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "agent": "cursor",
+            "model": "grok-4.7",
+            "substitution": {
+                "kind": "agent-substitution",
+                "substituted": True,
+                "source": "budget-guard",
+                "requested_agent": "codex",
+                "actual_agent": "cursor",
+                "requested_model": "gpt-6-sol",
+                "actual_model": "grok-4.7",
+                "actual_model_known": True,
+                "model_resolution": "catalog-default",
+            },
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "grok-4.7",
+            "effort": "unknown",
+            "cli_version": "test",
+            "substitution": {
+                "requested_model": "grok-4.7",
+                "actual_model": "grok-4.7",
+                "actual_model_known": True,
+                "source": "cursor-stream-json",
+                "substituted": False,
+            },
+        },
+    )()
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="grok-4.7",
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["substitution"]["kind"] == "agent-substitution"
+    assert state["substitution"]["requested_model"] == "gpt-6-sol"
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["runtime_attribution"]["source"] == "cursor-stream-json"
+    assert state["resolved_model"] == "grok-4.7"
+    assert state["resolved_model_source"] == "cursor-stream-json"

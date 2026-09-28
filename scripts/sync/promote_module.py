@@ -43,6 +43,7 @@ def _load_wiki_completeness_gate() -> None:
 
 _load_wiki_completeness_gate()
 from scripts.build import promote_quality_gate
+from scripts.common.repo_root import project_interpreter
 
 CURRICULUM_ROOT = Path("curriculum") / "l2-uk-en"
 DOCS_ROOT = Path("site") / "src" / "content" / "docs"
@@ -400,7 +401,7 @@ def _run_make_atlas(repo_root: Path) -> int:
 
 
 def _python(repo_root: Path) -> Path:
-    return repo_root / ".venv" / "bin" / "python"
+    return project_interpreter(repo_root)
 
 
 def _repo_rel(repo_root: Path, raw_path: str) -> Path:

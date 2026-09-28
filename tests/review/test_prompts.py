@@ -27,7 +27,14 @@ from scripts.build.fresh import manifest, plan_manifest
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.curriculum.evidence import lock
 from scripts.review.prompts import eligibility
-from scripts.review.prompts.check import MODULE_MANIFEST, TEMPLATE_PROSE_SLUGS, check_prompt
+from scripts.review.prompts.check import (
+    ATTEMPT_ENTRY,
+    MODULE_MANIFEST,
+    TEMPLATE_PROSE_SLUGS,
+    AttemptIdsUnreadableError,
+    check_prompt,
+    parse_attempt_ids,
+)
 from scripts.review.prompts.check import main as check_main
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import (
@@ -35,6 +42,7 @@ from scripts.review.prompts.render import (
     InputHashMismatchError,
     LearnerStateMismatchError,
     ManifestReader,
+    MissingAttemptIdsError,
     PackLockMismatchError,
     PinIneligibleError,
     RenderError,
@@ -42,18 +50,34 @@ from scripts.review.prompts.render import (
     WordsLockMismatchError,
     data_fence,
     dump_yaml,
-    render_prompt,
 )
+from scripts.review.prompts.render import render_prompt as _render_prompt_with_ids
 from scripts.review.receipts import REVIEW_TOOLS
+from scripts.review.validate import codes
+from scripts.review.validate.validate import validate_review
 from tests.build import test_fresh_runner as fresh_runner_tests
 from tests.build.test_fresh_e3b2 import _fake_state, _rereview_setup, _write
 from tests.build.test_fresh_e3b2 import _fixture as lesson_fixture
 from tests.build.test_fresh_plan_review import fake_verify
 from tests.helpers.plan_review_world import LEVEL, SLUG, build_env, validate_provisional
+from tests.review.test_record import World
+from tests.review.test_record import finding as record_finding
 
 pytestmark = pytest.mark.reads_content
 
 _SHIPPED_PROMPTS = (Path(__file__).resolve().parents[2] / "scripts" / "review" / "prompts").resolve()
+
+#: Attempt ids (#8996) most of this module's tests dispatch with; only the tests that exercise id
+#: behaviour itself (further below) pass their own.
+TEST_REVIEW_ID = "r2b-test-review"
+TEST_ATTEMPT_ID = "test-attempt-1"
+
+
+def render_prompt(manifest_source, template_name=None, **kwargs):
+    """``render_prompt`` with default attempt ids (#8996) for tests that only care about content, not ids."""
+    kwargs.setdefault("review_id", TEST_REVIEW_ID)
+    kwargs.setdefault("attempt_id", TEST_ATTEMPT_ID)
+    return _render_prompt_with_ids(manifest_source, template_name, **kwargs)
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -115,6 +139,120 @@ def _cache_immutable_shipped_templates():
         Path.read_text = original_text  # type: ignore[method-assign]
         Path.read_bytes = original_bytes  # type: ignore[method-assign]
         prompt_render.template_sources = original_sources
+
+
+def _prompt_bytes(path: Path) -> bytes:
+    try:
+        return path.read_bytes()
+    except OSError:
+        return b""
+
+
+def _render_cache_key(
+    manifest_source: object,
+    template_name: str | None,
+    repo_root: Path | None,
+    prompts_dir: Path | None,
+    review_id: str | None,
+    attempt_id: str | None,
+) -> tuple | None:
+    """Content key for one render. A changed pin, manifest, or template misses."""
+    if repo_root is None:
+        return None
+    root = Path(repo_root).resolve()
+    try:
+        if isinstance(manifest_source, (str, Path)):
+            path = Path(manifest_source)
+            if root is not None and not path.is_absolute():
+                path = root / path
+            manifest_bytes = path.read_bytes()
+            doc = yaml.safe_load(manifest_bytes.decode("utf-8"))
+        elif isinstance(manifest_source, dict):
+            doc = manifest_source
+            manifest_bytes = json.dumps(manifest_source, sort_keys=True, default=str).encode()
+        else:
+            return None
+        pin_bytes = tuple(
+            (entry.get("path"), hashlib.sha256(_prompt_bytes(root / entry["path"])).hexdigest())
+            for _location, entry in manifest.pinned_entries(doc)
+            if isinstance(entry, dict) and isinstance(entry.get("path"), str)
+        )
+    except (OSError, UnicodeError, yaml.YAMLError, TypeError, ValueError):
+        return None
+    prompt_root = Path(prompts_dir) if prompts_dir is not None else _SHIPPED_PROMPTS
+    templates = tuple(
+        (path.name, hashlib.sha256(_prompt_bytes(path)).hexdigest()) for path in sorted(prompt_root.glob("*.md.j2"))
+    )
+    return (manifest_bytes, tuple(pin_bytes), templates, template_name, str(root), review_id, attempt_id)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _cache_repeated_exact_renders_and_template_lint():
+    """Reuse a render and the static template lint when every input byte matches.
+
+    ``check_prompt`` re-renders and re-lints the same manifest for each exact-render
+    assertion. The key covers the manifest, each pinned file, and every template,
+    so a rewrite cannot be served from the previous text.
+    """
+    from scripts.review.prompts import check as prompt_check
+
+    original_render = prompt_check.render
+    original_lint = prompt_check._lint_templates
+    renders: dict[tuple, object] = {}
+    lint_static: dict[tuple, tuple[list[str], list[str]]] = {}
+
+    def cached_render(manifest_source, template_name=None, **kwargs):
+        key = _render_cache_key(
+            manifest_source,
+            template_name,
+            kwargs.get("repo_root"),
+            kwargs.get("prompts_dir"),
+            kwargs.get("review_id"),
+            kwargs.get("attempt_id"),
+        )
+        if key is None:
+            return original_render(manifest_source, template_name, **kwargs)
+        cached = renders.get(key)
+        if cached is None:
+            cached = original_render(manifest_source, template_name, **kwargs)
+            renders[key] = cached
+        return copy.deepcopy(cached)
+
+    def cached_lint(manifest_doc, used_text, used_name, prompts_dir, root, foreign_slugs, verifier_reads, errors):
+        paths = tuple(prompt_check._template_paths(Path(prompts_dir)))
+        fingerprint = tuple((str(path), hashlib.sha256(_prompt_bytes(path)).hexdigest()) for path in paths)
+        slug = manifest_doc.get("slug") if isinstance(manifest_doc, dict) else None
+        key = (fingerprint, slug, tuple(sorted(foreign_slugs, key=str)))
+        static = lint_static.get(key)
+        if static is None:
+            static_errors: list[str] = []
+            static_reads: list[str] = []
+            original_lint(
+                manifest_doc, None, used_name, prompts_dir, root, foreign_slugs, static_reads, static_errors
+            )
+            static = (static_errors, static_reads)
+            lint_static[key] = static
+        errors.extend(static[0])
+        verifier_reads.extend(static[1])
+        if used_text is not None:
+            previous_attempt = isinstance(manifest_doc, dict) and bool(manifest_doc.get("previous_attempt"))
+            prompt_check._lint_template_text(
+                used_text,
+                f"the render of {used_name} without its pinned data",
+                own_slug=slug,
+                foreign_slugs=foreign_slugs,
+                rereview="rereview" in used_name or previous_attempt,
+                rendered=True,
+                errors=errors,
+            )
+
+    prompt_check.render = cached_render
+    prompt_check._lint_templates = cached_lint
+    try:
+        yield
+    finally:
+        prompt_check.render = original_render
+        prompt_check._lint_templates = original_lint
 
 
 EXPECTED_RULE_SNIPPET = (
@@ -1701,3 +1839,228 @@ def test_the_renderer_serves_only_the_fixed_template_set_and_records_each_templa
     )
     assert any(err.startswith("template_sha256_mismatch") for err in wrong.errors)
     assert check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)]) == 0
+
+
+# ---------------------------------------------------------------------------
+# #8996: review seats get their exact review_id/attempt_id in the rendered prompt
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "fixture_name, template",
+    [("_setup_lesson_fixture", "lesson-review.md.j2"), ("_setup_plan_fixture", "plan-review.md.j2")],
+)
+def test_render_prints_the_given_review_and_attempt_ids(tmp_path, monkeypatch, fixture_name, template):
+    manifest_path, _doc, _ = globals()[fixture_name](tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(
+        manifest_path, repo_root=tmp_path, review_id="rev-8996-001", attempt_id="claude-att-1"
+    )
+    assert parse_attempt_ids(rendered) == ("rev-8996-001", "claude-att-1")
+    assert "<review_id>" not in rendered and "<attempt_id>" not in rendered
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+def test_lesson_rereview_prints_the_given_ids_beside_the_previous_attempt_id(tmp_path, monkeypatch):
+    manifest_path, _doc = _write_rereview(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(
+        manifest_path, repo_root=tmp_path, review_id="rev-8996-002", attempt_id="claude-att-2"
+    )
+    assert parse_attempt_ids(rendered) == ("rev-8996-002", "claude-att-2")
+    assert "Previous Attempt ID: attempt-1" in rendered  # unaffected: only the attempt block changed
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+@pytest.mark.parametrize(
+    "review_id, attempt_id, match",
+    [
+        (None, None, "review_id and attempt_id"),
+        ("rev-8996-001", None, "review_id and attempt_id"),
+        (None, "claude-att-1", "review_id and attempt_id"),
+        ("not a token", "claude-att-1", "review_id"),
+        ("rev-8996-001", "not a token", "attempt_id"),
+    ],
+)
+def test_render_refuses_a_dispatchable_prompt_without_valid_attempt_ids(
+    tmp_path, monkeypatch, review_id, attempt_id, match
+):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    with pytest.raises(MissingAttemptIdsError, match=match):
+        _render_prompt_with_ids(manifest_path, repo_root=tmp_path, review_id=review_id, attempt_id=attempt_id)
+
+
+def test_render_does_not_require_attempt_ids_for_a_template_with_no_attempt_block(tmp_path, monkeypatch):
+    """A custom template (settle's own, or a test double) prints no attempt block, so it needs no ids (#8996)."""
+    custom_prompts_dir = tmp_path / "custom_prompts"
+    custom_prompts_dir.mkdir(parents=True, exist_ok=True)
+    (custom_prompts_dir / "custom-check.md.j2").write_text(
+        "# Custom Review Prompt\n\nModule: {{ manifest.slug }}\n", encoding="utf-8"
+    )
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, _files = _render_prompt_with_ids(
+        manifest_path, template_name="custom-check.md.j2", repo_root=tmp_path, prompts_dir=custom_prompts_dir
+    )
+    assert "# Custom Review Prompt" in rendered
+
+
+def test_check_refuses_a_prompt_whose_attempt_ids_differ_from_those_given(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, files_read = render_prompt(
+        manifest_path, repo_root=tmp_path, review_id="rev-real", attempt_id="att-real"
+    )
+
+    wrong_review = check_prompt(
+        rendered, manifest_path, repo_root=tmp_path, files_read=files_read, review_id="rev-other"
+    )
+    assert not wrong_review.passed
+    assert any(
+        err.startswith("review_id_mismatch") and "rev-real" in err and "rev-other" in err for err in wrong_review.errors
+    ), wrong_review.errors
+
+    wrong_attempt = check_prompt(
+        rendered, manifest_path, repo_root=tmp_path, files_read=files_read, attempt_id="att-other"
+    )
+    assert not wrong_attempt.passed
+    assert any(
+        err.startswith("attempt_id_mismatch") and "att-real" in err and "att-other" in err
+        for err in wrong_attempt.errors
+    ), wrong_attempt.errors
+
+    # The matching ids pass exactly as an unspecified check does (parsed straight from the prompt).
+    matching = check_prompt(
+        rendered, manifest_path, repo_root=tmp_path, files_read=files_read, review_id="rev-real", attempt_id="att-real"
+    )
+    assert matching.passed, matching.errors
+
+
+def _copy_rendered_attempt_block(rendered: str, return_path: Path) -> dict:
+    """Overwrite a return's ``attempt`` mapping with the one the rendered prompt prints — what a seat copies."""
+    copied = yaml.safe_load(ATTEMPT_ENTRY.search(rendered).group(0))["attempt"]
+    document = yaml.safe_load(return_path.read_text(encoding="utf-8"))
+    document["attempt"] = copied
+    return_path.write_text(yaml.safe_dump(document, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    return copied
+
+
+@pytest.mark.parametrize("rendered_ids_match_dispatch", [True, False])
+def test_a_return_copied_from_the_rendered_template_validates_against_its_ledger(
+    tmp_path, monkeypatch, rendered_ids_match_dispatch
+):
+    """Round trip (#8996): the dispatch's ids key the receipt ledger (``<review_id>/<attempt_id>.jsonl``); the
+    seat's return carries the ``attempt`` block it copied from the rendered prompt, verbatim. With the ids
+    render.py baked in, that copy validates with no ``receipt_not_in_ledger`` — the exact failure #8996 reports;
+    a prompt rendered with other ids yields a copy the validator rejects by that code."""
+    world = World(tmp_path, monkeypatch)
+    review_id, attempt_id = "r2b-roundtrip-review", "r2b-roundtrip-attempt-1"
+    manifest_path = world.manifest(2)
+    render_ids = (review_id, attempt_id) if rendered_ids_match_dispatch else ("r2b-other-review", "r2b-other-1")
+
+    rendered, _prompt_sha, _files = render_prompt(
+        manifest_path, repo_root=world.root, review_id=render_ids[0], attempt_id=render_ids[1]
+    )
+    made = world.make_return(2, [record_finding(evidence="auto")], ids=(review_id, attempt_id))
+    assert made["ledger"] == world.ledgers / review_id / f"{attempt_id}.jsonl"
+    copied = _copy_rendered_attempt_block(rendered, made["review"])
+    assert (copied["review_id"], copied["attempt_id"]) == render_ids
+
+    result = validate_review(
+        made["review"],
+        manifest_path=manifest_path,
+        document_path=world.expanded(2),
+        ledger_path=made["ledger"],
+        repo_root=world.root,
+    )
+    rejection_codes = {item.code for item in result.rejections}
+    if rendered_ids_match_dispatch:
+        assert result.ok, result.rejections
+        assert codes.RECEIPT_NOT_IN_LEDGER not in rejection_codes
+    else:
+        assert not result.ok
+        assert codes.RECEIPT_NOT_IN_LEDGER in rejection_codes, result.rejections
+
+
+@pytest.mark.parametrize(
+    "block, expected",
+    [
+        ('attempt:\n  review_id: "rev-a"\n  attempt_id: "att-1"\nnext: 1\n', ("rev-a", "att-1")),
+        ("attempt:\n  review_id: 'rev-a'\n  attempt_id: 'att-1'\n", ("rev-a", "att-1")),
+        ("attempt:\n  review_id: rev-other\n  attempt_id: att-other\n", ("rev-other", "att-other")),
+        ("attempt: {review_id: rev-f, attempt_id: att-f}\n", ("rev-f", "att-f")),
+        ("no attempt entry here\n", (None, None)),
+    ],
+)
+def test_parse_attempt_ids_reads_every_yaml_spelling(block, expected):
+    assert parse_attempt_ids("## 4. Return Schema Instructions\n" + block) == expected
+
+
+@pytest.mark.parametrize(
+    "prompt, expected",
+    [
+        ("```yaml\nreview_schema: 1\n? attempt\n: {review_id: rev-x, attempt_id: att-x}\n```\n", ("rev-x", "att-x")),
+        (
+            "```yaml\n  review_schema: 1\n  attempt:\n    review_id: rev-i\n    attempt_id: att-i\n```\n",
+            ("rev-i", "att-i"),
+        ),
+        # settle prints its ids at the top level of its return schema
+        ('```yaml\nsettle_schema: 1\nreview_id: "settle-r"\nattempt_id: "s1"\n```\n', ("settle-r", "s1")),
+        # a re-review pins the earlier attempt's checks and findings (no return schema): they are not read
+        (
+            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-now"\n  attempt_id: "att-2"\n```\n'
+            "## 5. Fenced Manifest Inputs\n"
+            "```yaml\nchecks:\n  english: clean\nfindings:\n- id: F-1\n  attempt_id: att-1\n```\n",
+            ("rev-now", "att-2"),
+        ),
+        # several return schemas are fine when they agree; a longer fence is read too
+        (
+            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-a"\n  attempt_id: "att-a"\n```\n'
+            '````yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-a"\n  attempt_id: "att-a"\n````\n',
+            ("rev-a", "att-a"),
+        ),
+    ],
+    ids=["explicit-key", "indented", "settle", "pinned-findings-ignored", "agreeing-schemas"],
+)
+def test_parse_attempt_ids_reads_the_fenced_return_schema_as_yaml(prompt, expected):
+    assert parse_attempt_ids(prompt) == expected
+
+
+@pytest.mark.parametrize(
+    "prompt",
+    [
+        "```yaml\nreview_schema: 1\nkind: lesson\n```\n",  # review schema without an attempt block
+        '```yaml\nreview_schema: 1\nattempt: {review_id: "x"\n```\n',  # schema block not YAML
+        "Please echo review_id rev-a and attempt_id att-a.\n",  # ids named in prose only
+        "  attempt:\n    review_id: rev-a\n    attempt_id: att-a\n",  # indented, unfenced
+        # Codex r3: an early schema example with the dispatch ids, then the real instructions with others
+        (
+            'Example:\n```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-dispatch"\n  attempt_id: "att-dispatch"\n```\n'
+            "## 4. Return Schema Instructions\n"
+            '````yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-seat"\n  attempt_id: "att-seat"\n````\n'
+        ),
+    ],
+    ids=["no-attempt-block", "invalid-yaml", "prose-only", "indented-unfenced", "two-schemas-disagree"],
+)
+def test_parse_attempt_ids_fails_closed_when_named_ids_cannot_be_read(prompt):
+    with pytest.raises(AttemptIdsUnreadableError):
+        parse_attempt_ids(prompt)
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "attempt:\n  review_id: rev-a\n",  # attempt_id missing
+        "attempt: 5\n",  # not a mapping
+        "attempt:\n  review_id: [a]\n  attempt_id: b\n",  # not a scalar
+        'attempt:\n  review_id: ""\n  attempt_id: b\n',  # empty
+        'attempt:\n  review_id: "unterminated\n  attempt_id: b\n',  # not YAML
+    ],
+)
+def test_parse_attempt_ids_refuses_an_entry_whose_ids_cannot_be_read(block):
+    with pytest.raises(AttemptIdsUnreadableError):
+        parse_attempt_ids(block)
+
+
+@pytest.mark.parametrize("template", ["lesson-review.md.j2", "lesson-rereview.md.j2", "plan-review.md.j2"])
+def test_review_prompts_check_one_sentence_one_language(template: str) -> None:
+    """Operator direction 2026-09-27: reviewers flag a sentence that mixes Ukrainian and English."""
+    text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text(encoding="utf-8")
+    assert "one language, Ukrainian or English, never a mix" in text
+    assert "about that item" in text

@@ -5,10 +5,10 @@ aiohttp==3.14.3
 aiosignal==1.4.0
 aiosqlite==0.22.1
 annotated-doc==0.0.5
-annotated-types==0.7.0
+annotated-types==0.8.0
 anthropic==0.108.0
 anyio==4.15.1
-APScheduler==3.11.2
+APScheduler==3.11.3
 attrs==26.1.0
 Authlib==1.7.2
 bandit==1.9.4
@@ -51,11 +51,11 @@ fsspec==2026.1.0
 ftfy==6.3.1
 google-auth==2.49.2
 google-genai==1.65.0
-greenlet==3.5.5
+greenlet==3.5.6
 grpcio==1.82.1
 h11==0.16.0
 h2==4.4.1
-hf-xet==1.5.1
+hf-xet==1.6.0
 hpack==4.2.0
 httpcore==1.0.9
 httpcore2==2.10.0
@@ -112,19 +112,19 @@ open_clip_torch==3.3.0
 openai==1.109.1
 opencv-python-headless==4.13.0.92
 opentelemetry-api==1.44.0
-packaging==26.2
+packaging==26.3
 pandas==3.0.1
 pathspec==1.1.1
 pdftext==0.7.1
 peft==0.20.0
 pillow==12.3.0
-platformdirs==4.9.6
+platformdirs==4.11.11
 playwright==1.59.0
 pluggy==1.6.0
-portalocker==3.2.0
+portalocker==4.4.0
 pre_commit==4.6.0
 propcache==0.5.2
-protobuf==7.36.0
+protobuf==7.36.2
 psutil==7.2.2
 psycopg==3.3.4
 psycopg-binary==3.3.4
@@ -134,8 +134,8 @@ pyasn1_modules==0.4.2
 pycookiecheat==0.8.0
 pycparser==3.0
 pydantic-settings==2.15.0
-pydantic==2.13.4
-pydantic_core==2.46.4
+pydantic==2.13.5
+pydantic_core==2.46.5
 pyee==13.0.1
 Pygments==2.21.0
 PyJWT==2.14.0
@@ -153,9 +153,10 @@ pypdf==6.16.2
 pypdfium2==4.30.0
 pyproject_hooks==1.2.0
 pytest-cov==7.1.0
+pytest-rerunfailures==16.7
 pytest-timeout==2.4.0
 pytest-xdist==3.8.0
-pytest==9.0.3
+pytest==9.1.1
 python-dateutil==2.9.0.post0
 python-discovery==1.4.4
 python-docx==1.2.0
@@ -183,7 +184,7 @@ setuptools==84.0.0
 shellingham==1.5.4
 six==1.17.0
 sniffio==1.3.1
-soupsieve==2.9
+soupsieve==2.9.2
 sqlite-vec==0.1.9
 sse-starlette==3.4.8
 stanza==1.13.0
@@ -203,7 +204,7 @@ tqdm==4.69.1
 transformers==5.14.1
 trec-car-tools==2.6
 typer-slim==0.24.0
-typer==0.26.7
+typer==0.27.2
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 tzlocal==5.4.4
@@ -223,10 +224,10 @@ Werkzeug==3.1.8
 wheel==0.48.0
 xxhash==3.7.0
 yamllint==1.38.0
-yarl==1.24.2
+yarl==1.25.1
 youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
-zeroconf==0.150.0
+zeroconf==0.151.3
 zlib-state==0.1.12
 
 # Repository runtime dependency; install requirements from the repository root.

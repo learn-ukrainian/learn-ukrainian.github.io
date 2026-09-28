@@ -16,10 +16,10 @@ from scripts.lexicon.runner.memory import (
     apply_worker_memory_limit,
     classify_oom_exit,
     current_rss_bytes,
+    project_interpreter,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
-VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 
 
 def _worker_main(payload: dict[str, Any], result_path: str) -> None:
@@ -99,6 +99,7 @@ def run_capped_worker(
     timeout_s: float | None = None,
 ) -> WorkerResult:
     """Spawn a hard-capped child via subprocess; classify OOM when the OS stops it."""
+    interpreter = project_interpreter()
     result_path.parent.mkdir(parents=True, exist_ok=True)
     if result_path.exists():
         result_path.unlink()
@@ -107,7 +108,7 @@ def run_capped_worker(
     try:
         completed = subprocess.run(
             [
-                str(VENV_PYTHON),
+                str(interpreter),
                 "-m",
                 "scripts.lexicon.runner.worker",
                 str(payload_path),

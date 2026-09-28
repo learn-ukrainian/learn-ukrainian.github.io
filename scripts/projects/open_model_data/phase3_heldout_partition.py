@@ -32,9 +32,12 @@ from scripts.projects.open_model_data import phase3_functional_roles as function
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR, resolve_open_model_path
+from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 DEFAULT_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
 DEFAULT_SOURCES_DB = ROOT / "data/sources.db"
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
@@ -51,9 +54,7 @@ UA_EVAL_ARTIFACTS = (
     "data/projects/ua_eval_harness/analysis/v0.1.1/item_evidence.jsonl",
     "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl",
 )
-PUBLIC_CANARY_ARTIFACTS = (
-    "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
-)
+PUBLIC_CANARY_ARTIFACTS = ("data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",)
 
 ROLE_ID = "heldout_steward"
 TASK_ID = "phase3-v2-1-heldout-stewardship"
@@ -202,9 +203,14 @@ def attach_receipt_hash(value: dict[str, Any], *, hash_field: str = "receipt_sha
 
 
 def write_public_json(path: Path, value: Mapping[str, Any]) -> str:
-    path.parent.mkdir(parents=True, exist_ok=True)
     payload = (canonical_json(value) + "\n").encode("utf-8")
     digest = sha256_bytes(payload)
+    if path == DEFAULT_PUBLIC_DIR / "public_receipt_v1.json":
+        require(receipt_body_sha256(value) == value.get("receipt_sha256"), "public receipt body hash drift")
+        _assert_no_forbidden_public_fields(value)
+        publish_bound_companion(ROOT, "open_model_evidence_indexes", "phase3_heldout_partition", path, payload)
+        return digest
+    path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix=path.name, suffix=".tmp", dir=path.parent)
     try:
         with os.fdopen(fd, "wb") as handle:
@@ -259,23 +265,29 @@ def _connect_sources(path: Path) -> sqlite3.Connection:
 
 def _load_freeze_ua_gec_units(source_universe: Path) -> list[dict[str, Any]]:
     path = source_universe / "ua_gec.units.jsonl"
-    require(path.is_file(), f"missing frozen ua_gec units: {path}")
+    if source_universe == DEFAULT_SOURCE_UNIVERSE:
+        snapshot = artifact_set("open_model_evidence_indexes", repo=ROOT)
+        member = "projects/open_model_data/evidence/source_universe_v1/ua_gec.units.jsonl"
+        require(member in snapshot.artifacts, f"missing frozen ua_gec units: {path}; hydrate P3 artifacts")
+        lines = snapshot.artifacts[member].decode("utf-8").splitlines()
+    else:
+        require(path.is_file(), f"missing frozen ua_gec units: {path}")
+        lines = path.read_text(encoding="utf-8").splitlines()
     units: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
-    with path.open(encoding="utf-8") as handle:
-        for ordinal, line in enumerate(handle, start=1):
-            if not line.strip():
-                continue
-            try:
-                unit = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise PartitionError(f"malformed frozen ua_gec unit at line {ordinal}") from exc
-            require(isinstance(unit, dict), f"frozen ua_gec unit must be object at line {ordinal}")
-            require(unit.get("family_id") == UA_GEC_FAMILY, "frozen unit family drift")
-            unit_id = unit.get("unit_id")
-            require(isinstance(unit_id, str) and unit_id not in seen_ids, "duplicate or missing frozen unit_id")
-            seen_ids.add(unit_id)
-            units.append(unit)
+    for ordinal, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        try:
+            unit = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise PartitionError(f"malformed frozen ua_gec unit at line {ordinal}") from exc
+        require(isinstance(unit, dict), f"frozen ua_gec unit must be object at line {ordinal}")
+        require(unit.get("family_id") == UA_GEC_FAMILY, "frozen unit family drift")
+        unit_id = unit.get("unit_id")
+        require(isinstance(unit_id, str) and unit_id not in seen_ids, "duplicate or missing frozen unit_id")
+        seen_ids.add(unit_id)
+        units.append(unit)
     require(units, "frozen ua_gec ledger is empty")
     return units
 
@@ -294,10 +306,7 @@ def reconstruct_ua_gec_rows(
     freeze_units: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
     """Join frozen unit identities to sources.db rows; fail closed on drift."""
-    by_pk_hash = {
-        str(unit["locator"]["primary_key_sha256"]): unit
-        for unit in freeze_units
-    }
+    by_pk_hash = {str(unit["locator"]["primary_key_sha256"]): unit for unit in freeze_units}
     require(len(by_pk_hash) == len(freeze_units), "frozen ua_gec primary_key_sha256 collision")
     connection = _connect_sources(sources_db)
     try:
@@ -374,7 +383,7 @@ def reconstruct_ua_gec_rows(
 
 
 def _artifact_binding(logical_path: str, *, root: Path = ROOT) -> dict[str, str]:
-    path = root / logical_path
+    path = resolve_open_model_path(logical_path, repo=root)
     require(path.is_file(), f"missing binding artifact: {logical_path}")
     return {"logical_path": logical_path, "sha256": sha256_file(path)}
 
@@ -460,7 +469,9 @@ def build_ua_eval_exclusion_manifest(*, root: Path = ROOT) -> tuple[dict[str, An
     item_fields = layout.get("item")
     exclusion_fields = layout.get("exclusion")
     require(isinstance(item_fields, list) and "doc_id" in item_fields, "heldout manifest item layout drift")
-    require(isinstance(exclusion_fields, list) and "doc_id" in exclusion_fields, "heldout manifest exclusion layout drift")
+    require(
+        isinstance(exclusion_fields, list) and "doc_id" in exclusion_fields, "heldout manifest exclusion layout drift"
+    )
     doc_index = item_fields.index("doc_id")
     source_index = item_fields.index("source") if "source" in item_fields else None
     excl_doc_index = exclusion_fields.index("doc_id")
@@ -520,7 +531,7 @@ def build_public_canary_exclusion_manifest(*, root: Path = ROOT) -> tuple[dict[s
     bindings = [_artifact_binding(path, root=root) for path in PUBLIC_CANARY_ARTIFACTS]
     surfaces: list[str] = []
     for logical in PUBLIC_CANARY_ARTIFACTS:
-        _collect_string_surfaces(read_json(root / logical), surfaces)
+        _collect_string_surfaces(read_json(resolve_open_model_path(logical, repo=root)), surfaces)
     fingerprints: set[str] = set()
     for surface in surfaces:
         try:
@@ -541,13 +552,13 @@ def build_public_canary_exclusion_manifest(*, root: Path = ROOT) -> tuple[dict[s
     return body, surfaces
 
 
-def _load_exclusion_surfaces(*, root: Path = ROOT) -> tuple[set[str], list[str], set[str], set[str], dict[str, Any], dict[str, Any]]:
+def _load_exclusion_surfaces(
+    *, root: Path = ROOT
+) -> tuple[set[str], list[str], set[str], set[str], dict[str, Any], dict[str, Any]]:
     """Return exact fingerprints, surfaces, excluded row hashes, doc identities, and manifests."""
     ua_eval, ua_surfaces = build_ua_eval_exclusion_manifest(root=root)
     canary, canary_surfaces = build_public_canary_exclusion_manifest(root=root)
-    exact = set(ua_eval["excluded_surface_fingerprint_sha256s"]) | set(
-        canary["excluded_surface_fingerprint_sha256s"]
-    )
+    exact = set(ua_eval["excluded_surface_fingerprint_sha256s"]) | set(canary["excluded_surface_fingerprint_sha256s"])
     surfaces = _unique_exclusion_surfaces([*ua_surfaces, *canary_surfaces])
     return (
         exact,
@@ -693,9 +704,7 @@ def build_heldout_sealed_unit(
         "error_span_fingerprint_sha256": fingerprints["error_span_fingerprint_sha256"],
         "correct_span_fingerprint_sha256": fingerprints["correct_span_fingerprint_sha256"],
         "sources_db_sha256": sources_db_sha256,
-        "near_duplicate_policy_fingerprint_sha256": fingerprints[
-            "near_duplicate_policy_fingerprint_sha256"
-        ],
+        "near_duplicate_policy_fingerprint_sha256": fingerprints["near_duplicate_policy_fingerprint_sha256"],
     }
 
 
@@ -745,7 +754,9 @@ def build_action_receipt(
     require(
         set(execution_metadata) == EXECUTION_METADATA_FIELDS
         and execution_metadata.get("provider") == "local"
-        and all(isinstance(execution_metadata[key], str) and execution_metadata[key] for key in EXECUTION_METADATA_FIELDS),
+        and all(
+            isinstance(execution_metadata[key], str) and execution_metadata[key] for key in EXECUTION_METADATA_FIELDS
+        ),
         "steward execution metadata is malformed",
     )
     input_manifest_sha256 = sha256_bytes(canonical_json(input_bindings).encode("utf-8"))
@@ -808,13 +819,21 @@ def _assert_no_forbidden_public_fields(value: Any, *, path: str = "$") -> None:
             require(
                 not any(
                     token == lower or lower.startswith(token + "_") or lower.endswith("_" + token)
-                    for token in ("unit_id", "unit_ids", "doc_id", "doc_ids", "locator", "locators", "complement", "complements")
+                    for token in (
+                        "unit_id",
+                        "unit_ids",
+                        "doc_id",
+                        "doc_ids",
+                        "locator",
+                        "locators",
+                        "complement",
+                        "complements",
+                    )
                 ),
                 f"public receipt forbids identity-bearing field {key}",
             )
             require(
-                "span_fingerprint" not in lower
-                and lower not in {"fingerprint", "fingerprints", "normalized_surface"},
+                "span_fingerprint" not in lower and lower not in {"fingerprint", "fingerprints", "normalized_surface"},
                 f"public receipt forbids content fingerprint field {key}",
             )
             _assert_no_forbidden_public_fields(item, path=f"{path}.{key}")
@@ -926,8 +945,14 @@ def partition_ua_gec(
     author_unit_ids = {item["unit_id"] for item in author_cleared}
     require(heldout_unit_ids.isdisjoint(author_unit_ids), "unit-level author/held-out overlap")
     require(all(item["split"] == "test" for item in heldout_units), "held-out contains non-test units")
-    require("/test" not in "".join(item.get("split", "") for item in author_cleared), "author clearance contains test marker")
-    require(all(item["unit_id"] not in heldout_unit_ids for item in author_cleared), "test units leaked into author clearance")
+    require(
+        "/test" not in "".join(item.get("split", "") for item in author_cleared),
+        "author clearance contains test marker",
+    )
+    require(
+        all(item["unit_id"] not in heldout_unit_ids for item in author_cleared),
+        "test units leaked into author clearance",
+    )
 
     return {
         "heldout_units": heldout_units,
@@ -1071,40 +1096,40 @@ def build_artifacts(
     heldout_seal = attach_receipt_hash(heldout_seal)
 
     author_clearance = {
-            "schema_version": "phase3_author_clearance_receipt_v2_1",
-            "text_free": True,
-            "implementation_version": IMPLEMENTATION_VERSION,
-            "role_binding": role_binding,
-            "input_bindings": {
-                key: bindings[key]
-                for key in (
-                    "phase3_v2_contract_sha256",
-                    "phase3_v2_1_amendment_sha256",
-                    "combined_contract_sha256",
-                    "role_contract_sha256",
-                    "evaluation_contract_sha256",
-                    "coverage_contract_sha256",
-                    "source_universe_receipt_sha256",
-                    "near_duplicate_policy_fingerprint_sha256",
-                    "ua_eval_exclusion_manifest_sha256",
-                    "public_canary_exclusion_manifest_sha256",
-                )
-            },
-            "cleared_units": [
-                {
-                    "unit_id": item["unit_id"],
-                    "unit_sha256": item["unit_sha256"],
-                    "family_id": item["family_id"],
-                }
-                for item in partitioned["author_cleared_units"]
-            ],
-            "cleared_unit_count": len(partitioned["author_cleared_units"]),
-            "heldout_excluded": True,
-            "ua_eval_exclusion_enforced": True,
-            "public_canary_exclusion_enforced": True,
-            "heldout_complement_encoded": False,
-            "fingerprints_encoded": False,
-            "locators_encoded": False,
+        "schema_version": "phase3_author_clearance_receipt_v2_1",
+        "text_free": True,
+        "implementation_version": IMPLEMENTATION_VERSION,
+        "role_binding": role_binding,
+        "input_bindings": {
+            key: bindings[key]
+            for key in (
+                "phase3_v2_contract_sha256",
+                "phase3_v2_1_amendment_sha256",
+                "combined_contract_sha256",
+                "role_contract_sha256",
+                "evaluation_contract_sha256",
+                "coverage_contract_sha256",
+                "source_universe_receipt_sha256",
+                "near_duplicate_policy_fingerprint_sha256",
+                "ua_eval_exclusion_manifest_sha256",
+                "public_canary_exclusion_manifest_sha256",
+            )
+        },
+        "cleared_units": [
+            {
+                "unit_id": item["unit_id"],
+                "unit_sha256": item["unit_sha256"],
+                "family_id": item["family_id"],
+            }
+            for item in partitioned["author_cleared_units"]
+        ],
+        "cleared_unit_count": len(partitioned["author_cleared_units"]),
+        "heldout_excluded": True,
+        "ua_eval_exclusion_enforced": True,
+        "public_canary_exclusion_enforced": True,
+        "heldout_complement_encoded": False,
+        "fingerprints_encoded": False,
+        "locators_encoded": False,
     }
     author_clearance["action_receipt"] = build_action_receipt(
         role_contract=role_contract,
@@ -1222,7 +1247,10 @@ def build_artifacts(
     write_private_json(paths["leakage_verification"], leakage)
     public_hash = write_public_json(paths["public_receipt"], public_receipt)
     require(public_hash == sha256_file(paths["public_receipt"]), "public receipt write drift")
-    require(receipt_body_sha256(public_receipt) == public_receipt["receipt_sha256"], "public receipt body hash drift after write")
+    require(
+        receipt_body_sha256(public_receipt) == public_receipt["receipt_sha256"],
+        "public receipt body hash drift after write",
+    )
 
     return {
         "ok": True,
@@ -1391,8 +1419,10 @@ def verify_artifacts(
     require(
         public_receipt.get("input_bindings", {}).get("phase3_v2_contract_sha256") == PHASE3_V2_CONTRACT_SHA256
         and public_receipt.get("input_bindings", {}).get("phase3_v2_1_amendment_sha256") == PHASE3_V2_1_AMENDMENT_SHA256
-        and public_receipt.get("input_bindings", {}).get("combined_contract_sha256") == PHASE3_V2_1_COMBINED_CONTRACT_SHA256
-        and public_receipt.get("input_bindings", {}).get("conflict_graph_sha256") == functional_roles.conflict_graph_sha256(role_contract),
+        and public_receipt.get("input_bindings", {}).get("combined_contract_sha256")
+        == PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+        and public_receipt.get("input_bindings", {}).get("conflict_graph_sha256")
+        == functional_roles.conflict_graph_sha256(role_contract),
         "public receipt v2.1 contract binding drift",
     )
     action = public_receipt.get("action_receipt")
@@ -1423,8 +1453,32 @@ def verify_artifacts(
     # The public receipt carries the exact clearance action evidence; validate
     # all metadata and contract bindings without deriving private identities.
     require(set(action) == set(functional_roles.ACTION_RECEIPT_FIELDS), "public action receipt field set drift")
-    require(action["role_id"] == role_binding["role_id"] and action["task_id"] == role_binding["task_id"], "public action role binding drift")
-    require(all(action[key] == expected_public_action[key] for key in ("action_kind", "provider", "exact_model", "model_family", "harness", "evaluation_cycle_id", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "started_at", "completed_at", "status")), "public action receipt contract drift")
+    require(
+        action["role_id"] == role_binding["role_id"] and action["task_id"] == role_binding["task_id"],
+        "public action role binding drift",
+    )
+    require(
+        all(
+            action[key] == expected_public_action[key]
+            for key in (
+                "action_kind",
+                "provider",
+                "exact_model",
+                "model_family",
+                "harness",
+                "evaluation_cycle_id",
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "started_at",
+                "completed_at",
+                "status",
+            )
+        ),
+        "public action receipt contract drift",
+    )
     require(
         action["input_manifest_sha256"] == expected_public_action["input_manifest_sha256"],
         "public action input binding drift",
@@ -1442,8 +1496,7 @@ def verify_artifacts(
     }
     require(
         action["receipt_id"]
-        == "phase3_functional_action:"
-        + sha256_bytes(canonical_json(public_action_identity).encode("utf-8")),
+        == "phase3_functional_action:" + sha256_bytes(canonical_json(public_action_identity).encode("utf-8")),
         "public action receipt ID drift",
     )
     require(
@@ -1536,7 +1589,10 @@ def verify_artifacts(
         public_receipt["artifact_hashes"]["author_clearance_sha256"] == author["receipt_sha256"],
         "public author clearance hash binding drift",
     )
-    require(public_receipt.get("action_receipt") == author.get("action_receipt"), "public action receipt differs from clearance")
+    require(
+        public_receipt.get("action_receipt") == author.get("action_receipt"),
+        "public action receipt differs from clearance",
+    )
     require(
         public_receipt["artifact_hashes"]["partition_verification_sha256"] == partition_receipt["receipt_sha256"],
         "public partition verification hash binding drift",
@@ -1766,9 +1822,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 sources_db=sources_db,
                 source_universe=source_universe,
                 require_private=not bool(args.public_only),
-                skip_source_freeze_git_binding=bool(
-                    getattr(args, "skip_source_freeze_git_binding", False)
-                ),
+                skip_source_freeze_git_binding=bool(getattr(args, "skip_source_freeze_git_binding", False)),
             )
     except PartitionError as exc:
         parser.error(str(exc))

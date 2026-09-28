@@ -183,7 +183,7 @@ function collectClozeCases(deck: PracticeDeckData, weakness: WeakArea): Set<stri
       sessionSeed: iteration,
       poolFilter: (item) => matchesWeakness(item, weakness),
     });
-    if (selection?.cloze) cases.add(selection.cloze.blankCase);
+    if (selection?.cloze?.blankCase) cases.add(selection.cloze.blankCase);
   }
   return cases;
 }

@@ -154,6 +154,7 @@ def _validate_primary(repo_root: Path, *, require_interpreter: bool = False) -> 
     if branch.returncode != 0 or branch.stdout.strip() != "main":
         raise LaunchdError(f"repository primary must be on main: {repo_root}")
     if require_interpreter:
+        # Intentional: validate the interpreter of the checkout this LaunchAgent runs.
         interpreter = repo_root / ".venv" / "bin" / "python"
         if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
             raise LaunchdError(f"required interpreter is missing: {interpreter}")

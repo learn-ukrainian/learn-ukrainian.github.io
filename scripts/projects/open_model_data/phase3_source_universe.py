@@ -22,8 +22,10 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_CONTRACT = ROOT / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json"
+DEFAULT_CONTRACT = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_coverage_contract_v1.json"
 EXPECTED_2019_SHA256 = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
 EXPECTED_2026_SHA256 = "E593956BFBA6737D991A76FA86970DB9C10A5CD7FD8895BAE67F2B9A950C3A92"
 EXPECTED_PARAGRAPH_COUNT = 168
@@ -31,12 +33,10 @@ PRAVOPYS_2019_OFFICIAL_DOWNLOAD_LOCATOR = (
     "https://mon.gov.ua/storage/app/media/zagalna%20serednya/05062019-onovl-pravo.pdf"
 )
 PRAVOPYS_2026_DECISION_LOCATOR = (
-    "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/"
-    "rishennia-47-vid-1-bereznia"
+    "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/rishennia-47-vid-1-bereznia"
 )
 PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR = (
-    "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/"
-    "sdm-ukrayinskii-pravopis-vidannia.pdf"
+    "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/sdm-ukrayinskii-pravopis-vidannia.pdf"
 )
 RIGHTS_PROVENANCE_CLASSIFICATION = "rights_limited_locator_only"
 ISO_8601_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
@@ -77,17 +77,19 @@ HEADING_MARKER = re.compile(
 # A contents leader is a long trailing run, or a three-mark run followed by a page
 # number; unlike ordinary ``(...)`` title punctuation, the shorter form needs digits.
 TOC_LEADER = re.compile(r"(?:[.…]{3,}\s*\d+|[.…]{4,})\s*$")
-PAYLOAD_FILES = frozenset({
-    "antonenko_style_guide.units.jsonl",
-    "antonenko_textbook_representation.units.jsonl",
-    "calque_inventory.units.jsonl",
-    "lexical_structural_freeze_v1.json",
-    "other_normative_style_inventory.units.jsonl",
-    "pravopys_2019_complete.units.jsonl",
-    "pravopys_2026_complete.units.jsonl",
-    "school_textbooks.units.jsonl",
-    "ua_gec.units.jsonl",
-})
+PAYLOAD_FILES = frozenset(
+    {
+        "antonenko_style_guide.units.jsonl",
+        "antonenko_textbook_representation.units.jsonl",
+        "calque_inventory.units.jsonl",
+        "lexical_structural_freeze_v1.json",
+        "other_normative_style_inventory.units.jsonl",
+        "pravopys_2019_complete.units.jsonl",
+        "pravopys_2026_complete.units.jsonl",
+        "school_textbooks.units.jsonl",
+        "ua_gec.units.jsonl",
+    }
+)
 RECEIPT_FILE = "source-universe-freeze-receipt.json"
 EXPECTED_OUTPUT_FILES = frozenset({*PAYLOAD_FILES, RECEIPT_FILE})
 
@@ -131,10 +133,15 @@ def _verify_merged_main_binding(merged_main_sha: str) -> dict[str, str]:
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise FreezeError(f"unable to verify merged-main binding: {exc}") from exc
     require(remote_head.returncode == 0, "unable to resolve origin/main for freeze binding")
-    require(remote_head.stdout.decode("ascii").strip() == merged_main_sha, "freeze SHA is not the current origin/main head")
+    require(
+        remote_head.stdout.decode("ascii").strip() == merged_main_sha, "freeze SHA is not the current origin/main head"
+    )
     require(merged_script.returncode == 0, "freezer implementation is absent from the merged-main SHA")
     current_script = ROOT / FREEZER_SCRIPT_PATH
-    require(merged_script.stdout == current_script.read_bytes(), "running freezer bytes differ from merged-main freezer bytes")
+    require(
+        merged_script.stdout == current_script.read_bytes(),
+        "running freezer bytes differ from merged-main freezer bytes",
+    )
     return {
         "implementation_version": FREEZER_IMPLEMENTATION_VERSION,
         "script_path": FREEZER_SCRIPT_PATH,
@@ -226,7 +233,9 @@ def _expected_count(family: Mapping[str, Any]) -> int | None:
     return value if isinstance(value, int) else None
 
 
-def _database_units(connection: sqlite3.Connection, table: str, family_id: str, family: Mapping[str, Any], input_hash: str) -> Iterable[dict[str, Any]]:
+def _database_units(
+    connection: sqlite3.Connection, table: str, family_id: str, family: Mapping[str, Any], input_hash: str
+) -> Iterable[dict[str, Any]]:
     columns = [row[1] for row in connection.execute(f"PRAGMA table_info({_safe_name(table)})")]
     require(columns, f"missing table for {family_id}: {table}")
     pk_columns = [row[1] for row in connection.execute(f"PRAGMA table_info({_safe_name(table)})") if row[5]]
@@ -237,7 +246,9 @@ def _database_units(connection: sqlite3.Connection, table: str, family_id: str, 
         raw = dict(row)
         identity = {key: raw[key] for key in pk_columns} if pk_columns else {"rowid": raw["__freeze_rowid__"]}
         normalized_row = _normal(raw)
-        duplicate_basis = {key: value for key, value in normalized_row.items() if key not in {*identity, "__freeze_rowid__"}}
+        duplicate_basis = {
+            key: value for key, value in normalized_row.items() if key not in {*identity, "__freeze_rowid__"}
+        }
         yield {
             "family_id": family_id,
             "unit_id": _opaque_id(f"unit.{family_id}", {"table": table, "identity": identity}),
@@ -251,7 +262,9 @@ def _database_units(connection: sqlite3.Connection, table: str, family_id: str, 
         }
 
 
-def _antonenko_textbook_units(connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str) -> Iterable[dict[str, Any]]:
+def _antonenko_textbook_units(
+    connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str
+) -> Iterable[dict[str, Any]]:
     table = "textbooks"
     columns = {row[1] for row in connection.execute(f"PRAGMA table_info({_safe_name(table)})")}
     require({"id", "source_file"} <= columns, "textbooks cannot identify Antonenko representation")
@@ -267,10 +280,12 @@ def _antonenko_textbook_units(connection: sqlite3.Connection, family: Mapping[st
         yield {
             "family_id": "antonenko_textbook_representation",
             "unit_id": _opaque_id("unit.antonenko_textbook_representation", identity),
-            "unit_sha256": _unit_hash(normalized), "ordinal": ordinal,
+            "unit_sha256": _unit_hash(normalized),
+            "ordinal": ordinal,
             "locator": {"kind": "sqlite_row", "table": table, **_primary_key_locator(identity)},
             "duplicate_group_id": _opaque_id("duplicate.antonenko_textbook_representation", duplicate),
-            "parse_status": "parsed", "rights": _rights(family),
+            "parse_status": "parsed",
+            "rights": _rights(family),
             "provenance": {"input_sha256": input_hash, "unit_grain": family["input_identity"]["unit_grain"]},
         }
 
@@ -296,15 +311,20 @@ def _calque_units(path: Path, family: Mapping[str, Any]) -> list[dict[str, Any]]
         entries.extend((collection, str(key), item) for key, item in value.items())
     entries.sort(key=lambda item: (item[0], item[1]))
     module_hash = sha256_file(path)
-    return [{
-        "family_id": "calque_inventory",
-        "unit_id": _opaque_id("unit.calque_inventory", {"collection": collection, "key": key}),
-        "unit_sha256": _unit_hash(value), "ordinal": ordinal,
-        "locator": {"kind": "python_mapping_entry", "collection": collection, "entry_id_sha256": _unit_hash(key)},
-        "duplicate_group_id": _opaque_id("duplicate.calque_inventory", value), "parse_status": "parsed",
-        "rights": _rights(family),
-        "provenance": {"input_sha256": module_hash, "unit_grain": family["input_identity"]["unit_grain"]},
-    } for ordinal, (collection, key, value) in enumerate(entries, start=1)]
+    return [
+        {
+            "family_id": "calque_inventory",
+            "unit_id": _opaque_id("unit.calque_inventory", {"collection": collection, "key": key}),
+            "unit_sha256": _unit_hash(value),
+            "ordinal": ordinal,
+            "locator": {"kind": "python_mapping_entry", "collection": collection, "entry_id_sha256": _unit_hash(key)},
+            "duplicate_group_id": _opaque_id("duplicate.calque_inventory", value),
+            "parse_status": "parsed",
+            "rights": _rights(family),
+            "provenance": {"input_sha256": module_hash, "unit_grain": family["input_identity"]["unit_grain"]},
+        }
+        for ordinal, (collection, key, value) in enumerate(entries, start=1)
+    ]
 
 
 def _r2u_units(path: Path, family: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -319,14 +339,23 @@ def _r2u_units(path: Path, family: Mapping[str, Any]) -> list[dict[str, Any]]:
     units: list[dict[str, Any]] = []
     for ordinal, entry in enumerate(normalized_entries, start=1):
         require(isinstance(entry, Mapping), "invalid R2U cache entry")
-        units.append({
-            "family_id": "lexical_r2u", "unit_id": _opaque_id("unit.lexical_r2u", entry),
-            "unit_sha256": _unit_hash(entry), "ordinal": ordinal,
-            "locator": {"kind": "r2u_cache_entry", "entry_sha256": _unit_hash(entry)},
-            "duplicate_group_id": _opaque_id("duplicate.lexical_r2u", entry), "parse_status": "parsed",
-            "rights": _rights(family),
-            "provenance": {"input_sha256": input_hash, "cache_id_sha256": _unit_hash(cache.get("cache_id")), "unit_grain": family["input_identity"]["unit_grain"]},
-        })
+        units.append(
+            {
+                "family_id": "lexical_r2u",
+                "unit_id": _opaque_id("unit.lexical_r2u", entry),
+                "unit_sha256": _unit_hash(entry),
+                "ordinal": ordinal,
+                "locator": {"kind": "r2u_cache_entry", "entry_sha256": _unit_hash(entry)},
+                "duplicate_group_id": _opaque_id("duplicate.lexical_r2u", entry),
+                "parse_status": "parsed",
+                "rights": _rights(family),
+                "provenance": {
+                    "input_sha256": input_hash,
+                    "cache_id_sha256": _unit_hash(cache.get("cache_id")),
+                    "unit_grain": family["input_identity"]["unit_grain"],
+                },
+            }
+        )
     return units
 
 
@@ -364,7 +393,11 @@ def _pdf_units(
     require(input_hash.lower() == expected.lower(), f"official {family_id} PDF hash mismatch")
     pages = extract_pdf_pages(path, pdftotext)
     require(pages and any(pages), f"official {family_id} PDF has no extractable pages")
-    lines = [(page, line_number, line) for page, text in enumerate(pages, start=1) for line_number, line in enumerate(text.splitlines(), start=1)]
+    lines = [
+        (page, line_number, line)
+        for page, text in enumerate(pages, start=1)
+        for line_number, line in enumerate(text.splitlines(), start=1)
+    ]
     anchors: list[tuple[int, int, int, tuple[str, ...], int]] = []
     structural: list[str] = []
     decimal_stack: list[str] = []
@@ -413,13 +446,21 @@ def _pdf_units(
         elif current_paragraph is not None and (match := PART_MARKER.match(line)):
             current_part = f"part:{int(match.group(1))}"
             current_point = None
-            anchors.append((index, 3, page, tuple([*structural, *decimal_stack, current_paragraph, current_part]), line_number))
+            anchors.append(
+                (index, 3, page, tuple([*structural, *decimal_stack, current_paragraph, current_part]), line_number)
+            )
         elif current_paragraph is not None and (match := POINT_MARKER.match(line)):
             current_point = f"point:{int(match.group(1))}"
             parent = [*structural, *decimal_stack, current_paragraph, *([current_part] if current_part else [])]
             anchors.append((index, 4, page, tuple([*parent, current_point]), line_number))
         elif current_paragraph is not None and (match := SUBPOINT_MARKER.match(line)):
-            parent = [*structural, *decimal_stack, current_paragraph, *([current_part] if current_part else []), *([current_point] if current_point else [])]
+            parent = [
+                *structural,
+                *decimal_stack,
+                current_paragraph,
+                *([current_part] if current_part else []),
+                *([current_point] if current_point else []),
+            ]
             anchors.append((index, 5, page, tuple([*parent, f"subpoint:{match.group(1).casefold()}"]), line_number))
     require(anchors, f"official {family_id} PDF exposes no stable numbered hierarchy")
     unique_anchors: list[tuple[int, int, int, tuple[str, ...], int]] = []
@@ -431,10 +472,16 @@ def _pdf_units(
     anchors = unique_anchors
     # A structural heading can prefix a paragraph path; find the paragraph token instead.
     paragraph_numbers = {
-        int(token.split(":", 1)[1]) for _, level, _, path_tokens, _ in anchors if level == 2
-        for token in path_tokens if token.startswith("paragraph:")
+        int(token.split(":", 1)[1])
+        for _, level, _, path_tokens, _ in anchors
+        if level == 2
+        for token in path_tokens
+        if token.startswith("paragraph:")
     }
-    require(paragraph_numbers == set(range(1, EXPECTED_PARAGRAPH_COUNT + 1)), f"{family_id} PDF does not represent every required paragraph")
+    require(
+        paragraph_numbers == set(range(1, EXPECTED_PARAGRAPH_COUNT + 1)),
+        f"{family_id} PDF does not represent every required paragraph",
+    )
     paths = [anchor[3] for anchor in anchors]
     require(len(paths) == len(set(paths)), f"{family_id} PDF has duplicate structural section paths")
     units: list[dict[str, Any]] = []
@@ -446,14 +493,30 @@ def _pdf_units(
                 break
         text = "\n".join(line for _, _, line in lines[start:end])
         end_page, end_line, _ = lines[end - 1] if end > start else lines[start]
-        units.append({
-            "family_id": family_id,
-            "unit_id": _opaque_id(f"unit.{family_id}", {"edition_sha256": input_hash, "section_path": section_path}),
-            "unit_sha256": sha256_bytes(text.encode("utf-8")), "normalized_text_sha256": sha256_bytes(text.encode("utf-8")), "ordinal": ordinal,
-            "locator": {"kind": "pdf_numbered_hierarchy", "edition_sha256": input_hash, "page": page, "line": line_number, "end_page": end_page, "end_line": end_line, "section_path": list(section_path)},
-            "duplicate_group_id": _opaque_id(f"duplicate.{family_id}", text), "parse_status": "numbered_hierarchy_parsed",
-            "rights": _rights(family), "provenance": {"input_sha256": input_hash, "unit_grain": "pdf_numbered_hierarchy"},
-        })
+        units.append(
+            {
+                "family_id": family_id,
+                "unit_id": _opaque_id(
+                    f"unit.{family_id}", {"edition_sha256": input_hash, "section_path": section_path}
+                ),
+                "unit_sha256": sha256_bytes(text.encode("utf-8")),
+                "normalized_text_sha256": sha256_bytes(text.encode("utf-8")),
+                "ordinal": ordinal,
+                "locator": {
+                    "kind": "pdf_numbered_hierarchy",
+                    "edition_sha256": input_hash,
+                    "page": page,
+                    "line": line_number,
+                    "end_page": end_page,
+                    "end_line": end_line,
+                    "section_path": list(section_path),
+                },
+                "duplicate_group_id": _opaque_id(f"duplicate.{family_id}", text),
+                "parse_status": "numbered_hierarchy_parsed",
+                "rights": _rights(family),
+                "provenance": {"input_sha256": input_hash, "unit_grain": "pdf_numbered_hierarchy"},
+            }
+        )
     unit_ids = [unit["unit_id"] for unit in units]
     require(len(unit_ids) == len(set(unit_ids)), f"{family_id} PDF has duplicate unit IDs")
     report: dict[str, Any] = {
@@ -474,21 +537,25 @@ def _pdf_units(
             isinstance(retrieval_locator, str) and retrieval_locator.startswith("https://"),
             f"{family_id} retrieval locator must be HTTPS",
         )
-        report.update({
-            "official_download_locator": (
-                PRAVOPYS_2019_OFFICIAL_DOWNLOAD_LOCATOR
-                if family_id == "pravopys_2019_complete"
-                else PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR
-            ),
-            "retrieval_locator": retrieval_locator,
-            "retrieved_at": retrieved_at,
-        })
+        report.update(
+            {
+                "official_download_locator": (
+                    PRAVOPYS_2019_OFFICIAL_DOWNLOAD_LOCATOR
+                    if family_id == "pravopys_2019_complete"
+                    else PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR
+                ),
+                "retrieval_locator": retrieval_locator,
+                "retrieved_at": retrieved_at,
+            }
+        )
         if family_id == "pravopys_2026_complete":
             report["official_decision_locator"] = PRAVOPYS_2026_DECISION_LOCATOR
     return units, report
 
 
-def _other_normative_units(connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def _other_normative_units(
+    connection: sqlite3.Connection, family: Mapping[str, Any], input_hash: str
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     tables = [row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
     candidates = [name for name in tables if NORMATIVE_TABLE.search(name) and name != "style_guide"]
     additions: list[dict[str, Any]] = []
@@ -498,38 +565,57 @@ def _other_normative_units(connection: sqlite3.Connection, family: Mapping[str, 
     style_columns = {row[1] for row in connection.execute('PRAGMA table_info("style_guide")')}
     if "source" in style_columns:
         foreign_rows = [
-            row for row in connection.execute('SELECT * FROM "style_guide" ORDER BY "id"').fetchall()
+            row
+            for row in connection.execute('SELECT * FROM "style_guide" ORDER BY "id"').fetchall()
             if "антоненко" not in str(row["source"] or "").casefold()
         ]
         if foreign_rows:
-            additions.extend(_rows_to_units(foreign_rows, "style_guide", "other_normative_style_inventory", family, input_hash))
+            additions.extend(
+                _rows_to_units(foreign_rows, "style_guide", "other_normative_style_inventory", family, input_hash)
+            )
     textbook_columns = {row[1] for row in connection.execute('PRAGMA table_info("textbooks")')}
     if "source_file" in textbook_columns:
         tagged_rows = [
-            row for row in connection.execute('SELECT * FROM "textbooks" ORDER BY "id"').fetchall()
+            row
+            for row in connection.execute('SELECT * FROM "textbooks" ORDER BY "id"').fetchall()
             if str(row["source_file"] or "").casefold() != "antonenko-davydovych-yak-my-hovorymo"
             and NORMATIVE_TABLE.search(str(row["source_file"] or ""))
         ]
         if tagged_rows:
-            additions.extend(_rows_to_units(tagged_rows, "textbooks", "other_normative_style_inventory", family, input_hash))
-    discovery = {"candidate_tables": candidates, "additional_family_count": len(additions), "zero_additional_family_inventory": not additions}
+            additions.extend(
+                _rows_to_units(tagged_rows, "textbooks", "other_normative_style_inventory", family, input_hash)
+            )
+    discovery = {
+        "candidate_tables": candidates,
+        "additional_family_count": len(additions),
+        "zero_additional_family_inventory": not additions,
+    }
     return additions, discovery
 
 
-def _rows_to_units(rows: Iterable[sqlite3.Row], table: str, family_id: str, family: Mapping[str, Any], input_hash: str) -> list[dict[str, Any]]:
+def _rows_to_units(
+    rows: Iterable[sqlite3.Row], table: str, family_id: str, family: Mapping[str, Any], input_hash: str
+) -> list[dict[str, Any]]:
     units: list[dict[str, Any]] = []
     for ordinal, row in enumerate(rows, start=1):
         raw = dict(row)
         identity = {"id": raw["id"]} if "id" in raw else {"ordinal": ordinal}
         normalized = _normal(raw)
-        units.append({
-            "family_id": family_id, "unit_id": _opaque_id(f"unit.{family_id}", {"table": table, "identity": identity}),
-            "unit_sha256": _unit_hash(normalized), "ordinal": ordinal,
-            "locator": {"kind": "sqlite_row", "table": table, **_primary_key_locator(identity)},
-            "duplicate_group_id": _opaque_id(f"duplicate.{family_id}", {key: value for key, value in normalized.items() if key != "id"}),
-            "parse_status": "parsed", "rights": _rights(family),
-            "provenance": {"input_sha256": input_hash, "unit_grain": family["input_identity"]["unit_grain"]},
-        })
+        units.append(
+            {
+                "family_id": family_id,
+                "unit_id": _opaque_id(f"unit.{family_id}", {"table": table, "identity": identity}),
+                "unit_sha256": _unit_hash(normalized),
+                "ordinal": ordinal,
+                "locator": {"kind": "sqlite_row", "table": table, **_primary_key_locator(identity)},
+                "duplicate_group_id": _opaque_id(
+                    f"duplicate.{family_id}", {key: value for key, value in normalized.items() if key != "id"}
+                ),
+                "parse_status": "parsed",
+                "rights": _rights(family),
+                "provenance": {"input_sha256": input_hash, "unit_grain": family["input_identity"]["unit_grain"]},
+            }
+        )
     return units
 
 
@@ -555,7 +641,9 @@ def _stage_ledger(path: Path, units: Iterable[Mapping[str, Any]]) -> tuple[Path,
     count = 0
     temporary: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False) as handle:
+        with tempfile.NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
+        ) as handle:
             temporary = Path(handle.name)
             for unit in units:
                 encoded = (canonical_json(unit) + "\n").encode("utf-8")
@@ -579,8 +667,10 @@ def _structural_summary(family_id: str, units: Iterable[Mapping[str, Any]]) -> d
     provenance: Mapping[str, Any] | None = None
     for unit in units:
         binding = {
-            "unit_id": unit["unit_id"], "unit_sha256": unit["unit_sha256"],
-            "duplicate_group_id": unit["duplicate_group_id"], "parse_status": unit["parse_status"],
+            "unit_id": unit["unit_id"],
+            "unit_sha256": unit["unit_sha256"],
+            "duplicate_group_id": unit["duplicate_group_id"],
+            "parse_status": unit["parse_status"],
             "provenance": unit["provenance"],
         }
         encoded = canonical_json(binding).encode("utf-8")
@@ -597,7 +687,9 @@ def _structural_summary(family_id: str, units: Iterable[Mapping[str, Any]]) -> d
         count += 1
     require(provenance is not None, f"lexical family has no units: {family_id}")
     return {
-        "family_id": family_id, "unit_count": count, "ordered_rolling_sha256": rolling.hexdigest(),
+        "family_id": family_id,
+        "unit_count": count,
+        "ordered_rolling_sha256": rolling.hexdigest(),
         "parse_status_counts": dict(sorted(parse_counts.items())),
         "binding_fields": ["unit_id", "unit_sha256", "duplicate_group_id", "parse_status", "provenance"],
         "provenance": dict(provenance),
@@ -622,7 +714,15 @@ def freeze(
     merged_main_sha: str,
 ) -> dict[str, Any]:
     """Validate every family first, then atomically publish text-free ledgers."""
-    for path, label in ((coverage_contract, "coverage contract"), (sources_db, "sources database"), (vesum_db, "VESUM database"), (pravopys_2019_pdf, "2019 PDF"), (pravopys_2026_pdf, "2026 PDF"), (calque_module, "calque module"), (r2u_cache, "R2U cache")):
+    for path, label in (
+        (coverage_contract, "coverage contract"),
+        (sources_db, "sources database"),
+        (vesum_db, "VESUM database"),
+        (pravopys_2019_pdf, "2019 PDF"),
+        (pravopys_2026_pdf, "2026 PDF"),
+        (calque_module, "calque module"),
+        (r2u_cache, "R2U cache"),
+    ):
         require(path.is_file(), f"missing {label}: {path}")
     freezer_binding = _verify_merged_main_binding(merged_main_sha)
     if output_dir.exists():
@@ -654,29 +754,47 @@ def freeze(
                 temporary.unlink(missing_ok=True)
                 raise
             staged.append((temporary, target))
-            receipt_families.append({"family_id": family_id, "unit_count": count, "ledger_sha256": digest, "ledger_file": target.name})
+            receipt_families.append(
+                {"family_id": family_id, "unit_count": count, "ledger_sha256": digest, "ledger_file": target.name}
+            )
 
         for family_id, table in SOURCES_FAMILIES.items():
             require(family_id in families, f"coverage contract missing required family: {family_id}")
             stage_family(family_id, _database_units(source, table, family_id, families[family_id], source_hash))
-        stage_family("antonenko_textbook_representation", _antonenko_textbook_units(source, families["antonenko_textbook_representation"], source_hash))
-        stage_family("lexical_vesum", _database_units(vesum, "forms", "lexical_vesum", families["lexical_vesum"], vesum_hash))
+        stage_family(
+            "antonenko_textbook_representation",
+            _antonenko_textbook_units(source, families["antonenko_textbook_representation"], source_hash),
+        )
+        stage_family(
+            "lexical_vesum", _database_units(vesum, "forms", "lexical_vesum", families["lexical_vesum"], vesum_hash)
+        )
         stage_family("calque_inventory", _calque_units(calque_module, families["calque_inventory"]))
         stage_family("lexical_r2u", _r2u_units(r2u_cache, families["lexical_r2u"]))
         units2019, pdf2019 = _pdf_units(
-            pravopys_2019_pdf, "pravopys_2019_complete", families["pravopys_2019_complete"], pdftotext,
-            retrieved_at=pravopys_2019_retrieved_at, retrieval_locator=pravopys_2019_retrieval_locator,
+            pravopys_2019_pdf,
+            "pravopys_2019_complete",
+            families["pravopys_2019_complete"],
+            pdftotext,
+            retrieved_at=pravopys_2019_retrieved_at,
+            retrieval_locator=pravopys_2019_retrieval_locator,
         )
         stage_family("pravopys_2019_complete", units2019)
         units2026, pdf2026 = _pdf_units(
-            pravopys_2026_pdf, "pravopys_2026_complete", families["pravopys_2026_complete"], pdftotext,
-            retrieved_at=pravopys_2026_retrieved_at, retrieval_locator=pravopys_2026_retrieval_locator,
+            pravopys_2026_pdf,
+            "pravopys_2026_complete",
+            families["pravopys_2026_complete"],
+            pdftotext,
+            retrieved_at=pravopys_2026_retrieved_at,
+            retrieval_locator=pravopys_2026_retrieval_locator,
         )
         stage_family("pravopys_2026_complete", units2026)
-        other_units, discovery = _other_normative_units(source, families["other_normative_style_inventory"], source_hash)
+        other_units, discovery = _other_normative_units(
+            source, families["other_normative_style_inventory"], source_hash
+        )
         stage_family("other_normative_style_inventory", other_units)
         lexical_artifact = {
-            "schema_version": "lexical_structural_freeze_v1", "text_free": True,
+            "schema_version": "lexical_structural_freeze_v1",
+            "text_free": True,
             "families": sorted(lexical_summaries, key=lambda item: str(item["family_id"])),
         }
         lexical_target = output_dir / "lexical_structural_freeze_v1.json"
@@ -684,13 +802,19 @@ def freeze(
         lexical_digest = sha256_bytes(lexical_content)
         staged.append((_stage(lexical_target, lexical_content), lexical_target))
         for summary in lexical_summaries:
-            receipt_families.append({
-                "family_id": summary["family_id"], "unit_count": summary["unit_count"],
-                "structural_receipt_file": lexical_target.name,
-                "structural_receipt_sha256": lexical_digest,
-                "structural_universe_sha256": summary["ordered_rolling_sha256"],
-            })
-        require({item["family_id"] for item in receipt_families} == set(families), "not every mandatory source family was frozen")
+            receipt_families.append(
+                {
+                    "family_id": summary["family_id"],
+                    "unit_count": summary["unit_count"],
+                    "structural_receipt_file": lexical_target.name,
+                    "structural_receipt_sha256": lexical_digest,
+                    "structural_universe_sha256": summary["ordered_rolling_sha256"],
+                }
+            )
+        require(
+            {item["family_id"] for item in receipt_families} == set(families),
+            "not every mandatory source family was frozen",
+        )
         payload_files = sorted(
             (
                 {"path": target.name, "sha256": sha256_file(temporary), "byte_count": temporary.stat().st_size}
@@ -698,16 +822,27 @@ def freeze(
             ),
             key=lambda item: str(item["path"]),
         )
-        require({str(item["path"]) for item in payload_files} == PAYLOAD_FILES, "source-freeze payload file set changed")
+        require(
+            {str(item["path"]) for item in payload_files} == PAYLOAD_FILES, "source-freeze payload file set changed"
+        )
         receipt = {
-            "schema_version": "phase3_source_universe_freeze_v1", "text_free": True,
+            "schema_version": "phase3_source_universe_freeze_v1",
+            "text_free": True,
             "status": "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY",
             "merged_main_sha": merged_main_sha,
             "freezer": freezer_binding,
             "coverage_contract_sha256": sha256_file(coverage_contract),
-            "input_sha256": {"sources_db": source_hash, "vesum_db": vesum_hash, "calque_module": sha256_file(calque_module), "r2u_cache": sha256_file(r2u_cache), "pravopys_2019_pdf": pdf2019["input_sha256"], "pravopys_2026_pdf": pdf2026["input_sha256"]},
+            "input_sha256": {
+                "sources_db": source_hash,
+                "vesum_db": vesum_hash,
+                "calque_module": sha256_file(calque_module),
+                "r2u_cache": sha256_file(r2u_cache),
+                "pravopys_2019_pdf": pdf2019["input_sha256"],
+                "pravopys_2026_pdf": pdf2026["input_sha256"],
+            },
             "pdf_editions": {"pravopys_2019_complete": pdf2019, "pravopys_2026_complete": pdf2026},
-            "other_normative_style_inventory": discovery, "families": receipt_families,
+            "other_normative_style_inventory": discovery,
+            "families": receipt_families,
             "blocking_requirements": [
                 "source_unit_dispositions_and_dual_population_audits",
                 "textbook_nonhit_audit",
@@ -763,7 +898,11 @@ def main(argv: list[str] | None = None) -> int:
     except FreezeError as exc:
         print(canonical_json({"ok": False, "error": str(exc)}))
         return 2
-    print(canonical_json({"ok": True, "receipt": "source-universe-freeze-receipt.json", "families": len(receipt["families"])}))
+    print(
+        canonical_json(
+            {"ok": True, "receipt": "source-universe-freeze-receipt.json", "families": len(receipt["families"])}
+        )
+    )
     return 0
 
 

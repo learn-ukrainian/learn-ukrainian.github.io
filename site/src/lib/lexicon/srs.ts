@@ -155,13 +155,18 @@ export interface PracticeClozeOption {
   strategy?: string;
 }
 
+/**
+ * Deck-authored cloze rule. `lexical_insertion` identity cards (answer = the
+ * dictionary spelling, case not decidable from context, #8726) carry only
+ * `ruleId` + `trigger`: no case, case label, trigger label or feedback.
+ */
 export interface PracticeAuthoredCaseRule {
   ruleId: string;
-  case: string;
-  caseLabel: string;
+  case?: string;
+  caseLabel?: string;
   trigger: string;
-  triggerLabel: string;
-  feedback: string;
+  triggerLabel?: string;
+  feedback?: string;
 }
 
 export interface PracticeDocumentCaseRule {
@@ -202,7 +207,8 @@ export interface PracticeClozeItem {
   lemmaId: string;
   sentenceFrameId: string;
   sentence: string;
-  blankCase: string;
+  /** Absent when the sentence cannot decide the slot's case (`lexical_insertion`). */
+  blankCase?: string;
   form: string;
   lemma?: string;
   acceptedAlt?: string[];
@@ -1721,7 +1727,7 @@ function candidatePenaltyContext(
   const candidateCases = new Set<string>();
   for (const candidate of candidates) {
     availableModes.add(candidate.mode);
-    if (candidate.cloze) candidateCases.add(candidate.cloze.blankCase);
+    if (candidate.cloze?.blankCase) candidateCases.add(candidate.cloze.blankCase);
   }
   const recent = history.slice(-12);
   const recentCases = new Set<string>();
@@ -1764,7 +1770,7 @@ function candidatePenalty(
 
   if (candidate.cloze) {
     if (context.candidateCases.size >= 3 && context.recentCases.size < 3) {
-      penalty += context.recentCases.has(candidate.cloze.blankCase) ? 16 : -12;
+      penalty += candidate.cloze.blankCase && context.recentCases.has(candidate.cloze.blankCase) ? 16 : -12;
     }
     if (context.last?.sentenceFrameId === candidate.cloze.sentenceFrameId) penalty += 60;
   }
@@ -2602,7 +2608,7 @@ export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
   const obliqueDistractors = cloze.options.filter(
     (option) => option.kind !== 'answer' && option.case && option.case !== 'nominative',
   ).length;
-  if (cloze.blankCase !== 'nominative' && (obliqueTotal < 2 || obliqueDistractors < 1)) {
+  if (cloze.blankCase && cloze.blankCase !== 'nominative' && (obliqueTotal < 2 || obliqueDistractors < 1)) {
     errors.push('option set must contain the answer plus at least one oblique distractor');
   }
   const posValues = new Set(cloze.options.map((option) => option.pos).filter(Boolean));

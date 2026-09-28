@@ -34,9 +34,9 @@ if str(ROOT) not in sys.path:
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.verification.vesum import verify_words
 
-CONFIG_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/corpus_profile_config_v1.schema.json"
-CANDIDATE_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
-RECEIPT_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
+CONFIG_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/corpus_profile_config_v1.schema.json"
+CANDIDATE_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/review_candidate_v1.schema.json"
+RECEIPT_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
 
 SCHEMA_VERSION = "corpus_profile_receipt_v1"
 CANDIDATE_SCHEMA_VERSION = "review_candidate_v1"

@@ -47,7 +47,7 @@ from jsonschema import Draft202012Validator
 from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh.cli import main as fresh_cli
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateReport
@@ -75,7 +75,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 RECEIPTS_ROOT = resolve_repo_root(Path(review_mcp.__file__), 2) / "batch_state" / "review-receipts"
-PYTHON = PRIMARY / ".venv" / "bin" / "python"
+PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
 BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a terminal budget (#8774), pinned by name
 
@@ -401,7 +401,7 @@ class ModuleWorld(World):
                 review_id=review_id,
             ),
         )
-        self.task("plan-review-claude", "claude", "claude-sonnet-5")
+        self.task("plan-review-claude", "claude", "claude-sonnet-5-5")
         recorded = run_main(
             record.main,
             [
@@ -947,12 +947,39 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
     ]
 
 
-def render_and_check(root: Path, manifest: Path, prompt: Path) -> tuple[str, str]:
-    """Render the prompt from the manifest and check it with the repository's own CLIs; returns its sha256 and the note."""
-    rendered = run_main(prompt_render.main, [str(manifest), "--output", str(prompt), "--repo-root", str(root)])
+def render_and_check(root: Path, manifest: Path, prompt: Path, review_id: str, attempt_id: str) -> tuple[str, str]:
+    """Render the prompt from the manifest with this seat's ids (#8996) and check it with the repository's own
+    CLIs; returns its sha256 and the note."""
+    rendered = run_main(
+        prompt_render.main,
+        [
+            str(manifest),
+            "--output",
+            str(prompt),
+            "--repo-root",
+            str(root),
+            "--review-id",
+            review_id,
+            "--attempt-id",
+            attempt_id,
+        ],
+    )
     if rendered.code != 0:
         raise RuntimeError(f"render failed: {rendered.err.strip()[-400:]}")
-    checked = run_main(prompt_check.main, [str(prompt), "--manifest", str(manifest), "--repo-root", str(root)])
+    checked = run_main(
+        prompt_check.main,
+        [
+            str(prompt),
+            "--manifest",
+            str(manifest),
+            "--repo-root",
+            str(root),
+            "--review-id",
+            review_id,
+            "--attempt-id",
+            attempt_id,
+        ],
+    )
     if checked.code != 0:
         raise RuntimeError(f"prompt check failed: {checked.out.strip()[-600:]}")
     digest = sha256(prompt)
@@ -994,7 +1021,7 @@ def make_card(
     **extra: Any,
 ) -> dict[str, Any]:
     """Render and check the prompt, then describe everything the driver needs to run the seat and record its return."""
-    digest, note = render_and_check(root, manifest, prompt)
+    digest, note = render_and_check(root, manifest, prompt, seat.review_id, seat.attempt_id)
     return {
         "case": key,
         "title": title,

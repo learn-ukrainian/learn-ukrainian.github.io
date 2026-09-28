@@ -30,7 +30,9 @@ from scripts.projects.open_model_data import phase3_vspu_modern_theory_intake as
 from scripts.rag.extract_text import detect_native_text_anomalies
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_vspu_source_materialization_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_vspu_source_materialization_v1.json"

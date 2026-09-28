@@ -407,8 +407,13 @@ if [ "$IS_CODEX_SESSION" = "0" ] \
     diff_args+=("--exclude=$ex")
   done
 
-  DRIFT=$(run_bounded 2 diff "${diff_args[@]}" \
-    "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | head -5)
+  if declare -F filter_pycache_only_diff >/dev/null 2>&1; then
+    DRIFT=$(run_bounded 2 diff "${diff_args[@]}" \
+      "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | filter_pycache_only_diff | head -5)
+  else
+    DRIFT=$(run_bounded 2 diff "${diff_args[@]}" \
+      "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | head -5)
+  fi
   if [ -n "$DRIFT" ]; then
     DRIFT_COUNT=$(echo "$DRIFT" | wc -l | tr -d ' ')
     ISSUES+=("DEPLOY DRIFT: $DRIFT_COUNT file(s) differ between agents_extensions/shared/ and .claude/. Run: npm run agents:deploy")

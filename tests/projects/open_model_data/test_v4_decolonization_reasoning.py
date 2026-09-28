@@ -10,6 +10,7 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     CalqueCandidate,
     classify_calque_type,
@@ -26,7 +27,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 
 
 @pytest.fixture(scope="module")
@@ -245,7 +246,6 @@ def test_scan_generated_files_detects_violations(tmp_path: Path) -> None:
     )
     _, _, viols = scan_generated_files([math_file])
     assert any("isolated multiplication" in v or "repeated adjacent word" in v for v in viols)
-
 
 
 def test_generate_pipeline_mock(

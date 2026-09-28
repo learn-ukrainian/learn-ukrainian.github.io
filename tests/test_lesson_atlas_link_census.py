@@ -24,6 +24,7 @@ from scripts.lexicon.lesson_atlas_link_census import (
     PublishedCatalog,
     blocking_atlas_hrefs,
     decode_lexicon_slug,
+    iter_lesson_hits,
     load_published_catalog,
     mask_atlas_href_fields,
 )
@@ -124,6 +125,28 @@ def test_committed_lesson_atlas_hrefs_are_published_entries():
         f"{len(hits)} alias, ambiguous, or dead lesson atlas_href values:\n"
         + "\n".join(preview)
     )
+
+
+def test_committed_lessons_keep_wrong_sense_links_out():
+    """#9002: the region Поділля and the language register реєстр have no
+    matching Atlas sense, so these lessons carry no link for them."""
+    wrong = {
+        ("folk/narodni-tantsi.mdx", "Поділля", "поділля"),
+        ("folk/pysankarstvo.mdx", "Поділля", "поділля"),
+        ("b2/advanced-conjunctions-ii.mdx", "реєстр", "реєстр"),
+        ("b2/active-participles-past.mdx", "реєстр", "реєстр"),
+        ("b2/advanced-conjunctions-i.mdx", "реєстр", "реєстр"),
+        ("b2/b2-final-exam.mdx", "реєстр", "реєстр"),
+        ("b2/synonymy-in-registers.mdx", "знижений", "знижений"),
+        ("b2/synonymy-types-and-rows.mdx", "знижений", "знижений"),
+    }
+    catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
+    found = {
+        (hit.path.split("content/docs/", 1)[-1], hit.word, hit.slug)
+        for hit in iter_lesson_hits(DEFAULT_DOCS, catalog)
+        if hit.kind == "atlas_href"
+    }
+    assert not wrong & found
 
 
 def test_census_help_mentions_when_not_to_use_it():

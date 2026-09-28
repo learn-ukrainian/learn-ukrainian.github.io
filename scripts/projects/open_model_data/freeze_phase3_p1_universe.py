@@ -10,11 +10,19 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import ArtifactSet, artifact_set
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 ADMISSION = DATA / "admission"
 EVIDENCE = DATA / "evidence"
 OUTPUT = EVIDENCE / "phase3_p1_universe_freeze_v1.json"
@@ -22,6 +30,8 @@ OUTPUT = EVIDENCE / "phase3_p1_universe_freeze_v1.json"
 OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 FREEZE_COMMIT = "59de8c451df4904b859d8ba4714da223a9ecbd21"
 ADMISSION_CUTOFF = "2026-08-29"
+# Historical provenance independently pinned to the 55d0ed1515 source blob.
+FROZEN_GENERATOR_SHA256 = "e418c0b2ed9dfd07468ba616ea9446d2d46073cf96c11415021ef06a1c189e83"
 
 MODERN_CONTACT_CLASSES = [
     "russian",
@@ -105,6 +115,8 @@ def read_json(path: Path) -> dict[str, Any]:
 
 
 def relative(path: Path) -> str:
+    if path.is_relative_to(DATA):
+        return "data/projects/open_model_data/" + path.relative_to(DATA).as_posix()
     return path.relative_to(ROOT).as_posix()
 
 
@@ -191,15 +203,27 @@ def policy_units(path: Path, additive_path: Path) -> list[dict[str, Any]]:
         units.append(
             source_unit(
                 source_unit_id=f"policy.{source_id}",
-                source_class="operator_supplied_university" if source.get("source_kind", "university_jsonl") == "university_jsonl" else "qualified_reference",
+                source_class="operator_supplied_university"
+                if source.get("source_kind", "university_jsonl") == "university_jsonl"
+                else "qualified_reference",
                 unit_grain="admission_policy_source_record",
                 unit_count=1,
                 identity_sha256=sha256_bytes(canonical_json(source)),
                 source_artifact=artifact(source_path),
-                provenance={"source_id": source_id, "evidence_hashes": source.get("evidence_hashes", []) or [source.get("evidence", {}).get("jsonl_sha256", "unknown")]},
+                provenance={
+                    "source_id": source_id,
+                    "evidence_hashes": source.get("evidence_hashes", [])
+                    or [source.get("evidence", {}).get("jsonl_sha256", "unknown")],
+                },
                 capability=capability,
                 disposition=disposition,
-                block_reason=("admission_policy_quarantine" if disposition == "blocked_with_reason" else "rights_capability_not_declared" if capability == "unknown" else None),
+                block_reason=(
+                    "admission_policy_quarantine"
+                    if disposition == "blocked_with_reason"
+                    else "rights_capability_not_declared"
+                    if capability == "unknown"
+                    else None
+                ),
             )
         )
     return units
@@ -240,22 +264,41 @@ def historical_units(path: Path) -> list[dict[str, Any]]:
     return units
 
 
-def legacy_units(receipt_path: Path, evidence_dir: Path) -> list[dict[str, Any]]:
+def legacy_units(receipt_path: Path, evidence_dir: Path, snapshot: ArtifactSet) -> list[dict[str, Any]]:
     receipt = read_json(receipt_path)
     receipt_artifact = artifact(receipt_path)
     units = []
     for family in sorted(receipt["families"], key=lambda item: item["family_id"]):
         family_id = family["family_id"]
         if family_id in LEGACY_LEDGER_FAMILIES and "ledger_file" in family:
-            path = evidence_dir / family["ledger_file"]
-            source_artifact = artifact(path)
-            identity_sha = sha256_bytes(canonical_json({"family_id": family_id, "ledger_sha256": family["ledger_sha256"], "unit_count": family["unit_count"]}))
-            provenance = {"freeze_receipt": receipt_artifact, "family_id": family_id, "ledger_sha256": family["ledger_sha256"]}
+            relative_ledger = f"projects/open_model_data/evidence/source_universe_v1/{family['ledger_file']}"
+            source_artifact = {
+                "path": f"data/{relative_ledger}",
+                "sha256": sha256_bytes(snapshot.artifacts[relative_ledger]),
+            }
+            identity_sha = sha256_bytes(
+                canonical_json(
+                    {
+                        "family_id": family_id,
+                        "ledger_sha256": family["ledger_sha256"],
+                        "unit_count": family["unit_count"],
+                    }
+                )
+            )
+            provenance = {
+                "freeze_receipt": receipt_artifact,
+                "family_id": family_id,
+                "ledger_sha256": family["ledger_sha256"],
+            }
         elif family_id in LEGACY_LEDGER_FAMILIES:
             path = evidence_dir / "lexical_structural_freeze_v1.json"
             source_artifact = artifact(path)
             identity_sha = family["structural_universe_sha256"]
-            provenance = {"freeze_receipt": receipt_artifact, "family_id": family_id, "structural_universe_sha256": identity_sha}
+            provenance = {
+                "freeze_receipt": receipt_artifact,
+                "family_id": family_id,
+                "structural_universe_sha256": identity_sha,
+            }
         else:
             continue
         units.append(
@@ -275,7 +318,9 @@ def legacy_units(receipt_path: Path, evidence_dir: Path) -> list[dict[str, Any]]
     return units
 
 
-def cell(cell_id: str, language: str, context: str, phenomenon: str, role: str, status: str, protection_required: bool) -> dict[str, Any]:
+def cell(
+    cell_id: str, language: str, context: str, phenomenon: str, role: str, status: str, protection_required: bool
+) -> dict[str, Any]:
     return {
         "cell_id": cell_id,
         "language_identity": language,
@@ -289,20 +334,76 @@ def cell(cell_id: str, language: str, context: str, phenomenon: str, role: str, 
 
 def required_cells() -> list[dict[str, Any]]:
     cells = [
-        cell(f"modern.{language}.unmarked.contact_interference.source_backed_correction", language, "unmarked_modern_ukrainian", "contact_interference", "source_backed_correction", "coverage_blocked", False)
+        cell(
+            f"modern.{language}.unmarked.contact_interference.source_backed_correction",
+            language,
+            "unmarked_modern_ukrainian",
+            "contact_interference",
+            "source_backed_correction",
+            "coverage_blocked",
+            False,
+        )
         for language in MODERN_CONTACT_CLASSES
     ]
     cells.extend(
-        cell(f"historical.{language}.historical_text.historical_identity.protected_historical", language, "historical_text", "historical_identity", "protected_historical", "coverage_blocked", True)
+        cell(
+            f"historical.{language}.historical_text.historical_identity.protected_historical",
+            language,
+            "historical_text",
+            "historical_identity",
+            "protected_historical",
+            "coverage_blocked",
+            True,
+        )
         for language in HISTORICAL_PROTECTED_CLASSES
     )
     cells.extend(
         [
-            cell("boundary.other_or_unresolved_slavic_cyrillic.ambiguous_noisy.scope_boundary.abstention", "other_or_unresolved_slavic_cyrillic", "ambiguous_noisy", "scope_boundary", "abstention", "coverage_blocked", True),
-            cell("boundary.mixed_identity.ambiguous_noisy.scope_boundary.abstention", "mixed_identity", "ambiguous_noisy", "scope_boundary", "abstention", "coverage_blocked", True),
-            cell("boundary.unknown.ambiguous_noisy.scope_boundary.abstention", "unknown", "ambiguous_noisy", "scope_boundary", "abstention", "coverage_blocked", True),
-            cell("boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable", "latin_script_slavic", "ambiguous_noisy", "scope_boundary", "not_applicable_with_evidence", "not_applicable_with_evidence", False),
-            cell("boundary.non_slavic_cyrillic.ambiguous_noisy.scope_boundary.not_applicable", "non_slavic_cyrillic", "ambiguous_noisy", "scope_boundary", "not_applicable_with_evidence", "not_applicable_with_evidence", False),
+            cell(
+                "boundary.other_or_unresolved_slavic_cyrillic.ambiguous_noisy.scope_boundary.abstention",
+                "other_or_unresolved_slavic_cyrillic",
+                "ambiguous_noisy",
+                "scope_boundary",
+                "abstention",
+                "coverage_blocked",
+                True,
+            ),
+            cell(
+                "boundary.mixed_identity.ambiguous_noisy.scope_boundary.abstention",
+                "mixed_identity",
+                "ambiguous_noisy",
+                "scope_boundary",
+                "abstention",
+                "coverage_blocked",
+                True,
+            ),
+            cell(
+                "boundary.unknown.ambiguous_noisy.scope_boundary.abstention",
+                "unknown",
+                "ambiguous_noisy",
+                "scope_boundary",
+                "abstention",
+                "coverage_blocked",
+                True,
+            ),
+            cell(
+                "boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable",
+                "latin_script_slavic",
+                "ambiguous_noisy",
+                "scope_boundary",
+                "not_applicable_with_evidence",
+                "not_applicable_with_evidence",
+                False,
+            ),
+            cell(
+                "boundary.non_slavic_cyrillic.ambiguous_noisy.scope_boundary.not_applicable",
+                "non_slavic_cyrillic",
+                "ambiguous_noisy",
+                "scope_boundary",
+                "not_applicable_with_evidence",
+                "not_applicable_with_evidence",
+                False,
+            ),
         ]
     )
     return cells
@@ -314,9 +415,20 @@ def build_manifest() -> dict[str, Any]:
     historical_path = ADMISSION / "phase3_historical_evidence_spine_v2.json"
     legacy_receipt = EVIDENCE / "source_universe_v1/source-universe-freeze-receipt.json"
     legacy_dir = EVIDENCE / "source_universe_v1"
-    source_units = policy_units(policy_path, additive_path) + historical_units(historical_path) + legacy_units(legacy_receipt, legacy_dir)
+    snapshot = artifact_set("open_model_evidence_indexes", repo=ROOT)
+    source_units = (
+        policy_units(policy_path, additive_path)
+        + historical_units(historical_path)
+        + legacy_units(legacy_receipt, legacy_dir, snapshot)
+    )
     source_units.sort(key=lambda item: item["source_unit_id"])
-    source_refs = [policy_path, additive_path, historical_path, legacy_receipt, legacy_dir / "lexical_structural_freeze_v1.json"]
+    source_refs = [
+        policy_path,
+        additive_path,
+        historical_path,
+        legacy_receipt,
+        legacy_dir / "lexical_structural_freeze_v1.json",
+    ]
     return {
         "schema_version": "phase3_p1_universe_freeze_v1",
         "text_free": True,
@@ -326,7 +438,7 @@ def build_manifest() -> dict[str, Any]:
             "admission_cutoff": ADMISSION_CUTOFF,
             "freeze_commit": FREEZE_COMMIT,
             "later_source_policy": "later_source_requires_new_dataset_version",
-            "generator": {"path": relative(Path(__file__)), "sha256": sha256_file(Path(__file__))},
+            "generator": {"path": relative(Path(__file__)), "sha256": FROZEN_GENERATOR_SHA256},
         },
         "source_manifest": {
             "source_unit_count": len(source_units),
@@ -341,7 +453,17 @@ def build_manifest() -> dict[str, Any]:
             "modern_contact_classes_exhaustive": True,
             "historical_protected_classes": HISTORICAL_PROTECTED_CLASSES,
             "fail_closed_classes": FAIL_CLOSED_CLASSES,
-            "span_fields_required": ["language_identity", "script_profile", "context_role", "scope_status", "period", "region", "register", "recension_editorial_layer", "identity_candidates"],
+            "span_fields_required": [
+                "language_identity",
+                "script_profile",
+                "context_role",
+                "scope_status",
+                "period",
+                "region",
+                "register",
+                "recension_editorial_layer",
+                "identity_candidates",
+            ],
             "context_roles": CONTEXT_ROLES,
             "script_is_language_identity": False,
             "unknown_mixed_and_unresolved_route": "out_of_scope_protected_or_abstain",
@@ -395,10 +517,18 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
     value = build_manifest()
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_bytes(canonical_json(value))
+    payload = canonical_json(value)
+    if args.output.resolve() == OUTPUT.resolve():
+        publish_bound_companion(ROOT, "open_model_evidence_indexes", "freeze_phase3_p1_universe", OUTPUT, payload)
+    else:
+        if args.output.absolute().is_relative_to(DATA) or args.output.resolve().is_relative_to(DATA):
+            raise ValueError(f"unbound managed P1 output: {args.output}")
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_bytes(payload)
     print(f"wrote {relative(args.output) if args.output.is_relative_to(ROOT) else args.output}")
-    print(f"source_units={value['source_manifest']['source_unit_count']} cells={len(value['required_cell_manifest']['cells'])}")
+    print(
+        f"source_units={value['source_manifest']['source_unit_count']} cells={len(value['required_cell_manifest']['cells'])}"
+    )
     return 0
 
 

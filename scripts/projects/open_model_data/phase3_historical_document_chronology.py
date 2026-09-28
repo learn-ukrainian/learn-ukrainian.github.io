@@ -34,7 +34,9 @@ from scripts.projects.open_model_data import phase3_historical_materialization a
 from scripts.projects.open_model_data import phase3_historical_periodization as periodization
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 RECORD_SCHEMA_PATH = DATA / "contracts/phase3_historical_document_chronology_record_v1.schema.json"
 RECEIPT_SCHEMA_PATH = DATA / "contracts/phase3_historical_document_chronology_receipt_v1.schema.json"
 PERIODIZATION_FREEZE_PATH = DATA / "admission/phase3_historical_periodization_freeze_v1.json"
@@ -45,8 +47,8 @@ OUTPUT_FILENAME = "historical-document-chronology-v1.jsonl.gz"
 RECEIPT_FILENAME = "historical-document-chronology-receipt-v1.json"
 
 EXPECTED_PERIODIZATION_FREEZE_SHA256 = periodization.EXPECTED_FREEZE_SHA256
-EXPECTED_PERIODIZATION_IMPLEMENTATION_SHA256 = "cc311db5db46da73a6c5008186a5ea3acc4930baa96e21f3f16d1f4051d104ac"
-EXPECTED_MATERIALIZATION_IMPLEMENTATION_SHA256 = "97e7cd63da36dacb7c88db0ec8225ea4075c3a5873ecd618e6d8b5ca4188536e"
+EXPECTED_PERIODIZATION_IMPLEMENTATION_SHA256 = "85235ffb2df8757f39f069e863b02a714d85778115b9b7e6f312724cad08ca54"
+EXPECTED_MATERIALIZATION_IMPLEMENTATION_SHA256 = "5350d71453661d36dfbd5c1060fb627672928b52f85fedd18fc275268a6f8cfb"
 EXPECTED_FULL_RECEIPT_FILE_SHA256 = "05322d450a8e90b103fff7521605395250e1da957fbf63e8ecf1df8d3d5f6307"
 EXPECTED_FULL_RECEIPT_SHA256 = "8e3d33b4c5d5a5a4bd3c5da7788460d016e16b9058515b64a6683a725a14c2de"
 EXPECTED_UD_DATE_DENOMINATOR = {

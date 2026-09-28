@@ -8,12 +8,19 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data import phase3_near_duplicate as near
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+POLICY = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_near_duplicate_policy_v1.json"
 
 
-def _record(*, document: str = "doc:a", unit: str = "unit:1", span: str = "span:1", surface: str = "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon") -> dict[str, str]:
+def _record(
+    *,
+    document: str = "doc:a",
+    unit: str = "unit:1",
+    span: str = "span:1",
+    surface: str = "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon",
+) -> dict[str, str]:
     return {
         "source_document_identity": document,
         "unit_identity": unit,
@@ -59,17 +66,23 @@ def test_fixture_manifest_is_executable() -> None:
 def test_document_unit_and_span_scopes_are_distinct() -> None:
     policy = near.load_policy(POLICY)
     left = _record()
-    assert near.classify_records(left, _record(document="doc:b"), scope="document", policy=policy).classification == "nonmatch"
+    assert (
+        near.classify_records(left, _record(document="doc:b"), scope="document", policy=policy).classification
+        == "nonmatch"
+    )
     assert near.classify_records(left, _record(unit="unit:2"), scope="unit", policy=policy).classification == "nonmatch"
-    assert near.classify_records(
-        left,
-        _record(
-            span="span:2",
-            surface="alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau phi",
-        ),
-        scope="span",
-        policy=policy,
-    ).classification == "near"
+    assert (
+        near.classify_records(
+            left,
+            _record(
+                span="span:2",
+                surface="alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau phi",
+            ),
+            scope="span",
+            policy=policy,
+        ).classification
+        == "near"
+    )
 
 
 def test_policy_drift_and_malformed_comparison_fail_closed(tmp_path: Path) -> None:
@@ -85,7 +98,9 @@ def test_policy_drift_and_malformed_comparison_fail_closed(tmp_path: Path) -> No
     drifted.write_text(json.dumps(policy), encoding="utf-8")
     with pytest.raises(near.NearDuplicatePolicyError, match="implementation policy pin drift"):
         near.load_policy(drifted)
-    assert near.duplicate_or_fail_closed(_record(), {"normalized_surface": "x"}, policy=near.load_policy(POLICY)) is True
+    assert (
+        near.duplicate_or_fail_closed(_record(), {"normalized_surface": "x"}, policy=near.load_policy(POLICY)) is True
+    )
 
 
 def test_expected_fingerprint_mismatch_fails_closed() -> None:
@@ -112,16 +127,19 @@ def test_canonical_rule_collapse_and_nonduplicate_activation_counts_are_policy_b
     assert near.canonical_json(groups) == near.canonical_json(
         near.collapse_canonical_rules([first, near_first, second, near_second, third], policy=policy)
     )
-    assert near.nonduplicate_activation_count(
-        [
-            {"duplicate": False, "rule": first},
-            {"duplicate": False, "rule": second},
-            {"duplicate": False, "rule": third},
-            {"duplicate": False, "rule": near_first},
-            {"duplicate": False, "rule": near_second},
-        ],
-        policy=policy,
-    ) == 3
+    assert (
+        near.nonduplicate_activation_count(
+            [
+                {"duplicate": False, "rule": first},
+                {"duplicate": False, "rule": second},
+                {"duplicate": False, "rule": third},
+                {"duplicate": False, "rule": near_first},
+                {"duplicate": False, "rule": near_second},
+            ],
+            policy=policy,
+        )
+        == 3
+    )
     with pytest.raises(near.NearDuplicatePolicyError, match="explicitly false"):
         near.nonduplicate_activation_count([{"duplicate": True, "rule": first}], policy=policy)
 

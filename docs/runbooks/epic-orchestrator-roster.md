@@ -33,7 +33,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
 | **any epic** — Fable alternate (advisor seat; summon, don't seat) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
-| **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
+| **any epic** — routine Anthropic alternate | Sonnet 5.5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5-5` |
 | **any epic** — Cursor TUI driver (Auto; attested after run) | Cursor Auto | `./start-cursor-driver.sh --epic <epic>` |
 
 **Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
@@ -174,8 +174,8 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 - **Gemini** → infra: 1M window, MCP-leading tool use, cheap; never claims content lanes.
 - **Grok** → product/track coordination: best-on-board agentic tool use, on its **own**
   subscription window, so driving it doesn't steal review or writing capacity.
-- **Sonnet-5** → judgment-dense: near-Opus judgment at much lower cost, and it's *extra*
-  Anthropic capacity that does **not** consume the Opus review-of-record seat.
+- **Sonnet 5.5** → well-scoped routine work and bug fixes on practical Anthropic capacity;
+  it does **not** consume the Opus review-of-record seat.
 - **HydrationCapsuleV1** supplies the score-and-hydrate path for the authorized Codex alternate.
   Use the selected runtime's validated context profile; a historical model's window is not
   a current capability or permission grant. The alternate never co-owns Gemini's stream lease.

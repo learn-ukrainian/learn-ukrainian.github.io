@@ -14,8 +14,9 @@ from referencing import Registry, Resource
 
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-CONTRACTS = Path(__file__).resolve().parents[1] / "data/projects/open_model_data/contracts"
+CONTRACTS = resolve_open_model_path("data/projects/open_model_data/contracts")
 EVIDENCE_SCHEMA = CONTRACTS / "phase3_cycle007_evidence_v1.schema.json"
 SIDECAR_SCHEMA = CONTRACTS / "phase3_cycle007_evidence_sidecar_v1.schema.json"
 MANIFEST_SCHEMA = CONTRACTS / "phase3_cycle007_evidence_manifest_v1.schema.json"
@@ -95,7 +96,9 @@ def test_schemas_are_valid_draft_2020_12():
 def test_compiled_evidence_records_validate_against_evidence_schema():
     validators = _validators()
     row = _row("unit-1", "Привіт світ")
-    row_evidence = compiler.compile_row_evidence(row, SyntheticSourcesClient(), identity=SyntheticSourcesClient().server_identity())
+    row_evidence = compiler.compile_row_evidence(
+        row, SyntheticSourcesClient(), identity=SyntheticSourcesClient().server_identity()
+    )
     for record in row_evidence["evidence"]:
         errors = list(validators[EVIDENCE_SCHEMA].iter_errors(record))
         assert not errors, errors

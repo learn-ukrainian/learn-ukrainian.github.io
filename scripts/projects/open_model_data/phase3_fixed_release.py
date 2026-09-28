@@ -28,7 +28,9 @@ from scripts.projects.open_model_data import phase3_disposition_audit as disposi
 from scripts.projects.open_model_data import phase3_functional_roles as roles
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 DEFAULT_SCHEMA = DATA / "contracts/phase3_fixed_release_manifest_v1.schema.json"
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 DEFAULT_EVALUATION_CONTRACT = DATA / "evidence/correction_protection_evaluation_contract_v1.json"
@@ -155,13 +157,26 @@ def _verify_audit_bundle_pins(bundle: Mapping[str, Any], ledger: Mapping[str, An
     """
 
     required = {
-        "schema_version", "text_free", "source_universe_receipt_sha256", "coverage_contract_sha256",
-        "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-        "functional_role_contract_sha256", "conflict_graph_sha256", "disposition_ledger_sha256",
-        "population_freeze_sha256", "seed_receipt_sha256s", "sample_manifest_sha256", "audit_results_sha256",
+        "schema_version",
+        "text_free",
+        "source_universe_receipt_sha256",
+        "coverage_contract_sha256",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "conflict_graph_sha256",
+        "disposition_ledger_sha256",
+        "population_freeze_sha256",
+        "seed_receipt_sha256s",
+        "sample_manifest_sha256",
+        "audit_results_sha256",
     }
     require(set(bundle) == required, "audit bundle is not closed")
-    require(bundle["schema_version"] == "phase3_disposition_audit_bundle_v2_1" and bundle["text_free"] is True, "audit bundle is not a v2.1 text-free bundle")
+    require(
+        bundle["schema_version"] == "phase3_disposition_audit_bundle_v2_1" and bundle["text_free"] is True,
+        "audit bundle is not a v2.1 text-free bundle",
+    )
     require(
         bundle["disposition_ledger_sha256"] == disposition_audit.sha256_value(ledger),
         "audit bundle disposition ledger binding drift",
@@ -172,7 +187,10 @@ def _verify_audit_bundle_pins(bundle: Mapping[str, Any], ledger: Mapping[str, An
         and bundle["combined_contract_sha256"] == roles.COMBINED_SHA256,
         "audit bundle contract binding drift",
     )
-    require(isinstance(bundle["seed_receipt_sha256s"], list) and bundle["seed_receipt_sha256s"], "audit bundle has no passed samples")
+    require(
+        isinstance(bundle["seed_receipt_sha256s"], list) and bundle["seed_receipt_sha256s"],
+        "audit bundle has no passed samples",
+    )
     for field, value in bundle.items():
         if field.endswith("sha256"):
             require(isinstance(value, str) and len(value) == 64, f"audit bundle hash is incomplete: {field}")
@@ -182,7 +200,10 @@ def _rules(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     rules: list[dict[str, Any]] = []
     unit_ids: set[str] = set()
     for row in rows:
-        require(set(row) == {"unit_id", "unit_sha256", "artifact_sha256", "artifact", "consumer_views"}, "reviewed rule artifact shape drift")
+        require(
+            set(row) == {"unit_id", "unit_sha256", "artifact_sha256", "artifact", "consumer_views"},
+            "reviewed rule artifact shape drift",
+        )
         unit_id = row["unit_id"]
         require(isinstance(unit_id, str) and unit_id and unit_id not in unit_ids, "duplicate reviewed rule unit")
         unit_ids.add(unit_id)
@@ -204,21 +225,51 @@ def _verify_release_prerequisites(
     role_contract: Mapping[str, Any],
     evaluation_contract: Mapping[str, Any],
 ) -> None:
-    require(public_receipt.get("schema_version") == "phase3_source_production_public_receipt_v1" and public_receipt.get("review_complete") is True, "source-production review is incomplete")
+    require(
+        public_receipt.get("schema_version") == "phase3_source_production_public_receipt_v1"
+        and public_receipt.get("review_complete") is True,
+        "source-production review is incomplete",
+    )
     denominator = public_receipt.get("denominator")
-    require(isinstance(denominator, Mapping) and denominator.get("input_total") == 67041, "source-production denominator drift")
-    require(disposition_receipt.get("schema_version") == "phase3_source_disposition_receipt_v2_1", "wrong disposition receipt")
+    require(
+        isinstance(denominator, Mapping) and denominator.get("input_total") == 67041,
+        "source-production denominator drift",
+    )
+    require(
+        disposition_receipt.get("schema_version") == "phase3_source_disposition_receipt_v2_1",
+        "wrong disposition receipt",
+    )
     disposition = disposition_receipt.get("disposition_ledger")
-    require(isinstance(disposition, Mapping) and disposition.get("row_count") == 67041, "disposition ledger denominator drift")
-    require(ledger.get("schema_version") == "phase3_disposition_ledger_v2_1" and ledger.get("text_free") is True, "disposition ledger is not audit-compatible")
+    require(
+        isinstance(disposition, Mapping) and disposition.get("row_count") == 67041,
+        "disposition ledger denominator drift",
+    )
+    require(
+        ledger.get("schema_version") == "phase3_disposition_ledger_v2_1" and ledger.get("text_free") is True,
+        "disposition ledger is not audit-compatible",
+    )
     _verify_audit_bundle_pins(audit_bundle, ledger)
-    require(heldout_receipt.get("schema_version") == "phase3_heldout_label_public_receipt_v1", "wrong heldout-label receipt")
-    require(heldout_receipt.get("complete") is True and heldout_receipt.get("row_count") == 2000, "heldout labels are incomplete")
+    require(
+        heldout_receipt.get("schema_version") == "phase3_heldout_label_public_receipt_v1", "wrong heldout-label receipt"
+    )
+    require(
+        heldout_receipt.get("complete") is True and heldout_receipt.get("row_count") == 2000,
+        "heldout labels are incomplete",
+    )
     required_label_bundle = {
-        "schema_version", "text_free", "evaluation_cycle_id", "evaluation_freeze_receipt_sha256",
-        "partition_manifest_sha256", "sealed_labels_sha256", "row_count", "clean_modern_row_count",
-        "phenomenon_strata_row_count", "phenomenon_stratum_commitments", "complete",
-        "frozen_before_rule_extraction", "receipt_sha256",
+        "schema_version",
+        "text_free",
+        "evaluation_cycle_id",
+        "evaluation_freeze_receipt_sha256",
+        "partition_manifest_sha256",
+        "sealed_labels_sha256",
+        "row_count",
+        "clean_modern_row_count",
+        "phenomenon_strata_row_count",
+        "phenomenon_stratum_commitments",
+        "complete",
+        "frozen_before_rule_extraction",
+        "receipt_sha256",
     }
     require(set(comprehensive_label_bundle) == required_label_bundle, "comprehensive label bundle is not closed")
     require(
@@ -239,11 +290,26 @@ def _verify_release_prerequisites(
         and comprehensive_label_bundle.get("frozen_before_rule_extraction") is True,
         "comprehensive labels were not frozen before extraction",
     )
-    require(freeze_receipt.get("schema_version") == "phase3_evaluation_partition_receipt_v1", "wrong evaluation-freeze receipt")
-    require(freeze_receipt.get("aggregates", {}).get("clean_modern_candidate_total") == 2000, "clean_modern denominator drift")
-    require(freeze_receipt.get("input_bindings", {}).get("evaluation_cycle_id") == EVALUATION_CYCLE_ID, "evaluation-freeze cycle drift")
-    require(evaluation_contract.get("functional_role_evaluation_cycle", {}).get("evaluation_cycle_id") == EVALUATION_CYCLE_ID, "evaluation contract cycle drift")
-    require(role_contract["evaluation_cycle"]["evaluation_cycle_id"] == EVALUATION_CYCLE_ID, "role contract cycle drift")
+    require(
+        freeze_receipt.get("schema_version") == "phase3_evaluation_partition_receipt_v1",
+        "wrong evaluation-freeze receipt",
+    )
+    require(
+        freeze_receipt.get("aggregates", {}).get("clean_modern_candidate_total") == 2000,
+        "clean_modern denominator drift",
+    )
+    require(
+        freeze_receipt.get("input_bindings", {}).get("evaluation_cycle_id") == EVALUATION_CYCLE_ID,
+        "evaluation-freeze cycle drift",
+    )
+    require(
+        evaluation_contract.get("functional_role_evaluation_cycle", {}).get("evaluation_cycle_id")
+        == EVALUATION_CYCLE_ID,
+        "evaluation contract cycle drift",
+    )
+    require(
+        role_contract["evaluation_cycle"]["evaluation_cycle_id"] == EVALUATION_CYCLE_ID, "role contract cycle drift"
+    )
 
 
 def build(
@@ -275,17 +341,23 @@ def build(
     comprehensive_label_bundle = _read_json(comprehensive_sealed_label_bundle_path, "comprehensive sealed-label bundle")
     freeze_receipt = _read_json(evaluation_freeze_receipt_path, "evaluation-freeze receipt")
     _verify_release_prerequisites(
-        public_receipt=public_receipt, disposition_receipt=disposition_receipt, ledger=ledger,
-        audit_bundle=audit_bundle, heldout_receipt=heldout_receipt, comprehensive_label_bundle=comprehensive_label_bundle,
+        public_receipt=public_receipt,
+        disposition_receipt=disposition_receipt,
+        ledger=ledger,
+        audit_bundle=audit_bundle,
+        heldout_receipt=heldout_receipt,
+        comprehensive_label_bundle=comprehensive_label_bundle,
         freeze_receipt=freeze_receipt,
-        role_contract=role_contract, evaluation_contract=evaluation_contract,
+        role_contract=role_contract,
+        evaluation_contract=evaluation_contract,
     )
     bundle_body = dict(comprehensive_label_bundle)
     claimed_bundle_hash = bundle_body.pop("receipt_sha256")
     require(claimed_bundle_hash == sha256_value(bundle_body), "comprehensive label bundle self-hash drift")
     require(
         comprehensive_label_bundle["evaluation_cycle_id"] == EVALUATION_CYCLE_ID
-        and comprehensive_label_bundle["evaluation_freeze_receipt_sha256"] == sha256_file(evaluation_freeze_receipt_path),
+        and comprehensive_label_bundle["evaluation_freeze_receipt_sha256"]
+        == sha256_file(evaluation_freeze_receipt_path),
         "comprehensive label bundle evaluation-freeze binding drift",
     )
     rules = _rules(_read_jsonl(reviewed_rule_artifacts_path, "reviewed rule artifacts"))
@@ -322,11 +394,35 @@ def build(
     _atomic_write(paths["fixed-release-rules.jsonl"], rules_payload)
     _atomic_write(paths["denominator-contract.json"], denominator_contract_path.read_bytes())
     _atomic_write(paths["threshold-contract.json"], threshold_contract_path.read_bytes())
-    published_inputs = {"schema_version": "phase3_published_inputs_manifest_v1", "text_free": True, "input_hashes": input_hashes, "rule_count": len(rules)}
+    published_inputs = {
+        "schema_version": "phase3_published_inputs_manifest_v1",
+        "text_free": True,
+        "input_hashes": input_hashes,
+        "rule_count": len(rules),
+    }
     _atomic_write(paths["published-inputs-manifest.json"], canonical_bytes(published_inputs))
-    instructions = {"schema_version": "phase3_release_instructions_v1", "text_free": True, "fixed_release_task_id": TASK_ID, "rules_mutable": False, "thresholds_mutable": False, "heldout_plaintext_available": False}
-    ukrainian_recipe = {"schema_version": "phase3_recipe_v1", "language": "uk", "text_free": True, "fixed_release_task_id": TASK_ID, "rule_count": len(rules)}
-    english_recipe = {"schema_version": "phase3_recipe_v1", "language": "en", "text_free": True, "fixed_release_task_id": TASK_ID, "rule_count": len(rules)}
+    instructions = {
+        "schema_version": "phase3_release_instructions_v1",
+        "text_free": True,
+        "fixed_release_task_id": TASK_ID,
+        "rules_mutable": False,
+        "thresholds_mutable": False,
+        "heldout_plaintext_available": False,
+    }
+    ukrainian_recipe = {
+        "schema_version": "phase3_recipe_v1",
+        "language": "uk",
+        "text_free": True,
+        "fixed_release_task_id": TASK_ID,
+        "rule_count": len(rules),
+    }
+    english_recipe = {
+        "schema_version": "phase3_recipe_v1",
+        "language": "en",
+        "text_free": True,
+        "fixed_release_task_id": TASK_ID,
+        "rule_count": len(rules),
+    }
     _atomic_write(paths["release-instructions.json"], canonical_bytes(instructions))
     _atomic_write(paths["ukrainian-recipe.json"], canonical_bytes(ukrainian_recipe))
     _atomic_write(paths["english-recipe.json"], canonical_bytes(english_recipe))

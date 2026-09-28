@@ -23,10 +23,11 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_a13_cleanup_recovery as a13
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a13_cleanup_recovery_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a13_cleanup_recovery_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
@@ -70,9 +71,15 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, manifest=None, a12_receipt=N
     the whole upstream chain."""
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a12_gold_overlay_gate_receipt_v1.json").write_text(json.dumps(a12_receipt if a12_receipt is not None else _cached_json(A12_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH)))
+    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(
+        json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a12_gold_overlay_gate_receipt_v1.json").write_text(
+        json.dumps(a12_receipt if a12_receipt is not None else _cached_json(A12_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(
+        json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH))
+    )
     return tmp_path
 
 
@@ -107,7 +114,11 @@ def test_a13_state_closed_when_a_required_public_artifact_is_missing(tmp_path: P
 
 def test_a13_state_closed_when_a12_receipt_is_invalid(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _write_receipt_tree(tmp_path)
-    monkeypatch.setattr(a13.a12, "validate_receipt_independently", lambda *a, **k: (_ for _ in ()).throw(a13.a12.GoldOverlayGateError("forged")))
+    monkeypatch.setattr(
+        a13.a12,
+        "validate_receipt_independently",
+        lambda *a, **k: (_ for _ in ()).throw(a13.a12.GoldOverlayGateError("forged")),
+    )
     state = a13.check_cleanup_recovery_state(tmp_path)
     assert state["a12_receipt_valid"] is False
     assert state["blocked_reason_code"] == "a12_receipt_invalid"
@@ -122,7 +133,9 @@ def test_a13_state_flags_engine_drift_before_a12_validity(tmp_path: Path, monkey
     assert state["blocked_reason_code"] == "model_agreement_exclusion_engine_drifted"
 
 
-def test_a13_state_reports_rights_unresolved_and_slots_unassigned_when_both_pending(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a13_state_reports_rights_unresolved_and_slots_unassigned_when_both_pending(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     _fast_a12(monkeypatch)
     _write_receipt_tree(tmp_path)
     state = a13.check_cleanup_recovery_state(tmp_path)
@@ -154,7 +167,9 @@ def test_a13_state_reports_slot_assignment_pending_only(tmp_path: Path, monkeypa
     assert state["blocked_reason_code"] == "slot_assignment_pending_a2_a3"
 
 
-def test_a13_state_never_reports_epic_closed_even_when_fully_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a13_state_never_reports_epic_closed_even_when_fully_resolved(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Proves epic_closed can never flip true by accident: it is hardcoded
     False regardless of upstream resolution state."""
     _fast_a12(monkeypatch)
@@ -191,7 +206,9 @@ def test_a13_residuals_are_one_typed_entry_per_frozen_slot_never_a_silent_drop()
     residuals = a13.derive_a13_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), state)
     assert len(residuals) == 100
     assert len({r["residual_id"] for r in residuals}) == 100
-    assert {r["subject_id"] for r in residuals} == set(a13.a12.a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
+    assert {r["subject_id"] for r in residuals} == set(
+        a13.a12.a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH))
+    )
     assert all(r["stage"] == "A13" for r in residuals)
     assert {r["reason_code"] for r in residuals} == {"rights_unknown", "source_incomplete", "independence_unavailable"}
     # Never a fabricated cleanup/recovery verdict standing in for the missing released row.
@@ -285,7 +302,9 @@ def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_resi
     )
     for receipt_key, path, source_key in pairs:
         source = json.loads(path.read_text(encoding="utf-8"))
-        assert {e["residual_id"] for e in _cached_json(RECEIPT)[receipt_key]} == {e["residual_id"] for e in source[source_key]}
+        assert {e["residual_id"] for e in _cached_json(RECEIPT)[receipt_key]} == {
+            e["residual_id"] for e in source[source_key]
+        }
         assert all(e["status"] == "unresolved_carried_to_a13" for e in _cached_json(RECEIPT)[receipt_key])
 
 
@@ -300,7 +319,16 @@ def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -
     assert _cached_json(RECEIPT)["status"] == "A13_CLEANUP_RECOVERY_WIRED_TEXT_FREE_NO_STRONGER_RELEASE_STATE_CLAIM"
     assert _cached_json(RECEIPT)["recovery_state"]["epic_closed"] is False
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
-    for forbidden in ("EPIC_DONE", "TRAINING_READY_SILVER", "TRAINING_READY_GOLD_SUBSET", "GOLD_UPGRADE_READY", "EVAL_ARTIFACT_READY", "PILOT_REVIEW_PASSED", "ARENA_SLICE_READY", "ADMITTED_SLICE_READY"):
+    for forbidden in (
+        "EPIC_DONE",
+        "TRAINING_READY_SILVER",
+        "TRAINING_READY_GOLD_SUBSET",
+        "GOLD_UPGRADE_READY",
+        "EVAL_ARTIFACT_READY",
+        "PILOT_REVIEW_PASSED",
+        "ARENA_SLICE_READY",
+        "ADMITTED_SLICE_READY",
+    ):
         assert forbidden not in serialized, forbidden
     safety = _cached_json(RECEIPT)["safety_assertions"]
     assert safety["epic_done_claimed"] is False
@@ -313,7 +341,11 @@ def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -
 
 def test_a13_receipt_dataset_rows_emitted_stays_zero() -> None:
     assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["engine_wiring"]["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
+    assert _cached_json(RECEIPT)["engine_wiring"]["admission_receipt"]["counts"] == {
+        "input_rows": 0,
+        "admitted_rows": 0,
+        "rejected_rows": 0,
+    }
     assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
 
 
@@ -346,14 +378,21 @@ def test_a13_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
-            if binding["path"].startswith("scripts/") else binding["path"]
+            if binding["path"].startswith("scripts/")
+            else binding["path"]
         )
         assert path.is_file(), name
         assert a13.sha256_file(path) == binding["sha256"], name
 
 
 def test_a13_receipt_eligibility_all_false() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
 
 
 # --- fail-closed on tampering (fast: monkeypatched a12 validity) ----------------
@@ -417,7 +456,9 @@ def test_a13_refuses_a_nonzero_temp_outputs_reaped_claim(monkeypatch: pytest.Mon
 def test_a13_refuses_a_weakened_cleanup_policy_dropping_a_forbidden_path(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
     receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["cleanup_policy"]["forbidden_paths"] = [p for p in receipt["cleanup_policy"]["forbidden_paths"] if p != "data/sources.db"]
+    receipt["cleanup_policy"]["forbidden_paths"] = [
+        p for p in receipt["cleanup_policy"]["forbidden_paths"] if p != "data/sources.db"
+    ]
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
 

@@ -151,6 +151,7 @@ def init_repo(
                 "scripts/agent_runtime/bounded_command.py",
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
+                "scripts/lib/project_interpreter.sh",
                 "scripts/lib/handoff_identity.sh",
                 "scripts/lib/profile_resolver.sh",
                 "scripts/lib/session_supervisor.sh",

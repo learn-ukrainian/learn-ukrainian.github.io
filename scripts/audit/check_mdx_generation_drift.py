@@ -12,7 +12,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 MDX_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 if str(PROJECT_ROOT) not in sys.path:
@@ -20,6 +19,9 @@ if str(PROJECT_ROOT) not in sys.path:
 from manifest_utils import get_modules_for_level, load_manifest
 
 from scripts.build import linear_pipeline
+from scripts.common.repo_root import project_interpreter
+
+VENV_PYTHON = project_interpreter()
 
 SEMINAR_LEVELS = linear_pipeline.SEMINAR_LEVELS
 

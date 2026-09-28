@@ -27,6 +27,7 @@ from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     SONNET_5,
+    SONNET_5_5,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -54,7 +55,7 @@ def test_family_resolution_across_model_and_harness_aliases():
     cases = {
         "claude": "anthropic",
         "claude-tools": "anthropic",
-        "claude-sonnet-5": "anthropic",
+        "claude-sonnet-5-5": "anthropic",
         "claude-opus-4-8": "anthropic",
         "claude-fable-5": "anthropic",
         "codex": "openai",
@@ -208,13 +209,25 @@ def test_unsupported_risk_fails_closed():
 
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
-    # OpenAI author: critical → Fable 5 (Sol advisory); high/medium/low → Sonnet 5.
+    # OpenAI author: critical → Fable 5 (Sol advisory); high/medium/low → Sonnet 5.5.
     # Operator 2026-07-26: Opus 5 de-advisored; Fable is the Anthropic authority seat.
     critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
     assert critical.selected.name == "claude-fable-5"
     for risk in ("high", "medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
-        assert resolution.selected.name == "claude-sonnet-5", risk
+        assert resolution.selected.name == "claude-sonnet-5-5", risk
+
+
+@pytest.mark.parametrize("author_model", ("gpt-6-sol", "grok-4.7"))
+@pytest.mark.parametrize("review_profile", ("code", "infra"))
+def test_critical_security_review_excludes_sonnet_5_5(author_model: str, review_profile: str) -> None:
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model=author_model, review_profile=review_profile, risk="critical")
+    )
+    assert resolution.selected is not None
+    assert resolution.selected.concrete_model != "claude-sonnet-5-5"
+    sonnet = next(entry for entry in resolution.trace if entry.name == "claude-sonnet-5-5")
+    assert sonnet.status == "excluded"
 
 
 def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
@@ -232,7 +245,7 @@ def test_critical_anthropic_author_gets_astra_as_formal_gate():
 
 def test_high_risk_openai_author_gets_sonnet_not_fable():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert resolution.selected.transport == "native_claude"
     # Astra remains same-family advisory context, never this author’s CF gate.
     assert next(entry for entry in resolution.trace if entry.name == "openai_frontier").status == "advisory_only"
@@ -280,7 +293,7 @@ def test_high_risk_kimi_author_gets_claude_not_composer():
 
 def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "excluded"
 
 
@@ -312,7 +325,7 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert resolution.selected.health in {None, "healthy"}
 
 
@@ -324,8 +337,8 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
             routing_snapshot={"codex": "unhealthy", "cursor": "healthy"},
         )
     )
-    # Practical ladder: Astra dark → Sonnet 5 (Claude healthy by default).
-    assert resolution.selected.name == "claude-sonnet-5"
+    # Practical ladder: Astra dark → Sonnet 5.5 (Claude healthy by default).
+    assert resolution.selected.name == "claude-sonnet-5-5"
     terra = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "unhealthy" in terra.reason
@@ -341,7 +354,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert resolution.selected.health == "degraded"
 
 
@@ -353,7 +366,7 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
         }
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
 
 
@@ -396,7 +409,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
             routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"},
         )
     )
-    assert unhealthy.selected.name == "claude-sonnet-5"
+    assert unhealthy.selected.name == "claude-sonnet-5-5"
 
     invalid = resolve_reviewer(
         ResolverInputs(
@@ -418,7 +431,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
             routing_snapshot={"agy": "pre_launch", "grok": "near_cap"},
         )
     )
-    assert pre_launch.selected.name == "claude-sonnet-5"
+    assert pre_launch.selected.name == "claude-sonnet-5-5"
     assert pre_launch.selected.health is None
 
     unknown = resolve_reviewer(
@@ -429,7 +442,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5"
+    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5-5"
     assert unknown.substitution_note is None
 
 
@@ -482,7 +495,7 @@ def test_native_grok_dark_falls_to_explicit_cursor_grok():
 def test_missing_health_signal_is_fail_open():
     empty = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot={}))
     absent = resolve_reviewer(ResolverInputs(author_model="codex", risk="low", routing_snapshot=None))
-    assert empty.selected.name == absent.selected.name == "claude-sonnet-5"
+    assert empty.selected.name == absent.selected.name == "claude-sonnet-5-5"
 
 
 def test_family_exclusion_is_not_mislabeled_as_a_substitution():
@@ -649,7 +662,7 @@ def test_custom_ladder_still_supported_for_focused_callers():
 
 
 def test_same_tier_balancing_is_stable_and_yaml_order_independent(practical_astra):
-    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     inputs = ResolverInputs(author_model="gemini", exact_head="a" * 40)
     forward = resolve_reviewer(inputs, ladder=((PRACTICAL_ASTRA, sonnet),))
     reverse = resolve_reviewer(inputs, ladder=((sonnet, PRACTICAL_ASTRA),))
@@ -661,7 +674,7 @@ def test_same_tier_balancing_is_stable_and_yaml_order_independent(practical_astr
 
 
 def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(practical_astra):
-    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     ladder = ((PRACTICAL_ASTRA, sonnet),)
     inputs = ResolverInputs(author_model="gemini", exact_head="b" * 40, requested_role="implementation")
     capacity_weighted = {
@@ -681,7 +694,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
         }
     }
     selected = resolve_reviewer(inputs, ladder=ladder, runtime_state=headroom)
-    assert selected.selected.name == "claude-sonnet-5"
+    assert selected.selected.name == "claude-sonnet-5-5"
 
     stale_codex = {
         "agents": {
@@ -689,7 +702,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
             "claude": {"scheduler": {"completed_input_bytes": 10, "quota_stale": False}},
         }
     }
-    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_codex).selected.name == "claude-sonnet-5"
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_codex).selected.name == "claude-sonnet-5-5"
 
     # A stale route with deceptively low recorded load must not outrank a
     # fresh, verified route solely because its last-known-good counter is old.
@@ -711,7 +724,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
             },
         }
     }
-    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_low_load).selected.name == "claude-sonnet-5"
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_low_load).selected.name == "claude-sonnet-5-5"
 
 
 def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authority_models():
@@ -815,20 +828,20 @@ def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier
 
 
 def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate(practical_astra):
-    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", risk="high"),
         ladder=((sonnet, PRACTICAL_ASTRA),),
         runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
     )
     assert resolution.selected.name == "synthetic-practical-astra"
-    sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5")
+    sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5-5")
     assert sonnet_trace.status == "excluded"
     assert "near cap" in sonnet_trace.reason
 
 
 def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practical_astra):
-    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     ladder = ((PRACTICAL_ASTRA, sonnet),)
     inputs = ResolverInputs(author_model="gemini", exact_head="c" * 40)
     circuit = resolve_reviewer(
@@ -836,11 +849,11 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
         ladder=ladder,
         runtime_state={"agents": {"codex": {"scheduler": {"circuit_open": True}}}},
     )
-    assert circuit.selected.name == "claude-sonnet-5"
+    assert circuit.selected.name == "claude-sonnet-5-5"
     assert "circuit is open" in next(item.reason for item in circuit.trace if item.name == "synthetic-practical-astra")
 
     bucket = resolve_reviewer(inputs, ladder=ladder, excluded_quota_buckets=frozenset({"codex"}))
-    assert bucket.selected.name == "claude-sonnet-5"
+    assert bucket.selected.name == "claude-sonnet-5-5"
     assert "already reserved" in next(item.reason for item in bucket.trace if item.name == "synthetic-practical-astra")
 
     full_credential = resolve_reviewer(
@@ -848,14 +861,14 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
         ladder=ladder,
         runtime_state={"agents": {"codex": {"scheduler": {"capacity_exhausted": True}}}},
     )
-    assert full_credential.selected.name == "claude-sonnet-5"
+    assert full_credential.selected.name == "claude-sonnet-5-5"
     assert "no unreserved concurrency slot" in next(
         item.reason for item in full_credential.trace if item.name == "synthetic-practical-astra"
     )
 
 
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
-    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     missing_reason = resolve_reviewer(
         ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name), ladder=((PRACTICAL_ASTRA, sonnet),)
     )
@@ -891,7 +904,7 @@ def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
 
     same_family = resolve_reviewer(
         ResolverInputs(
-            author_model="claude-sonnet-5",
+            author_model="claude-sonnet-5-5",
             author_family="anthropic",
             risk="medium",
             pinned_candidate=fable.name,
@@ -939,11 +952,11 @@ def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
             data_egress_policy="local_interactive",
             exact_head="f" * 40,
         ),
-        ladder=((GLM,), (SONNET_5,)),
+        ladder=((GLM,), (SONNET_5_5,)),
     )
 
     assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     glm_entry = next(entry for entry in resolution.trace if entry.name == "glm-5.3")
     assert glm_entry.status == "excluded"
     assert glm_entry.reason == "retired→cursor"
@@ -1003,7 +1016,7 @@ def test_critical_ladder_keeps_authority_before_practical():
         "openai_frontier",
         "claude-fable-5",
         "claude-fable-5-cursor-fallback",
-        "claude-sonnet-5",
+        "claude-sonnet-5-5",
     ]
 
 
@@ -1014,11 +1027,32 @@ def test_practical_ladder_starts_with_sol_then_opus_fallbacks():
             "openai_frontier",
             "claude-opus-5-5",
             "claude-opus-5-5-cursor-fallback",
-            "claude-sonnet-5",
+            "claude-sonnet-5-5",
             "grok-4.7",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
         assert ladder[5][0].name == "grok-4.7-cursor-fallback"
+
+
+def test_medium_codex_author_falls_through_unavailable_opus_to_sonnet_5_5():
+    ladder = REVIEW_LADDERS["medium"]
+    assert [rung[0].name for rung in ladder[:4]] == [
+        "openai_frontier",
+        "claude-opus-5-5",
+        "claude-opus-5-5-cursor-fallback",
+        "claude-sonnet-5-5",
+    ]
+    # For an OpenAI author Sol is same-family; an unavailable Opus rung
+    # must leave the practical Sonnet rung in the same position.
+    without_opus = tuple(rung for rung in ladder if not rung[0].name.startswith("claude-opus-5-5"))
+    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6-sol", risk="medium"), ladder=without_opus)
+    assert resolution.selected is not None
+    assert resolution.selected.name == "claude-sonnet-5-5"
+
+
+def test_old_sonnet_record_still_resolves_anthropic_family():
+    assert resolve_author_family("claude-sonnet-5") == "anthropic"
+    assert REVIEW_CANDIDATES["claude-sonnet-5"].concrete_model == "claude-sonnet-5"
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -1030,11 +1064,12 @@ def test_candidate_constants_preserve_expected_identity():
     assert GLM.requires_data_egress_policy == "local_interactive"
     assert GLM.invocation.endswith("ask-glm")
     assert GROK_4_7.transport == "native_grok"
-    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5
+    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5, SONNET_5_5
 
     assert GROK_4_7_CURSOR_FALLBACK.transport == "cursor"
     assert GROK_4_7_CURSOR_FALLBACK.concrete_model == "grok-4.7"
     assert SONNET_5.concrete_model == "claude-sonnet-5"
+    assert SONNET_5_5.concrete_model == "claude-sonnet-5-5"
 
 
 def test_contradictory_snapshot_surfaces_degraded_telemetry_reason():

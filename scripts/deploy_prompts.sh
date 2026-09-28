@@ -213,6 +213,13 @@ check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
     [[ -d "$dst" ]] || return 0
     local path orphan d normalized
+    local prune_terms bytecode_pattern
+    # -type f: a directory named foo.pyc must stay visible so its contents
+    # are not hidden from the orphan check.
+    prune_terms=(-name '.DS_Store')
+    for bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+        prune_terms+=(-o \( -type f -name "$bytecode_pattern" \))
+    done
     # Diff output is presentation text: quoting, whitespace, and ': ' can
     # corrupt a filename into an allowed path. Enumerate actual names instead,
     # without following symlinks. A NUL sentinel reports traversal failure.
@@ -222,6 +229,17 @@ check_orphans() {
             return 1
         fi
         orphan="${path#"$dst"/}"
+        # Skip the __pycache__ directory node and regular *.pyc files.
+        # A directory named *.pyc is a real path and still aborts.
+        if [[ -d "$path" && ! -L "$path" ]]; then
+            case "$orphan" in
+                __pycache__ | */__pycache__) continue ;;
+            esac
+        elif [[ -f "$path" && ! -L "$path" ]]; then
+            case "$orphan" in
+                *.pyc) continue ;;
+            esac
+        fi
         [[ -e "$src/$orphan" || -L "$src/$orphan" ]] && continue
         local matched=false
         for d in $declared; do
@@ -245,7 +263,7 @@ check_orphans() {
             echo "       2. Add it to ORPHAN_PATHS_* in scripts/deploy_orphan_paths.sh"
             return 1
         fi
-    done < <(find -P "$dst" -mindepth 1 -name '.DS_Store' -prune -o -print0 || printf '\0')
+    done < <(find -P "$dst" -mindepth 1 \( "${prune_terms[@]}" \) -prune -o -print0 || printf '\0')
     return 0
 }
 
@@ -347,7 +365,7 @@ diff_dirs() {
         fi
     done
     local diff_out
-    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null || true)
+    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
         echo "  $label:"
         echo "$diff_out" | head -30 | sed 's/^/    /'
@@ -373,6 +391,7 @@ diff_overlay_files() {
     local diff_out=""
     local rel
     while IFS= read -r rel; do
+        bytecode_cache_path "$rel" && continue
         if [[ ! -f "$dst/$rel" ]]; then
             diff_out+="Only in $src: $rel"$'\n'
         elif ! cmp -s "$src/$rel" "$dst/$rel"; then
@@ -479,6 +498,7 @@ fi
 # and rsync fails with `mkdir ".agents/skills" failed: No such file or
 # directory (2)`. Pre-create the parent so a fresh clone works.
 mkdir -p .agents
+# shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete \

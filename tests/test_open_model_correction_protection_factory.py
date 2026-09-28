@@ -5,18 +5,54 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import correction_protection_factory as factory
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-KNOWN_ANSWERS = ROOT / "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json"
-THRESHOLDS = ROOT / "data/projects/open_model_data/detector/correction_protection_thresholds_v1.json"
-MODEL_LANES = ROOT / "data/projects/open_model_data/evidence/correction_protection_model_lanes_v1.json"
+KNOWN_ANSWERS = REGISTRY_OPEN_MODEL_DATA_DIR / "detector/correction_protection_known_answers_v1.json"
+THRESHOLDS = REGISTRY_OPEN_MODEL_DATA_DIR / "detector/correction_protection_thresholds_v1.json"
+MODEL_LANES = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_model_lanes_v1.json"
 
 
 def _json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_cli_defaults_open_registry_inputs(tmp_path: Path) -> None:
+    phase2_input = tmp_path / "phase2.jsonl"
+    args = factory.parse_args(
+        [
+            "candidate",
+            "--phase2-input",
+            str(phase2_input),
+            "--full-output-dir",
+            str(tmp_path / "full"),
+            "--public-output-dir",
+            str(tmp_path / "public"),
+            "--index-output",
+            str(tmp_path / "index.json"),
+        ]
+    )
+    assert args.thresholds == factory.DEFAULT_THRESHOLDS
+    assert args.known_answers == factory.DEFAULT_KNOWN_ANSWERS
+    assert args.phase2_receipt == factory.DEFAULT_PHASE2_RECEIPT
+    for path in (args.thresholds, args.known_answers, args.phase2_receipt):
+        assert path.is_file()
+        assert "registry/projects/open_model_data" in path.as_posix()
+
+    with pytest.raises(FileNotFoundError):
+        factory.build_artifacts(
+            phase2_input=phase2_input,
+            phase2_receipt_path=args.phase2_receipt,
+            thresholds_path=args.thresholds,
+            known_answers_path=args.known_answers,
+            full_output_root=args.full_output_dir,
+            public_output_root=args.public_output_dir,
+            model_evidence_path=None,
+        )
 
 
 def test_known_answers_cover_all_categories_and_frozen_minima() -> None:
@@ -24,11 +60,14 @@ def test_known_answers_cover_all_categories_and_frozen_minima() -> None:
     thresholds = _json(THRESHOLDS)
     assert tuple(known_answers["categories"]) == factory.CATEGORY_IDS
     assert tuple(thresholds["categories"]) == factory.CATEGORY_IDS
-    assert sum(
-        len(specification.get(role, []))
-        for specification in known_answers["categories"].values()
-        for role in ("positive", "acceptable_control", "protected")
-    ) == 99
+    assert (
+        sum(
+            len(specification.get(role, []))
+            for specification in known_answers["categories"].values()
+            for role in ("positive", "acceptable_control", "protected")
+        )
+        == 99
+    )
     gates = factory.gate_results(known_answers, thresholds, model_proposal_lanes=0, model_dissent_lanes=0)
     assert gates["russian_lexical_inflectional_intrusion"]["state"] == "passed"
     assert gates["russian_lexical_inflectional_intrusion"]["correction_release_allowed"] is True
@@ -111,9 +150,9 @@ def test_model_lane_is_attributed_and_failed_lane_cannot_strengthen_gate() -> No
 def test_calque_gate_counts_declared_non_model_channels_and_lanes() -> None:
     known_answers = _json(KNOWN_ANSWERS)
     thresholds = _json(THRESHOLDS)
-    known_answers["categories"]["contextual_calque_government_valency"]["evidence"] = known_answers[
-        "categories"
-    ]["contextual_calque_government_valency"]["evidence"][:1]
+    known_answers["categories"]["contextual_calque_government_valency"]["evidence"] = known_answers["categories"][
+        "contextual_calque_government_valency"
+    ]["evidence"][:1]
     gates = factory.gate_results(
         known_answers,
         thresholds,
@@ -133,8 +172,7 @@ def test_calque_gate_counts_declared_non_model_channels_and_lanes() -> None:
         model_dissent_lanes=0,
     )
     assert any(
-        "attributed dissent lanes=0" in reason
-        for reason in gates["contextual_calque_government_valency"]["reasons"]
+        "attributed dissent lanes=0" in reason for reason in gates["contextual_calque_government_valency"]["reasons"]
     )
 
 
@@ -181,9 +219,7 @@ def test_frozen_canaries_and_false_correction_caps_fail_closed() -> None:
     assert any("maximum_control_false_corrections=0" in reason for reason in gates[category_id]["reasons"])
 
     poisoned = _json(KNOWN_ANSWERS)
-    poisoned["categories"][category_id]["protected"][0]["text"] = (
-        "Неправильно незахищена фраза звучит поза цитатою."
-    )
+    poisoned["categories"][category_id]["protected"][0]["text"] = "Неправильно незахищена фраза звучит поза цитатою."
     gates = factory.gate_results(
         poisoned,
         thresholds,
@@ -192,10 +228,7 @@ def test_frozen_canaries_and_false_correction_caps_fail_closed() -> None:
     )
     assert gates[category_id]["state"] == "research_only"
     assert gates[category_id]["protected_false_corrections"] == 1
-    assert any(
-        "maximum_protected_false_corrections=0" in reason
-        for reason in gates[category_id]["reasons"]
-    )
+    assert any("maximum_protected_false_corrections=0" in reason for reason in gates[category_id]["reasons"])
 
 
 def test_actual_matcher_protects_zvuchyt_quote_and_lexical_boundary() -> None:
@@ -221,9 +254,12 @@ def test_known_answer_dispositions_obey_category_policy() -> None:
             )
             assert disposition in allowed
     quotation_rule = thresholds["categories"]["marked_russian_quotation_code_switch"]
-    assert factory.known_answer_disposition(
-        role="acceptable_control",
-        category_id="marked_russian_quotation_code_switch",
-        rule=quotation_rule,
-        correction_release_allowed=False,
-    ) == "protected"
+    assert (
+        factory.known_answer_disposition(
+            role="acceptable_control",
+            category_id="marked_russian_quotation_code_switch",
+            rule=quotation_rule,
+            correction_release_allowed=False,
+        )
+        == "protected"
+    )
