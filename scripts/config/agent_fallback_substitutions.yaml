@@ -3,7 +3,10 @@
 # referenced by orchestrator routing decisions (MEMORY.md, this file).
 
 # Machine-readable for hard auto-sub (when lane is near_cap, hot, or CodexBar
-# deficit / will_last_to_reset=False on a fresh snapshot):
+# deficit / will_last_to_reset=False on a fresh snapshot).
+# Model rewrite for an explicit --model on these rows is
+# model_catalog.yaml `budget_substitution_models` (#8855). This file stays
+# agent→agent only.
 dispatch_fallbacks:
   claude: codex
   # Mechanical shed when Codex is hot or in weekly deficit while free seats
