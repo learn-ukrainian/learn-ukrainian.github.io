@@ -93,6 +93,7 @@ check_agreement = _MORPHOLOGICAL_VALIDATOR.check_agreement
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
+DEFAULT_SOURCES_DB = Path("data/sources.db")
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
 # endpoints) so the fetch URL resolves identically in dev and prod — astro's
 # `trailingSlash: 'always'` otherwise serves a dynamic endpoint only at the trailing-slash
@@ -176,22 +177,38 @@ NO_PAIR_PROBABILITY = {
 HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
-# Corpus correction counts (UA-GEC annotator rows) are evidence about single
-# sentences, not a norm. A calque judgment needs a normative citation (style
-# guide, dictionary, standard, textbook) or VESUM attesting the calque itself
-# is not a standard form (#8727).
-HERITAGE_CORPUS_CITATION_PREFIXES = ("ua-gec",)
+# A calque judgment is a normative claim. Corpus correction counts (UA-GEC),
+# dictionary membership, synonymy and bare article titles are not evidence for
+# it (#8727; Astra stop-policy ruling 2026-09-28): a pair needs an exact
+# passage from a normative style guide, copied verbatim into
+# `normativeSupport` with the page chunk it comes from. Map: chunk-id pattern
+# -> learner-facing source label (edition + page).
+HERITAGE_NORMATIVE_SOURCES: dict[str, str] = {
+    r"antonenko-davydovych-yak-my-hovorymo_p(?P<page>\d{3})": (
+        "Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. {page}"
+    ),
+}
+# Learner-facing paronym explanations must be copied from a source: every
+# `glossSources` locator is a Ukrainian-language textbook or style-guide chunk
+# in data/sources.db (#8728).
+PARONYM_GLOSS_SOURCES: dict[str, str] = {
+    **HERITAGE_NORMATIVE_SOURCES,
+    r"(?P<book>\d{1,2}-klas-(?:ukrmova|ukrajinska-mova|ukrayinska-mova)-[a-z0-9-]+)_s(?P<page>\d{4})": (
+        "{book}, фрагмент s{page}"
+    ),
+}
 # Learner-facing Ukrainian explanation strings per relation mode; every
-# Cyrillic token outside a quoted mention must be a clean VESUM form (#8728).
+# Cyrillic token outside an explicit Russian mention must be a clean VESUM
+# form or one of the item's own contrasted forms (#8728).
 EXPLANATION_FIELDS_BY_MODE: dict[str, tuple[str, ...]] = {
     "heritage": ("rationale", "rationaleUk", "calqueSense", "authenticSense"),
     "paronym": ("distinction_gloss_uk",),
     "antonym": ("distinction_gloss_uk",),
     "homonym": ("distinction_gloss_uk",),
 }
-# Quoted material («…», "…", “…”) and an explicit Russian mention («рос. да»)
-# name the form being warned against: they are mentions, not Ukrainian use.
-_EXPLANATION_MENTION_RE = re.compile(r"«[^»]*»|\"[^\"]*\"|“[^”]*”|(?<![А-Яа-яЇїІіЄєҐґ])рос\.\s*[^;,.)»\n]*")
+# Only an explicit Russian mention («рос. да») marks a span as a foreign form.
+# Quotation marks alone do not: «вежливий» in a definition is still Russian.
+_EXPLANATION_MENTION_RE = re.compile(r"(?<![А-Яа-яЇїІіЄєҐґ])рос\.\s*[^;,.)»\n]*")
 _CYRILLIC = "А-Яа-яЇїІіЄєҐґЁёЪъЫыЭэ"
 _EXPLANATION_TOKEN_RE = re.compile(rf"[{_CYRILLIC}][{_CYRILLIC}'’ʼ\u0301-]*\.?")
 # Dictionary-style abbreviations (only when written with their period) and
@@ -496,6 +513,41 @@ class JsonVesumVerifier:
                 matches = [row for row in matches if isinstance(row, dict) and row.get("pos") == pos_filter]
             result[word] = [row for row in matches if isinstance(row, dict)]
         return result
+
+
+class SourcePassages(Protocol):
+    """Injectable lookup of source chunk text by chunk id (data/sources.db `textbooks`)."""
+
+    def chunk_text(self, chunk_id: str) -> str | None:
+        """Return the chunk's full text, or None when the chunk is unknown."""
+
+
+class SqliteSourcePassages:
+    """Read-only chunk lookup against the sources database used by the `sources` MCP."""
+
+    def __init__(self, db_path: Path) -> None:
+        self.db_path = db_path
+        self._cache: dict[str, str | None] = {}
+
+    def chunk_text(self, chunk_id: str) -> str | None:
+        if chunk_id not in self._cache:
+            import sqlite3
+
+            with sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True) as connection:
+                row = connection.execute("SELECT text FROM textbooks WHERE chunk_id = ?", (chunk_id,)).fetchone()
+            self._cache[chunk_id] = row[0] if row else None
+        return self._cache[chunk_id]
+
+
+class JsonSourcePassages:
+    """Fixture chunk lookup used by tests: {chunk_id: text}."""
+
+    def __init__(self, payload: dict[str, str]) -> None:
+        self.payload = payload
+
+    def chunk_text(self, chunk_id: str) -> str | None:
+        text = self.payload.get(chunk_id)
+        return text if isinstance(text, str) else None
 
 
 def _has_text(value: Any) -> bool:
@@ -3710,11 +3762,6 @@ def _heritage_frame_errors(frame: Any, kind: str) -> list[str]:
     return errors
 
 
-def _is_corpus_citation(citation: str) -> bool:
-    text = _plain(citation)
-    return any(text.startswith(prefix) for prefix in HERITAGE_CORPUS_CITATION_PREFIXES)
-
-
 def _heritage_calque_surfaces(pair: dict[str, Any]) -> list[str]:
     label = _clean_text(pair.get("calqueLabel"))
     return [surface for surface in dict.fromkeys([label, *_clean_text_list(pair.get("calqueSurfaces"))]) if surface]
@@ -3795,31 +3842,134 @@ def _heritage_frame_calque_mismatch(
     return f"calque_form {calque_form!r} is not a form of calqueLabel {label!r}; the pair rationale would be copied"
 
 
-def _heritage_normative_support_error(pair: dict[str, Any], verifier: VesumVerifier | None = None) -> str | None:
-    """Return why a pair cannot make a calque judgment, or None when it can.
+_SOURCE_TEXT_TRANSLATION = str.maketrans(
+    {"–": "-", "—": "-", "‑": "-", "«": '"', "»": '"', "“": '"', "”": '"', "„": '"', "’": "'", "ʼ": "'"}
+)
+_PASSAGE_TOKEN_RE = re.compile(r"[а-яіїєґёъыэ'][а-яіїєґёъыэ'-]*")
 
-    A learner-facing calque label needs a normative source: a citation that is
-    not a corpus correction count (style guide, dictionary, standard, textbook)
-    or VESUM itself attesting that every calque surface is not a standard
-    form. A one-off UA-GEC annotator correction of a clean VESUM word (#8727:
-    «вибачення» → «вибачити», n=1) is evidence about one sentence, not a norm.
+
+def _normalize_source_text(text: str) -> str:
+    """Case-, whitespace-, dash- and quote-insensitive text for verbatim passage checks.
+
+    Textbook chunks keep the print line breaks, including words hyphenated at
+    a line end («за-\nхворювання»); those are rejoined so a copied passage
+    matches the word as printed.
     """
-    citations = _clean_text_list(pair.get("citations"))
-    if any(not _is_corpus_citation(citation) for citation in citations):
+    text = re.sub(r"(?<=[а-яіїєґ'’ʼ])[-\u00ad]\s*\n\s*(?=[а-яіїєґ])", "", text.replace("\u0301", ""))
+    return re.sub(r"\s+", " ", text.translate(_SOURCE_TEXT_TRANSLATION)).strip().casefold()
+
+
+def _source_label(locator: str, sources: dict[str, str]) -> str | None:
+    for pattern, template in sources.items():
+        match = re.fullmatch(pattern, locator)
+        if match:
+            groups = {key: str(int(value)) if key == "page" else value for key, value in match.groupdict().items()}
+            return template.format(**groups)
+    return None
+
+
+def verified_source_passages(
+    entries: Any,
+    sources: dict[str, str],
+    passages: SourcePassages | None,
+    *,
+    field: str,
+) -> tuple[list[dict[str, str]], list[str]]:
+    """Return the entries whose passage is copied verbatim from an allowed source chunk, and the errors.
+
+    Each entry is ``{locator: <sources.db chunk id>, passage: <exact text>}``.
+    The locator must match an allowed source pattern (edition + page or chunk)
+    and the passage must occur in that chunk's text; a missing sources
+    database fails closed.
+    """
+    if not isinstance(entries, list) or not entries:
+        return [], [f"no {field} passage"]
+    verified: list[dict[str, str]] = []
+    errors: list[str] = []
+    for index, entry in enumerate(entries):
+        locator = _clean_text(entry.get("locator")) if isinstance(entry, dict) else None
+        passage = _clean_text(entry.get("passage")) if isinstance(entry, dict) else None
+        if not locator or not passage:
+            errors.append(f"{field}[{index}] needs a locator and a passage")
+            continue
+        label = _source_label(locator, sources)
+        if label is None:
+            errors.append(f"{field}[{index}] locator {locator!r} is not an allowed source")
+            continue
+        chunk = passages.chunk_text(locator) if passages is not None else None
+        if chunk is None:
+            errors.append(f"{field}[{index}] locator {locator!r} is not readable from the sources database")
+            continue
+        if _normalize_source_text(passage) not in _normalize_source_text(chunk):
+            errors.append(f"{field}[{index}] passage is not verbatim in {locator}")
+            continue
+        verified.append({"locator": locator, "passage": passage, "label": label})
+    return verified, errors
+
+
+def _token_lemmas(tokens: list[str], verifier: VesumVerifier | None) -> list[set[str]]:
+    """VESUM lemmas per token (one batched lookup); empty when VESUM cannot analyse it."""
+    if verifier is None or not tokens:
+        return [set() for _ in tokens]
+    matches = verifier.verify_words(sorted({variant for token in tokens for variant in _surface_variants(token)}))
+    return [
+        {
+            _plain(str(row.get("lemma")))
+            for variant in _surface_variants(token)
+            for row in matches.get(variant, [])
+            if isinstance(row, dict) and _clean_text(row.get("lemma"))
+        }
+        for token in tokens
+    ]
+
+
+def _passage_names_form(passage: str, form: str, verifier: VesumVerifier | None) -> bool:
+    """True when the passage contains the form or another form of the same lemma(s), in order.
+
+    Calques are often not VESUM words («бажаючі», «міроприємство»); when one
+    side has no VESUM analysis the conservative shared-stem test used for
+    frame identity decides, as in ``_heritage_frame_calque_mismatch``.
+    """
+    passage_tokens = [token.strip("-") for token in _PASSAGE_TOKEN_RE.findall(_normalize_source_text(passage))]
+    form_tokens = [token.strip("-") for token in _PASSAGE_TOKEN_RE.findall(_normalize_source_text(form))]
+    if not form_tokens or len(form_tokens) > len(passage_tokens):
+        return False
+    passage_lemmas = _token_lemmas(passage_tokens, verifier)
+    form_lemmas = _token_lemmas(form_tokens, verifier)
+
+    def same_word(passage_index: int, form_index: int) -> bool:
+        passage_token, form_token = passage_tokens[passage_index], form_tokens[form_index]
+        left, right = passage_lemmas[passage_index], form_lemmas[form_index]
+        if passage_token == form_token or ({passage_token} | left) & ({form_token} | right):
+            return True
+        return (not left or not right) and _shares_stem(passage_token, form_token)
+
+    width = len(form_tokens)
+    return any(
+        all(same_word(start + offset, offset) for offset in range(width))
+        for start in range(len(passage_tokens) - width + 1)
+    )
+
+
+def _heritage_frame_support(
+    frame: dict[str, Any],
+    supports: list[dict[str, str]],
+    verifier: VesumVerifier | None,
+) -> dict[str, str] | None:
+    """Return the verified passage that names this frame's calque AND its correction.
+
+    A passage about another word, or one that only names the calque, does not
+    support this particular correction (#8727).
+    """
+    calque_form = _clean_text(frame.get("calque_form"))
+    answer_form = _clean_text(frame.get("answer_form"))
+    if not calque_form or not answer_form:
         return None
-    label = _clean_text(pair.get("calqueLabel")) or "?"
-    surfaces = _heritage_calque_surfaces(pair)
-    single = [surface for surface in surfaces if len(surface.split()) == 1]
-    if verifier is None or not single or len(single) != len(surfaces):
-        return f"calque {label!r} has only corpus citations {citations} and no VESUM attestation of a non-standard form"
-    variants = sorted({variant for surface in single for variant in _surface_variants(surface)})
-    matches = verifier.verify_words(variants)
-    clean = [surface for surface in single if any(matches.get(variant) for variant in _surface_variants(surface))]
-    if clean:
-        return (
-            f"calque {label!r} is a clean VESUM form ({', '.join(clean)}) "
-            f"and its only evidence is corpus citations {citations}"
-        )
+    for support in supports:
+        if _passage_names_form(support["passage"], calque_form, verifier) and _passage_names_form(
+            support["passage"], answer_form, verifier
+        ):
+            return support
     return None
 
 
@@ -3992,15 +4142,24 @@ def _build_heritage_items(
     verifier: VesumVerifier | None = None,
     public_options: bool = True,
     creation_review: CreationReview | None = None,
+    source_passages: SourcePassages | None = None,
 ) -> list[dict[str, Any]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     frames = _valid_heritage_frames(pair, verifier)
     if not frames:
         return []
-    support_error = _heritage_normative_support_error(pair, verifier)
-    if support_error:
-        pair_label = _clean_text(pair.get("calqueLabel")) or lexeme["lemmaId"]
-        print(f"WARN: heritage_pair {pair_label!r} withheld: {support_error}", file=sys.stderr)
+    pair_label = _clean_text(pair.get("calqueLabel")) or lexeme["lemmaId"]
+    # A calque judgment ships only with an exact, page-located style-guide
+    # passage (#8727). Corpus counts, dictionary membership and article
+    # titles in `citations` are provenance notes, not support.
+    supports, support_errors = verified_source_passages(
+        pair.get("normativeSupport"), HERITAGE_NORMATIVE_SOURCES, source_passages, field="normativeSupport"
+    )
+    if not supports:
+        print(
+            f"WARN: heritage_pair {pair_label!r} withheld (no normative passage): {'; '.join(support_errors)}",
+            file=sys.stderr,
+        )
         return []
     # Heritage SRS identity is the native lemma, and the static client reaches
     # drill items through the same-level index/lexeme shards — so the item must
@@ -4034,6 +4193,14 @@ def _build_heritage_items(
             )
             continue
         if not creation_review.allows("heritage", sentence, answer_form, calque_form, heritage_source(pair, frame)):
+            continue
+        support = _heritage_frame_support(frame, supports, verifier)
+        if support is None:
+            print(
+                f"WARN: heritage_pair {pair_label!r} frame {index} withheld (passage does not support this "
+                f"correction): no verified passage names both {calque_form!r} and {answer_form!r}",
+                file=sys.stderr,
+            )
             continue
         distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level, verifier=verifier)
         if len(distractors) < 2:
@@ -4071,7 +4238,8 @@ def _build_heritage_items(
             "cefr": level,
             "options": _shuffle_heritage_options(heritage_id, options),
             "rationale": rationale,
-            "citations": citations,
+            # The supporting edition/page leads the learner-visible sources.
+            "citations": [support["label"], *(citation for citation in citations if citation != support["label"])],
             "corrections": _clean_text_list(pair.get("corrections")),
             "sourceFamily": _clean_text(pair.get("sourceFamily")) or "",
         }
@@ -4284,11 +4452,13 @@ def explanation_language_errors(
 ) -> list[str]:
     """VESUM-check every Cyrillic token of a learner-facing explanation.
 
-    Quoted mentions and «рос. …» spans are skipped, as are the item's own
-    forms (the calque or confusable being contrasted), dictionary
-    abbreviations written with their period, and hyphenated compounds whose
-    parts are all clean forms. A Russian word used as Ukrainian (#8728:
-    «вежливий» for «ввічливий») is reported so the item is withheld.
+    Only explicit «рос. …» spans are skipped, together with the item's own
+    forms (the calque or confusable it contrasts, passed as ``allowed``),
+    dictionary abbreviations written with their period, and hyphenated
+    compounds whose parts are all clean forms. Quotation marks are not an
+    exemption: «Тактовний — «вежливий»» still teaches a Russian word. A
+    Russian word used as Ukrainian (#8728: «вежливий» for «ввічливий») is
+    reported so the item is withheld.
     """
     cleaned = _clean_text(text)
     if not cleaned or verifier is None:
@@ -4478,6 +4648,64 @@ def validate_paronym_pair(pair: dict[str, Any]) -> list[str]:
     if not isinstance(citations, list) or not citations:
         errors.append("paronym_pair citations must be a nonempty list")
     return errors
+
+
+_GLOSS_CLAUSE_RE = re.compile(r"^(?P<head>[^\s—–-][^\s—–]*)\s+[—–-]\s+(?P<definition>.+)$")
+
+
+def _whole_word(word: str) -> re.Pattern[str]:
+    return re.compile(rf"(?<![\w'-]){re.escape(_normalize_source_text(word))}(?![\w'-])")
+
+
+def _definition_follows_head(passage: str, head: str, definition: str, others: list[str]) -> bool:
+    """True when the passage gives ``definition`` after ``head`` with no other contrasted word in between."""
+    for match in _whole_word(head).finditer(passage):
+        rest = passage[match.end() :]
+        position = rest.find(definition)
+        if position >= 0 and not any(_whole_word(other).search(rest[:position]) for other in others):
+            return True
+    return False
+
+
+def paronym_gloss_provenance_errors(pair: dict[str, Any], passages: SourcePassages | None) -> list[str]:
+    """Explain why a paronym explanation is not copied from its cited source, or [] when it is.
+
+    ``distinction_gloss_uk`` ships only when every ``<word> — <definition>``
+    clause is copied verbatim from a verified ``glossSources`` passage that
+    gives that definition for that word (not for its paronym), or when the
+    whole gloss is such a passage naming both words (#8728). Model-curated
+    wording without a precise source locator is withheld.
+    """
+    gloss = _clean_text(pair.get("distinction_gloss_uk"))
+    if not gloss:
+        return ["missing distinction_gloss_uk"]
+    supports, errors = verified_source_passages(
+        pair.get("glossSources"), PARONYM_GLOSS_SOURCES, passages, field="glossSources"
+    )
+    if not supports:
+        return errors
+    slugs = [slug for slug in (_clean_text(pair.get("slugA")), _clean_text(pair.get("slugB"))) if slug]
+    normalized = [_normalize_source_text(support["passage"]) for support in supports]
+    whole = _normalize_source_text(gloss).strip(" .;:")
+    if any(whole in passage and all(_whole_word(slug).search(passage) for slug in slugs) for passage in normalized):
+        return []
+    problems: list[str] = []
+    # Clauses start at a contrasted word followed by a dash; a copied
+    # definition may itself contain «;».
+    heads = "|".join(re.escape(slug) for slug in slugs)
+    for clause in (part.strip() for part in re.split(rf";\s*(?=(?:{heads})\s+[—–-]\s)", gloss, flags=re.IGNORECASE)):
+        if not clause:
+            continue
+        match = _GLOSS_CLAUSE_RE.match(clause)
+        head = _plain(match["head"]) if match else ""
+        if not match or head not in {_plain(slug) for slug in slugs}:
+            problems.append(f"gloss clause {clause!r} is not '<paronym> — <definition>'")
+            continue
+        definition = _normalize_source_text(match["definition"]).strip(" .;:")
+        others = [slug for slug in slugs if _plain(slug) != head]
+        if not any(_definition_follows_head(passage, head, definition, others) for passage in normalized):
+            problems.append(f"gloss clause {clause!r} is not copied from a glossSources passage defining {head!r}")
+    return problems
 
 
 def _paronym_frame_errors(frame: Any) -> list[str]:
@@ -5210,7 +5438,14 @@ def build_practice_shards(
     homonym_pairs: list[dict[str, Any]] | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
+    source_passages: SourcePassages | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
+    """Build every level shard.
+
+    ``source_passages`` reads the source chunks behind heritage
+    ``normativeSupport`` and paronym ``glossSources``; without it those modes
+    fail closed (no calque judgment or explanation ships unverified).
+    """
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
@@ -5398,6 +5633,7 @@ def build_practice_shards(
     )
 
     explanation_withheld: Counter[str] = Counter()
+    gloss_provenance_withheld: Counter[str] = Counter()
     heritage_frame_debt = 0
     for index, pair in enumerate(heritage_pairs or []):
         pair_errors = validate_heritage_pair(pair)
@@ -5427,6 +5663,7 @@ def build_practice_shards(
             verifier=verifier,
             public_options=False,
             creation_review=creation_review,
+            source_passages=source_passages,
         ):
             level = str(item.get("cefr") or "")
             if level not in mode_by_level:
@@ -5495,6 +5732,7 @@ def build_practice_shards(
                 file=sys.stderr,
             )
             continue
+        gloss_errors = paronym_gloss_provenance_errors(pair, source_passages)
         for item in _build_paronym_items(
             pair,
             lex_a,
@@ -5522,6 +5760,14 @@ def build_practice_shards(
             if public_errors:
                 print(
                     f"WARN: paronym_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            if gloss_errors:
+                gloss_provenance_withheld[level] += 1
+                print(
+                    f"WARN: paronym_pair[{index}] {slug_a}/{slug_b} item withheld at {level} by gloss-provenance gate: "
+                    f"{'; '.join(gloss_errors)}",
                     file=sys.stderr,
                 )
                 continue
@@ -5673,6 +5919,12 @@ def build_practice_shards(
     if homonym_frame_debt:
         print(
             f"homonym frame coverage: {homonym_frame_debt} records without frames — emitted 0 items for them",
+            file=sys.stderr,
+        )
+    if gloss_provenance_withheld:
+        print(
+            "paronym gloss-provenance gate: withheld "
+            + json.dumps(dict(sorted(gloss_provenance_withheld.items())), ensure_ascii=False),
             file=sys.stderr,
         )
     if explanation_withheld:
@@ -6334,6 +6586,31 @@ def run_broken_validator_fixtures() -> int:
                 }
             ),
         ),
+        "explanation_language_quoted": explanation_language_errors(
+            "Тактовний — «вежливий».", JsonVesumVerifier({"Тактовний": [{"lemma": "тактовний"}]})
+        ),
+        "paronym_gloss_provenance": paronym_gloss_provenance_errors(
+            {
+                "slugA": "тактичний",
+                "slugB": "тактовний",
+                "distinction_gloss_uk": "Тактичний — який стосується тактики; тактовний — вежливий.",
+                "glossSources": [
+                    {
+                        "locator": "5-klas-ukrmova-avramenko-2022_s0201",
+                        "passage": "Тактовний — той, що володіє почуттям міри й такту.",
+                    }
+                ],
+            },
+            JsonSourcePassages(
+                {"5-klas-ukrmova-avramenko-2022_s0201": "Тактовний — той, що володіє почуттям міри й такту."}
+            ),
+        ),
+        "heritage_normative_support": verified_source_passages(
+            [{"locator": "ua-gec:F/Calque", "passage": "«вибачення» flagged non-standard"}],
+            HERITAGE_NORMATIVE_SOURCES,
+            JsonSourcePassages({}),
+            field="normativeSupport",
+        )[1],
         "homonym_pair": validate_homonym_pair({"slugA": "байка", "slugB": "байка", "frames": [], "citations": []}),
     }
     print("Broken validator fixtures:")
@@ -6972,6 +7249,15 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         help="Explicit VESUM database path, including a validated local shadow.",
     )
     parser.add_argument(
+        "--sources-db",
+        type=Path,
+        default=DEFAULT_SOURCES_DB,
+        help=(
+            "Sources SQLite (the `sources` MCP database) used to verify heritage normativeSupport and paronym "
+            "glossSources passages; when missing, those modes fail closed (default: data/sources.db)."
+        ),
+    )
+    parser.add_argument(
         "--target",
         type=int,
         default=DEFAULT_TARGET,
@@ -7101,6 +7387,15 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         seed_selection=args.seed_selection,
         cloze_enabled=not args.disable_cloze,
     )
+    source_passages: SourcePassages | None = None
+    if args.sources_db and args.sources_db.exists():
+        source_passages = SqliteSourcePassages(args.sources_db)
+    else:
+        print(
+            f"WARN: sources database {args.sources_db} missing; heritage and paronym items that need a verified "
+            "source passage are withheld",
+            file=sys.stderr,
+        )
     aspect_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
@@ -7115,6 +7410,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
+        source_passages=source_passages,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}

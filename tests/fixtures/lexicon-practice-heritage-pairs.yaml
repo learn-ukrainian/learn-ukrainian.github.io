@@ -11,6 +11,9 @@ pairs:
     rationale: fixture rationale with cited correction
     citations:
       - fixture:heritage
+    normativeSupport:
+      - locator: antonenko-davydovych-yak-my-hovorymo_p999
+        passage: Кажуть "читаю кнігу", а треба "читаю книгу".
     sourceFamily: fixture
     cefrAvailability: a2
     severity: enrichment

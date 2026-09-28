@@ -27,32 +27,46 @@ sense evidence remain candidates rather than cards.
 
 The factory withholds, with a `WARN … withheld` line on stderr, any pair or
 item that fails one of these checks. Withheld records stay in the YAML; a
-curator repairs the evidence, never the gate.
+curator repairs the evidence, never the gate. Source passages are read from
+`data/sources.db` (`--sources-db`, the `sources` MCP database); without it
+both source gates fail closed.
 
 | Gate | Rule | Repair |
 | --- | --- | --- |
-| Normative support (`_heritage_normative_support_error`) | A pair whose `citations` are only corpus counts (`ua-gec:…`) is emitted only when VESUM has no clean analysis for its `calqueLabel` and every `calqueSurfaces` entry, i.e. the calque itself is not a standard form. A clean VESUM word backed by a single annotator correction (`вибачення` → `вибачити`, n=1) is not a calque judgment. | Add a normative citation (Антоненко-Давидович, State Standard, dictionary, textbook chunk) verified with the `sources` tools, or leave the pair withheld. |
-| Frame calque identity (`_heritage_frame_calque_mismatch`) | Each frame's `calque_form` must be a form of the pair's calque: exact surface, VESUM lemma, or a shared stem when VESUM cannot analyse one side. A frame for another word (`настільки` under `да → так`) would inherit a copied rationale. The overlay merge in `read_heritage_pairs` applies the same test, so a wave row's frames only join a curated pair when they share its calque. | Give the frame its own pair with its own rationale and citations. |
-| Explanation language (`explanation_language_errors`) | Every Cyrillic token of a learner-facing explanation (`rationale`, `rationaleUk`, `calqueSense`, `authenticSense`, and `distinction_gloss_uk` for paronym, antonym and homonym items) must be a clean VESUM form. Quoted mentions («…») and `рос. …` spans, the item's own contrasted forms, and dictionary abbreviations written with their period are exempt. | Replace the word with wording copied from a verified source; never paraphrase by hand. `--broken-validator-fixtures` proves the gate on a planted «вежливий». |
+| Normative support (`verified_source_passages`, `_heritage_frame_support`) | A calque judgment ships only with a `normativeSupport` entry: `locator` is a page chunk of a normative style guide listed in `HERITAGE_NORMATIVE_SOURCES` (today Антоненко-Давидович «Як ми говоримо», 1991 edition, `antonenko-davydovych-yak-my-hovorymo_pNNN`) and `passage` is copied verbatim from that page. Each frame ships only when the passage names that frame's calque and its correction (same form, VESUM lemma, or a shared stem when VESUM cannot analyse the calque). `citations` (UA-GEC counts, article titles, dictionary headwords, textbook names) are provenance notes and never admit a pair. The item's first learner-visible citation is the edition and page. | Copy the exact passage with the `sources` tools and check that its context matches every frame; otherwise leave the pair withheld. |
+| Frame calque identity (`_heritage_frame_calque_mismatch`) | Each frame's `calque_form` must be a form of the pair's calque: exact surface, VESUM lemma, or a shared stem when VESUM cannot analyse one side. A frame for another word (`настільки` under `да → так`) would inherit a copied rationale. The overlay merge in `read_heritage_pairs` applies the same test. | Give the frame its own pair with its own rationale and support. |
+| Paronym gloss provenance (`paronym_gloss_provenance_errors`) | `distinction_gloss_uk` ships only when it is copied from a `glossSources` passage (a Ukrainian-language school textbook chunk or a style-guide page, `PARONYM_GLOSS_SOURCES`) that is verbatim in its chunk. Each `<word> — <definition>` clause must be text the passage gives after that word and before its paronym (no swapped or paraphrased definitions), or the whole gloss must be one passage sentence naming both words. A de-interleaved reading of a two-column table is not verbatim text. | Copy a definition from a verified chunk; never paraphrase. A definition may stop early only at a phrase boundary. |
+| Explanation language (`explanation_language_errors`) | Every Cyrillic token of a learner-facing explanation (`rationale`, `rationaleUk`, `calqueSense`, `authenticSense`, and `distinction_gloss_uk` for paronym, antonym and homonym items) must be a clean VESUM form. Only an explicit `рос. …` mention, the item's own contrasted forms (calque, answer, options, corrections) and dictionary abbreviations written with their period are exempt; quotation marks are not (`Тактовний — «вежливий»` is withheld). | Replace the wording with text copied from a verified source. `--broken-validator-fixtures` proves every gate on a planted defect. |
 
-### Measured effect (2026-09-27, same `atlas.db`/VESUM inputs, `--disable-cloze`)
+### Measured effect (2026-09-28)
 
-| mode | level | origin/main generator | gated generator |
-| --- | --- | --- | --- |
-| heritage | A1 / A2 / B1 / B2 / C1 | 7 / 44 / 265 / 26 / 12 | 4 / 24 / 105 / 14 / 11 |
-| paronym | A1 / A2 / B1 / B2 / C1 | 35 / 44 / 138 / 33 / 6 | 32 / 43 / 137 / 33 / 6 |
+Denominator: the published deck `atlas-practice-v1-c0c3f3242b5134b6`. The
+regenerated deck (`atlas-practice-v1-9ab281221e5e0723`; same `atlas.db`,
+VESUM and `sources.db`; `--disable-cloze`) retains an item when the same
+prompt and answer still ship at any level.
 
-The heritage loss is 123 pairs (130 build-time withhold lines) whose only
-evidence is a UA-GEC count while VESUM analyses the calque as a clean form or
-cannot analyse a multiword calque («так як», «в якості», «в першу чергу»), plus
-five frames whose calque is a different word. Eight of the withheld pairs carry
-`severity: russianism` («но», «надо», «пол», «стакан», «залив», «сідий»,
-«тьотя», «любий»): their calque is a VESUM homograph of a real Ukrainian word,
-so the gate cannot clear them from VESUM alone and they need a verified
-normative citation to return. The explanation gate withheld 3 heritage, 10
-paronym and 22 homonym items, all on VESUM `:bad` forms (active participles
-such as «існуючий», «діюча»; «доставки», «прийому», «поліцейського»,
-«торговельна») or one unknown form («начесом»).
+| mode | level | published | retained | withheld | withheld by reason |
+| --- | --- | --- | --- | --- | --- |
+| heritage | A1 | 7 | 0 | 7 | 4 no normative passage, 3 frame calque is another word |
+| heritage | A2 | 44 | 7 | 37 | 36 no normative passage, 1 frame calque is another word |
+| heritage | B1 | 265 | 28 | 237 | 237 no normative passage |
+| heritage | B2 | 26 | 9 | 17 | 17 no normative passage |
+| heritage | C1 | 12 | 2 | 10 | 10 no normative passage |
+| paronym | A1 | 22 | 4 | 18 | 18 gloss not source-linked |
+| paronym | A2 | 17 | 6 | 11 | 11 gloss not source-linked |
+| paronym | B1 | 69 | 27 | 42 | 42 gloss not source-linked |
+| paronym | B2 | 11 | 4 | 7 | 7 gloss not source-linked |
+| paronym | C1 | 5 | 1 | 4 | 4 gloss not source-linked |
+
+Heritage keeps 24 pairs whose page-located Антоненко-Давидович passage gives
+an explicit verdict in the sense every frame tests. Pairs were left without
+support where the passage calls the word Ukrainian («дійсно»), gives no verdict
+on a form standard today («крокувати»), discusses another sense than a frame
+(«благополучна родина» vs «благополучна посадка»), or where no single page
+names both forms («знаходитися → розташований», «облік → обличчя»). Paronym
+keeps 24 rows whose explanation is now copied from a school textbook or
+style-guide chunk. The withheld rows and pairs stay in the registries and
+return when a curator adds a verified passage (replacement work: #8329).
 
 ## Severity and level guidance
 

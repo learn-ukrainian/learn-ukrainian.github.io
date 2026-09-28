@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import random
 import sqlite3
 from pathlib import Path
@@ -12,7 +13,9 @@ import scripts.audit.generate_practice_deck as generate_practice_deck
 from scripts.audit.generate_practice_deck import (
     DEFAULT_TARGET,
     DRILL_MODES,
+    HERITAGE_NORMATIVE_SOURCES,
     BuildConfig,
+    JsonSourcePassages,
     JsonVesumVerifier,
     RealVesumVerifier,
     ReviewedSourceAllowlist,
@@ -30,7 +33,7 @@ from scripts.audit.generate_practice_deck import (
     _eligible_decoys,
     _heritage_availability_level,
     _heritage_frame_calque_mismatch,
-    _heritage_normative_support_error,
+    _heritage_frame_support,
     _meaning_mc_eligible,
     _merge_heritage_pair_overlay,
     _option_strategy_for_level,
@@ -47,6 +50,7 @@ from scripts.audit.generate_practice_deck import (
     explanation_language_errors,
     main,
     merge_practice_seed_entries,
+    paronym_gloss_provenance_errors,
     read_antonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
@@ -67,6 +71,7 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_item,
     validate_paronym_pair,
     validate_synonym_item,
+    verified_source_passages,
     write_aspect_residual_report,
     write_shards,
 )
@@ -80,6 +85,8 @@ VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
+HERITAGE_REGISTRY = Path("registry/lexicon/heritage_pairs.yaml")
+PARONYM_REGISTRY = Path("registry/lexicon/paronym_pairs.yaml")
 CURATED_V5_SEED = FIXTURES / "atlas" / "curated_v5_practice_seed.json"
 
 
@@ -478,6 +485,20 @@ def _gloss_verifier(*words: str) -> JsonVesumVerifier:
     return JsonVesumVerifier({word: [{"lemma": word, "pos": "x", "tags": "x"}] for word in words})
 
 
+# Fixture source chunks behind normativeSupport / glossSources passages (#8727, #8728).
+FIXTURE_PASSAGES = JsonSourcePassages(
+    {
+        "antonenko-davydovych-yak-my-hovorymo_p999": 'Фіктивна сторінка. Кажуть "читаю кнігу", а треба "читаю книгу".',
+        "antonenko-davydovych-yak-my-hovorymo_p998": 'Фіктивна сторінка. Не "надо", а "треба".',
+        "5-klas-ukrmova-fixture-2000_s0001": "Адресант надсилає; адресат отримує.",
+        "5-klas-ukrmova-fixture-2000_s0002": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
+    }
+)
+FIXTURE_HERITAGE_SUPPORT = [
+    {"locator": "antonenko-davydovych-yak-my-hovorymo_p999", "passage": 'Кажуть "читаю кнігу", а треба "читаю книгу".'}
+]
+
+
 def _single_deck_version(shards: dict[str, dict[str, dict[str, object]]]) -> str:
     versions = {payload["deckVersion"] for level_shards in shards.values() for payload in level_shards.values()}
     assert len(versions) == 1
@@ -752,6 +773,7 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
         read_cloze_sources(CLOZE_SOURCES),
         BuildConfig(),
         [_fixture_heritage_pair()],
+        source_passages=FIXTURE_PASSAGES,
     )
     a2 = shards["A2"]
     heritage = a2["heritage"]["heritage"]
@@ -790,6 +812,7 @@ def test_heritage_availability_floor_wins_over_native_cefr() -> None:
         read_cloze_sources(CLOZE_SOURCES),
         BuildConfig(),
         [pair],
+        source_passages=FIXTURE_PASSAGES,
     )
     a2 = shards["A2"]
     a2_heritage = a2["heritage"]["heritage"]
@@ -810,13 +833,14 @@ def test_heritage_availability_floor_wins_over_native_cefr() -> None:
 def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
     pair = _fixture_heritage_pair()
     lexemes = _fixture_lexemes()
-    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
     internal_item = _build_heritage_items(
         pair,
         lexemes[0],
         lexemes,
         "deck-v1",
         public_options=False,
+        source_passages=FIXTURE_PASSAGES,
     )[0]
 
     assert validate_heritage_item(item) == []
@@ -838,15 +862,15 @@ def test_heritage_builder_copies_curated_prompt_en_and_suppresses_placeholders()
     lexemes = _fixture_lexemes()
     pair["frames"][0]["sentence_en"] = "I am reading a book."
 
-    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
     assert item["promptEn"] == "I am reading a book."
 
     pair["frames"][0].pop("sentence_en")
-    item_without_en = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    item_without_en = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
     assert "promptEn" not in item_without_en
 
     pair["frames"][0]["sentence_en"] = "Context sentence for книгу"
-    placeholder_item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    placeholder_item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
     assert "promptEn" not in placeholder_item
 
 
@@ -876,9 +900,9 @@ def test_heritage_item_ids_and_options_are_deterministic() -> None:
     pair = _fixture_heritage_pair()
     lexemes = _fixture_lexemes()
 
-    first = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
-    second = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
-    changed_version = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v2")[0]
+    first = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
+    second = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
+    changed_version = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v2", source_passages=FIXTURE_PASSAGES)[0]
 
     assert first["heritageId"] == second["heritageId"]
     assert first["options"] == second["options"]
@@ -892,7 +916,7 @@ def test_heritage_a1_admission_is_explicit_and_emitted_with_severity() -> None:
     lexemes = _fixture_lexemes()
 
     assert _heritage_availability_level(pair) == "A1"
-    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
     assert item["cefr"] == "A1"
     assert item["severity"] == "russianism"
 
@@ -3574,6 +3598,7 @@ def test_heritage_curated_distractors_win() -> None:
         "corrections": ["книга"],
         "rationale": "test rationale",
         "citations": ["test:heritage"],
+        "normativeSupport": FIXTURE_HERITAGE_SUPPORT,
         "sourceFamily": "test",
         "cefrAvailability": "a2",
         "frames": [
@@ -3592,7 +3617,13 @@ def test_heritage_curated_distractors_win() -> None:
 
     verifier = JsonVesumVerifier.from_path(VESUM)
     items = _build_heritage_items(
-        pair, lexemes[0], filtered_lexemes, "deck-v1", verifier=verifier, public_options=False
+        pair,
+        lexemes[0],
+        filtered_lexemes,
+        "deck-v1",
+        verifier=verifier,
+        public_options=False,
+        source_passages=FIXTURE_PASSAGES,
     )
 
     assert len(items) == 1
@@ -3618,6 +3649,9 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
         "corrections": ["треба"],
         "rationale": "test rationale",
         "citations": ["test:heritage"],
+        "normativeSupport": [
+            {"locator": "antonenko-davydovych-yak-my-hovorymo_p998", "passage": 'Не "надо", а "треба".'}
+        ],
         "sourceFamily": "test",
         "cefrAvailability": "a2",
         "frames": [
@@ -3647,7 +3681,9 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
         }
     )
 
-    items = _build_heritage_items(pair, lexeme, all_lexemes, "deck-v1", verifier=verifier, public_options=False)
+    items = _build_heritage_items(
+        pair, lexeme, all_lexemes, "deck-v1", verifier=verifier, public_options=False, source_passages=FIXTURE_PASSAGES
+    )
 
     assert len(items) == 1
     assert items[0]["lemmaId"] == "treba"
@@ -3684,6 +3720,9 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         "slugB": "адресат",
         "distinction_gloss_uk": "Адресант надсилає; адресат отримує.",
         "citations": ["fixture-test"],
+        "glossSources": [
+            {"locator": "5-klas-ukrmova-fixture-2000_s0001", "passage": "Адресант надсилає; адресат отримує."}
+        ],
         "frames": [
             {
                 "sentence_with_slot": "___ надіслав лист.",
@@ -3701,7 +3740,9 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
     verifier = _gloss_verifier("надсилає", "отримує")
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
+    shards = build_practice_shards(
+        entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair], source_passages=FIXTURE_PASSAGES
+    )
     b1_items = shards.get("B1", {}).get("paronym", {}).get("paronym", [])
     b2_items = shards.get("B2", {}).get("paronym", {}).get("paronym", [])
     # At least one direction emits
@@ -3744,6 +3785,12 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
         "slugB": "пам'ятник",
         "distinction_gloss_uk": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
         "citations": ["fixture-test"],
+        "glossSources": [
+            {
+                "locator": "5-klas-ukrmova-fixture-2000_s0002",
+                "passage": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
+            }
+        ],
         "frames": [
             {
                 "sentence_with_slot": "Це видатна архітектурна ___.",
@@ -3761,7 +3808,9 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
     verifier = _gloss_verifier("предмет", "давнини", "споруда", "на", "честь", "особи")
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
+    shards = build_practice_shards(
+        entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair], source_passages=FIXTURE_PASSAGES
+    )
     a1_items = shards.get("A1", {}).get("paronym", {}).get("paronym", [])
     a2_items = shards.get("A2", {}).get("paronym", {}).get("paronym", [])
     assert len(a1_items) + len(a2_items) >= 1, "apostrophe-lemma paronym pair should resolve and emit"
@@ -4794,36 +4843,131 @@ def test_heritage_single_corpus_correction_of_clean_vesum_word_is_withheld(
     verifier = _gloss_verifier("вибачення", "вибачити")
 
     assert validate_heritage_pair(pair) == []
-    assert _heritage_normative_support_error(pair, verifier) is not None
     items = _build_heritage_items(
-        pair, lexemes[0], lexemes, "deck-v1", verifier=verifier, creation_review=_AllowAllCreationReview()
+        pair,
+        lexemes[0],
+        lexemes,
+        "deck-v1",
+        verifier=verifier,
+        creation_review=_AllowAllCreationReview(),
+        source_passages=FIXTURE_PASSAGES,
     )
     assert items == []
     err = capsys.readouterr().err
-    assert "heritage_pair 'вибачення' withheld" in err
-    assert "clean VESUM form (вибачення)" in err
-    assert "ua-gec:F/Calque n=1" in err
+    assert "heritage_pair 'вибачення' withheld (no normative passage): no normativeSupport passage" in err
 
 
-def test_heritage_vesum_absent_calque_with_corpus_only_citation_is_admitted() -> None:
-    pair = {**_published_vybachennia_pair(), "calqueLabel": "вдруг", "calqueSurfaces": ["вдруг"]}
-    pair["frames"] = [{**pair["frames"][0], "calque_form": "вдруг", "answer_form": "книгу"}]
+def _book_pair(**overrides: Any) -> dict[str, Any]:
+    """A fixture-lexeme heritage pair («кніга» → «книга») for the normative-support gate."""
+    return {**_fixture_heritage_pair(), "normativeSupport": [], **overrides}
+
+
+def test_heritage_corpus_only_pair_is_withheld_even_when_vesum_cannot_analyse_the_calque(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Reviewer probe (#8727 r2): a corpus-only pair whose calque VESUM cannot analyse was admitted."""
     lexemes = _fixture_lexemes()
+    pair = _book_pair(citations=["ua-gec:F/Calque n=1"])
     verifier = JsonVesumVerifier.from_path(VESUM)
+    assert verifier.verify_words(["кніга", "кнігу"]) == {"кніга": [], "кнігу": []}
 
-    assert _heritage_normative_support_error(pair, verifier) is None
     items = _build_heritage_items(
-        pair, lexemes[0], lexemes, "deck-v1", verifier=verifier, creation_review=_AllowAllCreationReview()
+        pair, lexemes[0], lexemes, "deck-v1", verifier=verifier, source_passages=FIXTURE_PASSAGES
     )
+
+    assert items == []
+    assert "heritage_pair 'кніга' withheld (no normative passage)" in capsys.readouterr().err
+
+
+def test_heritage_non_corpus_citation_is_not_support_without_a_verified_passage(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Reviewer probe (#8727 r2): any non-UA-GEC citation string (an article title) admitted the pair."""
+    lexemes = _fixture_lexemes()
+    for citations in (["antonenko:Вибачення"], ["sum-11:кніга", "grinchenko:книга"], ["state-standard:glazova-11"]):
+        pair = _book_pair(citations=citations)
+        assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
+    assert capsys.readouterr().err.count("withheld (no normative passage)") == 3
+
+
+def test_normative_support_passage_must_be_verbatim_from_an_allowed_page() -> None:
+    page = "antonenko-davydovych-yak-my-hovorymo_p999"
+
+    def errors(entries: Any, passages: Any = FIXTURE_PASSAGES) -> list[str]:
+        return verified_source_passages(entries, HERITAGE_NORMATIVE_SOURCES, passages, field="normativeSupport")[1]
+
+    verified, problems = verified_source_passages(
+        FIXTURE_HERITAGE_SUPPORT, HERITAGE_NORMATIVE_SOURCES, FIXTURE_PASSAGES, field="normativeSupport"
+    )
+    assert problems == []
+    assert verified[0]["label"] == "Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. 999"
+    # whitespace, dashes and quote style are not a paraphrase
+    assert errors([{"locator": page, "passage": "Кажуть «читаю  кнігу»,\nа треба «читаю книгу»."}]) == []
+    assert errors([]) == ["no normativeSupport passage"]
+    assert errors([{"locator": page}]) == ["normativeSupport[0] needs a locator and a passage"]
+    # a school textbook, СУМ-11 or a corpus row is not a style-guide page
+    for locator in ("5-klas-ukrmova-fixture-2000_s0001", "sum-11:кніга", "ua-gec:F/Calque"):
+        assert errors([{"locator": locator, "passage": "x"}]) == [
+            f"normativeSupport[0] locator {locator!r} is not an allowed source"
+        ]
+    assert errors([{"locator": "antonenko-davydovych-yak-my-hovorymo_p997", "passage": "x"}]) == [
+        "normativeSupport[0] locator 'antonenko-davydovych-yak-my-hovorymo_p997' is not readable from the sources database"
+    ]
+    assert errors([{"locator": page, "passage": "Кажуть «кніга», а треба «книга»."}]) == [
+        f"normativeSupport[0] passage is not verbatim in {page}"
+    ]
+    # no sources database: fail closed
+    assert errors(FIXTURE_HERITAGE_SUPPORT, None) == [
+        f"normativeSupport[0] locator {page!r} is not readable from the sources database"
+    ]
+
+
+def test_heritage_passage_must_name_this_frames_calque_and_correction(capsys: pytest.CaptureFixture[str]) -> None:
+    lexemes = _fixture_lexemes()
+    passages = JsonSourcePassages(
+        {
+            "antonenko-davydovych-yak-my-hovorymo_p998": "Кажуть «кніга» — так не можна.",
+            "antonenko-davydovych-yak-my-hovorymo_p999": 'Фіктивна сторінка. Кажуть "читаю кнігу", а треба "читаю книгу".',
+        }
+    )
+    calque_only = _book_pair(
+        normativeSupport=[
+            {"locator": "antonenko-davydovych-yak-my-hovorymo_p998", "passage": "Кажуть «кніга» — так не можна."}
+        ]
+    )
+    assert _build_heritage_items(calque_only, lexemes[0], lexemes, "deck-v1", source_passages=passages) == []
+    assert "frame 1 withheld (passage does not support this correction)" in capsys.readouterr().err
+
+    supported = _book_pair(normativeSupport=FIXTURE_HERITAGE_SUPPORT)
+    items = _build_heritage_items(supported, lexemes[0], lexemes, "deck-v1", source_passages=passages)
     assert len(items) == 1
-    assert items[0]["calque"] == "вдруг"
+    # The learner sees the edition and page first, then the curator provenance.
+    assert items[0]["citations"] == ["Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. 999", "fixture:heritage"]
+    assert _heritage_frame_support(supported["frames"][0], [{"passage": "Кажуть «кнігу»."}], None) is None
 
 
-def test_heritage_pair_with_normative_citation_is_not_gated_by_vesum() -> None:
-    pair = {**_published_vybachennia_pair(), "citations": ["ua-gec:F/Calque n=1", "antonenko:Вибачення"]}
-    assert _heritage_normative_support_error(pair, _gloss_verifier("вибачення")) is None
-    # Without a verifier the corpus-only pair fails closed.
-    assert _heritage_normative_support_error(_published_vybachennia_pair(), None) is not None
+def _live_source_checkers() -> tuple[Any, Any]:
+    """Real sources.db / VESUM for live-registry provenance checks (skipped where the data is not hydrated)."""
+    sources_db = Path(os.environ.get("LU_SOURCES_DB", "data/sources.db"))
+    vesum_db = Path(os.environ.get("LU_VESUM_DB", "data/vesum.db"))
+    if not sources_db.exists() or not vesum_db.exists():
+        pytest.skip("data/sources.db and data/vesum.db are not available")
+    return generate_practice_deck.SqliteSourcePassages(sources_db), RealVesumVerifier(vesum_db)
+
+
+def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> None:
+    passages, verifier = _live_source_checkers()
+    supported = [pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")]
+    assert supported
+    for pair in supported:
+        verified, problems = verified_source_passages(
+            pair["normativeSupport"], HERITAGE_NORMATIVE_SOURCES, passages, field="normativeSupport"
+        )
+        assert problems == [], pair["calqueLabel"]
+        frames = _valid_heritage_frames(pair, verifier, report=False)
+        assert frames, pair["calqueLabel"]
+        for frame in frames:
+            assert _heritage_frame_support(frame, verified, verifier) is not None, (pair["calqueLabel"], frame)
 
 
 def _published_da_tak_pair() -> dict[str, Any]:
@@ -4998,82 +5142,179 @@ _TAKTOVNYI_VERIFIER_WORDS = (
     "чи",
     "плану",
     "дій",
-    "способів",
-    "у",
-    "спорті",
-    "політиці",
-    "на",
-    "війні",
     "володіє",
     "почуттям",
     "міри",
-    "той",
-    "що",
-    "й",
-    "такту",
+    "вміє",
+    "поводитися",
+    "дотримується",
+    "відповідних",
+    "норм",
+)
+# Verbatim excerpts of the two textbook chunks behind the тактичний/тактовний row (sources MCP
+# get_chunk_context): the paronym dictionary (Заболотний 5 кл. 2023, Додаток 2) and the two-column
+# example table on p. 37 whose definitions interleave line by line.
+_ZABOLOTNYI_S0200 = "5-klas-ukrmova-zabolotnyi-2023_s0200"
+_ZABOLOTNYI_S0027 = "5-klas-ukrmova-zabolotnyi-2023_s0027"
+_TAKTOVNYI_CHUNKS = {
+    _ZABOLOTNYI_S0200: (
+        "Тактичний // тактовний\nТактичний – який стосується тактики як сукупності прийомів та\n"
+        "способів для досягнення мети (у політиці, спорті) або здійснення певної\nбойової операції. "
+        "Тактичний хід, тактична перевага.\nТактовний – який володіє почуттям міри, вміє поводитися, "
+        "дотримується\nвідповідних норм. Тактовна людина, бути тактовним.\n236"
+    ),
+    _ZABOLOTNYI_S0027: (
+        "2) тактовний – тактичний\n(який уміє (який стосується тактики,\nправильно способів дій у спорті,\n"
+        "поводитися) політиці, на війні)."
+    ),
+}
+_TAKTOVNYI_PASSAGE = (
+    "Тактичний – який стосується тактики як сукупності прийомів та способів для досягнення мети (у політиці, "
+    "спорті) або здійснення певної бойової операції. Тактичний хід, тактична перевага. Тактовний – який володіє "
+    "почуттям міри, вміє поводитися, дотримується відповідних норм."
+)
+_TAKTOVNYI_SOURCED_GLOSS = (
+    "Тактичний — який стосується тактики; тактовний — який володіє почуттям міри, вміє поводитися, "
+    "дотримується відповідних норм."
 )
 
 
+def _sourced_taktovnyi_pair(gloss: str = _TAKTOVNYI_SOURCED_GLOSS, passage: str = _TAKTOVNYI_PASSAGE) -> dict[str, Any]:
+    return {
+        **_taktovnyi_pair(gloss),
+        "glossSources": [{"locator": _ZABOLOTNYI_S0200, "passage": passage}],
+    }
+
+
+def _build_taktovnyi(pair: dict[str, Any], chunks: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    shards = build_practice_shards(
+        _taktovnyi_entries(),
+        ReviewedSourceAllowlist.from_payload([]),
+        _gloss_verifier(*_TAKTOVNYI_VERIFIER_WORDS),
+        [],
+        BuildConfig(target=10),
+        paronym_pairs=[pair],
+        source_passages=JsonSourcePassages(chunks if chunks is not None else _TAKTOVNYI_CHUNKS),
+    )
+    return shards["B1"]["paronym"]["paronym"]
+
+
 def test_paronym_explanation_with_russian_word_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
-    """Published par_42a6a39064f8 / par_687bf8430790 taught «вежливий» (VESUM NOT_FOUND) in feedback (#8728)."""
+    """Published par_42a6a39064f8 / par_687bf8430790 taught «вежливий» (VESUM NOT_FOUND) in feedback (#8728).
+
+    Even a gloss copied from a (fixture) source is withheld when a word is not clean Ukrainian.
+    """
     published_gloss = (
         "Тактичний — який стосується тактики бою чи плану дій; тактовний — вежливий, який володіє почуттям міри."
     )
-    verifier = _gloss_verifier(*_TAKTOVNYI_VERIFIER_WORDS)
-    allowlist = ReviewedSourceAllowlist.from_payload([])
+    pair = _sourced_taktovnyi_pair(published_gloss, published_gloss)
 
-    shards = build_practice_shards(
-        _taktovnyi_entries(),
-        allowlist,
-        verifier,
-        [],
-        BuildConfig(target=10),
-        paronym_pairs=[_taktovnyi_pair(published_gloss)],
-    )
-
-    assert shards["B1"]["paronym"]["paronym"] == []
+    assert _build_taktovnyi(pair, {_ZABOLOTNYI_S0200: published_gloss}) == []
     err = capsys.readouterr().err
     assert "item withheld by explanation-language gate: distinction_gloss_uk: explanation token «вежливий»" in err
     assert 'explanation-language gate: withheld {"paronym": 2}' in err
 
 
-def test_paronym_source_verified_gloss_passes_the_explanation_gate() -> None:
-    live = next(
-        pair for pair in read_paronym_pairs(Path("registry/lexicon/paronym_pairs.yaml")) if pair["slugA"] == "тактичний"
-    )
-    assert "вежливий" not in live["distinction_gloss_uk"]
-    assert any(citation.startswith("textbook:5-klas-ukrmova-avramenko-2022_s0201") for citation in live["citations"])
-    verifier = _gloss_verifier(*_TAKTOVNYI_VERIFIER_WORDS)
+def test_paronym_gloss_without_a_source_locator_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
+    """Reviewer probe (#8728 r2): model-curated wording shipped behind a bare book title or site name."""
+    for citations in (["Гринчишин Д. Г. Словник паронімів української мови (1986)"], ["miyklas.com.ua"]):
+        pair = {**_taktovnyi_pair("Тактичний — який стосується тактики бою чи плану дій."), "citations": citations}
+        assert _build_taktovnyi(pair) == []
+    err = capsys.readouterr().err
+    assert err.count("item withheld at B1 by gloss-provenance gate: no glossSources passage") == 4
+    assert 'paronym gloss-provenance gate: withheld {"B1": 2}' in err
 
-    shards = build_practice_shards(
-        _taktovnyi_entries(),
-        ReviewedSourceAllowlist.from_payload([]),
-        verifier,
-        [],
-        BuildConfig(target=10),
-        paronym_pairs=[live],
-    )
 
-    items = shards["B1"]["paronym"]["paronym"]
+def test_paronym_gloss_provenance_rejects_reconstructed_swapped_and_paraphrased_clauses() -> None:
+    passages = JsonSourcePassages(_TAKTOVNYI_CHUNKS)
+
+    def errors(pair: dict[str, Any]) -> list[str]:
+        return paronym_gloss_provenance_errors(pair, passages)
+
+    assert errors(_sourced_taktovnyi_pair()) == []
+    # r2 quoted a de-interleaved reading of the two-column table, not text printed in the chunk.
+    reconstructed = {
+        **_taktovnyi_pair("Тактичний — який стосується тактики, способів дій у спорті, політиці, на війні."),
+        "glossSources": [
+            {
+                "locator": _ZABOLOTNYI_S0027,
+                "passage": "тактичний (який стосується тактики, способів дій у спорті, політиці, на війні)",
+            }
+        ],
+    }
+    assert errors(reconstructed) == [f"glossSources[0] passage is not verbatim in {_ZABOLOTNYI_S0027}"]
+    swapped = _sourced_taktovnyi_pair("Тактичний — який володіє почуттям міри; тактовний — який стосується тактики.")
+    assert errors(swapped) == [
+        "gloss clause 'Тактичний — який володіє почуттям міри' is not copied from a glossSources passage defining "
+        "'тактичний'",
+        "gloss clause 'тактовний — який стосується тактики.' is not copied from a glossSources passage defining "
+        "'тактовний'",
+    ]
+    paraphrased = _sourced_taktovnyi_pair("Тактичний — який стосується тактики; тактовний — той, хто має почуття міри.")
+    assert errors(paraphrased) == [
+        "gloss clause 'тактовний — той, хто має почуття міри.' is not copied from a glossSources passage defining "
+        "'тактовний'"
+    ]
+    unshaped = _sourced_taktovnyi_pair("Слова тактичний і тактовний різні.")
+    assert errors(unshaped) == ["gloss clause 'Слова тактичний і тактовний різні.' is not '<paronym> — <definition>'"]
+    # No sources database: fail closed.
+    assert paronym_gloss_provenance_errors(_sourced_taktovnyi_pair(), None) == [
+        f"glossSources[0] locator {_ZABOLOTNYI_S0200!r} is not readable from the sources database"
+    ]
+
+
+def test_paronym_source_linked_gloss_ships() -> None:
+    items = _build_taktovnyi(_sourced_taktovnyi_pair())
+
     assert len(items) == 2
-    assert {item["distinction_gloss_uk"] for item in items} == {live["distinction_gloss_uk"]}
+    assert {item["distinction_gloss_uk"] for item in items} == {_TAKTOVNYI_SOURCED_GLOSS}
 
 
-def test_explanation_language_errors_exempt_mentions_abbreviations_and_own_forms() -> None:
+def test_live_paronym_gloss_sources_are_verbatim_and_clean() -> None:
+    passages, verifier = _live_source_checkers()
+    sourced = [pair for pair in read_paronym_pairs(PARONYM_REGISTRY) if pair.get("glossSources")]
+    assert sourced
+    for pair in sourced:
+        assert paronym_gloss_provenance_errors(pair, passages) == [], (pair["slugA"], pair["slugB"])
+        assert (
+            explanation_language_errors(pair["distinction_gloss_uk"], verifier, allowed=[pair["slugA"], pair["slugB"]])
+            == []
+        ), (pair["slugA"], pair["slugB"])
+    taktovnyi = next(pair for pair in sourced if pair["slugA"] == "тактичний")
+    assert "вежливий" not in taktovnyi["distinction_gloss_uk"]
+
+
+def test_explanation_language_errors_check_quoted_words_but_exempt_russian_mentions_and_own_forms() -> None:
     verifier = _gloss_verifier(
-        "канонічний", "суржик", "маркер", "так", "офіційно", "діловому", "великий", "стилі", "канцелярит"
+        "Тактовний", "канонічний", "суржик", "маркер", "так", "офіційно", "діловому", "великий", "стилі", "канцелярит"
     )
 
+    # Reviewer probe (#8728 r2): quotation marks used to hide a Russian definition.
+    assert explanation_language_errors("Тактовний — «вежливий».", verifier) == [
+        "explanation token «вежливий» is not a clean VESUM form"
+    ]
+    assert explanation_language_errors('Тактовний — "вежливий".', verifier) == [
+        "explanation token «вежливий» is not a clean VESUM form"
+    ]
+    # An explicit Russian mention and the item's own contrasted forms stay exempt.
     assert explanation_language_errors("канонічний суржик-маркер: рос. да; укр. так", verifier) == []
+    assert explanation_language_errors("Тактовний — рос. вежливий", verifier) == []
     assert (
-        explanation_language_errors("«вибачення» flagged non-standard; reviewed correction «вибачити».", verifier) == []
+        explanation_language_errors(
+            "«вибачення» flagged non-standard; reviewed correction «вибачити».",
+            verifier,
+            allowed=["вибачення", "вибачити"],
+        )
+        == []
     )
-    assert explanation_language_errors("канцелярит «в даний час», «дана книга» (рос. данный)", verifier) == []
+    assert explanation_language_errors("канцелярит «дана книга» (рос. данный)", verifier) == [
+        "explanation token «дана» is not a clean VESUM form",
+        "explanation token «книга» is not a clean VESUM form",
+    ]
     assert explanation_language_errors("в офіційно-діловому стилі (розм.)", verifier) == []
     assert explanation_language_errors("великий бык", verifier) == ["explanation token «бык» is not a clean VESUM form"]
     assert explanation_language_errors("великий бык", verifier, allowed=["бык"]) == []
     assert explanation_language_errors("", verifier) == []
-    assert explanation_language_errors("великий бык", None) == []
 
 
 def test_explanation_gate_errors_cover_every_learner_facing_field() -> None:
@@ -5100,3 +5341,9 @@ def test_broken_validator_fixtures_prove_the_explanation_language_gate(capsys: p
     assert main(["--broken-validator-fixtures"]) == 1
     out = capsys.readouterr().out
     assert "explanation_language: ['explanation token «вежливий» is not a clean VESUM form']" in out
+    assert "explanation_language_quoted: ['explanation token «вежливий» is not a clean VESUM form']" in out
+    assert "\"gloss clause 'тактовний — вежливий.' is not copied from a glossSources passage" in out
+    assert (
+        "heritage_normative_support: [\"normativeSupport[0] locator 'ua-gec:F/Calque' is not an allowed source\"]"
+        in out
+    )
