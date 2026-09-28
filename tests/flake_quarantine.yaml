@@ -1,0 +1,6 @@
+# #9067: empty until an OPEN fix issue and two distinct flaky run IDs exist.
+# Each entry: node_id, fix_issue, owner, admitted_on, expires_on,
+# observed_run_ids, renewals (0 or 1), and renewed_on for a renewal.
+# Offline lint cannot determine whether a fix issue has since closed;
+# admission checks that against GitHub before an entry is added.
+entries: []

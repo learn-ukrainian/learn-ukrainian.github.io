@@ -18,6 +18,7 @@ import sys
 import threading
 import weakref
 from collections.abc import Collection, Generator
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
@@ -27,6 +28,7 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
@@ -1539,7 +1541,14 @@ def _item_repo_rel(item: pytest.Item) -> str:
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Skip tests whose sparse-excluded tree is not in this worktree."""
-    del config
+    selected = rerun_node_ids(
+        load_registry(),
+        today=datetime.now(UTC).date(),
+        event_name="schedule" if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1" else os.environ.get("GITHUB_EVENT_NAME"),
+    )
+    for item in items:
+        if item.nodeid in selected:
+            item.add_marker(pytest.mark.flaky(reruns=1, rerun_except=[TIMEOUT_PATTERN]))
     missing = _sparse_missing_trees()
     if not missing:
         return
@@ -1554,8 +1563,57 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
             item.add_marker(pytest.mark.skip(reason=reason))
 
 
+class _FlakeRerunReporter:
+    """Keep successful reruns visible in both xunit2 and the Actions summary."""
+
+    def __init__(self, config: pytest.Config) -> None:
+        self.config = config
+        self.first_failures: set[str] = set()
+        self.call_passed: set[str] = set()
+        self.recovered: set[str] = set()
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
+        if report.outcome == "rerun":
+            self.first_failures.add(report.nodeid)
+            self.call_passed.discard(report.nodeid)
+        elif report.when == "call" and report.passed:
+            self.call_passed.add(report.nodeid)
+        elif report.when == "teardown" and report.passed and report.nodeid in self.first_failures and report.nodeid in self.call_passed:
+            self.recovered.add(report.nodeid)
+            from _pytest.junitxml import xml_key
+
+            xml = self.config.stash.get(xml_key, None)
+            if xml is not None:
+                reporter = xml.node_reporter(report)
+                reporter.add_property("flake.reruns", "1")
+
+    def pytest_terminal_summary(self, terminalreporter: pytest.TerminalReporter) -> None:
+        if not self.recovered:
+            return
+        lines = ["### Quarantined tests recovered by one rerun", ""]
+        for node_id in sorted(self.recovered):
+            lines.append(f"- `{node_id}`: first attempt failed, rerun passed")
+        lines.append("")
+        summary = "\n".join(lines)
+        terminalreporter.write_sep("=", "quarantined reruns")
+        terminalreporter.write(summary)
+        summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary_path:
+            with open(summary_path, "a", encoding="utf-8") as output:
+                output.write(summary)
+
+
 def pytest_configure(config: pytest.Config) -> None:
+    load_registry()
+    if config.getoption("reruns", default=0):
+        raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
+    config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
     _install_socket_guard()
+    config.addinivalue_line(
+        "markers",
+        "flaky(reruns, rerun_except): quarantine marker; pytest-rerunfailures enforces reruns when installed",
+    )
     config.addinivalue_line(
         "markers",
         "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "

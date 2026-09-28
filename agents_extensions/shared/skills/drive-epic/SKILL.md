@@ -599,11 +599,13 @@ exact-head CF review if the head moved, then re-queue — same hour, never left
 overnight. Do not stand up a bot or recovery workflow for this; it is driver work
 like any other red CI.
 
-**Before enqueue: cover the whole repo (#8692, fix #8707).** If the PR's own CI ran only
-the selected tier and the PR touches `tests/`, lint config, or anything repo-wide, add
-the `full-ci` label first so the queue run covers every shard. #8692 merged on shard 1
-alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5 h and
-dequeued unrelated PRs (#8691 ×3, #8693 ×2).
+**Before enqueue: use `full-ci` only for a classifier blind spot (#9066).** Do not
+add the label by habit when a PR touches `tests/` or runs the selected tier.
+The merge queue runs the full required Python tier for code, frontend-only,
+and docs changes outside curriculum/wiki (#9073); the selected tier runs
+repo-wide tests (#8707). Add `full-ci` only when a change affects tests the
+path classifier cannot see, and explain why in the PR. #8692 exposed the old
+gap when a shard-3 lint test escaped.
 
 **Before opening a PR that touches launchers or hooks, run every real-launcher test
 (2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
