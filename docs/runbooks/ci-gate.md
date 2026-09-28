@@ -106,6 +106,11 @@ edits do not start it. `full-ci` is read from the PR's current labels
 (case-insensitive, fail closed) on the next PR push and in every merge-queue
 run, where every PR in the group is resolved from the queue refs. A label added
 after a green PR run does not rerun it: push again, or rely on the merge queue.
+Use the label only when a change affects tests the path classifier cannot see;
+explain that blind spot in the PR. It forces the full Python tier while known
+changed paths still decide whether Frontend runs. The merge queue already runs
+the full Python tier for code, frontend-only, and docs changes outside
+curriculum/wiki (#9073).
 Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
 floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the
 separate slow selection; this adds no retries or duplicate slow-test execution.
