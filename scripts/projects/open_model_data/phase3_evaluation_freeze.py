@@ -34,7 +34,9 @@ from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_unit_materialization as materializer
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 DEFAULT_EVALUATION_CONTRACT = DATA / "evidence/correction_protection_evaluation_contract_v1.json"
 DEFAULT_SCHEMA = DATA / "contracts/phase3_evaluation_freeze_bundle_v1.schema.json"
@@ -65,9 +67,7 @@ TOTALS = {
 }
 UA_GEC = "ua_gec"
 SCHOOL = "school_textbooks"
-ZERO_EVALUATION_FAMILIES = frozenset(
-    {"antonenko_textbook_representation", "other_normative_style_inventory"}
-)
+ZERO_EVALUATION_FAMILIES = frozenset({"antonenko_textbook_representation", "other_normative_style_inventory"})
 PHENOMENA = (
     "direct_address_vocative",
     "impersonal_no_to_expressed_agent",
@@ -140,7 +140,10 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
 
 def _private_source_rows(path: Path, receipt: Mapping[str, Any]) -> list[dict[str, Any]]:
     _regular_private(path, "private source materialization")
-    require(receipt.get("schema_version") == "phase3_source_unit_materialization_receipt_v1", "wrong materialization receipt")
+    require(
+        receipt.get("schema_version") == "phase3_source_unit_materialization_receipt_v1",
+        "wrong materialization receipt",
+    )
     require(receipt.get("private_record_count") == 67041, "materialization denominator drift")
     require(receipt.get("private_jsonl_sha256") == sha256_file(path), "materialization payload hash drift")
     rows: list[dict[str, Any]] = []
@@ -211,9 +214,7 @@ def _load_external_exclusions(path: Path) -> tuple[dict[str, Any], str]:
     if records is None:
         records = [*value.get("frozen_ua_eval_records", []), *value.get("public_canary_records", [])]
     require(isinstance(records, list) and records, "external exclusion records missing")
-    policy = near.policy_for_governed_use(
-        "ua_eval_exclusion", expected_fingerprint=near.PINNED_POLICY_FINGERPRINT
-    )
+    policy = near.policy_for_governed_use("ua_eval_exclusion", expected_fingerprint=near.PINNED_POLICY_FINGERPRINT)
     documents: set[str] = set()
     units: set[tuple[str, str]] = set()
     exact: set[str] = set()
@@ -223,7 +224,8 @@ def _load_external_exclusions(path: Path) -> tuple[dict[str, Any], str]:
     for index, record in enumerate(records):
         require(isinstance(record, Mapping), f"external exclusion record malformed: {index}")
         require(
-            set(record) == {
+            set(record)
+            == {
                 "source_document_identity",
                 "unit_identity",
                 "span_fingerprint",
@@ -234,7 +236,9 @@ def _load_external_exclusions(path: Path) -> tuple[dict[str, Any], str]:
         document = record["source_document_identity"]
         unit = record["unit_identity"]
         surface = record["normalized_surface"]
-        require(all(isinstance(item, str) and item for item in (document, unit, surface)), "external exclusion value drift")
+        require(
+            all(isinstance(item, str) and item for item in (document, unit, surface)), "external exclusion value drift"
+        )
         fingerprint = near.fingerprint(surface)
         require(fingerprint.exact_fingerprint == record["span_fingerprint"], "external exclusion fingerprint drift")
         documents.add(document)
@@ -324,22 +328,16 @@ def _heldout_neighbour(row: Mapping[str, Any], index: Mapping[str, Any]) -> bool
         return True
     tokens = frozenset(probe.tokens)
     if not tokens:
-        candidates: set[int] = {
-            candidate for candidate, item in enumerate(index["token_sets"]) if not item
-        }
+        candidates: set[int] = {candidate for candidate, item in enumerate(index["token_sets"]) if not item}
     else:
         required = math.ceil(0.9 * len(tokens))
         # Any set sharing at least ``required`` probe tokens must contain at
         # least one member of this smallest-posting hitting set.
         hitting_size = len(tokens) - required + 1
-        hitting_tokens = sorted(
-            tokens, key=lambda token: (len(index["token_index"].get(token, ())), token)
-        )[:hitting_size]
-        candidates = {
-            candidate
-            for token in hitting_tokens
-            for candidate in index["token_index"].get(token, ())
-        }
+        hitting_tokens = sorted(tokens, key=lambda token: (len(index["token_index"].get(token, ())), token))[
+            :hitting_size
+        ]
+        candidates = {candidate for token in hitting_tokens for candidate in index["token_index"].get(token, ())}
     for candidate in candidates:
         candidate_tokens = index["token_sets"][candidate]
         union = len(tokens | candidate_tokens)
@@ -358,17 +356,15 @@ def _heldout_neighbour(row: Mapping[str, Any], index: Mapping[str, Any]) -> bool
 
 def _rank(seed: str, row: Mapping[str, Any]) -> bytes:
     return hashlib.sha256(
-        seed.encode("utf-8")
-        + b"\0"
-        + row["unit_id"].encode("utf-8")
-        + b"\0"
-        + row["unit_sha256"].encode("ascii")
+        seed.encode("utf-8") + b"\0" + row["unit_id"].encode("utf-8") + b"\0" + row["unit_sha256"].encode("ascii")
     ).digest()
 
 
 def _document_rank(seed: str, document: str, members: Sequence[Mapping[str, Any]]) -> bytes:
     commitment = sha256_value(sorted((row["unit_id"], row["unit_sha256"]) for row in members))
-    return hashlib.sha256(seed.encode("utf-8") + b"\0" + document.encode("utf-8") + b"\0" + commitment.encode("ascii")).digest()
+    return hashlib.sha256(
+        seed.encode("utf-8") + b"\0" + document.encode("utf-8") + b"\0" + commitment.encode("ascii")
+    ).digest()
 
 
 def _structural_clean_candidate(text: str) -> bool:
@@ -509,8 +505,14 @@ def partition(
         for family in FAMILIES
     }
     for family, counts in family_counts.items():
-        require(sum(value for key, value in counts.items() if key != "family_total") == counts["family_total"], f"family accounting drift: {family}")
-        require(counts["sealed_evaluation"] <= math.floor(counts["family_total"] * 0.20), f"sealed share exceeds 20 percent: {family}")
+        require(
+            sum(value for key, value in counts.items() if key != "family_total") == counts["family_total"],
+            f"family accounting drift: {family}",
+        )
+        require(
+            counts["sealed_evaluation"] <= math.floor(counts["family_total"] * 0.20),
+            f"sealed share exceeds 20 percent: {family}",
+        )
     return {
         "partition_rows": partition_rows,
         "clearance_rows": clearance_rows,
@@ -566,7 +568,10 @@ def _prepare_private_dir(path: Path) -> None:
         EVALUATION_INPUT_FILENAME,
     }
     for child in path.iterdir():
-        require(child.name in allowed and child.is_file() and not child.is_symlink(), "unexpected private evaluation artifact")
+        require(
+            child.name in allowed and child.is_file() and not child.is_symlink(),
+            "unexpected private evaluation artifact",
+        )
 
 
 def _role_binding(role_contract: Mapping[str, Any]) -> dict[str, str]:
@@ -719,7 +724,10 @@ def build(
     require(not errors, f"evaluation freeze schema violation: {errors[0].message if errors else ''}")
     serialized = canonical_json(receipt)
     require(
-        not any(token in serialized for token in ("source_text", "source_record", "unit_id", "document_or_edition_identity", "frozen_locator")),
+        not any(
+            token in serialized
+            for token in ("source_text", "source_record", "unit_id", "document_or_edition_identity", "frozen_locator")
+        ),
         "public evaluation receipt leaks source or heldout identity",
     )
     _prepare_private_dir(private_dir)
@@ -736,7 +744,10 @@ def _read_private_json_list(path: Path, label: str) -> list[dict[str, Any]]:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise EvaluationFreezeError(f"cannot read {label}: {path}") from exc
-    require(isinstance(value, list) and all(isinstance(row, dict) for row in value), f"{label} must be a JSON list of objects")
+    require(
+        isinstance(value, list) and all(isinstance(row, dict) for row in value),
+        f"{label} must be a JSON list of objects",
+    )
     return value
 
 
@@ -752,7 +763,16 @@ def _private_partition_rows(path: Path, freeze_receipt: Mapping[str, Any]) -> li
             row = json.loads(raw.decode("utf-8"))
             require(isinstance(row, dict), f"private partition row {number} must be an object")
             require(
-                set(row) == {"family_id", "unit_id", "unit_sha256", "reason", "candidate_lane", "source_text_sha256", "frozen_locator_sha256"},
+                set(row)
+                == {
+                    "family_id",
+                    "unit_id",
+                    "unit_sha256",
+                    "reason",
+                    "candidate_lane",
+                    "source_text_sha256",
+                    "frozen_locator_sha256",
+                },
                 "private partition row shape drift",
             )
             rows.append(row)
@@ -773,15 +793,30 @@ def _comprehensive_label_bundle(
 
     bundle = _read_json(path, "comprehensive sealed-label bundle")
     required = {
-        "schema_version", "text_free", "evaluation_cycle_id", "evaluation_freeze_receipt_sha256",
-        "partition_manifest_sha256", "sealed_labels_sha256", "row_count", "clean_modern_row_count",
-        "phenomenon_strata_row_count", "phenomenon_stratum_commitments", "complete",
-        "frozen_before_rule_extraction", "receipt_sha256",
+        "schema_version",
+        "text_free",
+        "evaluation_cycle_id",
+        "evaluation_freeze_receipt_sha256",
+        "partition_manifest_sha256",
+        "sealed_labels_sha256",
+        "row_count",
+        "clean_modern_row_count",
+        "phenomenon_strata_row_count",
+        "phenomenon_stratum_commitments",
+        "complete",
+        "frozen_before_rule_extraction",
+        "receipt_sha256",
     }
     require(set(bundle) == required, "comprehensive sealed-label bundle is not closed")
-    require(bundle["schema_version"] == "phase3_comprehensive_sealed_label_bundle_v1" and bundle["text_free"] is True, "wrong comprehensive sealed-label bundle")
+    require(
+        bundle["schema_version"] == "phase3_comprehensive_sealed_label_bundle_v1" and bundle["text_free"] is True,
+        "wrong comprehensive sealed-label bundle",
+    )
     require(bundle["evaluation_cycle_id"] == "phase3-v2-1-evaluation-cycle-001", "sealed-label cycle drift")
-    require(bundle["evaluation_freeze_receipt_sha256"] == sha256_file(evaluation_freeze_receipt_path), "sealed-label freeze receipt drift")
+    require(
+        bundle["evaluation_freeze_receipt_sha256"] == sha256_file(evaluation_freeze_receipt_path),
+        "sealed-label freeze receipt drift",
+    )
     require(bundle["partition_manifest_sha256"] == sha256_file(partition_path), "sealed-label partition drift")
     require(bundle["sealed_labels_sha256"] == sha256_file(sealed_labels_path), "sealed-label payload drift")
     require(
@@ -791,9 +826,18 @@ def _comprehensive_label_bundle(
         "comprehensive labels must cover 2,000 clean_modern plus 7,392 phenomenon strata",
     )
     commitments = bundle["phenomenon_stratum_commitments"]
-    require(isinstance(commitments, Mapping) and set(commitments) == set(PHENOMENA), "phenomenon stratum commitments are incomplete")
-    require(all(isinstance(value, str) and len(value) == 64 for value in commitments.values()), "invalid phenomenon stratum commitment")
-    require(bundle["complete"] is True and bundle["frozen_before_rule_extraction"] is True, "sealed labels were not closed before extraction")
+    require(
+        isinstance(commitments, Mapping) and set(commitments) == set(PHENOMENA),
+        "phenomenon stratum commitments are incomplete",
+    )
+    require(
+        all(isinstance(value, str) and len(value) == 64 for value in commitments.values()),
+        "invalid phenomenon stratum commitment",
+    )
+    require(
+        bundle["complete"] is True and bundle["frozen_before_rule_extraction"] is True,
+        "sealed labels were not closed before extraction",
+    )
     body = dict(bundle)
     claimed = body.pop("receipt_sha256")
     require(claimed == sha256_value(body), "comprehensive sealed-label receipt hash drift")
@@ -813,21 +857,36 @@ def _sealed_interface_rows(
     seen: set[str] = set()
     lane_counts = {"clean_modern": 0, "phenomenon_strata": 0}
     for label in labels:
-        require(isinstance(label.get("unit_id"), str) and isinstance(label.get("unit_sha256"), str), "sealed label identity is missing")
+        require(
+            isinstance(label.get("unit_id"), str) and isinstance(label.get("unit_sha256"), str),
+            "sealed label identity is missing",
+        )
         unit_id = label["unit_id"]
         partition = partition_by_id.get(unit_id)
         source = materialized_by_id.get(unit_id)
-        require(unit_id not in seen and partition is not None and source is not None, "sealed label is not an exact partition/materialization member")
+        require(
+            unit_id not in seen and partition is not None and source is not None,
+            "sealed label is not an exact partition/materialization member",
+        )
         seen.add(unit_id)
-        require(label["unit_sha256"] == partition["unit_sha256"] == source["unit_sha256"], "sealed label unit hash drift")
-        require(source["family_id"] == partition["family_id"] and source["source_text_sha256"] == partition["source_text_sha256"], "sealed label source binding drift")
+        require(
+            label["unit_sha256"] == partition["unit_sha256"] == source["unit_sha256"], "sealed label unit hash drift"
+        )
+        require(
+            source["family_id"] == partition["family_id"]
+            and source["source_text_sha256"] == partition["source_text_sha256"],
+            "sealed label source binding drift",
+        )
         lane = partition["candidate_lane"]
         require(lane in lane_counts, "only frozen evaluation lanes may enter the scorer interface")
         lane_counts[lane] += 1
         label_payload = dict(label)
         label_payload.pop("unit_id")
         label_payload.pop("unit_sha256")
-        require("source_text" not in label_payload and "source_record" not in label_payload, "sealed label payload duplicates source bytes")
+        require(
+            "source_text" not in label_payload and "source_record" not in label_payload,
+            "sealed label payload duplicates source bytes",
+        )
         output.append(
             {
                 "unit_id": unit_id,
@@ -934,12 +993,22 @@ def emit_sealed_interface(
         "evaluation_freeze_receipt_sha256": sha256_file(evaluation_freeze_receipt_path),
         "comprehensive_sealed_label_bundle_sha256": sha256_file(comprehensive_sealed_label_bundle_path),
         "output": output,
-        "gates": {"fixed_release_validated_first": True, "complete_partition_labels_required": True, "heldout_plaintext_exported": False, "outsider_receives_freeze_container": False},
+        "gates": {
+            "fixed_release_validated_first": True,
+            "complete_partition_labels_required": True,
+            "heldout_plaintext_exported": False,
+            "outsider_receives_freeze_container": False,
+        },
     }
     receipt["action_receipt"] = _action_receipt(
         role_contract=role_contract,
         role_contract_path=role_contract_path,
-        input_sha256=sha256_value({"release_manifest_sha256": manifest["manifest_sha256"], "labels_bundle_sha256": sha256_file(comprehensive_sealed_label_bundle_path)}),
+        input_sha256=sha256_value(
+            {
+                "release_manifest_sha256": manifest["manifest_sha256"],
+                "labels_bundle_sha256": sha256_file(comprehensive_sealed_label_bundle_path),
+            }
+        ),
         output_sha256=sha256_value(output),
         started_at=started_at,
         completed_at=completed_at,

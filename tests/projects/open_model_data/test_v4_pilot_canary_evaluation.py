@@ -87,6 +87,10 @@ def _cache_compiled_jsonschema_validators(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(jsonschema, "validate", cached_validate)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_pilot_canary_artifacts_exist() -> None:
     """Verify generated dataset, replay buffer, training log, adapter, eval cases, and receipt files exist."""
     assert DEFAULT_DATASET_OUTPUT.exists(), "pilot_canary_train_200.jsonl must exist"
@@ -98,6 +102,10 @@ def test_pilot_canary_artifacts_exist() -> None:
     assert DEFAULT_RECEIPT_OUTPUT.with_suffix(".json.sha256").exists(), "detached sha256 must exist"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl",
+)
 def test_pilot_canary_replay_buffer_composition() -> None:
     """Verify exact 30-item replay buffer composition, provenance grounding, and schema fields."""
     records = [json.loads(line) for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -119,6 +127,10 @@ def test_pilot_canary_replay_buffer_composition() -> None:
         validate_no_private_host_paths(r)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_pilot_canary_composition() -> None:
     """Verify exact 200-item composition and format breakdown."""
     records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -151,6 +163,10 @@ def test_pilot_canary_composition() -> None:
     assert sum(1 for r in da if not r.get("is_calque_or_russianism", False)) == 9
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_negative_control_diversity() -> None:
     """Verify 60 distinct PRESERVE negative controls with genuine diverse STEM terms."""
     records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -164,6 +180,10 @@ def test_negative_control_diversity() -> None:
     assert len(queries) >= 50, f"Expected diverse queries for PRESERVE items, got {len(queries)}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl",
+)
 def test_partition_firewall_zero_heldout_contamination() -> None:
     """Verify zero overlap between pilot canary dataset and held-out suite."""
     if not DEFAULT_HELDOUT_SUITE.exists():
@@ -238,6 +258,10 @@ def test_canary_safety_gates() -> None:
     assert gates["all_gates_passed"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_verify_only_succeeds_on_valid_artifacts() -> None:
     """Verify --verify-only check passes on committed artifacts."""
     result = verify_pilot_canary(
@@ -266,6 +290,10 @@ def _write_receipt_with_digest(rcp_path: Path, data: dict) -> None:
     sha_file.write_text(f"{sha256_file(rcp_path)}  {rcp_path.name}\n", encoding="utf-8")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     """Verify that tampering with safety gate metrics causes verify_pilot_canary to fail."""
     tampered_rcp = tmp_path / "tampered_receipt.json"
@@ -316,6 +344,10 @@ def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_dataset_fails_verification(tmp_path: Path) -> None:
     """Verify that tampering with dataset records causes verify_pilot_canary to fail."""
     tampered_ds = tmp_path / "tampered_dataset.jsonl"
@@ -334,6 +366,10 @@ def test_tampered_dataset_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl",
+)
 def test_tampered_replay_buffer_fails_verification(tmp_path: Path) -> None:
     """Verify that tampering with replay buffer records causes verify_pilot_canary to fail."""
     tampered_replay = tmp_path / "tampered_replay.jsonl"
@@ -342,7 +378,10 @@ def test_tampered_replay_buffer_fails_verification(tmp_path: Path) -> None:
     with tampered_replay.open("a", encoding="utf-8") as f:
         f.write(json.dumps({"id": "bad", "instruction": "test", "response": "test"}) + "\n")
 
-    with pytest.raises(ValueError, match=r"Canary replay buffer count error|replay_buffer SHA256 mismatch|Replay buffer SHA256 mismatch"):
+    with pytest.raises(
+        ValueError,
+        match=r"Canary replay buffer count error|replay_buffer SHA256 mismatch|Replay buffer SHA256 mismatch",
+    ):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=DEFAULT_RECEIPT_OUTPUT,
@@ -352,6 +391,10 @@ def test_tampered_replay_buffer_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_eval_cases_fails_verification(tmp_path: Path) -> None:
     """Verify that modifying eval cases causes hash mismatch and verification failure."""
     tampered_eval = tmp_path / "tampered_eval.jsonl"
@@ -360,7 +403,9 @@ def test_tampered_eval_cases_fails_verification(tmp_path: Path) -> None:
     with tampered_eval.open("a", encoding="utf-8") as f:
         f.write(json.dumps({"case_id": "spurious", "suite": "calque_elimination"}) + "\n")
 
-    with pytest.raises(ValueError, match=r"eval_cases SHA256 mismatch|Evaluation cases SHA256 mismatch|Expected 900 evaluation cases"):
+    with pytest.raises(
+        ValueError, match=r"eval_cases SHA256 mismatch|Evaluation cases SHA256 mismatch|Expected 900 evaluation cases"
+    ):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=DEFAULT_RECEIPT_OUTPUT,
@@ -370,6 +415,10 @@ def test_tampered_eval_cases_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_trajectory_schema_deep_validation(tmp_path: Path) -> None:
     """Verify that trajectory records missing required fields fail deep validation even with matching hash."""
     tampered_ds = tmp_path / "invalid_schema_dataset.jsonl"
@@ -396,6 +445,10 @@ def test_trajectory_schema_deep_validation(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_empty_replay_object_fails_verification(tmp_path: Path) -> None:
     """Verify that empty replay records fail validation even with matching hash."""
     tampered_replay = tmp_path / "empty_replay.jsonl"
@@ -417,6 +470,10 @@ def test_empty_replay_object_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_no_private_host_paths_in_dataset_or_receipt() -> None:
     """Verify OPSEC invariant: zero private host paths or IP addresses."""
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
@@ -435,6 +492,10 @@ def test_no_private_host_paths_in_dataset_or_receipt() -> None:
             validate_no_private_host_paths(json.loads(line))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_opsec_sentinel_fails_verification(tmp_path: Path) -> None:
     """Verify that injecting a private host path sentinel causes immediate failure even with matching hash."""
     tampered_ds = tmp_path / "opsec_dataset.jsonl"
@@ -484,6 +545,10 @@ def test_clopper_pearson_exact_calculation() -> None:
         exact_clopper_pearson_upper(601, 600, 0.95)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_missing_detached_sha256_fails_verification(tmp_path: Path) -> None:
     """Verify that verify_pilot_canary fails closed if detached .sha256 is missing."""
     rcp = tmp_path / "receipt_no_sha.json"
@@ -501,6 +566,10 @@ def test_missing_detached_sha256_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_detached_sha256_fails_verification(tmp_path: Path) -> None:
     """Verify that tampering with detached .sha256 fails verification."""
     rcp = tmp_path / "receipt_bad_sha.json"
@@ -517,6 +586,10 @@ def test_tampered_detached_sha256_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_record_count_fails_verification(tmp_path: Path) -> None:
     """Verify that tampering with receipt record_count fails verification."""
     rcp = tmp_path / "receipt_bad_count.json"
@@ -533,6 +606,10 @@ def test_tampered_record_count_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_loss_reduction_pct_fails_verification(tmp_path: Path) -> None:
     """Verify that inconsistent loss reduction percentage fails verification."""
     rcp = tmp_path / "receipt_bad_reduction.json"
@@ -549,6 +626,10 @@ def test_tampered_loss_reduction_pct_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_eval_case_prediction_fails_verification(tmp_path: Path) -> None:
     """Verify that forged model prediction or inconsistent flags in eval cases fail verification."""
     tampered_eval = tmp_path / "tampered_eval.jsonl"
@@ -573,6 +654,10 @@ def test_tampered_eval_case_prediction_fails_verification(tmp_path: Path) -> Non
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl",
+)
 def test_replay_conversation_deep_validation(tmp_path: Path) -> None:
     """Verify deep schema validation on replay buffer conversations (empty text, mismatch with top-level)."""
     tampered_replay = tmp_path / "bad_conv_replay.jsonl"
@@ -596,6 +681,10 @@ def test_replay_conversation_deep_validation(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl",
+)
 def test_replay_partition_firewall_rejection(tmp_path: Path) -> None:
     """Verify that held-out partition firewall catches leaks in replay records."""
     tampered_replay = tmp_path / "heldout_leak_replay.jsonl"
@@ -620,25 +709,38 @@ def test_replay_partition_firewall_rejection(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_query_embedded_in_heldout_context_fails_firewall(tmp_path: Path) -> None:
     """Verify bidirectional context firewall detects training queries embedded in longer held-out contexts."""
     synthetic_heldout = tmp_path / "synthetic_heldout.jsonl"
     synthetic_heldout.write_text(
-        json.dumps({
-            "target_term": "дезінформація",
-            "case_type": "CORRECT",
-            "input_text": "Це дуже довгий контекст із посібника, де міститься фрагмент: "
-                          "Відредагуйте речення (якщо є помилка): «У цьому досліді ключову роль відіграє нейтрон». "
-                          "Який продовжується далі багатьма словами.",
-        }) + "\n",
+        json.dumps(
+            {
+                "target_term": "дезінформація",
+                "case_type": "CORRECT",
+                "input_text": "Це дуже довгий контекст із посібника, де міститься фрагмент: "
+                "Відредагуйте речення (якщо є помилка): «У цьому досліді ключову роль відіграє нейтрон». "
+                "Який продовжується далі багатьма словами.",
+            }
+        )
+        + "\n",
         encoding="utf-8",
     )
     records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
-    replay_records = [json.loads(line) for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    replay_records = [
+        json.loads(line) for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line
+    ]
     with pytest.raises(ValueError, match="Query embedded inside held-out context"):
         verify_pilot_canary_partition_firewall(records, replay_records, synthetic_heldout)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_eval_prompt_diversity() -> None:
     """Verify empirical eval cases have 100% distinct prompts (200 calque, 600 clean control, 100 NLP)."""
     cases = [json.loads(line) for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -657,6 +759,7 @@ def test_stem_preserves_vesum_fidelity() -> None:
     if not DEFAULT_VESUM_DB.exists():
         pytest.skip("VESUM db not present in test environment")
     import sqlite3
+
     try:
         conn = sqlite3.connect(f"file:{DEFAULT_VESUM_DB.resolve()}?mode=ro", uri=True)
     except sqlite3.OperationalError:
@@ -684,7 +787,9 @@ def test_stem_preserves_vesum_fidelity() -> None:
         assert db_cnt == cnt, f"Lemma {lemma} count mismatch: recorded {cnt} vs DB {db_cnt}"
 
     conn.close()
-    assert len(form_counts) >= 5, f"Expected non-hardcoded distinct form counts across STEM terms, got {len(form_counts)}"
+    assert len(form_counts) >= 5, (
+        f"Expected non-hardcoded distinct form counts across STEM terms, got {len(form_counts)}"
+    )
 
 
 def test_adversarial_calque_scorer() -> None:
@@ -732,9 +837,11 @@ def test_adversarial_safety_scorer() -> None:
     assert score_safety_prediction(term, sent, "У цьому фізичному досліді все правильно.") == (True, False, 0.0)
 
     # 3. Reject false error flags applied to target term
-    assert score_safety_prediction(
-        term, sent, f"Помилково: термін «{term}» є русизмом і його слід замінити."
-    ) == (True, False, 0.0)
+    assert score_safety_prediction(term, sent, f"Помилково: термін «{term}» є русизмом і його слід замінити.") == (
+        True,
+        False,
+        0.0,
+    )
 
     # 4. Reject drastic rewrite (<40% words preserved)
     assert score_safety_prediction(
@@ -772,6 +879,10 @@ def test_adversarial_nlp_scorer() -> None:
     assert score_nlp_prediction(task_id, "Д", "Д") == (True, 1.0)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_training_log.jsonl",
+)
 def test_training_log_deep_verification() -> None:
     """Verify training log step sequence, loss convergence (<0.85), and learning rate schedule."""
     steps = [json.loads(line) for line in DEFAULT_TRAINING_LOG_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -793,6 +904,10 @@ def test_training_log_deep_verification() -> None:
     assert reduction > 75.0, f"Loss reduction {reduction:.2f}% is below 75%"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_training_log.jsonl",
+)
 def test_tampered_training_log_fails_verification(tmp_path: Path) -> None:
     """Verify that tampering with training log steps or loss fails verification."""
     tampered_log = tmp_path / "tampered_training_log.jsonl"
@@ -858,18 +973,14 @@ def test_adversarial_safety_scorer_deleted_term_in_stalo() -> None:
     assert sc == 0.0
 
     # 2. Prediction under 'Відредаговане речення:' deletes term
-    vidred_pred = (
-        "Потрібно покращити стиль. Відредаговане речення: «Студенти досліджують у сучасній лабораторії»."
-    )
+    vidred_pred = "Потрібно покращити стиль. Відредаговане речення: «Студенти досліджують у сучасній лабораторії»."
     harm2, passed2, sc2 = score_safety_prediction(term, orig, vidred_pred)
     assert harm2 is True
     assert passed2 is False
     assert sc2 == 0.0
 
     # 3. Prediction under 'Виправлено:' deletes term
-    vypravleno_pred = (
-        "Виправлено: Студенти проводять досліди у сучасній лабораторії."
-    )
+    vypravleno_pred = "Виправлено: Студенти проводять досліди у сучасній лабораторії."
     harm3, passed3, sc3 = score_safety_prediction(term, orig, vypravleno_pred)
     assert harm3 is True
     assert passed3 is False
@@ -897,10 +1008,20 @@ def test_adversarial_nlp_scorer_all_options_and_nonanswers() -> None:
     assert score_nlp_prediction(task_id, "Правильна відповідь: А, Б, В", "А") == (False, 0.0)
 
     # 5. Genuine unambiguous single answers must pass
-    assert score_nlp_prediction(task_id, "Правильна відповідь: Б.\nАналіз: варіант А має помилку...", "Б") == (True, 1.0)
-    assert score_nlp_prediction(task_id, "Варіант А неправильний, варіант В також. Правильна відповідь: Б.", "Б") == (True, 1.0)
+    assert score_nlp_prediction(task_id, "Правильна відповідь: Б.\nАналіз: варіант А має помилку...", "Б") == (
+        True,
+        1.0,
+    )
+    assert score_nlp_prediction(task_id, "Варіант А неправильний, варіант В також. Правильна відповідь: Б.", "Б") == (
+        True,
+        1.0,
+    )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_nlp_all_options_fails_verification(tmp_path: Path) -> None:
     """Verify that replacing passing NLP predictions with all-options string fails verify_pilot_canary (Codex R4 attack)."""
     tampered_cases_path = tmp_path / "tampered_eval_cases.jsonl"
@@ -955,6 +1076,10 @@ def test_adversarial_safety_commentary_bypass_rejected() -> None:
     assert sc == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_safety_commentary_deletion_fails_verification(tmp_path: Path) -> None:
     """Verify that applying safety commentary deletion to eval cases fails verify_pilot_canary (Codex R5 attack)."""
     tampered_cases_path = tmp_path / "tampered_safety_eval_cases.jsonl"
@@ -1016,6 +1141,10 @@ def test_adversarial_nlp_contradictory_declarations_rejected() -> None:
     assert score_nlp_prediction("task_contradict", contradictory_pred, "Б") == (False, 0.0)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_training_log.jsonl",
+)
 def test_stripped_training_log_provenance_fails_verification(tmp_path: Path) -> None:
     """Verify that removing provenance fields from training log fails verify_pilot_canary (Codex R5 finding 1)."""
     tampered_log = tmp_path / "stripped_training_log.jsonl"
@@ -1042,6 +1171,10 @@ def test_stripped_training_log_provenance_fails_verification(tmp_path: Path) -> 
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_stripped_eval_cases_provenance_fails_verification(tmp_path: Path) -> None:
     """Verify that removing provenance fields from eval cases fails verify_pilot_canary (Codex R5 finding 1)."""
     tampered_cases = tmp_path / "stripped_eval_cases.jsonl"
@@ -1068,6 +1201,10 @@ def test_stripped_eval_cases_provenance_fails_verification(tmp_path: Path) -> No
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_missing_receipt_provenance_fails_verification(tmp_path: Path) -> None:
     """Verify that removing provenance section from receipt fails verify_pilot_canary and schema (Codex R5 finding 1)."""
     tampered_rcp = tmp_path / "missing_provenance_receipt.json"
@@ -1086,6 +1223,10 @@ def test_missing_receipt_provenance_fails_verification(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_stripped_nlp_baseline_provenance_fails_verification(tmp_path: Path) -> None:
     """Verify that removing baseline_model_id or baseline_checkpoint from NLP cases fails verification (Codex R6 finding 1)."""
     tampered_cases = tmp_path / "stripped_nlp_cases.jsonl"
@@ -1134,10 +1275,7 @@ def test_adversarial_safety_inline_commentary_rejected() -> None:
 
 def test_adversarial_safety_sentence_deletion_in_stalo_rejected() -> None:
     """Verify Codex R6 finding 2 counterexample: sentence deletion / truncation under Стало:."""
-    pred = (
-        "Було: Студенти досліджують електрон у сучасній лабораторії.\n"
-        "Стало: електрон."
-    )
+    pred = "Було: Студенти досліджують електрон у сучасній лабораторії.\nСтало: електрон."
     harmful, passed, score = score_safety_prediction(
         target_term="електрон",
         original_sentence="Студенти досліджують електрон у сучасній лабораторії.",
@@ -1150,10 +1288,7 @@ def test_adversarial_safety_sentence_deletion_in_stalo_rejected() -> None:
 
 def test_adversarial_calque_long_qualifier_reversed_direction_rejected() -> None:
     """Verify Codex R6 finding 3 counterexample: reversed calque recommendation with multi-word qualifiers."""
-    pred = (
-        "«збігається» — дуже груба помилка.\n"
-        "«співпадає» — правильний варіант."
-    )
+    pred = "«збігається» — дуже груба помилка.\n«співпадає» — правильний варіант."
     eliminated, passed, score = score_calque_prediction(
         target_calque="співпадає",
         replacement="збігається",
@@ -1176,6 +1311,10 @@ def test_adversarial_nlp_bold_contradictory_declarations_rejected() -> None:
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_calque_reversed_template_fails_verification(tmp_path: Path) -> None:
     """Verify that replacing calque predictions with Codex R6 reversed template fails verification."""
     tampered_cases = tmp_path / "tampered_calque_cases.jsonl"
@@ -1206,6 +1345,10 @@ def test_tampered_calque_reversed_template_fails_verification(tmp_path: Path) ->
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_safety_inline_commentary_fails_verification(tmp_path: Path) -> None:
     """Verify that replacing safety predictions with inline commentary attack fails verification."""
     tampered_cases = tmp_path / "tampered_safety_cases.jsonl"
@@ -1236,6 +1379,10 @@ def test_tampered_safety_inline_commentary_fails_verification(tmp_path: Path) ->
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_nlp_bold_contradiction_fails_verification(tmp_path: Path) -> None:
     """Verify that injecting markdown bold contradictory declarations into NLP cases fails verification."""
     tampered_cases = tmp_path / "tampered_nlp_cases.jsonl"
@@ -1264,6 +1411,10 @@ def test_tampered_nlp_bold_contradiction_fails_verification(tmp_path: Path) -> N
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_adapter.safetensors",
+)
 def test_pilot_canary_adapter_safetensors_structure() -> None:
     """Verify that pilot canary adapter safetensors has 32 non-zero tensors and execution metadata."""
     import numpy as np
@@ -1295,6 +1446,10 @@ def test_pilot_canary_adapter_safetensors_structure() -> None:
         assert not np.allclose(first_b, mock_sample, atol=1e-5), "Adapter weights must not match mock sample"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_train_200.jsonl",
+)
 def test_tampered_training_dataset_without_log_update_fails_verification(tmp_path: Path) -> None:
     """Verify that modifying a training response in the dataset fails verification even if dataset hash is updated in receipt.
 
@@ -1341,6 +1496,10 @@ def test_adversarial_safety_bold_commentary_deletion_rejected() -> None:
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_safety_bold_commentary_fails_verification(tmp_path: Path) -> None:
     """Verify that mutating passing safety cases to hide deleted term in bold commentary fails verification.
 
@@ -1353,7 +1512,9 @@ def test_tampered_safety_bold_commentary_fails_verification(tmp_path: Path) -> N
     for idx, l in enumerate(lines):
         c = json.loads(l)
         if c.get("suite") == "clean_control_safety" and c.get("passed"):
-            c["model_prediction"] = f"Стало: Студенти досліджують у сучасній лабораторії. **Пояснення:** {c['target_term']}."
+            c["model_prediction"] = (
+                f"Стало: Студенти досліджують у сучасній лабораторії. **Пояснення:** {c['target_term']}."
+            )
             lines[idx] = json.dumps(c)
 
     tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -1389,6 +1550,10 @@ def test_adversarial_calque_error_on_replacement_with_prescribed_calque_rejected
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_calque_error_on_replacement_fails_verification(tmp_path: Path) -> None:
     """Verify that mutating passing calque cases to reversed recommendation template fails verification.
 
@@ -1433,6 +1598,10 @@ def test_adversarial_nlp_backtick_contradictory_declarations_rejected() -> None:
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_nlp_backtick_contradiction_fails_verification(tmp_path: Path) -> None:
     """Verify that mutating passing NLP cases to contain backtick contradictory declarations fails verification.
 
@@ -1465,6 +1634,10 @@ def test_tampered_nlp_backtick_contradiction_fails_verification(tmp_path: Path) 
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_training_log.jsonl",
+)
 def test_tampered_adapter_mock_random_weights_fails_verification(tmp_path: Path) -> None:
     """Verify that an adapter containing mock torch.randn weights fails verification.
 
@@ -1548,6 +1721,10 @@ def test_adversarial_safety_bold_dash_commentary_rejected() -> None:
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_safety_bold_dash_commentary_fails_verification(tmp_path: Path) -> None:
     """Verify that mutating clean control cases to use bold dash commentary concealing deletions fails verification.
 
@@ -1594,6 +1771,10 @@ def test_adversarial_calque_bold_replacement_error_rejected() -> None:
     assert score == 0.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_tampered_calque_bold_replacement_fails_verification(tmp_path: Path) -> None:
     """Verify that mutating passing calque cases to use bold replacement error fails verification.
 
@@ -1650,6 +1831,10 @@ def test_adversarial_nlp_selected_with_negated_alternative_accepted() -> None:
     assert score == 1.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_training_log.jsonl",
+)
 def test_adversarial_adapter_seed42_random_weights_rejected(tmp_path: Path) -> None:
     """Verify that replacing adapter weights with random generator weights (seed 42) fails verification.
 
@@ -1708,6 +1893,10 @@ def test_adversarial_adapter_seed42_random_weights_rejected(tmp_path: Path) -> N
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_adversarial_safety_triple_asterisk_commentary_rejected(tmp_path: Path) -> None:
     """Verify that commentary with triple emphasis (***Пояснення***) concealing deleted target term fails verification.
 
@@ -1746,6 +1935,10 @@ def test_adversarial_safety_triple_asterisk_commentary_rejected(tmp_path: Path) 
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_adversarial_calque_parenthesized_reversed_recommendation_rejected(tmp_path: Path) -> None:
     """Verify that reversed recommendation with parenthesized term and 'кажіть' is rejected.
 
@@ -1784,6 +1977,10 @@ def test_adversarial_calque_parenthesized_reversed_recommendation_rejected(tmp_p
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/canary/pilot_canary_eval_cases.jsonl",
+)
 def test_adversarial_nlp_negated_options_codex_r9(tmp_path: Path) -> None:
     """Verify that complex negated options ('Не слід обирати `А`', '`А` — неправильна відповідь') are rejected.
 

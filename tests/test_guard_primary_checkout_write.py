@@ -34,6 +34,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.test_guard_benign_corpus import BENIGN_COMMANDS
+
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -63,6 +65,124 @@ def _load_hook():
 
 
 hook = _load_hook()
+
+
+@pytest.mark.parametrize("command", BENIGN_COMMANDS)
+def test_issue_9102_benign_corpus_allowed_in_dispatch(repo: Path, command: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}}
+    result = _run(dispatch, payload)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("shape", [
+    "echo $((1 << EOF))\n{payload}\nEOF",
+    "((1 << EOF))\n{payload}\nEOF",
+    "echo ${x#<<EOF }\n{payload}\nEOF",
+    "let 'x=1<<EOF'\n{payload}\nEOF",
+    "true # <<EOF\n{payload}\nEOF",
+    ": <<EOF; \\\n{payload}\nnote\nEOF",
+    ": <<EOF\n$({payload})\nEOF",
+    ": <<EOF\n`{payload}`\nEOF",
+    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
+])
+def test_issue_9102_executable_payload_stays_visible(repo: Path, shape):
+    command = shape.replace("{payload}", "tee AGENTS.md")
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9102_real_let_heredoc_body_is_inert():
+    assert hook.bash_write_targets("let x=1<<EOF\ntee AGENTS.md\nEOF") == []
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert hook._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
+
+
+@pytest.mark.parametrize("opener,closer,quoted", [
+    ("<<'EOF'", "EOF", True),
+    ('<<"EOF"', "EOF", True),
+    ("<<EOF", "EOF", False),
+    ("<<-EOF", "\tEOF", False),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
+    assert hook._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
+    assert hook.bash_write_targets(f"cat {opener}\ntee AGENTS.md\n{closer}") == []
+    assert hook.bash_write_targets(f"cat {opener}\nnote\n{closer}\ntee AGENTS.md") == ["AGENTS.md"]
+
+
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_primary_write_visible(repo: Path, first):
+    command = f"{first}\ntee AGENTS.md\nEOF"
+    assert hook._heredoc_delimiters(first) == []
+    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9088_crlf_closer_keeps_primary_write_visible(repo: Path):
+    command = "cat <<EOF\r\nEOF\r\ntee AGENTS.md\nEOF"
+    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(repo: Path):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
+    assert hook.bash_write_targets(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_primary_write_visible(repo: Path, opener, closer):
+    command = f"cat {opener}\ntee AGENTS.md\n{closer}"
+    assert hook._heredoc_delimiters(f"cat {opener}") is None
+    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
+    assert hook.bash_write_targets(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(repo: Path):
+    command = "cat <<$'EOF'\ncat <<SAFE\ntee AGENTS.md\nSAFE\nEOF"
+    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 # ===========================================================================

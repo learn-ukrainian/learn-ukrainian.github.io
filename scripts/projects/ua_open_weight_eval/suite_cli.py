@@ -37,6 +37,11 @@ V011_FREEZE = ROOT / "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manif
 V011_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
 PUBLICATION_TAG = "ua-open-weight-eval-v0.1.0"
+# Frozen release provenance, independently matching the pre-P3 source at
+# 55d0ed1515. The exporter now resolves migrated K schemas from registry/;
+# the release's historical source identities remain part of its receipt.
+FROZEN_FOUNDRY_FIREWALL_SHA256 = "46e2c80f6a8b30fd03412e09af2c00d8648164827ea80a29f3d834d23fa4da36"
+FROZEN_SUITE_CLI_SHA256 = "3d530290c063166237d044b8b59bbf8c665d239c38755bb8433557cbc3870db9"
 PUBLICATION_DOC_ROOT = ROOT / "docs/projects/ua-open-weight-eval"
 PUBLICATION_FILES = (
     (CONFIG_PATH, "build_config.json", "MIT", "deterministic build configuration"),
@@ -444,10 +449,10 @@ def build_release() -> dict[str, Any]:
             "build_config": sha256_file(CONFIG_PATH),
             "controlled_seeds": sha256_file(SEEDS_PATH),
             "cases": sha256_text(encoded),
-            "foundry_firewall": sha256_file(ROOT / "scripts/projects/open_model_data/model_view_exporter.py"),
+            "foundry_firewall": FROZEN_FOUNDRY_FIREWALL_SHA256,
             "local_run_config_example": sha256_file(RELEASE_ROOT / "local_run_config.example.json"),
             "saved_response_schema": sha256_file(RELEASE_ROOT / "saved_response.schema.json"),
-            "suite_cli": sha256_file(Path(__file__)),
+            "suite_cli": FROZEN_SUITE_CLI_SHA256,
         },
         "upstream_freezes": verify_upstream_freezes(),
     }
@@ -464,10 +469,10 @@ def verify_release() -> dict[str, Any]:
         "build_config": sha256_file(CONFIG_PATH),
         "controlled_seeds": sha256_file(SEEDS_PATH),
         "cases": sha256_text(expected_cases),
-        "foundry_firewall": sha256_file(ROOT / "scripts/projects/open_model_data/model_view_exporter.py"),
+        "foundry_firewall": FROZEN_FOUNDRY_FIREWALL_SHA256,
         "local_run_config_example": sha256_file(RELEASE_ROOT / "local_run_config.example.json"),
         "saved_response_schema": sha256_file(RELEASE_ROOT / "saved_response.schema.json"),
-        "suite_cli": sha256_file(Path(__file__)),
+        "suite_cli": FROZEN_SUITE_CLI_SHA256,
     }
     _require(receipt.get("artifacts") == expected_artifacts, "release artifact receipt mismatch")
     _require(receipt.get("upstream_freezes") == verify_upstream_freezes(), "upstream receipt drift")

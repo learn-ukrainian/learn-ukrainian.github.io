@@ -123,6 +123,11 @@ _SESSION_COLUMNS = {
 }
 
 
+def _monotonic() -> float:
+    """Read the inbox clock without exposing the process-wide time module to tests."""
+    return time.monotonic()
+
+
 def _with_discussion_readonly_tool_config(
     tool_config: dict | None,
     *,
@@ -914,13 +919,13 @@ def run_inbox(
     replies_total = 0
     threads_total = 0
     abort_reason: str | None = None
-    start_time = time.monotonic()
+    start_time = _monotonic()
 
     while True:
         if (
             stop_after_seconds is not None
             and threads_total > 0
-            and time.monotonic() - start_time >= stop_after_seconds
+            and _monotonic() - start_time >= stop_after_seconds
         ):
             break
 

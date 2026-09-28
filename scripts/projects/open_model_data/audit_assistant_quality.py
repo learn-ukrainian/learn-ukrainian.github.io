@@ -27,8 +27,15 @@ import subprocess
 import sys
 from pathlib import Path
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v06_general_assistant"
+INSPECTION_150 = resolve_open_model_path(RELEASE_DIR / "SAMPLE_INSPECTION_150.md")
+INSPECTION_50 = resolve_open_model_path(RELEASE_DIR / "SAMPLE_INSPECTION_50.md")
 
 
 def resolve_data_path(rel_path: str) -> Path:
@@ -57,15 +64,56 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 
 DISALLOWED_VESUM_TAGS = (":alt", ":subst", ":nonstd", ":arch", ":bad", ":rare", ":dial", ":slang")
 GENITIVE_GOVERNING_PREPOSITIONS = {
-    "до", "від", "з", "із", "зі", "для", "без", "після", "біля", "навколо",
-    "серед", "проти", "замість", "внаслідок", "щодо", "поза", "поблизу", "крім",
-    "окрім", "завдяки"
+    "до",
+    "від",
+    "з",
+    "із",
+    "зі",
+    "для",
+    "без",
+    "після",
+    "біля",
+    "навколо",
+    "серед",
+    "проти",
+    "замість",
+    "внаслідок",
+    "щодо",
+    "поза",
+    "поблизу",
+    "крім",
+    "окрім",
+    "завдяки",
 }
 GENITIVE_QUANTIFIERS = {"один", "одна", "одне", "кілька", "декілька", "багато", "мало", "чимало"}
 
 ABBREVIATIONS: set[str] = {
-    "млрд", "млн", "тис", "см", "мм", "км", "кг", "мг", "га", "грн", "кв", "куб", "коп",
-    "дм", "л", "мл", "хв", "сек", "год", "стор", "табл", "мал", "рис", "р", "pp", "ст",
+    "млрд",
+    "млн",
+    "тис",
+    "см",
+    "мм",
+    "км",
+    "кг",
+    "мг",
+    "га",
+    "грн",
+    "кв",
+    "куб",
+    "коп",
+    "дм",
+    "л",
+    "мл",
+    "хв",
+    "сек",
+    "год",
+    "стор",
+    "табл",
+    "мал",
+    "рис",
+    "р",
+    "pp",
+    "ст",
 }
 
 _TEXTBOOK_LEMMA_FREQ: dict[str, int] | None = None
@@ -174,90 +222,510 @@ def normalize_ukrainian_apostrophes(text: str) -> str:
 
 # General textbook & school metalanguage stopwords (excluding authentic scientific domain terms)
 AUDIT_STOPWORD_TERMS = {
-    "клас", "класу", "класи", "класів", "класом", "математика", "математики", "математику",
-    "підручник", "підручника", "підручнику", "розділ", "розділу", "розділі",
-    "тема", "теми", "тему", "темі", "сторінка", "сторінки", "сторінку",
-    "учень", "учня", "учні", "учнів", "учням", "учениця", "учениці",
-    "вчитель", "вчителя", "вчителька", "вчительки",
-    "завдання", "завдань", "вправа", "вправи", "вправу",
-    "україна", "україни", "українська", "української", "українською",
-    "слово", "слова", "словом", "мова", "мови", "мову", "мовою",
-    "предмет", "предмета", "предмету", "робота", "роботи", "роботу", "роботі", "роботою",
-    "параграф", "параграфа", "частина", "частини", "частину",
-    "питання", "відповідь", "відповіді", "відповіддю",
-    "школа", "школи", "школу", "курс", "курсу", "курсі",
-    "урок", "уроку", "уроці", "поняття", "приклад", "прикладу", "значення",
-    "автор", "автори", "авторів", "підсумок", "підсумки", "правило", "правила",
-    "число", "числа", "чисел", "числу", "числом", "член", "члена", "членів",
-    "треба", "можна", "слід", "бути", "мати", "стати", "дати", "буде", "було",
-    "випадок", "випадку", "випадки", "вигляд", "вигляду", "спосіб", "способу", "способом",
-    "відміна", "відміну", "умова", "умови", "умовою", "початок", "початку",
-    "кінець", "кінця", "кінцем", "допомога", "допомогою", "основа", "основи", "основою",
-    "зв'язок", "зв'язку", "наслідок", "наслідку", "порядок", "порядку",
-    "запис", "запису", "записом", "форма", "форми", "формою", "тип", "типу", "типом",
-    "вид", "виду", "видом", "група", "групи", "групою", "рівень", "рівня", "рівнем",
-    "текст", "тексту", "рядок", "рядка", "знак", "знака", "знаком", "знаки",
-    "ознака", "ознаки", "ознакою",
-    "справа", "справи", "справу", "справі", "справою",
-    "створення", "створенні", "створенням",
-    "художник", "художника", "художники", "художників",
-    "людина", "людини", "людині", "людиною", "люди", "людей", "людям", "людьми",
-    "час", "часу", "часом", "часі",
-    "використання", "використанні", "використанням",
-    "сукупність", "сукупності", "сукупністю",
-    "можливість", "можливості", "можливістю",
-    "розгляд", "розгляду", "діяльність",
-    "процес", "процесу", "процеси", "процесів",
-    "явище", "явища", "явищ", "явищем",
-    "складова", "властивість", "властивості", "властивостей",
-    "особливість", "факт", "інформація", "дані", "потреба", "мета", "ціль",
-    "напрям", "напрямок", "сторона", "точка", "місце", "край", "стан", "роль",
-    "сутність", "середина", "межа", "розмір", "кількість", "якість",
-    "величина", "величини", "величину", "величиною",
-    "безліч", "безлічі", "безліччю", "кількості",
-    "метод", "методи", "методів", "метода", "двері", "дверей", "дверима",
-    "досягнення", "історія", "людство",
-    "прийом", "прийому", "прийоми", "п'ята", "п'яти",
-    "життя", "світ", "світу", "рік", "року", "роки", "років",
-    "день", "дня", "дні", "днів", "протилежне", "живе", "живий", "живим",
-    "житель", "жителі", "жителя", "жителів", "прихильник", "прихильники", "прихильника",
-    "богиня", "богині", "богинею", "божество", "божества", "божеств", "бог", "бога", "боги", "богів", "міф", "міфи", "міфів", "міфологія",
-    "давньоримський", "давньоримська", "давньоримське", "давньоримські",
-    "основний", "основна", "основне", "основні", "основного", "основній", "основних", "основним",
-    "численний", "численна", "численне", "численні", "численних", "численними", "численним",
-    "непростий", "непроста", "непросте", "непрості", "непростих", "непростим",
-    "простий", "проста", "просте", "прості", "простих", "простим",
-    "складний", "складна", "складне", "складні", "складних", "складним",
-    "різний", "різна", "різне", "різні", "різних", "різними", "різним",
-    "новий", "нова", "нове", "нові", "нових", "новим",
-    "старий", "стара", "старе", "старі", "старих",
-    "важливий", "важлива", "важливе", "важливі", "важливих", "важливим",
-    "головний", "головна", "головне", "головні", "головних", "головним",
-    "великий", "велика", "велике", "великі", "великих", "великим", "великою",
-    "малий", "мала", "мале", "малі", "малих", "малим", "малою",
-    "середній", "середня", "середнє", "середні", "середніх",
-    "високий", "висока", "високе", "високі", "високих",
-    "низький", "низька", "низьке", "низькі", "низьких",
-    "певний", "певна", "певне", "певні", "певного", "певній", "певних", "певним",
-    "деякий", "деяка", "деяке", "деякі", "деяких",
-    "окремий", "окрема", "окреме", "окремі", "окремих", "окремим",
-    "загальний", "загальна", "загальне", "загальні", "загальних", "загальним",
-    "кожен", "кожна", "кожне", "кожні", "кожного", "кожній", "кожним",
-    "всякий", "інший", "інша", "інше", "інші", "інших", "іншим",
-    "подібний", "подібна", "подібне", "подібні", "подібних",
-    "однаковий", "однакова", "однакове", "однакові", "однакових",
-    "перший", "другий", "третій", "четвертий", "п'ятий",
-    "наступний", "попередній", "подальший",
-    "цілий", "повний", "правильний", "вільний", "довгий", "короткий", "прямий",
-    "відомий", "відома", "відоме", "відомі", "відомих", "відомим", "невідомий",
-    "можливий", "неможливий", "необхідний", "необхідна", "необхідне", "необхідні", "необхідних",
-    "єдиний", "сучасний", "давній", "минулий", "майбутній",
-    "шкільний", "учнівський", "домашній", "класний", "навчальний",
-    "кращий", "гірший", "найкращий", "найбільший", "найменший",
-    "фізичний", "фізична", "фізичне", "фізичні", "фізичних", "фізичним",
-    "питомий", "питома", "питоме", "питомі", "питомих",
-    "майбутнє", "середа", "раз", "точок",
-    "мор", "зв'язка", "кода", "кіл", "риск", "появ", "колон", "пар", "пол", "крок", "різка",
+    "клас",
+    "класу",
+    "класи",
+    "класів",
+    "класом",
+    "математика",
+    "математики",
+    "математику",
+    "підручник",
+    "підручника",
+    "підручнику",
+    "розділ",
+    "розділу",
+    "розділі",
+    "тема",
+    "теми",
+    "тему",
+    "темі",
+    "сторінка",
+    "сторінки",
+    "сторінку",
+    "учень",
+    "учня",
+    "учні",
+    "учнів",
+    "учням",
+    "учениця",
+    "учениці",
+    "вчитель",
+    "вчителя",
+    "вчителька",
+    "вчительки",
+    "завдання",
+    "завдань",
+    "вправа",
+    "вправи",
+    "вправу",
+    "україна",
+    "україни",
+    "українська",
+    "української",
+    "українською",
+    "слово",
+    "слова",
+    "словом",
+    "мова",
+    "мови",
+    "мову",
+    "мовою",
+    "предмет",
+    "предмета",
+    "предмету",
+    "робота",
+    "роботи",
+    "роботу",
+    "роботі",
+    "роботою",
+    "параграф",
+    "параграфа",
+    "частина",
+    "частини",
+    "частину",
+    "питання",
+    "відповідь",
+    "відповіді",
+    "відповіддю",
+    "школа",
+    "школи",
+    "школу",
+    "курс",
+    "курсу",
+    "курсі",
+    "урок",
+    "уроку",
+    "уроці",
+    "поняття",
+    "приклад",
+    "прикладу",
+    "значення",
+    "автор",
+    "автори",
+    "авторів",
+    "підсумок",
+    "підсумки",
+    "правило",
+    "правила",
+    "число",
+    "числа",
+    "чисел",
+    "числу",
+    "числом",
+    "член",
+    "члена",
+    "членів",
+    "треба",
+    "можна",
+    "слід",
+    "бути",
+    "мати",
+    "стати",
+    "дати",
+    "буде",
+    "було",
+    "випадок",
+    "випадку",
+    "випадки",
+    "вигляд",
+    "вигляду",
+    "спосіб",
+    "способу",
+    "способом",
+    "відміна",
+    "відміну",
+    "умова",
+    "умови",
+    "умовою",
+    "початок",
+    "початку",
+    "кінець",
+    "кінця",
+    "кінцем",
+    "допомога",
+    "допомогою",
+    "основа",
+    "основи",
+    "основою",
+    "зв'язок",
+    "зв'язку",
+    "наслідок",
+    "наслідку",
+    "порядок",
+    "порядку",
+    "запис",
+    "запису",
+    "записом",
+    "форма",
+    "форми",
+    "формою",
+    "тип",
+    "типу",
+    "типом",
+    "вид",
+    "виду",
+    "видом",
+    "група",
+    "групи",
+    "групою",
+    "рівень",
+    "рівня",
+    "рівнем",
+    "текст",
+    "тексту",
+    "рядок",
+    "рядка",
+    "знак",
+    "знака",
+    "знаком",
+    "знаки",
+    "ознака",
+    "ознаки",
+    "ознакою",
+    "справа",
+    "справи",
+    "справу",
+    "справі",
+    "справою",
+    "створення",
+    "створенні",
+    "створенням",
+    "художник",
+    "художника",
+    "художники",
+    "художників",
+    "людина",
+    "людини",
+    "людині",
+    "людиною",
+    "люди",
+    "людей",
+    "людям",
+    "людьми",
+    "час",
+    "часу",
+    "часом",
+    "часі",
+    "використання",
+    "використанні",
+    "використанням",
+    "сукупність",
+    "сукупності",
+    "сукупністю",
+    "можливість",
+    "можливості",
+    "можливістю",
+    "розгляд",
+    "розгляду",
+    "діяльність",
+    "процес",
+    "процесу",
+    "процеси",
+    "процесів",
+    "явище",
+    "явища",
+    "явищ",
+    "явищем",
+    "складова",
+    "властивість",
+    "властивості",
+    "властивостей",
+    "особливість",
+    "факт",
+    "інформація",
+    "дані",
+    "потреба",
+    "мета",
+    "ціль",
+    "напрям",
+    "напрямок",
+    "сторона",
+    "точка",
+    "місце",
+    "край",
+    "стан",
+    "роль",
+    "сутність",
+    "середина",
+    "межа",
+    "розмір",
+    "кількість",
+    "якість",
+    "величина",
+    "величини",
+    "величину",
+    "величиною",
+    "безліч",
+    "безлічі",
+    "безліччю",
+    "кількості",
+    "метод",
+    "методи",
+    "методів",
+    "метода",
+    "двері",
+    "дверей",
+    "дверима",
+    "досягнення",
+    "історія",
+    "людство",
+    "прийом",
+    "прийому",
+    "прийоми",
+    "п'ята",
+    "п'яти",
+    "життя",
+    "світ",
+    "світу",
+    "рік",
+    "року",
+    "роки",
+    "років",
+    "день",
+    "дня",
+    "дні",
+    "днів",
+    "протилежне",
+    "живе",
+    "живий",
+    "живим",
+    "житель",
+    "жителі",
+    "жителя",
+    "жителів",
+    "прихильник",
+    "прихильники",
+    "прихильника",
+    "богиня",
+    "богині",
+    "богинею",
+    "божество",
+    "божества",
+    "божеств",
+    "бог",
+    "бога",
+    "боги",
+    "богів",
+    "міф",
+    "міфи",
+    "міфів",
+    "міфологія",
+    "давньоримський",
+    "давньоримська",
+    "давньоримське",
+    "давньоримські",
+    "основний",
+    "основна",
+    "основне",
+    "основні",
+    "основного",
+    "основній",
+    "основних",
+    "основним",
+    "численний",
+    "численна",
+    "численне",
+    "численні",
+    "численних",
+    "численними",
+    "численним",
+    "непростий",
+    "непроста",
+    "непросте",
+    "непрості",
+    "непростих",
+    "непростим",
+    "простий",
+    "проста",
+    "просте",
+    "прості",
+    "простих",
+    "простим",
+    "складний",
+    "складна",
+    "складне",
+    "складні",
+    "складних",
+    "складним",
+    "різний",
+    "різна",
+    "різне",
+    "різні",
+    "різних",
+    "різними",
+    "різним",
+    "новий",
+    "нова",
+    "нове",
+    "нові",
+    "нових",
+    "новим",
+    "старий",
+    "стара",
+    "старе",
+    "старі",
+    "старих",
+    "важливий",
+    "важлива",
+    "важливе",
+    "важливі",
+    "важливих",
+    "важливим",
+    "головний",
+    "головна",
+    "головне",
+    "головні",
+    "головних",
+    "головним",
+    "великий",
+    "велика",
+    "велике",
+    "великі",
+    "великих",
+    "великим",
+    "великою",
+    "малий",
+    "мала",
+    "мале",
+    "малі",
+    "малих",
+    "малим",
+    "малою",
+    "середній",
+    "середня",
+    "середнє",
+    "середні",
+    "середніх",
+    "високий",
+    "висока",
+    "високе",
+    "високі",
+    "високих",
+    "низький",
+    "низька",
+    "низьке",
+    "низькі",
+    "низьких",
+    "певний",
+    "певна",
+    "певне",
+    "певні",
+    "певного",
+    "певній",
+    "певних",
+    "певним",
+    "деякий",
+    "деяка",
+    "деяке",
+    "деякі",
+    "деяких",
+    "окремий",
+    "окрема",
+    "окреме",
+    "окремі",
+    "окремих",
+    "окремим",
+    "загальний",
+    "загальна",
+    "загальне",
+    "загальні",
+    "загальних",
+    "загальним",
+    "кожен",
+    "кожна",
+    "кожне",
+    "кожні",
+    "кожного",
+    "кожній",
+    "кожним",
+    "всякий",
+    "інший",
+    "інша",
+    "інше",
+    "інші",
+    "інших",
+    "іншим",
+    "подібний",
+    "подібна",
+    "подібне",
+    "подібні",
+    "подібних",
+    "однаковий",
+    "однакова",
+    "однакове",
+    "однакові",
+    "однакових",
+    "перший",
+    "другий",
+    "третій",
+    "четвертий",
+    "п'ятий",
+    "наступний",
+    "попередній",
+    "подальший",
+    "цілий",
+    "повний",
+    "правильний",
+    "вільний",
+    "довгий",
+    "короткий",
+    "прямий",
+    "відомий",
+    "відома",
+    "відоме",
+    "відомі",
+    "відомих",
+    "відомим",
+    "невідомий",
+    "можливий",
+    "неможливий",
+    "необхідний",
+    "необхідна",
+    "необхідне",
+    "необхідні",
+    "необхідних",
+    "єдиний",
+    "сучасний",
+    "давній",
+    "минулий",
+    "майбутній",
+    "шкільний",
+    "учнівський",
+    "домашній",
+    "класний",
+    "навчальний",
+    "кращий",
+    "гірший",
+    "найкращий",
+    "найбільший",
+    "найменший",
+    "фізичний",
+    "фізична",
+    "фізичне",
+    "фізичні",
+    "фізичних",
+    "фізичним",
+    "питомий",
+    "питома",
+    "питоме",
+    "питомі",
+    "питомих",
+    "майбутнє",
+    "середа",
+    "раз",
+    "точок",
+    "мор",
+    "зв'язка",
+    "кода",
+    "кіл",
+    "риск",
+    "появ",
+    "колон",
+    "пар",
+    "пол",
+    "крок",
+    "різка",
 }
 
 
@@ -375,7 +843,11 @@ def audit_anaphora_and_starters(snippet: str) -> bool:
         return False
 
     # Conversational knowledge reminders
-    if re.search(r"\b(?:ви\s+вже\s+(?:дізналися|знаєте|вивчили|чули|бачили)|ми\s+вже\s+(?:дізналися|знаємо|вивчили|розглянули))\b", s, re.IGNORECASE):
+    if re.search(
+        r"\b(?:ви\s+вже\s+(?:дізналися|знаєте|вивчили|чули|бачили)|ми\s+вже\s+(?:дізналися|знаємо|вивчили|розглянули))\b",
+        s,
+        re.IGNORECASE,
+    ):
         return False
 
     # Mid-sentence anaphora
@@ -476,7 +948,17 @@ def is_appositive_double_dash(snippet: str, cur: sqlite3.Cursor) -> bool:
         if is_indicative_verb:
             return True
         is_modifier = any(r[1] in ("adv", "part", "conj") for r in info) or w in (
-            "не", "теж", "також", "вже", "ще", "і", "й", "але", "проте", "однак", "швидко"
+            "не",
+            "теж",
+            "також",
+            "вже",
+            "ще",
+            "і",
+            "й",
+            "але",
+            "проте",
+            "однак",
+            "швидко",
         )
         if not is_modifier:
             break
@@ -566,7 +1048,9 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         re.IGNORECASE,
     ):
         return False
-    if re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", s, re.IGNORECASE) or re.search(r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", s, re.IGNORECASE):
+    if re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", s, re.IGNORECASE) or re.search(
+        r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", s, re.IGNORECASE
+    ):
         return False
 
     def _get_std_lemmas(phrase: str) -> set[str]:
@@ -582,13 +1066,32 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         if not target_lemmas:
             return False
         meta_terms = {
-            "поняття", "термін", "явище", "процес", "величина", "графік", "властивість", "закон", "правило",
-            "два", "дві", "три", "чотири", "п'ять", "один", "одна", "одне", "кілька", "деякі",
+            "поняття",
+            "термін",
+            "явище",
+            "процес",
+            "величина",
+            "графік",
+            "властивість",
+            "закон",
+            "правило",
+            "два",
+            "дві",
+            "три",
+            "чотири",
+            "п'ять",
+            "один",
+            "одна",
+            "одне",
+            "кілька",
+            "деякі",
         }
         cleaned = target_lemmas - meta_terms
         if not cleaned:
             return False
-        return bool(all(any(lem in cleaned for lem in word_lemmas) for word_lemmas in cw_lemmas) and cleaned.issubset(c_lemmas))
+        return bool(
+            all(any(lem in cleaned for lem in word_lemmas) for word_lemmas in cw_lemmas) and cleaned.issubset(c_lemmas)
+        )
 
     # 1. Copula: Subject [—–-] це / [noun phrase]
     m_cop = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ\s'-]{3,}))", s)
@@ -607,17 +1110,40 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                 else:
                     cur.execute("SELECT tags, pos FROM forms_all WHERE word_form = ?", (first_w,))
                     first_rows = cur.fetchall()
-                    is_first_nom = any(r[1] in ("noun", "adj") and any(c in r[0] for c in (":v_naz", ":naz")) for r in first_rows)
+                    is_first_nom = any(
+                        r[1] in ("noun", "adj") and any(c in r[0] for c in (":v_naz", ":naz")) for r in first_rows
+                    )
                     if not is_first_nom:
                         subj = ""
                     elif any(r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz")) for r in first_rows):
                         has_nom_noun = True
                     else:
                         has_nom_noun = False
-                        prep_words = {"для", "від", "до", "з", "із", "зі", "на", "в", "у", "про", "за", "під", "над", "при", "без"}
+                        prep_words = {
+                            "для",
+                            "від",
+                            "до",
+                            "з",
+                            "із",
+                            "зі",
+                            "на",
+                            "в",
+                            "у",
+                            "про",
+                            "за",
+                            "під",
+                            "над",
+                            "при",
+                            "без",
+                        }
                         adj_cgns = {
-                            (next((p for p in r[0].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[0] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None))
-                            for r in first_rows if r[1] == "adj" and any(c in r[0] for c in (":v_naz", ":naz"))
+                            (
+                                next((p for p in r[0].split(":") if p.startswith("v_")), None),
+                                "p" if ":p:" in r[0] else "s",
+                                next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None),
+                            )
+                            for r in first_rows
+                            if r[1] == "adj" and any(c in r[0] for c in (":v_naz", ":naz"))
                         }
                         prev_w = ""
                         for w in words[1:]:
@@ -627,10 +1153,21 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                             cur.execute("SELECT tags, pos FROM forms_all WHERE word_form = ?", (w,))
                             w_rows = cur.fetchall()
                             noun_cgns = {
-                                (next((p for p in r[0].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[0] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None))
-                                for r in w_rows if r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz"))
+                                (
+                                    next((p for p in r[0].split(":") if p.startswith("v_")), None),
+                                    "p" if ":p:" in r[0] else "s",
+                                    next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None),
+                                )
+                                for r in w_rows
+                                if r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz"))
                             }
-                            if any(ac[0] == nc[0] and ac[1] == nc[1] and (ac[1] == "p" or ac[2] == nc[2] or ac[2] is None or nc[2] is None) for ac in adj_cgns for nc in noun_cgns):
+                            if any(
+                                ac[0] == nc[0]
+                                and ac[1] == nc[1]
+                                and (ac[1] == "p" or ac[2] == nc[2] or ac[2] is None or nc[2] is None)
+                                for ac in adj_cgns
+                                for nc in noun_cgns
+                            ):
                                 has_nom_noun = True
                                 break
                             prev_w = w
@@ -642,14 +1179,19 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                 return True
 
     # 2. X називається Y: strictly verify defined entity is not genus
-    m_naz = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", s)
+    m_naz = re.search(
+        r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+        s,
+    )
     if m_naz:
         before_phrase = m_naz.group(1).strip()
         after_phrase = m_naz.group(2).strip()
         first_w = before_phrase.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
         cur.execute("SELECT tags FROM forms_all WHERE word_form = ?", (first_w,))
         w_tags = [r[0] for r in cur.fetchall()]
-        is_before_oru = any("v_oru" in t or ":oru" in t for t in w_tags) and not any("v_naz" in t or ":naz" in t for t in w_tags)
+        is_before_oru = any("v_oru" in t or ":oru" in t for t in w_tags) and not any(
+            "v_naz" in t or ":naz" in t for t in w_tags
+        )
         if is_before_oru:
             after_lemmas = _get_std_lemmas(after_phrase)
             if _matches_concept(after_lemmas):
@@ -693,7 +1235,11 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                 return True
         else:
             combined_lemmas = _get_std_lemmas(before_phrase) | _get_std_lemmas(after_phrase)
-            if _matches_concept(_get_std_lemmas(after_phrase)) or _matches_concept(_get_std_lemmas(before_phrase)) or _matches_concept(combined_lemmas):
+            if (
+                _matches_concept(_get_std_lemmas(after_phrase))
+                or _matches_concept(_get_std_lemmas(before_phrase))
+                or _matches_concept(combined_lemmas)
+            ):
                 return True
 
     # 4. X є Y
@@ -713,9 +1259,21 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
 
     # Fallback strict whole-token containment in definitional sentence
     has_def_marker = bool(
-        re.search(r"\b(?:називають|називається|названо|визначається як|являє собою|під\s+[а-яіїєґ\s'-]+\s+розуміють)\b", s, re.IGNORECASE)
-        or re.search(r"\bє\s+(?:одним|однією|основним|системою|процесом|явищем|сукупністю|формою|частиною|результатом|величиною|правилом|числом|добутком|відношенням|наукою|[а-яіїєґ']+(?:ою|им|ем|ом|єю|ією))\b", s, re.IGNORECASE)
-        or re.search(r"[—–-]\s*(?:це\b|(?:один|одне|одна|вид|процес|явище|сукупність|здатність|прилад|стан|властивість|наука|розділ|форма|частина|метод|галузь|поняття|особа|величина|значення|документ|тип|період|система|суміш|речовина|тіло|сполука|елемент|клітина|структура|функція|число|вираз|фігура|відрізок|точка|пряма|кут|рівняння|вектор|орган|тканина|сфера|діяльність|дія|відношення|правило|закон|принцип|комплекс|утворення)\b)", s, re.IGNORECASE)
+        re.search(
+            r"\b(?:називають|називається|названо|визначається як|являє собою|під\s+[а-яіїєґ\s'-]+\s+розуміють)\b",
+            s,
+            re.IGNORECASE,
+        )
+        or re.search(
+            r"\bє\s+(?:одним|однією|основним|системою|процесом|явищем|сукупністю|формою|частиною|результатом|величиною|правилом|числом|добутком|відношенням|наукою|[а-яіїєґ']+(?:ою|им|ем|ом|єю|ією))\b",
+            s,
+            re.IGNORECASE,
+        )
+        or re.search(
+            r"[—–-]\s*(?:це\b|(?:один|одне|одна|вид|процес|явище|сукупність|здатність|прилад|стан|властивість|наука|розділ|форма|частина|метод|галузь|поняття|особа|величина|значення|документ|тип|період|система|суміш|речовина|тіло|сполука|елемент|клітина|структура|функція|число|вираз|фігура|відрізок|точка|пряма|кут|рівняння|вектор|орган|тканина|сфера|діяльність|дія|відношення|правило|закон|принцип|комплекс|утворення)\b)",
+            s,
+            re.IGNORECASE,
+        )
     )
     if not has_def_marker:
         return False
@@ -746,11 +1304,20 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
             snip_valid_lemmas.add(CANONICAL_HOMONYM_LEMMAS[tok_low])
             continue
 
-        cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ? OR word_form = ?", (tok, tok.capitalize()))
+        cur.execute(
+            "SELECT lemma, pos, tags FROM forms_all WHERE word_form = ? OR word_form = ?", (tok, tok.capitalize())
+        )
         raw_rows = cur.fetchall()
         std_rows = [r for r in raw_rows if not any(tag in r[2] for tag in DISALLOWED_VESUM_TAGS)]
         rows = std_rows if std_rows else raw_rows
-        noun_rows = [r for r in rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv", ":v_kly", ":kly"))]
+        noun_rows = [
+            r
+            for r in rows
+            if r[1] == "noun"
+            and not any(
+                p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv", ":v_kly", ":kly")
+            )
+        ]
         if not noun_rows:
             continue
 
@@ -759,18 +1326,26 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
 
         if prev_tok:
             prev_low = prev_tok.lower()
-            cur.execute("SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'adj'", (prev_low, prev_tok.capitalize()))
+            cur.execute(
+                "SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'adj'",
+                (prev_low, prev_tok.capitalize()),
+            )
             adj_tags = [r[0] for r in cur.fetchall()]
             if adj_tags:
+
                 def extract_cgn(tag: str):
                     parts = tag.split(":")
                     case = next((p for p in parts if p.startswith("v_")), None)
                     num = "p" if ":p:" in tag else "s"
                     return (case, num)
+
                 adj_cgns = {extract_cgn(t) for t in adj_tags}
                 matching_noun_rows = [r for r in noun_rows if extract_cgn(r[2]) in adj_cgns]
                 if matching_noun_rows:
-                    chosen_lemma = max(matching_noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+                    chosen_lemma = max(
+                        matching_noun_rows,
+                        key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0),
+                    )[0].lower()
 
             # Locative preposition context -> match :v_mis
             if chosen_lemma is None:
@@ -778,7 +1353,9 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
                 if prev_low in LOC_PREPS:
                     loc_rows = [r for r in noun_rows if ":v_mis" in r[2]]
                     if loc_rows:
-                        chosen_lemma = max(loc_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+                        chosen_lemma = max(
+                            loc_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0)
+                        )[0].lower()
 
             if chosen_lemma is None:
                 is_gen_context = prev_low in GENITIVE_GOVERNING_PREPOSITIONS or prev_low in GENITIVE_QUANTIFIERS
@@ -789,21 +1366,38 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
                 if is_gen_context:
                     rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
                     if rod_rows:
-                        chosen_lemma = max(rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+                        chosen_lemma = max(
+                            rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0)
+                        )[0].lower()
 
         if chosen_lemma is None and prev_tok:
             prev_low = prev_tok.lower()
-            if prev_low in ("рядів", "кількість", "число", "безліч", "шерег", "група", "сукупність", "багато", "кілька", "декілька"):
+            if prev_low in (
+                "рядів",
+                "кількість",
+                "число",
+                "безліч",
+                "шерег",
+                "група",
+                "сукупність",
+                "багато",
+                "кілька",
+                "декілька",
+            ):
                 p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
                 if p_rod_rows:
-                    chosen_lemma = max(p_rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+                    chosen_lemma = max(
+                        p_rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0)
+                    )[0].lower()
 
         if chosen_lemma is None:
             exact_rows = [r for r in noun_rows if r[0].lower() == tok_low and ":v_naz" in r[2]]
             if exact_rows:
                 chosen_lemma = exact_rows[0][0].lower()
             else:
-                chosen_lemma = max(noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+                chosen_lemma = max(
+                    noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0)
+                )[0].lower()
 
         if chosen_lemma:
             if chosen_lemma == "кода" and tok_low == "код":
@@ -858,7 +1452,9 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
 
         if has_adj or is_prop or not has_noun:
             return False
-        if has_disallowed and not any(r[1] == "noun" and not any(dt in r[0] for dt in DISALLOWED_VESUM_TAGS) for r in rows):
+        if has_disallowed and not any(
+            r[1] == "noun" and not any(dt in r[0] for dt in DISALLOWED_VESUM_TAGS) for r in rows
+        ):
             return False
 
         # Term MUST be in the contextually disambiguated snippet lemmas! ZERO substring / stem matching!
@@ -924,16 +1520,28 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                     defect_counts["truncated_snippets"] += 1
 
                 # Defect: Ellipsis & conjunction starters
-                if "..." in snip or "…" in snip or re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", snip, re.IGNORECASE):
+                if (
+                    "..." in snip
+                    or "…" in snip
+                    or re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", snip, re.IGNORECASE)
+                ):
                     defect_counts["ellipsis_and_conjunction_starters"] += 1
 
                 # Defect: Rhetorical & negated assertions
                 if (
                     re.search(r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b", snip, re.IGNORECASE)
-                    or re.search(r"[—–-]\s*(?:це\s+)?(?:не\b|ще\s+не|теж\b|також\b|лише\b|тільки\b|просто\b)", snip, re.IGNORECASE)
+                    or re.search(
+                        r"[—–-]\s*(?:це\s+)?(?:не\b|ще\s+не|теж\b|також\b|лише\b|тільки\b|просто\b)",
+                        snip,
+                        re.IGNORECASE,
+                    )
                     or re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", snip, re.IGNORECASE)
                     or re.search(r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", snip, re.IGNORECASE)
-                    or re.search(r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b", snip, re.IGNORECASE)
+                    or re.search(
+                        r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
+                        snip,
+                        re.IGNORECASE,
+                    )
                 ):
                     defect_counts["rhetorical_and_negated_definitions"] += 1
 
@@ -951,7 +1559,10 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                     defect_counts["page_number_and_artifacts"] += 1
 
                 # Defect 2: Inverted definitions
-                m_naz = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snip)
+                m_naz = re.search(
+                    r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+                    snip,
+                )
                 if m_naz:
                     before_phrase = m_naz.group(1).strip()
                     after_phrase = m_naz.group(2).strip()
@@ -985,16 +1596,35 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                             defect_counts["inverted_definitions"] += 1
 
                 # Defect 3: Disallowed / wrong lemmas
-                disallowed_set = {"циліндер", "кода", "кіл", "риск", "мор", "зв'язка", "появ", "колон", "пар", "пол", "прийом", "п'ята", "крок", "різка"}
+                disallowed_set = {
+                    "циліндер",
+                    "кода",
+                    "кіл",
+                    "риск",
+                    "мор",
+                    "зв'язка",
+                    "появ",
+                    "колон",
+                    "пар",
+                    "пол",
+                    "прийом",
+                    "п'ята",
+                    "крок",
+                    "різка",
+                }
                 if any(t in disallowed_set for t in terms):
                     defect_counts["disallowed_lemmas"] += 1
                 for t in terms:
                     t_low = t.lower()
                     if t_low in ABBREVIATIONS or not any(c in "аеєиіїоуюя" for c in t_low):
                         defect_counts["disallowed_lemmas"] += 1
-                if "колон" in terms and re.search(r"\b(?:рядів|кількість|шерег|група|висота)\s+колон\b", snip, re.IGNORECASE):
+                if "колон" in terms and re.search(
+                    r"\b(?:рядів|кількість|шерег|група|висота)\s+колон\b", snip, re.IGNORECASE
+                ):
                     defect_counts["disallowed_lemmas"] += 1
-                if "точок" in terms and re.search(r"\b(?:кількість|число|безліч|сукупність)\s+точок\b", snip, re.IGNORECASE):
+                if "точок" in terms and re.search(
+                    r"\b(?:кількість|число|безліч|сукупність)\s+точок\b", snip, re.IGNORECASE
+                ):
                     defect_counts["disallowed_lemmas"] += 1
                 if "появ" in terms and re.search(r"\b(?:ознаки|причини|час)\s+появи?\b", snip, re.IGNORECASE):
                     defect_counts["disallowed_lemmas"] += 1
@@ -1004,38 +1634,86 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                 snip_tokens = {m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_snip)}
                 if "ятка" in terms and any(tok.startswith("пам'ят") for tok in snip_tokens):
                     defect_counts["disallowed_lemmas"] += 1
-                if "трава" in terms and any("трав'ян" in tok for tok in snip_tokens) and "трава" not in snip_tokens and "трави" not in snip_tokens:
+                if (
+                    "трава" in terms
+                    and any("трав'ян" in tok for tok in snip_tokens)
+                    and "трава" not in snip_tokens
+                    and "трави" not in snip_tokens
+                ):
                     defect_counts["disallowed_lemmas"] += 1
-                ORGAN_FORMS = {"орган", "органи", "органів", "органу", "органові", "органом", "органі", "органа", "органах", "органами"}
+                ORGAN_FORMS = {
+                    "орган",
+                    "органи",
+                    "органів",
+                    "органу",
+                    "органові",
+                    "органом",
+                    "органі",
+                    "органа",
+                    "органах",
+                    "органами",
+                }
                 SVITLO_FORMS = {"світло", "світла", "світлу", "світлом", "світлі"}
                 SPRAVEDLYVIST_FORMS = {"справедливість", "справедливості", "справедливістю"}
                 MORAL_FORMS = {"мораль", "моралі", "мораллю"}
 
                 for t in terms:
                     t_low = t.lower()
-                    if t_low == "орган" and not any(tok in ORGAN_FORMS for tok in snip_tokens) and any(tok.startswith("організм") for tok in snip_tokens):
+                    if (
+                        t_low == "орган"
+                        and not any(tok in ORGAN_FORMS for tok in snip_tokens)
+                        and any(tok.startswith("організм") for tok in snip_tokens)
+                    ):
                         defect_counts["substring_terms"] += 1
-                    if t_low == "світло" and not any(tok in SVITLO_FORMS for tok in snip_tokens) and any("світло-" in tok for tok in snip_tokens):
+                    if (
+                        t_low == "світло"
+                        and not any(tok in SVITLO_FORMS for tok in snip_tokens)
+                        and any("світло-" in tok for tok in snip_tokens)
+                    ):
                         defect_counts["substring_terms"] += 1
-                    if t_low == "справедливість" and not any(tok in SPRAVEDLYVIST_FORMS for tok in snip_tokens) and "несправедливість" in snip_tokens:
+                    if (
+                        t_low == "справедливість"
+                        and not any(tok in SPRAVEDLYVIST_FORMS for tok in snip_tokens)
+                        and "несправедливість" in snip_tokens
+                    ):
                         defect_counts["substring_terms"] += 1
-                    if t_low == "мораль" and not any(tok in MORAL_FORMS for tok in snip_tokens) and any("моральн" in tok for tok in snip_tokens):
+                    if (
+                        t_low == "мораль"
+                        and not any(tok in MORAL_FORMS for tok in snip_tokens)
+                        and any("моральн" in tok for tok in snip_tokens)
+                    ):
                         defect_counts["substring_terms"] += 1
 
                 # Defect 5: Conversational anaphora
                 if re.search(r"^(?:про\s+(?:один|одну|одне|нього|неї|них|цей|цю|це|ці))\b", snip, re.IGNORECASE):
                     defect_counts["unresolved_anaphora"] += 1
-                if re.search(r"\b(?:ви\s+вже\s+(?:дізналися|знаєте|вивчили|чули|бачили)|ми\s+вже\s+(?:дізналися|знаємо|вивчили|розглянули))\b", snip, re.IGNORECASE):
+                if re.search(
+                    r"\b(?:ви\s+вже\s+(?:дізналися|знаєте|вивчили|чули|бачили)|ми\s+вже\s+(?:дізналися|знаємо|вивчили|розглянули))\b",
+                    snip,
+                    re.IGNORECASE,
+                ):
                     defect_counts["unresolved_anaphora"] += 1
 
                 # Defect 6: Context-bound heads
-                if re.search(r"\b(?:авторки|автора|письменника|письменниці|поета|поетеси|вірша|твору|книжки|роману|повісті|оповідання|п'єси|драми|статті|тексту|героя|персонажа)\b", concept, re.IGNORECASE):
+                if re.search(
+                    r"\b(?:авторки|автора|письменника|письменниці|поета|поетеси|вірша|твору|книжки|роману|повісті|оповідання|п'єси|драми|статті|тексту|героя|персонажа)\b",
+                    concept,
+                    re.IGNORECASE,
+                ):
                     defect_counts["context_bound_heads"] += 1
 
                 # Defect 7: Descriptive non-concepts
                 if (
-                    re.match(r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b", concept, re.IGNORECASE)
-                    or re.match(r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*|особлив\w*|цікав\w*|важлив\w*)\b", concept, re.IGNORECASE)
+                    re.match(
+                        r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b",
+                        concept,
+                        re.IGNORECASE,
+                    )
+                    or re.match(
+                        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*|особлив\w*|цікав\w*|важлив\w*)\b",
+                        concept,
+                        re.IGNORECASE,
+                    )
                     or concept.lower() in ("виділення окремих", "окремі елементи", "крапка в центрі", "волосся")
                 ):
                     defect_counts["descriptive_non_concepts"] += 1
@@ -1054,7 +1732,11 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                     re.IGNORECASE,
                 ):
                     defect_counts["metaphors_and_evaluatives"] += 1
-                if re.search(r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*|обов'язков\w*|необхідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник|складник)", snip, re.IGNORECASE):
+                if re.search(
+                    r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*|обов'язков\w*|необхідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник|складник)",
+                    snip,
+                    re.IGNORECASE,
+                ):
                     defect_counts["metaphors_and_evaluatives"] += 1
 
                 # Defect 9: Query framing mismatch
@@ -1153,21 +1835,23 @@ def audit_records_for_seed(
         terms_ok = audit_scientific_terms(terms, raw_snip, concept, cur)
 
         rec_ok = citation_ok and anaphora_clean and ocr_clean and def_aligned and terms_ok
-        audit_results.append({
-            "seed": seed,
-            "origin": rec.get("_origin", ""),
-            "concept": concept,
-            "subject": rec.get("subject", ""),
-            "grade": rec.get("grade", ""),
-            "terms": terms,
-            "snippet": raw_snip,
-            "citation_ok": citation_ok,
-            "anaphora_clean": anaphora_clean,
-            "ocr_clean": ocr_clean,
-            "def_aligned": def_aligned,
-            "terms_ok": terms_ok,
-            "verdict": "PASS" if rec_ok else "FAIL",
-        })
+        audit_results.append(
+            {
+                "seed": seed,
+                "origin": rec.get("_origin", ""),
+                "concept": concept,
+                "subject": rec.get("subject", ""),
+                "grade": rec.get("grade", ""),
+                "terms": terms,
+                "snippet": raw_snip,
+                "citation_ok": citation_ok,
+                "anaphora_clean": anaphora_clean,
+                "ocr_clean": ocr_clean,
+                "def_aligned": def_aligned,
+                "terms_ok": terms_ok,
+                "verdict": "PASS" if rec_ok else "FAIL",
+            }
+        )
 
     return audit_results
 
@@ -1181,7 +1865,9 @@ def main() -> None:
     sft_records_count = sum(sum(1 for line in f.open("r", encoding="utf-8") if line.strip()) for f in sft_files)
     eval_records_count = sum(sum(1 for line in f.open("r", encoding="utf-8") if line.strip()) for f in eval_files)
 
-    print(f"Running release-wide defect scan across all {sft_records_count:,} SFT and {eval_records_count:,} eval records...")
+    print(
+        f"Running release-wide defect scan across all {sft_records_count:,} SFT and {eval_records_count:,} eval records..."
+    )
     defect_counts = scan_entire_release_defects(cur)
     print("Release-wide defect counts:")
     for k, v in defect_counts.items():
@@ -1216,7 +1902,9 @@ def main() -> None:
         out_md.append(f"| `{defect_name}` | {cnt} | {status_icon} |")
 
     out_md.append("\n## Multi-Seed Inspected Sample Overview\n")
-    out_md.append("| # | Seed | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | OCR-Clean | Def-Aligned | Terms Valid | Verdict |")
+    out_md.append(
+        "| # | Seed | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | OCR-Clean | Def-Aligned | Terms Valid | Verdict |"
+    )
     out_md.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
 
     for i, r in enumerate(all_results, 1):
@@ -1233,16 +1921,20 @@ def main() -> None:
         out_md.append(f"### Record {i} (Seed {r['seed']}): {r['concept']} ({r['origin']})")
         out_md.append(f"- **Subject / Grade:** {r['subject']} (Grade {r['grade']})")
         out_md.append(f"- **Concept:** `{r['concept']}` (Citation form: {'✅' if r['citation_ok'] else '❌'})")
-        out_md.append(f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 2 & non-generic: {'✅' if r['terms_ok'] else '❌'})")
-        out_md.append(f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, OCR-Clean: {'✅' if r['ocr_clean'] else '❌'}, Def-Aligned: {'✅' if r['def_aligned'] else '❌'})")
+        out_md.append(
+            f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 2 & non-generic: {'✅' if r['terms_ok'] else '❌'})"
+        )
+        out_md.append(
+            f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, OCR-Clean: {'✅' if r['ocr_clean'] else '❌'}, Def-Aligned: {'✅' if r['def_aligned'] else '❌'})"
+        )
         out_md.append(f"- **Overall Record Verdict:** **{r['verdict']}**\n")
 
-    report_150_path = RELEASE_DIR / "SAMPLE_INSPECTION_150.md"
+    report_150_path = INSPECTION_150
     report_150_path.write_text("\n".join(out_md) + "\n", encoding="utf-8")
     print(f"Wrote inspection report to {report_150_path}")
 
     # Also write SAMPLE_INSPECTION_50.md with the seed 42 subset for backwards compatibility
-    report_50_path = RELEASE_DIR / "SAMPLE_INSPECTION_50.md"
+    report_50_path = INSPECTION_50
     seed_42_results = [r for r in all_results if r["seed"] == 42][:50]
     out_50_md = [
         "# Sample Inspection of 50 Mined Records (Phase 6.1)\n",
@@ -1263,8 +1955,12 @@ def main() -> None:
         out_50_md.append(f"### Record {i}: {r['concept']} ({r['origin']})")
         out_50_md.append(f"- **Subject / Grade:** {r['subject']} (Grade {r['grade']})")
         out_50_md.append(f"- **Concept:** `{r['concept']}` (Citation form: {'✅' if r['citation_ok'] else '❌'})")
-        out_50_md.append(f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 2 & non-generic: {'✅' if r['terms_ok'] else '❌'})")
-        out_50_md.append(f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, OCR-Clean: {'✅' if r['ocr_clean'] else '❌'}, Def-Aligned: {'✅' if r['def_aligned'] else '❌'})")
+        out_50_md.append(
+            f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 2 & non-generic: {'✅' if r['terms_ok'] else '❌'})"
+        )
+        out_50_md.append(
+            f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, OCR-Clean: {'✅' if r['ocr_clean'] else '❌'}, Def-Aligned: {'✅' if r['def_aligned'] else '❌'})"
+        )
         out_50_md.append(f"- **Overall Record Verdict:** **{r['verdict']}**\n")
     report_50_path.write_text("\n".join(out_50_md) + "\n", encoding="utf-8")
     print(f"Wrote inspection report to {report_50_path}")

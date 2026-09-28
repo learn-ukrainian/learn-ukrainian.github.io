@@ -237,6 +237,7 @@ def _default_service_state(name: str, definition: ServiceDefinition) -> str:
             private = resolve_work_private_root(resolve_primary_repo_root(Path.cwd()))
             if not (private / ".git").exists() and not (private / ".git").is_file():
                 return "unavailable"
+            # Intentional: the private work-service checkout, not this repo.
             if not (private / ".venv" / "bin" / "python").is_file():
                 return "unavailable"
             if not (private / "work_projection").is_dir():

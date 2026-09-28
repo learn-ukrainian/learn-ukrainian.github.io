@@ -143,6 +143,19 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Optional
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Don't write __pycache__ next to deployed hooks (#9108).
+sys.dont_write_bytecode = True
+try:
+    from shell_shlex import (
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
 # ---------------------------------------------------------------------------
 # shared containment predicate (issue #4444) — imported, never re-derived
 # ---------------------------------------------------------------------------
@@ -298,48 +311,9 @@ _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
 _REDIRECT_OPS = _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}
 
 
-def _strip_quotes_for_heredoc(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
-    try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.whitespace = " \t\n"
-        lexer.commenters = ""
-        tokens = list(lexer)
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_tok = ""
-        if j < len(tokens):
-            nxt = tokens[j]
-            if nxt == "-":  # spaced: << - DELIM
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_tok = tokens[j]
-            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
-                strip_tabs = True
-                delim_tok = nxt[1:]
-            else:
-                delim_tok = nxt
-        delimiter = _strip_quotes_for_heredoc(delim_tok)
-        if delimiter:
-            delimiters.append((delimiter, strip_tabs, delim_tok != delimiter))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    return skippable_heredoc_delimiters(line)
 
 
 def _strip_heredoc_bodies(command: str) -> str:
@@ -356,37 +330,9 @@ def _strip_heredoc_bodies(command: str) -> str:
     tokenized view. Those lines are kept; only a heredoc that actually
     closes has its body + closer dropped.
     """
-    if "<<" not in command:
-        return command
-
-    lines = command.split("\n")
-    kept: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        kept.append(lines[i])
-        i += 1
-        pending = _heredoc_delimiters(_strip_shell_comments(lines[i - 1]))
-        if not pending:
-            continue
-        body_start = i
-        substitutions: list[str] = []
-        while i < n and pending:
-            delimiter, strip_tabs, quoted = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            elif not quoted:
-                substitutions.extend(_heredoc_substitutions(lines[i]))
-            i += 1
-        if pending:
-            kept.extend(lines[body_start:i])
-        else:
-            # Unquoted delimiters expand command substitutions in the body.
-            # Keep only those executable fragments, never ordinary document
-            # text (which may contain redirect-looking punctuation).
-            kept.extend(substitutions)
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(
+        command, opener_transform=_strip_shell_comments, body_substitutions=_heredoc_substitutions
+    )
 
 
 def _heredoc_substitutions(line: str) -> list[str]:
@@ -739,9 +685,7 @@ def _tokenize(command: str) -> list[str]:
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(
                     _normalize_backtick_substitutions(
-                        _strip_shell_comments(
-                            _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
-                        )
+                        _decode_ansi_c_quotes(preprocess_shell_command(command))
                     )
                 )
             ),

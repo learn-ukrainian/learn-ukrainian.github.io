@@ -36,6 +36,7 @@ from scripts.ci.pytest_shards import (
 from scripts.ci.pytest_shards import (
     main as pytest_shards_main,
 )
+from scripts.ci.test_areas import filter_paths
 from tests.conftest import (
     LU_PYTEST_SHARD_FILES_ENV_VAR,
     _load_shard_allowlist,
@@ -483,6 +484,29 @@ def test_ci_yml_plan_files_uses_changes_shard_count() -> None:
     assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
 
 
+def test_full_plan_filters_area_before_partition_and_reports_count() -> None:
+    ci_text = _ci_text()
+    assert "skipped_areas: ${{ steps.classify.outputs.skipped_areas }}" in ci_text
+    assert "SKIPPED_AREAS: ${{ needs.changes.outputs.skipped_areas }}" in ci_text
+    plan = ci_text.split("      - name: Plan pytest shard files", 1)[1].split("      - name:", 1)[0]
+    assert plan.index("test_areas.py filter") < plan.index("pytest_shards.py plan-files", plan.index("else"))
+    assert "Skipped test areas:" in plan and "dropped test files:" in plan
+
+
+def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
+    (tmp_path / "tests").mkdir()
+    ordinary = "tests/test_open_model_ordinary.py"
+    repo_wide = "tests/test_open_model_repo_wide.py"
+    (tmp_path / ordinary).write_text("def test_one(): pass\n", encoding="utf-8")
+    (tmp_path / repo_wide).write_text("pytest.mark.repo_wide\n", encoding="utf-8")
+    paths = [ordinary, repo_wide, "tests/test_unrelated.py"]
+    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths[1:], 1)
+    assert filter_paths(paths, ["unknown"], repo=tmp_path) == (paths, 0)
+    bad = tmp_path / "bad.json"
+    bad.write_text("{}", encoding="utf-8")
+    assert filter_paths(paths, ["open_model_data"], manifest=bad, repo=tmp_path) == (paths, 0)
+
+
 def test_content_lane_excludes_slow_partition_test() -> None:
     assert "pytest tests/test_ci_shard_partition.py -m 'not slow' --timeout=120" in _ci_text()
 
@@ -566,8 +590,8 @@ def test_shards_length_equals_shard_count_for_selected_and_full() -> None:
     assert len(json.loads(full["shards"])) == int(full["shard_count"]) == 4
 
 
-def test_merge_group_docs_skip_frontend_and_full_shards() -> None:
-    """A docs merge must not rebuild the site or run four pytest shards (#8437)."""
+def test_merge_group_docs_run_full_shards_without_frontend() -> None:
+    """A docs merge runs every required Python shard without rebuilding the site (#9073)."""
     from scripts.ci.classify_changes import classify
 
     result = classify(
@@ -578,11 +602,11 @@ def test_merge_group_docs_skip_frontend_and_full_shards() -> None:
         denominator=["site/"],
         tree_paths=frozenset(),
     )
-    assert result["docs_only"] == "true"
+    assert result["docs_only"] == "false"
     assert result["frontend"] == "false"
     assert result["backend"] == "true"
-    assert result["pytest_mode"] == "docs"
-    assert json.loads(result["shards"]) == [1]
+    assert result["pytest_mode"] == "full"
+    assert json.loads(result["shards"]) == [1, 2, 3, 4]
 
 
 def test_frontend_only_change_skips_python_shards() -> None:
@@ -601,6 +625,19 @@ def test_frontend_only_change_skips_python_shards() -> None:
     assert result["pytest_mode"] == "frontend"
     assert json.loads(result["shards"]) == []
 
+    queue = classify(
+        ["site/src/pages/index.astro", "packages/activity-kit/src/card.ts"],
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=["site/", "packages/activity-kit/"],
+        tree_paths=frozenset(),
+    )
+    assert queue["frontend"] == "true"
+    assert queue["backend"] == "true"
+    assert queue["pytest_mode"] == "full"
+    assert json.loads(queue["shards"]) == [1, 2, 3, 4]
+
 
 def test_backend_only_merge_group_skips_frontend() -> None:
     from scripts.ci.classify_changes import classify
@@ -613,9 +650,10 @@ def test_backend_only_merge_group_skips_frontend() -> None:
         denominator=["site/"],
         tree_paths=frozenset({"tests/test_x.py"}),
     )
-    assert result["pytest_mode"] == "selected"
+    assert result["pytest_mode"] == "full"
     assert result["frontend"] == "false"
     assert result["backend"] == "true"
+    assert json.loads(result["shards"]) == [1, 2, 3, 4]
 
 
 def test_learner_docs_still_run_content_lane_and_frontend() -> None:

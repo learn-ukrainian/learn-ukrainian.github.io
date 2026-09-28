@@ -30,8 +30,12 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+HISTORICAL_IMPLEMENTATION_SHA256 = "e2c0a3c55d9be999ab29d376eef6ae23548d28a8deeffba92b3eaa2cdfcc75da"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "cae11884b203e1d4a4362cfcc140f1c841dce6fef98a4f3a6a39bcb6a4f9d622"
 SCHEMA_PATH = DATA / "contracts/phase3_pliush_2005_canonical_grammar_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_pliush_2005_canonical_grammar_candidate_v1.json"
 UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
@@ -123,8 +127,7 @@ PRIMARY_CELLS = ["morphemics", "word_formation"]
 SECONDARY_CELLS = ["morphology"]
 VISUAL_QA_PASSED_PDF_PAGES = [3, 8, 21, 70, 283, 289]
 RIGHTS_STATEMENT = (
-    "NBUV Ukrainica educational/scientific noncommercial use with attribution; "
-    "no downstream reproduction of full texts"
+    "NBUV Ukrainica educational/scientific noncommercial use with attribution; no downstream reproduction of full texts"
 )
 NBUV_TERMS = "educational_and_scientific_noncommercial_with_attribution_no_downstream_full_text_reproduction"
 
@@ -692,7 +695,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
     authoritative = validate_authoritative_university_state()
     require(receipt["status"] == STATUS, "status drift")
-    require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    # The exact frozen receipt records historical source provenance from the
+    # independently verified 55d0ed1515 blob.
+    implementation_sha256 = (
+        HISTORICAL_IMPLEMENTATION_SHA256
+        if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256
+        else sha256_file(SCRIPT_PATH)
+    )
+    require(receipt["bindings"]["implementation_sha256"] == implementation_sha256, "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(
         receipt["bindings"]["university_content_audit_freeze_v1_sha256"]
@@ -802,7 +812,10 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     )
     require(receipt["rights"]["public_redistribution_authorized"] is False, "receipt overclaims redistribution")
     receipt_body = {key: item for key, item in receipt.items() if key != "receipt_sha256"}
-    require(receipt_body == build_receipt_body(), "receipt body drift")
+    expected_body = build_receipt_body()
+    if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256:
+        expected_body["bindings"]["implementation_sha256"] = HISTORICAL_IMPLEMENTATION_SHA256
+    require(receipt_body == expected_body, "receipt body drift")
     serialized = canonical_json(receipt)
     require("GoogleDrive-" not in serialized, "receipt leaks private Drive identity")
     require("@gmail.com" not in serialized, "receipt leaks private account identity")

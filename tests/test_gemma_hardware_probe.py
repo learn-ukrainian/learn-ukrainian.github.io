@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,10 +9,12 @@ import pytest
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 
 from scripts.projects.open_model_data import gemma_hardware_probe as probe
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-ROOT = Path(__file__).resolve().parents[1]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
-PLAN_PATH = ROOT / "data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json"
+CONTRACTS = resolve_open_model_path("data/projects/open_model_data/contracts")
+PLAN_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json"
+)
 
 
 def _authorization() -> dict:
@@ -61,6 +64,27 @@ def _write_authorization(tmp_path: Path, value: dict | None = None) -> Path:
     path = tmp_path / "authorization.json"
     path.write_text(json.dumps(value or _authorization(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
+
+
+def test_runner_pin_matches_current_file_and_pre_migration_blob() -> None:
+    import subprocess
+
+    from scripts.projects.open_model_data.paths import GEMMA_PROBE_RUNNER_BYTES, GEMMA_PROBE_RUNNER_SHA256
+
+    current = Path(probe.__file__).read_bytes()
+    assert len(current) == GEMMA_PROBE_RUNNER_BYTES
+    assert hashlib.sha256(current).hexdigest() == GEMMA_PROBE_RUNNER_SHA256
+    pre_migration = subprocess.check_output(
+        [
+            "git",
+            "cat-file",
+            "blob",
+            "55d0ed1515835e5f7b7d1d12b933ad4c46706e1f:scripts/projects/open_model_data/gemma_hardware_probe.py",
+        ],
+        timeout=30,
+    )
+    assert len(pre_migration) == probe._FROZEN_RUNNER_BYTES
+    assert hashlib.sha256(pre_migration).hexdigest() == probe._FROZEN_RUNNER_SHA256
 
 
 def test_committed_probe_schemas_and_plan_validate() -> None:

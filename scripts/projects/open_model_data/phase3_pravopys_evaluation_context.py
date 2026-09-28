@@ -35,7 +35,9 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT = DATA / "inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
@@ -64,9 +66,7 @@ PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256 = (
 )
 
 
-_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH = (
-    DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
-)
+_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH = DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 _RECEIPT_FILE_HASH_LOCK = threading.Lock()
 
 
@@ -328,7 +328,9 @@ def _validate_evaluation_context_manifest_receipt(path: Path) -> dict[str, Any]:
         validated = eval_manifest.validate_receipt(receipt)
     except eval_manifest.EvaluationContextManifestError as exc:
         raise PravopysEvaluationContextError(str(exc)) from exc
-    require(sha256_file(path) == _pinned_evaluation_context_manifest_receipt_file_sha256(), "manifest receipt file drift")
+    require(
+        sha256_file(path) == _pinned_evaluation_context_manifest_receipt_file_sha256(), "manifest receipt file drift"
+    )
     require(
         validated["receipt_sha256"] == PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256,
         "manifest receipt body drift",
@@ -629,7 +631,8 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     }.items():
         require(bindings[key] == expected, f"binding drift: {key}")
     require(
-        bindings["implementation_sha256"] in {
+        bindings["implementation_sha256"]
+        in {
             "7a6e73714cc7b4723489432ddde5435edd94e756ff46e86aa1327ab31418361c",
             sha256_file(SCRIPT_PATH),
         },

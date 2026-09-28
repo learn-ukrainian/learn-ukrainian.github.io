@@ -111,7 +111,7 @@ write_restic_gate_receipt() {
     if [[ -x "$REPO_ROOT/.venv/bin/python" ]]; then
       project_python="$REPO_ROOT/.venv/bin/python"
     else
-      common_dir="$(git -C "$REPO_ROOT" rev-parse --git-common-dir 2>/dev/null || true)"
+      common_dir="$(git_command -C "$REPO_ROOT" rev-parse --git-common-dir 2>/dev/null || true)"
       case "$common_dir" in
         /*) : ;;
         "") common_dir="" ;;
@@ -125,7 +125,7 @@ write_restic_gate_receipt() {
   fi
   [[ -x "$project_python" ]] ||
     die "Runner mirror receipt writer requires the shared project interpreter (.venv/bin/python via primary checkout)"
-  git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
+  git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
   "$project_python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
     write-restic-gate-receipt \
     --mirror-root "$staged_mirror_root" \
@@ -230,7 +230,19 @@ info() {
 }
 
 restic_repository_command() {
-  restic "$@" --option rclone.connections=1 --retry-lock 5m
+  if [[ -n "$LOCK_FD" ]]; then
+    restic "$@" --option rclone.connections=1 --retry-lock 5m {LOCK_FD}>&-
+  else
+    restic "$@" --option rclone.connections=1 --retry-lock 5m
+  fi
+}
+
+git_command() {
+  if [[ -n "$LOCK_FD" ]]; then
+    git "$@" {LOCK_FD}>&-
+  else
+    git "$@"
+  fi
 }
 
 cleanup() {
@@ -440,7 +452,7 @@ validate_environment() {
   require_command jq "brew install jq"
   require_command realpath
   require_command touch
-  require_command flock
+  require_command flock "brew install flock"
   check_restic_version
   validate_password_file
   validate_repository_config
@@ -608,7 +620,7 @@ validate_untracked_coverage() {
     path_has_backup_coverage "$relative" && continue
     echo "UNBACKED untracked Git path: $relative" >&2
     uncovered=$((uncovered + 1))
-  done < <(git -C "$PROJECT_ROOT" ls-files --others --exclude-standard -z)
+  done < <(git_command -C "$PROJECT_ROOT" ls-files --others --exclude-standard -z)
   [[ "$uncovered" -eq 0 ]] ||
     die "$uncovered untracked path(s) are outside Git and declared recovery roots."
 }
@@ -620,7 +632,7 @@ validate_source() {
   repo_real="$(canonical_existing_dir "$REPO_ROOT")"
   project_real="$(canonical_existing_dir "$PROJECT_ROOT")"
   tmp_real="$(canonical_existing_dir "$TMP_ROOT")"
-  git_root="$(git -C "$PROJECT_ROOT" rev-parse --show-toplevel 2>/dev/null)" ||
+  git_root="$(git_command -C "$PROJECT_ROOT" rev-parse --show-toplevel 2>/dev/null)" ||
     die "Project root is not a Git checkout: $PROJECT_ROOT"
   git_root="$(canonical_existing_dir "$git_root")"
   [[ "$git_root" == "$project_real" ]] ||
@@ -653,8 +665,11 @@ acquire_lock() {
   [[ -d "$LOCK_ROOT" ]] || die "Backup lock directory does not exist: $LOCK_ROOT"
   [[ ! -L "$LOCK_FILE" ]] || die "Refusing symlink at backup lock path: $LOCK_FILE"
   exec {LOCK_FD}>>"$LOCK_FILE" || die "Could not open backup lock file: $LOCK_FILE"
-  if ! flock -w "$LOCK_WAIT_SECONDS" "$LOCK_FD"; then
-    die "Timed out after ${LOCK_WAIT_SECONDS}s waiting for backup lock: $LOCK_FILE"
+  if ! flock -n "$LOCK_FD"; then
+    info "waiting for lock (up to ${LOCK_WAIT_SECONDS}s): $LOCK_FILE"
+    if ! flock -w "$LOCK_WAIT_SECONDS" "$LOCK_FD"; then
+      die "Timed out after ${LOCK_WAIT_SECONDS}s waiting for backup lock: $LOCK_FILE"
+    fi
   fi
   # A killed backup can leave private staging; only the lock holder may clear it.
   [[ ! -L "$STAGE_PATH" ]] || die "Refusing symlink at the private staging path: $STAGE_PATH"
@@ -1008,8 +1023,8 @@ print_backup_selection() {
 }
 
 create_worktree_patch() {
-  if ! git -C "$PROJECT_ROOT" diff --quiet HEAD --; then
-    git -C "$PROJECT_ROOT" diff --binary HEAD -- \
+  if ! git_command -C "$PROJECT_ROOT" diff --quiet HEAD --; then
+    git_command -C "$PROJECT_ROOT" diff --binary HEAD -- \
       > "$STAGED_ROOT/GIT-WORKTREE.patch"
     BACKUP_PATHS+=("GIT-WORKTREE.patch")
   fi
@@ -1037,14 +1052,14 @@ write_backup_receipt() {
   inventory_json="$(jq -s '.' "$inventory_file")"
   find "$inventory_file" -maxdepth 0 -type f -delete
 
-  git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
+  git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
   git_dirty=false
-  git -C "$PROJECT_ROOT" diff --quiet HEAD -- || git_dirty=true
+  git_command -C "$PROJECT_ROOT" diff --quiet HEAD -- || git_dirty=true
   untracked_count=0
   while IFS= read -r -d '' relative; do
     path_has_backup_coverage "$relative" && continue
     untracked_count=$((untracked_count + 1))
-  done < <(git -C "$PROJECT_ROOT" ls-files --others --exclude-standard -z)
+  done < <(git_command -C "$PROJECT_ROOT" ls-files --others --exclude-standard -z)
   known_missing='[]'
   if [[ ! -d "$PROJECT_ROOT/.claude/atlas-epic/plans/curated-seed" ]]; then
     known_missing='[".claude/atlas-epic/plans/curated-seed"]'
@@ -1479,7 +1494,8 @@ run_restore() {
   manifest_id="$snapshot"
   if [[ "$snapshot" == latest && "$(uname -s)" == Linux ]]; then
     snapshots_json="$(restic_repository_command snapshots --json --host "$BACKUP_HOST" --tag "$BACKUP_TAG")"
-    manifest_id="$(jq -r '[.[] | select(.tags | index("lu-part-complete"))] | sort_by(.time) | last | .id // empty' <<< "$snapshots_json")"
+    manifest_id="$(jq -r "$SNAPSHOT_EPOCH_JQ"'[.[] | select(.tags | index("lu-part-complete"))] | sort_by(.time | epoch_seconds) | last | .id // empty' <<< "$snapshots_json")" ||
+      die "Could not order completed snapshots by time."
     if [[ -z "$manifest_id" ]]; then
       if jq -e 'any(.[]; any(.tags[]?; startswith("lu-run-")))' <<< "$snapshots_json" >/dev/null; then
         die "No completed Linux backup run is available; specify a verified older snapshot ID."
@@ -1654,9 +1670,7 @@ run_init() {
 # Snapshot times may carry fractional seconds and a numeric offset. Convert
 # each RFC 3339 timestamp to a UTC epoch before ordering or bucketing runs.
 # shellcheck disable=SC2016  # $daily/$run/... are jq variables, not shell.
-readonly RETENTION_PLAN_JQ='
-def run_key:
-  ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
+readonly SNAPSHOT_EPOCH_JQ='
 def epoch_seconds:
   ([capture("^(?<base>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\\.(?<fraction>[0-9]+))?(?<zone>Z|[+-][0-9]{2}:[0-9]{2})$")]
    | if length == 1 then .[0] else error("unparsable snapshot time") end) as $timestamp
@@ -1666,6 +1680,11 @@ def epoch_seconds:
           (if $timestamp.zone[0:1] == "+" then 1 else -1 end)
           * (($timestamp.zone[1:3] | tonumber) * 3600 + ($timestamp.zone[4:6] | tonumber) * 60)
         end));
+'
+# shellcheck disable=SC2016  # jq variables are not shell variables.
+readonly RETENTION_PLAN_JQ="$SNAPSHOT_EPOCH_JQ"'
+def run_key:
+  ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
 def week_bucket:
   ((.epoch + 259200) / 604800 | floor);
 def newest_per_bucket(bucket; limit):
@@ -1712,7 +1731,7 @@ retention_snapshot_list() {
 }
 
 run_retention() {
-  local execute=$1
+  local execute=$1 ids_output
   local snapshots_json plan forget_count
   local forget_ids=()
 
@@ -1747,9 +1766,12 @@ run_retention() {
   fi
 
   if [[ "$forget_count" -gt 0 ]]; then
-    while IFS= read -r id; do
-      forget_ids+=("$id")
-    done < <(jq -er '.forget_ids[]' <<< "$plan")
+    ids_output="$(jq -er '.forget_ids[]' <<< "$plan")" || die "Retention plan IDs could not be read; forgetting nothing."
+    mapfile -t forget_ids <<< "$ids_output"
+    [[ "${#forget_ids[@]}" -eq "$forget_count" ]] || die "Retention plan IDs could not be read; forgetting nothing."
+    for id in "${forget_ids[@]}"; do
+      [[ "$id" =~ ^[0-9a-f]{64}$ ]] || die "Retention plan has an invalid snapshot ID; forgetting nothing."
+    done
     info "Forgetting ${#forget_ids[@]} snapshot(s) of dropped runs by explicit snapshot ID."
     restic_repository_command forget "${forget_ids[@]}"
   else

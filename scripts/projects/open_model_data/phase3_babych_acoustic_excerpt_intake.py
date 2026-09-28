@@ -31,9 +31,13 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 from pypdf import PdfReader
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+HISTORICAL_IMPLEMENTATION_SHA256 = "18221ebdc6c69a58fc5939c928828439e5807895fe1bf208468b20fc346712f0"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "dfb0aedaef9c9db1c4b8fa630136ca896baad3cf01029c8fed77a6919cf917a0"
 SCHEMA_PATH = DATA / "contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_babych_acoustic_excerpt_candidate_v1.json"
 
@@ -541,7 +545,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "receipt"
         raise BabychAcousticExcerptIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
-    require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    # The frozen public receipt records the pre-migration implementation.
+    # Newly built receipts bind the actual current implementation instead.
+    implementation_sha256 = (
+        HISTORICAL_IMPLEMENTATION_SHA256
+        if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256
+        else sha256_file(SCRIPT_PATH)
+    )
+    require(receipt["bindings"]["implementation_sha256"] == implementation_sha256, "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(
         receipt["bindings"]["phase3_recovery_prompt_v2_sha256"] == V2_PROMPT_SHA256,

@@ -45,6 +45,7 @@ from scripts.projects.open_model_data import v4_original_row_admission as admiss
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
 from scripts.projects.open_model_data import v4_stage_evidence as ev
 from scripts.projects.open_model_data import v4_trust_authority as trust
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 FORBIDDEN_PUBLIC_TERMS = ("fam-", "db.", "historical.", "heldout_membership", "source_unit_id")
@@ -60,6 +61,7 @@ def _fixture_policy_seam(monkeypatch, tmp_path):
     monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
     with synthetic_resources():
         yield
+
 
 EMPTY_MANIFEST: dict = {"slot_series": []}
 EMPTY_A2_RECEIPT: dict = {"stratum_coverage_map": []}
@@ -77,13 +79,24 @@ def _real_slot_construction_kwargs(tmp_root: Path, sealed: dict) -> dict:
     """The full, valid kwargs for a real ``construct_completion`` call
     against the fixture's standard target slot -- callers override only
     what they want to tamper with."""
-    manifest = json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text(encoding="utf-8"))
-    a2_receipt = json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    a2_receipt = json.loads(
+        (
+            tmp_root
+            / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+        ).read_text(encoding="utf-8")
+    )
     row_content_sha256 = ledger.sha256_text(fx.ROW_TEXT)
     reference_check_receipt = fx.build_reference_check_receipt()
     reference_check_signature, replay_attestation = fx.build_reference_check_authenticity(reference_check_receipt)
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+    authorship_receipt = ledger.build_authorship_receipt(
+        author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256
+    )
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship_receipt))
     reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256)
     return {
@@ -110,8 +123,17 @@ def _real_slot_construction_kwargs(tmp_root: Path, sealed: dict) -> dict:
 
 def _replay_kwargs(tmp_root: Path, info: dict) -> dict:
     sealed = info["sealed"]
-    manifest = json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text(encoding="utf-8"))
-    a2_receipt = json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    a2_receipt = json.loads(
+        (
+            tmp_root
+            / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+        ).read_text(encoding="utf-8")
+    )
     return {
         "salt": fx.TEST_SALT,
         "a4_unit_commitments": fx.a4_unit_commitments(tmp_root),
@@ -173,7 +195,9 @@ def test_private_replay_succeeds_with_full_a3_role_reference_check_replay(tmp_pa
     def _verifier(candidate_text: str, receipt: dict) -> None:
         reference_check.verify_reference_check_receipt(receipt, candidate_text, fx.REFERENCE_TEXTS, fx.A3_FIXTURE_SALT)
 
-    ledger.verify_private_replay(info["a7_receipt"], stored_ledger, reference_check_verifier=_verifier, **_replay_kwargs(tmp_root, info))
+    ledger.verify_private_replay(
+        info["a7_receipt"], stored_ledger, reference_check_verifier=_verifier, **_replay_kwargs(tmp_root, info)
+    )
 
 
 def test_fresh_checkout_public_validation_needs_no_batch_state(tmp_path: Path) -> None:
@@ -248,22 +272,32 @@ def test_a7_ledger_and_review_receipts_carry_no_source_or_membership_fields(tmp_
 def test_review_receipt_refuses_same_model_family_as_author() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(
+        author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256
+    )
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
     # A distinct task/run/session, properly signed under the fixture's own
     # fleet key, but the reviewer's task-state seat_or_model resolves (via
     # the canonical resolver) to the *same* model family as the author's --
     # never a caller-asserted family string.
     same_family_task_state = fx.build_reviewer_task_state(seat_or_model=fx.AUTHOR_SEAT_OR_MODEL)
-    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256, task_state=same_family_task_state)
+    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(
+        row_content_sha256, authorship_receipt_sha256, task_state=same_family_task_state
+    )
     with pytest.raises(ledger.PrivateLedgerError, match="model family"):
-        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(
+            authorship_receipt=authorship,
+            reviewer_execution_receipt=reviewer_execution_receipt,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 def test_review_receipt_refuses_same_session_as_author() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(
+        author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256
+    )
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
     # A distinct model_family/task/run, but the same provider session
     # identity (the envelope's own session_id, cross-checked against the
@@ -271,13 +305,22 @@ def test_review_receipt_refuses_same_session_as_author() -> None:
     # so the signature stays valid while the session collides.
     same_session_task_state = fx.build_reviewer_task_state(session_id=fx.AUTHOR_SESSION_ID)
     same_session_envelope = fx.build_terminal_envelope(
-        raw_capture_sha256=ledger.sha256_text("fixture-reviewer-execution-result"), session_id=fx.AUTHOR_SESSION_ID, raw_capture_artifact_id="fixture-reviewer-raw-capture-001"
+        raw_capture_sha256=ledger.sha256_text("fixture-reviewer-execution-result"),
+        session_id=fx.AUTHOR_SESSION_ID,
+        raw_capture_artifact_id="fixture-reviewer-raw-capture-001",
     )
     reviewer_execution_receipt = fx.build_reviewer_execution_receipt(
-        row_content_sha256, authorship_receipt_sha256, task_state=same_session_task_state, envelope=same_session_envelope
+        row_content_sha256,
+        authorship_receipt_sha256,
+        task_state=same_session_task_state,
+        envelope=same_session_envelope,
     )
     with pytest.raises(ledger.PrivateLedgerError, match="session"):
-        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(
+            authorship_receipt=authorship,
+            reviewer_execution_receipt=reviewer_execution_receipt,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 # --- tamper: saw_source_text / saw_heldout / saw_eligible_unit_ids ---------
@@ -401,7 +444,9 @@ def test_verify_private_replay_refuses_a_same_count_reference_swap_on_the_defaul
         reference_check.verify_reference_check_receipt(receipt, candidate_text, fx.REFERENCE_TEXTS, fx.A3_FIXTURE_SALT)
 
     with pytest.raises(ledger.PrivateLedgerError, match="A3 reference-check signed authenticity failed replay"):
-        ledger.verify_private_replay(info["a7_receipt"], stored_ledger, reference_check_verifier=_verifier, **_replay_kwargs(tmp_root, info))
+        ledger.verify_private_replay(
+            info["a7_receipt"], stored_ledger, reference_check_verifier=_verifier, **_replay_kwargs(tmp_root, info)
+        )
 
 
 # --- tamper: arbitrary/held-out unit selection (P1) -------------------------
@@ -511,7 +556,9 @@ def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
 
 
 def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    revoked_policy = trust.build_test_trust_policy(sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID}))
+    revoked_policy = trust.build_test_trust_policy(
+        sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID})
+    )
     revoked_digest = trust.trust_policy_sha256(revoked_policy)
     fx.install_policy_resource(monkeypatch, tmp_path, revoked_policy)
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
@@ -532,7 +579,9 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest
         evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
-def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     """Mechanism-only production: an empty trust policy (no active
     ``sources`` key yet) refuses every production-capable receipt."""
     empty = trust.empty_trust_policy()
@@ -583,14 +632,18 @@ def test_construct_completion_has_no_synthetic_admission_switch() -> None:
     params = set(inspect.signature(ledger.construct_completion).parameters)
     assert "trust_policy" not in params
     assert "allow_synthetic_fixture" not in params
-    assert not hasattr(evidence_binder, "build_synthetic_fixture_evidence_receipt"), "production evidence binder must expose no synthetic-fixture builder"
+    assert not hasattr(evidence_binder, "build_synthetic_fixture_evidence_receipt"), (
+        "production evidence binder must expose no synthetic-fixture builder"
+    )
 
 
 def test_construct_completion_refuses_a_non_production_capable_evidence_receipt(tmp_path: Path) -> None:
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     sealed = fx.build_sealed_receipt_and_packet(tmp_path)
     kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
-    kwargs["evidence_receipt"] = fx.build_synthetic_fixture_evidence_receipt(kwargs["evidence_receipt"]["row_content_sha256"], list(fx.VESUM_IDS))
+    kwargs["evidence_receipt"] = fx.build_synthetic_fixture_evidence_receipt(
+        kwargs["evidence_receipt"]["row_content_sha256"], list(fx.VESUM_IDS)
+    )
     with pytest.raises(ledger.PrivateLedgerError, match="not production_capable"):
         ledger.construct_completion(**kwargs)
 
@@ -639,19 +692,34 @@ def test_candidate_family_floor_refuses_an_unregistered_supporting_unit() -> Non
 
 
 def _real_seal_receipt() -> dict:
-    return json.loads((ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json").read_text(encoding="utf-8"))
+    return json.loads(
+        (REGISTRY_OPEN_MODEL_DATA_DIR / "admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
 
 def test_d1_transition_validator_refuses_a_single_family_assigned_stratum() -> None:
     manifest = {"slot_series": [{"stratum": "standard_correct", "assignment_state": "ASSIGNED"}]}
-    a2_receipt = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}]}
+    a2_receipt = {
+        "stratum_coverage_map": [
+            {"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}
+        ]
+    }
     with pytest.raises(d1_validator.D1TransitionError, match="floor not met"):
         d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, _real_seal_receipt())
 
 
 def test_d1_transition_validator_passes_two_distinct_supporting_families() -> None:
     manifest = {"slot_series": [{"stratum": "standard_correct", "assignment_state": "ASSIGNED"}]}
-    a2_receipt = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public", "db.external_articles"]}]}
+    a2_receipt = {
+        "stratum_coverage_map": [
+            {
+                "stratum": "standard_correct",
+                "supporting_existing_source_unit_ids": ["db.textbooks.public", "db.external_articles"],
+            }
+        ]
+    }
     d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, _real_seal_receipt())  # no raise
 
 
@@ -665,7 +733,9 @@ def test_a7_factory_gate_refuses_a_directly_assigned_manifest_that_fails_d1(tmp_
     supporting family (never through reissue, and never through this
     fixture's own D1-compliant top-up) must fail A7's own gate."""
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
-    a2_path = tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+    a2_path = (
+        tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+    )
     a2_receipt = json.loads(a2_path.read_text(encoding="utf-8"))
     for coverage in a2_receipt["stratum_coverage_map"]:
         if coverage["stratum"] == "standard_correct":
@@ -679,8 +749,22 @@ def test_construct_completion_refuses_when_the_manifest_fails_d1(tmp_path: Path)
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     sealed = fx.build_sealed_receipt_and_packet(tmp_path)
     kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
-    kwargs["manifest"] = {"slot_series": [{"stratum": "standard_correct", "id_prefix": "v4p-standard-correct", "start": 1, "count": 15, "assignment_state": "ASSIGNED"}]}
-    kwargs["a2_receipt"] = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}]}
+    kwargs["manifest"] = {
+        "slot_series": [
+            {
+                "stratum": "standard_correct",
+                "id_prefix": "v4p-standard-correct",
+                "start": 1,
+                "count": 15,
+                "assignment_state": "ASSIGNED",
+            }
+        ]
+    }
+    kwargs["a2_receipt"] = {
+        "stratum_coverage_map": [
+            {"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}
+        ]
+    }
     with pytest.raises(ledger.PrivateLedgerError, match="Invariant D1"):
         ledger.construct_completion(**kwargs)
 
@@ -689,8 +773,22 @@ def test_verify_private_replay_refuses_when_the_manifest_fails_d1(tmp_path: Path
     tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     replay_kwargs = _replay_kwargs(tmp_root, info)
-    replay_kwargs["manifest"] = {"slot_series": [{"stratum": "standard_correct", "id_prefix": "v4p-standard-correct", "start": 1, "count": 15, "assignment_state": "ASSIGNED"}]}
-    replay_kwargs["a2_receipt"] = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}]}
+    replay_kwargs["manifest"] = {
+        "slot_series": [
+            {
+                "stratum": "standard_correct",
+                "id_prefix": "v4p-standard-correct",
+                "start": 1,
+                "count": 15,
+                "assignment_state": "ASSIGNED",
+            }
+        ]
+    }
+    replay_kwargs["a2_receipt"] = {
+        "stratum_coverage_map": [
+            {"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}
+        ]
+    }
     with pytest.raises(ledger.PrivateLedgerError, match="Invariant D1"):
         ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **replay_kwargs)
 
@@ -713,12 +811,18 @@ def _generate_sealed_receipt(tmp_path: Path, salt_hex: str) -> tuple[dict, Path]
         salt = bytes.fromhex(salt_hex)
         result = heldout.assign(salt, family_ids)
         summary = heldout.public_commitment_summary(salt, result)
-        receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] = summary["salt_commitment_sha256"]
-        receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"] = summary["assignment_commitment_sha256"]
+        receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] = summary[
+            "salt_commitment_sha256"
+        ]
+        receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"] = summary[
+            "assignment_commitment_sha256"
+        ]
         from _v4_provenance_resource_fixture import ACTIVE
 
         ACTIVE.get().install_seal(receipt, tmp_path)
-        heldout.write_private_artifact(private_dir / heldout.MEMBERSHIP_FILENAME, salt, result, heldout.receipt_binding_sha256(receipt))
+        heldout.write_private_artifact(
+            private_dir / heldout.MEMBERSHIP_FILENAME, salt, result, heldout.receipt_binding_sha256(receipt)
+        )
     finally:
         del os.environ["V4_A3_HELDOUT_TEST_SALT_HEX_ONLY"]
     return receipt, private_dir / heldout.MEMBERSHIP_FILENAME
@@ -731,7 +835,12 @@ def test_reissue_refuses_a_changed_assignment_commitment(tmp_path: Path) -> None
     before = membership_path.read_bytes()
     with pytest.raises(heldout.AssignmentError, match="unknown receipt or incomplete manifest"):
         reissue.reissue_private_artifact(
-            membership_path, old_receipt, new_receipt, sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]), EMPTY_A2_RECEIPT, EMPTY_MANIFEST
+            membership_path,
+            old_receipt,
+            new_receipt,
+            sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]),
+            EMPTY_A2_RECEIPT,
+            EMPTY_MANIFEST,
         )
     assert membership_path.read_bytes() == before
 
@@ -743,7 +852,12 @@ def test_reissue_refuses_a_changed_family_registry(tmp_path: Path) -> None:
     before = membership_path.read_bytes()
     with pytest.raises(heldout.AssignmentError, match="unknown receipt or incomplete manifest"):
         reissue.reissue_private_artifact(
-            membership_path, old_receipt, new_receipt, sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]), EMPTY_A2_RECEIPT, EMPTY_MANIFEST
+            membership_path,
+            old_receipt,
+            new_receipt,
+            sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]),
+            EMPTY_A2_RECEIPT,
+            EMPTY_MANIFEST,
         )
     assert membership_path.read_bytes() == before
 
@@ -757,8 +871,13 @@ def test_reissue_succeeds_and_rebinds_when_membership_is_provably_unchanged(tmp_
     old_receipt, membership_path = _generate_sealed_receipt(tmp_path, "33" * 32)
     new_receipt = copy.deepcopy(old_receipt)
     family_ids = sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"])
-    summary = reissue.reissue_private_artifact(membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, EMPTY_MANIFEST)
-    assert summary["assignment_commitment_sha256"] == old_receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"]
+    summary = reissue.reissue_private_artifact(
+        membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, EMPTY_MANIFEST
+    )
+    assert (
+        summary["assignment_commitment_sha256"]
+        == old_receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"]
+    )
     # The artifact still reproduces against both (identical) receipts.
     reissue.heldout.verify_against_receipt(membership_path, new_receipt, family_ids)
     reissue.heldout.verify_against_receipt(membership_path, old_receipt, family_ids)
@@ -773,7 +892,11 @@ def test_reissue_refuses_when_an_assigned_stratum_fails_the_candidate_family_flo
     manifest = {"slot_series": [{"stratum": "standard_correct", "assignment_state": "ASSIGNED"}]}
     # db.textbooks.public is a member of exactly one family in the real
     # registry -- one distinct supporting family, below heldout_count(1) + 1.
-    a2_receipt = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}]}
+    a2_receipt = {
+        "stratum_coverage_map": [
+            {"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}
+        ]
+    }
     with pytest.raises(reissue.ReissueError, match="candidate-family floor"):
         reissue.reissue_private_artifact(membership_path, old_receipt, new_receipt, family_ids, a2_receipt, manifest)
 
@@ -784,7 +907,9 @@ def test_reissue_refuses_an_assigned_stratum_with_no_matching_a2_coverage_entry(
     family_ids = sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"])
     manifest = {"slot_series": [{"stratum": "standard_correct", "assignment_state": "ASSIGNED"}]}
     with pytest.raises(reissue.ReissueError, match="no matching A2 stratum_coverage_map entry"):
-        reissue.reissue_private_artifact(membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, manifest)
+        reissue.reissue_private_artifact(
+            membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, manifest
+        )
 
 
 def test_builder_packet_reissue_succeeds_and_refuses_a_wrong_expected_commitment(tmp_path: Path) -> None:
@@ -798,13 +923,17 @@ def test_builder_packet_reissue_succeeds_and_refuses_a_wrong_expected_commitment
 
     new_receipt = copy.deepcopy(old_receipt)
     family_ids = sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"])
-    reissue.reissue_private_artifact(membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, EMPTY_MANIFEST)
+    reissue.reissue_private_artifact(
+        membership_path, old_receipt, new_receipt, family_ids, EMPTY_A2_RECEIPT, EMPTY_MANIFEST
+    )
     new_receipt_path = tmp_path / "new_seal_receipt.json"
     new_receipt_path.write_text(json.dumps(new_receipt), encoding="utf-8")
 
     # A wrong operator-asserted expectation refuses.
     with pytest.raises(packet.BuilderPacketError, match="expect-eligible-units-commitment"):
-        packet.reissue_packet(old_receipt_path, new_receipt_path, private_dir, private_dir, expect_eligible_units_commitment="0" * 64)
+        packet.reissue_packet(
+            old_receipt_path, new_receipt_path, private_dir, private_dir, expect_eligible_units_commitment="0" * 64
+        )
 
     # The real reissue (no false expectation) succeeds and preserves the
     # eligible-units commitment exactly.
@@ -888,7 +1017,12 @@ def test_build_authorship_receipt_refuses_missing_signature() -> None:
     real = fx.build_author_execution_receipt(row_content_sha256)
     without_signature = {k: v for k, v in real.items() if k != "signature_hex"}
     with pytest.raises(fleet_execution.FleetExecutionError, match="signature"):
-        fleet_execution.verify_author_execution_receipt(without_signature, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256)
+        fleet_execution.verify_author_execution_receipt(
+            without_signature,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 def test_build_authorship_receipt_refuses_an_unknown_signer_key() -> None:
@@ -901,17 +1035,34 @@ def test_build_authorship_receipt_refuses_an_unknown_signer_key() -> None:
 def test_build_authorship_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     row_content_sha256 = "a" * 64
     real = fx.build_author_execution_receipt(row_content_sha256)
-    revoked_policy = trust.build_test_trust_policy(fleet_execution={fx.FLEET_KEY_ID: fx.FLEET_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.FLEET_KEY_ID}))
+    revoked_policy = trust.build_test_trust_policy(
+        fleet_execution={fx.FLEET_KEY_ID: fx.FLEET_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.FLEET_KEY_ID})
+    )
     fx.install_policy_resource(monkeypatch, tmp_path, revoked_policy)
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
         ledger.build_authorship_receipt(author_execution_receipt=real, row_content_sha256=row_content_sha256)
 
 
-@pytest.mark.parametrize("field", ["model_family", "exact_model", "harness", "task_id", "run_nonce", "row_content_sha256", "prompt_sha256", "packet_sha256"])
+@pytest.mark.parametrize(
+    "field",
+    [
+        "model_family",
+        "exact_model",
+        "harness",
+        "task_id",
+        "run_nonce",
+        "row_content_sha256",
+        "prompt_sha256",
+        "packet_sha256",
+    ],
+)
 def test_build_authorship_receipt_refuses_any_signed_field_mutation(field: str) -> None:
     row_content_sha256 = "a" * 64
     real = fx.build_author_execution_receipt(row_content_sha256)
-    tampered = {**real, field: "tampered-value" if field not in {"prompt_sha256", "packet_sha256", "row_content_sha256"} else "f" * 64}
+    tampered = {
+        **real,
+        field: "tampered-value" if field not in {"prompt_sha256", "packet_sha256", "row_content_sha256"} else "f" * 64,
+    }
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
         ledger.build_authorship_receipt(author_execution_receipt=tampered, row_content_sha256=row_content_sha256)
 
@@ -919,19 +1070,31 @@ def test_build_authorship_receipt_refuses_any_signed_field_mutation(field: str) 
 def test_build_review_receipt_refuses_a_review_swapped_across_a_different_authorship_receipt() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(
+        author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256
+    )
     other_authorship = {**authorship, "session_id": "a-different-session"}
-    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, ledger.sha256_text(ledger.canonical_json(authorship)))
+    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(
+        row_content_sha256, ledger.sha256_text(ledger.canonical_json(authorship))
+    )
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_review_receipt(authorship_receipt=other_authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(
+            authorship_receipt=other_authorship,
+            reviewer_execution_receipt=reviewer_execution_receipt,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 def test_build_review_receipt_refuses_a_rubric_hash_mismatch() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(
+        author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256
+    )
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
-    signed_for_one_rubric = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256, rubric_sha256="a" * 64)
+    signed_for_one_rubric = fx.build_reviewer_execution_receipt(
+        row_content_sha256, authorship_receipt_sha256, rubric_sha256="a" * 64
+    )
     with pytest.raises(fleet_execution.FleetExecutionError, match="rubric"):
         fleet_execution.verify_reviewer_execution_receipt(
             signed_for_one_rubric,
@@ -953,7 +1116,9 @@ def test_issue_execution_receipt_apis_accept_no_caller_supplied_family_or_harnes
     ``TaskExecutionState.seat_or_model``/``harness`` (PR #7662 repair 5)."""
     issue_author_params = set(inspect.signature(fleet_execution.issue_author_execution_receipt).parameters)
     issue_reviewer_params = set(inspect.signature(fleet_execution.issue_reviewer_execution_receipt).parameters)
-    observation_fields = {f.name for f in dataclasses.fields(fleet_execution.AuthorExecutionObservation)} | {f.name for f in dataclasses.fields(fleet_execution.ReviewerExecutionObservation)}
+    observation_fields = {f.name for f in dataclasses.fields(fleet_execution.AuthorExecutionObservation)} | {
+        f.name for f in dataclasses.fields(fleet_execution.ReviewerExecutionObservation)
+    }
     for forbidden in ("model_family", "exact_model", "harness", "author_family"):
         assert forbidden not in issue_author_params
         assert forbidden not in issue_reviewer_params
@@ -966,7 +1131,13 @@ def test_response_envelope_cannot_construct_complete_without_a_terminal_event() 
     possible enforcement of the advisor's terminal-event requirement."""
     with pytest.raises(ValueError, match="terminal event"):
         ResponseEnvelope(
-            segments=(), completion_state=CompletionState.COMPLETE, terminal_event_observed=False, process_returncode=0, raw_capture_artifact_id="x", raw_capture_sha256="a" * 64, session_id="s"
+            segments=(),
+            completion_state=CompletionState.COMPLETE,
+            terminal_event_observed=False,
+            process_returncode=0,
+            raw_capture_artifact_id="x",
+            raw_capture_sha256="a" * 64,
+            session_id="s",
         )
 
 
@@ -982,7 +1153,15 @@ def test_issue_author_execution_receipt_refuses_a_nonzero_task_return_code() -> 
         fx.build_author_execution_receipt("a" * 64, task_state=task_state)
 
 
-@pytest.mark.parametrize("completion_state", [CompletionState.FAILED, CompletionState.UNKNOWN, CompletionState.LENGTH_LIMITED, CompletionState.TRANSPORT_INCOMPLETE])
+@pytest.mark.parametrize(
+    "completion_state",
+    [
+        CompletionState.FAILED,
+        CompletionState.UNKNOWN,
+        CompletionState.LENGTH_LIMITED,
+        CompletionState.TRANSPORT_INCOMPLETE,
+    ],
+)
 def test_issue_author_execution_receipt_refuses_a_non_complete_envelope(completion_state: CompletionState) -> None:
     envelope = ResponseEnvelope(
         segments=(),
@@ -1076,7 +1255,12 @@ def test_verify_author_execution_receipt_refuses_an_extra_signed_field_even_when
     signature_hex = trust.sign(fx.FLEET_SIGNING_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, tampered_body)
     tampered = {**tampered_body, "signature_hex": signature_hex}
     with pytest.raises(fleet_execution.FleetExecutionError, match="exactly"):
-        fleet_execution.verify_author_execution_receipt(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256)
+        fleet_execution.verify_author_execution_receipt(
+            tampered,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when_resigned() -> None:
@@ -1087,7 +1271,12 @@ def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when
     signature_hex = trust.sign(fx.FLEET_SIGNING_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, tampered_body)
     tampered = {**tampered_body, "signature_hex": signature_hex}
     with pytest.raises(fleet_execution.FleetExecutionError, match="lowercase-hex"):
-        fleet_execution.verify_author_execution_receipt(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256)
+        fleet_execution.verify_author_execution_receipt(
+            tampered,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+        )
 
 
 def test_issue_verifier_attestation_refuses_duplicate_lookup_ids() -> None:
@@ -1128,12 +1317,18 @@ def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned()
     signature_hex = trust.sign(fx.SOURCES_SIGNING_KEY_HEX, sources_authority.ATTESTATION_DOMAIN, tampered_body)
     tampered = {**tampered_body, "signature_hex": signature_hex}
     with pytest.raises(sources_authority.SourcesAuthorityError, match="exactly"):
-        sources_authority.verify_verifier_attestation(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256="a" * 64)
+        sources_authority.verify_verifier_attestation(
+            tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256="a" * 64
+        )
 
 
 def test_trust_policy_refuses_a_keyring_entry_with_an_extra_field() -> None:
     policy = trust.empty_trust_policy()
-    policy["keyrings"]["fleet_execution"]["extra-key"] = {"public_key_hex": fx.FLEET_PUBLIC_KEY_HEX, "revoked": False, "note": "smuggled"}
+    policy["keyrings"]["fleet_execution"]["extra-key"] = {
+        "public_key_hex": fx.FLEET_PUBLIC_KEY_HEX,
+        "revoked": False,
+        "note": "smuggled",
+    }
     with pytest.raises(trust.TrustAuthorityError, match="exactly"):
         trust.validate_trust_policy(policy)
 
@@ -1156,13 +1351,19 @@ def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_p
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["review_receipt"] = {
         **entry["review_receipt"],
-        "execution_receipt": {**entry["review_receipt"]["execution_receipt"], "task_id": entry["authorship_receipt"]["execution_receipt"]["task_id"], "run_nonce": entry["authorship_receipt"]["execution_receipt"]["run_nonce"]},
+        "execution_receipt": {
+            **entry["review_receipt"]["execution_receipt"],
+            "task_id": entry["authorship_receipt"]["execution_receipt"]["task_id"],
+            "run_nonce": entry["authorship_receipt"]["execution_receipt"]["run_nonce"],
+        },
     }
     with pytest.raises(ledger.PrivateLedgerError):
         ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
 
 
-def test_construct_completion_produces_a_completion_that_validates_empty_receipts_without_a_signer(tmp_path: Path) -> None:
+def test_construct_completion_produces_a_completion_that_validates_empty_receipts_without_a_signer(
+    tmp_path: Path,
+) -> None:
     """Empty production completion sets continue to verify without
     requiring a signer -- the frozen 0/100/0 production state."""
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
@@ -1282,18 +1483,36 @@ def test_reference_check_signature_refuses_a_stale_receipt() -> None:
     receipt = fx.build_reference_check_receipt()
     signature, _ = fx.build_reference_check_authenticity(receipt)
     tampered_receipt = {**receipt, "passed": receipt["passed"]}  # identical content, sanity baseline
-    reference_check.verify_reference_check_receipt_signature(signature, receipt=tampered_receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256)  # no raise
-    swapped_receipt = reference_check.build_reference_check_receipt(fx.ROW_TEXT, {**fx.REFERENCE_TEXTS, "synthetic-fixture-unit-alpha": "totally different text entirely"}, fx.A3_FIXTURE_SALT)
+    reference_check.verify_reference_check_receipt_signature(
+        signature, receipt=tampered_receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256
+    )  # no raise
+    swapped_receipt = reference_check.build_reference_check_receipt(
+        fx.ROW_TEXT,
+        {**fx.REFERENCE_TEXTS, "synthetic-fixture-unit-alpha": "totally different text entirely"},
+        fx.A3_FIXTURE_SALT,
+    )
     with pytest.raises(reference_check.ReferenceCheckError, match="stale or altered"):
-        reference_check.verify_reference_check_receipt_signature(signature, receipt=swapped_receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256)
+        reference_check.verify_reference_check_receipt_signature(
+            signature, receipt=swapped_receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256
+        )
 
 
 def test_replay_attestation_refuses_a_stale_attestation_over_a_swapped_receipt() -> None:
     receipt = fx.build_reference_check_receipt()
     _, attestation = fx.build_reference_check_authenticity(receipt)
-    swapped_receipt = reference_check.build_reference_check_receipt(fx.ROW_TEXT, {**fx.REFERENCE_TEXTS, "synthetic-fixture-unit-alpha": "totally different text entirely"}, fx.A3_FIXTURE_SALT)
+    swapped_receipt = reference_check.build_reference_check_receipt(
+        fx.ROW_TEXT,
+        {**fx.REFERENCE_TEXTS, "synthetic-fixture-unit-alpha": "totally different text entirely"},
+        fx.A3_FIXTURE_SALT,
+    )
     with pytest.raises(reference_check.ReferenceCheckError, match="stale or altered"):
-        reference_check.verify_replay_attestation(attestation, receipt=swapped_receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=ledger.sha256_text(fx.ROW_TEXT))
+        reference_check.verify_replay_attestation(
+            attestation,
+            receipt=swapped_receipt,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
+        )
 
 
 def test_replay_attestation_refuses_when_the_recomputation_does_not_match() -> None:
@@ -1331,7 +1550,13 @@ def test_replay_attestation_refuses_an_unknown_a3_signer_key() -> None:
         trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     with pytest.raises(reference_check.ReferenceCheckError, match="unregistered"):
-        reference_check.verify_replay_attestation(attestation, receipt=receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=ledger.sha256_text(fx.ROW_TEXT))
+        reference_check.verify_replay_attestation(
+            attestation,
+            receipt=receipt,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
+        )
 
 
 def test_construct_completion_refuses_a_nonempty_call_with_no_replay_attestation(tmp_path: Path) -> None:
@@ -1347,6 +1572,6 @@ def test_construct_completion_refuses_a_nonempty_call_with_no_replay_attestation
 
 
 def test_assemble_receipt_from_row_receipts_matches_admit_rows_at_zero() -> None:
-    assert admission.assemble_receipt_from_row_receipts(outcome_sha256=a7.V4_SHA256, row_receipts=[]) == admission.admit_rows(
-        outcome_sha256=a7.V4_SHA256, rows=[]
-    )
+    assert admission.assemble_receipt_from_row_receipts(
+        outcome_sha256=a7.V4_SHA256, row_receipts=[]
+    ) == admission.admit_rows(outcome_sha256=a7.V4_SHA256, rows=[])

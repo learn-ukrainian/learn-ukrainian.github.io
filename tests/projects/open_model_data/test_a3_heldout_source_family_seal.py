@@ -11,9 +11,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.schema.json"
 A2_RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
@@ -21,7 +23,7 @@ A2_RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.js
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 V3_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 
-NEAR_DUP_POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+NEAR_DUP_POLICY = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_near_duplicate_policy_v1.json"
 
 # Exact (kind, value) pairs the denial must contain -- checked as pairs, not
 # just as a value set, so a kind/value mismatch (or a masked duplicate) fails.
@@ -55,6 +57,7 @@ ASSIGNMENT_ALGORITHM_DESCRIPTOR = {
 
 def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
 
 FORBIDDEN_KEYS = {
     "content",
@@ -135,6 +138,7 @@ def test_a3_heldout_seal_bindings_match_exact_inputs() -> None:
 
     for binding in receipt["bindings"].values():
         from learn_ukrainian_v4_runtime import resources
+
         logical = binding["path"]
         if logical.startswith("scripts/"):
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
@@ -183,9 +187,10 @@ def test_a3_heldout_seal_receipt_is_payload_and_membership_free() -> None:
     # The descriptor hash is recomputed from a formula frozen in this test file
     # (independent of the receipt), so a different private implementation that
     # silently changed the formula cannot keep this hash and still pass.
-    assert algorithm["algorithm_descriptor_sha256"] == hashlib.sha256(
-        _canonical_json(ASSIGNMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")
-    ).hexdigest()
+    assert (
+        algorithm["algorithm_descriptor_sha256"]
+        == hashlib.sha256(_canonical_json(ASSIGNMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
+    )
     assert re.fullmatch(r"[a-f0-9]{64}", algorithm["salt_commitment_sha256"])
     assert re.fullmatch(r"[a-f0-9]{64}", algorithm["assignment_commitment_sha256"])
     # The private salt itself, and the family->pool membership, never appear here.
@@ -266,9 +271,7 @@ def test_a3_heldout_seal_carries_forward_every_a2_residual() -> None:
     # heldout-assignment test below), so a3_residuals may legitimately be
     # empty; it must not carry a stale "still pending" placeholder.
     assert isinstance(receipt["a3_residuals"], list)
-    assert not any(
-        entry.get("reason_code") == "membership_not_yet_assigned" for entry in receipt["a3_residuals"]
-    )
+    assert not any(entry.get("reason_code") == "membership_not_yet_assigned" for entry in receipt["a3_residuals"])
     for entry in receipt["a3_residuals"]:
         assert entry["stage"] == "A3"
         assert entry["owner_role"]

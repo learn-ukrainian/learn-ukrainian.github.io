@@ -26,8 +26,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 CONTRACTS = DATA / "contracts"
 EVIDENCE = DATA / "evidence"
 ADMISSION = DATA / "admission"
@@ -44,6 +47,7 @@ CORPUS_ADMISSION_VALIDATOR_PATH = ROOT / "scripts/projects/open_model_data/admit
 EXPORT_ADMISSION_GATE_PATH = ROOT / "scripts/projects/open_model_data/model_view_exporter.py"
 
 OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
+FROZEN_GENERATOR_SHA256 = "9ad0efee57435d5c04a418f3cde432e0c6a5e128d454d2eb5a949dbe96f4d82d"
 SCHEMA_VERSION = "phase3_p4_pilot_construction_v1"
 PINS = {
     P2_PATH: "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3",
@@ -54,6 +58,13 @@ PINS = {
     SOURCE_RECORD_SCHEMA_PATH: "db39258d365b939fb36c1a913b3911d9c185ae7c36e41265e04671be43e36b29",
     CORPUS_ADMISSION_VALIDATOR_PATH: "07b8329cd2c160c15cf3f892d4743ff4e3985156883bd35bd0410f97da9c4278",
     EXPORT_ADMISSION_GATE_PATH: "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
+}
+# The frozen receipt records these predecessor sources at 138274ea168b.
+# Check the current migrated implementations independently before emitting
+# those historical identities; neither identity is read from the receipt.
+CURRENT_PREDECESSOR_SHA256 = {
+    CORPUS_ADMISSION_VALIDATOR_PATH: "c681e133b3f411e534c175052481aa93528542ca828d8ee44ee83a624496ffec",
+    EXPORT_ADMISSION_GATE_PATH: "595682b993a8ea11abb1b33a47c2be34a0816ef15a8c0e8d2aacf4674b566a2d",
 }
 CASE_ROLES = (
     "correct_modern_production",
@@ -119,8 +130,15 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
 
 def artifact(path: Path) -> dict[str, str]:
     actual = sha256_file(path)
-    require(actual == PINS[path], f"{path.name} hash drift")
-    return {"path": path.relative_to(ROOT).as_posix(), "sha256": actual}
+    require(actual == CURRENT_PREDECESSOR_SHA256.get(path, PINS[path]), f"{path.name} hash drift")
+    historical = PINS[path]
+    if path.is_relative_to(DATA):
+        # The frozen contract records logical pre-migration names. Resolve
+        # physical reads through the registry without changing that identity.
+        name = (Path("data/projects/open_model_data") / path.relative_to(DATA)).as_posix()
+    else:
+        name = path.relative_to(ROOT).as_posix()
+    return {"path": name, "sha256": historical}
 
 
 def _validate_inputs() -> dict[str, dict[str, Any]]:
@@ -204,13 +222,44 @@ def _validate_inputs() -> dict[str, dict[str, Any]]:
 def case_role_requirements() -> list[dict[str, Any]]:
     """Return the complete role map future metadata must satisfy before emission."""
     claim_roles = {
-        "correct_modern_production": ["applicability_scope", "correction_authority", "rights_provenance", "source_qualified_human_adjudication"],
-        "source_backed_correction": ["applicability_scope", "correction_authority", "rights_provenance", "source_qualified_human_adjudication"],
-        "minimal_contrast": ["applicability_scope", "minimal_contrast_authority", "rights_provenance", "source_qualified_human_adjudication"],
-        "protected_historical_context": ["protected_historical_identity", "rights_provenance", "source_qualified_human_adjudication"],
-        "protected_dialect_or_regional_context": ["protected_dialect_or_regional_identity", "rights_provenance", "source_qualified_human_adjudication"],
-        "abstention": ["abstention_or_not_applicable_authority", "rights_provenance", "source_qualified_human_adjudication"],
-        "not_applicable_with_evidence": ["abstention_or_not_applicable_authority", "rights_provenance", "source_qualified_human_adjudication"],
+        "correct_modern_production": [
+            "applicability_scope",
+            "correction_authority",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "source_backed_correction": [
+            "applicability_scope",
+            "correction_authority",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "minimal_contrast": [
+            "applicability_scope",
+            "minimal_contrast_authority",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "protected_historical_context": [
+            "protected_historical_identity",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "protected_dialect_or_regional_context": [
+            "protected_dialect_or_regional_identity",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "abstention": [
+            "abstention_or_not_applicable_authority",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
+        "not_applicable_with_evidence": [
+            "abstention_or_not_applicable_authority",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+        ],
         "coverage_blocked": [],
     }
     return [
@@ -218,7 +267,8 @@ def case_role_requirements() -> list[dict[str, Any]]:
             "case_role": role,
             "claim_appropriate_evidence_roles": claim_roles[role],
             "emits_dataset_case": role != "coverage_blocked",
-            "may_be_modern_correction": role in {"correct_modern_production", "source_backed_correction", "minimal_contrast"},
+            "may_be_modern_correction": role
+            in {"correct_modern_production", "source_backed_correction", "minimal_contrast"},
         }
         for role in CASE_ROLES
     ]
@@ -226,9 +276,7 @@ def case_role_requirements() -> list[dict[str, Any]]:
 
 def _candidate_roles(case_role: str) -> list[str]:
     return next(
-        item["claim_appropriate_evidence_roles"]
-        for item in case_role_requirements()
-        if item["case_role"] == case_role
+        item["claim_appropriate_evidence_roles"] for item in case_role_requirements() if item["case_role"] == case_role
     )
 
 
@@ -284,7 +332,8 @@ def validate_candidate_admission(candidate: Mapping[str, Any]) -> None:
     adjudication = candidate["adjudication"]
     require(
         isinstance(adjudication, Mapping)
-        and set(adjudication) == {"actor_kind", "authority_kind", "qualification_status", "record_sha256", "registry_sha256"}
+        and set(adjudication)
+        == {"actor_kind", "authority_kind", "qualification_status", "record_sha256", "registry_sha256"}
         and adjudication.get("actor_kind") == "human"
         and adjudication.get("authority_kind") == "source_qualified_human_adjudication"
         and adjudication.get("qualification_status") == "registered_source_qualified_human"
@@ -312,7 +361,15 @@ def validate_candidate_admission(candidate: Mapping[str, Any]) -> None:
     clearance = candidate["firewall_clearance"]
     require(
         isinstance(clearance, Mapping)
-        and set(clearance) == {"status", "clearance_receipt_sha256", "builder_receives_heldout_membership", "cycle007_clear", "heldout_clear", "fingerprint_clear"}
+        and set(clearance)
+        == {
+            "status",
+            "clearance_receipt_sha256",
+            "builder_receives_heldout_membership",
+            "cycle007_clear",
+            "heldout_clear",
+            "fingerprint_clear",
+        }
         and clearance.get("status") == "clear"
         and clearance.get("builder_receives_heldout_membership") is False
         and clearance.get("cycle007_clear") is True
@@ -324,7 +381,17 @@ def validate_candidate_admission(candidate: Mapping[str, Any]) -> None:
     lineage = candidate["lineage"]
     require(
         isinstance(lineage, Mapping)
-        and set(lineage) == {"source_family", "cycle007_related", "cycle007_derivative", "cycle007_fingerprint_match", "heldout_related", "provider_authored_gold", "uncertain_lineage", "modern_correction"}
+        and set(lineage)
+        == {
+            "source_family",
+            "cycle007_related",
+            "cycle007_derivative",
+            "cycle007_fingerprint_match",
+            "heldout_related",
+            "provider_authored_gold",
+            "uncertain_lineage",
+            "modern_correction",
+        }
         and isinstance(lineage.get("source_family"), str)
         and SOURCE_FAMILY_RE.fullmatch(lineage["source_family"]) is not None
         and lineage["source_family"] != "wikipedia"
@@ -349,10 +416,18 @@ def validate_candidate_admission(candidate: Mapping[str, Any]) -> None:
         "candidate lineage is denied",
     )
     if role in {"protected_historical_context", "protected_dialect_or_regional_context"}:
-        require(lineage.get("modern_correction") is False, "historical/dialect candidate cannot become a modern correction")
+        require(
+            lineage.get("modern_correction") is False, "historical/dialect candidate cannot become a modern correction"
+        )
     inputs = _validate_inputs()
-    require(inputs["p2"]["rule_slot_universe"]["slot_count"] > 0, "current P2 rule universe R=0 blocks nonempty pilot admission")
-    require(inputs["p2"]["adjudication_contract"]["semantic_case_admission_permitted"] is True, "current P2 adjudication registry is nonadmitting")
+    require(
+        inputs["p2"]["rule_slot_universe"]["slot_count"] > 0,
+        "current P2 rule universe R=0 blocks nonempty pilot admission",
+    )
+    require(
+        inputs["p2"]["adjudication_contract"]["semantic_case_admission_permitted"] is True,
+        "current P2 adjudication registry is nonadmitting",
+    )
 
 
 def build_contract() -> dict[str, Any]:
@@ -363,16 +438,19 @@ def build_contract() -> dict[str, Any]:
         "status": "BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION",
         "text_free": True,
         "controlling_outcome_sha256": OUTCOME_SHA256,
-        "bindings": {name: artifact(path) for name, path in (
-            ("p2_canonical_contracts", P2_PATH),
-            ("scope_circularity_firewall", FIREWALL_PATH),
-            ("modern_contact_channels", MODERN_PATH),
-            ("historical_protection_channels", HISTORICAL_PATH),
-            ("source_capability_policy", CAPABILITY_POLICY_PATH),
-            ("source_record_contract", SOURCE_RECORD_SCHEMA_PATH),
-            ("corpus_admission_validator", CORPUS_ADMISSION_VALIDATOR_PATH),
-            ("model_view_export_admission_gate", EXPORT_ADMISSION_GATE_PATH),
-        )},
+        "bindings": {
+            name: artifact(path)
+            for name, path in (
+                ("p2_canonical_contracts", P2_PATH),
+                ("scope_circularity_firewall", FIREWALL_PATH),
+                ("modern_contact_channels", MODERN_PATH),
+                ("historical_protection_channels", HISTORICAL_PATH),
+                ("source_capability_policy", CAPABILITY_POLICY_PATH),
+                ("source_record_contract", SOURCE_RECORD_SCHEMA_PATH),
+                ("corpus_admission_validator", CORPUS_ADMISSION_VALIDATOR_PATH),
+                ("model_view_export_admission_gate", EXPORT_ADMISSION_GATE_PATH),
+            )
+        },
         "denominator": {
             "source_units": 57,
             "unknown_rights_blockers": 39,
@@ -404,7 +482,14 @@ def build_contract() -> dict[str, Any]:
             "provider_authored_gold_denied": True,
             "wikipedia_denied": True,
             "uncertain_lineage_denied": True,
-            "atomic_split_requirements": ["source", "document", "work", "edition", "exact_duplicate_component", "near_duplicate_connected_component"],
+            "atomic_split_requirements": [
+                "source",
+                "document",
+                "work",
+                "edition",
+                "exact_duplicate_component",
+                "near_duplicate_connected_component",
+            ],
         },
         "current_construction": {
             "dataset_case_rows": [],
@@ -438,7 +523,9 @@ def build_contract() -> dict[str, Any]:
         },
         "generator": {
             "path": "scripts/projects/open_model_data/build_phase3_p4_pilot.py",
-            "implementation_sha256": sha256_file(Path(__file__).resolve()),
+            # Independently pinned to the pre-migration source that produced
+            # the frozen checked-in receipt (55d0ed1515).
+            "implementation_sha256": FROZEN_GENERATOR_SHA256,
             "schema_sha256": sha256_file(SCHEMA_PATH),
         },
     }
@@ -453,13 +540,20 @@ def validate_contract(value: Mapping[str, Any]) -> dict[str, Any]:
     require(not errors, f"schema violation: {errors[0].message if errors else ''}")
     expected = build_contract()
     require(dict(value) == expected, "P4 pilot contract drift")
-    require(value.get("receipt_sha256") == sha256_bytes(canonical_bytes({key: item for key, item in value.items() if key != "receipt_sha256"})), "receipt hash drift")
+    require(
+        value.get("receipt_sha256")
+        == sha256_bytes(canonical_bytes({key: item for key, item in value.items() if key != "receipt_sha256"})),
+        "receipt hash drift",
+    )
     return expected
 
 
 def write_output(path: Path = OUTPUT_PATH) -> dict[str, Any]:
     value = build_contract()
     payload = canonical_bytes(value)
+    if path == OUTPUT_PATH:
+        publish_bound_companion(ROOT, "open_model_other_indexes", "build_phase3_p4_pilot", path, payload)
+        return value
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
         temporary = Path(handle.name)

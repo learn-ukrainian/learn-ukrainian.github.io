@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Iterator, Mapping
@@ -20,13 +21,17 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = (
-    ROOT
-    / "data/projects/open_model_data/contracts/corpus_training_usability_decision_v1.schema.json"
+SCHEMA_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/contracts/corpus_training_usability_decision_v1.schema.json"
 )
-PROFILE_PATH = ROOT / "data/projects/open_model_data/profiles/full_corpus_profile_v1.json"
-DETECTOR_PATH = ROOT / "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
+PROFILE_PATH = resolve_open_model_path("data/projects/open_model_data/profiles/full_corpus_profile_v1.json")
+DETECTOR_PATH = resolve_open_model_path("data/projects/open_model_data/detector/language_contact_receipt_v1.json")
 URL_MAP_PATH = ROOT / "registry/pidruchnyk_urls.yaml"
 MOJIBAKE_RE = re.compile(r"[ÂÃÐÑ]")
 LITERARY_METADATA_FIELDS = ("work", "author", "year", "genre", "language_period")

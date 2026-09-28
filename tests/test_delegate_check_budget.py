@@ -8,7 +8,7 @@ import sys
 import tempfile
 import types
 import urllib.error
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 import pytest
+
+from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 
 
 @pytest.fixture(autouse=True)
@@ -146,6 +148,8 @@ def _dispatch_args(*extra: str):
             "no-op",
             "--mode",
             "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
             *extra,
         ]
     )
@@ -295,7 +299,9 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fail_if_spawned)
 
-    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--dry-run"))
+    args = _dispatch_args("--check-budget", "--dry-run")
+    args.cwd = None  # Exercise the new default without allowing any git or worker spawn.
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     captured = capsys.readouterr()
@@ -305,6 +311,8 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert len(lines[1]) == 16
     assert int(lines[1], 16) >= 0
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert state["worktree_path"] is not None
+    assert not Path(state["worktree_path"]).exists()
     assert lines[1] == state["run_nonce"]
     assert "ROUTING WARNING" in captured.err
 
@@ -360,7 +368,6 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     args = _dispatch_args("--language-lane")
     args.agent = agent
-
     assert delegate.cmd_dispatch(args) == 0
 
 
@@ -436,12 +443,12 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
     assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True) == "codex"
 
 
-def test_adapter_rejects_foreign_model_after_substitution():
-    temp_root = Path(tempfile.gettempdir())
-    before = set(temp_root.glob("codex-runtime-*.txt"))
+def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path):
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
     assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
-    assert set(temp_root.glob("codex-runtime-*.txt")) <= before
+    assert not list(tmp_path.glob("codex-runtime-*.txt"))
 
 
 def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
@@ -665,6 +672,8 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-hot",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -682,7 +691,7 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
 
 
 def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
-    """will_last_to_reset=False (deficit) → hard auto-sub even if status is warm."""
+    """Visible pace deficit (won't last, delta outside the on-pace band) hard-subs even if status is warm."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(
@@ -698,7 +707,12 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
                 "codex": {
                     "status": "warm",
                     "burn_pct_7d": 55.0,
-                    "codexbar": {"will_last_to_reset": False, "pace_summary": "won't last"},
+                    "codexbar": {
+                        "will_last_to_reset": False,
+                        "weekly_pace_delta_pct": 12.0,
+                        "weekly_expected_pct": 40.0,
+                        "pace_summary": "won't last",
+                    },
                 },
                 "cursor": {"status": "cool", "burn_pct_7d": 5.0},
             },
@@ -715,6 +729,8 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
                 "codex",
                 "--task-id",
                 "budget-check-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
                 "--prompt",
                 "no-op",
                 "--mode",
@@ -727,6 +743,113 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" in err
+    assert "will_last_to_reset=False" in err
+
+
+def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_path, capsys):
+    """Freshly reset Claude (1% used, delta +0.49, will_last false, status hot) stays on Claude."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {
+                "primary_agent_for_code": "codex",
+                "rationale": "claude marked hot by early-window pace",
+                "warnings": [],
+            },
+            "agents": {
+                "claude": {
+                    "status": "hot",
+                    "interactive": {"status": "hot", "burn_pct_7d": 1.0},
+                    "burn_pct_7d": 1.0,
+                    "remaining_pct": 99,
+                    "resets_at": "2026-10-05T06:59:59Z",
+                    "codexbar": {
+                        "weekly_used_pct": 1.0,
+                        "weekly_pace_delta_pct": 0.49,
+                        "will_last_to_reset": False,
+                        "pace_summary": "0% in deficit | Expected 1% used",
+                    },
+                },
+                "codex": {"status": "hot", "burn_pct_7d": 70.0},
+            },
+            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert delegate._resolve_agent_with_budget_guard("claude") == "claude"
+
+
+def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, capsys):
+    """25% used and projected to run out 2 days before reset still substitutes."""
+    now = datetime(2026, 9, 28, 12, 0, tzinfo=UTC)
+    resets_at = (now + timedelta(days=5.75)).isoformat().replace("+00:00", "Z")
+    pace = compute_usage_pace(25.0, resets_at, now=now)
+    assert pace is not None
+    assert pace["will_last_to_reset"] is False
+    assert pace["delta_pct"] > 2
+    assert pace_is_deficit(pace) is True
+    runs_out_days_early = ((5.75 * 86400) - pace["eta_seconds"]) / 86400
+    assert abs(runs_out_days_early - 2) < 0.05
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": "cursor", "rationale": "codex deficit", "warnings": []},
+            "agents": {
+                "codex": {
+                    "status": "warm",
+                    "burn_pct_7d": 25.0,
+                    "remaining_pct": 75.0,
+                    "codexbar": {
+                        "weekly_used_pct": 25.0,
+                        "weekly_pace_delta_pct": pace["delta_pct"],
+                        "weekly_expected_pct": pace["expected_pct"],
+                        "will_last_to_reset": False,
+                        "pace_summary": "runs out 2d before reset",
+                    },
+                },
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
+            "diagnostics": {"records_loaded": 4, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "budget-real-deficit",
+                "--cwd",
+                str(delegate._REPO_ROOT),
+                "--prompt",
+                "no-op",
+                "--mode",
+                "read-only",
+                "--check-budget",
+            ]
+        )
+    )
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in err
+    assert "codex" in err and "cursor" in err
     assert "will_last_to_reset=False" in err
 
 
@@ -1191,6 +1314,8 @@ def _codex_dispatch(*extra: str):
             "noop",
             "--mode",
             "read-only",
+            "--cwd",
+            str(delegate._REPO_ROOT),
             "--check-budget",
             *extra,
         ]

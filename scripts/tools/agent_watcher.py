@@ -43,6 +43,7 @@ import yaml
 # ``ai_agent_bridge`` identity (a second sys.modules entry with divergent state).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from scripts.ai_agent_bridge._env import build_agent_env
+from scripts.common.repo_root import project_interpreter
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +86,7 @@ def _get_login_env() -> dict:
     return _LOGIN_ENV_CACHE
 
 # Configuration
-VENV_PYTHON = Path(__file__).parent.parent.parent / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 DB_PATH = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.pid"
 LOG_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.log"

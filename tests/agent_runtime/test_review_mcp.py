@@ -378,6 +378,8 @@ def test_delegate_dispatch_cursor_refuses_primary_checkout(
             "cursor",
             "--task-id",
             "review-task-cursor-primary",
+            "--cwd",
+            str(delegate_cli._REPO_ROOT),
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
             "--review-attempt",

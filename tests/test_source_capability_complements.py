@@ -14,8 +14,9 @@ import pytest
 from scripts.projects.open_model_data import document_signal_manifest as signals
 from scripts.projects.open_model_data import source_capability_complements as complements
 from scripts.projects.open_model_data import source_work_locator_index as locators
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-ROOT = Path(__file__).resolve().parents[1]
+CAPABILITY_POLICY = resolve_open_model_path("data/projects/open_model_data/evidence/source_capability_policy_v1.json")
 ASSETS = {
     "literary": "db.literary_texts",
     "public_textbooks": "db.textbooks.public",
@@ -259,7 +260,7 @@ def _compact_locator(path: Path, rows: list[dict]) -> Path:
 
 
 def _policy(tmp_path: Path, mutate: Callable[[dict], None] | None = None) -> Path:
-    value = json.loads((ROOT / "data/projects/open_model_data/evidence/source_capability_policy_v1.json").read_text())
+    value = json.loads(CAPABILITY_POLICY.read_text())
     if mutate is not None:
         mutate(value)
     _write(tmp_path / "policy.json", value)
@@ -324,7 +325,11 @@ def test_verify_rebuilds_locator_bound_bundle(tmp_path: Path) -> None:
 def test_build_and_verify_accept_compact_locator_with_compact_byte_binding(tmp_path: Path) -> None:
     manifest, phase1_receipt, rows = _phase1(tmp_path)
     locator = _compact_locator(tmp_path / "locators.compact.jsonl", rows)
-    complement, worklist, receipt = tmp_path / "complement.jsonl", tmp_path / "worklist.jsonl", tmp_path / "receipt.json"
+    complement, worklist, receipt = (
+        tmp_path / "complement.jsonl",
+        tmp_path / "worklist.jsonl",
+        tmp_path / "receipt.json",
+    )
     complements.build(
         phase1_manifest=manifest,
         phase1_receipt=phase1_receipt,
@@ -545,9 +550,7 @@ def test_faithful_requires_both_preparation_and_learning(tmp_path: Path) -> None
 
 
 def test_wikipedia_policy_cannot_reopen_learning_without_a_new_bound_policy() -> None:
-    policy = json.loads(
-        (ROOT / "data/projects/open_model_data/evidence/source_capability_policy_v1.json").read_text()
-    )
+    policy = json.loads(CAPABILITY_POLICY.read_text())
     families, _overrides = complements._validate_policy(
         policy,
         complements._validator(complements.SCHEMAS["policy"]),

@@ -23,6 +23,8 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import project_interpreter
+
 from .mcp_proxy import REFERENCE_TOOLS
 
 
@@ -31,7 +33,7 @@ class AdapterError(ValueError):
 
 
 _TOOL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,127}$")
-_PROJECT_PYTHON = (Path(__file__).resolve().parents[3] / ".venv" / "bin" / "python").resolve()
+_PROJECT_PYTHON = project_interpreter()
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
 _SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "sources_db_sha256", "vesum_db_sha256"})
 _SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset({"sources_db_bytes", "vesum_db_bytes"})

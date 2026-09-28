@@ -64,8 +64,26 @@ Hramatka and any 50%/majority heuristic are not membership evidence. A private
 API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
 never becomes an implicit allow. The gate has no environment-variable bypass.
 
-Host-mutation work without an explicit operator GO remains `ESCALATE` (see
-private #212 residual; private #360 crypto redeploy was completed on-host).
+Host actions on the Hramatka host follow operator-expectations item 10's split
+(production cutover stays operator-only; routine maintenance is driver work).
+Routine host maintenance there is driver work per item 10, done then reported,
+and it includes using sudo where the host requires it: pull merged `main`;
+restart an updated or broken service (system or user unit) after checking no
+active dispatch depends on it; install or enable a reviewed systemd unit or
+timer that lives in the repo; clean agent-generated caches, logs, and
+worktrees; install OS packages a reviewed repo change needs. A production
+release rollover on the live-serving Hramatka host (running
+`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
+including rebuilding or swapping the read-only release checkout — private #360
+class) is a production cutover under operator-expectations item 10 and needs a
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count; the private deploy runbook (including the sudo
+steps inside it) applies only after that GO (it remains `ESCALATE` without that
+present-tense GO). Host access and security configuration stays operator-only
+(`ESCALATE`, not solo) — sshd configuration (e.g. `PermitRootLogin`), sudoers,
+user accounts, SSH keys and other credentials, and firewall changes that could
+cut off operator access — because of lock-out risk and because
+accounts/credentials are an operator stop condition.
 
 ## Closeout hygiene check
 
@@ -104,12 +122,25 @@ The gate does not reap orphan worktrees or gate new scope itself — that is
 `post_task_reap` (PR-3) and `hramatka_scope_gate` (PR-2) respectively. It only
 reports.
 
-## Operator-only items — track/escalate, never action solo
+## Production cutover and host access/security — escalate, never action solo
 
-Host mutation without an explicit operator GO must **ESCALATE** — track and
-surface, do not freestyle host changes outside the documented deploy path.
-Drivers with SSH access still follow the private deploy runbook and record
-evidence on the private issue.
+A production release rollover on the live-serving Hramatka host (running
+`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
+including rebuilding or swapping the read-only release checkout — private #360
+class) is a production cutover under operator-expectations item 10 and needs a
+present-tense operator GO for that rollover; a GO recorded on an earlier or
+closed issue does not count; the private deploy runbook (including the sudo
+steps inside it) applies only after that GO (it must **ESCALATE** without that
+present-tense GO). Only after a present-tense operator GO is granted may
+drivers with SSH access follow the private deploy runbook and record evidence
+on the private issue (never freestyling host changes outside that documented
+deploy path). Host access and security configuration stays operator-only
+(**ESCALATE**, not solo) — sshd configuration (e.g. `PermitRootLogin`),
+sudoers, user accounts, SSH keys and other credentials, and firewall changes
+that could cut off operator access — because of lock-out risk and because
+accounts/credentials are an operator stop condition. Routine host maintenance,
+including sudo where the host requires it, is driver work per item 10 (see the
+new-scope gate section above) — it is not part of this escalate class.
 
 ## Same-session correction rule
 

@@ -226,4 +226,8 @@ def test_context_preview_failure_is_named(
     assert body["context_preview"] == ""
     assert body["context_sha256"] == ""
     assert any("context_preview:" in item and "OSError" in item for item in body["errors"])
-    assert any("context preview" in record.message for record in caplog.records)
+    preview_logs = [record.message for record in caplog.records if "context preview" in record.message]
+    assert preview_logs
+    assert all("OSError" in message for message in preview_logs)
+    assert all("context unreadable" not in message for message in preview_logs)
+    assert all("\n" not in message and "\r" not in message for message in preview_logs)

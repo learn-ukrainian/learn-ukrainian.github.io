@@ -115,9 +115,14 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
 - `API_SLOW_SQL_MS` defaults to 500 ms and logs slow SQLite calls made through
   `connect_sqlite()`.
 - `/api/health` exposes in-flight, saturation, timeout, slow-request, and
-  slow-SQL telemetry, plus `instance.host` (hostname or `MONITOR_INSTANCE_ID`)
-  and `instance.git_sha` (exact git HEAD) so SSH-tunneled VPS hosts are
-  distinguishable from a local Mac Monitor.
+  slow-SQL telemetry, plus `instance.host` (the opaque host id from
+  `occupancy_local.resolve_launcher_host_id()` — `LU_MONITOR_HOST_ID` when it
+  is a valid opaque id; a *set but non-opaque* `LU_MONITOR_HOST_ID` returns
+  `"local"` immediately and does not fall through to the driver id or the
+  occupancy host-id mapping; only when the variable is unset does resolution
+  fall through to the driver id, then the mapping, else `"local"`; never a
+  raw hostname) and `instance.git_sha` (exact git HEAD) so SSH-tunneled VPS
+  hosts are distinguishable from a local Mac Monitor.
 - `agents_extensions/shared/hooks/tool-timing.sh` serializes hook data with
   `jq` and posts it to `/api/telemetry/tool-timings`. The endpoint keeps its
   strict `ToolTimingIngest` schema; malformed hook input is discarded locally

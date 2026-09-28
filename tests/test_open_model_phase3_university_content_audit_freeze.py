@@ -9,10 +9,7 @@ import pytest
 from scripts.projects.open_model_data import phase3_university_content_audit_freeze as freeze
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT_PATH = (
-    ROOT
-    / "data/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json"
-)
+ARTIFACT_PATH = freeze.DEFAULT_OUTPUT_PATH
 
 
 def _artifact() -> dict:
@@ -85,9 +82,7 @@ def test_all_26_topic_gaps_are_explicit_without_quarantine_support() -> None:
 
 def test_rejects_database_source_set_substitution_even_with_fresh_receipt_hash() -> None:
     document = copy.deepcopy(_artifact())
-    document["source_universe"]["database_resident_source_ids"][0] = (
-        "uni-ukrmova-vlasova-2023"
-    )
+    document["source_universe"]["database_resident_source_ids"][0] = "uni-ukrmova-vlasova-2023"
     with pytest.raises(freeze.UniversityContentAuditFreezeError, match="database_resident_source_ids"):
         freeze.validate_document(_rehash(document))
 
@@ -104,10 +99,7 @@ def test_authority_lane() -> None:
     document = copy.deepcopy(_artifact())
     universe = document["source_universe"]
     contextual_id = next(
-        iter(
-            set(universe["database_resident_source_ids"])
-            - set(universe["mandatory_conversion_source_ids"])
-        )
+        iter(set(universe["database_resident_source_ids"]) - set(universe["mandatory_conversion_source_ids"]))
     )
     topic = next(row for row in document["topic_coverage"]["topics"] if row["status"] == "sufficient")
     topic["supporting_source_ids"] = [contextual_id]

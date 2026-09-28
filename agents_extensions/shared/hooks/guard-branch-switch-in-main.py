@@ -44,6 +44,15 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Don't write __pycache__ next to deployed hooks (#9108).
+sys.dont_write_bytecode = True
+try:
+    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
 # Words that, when seen as the FIRST token after `git`, indicate a branch
 # switch. Everything else is treated as a different git verb and ignored.
 SWITCH_VERBS = frozenset({"checkout", "switch"})
@@ -146,56 +155,10 @@ def _in_main_worktree(project_root: Path) -> bool:
 # guard-admin-merge.py, and guard-pr-merge.py in sync.
 
 
-def _strip_quotes(token: str) -> str:
-    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
-        return token[1:-1]
-    return token
-
-
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
-    """Return (delimiter, strip_tabs) for each heredoc opener on `line`.
-
-    Handles all four operator/marker forms (#4877): spaced ``<< EOF`` /
-    ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` — the attached ``-``
-    means ``<<-`` (strip leading tabs on the closer), NOT part of the
-    delimiter word. Getting this wrong left a real heredoc effectively
-    unclosed, which (with the old strip) silently dropped everything after
-    the opener.
-    """
-    try:
-        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
-        lexer.whitespace_split = True
-        lexer.commenters = ""
-        tokens = list(lexer)
-    except ValueError:
-        return []
-
-    delimiters: list[tuple[str, bool]] = []
-    i = 0
-    while i < len(tokens):
-        if tokens[i] != "<<":
-            i += 1
-            continue
-        strip_tabs = False
-        j = i + 1
-        delim_tok = ""
-        if j < len(tokens):
-            nxt = tokens[j]
-            if nxt == "-":  # spaced: << - DELIM
-                strip_tabs = True
-                j += 1
-                if j < len(tokens):
-                    delim_tok = tokens[j]
-            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
-                strip_tabs = True
-                delim_tok = nxt[1:]
-            else:
-                delim_tok = nxt
-        delimiter = _strip_quotes(delim_tok)
-        if delimiter:
-            delimiters.append((delimiter, strip_tabs))
-        i = j + 1
-    return delimiters
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
+    """Keep only the shared parser's unambiguous here-doc delimiters."""
+    parsed = skippable_heredoc_delimiters(line)
+    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
 
 
 def _strip_heredoc_bodies(command: str) -> str:
@@ -208,32 +171,7 @@ def _strip_heredoc_bodies(command: str) -> str:
     lines are kept and inspected; only a heredoc that actually closes has
     its body + closer dropped.
     """
-    if "<<" not in command:
-        return command
-
-    lines = command.splitlines()
-    kept: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        line = lines[i]
-        kept.append(line)
-        i += 1
-        pending = _heredoc_delimiters(line)
-        if not pending:
-            continue
-        body_start = i
-        while i < n and pending:
-            delimiter, strip_tabs = pending[0]
-            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
-            if candidate == delimiter:
-                pending.pop(0)
-            i += 1
-        if pending:
-            # Unclosed at EOF → not a real body; keep the lines (fail-closed).
-            kept.extend(lines[body_start:i])
-        # else: closed — body and closer consumed and dropped.
-    return "\n".join(kept)
+    return strip_skippable_heredoc_bodies(command)
 
 
 def _join_line_continuations(text: str) -> str:
@@ -265,7 +203,7 @@ def _segments(command: str) -> list[list[str]]:
     commented-out text can neither trigger nor hide a verb.
     """
     segments: list[list[str]] = []
-    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+    for line in preprocess_shell_command(command).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True
@@ -296,7 +234,7 @@ def _segments_with_following_operator(command: str) -> list[tuple[list[str], str
     when ``cd <path> &&`` changes the effective cwd of the following command.
     """
     segments: list[tuple[list[str], str | None]] = []
-    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+    for line in preprocess_shell_command(command).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True

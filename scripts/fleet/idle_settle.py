@@ -29,6 +29,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.api.subscription_usage import pace_is_deficit
 from scripts.common.repo_root import main_checkout_root
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -144,9 +145,10 @@ class LaneState:
             return False
         if int(self.in_flight or 0) != 0:
             return False
-        if self.quota_ok is False:
-            return False
-        return self.will_last is not False
+        # Raw will_last is not a gate. A freshly reset lane reports False before
+        # the pace is visible. Confirmed deficits are stored as quota_ok False
+        # via pace_is_deficit (or capacity_pick's gated avoid flag).
+        return self.quota_ok is not False
 
 
 def _optional_int(raw: Any) -> int | None:
@@ -294,6 +296,25 @@ def empty_snapshot() -> EligibilitySnapshot:
     return EligibilitySnapshot()
 
 
+def _lane_pace_deficit(row: dict[str, Any]) -> bool:
+    """True only for a confirmed pace deficit, never for a raw will_last flag."""
+    codexbar = row.get("codexbar")
+    if isinstance(codexbar, dict):
+        return pace_is_deficit(codexbar) is True
+    pace = row.get("pace")
+    if isinstance(pace, dict):
+        return pace_is_deficit(pace) is True
+    return pace_is_deficit(row) is True
+
+
+def _lane_quota_ok(row: dict[str, Any], *, avoid_blocks: bool) -> bool | None:
+    quota_raw = row.get("quota_ok")
+    quota_ok: bool | None = None if quota_raw is None else bool(quota_raw)
+    if avoid_blocks or _lane_pace_deficit(row):
+        return False
+    return quota_ok
+
+
 def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
     data = payload if isinstance(payload, dict) else {}
     lanes_raw = data.get("lanes") or []
@@ -308,14 +329,13 @@ def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
         if not lane:
             continue
         will_last = row.get("will_last")
-        quota_ok = row.get("quota_ok")
         lanes.append(
             LaneState(
                 lane=lane,
                 status=str(row.get("status") or "unknown"),
                 in_flight=int(row.get("in_flight") or 0),
                 will_last=None if will_last is None else bool(will_last),
-                quota_ok=None if quota_ok is None else bool(quota_ok),
+                quota_ok=_lane_quota_ok(row, avoid_blocks=bool(row.get("avoid"))),
             )
         )
 
@@ -374,15 +394,13 @@ def lanes_from_capacity_rows(rows: list[dict[str, Any]] | None) -> tuple[LaneSta
         if not lane:
             continue
         will_last = row.get("will_last")
-        avoid = bool(row.get("avoid"))
-        quota_ok = False if avoid else None
         lanes.append(
             LaneState(
                 lane=lane,
                 status=str(row.get("status") or "unknown"),
                 in_flight=int(row.get("in_flight") or 0),
                 will_last=None if will_last is None else bool(will_last),
-                quota_ok=quota_ok,
+                quota_ok=_lane_quota_ok(row, avoid_blocks=bool(row.get("avoid"))),
             )
         )
     return tuple(lanes)

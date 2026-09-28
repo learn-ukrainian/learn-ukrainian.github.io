@@ -11,21 +11,29 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 P1 = DATA / "evidence/phase3_p1_universe_freeze_v1.json"
-P1_DIALECT_REGIONAL_AMENDMENT = (
-    DATA / "evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
-)
+P1_DIALECT_REGIONAL_AMENDMENT = DATA / "evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
 OUTPUT = DATA / "evidence/phase3_p2_canonical_contracts_v1.json"
 
 OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 SCHEMA_VERSION = "phase3_p2_canonical_contracts_v1"
 PINNED_P1_MANIFEST_SHA256 = "0b1cd81448b96b4e818aa1dedd7df7633ff88eb500bb4d6ac3668be02962a35b"
 PINNED_P1_DIALECT_REGIONAL_AMENDMENT_SHA256 = "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"
+# Independently checked against the source blob at 55d0ed1515. This is the
+# frozen contract's generator provenance, not the current source hash.
+FROZEN_GENERATOR_SHA256 = "a1c2356ea291956c73fbeab29a2d46e0547b16cd7e760676b6278a15783b15f2"
 RULE_SLOT_ALGORITHM_VERSION = "phase3_p2_rule_admission_and_identity_v1"
 CASE_RECORD_KINDS = frozenset(
     {
@@ -65,9 +73,7 @@ HISTORICAL_PROTECTION_INVARIANTS = {
 
 
 def canonical_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -79,11 +85,14 @@ def sha256_file(path: Path) -> str:
 
 
 def relative(path: Path) -> str:
+    if path.is_relative_to(DATA):
+        return "data/projects/open_model_data/" + path.relative_to(DATA).as_posix()
     return path.relative_to(ROOT).as_posix()
 
 
 def artifact(path: Path) -> dict[str, str]:
-    return {"path": relative(path), "sha256": sha256_file(path)}
+    digest = FROZEN_GENERATOR_SHA256 if path.resolve() == Path(__file__).resolve() else sha256_file(path)
+    return {"path": relative(path), "sha256": digest}
 
 
 def read_p1() -> dict[str, Any]:
@@ -183,7 +192,8 @@ def build_contract() -> dict[str, Any]:
             "unknown_rights_blocker_count": unknown_rights,
             "required_cell_count": len(base_cells),
             "required_cell_statuses": [
-                {"cell_id": cell["cell_id"], "status": cell["status"]} for cell in sorted(base_cells, key=lambda item: item["cell_id"])
+                {"cell_id": cell["cell_id"], "status": cell["status"]}
+                for cell in sorted(base_cells, key=lambda item: item["cell_id"])
             ],
             "composite_required_cell_count": len(cells),
             "composite_required_cell_statuses": composite_input["composite_required_cell_statuses"],
@@ -197,8 +207,26 @@ def build_contract() -> dict[str, Any]:
             "rule_manifest_sha256": sha256_bytes(canonical_json(slots)),
             "rule_manifest_version": "phase3_p2_rule_manifest_v1",
             "coverage_strata_are_rules": False,
-            "merge_criteria": {"permitted": True, "requires": ["source_qualified_claim_typed_evidence", "registered_qualified_human_adjudication", "all_parent_slot_ids"], "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"], "version_effect": "new_rule_manifest_version_with_all_parent_lineage"},
-            "split_criteria": {"permitted": True, "requires": ["source_qualified_claim_typed_evidence", "registered_qualified_human_adjudication", "parent_slot_id"], "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"], "version_effect": "new_rule_manifest_version_with_parent_child_lineage"},
+            "merge_criteria": {
+                "permitted": True,
+                "requires": [
+                    "source_qualified_claim_typed_evidence",
+                    "registered_qualified_human_adjudication",
+                    "all_parent_slot_ids",
+                ],
+                "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"],
+                "version_effect": "new_rule_manifest_version_with_all_parent_lineage",
+            },
+            "split_criteria": {
+                "permitted": True,
+                "requires": [
+                    "source_qualified_claim_typed_evidence",
+                    "registered_qualified_human_adjudication",
+                    "parent_slot_id",
+                ],
+                "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"],
+                "version_effect": "new_rule_manifest_version_with_parent_child_lineage",
+            },
             "denominator_change_policy": "new_p1_manifest_sha256_and_new_dataset_version_required",
             "substantive_rule_claims": "not_frozen",
         },
@@ -222,7 +250,13 @@ def build_contract() -> dict[str, Any]:
                 "phase3_p2_proposal_record_v1",
                 "phase3_p2_promotion_decision_v1",
             ],
-            "validator_functions": ["validate_contract_integrity", "validate_case_record", "validate_promotion", "validate_rule_slot_identity", "validate_rule_manifest_evolution"],
+            "validator_functions": [
+                "validate_contract_integrity",
+                "validate_case_record",
+                "validate_promotion",
+                "validate_rule_slot_identity",
+                "validate_rule_manifest_evolution",
+            ],
         },
         "adjudication_contract": {
             "registry_status": "FROZEN_NONADMITTING",
@@ -306,8 +340,7 @@ def _proposal_sha256(proposal: dict[str, Any]) -> str:
 def _historical_protection_is_exact(p1: dict[str, Any]) -> bool:
     """Keep protected records bound to P1's non-erasure contract, not assertions."""
     return (
-        p1.get("language_universe", {}).get("historical_protected_classes")
-        == list(HISTORICAL_PROTECTED_CLASSES)
+        p1.get("language_universe", {}).get("historical_protected_classes") == list(HISTORICAL_PROTECTED_CLASSES)
         and p1.get("historical_protection") == HISTORICAL_PROTECTION_INVARIANTS
     )
 
@@ -342,16 +375,8 @@ def validate_case_record(record: dict[str, Any], contract: dict[str, Any] | None
     contract_value = build_contract()
     p1 = read_p1()
     dialect_amendment = read_dialect_regional_amendment()
-    cells = {
-        cell["cell_id"]: cell
-        for cell in _composite_cells(p1, dialect_amendment)
-        if isinstance(cell, dict)
-    }
-    units = {
-        unit["source_unit_id"]: unit
-        for unit in p1["source_manifest"]["source_units"]
-        if isinstance(unit, dict)
-    }
+    cells = {cell["cell_id"]: cell for cell in _composite_cells(p1, dialect_amendment) if isinstance(cell, dict)}
+    units = {unit["source_unit_id"]: unit for unit in p1["source_manifest"]["source_units"] if isinstance(unit, dict)}
     kind = record["record_kind"]
     if kind == "coverage_blocked":
         return (
@@ -379,36 +404,70 @@ def validate_case_record(record: dict[str, Any], contract: dict[str, Any] | None
             return False
     elif cell["status"] != "satisfied":
         return False
-    if kind in {"protected_historical_context", "protected_dialect_or_regional_context"} and cell["protection_required"] is not True:
+    if (
+        kind in {"protected_historical_context", "protected_dialect_or_regional_context"}
+        and cell["protection_required"] is not True
+    ):
         return False
     allowed_roles = set(contract_value["evidence_contract"]["claim_typed_roles"])
     seen_ids: set[str] = set()
     roles: set[str] = set()
     for ref in refs:
-        if not isinstance(ref, dict) or set(ref) != {"evidence_ref_id", "claim_role", "source_unit_id", "source_class", "identity_candidate", "coverage_stratum_id", "source_unit_identity_sha256", "source_artifact_sha256", "provenance_sha256"}:
+        if not isinstance(ref, dict) or set(ref) != {
+            "evidence_ref_id",
+            "claim_role",
+            "source_unit_id",
+            "source_class",
+            "identity_candidate",
+            "coverage_stratum_id",
+            "source_unit_identity_sha256",
+            "source_artifact_sha256",
+            "provenance_sha256",
+        }:
             return False
         identifier = ref["evidence_ref_id"]
-        if not _metadata_identifier(identifier) or identifier in seen_ids or not _metadata_identifier(ref["source_unit_id"]):
+        if (
+            not _metadata_identifier(identifier)
+            or identifier in seen_ids
+            or not _metadata_identifier(ref["source_unit_id"])
+        ):
             return False
         unit = units.get(ref["source_unit_id"])
-        if unit is None or ref["claim_role"] not in allowed_roles or ref["coverage_stratum_id"] != record["coverage_stratum_id"]:
+        if (
+            unit is None
+            or ref["claim_role"] not in allowed_roles
+            or ref["coverage_stratum_id"] != record["coverage_stratum_id"]
+        ):
             return False
         if ref["source_class"] != unit.get("source_class") or not _metadata_identifier(ref["identity_candidate"]):
             return False
         candidates = unit.get("identity_candidates")
         if isinstance(candidates, list) and ref["identity_candidate"] not in candidates:
             return False
-        if unit.get("rights", {}).get("required_state") != "scoped_capability" or unit.get("source_unit_disposition") not in {"supporting_only", "protected"}:
+        if unit.get("rights", {}).get("required_state") != "scoped_capability" or unit.get(
+            "source_unit_disposition"
+        ) not in {"supporting_only", "protected"}:
             return False
-        if ref["source_unit_identity_sha256"] != unit.get("identity_sha256") or ref["source_artifact_sha256"] != unit.get("source_artifact", {}).get("sha256"):
+        if ref["source_unit_identity_sha256"] != unit.get("identity_sha256") or ref[
+            "source_artifact_sha256"
+        ] != unit.get("source_artifact", {}).get("sha256"):
             return False
         if ref["provenance_sha256"] != sha256_bytes(canonical_json(unit.get("provenance"))):
             return False
         seen_ids.add(identifier)
         roles.add(ref["claim_role"])
-    if not isinstance(authority, dict) or set(authority) != {"authority_kind", "actor_kind", "adjudication_id", "evidence_ref_ids"}:
+    if not isinstance(authority, dict) or set(authority) != {
+        "authority_kind",
+        "actor_kind",
+        "adjudication_id",
+        "evidence_ref_ids",
+    }:
         return False
-    if authority.get("authority_kind") != "source_qualified_human_adjudication" or authority.get("actor_kind") != "human" or not _metadata_identifier(authority.get("adjudication_id")):
+    if (
+        authority.get("authority_kind") != "source_qualified_human_adjudication"
+        or authority.get("actor_kind") != "human"
+        or not _metadata_identifier(authority.get("adjudication_id"))
+    ):
         return False
     if authority.get("evidence_ref_ids") != sorted(seen_ids):
         return False
@@ -458,18 +517,32 @@ def validate_case_record(record: dict[str, Any], contract: dict[str, Any] | None
             }
             and set(record)
             == base
-            | {"dialect_or_regional_identity", "region_id", "register_id", "source_qualified_identity", "modern_normalization"}
+            | {
+                "dialect_or_regional_identity",
+                "region_id",
+                "register_id",
+                "source_qualified_identity",
+                "modern_normalization",
+            }
             and record["dialect_or_regional_identity"] == "source_attested_ukrainian_dialect_or_regional_form"
             and all(_metadata_identifier(record[key]) for key in ("region_id", "register_id"))
             and record["source_qualified_identity"] is True
             and record["modern_normalization"] is False
         )
     if kind == "abstention":
-        return set(record) == base | {"abstention_reason_code"} and _metadata_identifier(record["abstention_reason_code"])
+        return set(record) == base | {"abstention_reason_code"} and _metadata_identifier(
+            record["abstention_reason_code"]
+        )
     if kind == "not_applicable_with_evidence":
-        return set(record) == base | {"not_applicable_evidence_id"} and _metadata_identifier(record["not_applicable_evidence_id"])
+        return set(record) == base | {"not_applicable_evidence_id"} and _metadata_identifier(
+            record["not_applicable_evidence_id"]
+        )
     if kind == "minimal_contrast":
-        return set(record) == base | {"contrast_pair_id", "rule_slot_id"} and _metadata_identifier(record["contrast_pair_id"]) and _rule_slot_admitted(record["rule_slot_id"], contract)
+        return (
+            set(record) == base | {"contrast_pair_id", "rule_slot_id"}
+            and _metadata_identifier(record["contrast_pair_id"])
+            and _rule_slot_admitted(record["rule_slot_id"], contract)
+        )
     if kind in {"correct_modern_production", "source_backed_correction"}:
         return set(record) == base | {"rule_slot_id"} and _rule_slot_admitted(record["rule_slot_id"], contract)
     return False
@@ -510,8 +583,10 @@ def validate_rule_slot_identity(slot: dict[str, Any], contract: dict[str, Any] |
     if slot["rule_slot_id"] != expected_id or slot["lineage_kind"] not in {"root", "split_child", "merge"}:
         return False
     parents = slot["parent_slot_ids"]
-    if not isinstance(parents, list) or len(parents) != len(set(parents)) or not all(
-        _is_rule_slot_id(parent) for parent in parents
+    if (
+        not isinstance(parents, list)
+        or len(parents) != len(set(parents))
+        or not all(_is_rule_slot_id(parent) for parent in parents)
     ):
         return False
     if parents != sorted(parents):
@@ -538,7 +613,11 @@ def validate_rule_manifest_evolution(
 ) -> bool:
     """Validate a future versioned manifest evolution without admitting it in P2."""
     value = contract if contract is not None else build_contract()
-    if not validate_contract_integrity(value) or not isinstance(previous_manifest, dict) or not isinstance(next_manifest, dict):
+    if (
+        not validate_contract_integrity(value)
+        or not isinstance(previous_manifest, dict)
+        or not isinstance(next_manifest, dict)
+    ):
         return False
     previous_version = _manifest_version_number(previous_manifest.get("manifest_version"))
     if previous_version is None:
@@ -550,7 +629,13 @@ def validate_rule_manifest_evolution(
         return False
     if previous_version > 1 and not _is_sha256(previous_manifest.get("parent_rule_manifest_sha256")):
         return False
-    if set(next_manifest) != {"manifest_version", "composite_input_sha256", "parent_rule_manifest_sha256", "slots", "rule_manifest_sha256"}:
+    if set(next_manifest) != {
+        "manifest_version",
+        "composite_input_sha256",
+        "parent_rule_manifest_sha256",
+        "slots",
+        "rule_manifest_sha256",
+    }:
         return False
     previous_slots = previous_manifest.get("slots")
     next_slots = next_manifest.get("slots")
@@ -562,14 +647,21 @@ def validate_rule_manifest_evolution(
         or next_manifest.get("composite_input_sha256") != composite_input_sha256
     ):
         return False
-    if not _is_sha256(previous_manifest["rule_manifest_sha256"]) or previous_manifest["rule_manifest_sha256"] != sha256_bytes(canonical_json(previous_slots)):
+    if not _is_sha256(previous_manifest["rule_manifest_sha256"]) or previous_manifest[
+        "rule_manifest_sha256"
+    ] != sha256_bytes(canonical_json(previous_slots)):
         return False
-    if not _is_sha256(next_manifest.get("parent_rule_manifest_sha256")) or next_manifest["parent_rule_manifest_sha256"] != previous_manifest["rule_manifest_sha256"]:
+    if (
+        not _is_sha256(next_manifest.get("parent_rule_manifest_sha256"))
+        or next_manifest["parent_rule_manifest_sha256"] != previous_manifest["rule_manifest_sha256"]
+    ):
         return False
     next_version = _manifest_version_number(next_manifest["manifest_version"])
     if previous_version is None or next_version != previous_version + 1:
         return False
-    if not _is_sha256(next_manifest["rule_manifest_sha256"]) or next_manifest["rule_manifest_sha256"] != sha256_bytes(canonical_json(next_slots)):
+    if not _is_sha256(next_manifest["rule_manifest_sha256"]) or next_manifest["rule_manifest_sha256"] != sha256_bytes(
+        canonical_json(next_slots)
+    ):
         return False
     identifiers = [slot.get("rule_slot_id") for slot in next_slots if isinstance(slot, dict)]
     if len(identifiers) != len(next_slots) or len(identifiers) != len(set(identifiers)):
@@ -614,35 +706,67 @@ def validate_promotion(
         return False
     if contract is not None and not validate_contract_integrity(contract):
         return False
-    if set(proposal) != {"record_kind", "proposal_id", "producer_kind", "producer_provenance", "input_identity_sha256", "proposal_metadata", "proposal_metadata_sha256", "proposal_sha256"}:
+    if set(proposal) != {
+        "record_kind",
+        "proposal_id",
+        "producer_kind",
+        "producer_provenance",
+        "input_identity_sha256",
+        "proposal_metadata",
+        "proposal_metadata_sha256",
+        "proposal_sha256",
+    }:
         return False
     if proposal.get("record_kind") != "proposal" or proposal.get("producer_kind") not in {"model", "tool"}:
         return False
-    if not _metadata_identifier(proposal.get("proposal_id")) or not all(
-        _is_sha256(proposal.get(key)) for key in ("input_identity_sha256", "proposal_metadata_sha256", "proposal_sha256")
-    ) or proposal.get("proposal_sha256") != _proposal_sha256(proposal):
+    if (
+        not _metadata_identifier(proposal.get("proposal_id"))
+        or not all(
+            _is_sha256(proposal.get(key))
+            for key in ("input_identity_sha256", "proposal_metadata_sha256", "proposal_sha256")
+        )
+        or proposal.get("proposal_sha256") != _proposal_sha256(proposal)
+    ):
         return False
     value = build_contract()
     if proposal["input_identity_sha256"] != value["p1_binding"]["composite_input_sha256"]:
         return False
     metadata = proposal.get("proposal_metadata")
-    if not isinstance(metadata, dict) or set(metadata) != {"proposal_schema_version", "candidate_kind", "candidate_identity_sha256", "coverage_stratum_id"}:
+    if not isinstance(metadata, dict) or set(metadata) != {
+        "proposal_schema_version",
+        "candidate_kind",
+        "candidate_identity_sha256",
+        "coverage_stratum_id",
+    }:
         return False
-    if metadata.get("proposal_schema_version") != "phase3_p2_proposal_metadata_v1" or not _metadata_identifier(metadata.get("candidate_kind")):
+    if metadata.get("proposal_schema_version") != "phase3_p2_proposal_metadata_v1" or not _metadata_identifier(
+        metadata.get("candidate_kind")
+    ):
         return False
     if not _is_sha256(metadata.get("candidate_identity_sha256")):
         return False
     composite_cells = {
-        cell["cell_id"] for cell in _composite_cells(read_p1(), read_dialect_regional_amendment()) if isinstance(cell, dict)
+        cell["cell_id"]
+        for cell in _composite_cells(read_p1(), read_dialect_regional_amendment())
+        if isinstance(cell, dict)
     }
     if metadata.get("coverage_stratum_id") not in composite_cells:
         return False
     if proposal["proposal_metadata_sha256"] != sha256_bytes(canonical_json(metadata)):
         return False
     provenance = proposal.get("producer_provenance")
-    if not isinstance(provenance, dict) or set(provenance) != {"producer_kind", "run_identity_sha256", "input_identity_sha256", "proposal_process_version"}:
+    if not isinstance(provenance, dict) or set(provenance) != {
+        "producer_kind",
+        "run_identity_sha256",
+        "input_identity_sha256",
+        "proposal_process_version",
+    }:
         return False
-    if provenance.get("producer_kind") != proposal.get("producer_kind") or provenance.get("input_identity_sha256") != proposal.get("input_identity_sha256") or not _metadata_identifier(provenance.get("proposal_process_version")):
+    if (
+        provenance.get("producer_kind") != proposal.get("producer_kind")
+        or provenance.get("input_identity_sha256") != proposal.get("input_identity_sha256")
+        or not _metadata_identifier(provenance.get("proposal_process_version"))
+    ):
         return False
     if not _is_sha256(provenance.get("run_identity_sha256")):
         return False
@@ -650,7 +774,9 @@ def validate_promotion(
         return False
     if promotion.get("record_kind") != "promotion_decision" or promotion.get("decision") not in {"pending", "rejected"}:
         return False
-    if promotion.get("proposal_id") != proposal.get("proposal_id") or promotion.get("proposal_sha256") != proposal.get("proposal_sha256"):
+    if promotion.get("proposal_id") != proposal.get("proposal_id") or promotion.get("proposal_sha256") != proposal.get(
+        "proposal_sha256"
+    ):
         return False
     if promotion.get("authority") != {"authority_kind": "source_qualified_human_adjudication", "actor_kind": "human"}:
         return False
@@ -668,8 +794,13 @@ def main() -> int:
             raise SystemExit("p2_contract_drift")
         print("p2_contract_verified")
         return 0
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_bytes(expected)
+    if args.output.resolve() == OUTPUT.resolve():
+        publish_bound_companion(ROOT, "open_model_evidence_indexes", "freeze_phase3_p2_contracts", OUTPUT, expected)
+    else:
+        if args.output.absolute().is_relative_to(DATA) or args.output.resolve().is_relative_to(DATA):
+            raise ValueError(f"unbound managed P2 output: {args.output}")
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_bytes(expected)
     print(f"wrote {relative(args.output) if args.output.is_relative_to(ROOT) else args.output}")
     return 0
 

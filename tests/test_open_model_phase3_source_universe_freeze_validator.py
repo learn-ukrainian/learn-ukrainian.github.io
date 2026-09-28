@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -25,15 +26,20 @@ def _script_binding() -> tuple[str, str]:
         ["git", "-C", str(verifier.ROOT), "rev-parse", "origin/main"],
         check=True,
         capture_output=True,
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     ).stdout.strip()
     script = subprocess.run(
         [
-            "git", "-C", str(verifier.ROOT), "show",
+            "git",
+            "-C",
+            str(verifier.ROOT),
+            "show",
             f"{merged_main_sha}:scripts/projects/open_model_data/phase3_source_universe.py",
         ],
         check=True,
-        capture_output=True, timeout=30,
+        capture_output=True,
+        timeout=30,
     ).stdout
     return merged_main_sha, verifier.sha256_bytes(script)
 
@@ -59,13 +65,19 @@ def _record(family_id: str, ordinal: int = 1) -> dict[str, Any]:
         record["parse_status"] = "numbered_hierarchy_parsed"
         record["normalized_text_sha256"] = _token("6")
         record["locator"] = {
-            "kind": "pdf_numbered_hierarchy", "edition_sha256": _token("7"),
-            "page": 1, "line": 1, "end_page": 1, "end_line": 1,
+            "kind": "pdf_numbered_hierarchy",
+            "edition_sha256": _token("7"),
+            "page": 1,
+            "line": 1,
+            "end_page": 1,
+            "end_line": 1,
             "section_path": ["paragraph:1"],
         }
     else:
         record["locator"] = {
-            "kind": "sqlite_row", "table": "fixture", "primary_key_fields": ["id"],
+            "kind": "sqlite_row",
+            "table": "fixture",
+            "primary_key_fields": ["id"],
             "primary_key_sha256": _token("8"),
         }
     return record
@@ -129,21 +141,34 @@ def _evidence(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
         name = f"{family_id}.units.jsonl"
         path = evidence_dir / name
         path.write_text(verifier.canonical_json(_record(family_id)) + "\n", encoding="utf-8")
-        families.append({
-            "family_id": family_id, "unit_count": 1,
-            "ledger_sha256": verifier.sha256_file(path), "ledger_file": name,
-        })
+        families.append(
+            {
+                "family_id": family_id,
+                "unit_count": 1,
+                "ledger_sha256": verifier.sha256_file(path),
+                "ledger_file": name,
+            }
+        )
     summaries = [_lexical_summary(family_id) for family_id in sorted(verifier.LEXICAL_FAMILIES)]
-    _write_json(evidence_dir / verifier.STRUCTURAL_FILE, {
-        "schema_version": "lexical_structural_freeze_v1", "text_free": True, "families": summaries,
-    })
+    _write_json(
+        evidence_dir / verifier.STRUCTURAL_FILE,
+        {
+            "schema_version": "lexical_structural_freeze_v1",
+            "text_free": True,
+            "families": summaries,
+        },
+    )
     structural_hash = verifier.sha256_file(evidence_dir / verifier.STRUCTURAL_FILE)
-    families.extend({
-        "family_id": summary["family_id"], "unit_count": summary["unit_count"],
-        "structural_receipt_file": verifier.STRUCTURAL_FILE,
-        "structural_receipt_sha256": structural_hash,
-        "structural_universe_sha256": summary["ordered_rolling_sha256"],
-    } for summary in summaries)
+    families.extend(
+        {
+            "family_id": summary["family_id"],
+            "unit_count": summary["unit_count"],
+            "structural_receipt_file": verifier.STRUCTURAL_FILE,
+            "structural_receipt_sha256": structural_hash,
+            "structural_universe_sha256": summary["ordered_rolling_sha256"],
+        }
+        for summary in summaries
+    )
     merged_main_sha, script_sha256 = _script_binding()
     receipt: dict[str, Any] = {
         "schema_version": "phase3_source_universe_freeze_v1",
@@ -156,36 +181,52 @@ def _evidence(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
         },
         "coverage_contract_sha256": _token("d"),
         "input_sha256": {
-            "sources_db": _token("e"), "vesum_db": _token("f"), "calque_module": _token("0"),
-            "r2u_cache": _token("1"), "pravopys_2019_pdf": _token("2"), "pravopys_2026_pdf": _token("3"),
+            "sources_db": _token("e"),
+            "vesum_db": _token("f"),
+            "calque_module": _token("0"),
+            "r2u_cache": _token("1"),
+            "pravopys_2019_pdf": _token("2"),
+            "pravopys_2026_pdf": _token("3"),
         },
         "pdf_editions": {
             "pravopys_2019_complete": {
-                "edition_identity": "pravopys_2019_complete", "input_sha256": _token("2"),
+                "edition_identity": "pravopys_2019_complete",
+                "input_sha256": _token("2"),
                 "official_download_locator": "https://example.invalid/2019.pdf",
                 "retrieval_locator": "https://example.invalid/2019-retrieval.pdf",
-                "retrieved_at": "2026-01-01T00:00:00Z", "page_count_extracted": 1,
-                "stable_grain": "pdf_numbered_hierarchy", "paragraph_count": 1,
-                "source_text_committed": False, "rights_provenance_classification": "rights_limited_locator_only",
+                "retrieved_at": "2026-01-01T00:00:00Z",
+                "page_count_extracted": 1,
+                "stable_grain": "pdf_numbered_hierarchy",
+                "paragraph_count": 1,
+                "source_text_committed": False,
+                "rights_provenance_classification": "rights_limited_locator_only",
             },
             "pravopys_2026_complete": {
-                "edition_identity": "pravopys_2026_complete", "input_sha256": _token("3"),
+                "edition_identity": "pravopys_2026_complete",
+                "input_sha256": _token("3"),
                 "official_decision_locator": "https://example.invalid/decision",
                 "official_download_locator": "https://example.invalid/2026.pdf",
                 "retrieval_locator": "https://example.invalid/2026-retrieval.pdf",
-                "retrieved_at": "2026-01-01T00:00:00Z", "page_count_extracted": 1,
-                "stable_grain": "pdf_numbered_hierarchy", "paragraph_count": 1,
-                "source_text_committed": False, "rights_provenance_classification": "rights_limited_locator_only",
+                "retrieved_at": "2026-01-01T00:00:00Z",
+                "page_count_extracted": 1,
+                "stable_grain": "pdf_numbered_hierarchy",
+                "paragraph_count": 1,
+                "source_text_committed": False,
+                "rights_provenance_classification": "rights_limited_locator_only",
             },
         },
         "other_normative_style_inventory": {
-            "candidate_tables": [], "additional_family_count": 0, "zero_additional_family_inventory": True,
+            "candidate_tables": [],
+            "additional_family_count": 0,
+            "zero_additional_family_inventory": True,
         },
         "families": families,
         "status": "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY",
         "blocking_requirements": [
-            "source_unit_dispositions_and_dual_population_audits", "textbook_nonhit_audit",
-            "pravopys_2019_2026_delta_coverage_and_audit", "lexical_used_subset_census",
+            "source_unit_dispositions_and_dual_population_audits",
+            "textbook_nonhit_audit",
+            "pravopys_2019_2026_delta_coverage_and_audit",
+            "lexical_used_subset_census",
         ],
     }
     _manifest(receipt, evidence_dir)
@@ -206,6 +247,10 @@ def test_valid_freeze_reports_integrity_only(tmp_path: Path) -> None:
     assert "status" not in result
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_committed_freeze_integrity() -> None:
     result = verifier.validate(verifier.DEFAULT_EVIDENCE_DIR, repo_root=verifier.ROOT)
 
@@ -218,14 +263,39 @@ def test_committed_freeze_integrity() -> None:
     }
 
 
+def test_mixed_freeze_rejects_stray_and_missing_members(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = tmp_path / "repo"
+    registry = repo / "registry/projects/open_model_data/evidence/source_universe_v1"
+    managed = repo / "data/projects/open_model_data/evidence/source_universe_v1"
+    registry.mkdir(parents=True)
+    managed.mkdir(parents=True)
+    for name in verifier.REGISTRY_FILES:
+        (registry / name).write_bytes(name.encode())
+    artifacts = {}
+    for name in verifier.EXPECTED_FILES - verifier.REGISTRY_FILES:
+        (managed / name).write_bytes(name.encode())
+        artifacts[f"projects/open_model_data/evidence/source_universe_v1/{name}"] = name.encode()
+    monkeypatch.setattr(verifier, "artifact_set", lambda _group, *, repo: SimpleNamespace(artifacts=artifacts))
+
+    with verifier.verified_source_universe_dir(repo_root=repo) as staged:
+        assert {path.name for path in staged.iterdir()} == verifier.EXPECTED_FILES
+    stray = managed / "retired.units.jsonl"
+    stray.write_bytes(b"stale")
+    with pytest.raises(verifier.IntegrityError, match="file set"):
+        with verifier.verified_source_universe_dir(repo_root=repo):
+            pass
+    stray.unlink()
+    artifacts.pop(next(iter(artifacts)))
+    with pytest.raises(verifier.IntegrityError, match="missing managed freeze member"):
+        with verifier.verified_source_universe_dir(repo_root=repo):
+            pass
+
+
 def test_valid_freeze_accepts_empty_ledger(tmp_path: Path) -> None:
     evidence_dir, receipt = _evidence(tmp_path)
     path = evidence_dir / "other_normative_style_inventory.units.jsonl"
     path.write_text("", encoding="utf-8")
-    ledger = next(
-        item for item in receipt["families"]
-        if item["family_id"] == "other_normative_style_inventory"
-    )
+    ledger = next(item for item in receipt["families"] if item["family_id"] == "other_normative_style_inventory")
     ledger["unit_count"] = 0
     ledger["ledger_sha256"] = verifier.sha256_file(path)
     _refresh_payload(receipt, evidence_dir, path.name)
@@ -303,10 +373,7 @@ def test_rejects_inverted_pdf_locator_range(tmp_path: Path) -> None:
     record = json.loads(path.read_text(encoding="utf-8"))
     record["locator"].update({"page": 5, "line": 2, "end_page": 4, "end_line": 9})
     path.write_text(verifier.canonical_json(record) + "\n", encoding="utf-8")
-    ledger = next(
-        item for item in receipt["families"]
-        if item["family_id"] == "pravopys_2026_complete"
-    )
+    ledger = next(item for item in receipt["families"] if item["family_id"] == "pravopys_2026_complete")
     ledger["ledger_sha256"] = verifier.sha256_file(path)
     _refresh_payload(receipt, evidence_dir, path.name)
     _write_receipt(receipt, evidence_dir)

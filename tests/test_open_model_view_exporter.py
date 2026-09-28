@@ -16,9 +16,10 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import correction_factory
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import validate_source_records as source_contract
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_EXAMPLE = ROOT / "data/projects/open_model_data/contracts/source_record_v1.example.json"
+SOURCE_EXAMPLE = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/source_record_v1.example.json"
 
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -546,7 +547,7 @@ def test_source_family_is_not_inferred_from_opaque_record_id(tmp_path: Path) -> 
 
 
 def test_historical_wikipedia_receipt_is_frozen_without_rewriting_artifact_metadata() -> None:
-    path = ROOT / "data/projects/open_model_data/model_views/wikipedia_faithful_cpt_export_receipt_v1.json"
+    path = REGISTRY_OPEN_MODEL_DATA_DIR / "model_views/wikipedia_faithful_cpt_export_receipt_v1.json"
     receipt = exporter.read_json(path)
     frozen = exporter.freeze_wikipedia_historical_export_receipt(receipt)
 
@@ -909,11 +910,7 @@ def test_qgram_bound_rejects_same_histogram_different_sequence() -> None:
 
 
 def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
-    values = [
-        "".join(characters)
-        for length in range(1, 6)
-        for characters in product("аб", repeat=length)
-    ]
+    values = ["".join(characters) for length in range(1, 6) for characters in product("аб", repeat=length)]
     for first in values:
         for second in values:
             ratio = exporter.SequenceMatcher(None, first, second, autojunk=False).ratio()
@@ -923,10 +920,7 @@ def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
 
 def test_long_character_sequence_detects_distributed_repetitive_edits() -> None:
     reference = "".join(chr(ord("а") + index % 20) for index in range(12_000))
-    candidate = "".join(
-        "я" if index % 10 == 9 else character
-        for index, character in enumerate(reference)
-    )
+    candidate = "".join("я" if index % 10 == 9 else character for index, character in enumerate(reference))
 
     assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
 
@@ -945,11 +939,7 @@ def test_long_character_sequence_detects_realistic_indels(edit_kind: str) -> Non
         chunks = [reference[index : index + 100] for index in range(0, len(reference), 100)]
         candidate = "я".join(chunks)
     else:
-        candidate = "".join(
-            character
-            for index, character in enumerate(reference)
-            if index % 100 != 99
-        )
+        candidate = "".join(character for index, character in enumerate(reference) if index % 100 != 99)
 
     assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
 
@@ -1593,11 +1583,16 @@ def test_human_source_local_permission_is_not_public_authority(tmp_path, redistr
     write_jsonl(tmp_path / "sources.jsonl", [record])
     write_jsonl(tmp_path / "payloads.jsonl", [payload])
     receipt = exporter.export_pretraining(
-        source_records_path=tmp_path / "sources.jsonl", payloads_path=tmp_path / "payloads.jsonl",
-        origin="human_authored", representation_view="faithful_literary",
-        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
-        allow_test_fixtures=False, operation=operation,
-        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        source_records_path=tmp_path / "sources.jsonl",
+        payloads_path=tmp_path / "payloads.jsonl",
+        origin="human_authored",
+        representation_view="faithful_literary",
+        output=tmp_path / "output.jsonl",
+        receipt_output=tmp_path / "receipt.json",
+        allow_test_fixtures=False,
+        operation=operation,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
         extra_evaluation_artifacts=(),
     )
     assert receipt["output"]["records"] == expected
@@ -1616,11 +1611,15 @@ def test_machine_origin_cannot_become_training_eligible(tmp_path, origin):
     write_jsonl(tmp_path / "sources.jsonl", [record])
     write_jsonl(tmp_path / "payloads.jsonl", [payload])
     receipt = exporter.export_pretraining(
-        source_records_path=tmp_path / "sources.jsonl", payloads_path=tmp_path / "payloads.jsonl",
-        origin=origin, representation_view="faithful_literary",
-        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
+        source_records_path=tmp_path / "sources.jsonl",
+        payloads_path=tmp_path / "payloads.jsonl",
+        origin=origin,
+        representation_view="faithful_literary",
+        output=tmp_path / "output.jsonl",
+        receipt_output=tmp_path / "receipt.json",
         allow_test_fixtures=True,
-        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
         extra_evaluation_artifacts=(),
     )
     assert receipt["output"]["records"] == 0
@@ -1643,11 +1642,16 @@ def test_correction_consumer_permissions_are_operation_specific(tmp_path, view_k
     write_jsonl(tmp_path / "source.jsonl", [record])
     write_jsonl(tmp_path / "correction.jsonl", [correction_record(text)])
     receipt = exporter.export_correction_family(
-        view_kind=view_kind, source_records_path=tmp_path / "source.jsonl",
-        correction_records_path=tmp_path / "correction.jsonl", origin="machine_generated",
-        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
-        operation=operation, allow_test_fixtures=True,
-        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        view_kind=view_kind,
+        source_records_path=tmp_path / "source.jsonl",
+        correction_records_path=tmp_path / "correction.jsonl",
+        origin="machine_generated",
+        output=tmp_path / "output.jsonl",
+        receipt_output=tmp_path / "receipt.json",
+        operation=operation,
+        allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
         extra_evaluation_artifacts=(),
     )
     assert receipt["output"]["records"] == expected

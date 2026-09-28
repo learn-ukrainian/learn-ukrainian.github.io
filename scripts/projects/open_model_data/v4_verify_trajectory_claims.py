@@ -31,6 +31,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -55,7 +57,7 @@ def resolve_data_path(rel_path: str) -> Path:
     return local_p
 
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_cot_claim_verification_receipt.schema.json"
 
@@ -69,7 +71,9 @@ DEFAULT_INPUT_TRAJECTORIES = resolve_data_path(
 DEFAULT_TRAJECTORIES_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "trajectories"
 DEFAULT_VERIFIED_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "verified_trajectories.jsonl"
 DEFAULT_REJECTED_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "rejected_trajectories.jsonl"
-DEFAULT_RECEIPT_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "cot_claim_verification_receipt.json"
+DEFAULT_RECEIPT_OUTPUT = resolve_open_model_path(
+    "data/projects/open_model_data/trajectories/cot_claim_verification_receipt.json"
+)
 
 PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
 ACUTE_RE = re.compile(r"[\u0301\u0300]")
@@ -284,7 +288,9 @@ class CoTClaimVerifier:
             cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (norm,))
             lem_row = cur.fetchone()
             if lem_row:
-                cur.execute("SELECT DISTINCT pos, tags FROM forms_all WHERE lemma = ? OR word_form = ?", (lem_row[0], norm))
+                cur.execute(
+                    "SELECT DISTINCT pos, tags FROM forms_all WHERE lemma = ? OR word_form = ?", (lem_row[0], norm)
+                )
                 rows = cur.fetchall()
         if not rows:
             return False

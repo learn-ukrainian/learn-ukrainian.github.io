@@ -175,6 +175,7 @@ def _validate_runtime(repo_root: Path, *, require_interpreter: bool = False) -> 
     if not (repo_root / ".git").is_dir() and not (repo_root / ".git").is_file():
         raise LaunchdError(f"repository root is missing .git: {repo_root}")
     if require_interpreter:
+        # Intentional: validate the interpreter of the checkout this LaunchAgent runs.
         interpreter = repo_root / ".venv" / "bin" / "python"
         if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
             raise LaunchdError(f"required interpreter is missing: {interpreter}")

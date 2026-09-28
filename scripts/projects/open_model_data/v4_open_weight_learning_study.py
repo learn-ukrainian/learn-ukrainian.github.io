@@ -19,10 +19,20 @@ import hashlib
 import json
 import re
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
 import jsonschema
+
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import ArtifactChange, CompanionChange, publish_set
+
+_GROUP = "open_model_study_outputs"
+_DATASET_GROUP = "open_model_other_indexes"
+_RECIPE = "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+_RUNS = "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
+_RECEIPT = "projects/open_model_data/study/v4_learning_study_receipt_v1.json"
 
 DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MODEL_IDENTIFIER = "google/gemma-4-31B-it"
@@ -72,18 +82,116 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
             assert_no_private_host_paths(item, f"{path_prefix}[{idx}]")
 
 
+def _destination(repo: Path, path: Path, relative: str) -> bool:
+    """Recognize only the declared managed destination, including absolute CLI paths."""
+    root = repo.resolve()
+    absolute = path.absolute()
+    managed = root / relative
+    if absolute == managed:
+        if path.resolve() != managed:
+            raise ValueError(f"managed study destination reached through a symlink: {path}")
+        return True
+    if absolute.is_relative_to(root / "data/projects/open_model_data") or absolute.is_relative_to(
+        root / "registry/projects/open_model_data"
+    ):
+        raise ValueError(f"unsupported managed study destination: {path}")
+    if path.resolve().is_relative_to(root / "data/projects/open_model_data") or path.resolve().is_relative_to(
+        root / "registry/projects/open_model_data"
+    ):
+        raise ValueError(f"managed study destination reached through a symlink: {path}")
+    return False
+
+
+def _from_repo(repo: Path, path: Path) -> Path:
+    return path if path.is_absolute() else repo / path
+
+
+def _verified_set(repo: Path, group: str) -> storage_paths.ArtifactSet:
+    try:
+        return storage_paths.artifact_set(group, repo=repo)
+    except (FileNotFoundError, ValueError) as exc:
+        raise ValueError(
+            f"Cannot verify {group}: {exc}; hydrate with "
+            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+        ) from exc
+
+
+def _study_snapshot(repo: Path) -> storage_paths.ArtifactSet:
+    snapshot = _verified_set(repo, _GROUP)
+    if _RECIPE not in snapshot.companions or _RUNS not in snapshot.artifacts or _RECEIPT not in snapshot.artifacts:
+        raise ValueError("incomplete learning study set; hydrate and verify open_model_study_outputs")
+    return snapshot
+
+
+def _publish_study(
+    repo: Path,
+    snapshot: storage_paths.ArtifactSet,
+    recipe: Path,
+    runs: Path | None = None,
+    receipt: Path | None = None,
+) -> None:
+    """Publish the staged recipe and optional A outputs against one verified version."""
+    members = {entry["path"][5:] for entry in snapshot.manifest["entries"]}
+    prior = {entry["path"][5:]: entry["sha256"] for entry in snapshot.manifest["entries"]}
+    rows = []
+    if runs is not None and receipt is not None:
+        rows = [
+            ArtifactChange("replace", _RUNS, runs, prior[_RUNS]),
+            ArtifactChange("replace", _RECEIPT, receipt, prior[_RECEIPT]),
+        ]
+    with tempfile.TemporaryDirectory(prefix="learning-study-companions-") as directory:
+        companion_rows = [CompanionChange(_RECIPE, recipe, sha256_bytes(snapshot.companions[_RECIPE]))]
+        for index, (relative, content) in enumerate(snapshot.companions.items()):
+            if relative == _RECIPE:
+                continue
+            staged = Path(directory) / f"unchanged-{index}"
+            staged.write_bytes(content)
+            companion_rows.append(CompanionChange(relative, staged, sha256_bytes(content)))
+        publish_set(
+            repo,
+            _GROUP,
+            rows,
+            "v4_open_weight_learning_study.py",
+            companions=companion_rows,
+            expected_members=members,
+            expected_manifest=sha256_bytes((json.dumps(snapshot.manifest, indent=2, sort_keys=True) + "\n").encode()),
+        )
+
+
 def build_recipe(
     repo_root: Path,
     recipe_out: Path,
 ) -> dict[str, Any]:
     """Build the controlled learning study recipe (TRAIN-1 & TRAIN-2)."""
-    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
-    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
-    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    recipe_out = _from_repo(repo_root, recipe_out)
+    if _destination(repo_root, recipe_out, _RECIPE):
+        snapshot = _study_snapshot(repo_root)
+        with tempfile.TemporaryDirectory(prefix="learning-study-") as directory:
+            staged = Path(directory) / "recipe.json"
+            result = _build_recipe_into(repo_root, staged)
+            _publish_study(repo_root, snapshot, staged)
+        return result
+    return _build_recipe_into(repo_root, recipe_out)
 
-    for p in [dataset_manifest_path, dataset_records_path, dataset_receipt_path]:
-        if not p.exists():
-            raise FileNotFoundError(f"Missing required dataset dependency: {p}")
+
+def _build_recipe_into(repo_root: Path, recipe_out: Path) -> dict[str, Any]:
+    dataset_manifest_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    )
+    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    dataset_receipt_path = (
+        repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    )
+
+    dataset = _verified_set(repo_root, _DATASET_GROUP)
+    required = {
+        f"registry/{dataset_manifest_path.relative_to(repo_root / 'registry')}": dataset.companions,
+        f"registry/{dataset_receipt_path.relative_to(repo_root / 'registry')}": dataset.companions,
+        str(dataset_records_path.relative_to(repo_root / "data")): dataset.artifacts,
+    }
+    for relative, members in required.items():
+        if relative not in members:
+            raise ValueError(f"missing required verified dataset dependency: {relative}")
 
     recipe_data = {
         "schema_version": "v4_learning_study_recipe_v1",
@@ -126,7 +234,9 @@ def build_recipe(
     }
 
     assert_no_private_host_paths(recipe_data)
-    recipe_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_recipe_v1.schema.json"
+    recipe_schema_path = (
+        repo_root / "registry/projects/open_model_data/contracts/v4_learning_study_recipe_v1.schema.json"
+    )
     recipe_schema = json.loads(recipe_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=recipe_data, schema=recipe_schema)
 
@@ -142,10 +252,43 @@ def run_study(
     receipt_out: Path,
 ) -> dict[str, Any]:
     """Run the controlled learning study across conditions and seeds (TRAIN-3, TRAIN-4, TRAIN-5)."""
+    recipe_path = _from_repo(repo_root, recipe_path)
+    runs_out = _from_repo(repo_root, runs_out)
+    receipt_out = _from_repo(repo_root, receipt_out)
+    managed_runs = _destination(repo_root, runs_out, f"data/{_RUNS}")
+    managed_receipt = _destination(repo_root, receipt_out, f"data/{_RECEIPT}")
+    managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
+    if managed_runs != managed_receipt:
+        raise ValueError("study runs and receipt must share a managed or external destination")
+    if managed_runs:
+        if not managed_recipe:
+            raise ValueError("managed study outputs require the managed recipe")
+        snapshot = _study_snapshot(repo_root)
+        with tempfile.TemporaryDirectory(prefix="learning-study-") as directory:
+            stage = Path(directory)
+            staged_recipe = stage / "recipe.json"
+            staged_recipe.write_bytes(snapshot.companions[_RECIPE])
+            staged_runs = stage / "runs.jsonl"
+            staged_receipt = stage / "receipt.json"
+            result = _run_study_into(repo_root, staged_recipe, staged_runs, staged_receipt)
+            _publish_study(repo_root, snapshot, staged_recipe, staged_runs, staged_receipt)
+        return result
+    if managed_recipe:
+        snapshot = _study_snapshot(repo_root)
+        with tempfile.TemporaryDirectory(prefix="learning-study-") as directory:
+            staged_recipe = Path(directory) / "recipe.json"
+            staged_recipe.write_bytes(snapshot.companions[_RECIPE])
+            return _run_study_into(repo_root, staged_recipe, runs_out, receipt_out)
+    return _run_study_into(repo_root, recipe_path, runs_out, receipt_out)
+
+
+def _run_study_into(repo_root: Path, recipe_path: Path, runs_out: Path, receipt_out: Path) -> dict[str, Any]:
     recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
     recipe_sha = sha256_file(recipe_path)
 
-    runs_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_execution_v1.schema.json"
+    runs_schema_path = (
+        repo_root / "registry/projects/open_model_data/contracts/v4_learning_study_execution_v1.schema.json"
+    )
     runs_schema = json.loads(runs_schema_path.read_text(encoding="utf-8"))
 
     # Evaluated outcomes per condition and seed (Calibrated Protocol Simulation Fixtures)
@@ -347,7 +490,9 @@ def run_study(
     }
 
     assert_no_private_host_paths(receipt_data)
-    receipt_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+    receipt_schema_path = (
+        repo_root / "registry/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+    )
     receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=receipt_data, schema=receipt_schema)
 
@@ -364,18 +509,47 @@ def verify_study(
     receipt_path: Path,
 ) -> bool:
     """Verify the controlled learning study artifacts."""
+    recipe_path = _from_repo(repo_root, recipe_path)
+    runs_path = _from_repo(repo_root, runs_path)
+    receipt_path = _from_repo(repo_root, receipt_path)
+    managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
+    managed_runs = _destination(repo_root, runs_path, f"data/{_RUNS}")
+    managed_receipt = _destination(repo_root, receipt_path, f"data/{_RECEIPT}")
+    if managed_recipe or managed_runs or managed_receipt:
+        snapshot = _study_snapshot(repo_root)
+        with tempfile.TemporaryDirectory(prefix="learning-study-verify-") as directory:
+            stage = Path(directory)
+            sources = (
+                (recipe_path, managed_recipe, snapshot.companions[_RECIPE], "recipe.json"),
+                (runs_path, managed_runs, snapshot.artifacts[_RUNS], "runs.jsonl"),
+                (receipt_path, managed_receipt, snapshot.artifacts[_RECEIPT], "receipt.json"),
+            )
+            staged = []
+            for original, managed, content, name in sources:
+                target = stage / name
+                if not managed and not original.is_file():
+                    return False
+                target.write_bytes(content if managed else original.read_bytes())
+                staged.append(target)
+            return _verify_study_files(repo_root, *staged)
+    return _verify_study_files(repo_root, recipe_path, runs_path, receipt_path)
+
+
+def _verify_study_files(repo_root: Path, recipe_path: Path, runs_path: Path, receipt_path: Path) -> bool:
     if not recipe_path.exists() or not runs_path.exists() or not receipt_path.exists():
         return False
 
     receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert_no_private_host_paths(receipt_data)
 
-    receipt_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+    receipt_schema_path = (
+        repo_root / "registry/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+    )
     if not receipt_schema_path.is_file():
         script_root = Path(__file__).resolve().parents[3]
         for p in [repo_root, Path.cwd(), script_root]:
             for parent in [p, *p.parents]:
-                cand = parent / "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+                cand = parent / "registry/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
                 if cand.is_file():
                     receipt_schema_path = cand
                     break
@@ -390,10 +564,56 @@ def verify_study(
     if sha256_file(recipe_path) != receipt_data.get("recipe_sha256"):
         return False
 
+    if not runs_path.read_bytes().strip():
+        return False
+
     if receipt_data.get("summary_findings", {}).get("catastrophic_forgetting_detected") is not False:
         return False
 
     return receipt_data.get("summary_findings", {}).get("historical_preservation_verified") is True
+
+
+def prepare_and_run(repo_root: Path, recipe_path: Path, runs_path: Path, receipt_path: Path) -> dict[str, Any]:
+    """Build and validate the complete invocation before publishing managed outputs."""
+    recipe_path = _from_repo(repo_root, recipe_path)
+    runs_path = _from_repo(repo_root, runs_path)
+    receipt_path = _from_repo(repo_root, receipt_path)
+    managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
+    managed_runs = _destination(repo_root, runs_path, f"data/{_RUNS}")
+    managed_receipt = _destination(repo_root, receipt_path, f"data/{_RECEIPT}")
+    if managed_runs != managed_receipt:
+        raise ValueError("study runs and receipt must share a managed or external destination")
+    if managed_runs and not managed_recipe:
+        raise ValueError("managed study outputs require the managed recipe")
+    if not (managed_recipe or managed_runs):
+        _build_recipe_into(repo_root, recipe_path)
+        return _run_study_into(repo_root, recipe_path, runs_path, receipt_path)
+    snapshot = _study_snapshot(repo_root)
+    with tempfile.TemporaryDirectory(prefix="learning-study-") as directory:
+        stage = Path(directory)
+        staged_recipe = stage / "recipe.json"
+        staged_runs = stage / "runs.jsonl"
+        staged_receipt = stage / "receipt.json"
+        _build_recipe_into(repo_root, staged_recipe)
+        result = _run_study_into(repo_root, staged_recipe, staged_runs, staged_receipt)
+        if not _verify_study_files(repo_root, staged_recipe, staged_runs, staged_receipt):
+            raise ValueError("staged learning study failed verification")
+        _publish_study(
+            repo_root,
+            snapshot,
+            staged_recipe,
+            staged_runs if managed_runs else None,
+            staged_receipt if managed_receipt else None,
+        )
+        if not managed_recipe:
+            recipe_path.parent.mkdir(parents=True, exist_ok=True)
+            recipe_path.write_bytes(staged_recipe.read_bytes())
+        if not managed_runs:
+            runs_path.parent.mkdir(parents=True, exist_ok=True)
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            runs_path.write_bytes(staged_runs.read_bytes())
+            receipt_path.write_bytes(staged_receipt.read_bytes())
+        return result
 
 
 def main() -> int:
@@ -403,7 +623,7 @@ def main() -> int:
     parser.add_argument(
         "--recipe",
         type=Path,
-        default=Path("data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"),
+        default=Path("registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json"),
     )
     parser.add_argument(
         "--runs",
@@ -429,8 +649,7 @@ def main() -> int:
             print(f"SUCCESS: Built recipe {rec['recipe_id']}")
             return 0
         elif args.action == "run":
-            build_recipe(repo_root, rec_p)
-            receipt = run_study(repo_root, rec_p, runs_p, rcpt_p)
+            receipt = prepare_and_run(repo_root, rec_p, runs_p, rcpt_p)
             print(f"SUCCESS: Completed learning study with receipt {receipt['receipt_id']}")
             return 0
         elif args.action == "verify":

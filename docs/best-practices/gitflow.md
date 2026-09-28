@@ -242,10 +242,9 @@ close the gap:
 | Hook | Owns | Blocks |
 | --- | --- | --- |
 | `guard-admin-merge.py` | `gh pr merge --admin` | a blocking check is red (#M-0.5) |
-| `guard-pr-merge.py` | every other `gh pr merge` | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
+| `guard-pr-merge.py` | every `gh pr merge`, including `--admin` | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
 
-The two never judge the same command — `guard-pr-merge.py` skips `--admin`
-segments. Both fail **closed**: if the PR, its checks, or the base branch's
+Both guards judge `--admin` merges. They fail **closed**: if the PR, its checks, or the base branch's
 protection can't be read (gh error/timeout), the merge is refused rather than
 assumed safe.
 

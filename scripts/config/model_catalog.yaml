@@ -99,7 +99,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
+      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -457,10 +457,21 @@ models:
     weaknesses: [frontier_quota_cost, superseded_by_claude-opus-5]
     sources:
       - https://www.anthropic.com/news/claude-opus-4-8
-  claude-sonnet-5:
+  claude-sonnet-5-5:
     family: anthropic
     tier: frontier_practical
     lifecycle: active
+    roles: [implementation, agentic_coding, strong_review]
+    transports: [native_claude, cursor]
+    strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task]
+    weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured]
+    sources:
+      - https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+      - https://www.anthropic.com/claude-sonnet-5-5
+  claude-sonnet-5:
+    family: anthropic
+    tier: frontier_practical
+    lifecycle: fallback
     roles: [implementation, agentic_coding, strong_review]
     transports: [native_claude, cursor]
     strengths: [speed_intelligence_balance, complex_instruction_following]
@@ -1008,6 +1019,13 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
+  claude-sonnet-5-5:
+    model_id: claude-sonnet-5-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5-5
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-sonnet-5:
     model_id: claude-sonnet-5
     route: claude
@@ -1161,13 +1179,14 @@ formal_cf_defaults:
     escalate_model_id: gpt-6-astra
     escalate_effort: high
   claude:
-    model_id: claude-sonnet-5
+    model_id: claude-sonnet-5-5
     effort: high
-    # Sealed Claude ACP: Sonnet default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
+    # Sealed Claude ACP: Sonnet 5.5 default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
     # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
     escalate_model_id: claude-fable-5
     escalate_effort: high
     family_models:
+      - claude-sonnet-5-5
       - claude-sonnet-5
       - claude-fable-5
       - claude-opus-5-5
@@ -1211,7 +1230,7 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet → Grok / K3 / DS / pool.
+  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / K3 / DS / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1221,7 +1240,7 @@ review_ladders:
     # NOT on the authority ladder at all; it remains a practical/coding seat.
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
-    - [claude-sonnet-5]
+    - [claude-sonnet-5-5]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
     - [kimi-k3]
@@ -1232,12 +1251,12 @@ review_ladders:
     - [pool]
     - [pool-xs]
   high: &practical_first_code_review
-    # Routine CF order: Sol high → Opus 5.5 high → Sonnet → Grok / K3…
+    # Routine CF order: Sol high → Opus 5.5 high → Sonnet 5.5 → Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-opus-5-5]
     - [claude-opus-5-5-cursor-fallback]
-    - [claude-sonnet-5]
+    - [claude-sonnet-5-5]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
     - [kimi-k3]

@@ -19,13 +19,22 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: atlas-grow
+  cancel-in-progress: false
 
 jobs:
   grow:
     name: Promote clean Word Atlas grow candidates
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Job-scoped (zizmor excessive-permissions): only this job pushes the
+    # grow branch and opens/updates its PR.
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -57,7 +66,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML requests ukrainian-word-stress regex==2026.5.9
+          .venv/bin/python -m pip install PyYAML requests ukrainian-word-stress regex==2026.5.9 jsonschema==4.26.0
 
       - name: Configure GitHub auth
         if: steps.dictionary_data.outputs.available == 'true'

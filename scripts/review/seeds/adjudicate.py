@@ -30,9 +30,9 @@ delegate append a block to the prompt the seat receives (the worktree block inte
 adjudication dispatch has no appended blocks at all and ``record`` refuses any other dispatch.
 
 **The recorded dispatch must equal the canonical dispatch (R3-A r7).** ``dispatch_argv`` is the only way an
-adjudication task is dispatched, and it never passes ``--cwd`` or ``--worktree``, so the seat runs at delegate's own
-default working directory, the primary checkout (``delegate._REPO_ROOT``). ``check_dispatch_binding`` checks that
-directly (a caller-chosen ``--cwd`` could otherwise carry its own instructive ``AGENTS.md``/``CLAUDE.md`` outside
+adjudication task is dispatched, and it passes ``--cwd`` for the primary checkout (``delegate._REPO_ROOT``).
+``check_dispatch_binding`` checks that exact directory and the dispatch argument hash
+(a different ``--cwd`` could otherwise carry its own instructive ``AGENTS.md``/``CLAUDE.md`` outside
 the hashed prompt) and reads the adjudicator's identity from the very same parsed record it checked, never rereading
 the file, so a record replaced between the check and the identity read cannot change who is trusted. **Documented
 residual, not fixed here:** instructions the runtime reads from its own home directory (not the dispatch cwd) are
@@ -314,7 +314,7 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
 def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
     """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
 
-    Deliberately no ``--worktree`` (nor lifecycle/research flags): the dispatch must append no prompt blocks.
+    The explicit primary ``--cwd`` preserves the no-appended-blocks prompt binding.
 
     ``model`` is required: a task dispatched without an explicit model resolves to a provider default before
     delegate records ``model``, and ``check_dispatch_binding`` cannot reconstruct that resolution byte-for-byte
@@ -334,6 +334,8 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         str(task_file),
         "--mode",
         READ_ONLY_MODE,
+        "--cwd",
+        str(_delegate_module()._REPO_ROOT),
         "--model",
         model,
     ]
@@ -505,9 +507,8 @@ def check_dispatch_binding(
     :func:`_expected_dispatch_args_sha256`); any difference, present or future, is ``adjudication_task_mismatch``.
     ``prompt_blocks`` is checked directly because it covers the *prompt* delegate built, not an argument.
 
-    The one exception is ``cwd``: a plain dispatch (no ``--cwd``) resolves to ``delegate._REPO_ROOT``, a
-    runtime-derived path, not a literal parsed argument value (``args.cwd`` stays ``None`` either way), so it is
-    still compared directly against the primary checkout — a caller-chosen ``--cwd`` can carry its own
+    The ``cwd`` field is also compared directly against the primary checkout named by the canonical
+    ``--cwd``; a different ``--cwd`` can carry its own
     ``AGENTS.md``/``CLAUDE.md`` outside the hashed prompt.
 
     Residual (not fixed here): instructions the runtime reads from its own home directory (not the dispatch cwd) are
@@ -549,7 +550,7 @@ def check_dispatch_binding(
     if dispatched.get("cwd") != canonical_cwd:
         raise AdjudicationError(
             f"the dispatch of {task_id} ran with cwd {dispatched.get('cwd')!r}, not the primary checkout "
-            f"{canonical_cwd!r} a plain dispatch (no --cwd) resolves to: a caller-chosen --cwd can carry its own "
+            f"{canonical_cwd!r} named by the canonical --cwd: a different --cwd can carry its own "
             "AGENTS.md/CLAUDE.md instructions the adjudicator would read outside the hashed prompt",
             TASK_MISMATCH,
         )

@@ -1224,9 +1224,11 @@ def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0
     duration, and error *class* (never the error message, which can embed a
     private argument). Default (non-privacy) behavior is unchanged.
     """
+    import os
     from datetime import datetime as _dt
 
-    log_dir = Path(__file__).resolve().parents[2].parent / "logs"
+    override = os.environ.get("LU_MCP_SOURCES_LOG_DIR")
+    log_dir = Path(override) if override else Path(__file__).resolve().parents[2].parent / "logs"
     log_dir.mkdir(exist_ok=True)
     log_path = log_dir / "mcp-sources-requests.jsonl"
 

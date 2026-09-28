@@ -9,19 +9,31 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import correction_protection_consumer as consumer
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "data/projects/open_model_data/release/correction_protection_v1"
 
 
 def _json(path: Path) -> dict:
+    if path.parent == RELEASE:
+        path = REGISTRY_OPEN_MODEL_DATA_DIR / "release/correction_protection_v1" / path.name
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _jsonl(path: Path) -> list[dict]:
+    if path.parent == RELEASE:
+        relative = f"projects/open_model_data/release/correction_protection_v1/{path.name}"
+        raw = artifact_set("open_model_release_payload", repo=ROOT).artifacts[relative]
+        return [json.loads(line) for line in raw.decode("utf-8").splitlines()]
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_consumer_view_schema_is_strict_and_public_views_validate() -> None:
     schema = _json(consumer.VIEW_SCHEMA)
     Draft202012Validator.check_schema(schema)
@@ -38,6 +50,10 @@ def test_consumer_view_schema_is_strict_and_public_views_validate() -> None:
     assert all(row["proposal"] is None for row in filtering)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_public_non_erasure_benchmark_covers_known_answers_and_mandatory_canary() -> None:
     bundle = {name: _jsonl(RELEASE / f"{name}.jsonl") for name in consumer.PUBLIC_FILES}
     report = consumer.public_benchmark(bundle)
@@ -60,14 +76,19 @@ def test_public_non_erasure_benchmark_covers_known_answers_and_mandatory_canary(
     assert report["held_back_strategy"]["public_repo_copy"] is False
 
     coverage = _json(RELEASE / "coverage.json")
-    assert coverage["full_bundle"]["phenomenon"][
-        "Source-blind Phase 2 stand-off candidate; no span-level linguistic claim"
-    ] == 189150
-    assert coverage["public_product"]["disagreement_by_category"] == {
-        "contextual_calque_government_valency": 4
-    }
+    assert (
+        coverage["full_bundle"]["phenomenon"][
+            "Source-blind Phase 2 stand-off candidate; no span-level linguistic claim"
+        ]
+        == 189150
+    )
+    assert coverage["public_product"]["disagreement_by_category"] == {"contextual_calque_government_valency": 4}
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_apply_recipe_corrects_narration_protects_quote_and_abstains(tmp_path: Path) -> None:
     input_path = tmp_path / "consumer.jsonl"
     rows = [
@@ -96,11 +117,13 @@ def test_apply_recipe_corrects_narration_protects_quote_and_abstains(tmp_path: P
     assert [row["record_id"] for row in abstentions] == ["control"]
     assert corrections[0]["evaluation_firewall"]["learning_eligible"] is True
     assert receipt["source_mutated"] is False
-    assert input_path.read_text(encoding="utf-8") == "".join(
-        consumer.canonical_json(row) + "\n" for row in rows
-    )
+    assert input_path.read_text(encoding="utf-8") == "".join(consumer.canonical_json(row) + "\n" for row in rows)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_evaluation_overlap_is_excluded_from_every_learning_view() -> None:
     firewall_version, registry = consumer.evaluation_version()
     bundle = {name: _jsonl(RELEASE / f"{name}.jsonl") for name in consumer.PUBLIC_FILES}
@@ -122,6 +145,10 @@ def test_evaluation_overlap_is_excluded_from_every_learning_view() -> None:
     }
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_release_build_is_byte_identical_and_self_verifying(tmp_path: Path) -> None:
     first = tmp_path / "first"
     second = tmp_path / "second"
@@ -133,6 +160,10 @@ def test_release_build_is_byte_identical_and_self_verifying(tmp_path: Path) -> N
     assert consumer.verify_release(first)["verified"] is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
+)
 def test_heldback_artifact_requires_exact_operator_supplied_hash(tmp_path: Path) -> None:
     heldback = tmp_path / "heldback.jsonl"
     heldback.write_text('{"id":"private","text":"не публікується"}\n', encoding="utf-8")

@@ -21,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_textbook_heldout,
     is_phase30_uagec_heldout_doc,
@@ -44,15 +45,22 @@ from scripts.projects.open_model_data.v4_mine_uagec_calques import (
     lookup_uagec_source_sentence,
     resolve_uagec_sentence_context,
 )
+from scripts.storage.paths import artifact_path
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 MINED_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined"
 
 MANIFEST_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_mined_candidates.schema.json"
-MANIFEST_FILE = MINED_DIR / "decolonization_mined_manifest.json"
+MANIFEST_FILE = REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization/mined/decolonization_mined_manifest.json"
 CONTRAST_FILE = MINED_DIR / "corpus_contrast_tables.jsonl"
 ZNO_FILE = MINED_DIR / "zno_distractor_tasks.jsonl"
 UAGEC_FILE = MINED_DIR / "uagec_mined_calques.jsonl"
+
+
+def _artifact_path(name: str) -> Path:
+    return artifact_path(
+        "open_model_other_indexes", f"projects/open_model_data/decolonization/mined/{name}", repo=REPO_ROOT
+    )
 
 
 @pytest.fixture(scope="module")
@@ -98,6 +106,9 @@ def requires_vesum_db() -> Path:
     return DEFAULT_VESUM_DB
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_mined_manifest_integrity(manifest_schema: dict) -> None:
     """Verify mined candidates manifest matches Draft2020-12 schema and files match exact SHA-256."""
     assert MANIFEST_FILE.is_file(), f"Missing manifest: {MANIFEST_FILE}"
@@ -116,7 +127,7 @@ def test_mined_manifest_integrity(manifest_schema: dict) -> None:
 
     # 3. File existence, line count, and cryptographic SHA-256 validation
     for key, fmeta in manifest["files"].items():
-        fpath = MINED_DIR / fmeta["filename"]
+        fpath = _artifact_path(fmeta["filename"])
         assert fpath.is_file(), f"Missing artifact file: {fpath}"
         actual_sha = hashlib.sha256(fpath.read_bytes()).hexdigest()
         assert actual_sha == fmeta["sha256"], f"SHA256 mismatch for {key}: expected {fmeta['sha256']}, got {actual_sha}"
@@ -127,12 +138,15 @@ def test_mined_manifest_integrity(manifest_schema: dict) -> None:
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_textbook_contrast_tables_authenticity_and_invariants() -> None:
     """Verify structure and content of mined textbook contrast tables."""
-    assert CONTRAST_FILE.is_file(), f"Missing contrast file: {CONTRAST_FILE}"
+    assert _artifact_path(CONTRAST_FILE.name).is_file(), f"Missing contrast file: {CONTRAST_FILE}"
 
     records = []
-    with CONTRAST_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(CONTRAST_FILE.name).open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line.strip()))
@@ -160,12 +174,15 @@ def test_textbook_contrast_tables_authenticity_and_invariants() -> None:
         seen_items.add(pair_key)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_zno_distractor_tasks_coverage_and_invariants() -> None:
     """Verify that exactly 1,646 official ZNO tasks are extracted with complete metadata."""
-    assert ZNO_FILE.is_file(), f"Missing ZNO file: {ZNO_FILE}"
+    assert _artifact_path(ZNO_FILE.name).is_file(), f"Missing ZNO file: {ZNO_FILE}"
 
     tasks = []
-    with ZNO_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(ZNO_FILE.name).open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 tasks.append(json.loads(line.strip()))
@@ -184,12 +201,15 @@ def test_zno_distractor_tasks_coverage_and_invariants() -> None:
         assert t.get("topic_norm")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_uagec_mining_curriculum_cap_and_invariants() -> None:
     """Verify UA-GEC mined records, strict test-split exclusion, and <= 25% G/Case curriculum cap."""
-    assert UAGEC_FILE.is_file(), f"Missing UA-GEC file: {UAGEC_FILE}"
+    assert _artifact_path(UAGEC_FILE.name).is_file(), f"Missing UA-GEC file: {UAGEC_FILE}"
 
     records = []
-    with UAGEC_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(UAGEC_FILE.name).open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line.strip()))
@@ -217,6 +237,9 @@ def test_uagec_mining_curriculum_cap_and_invariants() -> None:
     assert calque_colloc_count >= 1500, f"Expected >= 1500 grounded calques/collocations, got {calque_colloc_count}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_mined_cli_verify_only() -> None:
     """Verify CLI --verify-only flag on both miners passes with exit code 0."""
     res1 = subprocess.run(
@@ -246,13 +269,16 @@ def test_mined_cli_verify_only() -> None:
     assert res2.returncode == 0, f"v4_mine_uagec_calques.py --verify-only failed: {res2.stderr}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     """Independently verify that mined items are 100% grounded in sources.db."""
     s_conn = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
     sc = s_conn.cursor()
 
     # 1. Verify random sample of contrast chunks exist in textbooks
-    with CONTRAST_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(CONTRAST_FILE.name).open("r", encoding="utf-8") as f:
         contrast_records = [json.loads(line) for line in f if line.strip()]
 
     for rec in contrast_records[:30]:
@@ -267,13 +293,13 @@ def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     test_rows = sc.execute("SELECT doc_id FROM ua_gec_errors WHERE partition LIKE '%test%'").fetchall()
     test_doc_ids = {r[0] for r in test_rows}
 
-    with UAGEC_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(UAGEC_FILE.name).open("r", encoding="utf-8") as f:
         uagec_records = [json.loads(line) for line in f if line.strip()]
 
     for rec in uagec_records:
         assert rec["doc_id"] not in test_doc_ids, f"Protected test doc_id {rec['doc_id']} found in mined record: {rec}"
 
-    with ZNO_FILE.open(encoding="utf-8") as handle:
+    with _artifact_path(ZNO_FILE.name).open(encoding="utf-8") as handle:
         zno_records = [json.loads(line) for line in handle if line.strip()]
     mismatched = []
     for rec in zno_records:
@@ -290,12 +316,15 @@ def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     s_conn.close()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_independent_vesum_lemma_attestation(requires_vesum_db: Path) -> None:
     """Independently verify that correct phrases and target terms are attested in VESUM."""
     v_conn = sqlite3.connect(f"file:{requires_vesum_db}?mode=ro", uri=True)
     vc = v_conn.cursor()
 
-    with CONTRAST_FILE.open("r", encoding="utf-8") as f:
+    with _artifact_path(CONTRAST_FILE.name).open("r", encoding="utf-8") as f:
         contrast_records = [json.loads(line) for line in f if line.strip()]
 
     attested_count = 0
@@ -317,12 +346,15 @@ def test_f1_inverted_do_po_date_range_guard_rejects_calque_as_gold() -> None:
     assert not is_inverted_do_po_date_range("по вулиці", "на вулиці")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_f1_shipped_contrast_tables_have_no_inverted_do_po_pairs() -> None:
     """F1 lock: committed contrast JSONL never teaches the Russian с…по calque as correct."""
-    assert CONTRAST_FILE.is_file()
+    assert _artifact_path(CONTRAST_FILE.name).is_file()
     inverted = []
     glazova_s0120 = []
-    with CONTRAST_FILE.open(encoding="utf-8") as handle:
+    with _artifact_path(CONTRAST_FILE.name).open(encoding="utf-8") as handle:
         for line in handle:
             if not line.strip():
                 continue
@@ -369,12 +401,15 @@ def test_f2_strip_skorocheno_does_not_leave_spliced_ellipsis() -> None:
     assert " ... ... " not in strip_invented_zno_ellipsis(leftover)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
     """F2 lock: committed UA-GEC contexts are original sentences; ZNO stems have no [скорочено]."""
-    assert UAGEC_FILE.is_file()
+    assert _artifact_path(UAGEC_FILE.name).is_file()
     wrappers = 0
     ungrounded = 0
-    with UAGEC_FILE.open(encoding="utf-8") as handle:
+    with _artifact_path(UAGEC_FILE.name).open(encoding="utf-8") as handle:
         for line in handle:
             if not line.strip():
                 continue
@@ -388,7 +423,7 @@ def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
 
     invented = 0
     spliced = 0
-    with ZNO_FILE.open(encoding="utf-8") as handle:
+    with _artifact_path(ZNO_FILE.name).open(encoding="utf-8") as handle:
         for line in handle:
             if not line.strip():
                 continue
@@ -402,6 +437,9 @@ def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
     assert spliced == 0, f"Miner-spliced ' ... ... ' stems still present: {spliced}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_f3_phase30_firewall_helpers_and_zero_heldout_leak() -> None:
     """F3: Phase 3.0 uagec_doc: split is applied; leaked docs would fail this test."""
     leaked_example = None
@@ -419,9 +457,9 @@ def test_f3_phase30_firewall_helpers_and_zero_heldout_leak() -> None:
     assert uagec_doc_partition_bucket(train_example) < 8
     assert is_phase30_textbook_heldout("heldout-author", "heldout-title") in (True, False)
 
-    assert UAGEC_FILE.is_file()
+    assert _artifact_path(UAGEC_FILE.name).is_file()
     leaked_docs: set[str] = set()
-    with UAGEC_FILE.open(encoding="utf-8") as handle:
+    with _artifact_path(UAGEC_FILE.name).open(encoding="utf-8") as handle:
         for line in handle:
             if not line.strip():
                 continue
@@ -457,6 +495,9 @@ def test_f3_lookup_uses_complete_context_fixture(tmp_path: Path) -> None:
     assert resolve_uagec_sentence_context(rec, {}, None) is None
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
+)
 def test_f4_verify_only_hashes_and_schema_reject_unconstrained_filenames(manifest_schema: dict, tmp_path: Path) -> None:
     """F4/F5: --verify-only is hash+record contract, not line-count; absolute paths fail."""
     result = verify_mined_manifest(MINED_DIR, MANIFEST_SCHEMA_PATH)

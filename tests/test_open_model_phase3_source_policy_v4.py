@@ -14,9 +14,10 @@ from scripts.ingest import incremental_textbook_ingest as textbook_ingest
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
 from scripts.projects.open_model_data import phase3_university_source_admission as admission
 from scripts.projects.open_model_data import university_source_policy
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
+POLICY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_complete_source_policy_v4.json"
 
 
 def _policy() -> dict:

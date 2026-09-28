@@ -32,9 +32,10 @@ ukrainian-word-stress>=2,<3
 regex>=2026.5.9  # scripts/build/activity_renderer.py (Unicode-property patterns)
 
 # Testing
-pytest>=9.0.3
+pytest>=9.1.1
 pytest-cov>=7.0
 pytest-timeout>=2.4.0
+pytest-rerunfailures>=16.7  # #9067: quarantined node ids only
 
 # Linting
 ruff>=0.15.21
@@ -74,12 +75,12 @@ yt-dlp>=2026.7.4
 jinja2>=3.1
 
 # TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
-typesafe-sdk>=0.6.0
+typesafe-sdk>=0.7.0
 
 # Security floors (transitive deps held above their vulnerable range)
 # zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm
 # (unbounded TC-deferred queue → LAN-local memory exhaustion) is fixed in 0.149.12.
-zeroconf>=0.150.0
+zeroconf>=0.151.3
 
 # ----------------------------------------------------------------------
 # Known-harmless `pip check` warnings (DO NOT CHASE)

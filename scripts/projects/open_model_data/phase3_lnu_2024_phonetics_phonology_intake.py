@@ -21,12 +21,16 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_lnu_2024_phonetics_phonology_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_lnu_2024_phonetics_phonology_candidate_v1.json"
 FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
 POLICY_PATH = DATA / "admission/phase3_complete_source_policy_v4.json"
 SCRIPT_PATH = Path(__file__).resolve()
+HISTORICAL_IMPLEMENTATION_SHA256 = "12cdb5363b834699ab4c62e471456c0ad05724d76aed786aa3e05e85bb7f0571"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "c521f515414adeddca800e6ab01e0bb14ddd42683dcc5038f2133762483e7dcf"
 
 SCHEMA_VERSION = "phase3_lnu_2024_phonetics_phonology_candidate_v1"
 STATUS = "ACADEMIC_CANON_CORROBORATION_CANDIDATE_NO_GAP_TRANSITION"
@@ -433,7 +437,10 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         raise Lnu2024PhoneticsPhonologyIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
     _require_no_training_authorization(receipt["rights"])
-    require(receipt == {**build_receipt_body(), "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
+    expected_body = build_receipt_body()
+    if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256:
+        expected_body["bindings"]["implementation_sha256"] = HISTORICAL_IMPLEMENTATION_SHA256
+    require(receipt == {**expected_body, "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
     encoded = canonical_json(receipt)
     for forbidden in (
         "GoogleDrive-",

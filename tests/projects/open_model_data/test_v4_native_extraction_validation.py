@@ -11,8 +11,20 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_native_extraction_validation as extraction
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-CONFIG_PATH = Path("data/projects/open_model_data/extraction/v4_native_extraction_config_v1.json")
+
+def _committed(name: str) -> Path:
+    return resolve_open_model_path(f"data/projects/open_model_data/extraction/{name}")
+
+
+def _place(root: Path, name: str) -> Path:
+    path = resolve_open_model_path(f"data/projects/open_model_data/extraction/{name}", repo=root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+CONFIG_PATH = _committed("v4_native_extraction_config_v1.json")
 
 
 @pytest.fixture
@@ -137,29 +149,29 @@ def test_evaluate_span_fidelity_excludes_ocr() -> None:
     assert any(f["type"] == "ocr_extraction_detected" for f in findings)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path) -> None:
     """verify() detects when index_sha256 or quarantine_report_sha256 in receipt is tampered."""
     tampered_out = tmp_path / "out"
     tgt_extract = tampered_out / "data/projects/open_model_data/extraction"
     tgt_extract.mkdir(parents=True)
 
-    orig_idx = Path("data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl").read_bytes()
-    orig_quarantine = Path(
-        "data/projects/open_model_data/extraction/v4_native_extraction_quarantine_report_v1.json"
-    ).read_bytes()
-    orig_receipt_data = json.loads(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    orig_idx = _committed("v4_native_extraction_index_v1.jsonl").read_bytes()
+    orig_quarantine = _committed("v4_native_extraction_quarantine_report_v1.json").read_bytes()
+    orig_receipt_data = json.loads(_committed("v4_native_extraction_receipt_v1.json").read_text(encoding="utf-8"))
 
-    (tgt_extract / "v4_native_extraction_index_v1.jsonl").write_bytes(orig_idx)
-    (tgt_extract / "v4_native_extraction_quarantine_report_v1.json").write_bytes(orig_quarantine)
+    _place(tampered_out, "v4_native_extraction_index_v1.jsonl").write_bytes(orig_idx)
+    _place(tampered_out, "v4_native_extraction_quarantine_report_v1.json").write_bytes(orig_quarantine)
 
     # Tamper index_sha256 in receipt
     receipt_tampered = copy.deepcopy(orig_receipt_data)
     receipt_tampered["index_sha256"] = "0" * 64
-    (tgt_extract / "v4_native_extraction_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    _place(tampered_out, "v4_native_extraction_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
     with pytest.raises(extraction.NativeExtractionError, match=r"Receipt index_sha256 mismatch"):
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
@@ -167,23 +179,25 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path)
     # Tamper receipt_id
     receipt_tampered2 = copy.deepcopy(orig_receipt_data)
     receipt_tampered2["receipt_id"] = "receipt.extraction.000000000000000000000000"
-    (tgt_extract / "v4_native_extraction_receipt_v1.json").write_text(json.dumps(receipt_tampered2), encoding="utf-8")
+    _place(tampered_out, "v4_native_extraction_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered2), encoding="utf-8"
+    )
 
     with pytest.raises(extraction.NativeExtractionError, match=r"Receipt ID mismatch"):
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_root: Path) -> None:
     """verify() rejects records where quarantined or damaged spans claim training_eligible=True."""
     tampered_out = tmp_path / "out"
     tgt_extract = tampered_out / "data/projects/open_model_data/extraction"
     tgt_extract.mkdir(parents=True)
 
-    orig_lines = (
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-    )
+    orig_lines = _committed("v4_native_extraction_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
     header = orig_lines[0]
     first_record = json.loads(orig_lines[1])
 
@@ -192,20 +206,14 @@ def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_r
     first_record["fidelity_assessment"]["training_eligible"] = True
 
     tampered_lines = [header, json.dumps(first_record), *orig_lines[2:]]
-    idx_path = tgt_extract / "v4_native_extraction_index_v1.jsonl"
+    idx_path = _place(tampered_out, "v4_native_extraction_index_v1.jsonl")
     idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
 
-    quarantine_path = tgt_extract / "v4_native_extraction_quarantine_report_v1.json"
-    quarantine_path.write_bytes(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_quarantine_report_v1.json").read_bytes()
-    )
+    quarantine_path = _place(tampered_out, "v4_native_extraction_quarantine_report_v1.json")
+    quarantine_path.write_bytes(_committed("v4_native_extraction_quarantine_report_v1.json").read_bytes())
 
     # Build matching receipt
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    receipt_data = json.loads(_committed("v4_native_extraction_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = extraction.sha256_file(idx_path)
     receipt_tampered["receipt_id"] = extraction._make_receipt_id(
@@ -213,7 +221,9 @@ def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_r
         receipt_tampered["index_sha256"],
         receipt_tampered["quarantine_report_sha256"],
     )
-    (tgt_extract / "v4_native_extraction_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    _place(tampered_out, "v4_native_extraction_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
     with pytest.raises(
         extraction.NativeExtractionError, match=r"QUARANTINED_ANOMALOUS span cannot have training_eligible=True"
@@ -221,36 +231,30 @@ def test_verify_detects_contradictory_fidelity_invariants(tmp_path: Path, repo_r
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_non_consecutive_sequence_order(tmp_path: Path, repo_root: Path) -> None:
     """verify() rejects records with gaps or reordering in reconstruction sequence_order (EXTRACT-4)."""
     tampered_out = tmp_path / "out"
     tgt_extract = tampered_out / "data/projects/open_model_data/extraction"
     tgt_extract.mkdir(parents=True)
 
-    orig_lines = (
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-    )
+    orig_lines = _committed("v4_native_extraction_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
     header = orig_lines[0]
     first_record = json.loads(orig_lines[1])
     # Tamper first record sequence_order from 0 to 5
     first_record["reconstruction_linkage"]["sequence_order"] = 5
 
     tampered_lines = [header, json.dumps(first_record), *orig_lines[2:]]
-    idx_path = tgt_extract / "v4_native_extraction_index_v1.jsonl"
+    idx_path = _place(tampered_out, "v4_native_extraction_index_v1.jsonl")
     idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
 
-    quarantine_path = tgt_extract / "v4_native_extraction_quarantine_report_v1.json"
-    quarantine_path.write_bytes(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_quarantine_report_v1.json").read_bytes()
-    )
+    quarantine_path = _place(tampered_out, "v4_native_extraction_quarantine_report_v1.json")
+    quarantine_path.write_bytes(_committed("v4_native_extraction_quarantine_report_v1.json").read_bytes())
 
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    receipt_data = json.loads(_committed("v4_native_extraction_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = extraction.sha256_file(idx_path)
     receipt_tampered["receipt_id"] = extraction._make_receipt_id(
@@ -258,36 +262,36 @@ def test_verify_detects_non_consecutive_sequence_order(tmp_path: Path, repo_root
         receipt_tampered["index_sha256"],
         receipt_tampered["quarantine_report_sha256"],
     )
-    (tgt_extract / "v4_native_extraction_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    _place(tampered_out, "v4_native_extraction_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
     with pytest.raises(extraction.NativeExtractionError, match=r"first span sequence_order must be 0"):
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if private host paths are found in receipt or quarantine report."""
     tampered_out = tmp_path / "out"
     tgt_extract = tampered_out / "data/projects/open_model_data/extraction"
     tgt_extract.mkdir(parents=True)
 
-    (tgt_extract / "v4_native_extraction_index_v1.jsonl").write_bytes(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl").read_bytes()
+    _place(tampered_out, "v4_native_extraction_index_v1.jsonl").write_bytes(
+        _committed("v4_native_extraction_index_v1.jsonl").read_bytes()
     )
 
     quarantine_data = json.loads(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_quarantine_report_v1.json").read_text(
-            encoding="utf-8"
-        )
+        _committed("v4_native_extraction_quarantine_report_v1.json").read_text(encoding="utf-8")
     )
     quarantine_data["quarantined_spans"][0]["reason"] = "failed at /home/ops/secret/corpus"
-    quarantine_path = tgt_extract / "v4_native_extraction_quarantine_report_v1.json"
+    quarantine_path = _place(tampered_out, "v4_native_extraction_quarantine_report_v1.json")
     quarantine_path.write_text(json.dumps(quarantine_data), encoding="utf-8")
 
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    receipt_data = json.loads(_committed("v4_native_extraction_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["quarantine_report_sha256"] = extraction.sha256_file(quarantine_path)
     receipt_tampered["receipt_id"] = extraction._make_receipt_id(
@@ -295,7 +299,9 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         receipt_tampered["index_sha256"],
         receipt_tampered["quarantine_report_sha256"],
     )
-    (tgt_extract / "v4_native_extraction_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    _place(tampered_out, "v4_native_extraction_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
     with pytest.raises(
         extraction.NativeExtractionError, match=r"Quarantine report contains prohibited private or absolute host paths"
@@ -303,17 +309,26 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         extraction.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Current committed extraction artifacts pass verify() cleanly."""
     extraction.verify(CONFIG_PATH)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"
     # Copy only schemas, config, and extraction artifacts (no sources.db)
     for sub in [
-        "data/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/extraction",
         "data/projects/open_model_data/extraction",
     ]:
         dest = ci_root / sub
@@ -327,7 +342,7 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
 
     # verify() must succeed on the committed artifacts
     extraction.verify(
-        ci_root / "data/projects/open_model_data/extraction/v4_native_extraction_config_v1.json",
+        _place(ci_root, "v4_native_extraction_config_v1.json"),
         input_root=ci_root,
         output_root=ci_root,
     )
@@ -339,9 +354,7 @@ def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypat
         extraction._primary_repo_root()
 
 
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(extraction.PRIMARY_REPO_ROOT_ENV, raising=False)
     monkeypatch.chdir(tmp_path)
     assert extraction._primary_repo_root() is None

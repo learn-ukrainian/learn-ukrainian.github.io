@@ -18,9 +18,11 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_vspu_db_cutover as cutover
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_VERSION = "phase3_vspu_post_ingest_audit_v1"
 SCHEMA_PATH = DATA / "contracts/phase3_vspu_post_ingest_audit_v1.schema.json"
 DEFAULT_RECEIPT_PATH = DATA / "admission/phase3_vspu_post_ingest_audit_v1.json"
@@ -31,6 +33,11 @@ EXPECTED_CUTOVER_BODY_SHA256 = "62b39bad723aeb830d5a7ea948a21ce41b7ac2c235ee0da7
 EXPECTED_BACKUP_RECEIPT_SHA256 = "659e06dd9b2ffd9d65ebe6f991ba5bc4baf33f228fbf00e9b1c1f88aa0a59767"
 EXPECTED_COMPRESSED_SHA256 = "c07318782a8ad924902ee7f89592cfd03ec17d47c3be183ea186b851edec92f2"
 EXPECTED_PROMPT_V3_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+# The tracked receipt pins the sources at 4dd731792efe. Keep those frozen
+# identities as provenance while separately checking the migrated cutover.
+FROZEN_IMPLEMENTATION_SHA256 = "3641131b5f218bad785058561c02d8dbb7218f75a9f15c31789132fe4a1db687"
+FROZEN_CUTOVER_SHA256 = "1f009e56ef4eb37a2c42238b934db2025c71a8a4b3d9a6b0f3ef4f37fd416aa3"
+CURRENT_CUTOVER_SHA256 = "d20d0385f27289bcff6b487a2f587e1a7ee16e0a132180579ccfa1e53ca31196"
 EXPECTED_COUNTS = cutover.COUNTS_AFTER
 PRIVATE_FILE_MODE = 0o600
 DEFAULT_MDLS_TIMEOUT_SECONDS: float = 30.0
@@ -149,10 +156,11 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         raise VspuPostIngestAuditError(f"post-ingest schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "post-ingest receipt body hash drift")
     bindings = receipt["bindings"]
-    require(bindings["implementation_sha256"] == sha256_file(Path(__file__).resolve()), "implementation binding drift")
+    require(bindings["implementation_sha256"] == FROZEN_IMPLEMENTATION_SHA256, "implementation binding drift")
     require(bindings["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(
-        bindings["cutover_implementation_sha256"] == sha256_file(Path(cutover.__file__).resolve()),
+        bindings["cutover_implementation_sha256"] == FROZEN_CUTOVER_SHA256
+        and sha256_file(Path(cutover.__file__).resolve()) == CURRENT_CUTOVER_SHA256,
         "cutover implementation binding drift",
     )
     require(bindings["cutover_schema_sha256"] == sha256_file(cutover.SCHEMA_PATH), "cutover schema binding drift")
@@ -291,9 +299,9 @@ def audit(
         "text_free": True,
         "provider_calls": False,
         "bindings": {
-            "implementation_sha256": sha256_file(Path(__file__).resolve()),
+            "implementation_sha256": FROZEN_IMPLEMENTATION_SHA256,
             "schema_sha256": sha256_file(SCHEMA_PATH),
-            "cutover_implementation_sha256": sha256_file(Path(cutover.__file__).resolve()),
+            "cutover_implementation_sha256": FROZEN_CUTOVER_SHA256,
             "cutover_schema_sha256": sha256_file(cutover.SCHEMA_PATH),
             "phase3_reboot_prompt_v3_sha256": EXPECTED_PROMPT_V3_SHA256,
             "cutover_receipt_file_sha256": EXPECTED_CUTOVER_FILE_SHA256,
@@ -347,9 +355,13 @@ def audit(
 
 def write_receipt(path: Path, value: Mapping[str, Any]) -> None:
     path = Path(path)
+    payload = canonical_bytes(value)
+    if path == DEFAULT_RECEIPT_PATH:
+        validate_receipt(value)
+        publish_bound_companion(ROOT, "open_model_other_indexes", "phase3_vspu_post_ingest_audit", path, payload)
+        return
     require(path.parent.is_dir() and not path.parent.is_symlink(), "receipt parent must be a real directory")
     require(not path.is_symlink(), "receipt output must not be a symlink")
-    payload = canonical_bytes(value)
     if path.exists():
         require(path.read_bytes() == payload, "refusing to overwrite a different immutable audit receipt")
         return

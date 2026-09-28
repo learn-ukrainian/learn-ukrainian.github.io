@@ -199,7 +199,7 @@
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
-        "sha256": "31e8fc21a51b12464a38cdd6eb7dae46c31b62eae8dcf0f53ebfd5c38d762cea"
+        "sha256": "3d40a96cc10e947bbff616421ceeae45b6eb633f576e35ab489bac8f2782658a"
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",

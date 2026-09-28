@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -323,6 +324,52 @@ def test_build_agent_env_keeps_only_the_dispatch_cap_plugin() -> None:
 
     assert "PYTEST_PLUGINS" not in dropped
     assert "LEARN_UKRAINIAN_DISPATCH_TASK_ID" not in dropped
+
+
+def test_build_agent_env_keeps_only_the_cap_plugins_scripts_dir(tmp_path) -> None:
+    """#8795: PYTHONPATH must carry only the entry that hosts the cap plugin.
+
+    ``_build_worker_env`` adds the plugin's real ``scripts`` dir to PYTHONPATH
+    so a pytest process rooted outside this repo (e.g. a nested ``pytester``
+    subprocess) can still import ``ci.pytest_dispatch_cap``. An unrelated
+    inherited PYTHONPATH entry must not ride along into the agent CLI env.
+    """
+    real_scripts = tmp_path / "real-scripts"
+    (real_scripts / "ci").mkdir(parents=True)
+    (real_scripts / "ci" / "pytest_dispatch_cap.py").write_text("", encoding="utf-8")
+    unrelated = tmp_path / "unrelated"
+    unrelated.mkdir()
+
+    parent = {
+        "PATH": "/usr/bin",
+        "HOME": "/Users/example",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "impl-8795-b",
+        "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+        "PYTHONPATH": os.pathsep.join([str(unrelated), str(real_scripts)]),
+    }
+    with patch.dict("os.environ", parent, clear=True):
+        kept = build_agent_env(provider="codex")
+
+    assert kept["PYTHONPATH"] == str(real_scripts)
+
+    with patch.dict("os.environ", {**parent, "PYTEST_PLUGINS": ""}, clear=True):
+        without_cap = build_agent_env(provider="codex")
+
+    assert "PYTHONPATH" not in without_cap
+
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+            "PYTHONPATH": str(real_scripts),
+        },
+        clear=True,
+    ):
+        without_marker = build_agent_env(provider="codex")
+
+    assert "PYTHONPATH" not in without_marker
 
 
 def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:

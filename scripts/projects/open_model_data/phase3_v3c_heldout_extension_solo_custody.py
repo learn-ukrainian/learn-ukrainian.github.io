@@ -22,8 +22,13 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.frozen_k_outputs import publish_frozen_k_bundle
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v3c_heldout_extension_solo_custody_v1.schema.json"
 ARTIFACT_PATH = DATA / "contracts/phase3_v3c_heldout_extension_solo_custody_v1.json"
 SCRIPT_PATH = Path(__file__).resolve()
@@ -35,6 +40,8 @@ PARENT_OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52
 V3_CONSENSUS_SHA256 = "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"
 V3A_ARTIFACT_SHA256 = "131d4b7286de0a6c079548b9eba21e5eec6804bbdd1dd41817e3ce58444d9a28"
 V3A_MATRIX_SHA256 = "580a3785aa4af22a910a61c55d789c5d930f6fafaf317054ce070074ecf3ddbd"
+# Frozen pre-migration validator provenance, not the current implementation hash.
+FROZEN_VALIDATOR_SHA256 = "0f9453193ceb4bac892cfb9264ea676151e38f5bb7f0deac97ce35e38b6474a2"
 
 SCHEMA_VERSION = "phase3-v3c-heldout-extension-solo-custody-v1"
 RECEIPT_SCHEMA_VERSION = "phase3-v3c-custody-receipt-v1"
@@ -148,12 +155,15 @@ def sha256_value(value: Any) -> str:
 
 
 def logical(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
+    relative = path.relative_to(ROOT).as_posix()
+    if relative.startswith("registry/projects/open_model_data/"):
+        return relative.replace("registry/projects/open_model_data/", "data/projects/open_model_data/", 1)
+    return relative
 
 
 def binding(path: Path) -> dict[str, str]:
     require(path.is_file(), f"missing binding artifact: {logical(path)}")
-    return {"path": logical(path), "sha256": sha256_file(path)}
+    return {"path": logical(path), "sha256": FROZEN_VALIDATOR_SHA256 if path == SCRIPT_PATH else sha256_file(path)}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -557,9 +567,7 @@ def build_schema() -> dict[str, Any]:
         ),
         "threshold": strict(
             {
-                "minimum_eligible_item_count": {
-                    "anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]
-                },
+                "minimum_eligible_item_count": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
                 "minimum_direct_human_review_fraction": {"const": 1.0},
                 "abstention_is_not_gold": {"const": True},
                 "applies_only_when_requirement_admitted": {"const": True},
@@ -645,7 +653,12 @@ def build_schema() -> dict[str, Any]:
             {
                 "freeze_id": {"const": "v3c_identity_group_freeze_v1"},
                 "status": {"const": "FROZEN_ALGORITHM_ONLY_NO_MEMBERSHIP"},
-                "dimensions": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "#/$defs/identityDimension"}},
+                "dimensions": {
+                    "type": "array",
+                    "minItems": 5,
+                    "maxItems": 5,
+                    "items": {"$ref": "#/$defs/identityDimension"},
+                },
                 "dimension_order_is_frozen": {"const": True},
                 "all_identity_dimensions_frozen": {"const": True},
                 "source_admission_assigns_hidden_membership": {"const": False},
@@ -782,7 +795,9 @@ def build_schema() -> dict[str, Any]:
                 "construction_mutation_after_exposure": {"const": False},
                 "exposure_requires_all_freeze_fields": {"const": True},
                 "exposure_before_freeze_forbidden": {"const": True},
-                "post_exposure_mutation_action": {"const": "invalidate_evaluation_version_and_require_new_sealed_cycle"},
+                "post_exposure_mutation_action": {
+                    "const": "invalidate_evaluation_version_and_require_new_sealed_cycle"
+                },
                 "current_cycle_state": {"const": "UNSEALED_NO_EXPOSURE"},
                 "exposure_allowed": {"const": False},
                 "evaluation_version_present": {"const": False},
@@ -923,7 +938,9 @@ def build_schema() -> dict[str, Any]:
                     "items": strict(
                         {
                             "stratum_id": {"type": "string", "minLength": 1},
-                            "minimum_eligible_item_count": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+                            "minimum_eligible_item_count": {
+                                "anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]
+                            },
                             "minimum_direct_human_review_fraction": {"const": 1.0},
                             "abstention_is_not_gold": {"const": True},
                             "requirement_state": {"enum": ["blocked", "not_applicable", "lineage_only"]},
@@ -982,7 +999,16 @@ def build_schema() -> dict[str, Any]:
             {
                 "row_contract": strict(
                     {
-                        "required_fields": {"const": ["stratum_id", "denominator_ordinal", "residual_code", "blocking", "owner_role_id", "safe_next_action"]},
+                        "required_fields": {
+                            "const": [
+                                "stratum_id",
+                                "denominator_ordinal",
+                                "residual_code",
+                                "blocking",
+                                "owner_role_id",
+                                "safe_next_action",
+                            ]
+                        },
                         "all_denominator_rows_visible": {"const": True},
                     },
                     ("required_fields", "all_denominator_rows_visible"),
@@ -995,7 +1021,9 @@ def build_schema() -> dict[str, Any]:
         ),
         "stateMachine": strict(
             {
-                "states": {"const": ["UNSEALED_NO_EXPOSURE", "SEALED_PRE_EXPOSURE", "EXPOSED", "INVALIDATED_RESEAL_REQUIRED"]},
+                "states": {
+                    "const": ["UNSEALED_NO_EXPOSURE", "SEALED_PRE_EXPOSURE", "EXPOSED", "INVALIDATED_RESEAL_REQUIRED"]
+                },
                 "transitions": {
                     "const": [
                         {"from_state": source, "to_state": target, "condition_code": condition}
@@ -1250,9 +1278,7 @@ def _receipt_identity(value: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def validate_custody_receipts(
-    receipts: Sequence[Mapping[str, Any]], artifact: Mapping[str, Any] | None = None
-) -> None:
+def validate_custody_receipts(receipts: Sequence[Mapping[str, Any]], artifact: Mapping[str, Any] | None = None) -> None:
     """Validate an append-only custody stream without inspecting held-out data."""
     artifact = artifact or build_artifact()
     schema = read_json(SCHEMA_PATH)
@@ -1325,7 +1351,9 @@ def validate_custody_receipts(
             require(status == "EXPOSED", "exposure receipt state invalid")
             require(mutated is False and receipt["new_cycle_required"] is False, "exposure flags invalid")
             require(receipt["freeze_commitment_sha256"] == sealed_freeze_commitment, "exposure freeze commitment drift")
-            require(receipt["evaluation_version_sha256"] == sealed_evaluation_version, "exposure evaluation version drift")
+            require(
+                receipt["evaluation_version_sha256"] == sealed_evaluation_version, "exposure evaluation version drift"
+            )
             require(receipt["freeze_commitment_sha256"] != "0" * 64, "exposure freeze commitment missing")
             current_state = status
             exposed_version = receipt["evaluation_version_sha256"]
@@ -1334,7 +1362,9 @@ def validate_custody_receipts(
             require(status == "INVALIDATED_RESEAL_REQUIRED", "invalidation receipt state invalid")
             require(mutated is True and receipt["new_cycle_required"] is True, "post-exposure mutation not invalidated")
             require(exposed_version == receipt["evaluation_version_sha256"], "invalidated evaluation version drift")
-            require(receipt["freeze_commitment_sha256"] == sealed_freeze_commitment, "invalidated freeze commitment drift")
+            require(
+                receipt["freeze_commitment_sha256"] == sealed_freeze_commitment, "invalidated freeze commitment drift"
+            )
             current_state = status
         else:
             raise V3CError(f"unsupported custody event: {event}")
@@ -1356,15 +1386,31 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any] | None = Non
     require(artifact["strata"] == expected_strata, "V3-C visible strata drift")
     expected_ledger = _build_requirement_ledger(expected_strata, artifact["denominator"])
     require(artifact["requirement_ledger"] == expected_ledger, "per-stratum requirement ledger drift")
-    require(artifact["requirement_ledger"]["ledger_sha256"] == receipt_sha(artifact["requirement_ledger"], "ledger_sha256"), "ledger hash drift")
-    require(artifact["requirement_ledger"]["denominator_sha256"] == sha256_value(artifact["denominator"]), "ledger denominator binding drift")
+    require(
+        artifact["requirement_ledger"]["ledger_sha256"] == receipt_sha(artifact["requirement_ledger"], "ledger_sha256"),
+        "ledger hash drift",
+    )
+    require(
+        artifact["requirement_ledger"]["denominator_sha256"] == sha256_value(artifact["denominator"]),
+        "ledger denominator binding drift",
+    )
     require(artifact["identity_group_freeze"] == _identity_group_freeze(), "identity-group freeze drift")
-    require(artifact["split_assignment"] == _split_assignment(artifact["identity_group_freeze"]), "split algorithm drift")
+    require(
+        artifact["split_assignment"] == _split_assignment(artifact["identity_group_freeze"]), "split algorithm drift"
+    )
     require(artifact["construction_visibility"] == _construction_visibility(), "construction visibility drift")
     require(artifact["solo_operator_custody"] == _solo_custody(), "solo custody disclosure drift")
-    require(artifact["temporal_firewall"] == _temporal_firewall(artifact["identity_group_freeze"], artifact["split_assignment"]), "temporal firewall drift")
-    require(artifact["evaluation_policy"] == _evaluation_policy(expected_strata, expected_ledger), "evaluation policy drift")
-    require(artifact["custody_receipts"] == _custody_receipt_contract(expected_ledger), "custody receipt contract drift")
+    require(
+        artifact["temporal_firewall"]
+        == _temporal_firewall(artifact["identity_group_freeze"], artifact["split_assignment"]),
+        "temporal firewall drift",
+    )
+    require(
+        artifact["evaluation_policy"] == _evaluation_policy(expected_strata, expected_ledger), "evaluation policy drift"
+    )
+    require(
+        artifact["custody_receipts"] == _custody_receipt_contract(expected_ledger), "custody receipt contract drift"
+    )
     require(artifact["residual_query"] == _residual_query(expected_strata), "residual query drift")
     require(artifact["state_machine"] == _state_machine(), "state machine drift")
     require(artifact["execution_gates"] == build_artifact()["execution_gates"], "execution gate drift")
@@ -1382,8 +1428,10 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any] | None = Non
 
 
 def write_outputs() -> None:
-    SCHEMA_PATH.write_bytes(canonical_bytes(build_schema()))
-    ARTIFACT_PATH.write_bytes(canonical_bytes(build_artifact()))
+    schema = build_schema()
+    artifact = build_artifact()
+    validate(artifact, schema)
+    publish_frozen_k_bundle(ROOT, {SCHEMA_PATH: canonical_bytes(schema), ARTIFACT_PATH: canonical_bytes(artifact)})
 
 
 def check_outputs() -> None:

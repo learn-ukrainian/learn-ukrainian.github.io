@@ -18,8 +18,12 @@ Only module-level defs/constants run on load (``main`` is guarded by
 from __future__ import annotations
 
 import importlib.util
+import io
+import json
 import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -39,6 +43,112 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+
+@pytest.mark.parametrize("shape", [
+    "echo $((1 << EOF))\n{payload}\nEOF",
+    "((1 << EOF))\n{payload}\nEOF",
+    "echo ${x#<<EOF }\n{payload}\nEOF",
+    "let 'x=1<<EOF'\n{payload}\nEOF",
+    "true # <<EOF\n{payload}\nEOF",
+    ": <<EOF; \\\n{payload}\nnote\nEOF",
+    ": <<EOF\n$({payload})\nEOF",
+    ": <<EOF\n`{payload}`\nEOF",
+    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
+])
+def test_issue_9102_executable_payload_stays_visible(repos, shape):
+    command = shape.replace("{payload}", "git checkout -b feature")
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9102_real_let_heredoc_body_is_inert():
+    assert _dangerous("let x=1<<EOF\ngit checkout -b feature\nEOF") is None
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+
+
+@pytest.mark.parametrize("opener,closer", [
+    ("<<'EOF'", "EOF"),
+    ('<<"EOF"', "EOF"),
+    ("<<EOF", "EOF"),
+    ("<<-EOF", "\tEOF"),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert _dangerous(f"cat {opener}\ngit checkout -b feature\n{closer}") is None
+    assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
+
+
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_branch_switch_visible(repos, first):
+    command = f"{first}\ngit checkout -b feature\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_crlf_closer_keeps_branch_switch_visible(repos):
+    command = "cat <<EOF\r\nEOF\r\ngit checkout -b feature\nEOF"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    monkeypatch.chdir(repos["public"])
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_branch_switch_visible(repos, opener, closer):
+    command = f"cat {opener}\ngit checkout -b x\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(repos):
+    command = "cat <<$'EOF'\ncat <<SAFE\ngit checkout -b x\nSAFE\nEOF"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "git checkout -b feature"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 def _dangerous(command: str) -> str | None:
