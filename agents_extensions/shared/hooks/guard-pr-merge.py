@@ -51,7 +51,7 @@ from typing import NamedTuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -274,7 +274,7 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     Only a `segment` event carries argv; the rest carry [].
     """
     events: list[tuple[str, list[str]]] = []
-    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+    for line in preprocess_shell_command(command).splitlines():
         line_events: list[tuple[str, list[str]]] = []
         readable = True
         for kind, raw in _split_scopes(line):
