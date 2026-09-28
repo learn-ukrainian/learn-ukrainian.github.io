@@ -3234,7 +3234,8 @@ function LexiconPracticeIsland({
     dailyReRollCount,
   ]);
 
-  const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
+  // Cached index shards can predate #8714; never count withdrawn modes on the home.
+  const indexForStats = sessionScopeIndexForMode(deck?.index ?? dueIndex ?? [], 'mixed').filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
   );
 

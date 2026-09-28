@@ -245,7 +245,8 @@ def withdraw_synonyms_from_pinned_package(
 
     This contains the defect without changing unrelated cards while the full
     rebuild is blocked by unresolved curated Atlas routes. The normal publish
-    shard checks and linguistic gate still apply before upload.
+    shard checks still apply here. The caller must run the linguistic gate
+    separately before any upload; this helper does not publish the result.
     """
     from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED, _json_bytes, _size_budget
     from scripts.practice_deck.io import _decode_package

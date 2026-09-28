@@ -123,17 +123,17 @@ function itemsFromShard<T>(payload: unknown, key: PracticeDrillKind): T[] {
   return ((payload as Record<string, T[] | undefined> | null)?.[key] ?? []) as T[];
 }
 
-export function drillFieldsFromShardResults(results: readonly unknown[]): PracticeDrillFields {
+export function drillFieldsFromShardResults(results: Partial<Record<PracticeDrillKind, unknown>>): PracticeDrillFields {
   return {
-    cloze: itemsFromShard<PracticeClozeItem>(results[0], "cloze"),
-    stress: itemsFromShard<PracticeStressItem>(results[1], "stress"),
-    classify: itemsFromShard<PracticeClassifyItem>(results[2], "classify"),
-    paradigm: itemsFromShard<PracticeParadigmItem>(results[3], "paradigm"),
-    synonym: isPracticeModeEnabled('synonym') ? itemsFromShard<PracticeSynonymItem>(results[4], "synonym") : [],
-    paronym: itemsFromShard<PracticeParonymItem>(results[5], "paronym"),
-    heritage: itemsFromShard<PracticeHeritageItem>(results[6], "heritage"),
-    antonym: itemsFromShard<PracticeAntonymItem>(results[7], "antonym"),
-    imperative: itemsFromShard<PracticeImperativeItem>(results[8], "imperative"),
+    cloze: itemsFromShard<PracticeClozeItem>(results.cloze, "cloze"),
+    stress: itemsFromShard<PracticeStressItem>(results.stress, "stress"),
+    classify: itemsFromShard<PracticeClassifyItem>(results.classify, "classify"),
+    paradigm: itemsFromShard<PracticeParadigmItem>(results.paradigm, "paradigm"),
+    synonym: isPracticeModeEnabled('synonym') ? itemsFromShard<PracticeSynonymItem>(results.synonym, "synonym") : [],
+    paronym: itemsFromShard<PracticeParonymItem>(results.paronym, "paronym"),
+    heritage: itemsFromShard<PracticeHeritageItem>(results.heritage, "heritage"),
+    antonym: itemsFromShard<PracticeAntonymItem>(results.antonym, "antonym"),
+    imperative: itemsFromShard<PracticeImperativeItem>(results.imperative, "imperative"),
   };
 }
 
@@ -144,17 +144,17 @@ export async function fetchPracticeDrillFields(
   publishedShards: ReadonlySet<string> = overridePublishedShards ?? PUBLISHED_PRACTICE_SHARDS,
 ): Promise<PracticeDrillFields> {
   const results = await Promise.all(
-    PRACTICE_DRILL_KINDS.map((kind) => {
-      if (!isPracticeModeEnabled(kind)) return Promise.resolve({});
+    PRACTICE_DRILL_KINDS.map(async (kind) => {
+      if (!isPracticeModeEnabled(kind)) return [kind, {}] as const;
       const filename = `practice-${kind}.${level}.json`;
       if (!isPracticeShardPublished(filename, publishedShards)) {
-        return Promise.resolve({});
+        return [kind, {}] as const;
       }
       const url = `${shardBaseUrl}/${filename}`;
-      return getShardJson<unknown>(url, cache).catch(softSkipUnpublishedDrillShard);
+      return [kind, await getShardJson<unknown>(url, cache).catch(softSkipUnpublishedDrillShard)] as const;
     }),
   );
-  return drillFieldsFromShardResults(results);
+  return drillFieldsFromShardResults(Object.fromEntries(results));
 }
 
 export function concatDrillFields(batches: readonly PracticeDrillFields[]): PracticeDrillFields {

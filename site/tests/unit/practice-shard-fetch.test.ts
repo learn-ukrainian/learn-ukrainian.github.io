@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   appendDrillFields,
   concatDrillFields,
+  drillFieldsFromShardResults,
   fetchPracticeDrillFields,
   getShardJson,
   isMissingShard,
@@ -90,7 +91,9 @@ describe("practice-shard-fetch", () => {
   });
 
   test("practiceDrillShardUrls keeps the published kind order under /lexicon", () => {
-    expect(practiceDrillShardUrls("/lexicon", "A1")).toEqual([
+    const urls = practiceDrillShardUrls("/lexicon", "A1");
+    expect(urls).toHaveLength(8);
+    expect(urls).toEqual([
       "/lexicon/practice-cloze.A1.json",
       "/lexicon/practice-stress.A1.json",
       "/lexicon/practice-classify.A1.json",
@@ -100,6 +103,20 @@ describe("practice-shard-fetch", () => {
       "/lexicon/practice-antonym.A1.json",
       "/lexicon/practice-imperative.A1.json",
     ]);
+  });
+
+  test("drill results map by kind when the synonym URL is skipped (#8714)", () => {
+    const results = {
+      imperative: { imperative: [{ imperativeId: "imperative-1" }] },
+      paronym: { paronym: [{ paronymId: "paronym-1" }] },
+      synonym: { synonym: [{ synonymId: "withdrawn" }] },
+      cloze: { cloze: [{ clozeId: "cloze-1" }] },
+    };
+    const fields = drillFieldsFromShardResults(results);
+    expect(fields.cloze).toEqual([{ clozeId: "cloze-1" }]);
+    expect(fields.paronym).toEqual([{ paronymId: "paronym-1" }]);
+    expect(fields.imperative).toEqual([{ imperativeId: "imperative-1" }]);
+    expect(fields.synonym).toEqual([]);
   });
 
   test("cached and published synonym shards cannot hydrate withdrawn cards (#8714)", async () => {

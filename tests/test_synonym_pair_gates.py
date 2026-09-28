@@ -63,10 +63,37 @@ def test_withdrawal_cases_are_named_and_gemini_verdicts_remain_rejected() -> Non
     assert sum(case["review"] == "gpt-r5" for case in cases) == 9
     assert sum(case["review"] == "gemini-r3" for case in cases) == 10
     verdicts = yaml.safe_load(SYNONYM_VERDICTS_YAML.read_text(encoding="utf-8"))
-    rejected = {frozenset((row["a"], row["b"])) for row in verdicts["rejected"] if row["polarity"] == "synonym"}
+    rejected = {(row["a"], row["b"]) for row in verdicts["rejected"] if row["polarity"] == "synonym"}
+    # The review IDs pin the card direction; the registry itself stores sorted pairs.
+    reviewed_directions = {
+        "syn_e236ca1c8934": ("обличчя", "вид"),
+        "syn_8e7c05b92713": ("відновлюватися", "повертати"),
+        "syn_561a6a8cce47": ("глагол", "річ"),
+        "syn_425321250dc8": ("далеко", "набагато"),
+        "syn_ea2d41290988": ("дощити", "падати"),
+        "syn_19e2f6d4c8e2": ("квартал", "чверть"),
+        "syn_d991bc2e21ef": ("кравець", "кравчиня"),
+        "syn_99a4abe4bd8a": ("майстер", "митець"),
+        "syn_23233be4d496": ("носити", "нести"),
+        "syn_e7e7f68d1014": ("переказ", "розповідь"),
+    }
+    gemini_cases = [case for case in cases if case["review"] == "gemini-r3"]
+    assert {case["id"] for case in gemini_cases} == set(reviewed_directions)
     for case in cases:
         if case["review"] == "gemini-r3":
-            assert frozenset((case["prompt"], case["answer"])) in rejected, case["name"]
+            assert (case["prompt"], case["answer"]) == reviewed_directions[case["id"]], case["name"]
+            assert case["displayed_sense"], case["name"]
+            assert tuple(sorted((case["prompt"], case["answer"]))) in rejected, case["name"]
+
+
+def test_python_and_site_synonym_switches_agree() -> None:
+    python_source = (PROJECT_ROOT / "scripts" / "audit" / "generate_practice_deck.py").read_text(encoding="utf-8")
+    site_source = (PROJECT_ROOT / "site" / "src" / "lib" / "lexicon" / "srs.ts").read_text(encoding="utf-8")
+    python_switch = re.search(r"^SYNONYM_MODE_ENABLED = (True|False)$", python_source, re.MULTILINE)
+    site_switch = re.search(r"^export const SYNONYM_MODE_ENABLED = (true|false);$", site_source, re.MULTILINE)
+    assert python_switch is not None and site_switch is not None
+    assert (python_switch.group(1) == "True") == (site_switch.group(1) == "true")
+    assert python_switch.group(1) == "False"  # #8714 withdrawal remains in force.
 
 
 def test_disabled_mode_withholds_every_known_failure(monkeypatch: pytest.MonkeyPatch) -> None:

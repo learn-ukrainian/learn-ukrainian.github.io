@@ -2066,6 +2066,51 @@ describe('LexiconPractice', () => {
     );
   });
 
+  test('stale fetched synonym tags and due cards do not change the home tile (#8714)', async () => {
+    const state = loadState(localStorage, NOW);
+    for (let index = 0; index < 4; index += 1) {
+      state.cards.set(cardKey(`A1-${index}`, 'synonym'), {
+        due: NOW.getTime() - 60_000,
+        stability: 4,
+        difficulty: 4,
+        elapsed_days: 1,
+        scheduled_days: 1,
+        learning_steps: 0,
+        reps: 2,
+        lapses: 0,
+        state: 2,
+      });
+    }
+    saveState(state, localStorage, NOW.getTime());
+    const { fn } = mockShardFetch({ A1: 4 });
+    let staleIndex = false;
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const response = await fn(input);
+      if (!staleIndex || !String(input).includes('practice-index.A1.json')) return response;
+      const shard = await response.json();
+      return okJson({
+        ...shard,
+        items: shard.items.map((item: PracticeDeckData['index'][number]) => ({
+          ...item,
+          modes: [...item.modes, 'synonym'],
+        })),
+      });
+    });
+
+    const control = render(<LexiconPractice />);
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/0 до повторення \+ 8 нових/),
+    );
+    const controlTile = screen.getByTestId('practice-session-scope').textContent;
+    control.unmount();
+
+    staleIndex = true;
+    render(<LexiconPractice />);
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-session-scope').textContent).toBe(controlTile),
+    );
+  });
+
   test('keeps higher published levels eligible while preferring the learner level', async () => {
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
