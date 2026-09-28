@@ -239,15 +239,15 @@ class ClassifierTests(unittest.TestCase):
             reads_content="true",
         )
 
-    def test_merge_group_docs_only_stays_docs(self):
-        # #8437: a docs merge does not rebuild the site or run four shards.
-        self.assert_docs(
+    def test_merge_group_docs_only_runs_full_without_frontend(self):
+        # #9073 D4: docs can be read by tests outside the docs-lane markers.
+        self.assert_full(
             self.classify(["docs/guide.md", "README.md"], event="merge_group"),
         )
 
     def test_docs_reads_content_flag(self):
-        # #8720: only a docs-lane result whose paths touch curriculum/ or wiki/
-        # flags the reads_content leg, on both pull_request and merge_group.
+        # #8720: curriculum/wiki docs-lane results flag the reads_content leg
+        # on both events; ordinary docs run full in the queue.
         for event in ("pull_request", "merge_group"):
             with self.subTest(event=event, case="curriculum"):
                 self.assert_docs(
@@ -262,10 +262,11 @@ class ClassifierTests(unittest.TestCase):
                     reads_content="true",
                 )
             with self.subTest(event=event, case="docs-only"):
-                self.assert_docs(
-                    self.classify(["docs/guide.md"], event=event),
-                    reads_content="false",
-                )
+                result = self.classify(["docs/guide.md"], event=event)
+                if event == "pull_request":
+                    self.assert_docs(result, reads_content="false")
+                else:
+                    self.assert_full(result)
         # A curriculum path mixed with a docs/ path is still docs with the flag.
         self.assert_docs(
             self.classify(["docs/guide.md", "wiki/figures/example.md"]),
@@ -358,7 +359,7 @@ class ClassifierTests(unittest.TestCase):
                 )
 
     def test_merge_group_non_code_classes_keep_their_tiers(self):
-        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"))
         self.assert_docs(
             self.classify(["wiki/figures/example.md"], event="merge_group"),
             reads_content="true",
@@ -381,8 +382,12 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assert_full(tier, frontend="false")
 
-    def test_merge_group_direct_python_test_read_docs_run_full(self):
+    def test_merge_group_all_docs_run_full(self):
         for path in (
+            "docs/epics/ci-speed-program.md",
+            "docs/guide.md",
+            "README.md",
+            "agents_extensions/shared/skills/example/SKILL.md",
             "docs/epics/fresh-build-a1-arc.md",
             "docs/ACTIVITY-YAML-REFERENCE.md",
             "docs/best-practices/activity-pedagogy.md",
@@ -405,6 +410,9 @@ class ClassifierTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assert_docs(self.classify([path]))
                 self.assert_full(self.classify([path], event="merge_group"))
+        self.assert_full(
+            self.classify(["docs/guide.md", "wiki/figures/example.md"], event="merge_group")
+        )
 
     def test_merge_group_mixed_frontend_and_code_runs_full_with_frontend(self):
         self.assert_full(
@@ -541,8 +549,8 @@ class ClassifierTests(unittest.TestCase):
                     frontend="true",
                 )
         self.assert_docs(self.classify(["docs/guide.md"], labels=["full-ci-later"]))
-        # #8437: a docs merge stays on the docs lane.
-        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+        # #9073 D4: a docs merge runs the full Python tier.
+        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"))
 
     def test_empty_and_capped_changes(self):
         for paths in ([], [f"docs/{i}.md" for i in range(300)]):
@@ -776,14 +784,14 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(ends, [_MAIN_SHA])
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout.getvalue())
-        # Without the label the group keeps its path-classified tier.
+        # Without the label the group still classifies docs as full (#9073 D4).
         stdout, compare, (called, _, _) = self._run_main_merge_group(
             ref, api_labels={8656: ["bug"]}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
         compare.assert_called_once()
         self.assertEqual(compare.call_args.args[:2], (_MAIN_SHA, "f" * 40))
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_with_two_prs_checks_both(self):
         # BASE is pr-8656's group head, not main (the #8505 r4 blocker).
@@ -809,13 +817,13 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(ends, [_MAIN_SHA])
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout.getvalue())
-        # No PR in the group carries full-ci: path classification applies.
+        # No PR in the group carries full-ci: docs still take the full tier.
         stdout, compare, (called, _, _) = self._run_main_merge_group(
             ref, api_labels={8650: [], 8657: [], 8656: []}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8650, 8657, 8656])
         self.assertEqual(compare.call_args.args[:2], ("2" * 40, "f" * 40))
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_stops_at_a_group_ahead_that_already_merged(self):
         # pr-8656 merged between queue events: its ref is gone and its head
@@ -831,7 +839,7 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8650, 8657])
         self.assertEqual(ends, ["1" * 40])
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_lookup_failures_fail_closed(self):
         refs, ref = self._live_queue(3)

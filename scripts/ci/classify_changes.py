@@ -45,60 +45,6 @@ _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 _QUEUE_CODE_SUFFIXES = (".py", ".js", ".jsx", ".ts", ".tsx", ".sh")
-# Docs referenced by unmarked Python test modules. The source scan is
-# conservative, so a harmless literal may also force full queue CI. The docs
-# lane runs only docs_skills, repo_wide, and (for curriculum/wiki edits)
-# reads_content tests.
-_QUEUE_TEST_READ_DOC_PATHS = frozenset({
-    "docs/ACTIVITY-YAML-REFERENCE.md",  # tests/test_batch_fix_mode.py
-    "docs/MONITOR-API.md",
-    "docs/SCRIPTS.md",  # tests/test_research_registry_p6.py
-    "docs/agent-runtime-guide.md",
-    "docs/audits/2026-09-11-uldr-program-audit.md",
-    "docs/best-practices/agent-cooperation.md",
-    "docs/best-practices/activity-pedagogy.md",  # tests/test_config_tables.py
-    "docs/best-practices/code-quality.md",
-    "docs/best-practices/fleet-role-scorecard.md",  # tests/test_luna_max_routing_contract.py
-    "docs/best-practices/fleet-shared-doctrine.md",  # tests/test_luna_max_routing_contract.py
-    "docs/best-practices/module-content-quality.md",
-    "docs/best-practices/ulp-presentation-pattern.md",
-    "docs/bug-autopsies/secret-leakage.md",
-    "docs/decisions/ADR-019-work-control-plane.md",
-    "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md",
-    "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md",
-    "docs/eval/human-eval-rubric.md",
-    "docs/folk-epic/seminar-quality-gate-design.md",
-    "docs/lesson-contract.md",
-    "docs/monitor-api/work.md",
-    "docs/projects/qg-quality-gate/fixture-rights-replace-list.md",
-    "docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
-    "docs/references/research-digests/unlp-2026-cefr-assessment.md",
-    "docs/research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md",
-    "docs/resources/EXTERNAL_RESOURCES_SCHEMA.md",
-    "docs/review-protocol.md",
-    "docs/runbooks/agent-seat-onboarding.md",  # tests/test_driver_work_api_onboarding.py
-    "docs/runbooks/background-session-tasks.md",
-    "docs/runbooks/ci-gate.md",
-    "docs/runbooks/codex-hooks.md",
-    "docs/runbooks/cursor-driver.md",
-    "docs/runbooks/epic-orchestrator-roster.md",
-    "docs/runbooks/epic-stream-handoff.md",
-    "docs/runbooks/fleet-comms-open-gaps.md",
-    "docs/runbooks/grok-bot-qa-observer.md",
-    "docs/runbooks/storage-topology.md",  # tests/test_storage_resolver.py
-    "docs/runbooks/word-atlas-source-inventory-review-candidates.md",
-    "docs/session-state/codex-orchestrator-handoff.md",
-    "docs/session-state/current.claude.md",
-    "docs/session-state/current.orchestrator.md",
-})
-_QUEUE_TEST_READ_DOC_PREFIXES = (
-    "docs/epics/fresh-build-",  # tests/curriculum/arc/test_arc*.py
-    "docs/l2-uk-direct/textbook-reading-notes/",  # tests/test_textbook_source_inventory_scope.py
-    "docs/projects/open-model-data/",  # tests/projects/open_model_data/test_real_training_run_8338.py
-    "docs/projects/ukrainian-data-foundry-evidence/",  # tests/projects/open_model_data/test_v4_reproduce_deliverables.py
-    "docs/research/bio/",  # tests/test_lint_bio_dossier_xref.py
-    "docs/style-cards/",  # tests/build/test_fresh_style_cards.py
-)
 
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
 # the full tier on both events and is excluded from the docs exemption; the
@@ -462,13 +408,14 @@ def classify_tier(
     tree_paths: Iterable[str] | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, str]:
-    """Classify PR paths and require full Python coverage for queue code changes.
+    """Classify PR paths and require full Python coverage for queue docs and code.
 
     ``full`` runs every required Python test except ``slow`` and
     ``atlas_release``; those markers run only nightly. On ``merge_group``,
-    docs-only and content-only changes retain their #8437 classes except
-    directly test-read docs. Frontend-only changes run ``full`` while keeping
-    their existing Frontend-job denominator. Other paths run ``full``.
+    docs-only and frontend-only changes run ``full`` while keeping their
+    existing Frontend-job denominator. Curriculum/wiki entries retain the
+    ``reads_content`` docs class; learner pages retain the content class.
+    Other paths run ``full``.
     """
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
@@ -490,14 +437,6 @@ def classify_tier(
         if event == "merge_group":
             return _full(shard_count, frontend="true" if frontend else "false")
         return _frontend_only()
-    # These docs are read by Python tests outside the docs-lane markers. Keep
-    # the #8437 docs class for other paths, but test these inputs as code.
-    if event == "merge_group" and any(
-        _norm(path) in _QUEUE_TEST_READ_DOC_PATHS
-        or _norm(path).startswith(_QUEUE_TEST_READ_DOC_PREFIXES)
-        for path in paths
-    ):
-        return _full(shard_count, frontend="true" if frontend else "false")
     # The broad curriculum/wiki docs/content exemptions can include code files
     # outside the known code-imported set. They also need the queue's full gate.
     if event == "merge_group" and any(
@@ -514,6 +453,12 @@ def classify_tier(
         return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
+        # Tests may construct docs paths dynamically, so a static test-read
+        # allowlist cannot safely select the queue's narrow docs lane.
+        if event == "merge_group" and not all(
+            _norm(path).startswith(CONTENT_PREFIXES) for path in paths
+        ):
+            return _full(shard_count, frontend="false")
         # A curriculum/wiki docs PR still needs the reads_content leg (#8720):
         # the docs lane runs no reads_content tests otherwise, so an edit that
         # breaks a test reading those live trees would merge green.

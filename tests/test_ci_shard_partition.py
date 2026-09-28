@@ -566,8 +566,8 @@ def test_shards_length_equals_shard_count_for_selected_and_full() -> None:
     assert len(json.loads(full["shards"])) == int(full["shard_count"]) == 4
 
 
-def test_merge_group_docs_skip_frontend_and_full_shards() -> None:
-    """A docs merge must not rebuild the site or run four pytest shards (#8437)."""
+def test_merge_group_docs_run_full_shards_without_frontend() -> None:
+    """A docs merge runs every required Python shard without rebuilding the site (#9073)."""
     from scripts.ci.classify_changes import classify
 
     result = classify(
@@ -578,11 +578,11 @@ def test_merge_group_docs_skip_frontend_and_full_shards() -> None:
         denominator=["site/"],
         tree_paths=frozenset(),
     )
-    assert result["docs_only"] == "true"
+    assert result["docs_only"] == "false"
     assert result["frontend"] == "false"
     assert result["backend"] == "true"
-    assert result["pytest_mode"] == "docs"
-    assert json.loads(result["shards"]) == [1]
+    assert result["pytest_mode"] == "full"
+    assert json.loads(result["shards"]) == [1, 2, 3, 4]
 
 
 def test_frontend_only_change_skips_python_shards() -> None:

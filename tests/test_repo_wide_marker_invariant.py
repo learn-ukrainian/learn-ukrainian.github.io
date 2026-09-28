@@ -76,7 +76,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
     "tests/test_post_processor_mutation_invariant.py",
     "tests/test_public_tree_no_baked_host_run_root.py",
     "tests/test_pytest_plugins_not_test_modules.py",
-    "tests/test_queue_docs_read_allowlist_invariant.py",
     "tests/test_reads_content_marker_invariant.py",
     "tests/test_session_identity_env_isolation.py",
     "tests/test_session_state_retired.py",
