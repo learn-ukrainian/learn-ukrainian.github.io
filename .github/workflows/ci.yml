@@ -521,7 +521,7 @@ jobs:
         env:
           SHARD: ${{ matrix.shard }}
         run: |
-          python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml \
+          .venv/bin/python -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml \
             --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY" || true
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'

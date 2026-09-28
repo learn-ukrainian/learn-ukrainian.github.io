@@ -160,3 +160,21 @@ def test_summary_tolerates_missing_empty_and_corrupt_files(tmp_path: Path):
 def test_summary_cli_never_fails_on_missing_input(tmp_path: Path, capsys):
     assert junit_main([str(tmp_path / "nope.xml"), "--title", "pytest (1)"]) == 0
     assert capsys.readouterr().out == "pytest (1): no JUnit results to summarise.\n"
+
+
+def test_summary_test_id_is_one_line_and_length_bounded(tmp_path: Path):
+    long_param = "x" * 5000
+    path = tmp_path / "ids.xml"
+    path.write_text(
+        "<testsuite>"
+        '<testcase classname="tests.test_a" name="test_nl[a&#10;b|c]" file="tests/test_a.py"><failure message="m"/></testcase>'
+        f'<testcase classname="tests.test_a" name="test_long[{long_param}]" file="tests/test_a.py"><failure message="m"/></testcase>'
+        "</testsuite>",
+        encoding="utf-8",
+    )
+    text = render_failure_summary([path])
+    rows = [line for line in text.splitlines() if line.startswith("| tests/")]
+    assert len(rows) == 2, text
+    assert "tests/test_a.py::test_nl[a b\\|c] | failed | m |" in rows[0]
+    assert "…" in rows[1] and len(rows[1]) < 400
+    assert long_param not in text

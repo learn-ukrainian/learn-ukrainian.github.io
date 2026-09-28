@@ -71,6 +71,7 @@ def parse_junit(paths: list[Path]) -> list[TestResult]:
 
 SUMMARY_ROW_CAP = 50
 _MESSAGE_LIMIT = 200
+_TEST_ID_LIMIT = 300
 
 
 def _cell(text: str) -> str:
@@ -83,6 +84,14 @@ def _cell(text: str) -> str:
 def _first_line(message: str) -> str:
     line = next((line.strip() for line in message.splitlines() if line.strip()), "")
     return line if len(line) <= _MESSAGE_LIMIT else line[: _MESSAGE_LIMIT - 1] + "…"
+
+
+def _test_id_cell(node_id: str) -> str:
+    """One-line, length-bounded, table-safe test ID (parametrize IDs are arbitrary text)."""
+    flat = " ".join(node_id.split())
+    if len(flat) > _TEST_ID_LIMIT:
+        flat = flat[: _TEST_ID_LIMIT - 1] + "…"
+    return _cell(flat)
 
 
 def render_failure_summary(paths: list[Path], *, title: str = "pytest", cap: int = SUMMARY_ROW_CAP) -> str:
@@ -109,7 +118,7 @@ def render_failure_summary(paths: list[Path], *, title: str = "pytest", cap: int
         "| --- | --- | --- |",
     ]
     lines.extend(
-        f"| {_cell(result.node_id)} | {result.outcome} | {_cell(_first_line(result.message))} |"
+        f"| {_test_id_cell(result.node_id)} | {result.outcome} | {_cell(_first_line(result.message))} |"
         for result in bad[:cap]
     )
     if len(bad) > cap:
