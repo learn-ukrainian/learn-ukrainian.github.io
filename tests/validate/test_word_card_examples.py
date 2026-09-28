@@ -602,6 +602,141 @@ def test_legacy_record_key_collides_and_correspondence_holds_ambiguous(gen) -> N
         assert not list(v.iter_errors({"snapshot_id": "ulif@next", **result})), result
 
 
+def test_unproven_position_never_narrows_an_ambiguous_hold(gen) -> None:
+    """Astra r4 reproduction: record 3 carries two historical register positions (the row was renumbered
+    between harvests, so both keys are kept). In a new harvest the weak header key hits A, B and C; the two
+    positions hit A and B. At 848fa00b the result was `ambiguous [A, B]` and C, possibly the moved original
+    row, stayed unsuppressed. Position continuity into a new harvest is unproven (Q-I6), so position evidence
+    may not narrow the weak-key candidate set at all: the hold covers A, B and C (fail wide, never narrow)."""
+    rec3 = copy.deepcopy(gen.SOURCE_RECORD_BY_HEAD["ulif:entry:3"])
+    al3 = {a["kind"]: a["key"] for a in rec3["aliases"]}
+    rec3["aliases"].append({"kind": "register_position", "key": "ulif:register:3660:2", "snapshot_id": "ulif@older"})
+    a, b, c = "ulif:entry:900001", "ulif:entry:900002", "ulif:entry:900003"
+    weak = al3["query_headword_label"]
+    rows = [
+        {"locator": a, "aliases": {"register_position": al3["register_position"], "query_headword_label": weak}},
+        {"locator": b, "aliases": {"register_position": "ulif:register:3660:2", "query_headword_label": weak}},
+        {"locator": c, "aliases": {"register_position": "ulif:register:9999:0", "query_headword_label": weak}},
+    ]
+    selector = {"kind": "source_record", "source_id": "ulif", "source_record_id": rec3["source_record_id"]}
+    result = gen.correspond(rec3, rows)
+    assert result["status"] in ("ambiguous", "held")
+    assert gen.selector_targets(selector, result) == [a, b, c], result
+    # the same rows re-read in the snapshot the first position was observed in: that position is direct
+    # observation and may narrow; the older position (a different snapshot) still may not, and because it
+    # lands on a row the proven evidence excludes the correspondence is a conflict hold, never a guess
+    observed = gen.correspond(rec3, rows, snapshot_id=gen.ULIF_SNAP)
+    assert observed["status"] == "held" and a in gen.selector_targets(selector, observed)
+    # with the content digest on A the proven evidence singles out A; the stale position on B is a conflict
+    with_content = copy.deepcopy(rows)
+    with_content[0]["aliases"]["content"] = al3["content"]
+    corroborated = gen.correspond(rec3, with_content)
+    assert corroborated["status"] == "held" and set(gen.selector_targets(selector, corroborated)) >= {a, b}
+    # drop the stale position from the snapshot: content + position agree on A, unique
+    del with_content[1]["aliases"]["register_position"]
+    assert gen.correspond(rec3, with_content) == {
+        "status": "unique",
+        "matched_by": "register_position",
+        "locator": a,
+    }
+
+
+def _small_world(
+    position: str, content: str, n: int, stale: bool, observed: bool
+) -> tuple[dict, list[dict], str | None]:
+    """One re-harvest scenario. The record was minted in `ulif@s1` with a register position, a content digest and
+    the weak header key; `stale` adds a second, older register position (`ulif@s0`, the row was renumbered).
+    `content == "changed"` appends a corrected digest (`ulif@s2`) that row 0 now carries (the old one is gone).
+    Rows r0..r{n-1} all carry the weak key; r0 is the original record. `position`: present (r0 carries the
+    position), absent (no row does), moved (r1 does). The stale position lands on the last row. `observed`
+    re-reads the rows in `ulif@s1`, which proves the s1 position (never the s0 one)."""
+    record = {
+        "source_record_id": "sr_smallworld000",
+        "source_id": "ulif",
+        "aliases": [
+            {"kind": "register_position", "key": "pos:s1", "snapshot_id": "ulif@s1"},
+            {"kind": "content", "key": "content:s1", "snapshot_id": "ulif@s1"},
+            {"kind": "query_headword_label", "key": "weak", "snapshot_id": "ulif@s1"},
+        ],
+    }
+    if stale:
+        record["aliases"].append({"kind": "register_position", "key": "pos:s0", "snapshot_id": "ulif@s0"})
+    if content == "changed":
+        record["aliases"].append({"kind": "content", "key": "content:s2", "snapshot_id": "ulif@s2"})
+    rows = [{"locator": f"r{i}", "aliases": {"query_headword_label": "weak"}} for i in range(n)]
+    for i, row in enumerate(rows):
+        row["aliases"]["register_position"] = f"pos:unrelated{i}"
+        if content != "absent":
+            row["aliases"]["content"] = f"content:unrelated{i}"
+    if position == "present":
+        rows[0]["aliases"]["register_position"] = "pos:s1"
+    elif position == "moved":
+        rows[1]["aliases"]["register_position"] = "pos:s1"
+    if stale:
+        rows[-1]["aliases"]["register_position"] = "pos:s0"
+    if content == "present":
+        rows[0]["aliases"]["content"] = "content:s1"
+    elif content == "changed":
+        rows[0]["aliases"]["content"] = "content:s2"
+    return record, rows, ("ulif@s1" if observed else None)
+
+
+def _unexcludable(record: dict, rows: list[dict], snapshot_id: str | None) -> set[str]:
+    """Oracle, independent of `correspond()`: the rows the PROVEN evidence cannot exclude. Content-side keys
+    are intrinsic to a row, so they are proven in any snapshot; a register position is proven only for the
+    snapshot it was observed in. No proven hit, or proven hits that contradict each other, excludes nothing."""
+    keys = {}
+    for a in record["aliases"]:
+        keys.setdefault(a["kind"], {}).setdefault(a["key"], set()).add(a["snapshot_id"])
+    proven: list[set[str]] = []
+    for kind, by_key in keys.items():
+        found = {
+            r["locator"]
+            for r in rows
+            if r["aliases"].get(kind) in by_key
+            and (kind != "register_position" or snapshot_id in by_key[r["aliases"][kind]])
+        }
+        if found:
+            proven.append(found)
+    everything = {r["locator"] for r in rows}
+    if not proven:
+        return everything
+    return set.intersection(*proven) or everything
+
+
+def test_small_world_suppression_targets_cover_every_unexcluded_candidate(gen) -> None:
+    """Exhaustive small world (Astra r4, closed as a class): for every (position present / absent / moved) x
+    (content present / absent / changed) x (1..3 weak-key candidates), each with and without a stale older
+    register position and each as a new harvest and as a re-read of the position's own snapshot, the
+    `source_record` suppression covers every candidate the proven evidence cannot exclude. Unproven position
+    evidence never narrows a candidate set, neither to one row nor to an ambiguous subset."""
+    selector = {"kind": "source_record", "source_id": "ulif", "source_record_id": "sr_smallworld000"}
+    evaluated = 0
+    for position in ("present", "absent", "moved"):
+        for content in ("present", "absent", "changed"):
+            for n in (1, 2, 3):
+                for stale in (False, True):
+                    if position == "moved" and n < 2:
+                        continue  # nowhere to move to
+                    if stale and (n < 2 or (position == "moved" and n < 3)):
+                        continue  # a row carries one position; the stale key needs a row of its own
+                    for observed in (False, True):
+                        record, rows, snapshot_id = _small_world(position, content, n, stale, observed)
+                        result = gen.correspond(record, rows, snapshot_id=snapshot_id)
+                        targets = set(gen.selector_targets(selector, result))
+                        expected = _unexcludable(record, rows, snapshot_id)
+                        label = f"position={position} content={content} n={n} stale={stale} observed={observed}"
+                        assert result["status"] != "missing", label  # the weak key always hits
+                        assert targets >= expected, (
+                            f"{label}: {result} leaves {sorted(expected - targets)} unsuppressed"
+                        )
+                        assert targets <= {r["locator"] for r in rows}, label
+                        if result["status"] == "unique":
+                            assert expected == {result["locator"]}, f"{label}: unique decision beyond the evidence"
+                        evaluated += 1
+    assert evaluated == 78
+
+
 def test_content_selector_survives_a_normaliser_change(gen) -> None:
     vriady = _card("vriady-hody-conflict")
     uws = next(a for a in vriady["assertions"] if a["source_id"] == "ukrainian_word_stress")

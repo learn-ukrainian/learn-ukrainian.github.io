@@ -20,6 +20,10 @@ declarations must agree and a reviewed overlay `variant` resolves conflicting sc
 configuration, and a generated assertion names the derivation that produced it so invalidation
 walks source -> generated assertion -> consumer; public projections recompute before tombstoning.
 
+Round 5 (Astra REVISE r4, 2026-09-28): correspondence sorts evidence into proven / unproven for the snapshot
+before any narrowing; an unproven register position never narrows a candidate set (not to one row, not to an
+ambiguous subset), so a hold always covers the full weak-key candidate set.
+
 Run:  /home/ops/learn-ukrainian/.venv/bin/python docs/atlas/word-cards/examples/build_examples.py
 """
 
@@ -106,12 +110,13 @@ SPLIT_OVERLAY = {
 #   - the r2 key `query#headword#grammatical_label` is NOT unique: 4,276 key groups covering 8,814 checked rows
 #     collide; rows 3 and 98008 (`ключ` homonyms 1 and 2) share `ключ#ключ#іменник чоловічого роду`.
 # Correspondence (§12.1, `correspond()`): every alias kind is evaluated against the new snapshot, with EVERY
-# historical key of a kind kept (a corrected header appends an alias; the old key still finds the row). A row
-# corresponds only if it is consistent with every kind that hits: exactly one such row is `unique`; several are an
-# explicit AMBIGUOUS hold; kinds that hit different rows are a CONFLICT hold (`held`). `register_position` is a
-# layout key whose continuity across harvests is untested (Q-I6): it never decides alone into another snapshot —
-# it needs a content-side alias that singles out the same row, or to have been observed in that snapshot — else
-# `held`. Under any hold a suppression applies to every candidate until a lane adjudicates; never a guess.
+# historical key of a kind kept (a corrected header appends an alias; the old key still finds the row). Only
+# evidence PROVEN for the snapshot narrows: content-side keys always, `register_position` only in the snapshot it
+# was observed in (its continuity across harvests is untested, Q-I6). A row corresponds only if it is consistent
+# with every proven kind that hits: exactly one such row is `unique`; several are an explicit AMBIGUOUS hold;
+# no proven hit, or kinds that hit different rows, is a CONFLICT hold (`held`) over every row any kind hit. An
+# unproven position never narrows, not to one row and not to an ambiguous subset (fail wide, never fail narrow).
+# Under any hold a suppression applies to every candidate until a lane adjudicates; never a guess.
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
 POSITION_KINDS = frozenset({"register_position"})  # layout evidence; continuity across harvests unproven (Q-I6)
 
@@ -235,27 +240,57 @@ def correspond(record: dict, candidates: list[dict], snapshot_id: str | None = N
     {locator, aliases: {kind: key}}; `snapshot_id` names the snapshot they come from (None = a new harvest).
 
     Every alias kind is evaluated, and every historical key of a kind counts (a corrected header APPENDS an
-    alias, so a row still carrying the old key is found). The rows consistent with every kind that hits are
-    the candidates: exactly one is `unique`; several are an explicit `ambiguous` hold; kinds that hit different
-    rows (register position says one row, content another) are a conflict `held`. `register_position` is layout
-    evidence whose continuity across harvests is unproven (Q-I6): it decides only when a content-side kind
-    singles out the same row, or when it was observed in `snapshot_id` itself; a row that only the position
-    singles out is `held`. Under every hold a suppression applies to every candidate until a language-lane
-    overlay `identity` entry settles the correspondence. No hit on any kind is `missing`."""
+    alias, so a row still carrying the old key is found). Evidence is PROVEN for the snapshot when it is a
+    content-side key (intrinsic to the row) or a position key observed in `snapshot_id` itself; a position key
+    from another harvest is unproven (Q-I6) and never narrows a candidate set, neither to one row nor to an
+    ambiguous subset. The rows consistent with every proven kind that hits are the candidates: exactly one is
+    `unique`; several are an explicit `ambiguous` hold; no proven evidence at all is `held` over every row any
+    kind hit; kinds that hit different rows (register position says one row, content another, or an unproven
+    position lands outside the proven set) are a conflict `held` over every row any kind hit. Under every hold
+    a suppression applies to every candidate until a language-lane overlay `identity` entry settles the
+    correspondence. No hit on any kind is `missing`."""
     mine: dict[str, dict[str, set[str]]] = {}  # kind -> key -> snapshots the key was observed in
     for a in record["aliases"]:
         mine.setdefault(a["kind"], {}).setdefault(a["key"], set()).add(a["snapshot_id"])
-    hits: dict[str, set[str]] = {}
+    # The guard comes BEFORE any narrowing (Astra r4, closed as a class): every hit is sorted into evidence that
+    # is proven for THIS snapshot and evidence that is not, and only proven evidence ever intersects. A content-
+    # side key is intrinsic to the row, so it is proven in any snapshot; a position key is proven only when it was
+    # observed in `snapshot_id`. Unproven evidence can widen a hold (a conflict) but never narrow a candidate set,
+    # neither to one row nor to an ambiguous subset: fail wide, never fail narrow.
+    hits: dict[str, set[str]] = {}  # every row any historical key of a kind found
+    proven: dict[str, set[str]] = {}  # the part of each kind's hits that is evidence for this snapshot
+    unproven: set[str] = set()  # rows found only by a position whose continuity here is unproven
     for kind in ALIAS_ORDER:
-        found = {c["locator"] for c in candidates if c["aliases"].get(kind) in mine.get(kind, {})}
-        if found:
-            hits[kind] = found
+        keys = mine.get(kind, {})
+        found = {c["locator"] for c in candidates if c["aliases"].get(kind) in keys}
+        if not found:
+            continue
+        hits[kind] = found
+        if kind not in POSITION_KINDS:
+            proven[kind] = found
+            continue
+        observed = {
+            c["locator"]
+            for c in candidates
+            if c["locator"] in found and snapshot_id is not None and snapshot_id in keys[c["aliases"][kind]]
+        }
+        if observed:
+            proven[kind] = observed
+        unproven |= found - observed
     if not hits:
         return {"status": "missing"}
     strongest = next(kind for kind in ALIAS_ORDER if kind in hits)
     everything = sorted(set().union(*hits.values()))
-    consistent = set.intersection(*hits.values())
-    if not consistent:
+    if not proven:
+        return {
+            "status": "held",
+            "matched_by": strongest,
+            "candidates": everything,
+            "hold": f"only register_position finds {', '.join(everything)}; position continuity across harvests is "
+            f"unproven (Q-I6) and no content alias corroborates it; {_HOLD_TAIL}",
+        }
+    consistent = set.intersection(*proven.values())
+    if not consistent or not unproven <= consistent:
         evidence = "; ".join(f"{kind} -> {', '.join(sorted(rows))}" for kind, rows in hits.items())
         return {
             "status": "held",
@@ -264,22 +299,16 @@ def correspond(record: dict, candidates: list[dict], snapshot_id: str | None = N
             "hold": f"conflicting identity evidence ({evidence}); {_HOLD_TAIL}",
         }
     if len(consistent) > 1:
+        if unproven:  # a position a lane could confirm exists, but it may not narrow: the hold names it
+            return {
+                "status": "held",
+                "matched_by": strongest,
+                "candidates": sorted(consistent),
+                "hold": f"register_position finds {', '.join(sorted(unproven))} among {len(consistent)} candidates "
+                f"but its continuity across harvests is unproven (Q-I6) and may not narrow them; {_HOLD_TAIL}",
+            }
         return {"status": "ambiguous", "matched_by": strongest, "candidates": sorted(consistent), "hold": _HOLD_TAIL}
     (locator,) = consistent
-    content_hits = [rows for kind, rows in hits.items() if kind not in POSITION_KINDS]
-    singled_out_by_content = bool(content_hits) and set.intersection(*content_hits) == {locator}
-    row = next(c for c in candidates if c["locator"] == locator)
-    observed_here = snapshot_id is not None and any(
-        snapshot_id in mine[kind].get(row["aliases"].get(kind), set()) for kind in hits if kind in POSITION_KINDS
-    )
-    if not singled_out_by_content and not observed_here:
-        return {
-            "status": "held",
-            "matched_by": strongest,
-            "candidates": everything,
-            "hold": f"only register_position singles out {locator}; position continuity across harvests is "
-            f"unproven (Q-I6) and no content alias corroborates it; {_HOLD_TAIL}",
-        }
     return {"status": "unique", "matched_by": strongest, "locator": locator}
 
 
