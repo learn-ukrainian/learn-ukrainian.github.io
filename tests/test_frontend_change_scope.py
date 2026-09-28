@@ -18,6 +18,7 @@ pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
+_ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
 _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
 
 
@@ -411,9 +412,17 @@ def test_ci_yml_frontend_job_is_gated_by_changes_output() -> None:
 
 
 def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
-    """The faster installer must retain the lock, exclusions and interpreter."""
+    """The installer must retain the lock, exclusions and interpreter.
+
+    Since #9062 the installer is the shared composite action; the pytest job
+    (and the other two) call it, so this guards the one copy.
+    """
     jobs = yaml.safe_load(_CI.read_text(encoding="utf-8"))["jobs"]
-    steps = jobs["pytest"]["steps"]
+    assert any(
+        step.get("uses") == "./.github/actions/python-ci-env"
+        for step in jobs["pytest"]["steps"]
+    )
+    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
     uv = next(step for step in steps if step.get("name") == "Set up uv")
     action, revision = uv["uses"].split("@")
     assert action == "astral-sh/setup-uv"
@@ -426,6 +435,8 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     assert "grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt" in install
     assert 'uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"' in install
     assert "--upgrade" not in install
-    setup_python = next(step for step in steps if step.get("uses", "").startswith("actions/setup-python@"))
+    setup_python = next(
+        step for step in jobs["pytest"]["steps"] if step.get("uses", "").startswith("actions/setup-python@")
+    )
     assert setup_python["with"]["python-version-file"] == ".python-version"
     assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.

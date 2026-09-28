@@ -8,32 +8,88 @@ import yaml
 from scripts.audit import check_ci_dependencies
 from scripts.audit.check_ci_dependencies import unexpected_diagnostics
 
-_CI = Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_CI = _REPO_ROOT / ".github/workflows/ci.yml"
+_WARM = _REPO_ROOT / ".github/workflows/uv-cache-warm.yml"
+_ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
+
+
+def _action_step(name: str) -> dict:
+    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
+    matches = [step for step in steps if step.get("name") == name]
+    assert len(matches) == 1, f"expected one action step named {name!r}"
+    return matches[0]
 
 
 def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
+    # #9062: the install/hydrate block is one composite action, and every job
+    # that used to carry a copy calls it, so the copies cannot drift apart.
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
-    scripts = [
-        next(step["run"] for step in jobs[job]["steps"] if step.get("name") == name)
-        for job, name in (
-            ("fast-checks", "Install preflight Python deps"),
-            ("pytest", "Install Python deps"),
-            ("needs-artifact-audit", "Install Python deps"),
-        )
-    ]
-    commands = [
-        [line.strip() for line in script.splitlines() if line.strip() and not line.strip().startswith("#")]
-        for script in scripts
-    ]
-    assert commands[0] == commands[1] == commands[2]
-    script = scripts[0]
+    for job in ("fast-checks", "pytest", "needs-artifact-audit"):
+        assert any(
+            step.get("uses") == "./.github/actions/python-ci-env"
+            for step in jobs[job]["steps"]
+        ), job
+    script = _action_step("Install Python deps")["run"]
     assert script.index("uv pip install --offline") < script.index(
         "uv pip install --python"
     ) < script.index("scripts/audit/check_ci_dependencies.py")
     assert script.index("scripts/audit/check_ci_dependencies.py") < script.index(
         "build_assets.py"
     )
+
+
+def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
+    # #9095: merge_group restores only a cache saved on the default branch.
+    # setup-uv matches the requirements-lock.txt key exactly, and save-cache
+    # `auto` does not write on merge_group. The warm workflow is that writer.
+    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
+    pytest_steps = workflow["jobs"]["pytest"]["steps"]
+    action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
+    uv = next(step for step in action["runs"]["steps"] if step.get("name") == "Set up uv")
+    assert uv["with"]["save-cache"] == "auto"
+    assert uv["with"]["enable-cache"] is True
+    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
+    assert uv["with"].get("prune-cache", False) is False
+
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    triggers = warm.get("on", warm.get(True))
+    assert triggers["push"] == {
+        "branches": ["main"],
+        "paths": [
+            "requirements-lock.txt",
+            ".python-version",
+            ".github/actions/python-ci-env/**",
+            ".github/workflows/uv-cache-warm.yml",
+        ],
+    }
+    assert "pull_request" not in triggers
+    assert "merge_group" not in triggers
+    assert triggers["schedule"] == [{"cron": "30 4 * * *"}]
+    assert warm["permissions"] == {"contents": "read"}
+    assert warm["concurrency"]["cancel-in-progress"] is False
+    assert warm["env"]["UV_HTTP_RETRIES"] == workflow["env"]["UV_HTTP_RETRIES"]
+    assert warm["env"]["PIP_RETRIES"] == workflow["env"]["PIP_RETRIES"]
+
+    job = warm["jobs"]["warm"]
+    assert job["runs-on"] == workflow["jobs"]["pytest"]["runs-on"]
+    assert job["timeout-minutes"] == 15
+    checkout = job["steps"][0]
+    ci_checkout = next(
+        step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/checkout@")
+    )
+    assert checkout["uses"] == ci_checkout["uses"]
+    assert checkout["with"]["persist-credentials"] is False
+    setup = next(
+        step for step in job["steps"] if str(step.get("uses", "")).startswith("actions/setup-python@")
+    )
+    ci_setup = next(
+        step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/setup-python@")
+    )
+    assert setup["uses"] == ci_setup["uses"]
+    assert setup["with"] == {"python-version-file": ".python-version"}
+    assert any(step.get("uses") == "./.github/actions/python-ci-env" for step in job["steps"])
 
 
 def test_ci_retry_settings_cover_uv_and_pip() -> None:

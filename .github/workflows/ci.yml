@@ -192,32 +192,13 @@ jobs:
       # Postgres, npm or native apt deps: no repo_wide test uses them (see
       # docs/runbooks/ci-gate.md). The venv lives in .venv; ruff,
       # plan-validate and TypeSafe triage use the setup-python interpreter.
-      - name: Set up uv
+      # Python env for the preflight leg: uv, the offline-first lockfile
+      # install, v4-runtime, then the Atlas manifest check. One composite
+      # action (#9062) so this copy cannot drift from pytest and
+      # needs-artifact-audit.
+      - name: Python CI environment
         if: needs.changes.outputs.preflight == 'true'
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
-        with:
-          version: '0.12.9'
-          enable-cache: true
-          cache-dependency-glob: requirements-lock.txt
-      - name: Install preflight Python deps
-        if: needs.changes.outputs.preflight == 'true'
-        run: |
-          set -euo pipefail
-          python -m venv .venv
-          # Same install as the pytest shards.
-          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
-            echo 'uv cache incomplete; retrying installation from the index'
-            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          fi
-          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
-          .venv/bin/python scripts/audit/check_ci_dependencies.py
-          .venv/bin/python packages/v4-runtime/build_assets.py
-      - name: Hydrate Atlas lexicon manifest
-        if: needs.changes.outputs.preflight == 'true'
-        run: |
-          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+        uses: ./.github/actions/python-ci-env
       - name: Preflight
         id: preflight
         if: ${{ !cancelled() && needs.changes.outputs.preflight == 'true' }}
@@ -333,7 +314,10 @@ jobs:
         shard: ${{ fromJSON(needs.changes.outputs.shards) }}
     services:
       postgres:
-        image: postgres:16
+        # Pinned to the multi-arch index digest (`docker buildx imagetools
+        # inspect postgres:16` / registry Docker-Content-Digest, 2026-09-28)
+        # so the gate cannot drift under a moving tag (#9062).
+        image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: lu
@@ -352,12 +336,6 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - name: Set up uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
-        with:
-          version: '0.12.9'
-          enable-cache: true
-          cache-dependency-glob: requirements-lock.txt
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
@@ -381,27 +359,12 @@ jobs:
             sudo apparmor_parser -r "${RUNNER_TEMP}/v4-ci-bwrap.apparmor"
           fi
           bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true
-      - name: Install Python deps
-        run: |
-          set -euo pipefail
-          python -m venv .venv
-          # Lockfile is internally inconsistent (marker-pdf vs pillow; see
-          # requirements.txt). Documented CI install is `--no-deps`. Drop
-          # live-ML wheels — the unit suite does not import them and they
-          # blow the 15m budget.
-          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
-            echo 'uv cache incomplete; retrying installation from the index'
-            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          fi
-          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
-          .venv/bin/python scripts/audit/check_ci_dependencies.py
-          .venv/bin/python packages/v4-runtime/build_assets.py
+      # Composite Python env (#9062): uv, offline-first lockfile install,
+      # v4-runtime, Atlas manifest check. npm stays after it (no dependency
+      # either way).
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env
       - run: npm ci --ignore-scripts
-      - name: Hydrate Atlas lexicon manifest
-        run: |
-          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
       - name: Download pytest duration source
         if: needs.changes.outputs.pytest_mode == 'full'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -592,27 +555,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
-        with:
-          version: '0.12.9'
-          enable-cache: true
-          cache-dependency-glob: requirements-lock.txt
-      - name: Install Python deps
-        run: |
-          set -euo pipefail
-          python -m venv .venv
-          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
-            echo 'uv cache incomplete; retrying installation from the index'
-            uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          fi
-          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
-          .venv/bin/python scripts/audit/check_ci_dependencies.py
-          .venv/bin/python packages/v4-runtime/build_assets.py
-      - name: Hydrate Atlas lexicon manifest
-        run: |
-          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      # Composite Python env (#9062), shared with pytest and fast-checks.
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env
       - name: Verify needs_artifact skip set
         run: |
           set -euo pipefail
