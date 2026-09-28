@@ -21,7 +21,11 @@ from pathlib import Path
 from agent_directory import open_agent_directory
 
 
-def sync_agent_mirror(source_root: str, agent_root: str) -> None:
+def sync_agent_mirror(
+    source_root: str,
+    agent_root: str,
+    excludes: tuple[str, ...] = (),
+) -> None:
     """Exec rsync into the directory represented by an open descriptor."""
     source = Path(source_root).resolve(strict=True)
     if not source.is_dir():
@@ -35,7 +39,10 @@ def sync_agent_mirror(source_root: str, agent_root: str) -> None:
         # working directory selected by fchdir.
         os.set_inheritable(agent_fd, True)
         os.fchdir(agent_fd)
-        os.execvp("rsync", ("rsync", "-av", f"{source}/", "."))
+        argv = ["rsync", "-av"]
+        argv.extend(f"--exclude={pattern}" for pattern in excludes)
+        argv.extend((f"{source}/", "."))
+        os.execvp("rsync", tuple(argv))
     finally:
         # execvp never returns on success.  Close only on an fchdir/exec failure.
         os.close(agent_fd)
@@ -45,10 +52,16 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", required=True)
     parser.add_argument("--agent-root", required=True)
+    parser.add_argument(
+        "--exclude",
+        action="append",
+        default=[],
+        help="rsync exclude pattern; deploy passes BYTECODE_CACHE_EXCLUDES",
+    )
     args = parser.parse_args(argv)
 
     try:
-        sync_agent_mirror(args.source_root, args.agent_root)
+        sync_agent_mirror(args.source_root, args.agent_root, tuple(args.exclude))
     except OSError as exc:
         print(f"Error: refusing .agent mirror sync: {exc}", file=sys.stderr)
         return 1

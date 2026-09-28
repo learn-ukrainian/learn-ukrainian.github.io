@@ -39,6 +39,12 @@ fi
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 
+BYTECODE_RSYNC_EXCLUDES=()
+for _bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+    BYTECODE_RSYNC_EXCLUDES+=(--exclude="$_bytecode_pattern")
+done
+unset _bytecode_pattern
+
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
@@ -170,9 +176,14 @@ sync_shared_agent_mirror() {
     # The source is absolute because the helper fchdirs into a descriptor for
     # .agent before it execs rsync.  Passing . as the destination keeps the write
     # bound to that descriptor even if another agent swaps the .agent pathname.
+    local pattern exclude_args=()
+    for pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+        exclude_args+=(--exclude "$pattern")
+    done
     "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
         --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
-        --agent-root .agent
+        --agent-root .agent \
+        "${exclude_args[@]}"
 }
 
 remove_claude_autoload_rules() {
@@ -213,6 +224,11 @@ check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
     [[ -d "$dst" ]] || return 0
     local path orphan d normalized
+    local prune_terms bytecode_pattern
+    prune_terms=(-name '.DS_Store')
+    for bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+        prune_terms+=(-o -name "$bytecode_pattern")
+    done
     # Diff output is presentation text: quoting, whitespace, and ': ' can
     # corrupt a filename into an allowed path. Enumerate actual names instead,
     # without following symlinks. A NUL sentinel reports traversal failure.
@@ -245,7 +261,7 @@ check_orphans() {
             echo "       2. Add it to ORPHAN_PATHS_* in scripts/deploy_orphan_paths.sh"
             return 1
         fi
-    done < <(find -P "$dst" -mindepth 1 -name '.DS_Store' -prune -o -print0 || printf '\0')
+    done < <(find -P "$dst" -mindepth 1 \( "${prune_terms[@]}" \) -prune -o -print0 || printf '\0')
     return 0
 }
 
@@ -346,6 +362,10 @@ diff_dirs() {
             diff_args+=(--exclude="${normalized##*/}")
         fi
     done
+    local bytecode_pattern
+    for bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+        diff_args+=(--exclude="$bytecode_pattern")
+    done
     local diff_out
     diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null || true)
     if [[ -n "$diff_out" ]]; then
@@ -373,6 +393,7 @@ diff_overlay_files() {
     local diff_out=""
     local rel
     while IFS= read -r rel; do
+        bytecode_cache_path "$rel" && continue
         if [[ ! -f "$dst/$rel" ]]; then
             diff_out+="Only in $src: $rel"$'\n'
         elif ! cmp -s "$src/$rel" "$dst/$rel"; then
@@ -457,7 +478,7 @@ fi
 echo "=== Syncing ==="
 "$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
+rsync -av --delete "${BYTECODE_RSYNC_EXCLUDES[@]}" $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
 # retired paths which an earlier deploy recorded, preserving all other runtime
 # scratch even when it shares a source directory such as prompts/. #4741
@@ -468,9 +489,9 @@ reap_retired_shared_agent_paths
 sync_shared_agent_mirror
 write_shared_agent_manifest
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
+rsync -av --delete "${BYTECODE_RSYNC_EXCLUDES[@]}" $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
-    rsync -av "$CODEX_EXTENSIONS/" .codex/
+    rsync -av "${BYTECODE_RSYNC_EXCLUDES[@]}" "$CODEX_EXTENSIONS/" .codex/
 fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
@@ -479,9 +500,11 @@ fi
 # and rsync fails with `mkdir ".agents/skills" failed: No such file or
 # directory (2)`. Pre-create the parent so a fresh clone works.
 mkdir -p .agents
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
+# shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
+rsync -av --delete "${BYTECODE_RSYNC_EXCLUDES[@]}" $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete \
+    "${BYTECODE_RSYNC_EXCLUDES[@]}" \
     $(build_excludes "$ORPHAN_PATHS_GEMINI") \
     $(build_shared_skill_overlay_excludes) \
     gemini_extensions/ .gemini/
@@ -489,9 +512,9 @@ for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
     [[ -d "$shared_skill" ]] || continue
     skill_name="$(basename "$shared_skill")"
     mkdir -p ".gemini/skills/$skill_name"
-    rsync -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
+    rsync -av --delete "${BYTECODE_RSYNC_EXCLUDES[@]}" "$shared_skill/" ".gemini/skills/$skill_name/"
 done
-rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
+rsync -av --delete "${BYTECODE_RSYNC_EXCLUDES[@]}" "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination

@@ -2,7 +2,7 @@
 # Single-source orphan allowlist for scripts/deploy_prompts.sh and
 # scripts/check_rules_deployment.sh.
 #
-# Pure variable assignments — no side effects. Source from both consumers;
+# Variable assignments plus bytecode_cache_path(). Source from consumers;
 # do not execute directly.
 #
 # Declared orphan paths (relative to destination). Space-separated.
@@ -84,3 +84,20 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 # Codex discovers shared skills only via .agents/skills. Preserve the legacy
 # path from rsync deletion; capture verified copies into retained storage.
 CODEX_DISCOVERY_EXCLUDES="skills"
+
+# Interpreter cache written beside deployed hooks and skill scripts (#9108).
+# These are not declared runtime state and must stay out of every ORPHAN_PATHS_*
+# list. Deploy excludes them from copy and from --delete, and the orphan
+# preflight ignores them. CPython recompiles a __pycache__ entry when the
+# paired .py mtime or size changes, so retaining the cache does not shadow
+# an updated source module.
+BYTECODE_CACHE_EXCLUDES=(__pycache__ '*.pyc')
+
+# True for a destination-relative interpreter cache path.
+bytecode_cache_path() {
+    local relative="$1"
+    case "$relative" in
+        *.pyc | *__pycache__/* | __pycache__) return 0 ;;
+    esac
+    return 1
+}

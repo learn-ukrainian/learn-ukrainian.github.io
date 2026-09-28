@@ -28,6 +28,8 @@ sed -n '/^git_source_deleted()/,/^}$/p' "$SCRIPT" >> "$EXTRACT"
 echo "" >> "$EXTRACT"
 sed -n '/^check_orphans()/,/^}$/p' "$SCRIPT" >> "$EXTRACT"
 
+# shellcheck disable=SC1091
+source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 # shellcheck disable=SC1090
 source "$EXTRACT"
 
@@ -103,6 +105,18 @@ _assert_rc "docs/ multi-file undeclared → rc 1" "1" "$?"
 # With docs/ declared → passes
 check_orphans "$TEST_DIR/src5" "$TEST_DIR/dst5" "docs/" "docs/ multi-file declared" >/dev/null 2>&1
 _assert_rc "docs/ multi-file declared → rc 0" "0" "$?"
+
+# Scenario 6: interpreter cache is not an undeclared orphan (#9108).
+mkdir -p "$TEST_DIR/src6/hooks" "$TEST_DIR/dst6/hooks/__pycache__"
+echo "x" > "$TEST_DIR/src6/hooks/kept.py"
+echo "x" > "$TEST_DIR/dst6/hooks/kept.py"
+echo "cache" > "$TEST_DIR/dst6/hooks/__pycache__/x.cpython-314.pyc"
+echo "loose" > "$TEST_DIR/dst6/hooks/legacy.pyc"
+check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode" >/dev/null 2>&1
+_assert_rc "bytecode cache → rc 0" "0" "$?"
+echo "mystery" > "$TEST_DIR/dst6/hooks/never-tracked.py"
+check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode-plus-file" >/dev/null 2>&1
+_assert_rc "real file beside bytecode → rc 1" "1" "$?"
 
 echo ""
 echo "=== git-deleted source → stale artifact, not orphan (#5783 deadlock) ==="

@@ -228,6 +228,7 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
         "agents_extensions/shared/skills/post-build-review/SKILL.md",
     ),
     "test_codex_orphan_is_caught": (),
+    "test_bytecode_cache_is_not_an_orphan_and_is_not_declared": (),
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
@@ -1238,6 +1239,113 @@ def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None
     combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
     assert deploy_result.returncode != 0
     assert "shared/Gemini skill collision: post-build-review" in combined_output
+
+
+def test_changed_source_mtime_invalidates_retained_pycache(tmp_path: Path) -> None:
+    """A retained __pycache__ entry must not shadow a .py whose mtime changed.
+
+    This is the #9108 stop check for excluding bytecode from rsync --delete.
+    CPython's timestamp header stores the source mtime and size; rsync -a
+    publishes the new source mtime, so the next import recompiles.
+    """
+    module_path = tmp_path / "probe_mod.py"
+    module_path.write_text("VALUE = 1\n", encoding="utf-8")
+    os.utime(module_path, (1_700_000_000, 1_700_000_000))
+    cache = (
+        tmp_path
+        / "__pycache__"
+        / f"probe_mod.cpython-{sys.version_info.major}{sys.version_info.minor}.pyc"
+    )
+    cache.parent.mkdir()
+    py_compile.compile(str(module_path), cfile=str(cache), doraise=True)
+    module_path.write_text("VALUE = 2\n", encoding="utf-8")
+    os.utime(module_path, (1_800_000_000, 1_800_000_000))
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(tmp_path) + os.pathsep + env.get("PYTHONPATH", "")
+    probe = subprocess.run(
+        [sys.executable, "-c", "import probe_mod; print(probe_mod.VALUE)"],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "2"
+
+
+def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> None:
+    """Stray hook bytecode must not abort deploy and is not an ORPHAN_PATHS entry.
+
+    #9108: Python writes hooks/__pycache__/*.pyc into the deploy targets after
+    the guards import shell_shlex. The cache is excluded from copy and from
+    --delete, and a real destination-only file still aborts.
+    """
+    sets = _bash_orphan_sets()
+    for label, tokens in sets.items():
+        assert "__pycache__" not in tokens, label
+        assert "*.pyc" not in tokens, tokens
+
+    repo = _init_checkout(tmp_path)
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stdout + first.stderr
+
+    marker = b"cache-marker-9108\n"
+    caches = [
+        repo / ".claude" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".codex" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".agent" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".agents" / "skills" / "__pycache__" / "x.cpython-312.pyc",
+        repo / ".gemini" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".gemini" / "rules" / "__pycache__" / "x.cpython-314.pyc",
+        repo / ".claude" / "hooks" / "legacy.pyc",
+    ]
+    for cache in caches:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_bytes(marker)
+    source_only = (
+        repo
+        / "agents_extensions"
+        / "shared"
+        / "hooks"
+        / "__pycache__"
+        / "from_source.cpython-312.pyc"
+    )
+    source_only.parent.mkdir(parents=True, exist_ok=True)
+    source_only.write_bytes(b"source-only-cache\n")
+    # A real source change forces rsync to run. Exit-before-sync would leave
+    # the stray cache in place without proving --delete was held back.
+    kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
+    kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    kept.chmod(0o755)
+    # .gemini/hooks is not created by the empty fixture. The directory itself
+    # must exist in source so the stray cache inside it is the only extra path.
+    (repo / "gemini_extensions" / "hooks").mkdir(parents=True, exist_ok=True)
+
+    second = _run(repo, DEPLOY_SCRIPT)
+    combined = f"{second.stdout}\n{second.stderr}"
+    assert second.returncode == 0, combined
+    assert "undeclared orphan" not in combined
+    assert (repo / ".claude" / "hooks" / "kept.sh").read_text(encoding="utf-8") == kept.read_text(
+        encoding="utf-8"
+    )
+    for cache in caches:
+        assert cache.read_bytes() == marker, cache
+    for mirror in (".claude", ".codex", ".agent"):
+        copied = repo / mirror / "hooks" / "__pycache__" / "from_source.cpython-312.pyc"
+        assert not copied.exists(), copied
+
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+
+    stray = repo / ".claude" / "stale-only.txt"
+    stray.write_text("stale\n", encoding="utf-8")
+    third = _run(repo, DEPLOY_SCRIPT)
+    third_output = f"{third.stdout}\n{third.stderr}"
+    assert third.returncode != 0
+    assert "undeclared orphan 'stale-only.txt'" in third_output
+    assert "undeclared orphan 'hooks/__pycache__/x.cpython-314.pyc'" not in third_output
+    assert (repo / ".claude" / "hooks" / "__pycache__" / "x.cpython-314.pyc").read_bytes() == marker
 
 
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:

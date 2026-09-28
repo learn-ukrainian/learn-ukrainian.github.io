@@ -131,6 +131,10 @@ check_pair() {
             diff_args+=(-x "${normalized##*/}")
         fi
     done
+    local bytecode_pattern
+    for bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
+        diff_args+=(-x "$bytecode_pattern")
+    done
 
     if [[ ! -d "$src" ]]; then
         echo "::error::Source dir missing: $src"
@@ -173,6 +177,7 @@ check_overlay() {
     local diff_out=""
     local rel
     while IFS= read -r rel; do
+        bytecode_cache_path "$rel" && continue
         if [[ ! -f "$dst/$rel" ]]; then
             diff_out+="Missing deployed overlay file: $dst/$rel"$'\n'
         elif ! cmp -s "$src/$rel" "$dst/$rel"; then
@@ -241,6 +246,9 @@ check_gemini_file_owners() {
     [[ -d .gemini ]] || return 0
     while IFS= read -r deployed_file; do
         relative="${deployed_file#.gemini/}"
+        if bytecode_cache_path "$relative"; then
+            continue
+        fi
         if [[ "$relative" == skills/* || "$relative" == rules/* ]]; then
             continue
         fi
