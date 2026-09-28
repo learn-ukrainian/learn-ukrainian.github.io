@@ -430,6 +430,12 @@ Then dispatch with a numbered brief
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
+The brief's test step names only the test files that cover the changed files; never
+collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
+or `-n` above 2, run those tests in the foreground and wait, and when the brief asks
+for full-suite proof trigger `gh workflow run ci.yml --ref <branch>` and report the
+run URL instead of a local full run — a brief may override this explicitly (e.g. a
+baseline capture).
 
 ### 4a. Required live-driver inbox drain — immediately before dispatch
 
@@ -522,6 +528,10 @@ questions. After launching any `ask-*`, confirm `batch_state/tasks/<id>.json` ex
 Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
 stale — re-run exact-head CF before any enqueue.
+
+Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
+most the specific tests that reproduce a finding you are checking, and cite CI run
+ids for suite results.
 
 ### 7. Merge discipline
 
