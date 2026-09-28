@@ -26,11 +26,12 @@
 | Ceiling advisor/designer | GPT-6 Astra, Fable 5.1 | — | Astra `high`; Fable `high` | provisional |
 | Accountable orchestrator | GPT-6 Sol, Claude Opus 5.5 | — | `high` | provisional |
 | General implementer | GPT-6 Sol, Claude Sonnet 5.5, Grok 4.7 | GPT-6 Luna for bounded work; Gemini 3.8 Flash for well-defined work; K3; Cursor (**pin family**) | `high` by task fit | provisional |
+| Polished written deliverables in English | Claude Sonnet 5.5 | Reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | By task fit | provisional |
 | Hard implementer | GPT-6 Sol, Claude Opus 5.5 | Escalate hard design judgment to Astra or Fable | `high` | provisional |
 | UI / visual product design | K3 | Astra for hard systems UX advice; Kimi consult non-UA | K3 `high`; Astra `high` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
 | Critical CF review | GPT-6 Sol ↔ Fable/Opus **cross-family** | — | `high` | provisional |
-| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6 Sol, Claude, Grok 4.7 + sources | `high` | provisional (morphology remains VESUM-gated) |
+| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6 Sol, Claude Fable 5.1 + sources | `high` | provisional (morphology remains VESUM-gated) |
 | Recon / triage | GPT-6 Luna, Claude Haiku, Gemini 3.8 Flash | — | Luna `high` with exact owned paths + objective scope ceiling; others by task fit; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
@@ -47,7 +48,7 @@
 | **Claude Opus 5.5** | Hard Claude-lane coding and deep code review | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding and review @ high |
 | **GPT-6 Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / native Codex | Bounded worker / recon @ high |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
-| **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; escalate hard judgment to Opus and authority to Fable 5.1 | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
+| **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Fable 5.1 for Claude); escalate hard judgment to Opus and authority to Fable 5.1 | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
 | **Grok 4.7** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |
 | **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro only on explicit request (operator 2026-09-22)) |
 | **K3** | Long-horizon coding; frontend/visual ideation | Maintainability ≠ demo; Moonshot route/egress | Moonshot | UI + long implement |

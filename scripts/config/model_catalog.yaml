@@ -461,10 +461,10 @@ models:
     family: anthropic
     tier: frontier_practical
     lifecycle: active
-    roles: [implementation, agentic_coding, strong_review]
+    roles: [implementation, agentic_coding, strong_review, document_authoring]
     transports: [native_claude, cursor]
-    strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task]
-    weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured]
+    strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task, polished_documents_slides_spreadsheets, design_eye]
+    weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured, not_for_security_sensitive_code]
     sources:
       - https://platform.claude.com/docs/en/models/sonnet-5-5/overview
       - https://www.anthropic.com/claude-sonnet-5-5

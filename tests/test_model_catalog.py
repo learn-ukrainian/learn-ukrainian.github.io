@@ -89,6 +89,18 @@ def test_fallback_sonnet_candidate_cannot_reenter_automatic_ladder():
         validate_catalog(broken)
 
 
+def test_sonnet_5_5_document_authoring_and_security_boundary():
+    catalog = load_model_catalog()
+    sonnet = catalog["models"]["claude-sonnet-5-5"]
+    assert "document_authoring" in sonnet["roles"]
+    assert {"polished_documents_slides_spreadsheets", "design_eye"} <= set(sonnet["strengths"])
+    assert {"weaker_than_opus_on_complex_open_ended_work", "not_for_security_sensitive_code"} <= set(
+        sonnet["weaknesses"]
+    )
+    assert "security_review" not in sonnet["roles"]
+    validate_catalog(catalog)
+
+
 def test_glm_53_flash_is_active_workhorse_catalog_entry() -> None:
     """GLM-5.3-Flash replaces retired ox-alpha as the LOCAL-ONLY workhorse seat."""
     catalog = load_model_catalog()
