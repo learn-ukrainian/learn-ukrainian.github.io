@@ -19,6 +19,7 @@ import unicodedata
 from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Protocol
@@ -2630,14 +2631,45 @@ def _vesum_analysis_pos_buckets(match: dict[str, Any]) -> set[str]:
     return buckets
 
 
-def _vesum_pos_buckets_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, set[str]]:
-    """School POS readings VESUM attests for each exact lemma, batched (#8729).
+_VESUM_GENDERS = {"m": "masculine", "f": "feminine", "n": "neuter"}
+
+
+@dataclass(frozen=True)
+class VesumLemmaEvidence:
+    """What VESUM attests for one exact lemma (#8729).
+
+    ``pos`` holds the school POS readings.  ``genders`` holds, per reading
+    that carries a lexical gender, every singular gender VESUM gives it:
+    plain nouns under ``noun`` and personal pronouns («він», «вона») under
+    ``pronoun``.  Other pronouns inflect for gender («цей», «хто») rather than
+    having one, so they contribute none.  Two genders under one reading mean
+    homographs or a common-gender noun («сирота»): the displayed sense cannot
+    be bound to either.
+    """
+
+    pos: frozenset[str] = frozenset()
+    genders: dict[str, frozenset[str]] = dataclass_field(default_factory=dict)
+
+
+def _vesum_analysis_gender(match: dict[str, Any]) -> tuple[str, str] | None:
+    """``(reading, gender)`` for an analysis that fixes a lexical gender."""
+    tags = str(match.get("tags") or "").split(":")
+    gender = next((_VESUM_GENDERS[tag] for tag in tags if tag in _VESUM_GENDERS), None)
+    if gender is None or match.get("pos") != "noun":
+        return None
+    if "pron" not in tags:
+        return ("noun", gender)
+    return ("pronoun", gender) if "pers" in tags else None
+
+
+def _vesum_lemma_evidence(lemmas: list[str], verifier: VesumVerifier) -> dict[str, VesumLemmaEvidence]:
+    """VESUM evidence for each exact lemma, batched (#8729).
 
     Only analyses whose VESUM lemma equals the headword count: a form of
     another lemma (``п'ята`` as the feminine of ``п'ятий``) is a different
     lexeme and cannot vouch for this one.
     """
-    buckets_by_lemma: dict[str, set[str]] = {}
+    evidence_by_lemma: dict[str, VesumLemmaEvidence] = {}
     unique_lemmas = list(dict.fromkeys(lemma for lemma in lemmas if lemma))
     for start in range(0, len(unique_lemmas), 500):
         batch = unique_lemmas[start : start + 500]
@@ -2647,13 +2679,35 @@ def _vesum_pos_buckets_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> d
         for lemma in batch:
             lemma_plain = _plain(lemma)
             buckets: set[str] = set()
+            genders: dict[str, set[str]] = {}
             for variant in _surface_variants(lemma):
                 for match in matches_by_form.get(variant, []):
-                    if _plain(str(match.get("lemma") or "")) == lemma_plain:
-                        buckets |= _vesum_analysis_pos_buckets(match)
+                    if _plain(str(match.get("lemma") or "")) != lemma_plain:
+                        continue
+                    buckets |= _vesum_analysis_pos_buckets(match)
+                    reading_gender = _vesum_analysis_gender(match)
+                    if reading_gender:
+                        genders.setdefault(reading_gender[0], set()).add(reading_gender[1])
             if buckets:
-                buckets_by_lemma[lemma_plain] = buckets
-    return buckets_by_lemma
+                evidence_by_lemma[lemma_plain] = VesumLemmaEvidence(
+                    frozenset(buckets), {reading: frozenset(values) for reading, values in genders.items()}
+                )
+    return evidence_by_lemma
+
+
+def _bound_gender(reading: str, labels: list[str], evidence: VesumLemmaEvidence) -> str | None:
+    """Gender of the displayed reading, or ``None`` when it cannot be bound (#8729).
+
+    VESUM must give the exact lemma one gender for that reading, and the
+    enrichment labels must name that same gender: labels that name none or
+    several (the noun and verb forms of «мати» merged) cannot confirm which
+    lexeme the card shows.
+    """
+    genders = evidence.genders.get(reading, frozenset())
+    if len(genders) != 1:
+        return None
+    gender = next(iter(genders))
+    return gender if _gender_category(labels) == gender else None
 
 
 def _is_aspect_residual_target(entry: dict[str, Any], lexeme: dict[str, Any]) -> bool:
@@ -2666,17 +2720,22 @@ def _build_classify_items(
     lexeme: dict[str, Any],
     *,
     vesum_aspect: str | None = None,
-    vesum_pos_buckets: set[str] | None = None,
+    vesum_evidence: VesumLemmaEvidence | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Grammar sets for the sense the learner sees (#8729).
 
-    The displayed lexeme's ``pos`` names that sense.  Enrichment morphology is
-    one VESUM analysis of the surface form and can belong to a homograph (the
-    note «до» behind the preposition «до»), so its gender/declension/aspect
-    keys count only when its POS is the displayed POS.  The POS set keys only
-    displayed POS readings that VESUM attests for this exact lemma.  No
-    reliable key means no set; an item with no sets is withheld.
+    The displayed lexeme's ``pos`` names that sense, and every key needs VESUM
+    to attest that reading for this exact lemma.  Gender and aspect come from
+    VESUM only when all of the lemma's analyses for that reading agree (same-POS
+    homographs or a common-gender noun leave the sense unbound).  Enrichment
+    morphology is one analysis of the surface form and can belong to a
+    homograph (the note «до» behind the preposition «до»), and the Atlas
+    ``pos`` alone can name the wrong reading («неминуче» filed as a noun,
+    glossed «inevitably»), so a grammar key also needs the enrichment analysis
+    to be of the displayed reading and to agree with VESUM.  The POS set keys
+    the displayed readings VESUM attests.  No reliable key means no set; an
+    item with no sets is withheld.
     """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -2695,24 +2754,29 @@ def _build_classify_items(
                 }
             )
         return []
+    evidence = vesum_evidence or VesumLemmaEvidence()
     labels = _morph_labels(morphology)
-    pos = _morph_pos(entry, morphology)
-    if pos not in displayed_pos:
-        pos = ""
-    pos_buckets = [bucket for bucket in displayed_pos if bucket in (vesum_pos_buckets or ())]
+    pos_buckets = [bucket for bucket in displayed_pos if bucket in evidence.pos]
+    # Gender and aspect belong to one reading: a display naming several
+    # («adverb, preposition») has none to key.
+    reading = pos_buckets[0] if len(displayed_pos) == 1 and pos_buckets else ""
+    # VESUM files personal pronouns as nouns, so a noun analysis is the pronoun's own.
+    morph_pos = _morph_pos(entry, morphology)
+    if morph_pos != reading and not (reading == "pronoun" and morph_pos == "noun"):
+        reading = ""
     sets: list[dict[str, Any]] = []
-    if pos == "noun":
-        gender = _gender_category(labels)
+    if reading in {"noun", "pronoun"}:
+        gender = _bound_gender(reading, labels, evidence)
         if gender:
             sets.append(_category_set_payload("gender", gender, lexeme["cefr"]))
-        declension = _declension_category(
-            entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {}
-        )
-        if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
-            sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
-    elif pos == "verb":
-        # Atlas form labels are primary. Direct VESUM lookup is only for
-        # manifests whose labels omitted aspect — never to override a conflict.
+        if reading == "noun" and gender and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
+            paradigm = morphology.get("paradigm")
+            declension = _declension_category(entry, labels, paradigm if isinstance(paradigm, dict) else {})
+            if declension:
+                sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
+    aspect_residual = "unbound_verb_reading"
+    if reading == "verb":
+        # VESUM keys aspect; explicit enrichment labels may only agree with it.
         explicit = _explicit_aspect_category(labels)
         has_any_explicit = any(
             pattern.search(label)
@@ -2720,20 +2784,23 @@ def _build_classify_items(
             for label in labels
             for pattern in patterns
         )
-        explicit_conflict = explicit is None and has_any_explicit
-        aspect = None if explicit_conflict else explicit or vesum_aspect or _aspect_category(labels)
+        explicit_conflict = (explicit is None and has_any_explicit) or bool(
+            explicit and vesum_aspect and explicit != vesum_aspect
+        )
+        aspect = None if explicit_conflict else vesum_aspect
+        aspect_residual = "conflicting_explicit_aspect" if explicit_conflict else "no_unambiguous_vesum_aspect"
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
-        elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
-            reason = "conflicting_explicit_aspect" if explicit_conflict else "no_explicit_aspect_or_tense_proxy"
-            aspect_residuals.append(
-                {
-                    "lemmaId": str(lexeme["lemmaId"]),
-                    "lemma": str(lexeme["lemma"]),
-                    "cefr": str(lexeme["cefr"]),
-                    "reason": reason,
-                }
-            )
+            aspect_residual = ""
+    if aspect_residual and aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
+        aspect_residuals.append(
+            {
+                "lemmaId": str(lexeme["lemmaId"]),
+                "lemma": str(lexeme["lemma"]),
+                "cefr": str(lexeme["cefr"]),
+                "reason": aspect_residual,
+            }
+        )
     if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
         pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
         if pos_set:
@@ -4780,11 +4847,13 @@ def validate_imperative_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
-_CYRILLIC_LATIN_TOKEN = re.compile(r"[^\W\d_]+", re.UNICODE)
+# A word keeps its apostrophes (', ’, ʼ), so «m'ясо» with a Latin m is one
+# mixed-script word rather than a Latin «m» beside a Cyrillic «ясо».
+_CYRILLIC_LATIN_TOKEN = re.compile(r"[^\W\d_]+(?:['’ʼ][^\W\d_]+)*", re.UNICODE)
 
 
 def _mixed_script_tokens(text: str) -> list[str]:
-    """Words that mix Cyrillic and Latin letters («вести cебе» with Latin c)."""
+    """Words that mix Cyrillic and Latin letters («вести cебе», «m'ясо»)."""
     mixed = []
     for token in _CYRILLIC_LATIN_TOKEN.findall(text):
         scripts = {unicodedata.name(char, "").split(" ", 1)[0] for char in token}
@@ -5257,13 +5326,9 @@ def build_practice_shards(
         config,
         priority_lemma_keys,
     )
-    verb_lemmas = [
-        str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if _is_aspect_residual_target(entry, lexeme)
-    ]
-    vesum_aspects = _vesum_aspect_by_lemma(verb_lemmas, verifier)
-    vesum_pos = _vesum_pos_buckets_by_lemma(
-        [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")], verifier
-    )
+    classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
+    vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
+    vesum_evidence = _vesum_lemma_evidence(classify_lemmas, verifier)
     # Paronym emit resolves adjudicated pair slugs against the selected pool
     # (main's _select_practice_lexemes refactor supplies the pool; this map is
     # the branch's paronym-specific addition kept through the merge).
@@ -5331,7 +5396,7 @@ def build_practice_shards(
             _entry,
             lexeme,
             vesum_aspect=vesum_aspects.get(lexeme["lemmaPlain"]),
-            vesum_pos_buckets=vesum_pos.get(lexeme["lemmaPlain"]),
+            vesum_evidence=vesum_evidence.get(lexeme["lemmaPlain"]),
             aspect_residuals=aspect_residuals,
         )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)

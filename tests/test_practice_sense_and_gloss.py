@@ -18,7 +18,10 @@ from scripts.audit.generate_practice_deck import (
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
+    VesumLemmaEvidence,
+    _build_classify_items,
     _build_lexeme,
+    _vesum_lemma_evidence,
     build_practice_shards,
 )
 
@@ -71,7 +74,32 @@ VESUM_ROWS: dict[str, list[dict[str, str]]] = {
         {"lemma": "кілька", "pos": "numr", "tags": "numr:p:v_naz:pron:ind"},
     ],
     "він": [{"lemma": "він", "pos": "noun", "tags": "noun:unanim:m:v_naz:pron:pers:3"}],
+    "вона": [{"lemma": "вона", "pos": "noun", "tags": "noun:unanim:f:v_naz:pron:pers:3"}],
+    "воно": [{"lemma": "воно", "pos": "noun", "tags": "noun:unanim:n:v_naz:pron:pers:3"}],
+    "вони": [{"lemma": "вони", "pos": "noun", "tags": "noun:unanim:p:v_naz:pron:pers:3"}],
+    "хто": [{"lemma": "хто", "pos": "noun", "tags": "noun:anim:m:v_naz:pron:int:rel"}],
+    "цей": [{"lemma": "цей", "pos": "adj", "tags": "adj:m:v_naz:pron:dem"}],
     "книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+    # Same-POS homographs (VESUM xp1/xp2) that agree on gender.
+    "замок": [
+        {"lemma": "замок", "pos": "noun", "tags": "noun:inanim:m:v_naz:xp1"},
+        {"lemma": "замок", "pos": "noun", "tags": "noun:inanim:m:v_naz:xp2"},
+        {"lemma": "замокти", "pos": "verb", "tags": "verb:perf:past:m"},
+    ],
+    # A common-gender noun: the displayed sense cannot be bound to one gender.
+    "сирота": [
+        {"lemma": "сирота", "pos": "noun", "tags": "noun:anim:f:v_naz"},
+        {"lemma": "сирота", "pos": "noun", "tags": "noun:anim:m:v_naz"},
+    ],
+    "двері": [{"lemma": "двері", "pos": "noun", "tags": "noun:inanim:p:v_naz:ns"}],
+    "мати": [
+        {"lemma": "мати", "pos": "noun", "tags": "noun:anim:f:v_naz"},
+        {"lemma": "мати", "pos": "verb", "tags": "verb:imperf:inf"},
+    ],
+    "лютий": [
+        {"lemma": "лютий", "pos": "adj", "tags": "adj:m:v_naz:compb"},
+        {"lemma": "лютий", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
+    ],
 }
 
 
@@ -146,15 +174,88 @@ def test_classify_keeps_noun_gender_when_morphology_is_the_displayed_noun() -> N
     assert _set_answers(classify["книга"]) == {"gender": ["feminine"], "pos": ["noun"]}
 
 
-def test_vesum_pos_readings_count_only_analyses_of_the_exact_lemma() -> None:
-    buckets = generate_practice_deck._vesum_pos_buckets_by_lemma(
-        ["п'ята", "кілька", "він", "невідоме"], JsonVesumVerifier(VESUM_ROWS)
+def test_classify_keys_no_gender_for_a_noun_vesum_does_not_attest() -> None:
+    """Review (#8729): an A1 noun with no exact-lemma VESUM noun reading was keyed masculine."""
+    classify = _classify_by_lemma(
+        [_entry("столик", "noun", "small table", "A1", morphology={"pos": "іменник", "forms": _noun_forms("чол.")})]
     )
 
-    assert buckets == {
-        "п'ята": {"noun"},
-        "кілька": {"noun", "numeral", "pronoun"},
-        "він": {"noun", "pronoun"},
+    assert "столик" not in classify
+
+
+def test_classify_binds_noun_gender_to_the_displayed_sense() -> None:
+    """Same-POS homographs must agree on gender, and the enrichment analysis must confirm VESUM."""
+    classify = _classify_by_lemma(
+        [
+            _entry("замок", "noun", "castle", "A1", morphology={"pos": "іменник", "forms": _noun_forms("чол.")}),
+            # A common-gender noun: VESUM gives two genders.
+            _entry("сирота", "noun", "orphan", "A1", morphology={"pos": "іменник", "forms": _noun_forms("жін.")}),
+            # The enrichment analysis names another gender.
+            _entry("книга", "noun", "book", "A1", morphology={"pos": "іменник", "forms": _noun_forms("чол.")}),
+            # Noun and verb forms merged (Atlas «мати», glossed «to have»): the labels confirm no gender.
+            _entry(
+                "мати",
+                "noun",
+                "to have",
+                "A1",
+                morphology={"pos": "іменник", "forms": [{"label": "жін., називний"}, {"label": "минулий, чол."}]},
+            ),
+            # The enrichment analysis is the adjective, not the displayed noun.
+            _entry("лютий", "noun", "fierce", "A1", morphology={"pos": "прикметник", "forms": _noun_forms("чол.")}),
+        ]
+    )
+
+    assert classify == {"замок": [classify["замок"][0]]}
+    assert _set_answers(classify["замок"]) == {"gender": ["masculine"]}
+
+
+@pytest.mark.parametrize(
+    "evidence",
+    [None, VesumLemmaEvidence(), VesumLemmaEvidence(frozenset({"verb"}), {"noun": frozenset({"masculine"})})],
+)
+def test_classify_items_need_vesum_noun_evidence_for_gender(evidence: VesumLemmaEvidence | None) -> None:
+    entry = _entry("замок", "noun", "castle", "A1", morphology={"pos": "іменник", "forms": _noun_forms("чол.")})
+    lexeme = {"lemmaId": "замок", "lemma": "замок", "cefr": "A1"}
+
+    assert _build_classify_items(entry, lexeme, vesum_evidence=evidence) == []
+
+
+@pytest.mark.parametrize(
+    ("lemma", "label", "expected"),
+    [
+        ("він", "чол.", "masculine"),
+        ("вона", "жін.", "feminine"),
+        ("воно", "сер.", "neuter"),
+        ("вони", "чол.", None),
+        ("хто", "чол.", None),
+        ("цей", "чол.", None),
+    ],
+)
+def test_classify_keeps_gender_only_for_a_personal_pronoun(lemma: str, label: str, expected: str | None) -> None:
+    """Review (#8729): «він/вона/воно» keep their gender card from the exact-lemma pronoun analysis."""
+    # The Atlas morphology of «він» is VESUM's noun-filed pronoun analysis.
+    forms = [{"label": f"{label}, називний, 3 ос."}, {"label": f"{label}, давальний, 3 ос."}]
+    classify = _classify_by_lemma([_entry(lemma, "pronoun", "he", "A1", morphology={"pos": "іменник", "forms": forms})])
+
+    if expected is None:
+        assert lemma not in classify
+    else:
+        assert _set_answers(classify[lemma]) == {"gender": [expected]}
+
+
+def test_vesum_lemma_evidence_counts_only_analyses_of_the_exact_lemma() -> None:
+    evidence = _vesum_lemma_evidence(
+        ["п'ята", "кілька", "він", "хто", "замок", "сирота", "двері", "невідоме"], JsonVesumVerifier(VESUM_ROWS)
+    )
+
+    assert evidence == {
+        "п'ята": VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"feminine"})}),
+        "кілька": VesumLemmaEvidence(frozenset({"noun", "numeral", "pronoun"}), {"noun": frozenset({"feminine"})}),
+        "він": VesumLemmaEvidence(frozenset({"noun", "pronoun"}), {"pronoun": frozenset({"masculine"})}),
+        "хто": VesumLemmaEvidence(frozenset({"noun", "pronoun"})),
+        "замок": VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"masculine"})}),
+        "сирота": VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"feminine", "masculine"})}),
+        "двері": VesumLemmaEvidence(frozenset({"noun"})),
     }
 
 
@@ -305,6 +406,8 @@ def test_homoglyph_repair_touches_only_mixed_script_words() -> None:
     assert repair("Xмара") == "Хмара"
     assert repair("café, CEO та Wi-Fi") == "café, CEO та Wi-Fi"
     assert repair("дgом") == "дgом"
+    # The apostrophe belongs to the word, so a homoglyph beyond it is repaired too.
+    assert repair("м'ясo і п’ятa, don't") == "м'ясо і п’ята, don't"
 
 
 def _deck(**kinds: dict[str, Any]) -> dict[str, dict[str, dict[str, Any]]]:
@@ -330,6 +433,16 @@ def test_deck_text_gate_rejects_mixed_script_words_and_stub_glosses() -> None:
         "heritage.B2.heritage[0].options[0].label: mixed Cyrillic/Latin word 'cебе'",
         "lexemes.B2: абонент glossClean is a stub 'Той'",
         "lexemes.B2: хіть glossClean is a stub 'хі́ті'",
+    ]
+
+
+@pytest.mark.parametrize("word", ["m'ясо", "m’ясо", "mʼясо"])
+def test_deck_text_gate_rejects_a_mixed_script_word_split_by_an_apostrophe(word: str) -> None:
+    """Review (#8715): «m'ясо» with a Latin m was read as «m» plus «ясо» and passed."""
+    planted = _deck(heritage={"heritage": [{"options": [{"label": f"{word}, l'amour, don't"}]}]})
+
+    assert generate_practice_deck.validate_deck_text(planted) == [
+        f"heritage.B2.heritage[0].options[0].label: mixed Cyrillic/Latin word {word!r}"
     ]
 
 
