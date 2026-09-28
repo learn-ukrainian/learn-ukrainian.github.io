@@ -5,8 +5,12 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 from scripts.ci.classify_changes import git_tree_paths
 from scripts.ci.frontend_change_scope import load_denominator, path_in_denominator
+
+pytestmark = pytest.mark.repo_wide
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"

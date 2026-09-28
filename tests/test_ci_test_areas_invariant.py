@@ -6,8 +6,12 @@ import ast
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.ci.classify_changes import hits_shared_root_denylist
 from scripts.ci.test_areas import load_areas, matches_root, matches_test
+
+pytestmark = pytest.mark.repo_wide
 
 _REPO = Path(__file__).resolve().parents[1]
 _OMD_MODULES = ("scripts.projects.open_model_data", "learn_ukrainian_v4_runtime")
