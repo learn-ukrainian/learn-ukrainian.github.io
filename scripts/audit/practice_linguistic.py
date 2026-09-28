@@ -915,12 +915,15 @@ def check_inventory_prompt_context(
 # ``cefr`` is its target lemma's level, not the sentence's, so a Grade 11
 # geometry sentence reached A1.  The words around the blank are rated with the
 # Atlas lexicon's own CEFR (PULS, else the GRAC-frequency estimate: the same
-# ``enrichment.cefr`` that levels the cards).  One word above the card's level
-# is tolerated: Krashen's i+1, and in a 10–20-word cloze sentence one unknown
-# word keeps running-word coverage near the 95% floor (Laufer 1989; Hu &
-# Nation 2000).  A second above-level word drops the prompt.
+# ``enrichment.cefr`` that levels the cards).  Every rated context word must be
+# at or below the card's level; no above-level word is tolerated.  Coverage
+# research does not support a one-word allowance in a cloze sentence: one
+# unknown word in 10–20 running words is 90–95% coverage, at or below
+# Laufer's (1989) 95% floor and short of the 98% Hu & Nation (2000) found for
+# adequate unassisted comprehension, and a cloze learner must also infer the
+# blank from that same context.  A word VESUM cannot analyse has no level
+# evidence and counts as above level (withheld, not assumed in-level).
 PROMPT_LEVEL_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
-PROMPT_ABOVE_LEVEL_TOLERANCE = 1
 _LEVEL_FUNCTION_POS = frozenset({"prep", "conj", "part", "intj"})
 
 
@@ -935,8 +938,9 @@ def _prompt_word_above_level(
         return False
     matches = verified_surface_matches(token, verifier)
     if not matches:
-        # VESUM cannot lemmatise it (names, OCR, foreign): no level evidence.
-        return False
+        # VESUM cannot lemmatise it (unlisted names, OCR debris, foreign
+        # words): with no level evidence it cannot count as in-level.
+        return True
     proper = [("prop" in str(match.get("tags") or "").split(":")) for match in matches]
     if all(proper) or (token[:1].isupper() and any(proper)):
         # A name («Франко», «Христина») is not vocabulary load, even when its
@@ -963,7 +967,7 @@ def prompt_words_above_level(
     lemma_levels: dict[str, str],
     verifier: VesumVerifier,
 ) -> list[str]:
-    """Return the prompt's context words rated above ``card_level``."""
+    """Return the prompt's context words rated above ``card_level`` or unknown to VESUM."""
     if card_level not in PROMPT_LEVEL_ORDER:
         return []
     card_rank = PROMPT_LEVEL_ORDER.index(card_level)
@@ -986,7 +990,7 @@ def check_inventory_prompt_level(
     if not isinstance(provenance, dict) or provenance.get("status") != "sentence_inventory":
         return []
     above = prompt_words_above_level(_clean(item.get("sentence")) or "", card_level, lemma_levels, verifier)
-    if len(above) <= PROMPT_ABOVE_LEVEL_TOLERANCE:
+    if not above:
         return []
     return [Finding(RULE_PROMPT_LEVEL, item_id, f"above {card_level}: {', '.join(above)}")]
 

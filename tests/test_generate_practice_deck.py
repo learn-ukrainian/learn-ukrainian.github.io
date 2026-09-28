@@ -2704,7 +2704,7 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
                     {
                         "lemma": "книга",
                         "lemmaId": "knyha",
-                        "sentence": "Це книга.",
+                        "sentence": "Моя книга у школі.",
                         "targetForm": "книга",
                         "cefr": "A1",
                         "uses": ["example"],
@@ -2728,7 +2728,7 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
         encoding="utf-8",
     )
     candidates = read_sentence_inventory(inventory_path)
-    assert candidates[0]["sentence"] == "Це ___."
+    assert candidates[0]["sentence"] == "Моя ___ у школі."
     assert candidates[0]["form"] == "книга"
     assert candidates[0]["provenance"]["status"] == "sentence_inventory"
     assert candidates[0]["provenance"]["path"] == str(inventory_path)
@@ -2738,12 +2738,26 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     # valid no-pair strategy.
     monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "two-pair")
 
+    # Every context word needs a VESUM analysis: an unanalysed word withholds
+    # the prompt at the level gate (#8724).
+    vesum = {
+        **json.loads(VESUM.read_text(encoding="utf-8")),
+        "моя": [
+            {"lemma": "мій", "pos": "adj", "tags": "adj:f:v_naz:pron:pos"},
+            {"lemma": "мій", "pos": "adj", "tags": "adj:f:v_kly:pron:pos"},
+        ],
+        "у": [{"lemma": "у", "pos": "prep", "tags": "prep"}],
+    }
+    from scripts.practice.creation_review import CreationReview, frame_identity
+
+    creation_review = CreationReview(frozenset({frame_identity("cloze", "Моя ___ у школі.", "книга", "книга")}))
     shards = build_practice_shards(
         read_manifest(MANIFEST),
         ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
-        JsonVesumVerifier.from_path(VESUM),
+        JsonVesumVerifier(vesum),
         candidates,
         BuildConfig(),
+        creation_review=creation_review,
     )
     cloze = next(item for item in shards["A1"]["cloze"]["cloze"] if item["clozeId"] == "knyha:inventory:1")
     assert cloze["blankCase"] == "nominative"
@@ -3125,6 +3139,8 @@ def test_dictionary_decoys_do_not_mash_school_function_categories() -> None:
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    """Live textbook rows; VESUM analyses and CEFR levels copied from data/vesum.db and the Atlas."""
+
     def entry(lemma: str, lemma_id: str, gloss: str, pos: str, level: str) -> dict[str, object]:
         return {
             "lemma": lemma,
@@ -3137,15 +3153,31 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
         }
 
     entries = [
-        entry("апостроф", "apostrof", "apostrophe", "noun", "A1"),
+        entry("село", "selo", "village", "noun", "A1"),
         entry("книга", "knyha", "book", "noun", "A1"),
         entry("місто", "misto", "city", "noun", "A1"),
         entry("школа", "shkola", "school", "noun", "A1"),
-        entry("аналогічно", "analogichno", "similarly", "adverb", "A2"),
+        entry("хотіти", "khotity", "to want", "verb", "A1"),
+        entry("поїзд", "poizd", "train", "noun", "A1"),
+        entry("відправлятися", "vidpravliatysia", "to depart", "verb", "A2"),
+        entry("обережно", "oberezhno", "carefully", "adverb", "A2"),
         entry("постійно", "postiino", "always", "adv", "A2"),
         entry("зазвичай", "zazvychai", "usually", "adv", "A2"),
         entry("поступово", "postupovo", "gradually", "adv", "A2"),
     ]
+
+    def row(lemma: str, lemma_id: str, sentence: str, target: str, level: str, locator: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "lemmaId": lemma_id,
+            "sentence": sentence,
+            "targetForm": target,
+            "cefr": level,
+            "uses": ["example"],
+            "provenance": {"source": "textbook", "label": "Ukrainian school textbook", "locator": locator},
+            "license": {"status": "fixture"},
+        }
+
     inventory_path = tmp_path / "sentence-inventory.json"
     inventory_path.write_text(
         json.dumps(
@@ -3153,78 +3185,71 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
                 "schema": "atlas-sentence-inventory",
                 "schemaVersion": 1,
                 "rows": [
-                    {
-                        "lemma": "апостроф",
-                        "lemmaId": "apostrof",
-                        "sentence": "Це апостроф.",
-                        "targetForm": "апостроф",
-                        "cefr": "A1",
-                        "uses": ["example"],
-                        "provenance": {
-                            "source": "fixture-textbook",
-                            "label": "Fixture textbook",
-                            "locator": "a1-1",
-                        },
-                        "license": {"status": "fixture"},
-                    },
-                    {
-                        "lemma": "аналогічно",
-                        "lemmaId": "analogichno",
-                        "sentence": "Це аналогічно.",
-                        "targetForm": "аналогічно",
-                        "cefr": "A2",
-                        "uses": ["example"],
-                        "provenance": {
-                            "source": "fixture-textbook",
-                            "label": "Fixture textbook",
-                            "locator": "a2-1",
-                        },
-                        "license": {"status": "fixture"},
-                    },
+                    row("село", "selo", "Ти хотів у село?", "село", "A1", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
+                    row(
+                        "обережно",
+                        "oberezhno",
+                        "Поїзд відправляється — Обережно!",
+                        "Обережно",
+                        "A2",
+                        "10-klas-ukrmova-karaman-2018_s0334",
+                    ),
                 ],
             },
             ensure_ascii=False,
         ),
         encoding="utf-8",
     )
-    vesum_path = tmp_path / "vesum.json"
-    vesum_path.write_text(
-        json.dumps(
-            {
-                # Two same-lemma analyses prove that dictionary-form identity
-                # clozes do not require an arbitrary single VESUM case.
-                "апостроф": [
-                    {"lemma": "апостроф", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
-                    {"lemma": "апостроф", "pos": "noun", "tags": "noun:inanim:m:v_zna"},
-                ],
-                "аналогічно": [{"lemma": "аналогічно", "pos": "adv", "tags": "adv"}],
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
+    vesum = JsonVesumVerifier(
+        {
+            # Three same-lemma analyses prove that dictionary-form identity
+            # clozes do not require an arbitrary single VESUM case.
+            "село": [
+                {"lemma": "село", "pos": "noun", "tags": f"noun:inanim:n:{case}"}
+                for case in ("v_naz", "v_zna", "v_kly")
+            ],
+            "ти": [
+                {"lemma": "ти", "pos": "noun", "tags": "noun:anim:s:v_naz:pron:pers:2"},
+                {"lemma": "ти", "pos": "noun", "tags": "noun:anim:s:v_kly:pron:pers:2"},
+            ],
+            "хотів": [{"lemma": "хотіти", "pos": "verb", "tags": "verb:imperf:past:m"}],
+            "у": [{"lemma": "у", "pos": "prep", "tags": "prep"}],
+            "обережно": [{"lemma": "обережно", "pos": "adv", "tags": "adv:compb"}],
+            "поїзд": [
+                {"lemma": "поїзд", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
+                {"lemma": "поїзд", "pos": "noun", "tags": "noun:inanim:m:v_zna"},
+            ],
+            "відправляється": [{"lemma": "відправлятися", "pos": "verb", "tags": "verb:rev:imperf:pres:s:3"}],
+        }
     )
+    from scripts.practice.creation_review import CreationReview, frame_identity
 
     monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
     candidates = read_sentence_inventory(inventory_path)
+    creation_review = CreationReview(
+        frozenset(
+            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
+        )
+    )
+    withheld: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
         ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
-        JsonVesumVerifier.from_path(vesum_path),
+        vesum,
         candidates,
         BuildConfig(target=len(entries), source_label="fixture"),
+        creation_review=creation_review,
+        cloze_withheld=withheld,
     )
 
-    for level, lemma_id, pos in (
-        ("A1", "apostrof", "noun"),
-        ("A2", "analogichno", "adverb"),
+    assert withheld == []
+    for level, lemma_id, pos, locator in (
+        ("A1", "selo", "noun", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
+        ("A2", "oberezhno", "adverb", "10-klas-ukrmova-karaman-2018_s0334"),
     ):
         cloze = next(item for item in shards[level]["cloze"]["cloze"] if item["lemmaId"] == lemma_id)
         assert cloze["provenance"]["status"] == "sentence_inventory"
-        assert cloze["attribution"] == {
-            "source": "fixture-textbook",
-            "label": "Fixture textbook",
-            "locator": "a1-1" if level == "A1" else "a2-1",
-        }
+        assert cloze["attribution"] == {"source": "textbook", "label": "Ukrainian school textbook", "locator": locator}
         # A nominative/accusative-syncretic noun and a caseless adverb cannot
         # prove a case from their dictionary spelling (#8726).
         assert "blankCase" not in cloze
@@ -4748,9 +4773,12 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
 ) -> None:
     """Replay the live inventory rows quoted in #8724 and #8726.
 
-    VESUM analyses are copied from data/vesum.db.  «до узбіччя» is a genitive
-    slot whose surface equals the nominative, so the card must be a case-free
-    insertion; the list, UI-chrome, stub and definition rows are withheld.
+    VESUM analyses and CEFR levels are copied from data/vesum.db and the live
+    Atlas.  «у село» is an accusative slot whose surface equals the nominative,
+    so the card must be a case-free insertion.  «до узбіччя» (the #8726 card)
+    is withheld by the level gate: налітати, автомашина, звірятко and прилягти
+    have no Atlas CEFR.  The list, UI-chrome, stub and definition rows are
+    withheld by the prompt-context gate.
     """
 
     def entry(lemma: str, gloss: str, pos: str, level: str) -> dict[str, object]:
@@ -4773,6 +4801,11 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
         entry("вразити", "to impress", "verb", "B2"),
         entry("геймер", "gamer", "noun", "C1"),
         entry("медіаграмотність", "media literacy", "noun", "C1"),
+        entry("село", "village", "noun", "A1"),
+        entry("хотіти", "to want", "verb", "A1"),
+        entry("рід", "kin", "noun", "A1"),
+        entry("мед", "honey", "noun", "A1"),
+        entry("гра", "game", "noun", "A1"),
     ]
 
     def row(lemma: str, sentence: str, target: str, level: str, locator: str) -> dict[str, object]:
@@ -4799,6 +4832,7 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
                     row("вразити", "Дієслова: зобразити, звести, вразити.", "вразити", "B2", "8-klas-ukrmova-avramenko-2025_s0096"),
                     row("геймер", "Геймер — важко хвора людина, вилікувати яку майже неможливо.", "Геймер", "C1", "10-klas-ukrmova-karaman-2018_s0057"),
                     row("медіаграмотність", "Ним є медіаграмотність.", "медіаграмотність", "C1", "8-klas-hromadianska-osvita-vasylkiv-2025_s0137"),
+                    row("село", "Ти хотів у село?", "село", "A1", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
                 ],
             },
             ensure_ascii=False,
@@ -4812,6 +4846,26 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     vesum = JsonVesumVerifier(
         {
             "узбіччя": noun_n,
+            "налітає": [
+                {"lemma": "налітати", "pos": "verb", "tags": "verb:imperf:pres:s:3"},
+                {"lemma": "налітати", "pos": "verb", "tags": "verb:perf:futr:s:3"},
+            ],
+            "автомашина": [{"lemma": "автомашина", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+            "звірятко": [
+                {"lemma": "звірятко", "pos": "noun", "tags": f"noun:anim:n:{case}"}
+                for case in ("v_naz", "v_zna", "v_kly")
+            ],
+            "прилягло": [{"lemma": "прилягти", "pos": "verb", "tags": "verb:perf:past:n"}],
+            "ти": [
+                {"lemma": "ти", "pos": "noun", "tags": "noun:anim:s:v_naz:pron:pers:2"},
+                {"lemma": "ти", "pos": "noun", "tags": "noun:anim:s:v_kly:pron:pers:2"},
+            ],
+            "хотів": [{"lemma": "хотіти", "pos": "verb", "tags": "verb:imperf:past:m"}],
+            "у": [{"lemma": "у", "pos": "prep", "tags": "prep"}],
+            "село": [
+                {"lemma": "село", "pos": "noun", "tags": f"noun:inanim:n:{case}"}
+                for case in ("v_naz", "v_zna", "v_kly")
+            ],
             "до": [
                 {"lemma": "до", "pos": "noun", "tags": "noun:inanim:n:v_naz:nv"},
                 {"lemma": "до", "pos": "prep", "tags": "prep"},
@@ -4852,24 +4906,29 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     )
 
     emitted = {item["clozeId"]: item for level in shards.values() for item in level["cloze"]["cloze"]}
-    uzbichchya = emitted["узбіччя:inventory:1"]
-    assert "blankCase" not in uzbichchya
-    assert uzbichchya["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
-    assert "словникова форма" not in json.dumps(uzbichchya, ensure_ascii=False)
-    assert all("case" not in option for option in uzbichchya["options"])
-    assert validate_option_set(uzbichchya) == []
+    selo = emitted["село:inventory:6"]
+    assert "blankCase" not in selo
+    assert selo["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
+    assert "словникова форма" not in json.dumps(selo, ensure_ascii=False)
+    assert all("case" not in option for option in selo["options"])
+    assert validate_option_set(selo) == []
 
-    assert set(emitted) == {"узбіччя:inventory:1"}
+    assert set(emitted) == {"село:inventory:6"}
     assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_context"} == {
         ("відповісти:inventory:2", "capitalized_mid_sentence"),
         ("вразити:inventory:3", "list_fragment"),
         ("геймер:inventory:4", "definition_prompt"),
         ("медіаграмотність:inventory:5", "context_free_stub"),
     }
-    # The listed verbs carry no CEFR in this fixture, so the level gate also fires.
-    assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_level"} == {
-        ("вразити:inventory:3", "above B2: зобразити, звести"),
-    }
+    # Of the rows the context gate passes, the level gate withholds the one whose
+    # words have no Atlas CEFR.  (The context-withheld rows' words are not all in
+    # this fixture's VESUM, so the level gate also fires on them.)
+    context_withheld = {row["clozeId"] for row in withheld if row["rule"] == "inventory_prompt_context"}
+    assert {
+        (row["clozeId"], row["reason"])
+        for row in withheld
+        if row["rule"] == "inventory_prompt_level" and row["clozeId"] not in context_withheld
+    } == {("узбіччя:inventory:1", "above A2: Налітає, автомашина, звірятко, прилягло")}
 
 
 def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
@@ -4879,9 +4938,10 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
 
     Levels are the live Atlas ``enrichment.cefr`` values; VESUM analyses are
     copied from data/vesum.db.  призма, грань, бічний, прямокутник and
-    дорівнювати have no Atlas CEFR, so they count as above A1.  The A1 bus
-    sentence keeps one above-level word (приїхати, A2) and stays.  Decoys are
-    the live cards' (твій, який, ваш; книга, місто, школа).
+    дорівнювати have no Atlas CEFR, so they count as above A1.  Review probe
+    (#8724 r3): the A1 bus sentence has one A2 word (приїхати) and is withheld;
+    no above-level word is tolerated.  «Ти хотів у село?» is all A1 and stays.
+    Decoys are the live cards' (твій, який, ваш; книга, місто, школа).
     """
 
     def entry(lemma: str, pos: str, level: str) -> dict[str, object]:
@@ -4906,6 +4966,8 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
         entry("школа", "noun", "A1"),
         entry("середа", "noun", "A1"),
         entry("новий", "adjective", "A1"),
+        entry("село", "noun", "A1"),
+        entry("хотіти", "verb", "A1"),
         entry("приїхати", "verb", "A2"),
         entry("зрозуміло", "adverb", "A2"),
         entry("прямий", "adjective", "A2"),
@@ -4935,6 +4997,7 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
                 "rows": [
                     row("її", prism, "11-klas-geometria-ister-2019-prof_s0011"),
                     row("автобус", "А в середу приїхав новий автобус.", "1-klas-bukvar-bolshakova-2018-2_s0010"),
+                    row("село", "Ти хотів у село?", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
                 ],
             },
             ensure_ascii=False,
@@ -4973,6 +5036,10 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
             "приїхав": analyses("приїхати", "verb", "verb:perf:past:m"),
             "новий": analyses("новий", "adj", "adj:m:v_naz:compb", "adj:m:v_zna:rinanim:compb", "adj:m:v_kly:compb"),
             "автобус": analyses("автобус", "noun", "noun:inanim:m:v_naz", "noun:inanim:m:v_zna"),
+            "ти": analyses("ти", "noun", "noun:anim:s:v_naz:pron:pers:2", "noun:anim:s:v_kly:pron:pers:2"),
+            "хотів": analyses("хотіти", "verb", "verb:imperf:past:m"),
+            "у": analyses("у", "prep", "prep"),
+            "село": analyses("село", "noun", "noun:inanim:n:v_naz", "noun:inanim:n:v_zna", "noun:inanim:n:v_kly"),
         }
     )
     from scripts.practice.creation_review import CreationReview, frame_identity
@@ -4996,11 +5063,14 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
     )
 
     emitted = {item["clozeId"] for level in shards.values() for item in level["cloze"]["cloze"]}
-    assert emitted == {"автобус:inventory:2"}
-    assert [(row["clozeId"], row["rule"], row["level"]) for row in withheld] == [
-        ("її:inventory:1", "inventory_prompt_level", "A1")
-    ]
-    assert withheld[0]["reason"] == (
-        "above A1: Зрозуміло, бічні, грані, прямої, призми, прямокутники, висота, прямої, призми, дорівнює, "
-        "бічному, ребру"
-    )
+    assert emitted == {"село:inventory:3"}
+    assert {(row["clozeId"], row["rule"], row["level"], row["reason"]) for row in withheld} == {
+        (
+            "її:inventory:1",
+            "inventory_prompt_level",
+            "A1",
+            "above A1: Зрозуміло, бічні, грані, прямої, призми, прямокутники, висота, прямої, призми, дорівнює, "
+            "бічному, ребру",
+        ),
+        ("автобус:inventory:2", "inventory_prompt_level", "A1", "above A1: приїхав"),
+    }

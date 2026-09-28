@@ -555,15 +555,35 @@ def test_prompt_level_counts_unrated_and_higher_content_words() -> None:
     assert prompt_words_above_level("___ грані.", "A1", LEVELS, verifier) == []
 
 
-def test_prompt_level_gate_tolerates_one_word_above_level_for_inventory_only() -> None:
+def test_prompt_level_counts_a_word_vesum_cannot_resolve_as_above_level() -> None:
+    """Review probe (#8724 r3): an unresolved token must not pass as in-level.
+
+    «бібліотецi» ends in a Latin «i» (mixed-script OCR debris), so VESUM has
+    no analysis and no level can be proved for it.
+    """
+    verifier = _level_verifier()
+    assert prompt_words_above_level("Мама читає ___ у бібліотецi.", "C1", LEVELS, verifier) == ["бібліотецi"]
+    assert prompt_words_above_level("Мама читає ___ Photoshop.", "A1", LEVELS, verifier) == ["Photoshop"]
+
+
+def test_prompt_level_gate_admits_only_prompts_with_every_word_at_the_card_level() -> None:
+    """AC-02: an inventory prompt is admitted only if no context word is above its level.
+
+    Review probe (#8724 r3): an A1 prompt with one A2 word («бібліотеці») was
+    admitted under a one-word tolerance; it is now withheld.
+    """
     verifier = _level_verifier()
     inventory = {"clozeId": "x", "provenance": {"status": "sentence_inventory"}}
+    in_level = {**inventory, "sentence": "Мама читає ___."}
     one_above = {**inventory, "sentence": "Мама читає ___ у бібліотеці."}
-    two_above = {**inventory, "sentence": "Мама читає ___ призми ребру."}
-    assert check_inventory_prompt_level(one_above, "A1", LEVELS, verifier, item_id="x") == []
-    findings = check_inventory_prompt_level(two_above, "A1", LEVELS, verifier, item_id="x")
-    assert [(finding.rule_id, finding.message) for finding in findings] == [
-        (RULE_PROMPT_LEVEL, "above A1: призми, ребру")
-    ]
-    curated = {**two_above, "provenance": {"status": "reviewed", "path": "curated.json"}}
+    unresolved = {**inventory, "sentence": "Мама читає ___ у бібліотецi."}
+    assert check_inventory_prompt_level(in_level, "A1", LEVELS, verifier, item_id="x") == []
+    # The same prompt is at level for an A2 card.
+    assert check_inventory_prompt_level(one_above, "A2", LEVELS, verifier, item_id="x") == []
+    for item, words in ((one_above, "бібліотеці"), (unresolved, "бібліотецi")):
+        findings = check_inventory_prompt_level(item, "A1", LEVELS, verifier, item_id="x")
+        assert [(finding.rule_id, finding.message) for finding in findings] == [
+            (RULE_PROMPT_LEVEL, f"above A1: {words}")
+        ]
+    curated = {**one_above, "provenance": {"status": "reviewed", "path": "curated.json"}}
     assert check_inventory_prompt_level(curated, "A1", LEVELS, verifier, item_id="x") == []
