@@ -589,6 +589,7 @@ def test_drills_are_bound_to_their_row_spans_and_direction(tmp_path: Path):
     assert evidence["err_0004"] == {
         "rowId": "textbooks:2",
         "rowSha256": row_sha256(_GLAZOVA_TABLE),
+        "source": "Textbook Gr 10 (glazova)",
         "error": "проявляти недостатки",
         "correct": "виявляти недоліки",
     }
@@ -605,15 +606,21 @@ def test_a_rows_pairs_never_combine_two_rows():
 
 
 def test_style_guide_pairs_are_bound_to_their_quotations():
-    from scripts.practice.extract_textbook_error_corrections import extract_error_correction_deck, span_text
+    from scripts.practice.extract_textbook_error_corrections import (
+        build_evidence_snapshot,
+        extract_error_correction_deck,
+        span_text,
+    )
 
     text = "Пасив. Неправильно «Головну увагу мною приділено таким явищам», треба « Головну увагу я приділив таким явищам»."
     conn = _textbook_db()
     conn.execute("INSERT INTO style_guide (word, section, text) VALUES ('Пасив', '', ?)", (text,))
-    (drill,) = extract_error_correction_deck(conn, None, log=lambda _msg: None)["drills"]
+    deck = extract_error_correction_deck(conn, None, log=lambda _msg: None)
+    (drill,) = deck["drills"]
     ref = drill["sourceRef"]
     assert ref["rowId"] == "style_guide:1" and ref["direction"] == "error_first"
     assert text[slice(*ref["correctSpan"])] == drill["correctForm"] == span_text(text, ref["correctSpan"])
+    assert build_evidence_snapshot(deck, conn)["drills"][drill["id"]]["source"] == drill["source"]
 
 
 def test_export_stops_when_a_drill_cannot_be_bound():
@@ -629,8 +636,23 @@ def test_export_stops_when_a_drill_cannot_be_bound():
         "correctSpan": [6, 9],
         "direction": "error_first",
     }
+    drill["source"] = "Textbook Gr 10 (glazova)"
     with pytest.raises(ValueError, match="not the drill's pair"):
         build_evidence_snapshot({"deckId": "d", "drills": [drill]}, conn)
+
+
+def test_export_stops_when_source_label_disagrees_with_row():
+    from scripts.practice.extract_textbook_error_corrections import (
+        build_evidence_snapshot,
+        extract_error_correction_deck,
+    )
+
+    conn = _textbook_db((10, "glazova", _GLAZOVA_TABLE))
+    deck = extract_error_correction_deck(conn, None, log=lambda _msg: None)
+    deck["drills"][0]["source"] = "Textbook Gr 1 (unrelated)"
+
+    with pytest.raises(ValueError, match="source label does not match"):
+        build_evidence_snapshot(deck, conn)
 
 
 def test_committed_evidence_snapshot_covers_every_drill():
@@ -644,8 +666,9 @@ def test_committed_evidence_snapshot_covers_every_drill():
     for drill in deck["drills"]:
         assert source_ref_problem(drill["sourceRef"]) is None, drill["id"]
         entry = evidence[drill["id"]]
-        assert (entry["rowId"], entry["error"], entry["correct"]) == (
+        assert (entry["rowId"], entry["source"], entry["error"], entry["correct"]) == (
             drill["sourceRef"]["rowId"],
+            drill["source"],
             drill["errorWord"],
             drill["correctForm"],
         )

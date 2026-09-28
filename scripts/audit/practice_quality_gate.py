@@ -71,6 +71,7 @@ try:
         load_source_row,
         pair_key,
         row_sha256,
+        source_label_for_row,
         source_ref_problem,
         span_text,
         typed_answer_key,
@@ -88,6 +89,7 @@ except ImportError:
         load_source_row,
         pair_key,
         row_sha256,
+        source_label_for_row,
         source_ref_problem,
         span_text,
         typed_answer_key,
@@ -299,19 +301,20 @@ class _SourceRows:
         import sqlite3
 
         self._conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
-        self._conn.execute("SELECT 1 FROM textbooks LIMIT 1")  # sqlite3.Error when not a sources.db
+        try:
+            self._conn.execute("SELECT id, grade, author, title, text FROM textbooks LIMIT 0")
+            self._conn.execute("SELECT id, word, section, text FROM style_guide LIMIT 0")
+        except sqlite3.Error:
+            self._conn.close()
+            raise
         self._vesum = vesum
         self._texts: dict[str, str | None] = {}
+        self._labels: dict[str, str | None] = {}
         self._pairs: dict[str, set[tuple]] = {}
 
     def text(self, row_id: str) -> str | None:
-        import sqlite3
-
         if row_id not in self._texts:
-            try:
-                self._texts[row_id] = load_source_row(self._conn, row_id)
-            except sqlite3.OperationalError:
-                self._texts[row_id] = None  # a sources.db without that table
+            self._texts[row_id] = load_source_row(self._conn, row_id)
         return self._texts[row_id]
 
     def derives(self, row_id: str, error: str, correct: str, ref: dict[str, Any]) -> bool:
@@ -324,21 +327,26 @@ class _SourceRows:
         key = (error, correct, tuple(ref["errorSpan"]), tuple(ref["correctSpan"]), ref["direction"])
         return key in self._pairs[row_id]
 
+    def label(self, row_id: str) -> str | None:
+        if row_id not in self._labels:
+            self._labels[row_id] = source_label_for_row(self._conn, row_id)
+        return self._labels[row_id]
+
 
 def _error_correction_source_rows(sources_db: Path | str | None, vesum: VesumLookup | None) -> _SourceRows | None:
-    """Source-row verifier, or None when sources.db is unavailable (CI checks the evidence snapshot only).
+    """Source-row verifier, or None only for explicitly database-free CI mode.
 
     The extractor pairs rows with VESUM, so re-deriving a pair needs VESUM too: without
     the audit's own VESUM view the default database is used.
     """
-    if not sources_db or not Path(sources_db).exists():
+    if sources_db is None:
         return None
     import sqlite3
 
     try:
         return _SourceRows(Path(sources_db), vesum or _error_correction_vesum(DEFAULT_VESUM_DB))
-    except sqlite3.Error:
-        return None
+    except (sqlite3.Error, OSError, ValueError) as exc:
+        raise ValueError("supplied sources_db is not a readable sources database") from exc
 
 
 def _source_binding_violations(
@@ -352,11 +360,9 @@ def _source_binding_violations(
     """A drill must be the exact pair of one source row (#8723); a missing binding is a failure.
 
     Both modes: ``sourceRef`` is well formed and the committed evidence snapshot has
-    this drill's row id and, as its span strings, exactly the drill's error and
-    correction. With sources.db: the row still hashes to the snapshot, the text at
-    both spans is the error and the correction, and the extractor itself pairs those
-    spans, in that direction, when it reads the row — so one row's error cannot be
-    combined with another row's correction, nor one marked word license a new edit.
+    this drill's row id, source label, error and correction. With sources.db: the
+    label is derived again from row metadata, and the row text, spans and pair
+    direction are re-verified.
     """
     ref = item.get("sourceRef")
     problem = source_ref_problem(ref)
@@ -381,6 +387,14 @@ def _source_binding_violations(
                 "message": f"drill {expected!r} does not match its evidence snapshot {mismatched!r}",
             }
         ]
+    if not isinstance(item.get("source"), str) or not item["source"] or item["source"] != entry.get("source"):
+        return [
+            {
+                "type": "SOURCE_LABEL_MISMATCH",
+                "item": item_id,
+                "message": f"displayed source label does not match the evidence snapshot for {ref['rowId']}",
+            }
+        ]
     if source_rows is None:
         return []
 
@@ -393,6 +407,14 @@ def _source_binding_violations(
                 "type": "SOURCE_ROW_CHANGED",
                 "item": item_id,
                 "message": f"{ref['rowId']} no longer hashes to its evidence snapshot SHA-256",
+            }
+        ]
+    if source_rows.label(ref["rowId"]) != entry["source"]:
+        return [
+            {
+                "type": "SOURCE_LABEL_MISMATCH",
+                "item": item_id,
+                "message": f"displayed source label does not match row metadata for {ref['rowId']}",
             }
         ]
     read = (span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"]))
@@ -499,7 +521,10 @@ def audit_error_correction_deck(
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
     pair_vesum = _error_correction_vesum(vesum_db)
-    source_rows = _error_correction_source_rows(sources_db, pair_vesum)
+    try:
+        source_rows = _error_correction_source_rows(sources_db, pair_vesum)
+    except ValueError as exc:
+        return [{"type": "SOURCE_DB_INVALID", "item": "sources_db", "message": str(exc)}]
     evidence = load_evidence_snapshot(evidence_path)
     reviewed_withholds = load_reviewed_withholds()
 

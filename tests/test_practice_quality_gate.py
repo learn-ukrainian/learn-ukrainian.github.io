@@ -91,6 +91,7 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
                 "correctForm": "брав участь",
                 "options": ["брав участь", "приймав участь"],
                 "explanation": "Калька з російської мови.",
+                "source": "Textbook Gr 10 (glazova)",
                 "sourceRef": {
                     "rowId": "textbooks:1",
                     "errorSpan": [0, 14],
@@ -188,11 +189,17 @@ def _error_correction_deck(tmp_path: Path, drills: list[dict], evidence: dict | 
             d["id"]: {
                 "rowId": d["sourceRef"]["rowId"],
                 "rowSha256": "0" * 64,
+                "source": d.get("source"),
                 "error": d["errorWord"],
                 "correct": d["correctForm"],
             }
             for d in drills
             if isinstance(d.get("sourceRef"), dict)
+        }
+    else:
+        evidence = {
+            item_id: {"source": next((d.get("source") for d in drills if d.get("id") == item_id), None), **entry}
+            for item_id, entry in evidence.items()
         }
     (tmp_path / "ec-evidence.json").write_text(json.dumps({"drills": evidence}, ensure_ascii=False), encoding="utf-8")
     return deck_path
@@ -399,6 +406,74 @@ def test_extracted_drills_are_bound_to_their_source_row(tmp_path: Path):
     assert (
         _audit_error_corrections(tmp_path, deck["drills"], evidence, vesum_db=vesum_path, sources_db=sources_path) == []
     )
+
+
+@pytest.mark.parametrize("database_mode", [False, True])
+def test_changed_visible_source_label_fails(tmp_path: Path, database_mode: bool):
+    """A drill's displayed badge must match the metadata of its bound row."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drill = {**deck["drills"][2], "source": "Textbook Gr 1 (unrelated)"}
+    kwargs = {"vesum_db": vesum_path, "sources_db": sources_path} if database_mode else {}
+
+    violations = _audit_error_corrections(tmp_path, [drill], evidence, **kwargs)
+
+    assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
+
+
+def test_forged_snapshot_source_label_fails_with_sources_db(tmp_path: Path):
+    """The bound row remains authoritative when drill and snapshot labels agree falsely."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drill = {**deck["drills"][2], "source": "Textbook Gr 1 (unrelated)"}
+    forged = {drill["id"]: {**evidence[drill["id"]], "source": drill["source"]}}
+
+    violations = _audit_error_corrections(
+        tmp_path, [drill], forged, vesum_db=vesum_path, sources_db=sources_path
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
+
+
+@pytest.mark.parametrize("database_mode", [False, True])
+def test_reviewer_source_label_probe_on_committed_err_0005(tmp_path: Path, database_mode: bool):
+    """The exact reviewed badge edit fails on the committed learner-facing drill."""
+    from scripts.audit.practice_quality_gate import PROJECT_ROOT
+    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
+
+    if database_mode and not DEFAULT_SOURCES_DB.exists():
+        pytest.skip("Requires the local sources.db")
+    deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
+    drill = next(d for d in deck["drills"] if d["id"] == "err_0005")
+    probe = {**drill, "source": "Textbook Gr 1 (unrelated)"}
+    kwargs = {"sources_db": DEFAULT_SOURCES_DB} if database_mode else {}
+
+    violations = _audit_error_corrections(
+        tmp_path, [probe], {"err_0005": load_evidence_snapshot()["err_0005"]}, **kwargs
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_LABEL_MISMATCH")]
+
+
+@pytest.mark.parametrize("database_kind", ["missing", "wrong_schema", "missing_style_guide"])
+def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
+    """Supplying an invalid DB must never select snapshot-only CI mode."""
+    import sqlite3
+
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    if database_kind == "missing":
+        invalid_path = tmp_path / "missing.db"
+    elif database_kind == "wrong_schema":
+        invalid_path = vesum_path
+    else:
+        conn = sqlite3.connect(sources_path)
+        conn.execute("DROP TABLE style_guide")
+        conn.close()
+        invalid_path = sources_path
+
+    violations = _audit_error_corrections(
+        tmp_path, deck["drills"], evidence, vesum_db=vesum_path, sources_db=invalid_path
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [("sources_db", "SOURCE_DB_INVALID")]
 
 
 def test_one_rows_error_with_another_rows_correction_fails(tmp_path: Path):

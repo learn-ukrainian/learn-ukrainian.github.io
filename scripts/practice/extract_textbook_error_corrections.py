@@ -928,6 +928,19 @@ def _style_guide_source(word: str, section: str) -> str:
     return f"Antonenko-Davydovych: {word} ({section})"
 
 
+def source_label_for_row(conn: sqlite3.Connection, row_id: str) -> str | None:
+    """Learner-visible source label derived from the bound row's metadata."""
+    match = _ROW_ID_RE.fullmatch(row_id or "")
+    if not match:
+        return None
+    table, record_id = match.groups()
+    if table == "textbooks":
+        row = conn.execute("SELECT grade, author, title FROM textbooks WHERE id = ?", (int(record_id),)).fetchone()
+        return _textbook_source(*row) if row else None
+    row = conn.execute("SELECT word, section FROM style_guide WHERE id = ?", (int(record_id),)).fetchone()
+    return _style_guide_source(*row) if row else None
+
+
 _TEXTBOOK_TABLES_QUERY = """
     SELECT id, grade, author, title, text
     FROM textbooks
@@ -1166,9 +1179,9 @@ def extract_error_correction_deck(
 def build_evidence_snapshot(deck: dict[str, Any], conn: sqlite3.Connection) -> dict[str, Any]:
     """Per-drill source evidence, read from sources.db, that the gate checks without the database.
 
-    Each drill id maps to its source ``rowId``, the SHA-256 of that row's text and the
-    strings at its error and correction spans. A drill whose spans do not read back
-    as its error and correction is an extractor bug and stops the export.
+    Each drill id maps to its source ``rowId``, the SHA-256 of that row's text,
+    the row-derived display label, and the strings at its error and correction
+    spans. A drill that disagrees with its row stops the export.
     """
     evidence: dict[str, dict[str, str]] = {}
     for drill in deck["drills"]:
@@ -1177,12 +1190,16 @@ def build_evidence_snapshot(deck: dict[str, Any], conn: sqlite3.Connection) -> d
         text = load_source_row(conn, ref["rowId"]) if problem is None else None
         if text is None:
             raise ValueError(f"{drill['id']}: cannot bind to a source row ({problem or 'row not in sources.db'})")
+        source = source_label_for_row(conn, ref["rowId"])
+        if source is None or drill.get("source") != source:
+            raise ValueError(f"{drill['id']}: source label does not match its bound row metadata")
         error, correct = span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"])
         if (error, correct) != (drill["errorWord"], drill["correctForm"]):
             raise ValueError(f"{drill['id']}: spans read {error!r} → {correct!r}, not the drill's pair")
         evidence[drill["id"]] = {
             "rowId": ref["rowId"],
             "rowSha256": row_sha256(text),
+            "source": source,
             "error": error,
             "correct": correct,
         }
@@ -1218,7 +1235,7 @@ def main():
     parser.add_argument(
         "--evidence-json",
         type=Path,
-        help="Write the per-drill evidence snapshot (row id, row SHA-256, span strings) here",
+        help="Write the per-drill evidence snapshot (row id, row SHA-256, source label, span strings) here",
     )
     parser.add_argument("--withheld-json", type=Path, help="Write withheld source rows with reasons here")
     parser.add_argument(
