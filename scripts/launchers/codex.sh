@@ -148,7 +148,7 @@ launcher_codex_native_profile_preflight() {
 }
 
 launcher_codex_transport_probe() {
-  local probe=("$LC_ROOT/.venv/bin/python" -m scripts.orchestration.codex_transport_health probe --ttl-seconds "${CODEX_TRANSPORT_PROBE_TTL_SECONDS:-900}" --timeout-seconds "${CODEX_TRANSPORT_PROBE_TIMEOUT_SECONDS:-120}" --model "$LC_MODEL" --effort low --json)
+  local probe=("${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}/.venv/bin/python" -m scripts.orchestration.codex_transport_health probe --ttl-seconds "${CODEX_TRANSPORT_PROBE_TTL_SECONDS:-900}" --timeout-seconds "${CODEX_TRANSPORT_PROBE_TIMEOUT_SECONDS:-120}" --model "$LC_MODEL" --effort low --json)
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'codex adapter: would probe '; printf '%q ' "${probe[@]}"; printf '\n'; return 0; fi
   if ! "${probe[@]}"; then
     launcher_error 'Codex transport is degraded; do not retry Codex, route this cycle through the external fleet/epic roster.'
@@ -180,7 +180,7 @@ launcher_adapter_prelease() {
   resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT"
 }
 launcher_adapter_canary() {
-  local cmd=("$LC_ROOT/.venv/bin/python" -m scripts.session_canary.codex_lane)
+  local cmd=("${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}/.venv/bin/python" -m scripts.session_canary.codex_lane)
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'codex adapter: would mint and bootstrap provider canary'; return 0; fi
   "${cmd[@]}" mint --epic "$LC_EPIC" && "${cmd[@]}" bootstrap --epic "$LC_EPIC"
 }

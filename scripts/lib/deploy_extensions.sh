@@ -18,6 +18,38 @@
 # Load-bearing tests: scripts/audit/test_deploy_extensions.sh (wrapped by
 # tests/test_deploy_extensions.py in the required pytest gate).
 
+# Resolve the project interpreter for the deploy-status helper: the checkout's
+# own .venv, else the primary checkout's (dispatch worktrees carry no .venv by
+# design; the primary is found via git's common dir, as in glmcc_route_python
+# and fleet_comms_resolve_python). Prints the interpreter path on success. On
+# failure prints "project interpreter not found: <paths tried>" to stderr and
+# returns 1 — never a silent fall back to a system python3.
+# Kept in this file (not sourced) because fixtures copy this helper alone.
+_deploy_status_python() {
+    local root="$1"
+    local tried="$root/.venv/bin/python"
+    local git_common primary_python
+
+    if [ -x "$tried" ]; then
+        printf '%s\n' "$tried"
+        return 0
+    fi
+    git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR \
+        git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    if [ -n "$git_common" ]; then
+        primary_python="$(dirname "$git_common")/.venv/bin/python"
+        if [ "$primary_python" != "$tried" ]; then
+            tried="$tried, $primary_python"
+        fi
+        if [ -x "$primary_python" ]; then
+            printf '%s\n' "$primary_python"
+            return 0
+        fi
+    fi
+    echo "Error: project interpreter not found: $tried" >&2
+    return 1
+}
+
 deploy_agent_extensions() {
     local project_dir="$1"
     local npm_script="$2"
@@ -50,14 +82,30 @@ deploy_agent_extensions() {
     # .agent is concurrent agent-owned state. The helper opens it with
     # O_NOFOLLOW|O_DIRECTORY and updates leaves by dir_fd; plain shell
     # redirection/cp/rm here would reintroduce deploy's path-swap escape.
-    local scripts_dir helper_project_root status_helper
+    local scripts_dir helper_project_root status_helper status_python status_rc=0
     scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
     helper_project_root="$(cd "$scripts_dir/.." && pwd)"
     status_helper="$scripts_dir/deploy/update_agent_deploy_status.py"
 
+    # A missing interpreter must not read as an unsafe .agent root: the
+    # resolver prints its own "project interpreter not found" line. The helper
+    # exits 1 only when it refuses the .agent root (its stderr says why); any
+    # other non-zero exit is a crash or usage error.
+    status_python="$(_deploy_status_python "$helper_project_root")" || status_python=""
+
     if [ "$exit_code" -eq 0 ]; then
-        if ! "$helper_project_root/.venv/bin/python" "$status_helper" clear --agent-root "$project_dir/.agent"; then
+        if [ -z "$status_python" ]; then
+            echo "Error: agent extensions deployed but deploy-status cleanup could not run (project interpreter missing)." >&2
+            rm -f "$log_file"
+            return 1
+        fi
+        "$status_python" "$status_helper" clear --agent-root "$project_dir/.agent" || status_rc=$?
+        if [ "$status_rc" -eq 1 ]; then
             echo "Error: agent extensions deployed but deploy-status cleanup refused an unsafe .agent root." >&2
+            rm -f "$log_file"
+            return 1
+        elif [ "$status_rc" -ne 0 ]; then
+            echo "Error: agent extensions deployed but the deploy-status helper failed (exit $status_rc)." >&2
             rm -f "$log_file"
             return 1
         fi
@@ -70,12 +118,19 @@ deploy_agent_extensions() {
         tail -15 "$log_file"
         echo "────────────────────────────────────────"
         echo "Reproduce with: npm run $npm_script"
-        if ! "$helper_project_root/.venv/bin/python" "$status_helper" record-failure \
-            --agent-root "$project_dir/.agent" \
-            --script "$npm_script" \
-            --exit-code "$exit_code" \
-            --failure-log "$log_file"; then
-            echo "Error: deploy-status update refused an unsafe .agent root." >&2
+        if [ -z "$status_python" ]; then
+            echo "Error: deploy-status update skipped (project interpreter missing)." >&2
+        else
+            "$status_python" "$status_helper" record-failure \
+                --agent-root "$project_dir/.agent" \
+                --script "$npm_script" \
+                --exit-code "$exit_code" \
+                --failure-log "$log_file" || status_rc=$?
+            if [ "$status_rc" -eq 1 ]; then
+                echo "Error: deploy-status update refused an unsafe .agent root." >&2
+            elif [ "$status_rc" -ne 0 ]; then
+                echo "Error: deploy-status helper failed (exit $status_rc)." >&2
+            fi
         fi
     fi
     rm -f "$log_file"
