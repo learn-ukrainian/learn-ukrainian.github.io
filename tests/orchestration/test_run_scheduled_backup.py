@@ -196,9 +196,9 @@ exit 0
 
     assert result.returncode != 0
     assert "could not capture the backup log" in result.stderr
-    # The receipt is still written and carries the backup's own zero status.
+    # A failed capture makes the scheduled run a failure in the receipt too.
     receipt = json.loads(last_run.read_text(encoding="utf-8"))
-    assert receipt["exit_status"] == 0
+    assert receipt["exit_status"] != 0
 
 
 def test_run_fails_when_last_run_receipt_cannot_be_written(
@@ -335,3 +335,88 @@ def test_retention_mode_redacts_output_and_preserves_failure_status(
     assert password_file not in result.stdout + result.stderr
     assert "<repository>" in result.stdout
     assert "<password-file>" in result.stdout
+
+
+@pytest.mark.parametrize("failure", ["missing-jq", "missing-script", "mktemp", "tmpdir"])
+def test_early_failure_invalidates_previous_success_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, failure: str
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    last_run = tmp_path / "last-run.json"
+    last_run.write_text('{"exit_status":0}\n', encoding="utf-8")
+    environment["LU_BACKUP_LAST_RUN"] = str(last_run)
+    if failure == "missing-jq":
+        for command in ("dirname", "rm"):
+            executable = shutil.which(command, path=os.environ["PATH"])
+            assert executable
+            (fake_bin / command).symlink_to(executable)
+        environment["PATH"] = str(fake_bin)
+    elif failure == "missing-script":
+        environment["LU_BACKUP_SCRIPT"] = str(tmp_path / "missing.sh")
+    else:
+        script = tmp_path / "backup.sh"
+        _write_executable(script, "#!/bin/bash\nexit 0\n")
+        environment["LU_BACKUP_SCRIPT"] = str(script)
+        if failure == "mktemp":
+            _write_executable(fake_bin / "mktemp", "#!/bin/bash\nexit 42\n")
+        else:
+            blocker = tmp_path / "blocker"
+            blocker.write_text("file\n", encoding="utf-8")
+            environment["LU_BACKUP_TMPDIR"] = str(blocker / "staging")
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode != 0
+    assert not last_run.exists()
+
+
+def test_invalid_new_receipt_does_not_replace_existing_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    old_receipt = tmp_path / "last-run.json"
+    old_receipt.write_text('{"exit_status":7}\n', encoding="utf-8")
+    log = tmp_path / "backup.log"
+    log.write_text(FAILURE_LOG, encoding="utf-8")
+    environment["REAL_JQ"] = shutil.which("jq") or ""
+    assert environment["REAL_JQ"]
+    _write_executable(
+        fake_bin / "jq",
+        '#!/bin/bash\nif [[ "$1" == "-n" ]]; then printf "truncated"; exit 0; fi\nexec "$REAL_JQ" "$@"\n',
+    )
+
+    result = _run_wrapper(
+        environment, "record", "--status", "1", "--started", "2026-09-26T03:30:00Z",
+        "--log", str(log), "--last-run", str(old_receipt),
+    )
+
+    assert result.returncode != 0
+    assert old_receipt.read_text(encoding="utf-8") == '{"exit_status":7}\n'
+    assert not list(tmp_path.glob("last-run.json.tmp.*"))
+
+
+def test_empty_primary_repository_and_bare_remote_path_are_redacted(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, _fake_bin = writer_environment
+    repository = "rclone:testdrive:Projects/private-folder"
+    script = tmp_path / "backup.sh"
+    _write_executable(
+        script,
+        "#!/bin/bash\n"
+        'printf "%s\\n" "$RESTIC_REPOSITORY" "Google drive root \'Projects/private-folder\'"\n'
+        "exit 4\n",
+    )
+    environment.update({
+        "LU_BACKUP_SCRIPT": str(script),
+        "LU_BACKUP_LAST_RUN": str(tmp_path / "last-run.json"),
+        "LU_BACKUP_REPOSITORY": "",
+        "RESTIC_REPOSITORY": repository,
+    })
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 4
+    assert repository not in result.stdout + result.stderr
+    assert "Projects/private-folder" not in result.stdout + result.stderr
+    assert "Google drive root '<repository>'" in result.stdout
