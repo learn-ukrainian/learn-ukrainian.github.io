@@ -48,7 +48,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -203,7 +203,7 @@ def _segments(command: str) -> list[list[str]]:
     commented-out text can neither trigger nor hide a verb.
     """
     segments: list[list[str]] = []
-    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+    for line in preprocess_shell_command(command).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True
@@ -234,7 +234,7 @@ def _segments_with_following_operator(command: str) -> list[tuple[list[str], str
     when ``cd <path> &&`` changes the effective cwd of the following command.
     """
     segments: list[tuple[list[str], str | None]] = []
-    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+    for line in preprocess_shell_command(command).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True

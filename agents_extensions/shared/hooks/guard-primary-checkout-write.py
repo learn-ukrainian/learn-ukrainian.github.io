@@ -147,7 +147,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import (
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -681,9 +685,7 @@ def _tokenize(command: str) -> list[str]:
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(
                     _normalize_backtick_substitutions(
-                        _strip_shell_comments(
-                            _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
-                        )
+                        _decode_ansi_c_quotes(preprocess_shell_command(command))
                     )
                 )
             ),

@@ -39,6 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
+        preprocess_shell_command,
         skippable_heredoc_delimiters,
         split_quote_preserving,
         strip_skippable_heredoc_bodies,
@@ -166,12 +167,17 @@ def _collapse_shell_line_continuations(command: str) -> str:
 
 def _tokenize(command: str) -> list[str]:
     try:
-        executable = _strip_shell_comments(
-            _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
-        )
+        executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
         protected, parameters = _protect_parameters(executable)
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
-        return [_restore_parameters(token, parameters) for token in tokens]
+        restored = [_restore_parameters(token, parameters) for token in tokens]
+        # shlex can combine an arithmetic close and newline as one punctuation
+        # run (`))\n`). The newline still starts a new executable command.
+        return [
+            part
+            for token in restored
+            for part in (re.findall(r"[^\n]+|\n", token) if "\n" in token and set(token) <= set("();&|<>\n") else [token])
+        ]
     except ValueError:
         return ["__UNDECIDABLE_SECRET_COMMAND__"]
 
@@ -982,9 +988,7 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
         return "shell recursion limit reached while scanning for secret output"
     if named is None:
         named = {}
-    executable = _strip_shell_comments(
-        _decode_ansi_c_quotes(_strip_heredoc_bodies(_collapse_shell_line_continuations(command)))
-    )
+    executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
     # Scan the complete text first: shlex may expose a separator inside a
     # substitution as a top-level token, but Bash executes its whole body.
     for body in _substitution_bodies(executable):
