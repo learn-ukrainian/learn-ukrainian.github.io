@@ -6,7 +6,9 @@ import os
 import sys
 from pathlib import Path
 
-_VENV_PYTHON_NAMES = frozenset({"python", "python3"})
+# Final-component symlink hops followed while identifying a venv entrypoint.
+# POSIX SYMLOOP_MAX is commonly 40; a longer chain is treated as not a venv.
+_MAX_SYMLINK_HOPS = 40
 
 
 def main_checkout_root(repo_root: Path) -> Path:
@@ -53,19 +55,46 @@ def _venv_python(checkout: Path) -> Path:
     return checkout / ".venv" / "bin" / "python"
 
 
-def _venv_checkout_of(interpreter: Path) -> Path | None:
-    """Checkout that owns ``interpreter`` when it is that checkout's venv entrypoint.
-
-    ``python`` and ``python3`` under ``<checkout>/.venv/bin`` count. A toolchain
-    interpreter such as ``hostedtoolcache/.../bin/python`` does not.
-    """
-    candidate = _lexical_absolute(interpreter)
-    if candidate.name not in _VENV_PYTHON_NAMES or candidate.parent.name != "bin":
+def _venv_bin_checkout(candidate: Path) -> Path | None:
+    """Checkout that owns ``candidate`` when it sits directly in that checkout's ``.venv/bin``."""
+    if candidate.parent.name != "bin":
         return None
     venv = candidate.parent.parent
     if venv.name != ".venv":
         return None
     return venv.parent
+
+
+def _venv_checkout_of(interpreter: Path) -> Path | None:
+    """Checkout that owns ``interpreter`` when it is that checkout's venv entrypoint.
+
+    Any direct child of ``<checkout>/.venv/bin`` counts: ``python``, ``python3``,
+    versioned ``python3.N``, and every other executable there. Each symlink hop
+    is checked the same way, so a link that resolves into that directory counts
+    even when the link's own path does not. The entrypoint is recognized before
+    the hop is followed, so ``python3.12`` still counts when it points at a
+    toolchain binary outside the venv. A toolchain interpreter such as
+    ``hostedtoolcache/.../bin/python`` does not.
+    """
+    candidate = _lexical_absolute(interpreter)
+    seen: set[Path] = set()
+    for _ in range(_MAX_SYMLINK_HOPS + 1):
+        if candidate in seen:
+            return None
+        seen.add(candidate)
+        owner = _venv_bin_checkout(candidate)
+        if owner is not None:
+            return owner
+        if not candidate.is_symlink():
+            return None
+        try:
+            target = candidate.readlink()
+        except OSError:
+            return None
+        if not target.is_absolute():
+            target = candidate.parent / target
+        candidate = _lexical_absolute(target)
+    return None
 
 
 def project_interpreter(root: Path | None = None) -> Path:
@@ -85,8 +114,10 @@ def project_interpreter(root: Path | None = None) -> Path:
     2. Otherwise that checkout's own ``.venv/bin/python`` when the file exists.
     3. Otherwise ``sys.executable``. This is the CI case: the runner has no
        project ``.venv``. ``sys.executable`` is refused only when it lives in
-       some other checkout's ``.venv`` — a foreign project interpreter must
-       not be returned for a checkout that asked for its own.
+       some other checkout's ``.venv/bin`` — any entrypoint there, including
+       ``python3.N`` and a symlink that resolves into that directory. A
+       foreign project interpreter must not be returned for a checkout that
+       asked for its own.
     """
     repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
