@@ -95,12 +95,27 @@ describe("practice-shard-fetch", () => {
       "/lexicon/practice-stress.A1.json",
       "/lexicon/practice-classify.A1.json",
       "/lexicon/practice-paradigm.A1.json",
-      "/lexicon/practice-synonym.A1.json",
       "/lexicon/practice-paronym.A1.json",
       "/lexicon/practice-heritage.A1.json",
       "/lexicon/practice-antonym.A1.json",
       "/lexicon/practice-imperative.A1.json",
     ]);
+  });
+
+  test("cached and published synonym shards cannot hydrate withdrawn cards (#8714)", async () => {
+    setPublishedPracticeShardsForTesting(new Set([...PUBLISHED_PRACTICE_SHARDS, "practice-synonym.A1.json"]));
+    const requested: string[] = [];
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      requested.push(String(input));
+      return jsonResponse(404);
+    });
+    const fields = await fetchPracticeDrillFields("/lexicon", "A1", new Map());
+    expect(fields.synonym).toEqual([]);
+    expect(requested.some((url) => url.includes("practice-synonym.A1.json"))).toBe(false);
+
+    const oldCard = { synonymId: "old-card", lemmaId: "old" } as PracticeDeckData["synonym"][number];
+    const deck = { index: [], lexemes: [], cloze: [], synonym: [oldCard] } as PracticeDeckData;
+    expect(appendDrillFields(deck, { ...emptyFields, synonym: [oldCard] }).synonym).toEqual([]);
   });
 
   test("fetchPracticeDrillFields soft-skips 404 kinds and surfaces 5xx (#6768)", async () => {
@@ -109,7 +124,7 @@ describe("practice-shard-fetch", () => {
       if (url.includes("practice-cloze.A1.json")) {
         return jsonResponse(200, { cloze: [{ clozeId: "c1" }] });
       }
-      if (url.includes("practice-synonym.A1.json")) return jsonResponse(500);
+      if (url.includes("practice-paronym.A1.json")) return jsonResponse(500);
       return jsonResponse(404);
     });
 

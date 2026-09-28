@@ -2446,9 +2446,12 @@ def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pyte
     assert calls == 1
 
 
-def test_cli_fails_when_approved_synonyms_lack_ulif_data(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_fails_when_approved_synonyms_lack_ulif_data(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
+) -> None:
     # Reviewer probe (cf-8714-r3-codex): without sources.db the build warned and
     # wrote an empty synonym mode.
+    monkeypatch.setattr(generate_practice_deck, "SYNONYM_MODE_ENABLED", True)
     end_dictionary = tmp_path / "end-dictionary-inventory.json"
     end_dictionary.write_text(
         json.dumps(

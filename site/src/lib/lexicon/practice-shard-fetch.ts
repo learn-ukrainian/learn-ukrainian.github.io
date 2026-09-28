@@ -17,6 +17,7 @@ import type {
   PracticeStressItem,
   PracticeSynonymItem,
 } from "./srs";
+import { isPracticeModeEnabled } from "./srs";
 import practiceDeckPointer from "../../data/lexicon-practice-deck.pointer.json";
 
 export type ShardJsonCache = Map<string, Promise<unknown>>;
@@ -114,7 +115,7 @@ export function practiceDrillShardUrls(
   publishedShards: ReadonlySet<string> = overridePublishedShards ?? PUBLISHED_PRACTICE_SHARDS,
 ): string[] {
   return PRACTICE_DRILL_KINDS
-    .filter((kind) => !publishedOnly || isPracticeShardPublished(`practice-${kind}.${level}.json`, publishedShards))
+    .filter((kind) => isPracticeModeEnabled(kind) && (!publishedOnly || isPracticeShardPublished(`practice-${kind}.${level}.json`, publishedShards)))
     .map((kind) => `${shardBaseUrl}/practice-${kind}.${level}.json`);
 }
 
@@ -128,7 +129,7 @@ export function drillFieldsFromShardResults(results: readonly unknown[]): Practi
     stress: itemsFromShard<PracticeStressItem>(results[1], "stress"),
     classify: itemsFromShard<PracticeClassifyItem>(results[2], "classify"),
     paradigm: itemsFromShard<PracticeParadigmItem>(results[3], "paradigm"),
-    synonym: itemsFromShard<PracticeSynonymItem>(results[4], "synonym"),
+    synonym: isPracticeModeEnabled('synonym') ? itemsFromShard<PracticeSynonymItem>(results[4], "synonym") : [],
     paronym: itemsFromShard<PracticeParonymItem>(results[5], "paronym"),
     heritage: itemsFromShard<PracticeHeritageItem>(results[6], "heritage"),
     antonym: itemsFromShard<PracticeAntonymItem>(results[7], "antonym"),
@@ -144,6 +145,7 @@ export async function fetchPracticeDrillFields(
 ): Promise<PracticeDrillFields> {
   const results = await Promise.all(
     PRACTICE_DRILL_KINDS.map((kind) => {
+      if (!isPracticeModeEnabled(kind)) return Promise.resolve({});
       const filename = `practice-${kind}.${level}.json`;
       if (!isPracticeShardPublished(filename, publishedShards)) {
         return Promise.resolve({});
@@ -179,7 +181,7 @@ export function appendDrillFields(deck: PracticeDeckData, fields: PracticeDrillF
     stress: [...(deck.stress ?? []), ...fields.stress],
     classify: [...(deck.classify ?? []), ...fields.classify],
     paradigm: [...(deck.paradigm ?? []), ...fields.paradigm],
-    synonym: [...(deck.synonym ?? []), ...fields.synonym],
+    synonym: isPracticeModeEnabled('synonym') ? [...(deck.synonym ?? []), ...fields.synonym] : [],
     paronym: [...(deck.paronym ?? []), ...fields.paronym],
     heritage: [...(deck.heritage ?? []), ...fields.heritage],
     antonym: [...(withAntonym.antonym ?? []), ...fields.antonym],

@@ -1,0 +1,21 @@
+[
+  {"review": "gpt-r5", "name": "sensory-reflexive", "id": "syn_0339d32d382a", "prompt": "відчувати", "answer": "почуватися", "displayed_sense": "sensory perception with an object such as a smell", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "condition-vs-agreement", "id": "syn_df8d176d0874", "prompt": "умова", "answer": "домовленість", "displayed_sense": "no sense cue; condition and agreement are ambiguous", "failure": "missing_sense_cue"},
+  {"review": "gpt-r5", "name": "gender-restricted-person", "id": "syn_95131602f97c", "prompt": "чоловік", "answer": "людина", "displayed_sense": "person, including women", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "access-vs-passage", "id": "syn_54a38fa2f29e", "prompt": "доступ", "answer": "прохід", "displayed_sense": "physical place to pass through", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "window-vs-sill", "id": "syn_b214e7cea8dd", "prompt": "вікно", "answer": "підвіконня", "displayed_sense": "window presented as unrestricted referent", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "today-vs-now", "id": "syn_91013320ee7c", "prompt": "сьогодні", "answer": "зараз", "displayed_sense": "day", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "expansive-vs-smooth", "id": "syn_7160152d93fb", "prompt": "розлогий", "answer": "плавний", "displayed_sense": "smooth movement or speech", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "doubtful-vs-hypothetical", "id": "syn_b03b373d1c2b", "prompt": "сумнівний", "answer": "гіпотетичний", "displayed_sense": "hypothetical claim need not be doubtful", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "feral-vs-wild", "id": "syn_f872fbb6cfb7", "prompt": "здичавілий", "answer": "дикий", "displayed_sense": "all free-living animals", "failure": "wrong_pair"},
+  {"review": "gemini-r3", "name": "face-vs-kind", "prompt": "вид", "answer": "обличчя", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "recover-vs-return", "prompt": "відновлюватися", "answer": "повертати", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "archaic-word-vs-thing", "prompt": "глагол", "answer": "річ", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "far-vs-much", "prompt": "далеко", "answer": "набагато", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "drizzle-vs-fall", "prompt": "дощити", "answer": "падати", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "quarter-vs-district", "prompt": "квартал", "answer": "чверть", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "tailor-gender-counterpart", "prompt": "кравець", "answer": "кравчиня", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "master-vs-artist", "prompt": "майстер", "answer": "митець", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "carry-motion-aspect", "prompt": "нести", "answer": "носити", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "retelling-vs-story", "prompt": "переказ", "answer": "розповідь", "failure": "registry_rejected"}
+]

@@ -8,6 +8,8 @@ from typing import Any
 import pytest
 import yaml
 
+import scripts.audit.generate_practice_deck as generator
+
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -29,6 +31,11 @@ from scripts.practice.ulif_synonym_groups import UlifSynonymGroups, payload_from
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SYNONYM_VERDICTS_YAML = REPO_ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
+
+
+@pytest.fixture(autouse=True)
+def exercise_preserved_ulif_evidence_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
 
 FIXTURES = Path("tests/fixtures")
 # Synonym cards need ULIF evidence (#8714): fixture rows (not ULIF text) that make

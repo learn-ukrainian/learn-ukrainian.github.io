@@ -27,6 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+import scripts.audit.generate_practice_deck as generator
 from scripts.audit.generate_practice_deck import (
     BuildConfig,
     JsonVesumVerifier,
@@ -46,6 +47,55 @@ from scripts.practice.ulif_synonym_groups import (
 )
 
 SYNONYM_VERDICTS_YAML = PROJECT_ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
+WITHDRAWAL_CASES = PROJECT_ROOT / "tests" / "fixtures" / "synonym_withdrawal_cases.json"
+
+
+@pytest.fixture(autouse=True)
+def exercise_preserved_ulif_evidence_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Historical gate cases exercise the retained #8984 evidence code explicitly."""
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
+
+
+def test_withdrawal_cases_are_named_and_gemini_verdicts_remain_rejected() -> None:
+    cases = json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8"))
+    assert len(cases) == 19
+    assert len({case["name"] for case in cases}) == 19
+    assert sum(case["review"] == "gpt-r5" for case in cases) == 9
+    assert sum(case["review"] == "gemini-r3" for case in cases) == 10
+    verdicts = yaml.safe_load(SYNONYM_VERDICTS_YAML.read_text(encoding="utf-8"))
+    rejected = {frozenset((row["a"], row["b"])) for row in verdicts["rejected"] if row["polarity"] == "synonym"}
+    for case in cases:
+        if case["review"] == "gemini-r3":
+            assert frozenset((case["prompt"], case["answer"])) in rejected, case["name"]
+
+
+def test_disabled_mode_withholds_every_known_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", False)
+    cases = json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8"))
+    lemmas = {word for case in cases for word in (case["prompt"], case["answer"])}
+    manifest = [_entry(word, "noun", "fixture") for word in sorted(lemmas)]
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier({word: [{"lemma": word, "pos": "noun"}] for word in lemmas}),
+        cloze_sources=[],
+        config=BuildConfig(target=len(manifest)),
+        synonym_verdicts={"approved": [_approved(case["prompt"], case["answer"]) for case in cases]},
+    )
+    for level_shards in shards.values():
+        assert level_shards["synonym"]["synonym"] == []
+        assert all("synonym" not in item["modes"] for item in level_shards["index"]["items"])
+
+
+@pytest.mark.parametrize(
+    "case",
+    json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8")),
+    ids=lambda case: case["name"],
+)
+@pytest.mark.skip(reason="#8984 per-card sense-binding admission path is not built; every case remains withheld")
+def test_sense_binding_rejects_known_failures(case: dict[str, str]) -> None:
+    """Replace the skip with per-card sense-evidence assertions in #8984."""
+    raise NotImplementedError(f"Sense-binding admission missing for {case['name']}")
 
 ZANEPAD = (
     "<b>ЗАНЕ́ПАД</b> (погіршення загального стану, зниження рівня розвитку), <b>РЕГРЕ́С</b>, "

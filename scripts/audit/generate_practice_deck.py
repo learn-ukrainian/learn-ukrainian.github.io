@@ -185,6 +185,8 @@ HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
 SYNONYM_DEFAULT_AVAILABILITY = "B1"
+# Advisor ruling A on #8714: withhold the mode until #8984 has per-card sense binding.
+SYNONYM_MODE_ENABLED = False
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
@@ -3417,12 +3419,10 @@ def _approved_synonym_lemmas(synonym_verdicts: dict[str, Any] | None) -> set[str
 def read_ulif_synonym_groups(db_path: Path | None, synonym_verdicts: dict[str, Any] | None) -> UlifSynonymGroups | None:
     """Checked ULIF synonym groups listing any lemma an approved verdict names.
 
-    ``None`` only when no approved synonym-polarity verdict needs them.  When
-    one does and the groups cannot be read (no path, no file, no tables, no
-    checked group), this raises: an empty synonym mode must not build or
-    pass the publication check as if it were the real deck.
+    While the mode is disabled, no ULIF read is needed. Once re-enabled, a
+    missing checked group raises instead of silently building an empty mode.
     """
-    if not _approved_synonym_lemmas(synonym_verdicts):
+    if not SYNONYM_MODE_ENABLED or not _approved_synonym_lemmas(synonym_verdicts):
         return None
     lemmas = {
         str(record.get(leg) or "")
@@ -3442,8 +3442,11 @@ def read_ulif_synonym_groups(db_path: Path | None, synonym_verdicts: dict[str, A
 def ulif_synonym_evidence_payload(groups: UlifSynonymGroups | None) -> dict[str, Any]:
     """Deck-version input for the synonym evidence: which ULIF groups were available."""
     if groups is None:
-        return {"ulif_synonyms": None}
-    return {"ulif_synonyms": {"groups": len(groups), "fingerprint": groups.fingerprint()}}
+        return {"synonym_mode_enabled": SYNONYM_MODE_ENABLED, "ulif_synonyms": None}
+    return {
+        "synonym_mode_enabled": SYNONYM_MODE_ENABLED,
+        "ulif_synonyms": {"groups": len(groups), "fingerprint": groups.fingerprint()},
+    }
 
 
 def _synonym_option(
@@ -5532,7 +5535,9 @@ def build_practice_shards(
     else:
         synonym_verdicts_loaded = True
     approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
-    if ulif_synonym_groups is None and any(polarity == "synonym" for _a, _b, polarity in approved_set):
+    if SYNONYM_MODE_ENABLED and ulif_synonym_groups is None and any(
+        polarity == "synonym" for _a, _b, polarity in approved_set
+    ):
         raise UlifSynonymDataUnavailable("approved synonym verdicts need checked ULIF synonym groups; none were loaded")
 
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
@@ -5679,21 +5684,25 @@ def build_practice_shards(
         for lexeme in (by_plain_lemma.get(key[0]), by_plain_lemma.get(key[1]))
         if lexeme and _option_pos_bucket(lexeme.get("pos")) == "noun"
     ]
-    synonym_items = _build_synonym_items(
-        lexemes_by_entry,
-        by_plain_lemma,
-        all_lexemes,
-        deck_version,
-        approved_set - rejected_set,
-        rejected_set,
-        a2_exception_set,
-        synonym_verdicts_loaded,
-        encountered_pairs,
-        synonym_verdicts=synonym_verdicts,
-        vesum_aspects=vesum_aspects,
-        person_genders=_vesum_person_gender_by_lemma(pair_nouns, verifier),
-        ulif_groups=ulif_synonym_groups,
-        withheld=withheld_synonyms,
+    synonym_items = (
+        _build_synonym_items(
+            lexemes_by_entry,
+            by_plain_lemma,
+            all_lexemes,
+            deck_version,
+            approved_set - rejected_set,
+            rejected_set,
+            a2_exception_set,
+            synonym_verdicts_loaded,
+            encountered_pairs,
+            synonym_verdicts=synonym_verdicts,
+            vesum_aspects=vesum_aspects,
+            person_genders=_vesum_person_gender_by_lemma(pair_nouns, verifier),
+            ulif_groups=ulif_synonym_groups,
+            withheld=withheld_synonyms,
+        )
+        if SYNONYM_MODE_ENABLED
+        else []
     )
     for item in synonym_items:
         level = str(item.pop("level"))
@@ -5718,7 +5727,7 @@ def build_practice_shards(
         f"candidate_directions={2 * len(resolved_approved_pairs)}"
     )
     if synonym_accounting is not None:
-        synonym_accounting.candidate_directions = 2 * len(resolved_approved_pairs)
+        synonym_accounting.candidate_directions = 2 * len(resolved_approved_pairs) if SYNONYM_MODE_ENABLED else 0
         synonym_accounting.verdict_summary = verdict_summary
         synonym_accounting.loaded = synonym_verdicts_loaded
         synonym_accounting.withheld.extend(withheld_synonyms)

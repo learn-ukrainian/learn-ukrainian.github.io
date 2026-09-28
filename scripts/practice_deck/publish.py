@@ -42,6 +42,10 @@ DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-practice-deck.json.gz"
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
+# The exact published source of the #8714 withdrawal ledger. Never transform
+# an arbitrary package or silently use a different release as this source.
+WITHDRAWAL_SOURCE_VERSION = "atlas-practice-v1-c0c3f3242b5134b6"
+WITHDRAWAL_SOURCE_GZ_SHA256 = "5ed46cb483065703ace1e7c9f6710da9075a1377b67312d73ce17c2ed8ec8002"
 GH_RELEASE_VIEW_TIMEOUT_SECONDS = 30.0
 GH_RELEASE_CREATE_TIMEOUT_SECONDS = 60.0
 GH_RELEASE_ASSET_TIMEOUT_SECONDS = 180.0
@@ -160,6 +164,16 @@ def _read_json_bytes(path: Path) -> tuple[bytes, dict[str, Any]]:
 
 def _shard_metadata(path: Path, *, kind: str, level: str, deck_version: str | None) -> tuple[dict[str, Any], str]:
     data, payload = _read_json_bytes(path)
+    from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED
+
+    if not SYNONYM_MODE_ENABLED:
+        if kind == "synonym" and payload.get("synonym") != []:
+            raise PracticeDeckPublishError(f"synonym mode disabled but {path} contains cards")
+        if kind == "index" and (
+            any("synonym" in item.get("modes", []) for item in payload.get("items", []))
+            or payload.get("counts", {}).get("modeCounts", {}).get("synonym", 0)
+        ):
+            raise PracticeDeckPublishError(f"synonym mode disabled but {path} advertises cards")
     expected_schema = KINDS[kind][1]
     if payload.get("schema") != expected_schema:
         raise PracticeDeckPublishError(f"{path} schema {payload.get('schema')!r} != {expected_schema!r}")
@@ -192,12 +206,14 @@ def _shard_metadata(path: Path, *, kind: str, level: str, deck_version: str | No
     return metadata, shard_version
 
 
-def collect_shards(practice_dir: Path = DEFAULT_PRACTICE_DIR) -> tuple[str, list[dict[str, Any]], list[dict[str, str]]]:
+def collect_shards(
+    practice_dir: Path = DEFAULT_PRACTICE_DIR, *, kinds: dict[str, tuple[str, str]] = KINDS,
+) -> tuple[str, list[dict[str, Any]], list[dict[str, str]]]:
     deck_version: str | None = None
     pointer_files: list[dict[str, Any]] = []
     package_files: list[dict[str, str]] = []
     for level in LEVELS:
-        for kind, (template, _schema) in KINDS.items():
+        for kind, (template, _schema) in kinds.items():
             path = practice_dir / template.format(level=level)
             if not path.exists():
                 raise PracticeDeckPublishError(f"{path} is missing")
@@ -220,6 +236,59 @@ def build_package(deck_version: str, files: list[dict[str, str]]) -> bytes:
         "files": files,
     }
     return json.dumps(package, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def withdraw_synonyms_from_pinned_package(
+    source_gzip: Path, source_pointer: dict[str, Any], practice_dir: Path,
+) -> str:
+    """Build the #8714 withdrawal from the verified published source package.
+
+    This contains the defect without changing unrelated cards while the full
+    rebuild is blocked by unresolved curated Atlas routes. The normal publish
+    shard checks and linguistic gate still apply before upload.
+    """
+    from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED, _json_bytes, _size_budget
+    from scripts.practice_deck.io import _decode_package
+
+    if SYNONYM_MODE_ENABLED:
+        raise PracticeDeckPublishError("withdrawal requires synonym mode disabled")
+    if (source_pointer.get("deck_version") != WITHDRAWAL_SOURCE_VERSION or
+            source_pointer.get("gz_sha256") != WITHDRAWAL_SOURCE_GZ_SHA256):
+        raise PracticeDeckPublishError("withdrawal source is not the pinned #8714 deck")
+    compressed = source_gzip.read_bytes()
+    if _sha256(compressed) != WITHDRAWAL_SOURCE_GZ_SHA256:
+        raise PracticeDeckPublishError("withdrawal source gzip hash mismatch")
+    files = _decode_package(gzip.decompress(compressed), source_pointer)
+    version_seed = f"{source_pointer['package_sha256']}:8714-synonym-disabled-v1".encode()
+    deck_version = f"atlas-practice-v1-{_sha256(version_seed)[:16]}"
+    source_kind_names = {name.split(".", 1)[0].removeprefix("practice-") for name, _data in files}
+    permitted = (set(KINDS), set(KINDS) - {"imperative"})
+    if source_kind_names not in permitted or len(files) != len(LEVELS) * len(source_kind_names):
+        raise PracticeDeckPublishError("withdrawal source shard count is incomplete")
+    source_kinds = {kind: definition for kind, definition in KINDS.items() if kind in source_kind_names}
+
+    transformed: list[tuple[str, bytes]] = []
+    for name, raw in files:
+        payload = json.loads(raw)
+        payload["deckVersion"] = deck_version
+        if name.startswith("practice-synonym."):
+            payload["synonym"] = []
+        elif name.startswith("practice-index."):
+            for item in payload["items"]:
+                item["modes"] = [mode for mode in item["modes"] if mode != "synonym"]
+            payload["counts"].setdefault("modeCounts", {})["synonym"] = 0
+            payload["counts"].setdefault("modeCoverage", {})["synonym"] = 0.0
+        budget = payload.pop("sizeBudget")
+        payload["sizeBudget"] = _size_budget(payload, budget["rawLimitBytes"], budget["gzipLimitBytes"])
+        if not payload["sizeBudget"]["ok"]:
+            raise PracticeDeckPublishError(f"withdrawn shard exceeds size budget: {name}")
+        transformed.append((name, _json_bytes(payload)))
+
+    practice_dir.mkdir(parents=True, exist_ok=True)
+    for name, data in transformed:
+        (practice_dir / name).write_bytes(data)
+    collect_shards(practice_dir, kinds=source_kinds)
+    return deck_version
 
 
 def build_pointer(

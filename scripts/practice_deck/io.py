@@ -37,7 +37,7 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 27  # 26→27: synonym cards admitted by ULIF synonym groups only (#8714)
+PRACTICE_DECK_BUILDER_VERSION = 28  # #8714 ruling A: synonym mode fully withdrawn pending #8984
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
