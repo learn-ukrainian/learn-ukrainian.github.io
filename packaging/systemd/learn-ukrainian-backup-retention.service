@@ -1,6 +1,5 @@
 [Unit]
 Description=Learn Ukrainian backup retention (weekly restic forget --prune)
-After=network.target
 
 [Service]
 Type=oneshot
@@ -13,6 +12,3 @@ TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
 ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh retention
-
-[Install]
-WantedBy=default.target

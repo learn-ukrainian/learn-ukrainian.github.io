@@ -165,9 +165,13 @@ tie-breakers.
     at the exact head, CI Gate green on that head, then the driver enqueues, runs
     `merge_closeout`, and deploys with `npm run agents:deploy`. Never ask the operator to
     approve, merge, or deploy them. Routine host maintenance is driver work, done then
-    reported: pull merged `main`, restart an updated or broken service after checking no
-    active dispatch depends on it, install or enable a reviewed systemd user unit or timer
-    that lives in the repo, and clean agent-generated caches, logs, and worktrees.
+    reported, including with sudo where the host requires it: pull merged `main`, restart
+    an updated or broken service after checking no active dispatch depends on it, install
+    or enable a reviewed systemd user unit or timer that lives in the repo, and clean
+    agent-generated caches, logs, and worktrees. Host access and security configuration
+    (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall
+    changes that could cut off operator access) stays operator-only — lock-out risk, and
+    accounts/credentials are an operator stop condition.
 11. **Repo mechanics are part of the contract.** The hard gates codified in `AGENTS.md` and
     `/api/rules` bind as if written here — notably: dispatch worktree subtree layout
     (`.worktrees/dispatch/<agent>/<task>/`); project interpreter for shell/production

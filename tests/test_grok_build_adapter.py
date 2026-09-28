@@ -190,7 +190,8 @@ def test_exact_argv_per_mode(tmp_path):
         "high",
     ]
 
-    # danger: bypassPermissions, always-approve, fleet guards, no default deny rules
+    # danger shares the workspace-write argv (#9008). The equality pin is
+    # test_danger_argv_matches_workspace_write.
     danger_plan = _build("danger task", tmp_path, mode="danger", model="grok-4.7", effort="high")
     assert "--agent" in danger_plan.cmd
     assert _without_guard_agent(danger_plan.cmd) == [
@@ -210,6 +211,56 @@ def test_exact_argv_per_mode(tmp_path):
         "--effort",
         "high",
     ]
+
+
+def test_danger_argv_matches_workspace_write(tmp_path):
+    """Pin the #9008 decision: danger and workspace-write are one argv.
+
+    Both use bypassPermissions, --always-approve, and the same
+    lu-write-worker agent. Grok has no --dangerously-skip-permissions flag.
+    dontAsk and auto do not let a headless worker push, so danger keeps the
+    fleet guard agent instead of dropping it.
+    """
+    workspace = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.7", effort="high")
+    danger = _build("danger task", tmp_path, mode="danger", model="grok-4.7", effort="high")
+    try:
+        workspace_agent = Path(_val(workspace.cmd, "--agent"))
+        danger_agent = Path(_val(danger.cmd, "--agent"))
+        assert workspace_agent.name.endswith(".grok-write-agent.md")
+        assert danger_agent.name.endswith(".grok-write-agent.md")
+        body = workspace_agent.read_text(encoding="utf-8")
+        assert body == danger_agent.read_text(encoding="utf-8")
+        assert "name: lu-write-worker" in body
+        assert "search_replace" in body
+        assert "hashline_edit" in body
+        assert "guard-reviewer-publish.py" not in body
+
+        workspace_argv = _without_guard_agent(workspace.cmd)
+        danger_argv = _without_guard_agent(danger.cmd)
+        workspace_argv[workspace_argv.index("-p") + 1] = "PROMPT"
+        danger_argv[danger_argv.index("-p") + 1] = "PROMPT"
+        assert danger_argv == workspace_argv == [
+            FAKE_GROK,
+            "-p",
+            "PROMPT",
+            "--output-format",
+            "json",
+            "--no-alt-screen",
+            "--permission-mode",
+            "bypassPermissions",
+            "--cwd",
+            str(tmp_path),
+            "--always-approve",
+            "-m",
+            "grok-4.7",
+            "--effort",
+            "high",
+        ]
+        assert "--deny" not in danger_argv
+        assert "--disallowed-tools" not in danger_argv
+    finally:
+        GrokBuildAdapter().cleanup_invocation(workspace)
+        GrokBuildAdapter().cleanup_invocation(danger)
 
 
 def test_trail_isolation_does_not_inherit_write_approval(tmp_path):
