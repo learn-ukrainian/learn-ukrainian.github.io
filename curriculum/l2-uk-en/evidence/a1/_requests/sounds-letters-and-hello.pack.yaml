@@ -73,6 +73,10 @@ texts:
     source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0080}
     span: {first_words: 'Бачу Р, р (ер).', last_words: "Чую [р], [р']."}
     supports: 'Primer printed page 82: Р after П; adult Latin-shape interference is checked against this sound.'
+  - id: T-019
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058}
+    span: {first_words: 'Прочитай імена дітей.', last_words: 'Іван Вова Ніна Нонна'}
+    supports: 'Primer printed page 60: decodable personal names using taught letters.'
 exercises:
   - id: X-001
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}

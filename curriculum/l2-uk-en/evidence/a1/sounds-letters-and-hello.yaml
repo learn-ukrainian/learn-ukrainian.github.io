@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 014163ecb5ab9725f499c1c398ac69a80fd72e38
+  mcp_commit: 5d237ca9deada72850a8b71d2e097b7469509a0d
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 111d53b7127a9a13850a2b8b3dfece69587bbadf9e607bf60d4e7033ff1f8862
+  sources_db: b864f002740733f9c97a1ec03e2a83b800b3f015d716a4716c85d0616d953a3e
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -463,11 +463,28 @@ texts:
     row_sha256: 79a7aded6a89dd72ffd48a0d0342f3bc43c87866cb15e6af43efa0e889efe219
     section_id: 13031
   supports: 'Primer printed page 82: Р after П; adult Latin-shape interference is checked against this sound.'
+- id: T-019
+  quote: 'Прочитай імена дітей. Допоможи дітям від-
+
+    шукати їхніх друзів серед тварин.
+
+    Іван Вова Ніна Нонна'
+  sha256: 063f8f7afb04210ac7e2307bac3ed2611b541a6c7db529329b7a75fcb94d75f8
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 62
+    row_sha256: e635252ed2329a8b5e60594a9fd48b953ebdd1bf8e4d1b8ac9a8194815fa1712
+    section_id: 13009
+  supports: 'Primer printed page 60: decodable personal names using taught letters.'
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=FUF9Za-1bzY
     http_status: 200
   id: V-001
@@ -476,7 +493,7 @@ videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=GMcB5rsb3HM
     http_status: 200
   id: V-002
@@ -485,7 +502,7 @@ videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=5J9ZaM3-rrI
     http_status: 200
   id: V-003
@@ -494,7 +511,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
     http_status: 200
   id: V-004
@@ -503,7 +520,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
     http_status: 200
   id: V-005
@@ -512,7 +529,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
     http_status: 200
   id: V-006
@@ -521,7 +538,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=W-1rCu0indE
     http_status: 200
   id: V-007
@@ -530,7 +547,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
     http_status: 200
   id: V-008
@@ -539,7 +556,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
     http_status: 200
   id: V-009
@@ -548,7 +565,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
     http_status: 200
   id: V-010
@@ -557,7 +574,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
     http_status: 200
   id: V-011
@@ -566,7 +583,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
     http_status: 200
   id: V-012
@@ -575,7 +592,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
     http_status: 200
   id: V-013
@@ -584,7 +601,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
     http_status: 200
   id: V-014
@@ -593,7 +610,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
     http_status: 200
   id: V-015
@@ -602,7 +619,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-27'
+    date: '2026-09-28'
     final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
     http_status: 200
   id: V-016

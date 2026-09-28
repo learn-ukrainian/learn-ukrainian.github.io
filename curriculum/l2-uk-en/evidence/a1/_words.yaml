@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 014163ecb5ab9725f499c1c398ac69a80fd72e38
+  mcp_commit: 5d237ca9deada72850a8b71d2e097b7469509a0d
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 2f6d3aebf6806eb01bd3c4d639253eaab0d50137a970e80eaa53bb49c4219d04
+  sources_db: a46d6d55af83016f467b8eb2f7f6b69a62de06a1a3b501a8c5ae42e42794a1f3
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -6969,3 +6969,457 @@ words:
     - 1
     row_sha256: d0d7f28dbf5adb5d7aefbf3d26734c4c14f9bf85d93f7d6953af652c6d744532
     source: ulif
+- entry:
+    entry_id: 239577
+    source: vesum
+  forms:
+  - form: Ніні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ні
+    tags: noun:anim:f:v_dav:prop:fname
+  - form: Ніно
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́но
+    tags: noun:anim:f:v_kly:prop:fname
+  - form: Ніні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ні
+    tags: noun:anim:f:v_mis:prop:fname
+  - form: Ніна
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́на
+    tags: noun:anim:f:v_naz:prop:fname
+  - form: Ніною
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ною
+    tags: noun:anim:f:v_oru:prop:fname
+  - form: Ніни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ни
+    tags: noun:anim:f:v_rod:prop:fname
+  - form: Ніну
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ну
+    tags: noun:anim:f:v_zna:prop:fname
+  - form: Нінам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́нам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Ніни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ни
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Нінах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́нах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Ніни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́ни
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Нінами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Ні́нами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Нін
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: Нін
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Нін
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: Нін
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-091
+  lemma: Ніна
+  note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
+    only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 241021
+    source: vesum
+  forms:
+  - form: Нонні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нні
+    tags: noun:anim:f:v_dav:prop:fname
+  - form: Нонно
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нно
+    tags: noun:anim:f:v_kly:prop:fname
+  - form: Нонні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нні
+    tags: noun:anim:f:v_mis:prop:fname
+  - form: Нонна
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нна
+    tags: noun:anim:f:v_naz:prop:fname
+  - form: Нонною
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нною
+    tags: noun:anim:f:v_oru:prop:fname
+  - form: Нонни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нни
+    tags: noun:anim:f:v_rod:prop:fname
+  - form: Нонну
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нну
+    tags: noun:anim:f:v_zna:prop:fname
+  - form: Ноннам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́ннам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Нонни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нни
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Ноннах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́ннах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Нонни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́нни
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Ноннами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Но́ннами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Нонн
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: Нонн
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Нонн
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: Нонн
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-092
+  lemma: Нонна
+  note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
+    only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 151545
+    source: vesum
+  forms:
+  - form: Іванові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нові
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Івану
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ну
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Іване
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́не
+    tags: noun:anim:m:v_kly:prop:fname
+  - form: Іванові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нові
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Івану
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ну
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Івані
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ні
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Іван
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́н
+    tags: noun:anim:m:v_naz:prop:fname
+  - form: Іваном
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ном
+    tags: noun:anim:m:v_oru:prop:fname
+  - form: Івана
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́на
+    tags: noun:anim:m:v_rod:prop:fname
+  - form: Івана
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́на
+    tags: noun:anim:m:v_zna:prop:fname
+  - form: Іванам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Івани
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ни
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Іванах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Івани
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́ни
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Іванами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Іванів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нів
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Іванів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Іва́нів
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-093
+  lemma: Іван
+  note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
+    only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 63779
+    source: vesum
+  forms:
+  - form: Вові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́ві
+    tags: noun:anim:m:v_dav:prop:fname
+  - form: Вово
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́во
+    tags: noun:anim:m:v_kly:prop:fname
+  - form: Вов
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: Вов
+    tags: noun:anim:m:v_kly:prop:fname:short
+  - form: Вові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́ві
+    tags: noun:anim:m:v_mis:prop:fname
+  - form: Вова
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́ва
+    tags: noun:anim:m:v_naz:prop:fname
+  - form: Вовою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́вою
+    tags: noun:anim:m:v_oru:prop:fname
+  - form: Вови
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́ви
+    tags: noun:anim:m:v_rod:prop:fname
+  - form: Вову
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Во́ву
+    tags: noun:anim:m:v_zna:prop:fname
+  id: W-094
+  lemma: Вова
+  note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
+    only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 617
+    source: vesum
+  forms:
+  - form: Аві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́ві
+    tags: noun:anim:f:v_dav:prop:fname
+  - form: Аво
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́во
+    tags: noun:anim:f:v_kly:prop:fname
+  - form: Аві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́ві
+    tags: noun:anim:f:v_mis:prop:fname
+  - form: Ава
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́ва
+    tags: noun:anim:f:v_naz:prop:fname
+  - form: Авою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́вою
+    tags: noun:anim:f:v_oru:prop:fname
+  - form: Ави
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́ви
+    tags: noun:anim:f:v_rod:prop:fname
+  - form: Аву
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: А́ву
+    tags: noun:anim:f:v_zna:prop:fname
+  id: W-095
+  lemma: Ава
+  note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
+    only.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A1
+    row_id: 771
+    row_sha256: 7a487dc0dd62d6761dc66a7b163a06ca679ed03ba657187f1071c8c1d6caf2c4
+    source: puls
+  entry:
+    entry_id: 381084
+    source: vesum
+  forms:
+  - form: так
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: так
+    tags: part
+  gloss_en: yes (word used to indicate agreement or acceptance)
+  gloss_ref:
+    id: 129
+    row_sha256: 3748cf6d062c6bf60a9df494a0bbf2c0ecfbb55703203b93de5a8df6b6407b80
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-096
+  lemma: так
+  note: Affirmative particle for polar questions in recap, paired with W-062 ні; PULS A1.
+  pos: part
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending

@@ -18,3 +18,9 @@ words:
   - {lemma: читати, pos: verb, want: W-088, note: 'Read: primer reading instruction; lexical action only.'}
   - {lemma: писати, pos: verb, want: W-089, note: 'Write and copy: primer workbook action; lexical action only.'}
   - {lemma: повторення, pos: noun, want: W-090, note: 'Recap title and task label, from ULP S1 lesson 10 review pattern.'}
+  - {lemma: Ніна, pos: noun, entry: {source: vesum, entry_id: 239577}, want: W-091, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+  - {lemma: Нонна, pos: noun, entry: {source: vesum, entry_id: 241021}, want: W-092, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+  - {lemma: Іван, pos: noun, entry: {source: vesum, entry_id: 151545}, want: W-093, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+  - {lemma: Вова, pos: noun, entry: {source: vesum, entry_id: 63779}, want: W-094, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+  - {lemma: Ава, pos: noun, entry: {source: vesum, entry_id: 617}, want: W-095, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+  - {lemma: так, pos: part, entry: {source: vesum, entry_id: 381084}, want: W-096, note: 'Affirmative particle for polar questions in recap, paired with W-062 ні; PULS A1.'}

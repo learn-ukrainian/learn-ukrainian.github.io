@@ -628,3 +628,45 @@
   id: W-090
   lemma: повторення
   pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 239577
+    source: vesum
+  id: W-091
+  lemma: Ніна
+  pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 241021
+    source: vesum
+  id: W-092
+  lemma: Нонна
+  pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 151545
+    source: vesum
+  id: W-093
+  lemma: Іван
+  pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 63779
+    source: vesum
+  id: W-094
+  lemma: Вова
+  pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 617
+    source: vesum
+  id: W-095
+  lemma: Ава
+  pos: noun
+- allocated_at_build: f9b11657fa66d3725f5e8ad258ae871ffb80ff605b78d49feea16dd66794d3ef
+  entry:
+    entry_id: 381084
+    source: vesum
+  id: W-096
+  lemma: так
+  pos: part
