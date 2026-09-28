@@ -37,13 +37,23 @@ A spelling match is not a meaning match (#9002: the region «Поділля» li
 the common noun поділля "lowland"; «реєстр» "register" linked to реєстр
 "inventory"). After a target is resolved, a sense check can still drop it:
 
-  * a proper noun in the lesson — a proper-noun ``pos`` label, the word
-    capitalised in its example away from a sentence start, or a capitalised
-    headword with a VESUM ``prop`` reading — never links to a common-noun
-    article;
-  * when the lesson gives an English translation, the article must have an
-    English sense that shares a normalised content word with it. An article
-    with no English sense cannot confirm the meaning, so it gets no link.
+  * a proper noun in the lesson — a proper-noun ``pos`` label, or a
+    capitalised form with a VESUM ``prop`` reading (the headword, or the word
+    as its example writes it away from a sentence start) — never links to a
+    common-noun article. The capital alone is not enough: formal address
+    capitalises titles too («Шановна пані Голово!»);
+  * when the lesson's translation has English words, the article must have an
+    English sense that shares a normalised content word with them. Only the
+    English portion of either side counts: a Ukrainian note such as
+    "language register (мовний реєстр)" or "to belong Conjugation: 2nd (-ать)"
+    neither skips the check nor hides an article's sense. An article with no
+    English sense cannot confirm the meaning, so it gets no link.
+
+English words are compared after folding inflection (plural and third-person
+``-s``, ``-ed``, ``-ing``, irregular pronoun and verb forms: "has" ~ "have",
+"whom" ~ "who", "these" ~ "this") and British spelling ("centre" ~ "center",
+"colouring" ~ "coloring"), because an inflected lesson form links to its
+lemma's article.
 
 The vocabulary YAML is never modified — slugs are derived here at render time.
 """
@@ -96,12 +106,29 @@ _SENSE_POS_LABEL = re.compile(
     r"conjunction|interjection|determiner|particle|numeral|predicative)\)\s*$",
     re.IGNORECASE,
 )
-_LATIN = re.compile(r"[A-Za-z]")
 _CYRILLIC = re.compile(r"[\u0400-\u04FF]")
+# Learner-gloss metadata tail: "to belong Conjugation: 2nd (-ать) | ―".
+_CONJUGATION_NOTE = re.compile(r"\bConjugation:.*$", re.IGNORECASE | re.DOTALL)
+# A bracketed group with no nested brackets; dropped when it holds Cyrillic.
+_BRACKETED = re.compile(r"\([^()\[\]]*\)|\[[^()\[\]]*\]")
 _EN_WORD = re.compile(r"[a-z]+(?:'[a-z]+)?")
 # Only words that carry no meaning of their own. Everything else — "who",
 # "here", "noun" — is itself a sense some article must be able to match.
 _EN_STOPWORDS = frozenset({"a", "an", "the", "to", "of", "and", "or"})
+# Irregular forms folded onto the form a dictionary sense uses: an inflected
+# lesson form ("кого" 'whom', "мусить" 'has to') links to its lemma's article
+# ("хто" 'who', "мусити" 'to have to').
+_EN_IRREGULAR = {
+    "me": "i", "him": "he", "his": "he", "her": "she", "hers": "she",
+    "us": "we", "them": "they", "their": "they", "theirs": "they",
+    "whom": "who", "whose": "who", "these": "this", "those": "that",
+    "am": "be", "is": "be", "are": "be", "was": "be", "were": "be", "been": "be", "being": "be",
+    "has": "have", "had": "have", "having": "have",
+    "does": "do", "did": "do", "done": "do",
+    "people": "person", "men": "man", "women": "woman", "children": "child",
+    "grey": "gray",
+}
+_EN_VOWELS = frozenset("aeiouy")
 _UK_WORD = re.compile(r"[^\W\d_]+(?:'[^\W\d_]+)*")
 # A capital right after one of these (or at the start) is a sentence start.
 _SENTENCE_BREAKS = ".!?…:"
@@ -133,41 +160,86 @@ def normalize_lemma(word: str) -> str:
     return _strip_stress(word).strip().casefold()
 
 
-def _english_word(token: str) -> str:
-    """Fold possessive and regular plural endings: "carpathians" → "carpathian"."""
-    if token.endswith("'s"):
-        token = token[:-2]
-    if len(token) > 4 and token.endswith("ies"):
-        return token[:-3] + "y"
-    if len(token) > 4 and token.endswith(("sses", "xes", "zes", "ches", "shes")):
-        return token[:-2]
-    if len(token) > 3 and token.endswith("s") and not token.endswith(("ss", "us", "is")):
-        return token[:-1]
+def _american_spelling(token: str) -> str:
+    """Fold British spellings: "centre" → "center", "colour" → "color", "-isation" → "-ization"."""
+    token = _EN_IRREGULAR.get(token, token)
+    if token.endswith("isation"):
+        return token[:-7] + "ization"
+    if len(token) > 4 and token.endswith("our"):
+        return token[:-3] + "or"
+    if len(token) > 4 and token.endswith("re") and token[-3] not in _EN_VOWELS:
+        return token[:-2] + "er"
     return token
 
 
+def _english_word_forms(token: str) -> set[str]:
+    """Return the forms one English token may stand for.
+
+    Plurals and irregular forms fold to one form ("carpathians" →
+    "carpathian", "has" → "have"). ``-ed`` / ``-ing`` cannot tell whether a
+    final ``e`` was dropped, so both stems are kept: "lived" → {"lived",
+    "liv", "live"} meets "live".
+    """
+    if token.endswith("'s"):
+        token = token[:-2]
+    if token in _EN_IRREGULAR:
+        return {_EN_IRREGULAR[token]}
+    forms = {token}
+    if len(token) > 4 and token.endswith("ies"):
+        forms = {token[:-3] + "y"}
+    elif len(token) > 4 and token.endswith(("sses", "xes", "zes", "ches", "shes")):
+        forms = {token[:-2]}
+    elif len(token) > 4 and token.endswith("oes"):
+        forms = {token[:-1], token[:-2]}
+    elif len(token) > 3 and token.endswith("s") and not token.endswith(("ss", "us", "is")):
+        forms = {token[:-1]}
+    else:
+        for suffix, min_length in (("ing", 6), ("ed", 5)):
+            stem = token[: -len(suffix)]
+            if len(token) >= min_length and token.endswith(suffix) and set(stem) & _EN_VOWELS:
+                forms |= {stem, stem + "e"}
+                if len(stem) > 2 and stem[-1] == stem[-2] and stem[-1] not in _EN_VOWELS | {"l", "s", "z"}:
+                    forms.add(stem[:-1])
+                break
+    return {_american_spelling(form) for form in forms}
+
+
+def _english_portion(text: str) -> str:
+    """Drop the Ukrainian notes from a gloss, keeping its English words.
+
+    "language register (мовний реєстр)" → "language register";
+    "to belong Conjugation: 2nd (-ать) | ―" → "to belong";
+    "to belong (+ до, + genitive)" → "to belong".
+    """
+    text = _CONJUGATION_NOTE.sub("", text)
+    previous = None
+    while previous != text:
+        previous = text
+        text = _BRACKETED.sub(lambda match: " " if _CYRILLIC.search(match.group(0)) else match.group(0), text)
+    return _CYRILLIC.sub(" ", text)
+
+
 def english_content_words(text: str) -> frozenset[str]:
-    """Return the normalised content words of one English gloss or sense.
+    """Return the normalised content words of the English in one gloss or sense.
 
     A gloss made only of stopwords ("to", "a") keeps them, so a function-word
-    card can still match a function-word sense.
+    card can still match a function-word sense. Cyrillic text contributes
+    nothing (see :func:`_english_portion`).
     """
-    text = _SENSE_POS_LABEL.sub("", text)
+    text = _SENSE_POS_LABEL.sub("", _english_portion(text))
     folded = unicodedata.normalize("NFKD", text.casefold())
-    words = {_english_word(token) for token in _EN_WORD.findall(folded)}
+    words: set[str] = set()
+    for token in _EN_WORD.findall(folded):
+        words |= _english_word_forms(token)
     words.discard("")
     return frozenset(words - _EN_STOPWORDS or words)
 
 
-def _is_english(text: str | None) -> bool:
-    return bool(text) and bool(_LATIN.search(text)) and not _CYRILLIC.search(text)
-
-
 def _entry_english_senses(entry: dict) -> list[str]:
-    """English senses an Atlas article shows: its gloss and translations."""
+    """Senses an Atlas article shows that carry English: its gloss and translations."""
     senses: list[str] = []
     gloss = entry.get("gloss")
-    if isinstance(gloss, str) and _is_english(gloss):
+    if isinstance(gloss, str):
         senses.append(gloss)
     translation = (entry.get("enrichment") or {}).get("translation")
     if isinstance(translation, dict):
@@ -177,7 +249,7 @@ def _entry_english_senses(entry: dict) -> list[str]:
                 senses.extend(value for value in values if isinstance(value, str))
         if isinstance(translation.get("gloss"), str):
             senses.append(translation["gloss"])
-    return [sense for sense in senses if _is_english(sense)]
+    return [sense for sense in senses if english_content_words(sense)]
 
 
 def _entry_is_proper(entry: dict, senses: list[str]) -> bool:
@@ -262,30 +334,36 @@ def _vesum_has_proper_reading(form: str) -> bool:
     return row is not None
 
 
-def _capitalised_mid_sentence(word: str, example: str) -> bool:
-    """True when ``word`` appears capitalised in ``example`` away from a sentence start."""
+def _capitalised_mid_sentence(word: str, example: str) -> list[str]:
+    """Return the forms of ``word`` that ``example`` capitalises away from a sentence start."""
     target = normalize_lemma(word)
     if not target or " " in target:
-        return False
+        return []
     text = _strip_stress(example)
+    forms: list[str] = []
     for match in _UK_WORD.finditer(text):
         token = match.group(0)
         if not token[:1].isupper() or token.casefold() != target:
             continue
         before = text[: match.start()].rstrip(_OPENING_PUNCTUATION)
         if before and before[-1] not in _SENTENCE_BREAKS:
-            return True
-    return False
+            forms.append(token)
+    return forms
 
 
 def lesson_word_is_proper(word: str, pos: str | None = None, example: str | None = None) -> bool:
-    """Decide whether the lesson uses ``word`` as a proper noun."""
+    """Decide whether the lesson uses ``word`` as a proper noun.
+
+    A capital is evidence only when VESUM confirms a proper-name reading for
+    that capitalised form: «Поділля» has one, the title in «пані Голово» has not.
+    """
     if pos and _PROPER_POS.search(pos):
         return True
-    if example and _capitalised_mid_sentence(word, example):
-        return True
     surface = _strip_stress(word or "").strip()
-    return bool(surface) and " " not in surface and surface[:1].isupper() and _vesum_has_proper_reading(surface)
+    candidates = [surface] if surface and " " not in surface and surface[:1].isupper() else []
+    if example:
+        candidates.extend(_capitalised_mid_sentence(word, example))
+    return any(_vesum_has_proper_reading(form) for form in dict.fromkeys(candidates))
 
 
 def _sense_allows(
@@ -301,9 +379,10 @@ def _sense_allows(
     article = _load_manifest_tables(manifest_path)[1].get(slug)
     if lesson_word_is_proper(lesson_word, pos, example) and not (article and article.proper):
         return False
-    if not _is_english(translation):
+    lesson_english = english_content_words(translation or "")
+    if not lesson_english:
         return True
-    return article is not None and bool(english_content_words(translation or "") & article.english)
+    return article is not None and bool(lesson_english & article.english)
 
 
 def _href(slug: str) -> str:
@@ -435,8 +514,9 @@ def atlas_href_for(
         aliases_path: alias rows (``a`` → ``s``) used in fixture mode.
         published_slugs: fixture-mode page set. When omitted, every fixture
             manifest slug counts as published.
-        translation: the lesson card's translation. When it is English, the
-            article must share a content word with one of its English senses.
+        translation: the lesson card's translation. When it has English
+            words, the article must share a content word with one of its
+            English senses.
         pos: the lesson card's part-of-speech label.
         example: the lesson card's example sentence.
         lesson_word: the word as the lesson writes it, when ``word`` is a
