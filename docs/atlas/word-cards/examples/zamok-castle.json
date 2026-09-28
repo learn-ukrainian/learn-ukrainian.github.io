@@ -1,0 +1,1268 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_7k3m9q2xw4pd",
+  "card_kind": "lexeme",
+  "state": "active",
+  "merged_into": null,
+  "split_into": null,
+  "key_at_creation": {
+    "spelling": "замок",
+    "stress_patterns": [
+      "за́мок"
+    ],
+    "pos": "noun",
+    "paradigm_key": "vesum:entry:128973",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:128973"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:76792"
+      }
+    ]
+  },
+  "identity": {
+    "confidence": "high",
+    "method": "stress_and_paradigm",
+    "decided_by": "rules:rules-v1-draft",
+    "source_keys": [
+      {
+        "source_id": "vesum",
+        "key": "vesum:entry:128973",
+        "snapshot_id": "vesum@53923150073b4fc7",
+        "match_note": "xp2 за́мок (будівля); v_rod замку"
+      },
+      {
+        "source_id": "ulif",
+        "key": "ulif:entry:76792",
+        "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+        "match_note": "homonym 2 за́мок (будівля); родовий за́мку"
+      },
+      {
+        "source_id": "vts",
+        "key": "vts:замок#I",
+        "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+        "match_note": "'I з`амок' stress after з"
+      },
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:замок",
+        "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+        "match_note": "legacy merged article castle / lock; split"
+      },
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:heteronym:замок/за́мок",
+        "snapshot_id": "atlas0@manifest-0.1/2026-09-11"
+      }
+    ],
+    "notes": [
+      "VESUM and ULIF number the homonyms differently (vesum xp1 = lock, xp2 = castle; ulif 1 = settlement, 2 = castle, 3 = lock); matched by genitive singular and stress, never by number or spelling."
+    ]
+  },
+  "senses": [
+    {
+      "sense_id": "ws_a1b2c3d4e5f6",
+      "order": 1,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "vts",
+          "source_sense_key": "vts:замок#I/1"
+        },
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:section:96931"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_fe97882f7c0840d052a95a63",
+          "values": [
+            {
+              "value_norm": "Укріплене житло феодала доби середньовіччя з оборонними, господарськими, культовими і т. ін. будівлями, зазвичай оточене високим кам'яним муром із кількома вежами. || Великий поміщицький будинок; палац.",
+              "assertion_ids": [
+                "wa_fe97882f7c0840d052a95a63"
+              ],
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
+            }
+          ],
+          "independence_groups_agreeing": 0,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 0,
+          "comparison": "text",
+          "proposition": "definition_uk(ws_a1b2c3d4e5f6) ∋ <text>; parallel texts, identical texts corroborate"
+        },
+        "synonyms": {
+          "state": "single-source",
+          "selected": "wa_46116b167f31381472490503",
+          "values": [
+            {
+              "value_norm": "[\"ПАЛА́Ц\", \"ПАЛА́ТИ\", \"ДВІРО́К\", \"ДВОРЕ́ЦЬ\", \"ЗА́МОК\"]",
+              "assertion_ids": [
+                "wa_46116b167f31381472490503"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 1
+            }
+          ],
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "synonyms(ws_a1b2c3d4e5f6) ∋ <text>; parallel texts, identical texts corroborate"
+        }
+      }
+    },
+    {
+      "sense_id": "ws_b2c3d4e5f6g7",
+      "order": 2,
+      "state": "active",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "vts",
+          "source_sense_key": "vts:замок#I/2"
+        }
+      ],
+      "fields": {
+        "definition_uk": {
+          "state": "single-source",
+          "selected": "wa_a8d8a95109e94b86fb033937",
+          "values": [
+            {
+              "value_norm": "заст., рідко. Тюремна будівля; тюрма.",
+              "assertion_ids": [
+                "wa_a8d8a95109e94b86fb033937"
+              ],
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
+            }
+          ],
+          "independence_groups_agreeing": 0,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 0,
+          "comparison": "text",
+          "proposition": "definition_uk(ws_b2c3d4e5f6g7) ∋ <text>; parallel texts, identical texts corroborate"
+        },
+        "register": {
+          "state": "single-source",
+          "selected": "wa_5514bbbe5cd05ea322593a0a",
+          "values": [
+            {
+              "value_norm": "заст., рідко",
+              "assertion_ids": [
+                "wa_5514bbbe5cd05ea322593a0a"
+              ],
+              "independence_groups": [],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 0
+            }
+          ],
+          "independence_groups_agreeing": 0,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 0,
+          "comparison": "text",
+          "proposition": "register(ws_b2c3d4e5f6g7) ∋ <text>; parallel texts, identical texts corroborate"
+        }
+      }
+    },
+    {
+      "sense_id": "ws_c3d4e5f6g7h8",
+      "order": 3,
+      "state": "unsplit",
+      "merged_into": null,
+      "sense_map": [
+        {
+          "source_id": "ulif",
+          "source_sense_key": "ulif:section:96930"
+        },
+        {
+          "source_id": "synonyms_karavansky",
+          "source_sense_key": "slovnyk_me:synonyms_karavansky:замок",
+          "mapped_by": "rules: single unit on the source side only; awaiting a sense_map overlay"
+        }
+      ],
+      "fields": {
+        "synonyms": {
+          "state": "single-source",
+          "selected": "wa_b96ad8e79bb3874394ee5535",
+          "values": [
+            {
+              "value_norm": "[\"КРЕМЛЬ\", \"ДИТИ́НЕЦЬ\", \"ЗА́МОК\"]",
+              "assertion_ids": [
+                "wa_b96ad8e79bb3874394ee5535"
+              ],
+              "independence_groups": [
+                "G-ULIF"
+              ],
+              "mapping_evidenced": true,
+              "independence_groups_evidenced": 1
+            },
+            {
+              "value_norm": "[\"фортеця\", \"бастіон\", \"цитадель\", \"шато\"]",
+              "assertion_ids": [
+                "wa_275fd1703539997d6e631037"
+              ],
+              "independence_groups": [
+                "G-KARAVANSKY"
+              ],
+              "mapping_evidenced": false,
+              "independence_groups_evidenced": 0
+            }
+          ],
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "synonyms(ws_c3d4e5f6g7h8) ∋ <text>; parallel texts, identical texts corroborate"
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "wl_5ab31081f385044850c7d5d9",
+      "type": "homograph_of",
+      "endpoints": [
+        {
+          "id": "wc_7k3m9q2xw4pd"
+        },
+        {
+          "id": "wc_c2v8n5rt6yhq"
+        }
+      ],
+      "basis": "derived",
+      "assertion_ids": [
+        "wa_62c6b4bcf85fe14751cc40ef",
+        "wa_84a4dbaa12699bbaa3e254d6",
+        "wa_857969108a36010415e2e6cb",
+        "wa_e9aaa6b0196158574ab7d38d"
+      ],
+      "state": "active",
+      "derived_by": "rules:rules-v1-draft equal key_at_creation.spelling (case-insensitive), distinct identity"
+    },
+    {
+      "link_id": "wl_2773aee61819a4cc282910dc",
+      "type": "homograph_of",
+      "endpoints": [
+        {
+          "id": "wc_7k3m9q2xw4pd"
+        },
+        {
+          "id": "wc_e9p1s4dz7xkm"
+        }
+      ],
+      "basis": "derived",
+      "assertion_ids": [
+        "wa_19575ab28a8f1af8e929db78",
+        "wa_575969b16f415aea073a3393",
+        "wa_857969108a36010415e2e6cb",
+        "wa_e9aaa6b0196158574ab7d38d"
+      ],
+      "state": "active",
+      "derived_by": "rules:rules-v1-draft equal key_at_creation.spelling (case-insensitive), distinct identity"
+    }
+  ],
+  "fields": {
+    "cefr": {
+      "state": "single-source",
+      "selected": "wa_3eb58a6bdfa21afcee7afecb",
+      "values": [
+        {
+          "value_norm": "A2",
+          "assertion_ids": [
+            "wa_3eb58a6bdfa21afcee7afecb"
+          ],
+          "independence_groups": [
+            "G-PULS"
+          ],
+          "mapping_evidenced": false,
+          "independence_groups_evidenced": 0
+        }
+      ],
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": false,
+      "independence_groups_evidenced": 0,
+      "comparison": "scalar",
+      "proposition": "cefr(wc_7k3m9q2xw4pd) = <value_norm>"
+    },
+    "english_gloss": {
+      "state": "single-source",
+      "selected": "wa_06c862b935db9587706697e3",
+      "values": [
+        {
+          "value_norm": "castle",
+          "assertion_ids": [
+            "wa_06c862b935db9587706697e3"
+          ],
+          "independence_groups": [
+            "G-WIKI"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1
+        }
+      ],
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "text",
+      "proposition": "english_gloss(wc_7k3m9q2xw4pd) ∋ <text>; parallel texts, identical texts corroborate",
+      "level_policy": "scaffold: shown at A1 by design, never raised from A2 (#8983)"
+    },
+    "gender": {
+      "state": "verified",
+      "selected": "wa_64985b25438a5551c8f8efa4",
+      "values": [
+        {
+          "value_norm": "m",
+          "assertion_ids": [
+            "wa_64985b25438a5551c8f8efa4",
+            "wa_c4bdb7900e81b5fc2cfab42b"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      ],
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "gender(wc_7k3m9q2xw4pd) = <value_norm>"
+    },
+    "paradigm": {
+      "state": "verified",
+      "selected": [
+        "wa_47af2911b67d7e2cb2d9209c"
+      ],
+      "values": [
+        {
+          "value_norm": "rod.sg=замку",
+          "assertion_ids": [
+            "wa_47af2911b67d7e2cb2d9209c",
+            "wa_f94ea907ae57ba79666f24f7"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      ],
+      "independence_groups_agreeing": 2,
+      "propositions": {
+        "rod.sg": {
+          "state": "verified",
+          "selected": "wa_47af2911b67d7e2cb2d9209c",
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      },
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "keyed",
+      "proposition": "paradigm(wc_7k3m9q2xw4pd)[<key>] = <value>; one proposition per key"
+    },
+    "pos": {
+      "state": "verified",
+      "selected": "wa_434a62f92895117fb94cb05c",
+      "values": [
+        {
+          "value_norm": "noun",
+          "assertion_ids": [
+            "wa_434a62f92895117fb94cb05c",
+            "wa_87d17a39b6c749ff27ca2ca2"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      ],
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "pos(wc_7k3m9q2xw4pd) = <value_norm>"
+    },
+    "spelling": {
+      "state": "verified",
+      "selected": "wa_857969108a36010415e2e6cb",
+      "values": [
+        {
+          "value_norm": "замок",
+          "assertion_ids": [
+            "wa_857969108a36010415e2e6cb",
+            "wa_e9aaa6b0196158574ab7d38d"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 2
+        }
+      ],
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "spelling(wc_7k3m9q2xw4pd) = <value_norm>"
+    },
+    "stress": {
+      "state": "verified",
+      "selected": "wa_5888b96f6142b2da61ca2973",
+      "values": [
+        {
+          "value_norm": "за́мок",
+          "assertion_ids": [
+            "wa_5888b96f6142b2da61ca2973",
+            "wa_af42ba8e1e4cece8a46a08cd",
+            "wa_ee4ce52d28ed6153c5214c8c"
+          ],
+          "independence_groups": [
+            "G-ULIF",
+            "G-VESUM",
+            "G-WIKI"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 3
+        }
+      ],
+      "independence_groups_agreeing": 3,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 3,
+      "comparison": "scalar",
+      "proposition": "stress(wc_7k3m9q2xw4pd) = <value_norm>"
+    }
+  },
+  "assertions": [
+    {
+      "assertion_id": "wa_e9aaa6b0196158574ab7d38d",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "spelling",
+      "value": "замок",
+      "value_norm": "замок",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128973",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
+    },
+    {
+      "assertion_id": "wa_857969108a36010415e2e6cb",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "spelling",
+      "value": "замок",
+      "value_norm": "замок",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_5888b96f6142b2da61ca2973",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "stress",
+      "value": "за́мок",
+      "value_norm": "за́мок",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792 canonical_headword",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_af42ba8e1e4cece8a46a08cd",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "stress",
+      "value": "за́мок (будівля)",
+      "value_norm": "за́мок",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128973 source_comment",
+      "extraction_version": "v1",
+      "extraction_confidence": "medium",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
+    },
+    {
+      "assertion_id": "wa_ee4ce52d28ed6153c5214c8c",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "stress",
+      "value": "за́мок",
+      "value_norm": "за́мок",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/stress (kaikki/Wiktionary)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "basis": "stress",
+        "note": "kaikki row is spelling-keyed; its stress за́мок matches this card only (lock is замо́к)"
+      }
+    },
+    {
+      "assertion_id": "wa_87d17a39b6c749ff27ca2ca2",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "pos",
+      "value": "noun",
+      "value_norm": "noun",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128973 pos",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
+    },
+    {
+      "assertion_id": "wa_434a62f92895117fb94cb05c",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "pos",
+      "value": "іменник чоловічого роду",
+      "value_norm": "noun",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_64985b25438a5551c8f8efa4",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "gender",
+      "value": "m",
+      "value_norm": "m",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128973 tags noun:inanim:m:v_naz:xp2",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
+    },
+    {
+      "assertion_id": "wa_c4bdb7900e81b5fc2cfab42b",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "gender",
+      "value": "іменник чоловічого роду",
+      "value_norm": "m",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792 grammatical_label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_47af2911b67d7e2cb2d9209c",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "paradigm",
+      "value": [
+        [
+          "називний",
+          "за́мок",
+          "за́мки"
+        ],
+        [
+          "родовий",
+          "за́мку",
+          "за́мків"
+        ],
+        [
+          "давальний",
+          "за́мку, за́мкові",
+          "за́мкам"
+        ]
+      ],
+      "value_norm": "rod.sg=замку",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792/section:96929 rows[1..3]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_f94ea907ae57ba79666f24f7",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "paradigm",
+      "value": {
+        "v_rod_sg": "замку",
+        "v_dav_sg": [
+          "замкові",
+          "замку"
+        ]
+      },
+      "value_norm": "rod.sg=замку",
+      "source_id": "vesum",
+      "snapshot_id": "vesum@53923150073b4fc7",
+      "locator": "vesum:entry:128973 forms",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vesum extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vesum",
+        "register_version": 2
+      },
+      "independence_group": "G-VESUM",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_xbvdyht4j17t",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2"
+    },
+    {
+      "assertion_id": "wa_3eb58a6bdfa21afcee7afecb",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "cefr",
+      "value": "A2",
+      "value_norm": "A2",
+      "source_id": "puls",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "sources.puls_cefr:id:4340 (замок, іменник)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "puls extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "puls",
+        "register_version": 2
+      },
+      "independence_group": "G-PULS",
+      "tier": 2,
+      "status": "active",
+      "source_record_id": "sr_3bzzw6z5fk2n",
+      "source_record_key": "puls:record:замок/іменник/A2",
+      "mapping": {
+        "confidence": "medium",
+        "basis": "spelling",
+        "ambiguous": true,
+        "note": "PULS rows are keyed by spelling and this spelling has several cards; retained and shown, but not evidence for a dependent eligibility rule until an overlay maps the row (schema.md §9.5)"
+      }
+    },
+    {
+      "assertion_id": "wa_06c862b935db9587706697e3",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "english_gloss",
+      "value": "castle",
+      "value_norm": "castle",
+      "source_id": "kaikki",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/meaning definitions[0]",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "kaikki extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "kaikki",
+        "register_version": 2
+      },
+      "independence_group": "G-WIKI",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "basis": "sense",
+        "note": "spelling-keyed list [castle, lock]; item mapped by rule: matches ULIF sense_gloss (будівля)"
+      }
+    },
+    {
+      "assertion_id": "wa_dc9aade56998dd5f330df31d",
+      "subject": {
+        "kind": "card",
+        "id": "wc_7k3m9q2xw4pd"
+      },
+      "field": "english_gloss",
+      "value": "castle, fortress, palace",
+      "value_norm": "castle, fortress, palace",
+      "source_id": "atlas_curated",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "site/src/lib/lexicon/curated-heteronyms.ts замок[0].gloss",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "curator",
+        "name": "curated-heteronyms batch",
+        "version": "13 batches"
+      },
+      "review": {
+        "status": "reviewed",
+        "lane": "human",
+        "record": "#8334 side file"
+      },
+      "licence_ref": {
+        "register_source_id": "atlas_curated",
+        "register_version": 2
+      },
+      "independence_group": "G-PROJECT",
+      "tier": 3,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_fe97882f7c0840d052a95a63",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_a1b2c3d4e5f6"
+      },
+      "field": "definition_uk",
+      "value": "Укріплене житло феодала доби середньовіччя з оборонними, господарськими, культовими і т. ін. будівлями, зазвичай оточене високим кам'яним муром із кількома вежами. || Великий поміщицький будинок; палац.",
+      "value_norm": "Укріплене житло феодала доби середньовіччя з оборонними, господарськими, культовими і т. ін. будівлями, зазвичай оточене високим кам'яним муром із кількома вежами. || Великий поміщицький будинок; палац.",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/definition_cards vts 'I з`амок' 1》",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vts extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "high",
+        "note": "ВТС homonym I = castle (stress mark after з)"
+      }
+    },
+    {
+      "assertion_id": "wa_46116b167f31381472490503",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_a1b2c3d4e5f6"
+      },
+      "field": "synonyms",
+      "value": [
+        "ПАЛА́Ц",
+        "ПАЛА́ТИ",
+        "ДВІРО́К",
+        "ДВОРЕ́ЦЬ",
+        "ЗА́МОК"
+      ],
+      "value_norm": "[\"ПАЛА́Ц\", \"ПАЛА́ТИ\", \"ДВІРО́К\", \"ДВОРЕ́ЦЬ\", \"ЗА́МОК\"]",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792/section:96931 (synonyms:2) terms",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    },
+    {
+      "assertion_id": "wa_275fd1703539997d6e631037",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_c3d4e5f6g7h8"
+      },
+      "field": "synonyms",
+      "value": [
+        "фортеця",
+        "бастіон",
+        "цитадель",
+        "шато"
+      ],
+      "value_norm": "[\"фортеця\", \"бастіон\", \"цитадель\", \"шато\"]",
+      "source_id": "synonyms_karavansky",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/synonyms (slovnyk.me: Словник синонімів Караванського)",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "synonyms_karavansky extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "synonyms_karavansky",
+        "register_version": 2
+      },
+      "independence_group": "G-KARAVANSKY",
+      "tier": 2,
+      "status": "active",
+      "mapping": {
+        "confidence": "medium",
+        "basis": "spelling",
+        "ambiguous": true,
+        "note": "spelling-keyed; one unit on the source side does not align it to a sense (§6): held unsplit"
+      }
+    },
+    {
+      "assertion_id": "wa_a8d8a95109e94b86fb033937",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_b2c3d4e5f6g7"
+      },
+      "field": "definition_uk",
+      "value": "заст., рідко. Тюремна будівля; тюрма.",
+      "value_norm": "заст., рідко. Тюремна будівля; тюрма.",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/definition_cards vts 'I з`амок' 2》",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vts extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_5514bbbe5cd05ea322593a0a",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_b2c3d4e5f6g7"
+      },
+      "field": "register",
+      "value": "заст., рідко",
+      "value_norm": "заст., рідко",
+      "source_id": "vts",
+      "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+      "locator": "atlas0:enrichment:замок/definition_cards vts 'I з`амок' 2》 label",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "vts extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "vts",
+        "register_version": 2
+      },
+      "independence_group": "G-VTS?",
+      "tier": 2,
+      "status": "active"
+    },
+    {
+      "assertion_id": "wa_b96ad8e79bb3874394ee5535",
+      "subject": {
+        "kind": "sense",
+        "id": "ws_c3d4e5f6g7h8"
+      },
+      "field": "synonyms",
+      "value": [
+        "КРЕМЛЬ",
+        "ДИТИ́НЕЦЬ",
+        "ЗА́МОК"
+      ],
+      "value_norm": "[\"КРЕМЛЬ\", \"ДИТИ́НЕЦЬ\", \"ЗА́МОК\"]",
+      "source_id": "ulif",
+      "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+      "locator": "ulif:entry:76792/section:96930 (synonyms:1) terms",
+      "extraction_version": "v1",
+      "extraction_confidence": "high",
+      "producer": {
+        "kind": "source_extract",
+        "name": "ulif extractor",
+        "version": "v1"
+      },
+      "review": {
+        "status": "none"
+      },
+      "licence_ref": {
+        "register_source_id": "ulif",
+        "register_version": 2
+      },
+      "independence_group": "G-ULIF",
+      "tier": 1,
+      "status": "active",
+      "source_record_id": "sr_syjx1t2hh922",
+      "source_record_key": "ulif:register:2795:10"
+    }
+  ],
+  "quality": {
+    "identity_confidence": "high",
+    "extraction_confidence_min": "medium",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "stress",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "stress verified (3 groups), identity high",
+          "cefr A2 is single-source but mapping_evidenced=false: PULS row 4340 is spelling-keyed and the spelling has two lexeme cards; the level band rule is unmet until an overlay maps the row (§9.5)"
+        ]
+      },
+      {
+        "mode": "synonyms",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "sense s1 synonyms single-source (ULIF group 96931)",
+          "cefr not evidenced for this card (see stress mode)",
+          "Караванський group held unsplit on s3 (§6), excluded"
+        ],
+        "sense_id": "ws_a1b2c3d4e5f6"
+      },
+      {
+        "mode": "meaning",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "definition_uk single-source ВТС; english_gloss single-source; needs sampled review before A1–B1 meaning items"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [],
+  "build": {
+    "build_id": "example-2026-09-28-r3",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "S": {
+        "ulif": {
+          "ref": "sources.ulif_dictua_entries + ulif_dictua_sections",
+          "content_sha256": "fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+          "note": "sorted content_sha256 of the 262,788 checked rows; sections are parsed from the same responses"
+        },
+        "puls": {
+          "ref": "sources.puls_cefr",
+          "content_sha256": "98fc5be3e986f944fcf84cad34325ecbf770d22fc2dc54caa4b548f06e7f6b5a",
+          "note": "5,939 rows, canonical-row recipe"
+        },
+        "frazeolohichnyi": {
+          "ref": "sources.frazeolohichnyi",
+          "content_sha256": "9889123be2ce073528ee038c66824ba35af118d2b702b4e8cb0723156015f108",
+          "note": "24,683 rows, canonical-row recipe"
+        },
+        "wiktionary": {
+          "ref": "sources.wiktionary",
+          "content_sha256": "ead3e1bc521293fde1cdbc3767d0131aca41e6b2e1701e93de17f919e3a89d69",
+          "note": "50,278 rows, canonical-row recipe"
+        },
+        "atlas0": {
+          "ref": "data/atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00",
+          "content_sha256": "fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca",
+          "note": "frozen file; source of the migrated kaikki, vts, slovnyk_me, synonyms_karavansky, ukrainian_word_stress, grac, grac_estimate and course_authored assertions"
+        },
+        "atlas_curated": {
+          "ref": "site/src/lib/lexicon/curated-heteronyms.ts",
+          "content_sha256": "14d56cb53fdf14dd7e8b0155a2f1770f740cff93b3e10f8f0eb5bfb67be72f99",
+          "note": "420-lemma side file (retired into the overlay at M2)"
+        }
+      },
+      "V": {
+        "vesum": {
+          "ref": "data/vesum.db vesum_build_metadata.canonical_jsonl_sha256",
+          "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+          "note": "schema_version vesum-reingest-v1"
+        }
+      },
+      "I": {
+        "identity_registry": {
+          "ref": "examples/companion/identity-registry.json",
+          "version": "registry_version 2",
+          "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253",
+          "note": "frozen before assembly; assembly refuses ids it does not allocate"
+        }
+      },
+      "O": {
+        "overlay": {
+          "ref": "examples/companion/overlay.json",
+          "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a",
+          "note": "one split entry"
+        },
+        "suppressions": {
+          "ref": "examples/companion/suppression-selectors.json",
+          "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61",
+          "note": "three selectors"
+        }
+      },
+      "R": {
+        "rules": {
+          "ref": "resolve() in build_examples.py",
+          "version": "rules-v1-draft"
+        },
+        "normaliser": {
+          "ref": "normalise() in build_examples.py",
+          "version": "norm-v1"
+        },
+        "register": {
+          "ref": "docs/sources/permissions-register.yaml",
+          "version": "schema_version 2, register_date 2026-09-28",
+          "content_sha256": "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+        }
+      }
+    },
+    "card_version": "cv_2d1b96ac6eef9f9b5e71f2ea"
+  }
+}
