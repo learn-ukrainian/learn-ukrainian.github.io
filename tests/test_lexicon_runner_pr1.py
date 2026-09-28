@@ -317,7 +317,8 @@ def test_runner_spawns_use_primary_project_interpreter(
 
     A primary checkout uses its own ``.venv/bin/python``. A linked worktree
     uses that same primary interpreter, not a worktree-local virtualenv.
-    ``sys.executable`` is only a fallback when it is a project interpreter.
+    ``sys.executable`` is a fallback only when it is the requested checkout's
+    own ``.venv`` or that checkout's primary ``.venv``.
     """
     import inspect
 
@@ -352,11 +353,12 @@ def test_runner_spawns_use_primary_project_interpreter(
 
     bare = tmp_path / "bare"
     bare.mkdir()
-    fallback = tmp_path / "running" / ".venv" / "bin" / "python"
-    fallback.parent.mkdir(parents=True)
-    fallback.write_text("", encoding="utf-8")
-    monkeypatch.setattr(memory_mod.sys, "executable", str(fallback))
-    assert memory_mod.project_interpreter(bare) == fallback
+    foreign = tmp_path / "running" / ".venv" / "bin" / "python"
+    foreign.parent.mkdir(parents=True)
+    foreign.write_text("", encoding="utf-8")
+    monkeypatch.setattr(memory_mod.sys, "executable", str(foreign))
+    with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+        memory_mod.project_interpreter(bare)
 
     monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
     with pytest.raises(FileNotFoundError, match="project interpreter not found"):

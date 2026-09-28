@@ -15,17 +15,12 @@ import json
 import os
 import shutil
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
-_REPO = HERE.parent
-if str(_REPO) not in sys.path:
-    sys.path.insert(0, str(_REPO))
-from scripts.common.repo_root import project_interpreter
 
 
 def _resolve_primary_python() -> Path:
@@ -33,9 +28,8 @@ def _resolve_primary_python() -> Path:
     if raw:
         return Path(raw)
     root_raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
-    if root_raw:
-        return project_interpreter(Path(root_raw).resolve())
-    return project_interpreter()
+    root = Path(root_raw).resolve() if root_raw else HERE.parent
+    return root / ".venv" / "bin" / "python"
 
 
 def _resolve_agy() -> Path:

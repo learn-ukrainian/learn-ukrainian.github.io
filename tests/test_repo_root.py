@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
 
 
 def test_main_checkout_root_resolves_primary_checkout_from_worktree(tmp_path):
@@ -152,3 +152,73 @@ def test_bridge_monitor_cache_project_root_resolves_to_primary_in_worktree(wt_la
     )
     resolved_project_root = Path(proc.stdout.strip())
     assert resolved_project_root.resolve() == main_repo.resolve()
+
+
+def _write_venv_python(checkout: Path, name: str = "python") -> Path:
+    interpreter = checkout / ".venv" / "bin" / name
+    interpreter.parent.mkdir(parents=True, exist_ok=True)
+    interpreter.write_text("", encoding="utf-8")
+    return interpreter
+
+
+def _link_worktree(primary: Path, worktree: Path) -> None:
+    git_dir = primary / ".git" / "worktrees" / "task"
+    git_dir.mkdir(parents=True, exist_ok=True)
+    worktree.mkdir(parents=True, exist_ok=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+
+
+def test_project_interpreter_rejects_another_checkouts_venv(tmp_path, monkeypatch):
+    """An explicit root must not inherit a different checkout's interpreter.
+
+    ``scripts.api.batch_router`` passes ``live_repo_root`` to
+    ``project_interpreter`` (the dispatcher scan command). A missing checkout
+    used to accept any running ``sys.executable`` ending in ``.venv/bin/python``,
+    so ``project_interpreter(Path("/no-such-checkout"))`` returned this repo's
+    interpreter.
+    """
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_accepts_running_python3_of_the_requested_checkout(tmp_path, monkeypatch):
+    requested = tmp_path / "requested"
+    python3 = _write_venv_python(requested, "python3")
+    monkeypatch.setattr(sys, "executable", str(python3))
+
+    assert project_interpreter(requested) == python3
+
+
+def test_project_interpreter_accepts_running_python3_of_the_primary_checkout(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    python3 = _write_venv_python(primary, "python3")
+    monkeypatch.setattr(sys, "executable", str(python3))
+
+    assert project_interpreter(worktree) == python3
+
+
+def test_project_interpreter_accepts_the_requested_worktree_venv_when_primary_has_none(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    local = _write_venv_python(worktree)
+    monkeypatch.setattr(sys, "executable", str(local))
+
+    assert project_interpreter(worktree) == local
+
+
+def test_project_interpreter_does_not_substitute_a_worktree_venv_for_a_foreign_interpreter(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    _write_venv_python(worktree)
+    foreign = _write_venv_python(tmp_path / "other-checkout")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(worktree)

@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+_VENV_PYTHON_NAMES = frozenset({"python", "python3"})
 
 
 def main_checkout_root(repo_root: Path) -> Path:
@@ -39,9 +42,16 @@ def main_checkout_root(repo_root: Path) -> Path:
     return common_git_dir.parent
 
 
-def _is_project_venv_python(path: Path) -> bool:
-    """True when ``path`` is a checkout's ``.venv/bin/python`` entrypoint."""
-    return path.parts[-3:] == (".venv", "bin", "python")
+def _lexical_absolute(path: Path) -> Path:
+    """Absolute path with ``.`` and ``..`` collapsed, without resolving symlinks."""
+    return Path(os.path.normpath(os.fspath(path.absolute())))
+
+
+def _is_checkout_venv_entrypoint(interpreter: Path, checkout: Path) -> bool:
+    """True when ``interpreter`` is that checkout's ``.venv/bin/python`` or ``python3``."""
+    candidate = _lexical_absolute(interpreter)
+    venv_bin = _lexical_absolute(checkout / ".venv" / "bin")
+    return candidate.parent == venv_bin and candidate.name in _VENV_PYTHON_NAMES
 
 
 def project_interpreter(root: Path | None = None) -> Path:
@@ -54,22 +64,27 @@ def project_interpreter(root: Path | None = None) -> Path:
     ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
     git directory and returns that primary checkout. Its ``.venv/bin/python``
     is the project interpreter. A dispatch worktree has no local virtualenv,
-    so the worktree path is not a candidate. When the primary file is missing,
-    ``sys.executable`` is accepted only when it is itself a project
-    ``.venv/bin/python``. Otherwise this raises ``FileNotFoundError``.
+    so the worktree path is not a candidate while that primary file exists.
+    When the primary file is missing, ``sys.executable`` is accepted only when
+    it is the requested checkout's own ``.venv/bin/python`` (or ``python3``)
+    or the same entrypoint of that checkout's primary checkout. Another
+    checkout's interpreter raises ``FileNotFoundError``.
     """
     repo = Path(__file__).resolve().parents[2] if root is None else root
+    primary_root = main_checkout_root(repo)
     # Resolver definition: this join is the primary checkout's interpreter.
-    primary = main_checkout_root(repo) / ".venv" / "bin" / "python"
+    primary = primary_root / ".venv" / "bin" / "python"
     if primary.is_file():
         return primary
     current = Path(sys.executable)
-    if current.is_file() and _is_project_venv_python(current):
+    if current.is_file() and (
+        _is_checkout_venv_entrypoint(current, repo) or _is_checkout_venv_entrypoint(current, primary_root)
+    ):
         return current
     raise FileNotFoundError(
         "project interpreter not found: "
         f"{primary} does not exist and sys.executable ({current}) "
-        "is not a project .venv/bin/python"
+        "is not the requested checkout's .venv or its primary checkout's .venv"
     )
 
 

@@ -26,6 +26,7 @@ if __package__ in (None, ""):
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.repo_root import project_interpreter
 from scripts.projects.open_model_data import phase3_functional_roles as roles
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -1438,7 +1439,7 @@ def run_cycle002(
     require(sha256_file(prompt_path) == manifest["bindings"]["label_prompt_sha256"], "cycle002 manifest prompt binding drift")
     prompt = prompt_path.read_bytes()
     command = [
-        str(ROOT / ".venv/bin/python"),
+        str(project_interpreter(ROOT)),
         str(ROOT / "scripts/ai_agent_bridge/__main__.py"),
         "ask-codex",
         "-",
