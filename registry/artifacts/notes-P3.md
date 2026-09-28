@@ -2,11 +2,12 @@
 
 ## Status
 
-P3a — migration complete (1,125 rows), producer routing and consumer
-dispositions still partial; P3b
+P3a — migration complete (1,125 rows), producer routing done for the
+routed set, consumer census executed except 33 rows whose readers still
+open moved K files under `data/` (round 7; not fixed here); P3b
 residuals: `v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`,
 and `v4_production_shards_assembly.py` native archive regeneration (owner:
-claude-infra). P3 completion: NO (P3a).
+claude-infra). P3 completion: NO (P3a). P3a ready for review: NO.
 
 This is an incomplete P3a checkpoint, not a landing claim. A green migration
 count alone does not establish producer or consumer completion.
@@ -302,9 +303,50 @@ either value.
 comparisons: 2,589 rows checked, 577 blank. Checked rows are passing test
 files, scripts imported by those files, documentation mentions, and frozen
 JSON locators whose Git blob equals `55d0ed1515`. The largest blank consumer
-is `decolonization_language_reviews.py` (251 rows): its project test file
+was `decolonization_language_reviews.py` (251 rows): its project test file
 failed, so it was not cited. Package allowlists and storage-scanner rows
-were not in the two open-model junit runs, so they stay blank.
+were not in the two open-model junit runs, so they stayed blank.
+
+## Round-7 consumer census
+
+Round 7 executed checks for the 577 blank rows and did not change production
+code. `consumers-P3.tsv` is now 3,133 checked and 33 blank. The 33 blank
+rows are unrouted readers (or K writers) that still open a moved K path
+under `data/projects/open_model_data/`. Each of those paths is absent on
+disk there and present under `registry/projects/open_model_data/`. They are
+round-8 code work and were not patched in this census.
+
+| Consumer | What it still opens under `data/` |
+| --- | --- |
+| `scripts/projects/open_model_data/audit_corpus_training_usability.py` | `profiles/full_corpus_profile_v1.json`, `detector/language_contact_receipt_v1.json` |
+| `scripts/projects/open_model_data/audit_model_ready_receipts.py` | `contracts/`, `model_views/` receipts, `silver/language_contact_silver_receipt_v1.json`, `evidence/source_capability_policy_v1.json` |
+| `scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py` | `inventory/phase3_pravopys_evaluation_context_receipt_v1.json` |
+| `scripts/projects/open_model_data/judge_eval_seat.py` | `release/uldr_v06_general_assistant/eval_claude_verdicts.json` and `EVAL_INDEPENDENT_SEAT_JUDGMENT.md` |
+| `scripts/projects/open_model_data/audit_assistant_quality.py` | K reports `SAMPLE_INSPECTION_150.md` and `SAMPLE_INSPECTION_50.md` (A shards at `data/` are the right class) |
+| `tests/test_model_ready_receipt_audit.py` | `model_views/model_ready_product_audit_v1.json` |
+| `tests/test_source_work_locator_index.py` | provenance config, locator config, and their contract schemas |
+| `tests/test_inventory_existing_assets.py` | `inventory/existing_asset_inventory_v1.schema.json` (the ledger and aggregate summary are A and stay under `data/`) |
+| `tests/test_gemma_hardware_probe.py` | `contracts/` and `treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json` |
+| `tests/ingest/test_incremental_textbook_ingest.py` | `admission/phase3_university_source_policy_v3.json` |
+| `tests/test_source_capability_complements.py` | `evidence/source_capability_policy_v1.json` |
+| `tests/test_phase3_cycle007_evidence_schema.py` | `contracts/phase3_cycle007_evidence_*.schema.json` |
+| `tests/test_phase3_cycle007_storage_custody.py` | `contracts/phase3_cycle007_storage_public_summary_v1.schema.json` and `reference/phase3_cycle007_storage_public_summary_v1.json` |
+
+Executed fills for the other 544 rows included: review-locator resolution
+(250/250 registry files, blob-equal to `55d0ed1515`); decolonization tests
+except the two `#9023` ids; allowlist digest probe 45/45 through
+`source_asset`; packaged `resources.read_bytes` for v4 runtime literals;
+`pytest tests/storage/test_consumers.py`; classification-table tests; and
+`--help` or a passing unit test for scanner-token modules that do not open
+a P3 path.
+
+On this head, `artifacts verify --group` exited 0 for archive 80, component
+17, evidence 10, other 49, release 233, and study 23. The migration audit
+printed `rows=1125 K=713 K_bytes=12942226 A=412 A_bytes=637987720 errors=0`.
+The census pytest selection printed `10 failed, 812 passed, 3 skipped, 6
+errors`. The failures are a missing worktree `.venv`, ohoiko calque
+assertions, and two v4 release tests; they are not the unrouted K opens
+above. P3a ready for review: NO.
 
 ## Unresolved P3a gates at this checkpoint
 
