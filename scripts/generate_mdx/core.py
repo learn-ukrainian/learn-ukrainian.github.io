@@ -58,8 +58,9 @@ from yaml_activities import (
 )
 
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+from scripts.common.repo_root import project_interpreter
 
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 _VALIDATE_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124
 

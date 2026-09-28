@@ -24,45 +24,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, Literal
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
-
-
-def _is_project_venv_python(path: Path) -> bool:
-    """True when ``path`` is a checkout's ``.venv/bin/python`` entrypoint."""
-    return path.parts[-3:] == (".venv", "bin", "python")
-
-
-def project_interpreter(root: Path | None = None) -> Path:
-    """Interpreter for memory self-tests and capped workers.
-
-    Called when a spawn needs the interpreter, not while this module is
-    imported. Import therefore succeeds when no project interpreter can be
-    found; this function raises ``FileNotFoundError`` at the call.
-
-    ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
-    git directory and returns that primary checkout. Its ``.venv/bin/python``
-    is the project interpreter. A dispatch worktree has no local virtualenv,
-    so the worktree path is not a candidate. When the primary file is missing,
-    ``sys.executable`` is accepted only when it is itself a project
-    ``.venv/bin/python``. Otherwise this raises ``FileNotFoundError``.
-    """
-    repo = ROOT if root is None else root
-    primary = main_checkout_root(repo) / ".venv" / "bin" / "python"
-    if primary.is_file():
-        return primary
-    current = Path(sys.executable)
-    if current.is_file() and _is_project_venv_python(current):
-        return current
-    raise FileNotFoundError(
-        "project interpreter not found: "
-        f"{primary} does not exist and sys.executable ({current}) "
-        "is not a project .venv/bin/python"
-    )
 
 
 @dataclass(frozen=True, slots=True)

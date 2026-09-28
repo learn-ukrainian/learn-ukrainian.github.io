@@ -11,11 +11,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from batch_gemini_config import FLASH_MODEL
+from common.repo_root import project_interpreter
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
-VENV_PYTHON = REPO / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 
 
 def find_module_files(level: str, num: int) -> dict | None:

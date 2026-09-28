@@ -38,6 +38,8 @@ def resolve_relaunch_python(project_root: Path = PROJECT_ROOT) -> Path:
     3. The active interpreter (sys.executable), e.g. for CI or environments without .venv.
     4. Fallback to project_root / ".venv/bin/python" if no valid executable is found.
     """
+    # Intentional relaunch contract: this checkout's venv when it owns one,
+    # then the canonical checkout, then any sys.executable.
     local = project_root / ".venv" / "bin" / "python"
     if local.is_file() and os.access(local, os.X_OK):
         return local

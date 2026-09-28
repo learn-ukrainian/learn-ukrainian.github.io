@@ -145,7 +145,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
     ensure_scratch_root,
@@ -6268,7 +6268,7 @@ def _record_worktree_local_venv_warning(
     if local_venv.get("present"):
         print(
             "⚠️  dispatch worktree contains a local .venv; do not use, copy, or "
-            f"replace it. Use the primary interpreter {_REPO_ROOT / '.venv' / 'bin' / 'python'} "
+            f"replace it. Use the primary interpreter {project_interpreter()} "
             f"instead: {worktree_path / '.venv'} ({local_venv.get('kind')}).",
             file=sys.stderr,
         )
@@ -6675,7 +6675,7 @@ def _augment_prompt_with_worktree(
         "(no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n"
         "\n[shared project interpreter]\n"
         "Never create, copy, symlink, activate, or use a `.venv` inside this worktree. "
-        f"Run every project Python command with `{_REPO_ROOT / '.venv' / 'bin' / 'python'}` "
+        f"Run every project Python command with `{project_interpreter()}` "
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
@@ -9696,7 +9696,7 @@ def _dispatch(
         # Python interpreter: the project rule (non-negotiable-rules.md)
         # is to always use .venv/bin/python. delegate.py follows that rule
         # strictly.
-        venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
+        venv_python = project_interpreter()
         python_bin = str(venv_python)
         cmd = [
             python_bin,

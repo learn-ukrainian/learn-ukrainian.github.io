@@ -27,6 +27,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
+from common.repo_root import project_interpreter
 from secret_redactor import redact_text
 
 from ._ask_contract import (
@@ -54,7 +55,7 @@ from ._review_worktree import (
     review_target_payload,
 )
 
-VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
 CLAUDE_ADVISORY_MODEL = "claude-opus-5"
 

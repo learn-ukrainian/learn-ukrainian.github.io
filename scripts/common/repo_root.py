@@ -1,7 +1,8 @@
-"""Repository root resolver helpers for primary/worktree anchoring."""
+"""Repository root and project-interpreter resolvers."""
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 
@@ -36,6 +37,40 @@ def main_checkout_root(repo_root: Path) -> Path:
     if common_git_dir.name != ".git":
         return repo_root
     return common_git_dir.parent
+
+
+def _is_project_venv_python(path: Path) -> bool:
+    """True when ``path`` is a checkout's ``.venv/bin/python`` entrypoint."""
+    return path.parts[-3:] == (".venv", "bin", "python")
+
+
+def project_interpreter(root: Path | None = None) -> Path:
+    """Return the project interpreter for ``root`` or this checkout.
+
+    Called when a spawn needs the interpreter, not while this module is
+    imported. Import therefore succeeds when no project interpreter can be
+    found; this function raises ``FileNotFoundError`` at the call.
+
+    ``main_checkout_root`` follows a worktree ``.git`` gitdir to the shared
+    git directory and returns that primary checkout. Its ``.venv/bin/python``
+    is the project interpreter. A dispatch worktree has no local virtualenv,
+    so the worktree path is not a candidate. When the primary file is missing,
+    ``sys.executable`` is accepted only when it is itself a project
+    ``.venv/bin/python``. Otherwise this raises ``FileNotFoundError``.
+    """
+    repo = Path(__file__).resolve().parents[2] if root is None else root
+    # Resolver definition: this join is the primary checkout's interpreter.
+    primary = main_checkout_root(repo) / ".venv" / "bin" / "python"
+    if primary.is_file():
+        return primary
+    current = Path(sys.executable)
+    if current.is_file() and _is_project_venv_python(current):
+        return current
+    raise FileNotFoundError(
+        "project interpreter not found: "
+        f"{primary} does not exist and sys.executable ({current}) "
+        "is not a project .venv/bin/python"
+    )
 
 
 def resolve_repo_root(script_path: Path, parents: int) -> Path:

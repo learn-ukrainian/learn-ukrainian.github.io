@@ -401,6 +401,8 @@ def _venv_python() -> str:
     owns the approved interpreter while ``ROOT`` remains the worker's snapshot
     cwd so the detached process executes the exact deployed code.
     """
+    # Intentional: ROOT is an immutable release snapshot with no .venv.
+    # The worker executes snapshot code with the live checkout's interpreter.
     return str(LIVE_REPO_ROOT / ".venv" / "bin" / "python")
 
 

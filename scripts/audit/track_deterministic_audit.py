@@ -37,6 +37,7 @@ from audit.check_no_internal_ids import (
 )
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 from audit.content_surface_gates import scan_module_surface
+from common.repo_root import project_interpreter
 from level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from manifest_utils import get_modules_for_level, load_manifest
 from wiki.domains import resolve_write_domain
@@ -45,7 +46,7 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SITE_DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 SITE_READINGS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "readings"
 DEFAULT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = project_interpreter()
 
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 DEFAULT_GENERATE_TIMEOUT_SECONDS: float = 60.0

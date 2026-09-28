@@ -9,13 +9,18 @@ Module N = levels.{track}.modules[N-1] (1-indexed position in the array).
 from pathlib import Path
 
 import yaml
+
+try:
+    from common.repo_root import project_interpreter
+except ImportError:  # repo root on path, scripts/ is not
+    from scripts.common.repo_root import project_interpreter
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
 
 # Base paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
+VENV_PYTHON = str(project_interpreter())
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_YAML = CURRICULUM_DIR / "curriculum.yaml"
 PLANS_DIR = CURRICULUM_DIR / "plans"

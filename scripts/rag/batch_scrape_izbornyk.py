@@ -7,12 +7,17 @@ Scrapes texts organized into waves 5-10 by source page category.
 """
 
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 BASE = "http://izbornyk.org.ua"
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.common.repo_root import project_interpreter
+
+VENV_PYTHON = project_interpreter()
 
 # ══════════════════════════════════════════════════════════════════════
 # Wave 5: Old Ukrainian Literature (inoldlit.htm)

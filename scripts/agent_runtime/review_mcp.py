@@ -86,7 +86,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 
@@ -687,7 +687,7 @@ def prepare_review_attempt(
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
     primary_root = resolve_repo_root(Path(__file__), 2)
-    python_bin = primary_root / ".venv" / "bin" / "python"
+    python_bin = project_interpreter()
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
     # The receipts root (default or explicit) is the trust anchor: verified itself, with

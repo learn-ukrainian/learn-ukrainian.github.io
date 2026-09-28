@@ -23,6 +23,7 @@ from agent_runtime.adapters.kimicc import KimiccHarness
 from agent_runtime.runner import invoke
 from agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
 
+from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.trails import trail_mcp
 
 FAKE_GROK = "/usr/local/bin/grok"
@@ -80,9 +81,7 @@ def test_grok_profile_has_one_private_server_and_exact_allowlist() -> None:
         config_path = launch.root / ".mcp.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         assert set(config["mcpServers"]) == {"trail"}
-        assert config["mcpServers"]["trail"]["command"] == str(
-            trail_isolation.PROJECT_ROOT / ".venv" / "bin" / "python"
-        )
+        assert config["mcpServers"]["trail"]["command"] == str(project_interpreter())
         assert launch.tool_config["allowed_tools"].split(",") == list(trail_isolation.GROK_TRAIL_TOOLS)
 
         with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
