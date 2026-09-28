@@ -104,17 +104,25 @@ bytecode_cache_path() {
     return 1
 }
 
-# Drop "Only in …: __pycache__" when that directory contains nothing but *.pyc.
-# A notes.txt inside it keeps the diff line.
+# Drop bytecode-only diff lines. A directory named *.pyc is kept, and so is a
+# __pycache__ directory that contains anything other than regular *.pyc files.
 filter_pycache_only_diff() {
-    local line parent dir
+    local line parent name path
     while IFS= read -r line || [[ -n "$line" ]]; do
         case "$line" in
-            "Only in "*": __pycache__")
+            "Files "*".pyc and "*".pyc differ")
+                continue
+                ;;
+            "Only in "*": "*)
                 parent="${line#"Only in "}"
-                parent="${parent%": __pycache__"}"
-                dir="$parent/__pycache__"
-                if [[ -d "$dir" ]] && ! find "$dir" -mindepth 1 ! -name '*.pyc' -print -quit | grep -q .; then
+                parent="${parent%": "*}"
+                name="${line##*: }"
+                path="$parent/$name"
+                if [[ "$name" == *.pyc && -f "$path" && ! -d "$path" ]]; then
+                    continue
+                fi
+                if [[ "$name" == "__pycache__" && -d "$path" ]] \
+                    && ! find "$path" -mindepth 1 \( ! -type f -o ! -name '*.pyc' \) -print -quit | grep -q .; then
                     continue
                 fi
                 ;;

@@ -131,11 +131,6 @@ check_pair() {
             diff_args+=(-x "${normalized##*/}")
         fi
     done
-    local bytecode_pattern
-    for bytecode_pattern in "${BYTECODE_CACHE_EXCLUDES[@]}"; do
-        diff_args+=(-x "$bytecode_pattern")
-    done
-
     if [[ ! -d "$src" ]]; then
         echo "::error::Source dir missing: $src"
         return 1

@@ -43,15 +43,16 @@ REDACTED_UNSAFE = "ignoring unsafe manifest entry"
 VALID_KINDS = frozenset({"d", "f", "l"})
 
 
-def is_retained_bytecode(relative: str) -> bool:
-    """A *.pyc file or a __pycache__ directory is not a retired deploy artifact.
+def is_retained_bytecode(kind: str, relative: str) -> bool:
+    """A regular *.pyc file or a __pycache__ directory is not retired content.
 
-    Deploy excludes *.pyc from rsync --delete. An older manifest must not reap
-    that retained cache when the source cache disappears. A notes.txt inside
-    the directory is not bytecode and can still be reaped.
+    A directory whose name ends in .pyc is real content and can still be
+    reaped. A notes.txt inside __pycache__ is not bytecode.
     """
     name = relative.rsplit("/", 1)[-1]
-    return name == "__pycache__" or name.endswith(".pyc")
+    if kind == "d" and name == "__pycache__":
+        return True
+    return kind == "f" and name.endswith(".pyc")
 
 
 def path_is_lexically_safe(relative: str) -> bool:
@@ -274,7 +275,7 @@ def main(argv: list[str]) -> int:
         if kind not in VALID_KINDS or not path_is_lexically_safe(relative):
             print(f"  .agent: {REDACTED_UNSAFE} '{kind} {relative}'", file=sys.stderr)
             continue
-        if is_retained_bytecode(relative):
+        if is_retained_bytecode(kind, relative):
             continue
         # Still present in source => not retired.
         candidate = source_root / relative

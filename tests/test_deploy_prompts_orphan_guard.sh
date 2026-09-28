@@ -145,6 +145,22 @@ else
     FAIL=$((FAIL + 1))
 fi
 rm -rf "$TEST_DIR/dst6/foo__pycache__"
+mkdir -p "$TEST_DIR/dst6/foo.pyc"
+echo "settings" > "$TEST_DIR/dst6/foo.pyc/settings.json"
+rc=0
+out=$(check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "pyc-dir" 2>&1) || rc=$?
+_assert_rc "directory named foo.pyc → rc 1" "1" "$rc"
+if echo "$out" | grep -q "foo.pyc"; then
+    echo "  ✓ names the foo.pyc directory"
+    PASS=$((PASS + 1))
+else
+    echo "  ✗ did not name foo.pyc"
+    echo "    output: $out"
+    FAIL=$((FAIL + 1))
+fi
+kept_dir=$(printf '%s\n' "Only in $TEST_DIR/dst6: foo.pyc" | filter_pycache_only_diff)
+_assert_eq "directory named foo.pyc stays in the diff" "Only in $TEST_DIR/dst6: foo.pyc" "$kept_dir"
+rm -rf "$TEST_DIR/dst6/foo.pyc"
 echo "mystery" > "$TEST_DIR/dst6/hooks/never-tracked.py"
 check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode-plus-file" >/dev/null 2>&1
 _assert_rc "real file beside bytecode → rc 1" "1" "$?"

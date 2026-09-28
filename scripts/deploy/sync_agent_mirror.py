@@ -25,6 +25,7 @@ def sync_agent_mirror(
     source_root: str,
     agent_root: str,
     excludes: tuple[str, ...] = (),
+    filters: tuple[str, ...] = (),
 ) -> None:
     """Exec rsync into the directory represented by an open descriptor."""
     source = Path(source_root).resolve(strict=True)
@@ -41,6 +42,11 @@ def sync_agent_mirror(
         os.fchdir(agent_fd)
         argv = ["rsync", "-av"]
         argv.extend(f"--exclude={pattern}" for pattern in excludes)
+        for pattern in filters:
+            if pattern.startswith("--filter="):
+                argv.append(pattern)
+            else:
+                argv.append(f"--filter={pattern}")
         argv.extend((f"{source}/", "."))
         os.execvp("rsync", tuple(argv))
     finally:
@@ -52,16 +58,22 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", required=True)
     parser.add_argument("--agent-root", required=True)
+    parser.add_argument("--exclude", action="append", default=[])
     parser.add_argument(
-        "--exclude",
+        "--filter",
         action="append",
         default=[],
-        help="rsync exclude pattern; deploy passes BYTECODE_CACHE_EXCLUDES",
+        help="rsync filter rule; deploy passes file-only *.pyc rules",
     )
     args = parser.parse_args(argv)
 
     try:
-        sync_agent_mirror(args.source_root, args.agent_root, tuple(args.exclude))
+        sync_agent_mirror(
+            args.source_root,
+            args.agent_root,
+            tuple(args.exclude),
+            tuple(args.filter),
+        )
     except OSError as exc:
         print(f"Error: refusing .agent mirror sync: {exc}", file=sys.stderr)
         return 1
