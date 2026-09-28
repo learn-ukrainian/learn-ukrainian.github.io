@@ -2198,6 +2198,35 @@ def test_pace_is_deficit_four_routing_cases():
     )
 
 
+def test_pace_is_deficit_resolves_missing_expected_from_reset():
+    """Live records omit weekly_expected_pct. Resolve it; unknown is not a deficit."""
+    now = datetime.now(UTC)
+    early_reset = (now + timedelta(days=7) - timedelta(minutes=50)).isoformat().replace("+00:00", "Z")
+    early = {
+        "weekly_pace_delta_pct": 2.5,
+        "will_last_to_reset": False,
+        "weekly_expected_pct": None,
+        "weekly_resets_at": early_reset,
+    }
+    assert pace_is_deficit(early) is None
+
+    visible_reset = (now + timedelta(minutes=10080 / 2)).isoformat().replace("+00:00", "Z")
+    genuine = {
+        "weekly_pace_delta_pct": 10.0,
+        "will_last_to_reset": False,
+        "weekly_expected_pct": None,
+        "weekly_resets_at": visible_reset,
+    }
+    assert pace_is_deficit(genuine) is True
+
+    unresolved = {
+        "weekly_pace_delta_pct": 2.5,
+        "will_last_to_reset": False,
+        "weekly_expected_pct": None,
+    }
+    assert pace_is_deficit(unresolved) is None
+
+
 def test_computed_fallback_hides_will_last_until_pace_is_visible(monkeypatch):
     """1% used 52 minutes after reset: raw delta kept, will_last is not False."""
     frozen = datetime(2026, 9, 28, 7, 51, tzinfo=UTC)

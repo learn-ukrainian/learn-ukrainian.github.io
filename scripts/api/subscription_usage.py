@@ -1672,12 +1672,70 @@ def _pace_number(pace: dict[str, Any], *keys: str) -> float | None:
     return None
 
 
-def pace_is_deficit(pace: dict[str, Any] | None, *, kind: str = "weekly") -> bool | None:
+def _expected_pct_from_reset(pace: dict[str, Any], *, now: datetime | None = None) -> float | None:
+    """Expected used-percent from the reset instant, matching :func:`compute_usage_pace`.
+
+    Expected percent is the elapsed fraction of the window. ``used_pct=0`` keeps
+    that fraction without tripping the zero-elapsed-but-used guard. Returns
+    ``None`` when the reset is missing, unparseable, or outside the window.
+    """
+    resets_at: str | int | float | None = None
+    for key in ("weekly_resets_at", "resets_at", "resetsAt"):
+        value = pace.get(key)
+        if value not in (None, ""):
+            resets_at = value
+            break
+    if resets_at is None:
+        return None
+
+    window_minutes: int | None = None
+    for key in ("window_minutes", "windowMinutes"):
+        value = pace.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        minutes = int(value)
+        if minutes > 0:
+            window_minutes = minutes
+            break
+    if window_minutes is None:
+        windows = pace.get("windows")
+        secondary = windows.get("secondary") if isinstance(windows, dict) else None
+        if isinstance(secondary, dict):
+            for key in ("window_minutes", "windowMinutes"):
+                value = secondary.get(key)
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                    continue
+                minutes = int(value)
+                if minutes > 0:
+                    window_minutes = minutes
+                    break
+
+    computed = compute_usage_pace(0.0, resets_at, window_minutes=window_minutes, now=now)
+    if not isinstance(computed, dict):
+        return None
+    expected = computed.get("expected_pct")
+    if isinstance(expected, bool) or not isinstance(expected, (int, float)):
+        return None
+    return float(expected)
+
+
+def pace_is_deficit(
+    pace: dict[str, Any] | None,
+    *,
+    kind: str = "weekly",
+    now: datetime | None = None,
+) -> bool | None:
     """Whether a pace reading is a routing deficit.
 
-    ``None`` when the pace is missing or not visible (too early in the window).
-    Otherwise ``True`` only when the lane is projected to run out before reset
-    and the delta is outside the on-pace band (``|delta| <= 2`` is on pace).
+    ``None`` when the pace is missing, not visible, or the expected percentage
+    cannot be resolved (unknown, not a deficit). ``True`` only when the pace is
+    visible, the lane is projected to run out before reset, and the delta is
+    more than ``ON_PACE_BAND_PCT`` ahead. ``|delta| <= 2`` is on pace.
+
+    When ``weekly_expected_pct`` / ``expected_pct`` is missing, the expected
+    percentage is resolved from ``weekly_resets_at`` and the window length the
+    same way :func:`compute_usage_pace` does. Delta and ``will_last_to_reset``
+    alone are not a deficit.
 
     Accepts a :func:`compute_usage_pace` result or a routing ``codexbar`` record
     (``weekly_pace_delta_pct`` / ``weekly_expected_pct`` / ``will_last_to_reset``).
@@ -1686,6 +1744,8 @@ def pace_is_deficit(pace: dict[str, Any] | None, *, kind: str = "weekly") -> boo
     if not isinstance(pace, dict):
         return None
     expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+    if expected is None:
+        expected = _expected_pct_from_reset(pace, now=now)
     delta = _pace_number(pace, "delta_pct", "weekly_pace_delta_pct", "deltaPercent")
     if "will_last_to_reset" in pace:
         will_last = pace.get("will_last_to_reset")
@@ -1696,15 +1756,12 @@ def pace_is_deficit(pace: dict[str, Any] | None, *, kind: str = "weekly") -> boo
     if will_last is not None and not isinstance(will_last, bool):
         will_last = bool(will_last)
 
-    if expected is not None:
-        if not pace_is_visible({"expected_pct": expected}, kind=kind):
-            return None
-    elif delta is None and will_last is None:
+    if expected is not None and not pace_is_visible({"expected_pct": expected}, kind=kind):
         return None
-
     if delta is not None and abs(delta) <= ON_PACE_BAND_PCT:
         return False
-    if will_last is False and delta is not None and delta > ON_PACE_BAND_PCT:
+    # A deficit requires a visible expected percent. An unresolved reset is unknown.
+    if expected is not None and will_last is False and delta is not None and delta > ON_PACE_BAND_PCT:
         return True
     if will_last is True:
         return False

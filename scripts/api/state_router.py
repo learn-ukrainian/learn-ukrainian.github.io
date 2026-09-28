@@ -1379,7 +1379,7 @@ def _compute_dispatch_routing_budget(
             # near_cap (>= 90%) is unchanged. Below that, hot requires pace_is_deficit.
             if weekly_used >= 90.0:
                 cb_status = "near_cap"
-            elif pace_is_deficit(cb_data) is True:
+            elif pace_is_deficit(cb_data, now=current_time) is True:
                 cb_status = "hot"
             elif weekly_used < 50.0:
                 cb_status = "cool"
@@ -1627,7 +1627,7 @@ def _compute_dispatch_routing_budget(
         if lane in agents:
             cb = agents[lane].get("codexbar")
             if cb:
-                is_in_deficit = pace_is_deficit(cb) is True or (
+                is_in_deficit = pace_is_deficit(cb, now=current_time) is True or (
                     cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0
                 )
                 pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"

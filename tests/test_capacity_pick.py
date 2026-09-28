@@ -21,6 +21,7 @@ def _fixture_budget() -> dict:
                     "will_last_to_reset": False,
                     "pace_summary": "won't last to reset",
                     "weekly_pace_delta_pct": 12.0,
+                    "weekly_expected_pct": 40.0,
                 },
             },
             "cursor": {

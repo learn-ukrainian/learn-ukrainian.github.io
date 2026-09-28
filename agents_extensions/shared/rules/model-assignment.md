@@ -239,9 +239,10 @@ Subscription rows expose `remaining_pct` and compatibility `codexbar` metadata
 (`pace_summary`, `weekly_pace_delta_pct`, `will_last_to_reset`) where observed,
 and each allotment window line is followed by a `pace:` line (used-vs-expected
 delta and whether the window will last to reset) when the window is
-computable. Read pace per lane before widening fan-out: a lane at or ahead of
-pace (positive delta, `will_last_to_reset=False`) is a deficit risk — shed to
-a lane with reserve; negative delta means headroom. `capacity_pick` renders
+computable. Read pace per lane before widening fan-out: a deficit is visible
+pace, projected to run out before reset, and more than 2 points ahead of pace
+(near_cap ≥ 90% unchanged) — shed that lane to one with reserve; negative delta
+means headroom. `capacity_pick` renders
 the same reading in its `pace` and `will_last` columns. The AGY lane's quota
 is the Gemini subscription row: `PROVIDER_TO_LANE` keys the probe under
 `gemini` (`agy` CLI `/usage`, never Google quota APIs) and
