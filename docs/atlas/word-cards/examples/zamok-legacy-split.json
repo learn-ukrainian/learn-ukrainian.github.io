@@ -1,0 +1,97 @@
+{
+  "schema_version": "1",
+  "card_id": "wc_0a1b2c3d4e5f",
+  "card_kind": "lexeme",
+  "state": "split",
+  "merged_into": null,
+  "split_into": [
+    "wc_7k3m9q2xw4pd",
+    "wc_c2v8n5rt6yhq"
+  ],
+  "key_at_creation": {
+    "spelling": "замок",
+    "stress_patterns": [
+      "за́мок"
+    ],
+    "pos": "noun",
+    "source_keys": [
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:замок"
+      }
+    ]
+  },
+  "identity": {
+    "confidence": "high",
+    "method": "overlay",
+    "decided_by": "overlay:ovl-2026-09-28-0001",
+    "source_keys": [
+      {
+        "source_id": "atlas0",
+        "key": "atlas0:slug:замок",
+        "snapshot_id": "atlas0@manifest-0.1/2026-09-11",
+        "match_note": "merged article castle / lock"
+      }
+    ],
+    "notes": [
+      "Split into wc_7k3m9q2xw4pd (за́мок castle) and wc_c2v8n5rt6yhq (замо́к lock); learner progress per identity.md §7.3."
+    ]
+  },
+  "senses": [],
+  "links": [],
+  "fields": {},
+  "assertions": [],
+  "quality": {
+    "identity_confidence": "high",
+    "extraction_confidence_min": "high",
+    "linguistic_review": {
+      "status": "none"
+    },
+    "practice_eligibility": [
+      {
+        "mode": "*",
+        "eligible": false,
+        "rules_version": "rules-v1-draft",
+        "reasons": [
+          "card is split; resolve split_into first"
+        ]
+      }
+    ]
+  },
+  "overlay_applied": [
+    {
+      "overlay_id": "ovl-2026-09-28-0001",
+      "kind": "split",
+      "author": "human",
+      "lane": "language",
+      "date": "2026-09-28",
+      "evidence": "ulif:entry:76792 родовий за́мку vs ulif:entry:76793 родовий замка́; vesum:entry:128973 xp2 vs 128972 xp1; site/src/lib/lexicon/curated-heteronyms.ts замок (за́мок castle / замо́к lock)"
+    }
+  ],
+  "build": {
+    "build_id": "example-2026-09-28-r2",
+    "rules_version": "rules-v1-draft",
+    "inputs": {
+      "S": {
+        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+      },
+      "V": {
+        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+      },
+      "I": {
+        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+      },
+      "O": {
+        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+      },
+      "R": {
+        "rules": "rules-v1-draft",
+        "normaliser": "norm-v1",
+        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+      }
+    },
+    "card_version": "cv_aff989c85a48b9098e1647c5"
+  }
+}

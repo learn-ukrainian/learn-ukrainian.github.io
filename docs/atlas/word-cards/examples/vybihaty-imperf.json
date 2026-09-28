@@ -4,6 +4,7 @@
   "card_kind": "lexeme",
   "state": "active",
   "merged_into": null,
+  "split_into": null,
   "key_at_creation": {
     "spelling": "вибігати",
     "stress_patterns": [
@@ -33,13 +34,21 @@
   "senses": [],
   "links": [
     {
-      "link_id": "wl_14360c9e8984fbeb964d8a20",
+      "link_id": "wl_1ee8b1c64f672f0b68c562e6",
       "type": "aspect_pair",
-      "from": "wc_y9c3q6hw4rtn",
-      "to": "wc_z4f7m1kb8xsq",
-      "role": "imperfective",
+      "endpoints": [
+        {
+          "id": "wc_y9c3q6hw4rtn",
+          "role": "imperfective"
+        },
+        {
+          "id": "wc_z4f7m1kb8xsq",
+          "role": "perfective"
+        }
+      ],
+      "basis": "asserted",
       "assertion_ids": [
-        "wa_0d607aa5a9893320531bb7a9"
+        "wa_a864fa04ff1a18ebb41e2fac"
       ],
       "state": "active"
     }
@@ -61,7 +70,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "aspect(wc_y9c3q6hw4rtn) = <value_norm>"
     },
     "cefr": {
       "state": "unverified",
@@ -77,7 +90,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 0
+      "independence_groups_agreeing": 0,
+      "mapping_evidenced": false,
+      "independence_groups_evidenced": 0,
+      "comparison": "scalar",
+      "proposition": "cefr(wc_y9c3q6hw4rtn) = <value_norm>"
     },
     "pos": {
       "state": "single-source",
@@ -93,7 +110,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "pos(wc_y9c3q6hw4rtn) = <value_norm>"
     },
     "spelling": {
       "state": "verified",
@@ -111,7 +132,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "spelling(wc_y9c3q6hw4rtn) = <value_norm>"
     },
     "stress": {
       "state": "verified",
@@ -129,7 +154,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "stress(wc_y9c3q6hw4rtn) = <value_norm>"
     }
   },
   "assertions": [
@@ -161,7 +190,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вибігати/verb/verb:imperf:inf"
     },
     {
       "assertion_id": "wa_7f4ad74318cb51f83da207e4",
@@ -191,7 +221,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вибігати#вибіга́ти#дієслово недоконаного виду"
     },
     {
       "assertion_id": "wa_b424bee12947d835ee8d4bde",
@@ -221,7 +252,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вибігати#вибіга́ти#дієслово недоконаного виду"
     },
     {
       "assertion_id": "wa_7839dc25fb6e82bcfad78496",
@@ -251,7 +283,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вибігати/verb/verb:imperf:inf"
     },
     {
       "assertion_id": "wa_722e8f1e026ad841c3311d32",
@@ -281,7 +314,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вибігати/verb/verb:imperf:inf"
     },
     {
       "assertion_id": "wa_db21c3cc1e2753e0be73101f",
@@ -311,7 +345,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вибігати#вибіга́ти#дієслово недоконаного виду"
     },
     {
       "assertion_id": "wa_f92739cde4f33b47422f8dd1",
@@ -341,7 +376,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вибігати/verb/verb:imperf:inf"
     },
     {
       "assertion_id": "wa_0765152ef4c9c91c1951e4a9",
@@ -374,14 +410,16 @@
       "status": "active",
       "mapping": {
         "confidence": "medium",
+        "basis": "spelling",
+        "ambiguous": true,
         "note": "spelling-keyed; covers both вибігати homonyms"
       }
     },
     {
-      "assertion_id": "wa_0d607aa5a9893320531bb7a9",
+      "assertion_id": "wa_a864fa04ff1a18ebb41e2fac",
       "subject": {
         "kind": "link",
-        "id": "wl_14360c9e8984fbeb964d8a20"
+        "id": "wl_1ee8b1c64f672f0b68c562e6"
       },
       "field": "aspect_pair",
       "value": "II вибіг`ати - а ю, - а єш, недок. , в и бігти, -іжу, -іжиш, док. 1》 Бігом залишати, покидати як",
@@ -410,7 +448,7 @@
   ],
   "quality": {
     "identity_confidence": "high",
-    "extraction_confidence_min": "high",
+    "extraction_confidence_min": "medium",
     "linguistic_review": {
       "status": "none"
     },
@@ -428,14 +466,29 @@
   },
   "overlay_applied": [],
   "build": {
-    "build_id": "example-2026-09-28",
+    "build_id": "example-2026-09-28-r2",
     "rules_version": "rules-v1-draft",
     "inputs": {
-      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
-      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
-      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
-      "overlay": "none (examples)"
-    }
+      "S": {
+        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+      },
+      "V": {
+        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+      },
+      "I": {
+        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+      },
+      "O": {
+        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+      },
+      "R": {
+        "rules": "rules-v1-draft",
+        "normaliser": "norm-v1",
+        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+      }
+    },
+    "card_version": "cv_432fe08b00fc27a2d58e714f"
   }
 }

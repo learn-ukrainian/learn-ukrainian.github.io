@@ -4,6 +4,7 @@
   "card_kind": "lexeme",
   "state": "active",
   "merged_into": null,
+  "split_into": null,
   "key_at_creation": {
     "spelling": "вряди-годи",
     "pos": "adv",
@@ -50,7 +51,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "pos(wc_x2j5n8sd1vpc) = <value_norm>"
     },
     "spelling": {
       "state": "verified",
@@ -68,7 +73,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "spelling(wc_x2j5n8sd1vpc) = <value_norm>"
     },
     "stress": {
       "state": "conflict",
@@ -91,7 +100,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 0
+      "independence_groups_agreeing": 0,
+      "mapping_evidenced": false,
+      "independence_groups_evidenced": 0,
+      "comparison": "scalar",
+      "proposition": "stress(wc_x2j5n8sd1vpc) = <value_norm>"
     }
   },
   "assertions": [
@@ -123,7 +136,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вряди-годи/adv/adv"
     },
     {
       "assertion_id": "wa_1aa0ddc06897a94d4cf2eca1",
@@ -153,7 +167,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вряди-годи#вряди́-годи́#прислівник"
     },
     {
       "assertion_id": "wa_13e2a6627e129ec7647f8bed",
@@ -183,7 +198,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вряди-годи#вряди́-годи́#прислівник"
     },
     {
       "assertion_id": "wa_3af6a55c0a506fcdc7745b57",
@@ -243,7 +259,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:вряди-годи/adv/adv"
     },
     {
       "assertion_id": "wa_69d7753573ce9cc19badb16b",
@@ -273,7 +290,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:вряди-годи#вряди́-годи́#прислівник"
     }
   ],
   "quality": {
@@ -295,14 +313,29 @@
   },
   "overlay_applied": [],
   "build": {
-    "build_id": "example-2026-09-28",
+    "build_id": "example-2026-09-28-r2",
     "rules_version": "rules-v1-draft",
     "inputs": {
-      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
-      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
-      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
-      "overlay": "none (examples)"
-    }
+      "S": {
+        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+      },
+      "V": {
+        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+      },
+      "I": {
+        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+      },
+      "O": {
+        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+      },
+      "R": {
+        "rules": "rules-v1-draft",
+        "normaliser": "norm-v1",
+        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+      }
+    },
+    "card_version": "cv_25efffe3d148af2c6f465c14"
   }
 }

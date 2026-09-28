@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-identity-registry-v1.schema.json",
+  "title": "Word-card identity registry v1 (#8978 / #8334)",
+  "description": "Versioned build input I (schema.md §13): every card and sense id ever minted, its matching evidence at creation, and the lineage events (mint, split, merge, retire). The build reads ids from here and mints only for keys with no entry; ids are never reused.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_version",
+    "entries",
+    "events"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic; bumped by every committed change."
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "card_id",
+        "card_kind",
+        "state",
+        "key_at_creation",
+        "created_in_build",
+        "senses"
+      ],
+      "properties": {
+        "card_id": {
+          "$ref": "#/$defs/card_id"
+        },
+        "card_kind": {
+          "enum": [
+            "lexeme",
+            "mwe",
+            "proper_name"
+          ]
+        },
+        "state": {
+          "enum": [
+            "active",
+            "redirected",
+            "split",
+            "suppressed",
+            "retired"
+          ]
+        },
+        "key_at_creation": {
+          "type": "object",
+          "description": "Matching evidence, same shape as the card's key_at_creation."
+        },
+        "created_in_build": {
+          "type": "string"
+        },
+        "senses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sense_id",
+              "order"
+            ],
+            "properties": {
+              "sense_id": {
+                "$ref": "#/$defs/sense_id"
+              },
+              "order": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "state": {
+                "enum": [
+                  "active",
+                  "redirected",
+                  "suppressed",
+                  "unsplit",
+                  "retired"
+                ]
+              },
+              "merged_into": {
+                "$ref": "#/$defs/sense_id"
+              }
+            }
+          }
+        },
+        "merged_into": {
+          "$ref": "#/$defs/card_id"
+        },
+        "split_into": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/card_id"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "redirected"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "merged_into"
+            ],
+            "not": {
+              "required": [
+                "split_into"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "split"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "split_into"
+            ],
+            "not": {
+              "required": [
+                "merged_into"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "kind",
+        "build_id",
+        "evidence"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "pattern": "^ie_[0-9]{4,}$"
+        },
+        "kind": {
+          "enum": [
+            "mint",
+            "split",
+            "merge",
+            "retire",
+            "sense_mint",
+            "sense_merge",
+            "sense_split"
+          ]
+        },
+        "build_id": {
+          "type": "string"
+        },
+        "overlay_id": {
+          "type": "string"
+        },
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/card_id"
+          }
+        },
+        "from": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

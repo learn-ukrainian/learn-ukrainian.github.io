@@ -4,6 +4,7 @@
   "card_kind": "lexeme",
   "state": "active",
   "merged_into": null,
+  "split_into": null,
   "key_at_creation": {
     "spelling": "броня",
     "stress_patterns": [
@@ -61,7 +62,11 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "definition_uk(ws_t8v9w1x2y3z4) ∋ <text>; parallel texts, identical texts corroborate"
         },
         "sense_label": {
           "state": "single-source",
@@ -77,19 +82,35 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "sense_label(ws_t8v9w1x2y3z4) ∋ <text>; parallel texts, identical texts corroborate"
         }
       }
     }
   ],
   "links": [
     {
-      "link_id": "wl_adee4a8c5d866e47ff590674",
+      "link_id": "wl_366c31a808dc545ce5d1db1d",
       "type": "homograph_of",
-      "from": "wc_w8g1k4qt7zhm",
-      "to": "wc_v5r2b9nx3cfk",
-      "assertion_ids": [],
-      "state": "active"
+      "endpoints": [
+        {
+          "id": "wc_v5r2b9nx3cfk"
+        },
+        {
+          "id": "wc_w8g1k4qt7zhm"
+        }
+      ],
+      "basis": "derived",
+      "assertion_ids": [
+        "wa_324f4d6e8ad470fbf717e223",
+        "wa_a84cf259af9ac6c370876770",
+        "wa_d9de683eb89cae845e326f2f"
+      ],
+      "state": "active",
+      "derived_by": "rules:rules-v1-draft equal key_at_creation.spelling (case-insensitive), distinct identity"
     }
   ],
   "fields": {
@@ -107,7 +128,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "grammatical_label(wc_w8g1k4qt7zhm) = <value_norm>"
     },
     "spelling": {
       "state": "single-source",
@@ -123,7 +148,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "spelling(wc_w8g1k4qt7zhm) = <value_norm>"
     },
     "stress": {
       "state": "single-source",
@@ -139,7 +168,17 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "stress(wc_w8g1k4qt7zhm) = <value_norm>",
+      "non_voting": [
+        {
+          "assertion_id": "wa_e4dbb47633465ebe286698bb",
+          "reason": "mapping low"
+        }
+      ]
     }
   },
   "assertions": [
@@ -171,7 +210,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:броня#бро́ня#іменник жіночого роду"
     },
     {
       "assertion_id": "wa_e68402d9cfcd79118c32c684",
@@ -201,7 +241,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:броня#бро́ня#іменник жіночого роду"
     },
     {
       "assertion_id": "wa_e4dbb47633465ebe286698bb",
@@ -232,6 +273,7 @@
       "independence_group": "G-VESUM",
       "tier": 1,
       "status": "active",
+      "source_record_key": "vesum:record:броня/noun/noun:inanim:f:v_naz",
       "mapping": {
         "confidence": "low",
         "note": "unsplit VESUM lemma; evidence only"
@@ -265,7 +307,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:броня#бро́ня#іменник жіночого роду"
     },
     {
       "assertion_id": "wa_daedb9540775a8eda9070ad1",
@@ -295,7 +338,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:броня#бро́ня#іменник жіночого роду"
     },
     {
       "assertion_id": "wa_e4360d1faf73e41306a17896",
@@ -326,6 +370,7 @@
       "independence_group": "G-WIKI",
       "tier": 2,
       "status": "active",
+      "source_record_key": "wiktionary:record:броня",
       "mapping": {
         "confidence": "medium",
         "note": "mapped by curator to the ULIF sense_gloss"
@@ -334,7 +379,7 @@
   ],
   "quality": {
     "identity_confidence": "medium",
-    "extraction_confidence_min": "high",
+    "extraction_confidence_min": "medium",
     "linguistic_review": {
       "status": "none"
     },
@@ -353,14 +398,29 @@
   },
   "overlay_applied": [],
   "build": {
-    "build_id": "example-2026-09-28",
+    "build_id": "example-2026-09-28-r2",
     "rules_version": "rules-v1-draft",
     "inputs": {
-      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
-      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
-      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
-      "overlay": "none (examples)"
-    }
+      "S": {
+        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+      },
+      "V": {
+        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+      },
+      "I": {
+        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+      },
+      "O": {
+        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+      },
+      "R": {
+        "rules": "rules-v1-draft",
+        "normaliser": "norm-v1",
+        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+      }
+    },
+    "card_version": "cv_71b354effc0023051b528d52"
   }
 }

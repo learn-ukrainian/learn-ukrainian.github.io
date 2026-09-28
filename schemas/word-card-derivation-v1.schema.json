@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-derivation-v1.schema.json",
+  "title": "Word-card derivation records v1 (#8978 / #8983 / #8980)",
+  "description": "Dependency records (schema.md §11): each derived item (exercise, distractor, gloss, dataset row, page, search doc, curriculum embed) names the assertions and card versions it read and its own output identity. derived_id = wd_ + sha256(generator, generator_version, inputs, output kind + key).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derived_id",
+        "kind",
+        "generator",
+        "generator_version",
+        "rules_version",
+        "build_id",
+        "inputs",
+        "output",
+        "status"
+      ],
+      "properties": {
+        "derived_id": {
+          "type": "string",
+          "pattern": "^wd_[0-9a-f]{24}$"
+        },
+        "kind": {
+          "enum": [
+            "exercise",
+            "distractor",
+            "gloss",
+            "relation",
+            "dataset_row",
+            "atlas_page",
+            "search_doc",
+            "curriculum_embed"
+          ]
+        },
+        "generator": {
+          "type": "string"
+        },
+        "generator_version": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "build_id": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "assertion_ids",
+            "card_ids",
+            "card_versions"
+          ],
+          "properties": {
+            "assertion_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/assertion_id"
+              }
+            },
+            "card_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/card_id"
+              }
+            },
+            "card_versions": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^cv_[0-9a-f]{24}$"
+              }
+            }
+          }
+        },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "key",
+            "content_sha256"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string",
+              "description": "Output identity: route, item key, dataset row key, release + path."
+            },
+            "content_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "invalidated"
+          ]
+        },
+        "invalidated_by": {
+          "type": "string",
+          "description": "suppression_id or build_id that invalidated the output."
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,8 @@
-# Word cards C0 — identity contract (#8334, draft for review)
+# Word cards C0 — identity contract (#8334, r2 revised per the design panel)
 
 - **Decides (once approved):** what an Atlas entry *is*. A card is a lexeme, an MWE or a proper name, never a spelling. Spelling, stress, POS and source homonym numbers are attributes and matching evidence.
 - **Companion docs:** [`schema.md`](schema.md) (card and assertion shape, states), [`worked-examples.md`](worked-examples.md), [`migration.md`](migration.md).
-- **Status:** draft 2026-09-28, author Claude (Fable 5.1). Needs the #8334 stop-policy reads: an advisor design read (Astra) and a language-lane read (Gemini via AGY) on the linguistic model, then operator sign-off. No stress or meaning judgment below is the author's: every Ukrainian form is quoted from `data/sources.db`, `data/vesum.db` or `data/atlas.db` (read-only, 2026-09-28; §12).
+- **Status:** r2 2026-09-28, author Claude (Fable 5.1). Round 1: Astra (design) REVISE — split semantics, MWE key and progress handling reworked in §7 and §9; Gemini (language lane, via AGY) APPROVE — every measured split, stress and homonym reading confirmed against `sources.db`/`vesum.db`/`atlas.db` with the `sources` MCP tools, and the classification of the 78 Atlas-vs-ULIF stress differences as mostly identity artefacts confirmed. Remaining: operator sign-off and the decisions in `schema.md` §16.3. No stress or meaning judgment below is the author's: every Ukrainian form is quoted from `data/sources.db`, `data/vesum.db` or `data/atlas.db` (read-only, 2026-09-28; §12).
 - **Not in this doc:** the URL scheme (#8334 AC-02, open question) and the consumer inventory (in `migration.md` §6).
 
 ## 1. Operational definitions
@@ -11,8 +11,8 @@
 | --- | --- | --- |
 | **lexeme** | one word = one paradigm (a VESUM `entry_id` or a ULIF paradigm table) + one stress pattern or one declared doublet set + one coarse POS + one sense family as divided by the homonym numbering of a tier-1 dictionary. Two rows that differ in any of paradigm, stress pattern or dictionary homonym division are two lexemes unless a source states they are the same word. | spelling (NFC, no accents), `stress_patterns`, `pos`, `paradigm_key`, namespaced `source_keys` |
 | **sense** | one meaning unit under a lexeme, fed by one or more source sense units (`sense_map`); relations, definitions and examples target senses | order, `sense_map` |
-| **multiword expression (MWE)** | a fixed expression with its own citation in a phraseological source (ULIF phraseology section, `frazeolohichnyi` row) or an admitted multiword article, keyed by `<first locator>|<normalised form>`, linked to its component lexemes with roles | normalised form, slots, components |
-| **proper name** | a capitalised headword marked `:prop` in VESUM or capitalised in ULIF (`За́мок`, `Коса́`); its own card kind, never merged with the homographic common noun | as lexeme |
+| **multiword expression (MWE)** | a fixed expression with its own citation in a phraseological source (ULIF phraseology section, `frazeolohichnyi` row) or an admitted multiword article, identified by the identity registry; its normalised form and the locators it was found at are matching evidence (§9), linked to its component lexemes with roles | normalised form, slots, components |
+| **proper name** | a headword marked `:prop` in VESUM, or labelled `прізвище` (5,787 checked rows) / `власна назва` (443) in ULIF, or capitalised in ULIF with a place gloss (`За́мок`, `Коса́`); the label alone sets `card_kind = proper_name` (Gemini, Q-I8) but never establishes cross-source identity or distinguishes individual people or places (Astra): matching across sources still needs §4, and `Коса́` (settlement) and `Коса́` (river) are two cards. A proper name with no VESUM entry still gets a card from its ULIF evidence (Q-I7); capitalisation alone is not evidence. Its own card kind, never merged with the homographic common noun, excluded from the general vocabulary pilot | as lexeme |
 
 Attributes can change without changing the id: a 2019-orthography respelling, a corrected stress, a re-numbered homonym in a new ULIF harvest. Identity changes only by **split**, **merge** or **redirect** (§7).
 
@@ -73,11 +73,11 @@ Inputs per candidate: VESUM entry (lemma, pos, tags, stripped form set, comment 
 | several on a side, and stress + paradigm pick exactly one partner for each | `stress_and_paradigm`, **high** (`замок` castle/lock, `вибігати`) |
 | several on a side, paradigm alone separates them | `paradigm_only`, **high** |
 | several on a side, stress alone separates them (paradigm identical or missing) | `stress_only`, **medium** (`броня`, `варення`) |
-| several ULIF homonyms with identical stress and paradigm, one VESUM entry | dictionary-division split: one card per ULIF homonym, VESUM entry mapped to all, **medium** (`ключ`, `коса́` homonyms 4–6) — pending Q-I1 |
+| several ULIF homonyms with identical stress and paradigm, one VESUM entry | dictionary-division split: one **provisional** card per ULIF homonym, VESUM entry mapped to all (`mapping.basis = paradigm`), **medium** (`ключ`, `коса́` homonyms 4–6) — Q-I1 adopted (Astra + Gemini); when ULIF and ВТС divisions differ in count, see `schema.md` §16.3 item 1 |
 | unique VESUM entry, ULIF header empty and no paradigm (27 rows), or POS incompatible, or paradigm `differs` with no second candidate | VESUM card at **high** on its own; ULIF row held as `unresolved` (§6) |
 | overlay `identity` entry | `overlay`, confidence as stated by the lane |
 
-Spelling equality is a precondition of step 1, never sufficient by itself.
+Spelling equality is a precondition of step 1, never sufficient by itself. Every match records its `mapping.basis` (`entry`, `paradigm`, `stress`, `sense`, `overlay`, `curator`, `spelling`); a spelling-keyed row (PULS, kaikki, ukrainian-word-stress, GRAC estimates) on a spelling with more than one card is `ambiguous` unless stress or sense evidence picks the card, and ambiguous rows never feed eligibility (`schema.md` §9.5).
 
 ## 5. The cases, with measured examples
 
@@ -91,7 +91,7 @@ Spelling equality is a precondition of step 1, never sufficient by itself.
 
 **E. An apparent stress conflict that is homonymy: `варення`.** Atlas (kaikki) `варе́ння`; ULIF homonym 1 `ва́рення` `(дія)` and homonym 2 (header empty) with paradigm `варе́ння`; VESUM one entry (35022, `xv2`); PULS B1. Spelling-keyed comparison reports a conflict; the contract yields two cards (`stress_only`, medium) and no conflict at all. Same pattern: `бере` (ULIF noun `бе́ре` vs kaikki verb form `бере́`), `всього` (ULIF adverb `всього́` vs `всьо́го`), `виносити` (ULIF 1 `ви́носити` perfective; VESUM `xp1 вино́сити` imperfective / `xp2 ви́носити` perfective).
 
-**F. Sources disagree on identity: `броня`.** VESUM one lemma, comment `xv2 броня́; бро́ня` (a doublet on one word); ULIF two homonyms with different senses and stresses: 1 `бро́ня` `(закріплення; документ про закріплення)`, 2 (header empty) paradigm `броня́`; Wiktionary lists both meaning families under one spelling; kaikki stress `броня́`. Proposed rule: when the finer source gives distinct senses **and** distinct stress, follow the finer division (two cards, **medium**); the coarser source's doublet assertion is retained on both cards at `mapping.confidence = low` and does not vote. A language-lane read can raise this to `high` via an overlay `identity` entry.
+**F. Sources disagree on identity: `броня`.** VESUM one lemma, comment `xv2 броня́; бро́ня` (a doublet on one word); ULIF two homonyms with different senses and stresses: 1 `бро́ня` `(закріплення; документ про закріплення)`, 2 (header empty) paradigm `броня́`; Wiktionary lists both meaning families under one spelling; kaikki stress `броня́`. Rule: when the finer source gives distinct senses **and** distinct stress, follow the finer division (two cards, **medium**); the coarser source's doublet assertion is retained on both cards at `mapping.confidence = low`, does not vote, and is never read as assigning both stresses to each meaning. The language lane confirmed the two-card reading (Gemini, 2026-09-28: distinct etymologies per ЕСУМ т. 1, с. 262; VESUM's single entry is a morphological simplification); the cards rise to `high` when that read is recorded as an overlay `identity` entry citing the review.
 
 **G. Two ULIF rows, one word: `визволення`.** Homonym 2 is glossed `(те ж саме, що ви́зволення)`; ULIF itself equates the rows. Rule: a `те ж саме, що` gloss (or an overlay `variant`) collapses the rows into one card with `stress` **`variant`** (`ви́зволення` / `визво́лення`).
 
@@ -108,12 +108,24 @@ Spelling equality is a precondition of step 1, never sufficient by itself.
 
 Expected volume from today's numbers: 10,570 ULIF spellings with several homonyms, 18,935 VESUM lemmas with several entries, 2,811 existing Atlas lemma articles whose spelling has several checked ULIF homonyms; these are the split candidates for the golden set (`migration.md` §5).
 
-## 7. Splits, merges and redirects
+## 7. Splits, merges, redirects and what consumers do with them
 
-- **Split** (one card → several): overlay `split` with `into` ids (minted at split time), evidence and lane. The old card becomes `redirected` with `merged_into` pointing at the card that keeps the majority of its assertions (rule: the one matching the old card's shown stress), and each assertion is re-mapped by the matching rules; assertions that do not map at ≥ medium go to the holding area. Learner progress keyed to the old id follows `merged_into` (Q-I4 on whether progress should instead be voided on a split).
-- **Merge** (several → one): overlay `merge`; the losing card becomes `redirected`, its senses get `merged_into`, its assertions are re-subjected to the survivor, and duplicate assertions collapse (same content address).
-- **Redirect** is the only visible effect of both: ids are never deleted or reused, and the mapping table keeps `key_at_creation` so a future harvest cannot re-mint the old key.
-- **Re-harvest**: a new ULIF snapshot re-runs the matching; a homonym that changed number is re-attached by stress + paradigm, not by number; a changed `content_sha256` supersedes the old assertions.
+### 7.1 Merge → redirect (many → one)
+Overlay `merge`; the losing card becomes `redirected` with `merged_into = <survivor>`, its senses get `merged_into` sense ids, its assertions are re-subjected to the survivor and duplicate assertions collapse (same content address). Every consumer that holds the old id (learner progress, exercises, dataset rows, curriculum embeds) resolves through `merged_into` before use; scheduling state transfers whole, because one word remains one word.
+
+### 7.2 Split (one → many) is not a redirect
+Overlay `split` with `into` ids (allocated in the identity registry at split time), evidence and lane. The old card becomes `state = split` with `split_into = [successors]` and **no `merged_into`**: the old card mixed two words, so no successor is "the same card" and nothing may be sent to whichever successor happens to match the old displayed stress (round-1 rule, withdrawn). Each assertion is re-mapped by the matching rules of §4 with its basis recorded; assertions that do not map at ≥ medium go to the holding area (§6). The registry records the `split` event with `from`, `to`, overlay id and evidence (`examples/companion/identity-registry.json`, event `ie_0002`).
+
+### 7.3 Learner progress across a split (Q-I4, adopted)
+- **History is preserved.** Attempt records keep the old card id and are never rewritten or deleted.
+- **Scheduling transfers only on evidence.** A progress record moves to a successor only when the items it was built from identify that successor: the exercise's derivation record (`schema.md` §11) names a `sense_id` or assertion ids that map to exactly one successor (a stress item built on `за́мок` → castle; a meaning item built on the lock sense → lock). Transferred records note `transferred_from` and the split event id.
+- **Ambiguous mastery is reassessed, not guessed.** Records whose items cannot be attributed (an item built on the merged article's shared fields) are kept under the old id with `state = needs_reassessment`; the practice scheduler treats the successors as unseen until the learner answers a fresh item on each, then closes the old record.
+- **Never voided silently.** Nothing is deleted; the learner-visible history shows the split.
+
+### 7.4 Rules common to both
+- Ids are never deleted or reused; the registry keeps `key_at_creation` so a future harvest cannot re-mint an old key; a redirected/split/retired id stays resolvable forever.
+- Splits and merges chain: a consumer resolving an id follows `merged_into` and `split_into` until it reaches active cards, and the registry forbids cycles (`schema.md` §15 invariant 1).
+- **Re-harvest**: a new ULIF snapshot re-runs the matching; a homonym that changed number is re-attached by stress + paradigm, not by number; the `source_records` correspondence maps the old locator to the new one by `source_record_key` (`schema.md` §12.1); a changed `content_sha256` supersedes the old assertions and the suppression selectors still apply.
 
 ## 8. Sense identity
 
@@ -121,9 +133,9 @@ Senses are card-owned rows. Source sense units (`ulif:section:<id>` synonym grou
 
 ## 9. MWE identity
 
-- Key: `<first source locator>|<normalised form>`; normalised form = NFC, accents stripped, lower-case, inner punctuation dropped, slot words (`кого, чого`, `що-н.`) and bracketed alternatives kept as `mwe_frame`. Sources: ULIF phraseology (8,131 sections; 4,820 distinct 60-char heads), `frazeolohichnyi` (24,683 rows), today's 639 multiword articles.
-- The same idiom under several headwords is one card (`будувати повітряні замки` under `замок` and `повітряний`). Variant forms inside one ULIF section (`тримати (держати) за сімома замками`; `за сімома замками тримав`; `тримає за сімома замками`) are one card with `mwe_frame` variants, not several cards.
-- Components: `component_of` links to lexeme cards, role `anchor` for the fixed non-optional word (ULIF `uid` anchors identify the component's homonym: `uid=47336` castle for `повітряні за́мки`, `uid=47335` lock for `за сімома замка́ми`).
+- Identity is the registry entry; **matching evidence** is the normalised form plus the set of locators the expression was found at (recorded in `key_at_creation.mwe_key` as `<locator>|<normalised form>` for the first find and in `identity.source_keys` for every find). The key is evidence stored in the registry, not a derivation from source order: removing or reordering a source never changes which card an expression resolves to (Astra lock-in note). Normalised form = NFC, accents stripped, lower-case, inner punctuation dropped, slot words (`кого, чого`, `що-н.`) and bracketed alternatives kept as `mwe_frame`. Sources: ULIF phraseology (8,131 sections; 4,820 distinct 60-char heads), `frazeolohichnyi` (24,683 rows), today's 639 multiword articles.
+- **Equality of normalised text alone never merges two expressions.** The same idiom under several headwords is one card only when the source text, definition and citation are the same dictionary record (`будувати повітряні замки` under `замок` and `повітряний`: identical text and citation in ULIF sections 96932 and 218523); two expressions with equal normalised text but different definitions stay two cards until a language-lane overlay `merge` says otherwise. Variant forms inside one ULIF section (`тримати (держати) за сімома замками`; `за сімома замками тримав`; `тримає за сімома замками`) are one card with `mwe_frame` variants, not several cards.
+- Components: `component_of` links to lexeme cards, endpoints `{whole}` → `{anchor | component}` (ULIF `uid` anchors identify the component's homonym: `uid=47336` castle for `повітряні за́мки`, `uid=47335` lock for `за сімома замка́ми`).
 
 ## 10. Aspect pairs
 
@@ -167,13 +179,15 @@ for slug, f in atlas.items():
 print(agree, variant, conflict)   # 14419 12 78
 ```
 
-## 12. Open questions for the language lane (Gemini) and the design read (Astra)
+## 12. Panel answers to the identity questions (2026-09-28)
 
-- **Q-I1 (language)** Dictionary homonym division with an identical paradigm and stress (`ключ` 1/2, `коса́` 4–6): two cards at `medium` as proposed, or one card with senses until a lane confirms? What is the rule when ULIF and ВТС divisions differ in count?
-- **Q-I2 (language)** ULIF headwords with two accents on a single token (2,828): treat all as doublet candidates, or only when the paradigm rows are double-marked too (`по́ми́лки`, `по́ми́лці`) as for `помилка`?
-- **Q-I3 (language)** `броня`: confirm the two-card reading (VESUM unsplit doublet vs ULIF two homonyms), or rule that a VESUM-declared doublet always wins?
-- **Q-I4 (design)** On a split, should learner progress follow `merged_into` (proposed) or be voided, given the old card mixed two words?
-- **Q-I5 (design)** Denominator: every VESUM entry (442,458) gets a card even when ULIF is silent (proposed), versus VESUM lemma × pos (423,661).
-- **Q-I6 (design + ULIF lane)** Extract ULIF's own `uid` per entry from the self-referencing anchors so `ulif:uid:<n>` can be the stable locator across harvests (numbers move, `uid` presumably does not).
-- **Q-I7 (language)** Proper-name homonyms in ULIF with no VESUM `:prop` entry (`Коса́` river): create cards or hold?
-- **Q-I8 (language)** Treat `прізвище` (5,787 checked rows) and `власна назва` (443) as `proper_name` cards by label alone?
+| question | Astra (design) | Gemini (language) | adopted |
+| --- | --- | --- | --- |
+| **Q-I1** identical paradigm and stress, dictionary homonymy (`ключ`, `коса́` 4–6) | two provisional cards; identical paradigms do not collapse dictionary-distinguished words; adjudication before merge or meaning practice | two cards at `medium` per the tier-1 division (ЕСУМ, СУМ corroborate); where ULIF and ВТС counts differ, one shared card with an `unsplit` sense group until an overlay resolves it | two provisional cards at `medium` (§4). Count disagreement: **decision needed** (`schema.md` §16.3 item 1; recommendation = Gemini's shared card) |
+| **Q-I2** single tokens with two accents (2,828) | candidates only; distinguish alternate stress, compound/secondary stress, markup damage | candidates only when corroborated by double-marked paradigm rows or an external authority; `Ба́лтімо́р`-type rhythmic stress is not a doublet | adopted: candidate list for the split-candidate pass (M3); `variant` only with paradigm-row or second-source corroboration |
+| **Q-I3** `броня` | two cards provisionally, pending the language read; VESUM's comment is morphological, not semantic, evidence | two cards confirmed (distinct etymologies, meanings, stresses) | adopted (§5 F); overlay `identity` entry citing the read raises to `high` |
+| **Q-I4** progress on a split | preserve history; transfer only attributable state; store the event and all successors; reassess ambiguous scheduling | — | adopted (§7.3) |
+| **Q-I5** denominator | account for every VESUM entry, not one card per entry; report covered entries, cards, merged variants and unresolved mappings separately | — | adopted (`migration.md` §3) |
+| **Q-I6** ULIF `uid` | extract as a namespaced key, test uniqueness/stability across snapshots, keep snapshot-local locators and correspondence | — | adopted: `ulif:uid:<n>` becomes the preferred `source_record_key` once extracted; until then the content-derived `ulif:record:` key (`schema.md` §4) |
+| **Q-I7** ULIF-only proper names (`Коса́` river) | create independently evidenced cards; absence from VESUM is not rejection; keep matching uncertainty explicit | `власна назва`/`прізвище` → `proper_name` by label | adopted (§1) |
+| **Q-I8** labels | labels establish the source's classification, not cross-source identity or individual identity | by label alone | adopted (§1): kind by label, identity by §4 |

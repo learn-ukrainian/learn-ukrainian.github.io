@@ -1,0 +1,46 @@
+{
+  "schema_version": "1",
+  "entries": [
+    {
+      "suppression_id": "sup-example-0001",
+      "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+      "date": "2026-09-28",
+      "selector": {
+        "kind": "source_record",
+        "source_id": "ulif",
+        "source_record_key": "ulif:record:замок#замо́к#"
+      },
+      "scope": [
+        "site",
+        "dataset"
+      ],
+      "applies_to": {
+        "reharvest": true,
+        "rollback": true
+      },
+      "note": "example: every assertion extracted from the ULIF lock record, in any snapshot"
+    },
+    {
+      "suppression_id": "sup-example-0002",
+      "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+      "date": "2026-09-28",
+      "selector": {
+        "kind": "assertion_content",
+        "source_id": "ukrainian_word_stress",
+        "field": "stress",
+        "subject_spelling": "вряди-годи",
+        "value_norm": "вряди́-го́ди"
+      },
+      "scope": [
+        "site",
+        "dataset",
+        "internal"
+      ],
+      "applies_to": {
+        "reharvest": true,
+        "rollback": true
+      },
+      "note": "example: one value from one source on one spelling, whatever its assertion id after re-normalisation"
+    }
+  ]
+}

@@ -4,6 +4,7 @@
   "card_kind": "lexeme",
   "state": "active",
   "merged_into": null,
+  "split_into": null,
   "key_at_creation": {
     "spelling": "замок",
     "stress_patterns": [
@@ -76,7 +77,11 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "register(ws_d4e5f6g7h8j9) ∋ <text>; parallel texts, identical texts corroborate"
         },
         "sense_label": {
           "state": "single-source",
@@ -92,7 +97,11 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "sense_label(ws_d4e5f6g7h8j9) ∋ <text>; parallel texts, identical texts corroborate"
         },
         "synonyms": {
           "state": "single-source",
@@ -108,7 +117,11 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "synonyms(ws_d4e5f6g7h8j9) ∋ <text>; parallel texts, identical texts corroborate"
         }
       }
     },
@@ -138,7 +151,11 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "synonyms(ws_e5f6g7h8j9k1) ∋ <text>; parallel texts, identical texts corroborate"
         }
       }
     },
@@ -168,19 +185,36 @@
               ]
             }
           ],
-          "independence_groups_agreeing": 1
+          "independence_groups_agreeing": 1,
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1,
+          "comparison": "text",
+          "proposition": "synonyms(ws_f6g7h8j9k1m2) ∋ <text>; parallel texts, identical texts corroborate"
         }
       }
     }
   ],
   "links": [
     {
-      "link_id": "wl_07982e56bac41857fd326030",
+      "link_id": "wl_5ab31081f385044850c7d5d9",
       "type": "homograph_of",
-      "from": "wc_c2v8n5rt6yhq",
-      "to": "wc_7k3m9q2xw4pd",
-      "assertion_ids": [],
-      "state": "active"
+      "endpoints": [
+        {
+          "id": "wc_7k3m9q2xw4pd"
+        },
+        {
+          "id": "wc_c2v8n5rt6yhq"
+        }
+      ],
+      "basis": "derived",
+      "assertion_ids": [
+        "wa_62c6b4bcf85fe14751cc40ef",
+        "wa_84a4dbaa12699bbaa3e254d6",
+        "wa_857969108a36010415e2e6cb",
+        "wa_e9aaa6b0196158574ab7d38d"
+      ],
+      "state": "active",
+      "derived_by": "rules:rules-v1-draft equal key_at_creation.spelling (case-insensitive), distinct identity"
     }
   ],
   "fields": {
@@ -198,7 +232,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": false,
+      "independence_groups_evidenced": 0,
+      "comparison": "scalar",
+      "proposition": "cefr(wc_c2v8n5rt6yhq) = <value_norm>"
     },
     "english_gloss": {
       "state": "unverified",
@@ -207,8 +245,8 @@
         {
           "value_norm": "lock (door lock, padlock)",
           "assertion_ids": [
-            "wa_dcd597c8b17459058d7b7e74",
-            "wa_7c892f423fa19f342bfee208"
+            "wa_7c892f423fa19f342bfee208",
+            "wa_dcd597c8b17459058d7b7e74"
           ],
           "independence_groups": [
             "G-PROJECT"
@@ -216,6 +254,10 @@
         }
       ],
       "independence_groups_agreeing": 0,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 0,
+      "comparison": "text",
+      "proposition": "english_gloss(wc_c2v8n5rt6yhq) ∋ <text>; parallel texts, identical texts corroborate",
       "level_policy": "scaffold: shown at A1 by design, never raised from A2 (#8983)"
     },
     "gender": {
@@ -232,11 +274,17 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "gender(wc_c2v8n5rt6yhq) = <value_norm>"
     },
     "paradigm": {
       "state": "verified",
-      "selected": "wa_57e57fae5503a6900340a754",
+      "selected": [
+        "wa_57e57fae5503a6900340a754"
+      ],
       "values": [
         {
           "value_norm": "rod.sg=замка",
@@ -250,7 +298,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "keyed",
+      "proposition": "paradigm(wc_c2v8n5rt6yhq)[<key>] = <value>; one proposition per key"
     },
     "pos": {
       "state": "single-source",
@@ -266,7 +318,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 1
+      "independence_groups_agreeing": 1,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 1,
+      "comparison": "scalar",
+      "proposition": "pos(wc_c2v8n5rt6yhq) = <value_norm>"
     },
     "spelling": {
       "state": "verified",
@@ -284,7 +340,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "spelling(wc_c2v8n5rt6yhq) = <value_norm>"
     },
     "stress": {
       "state": "verified",
@@ -302,7 +362,11 @@
           ]
         }
       ],
-      "independence_groups_agreeing": 2
+      "independence_groups_agreeing": 2,
+      "mapping_evidenced": true,
+      "independence_groups_evidenced": 2,
+      "comparison": "scalar",
+      "proposition": "stress(wc_c2v8n5rt6yhq) = <value_norm>"
     }
   },
   "assertions": [
@@ -334,7 +398,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1"
     },
     {
       "assertion_id": "wa_84a4dbaa12699bbaa3e254d6",
@@ -364,7 +429,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_184ed5e9b96fb514b07b78f2",
@@ -394,7 +460,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_b829712900f589ee99675c1f",
@@ -424,7 +491,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1"
     },
     {
       "assertion_id": "wa_1a0df234919fbcd56b4e7845",
@@ -454,7 +522,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1"
     },
     {
       "assertion_id": "wa_f7ef72306cf6be9e419b273c",
@@ -484,7 +553,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1"
     },
     {
       "assertion_id": "wa_57e57fae5503a6900340a754",
@@ -530,7 +600,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_c2598bdade765dc15956cd95",
@@ -566,7 +637,8 @@
       },
       "independence_group": "G-VESUM",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1"
     },
     {
       "assertion_id": "wa_3c5417dcbd9f3e0f70f528ee",
@@ -597,9 +669,12 @@
       "independence_group": "G-PULS",
       "tier": 2,
       "status": "active",
+      "source_record_key": "puls:record:замок/іменник/A2",
       "mapping": {
         "confidence": "medium",
-        "note": "PULS rows are keyed by spelling; which замок the A2 rating means is not stated"
+        "basis": "spelling",
+        "ambiguous": true,
+        "note": "PULS rows are keyed by spelling and this spelling has several cards; retained and shown, but not evidence for a dependent eligibility rule until an overlay maps the row (schema.md §9.5)"
       }
     },
     {
@@ -697,7 +772,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_d43204238c39e0371ec61c1a",
@@ -730,7 +806,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_abaab06e9cdc389d41cd395f",
@@ -760,7 +837,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_ae38d7631114e3a1f35ab272",
@@ -795,7 +873,8 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     },
     {
       "assertion_id": "wa_d86785d728c6c05737122919",
@@ -830,22 +909,24 @@
       },
       "independence_group": "G-ULIF",
       "tier": 1,
-      "status": "active"
+      "status": "active",
+      "source_record_key": "ulif:record:замок#замо́к#"
     }
   ],
   "quality": {
     "identity_confidence": "high",
-    "extraction_confidence_min": "high",
+    "extraction_confidence_min": "medium",
     "linguistic_review": {
       "status": "none"
     },
     "practice_eligibility": [
       {
         "mode": "stress",
-        "eligible": true,
+        "eligible": false,
         "rules_version": "rules-v1-draft",
         "reasons": [
-          "stress verified (ULIF paradigm + VESUM comment)"
+          "stress verified (ULIF paradigm + VESUM comment), identity high",
+          "cefr A2 mapping_evidenced=false (PULS row 4340 spelling-keyed, two lexeme cards): level band rule unmet"
         ]
       },
       {
@@ -861,14 +942,29 @@
   },
   "overlay_applied": [],
   "build": {
-    "build_id": "example-2026-09-28",
+    "build_id": "example-2026-09-28-r2",
     "rules_version": "rules-v1-draft",
     "inputs": {
-      "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-      "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
-      "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
-      "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
-      "overlay": "none (examples)"
-    }
+      "S": {
+        "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+        "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+        "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)"
+      },
+      "V": {
+        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+      },
+      "I": {
+        "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+      },
+      "O": {
+        "overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"
+      },
+      "R": {
+        "rules": "rules-v1-draft",
+        "normaliser": "norm-v1",
+        "register": "docs/sources/permissions-register.yaml schema_version 2 sha256=eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
+      }
+    },
+    "card_version": "cv_e138076247b5a6fe31b30a6d"
   }
 }

@@ -1,0 +1,332 @@
+{
+  "schema_version": "1",
+  "registry_version": 1,
+  "entries": [
+    {
+      "card_id": "wc_0a1b2c3d4e5f",
+      "card_kind": "lexeme",
+      "state": "split",
+      "key_at_creation": {
+        "spelling": "замок",
+        "stress_patterns": [
+          "за́мок"
+        ],
+        "pos": "noun",
+        "source_keys": [
+          {
+            "source_id": "atlas0",
+            "key": "atlas0:slug:замок"
+          }
+        ]
+      },
+      "created_in_build": "atlas0-migration-M1",
+      "senses": [],
+      "split_into": [
+        "wc_7k3m9q2xw4pd",
+        "wc_c2v8n5rt6yhq"
+      ]
+    },
+    {
+      "card_id": "wc_7k3m9q2xw4pd",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "замок",
+        "stress_patterns": [
+          "за́мок"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:128973",
+        "source_keys": [
+          {
+            "source_id": "vesum",
+            "key": "vesum:entry:128973"
+          },
+          {
+            "source_id": "ulif",
+            "key": "ulif:entry:76792"
+          }
+        ]
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_a1b2c3d4e5f6",
+          "order": 1,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_b2c3d4e5f6g7",
+          "order": 2,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_c3d4e5f6g7h8",
+          "order": 3,
+          "state": "unsplit"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_c2v8n5rt6yhq",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "замок",
+        "stress_patterns": [
+          "замо́к"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:128972",
+        "source_keys": [
+          {
+            "source_id": "vesum",
+            "key": "vesum:entry:128972"
+          },
+          {
+            "source_id": "ulif",
+            "key": "ulif:entry:76793"
+          }
+        ]
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_d4e5f6g7h8j9",
+          "order": 1,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_e5f6g7h8j9k1",
+          "order": 2,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_f6g7h8j9k1m2",
+          "order": 3,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_e9p1s4dz7xkm",
+      "card_kind": "proper_name",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "Замок",
+        "stress_patterns": [
+          "За́мок"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:128971"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_g7h8j9k1m2n3",
+          "order": 1,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_hb4t8k1nq6zv",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "ключ",
+        "stress_patterns": [
+          "ключ"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:168409"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_h8j9k1m2n3p4",
+          "order": 1,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_j9k1m2n3p4q5",
+          "order": 2,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_k1m2n3p4q5r6",
+          "order": 3,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_m2n3p4q5r6s7",
+          "order": 4,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_n3p4q5r6s7t8",
+          "order": 5,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_p4q5r6s7t8v9",
+          "order": 6,
+          "state": "active"
+        },
+        {
+          "sense_id": "ws_q5r6s7t8v9w1",
+          "order": 7,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_m3y6w9dc2sxr",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "ключ",
+        "stress_patterns": [
+          "ключ"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:168409",
+        "source_keys": [
+          {
+            "source_id": "ulif",
+            "key": "ulif:entry:98008"
+          }
+        ]
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": []
+    },
+    {
+      "card_id": "wc_pq7z2f5jh8na",
+      "card_kind": "mwe",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "будувати повітряні замки",
+        "pos": "phrase",
+        "mwe_key": "ulif:entry:76792/section:96932|будувати повітряні замки"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_r6s7t8v9w1x2",
+          "order": 1,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_v5r2b9nx3cfk",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "броня",
+        "stress_patterns": [
+          "броня́"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:30497"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_s7t8v9w1x2y3",
+          "order": 1,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_w8g1k4qt7zhm",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "броня",
+        "stress_patterns": [
+          "бро́ня"
+        ],
+        "pos": "noun",
+        "paradigm_key": "vesum:entry:30497"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": [
+        {
+          "sense_id": "ws_t8v9w1x2y3z4",
+          "order": 1,
+          "state": "active"
+        }
+      ]
+    },
+    {
+      "card_id": "wc_x2j5n8sd1vpc",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "вряди-годи",
+        "pos": "adv",
+        "paradigm_key": "vesum:entry:67854"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": []
+    },
+    {
+      "card_id": "wc_y9c3q6hw4rtn",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "вибігати",
+        "stress_patterns": [
+          "вибіга́ти"
+        ],
+        "pos": "verb",
+        "paradigm_key": "vesum:entry:40937"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": []
+    },
+    {
+      "card_id": "wc_z4f7m1kb8xsq",
+      "card_kind": "lexeme",
+      "state": "active",
+      "key_at_creation": {
+        "spelling": "вибігти",
+        "stress_patterns": [
+          "ви́бігти"
+        ],
+        "pos": "verb",
+        "paradigm_key": "vesum:entry:40942"
+      },
+      "created_in_build": "example-2026-09-28",
+      "senses": []
+    }
+  ],
+  "events": [
+    {
+      "event_id": "ie_0001",
+      "kind": "mint",
+      "build_id": "atlas0-migration-M1",
+      "cards": [
+        "wc_0a1b2c3d4e5f"
+      ],
+      "evidence": "atlas0:slug:замок (articles.slug)"
+    },
+    {
+      "event_id": "ie_0002",
+      "kind": "split",
+      "build_id": "example-2026-09-28",
+      "overlay_id": "ovl-2026-09-28-0001",
+      "from": [
+        "wc_0a1b2c3d4e5f"
+      ],
+      "to": [
+        "wc_7k3m9q2xw4pd",
+        "wc_c2v8n5rt6yhq"
+      ],
+      "evidence": "ulif:entry:76792 родовий за́мку vs ulif:entry:76793 родовий замка́; vesum:entry:128973 xp2 vs 128972 xp1; site/src/lib/lexicon/curated-heteronyms.ts замок (за́мок castle / замо́к lock)"
+    }
+  ]
+}

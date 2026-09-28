@@ -1,0 +1,32 @@
+{
+  "schema_version": "1",
+  "entries": [
+    {
+      "derived_id": "wd_0f820d5993191aeaf6d3c3dd",
+      "kind": "exercise",
+      "generator": "stress_item",
+      "generator_version": "example",
+      "rules_version": "rules-v1-draft",
+      "build_id": "example-2026-09-28-r2",
+      "inputs": {
+        "assertion_ids": [
+          "wa_5888b96f6142b2da61ca2973",
+          "wa_af42ba8e1e4cece8a46a08cd",
+          "wa_ee4ce52d28ed6153c5214c8c"
+        ],
+        "card_ids": [
+          "wc_7k3m9q2xw4pd"
+        ],
+        "card_versions": {
+          "wc_7k3m9q2xw4pd": "cv_ed675823ab724f3772444a5d"
+        }
+      },
+      "output": {
+        "kind": "exercise",
+        "key": "practice/stress/wc_7k3m9q2xw4pd/1",
+        "content_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "status": "active"
+    }
+  ]
+}

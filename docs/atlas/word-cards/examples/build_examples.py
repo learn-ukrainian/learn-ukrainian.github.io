@@ -5,6 +5,12 @@ Every Ukrainian value below is quoted from data/sources.db, data/vesum.db or dat
 model-written. Card/sense ids are opaque example ids; assertion ids are derived with the
 formula in schema.md §4 so a rebuild reproduces them.
 
+Round 2 (Astra REVISE, 2026-09-28): the resolver honours declared doublets, excludes rejected
+reviews from voting, compares fields by class (scalar / keyed / text), reports non-voting
+evidence and whether the selected mapping is evidenced; links are canonical records with typed
+endpoints; assertions carry a durable source-record key; the build manifest hashes input
+content and names the identity registry; a split card is a distinct state from a redirect.
+
 Run:  /home/ops/learn-ukrainian/.venv/bin/python docs/atlas/word-cards/examples/build_examples.py
 """
 
@@ -16,14 +22,17 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 RULES = "rules-v1-draft"
+NORMALISER = "norm-v1"
 REGISTER_VERSION = 2
+# sha256sum docs/sources/permissions-register.yaml (merged #8979 register, schema_version 2) on 2026-09-28
+REGISTER_SHA256 = "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873"
 
 ULIF_SNAP = "ulif@ulif-dictua-v2/2026-09-22..2026-09-27"
 VESUM_SNAP = "vesum@53923150073b4fc7"
 ATLAS0_SNAP = "atlas0@manifest-0.1/2026-09-11"
 SOURCES_SNAP = "sources.db@2026-09-28"
 
-# Register source id -> (independence group, tier). Provisional; schema.md §7.
+# Register source id -> (independence group, tier). Provisional; schema.md §9.1.
 GROUPS = {
     "ulif": ("G-ULIF", 1),
     "sum20": ("G-ULIF", 1),
@@ -41,17 +50,64 @@ GROUPS = {
     "atlas_curated": ("G-PROJECT", 3),
 }
 
+# Build inputs are content hashes, not row counts (schema.md §13). Measured 2026-09-28, read-only:
+#   sha256 over the sorted content_sha256 of the 262,788 checked ULIF rows; sha256 over the canonical
+#   JSON of the 5,939 puls_cefr rows; sha256 of data/atlas.db (the frozen atlas0 snapshot file);
+#   vesum_build_metadata.canonical_jsonl_sha256; sha256 of the register file.
 BUILD = {
-    "build_id": "example-2026-09-28",
+    "build_id": "example-2026-09-28-r2",
     "rules_version": RULES,
     "inputs": {
-        "vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-        "sources.ulif_dictua_entries": "262788 rows homonym_checked=1, parser ulif-dictua-v2, retrieved_at 2026-09-22T07:16:23Z..2026-09-27T23:36:03Z",
-        "sources.ulif_dictua_sections": "336369 rows (paradigm 250183, synonyms 75952, phraseology 8131, antonyms 2103)",
-        "atlas0.manifest": "atlas.db manifest_metadata version 0.1 generated_at 2026-09-11T10:12:36+00:00",
-        "overlay": "none (examples)",
+        "S": {
+            "sources.ulif_dictua_entries": "sha256(sorted content_sha256, homonym_checked=1, 262788 rows)=fe9f52cb261736443f511a85b52e8ee6fe05b51165c56384cfa969b411429b98",
+            "sources.puls_cefr": "sha256(canonical rows, 5939)=c2586b0bd4830bac7fc08d7bd59e98460d6f5acd468a5f323308668134780d55",
+            "atlas0": "atlas.db manifest 0.1 generated_at 2026-09-11T10:12:36+00:00; file sha256=fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca (retained read-only for migrated assertions)",
+        },
+        "V": {"vesum.canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"},
+        "I": {
+            "identity_registry": "examples/companion/identity-registry.json registry_version 1 (example allocations)"
+        },
+        "O": {"overlay": "examples/companion/overlay.json (one split entry; examples otherwise overlay-free)"},
+        "R": {
+            "rules": RULES,
+            "normaliser": NORMALISER,
+            "register": f"docs/sources/permissions-register.yaml schema_version {REGISTER_VERSION} sha256={REGISTER_SHA256}",
+        },
     },
 }
+
+# Durable source-record keys (schema.md §12.1): content-derived, never a local row id, so a suppression
+# selector or a reharvest correspondence survives renumbering. ULIF: query#stressed headword (canonical
+# or paradigm-recovered)#grammatical_label, all as stored on 2026-09-28. VESUM: lemma/pos/lemma-form tags.
+RECORD_KEYS = {
+    "ulif:entry:76791": "ulif:record:замок#За́мок#іменник чоловічого роду",
+    "ulif:entry:76792": "ulif:record:замок#за́мок#іменник чоловічого роду",
+    "ulif:entry:76793": "ulif:record:замок#замо́к#",
+    "ulif:entry:3": "ulif:record:ключ#ключ#іменник чоловічого роду",
+    "ulif:entry:29074": "ulif:record:броня#бро́ня#іменник жіночого роду",
+    "ulif:entry:29075": "ulif:record:броня#броня́#",
+    "ulif:entry:47595": "ulif:record:вряди-годи#вряди́-годи́#прислівник",
+    "ulif:entry:34097": "ulif:record:вибігати#вибіга́ти#дієслово недоконаного виду",
+    "ulif:entry:34099": "ulif:record:вибігти#ви́бігти#дієслово доконаного виду",
+    "ulif:entry:170125": "ulif:record:повітряний##",
+    "vesum:entry:128971": "vesum:record:Замок/noun/noun:inanim:m:v_naz:prop:geo",
+    "vesum:entry:128972": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp1",
+    "vesum:entry:128973": "vesum:record:замок/noun/noun:inanim:m:v_naz:xp2",
+    "vesum:entry:168409": "vesum:record:ключ/noun/noun:inanim:m:v_naz",
+    "vesum:entry:30497": "vesum:record:броня/noun/noun:inanim:f:v_naz",
+    "vesum:entry:67854": "vesum:record:вряди-годи/adv/adv",
+    "vesum:entry:40937": "vesum:record:вибігати/verb/verb:imperf:inf",
+    "vesum:entry:40942": "vesum:record:вибігти/verb/verb:perf:inf",
+    "sources.puls_cefr:id:4340": "puls:record:замок/іменник/A2",
+    "sources.puls_cefr:id:3768": "puls:record:ключ/іменник/A2",
+    "sources.frazeolohichnyi:id:568": "frazeolohichnyi:record:будувати повітряні замки",
+    "sources.wiktionary:id:11318": "wiktionary:record:броня",
+}
+
+
+def record_key(locator: str) -> str | None:
+    head = locator.split(" ", 1)[0].split("/section:", 1)[0]
+    return RECORD_KEYS.get(head)
 
 
 def aid(
@@ -70,8 +126,28 @@ def aid(
     return "wa_" + hashlib.sha256(canon.encode("utf-8")).hexdigest()[:24]
 
 
-def lid(link_type: str, frm: str, to: str) -> str:
-    return "wl_" + hashlib.sha256(f"{link_type}|{frm}|{to}".encode()).hexdigest()[:24]
+# ---------------------------------------------------------------- links (canonical records, schema.md §7.2)
+# Symmetric types have one record for both cards; endpoints are ordered by role rank, then by id.
+SYMMETRIC = {"aspect_pair", "homograph_of", "stress_variant_of", "synonym", "antonym", "russification_contrast"}
+ROLE_RANK = {"imperfective": 0, "perfective": 1, "norm": 0, "imposed": 1}
+
+
+def link(link_type: str, endpoints: list[dict], assertion_ids: list[str], *, basis: str = "asserted", derived_by=None):
+    eps = [dict(e) for e in endpoints]
+    if link_type in SYMMETRIC:
+        eps.sort(key=lambda e: (ROLE_RANK.get(e.get("role", ""), 9), e["id"]))
+    canon = "|".join(f"{e['id']}:{e.get('role', '')}:{e.get('sense_id', '')}" for e in eps)
+    rec = {
+        "link_id": "wl_" + hashlib.sha256(f"{link_type}|{canon}".encode()).hexdigest()[:24],
+        "type": link_type,
+        "endpoints": eps,
+        "basis": basis,
+        "assertion_ids": sorted(assertion_ids),
+        "state": "active" if assertion_ids else "suppressed",
+    }
+    if derived_by:
+        rec["derived_by"] = derived_by
+    return rec
 
 
 def A(
@@ -117,6 +193,9 @@ def A(
         "tier": tier,
         "status": status,
     }
+    rk = record_key(locator)
+    if rk:
+        a["source_record_key"] = rk
     if mapping:
         a["mapping"] = mapping
     if suppression_ref:
@@ -124,46 +203,81 @@ def A(
     return a
 
 
-def resolve(assertions: list[dict], field: str, subject_id: str, overlay: dict | None = None) -> dict:
-    """Reference implementation of schema.md §8 (field resolution). Kept tiny on purpose."""
-    mine = [a for a in assertions if a["field"] == field and a["subject"]["id"] == subject_id]
-    active = [
-        a
-        for a in mine
-        if a["status"] == "active" and a.get("mapping", {}).get("confidence", "high") in ("high", "medium")
-    ]
-    if not active:
-        if any(a["status"] == "suppressed" for a in mine):
-            return {"state": "suppressed", "selected": None, "values": []}
-        return {"state": "unverified", "selected": None, "values": []}
-    voting = [a for a in active if a["tier"] in (1, 2)]
-    if not voting:
-        first = sorted(active, key=lambda a: a["assertion_id"])[0]
-        return {
-            "state": "unverified",
-            "selected": first["assertion_id"],
-            "values": [
-                {
-                    "value_norm": first["value_norm"],
-                    "assertion_ids": [x["assertion_id"] for x in active],
-                    "independence_groups": sorted({x["independence_group"] for x in active}),
-                }
-            ],
-            "independence_groups_agreeing": 0,
-        }
+# ---------------------------------------------------------------- field resolution (schema.md §8)
+# Comparison class per field: what proposition two assertions are compared on.
+#   scalar: one proposition per (subject, field); different value_norms contradict (stress, pos, cefr ...).
+#   keyed:  value_norm is "<key>=<value>"; one proposition per key; contradiction only inside a key (paradigm).
+#   text:   each source's text is its own proposition; different texts are parallel, never a conflict.
+KEYED_FIELDS = {"paradigm"}
+TEXT_FIELDS = {
+    "definition_uk",
+    "gloss_en",
+    "english_gloss",
+    "sense_label",
+    "examples",
+    "collocations",
+    "russification_exposed",
+    "synonyms",
+    "antonyms",
+    "spelling_variants",
+    "register",
+    "mwe_frame",
+}
+CONF_ORDER = ["high", "medium", "low"]
+STATE_RANK = {"verified": 0, "variant": 1, "single-source": 2, "unverified": 3, "conflict": 4, "suppressed": 5}
+
+
+def comparison_class(field: str) -> str:
+    if field in KEYED_FIELDS:
+        return "keyed"
+    if field in TEXT_FIELDS:
+        return "text"
+    return "scalar"
+
+
+def _mapping_evidenced(assertions: list[dict]) -> bool:
+    """A spelling-keyed source row on a spelling with several cards does not evidence this card (§9.5)."""
+    return all(not a.get("mapping", {}).get("ambiguous", False) for a in assertions)
+
+
+def _groups(xs: list[dict]) -> list[str]:
+    return sorted({x["independence_group"] for x in xs if not x["independence_group"].endswith("?")})
+
+
+def _value_entry(vn: str, xs: list[dict], declared: bool = False) -> dict:
+    entry = {
+        "value_norm": vn,
+        "assertion_ids": sorted(x["assertion_id"] for x in xs),
+        "independence_groups": _groups(xs),
+    }
+    if declared:
+        entry["declared_set"] = True
+    return entry
+
+
+def _resolve_scalar(voting: list[dict], overlay: dict | None) -> dict:
+    declared = [a for a in voting if a["tier"] == 1 and "|" in a["value_norm"]]
+    members = [a for a in voting if a not in declared]
     by_value: dict[str, list[dict]] = {}
-    for a in voting:
+    for a in members:
         by_value.setdefault(a["value_norm"], []).append(a)
-    values = [
-        {
-            "value_norm": vn,
-            "assertion_ids": sorted(x["assertion_id"] for x in xs),
-            "independence_groups": sorted(
-                {x["independence_group"] for x in xs if not x["independence_group"].endswith("?")}
-            ),
-        }
-        for vn, xs in sorted(by_value.items())
-    ]
+    values = [_value_entry(vn, xs) for vn, xs in sorted(by_value.items())]
+    by_decl: dict[str, list[dict]] = {}
+    for d in declared:
+        by_decl.setdefault(d["value_norm"], []).append(d)
+    values += [_value_entry(vn, xs, declared=True) for vn, xs in sorted(by_decl.items())]
+    observed = set(by_value)
+    # A tier-1 source that itself lists the doublet declares a variant; observed values inside the set agree.
+    for d in declared:
+        if observed <= set(d["value_norm"].split("|")):
+            return {
+                "state": "variant",
+                "selected": sorted(a["assertion_id"] for a in voting),
+                "values": values,
+                "independence_groups_agreeing": len(_groups(voting)),
+            }
+    if declared:  # a declared set that does not contain an observed value is a disagreement
+        return {"state": "conflict", "selected": None, "values": values, "independence_groups_agreeing": 0}
     if len(by_value) == 1:
         v = values[0]
         n = len(v["independence_groups"])
@@ -184,17 +298,114 @@ def resolve(assertions: list[dict], field: str, subject_id: str, overlay: dict |
             "independence_groups_agreeing": n,
             "resolution_ref": overlay["overlay_id"],
         }
-    declared = [a for a in voting if a["tier"] == 1 and "|" in a["value_norm"]]
-    for d in declared:
-        members = set(d["value_norm"].split("|"))
-        if members == set(by_value):
-            return {
-                "state": "variant",
-                "selected": sorted(a["assertion_id"] for a in voting),
-                "values": values,
-                "independence_groups_agreeing": 0,
-            }
     return {"state": "conflict", "selected": None, "values": values, "independence_groups_agreeing": 0}
+
+
+def _resolve_text(voting: list[dict]) -> dict:
+    """Texts are parallel propositions: identical texts corroborate, different texts never conflict."""
+    by_value: dict[str, list[dict]] = {}
+    for a in voting:
+        by_value.setdefault(a["value_norm"], []).append(a)
+    values = [_value_entry(vn, xs) for vn, xs in sorted(by_value.items())]
+
+    # shown first: the value with most independent groups, then lowest tier, then lowest assertion id
+    def rank(v):
+        tier = min(a["tier"] for a in by_value[v["value_norm"]])
+        return (-len(v["independence_groups"]), tier, v["assertion_ids"][0])
+
+    best = sorted(values, key=rank)[0]
+    n = len(best["independence_groups"])
+    return {
+        "state": "verified" if n >= 2 else "single-source",
+        "selected": best["assertion_ids"][0],
+        "values": values,
+        "independence_groups_agreeing": n,
+    }
+
+
+def _resolve_keyed(voting: list[dict], overlay: dict | None) -> dict:
+    parts: dict[str, list[dict]] = {}
+    for a in voting:
+        parts.setdefault(a["value_norm"].split("=", 1)[0], []).append(a)
+    per_key = {k: _resolve_scalar(xs, overlay) for k, xs in sorted(parts.items())}
+    worst = max(per_key.values(), key=lambda r: STATE_RANK[r["state"]])
+    selected = [r["selected"] for r in per_key.values() if isinstance(r["selected"], str)]
+    for r in per_key.values():
+        if isinstance(r["selected"], list):
+            selected += r["selected"]
+    return {
+        "state": worst["state"],
+        "selected": sorted(selected) if worst["state"] != "conflict" else None,
+        "values": [v for r in per_key.values() for v in r["values"]],
+        "independence_groups_agreeing": min(r["independence_groups_agreeing"] for r in per_key.values()),
+    }
+
+
+def resolve(assertions: list[dict], field: str, subject_id: str, overlay: dict | None = None) -> dict:
+    """Reference implementation of schema.md §8 (field resolution). Kept small on purpose."""
+    mine = [a for a in assertions if a["field"] == field and a["subject"]["id"] == subject_id]
+    cls = comparison_class(field)
+    non_voting: list[dict] = []
+    active: list[dict] = []
+    for a in mine:
+        if a["status"] != "active":
+            continue
+        conf = a.get("mapping", {}).get("confidence", "high")
+        if conf not in ("high", "medium"):
+            non_voting.append({"assertion_id": a["assertion_id"], "reason": f"mapping {conf}"})
+        elif a["review"]["status"] == "rejected":
+            non_voting.append({"assertion_id": a["assertion_id"], "reason": "review rejected"})
+        else:
+            active.append(a)
+    base = {"comparison": cls, "proposition": _proposition(cls, field, subject_id)}
+    if non_voting:
+        base["non_voting"] = sorted(non_voting, key=lambda x: x["assertion_id"])
+    if not active:
+        state = "suppressed" if any(a["status"] == "suppressed" for a in mine) else "unverified"
+        return {"state": state, "selected": None, "values": [], "mapping_evidenced": False, **base}
+    voting = [a for a in active if a["tier"] in (1, 2)]
+    if not voting:
+        first = sorted(active, key=lambda a: a["assertion_id"])[0]
+        return {
+            "state": "unverified",
+            "selected": first["assertion_id"],
+            "values": [_value_entry(first["value_norm"], active)],
+            "independence_groups_agreeing": 0,
+            "mapping_evidenced": _mapping_evidenced(active),
+            "independence_groups_evidenced": 0,
+            **base,
+        }
+    if cls == "text":
+        res = _resolve_text(voting)
+    elif cls == "keyed":
+        res = _resolve_keyed(voting, overlay)
+    else:
+        res = _resolve_scalar(voting, overlay)
+    sel = res["selected"]
+    sel_ids = set(sel if isinstance(sel, list) else ([sel] if sel else []))
+    shown = {vn for v in res["values"] for vn in [v["value_norm"]] if sel_ids & set(v["assertion_ids"])}
+    # Evidence for a dependent eligibility rule: only assertions whose mapping to THIS card is not ambiguous.
+    evidenced = [a for a in voting if a["value_norm"] in shown and not a.get("mapping", {}).get("ambiguous", False)]
+    res["mapping_evidenced"] = bool(evidenced)
+    res["independence_groups_evidenced"] = len(_groups(evidenced))
+    res.update(base)
+    return res
+
+
+def _proposition(cls: str, field: str, subject_id: str) -> str:
+    if cls == "keyed":
+        return f"{field}({subject_id})[<key>] = <value>; one proposition per key"
+    if cls == "text":
+        return f"{field}({subject_id}) ∋ <text>; parallel texts, identical texts corroborate"
+    return f"{field}({subject_id}) = <value_norm>"
+
+
+def card_version(card_public: dict) -> str:
+    body = {
+        k: card_public[k]
+        for k in ("card_id", "card_kind", "state", "merged_into", "split_into", "senses", "links", "fields")
+    }
+    return "cv_" + hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:24]
 
 
 def card(
@@ -209,6 +420,7 @@ def card(
     review=None,
     state="active",
     merged_into=None,
+    split_into=None,
     overlay=None,
 ):
     card_fields = sorted({a["field"] for a in assertions if a["subject"]["kind"] == "card"})
@@ -218,12 +430,13 @@ def card(
     for s in senses:
         sf = sorted({a["field"] for a in assertions if a["subject"]["id"] == s["sense_id"]})
         s["fields"] = {f: resolve(assertions, f, s["sense_id"]) for f in sf}
-    return {
+    out = {
         "schema_version": "1",
         "card_id": card_id,
         "card_kind": kind,
         "state": state,
         "merged_into": merged_into,
+        "split_into": split_into,
         "key_at_creation": key,
         "identity": identity,
         "senses": senses,
@@ -232,15 +445,34 @@ def card(
         "assertions": assertions,
         "quality": {
             "identity_confidence": identity["confidence"],
-            "extraction_confidence_min": min(
-                (a["extraction_confidence"] for a in assertions), key=["high", "medium", "low"].index
-            ),
+            # the card's summary is the WORST extraction confidence among its assertions
+            "extraction_confidence_min": max((a["extraction_confidence"] for a in assertions), key=CONF_ORDER.index)
+            if assertions
+            else "high",
             "linguistic_review": review or {"status": "none"},
             "practice_eligibility": eligibility,
         },
         "overlay_applied": overlay or [],
         "build": BUILD,
     }
+    out["build"] = {**BUILD, "card_version": card_version(out)}
+    return out
+
+
+def public_projection(c: dict) -> dict:
+    """Public outputs carry suppressed assertions as tombstones: id, status and reference only (schema.md §12.3)."""
+    out = json.loads(json.dumps(c, ensure_ascii=False))
+    out["assertions"] = [
+        a
+        if a["status"] != "suppressed"
+        else {
+            "assertion_id": a["assertion_id"],
+            "status": "suppressed",
+            "suppression_ref": a.get("suppression_ref", ""),
+        }
+        for a in out["assertions"]
+    ]
+    return out
 
 
 def sense(sense_id, order, smap, state="active"):
@@ -254,11 +486,49 @@ IDIOM, POVITRIANYI, BUDUVATY = "wc_pq7z2f5jh8na", "wc_s1x4v7gk9tdb", "wc_t6d3h8m
 BRONIA_ARMOUR, BRONIA_RESERV = "wc_v5r2b9nx3cfk", "wc_w8g1k4qt7zhm"
 VRIADY = "wc_x2j5n8sd1vpc"
 VYBIHATY, VYBIHTY = "wc_y9c3q6hw4rtn", "wc_z4f7m1kb8xsq"
+LEGACY_ZAMOK = "wc_0a1b2c3d4e5f"  # the pre-card atlas0 article "замок", split into CASTLE + LOCK
 
 PULS_SPELLING = {
     "confidence": "medium",
-    "note": "PULS rows are keyed by spelling; which замок the A2 rating means is not stated",
+    "basis": "spelling",
+    "ambiguous": True,
+    "note": "PULS rows are keyed by spelling and this spelling has several cards; retained and shown, "
+    "but not evidence for a dependent eligibility rule until an overlay maps the row (schema.md §9.5)",
 }
+
+# Spelling assertions per example card, used as the derived evidence of homograph_of links.
+SPELLINGS = {
+    CASTLE: ("замок", [("vesum", VESUM_SNAP, "vesum:entry:128973"), ("ulif", ULIF_SNAP, "ulif:entry:76792")]),
+    LOCK: ("замок", [("vesum", VESUM_SNAP, "vesum:entry:128972"), ("ulif", ULIF_SNAP, "ulif:entry:76793")]),
+    SETTLEMENT: (
+        "Замок",
+        [
+            ("vesum", VESUM_SNAP, "vesum:entry:128971 (noun:inanim:m:v_naz:prop:geo)"),
+            ("ulif", ULIF_SNAP, "ulif:entry:76791"),
+        ],
+    ),
+    KLIUCH1: ("ключ", [("vesum", VESUM_SNAP, "vesum:entry:168409"), ("ulif", ULIF_SNAP, "ulif:entry:3")]),
+    KLIUCH2: ("ключ", [("ulif", ULIF_SNAP, "ulif:entry:98008")]),
+    BRONIA_ARMOUR: ("броня", [("vesum", VESUM_SNAP, "vesum:entry:30497"), ("ulif", ULIF_SNAP, "ulif:entry:29075")]),
+    BRONIA_RESERV: ("броня", [("ulif", ULIF_SNAP, "ulif:entry:29074")]),
+}
+
+
+def spelling_aids(cid: str) -> list[str]:
+    sp, rows = SPELLINGS[cid]
+    return [aid(src, snap, loc, {"kind": "card", "id": cid}, "spelling", sp, "v1") for src, snap, loc in rows]
+
+
+def homograph(a: str, b: str) -> dict:
+    """Derived link: two active cards whose key_at_creation.spelling is equal ignoring case. Evidence =
+    the spelling assertions of both endpoints (schema.md §7.2: a link with no evidence is suppressed)."""
+    return link(
+        "homograph_of",
+        [{"id": a}, {"id": b}],
+        spelling_aids(a) + spelling_aids(b),
+        basis="derived",
+        derived_by=f"rules:{RULES} equal key_at_creation.spelling (case-insensitive), distinct identity",
+    )
 
 
 def build_castle():
@@ -295,7 +565,11 @@ def build_castle():
             source="kaikki",
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:замок/stress (kaikki/Wiktionary)",
-            mapping={"confidence": "medium", "note": "kaikki row is spelling-keyed; its stress matches this card only"},
+            mapping={
+                "confidence": "medium",
+                "basis": "stress",
+                "note": "kaikki row is spelling-keyed; its stress за́мок matches this card only (lock is замо́к)",
+            },
         ),
         A("card", cid, "pos", "noun", source="vesum", snapshot=VESUM_SNAP, locator="vesum:entry:128973 pos"),
         A(
@@ -367,6 +641,7 @@ def build_castle():
             locator="atlas0:enrichment:замок/meaning definitions[0]",
             mapping={
                 "confidence": "medium",
+                "basis": "sense",
                 "note": "spelling-keyed list [castle, lock]; item mapped by rule: matches ULIF sense_gloss (будівля)",
             },
         ),
@@ -402,13 +677,18 @@ def build_castle():
         ),
         A(
             "sense",
-            s1,
+            s3,
             "synonyms",
             ["фортеця", "бастіон", "цитадель", "шато"],
             source="synonyms_karavansky",
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:замок/synonyms (slovnyk.me: Словник синонімів Караванського)",
-            mapping={"confidence": "medium", "note": "spelling-keyed; members are castle words"},
+            mapping={
+                "confidence": "medium",
+                "basis": "spelling",
+                "ambiguous": True,
+                "note": "spelling-keyed; one unit on the source side does not align it to a sense (§6): held unsplit",
+            },
         ),
         A(
             "sense",
@@ -445,34 +725,24 @@ def build_castle():
             [
                 {"source_id": "vts", "source_sense_key": "vts:замок#I/1"},
                 {"source_id": "ulif", "source_sense_key": "ulif:section:96931"},
-                {
-                    "source_id": "synonyms_karavansky",
-                    "source_sense_key": "slovnyk_me:synonyms_karavansky:замок",
-                    "mapped_by": "rules: single sense on source side",
-                },
             ],
         ),
         sense(s2, 2, [{"source_id": "vts", "source_sense_key": "vts:замок#I/2"}]),
-        sense(s3, 3, [{"source_id": "ulif", "source_sense_key": "ulif:section:96930"}], state="unsplit"),
+        sense(
+            s3,
+            3,
+            [
+                {"source_id": "ulif", "source_sense_key": "ulif:section:96930"},
+                {
+                    "source_id": "synonyms_karavansky",
+                    "source_sense_key": "slovnyk_me:synonyms_karavansky:замок",
+                    "mapped_by": "rules: single unit on the source side only; awaiting a sense_map overlay",
+                },
+            ],
+            state="unsplit",
+        ),
     ]
-    links = [
-        {
-            "link_id": lid("homograph_of", cid, LOCK),
-            "type": "homograph_of",
-            "from": cid,
-            "to": LOCK,
-            "assertion_ids": [],
-            "state": "active",
-        },
-        {
-            "link_id": lid("homograph_of", cid, SETTLEMENT),
-            "type": "homograph_of",
-            "from": cid,
-            "to": SETTLEMENT,
-            "assertion_ids": [],
-            "state": "active",
-        },
-    ]
+    links = [homograph(cid, LOCK), homograph(cid, SETTLEMENT)]
     identity = {
         "confidence": "high",
         "method": "stress_and_paradigm",
@@ -511,15 +781,23 @@ def build_castle():
     elig = [
         {
             "mode": "stress",
-            "eligible": True,
+            "eligible": False,
             "rules_version": RULES,
-            "reasons": ["stress verified (3 groups)", "identity high", "cefr A2 (single-source, spelling-keyed)"],
+            "reasons": [
+                "stress verified (3 groups), identity high",
+                "cefr A2 is single-source but mapping_evidenced=false: PULS row 4340 is spelling-keyed and the spelling has "
+                "two lexeme cards; the level band rule is unmet until an overlay maps the row (§9.5)",
+            ],
         },
         {
             "mode": "synonyms",
-            "eligible": True,
+            "eligible": False,
             "rules_version": RULES,
-            "reasons": ["sense s1 synonyms single-source ULIF + Караванський", "sense s3 unsplit excluded"],
+            "reasons": [
+                "sense s1 synonyms single-source (ULIF group 96931)",
+                "cefr not evidenced for this card (see stress mode)",
+                "Караванський group held unsplit on s3 (§6), excluded",
+            ],
             "sense_id": s1,
         },
         {
@@ -692,16 +970,7 @@ def build_lock():
         sense(s2, 2, [{"source_id": "ulif", "source_sense_key": "ulif:section:96934"}]),
         sense(s3, 3, [{"source_id": "ulif", "source_sense_key": "ulif:section:96936"}]),
     ]
-    links = [
-        {
-            "link_id": lid("homograph_of", cid, CASTLE),
-            "type": "homograph_of",
-            "from": cid,
-            "to": CASTLE,
-            "assertion_ids": [],
-            "state": "active",
-        }
-    ]
+    links = [homograph(CASTLE, cid)]
     identity = {
         "confidence": "high",
         "method": "stress_and_paradigm",
@@ -728,9 +997,12 @@ def build_lock():
     elig = [
         {
             "mode": "stress",
-            "eligible": True,
+            "eligible": False,
             "rules_version": RULES,
-            "reasons": ["stress verified (ULIF paradigm + VESUM comment)"],
+            "reasons": [
+                "stress verified (ULIF paradigm + VESUM comment), identity high",
+                "cefr A2 mapping_evidenced=false (PULS row 4340 spelling-keyed, two lexeme cards): level band rule unmet",
+            ],
         },
         {
             "mode": "meaning",
@@ -821,16 +1093,7 @@ def build_settlement():
         {"spelling": "Замок", "stress_patterns": ["За́мок"], "pos": "noun", "paradigm_key": "vesum:entry:128971"},
         identity,
         senses,
-        [
-            {
-                "link_id": lid("homograph_of", cid, CASTLE),
-                "type": "homograph_of",
-                "from": cid,
-                "to": CASTLE,
-                "assertion_ids": [],
-                "state": "active",
-            }
-        ],
+        [homograph(CASTLE, cid)],
         asr,
         [
             {
@@ -886,6 +1149,8 @@ def build_kliuch():
             locator="atlas0:enrichment:ключ/stress",
             mapping={
                 "confidence": "medium",
+                "basis": "spelling",
+                "ambiguous": True,
                 "note": "spelling-keyed; ULIF homonyms 1 and 2 share the paradigm, stress decides nothing here",
             },
         ),
@@ -918,7 +1183,7 @@ def build_kliuch():
             source="kaikki",
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:ключ/meaning definitions[0]",
-            mapping={"confidence": "medium", "note": "spelling-keyed"},
+            mapping={"confidence": "medium", "basis": "spelling", "ambiguous": True, "note": "spelling-keyed"},
         ),
         A(
             "sense",
@@ -946,7 +1211,11 @@ def build_kliuch():
             source="kaikki",
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:ключ/meaning definitions[1]",
-            mapping={"confidence": "medium", "note": "aligned to ВТС I/2 by curator"},
+            mapping={
+                "confidence": "medium",
+                "basis": "curator",
+                "note": "aligned to ВТС I/2 by curator (no overlay entry yet)",
+            },
         ),
         A(
             "sense",
@@ -1002,16 +1271,7 @@ def build_kliuch():
             ],
         ),
     ]
-    links = [
-        {
-            "link_id": lid("homograph_of", cid, KLIUCH2),
-            "type": "homograph_of",
-            "from": cid,
-            "to": KLIUCH2,
-            "assertion_ids": [],
-            "state": "active",
-        }
-    ]
+    links = [homograph(cid, KLIUCH2)]
     identity = {
         "confidence": "medium",
         "method": "overlay",
@@ -1033,10 +1293,13 @@ def build_kliuch():
     elig = [
         {
             "mode": "meaning",
-            "eligible": True,
+            "eligible": False,
             "rules_version": RULES,
             "reasons": [
-                "sense s1 definition_uk single-source ВТС; cefr A2; identity medium accepted for meaning mode by rules-v1-draft (open question Q7)"
+                "identity medium (dictionary-division split, paradigm shared with wc_m3y6w9dc2sxr): meaning practice needs "
+                "reviewed high identity for this card and sense (Q7 decision, schema.md §9.5)",
+                "cefr A2 mapping_evidenced=false (PULS row 3768 spelling-keyed, two cards)",
+                "sense s1 definition_uk single-source ВТС",
             ],
             "sense_id": S[0],
         },
@@ -1174,31 +1437,28 @@ def build_idiom():
     ]
     links = [
         {
-            "link_id": lid("component_of", cid, CASTLE),
-            "type": "component_of",
-            "from": cid,
-            "to": CASTLE,
-            "role": "anchor (за́мки ↔ ULIF uid=47336 ЗА́МОК, castle)",
-            "assertion_ids": [asr[0]["assertion_id"]],
-            "state": "active",
+            **link(
+                "component_of",
+                [{"id": cid, "role": "whole"}, {"id": CASTLE, "role": "anchor"}],
+                [asr[0]["assertion_id"]],
+            ),
+            "note": "за́мки ↔ ULIF anchor uid=47336 ЗА́МОК (castle), read from the section HTML",
         },
         {
-            "link_id": lid("component_of", cid, POVITRIANYI),
-            "type": "component_of",
-            "from": cid,
-            "to": POVITRIANYI,
-            "role": "component (ULIF uid=115867)",
-            "assertion_ids": [asr[1]["assertion_id"]],
-            "state": "active",
+            **link(
+                "component_of",
+                [{"id": cid, "role": "whole"}, {"id": POVITRIANYI, "role": "component"}],
+                [asr[1]["assertion_id"]],
+            ),
+            "note": "ULIF anchor uid=115867",
         },
         {
-            "link_id": lid("component_of", cid, BUDUVATY),
-            "type": "component_of",
-            "from": cid,
-            "to": BUDUVATY,
-            "role": "component (ULIF uid=10839)",
-            "assertion_ids": [asr[0]["assertion_id"]],
-            "state": "active",
+            **link(
+                "component_of",
+                [{"id": cid, "role": "whole"}, {"id": BUDUVATY, "role": "component"}],
+                [asr[0]["assertion_id"]],
+            ),
+            "note": "ULIF anchor uid=10839",
         },
     ]
     identity = {
@@ -1280,7 +1540,11 @@ def build_bronia_armour():
             source="kaikki",
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:броня/stress (kaikki/Wiktionary)",
-            mapping={"confidence": "medium", "note": "spelling-keyed; matches this homonym's stress"},
+            mapping={
+                "confidence": "medium",
+                "basis": "stress",
+                "note": "spelling-keyed; броня́ matches this homonym only",
+            },
         ),
         A(
             "card",
@@ -1316,7 +1580,12 @@ def build_bronia_armour():
             snapshot=ATLAS0_SNAP,
             locator="atlas0:enrichment:броня/cefr 'estimated (GRAC frequency)' 0.55/million rank 2792/4161",
             producer={"kind": "estimator", "name": "GRAC frequency → CEFR estimate", "version": "atlas0"},
-            mapping={"confidence": "medium", "note": "spelling-keyed frequency"},
+            mapping={
+                "confidence": "medium",
+                "basis": "spelling",
+                "ambiguous": True,
+                "note": "spelling-keyed frequency",
+            },
         ),
         A(
             "sense",
@@ -1345,16 +1614,7 @@ def build_bronia_armour():
             ],
         )
     ]
-    links = [
-        {
-            "link_id": lid("homograph_of", cid, BRONIA_RESERV),
-            "type": "homograph_of",
-            "from": cid,
-            "to": BRONIA_RESERV,
-            "assertion_ids": [],
-            "state": "active",
-        }
-    ]
+    links = [homograph(cid, BRONIA_RESERV)]
     identity = {
         "confidence": "medium",
         "method": "stress_only",
@@ -1373,7 +1633,7 @@ def build_bronia_armour():
             {"source_id": "atlas0", "key": "atlas0:slug:броня"},
         ],
         "notes": [
-            "Sources disagree on identity: VESUM one lemma with two stresses, ULIF two homonyms with distinct senses (бро́ня закріплення; документ про закріплення / броня́). Rules follow the finer division when stress and sense both differ; confidence medium until a language lane confirms."
+            "Sources disagree on identity: VESUM one lemma with two stresses, ULIF two homonyms with distinct senses (бро́ня закріплення; документ про закріплення / броня́). Rules follow the finer division when stress and sense both differ; confidence stays medium until the language-lane read (Gemini, 2026-09-28, two-card reading confirmed) is recorded as an overlay identity entry."
         ],
     }
     elig = [
@@ -1465,16 +1725,7 @@ def build_bronia_reserv():
             ],
         )
     ]
-    links = [
-        {
-            "link_id": lid("homograph_of", cid, BRONIA_ARMOUR),
-            "type": "homograph_of",
-            "from": cid,
-            "to": BRONIA_ARMOUR,
-            "assertion_ids": [],
-            "state": "active",
-        }
-    ]
+    links = [homograph(BRONIA_ARMOUR, cid)]
     identity = {
         "confidence": "medium",
         "method": "stress_only",
@@ -1574,10 +1825,9 @@ def build_aspect_pair():
     """вибігати (ULIF homonym 2, imperfective) ↔ вибігти (perfective); pairing evidence from the ВТС card."""
     VTS_PAIR = "II вибіг`ати - а ю, - а єш, недок. , в и бігти, -іжу, -іжиш, док. 1》 Бігом залишати, покидати як"
     cards = []
-    for cid, other, role, ul, ve, hw, label, tag in (
+    for cid, role, ul, ve, hw, label, tag in (
         (
             VYBIHATY,
-            VYBIHTY,
             "imperfective",
             "ulif:entry:34097",
             "vesum:entry:40937",
@@ -1587,7 +1837,6 @@ def build_aspect_pair():
         ),
         (
             VYBIHTY,
-            VYBIHATY,
             "perfective",
             "ulif:entry:34099",
             "vesum:entry:40942",
@@ -1648,10 +1897,16 @@ def build_aspect_pair():
                     snapshot=ATLAS0_SNAP,
                     locator="atlas0:enrichment:вибігати/cefr 'estimated (GRAC frequency)' 0.23/million rank 3290/4161",
                     producer={"kind": "estimator", "name": "GRAC frequency → CEFR estimate", "version": "atlas0"},
-                    mapping={"confidence": "medium", "note": "spelling-keyed; covers both вибігати homonyms"},
+                    mapping={
+                        "confidence": "medium",
+                        "basis": "spelling",
+                        "ambiguous": True,
+                        "note": "spelling-keyed; covers both вибігати homonyms",
+                    },
                 )
             )
-        link_id = lid("aspect_pair", VYBIHATY, VYBIHTY)
+        endpoints = [{"id": VYBIHATY, "role": "imperfective"}, {"id": VYBIHTY, "role": "perfective"}]
+        link_id = link("aspect_pair", endpoints, [])["link_id"]  # id depends on type + canonical endpoints only
         link_asr = A(
             "link",
             link_id,
@@ -1665,17 +1920,7 @@ def build_aspect_pair():
             producer={"kind": "source_extract", "name": "ВТС header 'недок./док.' pair reader", "version": "example"},
         )
         asr.append(link_asr)
-        links = [
-            {
-                "link_id": link_id,
-                "type": "aspect_pair",
-                "from": cid,
-                "to": other,
-                "role": role,
-                "assertion_ids": [link_asr["assertion_id"]],
-                "state": "active",
-            }
-        ]
+        links = [link("aspect_pair", endpoints, [link_asr["assertion_id"]])]  # identical record on both cards
         identity = {
             "confidence": "high",
             "method": "stress_and_paradigm" if cid == VYBIHATY else "unique_match",
@@ -1711,11 +1956,211 @@ def build_aspect_pair():
     return cards
 
 
-def main() -> None:
-    out = {
+SPLIT_OVERLAY = {
+    "overlay_id": "ovl-2026-09-28-0001",
+    "kind": "split",
+    "card_id": LEGACY_ZAMOK,
+    "into": [CASTLE, LOCK],
+    "author": "human",
+    "lane": "language",
+    "date": "2026-09-28",
+    "evidence": "ulif:entry:76792 родовий за́мку vs ulif:entry:76793 родовий замка́; vesum:entry:128973 xp2 vs 128972 xp1; "
+    "site/src/lib/lexicon/curated-heteronyms.ts замок (за́мок castle / замо́к lock)",
+    "record": "#8334 curated heteronym side file; identity.md §5 case A",
+}
+
+
+def build_legacy_split():
+    """The pre-card atlas0 article 'замок' (one spelling, gloss 'castle / lock'): state `split`, two successors.
+    A split is one-to-many and is never a merge redirect (identity.md §7). Its assertions were re-mapped to the
+    successors by the matching rules; the card keeps its id, its key and the split event, nothing else."""
+    cid = LEGACY_ZAMOK
+    identity = {
+        "confidence": "high",
+        "method": "overlay",
+        "decided_by": "overlay:ovl-2026-09-28-0001",
+        "source_keys": [
+            {
+                "source_id": "atlas0",
+                "key": "atlas0:slug:замок",
+                "snapshot_id": ATLAS0_SNAP,
+                "match_note": "merged article castle / lock",
+            },
+        ],
+        "notes": [
+            "Split into wc_7k3m9q2xw4pd (за́мок castle) and wc_c2v8n5rt6yhq (замо́к lock); learner progress per identity.md §7.3."
+        ],
+    }
+    return card(
+        cid,
+        "lexeme",
+        {
+            "spelling": "замок",
+            "stress_patterns": ["за́мок"],
+            "pos": "noun",
+            "source_keys": [{"source_id": "atlas0", "key": "atlas0:slug:замок"}],
+        },
+        identity,
+        [],
+        [],
+        [],
+        [
+            {
+                "mode": "*",
+                "eligible": False,
+                "rules_version": RULES,
+                "reasons": ["card is split; resolve split_into first"],
+            }
+        ],
+        state="split",
+        split_into=[CASTLE, LOCK],
+        overlay=[{k: SPLIT_OVERLAY[k] for k in ("overlay_id", "kind", "author", "lane", "date", "evidence")}],
+    )
+
+
+# ---------------------------------------------------------------- companion instances (schema.md §§5, 11, 12, 13)
+def build_registry(cards: dict) -> dict:
+    """Identity registry: the versioned build input that fixes every card and sense id (schema.md §13)."""
+    entries = []
+    for c in sorted(cards.values(), key=lambda c: c["card_id"]):
+        e = {
+            "card_id": c["card_id"],
+            "card_kind": c["card_kind"],
+            "state": c["state"],
+            "key_at_creation": c["key_at_creation"],
+            "created_in_build": "atlas0-migration-M1" if c["card_id"] == LEGACY_ZAMOK else "example-2026-09-28",
+            "senses": [{"sense_id": s["sense_id"], "order": s["order"], "state": s["state"]} for s in c["senses"]],
+        }
+        if c["merged_into"]:
+            e["merged_into"] = c["merged_into"]
+        if c["split_into"]:
+            e["split_into"] = c["split_into"]
+        entries.append(e)
+    entries.append(
+        {
+            "card_id": KLIUCH2,
+            "card_kind": "lexeme",
+            "state": "active",
+            "key_at_creation": {
+                "spelling": "ключ",
+                "stress_patterns": ["ключ"],
+                "pos": "noun",
+                "paradigm_key": "vesum:entry:168409",
+                "source_keys": [{"source_id": "ulif", "key": "ulif:entry:98008"}],
+            },
+            "created_in_build": "example-2026-09-28",
+            "senses": [],
+        }
+    )
+    entries.sort(key=lambda e: e["card_id"])
+    events = [
+        {
+            "event_id": "ie_0001",
+            "kind": "mint",
+            "build_id": "atlas0-migration-M1",
+            "cards": [LEGACY_ZAMOK],
+            "evidence": "atlas0:slug:замок (articles.slug)",
+        },
+        {
+            "event_id": "ie_0002",
+            "kind": "split",
+            "build_id": "example-2026-09-28",
+            "overlay_id": SPLIT_OVERLAY["overlay_id"],
+            "from": [LEGACY_ZAMOK],
+            "to": [CASTLE, LOCK],
+            "evidence": SPLIT_OVERLAY["evidence"],
+        },
+    ]
+    return {"schema_version": "1", "registry_version": 1, "entries": entries, "events": events}
+
+
+def build_overlay() -> dict:
+    return {"schema_version": "1", "entries": [SPLIT_OVERLAY]}
+
+
+def build_suppressions() -> dict:
+    """Persistent suppression selectors (schema.md §12.1): keyed by durable source-record keys or by assertion
+    content, never by local row ids, so they survive reharvest, remapping and rollback."""
+    return {
+        "schema_version": "1",
+        "entries": [
+            {
+                "suppression_id": "sup-example-0001",
+                "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+                "date": "2026-09-28",
+                "selector": {
+                    "kind": "source_record",
+                    "source_id": "ulif",
+                    "source_record_key": "ulif:record:замок#замо́к#",
+                },
+                "scope": ["site", "dataset"],
+                "applies_to": {"reharvest": True, "rollback": True},
+                "note": "example: every assertion extracted from the ULIF lock record, in any snapshot",
+            },
+            {
+                "suppression_id": "sup-example-0002",
+                "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+                "date": "2026-09-28",
+                "selector": {
+                    "kind": "assertion_content",
+                    "source_id": "ukrainian_word_stress",
+                    "field": "stress",
+                    "subject_spelling": "вряди-годи",
+                    "value_norm": "вряди́-го́ди",
+                },
+                "scope": ["site", "dataset", "internal"],
+                "applies_to": {"reharvest": True, "rollback": True},
+                "note": "example: one value from one source on one spelling, whatever its assertion id after re-normalisation",
+            },
+        ],
+    }
+
+
+def build_derivations(cards: dict) -> dict:
+    """Dependency records (schema.md §11): every derived item names its input assertions, the card versions it
+    read and its own output identity, so a withdrawn assertion invalidates exactly the outputs that used it."""
+    castle = cards["zamok-castle"]
+    stress_ids = castle["fields"]["stress"]["values"][0]["assertion_ids"]
+    inputs = {
+        "assertion_ids": sorted(stress_ids),
+        "card_ids": [castle["card_id"]],
+        "card_versions": {castle["card_id"]: castle["build"]["card_version"]},
+    }
+    output = {"kind": "exercise", "key": "practice/stress/wc_7k3m9q2xw4pd/1", "content_sha256": "0" * 64}
+    ident = json.dumps(
+        {
+            "generator": "stress_item",
+            "generator_version": "example",
+            "inputs": inputs,
+            "output": {"kind": output["kind"], "key": output["key"]},
+        },
+        sort_keys=True,
+        ensure_ascii=False,
+    )
+    return {
+        "schema_version": "1",
+        "entries": [
+            {
+                "derived_id": "wd_" + hashlib.sha256(ident.encode()).hexdigest()[:24],
+                "kind": "exercise",
+                "generator": "stress_item",
+                "generator_version": "example",
+                "rules_version": RULES,
+                "build_id": BUILD["build_id"],
+                "inputs": inputs,
+                "output": output,
+                "status": "active",
+            }
+        ],
+    }
+
+
+def build_all() -> tuple[dict, dict]:
+    cards = {
         "zamok-castle": build_castle(),
         "zamok-lock": build_lock(),
         "zamok-settlement": build_settlement(),
+        "zamok-legacy-split": build_legacy_split(),
         "kliuch-1": build_kliuch(),
         "idiom-buduvaty-povitriani-zamky": build_idiom(),
         "bronia-armour": build_bronia_armour(),
@@ -1723,10 +2168,26 @@ def main() -> None:
         "vriady-hody-conflict": build_vriady(),
     }
     for i, c in enumerate(build_aspect_pair()):
-        out[["vybihaty-imperf", "vybihty-perf"][i]] = c
-    for name, c in out.items():
+        cards[["vybihaty-imperf", "vybihty-perf"][i]] = c
+    companions = {
+        "identity-registry": build_registry(cards),
+        "overlay": build_overlay(),
+        "suppression-selectors": build_suppressions(),
+        "derivations": build_derivations(cards),
+    }
+    return cards, companions
+
+
+def main() -> None:
+    cards, companions = build_all()
+    for name, c in cards.items():
         (HERE / f"{name}.json").write_text(json.dumps(c, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"wrote {len(out)} cards to {HERE}")
+    (HERE / "companion").mkdir(exist_ok=True)
+    for name, c in companions.items():
+        (HERE / "companion" / f"{name}.json").write_text(
+            json.dumps(c, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+    print(f"wrote {len(cards)} cards and {len(companions)} companion files to {HERE}")
 
 
 if __name__ == "__main__":
