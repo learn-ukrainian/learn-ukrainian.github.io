@@ -147,15 +147,18 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
     return identity_from_record(task, task_id, record_path=path)
 
 
-#: The return templates print this line for the seat to fill, but a prompt cannot contain its own hash and a seat
-#: that only reads its prompt cannot compute it. The dispatch record holds the hash of the exact prompt the runtime
-#: sent (``delegate.py`` ``prompt_sha256``), so the recorder attests it from there.
-PROMPT_SHA_PLACEHOLDER = re.compile(rb"""(?m)^(?P<key>[ \t]+prompt_sha256:[ \t]*)["']?<prompt_sha256>["']?[ \t]*$""")
+#: The return templates print ``prompt_sha256: "<prompt_sha256>"`` for the seat, but a prompt cannot contain its own
+#: hash (#9022). The value the field records is the sha256 of the **rendered review prompt** — the file the prompt
+#: check verifies byte for byte and the dispatch was given (``delegate.py`` ``prompt_sha256``, taken before the runtime
+#: appends its own blocks). The recorder attests it only when that dispatch hash equals a fresh render of this
+#: attempt's manifest with this attempt's ids, so a wrong or stale task record can never supply it.
+PROMPT_SHA_PLACEHOLDER = "<prompt_sha256>"
+_PLACEHOLDER_LINE = re.compile(r"""^(?P<key>[ \t]+prompt_sha256:[ \t]*)(?P<q>["'])<prompt_sha256>(?P=q)[ \t]*$""")
 HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
 def dispatch_prompt_sha256(task_id: str, tasks_dir: Path) -> str | None:
-    """The sha256 of the prompt the dispatch sent, from its record, or ``None`` when the record does not hold one."""
+    """The sha256 of the prompt the dispatch was given, from its record, or ``None`` when it holds none."""
     try:
         task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -164,18 +167,54 @@ def dispatch_prompt_sha256(task_id: str, tasks_dir: Path) -> str | None:
     return value if isinstance(value, str) and HEX64.fullmatch(value) else None
 
 
-def attest_prompt_sha256(data: bytes, dispatch_sha: str | None) -> bytes:
-    """Replace the template's untouched ``prompt_sha256: "<prompt_sha256>"`` line with the dispatch-attested hash.
+def rendered_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> str | None:
+    """The sha256 of this manifest's review prompt rendered with these ids, or ``None`` when it cannot be rendered."""
+    from scripts.review.prompts.render import RenderError, render
 
-    Only the literal placeholder, and only when it occurs exactly once and the dispatch record holds a hash; every
-    other value is left for the validator to judge (a malformed value still fails the schema).
+    try:
+        return render(Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id).prompt_sha256
+    except (RenderError, OSError, ValueError):
+        return None
+
+
+def attest_prompt_sha256(data: bytes, attested: str | None) -> bytes:
+    """Fill ``reviewer.prompt_sha256`` when, and only when, the seat left the template placeholder there.
+
+    Only the line inside the top-level ``reviewer`` mapping is touched, only with matching quotes, and the result
+    must differ from the original in that one field alone; otherwise (or with no attested hash) the bytes are
+    returned unchanged for the validator to judge.
     """
-    if dispatch_sha is None:
+    if attested is None:
         return data
-    replaced, count = PROMPT_SHA_PLACEHOLDER.subn(
-        lambda match: match.group("key") + f'"{dispatch_sha}"'.encode("ascii"), data
-    )
-    return replaced if count == 1 else data
+    try:
+        original = yaml.safe_load(data)
+    except yaml.YAMLError:
+        return data
+    reviewer = original.get("reviewer") if isinstance(original, dict) else None
+    if not isinstance(reviewer, dict) or reviewer.get("prompt_sha256") != PROMPT_SHA_PLACEHOLDER:
+        return data
+    lines = data.decode("utf-8").split("\n")
+    try:
+        head = lines.index("reviewer:")
+    except ValueError:
+        return data
+    for index in range(head + 1, len(lines)):
+        line = lines[index]
+        if line and not line[0].isspace():
+            break  # left the reviewer mapping
+        match = _PLACEHOLDER_LINE.match(line)
+        if match:
+            lines[index] = f'{match.group("key")}"{attested}"'
+            break
+    else:
+        return data
+    replaced = "\n".join(lines).encode("utf-8")
+    try:
+        filled = yaml.safe_load(replaced)
+    except yaml.YAMLError:
+        return data
+    expected = {**original, "reviewer": {**reviewer, "prompt_sha256": attested}}
+    return replaced if filled == expected else data
 
 
 def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | None = None) -> dict[str, str]:
@@ -387,7 +426,9 @@ def record_return(
     tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
     identity = resolve_reviewer_identity(task_id, tasks_root)
     if failure is None:
-        data = attest_prompt_sha256(data, dispatch_prompt_sha256(task_id, tasks_root))
+        sent = dispatch_prompt_sha256(task_id, tasks_root)
+        if sent is not None and sent == rendered_prompt_sha256(manifest_path, root, review_id, attempt_id):
+            data = attest_prompt_sha256(data, sent)
     params = findings_db.load_parameters()
     if second and kind != "lesson":
         raise RecordError("a second seat reviews lessons, not plans")

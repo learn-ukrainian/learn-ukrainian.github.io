@@ -1674,11 +1674,17 @@ def _with_placeholder_prompt_sha(made: dict[str, Any]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def test_the_template_prompt_sha_placeholder_is_attested_from_the_dispatch_record(world: World) -> None:
-    """A seat cannot hash the prompt it reads; the dispatch record's prompt_sha256 fills the untouched line."""
-    sent = "ab" * 32
+def _rendered(world: World, made: dict[str, Any]) -> str:
+    sha = record.rendered_prompt_sha256(world.manifest(made["n"]), world.root, made["review_id"], made["attempt_id"])
+    assert sha is not None
+    return sha
+
+
+def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_record(world: World) -> None:
+    """#9022: a seat cannot hash its own prompt; the dispatch hash is attested when it equals this attempt's render."""
+    made = world.make_return(2)
+    sent = _rendered(world, made)
     world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent)
-    made = world.make_return(1)
     _with_placeholder_prompt_sha(made)
     outcome = world.record(made, task_id="review-attested")
     assert outcome.accepted, outcome.rejection_codes
@@ -1688,23 +1694,37 @@ def test_the_template_prompt_sha_placeholder_is_attested_from_the_dispatch_recor
     assert attempt["prompt_sha256"] == sent
 
 
+def test_a_dispatch_hash_that_is_not_this_attempts_render_is_never_attested(world: World) -> None:
+    """A wrong or stale task record (its prompt is not this manifest rendered with these ids) supplies nothing."""
+    made = world.make_return(2)
+    world.task("review-stale", "claude", "claude-sonnet-5", prompt_sha256="ab" * 32)
+    _with_placeholder_prompt_sha(made)
+    outcome = world.record(made, task_id="review-stale")
+    assert not outcome.accepted
+    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+
+
 def test_the_placeholder_is_not_filled_without_a_dispatch_hash(world: World) -> None:
     """No hash in the dispatch record: nothing is invented, and the untouched placeholder fails the schema."""
-    made = world.make_return(1)
+    made = world.make_return(2)
     _with_placeholder_prompt_sha(made)
     outcome = world.record(made)  # the default fixture task record carries no prompt_sha256
     assert not outcome.accepted
     assert codes.SCHEMA_INVALID in outcome.rejection_codes
 
 
-def test_attest_prompt_sha256_touches_only_the_literal_placeholder() -> None:
+def test_attest_prompt_sha256_touches_only_the_reviewer_field() -> None:
     sent = "cd" * 32
+    one = b'reviewer:\n  model: m\n  prompt_sha256: "<prompt_sha256>"\nchecks: {}\n'
+    assert record.attest_prompt_sha256(one, sent) == one.replace(b"<prompt_sha256>", sent.encode())
+    assert record.attest_prompt_sha256(one, None) == one
     real = b'reviewer:\n  prompt_sha256: "' + b"ef" * 32 + b'"\n'
     assert record.attest_prompt_sha256(real, sent) == real
-    twice = b'a:\n  prompt_sha256: "<prompt_sha256>"\nb:\n  prompt_sha256: "<prompt_sha256>"\n'
-    assert record.attest_prompt_sha256(twice, sent) == twice  # ambiguous: left for the validator
-    one = b'reviewer:\n  prompt_sha256: "<prompt_sha256>"\nchecks: {}\n'
-    assert (
-        record.attest_prompt_sha256(one, sent) == b'reviewer:\n  prompt_sha256: "' + sent.encode() + b'"\nchecks: {}\n'
+    # a finding's block-scalar text that happens to contain the placeholder line is never rewritten
+    claim = (
+        b'reviewer:\n  prompt_sha256: "' + b"ef" * 32 + b'"\n'
+        b'findings:\n  - claim: |\n      prompt_sha256: "<prompt_sha256>"\n'
     )
-    assert record.attest_prompt_sha256(one, None) == one
+    assert record.attest_prompt_sha256(claim, sent) == claim
+    mixed = b"reviewer:\n  prompt_sha256: \"<prompt_sha256>'\n"  # mismatched quotes: not the template line
+    assert record.attest_prompt_sha256(mixed, sent) == mixed
