@@ -17,7 +17,7 @@ versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 ``_catalog_ladder``). **Policy changes to ladder order or formal CF seats are
 YAML edits** — this module must not hard-code a second ladder. As of the
 fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
-(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Sol, Sonnet 5,
+(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Sol, Sonnet 5.5,
 Grok native + Cursor-explicit ``grok-4.7`` fallback, …).
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
@@ -236,6 +236,7 @@ OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
 SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
+SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 KIMI_K3 = REVIEW_CANDIDATES["kimi-k3"]
 DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
 DEEPSEEK_V4_1_FLASH = REVIEW_CANDIDATES["deepseek-v4.1-flash"]

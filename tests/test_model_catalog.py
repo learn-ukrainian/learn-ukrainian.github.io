@@ -51,6 +51,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "claude-opus-5-5",
         "claude-opus-5",
         "claude-sonnet-5",
+        "claude-sonnet-5-5",
         "gemini-3.1-pro-high",
         "gemini-3.8-flash-high",
         "gemini-3.7-flash-high",
@@ -69,10 +70,23 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "composer-2.5",
     }
     assert required <= set(models)
+    assert models["claude-sonnet-5-5"]["lifecycle"] == "active"
+    assert models["claude-sonnet-5"]["lifecycle"] == "fallback"
+    for ladder in load_model_catalog()["review_ladders"].values():
+        names = {candidate for rung in ladder for candidate in rung}
+        assert "claude-sonnet-5-5" in names
+        assert "claude-sonnet-5" not in names
     assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_fallback_sonnet_candidate_cannot_reenter_automatic_ladder():
+    broken = deepcopy(load_model_catalog())
+    broken["review_ladders"]["medium"][3] = ["claude-sonnet-5"]
+    with pytest.raises(ModelCatalogError, match="must reference an active model"):
+        validate_catalog(broken)
 
 
 def test_glm_53_flash_is_active_workhorse_catalog_entry() -> None:
@@ -165,7 +179,7 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
     assert "glm-5.3" not in practical
-    assert practical.index("claude-sonnet-5") < practical.index("deepseek-v4.1-flash")
+    assert practical.index("claude-sonnet-5-5") < practical.index("deepseek-v4.1-flash")
     # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
     # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
     assert "deepseek-v4.1-flash" in practical
@@ -376,9 +390,10 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     defaults = load_model_catalog()["formal_cf_defaults"]
     assert defaults["codex"]["model_id"] == "gpt-6-sol"
     assert defaults["codex"]["effort"] == "high"
-    assert defaults["claude"]["model_id"] == "claude-sonnet-5"
+    assert defaults["claude"]["model_id"] == "claude-sonnet-5-5"
     assert defaults["claude"]["effort"] == "high"
     assert set(defaults["claude"].get("family_models", [])) >= {
+        "claude-sonnet-5-5",
         "claude-sonnet-5",
         "claude-fable-5",
         "claude-opus-5",
@@ -444,7 +459,7 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "claude-fable-5" not in names
         assert "claude-opus-4-8" not in names
         assert "gpt-5.6-terra" not in names
-        assert "claude-sonnet-5" in names
+        assert "claude-sonnet-5-5" in names
         assert "pool" in names
         assert "grok-4.7-cursor-fallback" in names
     critical = {name for rung in ladders["critical"] for name in rung}
@@ -692,7 +707,7 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     assert "claude-opus-5" not in flat
     # The Opus 5.5 orchestrator seat must not inherit approval authority either.
     assert "claude-opus-5-5" not in flat
-    assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
+    assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5-5")
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:

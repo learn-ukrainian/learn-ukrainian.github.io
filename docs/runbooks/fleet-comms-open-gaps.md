@@ -214,7 +214,7 @@ not erase routing evidence.
 
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
-- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.8 Flash (agy)** → Grok (native then Cursor explicit `grok-4.7`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
+- Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol/Fable authority first, with Sonnet 5.5 as the Anthropic practical fallback; **high/medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
 - Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
