@@ -21,12 +21,7 @@ from pathlib import Path
 from agent_directory import open_agent_directory
 
 
-def sync_agent_mirror(
-    source_root: str,
-    agent_root: str,
-    excludes: tuple[str, ...] = (),
-    filters: tuple[str, ...] = (),
-) -> None:
+def sync_agent_mirror(source_root: str, agent_root: str) -> None:
     """Exec rsync into the directory represented by an open descriptor."""
     source = Path(source_root).resolve(strict=True)
     if not source.is_dir():
@@ -40,15 +35,7 @@ def sync_agent_mirror(
         # working directory selected by fchdir.
         os.set_inheritable(agent_fd, True)
         os.fchdir(agent_fd)
-        argv = ["rsync", "-av"]
-        argv.extend(f"--exclude={pattern}" for pattern in excludes)
-        for pattern in filters:
-            if pattern.startswith("--filter="):
-                argv.append(pattern)
-            else:
-                argv.append(f"--filter={pattern}")
-        argv.extend((f"{source}/", "."))
-        os.execvp("rsync", tuple(argv))
+        os.execvp("rsync", ("rsync", "-av", f"{source}/", "."))
     finally:
         # execvp never returns on success.  Close only on an fchdir/exec failure.
         os.close(agent_fd)
@@ -58,22 +45,10 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", required=True)
     parser.add_argument("--agent-root", required=True)
-    parser.add_argument("--exclude", action="append", default=[])
-    parser.add_argument(
-        "--filter",
-        action="append",
-        default=[],
-        help="rsync filter rule; deploy passes file-only *.pyc rules",
-    )
     args = parser.parse_args(argv)
 
     try:
-        sync_agent_mirror(
-            args.source_root,
-            args.agent_root,
-            tuple(args.exclude),
-            tuple(args.filter),
-        )
+        sync_agent_mirror(args.source_root, args.agent_root)
     except OSError as exc:
         print(f"Error: refusing .agent mirror sync: {exc}", file=sys.stderr)
         return 1

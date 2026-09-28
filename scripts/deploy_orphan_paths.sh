@@ -85,17 +85,17 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 # path from rsync deletion; capture verified copies into retained storage.
 CODEX_DISCOVERY_EXCLUDES="skills"
 
-# Interpreter cache written beside deployed hooks and skill scripts (#9108).
-# These are not declared runtime state and must stay out of every ORPHAN_PATHS_*
-# list. Only the *.pyc file is excluded from copy and from --delete. The
-# __pycache__ directory itself stays visible so a non-bytecode file inside it
-# still fails closed. A directory named foo__pycache__ is not cache.
-# CPython recompiles a *.pyc when the paired .py mtime or size changes, so a
-# retained cache does not shadow an updated source module.
+# Interpreter cache written beside deployed hooks (#9108). Not declared runtime
+# state. rsync has no name rule for these: a *.pyc pattern also matches a
+# directory or a symlink, and would omit real source content. The preflight and
+# this diff filter ignore only a regular non-symlink file ending in .pyc, plus
+# a __pycache__ directory whose entries are all such files. --delete removes a
+# destination-only regular cache when a real sync runs.
 BYTECODE_CACHE_EXCLUDES=('*.pyc')
 
-# True for a *.pyc file or for the __pycache__ directory entry itself.
-# hooks/__pycache__/notes.txt and foo__pycache__/settings.json are not cache.
+# True for a path whose final component is *.pyc or exactly __pycache__.
+# Callers still have to check the file type. A directory or symlink keeps its
+# own name and is not cache.
 bytecode_cache_path() {
     local base="${1##*/}"
     case "$base" in
@@ -104,25 +104,35 @@ bytecode_cache_path() {
     return 1
 }
 
-# Drop bytecode-only diff lines. A directory named *.pyc is kept, and so is a
-# __pycache__ directory that contains anything other than regular *.pyc files.
+# A regular file, not a symlink. -f follows links, so the -L test comes first.
+regular_file() {
+    [[ -f "$1" && ! -L "$1" ]]
+}
+
+# Drop diff lines that are only regular bytecode files.
 filter_pycache_only_diff() {
-    local line parent name path
+    local line parent name path left right rest
     while IFS= read -r line || [[ -n "$line" ]]; do
         case "$line" in
-            "Files "*".pyc and "*".pyc differ")
-                continue
+            "Files "*.pyc" and "*.pyc" differ")
+                rest="${line#Files }"
+                rest="${rest% differ}"
+                left="${rest%% and *}"
+                right="${rest#* and }"
+                if regular_file "$left" && regular_file "$right"; then
+                    continue
+                fi
                 ;;
             "Only in "*": "*)
                 parent="${line#"Only in "}"
                 parent="${parent%": "*}"
                 name="${line##*: }"
                 path="$parent/$name"
-                if [[ "$name" == *.pyc && -f "$path" && ! -d "$path" ]]; then
+                if [[ "$name" == *.pyc ]] && regular_file "$path"; then
                     continue
                 fi
-                if [[ "$name" == "__pycache__" && -d "$path" ]] \
-                    && ! find "$path" -mindepth 1 \( ! -type f -o ! -name '*.pyc' \) -print -quit | grep -q .; then
+                if [[ "$name" == "__pycache__" && -d "$path" && ! -L "$path" ]] \
+                    && ! find "$path" -mindepth 1 \( -type l -o ! -type f -o ! -name '*.pyc' \) -print -quit | grep -q .; then
                     continue
                 fi
                 ;;

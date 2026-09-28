@@ -161,6 +161,21 @@ fi
 kept_dir=$(printf '%s\n' "Only in $TEST_DIR/dst6: foo.pyc" | filter_pycache_only_diff)
 _assert_eq "directory named foo.pyc stays in the diff" "Only in $TEST_DIR/dst6: foo.pyc" "$kept_dir"
 rm -rf "$TEST_DIR/dst6/foo.pyc"
+ln -s kept.py "$TEST_DIR/dst6/hooks/alias.pyc"
+rc=0
+out=$(check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "pyc-symlink" 2>&1) || rc=$?
+_assert_rc "symlink named alias.pyc → rc 1" "1" "$rc"
+if echo "$out" | grep -q "hooks/alias.pyc"; then
+    echo "  ✓ names the alias.pyc symlink"
+    PASS=$((PASS + 1))
+else
+    echo "  ✗ did not name alias.pyc"
+    echo "    output: $out"
+    FAIL=$((FAIL + 1))
+fi
+kept_link=$(printf '%s\n' "Only in $TEST_DIR/dst6/hooks: alias.pyc" | filter_pycache_only_diff)
+_assert_eq "symlink named alias.pyc stays in the diff" "Only in $TEST_DIR/dst6/hooks: alias.pyc" "$kept_link"
+rm -f "$TEST_DIR/dst6/hooks/alias.pyc"
 echo "mystery" > "$TEST_DIR/dst6/hooks/never-tracked.py"
 check_orphans "$TEST_DIR/src6" "$TEST_DIR/dst6" "" "bytecode-plus-file" >/dev/null 2>&1
 _assert_rc "real file beside bytecode → rc 1" "1" "$?"

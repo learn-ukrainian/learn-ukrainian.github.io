@@ -43,18 +43,6 @@ REDACTED_UNSAFE = "ignoring unsafe manifest entry"
 VALID_KINDS = frozenset({"d", "f", "l"})
 
 
-def is_retained_bytecode(kind: str, relative: str) -> bool:
-    """A regular *.pyc file or a __pycache__ directory is not retired content.
-
-    A directory whose name ends in .pyc is real content and can still be
-    reaped. A notes.txt inside __pycache__ is not bytecode.
-    """
-    name = relative.rsplit("/", 1)[-1]
-    if kind == "d" and name == "__pycache__":
-        return True
-    return kind == "f" and name.endswith(".pyc")
-
-
 def path_is_lexically_safe(relative: str) -> bool:
     """Reject absolute paths, traversal, and separator-bearing oddities.
 
@@ -274,8 +262,6 @@ def main(argv: list[str]) -> int:
         # skipped silently instead of refused loudly. Refusing must be the visible outcome.
         if kind not in VALID_KINDS or not path_is_lexically_safe(relative):
             print(f"  .agent: {REDACTED_UNSAFE} '{kind} {relative}'", file=sys.stderr)
-            continue
-        if is_retained_bytecode(kind, relative):
             continue
         # Still present in source => not retired.
         candidate = source_root / relative

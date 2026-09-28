@@ -39,11 +39,6 @@ fi
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 
-# '+ */' matches directories before '- *.pyc', so a directory named foo.pyc is
-# not protected. These filters must come AFTER orphan --exclude rules: the
-# first matching rsync rule wins.
-BYTECODE_RSYNC_FILTERS=(--filter='+ */' --filter='- *.pyc')
-
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
@@ -111,11 +106,6 @@ write_current_shared_agent_paths() {
                 echo "Cannot record unsafe shared source path: $path" >&2
                 exit 1
             }
-            # A regular *.pyc or a __pycache__ directory is not deploy-owned.
-            # A directory whose name ends in .pyc is real content.
-            case "$kind:${path##*/}" in
-                f:*.pyc | d:__pycache__) continue ;;
-            esac
             printf '%s\t%s\n' "$kind" "${path#./}"
         done
     done
@@ -182,8 +172,7 @@ sync_shared_agent_mirror() {
     # bound to that descriptor even if another agent swaps the .agent pathname.
     "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
         --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
-        --agent-root .agent \
-        "${BYTECODE_RSYNC_FILTERS[@]}"
+        --agent-root .agent
 }
 
 remove_claude_autoload_rules() {
@@ -487,7 +476,7 @@ fi
 echo "=== Syncing ==="
 "$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "${BYTECODE_RSYNC_FILTERS[@]}" "$SHARED_EXTENSIONS/" .claude/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
 # retired paths which an earlier deploy recorded, preserving all other runtime
 # scratch even when it shares a source directory such as prompts/. #4741
@@ -498,9 +487,9 @@ reap_retired_shared_agent_paths
 sync_shared_agent_mirror
 write_shared_agent_manifest
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "${BYTECODE_RSYNC_FILTERS[@]}" "$SHARED_EXTENSIONS/" .codex/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
-    rsync -av "${BYTECODE_RSYNC_FILTERS[@]}" "$CODEX_EXTENSIONS/" .codex/
+    rsync -av "$CODEX_EXTENSIONS/" .codex/
 fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
@@ -510,20 +499,19 @@ fi
 # directory (2)`. Pre-create the parent so a fresh clone works.
 mkdir -p .agents
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "${BYTECODE_RSYNC_FILTERS[@]}" "$SHARED_EXTENSIONS/skills/" .agents/skills/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete \
     $(build_excludes "$ORPHAN_PATHS_GEMINI") \
     $(build_shared_skill_overlay_excludes) \
-    "${BYTECODE_RSYNC_FILTERS[@]}" \
     gemini_extensions/ .gemini/
 for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
     [[ -d "$shared_skill" ]] || continue
     skill_name="$(basename "$shared_skill")"
     mkdir -p ".gemini/skills/$skill_name"
-    rsync -av --delete "${BYTECODE_RSYNC_FILTERS[@]}" "$shared_skill/" ".gemini/skills/$skill_name/"
+    rsync -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
 done
-rsync -av --delete "${BYTECODE_RSYNC_FILTERS[@]}" "$SHARED_EXTENSIONS/rules/" .gemini/rules/
+rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination

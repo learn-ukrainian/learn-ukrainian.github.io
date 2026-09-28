@@ -229,7 +229,7 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     ),
     "test_codex_orphan_is_caught": (),
     "test_bytecode_cache_is_not_an_orphan_and_is_not_declared": (),
-    "test_agent_reaper_keeps_bytecode_from_an_old_manifest": (),
+    "test_pyc_named_symlink_is_deployed": (),
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
@@ -1330,11 +1330,15 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
     assert (repo / ".claude" / "hooks" / "kept.sh").read_text(encoding="utf-8") == kept.read_text(
         encoding="utf-8"
     )
-    for cache in caches:
-        assert cache.read_bytes() == marker, cache
+    # --delete targets drop a destination-only regular cache. .agent has no
+    # --delete, so a hook-written cache there stays.
+    deleted = [cache for cache in caches if ".agent/" not in str(cache)]
+    for cache in deleted:
+        assert not cache.exists(), cache
+    assert (repo / ".agent" / "hooks" / "__pycache__" / "x.cpython-314.pyc").read_bytes() == marker
     for mirror in (".claude", ".codex", ".agent"):
         copied = repo / mirror / "hooks" / "__pycache__" / "from_source.cpython-312.pyc"
-        assert not copied.exists(), copied
+        assert copied.read_bytes() == b"source-only-cache\n", copied
 
     check = _run(repo, CHECK_SCRIPT)
     assert check.returncode == 0, check.stdout + check.stderr
@@ -1346,36 +1350,22 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
     assert third.returncode != 0
     assert "undeclared orphan 'stale-only.txt'" in third_output
     assert "undeclared orphan 'hooks/__pycache__/x.cpython-314.pyc'" not in third_output
-    assert (repo / ".claude" / "hooks" / "__pycache__" / "x.cpython-314.pyc").read_bytes() == marker
 
 
-def test_agent_reaper_keeps_bytecode_from_an_old_manifest(tmp_path: Path) -> None:
-    """An older .agent manifest must not reap a *.pyc the rsync exclude retained."""
+def test_pyc_named_symlink_is_deployed(tmp_path: Path) -> None:
+    """A symlink named *.pyc is source content, not bytecode (#9108)."""
     repo = _init_checkout(tmp_path)
     kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
     kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     kept.chmod(0o755)
-    first = _run(repo, DEPLOY_SCRIPT)
-    assert first.returncode == 0, first.stdout + first.stderr
+    link = repo / "agents_extensions" / "shared" / "hooks" / "link.pyc"
+    link.symlink_to("kept.sh")
 
-    cache = repo / ".agent" / "hooks" / "__pycache__" / "kept.cpython-314.pyc"
-    cache.parent.mkdir(parents=True, exist_ok=True)
-    cache.write_bytes(b"keep-this-cache\n")
-    manifest = repo / ".deploy-state" / "shared-to-agent.manifest"
-    assert manifest.is_file()
-    manifest.write_text(
-        manifest.read_text(encoding="utf-8")
-        + "d\thooks/__pycache__\n"
-        + "f\thooks/__pycache__/kept.cpython-314.pyc\n",
-        encoding="utf-8",
-    )
-    # A real source change is required. "No changes" returns before the reap.
-    kept.write_text("#!/bin/sh\nexit 0\n# redeploy\n", encoding="utf-8")
-    second = _run(repo, DEPLOY_SCRIPT)
-    assert second.returncode == 0, second.stdout + second.stderr
-    assert cache.read_bytes() == b"keep-this-cache\n"
-    recorded = manifest.read_text(encoding="utf-8")
-    assert "kept.cpython-314.pyc" not in recorded
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, deploy_result.stdout + deploy_result.stderr
+    deployed = repo / ".claude" / "hooks" / "link.pyc"
+    assert deployed.is_symlink()
+    assert os.readlink(deployed) == "kept.sh"
 
 
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:
