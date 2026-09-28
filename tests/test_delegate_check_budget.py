@@ -444,12 +444,12 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
     assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True) == "codex"
 
 
-def test_adapter_rejects_foreign_model_after_substitution():
-    temp_root = Path(tempfile.gettempdir())
-    before = set(temp_root.glob("codex-runtime-*.txt"))
+def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path):
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
     assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
-    assert set(temp_root.glob("codex-runtime-*.txt")) <= before
+    assert not list(tmp_path.glob("codex-runtime-*.txt"))
 
 
 def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
