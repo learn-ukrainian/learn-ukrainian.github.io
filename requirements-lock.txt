@@ -121,7 +121,7 @@ pillow==12.3.0
 platformdirs==4.9.6
 playwright==1.59.0
 pluggy==1.6.0
-portalocker==3.2.0
+portalocker==4.4.0
 pre_commit==4.6.0
 propcache==0.5.2
 protobuf==7.36.2
