@@ -535,12 +535,16 @@ def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
         json.dumps(
             {
                 "open_model_data": {"tests": [ordinary, repo_wide], "roots": ["scripts/projects/open_model_data/"]},
-                "atlas": {"tests": [], "roots": ["scripts/atlas/"]},
+                "atlas": {"tests": ["tests/test_atlas_db.py"], "roots": ["scripts/atlas/"]},
             }
         ),
         encoding="utf-8",
     )
     assert filter_paths(paths, ["open_model_data"], manifest=manifest, repo=tmp_path) == (paths[1:], 1)
+    invalid = json.loads(manifest.read_text(encoding="utf-8"))
+    invalid["atlas"]["tests"] = []
+    manifest.write_text(json.dumps(invalid), encoding="utf-8")
+    assert filter_paths(paths, ["open_model_data"], manifest=manifest, repo=tmp_path) == (paths, 0)
     assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths[1:], 1)
     assert filter_paths(paths, ["unknown"], repo=tmp_path) == (paths, 0)
     bad = tmp_path / "bad.json"

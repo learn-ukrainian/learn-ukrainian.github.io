@@ -199,6 +199,7 @@ class _Graph:
         self._trees: dict[str, ast.Module] = {}
         self._consts: dict[str, dict[str, str]] = {}
         self._data: dict[str, frozenset[str]] = {}
+        self.audited_sites: set[tuple[tuple[str, str], str]] = set()
         self._callers: dict[str, frozenset[str]] = {}
         self.by_top: dict[str, set[str]] = defaultdict(set)
         for path in self.modules:
@@ -458,6 +459,7 @@ class _Graph:
                 visit(child, active, inner, owner)
 
         visit(self._tree(path), scope, set())
+        self.audited_sites.update(audited_seen)
         self._data[path] = frozenset(found)
         return self._data[path]
 
@@ -709,11 +711,20 @@ def test_audited_computed_paths_are_an_exact_set() -> None:
             {"_REPO_ROOT / rel.with_suffix('.py')", "_REPO_ROOT / rel"}
         ),
         ("tests/conftest.py", "_analyze_test_module"): frozenset({"_REPO_ROOT / rel_path"}),
-        ("tests/conftest.py", "_sparse_missing_trees"): frozenset({"_REPO_ROOT / rel"}),
         ("tests/conftest.py", "pytest_runtest_setup"): frozenset({"DATA_ROOT / rel"}),
         ("tests/sparse_trees.py", "tree_absent"): frozenset({"REPO_ROOT / normalized"}),
     }
     assert expected == AUDITED_COMPUTED_REPO_PATHS
+
+
+def test_every_audited_computed_path_matches_a_current_site(graph: _Graph) -> None:
+    for path, _ in AUDITED_COMPUTED_REPO_PATHS:
+        assert path in graph.modules
+        graph.data(path)
+    declared = {
+        (key, expression) for key, expressions in AUDITED_COMPUTED_REPO_PATHS.items() for expression in expressions
+    }
+    assert graph.audited_sites == declared
 
 
 def test_audited_function_cannot_add_another_computed_path() -> None:

@@ -24,8 +24,6 @@ AUDITED_COMPUTED_REPO_PATHS: dict[tuple[str, str], frozenset[str]] = {
     ),
     # Collection supplies the current test file's repo-relative location.
     ("tests/conftest.py", "_analyze_test_module"): frozenset({"_REPO_ROOT / rel_path"}),
-    # This loop has only the two literal sparse-tree names.
-    ("tests/conftest.py", "_sparse_missing_trees"): frozenset({"_REPO_ROOT / rel"}),
     # find_entry validates rel; the invariant checks each test marker's data path.
     ("tests/conftest.py", "pytest_runtest_setup"): frozenset({"DATA_ROOT / rel"}),
     # The invariant checks each area test's tree_absent argument at its call site.
@@ -43,7 +41,7 @@ def load_areas(path: Path = _MANIFEST) -> dict[str, dict[str, list[str]]]:
             raise ValueError("test area must declare tests and roots")
         for key in ("tests", "roots"):
             values = area[key]
-            if not isinstance(values, list) or (key == "roots" and not values) or len(values) != len(set(values)):
+            if not isinstance(values, list) or not values or len(values) != len(set(values)):
                 raise ValueError(f"invalid {key} list")
             if any(
                 not isinstance(value, str)
