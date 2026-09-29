@@ -68,6 +68,55 @@ def test_reader_resolves_primary_database_from_sparse_worktree(tmp_path: Path, m
         assert conn.execute("SELECT value FROM proof").fetchone()[0] == "stale"
 
 
+def test_ulif_cache_uses_active_override_for_reads_writes_and_raw_response(tmp_path: Path, monkeypatch) -> None:
+    worktree = tmp_path / "worktree"
+    worktree_db = worktree / "data" / "sources.db"
+    active_db = tmp_path / "active" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setenv("LU_SOURCES_DB", str(active_db))
+
+    stored = sources_db.store_ulif_dictua_entry(
+        word="fixture-word",
+        canonical_headword="fixture-word",
+        sections={},
+        raw_responses={"paradigm": "fixture response"},
+        retrieved_at="2026-09-29T00:00:00+00:00",
+        parser_version="fixture-v1",
+        status="parse_error",
+    )
+
+    assert stored is not None
+    assert sources_db.get_ulif_dictua_entry("fixture-word") == stored
+    assert sources_db.resolve_ulif_dictua_raw_response(stored["raw_response_ref"])
+    assert active_db.is_file()
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
+
+
+def test_network_sources_override_refused_without_creating_database(tmp_path: Path, monkeypatch) -> None:
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    worktree_db = tmp_path / "data" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setenv("LU_SOURCES_DB", "//unreachable/UkrainianData/sources.db")
+
+    with pytest.raises(ActiveDatabaseNetworkError):
+        sources_db.store_ulif_dictua_entry(
+            word="fixture-word",
+            canonical_headword="fixture-word",
+            sections={},
+            raw_responses={},
+            retrieved_at="2026-09-29T00:00:00+00:00",
+            parser_version="fixture-v1",
+            status="parse_error",
+        )
+
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
+
+
 @pytest.fixture()
 def ua_gec_search_conn(monkeypatch: pytest.MonkeyPatch):
     """Small deterministic UA-GEC FTS database for query-safety tests."""

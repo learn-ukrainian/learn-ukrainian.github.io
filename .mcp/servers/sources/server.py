@@ -2110,9 +2110,11 @@ async def handle_get_chunk_context(args: dict):
     query_obj = {"chunk_id": chunk_id}
 
     from wiki.sources_db import _get_conn
+
+    from scripts.storage.topology import ActiveDatabaseNetworkError
     try:
         conn = _get_conn()
-    except FileNotFoundError:
+    except (FileNotFoundError, ActiveDatabaseNetworkError):
         prose = "Sources database not found."
         envelope = build_search_envelope(
             tool="get_chunk_context",
@@ -2574,7 +2576,12 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
 
     from wiki.sources_db import _read_db_path
 
-    db = _read_db_path()
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    try:
+        db = _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return None
     if not db.exists():
         return None
     conn: sqlite3.Connection | None = None
@@ -3011,6 +3018,15 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
 
 async def handle_query_ulif(args: dict) -> list[TextContent]:
+    from wiki.sources_db import _read_db_path
+
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    try:
+        _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return [TextContent(type="text", text="Sources database not found.")]
+
     word = args["word"]
     if args.get("cache_only"):
         # Cache-only: never a live ULIF fetch. A missing/unreadable cache

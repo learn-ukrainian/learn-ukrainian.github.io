@@ -306,7 +306,7 @@ def _ulif_dictua_conn(
     migrates. ``create=True`` creates missing tables for a write and still
     does not migrate an existing table.
     """
-    path = Path(db_path) if db_path is not None else (SOURCES_DB_PATH if create else _read_db_path())
+    path = Path(db_path) if db_path is not None else _read_db_path()
     if not path.exists():
         if not create:
             return None
@@ -516,7 +516,7 @@ def resolve_ulif_dictua_raw_response(
     db_path: str | Path | None = None,
 ) -> bytes | None:
     """Resolve a ``sha256:<digest>`` raw-response reference from the cache."""
-    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    path = Path(db_path) if db_path is not None else _read_db_path()
     cache = ulif_raw_cache.cache_path(path) if path != PROJECT_ROOT / "data/sources.db" else ulif_raw_cache.cache_path()
     return ulif_raw_cache.resolve_ref(raw_response_ref, path=cache)
 

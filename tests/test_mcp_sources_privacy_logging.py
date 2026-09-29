@@ -221,7 +221,7 @@ def test_on_call_tool_mcp_server_identity_explicitly_includes_content_hash(serve
     sources_db = data / "sources.db"
     sources_db.write_bytes(b"wire-sources-db")
     (data / "vesum.db").write_bytes(b"wire-vesum-db")
-    monkeypatch.setattr(server, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
 
     result = _call_on_call_tool(server, "mcp_server_identity", {"include_sources_db_sha256": True})
     assert result.is_error is False

@@ -54,7 +54,8 @@ def _run(coro):
     return asyncio.run(coro)
 
 
-def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_module, tmp_path, monkeypatch):
+@pytest.mark.parametrize("stale_db", [False, True])
+def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_module, tmp_path, monkeypatch, stale_db):
     """A real sources handler read must not make the dispatch guard fail (#9122)."""
     primary = tmp_path / "primary"
     primary.mkdir()
@@ -71,6 +72,10 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
         capture_output=True,
         timeout=30,
     )
+    worktree_db = worktree / "data" / "sources.db"
+    if stale_db:
+        worktree_db.parent.mkdir()
+        worktree_db.touch()
 
     db = primary / "data" / "sources.db"
     db.parent.mkdir()
@@ -82,6 +87,7 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path))
     monkeypatch.delenv("LU_SOURCES_DB", raising=False)
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
@@ -89,6 +95,8 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
 
     monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
     import delegate
+    from rag import source_query
+
     from wiki import sources_db
 
     monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
@@ -106,6 +114,24 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
         )
         assert result.is_error is False
         assert "Source text" in result.content[0].text
+        with patch.object(source_query, "_get") as fetch:
+            fetch.return_value.text = "<html>missing WebForms tokens</html>"
+            fetch.return_value.raise_for_status.return_value = None
+            ulif_result = _run(
+                server_module._on_call_tool(
+                    None,
+                    CallToolRequestParams(
+                        name="query_ulif",
+                        arguments={"word": "fixture-word", "sections": ["paradigm"]},
+                    ),
+                )
+            )
+            assert ulif_result.is_error is False
+            assert json.loads(ulif_result.content[0].text)["status"] == "parse_error"
+            assert source_query.query_ulif("fixture-word")["status"] == "parse_error"
+            fetch.assert_called_once()
+        with sqlite3.connect(db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0] == 1
         return type(
             "Result",
             (),
@@ -136,10 +162,39 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
         assert rc == 0
         assert state["status"] == "done"
         assert state["read_only_mutation_paths"] == []
-        assert not (worktree / "data" / "sources.db").exists()
+        if stale_db:
+            assert worktree_db.stat().st_size == 0
+        else:
+            assert not worktree_db.exists()
+            assert not worktree_db.parent.exists()
     finally:
         if sources_db._conn is not None:
             sources_db._conn.close()
+
+
+def test_network_sources_override_has_missing_database_responses(server_module, tmp_path, monkeypatch):
+    from wiki import sources_db
+
+    worktree_db = tmp_path / "data" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setenv("LU_SOURCES_DB", "//unreachable/UkrainianData/sources.db")
+
+    content, envelope = _run(server_module.handle_get_chunk_context({"chunk_id": "fixture"}))
+    assert content[0].text == "Sources database not found."
+    assert envelope["status"] == "error"
+    assert envelope["error_code"] == "sources_db_missing"
+    for args in (
+        {"word": "fixture", "cache_only": True},
+        {"word": "fixture", "sections": ["paradigm"]},
+        {"word": "fixture"},
+    ):
+        ulif_content = _run(server_module.handle_query_ulif(args))
+        assert ulif_content[0].text == "Sources database not found."
+    assert server_module._lookup_wikipedia_in_db("fixture") is None
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
 
 
 class TestListTools:
