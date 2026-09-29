@@ -698,7 +698,7 @@ jobs:
         with:
           name: needs-artifact-audit
           path: ci-artifacts/
-          if-no-files-found: ignore
+          if-no-files-found: warn
           retention-days: 7
 
 

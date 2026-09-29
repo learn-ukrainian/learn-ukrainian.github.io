@@ -69,6 +69,7 @@ def test_ci_audits_collection_and_runtime_skips_from_all_configured_roots() -> N
     assert "actions/upload-artifact" in audit
     assert "if: failure()" in audit
     assert "path: ci-artifacts/" in audit
+    assert "if-no-files-found: warn" in audit
     assert "retention-days: 7" in audit
 
 
