@@ -412,9 +412,8 @@ def test_ukrainian_gloss_clean_is_the_first_sense_not_a_stub(
     lexeme = _build_lexeme(_entry(lemma, "noun", gloss, "B1"), SELF_FORMS)
 
     assert generate_practice_deck._gloss_clean(gloss) == published_stub
-    assert lexeme is not None
-    assert lexeme["glossClean"] == expected
-    assert lexeme["meaningMcEligible"] is False
+    assert generate_practice_deck._ukrainian_definition_clean(gloss) == expected
+    assert lexeme is None  # The top-level article has no definition-specific source.
 
 
 def test_self_form_gloss_falls_back_to_the_english_source_gloss() -> None:
@@ -432,7 +431,7 @@ def test_self_form_gloss_falls_back_to_the_english_source_gloss() -> None:
     assert lexeme["glossClean"] == "twilight"
 
 
-def test_sourced_ukrainian_definition_stands_in_before_english() -> None:
+def test_unapproved_ukrainian_definition_yields_to_sourced_english() -> None:
     entry = _entry(
         "присмерк",
         "noun",
@@ -445,7 +444,7 @@ def test_sourced_ukrainian_definition_stands_in_before_english() -> None:
     lexeme = _build_lexeme(entry, SELF_FORMS)
 
     assert lexeme is not None
-    assert lexeme["glossClean"] == "слабке світло після заходу сонця"
+    assert lexeme["glossClean"] == "twilight"
 
 
 def test_english_fallback_rejects_a_bare_grammar_code_and_withholds_a_meaningless_lexeme() -> None:
@@ -485,15 +484,16 @@ def _deck(**kinds: dict[str, Any]) -> dict[str, dict[str, dict[str, Any]]]:
     return {"B2": kinds}
 
 
-def test_deck_text_gate_rejects_mixed_script_words_and_stub_glosses() -> None:
+def test_deck_text_gate_rejects_mixed_script_words_and_stub_glosses(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(generate_practice_deck, "_load_sum11_definitions", lambda words, path: {})
     planted = _deck(
         heritage={"heritage": [{"heritageId": "her_071765e3cc25", "options": [{"label": "вести cебе"}]}]},
         lexemes={
             "lexemes": [
-                {"lemmaId": "абонент", "lemma": "абонент", "glossClean": "Той"},
-                {"lemmaId": "хіть", "lemma": "хіть", "glossClean": "хі́ті"},
-                {"lemmaId": "книга", "lemma": "книга", "glossClean": "book"},
-                {"lemmaId": "довкіл", "lemma": "довкіл", "glossClean": "довко́ла"},
+                {"lemmaId": "абонент", "lemma": "абонент", "gloss": "Той", "glossClean": "Той", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
+                {"lemmaId": "хіть", "lemma": "хіть", "gloss": "хі́ті", "glossClean": "хі́ті", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
+                {"lemmaId": "книга", "lemma": "книга", "gloss": "book", "glossClean": "book"},
+                {"lemmaId": "довкіл", "lemma": "довкіл", "gloss": "довко́ла", "glossClean": "довко́ла", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
             ]
         },
     )
@@ -532,7 +532,7 @@ def test_homoglyph_gate_reads_a_stressed_word_as_one_word(apostrophe: str) -> No
     assert generate_practice_deck.validate_deck_text(generate_practice_deck._repair_deck_homoglyphs(planted)) == []
 
 
-def test_shard_build_repairs_homoglyphs_and_fails_on_an_unrepairable_one() -> None:
+def test_shard_build_withholds_mixed_language_glosses() -> None:
     def build(gloss: str) -> dict[str, dict[str, dict[str, Any]]]:
         return build_practice_shards(
             [_entry("книга", "noun", gloss, "A1")],
@@ -545,8 +545,5 @@ def test_shard_build_repairs_homoglyphs_and_fails_on_an_unrepairable_one() -> No
             synonym_verdicts={"approved": [], "rejected": []},
         )
 
-    repaired = build("book (у вiзочку)")
-    assert repaired["A1"]["lexemes"]["lexemes"][0]["gloss"] == "book (у візочку)"
-
-    with pytest.raises(ValueError, match="mixed Cyrillic/Latin word 'дgом'"):
-        build("book (дgом)")
+    assert build("book (у вiзочку)") == {}
+    assert build("book (дgом)")["A1"]["lexemes"]["lexemes"][0]["gloss"] == "book"

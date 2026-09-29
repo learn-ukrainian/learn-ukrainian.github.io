@@ -2,6 +2,7 @@
 
 import inspect
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -29,6 +30,46 @@ def _hide_sources_db(monkeypatch, tmp_path: Path) -> None:
         raise AssertionError("snapshot-only audit attempted to open sources.db")
 
     monkeypatch.setattr(practice_quality_gate, "_SourceRows", reject_sources)
+
+
+def test_practice_shard_audit_rejects_same_word_sum11_meaning(tmp_path: Path, monkeypatch) -> None:
+    from scripts.audit import practice_quality_gate
+
+    fixture = json.loads(Path("tests/fixtures/practice-meaning-sources-9160.json").read_text(encoding="utf-8"))
+    entry = fixture["entries"][0]
+    source_text = fixture["sum11Definitions"][entry["lemma"]][0]
+    source_db = tmp_path / "sources.db"
+    with sqlite3.connect(source_db) as conn:
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES (?, ?)", (entry["lemma"], source_text))
+    monkeypatch.setattr(practice_quality_gate, "DEFAULT_SOURCES_DB", source_db)
+    (tmp_path / "practice-lexemes.B1.json").write_text(json.dumps({"lexemes": [{
+        "lemmaId": entry["url_slug"], "lemma": entry["lemma"],
+        "gloss": source_text, "glossClean": source_text,
+        "meaningSource": {"source": "СУМ-20", "field": "enrichment.definition_cards.definitions"},
+    }]}, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(tmp_path, check_volume=False, verify_vesum=False)
+
+    assert any(v["type"] == "UNSAFE_PRACTICE_MEANING" and "sum11.definition" in v["message"] for v in violations)
+
+
+def test_practice_shard_audit_requires_source_db_for_ukrainian_meaning(tmp_path: Path, monkeypatch) -> None:
+    from scripts.audit import practice_quality_gate
+
+    fixture = json.loads(Path("tests/fixtures/practice-meaning-sources-9160.json").read_text(encoding="utf-8"))
+    entry = fixture["entries"][0]
+    text = entry["enrichment"]["definition_cards"][1]["definitions"][0]
+    monkeypatch.setattr(practice_quality_gate, "DEFAULT_SOURCES_DB", tmp_path / "missing.db")
+    (tmp_path / "practice-lexemes.B1.json").write_text(json.dumps({"lexemes": [{
+        "lemmaId": entry["url_slug"], "lemma": entry["lemma"],
+        "gloss": text, "glossClean": text,
+        "meaningSource": {"source": "СУМ-20", "field": "enrichment.definition_cards.definitions"},
+    }]}, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(tmp_path, check_volume=False, verify_vesum=False)
+
+    assert any(v["type"] == "SOURCE_DB_MISSING" for v in violations)
 
 
 def test_audit_teacher_cloze_validates_blank_count(tmp_path: Path):

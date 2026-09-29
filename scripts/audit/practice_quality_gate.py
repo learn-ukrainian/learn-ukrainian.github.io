@@ -742,8 +742,41 @@ def audit_practice_shards(
 
     for sf in shard_files:
         name = sf.name
-        # Skip index and lexemes metadata shards
-        if "index" in name or "lexemes" in name:
+        if name.startswith("practice-lexemes."):
+            from scripts.audit.generate_practice_deck import (
+                _is_english_learner_gloss,
+                _load_sum11_definitions,
+                practice_meaning_errors,
+            )
+
+            try:
+                payload = json.loads(sf.read_text(encoding="utf-8"))
+                lexemes = payload.get("lexemes", [])
+                definitions = _load_sum11_definitions(
+                    {
+                        str(row.get("lemma") or "")
+                        for row in lexemes
+                        if isinstance(row, dict)
+                        and not _is_english_learner_gloss(str(row.get("gloss") or ""))
+                    },
+                    DEFAULT_SOURCES_DB,
+                )
+                for row in lexemes:
+                    if not isinstance(row, dict):
+                        continue
+                    for error in practice_meaning_errors(row, definitions.get(str(row.get("lemma") or ""), [])):
+                        violations.append({
+                            "type": "UNSAFE_PRACTICE_MEANING",
+                            "item": f"{name}:{row.get('lemmaId')}",
+                            "message": error,
+                        })
+            except FileNotFoundError as exc:
+                violations.append({"type": "SOURCE_DB_MISSING", "item": name, "message": str(exc)})
+            except (OSError, ValueError, TypeError) as exc:
+                violations.append({"type": "JSON_PARSE_ERROR", "item": name, "message": str(exc)})
+            continue
+        # Index metadata is not a learner meaning.
+        if "index" in name:
             continue
         parts = name.split(".")
         if len(parts) < 3:

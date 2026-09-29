@@ -100,6 +100,10 @@ check_agreement = _MORPHOLOGICAL_VALIDATOR.check_agreement
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
+DEFAULT_SOURCES_DB = next(
+    (parent / "data/sources.db" for parent in (PROJECT_ROOT, *PROJECT_ROOT.parents) if (parent / "data/sources.db").is_file()),
+    PROJECT_ROOT / "data/sources.db",
+)
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
 # endpoints) so the fetch URL resolves identically in dev and prod — astro's
 # `trailingSlash: 'always'` otherwise serves a dynamic endpoint only at the trailing-slash
@@ -787,38 +791,6 @@ def _ukrainian_definition_clean(gloss: str) -> str:
     return first_sense.strip(" ,.:")
 
 
-def _practice_gloss_clean(
-    entry: dict[str, Any],
-    gloss: str,
-    verifier: VesumVerifier | None = None,
-    *,
-    sense: dict[str, Any] | None = None,
-) -> str:
-    """Short meaning label shown beside the lemma (#8715).
-
-    English glosses keep their first comma/semicolon segment.  A Ukrainian
-    dictionary definition keeps its first sense; when that carries no meaning,
-    a sourced Ukrainian definition and then an English source gloss stand in.
-    Returns ``""`` only when no source has a meaning.
-    """
-    if _is_english_learner_gloss(gloss):
-        return _gloss_clean(gloss)
-    lemma = _clean_text(entry.get("lemma")) or ""
-    enrichment = entry.get("enrichment")
-    meaning = enrichment.get("meaning") if isinstance(enrichment, dict) else None
-    definitions = meaning.get("definitions") if isinstance(meaning, dict) else None
-    for text in [gloss, *(definitions if isinstance(definitions, list) else [])]:
-        text = _clean_text(text)
-        if not text or _is_english_learner_gloss(text):
-            continue
-        clean = _ukrainian_definition_clean(text)
-        if not _is_uk_gloss_stub(clean, lemma, verifier):
-            return clean
-    english = _english_translation_gloss(entry, sense=sense)
-    # e2u rows can carry a bare grammar code («P vt») instead of a gloss.
-    return english if english and re.search(r"[a-z]{3,}", english) else ""
-
-
 def _meaning_label_word_count(label: str) -> int:
     return len(re.findall(r"[^\W_]+(?:[-'][^\W_]+)?", label, flags=re.UNICODE))
 
@@ -874,6 +846,8 @@ def _sense_learner_en(sense: dict[str, Any]) -> str | None:
     for raw in learner_en:
         text = re.sub(r"\s+", " ", str(raw)).strip()
         text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
+        text = re.sub(r"^\d+[.)]\s*", "", text)
+        text = re.split(r"\s+\d+[.)]\s*", text, maxsplit=1)[0]
         head = re.split(r"[;(]", text, maxsplit=1)[0]
         clean = _gloss_clean(head)
         if clean and _is_english_learner_gloss(clean):
@@ -917,6 +891,8 @@ def _english_translation_gloss(
         text = re.sub(r"\s+", " ", str(raw)).strip()
         # Strip leading qualifiers: "(dated) fairy tale" → "fairy tale"
         text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
+        text = re.sub(r"^\d+[.)]\s*", "", text)
+        text = re.split(r"\s+\d+[.)]\s*", text, maxsplit=1)[0]
         # Drop trailing dictionary expansions: "fairy tale (folktale)" → "fairy tale"
         head = re.split(r"[;(]", text, maxsplit=1)[0]
         clean = _gloss_clean(head)
@@ -932,28 +908,126 @@ def _english_translation_gloss(
     return multi[0] if multi else cleaned[0]
 
 
-def _practice_display_gloss(
-    entry: dict[str, Any],
-    level: str | None,
-    fallback: str,
-    *,
-    sense: dict[str, Any] | None = None,
-) -> str:
-    """Learner-facing gloss for flashcards / recognition.
+def _meaning_text_key(text: str) -> str:
+    """Normalize stress and spacing for same-word dictionary comparisons."""
+    return re.sub(r"\s+", " ", _strip_stress(text).casefold()).strip(" .,:;")
 
-    A1 always prefers English scaffolding when available.
-    A1–A2 never keep a long Ukrainian dictionary definition when English exists —
-    Wiktionary-style «розповідний твір про вигаданих осіб…» is not an A2 gloss.
-    Sense-first entries bind via ``sense`` and never fall back to ``en[0]``.
-    """
-    en = _english_translation_gloss(entry, sense=sense)
-    if not en:
-        return fallback
-    if level == "A1":
-        return en
-    if level == "A2" and not _is_english_learner_gloss(_gloss_clean(fallback)):
-        return en
-    return fallback
+
+def _sum11_meaning_match(text: str, definitions: list[str]) -> bool:
+    key = _meaning_text_key(text)
+    return bool(key) and any(key in _meaning_text_key(definition) for definition in definitions)
+
+
+def _load_sum11_definitions(words: set[str], path: Path) -> dict[str, list[str]]:
+    """Read only the selected words from the source database; never infer gloss provenance."""
+    if not words:
+        return {}
+    if not path.is_file():
+        raise FileNotFoundError(f"same-word SUM11 check requires sources database at {path}")
+    definitions: dict[str, list[str]] = {}
+    with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as conn:
+        for word in sorted(words):
+            rows = conn.execute("SELECT definition FROM sum11 WHERE word=?", (word,)).fetchall()
+            if rows:
+                definitions[word] = [str(row[0]) for row in rows]
+    return definitions
+
+
+def _definition_meaning(text: str, lemma: str, verifier: VesumVerifier) -> str:
+    """Keep the first definition sentence, without citation or example material."""
+    # Dictionary citations and sense references are not part of a learner meaning.
+    without_parentheses = re.sub(r"\([^()]*\)", "", text)
+    clean = _ukrainian_definition_clean(without_parentheses)
+    clean = re.split(r"[«»“”„]|\s+[—–]\s+", clean, maxsplit=1)[0].strip(" ,.;:")
+    if re.search(r"\b(?:19[2-8]\d|199[01])\b", clean):
+        return ""
+    return "" if _is_uk_gloss_stub(clean, lemma, verifier) else clean
+
+
+def practice_meaning_errors(lexeme: dict[str, Any], sum11_definitions: list[str]) -> list[str]:
+    """Publication gate for both learner-facing meaning fields."""
+    errors: list[str] = []
+    attribution = lexeme.get("meaningSource")
+    for field in ("gloss", "glossClean"):
+        text = str(lexeme.get(field) or "")
+        if not text:
+            errors.append(f"{field} missing")
+            continue
+        if re.search(r"\b(?:19[2-8]\d|199[01])\b", text):
+            errors.append(f"{field} has dated citation")
+        if "(" in text or ")" in text:
+            errors.append(f"{field} has parenthesized citation or note")
+        if any(mark in text for mark in ("«", "»", "“", "”", "„")):
+            errors.append(f"{field} has quotation")
+        if _sum11_meaning_match(text, sum11_definitions):
+            errors.append(f"{field} matches same-word sum11.definition")
+        if not _is_english_learner_gloss(text):
+            source = attribution.get("source") if isinstance(attribution, dict) else None
+            field_source = attribution.get("field") if isinstance(attribution, dict) else None
+            if source not in {"СУМ-20", "ВТС", "ULIF"} or field_source != "enrichment.definition_cards.definitions":
+                errors.append(f"{field} lacks allowed definition source")
+    return errors
+
+
+def _safe_meaning(text: str, source: dict[str, str], sum11_definitions: list[str]) -> bool:
+    return not practice_meaning_errors(
+        {"gloss": text, "glossClean": text, "meaningSource": source}, sum11_definitions
+    )
+
+
+def _practice_meaning(
+    entry: dict[str, Any],
+    verifier: VesumVerifier,
+    sense: dict[str, Any] | None,
+    sum11_definitions: list[str],
+) -> tuple[str, dict[str, str]] | None:
+    """Select a meaning with field-specific attribution, independent of admission provenance."""
+    lemma = _clean_text(entry.get("lemma")) or ""
+    enrichment = entry.get("enrichment")
+    enrichment = enrichment if isinstance(enrichment, dict) else {}
+    english = _english_translation_gloss(entry, sense=sense)
+    if english and re.search(r"[a-z]{3,}", english):
+        source = (
+            _clean_text(sense.get("source")) if sense is not None else
+            _clean_text((enrichment.get("translation") or {}).get("source"))
+        )
+        if source:
+            attribution = {"source": source, "field": "senses.learner_en" if sense else "enrichment.translation.en"}
+            if _safe_meaning(english, attribution, sum11_definitions):
+                return english, attribution
+    raw_gloss = _clean_text(entry.get("gloss")) or ""
+    if sense is None and _is_english_learner_gloss(raw_gloss):
+        clean = _gloss_clean(re.split(r"[;(]", raw_gloss, maxsplit=1)[0])
+        attribution = {"source": "Atlas gloss", "field": "gloss"}
+        if clean and _is_english_learner_gloss(clean) and _safe_meaning(clean, attribution, sum11_definitions):
+            return clean, attribution
+    cards = enrichment.get("definition_cards")
+    if not isinstance(cards, list):
+        return None
+    for card in sorted(
+        cards,
+        key=lambda row: {"sum20": 0, "vts": 1, "ulif": 2}.get(str(row.get("id") or "").casefold(), 3)
+        if isinstance(row, dict) else 3,
+    ):
+        if not isinstance(card, dict):
+            continue
+        card_id = str(card.get("id") or "").casefold()
+        if card_id not in {"sum20", "vts"} and not (card_id == "ulif" and card.get("checked") is True):
+            continue
+        source = _clean_text(card.get("source_pill")) or _clean_text(card.get("source"))
+        if not source or "11" in source.casefold():
+            continue
+        definitions = card.get("definitions")
+        if not isinstance(definitions, list):
+            continue
+        for definition in definitions:
+            if not isinstance(definition, str) or _sum11_meaning_match(definition, sum11_definitions):
+                continue
+            clean = _definition_meaning(definition, lemma, verifier)
+            attribution = {"source": source, "field": "enrichment.definition_cards.definitions"}
+            if clean and _safe_meaning(clean, attribution, sum11_definitions):
+                return clean, attribution
+    return None
 
 
 def _romanize_ukrainian_plain(value: str) -> str:
@@ -1994,19 +2068,23 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
     return []
 
 
-def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, Any] | None:
+def _build_lexeme(
+    entry: dict[str, Any], verifier: VesumVerifier, sum11_definitions: list[str] | None = None
+) -> dict[str, Any] | None:
     lemma = _clean_text(entry.get("lemma"))
-    raw_gloss = _clean_text(entry.get("gloss"))
     level = _cefr_level(entry)
-    if not lemma or not raw_gloss:
+    if not lemma:
         return None
     # Sense-first binding (#6437): when senses[] exists, key the lexeme off a
     # stable sense id and read learner_en from that sense — never en[0].
     sense = _practice_sense(entry)
-    gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
+    selected_meaning = _practice_meaning(entry, verifier, sense, sum11_definitions or [])
+    if selected_meaning is None:
+        return None
+    gloss, meaning_source = selected_meaning
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
-    gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense)
+    gloss_clean = gloss
     if not gloss_clean:
         # No source carries a meaning (#8715): showing the raw article head
         # («МОТИВА́ТОР.») would teach nothing.
@@ -2027,6 +2105,7 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "ipa": _ipa(entry),
         "gloss": gloss,
         "glossClean": gloss_clean,
+        "meaningSource": meaning_source,
         "meaningMcEligible": meaning_mc_eligible,
         "pos": pos,
         "cefr": level,
@@ -4964,6 +5043,20 @@ def validate_deck_text(
     Ukrainian ``glossClean`` names a meaning rather than a stub.
     """
     errors: list[str] = []
+    all_lexemes = [
+        lexeme
+        for level_shards in shards.values()
+        for lexeme in level_shards.get("lexemes", {}).get("lexemes", [])
+        if isinstance(lexeme, dict)
+    ]
+    sum11_by_word = _load_sum11_definitions(
+        {
+            str(lexeme.get("lemma") or "")
+            for lexeme in all_lexemes
+            if not _is_english_learner_gloss(str(lexeme.get("gloss") or ""))
+        },
+        DEFAULT_SOURCES_DB,
+    )
 
     def walk(value: Any, path: str) -> None:
         if isinstance(value, str):
@@ -4981,6 +5074,10 @@ def validate_deck_text(
             walk(payload, f"{kind}.{level}")
         lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
         for lexeme in lexemes if isinstance(lexemes, list) else []:
+            errors.extend(
+                f"lexemes.{level}: {lexeme.get('lemmaId')} {error}"
+                for error in practice_meaning_errors(lexeme, sum11_by_word.get(str(lexeme.get("lemma") or ""), []))
+            )
             label = str(lexeme.get("glossClean") or "")
             if _is_english_learner_gloss(label):
                 continue
@@ -5107,6 +5204,7 @@ def _select_practice_lexemes(
     verifier: VesumVerifier,
     config: BuildConfig,
     priority_lemma_keys: set[str] | None = None,
+    sum11_definitions: dict[str, list[str]] | None = None,
 ) -> tuple[
     list[tuple[dict[str, Any], dict[str, Any]]],
     list[dict[str, Any]],
@@ -5155,11 +5253,27 @@ def _select_practice_lexemes(
     if len(selected) < config.target:
         selected.extend(fill_entries[: config.target - len(selected)])
 
+    selected = selected[: config.target]
+    if sum11_definitions is None:
+        ukrainian_candidates = {
+            _clean_text(entry.get("lemma")) or ""
+            for entry in selected
+            if (meaning := _practice_meaning(entry, verifier, _practice_sense(entry), [])) is not None
+            and not _is_english_learner_gloss(meaning[0])
+        }
+        sum11_definitions = _load_sum11_definitions(
+            ukrainian_candidates, DEFAULT_SOURCES_DB
+        )
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
-    for entry in selected[: config.target]:
-        lexeme = _build_lexeme(entry, verifier)
+    withheld_by_level: Counter[str] = Counter()
+    for entry in selected:
+        lemma = _clean_text(entry.get("lemma")) or ""
+        lexeme = _build_lexeme(entry, verifier, sum11_definitions.get(lemma, []))
         if lexeme:
             lexemes_by_entry.append((entry, lexeme))
+        else:
+            withheld_by_level[_cefr_level(entry) or "unknown"] += 1
+    print(f"practice meanings withheld by level: {dict(sorted(withheld_by_level.items()))}")
 
     all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
     lexemes_by_id = {lexeme["lemmaId"]: lexeme for lexeme in all_lexemes}

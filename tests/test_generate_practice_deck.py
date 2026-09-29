@@ -1910,7 +1910,7 @@ def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
     assert "second" not in lexeme["gloss"].casefold()
 
 
-def test_build_lexeme_empty_learner_en_falls_back_to_uk_not_invented_en() -> None:
+def test_build_lexeme_empty_learner_en_withholds_unsourced_uk_not_invented_en() -> None:
     """#6437 PR3: an empty sense learner_en[] must never invent an EN gloss.
 
     A bound sense with no learner_en content must not silently borrow the
@@ -1944,13 +1944,45 @@ def test_build_lexeme_empty_learner_en_falls_back_to_uk_not_invented_en() -> Non
             }
         ],
     }
-    lexeme = _build_lexeme(entry, verifier)
-    assert lexeme is not None
-    assert lexeme["senseId"] == "brak_defect"
-    assert lexeme["gloss"] == "вада"
-    assert lexeme["glossClean"] == "вада"
-    assert "second" not in lexeme["gloss"].casefold()
-    assert "defect" not in lexeme["gloss"].casefold()
+    assert _build_lexeme(entry, verifier) is None
+
+
+def test_practice_meanings_use_definition_specific_sources_and_exclude_sum11_text() -> None:
+    """#9160: snapshot rows keep the article, modern cards, and same-word source text."""
+    import copy
+
+    from scripts.audit.generate_practice_deck import practice_meaning_errors
+
+    fixture = json.loads(Path("tests/fixtures/practice-meaning-sources-9160.json").read_text(encoding="utf-8"))
+    article, english_entry = fixture["entries"]
+    sum11 = fixture["sum11Definitions"][article["lemma"]]
+    verifier = JsonVesumVerifier({})
+
+    english = _build_lexeme(article, verifier, sum11)
+    assert english is not None
+    assert english["gloss"] == english["glossClean"]
+    assert english["gloss"] != article["gloss"]
+    assert english["meaningSource"]["field"] == "enrichment.translation.en"
+    assert practice_meaning_errors(english, sum11) == []
+
+    modern_entry = copy.deepcopy(article)
+    modern_entry["enrichment"].pop("translation")
+    modern = _build_lexeme(modern_entry, verifier, sum11)
+    assert modern is not None
+    assert modern["gloss"] == modern["glossClean"]
+    assert modern["meaningSource"]["source"] == "СУМ-20"
+    assert practice_meaning_errors(modern, sum11) == []
+
+    disguised_legacy = copy.deepcopy(modern_entry)
+    disguised_legacy["enrichment"]["definition_cards"] = [{
+        "id": "sum20", "source_pill": "СУМ-20", "definitions": sum11,
+    }]
+    assert _build_lexeme(disguised_legacy, verifier, sum11) is None
+
+    english_lexeme = _build_lexeme(english_entry, verifier, [])
+    assert english_lexeme is not None
+    assert english_lexeme["meaningSource"]["field"] == "enrichment.translation.en"
+    assert practice_meaning_errors(english_lexeme, []) == []
 
 
 def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
@@ -2015,11 +2047,7 @@ def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
         },
     ]
     shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}))
-    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
-    index_item = shards["A1"]["index"]["items"][0]
-
-    assert lexeme["meaningMcEligible"] is False
-    assert index_item["modes"] == ["flashcards"]
+    assert "A1" not in shards  # No definition-specific source for the Ukrainian gloss.
 
 
 def test_option_set_validator_rejects_phrase_labels() -> None:
