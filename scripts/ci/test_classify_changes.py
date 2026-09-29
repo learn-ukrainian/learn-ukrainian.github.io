@@ -61,7 +61,6 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(skipped(["scripts/unmapped_backend.py"]), ("full", ["open_model_data", "atlas"]))
         for path in (
             "scripts/projects/open_model_data/paths.py",
-            "data/projects/open_model_data/example.json",
             "registry/projects/open_model_data/example.json",
             "tests/test_open_model_view_exporter.py",
         ):
@@ -73,6 +72,8 @@ class ClassifierTests(unittest.TestCase):
             "scripts/practice_deck/zno.py",
             "scripts/etymology/transliterate.py",
             "registry/practice/noun_mechanics_deck.json",
+            # Read only through scripts/atlas/atlas_db.py's REGISTRY_ROOT constant.
+            "registry/lexicon/synonym_pair_verdicts.yaml",
             "tests/test_atlas_db.py",
         ):
             with self.subTest(atlas=path):
@@ -82,6 +83,8 @@ class ClassifierTests(unittest.TestCase):
             "scripts/storage/paths.py",
             "scripts/lexicon/manifest_io.py",
             "scripts/verification/vesum.py",
+            "data/projects/open_model_data/example.json",
+            "registry/artifacts/lexicon_kaikki.manifest.json",
         ):
             with self.subTest(both=path):
                 self.assertEqual(skipped([path]), ("full", []))

@@ -100,9 +100,19 @@
       "tests/test_v6_contract_artifact_freshness.py"
     ],
     "roots": [
-      "data/datasets/hramatka_literary_poltava_v1/",
+      "LICENSE",
+      "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
+      "data/datasets/",
+      "data/processed/",
       "data/projects/",
+      "docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md",
+      "docs/projects/ua-open-weight-eval/",
+      "docs/research/",
+      "docs/resources/ukrainianlessons/blog_db.json",
       "packages/v4-runtime/",
+      "registry/artifacts/",
+      "registry/historical_language_corpus_denominator.yaml",
+      "registry/pidruchnyk_urls.yaml",
       "registry/projects/",
       "registry/textbook_curriculum_denominator.yaml",
       "registry/university_corpus_denominator.yaml",
@@ -143,7 +153,8 @@
       "scripts/wiki/",
       "tests/sparse_trees.py",
       "tests/test_open_model_view_exporter.py",
-      "tests/wait_helpers.py"
+      "tests/wait_helpers.py",
+      "wiki/.state/"
     ]
   },
   "atlas": {
@@ -212,8 +223,16 @@
       "tests/test_verb_mechanics_engine.py"
     ],
     "roots": [
-      "data/processed/esum_vol1.jsonl",
+      "audit/etymology-ocr-feasibility/prompts/transcription-v1.txt",
+      "audit/etymology-phase-1/cognate_extraction_coverage.json",
+      "data/datasets/",
+      "data/processed/",
+      "data/projects/",
+      "registry/artifacts/",
+      "registry/lexicon/",
+      "registry/lt_replacements.json",
       "registry/practice/",
+      "registry/projects/open_model_data/contracts/correction_protection_adapter_receipt_v1.schema.json",
       "scripts/atlas/",
       "scripts/audit/check_teacher_cloze_content.py",
       "scripts/benchmarks/__init__.py",
@@ -245,7 +264,9 @@
       "scripts/verification/vesum.py",
       "scripts/wiki/__init__.py",
       "scripts/wiki/config.py",
-      "scripts/wiki/sum20_official.py"
+      "scripts/wiki/prompts/",
+      "scripts/wiki/sum20_official.py",
+      "wiki/.state/"
     ]
   }
 }
