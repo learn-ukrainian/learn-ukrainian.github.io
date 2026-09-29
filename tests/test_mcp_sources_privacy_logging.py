@@ -125,7 +125,7 @@ def test_query_ulif_cache_only_never_makes_a_live_call(server):
     assert "entry" in payload
     if payload["status"] == "ambiguous":
         assert payload["entry"] is None
-        assert isinstance(payload.get("entries"), list) and payload["entries"]
+        assert isinstance(payload.get("entries"), list) and len(payload["entries"]) >= 2
 
 
 def test_query_grac_cache_only_always_unavailable(server):
