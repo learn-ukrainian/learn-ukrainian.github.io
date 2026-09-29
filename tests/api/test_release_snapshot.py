@@ -6,8 +6,10 @@ import io
 import json
 import os
 import shutil
+import signal
 import socket
 import subprocess
+import sys
 import tarfile
 import time
 import urllib.error
@@ -555,189 +557,134 @@ def test_trusted_join_does_not_resolve_child_symlinks(tmp_path: Path) -> None:
     assert joined == Path(os.path.abspath(base / "link" / "x.txt"))  # lexical, unresolved
 
 
-def test_extract_archive_reports_git_failure_when_git_exits_nonzero(monkeypatch, tmp_path: Path) -> None:
+def _fake_git(monkeypatch: pytest.MonkeyPatch, script: str) -> list[subprocess.Popen[bytes]]:
+    """Run ``script`` in a real child process in place of ``git archive``."""
+    spawned: list[subprocess.Popen[bytes]] = []
+    real_popen = subprocess.Popen
+
+    def popen(command: list[str], **kwargs: object) -> subprocess.Popen[bytes]:
+        process = real_popen([sys.executable, "-c", script], **kwargs)
+        spawned.append(process)
+        return process
+
+    monkeypatch.setattr(release_snapshot.subprocess, "Popen", popen)
+    return spawned
+
+
+def _archive_file(tmp_path: Path, *, fifo: bool = False) -> Path:
+    """Write a small tar (``scripts/a.py``, optionally followed by a FIFO)."""
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w") as archive:
+        payload = b"VALUE = 1\n"
+        member = tarfile.TarInfo("scripts/a.py")
+        member.size = len(payload)
+        archive.addfile(member, io.BytesIO(payload))
+        if fifo:
+            pipe = tarfile.TarInfo("scripts/pipe")
+            pipe.type = tarfile.FIFOTYPE
+            archive.addfile(pipe)
+    path = tmp_path / "archive.tar"
+    path.write_bytes(buffer.getvalue())
+    return path
+
+
+def _write_stdout(archive: Path) -> str:
+    return f"sys.stdout.buffer.write(open({str(archive)!r}, 'rb').read()); sys.stdout.flush(); "
+
+
+def _extract_error(tmp_path: Path) -> release_snapshot.ReleaseSnapshotError:
     staging_dir = tmp_path / "staging"
     staging_dir.mkdir()
-
-    class FakeGitProcess:
-        def __init__(self, *args, **kwargs):
-            self.returncode = 128
-            self.stdout = io.BytesIO(b"")
-            self.stderr = io.BytesIO(b"fatal: ambiguous argument 'deadbeef': unknown revision\n")
-
-        def poll(self) -> int | None:
-            return self.returncode
-
-        def wait(self, timeout: float | None = None) -> int:
-            return self.returncode
-
-        def kill(self) -> None:
-            pass
-
-    monkeypatch.setattr(release_snapshot.subprocess, "Popen", FakeGitProcess)
-
     with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
         release_snapshot._extract_archive(tmp_path, "0" * 40, staging_dir)
+    return exc_info.value
 
-    err = exc_info.value
-    assert err.failing_side == "git"
+
+@pytest.mark.timeout(30)
+def test_extract_archive_reports_git_status_and_stderr_when_git_fails(monkeypatch, tmp_path: Path) -> None:
+    spawned = _fake_git(monkeypatch, "import sys; sys.stderr.write('fatal: bad revision\\n'); sys.exit(128)")
+
+    err = _extract_error(tmp_path)
+
     assert err.git_status == 128
-    assert "fatal: ambiguous argument" in (err.stderr or "")
-
-    message = str(err)
-    assert "failing side: git" in message
-    assert "git exit status: 128" in message
-    assert "fatal: ambiguous argument" in message
+    assert err.stderr_tail == "fatal: bad revision"
+    assert "git exit status 128" in str(err)
+    assert "fatal: bad revision" in str(err)
+    assert [process.poll() for process in spawned] == [128]
 
 
-def test_extract_archive_reports_git_failure_when_reader_succeeds_but_git_exits_nonzero(
-    monkeypatch, tmp_path: Path
-) -> None:
-    staging_dir = tmp_path / "staging"
-    staging_dir.mkdir()
+@pytest.mark.timeout(30)
+def test_extract_archive_reports_reader_error_and_git_status_when_reader_fails(monkeypatch, tmp_path: Path) -> None:
+    archive = _archive_file(tmp_path, fifo=True)
+    spawned = _fake_git(monkeypatch, "import sys; " + _write_stdout(archive) + "sys.exit(0)")
 
-    tar_buffer = io.BytesIO()
-    with tarfile.open(fileobj=tar_buffer, mode="w") as tar:
-        ti = tarfile.TarInfo("scripts")
-        ti.type = tarfile.DIRTYPE
-        tar.addfile(ti)
-    tar_bytes = tar_buffer.getvalue()
+    err = _extract_error(tmp_path)
 
-    class FakeGitProcess:
-        def __init__(self, *args, **kwargs):
-            self.returncode = 1
-            self.stdout = io.BytesIO(tar_bytes)
-            self.stderr = io.BytesIO(b"git warning treated as error\n")
+    assert (tmp_path / "staging" / "scripts" / "a.py").read_text(encoding="utf-8") == "VALUE = 1\n"
+    assert isinstance(err.__cause__, release_snapshot.ReleaseSnapshotError)
+    assert "unsupported entry in git archive: 'scripts/pipe'" in str(err.__cause__)
+    assert err.git_status == 0
+    assert "reader error: unsupported entry" in str(err)
+    assert "git exit status 0" in str(err)
+    assert [process.poll() for process in spawned] == [0]
 
-        def poll(self) -> int | None:
-            return None
 
-        def wait(self, timeout: float | None = None) -> int:
-            return self.returncode
+@pytest.mark.timeout(30)
+def test_extract_archive_keeps_only_a_bounded_stderr_tail(monkeypatch, tmp_path: Path) -> None:
+    limit = release_snapshot.STDERR_TAIL_BYTES
+    spawned = _fake_git(
+        monkeypatch,
+        f"import sys; sys.stderr.write('x' * {limit * 4} + 'TAIL-END'); sys.exit(1)",
+    )
 
-        def kill(self) -> None:
-            pass
+    err = _extract_error(tmp_path)
 
-    monkeypatch.setattr(release_snapshot.subprocess, "Popen", FakeGitProcess)
-
-    with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(tmp_path, "0" * 40, staging_dir)
-
-    err = exc_info.value
-    assert err.failing_side == "git"
     assert err.git_status == 1
-    assert "git warning treated as error" in (err.stderr or "")
+    assert err.stderr_tail is not None
+    assert err.stderr_tail.endswith("TAIL-END")
+    assert len(err.stderr_tail.encode()) <= limit
+    assert len(str(err)) < limit + 1024
+    assert [process.poll() for process in spawned] == [1]
 
-    message = str(err)
-    assert "failing side: git" in message
-    assert "git exit status: 1" in message
-    assert "git warning treated as error" in message
 
-
-def test_extract_archive_reports_reader_failure_when_tar_reader_fails(monkeypatch, tmp_path: Path) -> None:
+@pytest.mark.timeout(30)
+def test_extract_archive_does_not_hang_when_git_writes_lots_of_stderr_first(monkeypatch, tmp_path: Path) -> None:
+    archive = _archive_file(tmp_path)
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys; sys.stderr.write('w' * (4 << 20)); sys.stderr.flush(); " + _write_stdout(archive),
+    )
     staging_dir = tmp_path / "staging"
     staging_dir.mkdir()
 
-    class FakeRunningGitProcess:
-        def __init__(self, *args, **kwargs):
-            self.returncode: int | None = None
-            self.stdout = io.BytesIO(b"corrupt header bytes")
-            self.stderr = io.BytesIO(b"")
+    release_snapshot._extract_archive(tmp_path, "0" * 40, staging_dir)
 
-        def poll(self) -> int | None:
-            return self.returncode
-
-        def wait(self, timeout: float | None = None) -> int:
-            if self.returncode is None:
-                self.returncode = -13
-            return self.returncode
-
-        def kill(self) -> None:
-            self.returncode = -9
-
-    monkeypatch.setattr(release_snapshot.subprocess, "Popen", FakeRunningGitProcess)
-
-    def failing_tarfile_open(*args, **kwargs):
-        raise tarfile.ReadError("simulated corrupt tar archive")
-
-    monkeypatch.setattr(release_snapshot.tarfile, "open", failing_tarfile_open)
-
-    with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(tmp_path, "0" * 40, staging_dir)
-
-    err = exc_info.value
-    assert err.failing_side == "tar reader"
-    assert err.git_status == -13
-
-    message = str(err)
-    assert "failing side: tar reader" in message
-    assert "git exit status: -13" in message
-    assert "simulated corrupt tar archive" in message
+    assert (staging_dir / "scripts" / "a.py").read_text(encoding="utf-8") == "VALUE = 1\n"
+    assert [process.poll() for process in spawned] == [0]
 
 
-def test_extract_archive_reports_reader_failure_on_unsafe_archive_member(monkeypatch, tmp_path: Path) -> None:
-    staging_dir = tmp_path / "staging"
-    staging_dir.mkdir()
+@pytest.mark.timeout(30)
+def test_extract_archive_kills_git_that_does_not_exit(monkeypatch, tmp_path: Path) -> None:
+    archive = _archive_file(tmp_path)
+    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_WAIT_S", 0.5)
+    spawned = _fake_git(monkeypatch, "import sys, time; " + _write_stdout(archive) + "time.sleep(60)")
 
-    tar_buffer = io.BytesIO()
-    with tarfile.open(fileobj=tar_buffer, mode="w") as tar:
-        ti = tarfile.TarInfo("scripts/valid.py")
-        ti.size = 0
-        tar.addfile(ti)
-    tar_bytes = tar_buffer.getvalue()
+    err = _extract_error(tmp_path)
 
-    class FakeRunningGitProcess:
-        def __init__(self, *args, **kwargs):
-            self.returncode: int | None = None
-            self.stdout = io.BytesIO(tar_bytes)
-            self.stderr = io.BytesIO(b"")
-
-        def poll(self) -> int | None:
-            return self.returncode
-
-        def wait(self, timeout: float | None = None) -> int:
-            if self.returncode is None:
-                self.returncode = -13
-            return self.returncode
-
-        def kill(self) -> None:
-            self.returncode = -9
-
-    monkeypatch.setattr(release_snapshot.subprocess, "Popen", FakeRunningGitProcess)
-
-    def fake_safe_path(root: Path, name: str) -> Path:
-        raise release_snapshot.ReleaseSnapshotError("unsafe path in git archive: '../../etc/passwd'")
-
-    monkeypatch.setattr(release_snapshot, "_safe_archive_path", fake_safe_path)
-
-    with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(tmp_path, "0" * 40, staging_dir)
-
-    err = exc_info.value
-    assert err.failing_side == "tar reader"
-    assert err.git_status == -13
-
-    message = str(err)
-    assert "failing side: tar reader" in message
-    assert "git exit status: -13" in message
-    assert "unsafe path in git archive" in message
+    assert err.git_status is None
+    assert err.__cause__ is None
+    assert "git killed after timeout" in str(err)
+    assert [process.poll() for process in spawned] == [-signal.SIGKILL]
 
 
 def test_extract_archive_with_real_invalid_sha_reports_git_failure(tmp_path: Path) -> None:
     repo_root, _ = _create_snapshot_repo(tmp_path)
     staging_dir = tmp_path / "staging"
     staging_dir.mkdir()
-    invalid_sha = "f" * 40
 
     with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(repo_root, invalid_sha, staging_dir)
+        release_snapshot._extract_archive(repo_root, "f" * 40, staging_dir)
 
-    err = exc_info.value
-    assert err.failing_side == "git"
-    assert err.git_status == 128
-    assert "fatal: not a tree object" in (err.stderr or "")
-
-    message = str(err)
-    assert "failing side: git" in message
-    assert "git exit status: 128" in message
-    assert "fatal: not a tree object" in message
+    assert exc_info.value.git_status == 128
+    assert "fatal:" in (exc_info.value.stderr_tail or "")
+    assert "git exit status 128" in str(exc_info.value)
