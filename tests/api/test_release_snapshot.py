@@ -557,13 +557,16 @@ def test_trusted_join_does_not_resolve_child_symlinks(tmp_path: Path) -> None:
     assert joined == Path(os.path.abspath(base / "link" / "x.txt"))  # lexical, unresolved
 
 
-def _fake_git(monkeypatch: pytest.MonkeyPatch, script: str) -> list[subprocess.Popen[bytes]]:
+def _fake_git(
+    monkeypatch: pytest.MonkeyPatch,
+    script: str,
+    popen_cls: type[subprocess.Popen[bytes]] = subprocess.Popen,
+) -> list[subprocess.Popen[bytes]]:
     """Run ``script`` in a real child process in place of ``git archive``."""
     spawned: list[subprocess.Popen[bytes]] = []
-    real_popen = subprocess.Popen
 
     def popen(command: list[str], **kwargs: object) -> subprocess.Popen[bytes]:
-        process = real_popen([sys.executable, "-c", script], **kwargs)
+        process = popen_cls([sys.executable, "-c", script], **kwargs)
         spawned.append(process)
         return process
 
@@ -666,15 +669,101 @@ def test_extract_archive_does_not_hang_when_git_writes_lots_of_stderr_first(monk
 @pytest.mark.timeout(30)
 def test_extract_archive_kills_git_that_does_not_exit(monkeypatch, tmp_path: Path) -> None:
     archive = _archive_file(tmp_path)
-    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_WAIT_S", 0.5)
+    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 0.5)
     spawned = _fake_git(monkeypatch, "import sys, time; " + _write_stdout(archive) + "time.sleep(60)")
 
     err = _extract_error(tmp_path)
 
-    assert err.git_status is None
+    assert err.git_status == -signal.SIGKILL
     assert err.__cause__ is None
-    assert "git killed after timeout" in str(err)
+    assert "deadline of 0.5s hit; kill sent to git" in str(err)
+    assert f"git exit status {-signal.SIGKILL}" in str(err)
     assert [process.poll() for process in spawned] == [-signal.SIGKILL]
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_kills_git_that_stalls_mid_stream_at_the_deadline(monkeypatch, tmp_path: Path) -> None:
+    archive = _archive_file(tmp_path)
+    partial = tmp_path / "partial.tar"
+    partial.write_bytes(archive.read_bytes()[:520])  # header plus part of the file body
+    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 1.0)
+    spawned = _fake_git(monkeypatch, "import sys, time; " + _write_stdout(partial) + "time.sleep(60)")
+
+    started = time.monotonic()
+    err = _extract_error(tmp_path)
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 1.0 + release_snapshot.GIT_KILL_WAIT_S
+    assert err.__cause__ is not None  # the tar reader saw EOF mid-member
+    assert err.git_status == -signal.SIGKILL
+    assert "deadline of 1s hit; kill sent to git" in str(err)
+    assert [process.poll() for process in spawned] == [-signal.SIGKILL]
+
+
+class _ExitsAfterTimedWait(subprocess.Popen):
+    """The timed wait expires, and git exits on its own right after it."""
+
+    kills = 0
+    timed_out = False
+
+    def wait(self, timeout: float | None = None) -> int:
+        if not self.timed_out:
+            self.timed_out = True
+            os.waitid(os.P_PID, self.pid, os.WEXITED | os.WNOWAIT)  # exited, not yet reaped
+            raise subprocess.TimeoutExpired(self.args, timeout or 0.0)
+        return super().wait(timeout)
+
+    def kill(self) -> None:
+        type(self).kills += 1
+        super().kill()
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_reports_real_status_when_git_exits_after_the_timed_wait(monkeypatch, tmp_path: Path) -> None:
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys; sys.stderr.write('fatal: late\\n'); sys.exit(3)",
+        popen_cls=_ExitsAfterTimedWait,
+    )
+
+    err = _extract_error(tmp_path)
+
+    assert _ExitsAfterTimedWait.kills == 0
+    assert err.git_status == 3
+    assert "git exit status 3" in str(err)
+    assert "kill" not in str(err)
+    assert [process.poll() for process in spawned] == [3]
+
+
+class _IgnoresKill(subprocess.Popen):
+    """kill() is sent but git never goes away."""
+
+    def kill(self) -> None:
+        pass
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, tmp_path: Path) -> None:
+    archive = _archive_file(tmp_path)
+    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 0.5)
+    monkeypatch.setattr(release_snapshot, "GIT_KILL_WAIT_S", 0.5)
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys, time; " + _write_stdout(archive) + "time.sleep(60)",
+        popen_cls=_IgnoresKill,
+    )
+
+    try:
+        err = _extract_error(tmp_path)
+
+        assert err.git_status is None
+        assert "deadline of 0.5s hit; kill sent to git" in str(err)
+        assert "git did not exit after kill" in str(err)
+        assert [process.poll() for process in spawned] == [None]
+    finally:
+        for process in spawned:
+            os.kill(process.pid, signal.SIGKILL)
+            process.wait(timeout=5)
 
 
 def test_extract_archive_with_real_invalid_sha_reports_git_failure(tmp_path: Path) -> None:

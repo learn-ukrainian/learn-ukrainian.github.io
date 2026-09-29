@@ -17,6 +17,8 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
+import threading
+import time
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,9 +38,10 @@ ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
 # probe fails closed and pruning is skipped, same as when lsof is missing.
 LSOF_TIMEOUT_S = 10.0
 
-# git archive diagnostics: how long git may take to exit once its output is
-# consumed, how long to reap it after a kill, and how much stderr to keep.
-GIT_ARCHIVE_WAIT_S = 30.0
+# git archive diagnostics: the deadline for the whole extraction (git is
+# killed when it is hit), how long to reap git after a kill, and how much
+# stderr to keep.
+GIT_ARCHIVE_DEADLINE_S = 300.0
 GIT_KILL_WAIT_S = 5.0
 STDERR_TAIL_BYTES = 4096
 
@@ -124,8 +127,24 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
             stdout=subprocess.PIPE,
         )
         assert process.stdout is not None
+        deadline = time.monotonic() + GIT_ARCHIVE_DEADLINE_S
+        kill_lock = threading.Lock()
+        killed = False
+
+        def kill_git() -> None:
+            # Only a kill this code actually sent is reported as one.
+            nonlocal killed
+            with kill_lock:
+                if not killed and process.poll() is None:
+                    killed = True
+                    process.kill()
+
+        # The watchdog ends a git that stalls mid-stream: the kill closes its
+        # stdout, so the tar reader sees EOF instead of blocking forever.
+        watchdog = threading.Timer(GIT_ARCHIVE_DEADLINE_S, kill_git)
+        watchdog.daemon = True
+        watchdog.start()
         reader_error: Exception | None = None
-        git_status: int | None = None
         try:
             try:
                 with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
@@ -155,21 +174,33 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
             except Exception as exc:
                 reader_error = exc
             process.stdout.close()
-            with contextlib.suppress(subprocess.TimeoutExpired):
-                git_status = process.wait(timeout=GIT_ARCHIVE_WAIT_S)
-        finally:
-            process.stdout.close()
-            if process.poll() is None:
-                process.kill()
+            watchdog.cancel()
+            watchdog.join()
+            try:
+                process.wait(timeout=max(0.0, deadline - time.monotonic()))
+            except subprocess.TimeoutExpired:
+                kill_git()
+            if killed:
                 with contextlib.suppress(subprocess.TimeoutExpired):
                     process.wait(timeout=GIT_KILL_WAIT_S)
+        except BaseException:
+            watchdog.cancel()
+            kill_git()
+            with contextlib.suppress(subprocess.TimeoutExpired):
+                process.wait(timeout=GIT_KILL_WAIT_S)
+            raise
+        finally:
+            process.stdout.close()
+        git_status = process.returncode
         if reader_error is None and git_status == 0:
             return
         stderr_file.seek(max(0, stderr_file.seek(0, os.SEEK_END) - STDERR_TAIL_BYTES))
         stderr_tail = stderr_file.read().decode("utf-8", errors="replace").strip()
 
     facts = [f"reader error: {reader_error}"] if reader_error is not None else []
-    facts.append("git killed after timeout" if git_status is None else f"git exit status {git_status}")
+    if killed:
+        facts.append(f"deadline of {GIT_ARCHIVE_DEADLINE_S:g}s hit; kill sent to git")
+    facts.append("git did not exit after kill" if git_status is None else f"git exit status {git_status}")
     facts.append(f"git stderr tail: {stderr_tail or '<empty>'}")
     raise ReleaseSnapshotError(
         f"git archive failed for {sha} ({'; '.join(facts)})",
