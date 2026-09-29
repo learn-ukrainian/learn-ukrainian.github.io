@@ -29,7 +29,7 @@ paths:
 
 > Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
 >
-> **Note on graceful degradation**: Dense reranking inside `mcp__sources__search_sources` is a degradable enhancement. If `SOURCES_MCP_NO_DENSE=1` is set, or the in-process FlagEmbedding BGE-M3 encoder cannot be loaded (e.g. no `FlagEmbedding`/`torch` installed), search queries degrade gracefully and silently to standard SQLite FTS5-only ranking instead of raising an exception.
+> **Note on graceful degradation**: Dense reranking inside `mcp__sources__search_sources` is a degradable enhancement. It runs when an index exists and the host has CUDA or MPS; a CPU-only host keeps FTS5 ranking unless `SOURCES_MCP_DENSE=1` opts in. If `SOURCES_MCP_NO_DENSE=1` is set, or the in-process FlagEmbedding BGE-M3 encoder cannot be loaded or fails while encoding (e.g. no `FlagEmbedding`/`torch` installed, device or memory failure), search queries degrade gracefully and silently to standard SQLite FTS5-only ranking instead of raising an exception. The FTS5 path needs no model or tokenizer assets.
 
 
 ## Dictionary tools (for quality and vocabulary)

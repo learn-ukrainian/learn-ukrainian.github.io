@@ -4,6 +4,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
@@ -181,3 +182,55 @@ def test_search_sources_archaic_strategy_is_reserved(tmp_path):
         results = sources_db.search_sources(discovery_path, track="ruth", strategy="archaic_metadata")
 
     assert results == [result]
+
+
+@pytest.mark.parametrize("env", [{"SOURCES_MCP_NO_DENSE": "1"}, {}])
+def test_search_sources_keyword_path_needs_no_model_assets(monkeypatch, tmp_path, env):
+    from wiki import dense_rerank
+
+    conn = _make_conn()
+    _seed_conn(conn)
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections",))
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.delenv(dense_rerank.CPU_DENSE_ENV, raising=False)
+    for name, value in env.items():
+        monkeypatch.setenv(name, value)
+    # No env → the CPU-host default, where dense rerank is opt-in.
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: False)
+    monkeypatch.setattr(
+        dense_rerank,
+        "load_corpus_index",
+        lambda corpus, **_kwargs: dense_rerank.CorpusEmbeddingIndex(
+            corpus=corpus,
+            shards={0: np.zeros((1, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)},
+            unit_rows={"textbook_sections:101": (0, 0)},
+        ),
+    )
+
+    def missing_assets(*_args, **_kwargs):
+        raise OSError("Can't load tokenizer for 'BAAI/bge-m3'")
+
+    monkeypatch.setattr(sources_db, "_get_tokenizer", missing_assets)
+    monkeypatch.setattr(dense_rerank, "_get_tokenizer", missing_assets)
+    monkeypatch.setattr(dense_rerank, "_get_encoder", missing_assets)
+    monkeypatch.setattr(
+        sources_db,
+        "build_query_buckets",
+        lambda query, track: (['"апостроф і наголос"'], {"апостроф", "наголос"}),
+    )
+    discovery_path = tmp_path / "demo.yaml"
+    discovery_path.write_text("query_keywords: []\n", encoding="utf-8")
+
+    results = sources_db.search_sources(discovery_path, track="a1", limit=5)
+
+    assert [row["unit_key"] for row in results] == ["textbook_sections:101"]
+    assert results[0]["section_title"] == "Апостроф і наголос"
+    assert results[0]["dense_score"] == 0.0
+
+
+def test_candidate_pieces_keep_whole_unit_without_tokenizer():
+    pieces = sources_db._candidate_pieces("Ціла стаття.", corpus="wikipedia", tokenizer=None)
+
+    assert [(piece.chunk_index, piece.text, piece.extra_metadata) for piece in pieces] == [(0, "Ціла стаття.", {})]
+    assert sources_db._candidate_pieces("", corpus="wikipedia", tokenizer=None) == []

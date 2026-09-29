@@ -139,10 +139,16 @@ def test_balanced_canary_is_deterministic_category_balanced_and_track_covering()
 
 def test_worker_prompt_and_parser_accept_one_json_object_only() -> None:
     source = "У записі сказано: «Текст»."
-    prompt = hf_jobs_worker.format_prompt(source)
-    assert prompt.endswith('Source JSON string: "У записі сказано: «Текст»."')
-    assert "correct_control" not in prompt
-    assert "uaw-request" not in prompt
+    assert hf_jobs_worker.format_prompt(source) == (
+        "You are evaluating Ukrainian correction versus faithful preservation. "
+        "Return exactly one JSON object and no markdown or explanation. "
+        'The object must have the keys "action" and "output_text". '
+        '"action" must be "correct", "preserve", or "abstain". '
+        "Correct only a clearly warranted Ukrainian error. Preserve quotations, proper names, "
+        "historical or regional language, deliberate register, and genuinely acceptable text. "
+        "Use abstain when the evidence is insufficient. For preserve or abstain, copy the source "
+        'exactly as output_text. Source JSON string: "У записі сказано: «Текст»."'
+    )
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
     assert hf_jobs_worker.parse_model_reply(reply) == {"action": "preserve", "output_text": source}
     assert hf_jobs_worker.parse_model_reply(f"```json\n{reply}\n```") == {"action": "preserve", "output_text": source}

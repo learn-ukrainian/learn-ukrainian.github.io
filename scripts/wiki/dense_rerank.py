@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import atexit
+import functools
 import gc
 import hashlib
 import os
@@ -38,6 +39,10 @@ EMBEDDING_DIMS = 1024
 #: Set to ``1`` to keep the BGE-M3 encoder out of the process; dense rerank
 #: then degrades to FTS-only ordering.
 NO_DENSE_ENV = "SOURCES_MCP_NO_DENSE"
+#: Set to ``1`` to rerank search results with dense vectors on a host without
+#: CUDA or MPS. Without it such hosts keep keyword (FTS) ordering; hosts with
+#: an accelerator rerank whenever an index exists. Indexing is unaffected.
+CPU_DENSE_ENV = "SOURCES_MCP_DENSE"
 DEFAULT_POOLING_MODE = "cls"
 QUERY_MAX_LENGTH = 512
 INDEX_MAX_LENGTH = 512
@@ -262,6 +267,24 @@ def _select_device() -> str:
     return "cpu"
 
 
+@functools.cache
+def _accelerator_available() -> bool:
+    try:
+        return _select_device() != "cpu"
+    except (ImportError, OSError):  # torch missing or its native libraries broken
+        return False
+
+
+def _dense_search_block_reason() -> str | None:
+    """Why search-time dense reranking is off in this process, or ``None``."""
+
+    if os.environ.get(NO_DENSE_ENV) == "1":
+        return f"{NO_DENSE_ENV}=1 is set"
+    if os.environ.get(CPU_DENSE_ENV) == "1" or _accelerator_available():
+        return None
+    return f"no CUDA/MPS device and {CPU_DENSE_ENV}=1 is not set"
+
+
 class FlagEmbeddingEncoder:
     """In-process BGE-M3 dense encoder (FlagEmbedding, CLS pooling).
 
@@ -282,7 +305,8 @@ class FlagEmbeddingEncoder:
                 pooling_method="cls",
                 devices=self.device,
             )
-        except (ImportError, OSError) as exc:  # ML stack missing, or model weights unreachable
+        # ML stack missing, weights unreachable, or device/allocation failure
+        except (ImportError, OSError, RuntimeError, MemoryError) as exc:
             raise DenseEncoderUnavailableError(f"dense encoder unavailable: {exc}") from exc
 
     def encode(
@@ -291,14 +315,19 @@ class FlagEmbeddingEncoder:
         batch_size: int = MAX_BATCH_ROWS,
         max_length: int = INDEX_MAX_LENGTH,
     ) -> NDArray[np.float16]:
-        encoded = self._model.encode(
-            texts,
-            batch_size=batch_size,
-            max_length=max_length,
-            return_dense=True,
-            return_sparse=False,
-            return_colbert_vecs=False,
-        )
+        try:
+            encoded = self._model.encode(
+                texts,
+                batch_size=batch_size,
+                max_length=max_length,
+                return_dense=True,
+                return_sparse=False,
+                return_colbert_vecs=False,
+            )
+        # FlagEmbedding moves the model onto the device on first encode, so
+        # device, out-of-memory and driver failures surface here.
+        except (OSError, RuntimeError, MemoryError) as exc:
+            raise DenseEncoderUnavailableError(f"dense encode failed: {exc}") from exc
         return _extract_dense_vectors(encoded)
 
 
@@ -542,6 +571,17 @@ def invalidate_corpus_index(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST
         _INDEX_CACHE.pop((Path(manifest_db), corpus), None)
 
 
+def _keyword_order(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
+    scored.sort(
+        key=lambda row: (
+            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            str(row.get("unit_key", "")),
+        )
+    )
+    return scored[:limit]
+
+
 def rerank_candidates(
     query: str,
     candidates: list[dict[str, Any]],
@@ -560,6 +600,8 @@ def rerank_candidates(
         index = load_corpus_index(corpus, manifest_db=manifest_db)
         if not index.unit_rows:
             return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
+        if encoder is None and _dense_search_block_reason() is not None:
+            return _keyword_order(candidates, limit)
 
         vectors: list[NDArray[np.float32]] = []
         present: list[dict[str, Any]] = []
@@ -599,14 +641,7 @@ def rerank_candidates(
         )
         return scored[:limit]
     except DenseEncoderUnavailableError:
-        scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
-        scored.sort(
-            key=lambda row: (
-                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
-                str(row.get("unit_key", "")),
-            )
-        )
-        return scored[:limit]
+        return _keyword_order(candidates, limit)
 
 
 def rerank_sections(

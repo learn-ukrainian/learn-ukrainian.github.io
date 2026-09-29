@@ -163,3 +163,81 @@ def test_rerank_candidates_degrades_to_fts_order_when_encoder_unavailable(monkey
     assert [row["unit_key"] for row in results] == ["2", "1"]
     assert {row["dense_score"] for row in results} == {0.0}
     assert {row["cosine_score"] for row in results} == {0.0}
+
+
+def _two_row_index(monkeypatch) -> None:
+    shard = np.zeros((2, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)
+    shard[0, 0] = 1.0
+    shard[1, 1] = 1.0
+    index = dense_rerank.CorpusEmbeddingIndex(
+        corpus="test_corpus", shards={0: shard}, unit_rows={"1": (0, 0), "2": (0, 1)}
+    )
+    monkeypatch.setattr(dense_rerank, "load_corpus_index", lambda *a, **kw: index)
+    monkeypatch.setattr(dense_rerank, "_ENCODER", None)
+    monkeypatch.setattr(dense_rerank, "_QUERY_CACHE", {})
+
+
+# FTS puts "2" first; the query vector below points at unit "1".
+_CANDIDATES = [{"unit_key": "1", "fts_score": -5.0}, {"unit_key": "2", "fts_score": -10.0}]
+
+
+class _QueryEncoder:
+    def encode(self, texts, batch_size=1, max_length=512):
+        vector = np.zeros((1, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)
+        vector[0, 0] = 1.0
+        return vector
+
+
+def test_rerank_candidates_falls_back_to_fts_when_first_encode_fails(monkeypatch):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.setenv(dense_rerank.CPU_DENSE_ENV, "1")
+    monkeypatch.setattr(dense_rerank, "_select_device", lambda: "cuda:0")
+    _two_row_index(monkeypatch)
+
+    class _DeviceFailingModel:
+        def __init__(self, *_args, **_kwargs) -> None:
+            pass
+
+        def encode(self, *_args, **_kwargs):
+            raise RuntimeError("CUDA out of memory. Tried to allocate 2.00 GiB")
+
+    monkeypatch.setitem(sys.modules, "FlagEmbedding", types.SimpleNamespace(BGEM3FlagModel=_DeviceFailingModel))
+
+    results = dense_rerank.rerank_candidates("query", _CANDIDATES, corpus="test_corpus")
+
+    assert [row["unit_key"] for row in results] == ["2", "1"]
+    assert {row["dense_score"] for row in results} == {0.0}
+
+
+def test_rerank_candidates_is_keyword_only_on_cpu_without_opt_in(monkeypatch):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.delenv(dense_rerank.CPU_DENSE_ENV, raising=False)
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: False)
+    _two_row_index(monkeypatch)
+
+    def _must_not_load():
+        raise AssertionError("the encoder must not load on a CPU host without opt-in")
+
+    monkeypatch.setattr(dense_rerank, "_get_encoder", _must_not_load)
+
+    results = dense_rerank.rerank_candidates("query", _CANDIDATES, corpus="test_corpus")
+
+    assert [row["unit_key"] for row in results] == ["2", "1"]
+    assert {row["dense_score"] for row in results} == {0.0}
+
+
+@pytest.mark.parametrize(("accelerator", "cpu_opt_in"), [(True, False), (False, True)])
+def test_rerank_candidates_uses_dense_on_accelerator_or_cpu_opt_in(monkeypatch, accelerator, cpu_opt_in):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    if cpu_opt_in:
+        monkeypatch.setenv(dense_rerank.CPU_DENSE_ENV, "1")
+    else:
+        monkeypatch.delenv(dense_rerank.CPU_DENSE_ENV, raising=False)
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: accelerator)
+    _two_row_index(monkeypatch)
+    monkeypatch.setattr(dense_rerank, "_get_encoder", _QueryEncoder)
+
+    results = dense_rerank.rerank_candidates("query", _CANDIDATES, corpus="test_corpus")
+
+    assert [row["unit_key"] for row in results] == ["1", "2"]
+    assert results[0]["dense_score"] == pytest.approx(1.0)

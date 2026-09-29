@@ -298,6 +298,8 @@ def _configure_dense(monkeypatch: pytest.MonkeyPatch, manifest_path: Path) -> No
     fake_tokenizer = FakeTokenizer()
     monkeypatch.setattr(dense_rerank, "_TOKENIZER", fake_tokenizer)
     monkeypatch.setattr(dense_rerank, "_get_tokenizer", lambda: fake_tokenizer)
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.setenv(dense_rerank.CPU_DENSE_ENV, "1")
     monkeypatch.setattr(
         dense_rerank,
         "encode_query",
