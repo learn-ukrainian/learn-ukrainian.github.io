@@ -53,7 +53,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -1204,7 +1209,12 @@ def main() -> int:
     # (false block, or worse: false allow off a same-numbered green PR). Scoping that cwd
     # to its own shell level is _judged_segments' job: it is the only reader that knows
     # where a subshell or `bash -c` payload begins and ends.
-    for seg in _judged_segments(command):
+    try:
+        segments = _judged_segments(command)
+    except ShellPreprocessLimit:
+        sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
+        return 2
+    for seg in segments:
         args = _merge_args(seg.argv)
         if args is None:
             continue

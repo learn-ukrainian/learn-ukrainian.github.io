@@ -90,6 +90,12 @@ def test_issue_9115_nested_and_backtick_switches_blocked(repos, command):
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
+def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
+    command = r"echo `echo \`git checkout -b feature\``"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 

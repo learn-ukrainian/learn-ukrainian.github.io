@@ -48,7 +48,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -612,7 +617,10 @@ def main() -> int:
     if not command:
         return 0
 
-    reason = _command_danger_reason(command)
+    try:
+        reason = _command_danger_reason(command)
+    except ShellPreprocessLimit:
+        reason = "nested shell command could not be parsed safely"
     if reason:
             sys.stderr.write(
                 f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"

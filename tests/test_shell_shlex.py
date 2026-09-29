@@ -4,7 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from agents_extensions.shared.hooks.shell_shlex import preprocess_shell_command
+from agents_extensions.shared.hooks.shell_shlex import (
+    ShellPreprocessLimit,
+    _expose_backtick_bodies,
+    collapse_line_continuations,
+    preprocess_shell_command,
+)
 
 
 @pytest.mark.parametrize(
@@ -43,3 +48,35 @@ def test_issue_9115_comment_continuation_exposes_next_command(command: str):
 def test_issue_9115_nested_backtick_body_is_exposed():
     visible = preprocess_shell_command("echo $(echo `gh pr merge 5 --admin`)")
     assert visible == "echo $(echo $(gh pr merge 5 --admin))"
+
+
+@pytest.mark.parametrize(
+    "command, suffix",
+    [
+        ("echo `echo # `; tee AGENTS.md", "; tee AGENTS.md"),
+        ("echo `echo # `; cat .env", "; cat .env"),
+        (r"echo `echo # \` hidden `; tee AGENTS.md", "; tee AGENTS.md"),
+        (r"echo `echo # \\`; tee AGENTS.md", "; tee AGENTS.md"),
+        ("echo $(true )#; tee AGENTS.md", "#; tee AGENTS.md"),
+    ],
+)
+def test_issue_9115_closing_substitution_keeps_following_command(command: str, suffix: str):
+    assert collapse_line_continuations(command).endswith(suffix)
+    assert preprocess_shell_command(command).endswith(suffix)
+
+
+def test_issue_9115_escaped_nested_backticks_are_exposed():
+    command = r"echo `echo \`gh pr merge 5 --admin\``"
+    assert "$(gh pr merge 5 --admin)" in preprocess_shell_command(command)
+
+
+def test_issue_9115_deeper_escaped_backticks_are_exposed():
+    body = "gh pr merge 5 --admin"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    assert "$(gh pr merge 5 --admin)" in preprocess_shell_command("echo " + body)
+
+
+def test_issue_9115_backtick_depth_limit_is_explicit():
+    with pytest.raises(ShellPreprocessLimit, match="depth exceeded"):
+        _expose_backtick_bodies("`gh pr merge 5 --admin`", depth=16)

@@ -39,6 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
+        ShellPreprocessLimit,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         split_quote_preserving,
@@ -332,7 +333,41 @@ def _is_command_brace(token: str, segment: list[str]) -> bool:
 
 def _pipelines(command: str) -> list[list[list[str]]]:
     """Return command pipelines, split quote-aware on `|`, `&&`, `||`, and `;`."""
-    tokens = _tokenize(command)
+    # shlex groups adjacent punctuation into runs such as `);`. Split those
+    # before segmenting, or a command after a substitution can be hidden.
+    operators = (
+        "<<<",
+        "<<-",
+        "&&",
+        "||",
+        ";;",
+        ">>",
+        "<<",
+        "&>",
+        ">|",
+        "<>",
+        "(",
+        ")",
+        ";",
+        "&",
+        "|",
+        "<",
+        ">",
+        "\n",
+    )
+
+    def split_operator_run(token: str) -> list[str]:
+        if not token or not set(token) <= set("();&|<>\n"):
+            return [token]
+        parts: list[str] = []
+        index = 0
+        while index < len(token):
+            operator = next(op for op in operators if token.startswith(op, index))
+            parts.append(operator)
+            index += len(operator)
+        return parts
+
+    tokens = [part for token in _tokenize(command) for part in split_operator_run(token)]
     pipelines: list[list[list[str]]] = []
     pipeline: list[list[str]] = []
     segment: list[str] = []
@@ -1051,7 +1086,10 @@ def main() -> int:
     if not command:
         return 0
 
-    reason = _scan_command(command, set())
+    try:
+        reason = _scan_command(command, set())
+    except ShellPreprocessLimit:
+        reason = "nested shell command could not be parsed safely"
     if reason:
         sys.stderr.write(_block_msg(reason))
         return 2

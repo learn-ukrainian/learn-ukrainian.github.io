@@ -12,6 +12,11 @@ import shlex
 from collections.abc import Callable
 
 _HEREDOC_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
+_MAX_BACKTICK_DEPTH = 16
+
+
+class ShellPreprocessLimit(RuntimeError):
+    """A nested command could not be exposed within the parser's depth cap."""
 
 
 def collapse_line_continuations(command: str) -> str:
@@ -28,12 +33,21 @@ def collapse_line_continuations(command: str) -> str:
     while i < len(command):
         char = command[i]
         if comment:
-            out.append(char)
-            if char == "\n":
-                comment = False
-                word_start = True
-            i += 1
-            continue
+            # A backtick closes its body before Bash parses that body's
+            # comment. Only an unescaped closer can resume the outer command.
+            if backticks and char == "`":
+                slash = i - 1
+                while slash >= 0 and command[slash] == "\\":
+                    slash -= 1
+                if (i - 1 - slash) % 2 == 0:
+                    comment = False
+            if comment:
+                out.append(char)
+                if char == "\n":
+                    comment = False
+                    word_start = True
+                i += 1
+                continue
         if char == "\\" and quote != "'" and i + 1 < len(command):
             following = command[i + 1]
             if following != "\n":
@@ -70,6 +84,7 @@ def collapse_line_continuations(command: str) -> str:
             substitution_depth -= 1
             if not substitution_depth:
                 quote = outer_quote
+            word_start = False
         elif not quote:
             if char == "#" and word_start:
                 comment = True
@@ -125,10 +140,18 @@ def strip_shell_comments(command: str) -> str:
             substitution_depth -= 1
             if not substitution_depth:
                 quote = outer_quote
+            word_start = False
         elif not quote:
             if char == "#" and word_start:
-                end = command.find("\n", i)
-                if end < 0:
+                end = i + 1
+                while end < len(command):
+                    if command[end] == "\n" or (backticks and command[end] == "`"):
+                        break
+                    if backticks and command[end] == "\\" and end + 1 < len(command) and command[end + 1] != "\n":
+                        end += 2
+                    else:
+                        end += 1
+                if end == len(command):
                     break
                 i = end
                 continue
@@ -138,8 +161,10 @@ def strip_shell_comments(command: str) -> str:
     return "".join(out)
 
 
-def _expose_backtick_bodies(command: str) -> str:
+def _expose_backtick_bodies(command: str, *, depth: int = 0) -> str:
     """Expose executable backticks as inline command substitutions for guards."""
+    if depth >= _MAX_BACKTICK_DEPTH and "`" in command:
+        raise ShellPreprocessLimit("nested backtick depth exceeded")
     out: list[str] = []
     quote = ""
     substitutions: list[tuple[str, int]] = []
@@ -167,7 +192,10 @@ def _expose_backtick_bodies(command: str) -> str:
             if end < len(command):
                 if quote == '"':
                     out.append('"')
-                out.extend(("$(", command[index + 1 : end], ")"))
+                body = re.sub(r"\\([\\`])", r"\1", command[index + 1 : end])
+                if "`" in body:
+                    body = _expose_backtick_bodies(body, depth=depth + 1)
+                out.extend(("$(", body, ")"))
                 if quote == '"':
                     out.append('"')
                 index = end + 1

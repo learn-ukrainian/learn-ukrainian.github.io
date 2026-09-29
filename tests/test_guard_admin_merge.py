@@ -88,6 +88,18 @@ def test_issue_9115_nested_and_backtick_admin_merges_blocked(monkeypatch, comman
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
 
+def test_issue_9115_escaped_nested_backtick_admin_merge_is_visible():
+    assert _any_admin(r"echo `echo \`gh pr merge 5 --admin\``")
+
+
+def test_issue_9115_backtick_depth_limit_blocks_in_hook(monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    body = "gh pr merge 5 --admin"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    assert _run(monkeypatch, "echo " + body, failing=[]) == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 

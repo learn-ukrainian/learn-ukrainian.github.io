@@ -99,6 +99,12 @@ def test_issue_9115_nested_and_backtick_merges_blocked(monkeypatch, command):
     assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
 
 
+def test_issue_9115_escaped_nested_backtick_merge_is_visible(monkeypatch):
+    command = r"echo `echo \`gh pr merge 5 --admin\``"
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 

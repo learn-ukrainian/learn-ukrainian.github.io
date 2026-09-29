@@ -148,6 +148,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
+        ShellPreprocessLimit,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
@@ -2512,7 +2513,10 @@ def main() -> int:
         return _block_uncertain("undecidable_cwd")
 
     if tool_name == "Bash":
-        raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
+        try:
+            raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
+        except ShellPreprocessLimit:
+            return _block_uncertain("nested_shell_command")
 
     # --- #5396: git-mediated mutations against the primary worktree ----------
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"

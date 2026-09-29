@@ -31,11 +31,21 @@ BENIGN_COMMANDS = (
     'for ((i=0;i<1<<1;i++)); do echo "$i"; done\ngit status',
 )
 
+# These literals were added after BASELINE. Pin their allow decisions as well;
+# a later parser change must not turn harmless quoted/comment text into a block.
+HEAD_ONLY_BENIGN_COMMANDS = (
+    "echo $(printf '%s' '# gh pr merge 5 --admin')",
+    'echo $(printf "%s" "# gh pr merge 5 --admin")',
+    "echo $(printf '%s' $# ${#var} a#b)",
+    r"echo \`gh pr merge 5 --admin\`",
+    "echo 'literal `gh pr merge 5 --admin`'",
+    "echo `printf '%s' '# value'`",
+)
 
-def _literal_corpus() -> list[str]:
-    values = set(BENIGN_COMMANDS)
-    for name in GUARDS:
-        source = subprocess.run(
+
+def _source(name: str, *, baseline: bool) -> str:
+    if baseline:
+        return subprocess.run(
             ["git", "show", f"{BASELINE}:tests/test_guard_{name}.py"],
             cwd=REPO,
             capture_output=True,
@@ -43,22 +53,53 @@ def _literal_corpus() -> list[str]:
             text=True,
             timeout=30,
         ).stdout
-        tree = ast.parse(source)
-        docstrings = {
-            id(node.body[0].value)
-            for node in ast.walk(tree)
-            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
-            and node.body
-            and isinstance(node.body[0], ast.Expr)
-            and isinstance(node.body[0].value, ast.Constant)
-            and isinstance(node.body[0].value.value, str)
-        }
+    return (REPO / f"tests/test_guard_{name}.py").read_text()
+
+
+def _baseline_docstring(name: str, scope: str | None = None) -> str:
+    tree = ast.parse(_source(name, baseline=True))
+    if scope is None:
+        node = tree
+    else:
+        node = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == scope)
+    assert node.body and isinstance(node.body[0], ast.Expr)
+    value = node.body[0].value
+    assert isinstance(value, ast.Constant) and isinstance(value.value, str)
+    return value.value
+
+
+# Exact baseline prose strings, resolved by their file and AST scope above.
+# Old/new booleans are blocked decisions. These are docstrings, never shell
+# input, so the parser's decision on them has no execution effect.
+EXPECTED_PROSE_FLIPS = {
+    # A module description mentions an admin merge; exposed backticks now look executable.
+    ("admin_merge", _baseline_docstring("admin_merge")): (False, True),
+    # Both module descriptions mention a PR merge in prose, not a command to run.
+    ("pr_merge", _baseline_docstring("pr_merge")): (False, True),
+    ("pr_merge", _baseline_docstring("admin_merge")): (False, True),
+    # The module description quotes a branch command in explanatory text.
+    ("branch_switch_in_main", _baseline_docstring("branch_switch_in_main")): (False, True),
+    # These two test docstrings used to fail parsing safely; the new parser allows the prose.
+    (
+        "secret_print",
+        _baseline_docstring("pr_merge", "test_quoted_paren_is_not_a_scope_boundary"),
+    ): (True, False),
+    (
+        "secret_print",
+        _baseline_docstring("pr_merge", "test_quoted_close_paren_does_not_pop_a_real_scope"),
+    ): (True, False),
+}
+
+
+def _literal_corpus() -> list[str]:
+    values = set(BENIGN_COMMANDS)
+    for name in GUARDS:
+        tree = ast.parse(_source(name, baseline=True))
         values.update(
             node.value
             for node in ast.walk(tree)
             if isinstance(node, ast.Constant)
             and isinstance(node.value, str)
-            and id(node) not in docstrings
             and "{payload}" not in node.value  # A parameterized template is not a command.
         )
     return sorted(values)
@@ -96,13 +137,26 @@ def test_all_literal_commands_have_no_new_guard_blocks(tmp_path: Path) -> None:
     commands = _literal_corpus()
     baseline = _probe(_baseline_dir(tmp_path), commands)
     head = _probe(HOOK_DIR, commands)
-    changed = [
-        (guard, command)
+    changed = {
+        (guard, command): (was_blocked, is_blocked)
         for guard in GUARDS
         for command, was_blocked, is_blocked in zip(commands, baseline[guard], head[guard], strict=True)
         if was_blocked != is_blocked
+    }
+    assert changed == EXPECTED_PROSE_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
+
+
+def test_head_only_benign_literals_have_no_new_blocks(tmp_path: Path) -> None:
+    commands = sorted(set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS))
+    baseline = _probe(_baseline_dir(tmp_path), commands)
+    head = _probe(HOOK_DIR, commands)
+    newly_blocked = [
+        (guard, command)
+        for guard in GUARDS
+        for command, was_blocked, is_blocked in zip(commands, baseline[guard], head[guard], strict=True)
+        if not was_blocked and is_blocked
     ]
-    assert not changed, f"{len(commands)} literal commands; changed decisions: {changed[:10]!r}"
+    assert not newly_blocked, f"head-only benign allow-to-block flips: {newly_blocked!r}"
 
 
 def _probe_child(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:

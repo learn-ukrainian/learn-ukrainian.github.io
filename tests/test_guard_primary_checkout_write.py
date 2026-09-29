@@ -118,9 +118,24 @@ def test_issue_9102_real_let_heredoc_body_is_inert():
     ],
 )
 def test_issue_9115_nested_and_backtick_writes_blocked(repo: Path, command: str):
+    assert hook.bash_write_targets(command) == ["AGENTS.md"]
     payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
     result = _run(repo, payload)
     assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    ["echo `echo # `; tee AGENTS.md", "echo $(true )#; tee AGENTS.md"],
+)
+def test_issue_9115_comment_boundaries_keep_write_visible(repo: Path, command: str):
+    assert hook.bash_write_targets(command) == ["AGENTS.md"]
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    assert _run(repo, payload).returncode == 2
+
+
+def test_issue_9115_escaped_nested_backtick_write_is_visible():
+    assert hook.bash_write_targets(r"echo `echo \`tee AGENTS.md\``") == ["AGENTS.md"]
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():

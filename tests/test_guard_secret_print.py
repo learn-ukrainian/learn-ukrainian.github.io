@@ -272,6 +272,24 @@ def test_issue_9115_nested_and_backtick_secret_reads_blocked(monkeypatch, comman
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "x=`pwd`; cat .env",
+        "echo `true`; cat .env",
+        "echo $(true); cat .env",
+        "echo `echo # `; cat .env",
+        "echo $(true )#; cat .env",
+    ],
+)
+def test_issue_9115_substitution_operator_and_comment_boundaries_block_secret_reads(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9115_escaped_nested_backtick_secret_read_is_visible(monkeypatch):
+    assert _run(monkeypatch, r"echo `echo \`cat .env\``") == 2
+
+
+@pytest.mark.parametrize(
     "opener,closer,quoted",
     [
         ("<<'EOF'", "EOF", True),
