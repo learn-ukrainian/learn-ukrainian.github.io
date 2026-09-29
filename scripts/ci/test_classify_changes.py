@@ -38,11 +38,7 @@ class ClassifierTests(unittest.TestCase):
         tier = dict(result)
         preflight = tier.pop("preflight")
         self.assertIsInstance(json.loads(tier.pop("skipped_areas")), list)
-        expected = (
-            "true"
-            if event == "pull_request" and tier["pytest_mode"] in {"full", "selected"}
-            else "false"
-        )
+        expected = "true" if event == "pull_request" and tier["pytest_mode"] in {"full", "selected"} else "false"
         self.assertEqual(preflight, expected, (event, tier["pytest_mode"]))
         return tier
 
@@ -74,10 +70,10 @@ class ClassifierTests(unittest.TestCase):
             "registry/practice/noun_mechanics_deck.json",
             # Read only through scripts/atlas/atlas_db.py's REGISTRY_ROOT constant.
             "registry/lexicon/synonym_pair_verdicts.yaml",
-            "tests/test_atlas_db.py",
         ):
             with self.subTest(atlas=path):
                 self.assertEqual(skipped([path]), ("full", ["open_model_data"]))
+        self.assertEqual(skipped(["tests/test_atlas_db.py"]), ("full", ["open_model_data"]))
         for path in (
             "packages/v4-runtime/src/learn_ukrainian_v4_runtime/provenance.py",
             "scripts/storage/paths.py",
@@ -307,9 +303,7 @@ class ClassifierTests(unittest.TestCase):
         for event in ("pull_request", "merge_group"):
             with self.subTest(event=event, case="curriculum"):
                 self.assert_docs(
-                    self.classify(
-                        ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event=event
-                    ),
+                    self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event=event),
                     reads_content="true",
                 )
             with self.subTest(event=event, case="wiki"):
@@ -421,9 +415,7 @@ class ClassifierTests(unittest.TestCase):
             self.classify(["wiki/figures/example.md"], event="merge_group"),
             reads_content="true",
         )
-        self.assert_content(
-            self.classify(["site/src/content/docs/a1/module/1.mdx"], event="merge_group")
-        )
+        self.assert_content(self.classify(["site/src/content/docs/a1/module/1.mdx"], event="merge_group"))
         for path in ("site/src/components/X.astro", "packages/activity-kit/src/index.ts"):
             with self.subTest(path=path):
                 self.assert_full(self.classify([path], event="merge_group"), frontend="true")
@@ -467,9 +459,7 @@ class ClassifierTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assert_docs(self.classify([path]))
                 self.assert_full(self.classify([path], event="merge_group"))
-        self.assert_full(
-            self.classify(["docs/guide.md", "wiki/figures/example.md"], event="merge_group")
-        )
+        self.assert_full(self.classify(["docs/guide.md", "wiki/figures/example.md"], event="merge_group"))
 
     def test_merge_group_mixed_frontend_and_code_runs_full_with_frontend(self):
         self.assert_full(
@@ -502,7 +492,9 @@ class ClassifierTests(unittest.TestCase):
         for labels in ([], ["full-ci"]):
             with self.subTest(labels=labels):
                 stdout, compare, _ = self._run_main_merge_group(
-                    _queue_ref(7, _MAIN_SHA), api_labels={7: labels}, compare_error=OSError(),
+                    _queue_ref(7, _MAIN_SHA),
+                    api_labels={7: labels},
+                    compare_error=OSError(),
                 )
                 compare.assert_called_once()
                 self.assertIn("files=0", stdout.getvalue())
@@ -542,9 +534,7 @@ class ClassifierTests(unittest.TestCase):
             "tests/test_reads_content_marker_invariant.py",
         ]
         self.assert_full(self.classify(paths, tree_paths=tree), frontend="false")
-        self.assert_full(
-            self.classify(paths, event="merge_group", tree_paths=tree), frontend="false"
-        )
+        self.assert_full(self.classify(paths, event="merge_group", tree_paths=tree), frontend="false")
 
     def test_full_ci_label_forces_python_only_and_preserves_path_frontend(self):
         self.assert_full(
@@ -652,10 +642,14 @@ class ClassifierTests(unittest.TestCase):
 
     @patch.object(scope.subprocess, "check_output")
     def test_rename_source_and_odd_filenames(self, command):
-        command.return_value = json.dumps({"files": [
-            {"filename": "docs/moved.md", "previous_filename": "scripts/ci/README.md"},
-            {"filename": "unknown/line\nbreak.md"},
-        ]})
+        command.return_value = json.dumps(
+            {
+                "files": [
+                    {"filename": "docs/moved.md", "previous_filename": "scripts/ci/README.md"},
+                    {"filename": "unknown/line\nbreak.md"},
+                ]
+            }
+        )
         paths = scope.compare_paths("base", "head", "owner/repo")
         self.assertEqual(paths, ["docs/moved.md", "scripts/ci/README.md", "unknown/line\nbreak.md"])
         self.assert_full(self.classify(paths))
@@ -686,17 +680,22 @@ class ClassifierTests(unittest.TestCase):
                 subprocess.CalledProcessError(1, "gh"),
                 subprocess.TimeoutExpired("gh", 60),
             ):
-                with self.subTest(error=type(error).__name__), patch.dict(os.environ, env), \
-                     patch.object(scope, "compare_paths", side_effect=error), \
-                     patch.object(scope, "current_pr_labels", return_value=[]), \
-                     contextlib.redirect_stdout(io.StringIO()):
+                with (
+                    self.subTest(error=type(error).__name__),
+                    patch.dict(os.environ, env),
+                    patch.object(scope, "compare_paths", side_effect=error),
+                    patch.object(scope, "current_pr_labels", return_value=[]),
+                    contextlib.redirect_stdout(io.StringIO()),
+                ):
                     output.write_text("")
                     scope.main()
                     self.assertEqual(output.read_text(), full_line)
-            with patch.dict(os.environ, env), \
-                 patch.object(scope, "compare_paths", return_value=["docs/guide.md"]), \
-                 patch.object(scope, "current_pr_labels", return_value=[]), \
-                 contextlib.redirect_stdout(io.StringIO()):
+            with (
+                patch.dict(os.environ, env),
+                patch.object(scope, "compare_paths", return_value=["docs/guide.md"]),
+                patch.object(scope, "current_pr_labels", return_value=[]),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
                 output.write_text("")
                 scope.main()
                 self.assertEqual(
@@ -723,10 +722,12 @@ class ClassifierTests(unittest.TestCase):
             label_mock_kwargs = (
                 {"side_effect": api_error} if api_error is not None else {"return_value": api_labels or []}
             )
-            with patch.dict(os.environ, env), \
-                 patch.object(scope, "compare_paths", return_value=paths or []) as compare, \
-                 patch.object(scope, "current_pr_labels", **label_mock_kwargs) as labels_api, \
-                 contextlib.redirect_stdout(io.StringIO()) as stdout:
+            with (
+                patch.dict(os.environ, env),
+                patch.object(scope, "compare_paths", return_value=paths or []) as compare,
+                patch.object(scope, "current_pr_labels", **label_mock_kwargs) as labels_api,
+                contextlib.redirect_stdout(io.StringIO()) as stdout,
+            ):
                 scope.main()
             return stdout.getvalue(), compare, labels_api
 
@@ -787,14 +788,22 @@ class ClassifierTests(unittest.TestCase):
             self.assertEqual(scope.current_pr_labels("owner/repo", 7), ["bug", "full-ci"])
         command.assert_called_once()
         # An invalid PR number fails closed before any API call.
-        with self.assertRaises(ValueError), \
-             patch.object(scope.subprocess, "check_output") as no_call:
+        with self.assertRaises(ValueError), patch.object(scope.subprocess, "check_output") as no_call:
             scope.current_pr_labels("owner/repo", 0)
         no_call.assert_not_called()
 
     def _run_main_merge_group(
-        self, head_ref, *, api_labels, queue_refs=None, paths=None, compare_error=None,
-        base=None, on_main=(_MAIN_SHA,), branch_error=None, refs_error=None,
+        self,
+        head_ref,
+        *,
+        api_labels,
+        queue_refs=None,
+        paths=None,
+        compare_error=None,
+        base=None,
+        on_main=(_MAIN_SHA,),
+        branch_error=None,
+        refs_error=None,
     ):
         """Run main() for a merge_group event with every API call mocked.
 
@@ -828,17 +837,17 @@ class ClassifierTests(unittest.TestCase):
                 raise branch_error
             return sha in on_main
 
-        compare_kwargs = (
-            {"side_effect": compare_error} if compare_error else {"return_value": paths or []}
-        )
+        compare_kwargs = {"side_effect": compare_error} if compare_error else {"return_value": paths or []}
         refs_kwargs = {"side_effect": refs_error} if refs_error else {"return_value": refs}
-        with patch.dict(os.environ, env, clear=True), \
-             patch.object(scope, "compare_paths", **compare_kwargs) as compare, \
-             patch.object(scope, "current_pr_labels", side_effect=labels) as labels_api, \
-             patch.object(scope, "queue_refs_by_sha", **refs_kwargs) as refs_api, \
-             patch.object(scope, "on_base_branch", side_effect=branch) as branch_api, \
-             patch.object(scope, "git_tree_paths", return_value=set()), \
-             contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, env, clear=True),
+            patch.object(scope, "compare_paths", **compare_kwargs) as compare,
+            patch.object(scope, "current_pr_labels", side_effect=labels) as labels_api,
+            patch.object(scope, "queue_refs_by_sha", **refs_kwargs) as refs_api,
+            patch.object(scope, "on_base_branch", side_effect=branch) as branch_api,
+            patch.object(scope, "git_tree_paths", return_value=set()),
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
         called = [call.args[1] for call in labels_api.call_args_list]
         ends = [call.args[2] for call in branch_api.call_args_list]
@@ -864,7 +873,10 @@ class ClassifierTests(unittest.TestCase):
         # First group in the queue: BASE is the base branch commit.
         refs, ref = self._live_queue(1)
         stdout, compare, (called, refs_api, ends) = self._run_main_merge_group(
-            ref, api_labels={8656: ["full-ci"]}, queue_refs=refs, paths=["docs/guide.md"],
+            ref,
+            api_labels={8656: ["full-ci"]},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
         refs_api.assert_called_once_with("owner/repo", "main")
@@ -874,7 +886,10 @@ class ClassifierTests(unittest.TestCase):
         self.assertIn("frontend=false", stdout.getvalue())
         # Without the label the group still classifies docs as full (#9073 D4).
         stdout, compare, (called, _, _) = self._run_main_merge_group(
-            ref, api_labels={8656: ["bug"]}, queue_refs=refs, paths=["docs/guide.md"],
+            ref,
+            api_labels={8656: ["bug"]},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
         compare.assert_called_once()
@@ -885,7 +900,10 @@ class ClassifierTests(unittest.TestCase):
         # BASE is pr-8656's group head, not main (the #8505 r4 blocker).
         refs, ref = self._live_queue(2)
         stdout, compare, (called, _, ends) = self._run_main_merge_group(
-            ref, api_labels={8657: [], 8656: ["full-ci"]}, queue_refs=refs, paths=["docs/guide.md"],
+            ref,
+            api_labels={8657: [], 8656: ["full-ci"]},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8657, 8656])
         self.assertEqual(ends, [_MAIN_SHA])
@@ -907,7 +925,10 @@ class ClassifierTests(unittest.TestCase):
         self.assertIn("pytest_mode=full", stdout.getvalue())
         # No PR in the group carries full-ci: docs still take the full tier.
         stdout, compare, (called, _, _) = self._run_main_merge_group(
-            ref, api_labels={8650: [], 8657: [], 8656: []}, queue_refs=refs, paths=["docs/guide.md"],
+            ref,
+            api_labels={8650: [], 8657: [], 8656: []},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8650, 8657, 8656])
         self.assertEqual(compare.call_args.args[:2], ("2" * 40, "f" * 40))
@@ -952,14 +973,19 @@ class ClassifierTests(unittest.TestCase):
             "repeated pr": (ref, no_labels, {"queue_refs": repeated_pr}),
             "chain ends off main": (ref, no_labels, {"queue_refs": refs, "on_main": ()}),
             "branch check api error": (
-                ref, no_labels, {"queue_refs": refs, "branch_error": subprocess.CalledProcessError(1, "gh")},
+                ref,
+                no_labels,
+                {"queue_refs": refs, "branch_error": subprocess.CalledProcessError(1, "gh")},
             ),
             "queue refs api error": (ref, no_labels, {"refs_error": subprocess.CalledProcessError(1, "gh")}),
         }
         for name, (head_ref, labels, extra) in cases.items():
             with self.subTest(case=name):
                 stdout, compare, _ = self._run_main_merge_group(
-                    head_ref, api_labels=labels, paths=["docs/guide.md"], **{"queue_refs": refs, **extra},
+                    head_ref,
+                    api_labels=labels,
+                    paths=["docs/guide.md"],
+                    **{"queue_refs": refs, **extra},
                 )
                 compare.assert_not_called()
                 self.assertIn("files=0", stdout.getvalue())
@@ -967,8 +993,10 @@ class ClassifierTests(unittest.TestCase):
 
     def test_on_base_branch_reads_compare_status(self):
         for status, expected in {"identical": True, "behind": True, "ahead": False, "diverged": False}.items():
-            with self.subTest(status=status), \
-                 patch.object(scope.subprocess, "check_output", return_value=f"{status}\n") as command:
+            with (
+                self.subTest(status=status),
+                patch.object(scope.subprocess, "check_output", return_value=f"{status}\n") as command,
+            ):
                 self.assertIs(scope.on_base_branch("owner/repo", "main", "1" * 40), expected)
                 self.assertIn(f"repos/owner/repo/compare/main...{'1' * 40}", command.call_args.args[0])
 
@@ -976,13 +1004,14 @@ class ClassifierTests(unittest.TestCase):
         line = f"{'1' * 40} {_queue_ref(8644, _MAIN_SHA)}\n"
         with patch.object(scope.subprocess, "check_output", return_value=line) as command:
             self.assertEqual(
-                scope.queue_refs_by_sha("owner/repo", "main"), {"1" * 40: _queue_ref(8644, _MAIN_SHA)},
+                scope.queue_refs_by_sha("owner/repo", "main"),
+                {"1" * 40: _queue_ref(8644, _MAIN_SHA)},
             )
         self.assertIn(
-            "repos/owner/repo/git/matching-refs/heads/gh-readonly-queue/main/", command.call_args.args[0],
+            "repos/owner/repo/git/matching-refs/heads/gh-readonly-queue/main/",
+            command.call_args.args[0],
         )
-        with patch.object(scope.subprocess, "check_output", return_value="garbage\n"), \
-             self.assertRaises(ValueError):
+        with patch.object(scope.subprocess, "check_output", return_value="garbage\n"), self.assertRaises(ValueError):
             scope.queue_refs_by_sha("owner/repo", "main")
 
     def test_merge_group_refs_sharing_a_sha_fail_closed(self):
@@ -997,8 +1026,7 @@ class ClassifierTests(unittest.TestCase):
                 ("3" * 40, _queue_ref(3, shared)),
             ]
         )
-        with patch.object(scope.subprocess, "check_output", return_value=lines), \
-             self.assertRaises(ValueError):
+        with patch.object(scope.subprocess, "check_output", return_value=lines), self.assertRaises(ValueError):
             scope.queue_refs_by_sha("owner/repo", "main")
         env = {
             "PYTEST_SHARD_COUNT": "4",
@@ -1008,21 +1036,26 @@ class ClassifierTests(unittest.TestCase):
             "HEAD_REF": _queue_ref(3, shared),
             "REPO": "owner/repo",
         }
-        with patch.dict(os.environ, env, clear=True), \
-             patch.object(scope.subprocess, "check_output", return_value=lines), \
-             patch.object(scope, "current_pr_labels", side_effect=lambda _, n: {1: ["full-ci"]}.get(n, [])), \
-             patch.object(scope, "on_base_branch", return_value=True), \
-             patch.object(scope, "compare_paths", return_value=["docs/guide.md"]) as compare, \
-             patch.object(scope, "git_tree_paths", return_value=set()), \
-             contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, env, clear=True),
+            patch.object(scope.subprocess, "check_output", return_value=lines),
+            patch.object(scope, "current_pr_labels", side_effect=lambda _, n: {1: ["full-ci"]}.get(n, [])),
+            patch.object(scope, "on_base_branch", return_value=True),
+            patch.object(scope, "compare_paths", return_value=["docs/guide.md"]) as compare,
+            patch.object(scope, "git_tree_paths", return_value=set()),
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_forced_events_do_not_need_compare_api(self):
         # schedule stays force-full without touching the compare API.
-        with patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "schedule"}, clear=True), \
-             patch.object(scope, "compare_paths") as compare, contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "schedule"}, clear=True),
+            patch.object(scope, "compare_paths") as compare,
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
             compare.assert_not_called()
             self.assertIn("docs_only=false", stdout.getvalue())
@@ -1107,8 +1140,11 @@ class ClassifierTests(unittest.TestCase):
     def test_merge_group_without_event_env_fails_closed(self):
         # merge_group classifies by paths (#8399), but a missing REPO env must
         # fail closed to full before the compare API is ever called.
-        with patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "merge_group"}, clear=True), \
-             patch.object(scope, "compare_paths") as compare, contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "merge_group"}, clear=True),
+            patch.object(scope, "compare_paths") as compare,
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
             compare.assert_not_called()
             self.assertIn("pytest_mode=full", stdout.getvalue())

@@ -12,6 +12,24 @@ from pathlib import Path
 _MANIFEST = Path(__file__).with_name("test_areas.json")
 AREA_NAMES = frozenset({"open_model_data", "atlas"})
 
+# Exact expressions, keyed by tracked file and enclosing function. Each may
+# occur once; a second computed path, even in the same function, must be audited.
+AUDITED_COMPUTED_REPO_PATHS: dict[tuple[str, str], frozenset[str]] = {
+    # Sparse-tree import analysis resolves literal imports from the test's AST.
+    ("tests/conftest.py", "_resolve_module"): frozenset(
+        {
+            "_REPO_ROOT / rel.with_suffix('.py')",
+            "_REPO_ROOT / rel",
+        }
+    ),
+    # Collection supplies the current test file's repo-relative location.
+    ("tests/conftest.py", "_analyze_test_module"): frozenset({"_REPO_ROOT / rel_path"}),
+    # find_entry validates rel; the invariant checks each test marker's data path.
+    ("tests/conftest.py", "pytest_runtest_setup"): frozenset({"DATA_ROOT / rel"}),
+    # The invariant checks each area test's tree_absent argument at its call site.
+    ("tests/sparse_trees.py", "tree_absent"): frozenset({"REPO_ROOT / normalized"}),
+}
+
 
 def load_areas(path: Path = _MANIFEST) -> dict[str, dict[str, list[str]]]:
     """Validate the small area manifest before it can affect CI selection."""

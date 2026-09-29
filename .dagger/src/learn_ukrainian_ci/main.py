@@ -62,7 +62,6 @@ from dagger import dag, function, object_type
 # therefore also not in Dagger's clean container.
 _IGNORED_TESTS: tuple[str, ...] = (
     "tests/test_rag.py",
-    "tests/test_a1_review_scores.py",
     "tests/test_agent_runtime.py",
     "tests/test_channels_registry.py",
     "tests/test_convergence_loop.py",

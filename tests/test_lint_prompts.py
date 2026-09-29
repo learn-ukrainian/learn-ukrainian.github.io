@@ -102,6 +102,22 @@ class TestResearchRules:
 
 # ---------- Template variable tests ----------
 
+# Batch-system templates use legacy placeholder conventions.
+BATCH_TEMPLATES = {
+    "research-seminar-v0.md", "review-legacy.md",
+    "fix.md", "fix-content.md", "fix-activities.md",
+}
+
+
+def _phase_templates() -> list[Path]:
+    """Active phase templates: shared partials, README and batch templates are not phase templates."""
+    return [
+        path
+        for path in sorted((ROOT / "agents_extensions/shared" / "phases" / "gemini").glob("*.md"))
+        if not path.name.startswith("_") and path.name != "README.md" and path.name not in BATCH_TEMPLATES
+    ]
+
+
 class TestTemplateVariables:
     """Verify all active templates have resolvable placeholders."""
 
@@ -187,22 +203,9 @@ class TestTemplateVariables:
         """Extract {UPPERCASE_PLACEHOLDER} patterns from text."""
         return set(re.findall(r"\{([A-Z][A-Z0-9_]+)\}", text))
 
-    # Batch-system templates use legacy placeholder conventions
-    BATCH_TEMPLATES: typing.ClassVar[set[str]] = {
-        "research-seminar-v0.md", "review-legacy.md",
-        "fix.md", "fix-content.md", "fix-activities.md",
-    }
-
-    @pytest.mark.parametrize("template_file", sorted(
-        (ROOT / "agents_extensions/shared" / "phases" / "gemini").glob("*.md")
-    ), ids=lambda p: p.name)
+    @pytest.mark.parametrize("template_file", _phase_templates(), ids=lambda p: p.name)
     def test_template_placeholders_known(self, template_file):
         """Every placeholder in active templates should be in the known set."""
-        if template_file.name.startswith("_") or template_file.name == "README.md":
-            pytest.skip("Not a phase template")
-        if template_file.name in self.BATCH_TEMPLATES:
-            pytest.skip("Batch-system template (legacy placeholder convention)")
-
         text = template_file.read_text()
         placeholders = self._extract_placeholders(text)
 

@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import copy
 import json
+from functools import lru_cache
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import requests  # noqa: F401  # Declares promote_grow_candidates's transitive enrich_manifest HTTP dependency to the CI fastlane.
+import yaml
 
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
@@ -21,6 +25,27 @@ from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
 )
 
 MULTIWORD_LEMMAS = sorted(TARGET_ENTRY_TYPES)
+
+
+@lru_cache(maxsize=4)
+def _parse_decision_ledger(source: str) -> dict:
+    return yaml.load(source, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
+
+
+@pytest.fixture
+def cached_decision_loader(monkeypatch) -> None:
+    """Keep the content-keyed ledger cache local to these promotion tests."""
+    from scripts.lexicon import promote_atlas_6370_named_multiword_residual as promote
+
+    monkeypatch.setattr(
+        promote,
+        "yaml",
+        SimpleNamespace(
+            safe_load=lambda source: copy.deepcopy(_parse_decision_ledger(source)),
+            safe_dump=yaml.safe_dump,
+            YAMLError=yaml.YAMLError,
+        ),
+    )
 
 
 @pytest.fixture(scope="module")
@@ -117,7 +142,7 @@ def test_build_candidate_for_zabojatysja_has_no_explicit_entry_type() -> None:
     assert candidate["surface_admission"] == {"practice": True}
 
 
-def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path) -> None:
+def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path, cached_decision_loader) -> None:
     from scripts.audit.source_inventory_intake import SourceInventoryError
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import BIG_DECISIONS
 
@@ -125,7 +150,7 @@ def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path) -> None
         _scratch_decision_subset(BIG_DECISIONS, {"жоднийтакийлемма"}, tmp_path / "out.yaml")
 
 
-def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> None:
+def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path, cached_decision_loader) -> None:
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import BIG_DECISIONS
 
     lemmas = {"день тижня", "так само"}
@@ -138,8 +163,25 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> No
     assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
 
 
+def test_decision_parse_cache_changes_with_file_content(tmp_path: Path, cached_decision_loader) -> None:
+    source = tmp_path / "decisions.yaml"
+    output = tmp_path / "subset.yaml"
+    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: first\n", encoding="utf-8")
+    _scratch_decision_subset(source, {"demo"}, output)
+    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "first"
+
+    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: second\n", encoding="utf-8")
+    _scratch_decision_subset(source, {"demo"}, output)
+    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "second"
+
+    _scratch_decision_subset(source, {"demo"}, output)
+    parsed = _parse_decision_ledger(source.read_text(encoding="utf-8"))
+    assert parsed["decisions"][0]["gloss"] == "second"
+    assert "surface_admission" not in parsed["decisions"][0]
+
+
 def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(
-    tmp_path: Path, monkeypatch, committed_inventory_records
+    tmp_path: Path, monkeypatch, committed_inventory_records, cached_decision_loader
 ) -> None:
     """Build the full plan against an empty manifest fixture: 9/9 match, 0 missing."""
     _use_committed_inventory_records(monkeypatch, committed_inventory_records)

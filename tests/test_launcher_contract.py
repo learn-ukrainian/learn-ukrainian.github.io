@@ -206,6 +206,18 @@ def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, 
     assert f"model_reasoning_effort={effort}" in result.stdout
 
 
+# The fail-open pre-lease rollover import is not under test in the sandboxed
+# driver fixtures: their closure lacks its imports, so the real call only cost a
+# failed interpreter start. The launcher call site is covered by
+# tests/test_start_codex_profiles.py and tests/test_launcher_helper_root.py; the
+# import itself by tests/test_rollover_bundles.py.
+_ROLLOVER_IMPORT_STUB = """\
+if [[ "${1:-}" == */scripts/orchestration/thread_handoff.py && "$*" == *" import-bundle "* ]]; then
+  exit 0
+fi
+"""
+
+
 def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     """Build a provider-neutral driver whose canary failure is observable."""
     root = tmp_path / "repo"
@@ -248,7 +260,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {sys.executable!r} "$@"
+{_ROLLOVER_IMPORT_STUB}exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
@@ -422,7 +434,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {sys.executable!r} "$@"
+{_ROLLOVER_IMPORT_STUB}exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
@@ -954,17 +966,20 @@ def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
 
 @pytest.mark.repo_wide
 def test_retired_names_are_absent_from_tracked_content() -> None:
-    tracked = subprocess.run(
-        ["git", "ls-files"], cwd=REPO, text=True, capture_output=True, check=True, timeout=30
-    ).stdout.splitlines()
     for retired in RETIRED:
         assert not (REPO / retired).exists()
-    for relative in tracked:
-        path = REPO / relative
-        if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
-            content = path.read_text(encoding="utf-8", errors="ignore")
-            for retired in RETIRED:
-                assert retired not in content, relative
+    # One pass over the tracked working-tree files (images and PDFs excluded).
+    patterns = [arg for retired in RETIRED for arg in ("-e", retired)]
+    excluded = [f":(exclude)*{suffix}" for suffix in (".png", ".jpg", ".jpeg", ".gif", ".pdf")]
+    found = subprocess.run(
+        ["git", "grep", "-l", "-F", *patterns, "--", ".", *excluded],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    assert found.returncode == 1, found.stdout + found.stderr
 
 
 def test_claude_driver_injects_lane_agent_type() -> None:
@@ -1170,9 +1185,14 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
     completed = tmp_path / "provider-completed"
     restarted = tmp_path / "watcher-restarted"
     first = tmp_path / "watcher-first"
+    # The provider outlives the first watcher by up to one second, as before, but
+    # finishes as soon as a recovered watcher has restarted.
     launcher, _, closed, _ = _core_driver_exit_fixture(
         tmp_path,
-        provider_body=f"sleep 1\ntouch {str(completed)!r}\nexit 0",
+        provider_body=(
+            f"for _ in $(seq 100); do [ -f {str(restarted)!r} ] && break; sleep 0.01; done\n"
+            f"touch {str(completed)!r}\nexit 0"
+        ),
     )
     watcher = launcher.parent / "scripts/ai_agent_bridge/inbox_watch.sh"
     watcher.write_text(

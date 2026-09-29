@@ -13,7 +13,8 @@ root-relative literals (``"registry/practice/x.json"``) and static ``Path``
 expressions, resolved through module constants and imported names
 (``REGISTRY_ROOT / "lexicon/x.yaml"`` with ``REGISTRY_ROOT`` from
 ``scripts.storage.paths``). A named directory covers every tracked file under
-it; the repo root and top-level trees are anchors, not reads. Paths that force
+it; the repo root and top-level trees are anchors, not reads. Computed paths
+from those anchors escape every area unless their components are static. Paths that force
 the full tier (``hits_shared_root_denylist``) need no root, but their imports
 and data are followed.
 
@@ -37,7 +38,7 @@ from pathlib import Path, PurePosixPath
 import pytest
 
 from scripts.ci.classify_changes import hits_shared_root_denylist
-from scripts.ci.test_areas import load_areas, matches_root, matches_test
+from scripts.ci.test_areas import AUDITED_COMPUTED_REPO_PATHS, load_areas, matches_root, matches_test
 
 pytestmark = pytest.mark.repo_wide
 
@@ -179,6 +180,7 @@ def _imports(source: str, path: str) -> tuple[set[str], set[str]]:
 class _Scope:
     names: dict[str, str]  # local name -> repo-relative path
     modules: dict[str, str]  # module alias -> tracked module file
+    strings: dict[str, str]  # module constant or literal-loop binding
 
 
 class _Graph:
@@ -197,6 +199,8 @@ class _Graph:
         self._trees: dict[str, ast.Module] = {}
         self._consts: dict[str, dict[str, str]] = {}
         self._data: dict[str, frozenset[str]] = {}
+        self.audited_sites: set[tuple[tuple[str, str], str]] = set()
+        self._callers: dict[str, frozenset[str]] = {}
         self.by_top: dict[str, set[str]] = defaultdict(set)
         for path in self.modules:
             pure = PurePosixPath(path)
@@ -264,6 +268,12 @@ class _Graph:
             None,
         )
 
+    @staticmethod
+    def _string(node: ast.AST, scope: _Scope) -> str | None:
+        if isinstance(node, ast.Name):
+            return scope.strings.get(node.id)
+        return _str_value(node)
+
     def _anchor(self, node: ast.AST, scope: _Scope) -> str | None:
         """The repo-relative path a ``Path``-building expression denotes, if static."""
         if isinstance(node, ast.Name):
@@ -283,7 +293,7 @@ class _Graph:
         ):
             return _parent(self._anchor(node.value.value, scope), node.slice.value + 1)
         if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
-            right = _str_value(node.right)
+            right = self._string(node.right, scope)
             return None if right is None else _join(self._anchor(node.left, scope), [right])
         if not isinstance(node, ast.Call):
             return None
@@ -291,7 +301,7 @@ class _Graph:
         method = isinstance(node.func, ast.Attribute)
         if method and name in {"resolve", "absolute", "expanduser"} and not node.args:
             return self._anchor(node.func.value, scope)
-        strings = [_str_value(arg) for arg in node.args]
+        strings = [self._string(arg, scope) for arg in node.args]
         if method and name == "joinpath" and None not in strings:
             return _join(self._anchor(node.func.value, scope), strings)
         if method and name == "with_name" and len(strings) == 1 and strings[0] is not None:
@@ -310,10 +320,52 @@ class _Graph:
             return _join(self._anchor(node.args[0], scope), strings[1:])
         return None
 
+    def _computed(self, node: ast.AST, scope: _Scope) -> bool:
+        """A known repo anchor joined to an unresolved component."""
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+            return self._anchor(node.left, scope) is not None and self._string(node.right, scope) is None
+        if not isinstance(node, ast.Call):
+            return False
+        name = _call_name(node)
+        method = isinstance(node.func, ast.Attribute)
+        if method and name == "joinpath":
+            base = node.func.value
+            parts = node.args
+        elif node.args and (
+            (method and ast.unparse(node.func.value) in _OS_PATH_MODULES and name == "join")
+            or name in {"Path", "PurePath", "PurePosixPath"}
+        ):
+            base = node.args[0]
+            parts = node.args[1:]
+        else:
+            return False
+        return self._anchor(base, scope) is not None and any(self._string(part, scope) is None for part in parts)
+
     def _scope(self, path: str) -> _Scope:
         """Module-local path names (assignments) and imported names/modules."""
-        scope = _Scope({"__file__": path}, {})
+        scope = _Scope({"__file__": path}, {}, {})
         nodes = list(ast.walk(self._tree(path)))
+        # Only a single module-level literal binding is a static string. A
+        # function local, parameter, or a name assigned twice is not a
+        # dependable module constant at its use site.
+        writes: dict[str, int] = defaultdict(int)
+        for node in nodes:
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
+                writes[node.id] += 1
+            elif isinstance(node, ast.arg):
+                writes[node.arg] += 1
+        bindings: dict[str, list[ast.AST]] = defaultdict(list)
+        for stmt in self._tree(path).body:
+            if isinstance(stmt, (ast.Assign, ast.AnnAssign)) and stmt.value is not None:
+                targets = stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]
+                for target in targets:
+                    if isinstance(target, ast.Name):
+                        bindings[target.id].append(stmt.value)
+        scope.strings = {
+            name: value
+            for name, assigned in bindings.items()
+            if len(assigned) == writes[name] == 1 and (value := _str_value(assigned[0])) is not None
+        }
         for node in nodes:
             if isinstance(node, ast.ImportFrom):
                 module = _relative(path, node.level, node.module) if node.level else node.module
@@ -369,25 +421,108 @@ class _Graph:
             if "/" in text:
                 found |= self._named(text)
         scope = self._scope(path)
-        inner: set[int] = set()
-        # ast.walk is breadth-first: an outer path expression precedes its parts.
-        for node in ast.walk(self._tree(path)):
-            if id(node) in inner or not isinstance(node, (ast.BinOp, ast.Call)):
-                continue
-            # The longest static prefix: ``DIR / f"{x}.json"`` names DIR.
-            current: ast.AST = node
-            while (value := self._anchor(current, scope)) is None and (
-                isinstance(current, ast.BinOp) and isinstance(current.op, ast.Div)
+        audited_seen: set[tuple[tuple[str, str], str]] = set()
+
+        def visit(node: ast.AST, active: _Scope, inner: set[int], owner: str = "") -> None:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                owner = f"{owner}.{node.name}" if owner else node.name
+            if (
+                isinstance(node, ast.For)
+                and isinstance(node.target, ast.Name)
+                and isinstance(node.iter, (ast.Tuple, ast.List))
             ):
-                current = current.left
-            if value is None:
-                continue
-            found |= self._named(value, anchors=True)
-            while isinstance(current, ast.BinOp):
-                inner.add(id(current.left))
-                current = current.left
+                values = [_str_value(item) for item in node.iter.elts]
+                if values and all(value is not None for value in values):
+                    for value in values:
+                        loop_scope = _Scope(active.names, active.modules, {**active.strings, node.target.id: value})
+                        for stmt in node.body:
+                            visit(stmt, loop_scope, set(), owner)
+                    for stmt in node.orelse:
+                        visit(stmt, active, inner, owner)
+                    return
+            if id(node) not in inner and isinstance(node, (ast.BinOp, ast.Call)):
+                if (value := self._anchor(node, active)) is not None:
+                    found.update(self._named(value, anchors=True))
+                    current = node
+                    while isinstance(current, ast.BinOp):
+                        inner.add(id(current.left))
+                        current = current.left
+                elif self._computed(node, active):
+                    key = (path, owner)
+                    expression = ast.unparse(node)
+                    audit = (key, expression)
+                    if expression in AUDITED_COMPUTED_REPO_PATHS.get(key, ()) and audit not in audited_seen:
+                        audited_seen.add(audit)
+                    else:
+                        found.add(f"<computed repo path: {path}:{node.lineno} {expression}>")
+            for child in ast.iter_child_nodes(node):
+                visit(child, active, inner, owner)
+
+        visit(self._tree(path), scope, set())
+        self.audited_sites.update(audited_seen)
         self._data[path] = frozenset(found)
         return self._data[path]
+
+    def caller_data(self, path: str) -> frozenset[str]:
+        """Resolve caller-controlled paths in the two audited shared helpers."""
+        if path in self._callers:
+            return self._callers[path]
+        tree = self._tree(path)
+        scope = self._scope(path)
+        sparse_names: set[str] = set()
+        sparse_modules: set[str] = set()
+        marker_names: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module == "tests.sparse_trees":
+                sparse_names.update(
+                    alias.asname or ("tree_absent" if alias.name == "*" else alias.name)
+                    for alias in node.names
+                    if alias.name in {"tree_absent", "*"}
+                )
+            elif isinstance(node, ast.ImportFrom) and node.module == "tests":
+                sparse_modules.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == "sparse_trees"
+                )
+            elif isinstance(node, ast.Import):
+                sparse_modules.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == "tests.sparse_trees"
+                )
+            elif isinstance(node, ast.Assign) and isinstance(node.value, (ast.Name, ast.Attribute)):
+                source = ast.unparse(node.value)
+                for target in node.targets:
+                    if not isinstance(target, ast.Name):
+                        continue
+                    if source in sparse_names:
+                        sparse_names.add(target.id)
+                    if source == "pytest.mark.needs_artifact" or source in marker_names:
+                        marker_names.add(target.id)
+        found: set[str] = set()
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            sparse_call = (isinstance(func, ast.Name) and func.id in sparse_names) or (
+                isinstance(func, ast.Attribute)
+                and func.attr == "tree_absent"
+                and ast.unparse(func.value) in sparse_modules
+            )
+            marker_call = (isinstance(func, ast.Name) and func.id in marker_names) or (
+                isinstance(func, ast.Attribute) and ast.unparse(func).endswith(".mark.needs_artifact")
+            )
+            if not sparse_call and not marker_call:
+                continue
+            index = 0 if sparse_call else 1
+            value = self._string(node.args[index], scope) if len(node.args) > index else None
+            target = _join("", [value]) if sparse_call and value is not None else None
+            if sparse_call and target is not None:
+                target += "/"  # Directory existence is covered by that area root.
+            if marker_call and value is not None:
+                target = _join("data", [value])
+            found.add(
+                target if target is not None else f"<computed caller path: {path}:{node.lineno} {ast.unparse(node)}>"
+            )
+        self._callers[path] = frozenset(found)
+        return self._callers[path]
 
     def refs(self, path: str) -> tuple[set[str], set[str]]:
         if path not in self._refs:
@@ -440,7 +575,11 @@ def _escapes(area: dict[str, list[str]], graph: _Graph, test: str, *, first: boo
     found = {module for module in reached if outside(module)}
     # Data named by the test or by any module it reaches (a constant such as
     # ``DEFAULT_VERDICTS = REGISTRY_ROOT / "lexicon/x.yaml"`` is a read).
-    return found | {item for module in (test, *reached) for item in graph.data(module) if outside(item)}
+    return (
+        found
+        | {item for module in (test, *reached) for item in graph.data(module) if outside(item)}
+        | {item for module in (test, *reached) for item in graph.caller_data(module) if outside(item)}
+    )
 
 
 def _is_test(path: str) -> bool:
@@ -481,23 +620,21 @@ def test_every_area_is_closed_and_complete(graph: _Graph) -> None:
         assert missing_tests == [], name
 
 
-def test_incomplete_area_is_rejected(graph: _Graph) -> None:
-    area = load_areas()["open_model_data"]
-    omitted_test = "tests/test_open_model_corpus_admission.py"
-    omitted_root = "scripts/storage/paths.py"
-    assert omitted_test in graph.modules and omitted_root in graph.modules
-    fewer_tests = {**area, "tests": [pattern for pattern in area["tests"] if pattern != omitted_test]}
-    assert omitted_test in _violations("open_model_data", fewer_tests, graph)[0]
-    fewer_roots = {**area, "roots": [root for root in area["roots"] if root != "scripts/storage/"]}
-    assert any(item.endswith(" -> " + omitted_root) for item in _violations("open_model_data", fewer_roots, graph)[1])
-    atlas = load_areas()["atlas"]
-    no_decks = {**atlas, "roots": [root for root in atlas["roots"] if root != "registry/practice/"]}
-    missing = _violations("atlas", no_decks, graph)[1]
-    assert "tests/test_noun_mechanics_engine.py -> registry/practice/noun_mechanics_deck.json" in missing
-    # Data read only through an imported module's constant (review-8872-atlas).
-    no_lexicon = {**atlas, "roots": [root for root in atlas["roots"] if root != "registry/lexicon/"]}
-    missing = _violations("atlas", no_lexicon, graph)[1]
-    assert "tests/test_atlas_db.py -> registry/lexicon/synonym_pair_verdicts.yaml" in missing
+def test_incomplete_area_is_rejected() -> None:
+    test = "tests/test_area.py"
+    root = "scripts/storage/paths.py"
+    tracked = {test, "scripts/projects/open_model_data/core.py", root}
+    sources = {
+        test: "from scripts.projects.open_model_data import core\n",
+        "scripts/projects/open_model_data/core.py": "from scripts.storage import paths\n",
+    }
+    graph = _Graph(tracked, read=lambda path: sources.get(path, ""))
+    area = {"tests": [test], "roots": ["scripts/projects/open_model_data/", "scripts/storage/"]}
+    assert test in _violations("open_model_data", {**area, "tests": []}, graph)[0]
+    assert (
+        f"{test} -> {root}"
+        in _violations("open_model_data", {**area, "roots": ["scripts/projects/open_model_data/"]}, graph)[1]
+    )
 
 
 def test_data_reached_through_imported_constants() -> None:
@@ -527,8 +664,8 @@ def test_data_reached_through_imported_constants() -> None:
             "from scripts.storage import paths as store\n"
             'VERDICTS = REGISTRY_ROOT / "lexicon/verdicts.yaml"\n'
             'ALIASES = store.REGISTRY_ROOT.joinpath("lexicon", "aliases.yaml")\n'
-            "def deck(name):\n"
-            '    return REGISTRY_ROOT / "decks" / f"{name}.json"\n'
+            'for name in ("a.json", "b.json"):\n'
+            '    DECK = REGISTRY_ROOT / "decks" / name\n'
             'FIXTURES = Path(__file__).parent / "fixtures"\n'
             'SIBLING = Path(__file__).with_name("sibling.json")\n'
             'JOINED = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "joined.md")\n'
@@ -555,6 +692,129 @@ def test_data_reached_through_imported_constants() -> None:
     }
     widened = {**area, "roots": [*area["roots"], "registry/lexicon/", "registry/decks/"]}
     assert _escapes(widened, graph, "tests/test_area.py") == set()
+
+
+def test_computed_repo_root_read_is_not_admitted() -> None:
+    tracked = {"tests/test_area.py", "scripts/area/__init__.py", "scripts/area/read.py", "docs/elsewhere.json"}
+    sources = {
+        "tests/test_area.py": "from scripts.area import read\n",
+        "scripts/area/read.py": "ROOT = Path(__file__).resolve().parents[2]\nname = input()\nDATA = ROOT / name\n",
+    }
+    graph = _Graph(tracked, read=lambda path: sources.get(path, ""))
+    area = {"tests": ["tests/test_area.py"], "roots": ["scripts/area/"]}
+    assert any("ROOT / name" in item for item in _escapes(area, graph, "tests/test_area.py"))
+
+
+def test_audited_computed_paths_are_an_exact_set() -> None:
+    expected = {
+        ("tests/conftest.py", "_resolve_module"): frozenset(
+            {"_REPO_ROOT / rel.with_suffix('.py')", "_REPO_ROOT / rel"}
+        ),
+        ("tests/conftest.py", "_analyze_test_module"): frozenset({"_REPO_ROOT / rel_path"}),
+        ("tests/conftest.py", "pytest_runtest_setup"): frozenset({"DATA_ROOT / rel"}),
+        ("tests/sparse_trees.py", "tree_absent"): frozenset({"REPO_ROOT / normalized"}),
+    }
+    assert expected == AUDITED_COMPUTED_REPO_PATHS
+
+
+def test_every_audited_computed_path_matches_a_current_site(graph: _Graph) -> None:
+    for path, _ in AUDITED_COMPUTED_REPO_PATHS:
+        assert path in graph.modules
+        graph.data(path)
+    declared = {
+        (key, expression) for key, expressions in AUDITED_COMPUTED_REPO_PATHS.items() for expression in expressions
+    }
+    assert graph.audited_sites == declared
+
+
+def test_audited_function_cannot_add_another_computed_path() -> None:
+    path = "tests/conftest.py"
+    source = (
+        "from pathlib import Path\n_REPO_ROOT = Path(__file__).parents[1]\n"
+        "def _analyze_test_module(rel_path):\n"
+        "    first = _REPO_ROOT / rel_path\n"
+        "    second = _REPO_ROOT / rel_path\n"
+        "    third = _REPO_ROOT / extra\n"
+    )
+    graph = _Graph({path}, read=lambda _: source)
+    assert graph.data(path) == {
+        f"<computed repo path: {path}:5 _REPO_ROOT / rel_path>",
+        f"<computed repo path: {path}:6 _REPO_ROOT / extra>",
+    }
+
+
+def test_new_computed_path_in_area_test_still_disqualifies() -> None:
+    test = "tests/test_area.py"
+    source = (
+        "from pathlib import Path\nROOT = Path(__file__).parents[1]\ndef test_read(name):\n    return ROOT / name\n"
+    )
+    graph = _Graph({test, "docs/elsewhere.json"}, read=lambda _: source)
+    area = {"tests": [test], "roots": ["docs/inside/"]}
+    assert any("ROOT / name" in item for item in _escapes(area, graph, test))
+
+
+def test_shared_helper_caller_paths_are_checked() -> None:
+    test = "tests/test_area.py"
+    source = (
+        "from tests.sparse_trees import tree_absent as absent\n"
+        'absent("data/projects")\n'
+        'pytest.mark.needs_artifact("group", "projects/open_model_data/item.json")\n'
+        'pytest.mark.needs_artifact("group", "elsewhere/item.json")\n'
+        "absent(dynamic_tree)\n"
+        "import tests.sparse_trees\n"
+        "tests.sparse_trees.tree_absent(dynamic_tree)\n"
+        "also_absent = absent\n"
+        "also_absent(dynamic_tree)\n"
+        "artifact = pytest.mark.needs_artifact\n"
+        "artifact('group', dynamic_rel)\n"
+    )
+    graph = _Graph({test}, read=lambda _: source)
+    assert graph.caller_data(test) == {
+        "data/projects/",
+        "data/projects/open_model_data/item.json",
+        "data/elsewhere/item.json",
+        f"<computed caller path: {test}:5 absent(dynamic_tree)>",
+        f"<computed caller path: {test}:7 tests.sparse_trees.tree_absent(dynamic_tree)>",
+        f"<computed caller path: {test}:9 also_absent(dynamic_tree)>",
+        f"<computed caller path: {test}:11 artifact('group', dynamic_rel)>",
+    }
+
+
+@pytest.mark.parametrize(
+    "expression",
+    [
+        "ROOT / name",
+        "REPO_ROOT.joinpath(name)",
+        "os.path.join(ROOT, name)",
+        "Path(__file__).parents[2] / name",
+    ],
+)
+def test_computed_repo_root_forms_escape(expression: str) -> None:
+    tracked = {"scripts/area/read.py", "docs/elsewhere.json"}
+    source = f"import os\nfrom pathlib import Path\nROOT = Path(__file__).parents[2]\nREPO_ROOT = ROOT\nname = input()\nDATA = {expression}\n"
+    graph = _Graph(tracked, read=lambda _: source)
+    assert any(expression in item for item in graph.data("scripts/area/read.py"))
+
+
+def test_static_string_constant_stays_in_area() -> None:
+    tracked = {"scripts/area/read.py", "registry/lexicon/item.json", "docs/elsewhere.json"}
+    source = (
+        "from pathlib import Path\nROOT = Path(__file__).parents[2]\n"
+        'NAME = "registry/lexicon/item.json"\nDATA = ROOT / NAME\n'
+    )
+    graph = _Graph(tracked, read=lambda _: source)
+    assert graph.data("scripts/area/read.py") == {"registry/lexicon/item.json"}
+    area = {"tests": [], "roots": ["scripts/area/", "registry/lexicon/"]}
+    assert all(matches_root(item, area["roots"]) for item in graph.data("scripts/area/read.py"))
+
+
+def test_shadowed_module_string_is_not_treated_as_constant() -> None:
+    source = (
+        'from pathlib import Path\nROOT = Path(__file__).parents[2]\nNAME = "registry/lexicon/item.json"\n'
+        "def read(NAME):\n    return ROOT / NAME\n"
+    )
+    graph = _Graph({"scripts/area/read.py"}, read=lambda _: source)
+    assert any("ROOT / NAME" in item for item in graph.data("scripts/area/read.py"))
 
 
 def test_imports_sees_dynamic_and_relative_forms() -> None:

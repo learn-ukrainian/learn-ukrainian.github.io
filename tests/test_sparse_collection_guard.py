@@ -62,6 +62,7 @@ def _references_sparse_tree(value: str) -> bool:
     # Path-join segments: root / "curriculum" / ... or ".../wiki".
     return value in _BARE_SEGMENTS or any(value.endswith(f"/{tree}") for tree in _BARE_SEGMENTS)
 
+
 # Test modules changed by #8581. Unioned with the derived scan so coverage of
 # the modules this fix touched can never silently shrink — the scan alone
 # cannot see modules that reach the trees through helper calls (e.g.
@@ -297,10 +298,58 @@ def _assert_targets_reported(
     assert not unallowed_skips, f"unallowed module-level skip: {unallowed_skips}\n{output[-2000:]}"
 
 
+@pytest.mark.slow
 def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
     targets = _collection_targets()
     completed, outcomes = collect_with_absent_trees(targets)
     _assert_targets_reported(completed, outcomes, targets)
+
+
+def test_small_tree_referencing_modules_collect_when_sparse_trees_are_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Keep target discovery and absent-tree collection on the PR tier."""
+    repo = tmp_path / "synthetic-repo"
+    modules = repo / "tests"
+    trees = {
+        "curriculum": "curriculum/lesson.txt",
+        "wiki": "wiki/article.txt",
+        "projects": "data/projects/project.txt",
+        "lexicon": "data/lexicon/entry.txt",
+    }
+    for name, relative_path in trees.items():
+        source = repo / relative_path
+        source.parent.mkdir(parents=True)
+        source.write_text("present\n", encoding="utf-8")
+        _write_module(
+            modules,
+            f"test_{name}.py",
+            "from pathlib import Path\n"
+            "from tests.sparse_trees import forced_missing_trees\n"
+            f"source = Path({str(source)!r})\n"
+            f"if {relative_path.rsplit('/', 1)[0]!r} not in forced_missing_trees():\n"
+            "    raise AssertionError('sparse tree override missing')\n"
+            "if source.exists():\n"
+            "    raise AssertionError('sparse tree remained visible')\n"
+            "\n"
+            "def test_absent_tree_collects() -> None:\n"
+            "    pass\n",
+        )
+    _write_module(
+        modules,
+        "test_body_only.py",
+        "def test_body_only() -> None:\n    path = 'curriculum/lesson.txt'\n    assert path\n",
+    )
+    with monkeypatch.context() as patched:
+        patched.setattr(sys.modules[__name__], "_REPO_ROOT", repo)
+        patched.setattr(sys.modules[__name__], "_PR_CHANGED_MODULES", ())
+        discovered = _collection_targets()
+    assert discovered == [f"tests/test_{name}.py" for name in sorted(trees)]
+
+    targets = [str(repo / target) for target in discovered]
+    completed, outcomes = collect_with_absent_trees(targets, cwd=repo, repo_root=repo)
+    _assert_targets_reported(completed, outcomes, targets)
+    assert len(outcomes) == len(trees)
 
 
 def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:
@@ -383,10 +432,7 @@ def test_import_error_fails_the_collection_guard(tmp_path: Path) -> None:
     module = _write_module(
         tmp_path / "import-error",
         "test_import_error.py",
-        "raise RuntimeError('import boom')\n"
-        "\n"
-        "def test_import_error() -> None:\n"
-        "    pass\n",
+        "raise RuntimeError('import boom')\n\ndef test_import_error() -> None:\n    pass\n",
     )
     targets = [str(module)]
     completed, outcomes = collect_with_absent_trees(
@@ -429,11 +475,7 @@ def _write_eager_modules(directory: Path, curriculum_file: Path, lexicon: Path) 
     )
     lister = directory / "test_eager_lexicon_list.py"
     lister.write_text(
-        "import os\n"
-        f"os.listdir({str(lexicon)!r})\n"
-        "\n"
-        "def test_eager_lexicon_list() -> None:\n"
-        "    pass\n",
+        f"import os\nos.listdir({str(lexicon)!r})\n\ndef test_eager_lexicon_list() -> None:\n    pass\n",
         encoding="utf-8",
     )
     return [reader, lister]
