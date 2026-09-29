@@ -384,6 +384,24 @@ def test_build_invocation_sets_print_timeout(tmp_path: Path) -> None:
     assert _value_after_flag(plan, "--print-timeout") == agy_module._AGY_PRINT_TIMEOUT
 
 
+@pytest.mark.parametrize("size", [5, 200_000], ids=["short", "over-128-kib"])
+def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path: Path, size: int) -> None:
+    prompt = 'quoted "text"\n' + "x" * size
+    plan = AgyAdapter().build_invocation(
+        prompt=prompt, mode="read-only", cwd=tmp_path, model=None,
+        task_id="large-prompt", session_id=None, tool_config=None,
+    )
+
+    assert prompt not in plan.cmd
+    assert all(len(arg.encode("utf-8")) < 128 * 1024 for arg in plan.cmd)
+    assert "-p" not in plan.cmd
+    assert _value_after_flag(plan, "--input-format") == "stream-json"
+    assert _value_after_flag(plan, "--output-format") == "stream-json"
+    assert [json.loads(line) for line in plan.stdin_payload.splitlines()] == [
+        {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}}
+    ]
+
+
 def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
     # Runtime slugs pass through as ``agy models`` ids (verified 2026-07-21 for 3.6).
     plan = _build(tmp_path, model="gemini-3.6-flash-high")
@@ -1087,7 +1105,12 @@ def _parse_resumed_run(
     log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
     log_file.write_text(f"I0924 server.go:1185] found conversation {_FINISHED_CONVERSATION_ID}\n", encoding="utf-8")
     try:
-        return AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+        return AgyAdapter().parse_response(
+            stdout=_stream_stdout({
+                "conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": stdout,
+            }),
+            stderr="", returncode=0, output_file=None, plan=plan,
+        )
     finally:
         log_file.unlink(missing_ok=True)
 
@@ -1626,6 +1649,110 @@ def test_a_command_task_that_ends_without_finishing_is_rejected(tmp_path: Path, 
     ended = _task_message(_TASK_2, f'Task id "{_TASK_2}" {outcome} with result:\nTool execution was canceled')
 
     _assert_canceled(_judge(tmp_path, [_prompt(), _start(_TASK_2), ended, _reply("PROBE_DONE_7731")]))
+
+
+def _stream_stdout(result: dict[str, object]) -> str:
+    return "\n".join(
+        [
+            json.dumps({"event": "init", "conversation_id": result.get("conversation_id")}),
+            json.dumps({"event": "step_update", "step_update": {"state": "DONE"}}),
+            json.dumps({"event": "result", "result": result}),
+        ]
+    )
+
+
+def test_stream_result_extracts_answer_session_usage_and_transcript_calls(tmp_path: Path) -> None:
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={CONVERSATION_ID}, sending message\n", encoding="utf-8")
+    _write_transcript(app_data)
+    plan = _plan(
+        tmp_path, log_file=log_file, app_data=app_data,
+        cmd=["agy", "--input-format", "stream-json", "--output-format", "stream-json"],
+    )
+    stdout = _stream_stdout({
+        "conversation_id": CONVERSATION_ID, "status": "SUCCESS",
+        "response": "READY\n", "usage": {"total_tokens": 27},
+    })
+
+    result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is True
+    assert result.response == "READY"
+    assert result.session_id == CONVERSATION_ID
+    assert result.tokens == 27
+    assert [call["name"] for call in result.tool_calls] == ["mcp__sources__verify_words"]
+
+
+def test_stream_result_preserves_structured_output(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("APPROVE")])
+    plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
+    plan.metadata["output_schema"] = {
+        "type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"],
+    }
+    stdout = _stream_stdout({
+        "conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": "",
+        "structured_output": {"verdict": "APPROVE"}, "usage": {"total_tokens": 42},
+    })
+
+    result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is True
+    assert json.loads(result.response) == {"verdict": "APPROVE"}
+    assert result.tokens == 42
+
+
+def test_stream_result_cannot_borrow_another_conversations_transcript(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("READY")])
+    plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
+    stdout = _stream_stdout({
+        "conversation_id": "c08e56d5-9374-48c1-900e-a17b875aa2f9",
+        "status": "SUCCESS", "response": "READY",
+    })
+
+    result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+@pytest.mark.parametrize(
+    ("terminal", "expected"),
+    [
+        ({"status": "ERROR", "response": "", "error": "provider failed"}, "agy_stream_result_error"),
+        ({"status": "SUCCESS", "response": "interim"}, agy_module.AGY_BACKGROUND_TASK_CANCELED),
+    ],
+    ids=["terminal-error", "background-cancel"],
+)
+def test_stream_result_preserves_error_and_cancel_signals(
+    tmp_path: Path, terminal: dict[str, object], expected: str,
+) -> None:
+    ended = _task_message(_TASK_2, f'Task id "{_TASK_2}" was canceled with result:\nTool execution was canceled')
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _start(_TASK_2), ended, _reply("interim")])
+    plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
+    stdout = _stream_stdout({"conversation_id": _FINISHED_CONVERSATION_ID, **terminal})
+
+    result = AgyAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=1 if terminal["status"] == "ERROR" else 0,
+        output_file=None, plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0].startswith(expected)
+
+
+def test_stream_result_requires_one_valid_terminal_event() -> None:
+    assert agy_module._stream_result('{"event":"init"}\n')[1] == (
+        "agy_stream_output_invalid: missing terminal result"
+    )
+    assert agy_module._stream_result('{"event":"result","result":{}}\nnot-json')[1] == (
+        "agy_stream_output_invalid: malformed NDJSON event"
+    )
+    assert agy_module._stream_result(_stream_stdout({"status": "SUCCESS", "response": ""}))[1] == (
+        "agy_stream_output_invalid: empty terminal response"
+    )
 
 
 def test_a_canceled_task_is_rejected_even_when_a_rerun_finishes(tmp_path: Path) -> None:
