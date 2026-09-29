@@ -25,6 +25,18 @@ table". The requirements are ``docs/epics/fresh-build-requirements.md``
 carry the system-or-chunk table, so the arc source document it names in
 ``source.path`` (``docs/epics/fresh-build-<level>-arc.md``, section 3) is pinned as
 ``inputs.arc_source``.
+
+The mapped v1 module's activity totals (#9166; #8889 §A3) are the
+``plan-review.v1-totals.yaml`` document (deterministic YAML with its lock sidecar),
+pinned as ``inputs.v1_totals``: activities and response opportunities by placement
+and type, counted by ``activity_report.v1_totals`` from
+``curriculum/l2-uk-en/<previous edition>/<slug>/activities.yaml`` (the level's
+``level_config.PREVIOUS_EDITIONS`` entry, same slug). A level with no previous
+edition, or a slug with no v1 activities file, is recorded as such, never omitted.
+The document names the v1 file and its sha256, so the freshness check also sees
+the v1 source change. ``inputs.v1_totals`` is the one input the schema does not
+require: a manifest written before #9166 has none, and its freshness is judged on
+the inputs it pinned (nothing about v1); the engine always writes it now.
 """
 
 from __future__ import annotations
@@ -45,9 +57,11 @@ from scripts.build.fresh.manifest import sha256 as file_sha256
 from scripts.build.fresh.path_guard import checked_path, validate_module
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
+from scripts.curriculum.validate.activity_report import v1_placements, v1_totals
 from scripts.curriculum.validate.loader import PlanError, load_plan
 from scripts.curriculum.validate.validate import REPORT_NAME as VALIDATE_REPORT_NAME
 from scripts.curriculum.validate.validate import _declared_pack_path
+from scripts.level_config import PREVIOUS_EDITIONS
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = REPO_ROOT / "schemas" / "plan-review-manifest-v1.schema.json"
@@ -56,6 +70,7 @@ PACK_VERIFY_REPORT_NAME = "pack-verify.report.json"
 MANIFEST_NAME = "plan-review.manifest.yaml"
 SIDECAR_NAME = "plan-review.manifest.sha256"
 LEARNER_STATE_NAME = "plan-review.learner-state.yaml"
+V1_TOTALS_NAME = "plan-review.v1-totals.yaml"
 REQUIREMENTS_REL = "docs/epics/fresh-build-requirements.md"
 REVIEW_NAME = "plan-review.yaml"
 RECEIPT_NAME = "plan-promotion.yaml"
@@ -77,7 +92,10 @@ INPUT_NAMES = (
     "grammar",
     "validate_report",
     "pack_verify_report",
+    "v1_totals",
 )
+#: Inputs a manifest written before they existed may lack (see the module docstring).
+OPTIONAL_INPUT_NAMES = frozenset({"v1_totals"})
 _RECEIPT_KEYS = (
     "manifest_sha256",
     "reviewed_plan_sha256",
@@ -96,6 +114,7 @@ PACK_CHANGED_DURING_VERIFY = "pack_changed_during_verify"
 PACK_VERIFY_REFUSED = "pack_verify_report_refused"
 VALIDATE_REPORT_REFUSED = "validate_report_refused"
 LEARNER_STATE_UNAVAILABLE = "learner_state_unavailable"
+V1_TOTALS_UNAVAILABLE = "v1_totals_unavailable"
 LOCK_MISMATCH = "lock_mismatch"
 MANIFEST_INVALID = "manifest_invalid"
 MANIFEST_COLLISION = "manifest_collision"
@@ -367,6 +386,39 @@ def planned_state_sha256(root: Path, level: str, position: int) -> str:
     return learner_state_sha256(prior_planned_state(root, level, position))
 
 
+def _v1_source(root: Path, level: str, slug: str) -> tuple[dict[str, str], bytes | None]:
+    """The mapped v1 module's identity block and its activities.yaml bytes (None when there is none)."""
+    edition = PREVIOUS_EDITIONS.get(level)
+    if edition is None:
+        return {"status": "no_previous_edition", "reason": f"level {level} has no previous edition"}, None
+    relative = f"{TREE}/{edition}/{slug}/activities.yaml"
+    path = root / relative
+    if not path.is_file():
+        return {"status": "absent", "path": relative, "reason": "no v1 activities file for this slug"}, None
+    data = path.read_bytes()
+    return {"status": "present", "path": relative, "sha256": sha256_bytes(data)}, data
+
+
+def v1_totals_document(root: Path, level: str, slug: str) -> dict[str, Any]:
+    """The plan-review v1 totals document of (level, slug); see the module docstring."""
+    v1_module, data = _v1_source(root, level, slug)
+    document: dict[str, Any] = {"v1_totals_schema": 1, "level": level, "slug": slug, "v1_module": v1_module}
+    if data is None:
+        document["totals"] = "no_mapped_v1_module"
+        return document
+    try:
+        parsed = yaml.safe_load(data.decode("utf-8"))
+        document["v1_module"]["shape"] = (
+            "flat list (no placement marker; counted as inline)" if isinstance(parsed, list) else "inline/workbook keys"
+        )
+        document["totals"] = v1_totals(v1_placements(parsed, v1_module["path"]))
+    except (UnicodeDecodeError, yaml.YAMLError, ValueError, AttributeError, TypeError) as error:
+        raise PlanReviewError(
+            V1_TOTALS_UNAVAILABLE, f"{v1_module['path']} cannot be counted: {error}", [v1_module["path"]]
+        ) from error
+    return document
+
+
 def _arc_source_path(root: Path, arc_path: Path) -> Path:
     """The arc source document ``_arc.yaml`` names in ``source.path`` (a repo-relative docs/epics markdown file)."""
     try:
@@ -499,6 +551,13 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
         ) from error
     files["learner_state"] = state_path
 
+    totals_path = _guarded(root, directory / V1_TOTALS_NAME)
+    try:
+        lock.write(totals_path, lock.yaml_bytes(v1_totals_document(root, level, slug)))
+    except OSError as error:
+        raise PlanReviewError(V1_TOTALS_UNAVAILABLE, f"cannot write {_relative(root, totals_path)}: {error}") from error
+    files["v1_totals"] = totals_path
+
     manifest = {
         "manifest_schema": 1,
         "kind": "plan",
@@ -586,10 +645,13 @@ def _receipt_proof(root: Path, manifest: dict, manifest_sha: str, live_plan: byt
 
 def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Freshness:
     """Re-check every manifest input, both reports' recorded inputs, the pack and words
-    against their locks, and the planned learner-state hash.
+    against their locks, the planned learner-state hash, and the v1 source the v1
+    totals document records.
 
     The one allowed difference from the manifest is the plan hash, and only when
-    the promotion receipt proves the transition (see ``_receipt_proof``).
+    the promotion receipt proves the transition (see ``_receipt_proof``). An
+    optional input the manifest does not pin (a manifest written before it
+    existed) is not checked: the review of record never saw it.
     """
     root = root.resolve()
     level, slug = manifest["level"], manifest["slug"]
@@ -597,7 +659,7 @@ def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Fres
     inputs = manifest["inputs"]
 
     for name in INPUT_NAMES:
-        if name == "plan":
+        if name == "plan" or (name in OPTIONAL_INPUT_NAMES and name not in inputs):
             continue
         entry = inputs[name]
         actual = current_sha(root, entry["path"])
@@ -641,9 +703,26 @@ def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Fres
         if state_sha != manifest["learner_state"]["sha256"]:
             stale.setdefault("learner_state", "the planned learner state changed since the manifest")
 
+    if "v1_totals" in inputs:
+        why = _v1_source_problem(root, level, slug, inputs["v1_totals"]["path"])
+        if why:
+            stale.setdefault("v1_totals", why)
+
     if stale:
         return Freshness("stale", stale)
     return Freshness("promoted" if promoted else "fresh")
+
+
+def _v1_source_problem(root: Path, level: str, slug: str, totals_rel: str) -> str:
+    """Why the v1 source the pinned totals document records no longer describes the tree ('' when it does)."""
+    try:
+        recorded = yaml.safe_load((root / totals_rel).read_bytes())["v1_module"]
+    except (OSError, yaml.YAMLError, KeyError, TypeError):
+        return "the v1 totals document cannot be read"
+    live = _v1_source(root, level, slug)[0]
+    if {key: recorded.get(key) for key in live} != live or set(recorded) - set(live) - {"shape"}:
+        return "the mapped v1 module changed since the manifest"
+    return ""
 
 
 def load_manifest_of_record(root: Path, level: str, slug: str, digest: str) -> dict:

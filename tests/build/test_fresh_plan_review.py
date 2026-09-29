@@ -31,6 +31,14 @@ PLANS = f"curriculum/l2-uk-en/lesson-plans/{LEVEL}"
 EVIDENCE = f"curriculum/l2-uk-en/evidence/{LEVEL}"
 STATE = f"{EVIDENCE}/_state/{SLUG}"
 REQUIREMENTS = "docs/epics/fresh-build-requirements.md"
+V1_ACTIVITIES = f"curriculum/l2-uk-en/{LEVEL}-v1/{SLUG}/activities.yaml"
+V1_FIXTURE = {
+    "inline": [{"id": "i-1", "type": "quiz", "items": [{}, {}, {}]}],
+    "workbook": [
+        {"id": "w-1", "type": "match-up", "pairs": [{}, {}]},
+        {"id": "w-2", "type": "quiz", "items": [{}, {}, {}, {}]},
+    ],
+}
 ARC_SOURCE = "docs/epics/fresh-build-a1-arc.md"
 
 
@@ -132,6 +140,7 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
         "grammar": f"{PLANS}/_grammar.yaml",
         "validate_report": f"{STATE}/plan-validate.report.json",
         "pack_verify_report": f"{STATE}/pack-verify.report.json",
+        "v1_totals": f"{STATE}/plan-review.v1-totals.yaml",
     }
     for entry in manifest["inputs"].values():
         assert entry["sha256"] == sha(env.root / entry["path"])
@@ -401,6 +410,13 @@ def edit_words(env: Env) -> None:
     lock.write(env.words_path)
 
 
+def write_v1_module(env: Env, document: object = None) -> Path:
+    path = env.root / V1_ACTIVITIES
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(V1_FIXTURE if document is None else document), encoding="utf-8")
+    return path
+
+
 def edit_learner_state(env: Env) -> None:
     prior = env.plans_dir / "mod-zero.yaml"
     plan = yaml.safe_load(prior.read_bytes())
@@ -435,6 +451,12 @@ INPUT_CHANGES = {
         lambda env: append_comment(env.state_dir / "plan-review.learner-state.yaml"),
         f"{STATE}/plan-review.learner-state.yaml",
     ),
+    "v1_totals_file": (
+        lambda env: append_comment(env.state_dir / "plan-review.v1-totals.yaml"),
+        f"{STATE}/plan-review.v1-totals.yaml",
+    ),
+    # The manifest recorded "no v1 module"; one appearing later is a change the review never saw.
+    "v1_source": (write_v1_module, "v1_totals"),
 }
 
 
@@ -675,3 +697,120 @@ def test_a_manifest_naming_a_path_outside_the_repository_is_invalid(approved, pa
     with pytest.raises(plan_manifest.PlanReviewError) as excinfo:
         plan_manifest.validate_manifest_document(manifest)
     assert excinfo.value.code == plan_manifest.MANIFEST_INVALID
+
+
+# --- the mapped v1 module's activity totals (#9166) ------------------------------------------
+
+
+def v1_totals_of(env: Env) -> dict:
+    return yaml.safe_load((env.state_dir / "plan-review.v1-totals.yaml").read_bytes())
+
+
+def test_manifest_pins_the_mapped_v1_modules_activity_and_item_totals(env: Env, capsys) -> None:
+    from scripts.curriculum.validate.activity_report import v1_totals
+
+    v1_path = write_v1_module(env)
+    make_manifest(env, capsys)
+    manifest = yaml.safe_load((env.state_dir / "plan-review.manifest.yaml").read_bytes())
+    totals_path = env.state_dir / "plan-review.v1-totals.yaml"
+    assert manifest["inputs"]["v1_totals"] == {
+        "path": f"{STATE}/plan-review.v1-totals.yaml",
+        "sha256": sha(totals_path),
+    }
+    assert lock.check(totals_path)
+    document = v1_totals_of(env)
+    assert totals_path.read_bytes() == lock.yaml_bytes(document)
+    assert document["v1_module"] == {
+        "status": "present",
+        "path": V1_ACTIVITIES,
+        "sha256": sha(v1_path),
+        "shape": "inline/workbook keys",
+    }
+    assert document["totals"] == v1_totals(V1_FIXTURE)
+    assert document["totals"]["workbook"]["activities"] == {"total": 2, "by_type": {"match-up": 1, "quiz": 1}}
+    assert document["totals"]["workbook"]["response_opportunities"] == {
+        "total": 6,
+        "by_type": {"match-up": 2, "quiz": 4},
+    }
+    assert document["totals"]["inline"]["response_opportunities"]["total"] == 3
+
+
+def test_a_flat_list_v1_module_is_counted_as_inline_and_says_so(env: Env, capsys) -> None:
+    write_v1_module(env, V1_FIXTURE["workbook"])
+    make_manifest(env, capsys)
+    document = v1_totals_of(env)
+    assert document["v1_module"]["shape"] == "flat list (no placement marker; counted as inline)"
+    assert document["totals"]["inline"]["activities"]["total"] == 2
+    assert document["totals"]["workbook"]["activities"]["total"] == 0
+
+
+def test_a_missing_v1_module_is_recorded_explicitly(env: Env, capsys) -> None:
+    make_manifest(env, capsys)
+    assert v1_totals_of(env) == {
+        "v1_totals_schema": 1,
+        "level": LEVEL,
+        "slug": SLUG,
+        "v1_module": {"status": "absent", "path": V1_ACTIVITIES, "reason": "no v1 activities file for this slug"},
+        "totals": "no_mapped_v1_module",
+    }
+
+
+def test_a_level_without_a_previous_edition_is_recorded_explicitly(tmp_path: Path) -> None:
+    document = plan_manifest.v1_totals_document(tmp_path, "b2", "any-slug")
+    assert document["v1_module"] == {"status": "no_previous_edition", "reason": "level b2 has no previous edition"}
+    assert document["totals"] == "no_mapped_v1_module"
+
+
+def test_an_uncountable_v1_module_refuses_the_manifest(env: Env, capsys) -> None:
+    write_v1_module(env, "just a string")
+    assert validate_provisional(env) == 0
+    code, _out, err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
+    assert code == 1
+    refusal = error(err)
+    assert refusal["code"] == plan_manifest.V1_TOTALS_UNAVAILABLE and refusal["paths"] == [V1_ACTIVITIES]
+    assert not (env.state_dir / "plan-review.manifest.yaml").exists()
+
+
+def test_a_changed_v1_module_makes_a_promoted_review_stale(approved, capsys) -> None:
+    env, _digest = approved
+    assert run(env, capsys, "plan-promote", LEVEL, SLUG)[0] == 0
+    write_v1_module(env)
+    code, document = status(env, capsys)
+    assert code == 1 and document["stale"] == {"v1_totals": "the mapped v1 module changed since the manifest"}
+
+
+def test_a_manifest_written_before_v1_totals_existed_stays_fresh_and_promotable(env: Env, capsys) -> None:
+    """The position-1 manifest of record predates #9166. The schema keeps it valid, and freshness is judged
+    on the inputs it pinned: nothing about v1, so a v1 module appearing later neither stales nor blocks it."""
+    make_manifest(env, capsys)
+    manifest = yaml.safe_load((env.state_dir / "plan-review.manifest.yaml").read_bytes())
+    del manifest["inputs"]["v1_totals"]
+    plan_manifest.validate_manifest_document(manifest)
+    content = lock.yaml_bytes(manifest)
+    digest = plan_manifest.sha256_bytes(content)
+    plan_manifest.history_path(env.root, LEVEL, SLUG, digest).write_bytes(content)
+    current, sidecar = plan_manifest.manifest_paths(env.root, LEVEL, SLUG)
+    current.write_bytes(content)
+    sidecar.write_text(f"{digest}\n", encoding="ascii")
+    approve(env, digest)
+    write_v1_module(env)
+    assert status(env, capsys)[1] == {
+        "attempt_id": "attempt-1",
+        "manifest_sha256": digest,
+        "stale": {},
+        "state": "reviewed_pending_promotion",
+    }
+    assert run(env, capsys, "plan-promote", LEVEL, SLUG)[0] == 0
+    code, document = status(env, capsys, "--require-promoted")
+    assert code == 0 and document["state"] == "reviewed_promoted" and document["manifest_sha256"] == digest
+
+
+def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> None:
+    """The schema change is compatible: every committed manifest of record (none of which pins v1 totals
+    before #9166) still validates, so no promoted review is invalidated by the new input."""
+    repo = Path(__file__).resolve().parents[2]
+    records = sorted(repo.glob("curriculum/l2-uk-en/evidence/*/_state/*/manifests/plan/*.yaml"))
+    if not records:
+        pytest.skip("no plan manifest of record in this checkout")
+    for record in records:
+        plan_manifest.validate_manifest_document(yaml.safe_load(record.read_bytes()))

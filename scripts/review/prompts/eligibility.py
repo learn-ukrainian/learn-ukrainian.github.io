@@ -164,6 +164,9 @@ PLAN_LOCATIONS: _Table = {
     "inputs.grammar": lambda m, e: f"{m.plans}/_grammar\\.yaml",
     "inputs.validate_report": lambda m, e: f"{m.state}/plan-validate\\.report\\.json",
     "inputs.pack_verify_report": lambda m, e: f"{m.state}/pack-verify\\.report\\.json",
+    # Counts of the mapped v1 module's activities (#9166), written by the engine into this module's state
+    # directory; the v1 file itself is never a pin (``pin_v1_or_archive_tree``).
+    "inputs.v1_totals": lambda m, e: f"{m.state}/plan-review\\.v1-totals\\.yaml",
 }
 
 #: Settle receives only the current disputed document. The finding, its locations and the

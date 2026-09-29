@@ -58,7 +58,7 @@ from scripts.review.validate.validate import validate_review
 from tests.build import test_fresh_runner as fresh_runner_tests
 from tests.build.test_fresh_e3b2 import _fake_state, _rereview_setup, _write
 from tests.build.test_fresh_e3b2 import _fixture as lesson_fixture
-from tests.build.test_fresh_plan_review import fake_verify
+from tests.build.test_fresh_plan_review import V1_FIXTURE, fake_verify, write_v1_module
 from tests.helpers.plan_review_world import LEVEL, SLUG, build_env, validate_provisional
 from tests.review.test_record import World
 from tests.review.test_record import finding as record_finding
@@ -227,9 +227,7 @@ def _cache_repeated_exact_renders_and_template_lint():
         if static is None:
             static_errors: list[str] = []
             static_reads: list[str] = []
-            original_lint(
-                manifest_doc, None, used_name, prompts_dir, root, foreign_slugs, static_reads, static_errors
-            )
+            original_lint(manifest_doc, None, used_name, prompts_dir, root, foreign_slugs, static_reads, static_errors)
             static = (static_errors, static_reads)
             lint_static[key] = static
         errors.extend(static[0])
@@ -310,12 +308,16 @@ def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n:
     return state_dir / f"lesson-{lesson_n}.manifest.yaml", doc, digest
 
 
-def _setup_plan_fixture(root: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, dict, str]:
+def _setup_plan_fixture(
+    root: Path, monkeypatch: pytest.MonkeyPatch, *, v1_module: bool = False
+) -> tuple[Path, dict, str]:
     # git_repo stays on: validate_provisional runs check_append_only, which
     # needs `git merge-base HEAD origin/main`. A gitless tree fails that check.
     env = build_env(root)
     monkeypatch.setattr(plan_manifest, "verify_pack_strict", fake_verify())
     assert validate_provisional(env) == 0
+    if v1_module:
+        write_v1_module(env)
     doc, digest = plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root)
     manifest_path = env.state_dir / "plan-review.manifest.yaml"
     _write_module_manifest(root, SLUG)
@@ -733,6 +735,58 @@ def test_plan_context_contract_receives_survives(tmp_path: Path, monkeypatch: py
     assert "lessons/a1/mod-zero" not in rendered
 
     check_res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert check_res.passed, f"check failed: {check_res.errors}"
+
+
+V1_SECTION = "### Mapped v1 Module Activity Totals"
+
+
+def _v1_section(rendered: str) -> str:
+    return rendered.split(V1_SECTION, 1)[1].split("\n### ", 1)[0]
+
+
+def test_plan_prompt_shows_the_v1_totals_beside_the_activity_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """#9166: the pinned v1 totals render right after the plan-validate report (which holds the plan-stage
+    activity report), with the #8889 §A3 criterion quoted and no threshold."""
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch, v1_module=True)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    assert rendered.index("### Plan Validate Report") < rendered.index(V1_SECTION)
+    section = _v1_section(rendered)
+    assert "Activity volume and workbook variety are judged against these totals" in section
+    assert (
+        '"A fresh module below its v1 counterpart is a plan-review finding that needs a stated reason; it is not a gate."'
+        in section
+    )
+    totals_text = (tmp_path / doc["inputs"]["v1_totals"]["path"]).read_text(encoding="utf-8")
+    assert data_fence(totals_text, "yaml") in section
+    totals = yaml.safe_load(totals_text)["totals"]
+    assert totals["workbook"]["activities"]["total"] == len(V1_FIXTURE["workbook"])
+    assert "response_opportunities:" in section and "status: present" in section
+    check_res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert check_res.passed, f"check failed: {check_res.errors}"
+
+
+def test_plan_prompt_says_when_no_v1_module_maps_to_the_position(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    manifest_path, _doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    section = _v1_section(rendered)
+    assert "status: absent" in section and "totals: no_mapped_v1_module" in section
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+def test_plan_prompt_of_a_manifest_without_v1_totals_names_the_evidence_gap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """A manifest written before #9166 still renders, and says the comparison is unavailable, never silently."""
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch, v1_module=True)
+    del doc["inputs"]["v1_totals"]
+    old_path = manifest_path.with_name("plan-review.manifest.old.yaml")
+    old_path.write_bytes(lock.yaml_bytes(doc))
+    rendered, _sha, files_read = render_prompt(old_path, repo_root=tmp_path)
+    section = _v1_section(rendered)
+    assert "This manifest pins no v1 totals" in section and "record it as an evidence gap" in section
+    assert "```" not in section
+    check_res = check_prompt(rendered, old_path, repo_root=tmp_path, files_read=files_read)
     assert check_res.passed, f"check failed: {check_res.errors}"
 
 
@@ -1323,7 +1377,7 @@ def test_every_legitimate_manifest_kind_from_the_real_engine_fixtures_is_eligibl
     }
     assert pin_refusals(rereview, tmp_path / "rereview") == []
     _, plan, _ = _setup_plan_fixture(tmp_path / "plan", monkeypatch)
-    assert len(list(manifest.pinned_entries(plan))) == 14
+    assert len(list(manifest.pinned_entries(plan))) == 15  # the 14 required inputs and v1_totals (#9166)
     assert pin_refusals(plan, tmp_path / "plan") == []
 
 
