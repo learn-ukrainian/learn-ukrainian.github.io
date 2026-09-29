@@ -368,7 +368,6 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
         "candidates_with_english_anchor": len(lemmas),
         "held_without_english_anchor": 0,
         "dictionary_or_manifest_gloss_fallbacks": 0,
-        "sum11_attested_canonical_lemmas": 0,
     }
     monkeypatch.setattr(promote_module, "_build_rows", lambda *a, **kw: (candidates, decisions, report))
 
@@ -401,14 +400,13 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
 
     enriched_lemmas: list[str] = []
 
-    def _fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags, **_kwargs):
+    def _fake_enrich_entry(entry, conn, kaikki_lookup, **_kwargs):
         enriched_lemmas.append(entry["lemma"])
         entry["enrichment"] = True
         return True
 
     monkeypatch.setattr(promote_module.enrich_module, "enrich_entry", _fake_enrich_entry)
     monkeypatch.setattr(promote_module.enrich_module, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(promote_module.enrich_module, "_sum11_has_flag_columns", lambda conn: False)
 
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({"entries": [], "stats": {}}, ensure_ascii=False), encoding="utf-8")
@@ -458,8 +456,7 @@ def test_promote_resume_staged_skips_replan_and_reenrich(tmp_path, monkeypatch) 
                 "candidates_with_english_anchor": 1,
                 "held_without_english_anchor": 0,
                 "dictionary_or_manifest_gloss_fallbacks": 0,
-                "sum11_attested_canonical_lemmas": 0,
-            },
+                    },
         ),
     )
 

@@ -94,19 +94,18 @@ def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
 
     conn = sqlite3.connect(f"file:{sources.resolve().as_posix()}?mode=ro", uri=True)
     try:
-        has_sum11 = em._sum11_has_flag_columns(conn)
         fill_maps = measure.fill_local_style_relations(
-            conn, entries, has_sum11_flags=has_sum11
+            conn, entries
         )
         for entry in entries:
             lemma = str(entry["lemma"])
             key = em._canonical_synonym_term(lemma)
             assert key
             assert fill_maps["synonym"].get(key, []) == em._definition_pointer_relations(
-                conn, lemma, has_sum11_flags=has_sum11
+                conn, lemma
             )
             assert fill_maps["antonym"].get(key, []) == em._definition_antonym_relations(
-                conn, lemma, has_sum11_flags=has_sum11
+                conn, lemma
             )
     finally:
         conn.close()

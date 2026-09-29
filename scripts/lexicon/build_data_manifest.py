@@ -103,7 +103,7 @@ VESUM_CANONICAL_HEADS: dict[str, tuple[str, str]] = {
     ),
     "прийом": (
         "приймання",
-        "СУМ-20/СУМ-11 define прийом as 'те саме, що приймання'; VESUM indexes приймання.",
+        "СУМ-20 defines прийом as 'те саме, що приймання'; VESUM indexes приймання.",
     ),
 }
 

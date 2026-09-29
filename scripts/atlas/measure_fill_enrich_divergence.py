@@ -214,8 +214,6 @@ def _edge_stats(by_headword: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
 def fill_local_style_relations(
     conn: sqlite3.Connection,
     entries: list[dict[str, Any]],
-    *,
-    has_sum11_flags: bool,
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Per-lemma extractors only — pre-fix fill_local / enrich_entry None-pointer path."""
     out: dict[str, dict[str, list[dict[str, Any]]]] = {kind: {} for kind in RELATION_KINDS}
@@ -225,12 +223,12 @@ def fill_local_style_relations(
         if not key:
             continue
         synonym = em._definition_pointer_relations(
-            conn, lemma, has_sum11_flags=has_sum11_flags
+            conn, lemma
         )
         if synonym:
             out["synonym"][key] = synonym
         antonym = em._definition_antonym_relations(
-            conn, lemma, has_sum11_flags=has_sum11_flags
+            conn, lemma
         )
         if antonym:
             out["antonym"][key] = antonym
@@ -246,16 +244,14 @@ def fill_local_style_relations(
 def enrich_style_relations(
     conn: sqlite3.Connection,
     manifest: dict[str, Any],
-    *,
-    has_sum11_flags: bool,
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Run-level by_headword maps with reciprocal closure (full enrich / fixed fill_local)."""
     return {
         "synonym": em._definition_pointer_relations_by_headword(
-            conn, manifest, has_sum11_flags=has_sum11_flags
+            conn, manifest
         ),
         "antonym": em._definition_antonym_relations_by_headword(
-            conn, manifest, has_sum11_flags=has_sum11_flags
+            conn, manifest
         ),
         "homonym": em._homonym_relations_by_headword(conn, manifest),
         "paronym": em._paronym_relations_by_headword(conn, manifest),
@@ -365,7 +361,6 @@ def measure_divergence(
     with _engine_state(grac_cache, dictionary_rows):
         conn = connect(sources_db)
         try:
-            has_sum11 = em._sum11_has_flag_columns(conn)
 
             # --- legacy fill_local CEFR path: clear estimates, do not rebuild ---
             em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
@@ -383,10 +378,10 @@ def measure_divergence(
                 enrich_cefr[lemma] = block
 
             legacy_fill_relations = fill_local_style_relations(
-                conn, entries, has_sum11_flags=has_sum11
+                conn, entries
             )
             fixed_fill_relations = enrich_style_relations(
-                conn, manifest, has_sum11_flags=has_sum11
+                conn, manifest
             )
             enrich_relations = fixed_fill_relations
             prepared_estimate_keys = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)

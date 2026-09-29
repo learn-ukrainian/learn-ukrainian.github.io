@@ -39,6 +39,7 @@ from typing import Any
 
 from scripts.atlas import atlas_db
 from scripts.lexicon import enrich_manifest
+from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB
@@ -378,17 +379,11 @@ def _cohort_manifest(articles: list[sqlite3.Row]) -> dict[str, Any]:
 def _pointer_relation_maps(
     sources_conn: sqlite3.Connection,
     cohort_manifest: dict[str, Any],
-    *,
-    has_sum11_flags: bool,
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Precompute reciprocal pointer maps over the fill cohort (mirror enrich())."""
     return {
-        "synonym": enrich_manifest._definition_pointer_relations_by_headword(
-            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
-        ),
-        "antonym": enrich_manifest._definition_antonym_relations_by_headword(
-            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
-        ),
+        "synonym": enrich_manifest._definition_pointer_relations_by_headword(sources_conn, cohort_manifest),
+        "antonym": enrich_manifest._definition_antonym_relations_by_headword(sources_conn, cohort_manifest),
         "homonym": enrich_manifest._homonym_relations_by_headword(sources_conn, cohort_manifest),
         "paronym": enrich_manifest._paronym_relations_by_headword(sources_conn, cohort_manifest),
     }
@@ -410,7 +405,6 @@ def _fill_local(
         total = int(atlas_conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0])
         before = _coverage(atlas_conn)
         kaikki_lookup = enrich_manifest._load_kaikki_lookup(kaikki_lookup_path)
-        has_sum11_flags = enrich_manifest._sum11_has_flag_columns(sources_conn)
 
         # Align with full enrich / worker_enrich (#5331): prepare cohort CEFR
         # estimates and closed pointer maps before the per-article loop. Single-slug
@@ -418,7 +412,7 @@ def _fill_local(
         # cohort-wide reciprocity. Sealed full-cohort maps remain the #5230 path.
         cohort_manifest = _cohort_manifest(articles)
         enrich_manifest._prepare_cefr_estimates(sources_conn, cohort_manifest)
-        pointer_maps = _pointer_relation_maps(sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags)
+        pointer_maps = _pointer_relation_maps(sources_conn, cohort_manifest)
 
         filled_at = _iso_now()
         inserted = 0
@@ -426,14 +420,25 @@ def _fill_local(
 
         for article in articles:
             entry = _entry_from_article(atlas_conn, article)
-            existing_payloads = {} if refresh else _existing_payloads(atlas_conn, article["slug"])
+            stored_payloads = _existing_payloads(atlas_conn, article["slug"])
+            # Rows citing Soviet-era evidence are never kept as "existing" (#8990, rule #M-6):
+            # they are recomputed from allowed sources, or deleted when nothing replaces them.
+            soviet_withheld = {
+                section for section, payload in stored_payloads.items() if cites_soviet_dictionary_outside_context(payload)
+            }
+            existing_payloads = (
+                {}
+                if refresh
+                else {
+                    section: payload for section, payload in stored_payloads.items() if section not in soviet_withheld
+                }
+            )
             entry_key = enrich_manifest._canonical_synonym_term(str(entry.get("lemma") or "")) or ""
             with _skip_existing_extractors(existing_payloads):
                 enrich_entry(
                     entry,
                     sources_conn,
                     kaikki_lookup,
-                    has_sum11_flags=has_sum11_flags,
                     pointer_synonym_relations=pointer_maps["synonym"].get(entry_key, []),
                     pointer_antonym_relations=pointer_maps["antonym"].get(entry_key, []),
                     pointer_homonym_relations=pointer_maps["homonym"].get(entry_key, []),
@@ -465,6 +470,11 @@ def _fill_local(
                     ),
                 )
                 inserted += 1
+            for section in sorted(soviet_withheld - set(payloads)):
+                atlas_conn.execute(
+                    "DELETE FROM enrichment WHERE slug = ? AND section = ?",
+                    (article["slug"], section),
+                )
             atlas_conn.commit()
 
         after = _coverage(atlas_conn)

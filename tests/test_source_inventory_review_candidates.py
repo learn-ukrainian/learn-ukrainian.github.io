@@ -58,7 +58,6 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     monkeypatch.setattr(review, "screen_auto_merge_lemma_validity", lambda payload, **kw: [])
     monkeypatch.setattr(review.grow, "_preserve_wiki_reference_cache", lambda: nullcontext())
     monkeypatch.setattr(review.grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(review.grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(
         review.grow,
         "build_skeleton_entry",
@@ -69,8 +68,6 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
         entry: dict[str, Any],
         conn: object,
         kaikki_lookup: dict[str, Any],
-        *,
-        has_sum11_flags: bool,
     ) -> bool:
         entry["heritage_status"] = {
             "classification": "standard",

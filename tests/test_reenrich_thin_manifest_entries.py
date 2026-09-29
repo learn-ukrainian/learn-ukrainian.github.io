@@ -161,7 +161,7 @@ def test_reenrich_with_refresh_wiki_does_not_restore_redirect_card(monkeypatch) 
         ]
     }
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags=False):
+    def fake_enrich_entry(entry, conn, kaikki_lookup):
         entry.pop("wiki_reference", None)
 
     monkeypatch.setattr(enrich_manifest, "enrich_entry", fake_enrich_entry)
@@ -234,7 +234,7 @@ def test_refresh_wiki_strips_stale_cached_redirect_wiki_reference(monkeypatch) -
         ]
     }
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags=False):
+    def fake_enrich_entry(entry, conn, kaikki_lookup):
         # Cached redirect summary predating #7376; enrich_entry would attach it again.
         entry["wiki_reference"] = {
             **_BEZMEZHZHYA_REDIRECT_WIKI,
@@ -525,7 +525,7 @@ def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
 
 
 def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
-    def fake_enrich_entry(entry, conn, me_lookup, *, has_sum11_flags=False):
+    def fake_enrich_entry(entry, conn, me_lookup):
         entry["sections"] = {
             "proverbs": {"items": ["Слово не горобець"]},
             "usage_notes": {"essay": "Note"},
@@ -546,7 +546,7 @@ def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
 def test_canary_check_fails_and_aborts_mutation_check(monkeypatch) -> None:
     """Mutation check: breaking the cache/source path causes canary check to FAIL."""
 
-    def broken_enrich_entry(entry, conn, me_lookup, *, has_sum11_flags=False):
+    def broken_enrich_entry(entry, conn, me_lookup):
         # Broken cache / source: missing proverbs and grinchenko
         entry["sections"] = {"usage_notes": {"essay": "Note"}}
         entry["enrichment"] = {"morphology": {"forms": [{"form": entry["lemma"]}]}}
@@ -570,7 +570,7 @@ def test_circuit_breaker_trips_on_consecutive_misses(monkeypatch) -> None:
         ]
     }
 
-    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
+    def noop_enrich(entry, conn, me_lookup):
         pass
 
     monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
@@ -602,7 +602,7 @@ def test_already_enriched_prefix_does_not_trip_circuit_breaker(monkeypatch) -> N
         ]
     }
 
-    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
+    def noop_enrich(entry, conn, me_lookup):
         pass
 
     monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
@@ -663,7 +663,7 @@ def test_full_catalog_target_and_categorical_binning(monkeypatch) -> None:
         ]
     }
 
-    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
+    def noop_enrich(entry, conn, me_lookup):
         pass
 
     monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
@@ -1209,7 +1209,7 @@ def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatc
 
     seen: list[str] = []
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags=False):
+    def fake_enrich_entry(entry, conn, kaikki_lookup):
         seen.append(entry["lemma"])
         entry["wiki_reference"] = {
             "wikipedia": {"title": "Ампір", "summary": "Ампір...", "url": "https://uk.wikipedia.org/wiki/Ампір"}

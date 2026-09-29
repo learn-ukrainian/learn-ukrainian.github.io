@@ -339,9 +339,8 @@ def admit_slice_2a(
     kaikki_lookup = enrich_manifest._load_kaikki_lookup()
     enriched_count = 0
     with sqlite3.connect(f"file:{SOURCES_DB_PATH}?mode=ro", uri=True) as conn:
-        has_flags = enrich_manifest._sum11_has_flag_columns(conn)
         for idx, entry in enumerate(new_entries, 1):
-            if enrich_manifest.enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_flags):
+            if enrich_manifest.enrich_entry(entry, conn, kaikki_lookup):
                 enriched_count += 1
             if idx % 10 == 0 or idx == len(new_entries):
                 print(f"  [{idx}/{len(new_entries)}] enriched ({entry['lemma']})", flush=True)

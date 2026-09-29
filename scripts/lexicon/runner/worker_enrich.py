@@ -33,7 +33,6 @@ def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:
     sources_path = Path(str(payload["sources_db"]))
     conn = sqlite3.connect(f"file:{sources_path.resolve().as_posix()}?mode=ro", uri=True)
     try:
-        has_sum11_flags = em._sum11_has_flag_columns(conn)
         sealed_cefr = load_sealed_cefr_map(Path(str(payload["cefr_seal_db"])))
         apply_sealed_cefr_to_engine_cache(sealed_cefr, em._CEFR_ESTIMATE_LEVEL_BY_KEY)
 
@@ -71,7 +70,6 @@ def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:
                 entry,
                 conn,
                 kaikki,
-                has_sum11_flags=has_sum11_flags,
                 pointer_synonym_relations=pointer_syn.get(entry_key, []),
                 pointer_antonym_relations=pointer_ant.get(entry_key, []),
                 pointer_homonym_relations=pointer_hom.get(entry_key, []),

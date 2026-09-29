@@ -342,22 +342,19 @@ def _manifest_glosses(path: Path) -> dict[str, str]:
     return result
 
 
-def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[dict[str, str], set[str]]:
-    """Return local Dmklinger English anchors and SUM-11 attestations.
+def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> dict[str, str]:
+    """Return local Dmklinger English anchors.
 
     Dmklinger is intentionally indexed in-process: the source table contains
     only about 30k rows, whereas normalised lookups must serve thousands of
-    VESUM-resolved lemmas.  SUM-11 is Ukrainian-only, so it supplies
-    dictionary-attestation evidence for enrichment but never masquerades as an
-    English learner gloss.
+    VESUM-resolved lemmas.
     """
     if sources_db is None or not sources_db.is_file():
-        return {}, set()
+        return {}
     wanted = {_dmklinger_key(lemma): _lemma_key(lemma) for lemma in lemmas if not _is_expression(lemma)}
     if not wanted:
-        return {}, set()
+        return {}
     anchors: dict[str, str] = {}
-    sum11_attested: set[str] = set()
     with sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True) as conn:
         for word, translations in conn.execute("SELECT word, translations FROM dmklinger_uk_en"):
             key = _dmklinger_key(str(word or ""))
@@ -367,25 +364,19 @@ def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[
             terms = _parse_translations(translations)
             if terms and _is_english(terms[0]):
                 anchors[target] = terms[0]
-        wanted_words = sorted({_normalise(lemma) for lemma in lemmas if not _is_expression(lemma)})
-        for start in range(0, len(wanted_words), 500):
-            batch = wanted_words[start : start + 500]
-            placeholders = ",".join("?" for _ in batch)
-            for (word,) in conn.execute(f"SELECT word FROM sum11 WHERE word IN ({placeholders}) COLLATE NOCASE", batch):
-                sum11_attested.add(_lemma_key(str(word)))
-    return anchors, sum11_attested
+    return anchors
 
 
-def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[dict[str, str], set[str]]:
+def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> dict[str, str]:
     """Read local Kaikki and slovnyk fallbacks without network requests.
 
-    Dmklinger and SUM-11 are deliberately left to ``enrich_manifest`` when its
+    Dmklinger is deliberately left to ``enrich_manifest`` when its
     local sources database is available.  This promoter has no sources-db
     dependency, so it remains runnable in a sparse checkout while still using
     the two file-backed dictionary fallbacks available here.
     """
     lemma_list = sorted(set(lemmas))
-    dmklinger, sum11_attested = _dmklinger_glosses(lemma_list, sources_db)
+    dmklinger = _dmklinger_glosses(lemma_list, sources_db)
     kaikki = _load_kaikki_lookup()
     result: dict[str, str] = {}
     for lemma in lemma_list:
@@ -411,7 +402,7 @@ def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple
         terms = translation.get("en") if isinstance(translation, Mapping) else None
         if isinstance(terms, list) and terms and _is_english(str(terms[0])):
             result.setdefault(key, str(terms[0]).strip())
-    return result, sum11_attested
+    return result
 
 
 def _private_english_glosses(path: Path = DEFAULT_PRIVATE_EN_DECISIONS) -> dict[str, str]:
@@ -453,7 +444,7 @@ def _build_rows(
         canonical_analyses.setdefault(canonical, row_analyses)
 
     manifest_glosses = _manifest_glosses(manifest)
-    dictionary_glosses, sum11_attested = _dictionary_glosses(canonical_rows, sources_db)
+    dictionary_glosses = _dictionary_glosses(canonical_rows, sources_db)
     private_en = _private_english_glosses()
     candidates: list[dict[str, Any]] = []
     decisions: list[dict[str, Any]] = []
@@ -543,7 +534,6 @@ def _build_rows(
         "candidates_with_english_anchor": len(candidates),
         "held_without_english_anchor": len(canonical_rows) - len(candidates),
         "dictionary_or_manifest_gloss_fallbacks": gloss_fallbacks,
-        "sum11_attested_canonical_lemmas": len(sum11_attested),
     }
     return candidates, decisions, report
 
@@ -591,11 +581,10 @@ def _enrich_promoted_entries(
     enriched = 0
     kaikki_lookup = enrich_module._load_kaikki_lookup()
     with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
-        has_sum11_flags = enrich_module._sum11_has_flag_columns(conn)
         for entry in entries:
             if _lemma_key(str(entry.get("lemma") or "")) not in promoted_lemma_keys:
                 continue
-            if enrich_module.enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags):
+            if enrich_module.enrich_entry(entry, conn, kaikki_lookup):
                 enriched += 1
     return enriched
 
@@ -957,7 +946,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--sources-db",
         type=Path,
-        help="Optional read-only local sources.db for Dmklinger and SUM-11 fallbacks",
+        help="Optional read-only local sources.db for the Dmklinger fallback",
     )
     parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES,
                         help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})")

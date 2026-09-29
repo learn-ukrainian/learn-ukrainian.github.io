@@ -20,6 +20,7 @@ import {
 import { normalizeAtlasText, normalizeSlugForHash } from "./normalize.ts";
 import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
 import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
+import { withholdLegacySovietCitations } from "./soviet-citation-withholding.ts";
 import type { PracticeDeckData } from "./srs.ts";
 
 export interface AtlasFetch {
@@ -481,7 +482,8 @@ export class HttpAtlasDataSource implements AtlasDataSource {
       };
       const record = payload.records.find((item) => item.slug === slug);
       if (!record) return { kind: "missing", version: manifest.dataVersion, slug };
-      return { kind: "entry", version: manifest.dataVersion, record };
+      return { kind: "entry", version: manifest.dataVersion,
+        record: { ...record, entry: withholdLegacySovietCitations(record.entry) } };
     });
   }
 
