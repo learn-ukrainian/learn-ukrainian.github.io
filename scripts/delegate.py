@@ -8408,28 +8408,30 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     return pt.FAST_FAIL_EXIT_CODE
 
 
+# The short form rejects common file suffixes so source locations do not become issue repositories.
 _DOR_ISSUE_RE = re.compile(
     r"(?<![\w/=])(?:"
     r"https://github\.com/(?P<url_repo>[\w.-]+/[\w.-]+)/issues/(?P<url_number>\d+)\b"
-    r"|(?P<short_repo>[\w.-]+/[\w.-]+)#(?P<short_number>\d+)\b"
+    r"|(?P<short_repo>[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})/"
+    r"(?!(?:[A-Za-z0-9._-]+\.(?i:md|markdown|py|pyi|rst|txt))#)"
+    r"(?=[A-Za-z0-9._-]*[A-Za-z0-9_-]#)[A-Za-z0-9._-]+)"
+    r"#(?P<short_number>\d+)\b(?![/\\])"
     r"|#(?P<number>\d+)\b)"
 )
 
 
 def _run_dor_preflight(
-    prompt: str, allow_reason: str | None, dispatch_repo: str = _CANONICAL_GITHUB_REPO
+    prompt: str, allow_reason: str | None, *, dispatch_repo: str
 ) -> tuple[str | None, dict[str, Any] | None]:
     """Check each issue named by an implementation brief before dispatch side effects."""
-    candidates = sorted(
-        {
-            (
-                match.group("url_repo") or match.group("short_repo") or dispatch_repo,
-                int(match.group("url_number") or match.group("short_number") or match.group("number")),
-            )
-            for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt))
-        },
-        key=lambda issue: (issue[1], issue[0]),
-    )
+    distinct: dict[tuple[str, int], tuple[str, int]] = {}
+    for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
+        repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+        if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
+            repo = _CANONICAL_GITHUB_REPO
+        number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
+        distinct.setdefault((repo.casefold(), number), (repo, number))
+    candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
     warnings: dict[str, str] = {}
@@ -8437,7 +8439,7 @@ def _run_dor_preflight(
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
     issue_repositories: list[dict[str, Any]] = []
     for repo, number in candidates:
-        label = str(number) if repo == _CANONICAL_GITHUB_REPO else f"{repo}#{number}"
+        label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
         recorded = False
         try:
             issue = subprocess.run(
@@ -8456,7 +8458,7 @@ def _run_dor_preflight(
                 continue
             issue_numbers.append(number)
             recorded = True
-            if repo != _CANONICAL_GITHUB_REPO:
+            if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
                 issue_repositories.append({"issue": number, "repo": repo})
             result = subprocess.run(
                 [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
@@ -8473,7 +8475,7 @@ def _run_dor_preflight(
         except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
             if not recorded:
                 issue_numbers.append(number)
-                if repo != _CANONICAL_GITHUB_REPO:
+                if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
                     issue_repositories.append({"issue": number, "repo": repo})
             warnings[label] = "checker_error"
     if not issue_numbers:
@@ -8593,7 +8595,7 @@ def _dispatch(
             return 2
     dor_record: dict[str, Any] | None = None
     if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
-        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, dispatch_repo=fleet_repo.github)
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -8972,7 +8974,7 @@ def _dispatch(
             return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
-        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
