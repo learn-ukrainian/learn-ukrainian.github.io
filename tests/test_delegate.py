@@ -11915,6 +11915,8 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
 
 def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
     """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
+    _tmp_dispatch_repo_root(tmp_path, monkeypatch)
+    monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda *, mode: None)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
 
     def fail_ensure(**_kwargs):
