@@ -18,7 +18,7 @@ from learn_ukrainian_v4_runtime.provenance import verify_current_identity
 from test_v4_installed_release import REPO_ROOT
 
 POLICY_RAW_SHA256 = "847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72"
-PROFILE_RAW_SHA256 = "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
+PROFILE_RAW_SHA256 = "84d0c393304e0e8d7c61c3d1068db408453586d7673fb82beb17606bf0ad00d1"
 
 
 def test_active_policy_is_exact_public_release_and_old_policy_is_inactive(monkeypatch):
@@ -58,7 +58,7 @@ def test_fixed_native_profile_scope():
     assert profile["sources_url"] == "http://localhost:8766/mcp"
     assert profile["bwrap"] == "/usr/bin/bwrap"
     assert set(profile["adapters"]) == {"claude", "codex"}
-    for harness, model in [("codex", "gpt-6-astra"), ("claude", "claude-fable-5-1")]:
+    for harness, model in [("codex", "gpt-6.1-sol"), ("claude", "claude-fable-5-1")]:
         adapter = profile["adapters"][harness]
         assert adapter["models"] == [model]
         assert child.credential_mode(profile, harness) == "subscription"
@@ -71,13 +71,46 @@ def test_fixed_native_profile_scope():
         }
         assert all(set(entry) == {"source", "destination", "sha256"} for entry in entries.values())
         if harness == "codex":
+            assert adapter["version"] == "codex-cli 0.159.0"
+            assert entries["/runtime/codex"]["sha256"] == (
+                "d2752c52353401f7f6efbfcea68796f4f7a3d3e4769f5d1da53fa49d4856b72f"
+            )
             assert entries["/runtime/codex-code-mode-host"] == {
                 "source": "/opt/hramatka/current/v4-native/codex-code-mode-host",
                 "destination": "/runtime/codex-code-mode-host",
-                "sha256": "3e85d67471825f73d02ff5f7e047ca1f6ca8caa3f59e4c6e8d9ca6ca7302cb45",
+                "sha256": "160c7ea08738447582821fbb2611ee016d6dd628853401bbc441767cb4e95ef8",
             }
-    historical = resources.resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v2.json"
+    trust_dir = resources.resource_root() / "data/projects/open_model_data/trust"
+    historical = trust_dir / "v4_child_profile_v2.json"
     assert digest(historical.read_bytes()) == "3f5e9ccf4d97860dbf5bcbca54f6fee7796873d8aed59060a4bea0860813b25f"
+    previous = trust_dir / "v4_child_profile_v3.json"
+    assert digest(previous.read_bytes()) == "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
+    # v4 is v3 with only the Codex model, version and binary digests revised (#9230).
+    revised = json.loads(previous.read_bytes())
+    revised["adapters"]["codex"] = profile["adapters"]["codex"]
+    assert revised == profile
+    assert json.loads(previous.read_bytes())["adapters"]["codex"]["models"] == ["gpt-6-astra"]
+
+
+class _Admitted(Exception):
+    pass
+
+
+def test_active_profile_admits_only_its_codex_model(monkeypatch):
+    def admitted(*_args):
+        raise _Admitted
+
+    # Admission precedes credential and closure checks; stop the plan right after it.
+    monkeypatch.setattr(child, "_validate_credential", admitted)
+    profile = child.load_profile()
+    credential = child.ProviderCredential("codex", "subscription", "unused")
+    for model in ("gpt-6-astra", "gpt-6-sol", "gpt-6-luna"):
+        claim = {"binding": {"expected_harness": "codex", "expected_seat_or_model": model, "role": "reviewer"}}
+        with pytest.raises(OperationRefused, match="adapter_model_unqualified"):
+            child._plan(profile, claim, credential)
+    claim = {"binding": {"expected_harness": "codex", "expected_seat_or_model": "gpt-6.1-sol", "role": "reviewer"}}
+    with pytest.raises(_Admitted):
+        child._plan(profile, claim, credential)
 
 
 def test_active_policy_never_creates_completion_or_enables_switches(monkeypatch):

@@ -25,11 +25,11 @@ receive explicit effort settings; requests cannot select another effort.
 ## Active public release prerequisite
 
 The fixed production loaders select `v4_trust_policy_v2.json` and
-`v4_child_profile_v3.json`. Both are checked-in, digest-allowlisted build inputs
+`v4_child_profile_v4.json`. Both are checked-in, digest-allowlisted build inputs
 and hashed by the release manifest; each loader independently refuses raw-byte
 drift. The active policy allowlist contains only v2. The original empty v1
 policy, generated empty v1 profile, A3 receipts and provenance remain exact
-historical resources; the v2 native profile is also retained byte-exact. Current positive bodies bind the canonical v2 policy
+historical resources; the v2 and v3 native profiles are also retained byte-exact. Current positive bodies bind the canonical v2 policy
 digest; historical empty receipts acquire no retroactive attribution.
 
 The public policy contains the three operator-staged Ed25519 public keys only.
@@ -37,11 +37,14 @@ Its raw SHA-256 is
 `847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72`.
 Private key custody, rotation and revocation remain operator-owned.
 
-The native profile pins Codex 0.153.4 to `gpt-6-astra` and Claude 2.1.258 to
+The native profile pins Codex 0.159.0 to `gpt-6.1-sol` and Claude 2.1.258 to
 `claude-fable-5-1`, with author medium/reviewer high effort. Binary source paths
 are the immutable regular copies at `/opt/hramatka/current/v4-native/codex`
 and `/opt/hramatka/current/v4-native/claude`. Codex also requires its matching
-0.153.4 companion at `/opt/hramatka/current/v4-native/codex-code-mode-host`.
+0.159.0 companion at `/opt/hramatka/current/v4-native/codex-code-mode-host`.
+The v4 revision (#9230) changes only the Codex model, version and these two
+binary digests: the provider rejects `gpt-6.1-sol` from Codex 0.153.4 under a
+ChatGPT subscription, and v3 (`gpt-6-astra` on 0.153.4) stays historical.
 The private installer must supply
 root-owned copies without write permission; the observed mutable installation
 paths are never mounted. bwrap and each resolved library, resolver file and TLS
@@ -143,7 +146,7 @@ actual model semantic quality or establish held-out performance.
 The parent reads only its harness-selected `v4-provider-claude` or
 `v4-provider-codex` systemd credential, after checking the fixed reviewed child
 profile. Requests cannot supply credentials, paths, modes, models or effort.
-The shipped v2 profile selects subscription mode for both native adapters;
+The shipped v4 profile selects subscription mode for both native adapters;
 these interfaces do not enable execution or admission and do not qualify an
 installed native CLI.
 

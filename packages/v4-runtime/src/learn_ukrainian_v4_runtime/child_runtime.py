@@ -27,7 +27,7 @@ from learn_ukrainian_v4_runtime.resources import resource_root
 
 MAX_CAPTURE_BYTES = 1048576
 # Versioned reviewed public release; historical v1 is never an active profile.
-PRODUCTION_CHILD_PROFILE_SHA256 = "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
+PRODUCTION_CHILD_PROFILE_SHA256 = "84d0c393304e0e8d7c61c3d1068db408453586d7673fb82beb17606bf0ad00d1"
 # Required native network data only; no directory or arbitrary /etc mount.
 _NETWORK_DATA_TARGETS = frozenset({"/etc/resolv.conf", "/etc/ssl/certs/ca-certificates.crt"})
 MAX_CREDENTIAL_BYTES = 65536
@@ -215,7 +215,7 @@ def _sealed_auth_fd(raw: bytes) -> int:
 
 
 def profile_path() -> Path:
-    return resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    return resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v4.json"
 
 
 def load_profile() -> dict:

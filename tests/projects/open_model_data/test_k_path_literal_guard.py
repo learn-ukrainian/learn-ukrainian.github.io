@@ -119,7 +119,7 @@ PACKAGED_RESOURCE_PATHS = frozenset(
         "contracts/dataset_v4_a3_builder_packet_receipt_v1.schema.json",
         "contracts/dataset_v4_a3_heldout_source_family_seal_receipt_v1.schema.json",
         "evidence/correction_protection_near_duplicate_policy_v1.json",
-        "trust/v4_child_profile_v3.json",
+        "trust/v4_child_profile_v4.json",
         "trust/v4_review_rubric_v2.txt",
         "trust/v4_trust_policy_v2.json",
     }
@@ -147,6 +147,15 @@ def _kind(relative: str, classes: dict[str, str]) -> tuple[str, str | None]:
     prefix = relative + "/"
     child_classes = {classes[item] for item in classes if item.startswith(prefix)}
     if not child_classes:
+        # The frozen table predates later revisions such as trust/v4_child_profile_v4.json;
+        # a registry file added to a K-only directory is still a K member.
+        parent = relative.rpartition("/")[0]
+        if (
+            parent
+            and (REPO_ROOT / "registry/projects/open_model_data" / relative).is_file()
+            and _kind(parent, classes) == ("DIR", "K")
+        ):
+            return "FILE", "K"
         return "UNKNOWN", None
     if child_classes == {"K"}:
         return "DIR", "K"
@@ -631,7 +640,7 @@ def test_logical_key_resolver_and_log_message_stay_allowed() -> None:
     ],
 )
 def test_packaged_resource_join_uses_package_root(expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n" + expression.format(logical=logical)
@@ -651,7 +660,7 @@ def test_packaged_resource_join_uses_package_root(expression: str) -> None:
     ],
 )
 def test_packaged_resource_join_on_other_root_is_a_violation(root_assignment: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n"
@@ -664,7 +673,7 @@ def test_packaged_resource_join_on_other_root_is_a_violation(root_assignment: st
 
 
 def test_packaged_resource_join_rejects_rebound_and_parameter_roots() -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n"
@@ -695,7 +704,7 @@ def test_packaged_resource_join_rejects_rebound_and_parameter_roots() -> None:
     ],
 )
 def test_packaged_resource_alias_joins_on_other_root_are_violations(import_line: str, expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = f"{import_line}\n" + expression.format(logical=logical)
     hit = _literal_hits(source)[0]
     assert hit["join"] is True
@@ -713,7 +722,7 @@ def test_packaged_resource_alias_joins_on_other_root_are_violations(import_line:
     ],
 )
 def test_packaged_resource_alias_joins_accept_package_root(import_line: str, expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n"
@@ -735,7 +744,7 @@ def test_packaged_resource_alias_joins_accept_package_root(import_line: str, exp
     ],
 )
 def test_packaged_resource_join_rejects_function_local_shadow(function: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n" + function.format(logical=logical)
@@ -755,7 +764,7 @@ def test_packaged_resource_join_rejects_function_local_shadow(function: str) -> 
     ],
 )
 def test_packaged_resource_joinpath_accepts_package_root(expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
+    logical = "data/projects/open_model_data/trust/v4_child_profile_v4.json"
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n" + expression.format(logical=logical)
