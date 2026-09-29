@@ -5,15 +5,15 @@ sequence: 2
 slug: reading-ukrainian
 version: '1'
 title: читати
-subtitle: Read words and whole short sourced sentences aloud with 25 letters
-focus: 'Continue the primer sequence after position 1: hear each new sound, read its CV and VC row and decodable word, then
-  read whole sourced short sentences aloud and copy models offline.'
+subtitle: Twelve more letters, then whole words and short sourced sentences read aloud
+focus: 'Continue the primer sequence after position 1: hear each new sound, read its syllable or word row and a decodable
+  word, then read whole sourced short sentences aloud and copy models offline.'
 objectives:
 - Read and copy the 12 new letters in fixed primer order, and read at least one sourced decodable VESUM word with each new
   letter.
 - Read whole short sourced sentences aloud after word practice, with only the 25 taught letters and without apostrophe or
   the later digraphs.
-- Distinguish the two sounds represented by Г and Ґ and check Latin-shaped letters against primer sound models.
+- Distinguish the two sounds represented by Г and Ґ and check the Latin-shaped Т, Е and Х against sourced correspondences.
 - Copy decodable printed models and write one’s own name from an existing written model in a notebook; these are offline
   practices.
 connects_to:
@@ -25,12 +25,18 @@ register: English scaffolding at A1; Ukrainian models first with English support
 changelog:
 - First position-2 plan package. The primer part-1 sequence passes over the soft sign for position 3, and all sentence-reading
   models are whole sourced sentences.
+- 'Completion pass (co-author Claude Opus 5.5): every letter now has a native pronunciation video and a sourced read row
+  (T-018 for the lesson-2 labial, T-019 for the lesson-4 velar); the fifth letter gains the common noun W-117 and the lesson-2
+  labial the core noun W-118; the two-g contrast and the Latin-shape points are grounded in T-020 and T-021; the English-speaker
+  description of the lesson-4 and lesson-5 consonants is recorded as open U-001 and not taught; W-074 is recycled in every
+  teach lesson; each teach workbook has a quiz; the lesson-5 quiz and the recap questions no longer present non-decodable
+  text as reading items.'
 arc_ref:
   level: a1
   position: 2
 evidence_ref:
   path: evidence/a1/reading-ukrainian.yaml
-  sha256: 6ac277d2940fb446e53cb5970357b80f1e47c5c5817844f08973fc0b2daf00c3
+  sha256: 83cb54cbcc140bd06e3d70865e9d6b7fadfdc78e601ffbe6d3bd8b8c3f27af35
 lessons:
 - n: 1
   slug: t-and-e
@@ -38,7 +44,8 @@ lessons:
   kind: teach
   job: Read and copy Т and Е, their sound rows, and newly decodable whole words including the informal greeting.
   rationale: Two letters let the learner shift from position-1 word reading to a decodable greeting while keeping the primer
-    sound-row-to-word cycle. A 260-word target covers two sound rows, the whole greeting, and notebook prompts.
+    sound-row-to-word cycle; Т is the first Latin-shaped letter here that reads alike, and Е the first that must be read by
+    its primer sound. A 260-word target covers two sound rows, the whole greeting, and notebook prompts.
   word_target: 260
   inventory:
     phonetics:
@@ -56,7 +63,9 @@ lessons:
       incidental:
       - lemma: Евеліна
         evidence: W-102
-      recycled: &id001
+      - lemma: клен
+        evidence: W-117
+      recycled:
       - W-074
       - W-075
       - W-076
@@ -67,10 +76,10 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Hear Т from the primer, see its glyph, read its CV and VC row, then read W-101 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. After Т, recycle
-      W-074 as a whole-word read and copy item; hear W-075 and W-076 only as one intact greeting chunk, never read or split
-      it. The Cyrillic Т shares its shape with Latin T and the source sound [т] is the alike reading case.
+    teach: Open the lesson by hearing W-075 and W-076 as one intact greeting chunk, never read or split. Hear Т from V-001
+      and the primer, see its glyph, read its CV and VC row, then read W-101 as a whole decodable word and classify Т as
+      a consonant. Т has the shape of Latin T, and T-021 shows Latin t (th) written with Т, so it is a read-alike letter.
+      Once Т is known, W-074 is decodable; read it and copy it as a whole word.
     introduces:
       letters:
       - Т
@@ -80,20 +89,29 @@ lessons:
     uses:
       grammar:
       - G-a1-002
-      vocabulary: *id001
+      vocabulary:
+      - W-074
+      - W-075
+      - W-076
+      - W-079
+      - W-080
     evidence:
     - T-001
     - X-001
     - X-004
     - V-001
+    - T-021
     practice:
     - a1
     - a2
+    needs:
+    - video
   - id: s2
     kind: teach
-    teach: Hear Е from the primer, see its glyph, read its CV and VC row, then read W-102 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. Check the Latin-shaped
-      Е by its primer [е] sound, unlike the English E letter name; W-102 is a name for decoding, not core vocabulary.
+    teach: Hear Е from V-005 and the primer, see its glyph, read its CV and VC rows, then read W-117 and the name W-102
+      as whole decodable words and classify Е as a vowel. Е has the shape of Latin E, and T-021 shows Latin e written with
+      Е in borrowed words; the learner reads it by the primer sound [е], not by an English letter name. W-102 is a name
+      for decoding, not core vocabulary.
     introduces:
       letters:
       - Е
@@ -105,21 +123,28 @@ lessons:
       vocabulary: []
     evidence:
     - T-002
+    - T-003
     - X-001
     - X-004
-    - T-003
+    - V-005
+    - T-021
     practice:
     - a3
     - a4
+    needs:
+    - video
   - id: s3
     kind: practice
-    teach: Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after
-      hearing it; incidental decoding words are never drilled for meaning.
+    teach: Move from the separate sound rows to whole words. The learner hears and then reads W-074, W-101, W-117 and W-102
+      aloud from print; incidental decoding words are never drilled for meaning.
     uses:
       grammar:
       - G-a1-002
       vocabulary:
+      - W-074
       - W-101
+      - W-081
+      - W-082
     evidence:
     - T-001
     - T-002
@@ -128,33 +153,35 @@ lessons:
   consolidation:
   - a6
   - a7
+  - a8
   activities:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read the Т CV and VC row from T-001 aloud, then copy the letter and decodable W-101 by hand; practised offline
-      — not machine-verified.
+    focus: Read the Т CV and VC row from T-001 aloud, then copy the letter and the decodable W-101 and W-074 by hand; practised
+      offline — not machine-verified.
     model: X-001
   - id: a2
     type: quiz
     placement: inline
     focus: Choose the Т letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the Е CV and VC row from T-002 aloud, then copy the letter and decodable W-102 by hand; practised offline
+    focus: Read the Е CV and VC rows from T-002 aloud, then copy the letter and the decodable W-117 by hand; practised offline
       — not machine-verified.
     model: X-001
   - id: a4
     type: quiz
     placement: inline
-    focus: Choose the Е letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+    focus: Choose the Е letter after hearing its primer sound; contrast it with earlier taught vowels and consonants, and
+      include the Latin-shape check against the English letter name.
   - id: a5
     type: watch-and-repeat
     placement: inline
-    focus: Hear the new-letter words W-101, W-102, then read each whole word aloud from print; practised offline — not machine-verified.
+    focus: Hear the Т and Е models in V-001 and V-005, then read W-074, W-101, W-117 and W-102 whole aloud from print; practised
+      offline — not machine-verified.
   - id: a6
     type: pick-syllables
     placement: workbook
@@ -164,24 +191,33 @@ lessons:
   - id: a7
     type: match-up
     placement: workbook
-    focus: Match at least three independent core form–gloss pairs W-081, W-082 and W-101; no greeting option because W-074
-      has no gloss.
+    focus: Match three independent core form–gloss pairs W-081, W-082 and W-101; no greeting option because W-074 has no
+      gloss.
+  - id: a8
+    type: quiz
+    placement: workbook
+    focus: Hear a whole word and choose its printed form among the decodable W-074, W-081, W-082, W-101 and W-117; the
+      correct answer differs from item to item, and the check is word decoding, not meaning.
   practice:
     vocabulary: core
     stress: []
     patterns:
     - a6
     - a7
+    - a8
   videos:
   - evidence: V-001
     use: Step s1 pronunciation model for Т before the printed row.
+  - evidence: V-005
+    use: Step s2 pronunciation model for Е before the printed rows.
 - n: 2
   slug: d-z-b
   title: Д, З, Б
   kind: teach
   job: Read and copy Д, З and Б in primer order and move from short word parts to whole decodable words.
-  rationale: Three adjacent part-1 letters provide distinct rows and three new decodable word models; a roof word with the
-    later Х stays out of this lesson. A 300-word target covers each letter, short words, and copying.
+  rationale: Three adjacent part-1 letters provide distinct rows and new decodable word models; a roof word with the later
+    Х stays out of this lesson. The Б page has no printed syllable table, so Б is read on its primer word list. A 300-word
+    target covers each letter, short words, and copying.
   word_target: 300
   inventory:
     phonetics:
@@ -197,22 +233,26 @@ lessons:
         evidence: W-104
         forms:
         - noun:inanim:f:v_naz
+      - lemma: зуб
+        evidence: W-118
+        forms:
+        - noun:inanim:m:v_naz
       incidental:
       - lemma: дрова
         evidence: W-116
       - lemma: білка
         evidence: W-105
-      recycled: &id002
+      recycled:
+      - W-074
       - W-079
       - W-080
       - W-081
-      - W-082
       - W-101
   steps:
   - id: s1
     kind: teach
-    teach: Hear Д from the primer, see its glyph, read its CV and VC row, then read W-116 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model.
+    teach: Open by reading W-074 aloud as a whole word. Hear Д from V-006 and the primer, see its glyph, read its CV and
+      VC row, then read W-116 as a whole decodable word and classify Д as a consonant.
     introduces:
       letters:
       - Д
@@ -221,18 +261,26 @@ lessons:
     uses:
       grammar:
       - G-a1-002
-      vocabulary: *id002
+      vocabulary:
+      - W-074
+      - W-079
+      - W-080
+      - W-081
+      - W-101
     evidence:
     - T-004
     - X-001
     - X-004
+    - V-006
     practice:
     - a1
     - a2
+    needs:
+    - video
   - id: s2
     kind: teach
-    teach: Hear З from the primer, see its glyph, read its CV and VC row, then read W-104 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model.
+    teach: Hear З from V-007 and the primer, see its glyph, read its CV and VC row, then read W-104 as a whole decodable
+      word and classify З as a consonant.
     introduces:
       letters:
       - З
@@ -247,42 +295,51 @@ lessons:
     - T-005
     - X-001
     - X-004
+    - V-007
     practice:
     - a3
     - a4
+    needs:
+    - video
   - id: s3
     kind: teach
-    teach: Hear Б from the primer, see its glyph, read its CV and VC row, then read W-105 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model.
+    teach: Hear Б from V-008 and the primer, see its glyph, then read the primer’s Б word list in T-018 on the X-001 row
+      pattern, including W-118, and read W-105 as a whole decodable word; classify Б as a consonant.
     introduces:
       letters:
       - Б
       grammar: []
-      vocabulary: []
+      vocabulary:
+      - W-118
     uses:
       grammar:
       - G-a1-002
       vocabulary: []
     evidence:
     - T-006
+    - T-018
     - X-001
     - X-004
+    - V-008
     practice:
     - a5
     - a6
+    needs:
+    - video
   - id: s4
     kind: practice
-    teach: Read the new decodable words aloud from the printed primer models; no matching source audio is asserted. Incidental
-      decoding words are not drilled for meaning.
+    teach: Read the new decodable words aloud from the printed primer models. Incidental decoding words are not drilled
+      for meaning.
     uses:
       grammar:
       - G-a1-002
       vocabulary:
       - W-104
+      - W-118
     evidence:
     - T-004
     - T-005
-    - T-006
+    - T-018
     practice:
     - a7
   consolidation:
@@ -299,7 +356,7 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the Д letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a3
     type: letter-grid
     placement: inline
@@ -310,22 +367,22 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the З letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a5
     type: letter-grid
     placement: inline
-    focus: Read the Б CV and VC row from T-006 aloud, then copy the letter and decodable W-105 by hand; practised offline
+    focus: Read the Б word list from T-018 aloud, then copy the letter and decodable W-118 and W-105 by hand; practised offline
       — not machine-verified.
     model: X-001
   - id: a6
     type: quiz
     placement: inline
     focus: Choose the Б letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a7
     type: observe
     placement: inline
-    focus: Read the three new decodable words W-116, W-104 and W-105 aloud from print after sound-row practice; practised
+    focus: Read the new decodable words W-116, W-104, W-118 and W-105 aloud from print after sound-row practice; practised
       offline — not machine-verified.
   - id: a8
     type: divide-words
@@ -340,14 +397,24 @@ lessons:
   practice:
     vocabulary: core
     stress: []
-    patterns: []
+    patterns:
+    - a8
+    - a9
+  videos:
+  - evidence: V-006
+    use: Step s1 pronunciation model for Д before its rows.
+  - evidence: V-007
+    use: Step s2 pronunciation model for З before its rows.
+  - evidence: V-008
+    use: Step s3 pronunciation model for Б before its word list.
 - n: 3
   slug: two-g-sounds
   title: Г, Ґ
   kind: teach
   job: Hear, read and copy Г and Ґ as different sounds, then decode one source-backed word with each.
-  rationale: The primer places the two letters next to each other in part 2, and the Г/Ґ contrast is a genuine new teaching
-    point. A 260-word target supports side-by-side sound models, two word readings and the by-ear greeting opening.
+  rationale: The primer places the two letters next to each other in part 2 and sets their words side by side, and T-020
+    describes them as two different sounds like Latin h and g, so the Г/Ґ contrast is a genuine new teaching point. A 260-word
+    target supports side-by-side sound models, two word readings and the by-ear greeting opening.
   word_target: 260
   inventory:
     phonetics:
@@ -362,6 +429,7 @@ lessons:
       - T-007
       - T-009
       - X-002
+      - T-020
     vocabulary:
       core: []
       incidental:
@@ -369,22 +437,21 @@ lessons:
         evidence: W-106
       - lemma: ґава
         evidence: W-107
-      recycled: &id003
+      recycled:
       - W-074
       - W-075
       - W-076
       - W-079
       - W-080
+      - W-081
       - W-101
       - W-104
-      - W-081
-      - W-081
   steps:
   - id: s1
     kind: teach
-    teach: Hear Г from the primer, see its glyph, read its CV and VC row, then read W-106 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. Open by hearing
-      W-075 and W-076 as one intact greeting chunk, and read the now-decodable W-074 whole word.
+    teach: Open by hearing W-075 and W-076 as one intact greeting chunk and reading the decodable W-074 as a whole word.
+      Hear Г from V-009 and the primer, see its glyph, read its CV and VC row, then read W-106 as a whole decodable word
+      and classify Г as a consonant.
     introduces:
       letters:
       - Г
@@ -393,21 +460,28 @@ lessons:
     uses:
       grammar:
       - G-a1-002
-      vocabulary: *id003
+      vocabulary:
+      - W-074
+      - W-075
+      - W-076
+      - W-079
+      - W-080
     evidence:
     - T-007
+    - T-008
     - X-001
     - X-004
-    - T-008
+    - V-009
     practice:
     - a1
     - a2
+    needs:
+    - video
   - id: s2
     kind: teach
-    teach: Hear Ґ from the primer, see its glyph, read its CV and VC row, then read W-107 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. Compare the distinct
-      primer sounds [г] and [ґ] with the two printed glyphs; do not assign the English g reading to Г. Use W-107 only as
-      a decodable word, never for a gloss test.
+    teach: Hear Ґ from V-002 and the primer, see its glyph, read its CV and VC row, then read W-107 as a whole decodable
+      word. Compare the primer sounds [г] and [ґ] on the X-002 word pairs; T-020 describes them as two different sounds
+      like Latin h and g, so the learner never gives Г the g reading. W-107 is a decodable word only, never a gloss test.
     introduces:
       letters:
       - Ґ
@@ -420,14 +494,17 @@ lessons:
       vocabulary: []
     evidence:
     - T-009
-    - X-001
-    - X-004
     - T-007
+    - X-001
     - X-002
+    - X-004
+    - T-020
     - V-002
     practice:
     - a3
     - a4
+    needs:
+    - video
   - id: s3
     kind: practice
     teach: Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after
@@ -435,10 +512,15 @@ lessons:
     uses:
       grammar:
       - G-a1-002
-      vocabulary: []
+      - G-a1-004
+      vocabulary:
+      - W-081
+      - W-101
+      - W-104
     evidence:
     - T-007
     - T-009
+    - X-002
     practice:
     - a5
   consolidation:
@@ -455,7 +537,7 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the Г letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a3
     type: letter-grid
     placement: inline
@@ -465,13 +547,13 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: Choose the Ґ letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+    focus: Choose Г or Ґ after hearing a primer syllable, with answers alternating between the two sounds.
+    model: X-002
   - id: a5
     type: watch-and-repeat
     placement: inline
-    focus: Hear the sourced Г/Ґ sound contrast in V-002 and the primer, then read W-106 and W-107 whole aloud from print;
-      practised offline — not machine-verified.
+    focus: Hear the Г and Ґ models in V-009 and V-002, then read W-106 and W-107 whole aloud from print; practised offline
+      — not machine-verified.
   - id: a6
     type: odd-one-out
     placement: workbook
@@ -479,26 +561,30 @@ lessons:
       cite the primer contrast.
     model: X-002
   - id: a7
-    type: pick-syllables
+    type: quiz
     placement: workbook
-    focus: Complete three core decodable words W-081, W-101 and W-104 from prior lessons using their syllables, distinct
-      from the sound-contrast choice.
-    model: X-001
+    focus: Hear a taught decodable word (W-106, W-107, W-081, W-101 or W-104) and choose the letter it begins with among
+      Г, Ґ and earlier consonants; the answer changes from item to item, progressing from the lesson-2 sound-to-letter quiz
+      to the new Г/Ґ contrast.
   practice:
     vocabulary: core
     stress: []
     patterns:
+    - a6
     - a7
   videos:
+  - evidence: V-009
+    use: Step s1 pronunciation model for Г before its rows.
   - evidence: V-002
-    use: Step s2 repeats the Ґ pronunciation after the primer Г sound.
+    use: Step s2 pronunciation model for Ґ after the primer Г sound.
 - n: 4
   slug: ch-y-kh
   title: Ч, Й, Х
   kind: teach
   job: Read and copy Ч, Й and Х, then read new words without inserting an untaught sign or digraph.
-  rationale: Three part-2 letters extend the word inventory, make the later-sourced W-103 decodable, and add Й before Х.
-    A 300-word target covers three rows, whole-word reading and one Latin-shape check.
+  rationale: Three part-2 letters extend the word inventory, make the earlier-sourced W-103 decodable, and add Й before
+    Х. The English-speaker description of these sounds has no textbook source (U-001), so each is taught by its native
+    model. A 300-word target covers three rows, whole-word reading and one Latin-shape check.
   word_target: 300
   inventory:
     phonetics:
@@ -523,18 +609,18 @@ lessons:
         evidence: W-108
       - lemma: дах
         evidence: W-103
-      recycled: &id004
+      recycled:
+      - W-074
       - W-079
       - W-080
-      - W-081
       - W-101
       - W-104
+      - W-118
   steps:
   - id: s1
     kind: teach
-    teach: Hear Ч from the primer, see its glyph, read its CV and VC row, then read W-108 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. For English readers,
-      the Ч sound is the primer [ч]; hear it before any letter-name analogy.
+    teach: Open by reading W-074 aloud as a whole word. Hear Ч from V-010 and the primer before reading, see its glyph,
+      read its CV and VC row, then read W-108 as a whole decodable word and classify Ч as a consonant.
     introduces:
       letters:
       - Ч
@@ -543,19 +629,24 @@ lessons:
     uses:
       grammar:
       - G-a1-002
-      vocabulary: *id004
+      vocabulary:
+      - W-074
+      - W-079
+      - W-080
     evidence:
     - T-010
     - X-001
     - X-004
+    - V-010
     practice:
     - a1
     - a2
+    needs:
+    - video
   - id: s2
     kind: teach
-    teach: Hear Й from the primer, see its glyph, read its CV and VC row, then read W-109 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. For English readers,
-      the Й sound is the primer [й]; hear V-003 before reading the final-letter model.
+    teach: Hear Й from V-003 and the primer before reading, see its glyph, read its vowel-plus-Й row, then read W-109 as
+      a whole decodable word and classify Й as a consonant.
     introduces:
       letters:
       - Й
@@ -574,12 +665,13 @@ lessons:
     practice:
     - a3
     - a4
+    needs:
+    - video
   - id: s3
     kind: teach
-    teach: Hear Х from the primer, see its glyph, read its CV and VC row, then read W-110 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. Check the Latin-shaped
-      Х by its primer [х] sound, not the English x letter name; W-103 becomes decodable here and remains incidental. For
-      English readers, the Х sound is the primer [х], not a Latin X reading.
+    teach: Hear Х from V-011 and the primer before reading, see its glyph, read the Х syllables and word list in T-019,
+      then read W-110 and the now-decodable incidental W-103 as whole words. Х has the shape of Latin X, but T-021 shows
+      English h written with Х in some words, so Х is never read like Latin x.
     introduces:
       letters:
       - Х
@@ -592,12 +684,17 @@ lessons:
       vocabulary: []
     evidence:
     - T-012
+    - T-019
+    - T-004
+    - T-021
     - X-001
     - X-004
-    - T-004
+    - V-011
     practice:
     - a5
     - a6
+    needs:
+    - video
   - id: s4
     kind: practice
     teach: Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after
@@ -608,15 +705,19 @@ lessons:
       vocabulary:
       - W-109
       - W-110
+      - W-101
+      - W-104
+      - W-118
     evidence:
     - T-010
     - T-011
-    - T-012
+    - T-019
     practice:
     - a7
   consolidation:
   - a8
   - a9
+  - a10
   activities:
   - id: a1
     type: letter-grid
@@ -628,52 +729,64 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the Ч letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the Й CV and VC row from T-011 aloud, then copy the letter and decodable W-109 by hand; practised offline
+    focus: Read the vowel-plus-Й row from T-011 aloud, then copy the letter and decodable W-109 by hand; practised offline
       — not machine-verified.
     model: X-001
   - id: a4
     type: quiz
     placement: inline
     focus: Choose the Й letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a5
     type: letter-grid
     placement: inline
-    focus: Read the Х CV and VC row from T-012 aloud, then copy the letter and decodable W-110 by hand; practised offline
-      — not machine-verified.
+    focus: Read the Х syllables and word list from T-019 aloud, then copy the letter and decodable W-110 by hand; practised
+      offline — not machine-verified.
     model: X-001
   - id: a6
     type: quiz
     placement: inline
-    focus: Choose the Х letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+    focus: Choose the Ukrainian sound for the displayed Х from the primer model, rejecting the Latin-shape guess, and classify
+      it as a consonant.
   - id: a7
     type: watch-and-repeat
     placement: inline
-    focus: Hear the sourced Й sound in V-003, then read the new-letter decodable words W-108, W-109 and W-110 aloud from
+    focus: Hear the Ч, Й and Х models in V-010, V-003 and V-011, then read W-108, W-109, W-110 and W-103 whole aloud from
       print; practised offline — not machine-verified.
   - id: a8
     type: match-up
     placement: workbook
-    focus: Match four distinct core form–gloss pairs W-081, W-101, W-109 and W-110; each pair has a separate meaning decision.
+    focus: Match four distinct core form–gloss pairs W-104, W-109, W-110 and W-118; each pair has a separate meaning decision,
+      and none repeats a lesson-1 pair.
   - id: a9
     type: anagram
     placement: workbook
     focus: Assemble the letters of three taught core decodable words W-101, W-104 and W-109; a whole-word construction decision
       after the previous lesson’s sound selection.
     model: X-005
+  - id: a10
+    type: quiz
+    placement: workbook
+    focus: Hear a whole word and choose its printed form among the decodable W-101, W-103, W-108, W-109 and W-110; distractors
+      differ in one of the new letters, and the answer changes from item to item.
   practice:
     vocabulary: core
     stress: []
     patterns:
     - a8
+    - a9
+    - a10
   videos:
+  - evidence: V-010
+    use: Step s1 pronunciation model for Ч before its rows.
   - evidence: V-003
     use: Step s2 pronunciation model for Й before the final-letter word.
+  - evidence: V-011
+    use: Step s3 pronunciation model for Х before its syllables.
 - n: 5
   slug: zh-sh-and-sentences
   title: Ж, Ш
@@ -710,19 +823,16 @@ lessons:
       - lemma: не
         evidence: W-061
       recycled:
+      - W-074
       - W-087
       - W-079
       - W-080
-      - W-101
       - W-104
-      - W-109
-      - W-110
   steps:
   - id: s1
     kind: teach
-    teach: Hear Ж from the primer, see its glyph, read its CV and VC row, then read W-111 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. For English readers,
-      anchor Ж in primer [ж] before the printed word.
+    teach: Open by reading W-074 aloud as a whole word. Hear Ж from V-012 and the primer before reading, see its glyph,
+      read its CV and VC row, then read W-111 as a whole decodable word and classify Ж as a consonant.
     introduces:
       letters:
       - Ж
@@ -732,20 +842,23 @@ lessons:
       grammar:
       - G-a1-002
       vocabulary:
+      - W-074
       - W-079
       - W-080
     evidence:
     - T-013
     - X-001
     - X-004
+    - V-012
     practice:
     - a1
     - a2
+    needs:
+    - video
   - id: s2
     kind: teach
-    teach: Hear Ш from the primer, see its glyph, read its CV and VC row, then read W-112 as a whole decodable word; classify
-      the new sound against the known vowel/consonant distinction and copy only the taught-letter model. For English readers,
-      anchor Ш in primer [ш] before the printed word.
+    teach: Hear Ш from V-013 and the primer before reading, see its glyph, read its CV and VC row, then read W-112 as a
+      whole decodable word and classify Ш as a consonant.
     introduces:
       letters:
       - Ш
@@ -759,22 +872,23 @@ lessons:
     - T-014
     - X-001
     - X-004
+    - V-013
     practice:
     - a3
     - a4
+    needs:
+    - video
   - id: s3
     kind: practice
-    teach: After the Ж and Ш word rows, show EX-001 and EX-002 as whole primer sentences. Read each aloud without decoding
-      any untaught sign, and answer a question about the source; past forms are incidental, never analysed.
+    teach: After the Ж and Ш word rows, show EX-001 and EX-002 as whole primer sentences from T-015 with English support.
+      The learner reads each aloud from print, then picks out each sentence and its words by ear; the past forms are incidental
+      and never analysed.
     uses:
       grammar:
       - G-a1-002
       vocabulary:
       - W-087
-      - W-101
       - W-104
-      - W-109
-      - W-110
     evidence:
     - T-015
     - EX-001
@@ -799,7 +913,7 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the Ж letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a3
     type: letter-grid
     placement: inline
@@ -810,7 +924,7 @@ lessons:
     type: quiz
     placement: inline
     focus: Choose the Ш letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and
-      consonant answers represented where relevant.
+      consonant answers represented.
   - id: a5
     type: observe
     placement: inline
@@ -826,8 +940,8 @@ lessons:
   - id: a7
     type: quiz
     placement: inline
-    focus: Answer a source-hosted choice about which whole sentence in T-015 expresses arriving home versus a question;
-      more than one answer option is viable across the set.
+    focus: Hear one of the two whole sentences EX-001 and EX-002, or one word from them, and choose the matching printed
+      item; every option is decodable, and the answers vary across the set.
     model: X-003
   - id: a8
     type: unjumble
@@ -836,28 +950,34 @@ lessons:
       a sentence.
     model: X-003
   - id: a9
-    type: odd-one-out
+    type: quiz
     placement: workbook
-    focus: Select a different heard sound among Ж and Ш with earlier Ч and Х; distribute correct positions and retain vowel/consonant
-      classification.
+    focus: Choose the letter for a heard Ж, Ш, Ч or Х sound across a balanced mixed set, keeping the vowel/consonant classification;
+      it extends the lesson-2 and lesson-3 sound-to-letter quizzes to the last four consonants.
   - id: a10
     type: pick-syllables
     placement: workbook
-    focus: Complete three taught core decodable words W-101, W-104 and W-109 from sourced syllable patterns; this cumulative
-      word check differs from the whole-sentence reordering task.
+    focus: Complete the decodable W-111, W-112 and W-104 by selecting the missing syllable; the check is spelling with the
+      new letters, not meaning, and it differs from the whole-sentence reordering task.
     model: X-001
   practice:
     vocabulary: core
     stress: []
     patterns:
     - a8
+    - a9
     - a10
+  videos:
+  - evidence: V-012
+    use: Step s1 pronunciation model for Ж before its rows.
+  - evidence: V-013
+    use: Step s2 pronunciation model for Ш before its rows.
 - n: 6
   slug: whole-sentences-recap
   title: повторення
   kind: recap
-  job: Hear a short first-person bilingual source story, answer Ukrainian-only questions, read the two whole sourced sentences
-    aloud, and copy decodable models plus an own-name model offline.
+  job: Hear a short first-person bilingual source story, answer Ukrainian-only questions about it by ear, read the two whole
+    sourced sentences aloud, and copy decodable models plus an own-name model offline.
   rationale: The ULP review shape closes the module after all 25 letters; two whole primer sentences carry reading aloud
     and the notebook task carries writing. A 190-word target keeps the story and English alignment short while separating
     by-ear incidental language from decodable print.
@@ -890,17 +1010,18 @@ lessons:
       - W-104
       - W-109
       - W-110
+      - W-118
       - W-087
   steps:
   - id: s1
     kind: recap
-    teach: Play V-004 and show a short first-person story made only of complete T-016 source sentences, aligned Ukrainian-left
-      and English-right; omit OCR-interrupted lines. It is heard as incidental language and is never a reading or copying
-      prompt. Include the whole informal greeting W-074 and the intact formal W-075 plus W-076 chunk by ear; ask whole Ukrainian-only
-      source questions from T-017, with different correct answers across the set; do not manufacture new sentence models.
-      Then display EX-001 and EX-002 intact, have the learner read both aloud from print, copy these decodable lines and
-      a sourced W-093 name model, and write their own name from an already-written personal model in a notebook. The own-name
-      task is offline and its spelling is never scored or used as a decoding target.
+    teach: Open by hearing the intact W-075 and W-076 greeting chunk. Play V-004 and show the T-016 first-person story, Ukrainian
+      left and English right; it opens with the whole greeting W-074, and the rest is heard as incidental language, never
+      a reading or copying prompt. Ask the first three Ukrainian-only T-017 questions, whose answers are in the T-016 lines,
+      by ear; questions and answer options are heard as by-ear items and never used as decoding targets, and each has a
+      different correct answer. Then display EX-001 and EX-002 intact, have the learner read both aloud from print, copy
+      these decodable lines, a few taught core words and the sourced W-093 name model, and write their own name from an
+      already-written personal model in a notebook. The own-name task is offline and its spelling is never scored.
     uses:
       grammar: []
       vocabulary:
@@ -912,15 +1033,16 @@ lessons:
       - W-104
       - W-109
       - W-110
+      - W-118
       - W-087
     evidence:
     - T-016
+    - T-017
     - T-015
     - EX-001
     - EX-002
     - X-003
     - X-004
-    - T-017
     - V-004
     practice:
     - a1
@@ -934,12 +1056,12 @@ lessons:
     type: observe
     placement: inline
     focus: Hear the complete first-person source sentences in V-004 while seeing their T-016 Ukrainian-left and English-right
-      alignment; the nondecodable story is by-ear only.
+      alignment; the story is by-ear only.
   - id: a2
     type: quiz
     placement: inline
-    focus: Ask whole Ukrainian-only T-017 questions about the heard source story; use distinct supported answers from T-017,
-      with more than one answer across the set.
+    focus: Ask the first three Ukrainian-only T-017 questions about the heard story by ear, with heard answer options from
+      T-017; each question has a different correct answer, and no item is a decoding task.
   - id: a3
     type: observe
     placement: inline
@@ -948,8 +1070,8 @@ lessons:
   - id: a4
     type: letter-grid
     placement: inline
-    focus: Copy EX-001 and EX-002 whole, a sourced W-093 name model, and write one’s own name from an existing personal
-      model into a notebook; practised offline — not machine-verified.
+    focus: Copy EX-001 and EX-002 whole, the decodable core words W-101, W-104, W-109, W-110 and W-118, the sourced W-093
+      name model, and one’s own name from an existing personal model into a notebook; practised offline — not machine-verified.
     model: X-004
   practice:
     vocabulary: core

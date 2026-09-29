@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 8523a2cd6a90b858281194bd95aa580dfec1b409
+  mcp_commit: 2f8b05917f9d09c6f0dc58e7ae233746a60fd73c
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 4bcbe254f3ce5ddeaab6589307938a9f09da3aaacf0c2317711fda90296f160d
+  sources_db: a8ba741949c3f5e4cae11fd52f454c68e17d30383955fccfd691573b8c8735ae
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -10367,4 +10367,497 @@ words:
     - дро́ва
     - 1
     row_sha256: 61e93e052538d5c6052958d64a9838aa9465c67220ca2f297f7bc40228a3792a
+    source: ulif
+- entry:
+    entry_id: 167620
+    source: vesum
+  forms:
+  - form: кленові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́нові
+    tags: noun:inanim:m:v_dav
+  - form: клену
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́ну
+    tags: noun:inanim:m:v_dav
+  - form: клене
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́не
+    tags: noun:inanim:m:v_kly
+  - form: кленові
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́нові
+      unstressed_form: кленові
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=ADJ
+      stressed_form: клено́ві
+      unstressed_form: кленові
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=ADJ
+      stressed_form: клено́ві
+      unstressed_form: кленові
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:m:v_mis
+  - form: клену
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ну
+      unstressed_form: клену
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: клену́
+      unstressed_form: клену
+      vesum:
+        lemma: клясти
+        pos: verb
+        tags: verb:imperf:pres:s:1:rare
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:m:v_mis
+  - form: клені
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́ні
+    tags: noun:inanim:m:v_mis
+  - form: клен
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: клен
+    tags: noun:inanim:m:v_naz
+  - form: кленом
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́ном
+    tags: noun:inanim:m:v_oru
+  - form: клена
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́на
+    tags: noun:inanim:m:v_rod
+  - form: клену
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ну
+      unstressed_form: клену
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: клену́
+      unstressed_form: клену
+      vesum:
+        lemma: клясти
+        pos: verb
+        tags: verb:imperf:pres:s:1:rare
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:m:v_rod
+  - form: клен
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: клен
+    tags: noun:inanim:m:v_zna
+  - form: кленам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́нам
+    tags: noun:inanim:p:v_dav
+  - form: клени
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: клени́
+      unstressed_form: клени
+      vesum:
+        lemma: клясти
+        pos: verb
+        tags: verb:imperf:impr:s:2:rare
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_kly
+  - form: кленах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́нах
+    tags: noun:inanim:p:v_mis
+  - form: клени
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: клени́
+      unstressed_form: клени
+      vesum:
+        lemma: клясти
+        pos: verb
+        tags: verb:imperf:impr:s:2:rare
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_naz
+  - form: кленами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́нами
+    tags: noun:inanim:p:v_oru
+  - form: кленів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: кле́нів
+    tags: noun:inanim:p:v_rod
+  - form: клени
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: кле́ни
+      unstressed_form: клени
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - upos=VERB
+      stressed_form: клени́
+      unstressed_form: клени
+      vesum:
+        lemma: клясти
+        pos: verb
+        tags: verb:imperf:impr:s:2:rare
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_zna
+  gloss_en: maple (tree of the Acer genus)
+  gloss_ref:
+    id: 14473
+    row_sha256: d0956f3815f523fc2b56f08510b07c39b859397b9bd030f021053fdcbacb062b
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-117
+  lemma: клен
+  note: Decodable common noun for Е on primer part 1 printed page 90 (key-word letter strip and the syllabified text).
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A1
+    row_id: 4037
+    row_sha256: 36edc16316a700ce73bf93807ec20d14e41e0137c98aeabd9f94b86d5731c33e
+    source: puls
+  entry:
+    entry_id: 150592
+    source: vesum
+  forms:
+  - form: зубові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бові
+    tags: noun:inanim:m:v_dav
+  - form: зубу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бу
+    tags: noun:inanim:m:v_dav
+  - form: зубе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зу́бе
+    tags: noun:inanim:m:v_kly
+  - form: зубові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бові
+    tags: noun:inanim:m:v_mis
+  - form: зубу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бу
+    tags: noun:inanim:m:v_mis
+  - form: зубі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бі
+    tags: noun:inanim:m:v_mis
+  - form: зуб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: зуб
+    tags: noun:inanim:m:v_naz
+  - form: зубом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́бом
+    tags: noun:inanim:m:v_oru
+  - form: зуба
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́ба
+    tags: noun:inanim:m:v_rod
+  - form: зуб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: зуб
+    tags: noun:inanim:m:v_zna
+  - form: зуба
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́ба
+    tags: noun:inanim:m:v_zna:var
+  - form: зубам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зуба́м
+    tags: noun:inanim:p:v_dav
+  - form: зуби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́би
+    tags: noun:inanim:p:v_kly
+  - form: зубах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зуба́х
+    tags: noun:inanim:p:v_mis
+  - form: зуби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́би
+    tags: noun:inanim:p:v_naz
+  - form: зубами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зуба́ми
+    tags: noun:inanim:p:v_oru
+  - form: зубів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зубі́в
+    tags: noun:inanim:p:v_rod
+  - form: зуби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: зу́би
+    tags: noun:inanim:p:v_zna
+  gloss_en: 'anatomy: tooth'
+  gloss_ref:
+    id: 5364
+    row_sha256: 0abbba737e30319bffb6acdf7edd38252f25c22ef262ee7144880fc495b295c1
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-118
+  lemma: зуб
+  note: Decodable Б-page word in the read list on primer part 1 printed page 107.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - зуб
+    - 1
+    row_sha256: 74b146a84adc9ebb4b935b2192057c25461019a90ede5419e892ed84d6eb2dc3
     source: ulif

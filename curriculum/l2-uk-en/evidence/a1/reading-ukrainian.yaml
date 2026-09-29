@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 8523a2cd6a90b858281194bd95aa580dfec1b409
+  mcp_commit: 2f8b05917f9d09c6f0dc58e7ae233746a60fd73c
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 1b79015fe51366a219c217463e0efb0e9e0e613fc0adcec015e730f17c6645cd
+  sources_db: 5cc86cdb59fee1f79f70f29698bf397aa151c37677d8d7f1ee0fe6d942c66ac5
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -126,7 +126,7 @@ exercises:
   - 'грати кава грім
 
     ґрати ґава ґрунт'
-  pattern: Compare G and Ґ in displayed word pairs, then select the written word matching the heard sound.
+  pattern: Compare Г and Ґ in displayed word pairs, then select the written word matching the heard sound.
   quote: 'грати кава грім
 
     ґрати ґава ґрунт'
@@ -1057,6 +1057,143 @@ texts:
     section_id: null
   supports: 'ULP Season 1 lesson 10: whole Ukrainian-only recap questions and source answers, including open questions and
     an affirmative response.'
+- id: T-018
+  quote: 'Прочитай слова. Скільки складів у цих сло-
+
+    вах?
+
+    зуб
+
+    бак
+
+    біб
+
+    лід
+
+    бук
+
+    над'
+  sha256: c1b004beff071e149409313d74ddb51082565f2a111c05f56b7bd7405a85874c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0105
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 109
+    row_sha256: bd828b32ba22aa0fbefdd1b34677bb019dec8af511b21837a5cb14f27d359542
+    section_id: 13056
+  supports: 'Primer part 1 printed page 107: the Б-page read list of short decodable words, including зуб.'
+- id: T-019
+  quote: '-хи
+
+    -хо-
+
+    хви-
+
+    Що тобі відомо про персонажів казки «Ко-
+
+    тигорошко»? Роз­ кажи.
+
+    Прочитай склади. Знайди слова із цими
+
+    складами.
+
+    хвилина
+
+    мухомор
+
+    -рох
+
+    горіхи
+
+    горох'
+  sha256: 7f833fb68991342edc859dd9f53083348f33ff31f30d4690fd5acfa4a5ac562c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0021
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 24
+    row_sha256: a20d23aafbd1de7f96649bba692a01b8c077331c8c9ea49fc3a911787e62ce0d
+    section_id: 13083
+  supports: 'Primer part 2 printed page 22: Х syllables and a read list of decodable Х words after the Х key-word page.'
+- id: T-020
+  quote: 'В українській мові є два різні звуки. подібні до латинських h і g. Раніш вони
+
+    позначались на письмі й друковано літерами г (h) і ґ (g).'
+  sha256: cae99bed838fbeab235abab06867c32da3e7451ac92db949f3a64441b9055e60
+  source:
+    author: Borys Antonenko-Davydovych
+    chunk_id: antonenko-davydovych-yak-my-hovorymo_p147
+    file: antonenko-davydovych-yak-my-hovorymo
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 4a547be86afdc67ac4436e60be9e855e9e32e236fed4269a12b6382eb69091fc
+    section_id: 7191
+  supports: 'Antonenko-Davydovych, Як ми говоримо, p. 147: Ukrainian has two different sounds, similar to Latin h and g, written
+    г and ґ; the reader must not give г the g reading.'
+- id: T-021
+  quote: 'Сполучення Lе передається через ле: білéт, елéктрика, желé, Галілéй,
+
+    Лéссінг. ІІ. G і h звичайно передаються літерою г: авангáрд, агітáція, агрéсор,
+
+    Гюгó, Магомéт. хóбі, хокéй, Хемінгуéй та ін. В окремих словах англійського походження h передається літерою х:
+
+    NB! У прізвищах людей допускається передавання звука [g] двома способами:
+
+    шляхом адаптації до хвукового ладу української мови – буквою г (Вергíлій, Гарсíя, Гéгель)
+
+    і шляхом імітації іншомовного [g] – буквою ґ (Верґíлій, Ґарсíя, Ґéґель)
+
+    ІІІ. F і ph передаються літерою ф: фáбрика, факт, фартýх, фах,
+
+    фая нс, федеративний тощо. Th залежно від того, як слово узвичаєне в українській мові, передається
+
+    то літерою ф: арифмéтика, ефíр, кáфедра, логарúфм, міф, орфогрáфія, – то
+
+    літерою т: бібліотéка, ортодóкс, ортопéдія, теáтр, теóрія.'
+  sha256: c2e47503f836d570a7928e50b0576e62239a35cb2981b2727a1bd5529ea6c81f
+  source:
+    author: strokal
+    chunk_id: uni-ukrmova-orthography-strokal-2021_s0431
+    file: uni-ukrmova-orthography-strokal-2021
+    grade: university
+    kind: textbook
+    page: 233
+    row_sha256: d21383377439b81b065efc7c39b411f65a330d77ef7e2ad0142ecdead1e0ed83
+    section_id: 52400
+  supports: 'Strokal, orthography manual p. 233, § 21: Latin e is written е, Latin t (th) is written т, Latin g and h are
+    written г (ґ for an imitated g), and English h is written х in some words; the Latin-shaped Е, Т and Х are checked against
+    these correspondences.'
+unsupported:
+- claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader
+    difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation
+    video per letter (V-003, V-010 to V-013), and T-021 shows only that English h is written х in some borrowed words; no
+    textbook record describes these five sounds for an English speaker, so the plan teaches them by the native model and states
+    no English comparison.
+  id: U-001
+  searches:
+  - query: regex pleasure|measure|vision|shop|church|cheese|Bach|loch|boy|yes|like the English|pronounced like|sounds like
+      near Ж Ш Ч Х Й Г
+    tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes, anna-ohoiko-1000-words-2nd-ed, anna-ohoiko-500-verbs, pohribnyi-ukrainska-literaturna-vymova-1992,
+      private-teacher-lessons-a)
+  - query: regex ʃ|ʒ|tʃ|[x]|[j]|ɦ|zh|kh|sh|ch|voiced|voiceless|дзвінк|глух
+    tool: sqlite textbooks (ulp, anna-ohoiko, private-teacher)
+  - query: like the English | as in the English | in English words | English sound | Latin letter | English g | English h
+      | [h] | [g]
+    tool: sqlite textbooks (all subjects)
+  - query: шиплячі | [ж] | [ш] | [ч] | [х] | [й] | глотков | задньоязик (hits are OCR-garbled and give no English comparison)
+    tool: sqlite textbooks (pohribnyi-ukrainska-literaturna-vymova-1992)
+  - query: titles Pronunciation|Alphabet|How to pronounce; text pleasure|shop|church|Bach|loch|boy|yes (the per-letter video
+      transcripts hold only example words; the talkukrainian alphabet table of English equivalents is not in the stored text;
+      external_articles is not a T- source table)
+    tool: sqlite external_articles (ulp_youtube, ukrainianlessons.com, talkukrainian.com, opentext.ku.edu)
+  - query: вимова звуків ж ш ч х й для англомовних
+    tool: mcp sources search_sources
+  status: open
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
@@ -1094,3 +1231,84 @@ videos:
   id: V-004
   url: https://www.youtube.com/watch?v=z8NucPzHLhE
   use: Source audio for the Season 1 lesson 10 first-person recap story, heard by ear.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
+    http_status: 200
+  id: V-005
+  url: https://www.youtube.com/watch?v=KFlsroBW0dk
+  use: Pronunciation model for Е before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    http_status: 200
+  id: V-006
+  url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  use: Pronunciation model for Д before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
+    http_status: 200
+  id: V-007
+  url: https://www.youtube.com/watch?v=BhASNxitC1A
+  use: Pronunciation model for З before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    http_status: 200
+  id: V-008
+  url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  use: Pronunciation model for Б before its word row.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
+    http_status: 200
+  id: V-009
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  use: Pronunciation model for Г before the Г/Ґ contrast.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    http_status: 200
+  id: V-010
+  url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+  use: Pronunciation model for Ч before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
+    http_status: 200
+  id: V-011
+  url: https://www.youtube.com/watch?v=vpr58zJSJKc
+  use: Pronunciation model for Х before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    http_status: 200
+  id: V-012
+  url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+  use: Pronunciation model for Ж before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-29'
+    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    http_status: 200
+  id: V-013
+  url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  use: Pronunciation model for Ш before its sound rows.

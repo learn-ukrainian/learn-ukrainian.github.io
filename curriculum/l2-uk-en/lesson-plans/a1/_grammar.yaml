@@ -1,20 +1,12 @@
 - id: G-a1-001
   point: An audible sound and a visible letter are different units, even when a letter represents that sound.
-  introduced_at:
-    position: 1
-    lesson: sounds-and-letters
+  introduced_at: {position: 1, lesson: sounds-and-letters}
 - id: G-a1-002
   point: Vowels and consonants are different sound classes identified by hearing before sorting their letters.
-  introduced_at:
-    position: 1
-    lesson: vowels-and-first-syllables
+  introduced_at: {position: 1, lesson: vowels-and-first-syllables}
 - id: G-a1-003
   point: The two Ukrainian vowel letters introduced here represent different sounds and are not interchangeable.
-  introduced_at:
-    position: 1
-    lesson: vowels-and-first-syllables
+  introduced_at: {position: 1, lesson: vowels-and-first-syllables}
 - id: G-a1-004
   point: The two new consonant letters represent different sounds and must be distinguished when reading.
-  introduced_at:
-    position: 2
-    lesson: two-g-sounds
+  introduced_at: {position: 2, lesson: two-g-sounds}

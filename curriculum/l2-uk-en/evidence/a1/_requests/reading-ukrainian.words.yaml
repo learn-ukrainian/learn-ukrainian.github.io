@@ -83,3 +83,17 @@ words:
     entry_id: 105713
   want: W-116
   note: Decodable Д word on primer part 1 printed page 94; дах needs Х and is held until later in the module.
+- lemma: клен
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 167620
+  want: new
+  note: Decodable common noun for Е on primer part 1 printed page 90 (key-word letter strip and the syllabified text).
+- lemma: зуб
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 150592
+  want: new
+  note: Decodable Б-page word in the read list on primer part 1 printed page 107.

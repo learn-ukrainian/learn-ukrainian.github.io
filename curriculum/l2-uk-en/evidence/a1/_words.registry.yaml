@@ -810,3 +810,17 @@
   id: W-116
   lemma: дрова
   pos: noun
+- allocated_at_build: f50724bf1e6ed1e9f469fd477bb71b029afcd2cc6edb05afa0a85a774f4e3ba0
+  entry:
+    entry_id: 167620
+    source: vesum
+  id: W-117
+  lemma: клен
+  pos: noun
+- allocated_at_build: f50724bf1e6ed1e9f469fd477bb71b029afcd2cc6edb05afa0a85a774f4e3ba0
+  entry:
+    entry_id: 150592
+    source: vesum
+  id: W-118
+  lemma: зуб
+  pos: noun
