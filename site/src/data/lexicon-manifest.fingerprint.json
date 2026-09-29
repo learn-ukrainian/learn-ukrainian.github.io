@@ -147,7 +147,7 @@
       },
       {
         "path": "scripts/lexicon/curated_membership_evidence.py",
-        "sha256": "ac8ddf1495e39072297ba220dede71842c711e6e78ab55695b9074be141b4ade"
+        "sha256": "704d44d0a94dbe74c24de6413967b7267934b97e745ed68681323b39e1bb7f1d"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
@@ -319,7 +319,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "4548371e585986b5a0c1835447e5caec02a5dc2af4b568be50680d436960be98"
+        "sha256": "adccec2719dddaa30d75a48ce0d6ea9aac423bd45bf42b603f1b1c97160e2e83"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",

@@ -70,3 +70,34 @@ def test_empty_checked_homonym_without_matching_sections_is_not_attested() -> No
            INSERT INTO ulif_dictua_entries VALUES (1,'слово',1,'','','ok',1);"""
     )
     assert read_checked_ulif(conn, "слово")[0]["lexical_attestation"] is False
+
+
+def test_only_headword_cell_attests_and_unchecked_homonyms_are_excluded() -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(
+        """CREATE TABLE ulif_dictua_entries
+           (id INTEGER, normalized_query TEXT, homonym_index INTEGER,
+            canonical_headword TEXT, grammatical_label TEXT, status TEXT,
+            homonym_checked INTEGER);
+           CREATE TABLE ulif_dictua_sections
+           (id INTEGER, entry_id INTEGER, kind TEXT, source_order INTEGER,
+            payload_json TEXT);
+           INSERT INTO ulif_dictua_entries VALUES (1,'слово',1,'','','ok',1);
+           INSERT INTO ulif_dictua_entries VALUES (2,'слово',2,'слово','','ok',0);
+           INSERT INTO ulif_dictua_entries VALUES (3,'п’єса',1,'','','ok',1);"""
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (1,1,'paradigm',0,?)",
+        (json.dumps({"rows": [["називний", "інше", "слово"], ["родовий", "слово"]]}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (2,3,'paradigm',0,?)",
+        (json.dumps({"rows": [["називний", "пʼєса"]]}),),
+    )
+    checked = read_checked_ulif(conn, "слово")
+    assert [row["id"] for row in checked] == [1]
+    assert checked[0]["paradigm_headword"] == ""
+    assert checked[0]["lexical_attestation"] is False
+    apostrophe = read_checked_ulif(conn, "п’єса")
+    assert apostrophe[0]["paradigm_headword"] == "пʼєса"
+    assert apostrophe[0]["lexical_attestation"] is True

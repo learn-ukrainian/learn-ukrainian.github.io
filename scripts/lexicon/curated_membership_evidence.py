@@ -15,19 +15,21 @@ from typing import Any
 
 
 def _key(value: str) -> str:
+    value = value.replace("ʼ", "'").replace("’", "'").replace("`", "'")
     decomposed = unicodedata.normalize("NFD", value)
     return "".join(ch for ch in decomposed if ch != "\u0301").casefold().strip()
 
 
 def _paradigm_headword(payload: dict[str, Any], lemma: str) -> str:
     for row in payload.get("rows", []):
-        if not isinstance(row, list):
+        if not isinstance(row, list) or len(row) < 2:
             continue
-        for cell in row:
-            for form in str(cell).split(","):
-                candidate = form.strip()
-                if _key(candidate) == _key(lemma):
-                    return candidate
+        if _key(str(row[0])) not in {_key("називний"), _key("інфінітив")}:
+            continue
+        for form in str(row[1]).split(","):
+            candidate = form.strip()
+            if _key(candidate) == _key(lemma):
+                return candidate
     return ""
 
 
@@ -108,10 +110,25 @@ def refresh_registry(registry: Path, sources_db: Path) -> tuple[dict[str, Any], 
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--registry", type=Path, required=True)
-    parser.add_argument("--sources-db", type=Path, required=True)
-    parser.add_argument("--write", action="store_true")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Check ULIF evidence for the #9151 reconciliation registry. "
+            "Use for evidence refresh, not membership admission."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/lexicon/curated_membership_evidence.py "
+            "--registry registry/lexicon/curated-membership-reconciliation-9151.json "
+            "--sources-db data/sources.db\n"
+            "Outputs: JSON summary on stdout; --write updates only the registry.\n"
+            "Exit codes: 0 on success; nonzero on invalid inputs or read errors.\n"
+            "Related: #9151 reviewed reconciliation."
+        ),
+    )
+    parser.add_argument("--registry", type=Path, required=True, help="Reviewed reconciliation JSON path")
+    parser.add_argument("--sources-db", type=Path, required=True, help="Read-only ULIF sources.db path")
+    parser.add_argument("--write", action="store_true", help="Write refreshed evidence to --registry (default: report only)")
     args = parser.parse_args()
     payload, changed = refresh_registry(args.registry, args.sources_db)
     if args.write:
