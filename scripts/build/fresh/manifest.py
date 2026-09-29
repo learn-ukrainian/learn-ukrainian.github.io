@@ -8,7 +8,7 @@ state and the built lessons 1..N-1 (``upstream_lessons``).
 
 The learner state has two forms. ``learner_state.sha256`` is its identity: the
 canonical-JSON hash of ``planned_state(...).to_dict()``, independent of YAML
-formatting. ``inputs.learner_state`` is the readable form the reviewer opens: a
+formatting, with keys sorted except ``letters``, which keeps its taught order. ``inputs.learner_state`` is the readable form the reviewer opens: a
 deterministic YAML document written next to the manifest holding that same
 ``to_dict()`` under ``learner_state`` and the lesson's immersion rule (the
 ``lesson_immersion_payload`` result the writer received) under ``immersion``.
@@ -40,7 +40,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.path_guard import checked_existing_path, checked_path
 from scripts.curriculum.evidence import lock
-from scripts.curriculum.learner_state.planned import planned_state
+from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
 from scripts.review.receipts.ledger import LedgerError
 from scripts.review.validate.validate import index_ledger, review_schema_errors
@@ -65,9 +65,29 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _taught_order(value: Any, key: Any = None) -> Any:
+    """Mapping keys sorted, except ``letters``, whose order is the taught order (#9182).
+
+    The one ordering both the identity hash and the saved learner-state YAML use. Every other
+    mapping is sorted, so an empty ``letters`` or one already in code-point order serializes
+    exactly as the plain sorted form did before taught order became part of the identity.
+    """
+    if isinstance(value, dict):
+        items = value.items() if key == "letters" else sorted(value.items())
+        return {k: _taught_order(v, k) for k, v in items}
+    if isinstance(value, (list, tuple)):
+        return [_taught_order(item) for item in value]
+    return value
+
+
 def learner_state_sha256(state: Any) -> str:
-    """Canonical JSON identity, independent of YAML formatting and key order."""
-    data = json.dumps(state.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    """Canonical JSON identity, independent of YAML formatting.
+
+    Keys are sorted except the ``letters`` mapping, which keeps its taught order: two states
+    that teach the same letters in a different order are different learner states, and a
+    freshness check comparing this hash must see an order-only change in an earlier plan.
+    """
+    data = json.dumps(_taught_order(state.to_dict()), ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(data).hexdigest()
 
 
@@ -128,13 +148,15 @@ def pinned_entries(doc: Any, location: str = "") -> list[tuple[str, dict[str, An
 
 
 def changed_inputs(doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
-    """The pinned files whose bytes now differ from what the manifest recorded.
+    """The pinned files whose bytes now differ from what the manifest recorded, and, for a
+    lesson manifest, a learner state that no longer matches the recorded identity.
 
     One record per changed pin: ``input`` (its location in the manifest), ``entry``
     (the recorded pin) and ``current_sha256`` (``None`` when the file is gone or no
     longer resolves to the recorded path). Every pin in the manifest is recorded
     through ``_input``, so it is read back through ``_input`` too and recording and
-    freshness cannot disagree about what a path holds.
+    freshness cannot disagree about what a path holds. The learner-state record is
+    described in ``_learner_state_change``.
     """
     root = repo_root.resolve()
     changed = []
@@ -146,7 +168,42 @@ def changed_inputs(doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]
         current = now["sha256"] if now and now["path"] == entry["path"] else None
         if current != entry["sha256"]:
             changed.append({"input": name, "entry": entry, "current_sha256": current})
+    state_change = _learner_state_change(doc, root)
+    if state_change is not None:
+        changed.append(state_change)
     return changed
+
+
+def _learner_state_change(doc: dict[str, Any], root: Path) -> dict[str, Any] | None:
+    """The lesson's planned learner state, recomputed from the plans on disk, against ``learner_state.sha256``.
+
+    The saved state file's bytes cannot show that an earlier plan changed after the manifest was
+    written, so the identity is recomputed the way ``write_manifest`` computed it. A difference is
+    one record: ``input`` ``learner_state``, ``entry`` the saved file's path with the recorded
+    identity, and ``current_sha256`` the recomputed identity (``None`` when it cannot be recomputed).
+    """
+    recorded = doc.get("learner_state")
+    saved = (doc.get("inputs") or {}).get("learner_state")
+    if doc.get("kind") != "lesson" or not isinstance(recorded, dict) or not _is_pin(saved):
+        return None
+    try:
+        level, slug, n = doc["level"], doc["slug"], doc["lesson"]
+        plans_dir = root / "curriculum/l2-uk-en/lesson-plans" / level
+        plan_path = checked_existing_path(root, plans_dir / f"{slug}.yaml", "curriculum/l2-uk-en/lesson-plans")
+        position = (yaml.safe_load(plan_path.read_bytes()).get("arc_ref") or {}).get("position", 1)
+        state = planned_state(
+            level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=root / EVIDENCE_ROOT / level
+        )
+        current = learner_state_sha256(state)
+    except (OSError, yaml.YAMLError, KeyError, TypeError, AttributeError, ValueError, PlannedStateError):
+        current = None
+    if current == recorded.get("sha256"):
+        return None
+    return {
+        "input": "learner_state",
+        "entry": {"path": saved["path"], "sha256": recorded.get("sha256")},
+        "current_sha256": current,
+    }
 
 
 def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str, Any]:
@@ -157,11 +214,20 @@ def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str
     return document
 
 
+def learner_state_yaml_bytes(document: dict[str, Any]) -> bytes:
+    """``lock.yaml_bytes`` except that ``letters`` keeps the taught order the writer block shows.
+
+    The reviewer reads this file and recomputes ``learner_state_sha256`` from it; both use
+    ``_taught_order``, so the saved order and the recorded identity agree.
+    """
+    return yaml.safe_dump(_taught_order(document), allow_unicode=True, sort_keys=False, width=120).encode("utf-8")
+
+
 def materialize_learner_state(path: Path, document: dict[str, Any], repo_root: Path) -> dict[str, str]:
     """Write the document as deterministic YAML with its lock sidecar; return the manifest input entry."""
     root = repo_root.resolve()
     target = checked_path(root, path.resolve().relative_to(root), "curriculum/l2-uk-en/evidence")
-    lock.write(target, lock.yaml_bytes(document))
+    lock.write(target, learner_state_yaml_bytes(document))
     return _input(target, root)
 
 
