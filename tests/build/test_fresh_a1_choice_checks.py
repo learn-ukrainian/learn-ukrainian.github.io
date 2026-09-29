@@ -12,10 +12,15 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
+from scripts.build.fresh import cli
 from scripts.build.fresh.candidates import item_candidates
+from scripts.build.fresh.requires_confirm import record_answers
 from scripts.build.fresh.runner import check_4_activities, check_7_a1_choices
+from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
+from scripts.curriculum.resolver.inputs import ResolverError
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -138,6 +143,24 @@ FUTURE_BE = _record(
     ],
 )
 
+VESUM_LOCATIONS = {
+    "W-1": "487702-487719",
+    "W-2": "2614480-2614493",
+    "W-3": "542216-542245",
+    "W-4": "6561736-6561760",
+    "W-6": "611137-611177",
+    "W-7": "4758815-4758831",
+    "W-8": "1503099-1503139",
+    "W-9": "1380770-1380786",
+    "W-10": "2752427-2752449",
+    "W-11": "4832237-4832260",
+    "W-12": "1380770-1380786",
+    "W-13": "5594828-5594871",
+    "W-15": "2522268-2522281",
+    "W-16": "542216-542245",
+    "W-17": "6445807-6445825",
+}
+
 
 def _check(
     tmp_path: Path,
@@ -147,6 +170,7 @@ def _check(
     extra_records: list[dict] | None = None,
     lookup=None,
     typ: str = "quiz",
+    receipt: bool = True,
 ) -> dict:
     draft = {"activities": [{"id": "a1", "items": [item]}], "steps": []}
     lesson = {"activities": [{"id": "a1", "type": typ}]}
@@ -154,6 +178,8 @@ def _check(
     stream = SimpleNamespace(
         lesson={"level": "a1", "slug": "sample", "n": 1}, inputs={"draft_sha256": "a" * 64}, tokens=[]
     )
+    if receipt and item.get("kind") == "form" and not receipts.requirement_receipt_path(tmp_path, 1).exists():
+        _write_form_receipt(tmp_path, item)
     return check_7_a1_choices(
         draft,
         lesson,
@@ -163,6 +189,37 @@ def _check(
         lesson_n=1,
         vesum_lookup=lookup or (lambda words: {word: [] for word in words}),
     )
+
+
+def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm") -> None:
+    options = item["options"]
+    key = item.get("correct", 0)
+    evidence_id = "vesum:" + VESUM_LOCATIONS[item["option_records"][0]]
+    doc = {
+        "requirements_schema": 2,
+        "lesson": {"level": "a1", "slug": "sample", "n": 1},
+        "inputs": {"draft_sha256": "a" * 64},
+        "items": [
+            {
+                "activity": "a1",
+                "item": 0,
+                "requires": item["requires"],
+                "payload_sha256": receipts.requirement_payload_sha256(
+                    receipts.requirement_sentence(item), options, key, item["requires"]
+                ),
+                "decision": decision,
+                "reason": "source-backed unique reading" if decision == "confirm" else "alternative reading",
+                "requires_forced": decision == "confirm",
+                "options": [
+                    {"text": text, "judgement": "valid" if i == key else "invalid", "evidence": [evidence_id]}
+                    for i, text in enumerate(options)
+                ],
+                "writer": {"seat": "codex@sol", "family": "openai"},
+                "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
+            }
+        ],
+    }
+    receipts.write_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), doc)
 
 
 def _form(options: list[str], record: dict, demand: dict[str, str], *, key: int = 0, taught: str = "Case") -> dict:
@@ -176,11 +233,12 @@ def _form(options: list[str], record: dict, demand: dict[str, str], *, key: int 
     }
 
 
-def test_brother_accusative_accepts_only_key_and_records_missing_receipt(tmp_path: Path) -> None:
+def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
     item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
+    assert _check(tmp_path, item, BROTHER, receipt=False)["code"] == "requires_receipt_missing"
     row = _check(tmp_path, item, BROTHER)
     assert row["status"] == "passed"
-    assert row["details"]["requirement_receipts"] == [{"activity": "a1", "item": 0, "requirement": "not_checked"}]
+    assert row["details"]["requirement_receipts"] == [{"activity": "a1", "item": 0, "requirement": "confirmed"}]
     swapped = copy.deepcopy(item)
     swapped["correct"] = 1
     assert _check(tmp_path, swapped, BROTHER)["code"] == "form_not_unique_for_requires"
@@ -408,6 +466,7 @@ def test_analytic_future_uses_single_store_forms(tmp_path: Path) -> None:
     aux = _form(["буду", "буде", "будемо"], BE, {"Person": "1", "Number": "Sing"}, taught="Person")
     assert _check(tmp_path, aux, BE)["status"] == "passed"
     infinitive = _form(["читати", "читаю", "читав"], READ, {"VerbForm": "Inf"}, taught="VerbForm")
+    _write_form_receipt(tmp_path, infinitive)
     assert _check(tmp_path, infinitive, READ)["status"] == "passed"
     infinitive["options"][0] = "буду читати"
     assert _check(tmp_path, infinitive, READ)["code"] == "form_option_without_analysis"
@@ -415,25 +474,254 @@ def test_analytic_future_uses_single_store_forms(tmp_path: Path) -> None:
 
 def test_requirement_confirmation_is_bound_to_demand_and_other_family(tmp_path: Path) -> None:
     item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
-    doc = {
-        "requirements_schema": 1,
+    _write_form_receipt(tmp_path, item)
+    assert _check(tmp_path, item, BROTHER)["details"]["requirement_receipts"][0]["requirement"] == "confirmed"
+    item["sentence"] = "Changed ___"
+    assert _check(tmp_path, item, BROTHER)["code"] == "requires_receipt_stale"
+    item.pop("sentence")
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    doc = receipts.read_requirement_receipts(path)
+    doc["items"][0]["requires"] = {"Case": "Gen"}
+    receipts.write_requirement_receipts(path, doc)
+    assert _check(tmp_path, item, BROTHER)["code"] == "requires_receipt_stale"
+    doc["items"][0]["requires"] = {"Case": "Acc"}
+    doc["items"][0]["options"][0]["judgement"] = "invalid"
+    doc["items"][0]["options"][1]["judgement"] = "valid"
+    receipts.write_requirement_receipts(path, doc)
+    assert _check(tmp_path, item, BROTHER)["code"] == "requires_receipt_denied"
+
+
+def test_requirement_payload_binding_and_formatting() -> None:
+    demand = {"Case": "Acc", "Number": "Sing"}
+    original = receipts.requirement_payload_sha256("Можна ___?", ["хліб", "хліба"], 0, demand)
+    assert original == receipts.requirement_payload_sha256(
+        " Можна  ___? ", [" хліб ", "хліба"], 0, {"Number": "Sing", "Case": "Acc"}
+    )
+    for sentence, options, key, requires in [
+        ("Дайте ___?", ["хліб", "хліба"], 0, demand),
+        ("Можна ___?", ["хліб", "хлібу"], 0, demand),
+        ("Можна ___?", ["хліб", "хліба"], 1, demand),
+        ("Можна ___?", ["хліб", "хліба"], 0, {"Case": "Acc"}),
+    ]:
+        assert receipts.requirement_payload_sha256(sentence, options, key, requires) != original
+
+
+def test_requirement_inputs_ignore_only_form_formatting() -> None:
+    draft = {
+        "activities": [
+            {
+                "id": "a1",
+                "items": [
+                    {
+                        "kind": "form",
+                        "sentence": "Можна ___?",
+                        "options": ["хліб", "хліба"],
+                        "requires": {"Case": "Acc"},
+                    }
+                ],
+            }
+        ]
+    }
+    before = receipts.requirement_inputs({"expanded_sha256": "a" * 64, "words_lock": "b" * 64}, draft)
+    formatted = copy.deepcopy(draft)
+    formatted["activities"][0]["items"][0]["sentence"] = " Можна  ___? "
+    formatted["activities"][0]["items"][0]["options"][0] = " хліб "
+    assert receipts.requirement_inputs({"expanded_sha256": "c" * 64, "words_lock": "b" * 64}, formatted) == before
+    formatted["activities"][0]["items"][0]["options"][0] = "хліба"
+    assert receipts.requirement_inputs({"expanded_sha256": "c" * 64, "words_lock": "b" * 64}, formatted) != before
+
+
+def test_denied_partitive_item_fails_check_7(tmp_path: Path) -> None:
+    # inspect-words: хліб noun:inanim:m:v_zna; хліба noun:inanim:m:v_rod;
+    # хлібу noun:inanim:m:v_dav and noun:inanim:m:v_mis (VESUM 6445807-6445825).
+    bread = _record(
+        17,
+        "хліб",
+        [("хліб", "noun:inanim:m:v_zna"), ("хліба", "noun:inanim:m:v_rod"), ("хлібу", "noun:inanim:m:v_dav")],
+    )
+    item = _form(["хліб", "хліба", "хлібу"], bread, {"Case": "Acc", "Number": "Sing"})
+    item["sentence"] = "Можна ___?"
+    _write_form_receipt(tmp_path, item, decision="deny")
+    assert _check(tmp_path, item, bread)["code"] == "requires_receipt_denied"
+    item["sentence"] = "Дайте ___?"
+    assert _check(tmp_path, item, bread)["code"] == "requires_receipt_stale"
+
+
+def test_requires_record_rejects_invalid_answers() -> None:
+    question = {
+        "activity": "a1",
+        "item": 0,
+        "sentence": "На столі лежить ___.",
+        "options": ["хліб", "хліба"],
+        "key_index": 0,
+        "requires": {"Case": "Nom", "Number": "Sing"},
+        "payload_sha256": receipts.requirement_payload_sha256(
+            "На столі лежить ___.", ["хліб", "хліба"], 0, {"Case": "Nom", "Number": "Sing"}
+        ),
+    }
+    batch = {
         "lesson": {"level": "a1", "slug": "sample", "n": 1},
         "inputs": {"draft_sha256": "a" * 64},
-        "items": [
+        "questions": [question],
+    }
+    answer = {
+        "activity": "a1",
+        "item": 0,
+        "decision": "confirm",
+        "reason": "forced by context",
+        "requires_forced": True,
+        "options": [
+            {"text": "хліб", "judgement": "valid", "evidence": ["vesum:6445807-6445825"]},
+            {"text": "хліба", "judgement": "invalid", "evidence": ["vesum:6445807-6445825"]},
+        ],
+    }
+
+    def record(candidate: dict, *, seat: str = "claude@sonnet", family: str = "anthropic") -> dict:
+        return record_answers(
+            batch, {"answers": [candidate]}, seat=seat, family=family, writer_seat="codex@sol", writer_family="openai"
+        )
+
+    assert record(answer)["items"][0]["decision"] == "confirm"
+    for change in (
+        {"options": [{**answer["options"][0], "evidence": []}, answer["options"][1]]},
+        {"options": [{**answer["options"][0], "evidence": ["sum11:12"]}, answer["options"][1]]},
+        {"requires_forced": False},
+        {"options": list(reversed(answer["options"]))},
+    ):
+        with pytest.raises(ResolverError):
+            record({**answer, **change})
+    with pytest.raises(ResolverError, match="missing answers"):
+        record_answers(
+            batch,
+            {"answers": []},
+            seat="claude@sonnet",
+            family="anthropic",
+            writer_seat="codex@sol",
+            writer_family="openai",
+        )
+    with pytest.raises(ResolverError, match="duplicate"):
+        record_answers(
+            batch,
+            {"answers": [answer, answer]},
+            seat="claude@sonnet",
+            family="anthropic",
+            writer_seat="codex@sol",
+            writer_family="openai",
+        )
+    with pytest.raises(ResolverError, match="family"):
+        record(answer, family="OpenAI")
+    with pytest.raises(ResolverError, match="language lane"):
+        record(answer, seat="other@model")
+    with pytest.raises(ResolverError, match="language lane"):
+        record(answer, seat="grok@model")
+    with pytest.raises(ResolverError, match="family"):
+        record(answer, family="xai")
+    unresolved = {
+        **answer,
+        "decision": "deny",
+        "reason": "unresolved source evidence",
+        "options": [{**answer["options"][0], "evidence": []}, answer["options"][1]],
+    }
+    assert record(unresolved)["items"][0]["decision"] == "deny"
+    wrong_key = {
+        **answer,
+        "decision": "deny",
+        "reason": "the keyed form is invalid",
+        "options": [{**answer["options"][0], "judgement": "invalid"}, {**answer["options"][1], "judgement": "valid"}],
+    }
+    assert record(wrong_key)["items"][0]["decision"] == "deny"
+
+
+def test_requires_cli_writes_questions_prompt_and_denial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/sample"
+    state.mkdir(parents=True)
+    item = _form(["хліб", "хліба"], _record(17, "хліб", []), {"Case": "Acc"})
+    item["sentence"] = "Можна ___?"
+    (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes({"activities": [{"id": "a1", "items": [item]}]}))
+    identity = {"level": "a1", "slug": "sample", "n": 1}
+    inputs = {key: "a" * 64 for key in ("expanded_sha256", "allowlist_sha256", "words_lock", "vesum", "trie_digest")}
+    receipts.write_receipts(
+        state / "lesson-1.resolutions.yaml",
+        {"resolutions_schema": 1, "lesson": identity, "inputs": inputs, "tokens": []},
+    )
+    monkeypatch.setattr(
+        cli,
+        "_load_lesson_data",
+        lambda *args, **kwargs: (
+            {},
+            {"activities": [{"id": "a1", "type": "quiz"}]},
+            {},
+            {},
+            {"state_dir": state.parent},
+        ),
+    )
+    base = ["a1", "sample", "--lesson", "1", "--repo-root", str(tmp_path)]
+    assert cli.main(["requires-questions", *base]) == 0
+    batch = yaml.safe_load((state / "lesson-1.requires-questions.yaml").read_text())
+    assert batch["questions"][0]["sentence"] == "Можна ___?"
+    assert (state / "lesson-1.requires-confirm.prompt.md").is_file()
+    answer = {
+        "answers": [
             {
                 "activity": "a1",
                 "item": 0,
-                "requires": {"Case": "Acc"},
-                "confirmed": True,
-                "writer": {"seat": "codex@sol", "family": "openai"},
-                "reviewer": {"seat": "grok@grok", "family": "xai", "lane": "language"},
+                "decision": "deny",
+                "reason": "alternative partitive reading",
+                "requires_forced": False,
+                "options": [
+                    {"text": "хліб", "judgement": "valid", "evidence": ["vesum:6445807-6445825"]},
+                    {"text": "хліба", "judgement": "depends_on_context", "evidence": ["vesum:6445807-6445825"]},
+                ],
             }
-        ],
+        ]
     }
-    receipts.write_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), doc)
-    assert _check(tmp_path, item, BROTHER)["details"]["requirement_receipts"][0]["requirement"] == "confirmed"
-    item["requires"] = {"Case": "Gen"}
-    assert _check(tmp_path, item, BROTHER)["details"]["requirement_receipts"][0]["requirement"] == "not_checked"
+    answers_path = tmp_path / "answers.yaml"
+    answers_path.write_bytes(lock.yaml_bytes(answer))
+    questions_path = state / "lesson-1.requires-questions.yaml"
+    tampered = copy.deepcopy(batch)
+    tampered["questions"][0]["requires"] = {"Case": "Gen"}
+    lock.write(questions_path, lock.yaml_bytes(tampered))
+    assert (
+        cli.main(
+            [
+                "requires-record",
+                *base,
+                "--answers",
+                str(answers_path),
+                "--seat",
+                "claude@sonnet",
+                "--family",
+                "anthropic",
+                "--writer-seat",
+                "codex@sol",
+                "--writer-family",
+                "openai",
+            ]
+        )
+        == 1
+    )
+    lock.write(questions_path, lock.yaml_bytes(batch))
+    assert (
+        cli.main(
+            [
+                "requires-record",
+                *base,
+                "--answers",
+                str(answers_path),
+                "--seat",
+                "claude@sonnet",
+                "--family",
+                "anthropic",
+                "--writer-seat",
+                "codex@sol",
+                "--writer-family",
+                "openai",
+            ]
+        )
+        == 0
+    )
+    doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state, 1))
+    assert doc["requirements_schema"] == 2 and doc["items"][0]["decision"] == "deny"
 
 
 def test_missing_vesum_fails_as_named_check_not_exception(tmp_path: Path) -> None:

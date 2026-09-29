@@ -321,6 +321,41 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
+    for name in ("requires-questions", "requires-record"):
+        example = f"  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.fresh.cli {name} a1 sounds-letters-and-hello --lesson 1"
+        if name == "requires-record":
+            example += " --answers /path/to/answers.yaml --seat claude@sonnet --family anthropic --writer-seat codex@sol --writer-family openai"
+        p_requires = subparsers.add_parser(
+            name,
+            help="Prepare or record A1 form-item language confirmation",
+            description=(
+                "Prepare source-backed A1 form-item confirmation.\n"
+                "Use after a draft has reached the resolution-receipt step."
+            ),
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog=(
+                "Examples:\n"
+                f"{example}\n\n"
+                "Outputs:\n"
+                "  Questions and seat prompt, or a locked requirement receipt, in the lesson state directory.\n\n"
+                "Exit codes:\n"
+                "  0: Wrote the requested document\n"
+                "  1: Input, answer, or provenance validation failed\n\n"
+                "Related:\n"
+                "  scripts/build/fresh/prompts/requires-confirm.md.j2; issue #9019"
+            ),
+        )
+        p_requires.add_argument("level", choices=["a1"], help="A1 curriculum level")
+        p_requires.add_argument("slug", help="Module slug")
+        p_requires.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed)")
+        p_requires.add_argument("--repo-root", type=Path, default=None, help="Repository root for lesson files")
+        if name == "requires-record":
+            p_requires.add_argument("--answers", type=Path, required=True, help="Language seat's YAML answers file")
+            p_requires.add_argument("--seat", required=True, help="Language reviewer seat identity")
+            p_requires.add_argument("--family", required=True, help="Reviewer's model family")
+            p_requires.add_argument("--writer-seat", required=True, help="Author's seat identity")
+            p_requires.add_argument("--writer-family", required=True, help="Author's model family")
+
     p_closure = subparsers.add_parser(
         "closure", help="Recompute stale lesson manifest dependencies",
         description=(
@@ -691,7 +726,7 @@ def main(argv: list[str] | None = None) -> int:
         checked_path(repo_root, "docs/style-cards", "docs/style-cards")
         checked_path(repo_root, Path("site/src/content/docs") / args.level / args.slug,
                      "site/src/content/docs")
-        for option in ("output", "output_dir", "site_dir", "gap_report", "fake_seat"):
+        for option in ("output", "output_dir", "site_dir", "gap_report", "fake_seat", "answers"):
             value = getattr(args, option, None)
             if value is not None:
                 setattr(args, option, checked_existing_path(
@@ -701,6 +736,75 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{err}", file=sys.stderr)
         return 1
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
+
+    if args.command in {"requires-questions", "requires-record"}:
+        from scripts.build.fresh import requires_confirm
+        from scripts.curriculum.resolver import receipts
+        from scripts.curriculum.resolver.inputs import ResolverError
+
+        try:
+            _, lesson_entry, _, _, paths = _load_lesson_data(args.level, args.slug, args.lesson, repo_root=repo_root)
+            state_dir = checked_existing_path(repo_root, paths["state_dir"] / args.slug, "curriculum/l2-uk-en/evidence")
+            draft_path = checked_existing_path(
+                repo_root, state_dir / f"lesson-{args.lesson}.draft.yaml", "curriculum/l2-uk-en/evidence"
+            )
+            resolution_path = checked_existing_path(
+                repo_root, state_dir / f"lesson-{args.lesson}.resolutions.yaml", "curriculum/l2-uk-en/evidence"
+            )
+            draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
+            resolution = receipts.check_receipts(resolution_path)
+            identity = {"level": args.level, "slug": args.slug, "n": args.lesson}
+            if resolution["lesson"] != identity:
+                raise ValueError("resolution receipt belongs to another lesson")
+            batch = requires_confirm.questions_from_draft(
+                draft,
+                {"lesson": identity, "activities": lesson_entry["activities"]},
+                receipts.requirement_inputs(resolution["inputs"], draft),
+            )
+            questions_path = state_dir / f"lesson-{args.lesson}.requires-questions.yaml"
+            if args.command == "requires-questions":
+                requires_confirm.write_questions(state_dir, args.lesson, batch)
+                print(
+                    json.dumps({"questions": str(questions_path), "count": len(batch["questions"])}, ensure_ascii=False)
+                )
+            else:
+                lock.require(questions_path)
+                recorded = yaml.safe_load(questions_path.read_text(encoding="utf-8"))
+
+                def question_identity(question: dict[str, Any]) -> tuple[Any, ...]:
+                    return (
+                        question["activity"],
+                        question["item"],
+                        question["key_index"],
+                        question["requires"],
+                        question["payload_sha256"],
+                        receipts.canonical_text(question["sentence"]),
+                        tuple(receipts.canonical_text(option) for option in question["options"]),
+                    )
+
+                if (
+                    recorded["lesson"] != batch["lesson"]
+                    or recorded["inputs"] != batch["inputs"]
+                    or [question_identity(q) for q in recorded["questions"]]
+                    != [question_identity(q) for q in batch["questions"]]
+                ):
+                    raise ValueError("requires questions are stale for this draft or resolution receipt")
+                answers = requires_confirm.read_answers(args.answers)
+                doc = requires_confirm.record_answers(
+                    recorded,
+                    answers,
+                    seat=args.seat,
+                    family=args.family,
+                    writer_seat=args.writer_seat,
+                    writer_family=args.writer_family,
+                )
+                receipt_path = receipts.requirement_receipt_path(state_dir, args.lesson)
+                receipts.write_requirement_receipts(receipt_path, doc)
+                print(json.dumps({"receipt": str(receipt_path), "items": len(doc["items"])}, ensure_ascii=False))
+            return 0
+        except (OSError, ValueError, KeyError, TypeError, ResolverError, yaml.YAMLError) as err:
+            print(f"{err}", file=sys.stderr)
+            return 1
 
     if args.command == "build":
         from scripts.build.fresh.module import build_module

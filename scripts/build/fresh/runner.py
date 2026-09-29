@@ -390,8 +390,15 @@ def check_7_a1_choices(
                     inputs=requirement_inputs if requirement_inputs is not None else stream.inputs,
                     activity=aid,
                     item=index,
+                    payload_sha256=receipts.requirement_payload_sha256(
+                        receipts.requirement_sentence(item), texts, key, demand
+                    ),
+                    options=texts,
+                    key_index=key,
                     requires=demand,
                 )
+                if status != "confirmed":
+                    return bad(status, aid, index)
                 completeness.append({"activity": aid, "item": index, "requirement": status})
             elif kind == "vocabulary":
                 target = item.get("target_record")
@@ -1112,7 +1119,16 @@ def run_lesson(
     if level == "a1":
         try:
             choice_row = check_7_a1_choices(
-                draft, lesson, words, stream, state_dir=state_dir, lesson_n=n, requirement_inputs=receipt_doc["inputs"]
+                draft,
+                lesson,
+                words,
+                stream,
+                state_dir=state_dir,
+                lesson_n=n,
+                requirement_inputs=receipts.requirement_inputs(
+                    receipt_doc["inputs"],
+                    yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),
+                ),
             )
         except OSError as err:
             return finish(

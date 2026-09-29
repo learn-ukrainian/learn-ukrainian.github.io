@@ -12,8 +12,11 @@ cannot introduce a record. The observed-state index (#8414) and the digest
 
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -171,7 +174,65 @@ def check_receipts(path: Path) -> dict[str, Any]:
 # beside the resolution receipts with the same YAML + lock publication rule. Missing
 # receipts are an explicit completeness status; a present but broken receipt is invalid.
 _A1_REQUIREMENT_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
-_REQUIREMENT_FIELDS = frozenset({"activity", "item", "requires", "writer", "reviewer", "confirmed"})
+_LANGUAGE_FAMILIES = frozenset({"anthropic", "openai", "google"})
+_REQUIREMENT_FIELDS = frozenset(
+    {
+        "activity",
+        "item",
+        "requires",
+        "writer",
+        "reviewer",
+        "payload_sha256",
+        "decision",
+        "reason",
+        "options",
+        "requires_forced",
+    }
+)
+_EVIDENCE_RE = re.compile(r"^(?:vesum|pravopys|textbook|grinchenko|sum20|vts|ulif):[^\s:]+$")
+_SHA_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def canonical_text(value: str) -> str:
+    return " ".join(unicodedata.normalize("NFC", value).split())
+
+
+def requirement_sentence(item: dict[str, Any]) -> str:
+    """The authored sentence or question that presents the form slot."""
+    return item.get("sentence") or item.get("question") or ""
+
+
+def requirement_payload_sha256(sentence: str, options: list[str], key_index: int, requires: dict[str, str]) -> str:
+    payload = {
+        "sentence": canonical_text(sentence),
+        "options": [canonical_text(o) for o in options],
+        "key_index": key_index,
+        "requires": requires,
+    }
+    encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def requirement_inputs(resolution_inputs: dict[str, str], authored_draft: dict[str, Any]) -> dict[str, str]:
+    """Bind the whole draft, ignoring only formatting in form sentences and options."""
+    stable = copy.deepcopy(authored_draft)
+    for activity in stable.get("activities") or []:
+        for item in activity.get("items") or []:
+            if item.get("kind") != "form":
+                continue
+            item.pop("_resolved_key_index", None)
+            for field in ("sentence", "question"):
+                if isinstance(item.get(field), str):
+                    item[field] = canonical_text(item[field])
+            for option in item.get("options") or []:
+                if isinstance(option, dict) and isinstance(option.get("text"), str):
+                    option["text"] = canonical_text(option["text"])
+            if isinstance(item.get("options"), list):
+                item["options"] = [canonical_text(o) if isinstance(o, str) else o for o in item["options"]]
+    encoded = json.dumps(stable, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    inputs = {key: value for key, value in resolution_inputs.items() if key != "expanded_sha256"}
+    inputs["draft_semantic_sha256"] = hashlib.sha256(encoded).hexdigest()
+    return inputs
 
 
 def requirement_receipt_path(state_dir: Path, lesson_n: int) -> Path:
@@ -187,8 +248,8 @@ def validate_requirement_receipts(doc: Any) -> None:
     """Validate item identity, complete-demand snapshot and independent provenance."""
     if not isinstance(doc, dict) or set(doc) != {"requirements_schema", "lesson", "inputs", "items"}:
         raise _requirement_error("expected requirements_schema, lesson, inputs and items")
-    if type(doc["requirements_schema"]) is not int or doc["requirements_schema"] != 1:
-        raise _requirement_error("requirements_schema must be 1")
+    if type(doc["requirements_schema"]) is not int or doc["requirements_schema"] != 2:
+        raise _requirement_error("requirements_schema must be 2")
     lesson = doc["lesson"]
     if (
         not isinstance(lesson, dict)
@@ -226,8 +287,42 @@ def validate_requirement_receipts(doc: Any) -> None:
             or not all(isinstance(value, str) and value for value in demand.values())
         ):
             raise _requirement_error(f"item {index} has malformed A1 requires")
-        if row["confirmed"] is not True:
-            raise _requirement_error(f"item {index} is not confirmed")
+        if not isinstance(row["payload_sha256"], str) or not _SHA_RE.fullmatch(row["payload_sha256"]):
+            raise _requirement_error(f"item {index} has malformed payload_sha256")
+        if (
+            row["decision"] not in {"confirm", "deny"}
+            or not isinstance(row["reason"], str)
+            or not row["reason"].strip()
+        ):
+            raise _requirement_error(f"item {index} needs a decision and non-empty reason")
+        if type(row["requires_forced"]) is not bool or not isinstance(row["options"], list) or not row["options"]:
+            raise _requirement_error(f"item {index} has malformed option judgements")
+        no_evidence = False
+        for option in row["options"]:
+            if not isinstance(option, dict) or set(option) != {"text", "judgement", "evidence"}:
+                raise _requirement_error(f"item {index} has malformed option judgement")
+            if (
+                not isinstance(option["text"], str)
+                or not option["text"].strip()
+                or option["judgement"] not in {"valid", "invalid", "depends_on_context"}
+            ):
+                raise _requirement_error(f"item {index} has malformed option text or judgement")
+            evidence = option["evidence"]
+            if not isinstance(evidence, list) or any(
+                not isinstance(eid, str) or not _EVIDENCE_RE.fullmatch(eid) for eid in evidence
+            ):
+                raise _requirement_error(f"item {index} has invalid evidence id")
+            no_evidence |= not evidence
+        if no_evidence and (row["decision"] != "deny" or not row["reason"].startswith("unresolved")):
+            raise _requirement_error(f"item {index} has unsupported judgement")
+        confirmable = (
+            row["requires_forced"]
+            and not no_evidence
+            and [option["judgement"] for option in row["options"]].count("valid") == 1
+            and all(option["judgement"] in {"valid", "invalid"} for option in row["options"])
+        )
+        if row["decision"] == "confirm" and not confirmable:
+            raise _requirement_error(f"item {index} cannot be confirmed")
         writer, reviewer = row["writer"], row["reviewer"]
         if not isinstance(writer, dict) or set(writer) != {"seat", "family"}:
             raise _requirement_error(f"item {index} has malformed writer provenance")
@@ -236,6 +331,8 @@ def validate_requirement_receipts(doc: Any) -> None:
         for provenance in (writer, reviewer):
             _check_seat(provenance["seat"])
             _check_seat(provenance["family"])
+            if provenance["family"].casefold() not in _LANGUAGE_FAMILIES:
+                raise _requirement_error(f"item {index} uses a family outside the language lanes")
         if reviewer["lane"] != "language":
             raise _requirement_error(f"item {index} was not confirmed by a language lane")
         if writer["family"].casefold() == reviewer["family"].casefold():
@@ -270,18 +367,29 @@ def requirement_status(
     inputs: dict[str, Any],
     activity: str,
     item: int,
+    payload_sha256: str,
+    options: list[str],
+    key_index: int,
     requires: dict[str, str],
 ) -> str:
-    """Return `confirmed` only for an exact current item and demand; else `not_checked`.
-
-    An old judgement cannot certify a revised draft or changed source inputs.
-    """
+    """Return the named gate code or confirmed, with missing before stale before denied."""
     if doc is None:
-        return "not_checked"
+        return "requires_receipt_missing"
     validate_requirement_receipts(doc)
-    if doc["lesson"] != lesson or doc["inputs"] != inputs:
-        return "not_checked"
     for row in doc["items"]:
         if row["activity"] == activity and row["item"] == item:
-            return "confirmed" if row["requires"] == requires else "not_checked"
-    return "not_checked"
+            if (
+                doc["lesson"] != lesson
+                or doc["inputs"] != inputs
+                or row["payload_sha256"] != payload_sha256
+                or row["requires"] != requires
+            ):
+                return "requires_receipt_stale"
+            if len(row["options"]) != len(options) or [canonical_text(option["text"]) for option in row["options"]] != [
+                canonical_text(option) for option in options
+            ]:
+                return "requires_receipt_stale"
+            if row["options"][key_index]["judgement"] != "valid":
+                return "requires_receipt_denied"
+            return "confirmed" if row["decision"] == "confirm" else "requires_receipt_denied"
+    return "requires_receipt_missing"

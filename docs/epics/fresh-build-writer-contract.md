@@ -84,10 +84,14 @@ or `explanation` is subject to resolver, inventory, stress and immersion checks.
 `kind: form` tests one taught A1 group (`Gender`, `Number`, `Case`, `Person`, `VerbForm`).
 All options from one lemma force this kind. It supplies `tests_feature`, aligned
 `option_records` (or the fill-in `record`), and `requires`: **all** A1 group values imposed
-on the slot by the full sentence, not merely the value being taught. A finite verb slot
+on the slot by the full sentence, not the key's features. A finite verb slot
 names `VerbForm: Fin` in `requires`; a plural slot omits `Gender` because plural forms
-carry no gender. A language-lane seat
-from another family confirms this complete demand and records a requirement receipt beside
+carry no gender. If any form of the lemma fits through an alternative reading — partitive
+genitive after request, offer, or consumption verbs or `можна`, genitive of negation,
+animate accusative/genitive syncretism, or another reading — rewrite the sentence so it
+forces one reading or drop the item. Never repair it by removing a group from `requires`.
+A language-lane seat from another family confirms each option in this sentence with source
+evidence and records a requirement receipt beside
 the resolution receipts. The post-resolution check admits an option only if one analysis
 of its bound record's form carries the whole demand; it reads every analysis. An A1 noun
 without a plural atom can satisfy `Number: Sing`. An option without a bound store form fails.

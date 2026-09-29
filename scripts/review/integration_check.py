@@ -51,6 +51,7 @@ from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateReport
+from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.validate.validate import main as validate_main
 from scripts.review import findings_db, fixloop, record, second_seat, settle
@@ -231,19 +232,67 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
         )
         mp.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": LEVEL})())
         mp.setattr(runner, "write_manifest", lambda *a, **kw: ({"recap": False}, "a" * 64))
-        report = runner.run_lesson(
-            LEVEL, SLUG, n,
-            draft=draft, plan=plan, pack=pack, words=words, state_dir=state,
-            repo_root=scratch, plans_dir=scratch, evidence_dir=scratch,
-            question_seat="agy:fixture", question_dispatch=answer, sources=_FixtureSources(),
-            allowlist=Allowlist.from_records(words["words"], gloss_ids=frozenset(), words_lock="f" * 64),
-            site_dir=scratch / "site",
-            inventory_gate=lambda *a, **kw: GateReport(LEVEL, SLUG, n, ()),
-            observed_writer=lambda *a, **kw: None,
-            render_check=lambda *a, **kw: assemble.CheckResult(
-                check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}}
-            ),
-        )  # fmt: skip
+
+        def run_once(candidate_draft: dict[str, Any]) -> dict[str, Any]:
+            return runner.run_lesson(
+                LEVEL,
+                SLUG,
+                n,
+                draft=candidate_draft,
+                plan=plan,
+                pack=pack,
+                words=words,
+                state_dir=state,
+                repo_root=scratch,
+                plans_dir=scratch,
+                evidence_dir=scratch,
+                question_seat="agy:fixture",
+                question_dispatch=answer,
+                sources=_FixtureSources(),
+                allowlist=Allowlist.from_records(words["words"], gloss_ids=frozenset(), words_lock="f" * 64),
+                site_dir=scratch / "site",
+                inventory_gate=lambda *a, **kw: GateReport(LEVEL, SLUG, n, ()),
+                observed_writer=lambda *a, **kw: None,
+                render_check=lambda *a, **kw: assemble.CheckResult(
+                    check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}}
+                ),
+            )
+
+        first = run_once(copy.deepcopy(draft))
+        if not any(row.get("code") == "requires_receipt_missing" for row in first["checks"]):
+            raise RuntimeError(f"fixture did not reach requirement confirmation: {first}")
+        resolution = receipts.check_receipts(state / f"lesson-{n}.resolutions.yaml")
+        item = draft["activities"][1]["items"][0]
+        option_texts = item["options"]
+        demand = item["requires"]
+        receipt_doc = {
+            "requirements_schema": 2,
+            "lesson": resolution["lesson"],
+            "inputs": receipts.requirement_inputs(resolution["inputs"], draft),
+            "items": [
+                {
+                    "activity": "a2",
+                    "item": 0,
+                    "requires": demand,
+                    "payload_sha256": receipts.requirement_payload_sha256(item["question"], option_texts, 0, demand),
+                    "decision": "confirm",
+                    "reason": "fixture checks layer attribution after confirmation",
+                    "requires_forced": True,
+                    "options": [
+                        {
+                            "text": text,
+                            "judgement": "valid" if i == 0 else "invalid",
+                            "evidence": ["vesum:5682038-5682052"],
+                        }
+                        for i, text in enumerate(option_texts)
+                    ],
+                    "writer": {"seat": "codex@fixture", "family": "openai"},
+                    "reviewer": {"seat": "claude@fixture", "family": "anthropic", "lane": "language"},
+                }
+            ],
+        }
+        receipts.write_requirement_receipts(receipts.requirement_receipt_path(state, n), receipt_doc)
+        report = run_once(draft)
     finally:
         mp.undo()
     failed = [row for row in report["checks"] if row["status"] == "failed"]

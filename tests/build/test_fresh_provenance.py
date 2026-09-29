@@ -23,9 +23,64 @@ from tests.build.test_fresh_assemble import (
     validate_fixture_plan,
     validate_fixture_words,
 )
-from tests.build.test_fresh_runner import _fixture, _run_contract
+from tests.build.test_fresh_runner import _confirm_fixture_form, _fixture, _run_contract
 
 pytestmark = pytest.mark.reads_content
+
+
+def _run_with_fixture_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, draft: dict, plan: dict, pack: dict, words: dict
+):
+    probe_draft = copy.deepcopy(draft)
+    report, state, seen = _run_contract(tmp_path, monkeypatch, probe_draft, plan, pack, words)
+    if not any(row.get("code") == "requires_receipt_missing" for row in report["checks"]):
+        return report, state, seen
+    resolution = receipts.check_receipts(state / "lesson-1.resolutions.yaml")
+    by_type = {activity["id"]: activity["type"] for activity in plan["lessons"][0]["activities"]}
+    rows = []
+    for activity in probe_draft["activities"]:
+        for index, item in enumerate(activity.get("items") or []):
+            if item.get("kind") != "form":
+                continue
+            options = item["options"]
+            texts = [runner._choice_text(option) for option in options]
+            key = runner._choice_key(item, by_type[activity["id"]], options)
+            demand = item["requires"]
+            rows.append(
+                {
+                    "activity": activity["id"],
+                    "item": index,
+                    "requires": demand,
+                    "payload_sha256": receipts.requirement_payload_sha256(
+                        receipts.requirement_sentence(item), texts, key, demand
+                    ),
+                    "decision": "confirm",
+                    "reason": "fixture checks provenance plumbing",
+                    "requires_forced": True,
+                    "options": [
+                        {
+                            "text": text,
+                            "judgement": "valid" if i == key else "invalid",
+                            "evidence": ["vesum:5682038-5682052"],
+                        }
+                        for i, text in enumerate(texts)
+                    ],
+                    "writer": {"seat": "codex@sol", "family": "openai"},
+                    "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
+                }
+            )
+    assert rows
+    authored = yaml.safe_load((state / "lesson-1.draft.yaml").read_text(encoding="utf-8"))
+    receipts.write_requirement_receipts(
+        receipts.requirement_receipt_path(state, 1),
+        {
+            "requirements_schema": 2,
+            "lesson": resolution["lesson"],
+            "inputs": receipts.requirement_inputs(resolution["inputs"], authored),
+            "items": rows,
+        },
+    )
+    return _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
 
 
 def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path) -> None:
@@ -36,45 +91,120 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         "activity": "quiz1",
         "item": 0,
         "requires": demand,
+        "payload_sha256": receipts.requirement_payload_sha256("___", ["брата", "брату"], 0, demand),
+        "decision": "confirm",
+        "reason": "unique in context",
+        "requires_forced": True,
+        "options": [
+            {"text": "брата", "judgement": "valid", "evidence": ["vesum:487702-487719"]},
+            {"text": "брату", "judgement": "invalid", "evidence": ["vesum:487702-487719"]},
+        ],
         "writer": {"seat": "writer@model", "family": "openai"},
         "reviewer": {"seat": "reviewer@model", "family": "anthropic", "lane": "language"},
-        "confirmed": True,
     }
-    doc = {"requirements_schema": 1, "lesson": lesson, "inputs": inputs, "items": [row]}
+    doc = {"requirements_schema": 2, "lesson": lesson, "inputs": inputs, "items": [row]}
     path = receipts.requirement_receipt_path(tmp_path, 1)
     assert receipts.read_requirement_receipts(path) is None
     assert (
-        receipts.requirement_status(None, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
-        == "not_checked"
+        receipts.requirement_status(
+            None,
+            lesson=lesson,
+            inputs=inputs,
+            activity="quiz1",
+            item=0,
+            payload_sha256=row["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
+        )
+        == "requires_receipt_missing"
     )
     receipts.write_requirement_receipts(path, doc)
     checked = receipts.read_requirement_receipts(path)
     assert checked == doc
     assert (
-        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires=demand)
+        receipts.requirement_status(
+            checked,
+            lesson=lesson,
+            inputs=inputs,
+            activity="quiz1",
+            item=0,
+            payload_sha256=row["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
+        )
         == "confirmed"
     )
     assert (
         receipts.requirement_status(
-            checked, lesson=lesson, inputs=inputs, activity="quiz1", item=0, requires={"Case": "Nom"}
+            checked,
+            lesson=lesson,
+            inputs=inputs,
+            activity="quiz1",
+            item=0,
+            payload_sha256="0" * 64,
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
         )
-        == "not_checked"
+        == "requires_receipt_stale"
     )
     assert (
         receipts.requirement_status(
-            checked, lesson=lesson, inputs={"plan_sha256": "c" * 64}, activity="quiz1", item=0, requires=demand
+            checked,
+            lesson=lesson,
+            inputs={"plan_sha256": "c" * 64},
+            activity="quiz1",
+            item=0,
+            payload_sha256=row["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
         )
-        == "not_checked"
+        == "requires_receipt_stale"
     )
     assert (
-        receipts.requirement_status(checked, lesson=lesson, inputs=inputs, activity="quiz1", item=1, requires=demand)
-        == "not_checked"
+        receipts.requirement_status(
+            checked,
+            lesson=lesson,
+            inputs=inputs,
+            activity="quiz1",
+            item=1,
+            payload_sha256=row["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
+        )
+        == "requires_receipt_missing"
+    )
+
+    shortened = copy.deepcopy(doc)
+    shortened["items"][0]["options"] = shortened["items"][0]["options"][:1]
+    shortened["items"][0]["payload_sha256"] = receipts.requirement_payload_sha256("___", ["брата", "брату"], 1, demand)
+    assert (
+        receipts.requirement_status(
+            shortened,
+            lesson=lesson,
+            inputs=inputs,
+            activity="quiz1",
+            item=0,
+            payload_sha256=shortened["items"][0]["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=1,
+            requires=demand,
+        )
+        == "requires_receipt_stale"
     )
 
     same_family = copy.deepcopy(doc)
     same_family["items"][0]["reviewer"]["family"] = "OpenAI"
     with pytest.raises(ResolverError, match="receipt_invalid"):
         receipts.write_requirement_receipts(path, same_family)
+    unsupported_family = copy.deepcopy(doc)
+    unsupported_family["items"][0]["reviewer"]["family"] = "xai"
+    with pytest.raises(ResolverError, match="receipt_invalid"):
+        receipts.write_requirement_receipts(path, unsupported_family)
     wrong_lane = copy.deepcopy(doc)
     wrong_lane["items"][0]["reviewer"]["lane"] = "general"
     with pytest.raises(ResolverError, match="receipt_invalid"):
@@ -192,6 +322,9 @@ def test_live_runner_form_choice_item_provenance_rendered_text(tmp_path: Path, m
     validate_fixture_draft(draft)
 
     report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["checks"][6]["code"] == "requires_receipt_missing"
+    _confirm_fixture_form(state, draft["activities"][0]["items"][0])
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
 
     prov_path = state / "lesson-1.provenance.yaml"
@@ -248,7 +381,7 @@ def test_live_runner_quiz_typed_distractors_provenance(tmp_path: Path, monkeypat
     validate_fixture_plan(plan)
     validate_fixture_draft(draft)
 
-    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    report, state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
 
     prov_path = state / "lesson-1.provenance.yaml"
@@ -582,7 +715,7 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     # The runner's default lookup imports verify_words locally from this module.
     monkeypatch.setattr(vesum, "verify_words", runner.verify_words)
 
-    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    report, state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
 
     prov_path = state / "lesson-1.provenance.yaml"
@@ -910,7 +1043,7 @@ def test_provenance_byte_stable_rerun(tmp_path: Path, monkeypatch: pytest.Monkey
     validate_fixture_plan(plan)
     validate_fixture_draft(draft)
 
-    first_report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    first_report, state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert first_report["passed"] is True
     prov_path = state / "lesson-1.provenance.yaml"
     first_bytes = prov_path.read_bytes()
@@ -1410,7 +1543,7 @@ def test_live_runner_quiz_string_answer_key_follows_unstressed_option(
     draft, plan, pack, words = _quiz_fixture(
         [{"question": "слово", "options": ["слово", "слова"], "answer": "слово", "explanation": "E"}]
     )
-    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    report, state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
     prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
     by_unit = _spans_by_unit(prov_doc)
@@ -1466,7 +1599,7 @@ def test_live_runner_image_to_letter_locates_spans_on_the_page(tmp_path: Path, m
     # while the ActivityParser dropped image/letter/options. Since #8716 the parser reads them, so
     # the same fixture passes check 9 with the a4 spans located on the page.
     draft, plan, pack, words = _image_to_letter_fixture()
-    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    report, state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
     prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
     a4 = {k: v for k, v in _spans_by_unit(prov_doc).items() if k[2] == "a4"}
@@ -1775,7 +1908,7 @@ def test_live_runner_activity_jsx_rewritten_by_generate_mdx_fails_closed(
     draft, plan, pack, words = _quiz_fixture(
         [{"question": "слово", "options": ["слово", "слова"], "correct": 0, "explanation": "E<br>F"}]
     )
-    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    report, _state, _ = _run_with_fixture_receipts(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is False
     c9 = _check_9_row(report)
     assert c9["layer"] == "engine"

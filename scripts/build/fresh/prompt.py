@@ -211,7 +211,10 @@ def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str,
     lines = [
         "## Form-choice candidate bank",
         "",
-        "Use one form from its bound record per option. State the complete slot `requires`. "
+        "Use one form from its bound record per option. State only the `requires` the sentence forces, "
+        "not the key's features. If another reading fits (partitive genitive after request, offer, "
+        "consumption or permission requests; genitive of negation; animate accusative/genitive syncretism), "
+        "rewrite the context to force one reading or drop the item; never remove a `requires` group to repair it. "
         "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender` "
         "because plural forms carry no gender. Choose one admitted key. Each distractor must be "
         "a form that the sentence rules out by a feature the form itself carries. "
