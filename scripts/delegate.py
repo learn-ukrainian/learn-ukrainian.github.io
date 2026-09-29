@@ -55,6 +55,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
+        "review_contract": {server_checkout, server_digest, prompt_checkout, prompt_digest, paths} | absent,  # (#9163)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -9274,6 +9275,7 @@ def _dispatch(
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
+    review_contract: dict[str, Any] | None = None
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
             print(
@@ -9560,6 +9562,15 @@ def _dispatch(
                 f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
                 file=sys.stderr,
             )
+            return 2
+        # The seat's sources server launches from the primary checkout, while this prompt was rendered in the
+        # checkout running this dispatcher: refuse when their review contract files differ in content (#9163).
+        from scripts.agent_runtime.review_mcp import ReviewContractError, check_review_contract
+
+        try:
+            review_contract = check_review_contract(_local_repo_root)
+        except ReviewContractError as err:
+            print(f"❌ {err}", file=sys.stderr)
             return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
@@ -10545,6 +10556,8 @@ def _dispatch(
                 "attempt_id": attempt_id,
                 "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
             }
+            # Both checkouts' review contract digests (#9163), so the review of record names what it ran against.
+            initial_state["review_contract"] = review_contract
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies

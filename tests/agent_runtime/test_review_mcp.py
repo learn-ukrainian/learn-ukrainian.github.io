@@ -94,6 +94,12 @@ def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(delegate_cli, name, lambda: None)
 
 
+@pytest.fixture(autouse=True)
+def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dispatch tests here never read the real primary checkout; the contract check has its own tests (#9163)."""
+    monkeypatch.setattr(review_mcp_module, "check_review_contract", lambda _prompt_checkout: {})
+
+
 @pytest.fixture
 def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"

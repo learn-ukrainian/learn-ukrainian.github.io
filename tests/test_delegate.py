@@ -13919,6 +13919,9 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     _patch_worker_popen(monkeypatch)
+    # The sources server checkout and the dispatching checkout sit at the same commit (#9163).
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    monkeypatch.setattr(delegate, "_local_repo_root", dispatch_wt)
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     plan = type("Plan", (), {"config_path": tmp_path / "attempt.json"})()
@@ -13946,6 +13949,45 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
         "attempt_id": "att-test",
         "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
     }
+    # #9163: both checkouts' review contract digests travel with the attempt
+    contract = state["review_contract"]
+    assert (contract["server_checkout"], contract["prompt_checkout"]) == (str(main), str(dispatch_wt))
+    assert contract["server_digest"] == contract["prompt_digest"]
+    assert contract["server_digest"].startswith("sha256:")
+
+
+def test_review_attempt_refuses_when_the_primary_sources_server_differs(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    monkeypatch.setattr(delegate, "_local_repo_root", dispatch_wt)
+    server = main / ".mcp" / "servers" / "sources" / "server.py"
+    server.parent.mkdir(parents=True)
+    server.write_text("print('stale server')\n", encoding="utf-8")
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        prepare.side_effect = AssertionError("must not prepare a review attempt for a refused dispatch")
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-skewed",
+                mode="read-only",
+                prompt=_MATCHING_ATTEMPT_PROMPT,
+                cwd=str(dispatch_wt),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "review_contract_mismatch" in err
+    assert f"{main} digest sha256:" in err
+    assert f"{dispatch_wt} digest sha256:" in err
+    assert "pull the primary checkout to origin/main, then retry" in err
+    assert delegate._read_state(delegate._state_path("review-skewed")) is None
 
 
 @pytest.mark.parametrize(
@@ -14068,6 +14110,7 @@ def test_review_attempt_refuses_a_prompt_that_prints_no_ids(tmp_tasks_dir, tmp_p
 
 
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.check_review_contract", lambda _prompt_checkout: {})
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host"))

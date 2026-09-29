@@ -11,7 +11,9 @@ attempt-specific environment variables:
 
 The generated MCP configuration defines exclusively a `sources` server started
 over stdio from the primary checkout's virtual environment and server script,
-bypassing the shared streamable-HTTP daemon (127.0.0.1:8766).
+bypassing the shared streamable-HTTP daemon (127.0.0.1:8766). Because the prompt is
+rendered in the dispatching checkout, ``check_review_contract`` refuses the attempt
+when the two checkouts differ in the files that decide the review contract (#9163).
 
 Codex has no ``--mcp-config`` flag, and per-invocation ``-c mcp_servers.X`` overrides
 MERGE with the user's global ``~/.codex/config.toml``. A Codex attempt therefore also
@@ -86,6 +88,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
@@ -637,6 +640,106 @@ def _agy_oauth_link_state(link: Path, real_token: Path) -> str | None:
     return None
 
 
+#: The files that decide a review's contract (#9163): the sources server the seat calls, and the templates and
+#: renderer the prompt came from. The server launches from the primary checkout while the prompt is rendered in
+#: the dispatching checkout, so both checkouts must hold the same bytes under these paths.
+REVIEW_CONTRACT_PATHS = (".mcp/servers/sources", "scripts/review/prompts")
+_CONTRACT_DIGEST_VERSION = b"lu-review-contract-digest-v1"
+_CONTRACT_GIT_TIMEOUT_S = 30.0
+_CONTRACT_FIX = "pull the primary checkout to origin/main, then retry"
+
+
+class ReviewContractError(ValueError):
+    """The review contract files of a checkout cannot be digested, or differ between the two checkouts (#9163)."""
+
+
+def review_server_checkout() -> Path:
+    """The checkout every review attempt launches its sources server from: the primary checkout."""
+    return resolve_repo_root(Path(__file__), 2)
+
+
+def _contract_files(checkout: Path, rel_path: str) -> list[str]:
+    """Tracked plus untracked, not-ignored files below ``rel_path``: what the checkout would run or render."""
+    argv = ["git", "-C", str(checkout), "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", rel_path]
+    try:
+        proc = subprocess.run(
+            argv, capture_output=True, env=sanitized_git_env(), timeout=_CONTRACT_GIT_TIMEOUT_S, check=False
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ReviewContractError(
+            f"review attempt refused: cannot list {rel_path} in {checkout}: {exc} (#9163)"
+        ) from exc
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", errors="replace").strip()
+        raise ReviewContractError(
+            f"review attempt refused: cannot list {rel_path} in {checkout}: git exited {proc.returncode}: {detail} (#9163)"
+        )
+    return sorted({name for name in proc.stdout.decode("utf-8", errors="surrogateescape").split("\0") if name})
+
+
+def review_contract_digest(checkout: Path, rel_path: str) -> str:
+    """sha256 over the on-disk bytes of every file ``_contract_files`` lists, so a dirty tree cannot hide a change.
+
+    Each entry contributes its path, its kind (file, symlink, or missing: deleted or outside a sparse checkout)
+    and the sha256 of its content, in sorted path order. Ignored files such as ``__pycache__`` do not count.
+    """
+    hasher = hashlib.sha256(_CONTRACT_DIGEST_VERSION + b"\0")
+    for name in _contract_files(checkout, rel_path):
+        path = checkout / name
+        try:
+            if path.is_symlink():
+                kind, content = b"symlink", os.fsencode(os.readlink(path))
+            elif path.is_file():
+                kind, content = b"file", path.read_bytes()
+            else:
+                kind, content = b"missing", b""
+        except OSError as exc:
+            raise ReviewContractError(
+                f"review attempt refused: cannot read {name} in {checkout}: {exc} (#9163)"
+            ) from exc
+        hasher.update(os.fsencode(name) + b"\0" + kind + b"\0" + hashlib.sha256(content).digest())
+    return f"sha256:{hasher.hexdigest()}"
+
+
+def _combined_contract_digest(parts: Mapping[str, str]) -> str:
+    material = "".join(f"{rel_path}\0{parts[rel_path]}\n" for rel_path in REVIEW_CONTRACT_PATHS)
+    return f"sha256:{hashlib.sha256(material.encode('utf-8')).hexdigest()}"
+
+
+def check_review_contract(prompt_checkout: Path, server_checkout: Path | None = None) -> dict[str, Any]:
+    """Refuse a review attempt whose sources server and prompt templates differ in content (#9163).
+
+    ``prompt_checkout`` is the checkout the prompt was rendered in (the dispatching checkout);
+    ``server_checkout`` defaults to ``review_server_checkout()``. Only ``REVIEW_CONTRACT_PATHS`` are compared, so
+    an unrelated difference between the two commits never refuses. Returns the record the task stores.
+    """
+    server = Path(server_checkout or review_server_checkout()).resolve()
+    prompt = Path(prompt_checkout).resolve()
+    server_parts = {rel_path: review_contract_digest(server, rel_path) for rel_path in REVIEW_CONTRACT_PATHS}
+    prompt_parts = (
+        server_parts
+        if prompt == server
+        else {rel_path: review_contract_digest(prompt, rel_path) for rel_path in REVIEW_CONTRACT_PATHS}
+    )
+    record = {
+        "server_checkout": str(server),
+        "server_digest": _combined_contract_digest(server_parts),
+        "prompt_checkout": str(prompt),
+        "prompt_digest": _combined_contract_digest(prompt_parts),
+        "paths": list(REVIEW_CONTRACT_PATHS),
+    }
+    differing = [rel_path for rel_path in REVIEW_CONTRACT_PATHS if server_parts[rel_path] != prompt_parts[rel_path]]
+    if differing:
+        raise ReviewContractError(
+            "review attempt refused: review_contract_mismatch: the sources server checkout and the prompt checkout "
+            f"differ in {', '.join(differing)}\n"
+            f"  sources server (primary checkout): {record['server_checkout']} digest {record['server_digest']}\n"
+            f"  prompt (dispatching checkout): {record['prompt_checkout']} digest {record['prompt_digest']}\n"
+            f"  fix: {_CONTRACT_FIX} (#9163)"
+        )
+    return record
+
+
 def prepare_review_attempt(
     review_id: str,
     attempt_id: str,
@@ -686,7 +789,7 @@ def prepare_review_attempt(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
-    primary_root = resolve_repo_root(Path(__file__), 2)
+    primary_root = review_server_checkout()
     python_bin = project_interpreter()
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 

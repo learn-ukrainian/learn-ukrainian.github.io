@@ -834,6 +834,19 @@ The sibling repositories do not get their own `batch_state` or lock namespace.
 Do not add one: a second lock file for the same path would let a reaper and a
 dispatch hold "the" lock at once.
 
+### Review attempts: server and templates must match (#9163)
+
+A `--review-attempt` seat always runs the sources MCP server from the primary
+checkout, but the prompt was rendered in the checkout running `delegate.py`.
+Before anything is provisioned, `review_mcp.check_review_contract` hashes the
+on-disk bytes of every tracked or untracked, non-ignored file under
+`.mcp/servers/sources/` and `scripts/review/prompts/` in both checkouts. If
+either path differs, the dispatch is refused with exit 2 and a
+`review_contract_mismatch` message that names both checkouts, both digests and
+the fix: pull the primary checkout to `origin/main`, then retry. Differences
+anywhere else never refuse. The task record keeps both digests under
+`review_contract`. Render and dispatch a review from the same checkout.
+
 ## Common mistakes
 
 - **Writing new subprocess logic outside the runtime.** If you're
