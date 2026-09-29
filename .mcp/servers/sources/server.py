@@ -2217,8 +2217,12 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
     server_path = Path(__file__).resolve()
-    sources_db_path = PROJECT_ROOT / "data" / "sources.db"
-    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+    from wiki.sources_db import _read_db_path
+
+    from scripts.rag.config import VESUM_DB_PATH
+
+    sources_db_path = _read_db_path()
+    vesum_db_path = Path(VESUM_DB_PATH).resolve()
 
     def _identity() -> dict[str, Any]:
         from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
@@ -2567,14 +2571,15 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     """
     import contextlib
     import sqlite3
-    from pathlib import Path as _Path
 
-    db = _Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    from wiki.sources_db import _read_db_path
+
+    db = _read_db_path()
     if not db.exists():
         return None
     conn: sqlite3.Connection | None = None
     try:
-        conn = sqlite3.connect(str(db))
+        conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.

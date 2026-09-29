@@ -25,6 +25,7 @@ Helpers:
 import contextvars
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 from collections import defaultdict
@@ -305,12 +306,12 @@ def _ulif_dictua_conn(
     migrates. ``create=True`` creates missing tables for a write and still
     does not migrate an existing table.
     """
-    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    path = Path(db_path) if db_path is not None else (SOURCES_DB_PATH if create else _read_db_path())
     if not path.exists():
         if not create:
             return None
         path.parent.mkdir(parents=True, exist_ok=True)
-    conn = _open_conn(path)
+    conn = _open_conn(path, read_only=not create)
     if create:
         if _ulif_table_exists(conn, "ulif_dictua_entries") and not _ulif_dictua_schema_current(conn):
             conn.close()
@@ -675,7 +676,7 @@ def extract_ulif_dictua_snapshot(
         return [], [], []
     conn: sqlite3.Connection | None = None
     try:
-        conn = _open_conn(path)
+        conn = _open_conn(path, read_only=True)
         raw_rows: list[tuple] = []  # Cache is independent of the sources.db rebuild.
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
         if "homonym_index" in columns and "sense_gloss" in columns:
@@ -862,8 +863,24 @@ def _load_track_priors() -> dict[str, dict[str, float]]:
 _TRACK_PRIORS = _load_track_priors()
 
 
-def _open_conn(db_path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+def _read_db_path() -> Path:
+    """Resolve the database used by lookups, including sparse worktrees."""
+    if SOURCES_DB_PATH != PROJECT_ROOT / "data" / "sources.db":
+        return SOURCES_DB_PATH.resolve()
+
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.storage.topology import require_local_active_sources_db
+
+    if os.environ.get("LU_SOURCES_DB"):
+        return require_local_active_sources_db(PROJECT_ROOT).resolve()
+    return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
+
+
+def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
+    if read_only:
+        conn = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+    else:
+        conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -879,25 +896,24 @@ def _get_conn() -> sqlite3.Connection:
         return override
     global _conn
     if _conn is None:
-        if not SOURCES_DB_PATH.exists():
+        path = _read_db_path()
+        if not path.is_file() or not path.stat().st_size:
             raise FileNotFoundError(
-                f"Sources database not found at {SOURCES_DB_PATH}. "
-                "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+                f"Sources database not found at {path}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
             )
-        _conn = _open_conn(SOURCES_DB_PATH)
+        _conn = _open_conn(path, read_only=True)
     return _conn
 
 
 def _get_conn_for(db_path: str | Path | None = None) -> sqlite3.Connection:
     if db_path is None:
         return _get_conn()
-    source_db = Path(db_path)
-    if not source_db.exists():
+    source_db = Path(db_path).resolve()
+    if not source_db.is_file() or not source_db.stat().st_size:
         raise FileNotFoundError(
-            f"Sources database not found at {source_db}. "
-            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+            f"Sources database not found at {source_db}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    return _open_conn(source_db)
+    return _open_conn(source_db, read_only=True)
 
 
 def _close_if_temporary(conn: sqlite3.Connection, db_path: str | Path | None) -> None:

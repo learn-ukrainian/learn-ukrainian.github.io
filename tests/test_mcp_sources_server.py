@@ -16,6 +16,9 @@ import asyncio
 import hashlib
 import importlib.util
 import json
+import os
+import sqlite3
+import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -29,7 +32,7 @@ import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dic
 import pytest
 import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
-from mcp.types import TextContent
+from mcp.types import CallToolRequestParams, TextContent
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
@@ -49,6 +52,94 @@ def server_module():
 def _run(coro):
     """Run an async coroutine synchronously."""
     return asyncio.run(coro)
+
+
+def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_module, tmp_path, monkeypatch):
+    """A real sources handler read must not make the dispatch guard fail (#9122)."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    subprocess.run(["git", "init", str(primary)], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.email", "test@example.com"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.name", "test"], check=True, timeout=30)
+    (primary / "tracked.txt").write_text("fixture\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(primary), "add", "tracked.txt"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "commit", "-m", "fixture"], check=True, capture_output=True, timeout=30)
+    worktree = tmp_path / "dispatch-worktree"
+    subprocess.run(
+        ["git", "-C", str(primary), "worktree", "add", "--detach", str(worktree), "HEAD"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    db = primary / "data" / "sources.db"
+    db.parent.mkdir()
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("CREATE TABLE literary_texts (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("INSERT INTO textbooks VALUES ('chunk-1', 'Fixture', 'Source text')")
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key, raising=False)
+
+    monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
+    import delegate
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree / "data" / "sources.db")
+    monkeypatch.setattr(sources_db, "_conn", None)
+    task_id = "sources-read-only-lookup"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree)})
+
+    def lookup(*_args, **_kwargs):
+        result = _run(
+            server_module._on_call_tool(
+                None, CallToolRequestParams(name="get_chunk_context", arguments={"chunk_id": "chunk-1"})
+            )
+        )
+        assert result.is_error is False
+        assert "Source text" in result.content[0].text
+        return type(
+            "Result",
+            (),
+            {
+                "ok": True,
+                "response": "Source text",
+                "stderr_excerpt": None,
+                "returncode": 0,
+                "rate_limited": False,
+                "model": "fixture",
+                "effort": "high",
+                "cli_version": "fixture",
+            },
+        )()
+
+    try:
+        with patch("agent_runtime.runner.invoke", side_effect=lookup):
+            rc = delegate._run_worker(
+                task_id=task_id,
+                agent="agy",
+                prompt="Look up a source.",
+                mode="read-only",
+                cwd_str=str(worktree),
+                model=None,
+                hard_timeout=60,
+            )
+        state = delegate._read_state(state_path)
+        assert rc == 0
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+        assert not (worktree / "data" / "sources.db").exists()
+    finally:
+        if sources_db._conn is not None:
+            sources_db._conn.close()
 
 
 class TestListTools:
