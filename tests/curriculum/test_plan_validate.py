@@ -137,7 +137,7 @@ def base_plan() -> dict:
                         "focus": f"Fix the errors with {LETTER_A} and {LETTER_O}.",
                         "error_refs": ["E-001"],
                     },
-                    {"id": "a3", "type": "match-up", "placement": "inline", "focus": "Match pairs.", "model": "X-001"},
+                    {"id": "a3", "type": "quiz", "placement": "inline", "focus": "Checks the pairs.", "model": "X-001"},
                 ],
                 "videos": [{"evidence": "V-001", "use": "After step two."}],
                 "dialogue": {

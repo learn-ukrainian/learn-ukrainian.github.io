@@ -137,18 +137,13 @@ TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 # --- mechanical plan gates M1-M8 (issue #9138) -------------------------------
 STEP_LETTER_NOT_PRACTISED = "step_letter_not_practised"
 STEP_LETTER_NO_WORD_RECORD = "step_letter_no_word_record"
-TOKEN_NOT_ALLOWED = "token_not_allowed"
-COPY_TASK_LETTER_NOT_TAUGHT = "copy_task_letter_not_taught"
-CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
-MATCH_UP_TOO_FEW_ITEMS = "match_up_too_few_items"
-WORKBOOK_TOO_FEW_DECODABLE = "workbook_too_few_decodable"
-COUNT_SYLLABLES_ONE_COUNT = "count_syllables_one_count"
-GRAMMAR_NOT_REUSED = "grammar_not_reused"
 
 # --- notes (never fail the run) ---------------------------------------------
+TOKEN_NOT_ALLOWED = "token_not_allowed"
 COPY_MODEL_LETTER_NOT_TAUGHT = "copy_model_letter_not_taught"
-CORE_CEFR_ONE_BAND_ABOVE = "core_cefr_one_band_above"
+CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
 CORE_WORD_NOT_REUSED = "core_word_not_reused"
+GRAMMAR_NOT_REUSED = "grammar_not_reused"
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 
 # --- not_checked (never fail the run, always reported) ----------------------
@@ -231,16 +226,11 @@ DESCRIPTIONS = {
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
     STEP_LETTER_NOT_PRACTISED: "failure (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus",
     STEP_LETTER_NO_WORD_RECORD: "failure (gate M2, #9138): a step introduces a letter and practises it with pick-syllables, divide-words or match-up, but no allowed word record of the lesson contains the letter",
-    TOKEN_NOT_ALLOWED: "failure (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set",
-    COPY_TASK_LETTER_NOT_TAUGHT: "failure (gate M4, #9138): a copy task's focus names words that use letters not yet taught",
-    CORE_CEFR_ABOVE_MODULE: "failure (gate M5, #9138): a core lemma's word-store CEFR level is two or more bands above the module's level",
-    MATCH_UP_TOO_FEW_ITEMS: "failure (gate M6, #9138): a match-up whose focus enumerates fewer than three items",
-    WORKBOOK_TOO_FEW_DECODABLE: "failure (gate M6, #9138): a letter-stage workbook pick-syllables, divide-words or match-up binds fewer than three decodable word records",
-    COUNT_SYLLABLES_ONE_COUNT: "failure (gate M7, #9138): a count-syllables item set enumerated in the focus has one distinct syllable count",
-    GRAMMAR_NOT_REUSED: "failure (gate M8, #9138): a grammar id is never used by a later lesson of the module",
+    TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
     COPY_MODEL_LETTER_NOT_TAUGHT: "note (gate M4, #9138): a copy task's pack model text contains letters not yet taught; the plan review confirms which text is copied",
-    CORE_CEFR_ONE_BAND_ABOVE: "note (gate M5, #9138): a core lemma's word-store CEFR level is one band above the module's level; the plan review confirms it is intended (for example the module's own metalanguage)",
+    CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
     CORE_WORD_NOT_REUSED: "note (gate M8, #9138): a core word is never used or recycled by a later lesson of the module; the plan review confirms it is a deliberate one-off (decodable practice words, names)",
+    GRAMMAR_NOT_REUSED: "note (gate M8, #9138): a grammar id is never used by a later lesson of the module; the plan contract does not require recurrence, so the plan review confirms it",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
     PRIOR_PLAN_UNREADABLE: "failure (rule 4): a sibling plan file cannot be read, so earlier introductions cannot be trusted",
@@ -276,17 +266,19 @@ DESCRIPTIONS = {
     TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
-    TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1-M8, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level, syllable item words); the message names the gate and the reason",
+    TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1-M8, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level), or the plan states nothing to check (M4 copy text, M6/M7 item sets are draft fields); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
 NOTE_CODES = frozenset(
     {
         CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,
+        TOKEN_NOT_ALLOWED,
         COPY_MODEL_LETTER_NOT_TAUGHT,
-        CORE_CEFR_ONE_BAND_ABOVE,
+        CORE_CEFR_ABOVE_MODULE,
         CORE_WORD_NOT_REUSED,
+        GRAMMAR_NOT_REUSED,
     }
 )
 NOT_CHECKED_CODES = frozenset(

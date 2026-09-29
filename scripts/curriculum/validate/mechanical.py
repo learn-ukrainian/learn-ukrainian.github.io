@@ -5,46 +5,44 @@ decided from data the validator already reads — the plan, the level arc, the
 level word store, the module pack — never from a typed list of Ukrainian
 facts. The only Ukrainian inventories used are ones the code already owns:
 the closed Cyrillic letter class (scope.CYRILLIC_LETTER_CLASS) and the vowel
-letters of scripts.practice.euphony_stem_engine (syllable counts, M7).
+letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
 
   M1  a step introduces a letter that no activity in its practice names in its focus
   M2  a step introduces a letter that no allowed word record contains, while its
       practice includes a word-completion activity (pick-syllables, divide-words, match-up)
-  M3  a Ukrainian token in a step's teach text or an activity's focus resolves to
-      no record of the lesson's allowed set
-  M4  a copy task's text uses letters outside the taught-letter set
-  M5  a core lemma's word-record CEFR level is above the module's level (fail from two
-      bands above, note at one)
-  M6  a match-up binds fewer than three items; a workbook word activity binds fewer
-      than three decodable word records
-  M7  a count-syllables item set has one distinct syllable count
-  M8  a core word (note) or grammar id (fail) is never used or recycled by a later lesson
+  M3  a Ukrainian token in a step's teach text or an activity's focus resolves only to
+      records outside the lesson's allowed set
+  M4  a copy task's pack model text uses letters outside the taught-letter set
+  M5  a core lemma's word-record CEFR level is above the module's level
+  M6  a match-up, or a workbook word activity of a letter-stage module, binds fewer
+      than three items (the plan binds none: not_checked)
+  M7  a count-syllables item set has one distinct syllable count (not_checked, same reason)
+  M8  a core word or grammar id is never used or recycled by a later lesson
 
-Severity, per gate (a rule that can misfire on a valid plan must not fail it):
-M1, M2, the not-allowed part of M3, the focus part of M4, M6, M7, the grammar half
-of M8 and the two-band part of M5 are failures, because plan and store data decide
-them. What reads a proxy is reported without failing the run: a token that resolves
-to no store record may be a syllable or a sound (not_checked); the pack quote of a
-copy task's model may carry the primer's instruction line beside the lines to copy
-(note); a core lemma one CEFR band above the module is a note, since a per-lemma
-frequency band is noisy at the boundary and a module may teach its own metalanguage
-(the position-1 plan teaches звук/літера, which the store lists at A2); a core word
-never reused is a note, since decodable practice words and names are core by design
-and a recap cannot recycle all of them. Two or more bands above, and a grammar id no
-later lesson uses, are failures.
+Severity, per gate. Only what the plan text and the store decide outright fails the
+run: M1 and M2. The rest is reported and never fails, because the plan contract
+does not make any of it an invariant of a valid plan:
 
-Letter gates (M1, M2, M4 and the decodability half of M6) apply to letter-stage
+- M3 (note): a quoted token that resolves only to out-of-allowlist records. A token
+  that resolves to no store record, or that is spelled like a syllable (one vowel,
+  only letters the lesson has taught) and so may be the syllable the plan teaches
+  rather than the word it collides with, is not_checked.
+- M4 (note): the plan states no copied text; the activity's focus is prose, not the
+  text. The text a copy task names is the pack exercise its `model` points to, and a
+  primer exercise may carry its instruction line beside the lines to copy. A copy
+  task with no readable model is not_checked. Other production tasks state their
+  text in draft fields only, so they cannot be checked at plan stage.
+- M5 (note): the plan contract sets no CEFR ceiling for core vocabulary.
+- M6, M7 (not_checked): an activity's items are draft fields (plan schema §2b); the
+  plan states type, focus, placement and model. Nothing in the plan binds an item
+  set, so no item is counted from the focus prose or the vocabulary pool.
+- M8 (note): the plan contract does not require a core word or a grammar point to
+  recur in a later lesson.
+
+Letter gates (M1, M2, M4 and M6's letter-stage scope) apply to letter-stage
 modules only: those whose arc position carries letters (the rule 5 definition).
 The taught-letter state at a lesson is the arc's letters of every earlier position
 plus the letters this plan introduces through that lesson.
-
-An activity's items are not in the plan (the plan states type, focus, placement and
-model; items are draft fields, §2). The gates read what the plan does state: the
-Ukrainian tokens its focus enumerates. M6's match-up count uses only those; a focus
-that names none states no item set, so it is not applicable. For M6's workbook
-decodable count and M7's syllable counts a focus that names none falls back to the
-lesson's own word pool — its core and recycled records (§2: practice.vocabulary is
-core) — because those activities draw their words from the lesson.
 """
 
 from __future__ import annotations
@@ -65,10 +63,7 @@ from .scope import CYRILLIC_LETTER_CLASS
 
 WORD_COMPLETION_TYPES = frozenset({"pick-syllables", "divide-words", "match-up"})
 COPY_TASK_TYPES = frozenset({"letter-grid"})
-MATCH_UP_MIN_ITEMS = 3
-WORKBOOK_MIN_DECODABLE = 3
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
-CORE_CEFR_FAIL_BANDS = 2
 
 _LETTER = re.compile(f"[{CYRILLIC_LETTER_CLASS}]")
 _TOKEN = re.compile(f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*")
@@ -97,8 +92,10 @@ def _names_letter(text: str, letter: str) -> bool:
     return re.search(pattern, text, re.IGNORECASE) is not None
 
 
-def syllables_of(lemma: str) -> int:
-    return sum(1 for letter in lemma.casefold() if letter in VOWEL_LETTERS)
+def syllable_shaped(token: str, taught: set[str]) -> bool:
+    """Whether token reads as one syllable of the taught letters: one vowel letter, no untaught letter."""
+    letters = [letter.casefold() for letter in _LETTER.findall(token)]
+    return sum(1 for letter in letters if letter in VOWEL_LETTERS) == 1 and set(letters) <= taught
 
 
 def _is_copy_task(activity: dict) -> bool:
@@ -206,6 +203,12 @@ class _Gates:
     def fail(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
         self.report.failures.append(Outcome(code, message, lesson, step))
 
+    def note(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
+        self.report.notes.append(Outcome(code, message, lesson, step))
+
+    def unchecked(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
+        self.report.not_checked.append(Outcome(code, message, lesson, step))
+
     def skip(self, rule: str, reason: str) -> None:
         if rule in self.not_checked_rules:
             return
@@ -291,70 +294,79 @@ class _Gates:
             allowed = self.allowed_ids(index, "M3")
             if allowed is None:
                 return
+            taught = (self.taught_through or {}).get(lesson["n"], set())
             for where, step_id, text in sources:
-                unresolved = []
+                unresolved, syllables = [], []
                 for token in tokens_of(text):
                     ids = self.index.get(token)
                     if not ids:
                         unresolved.append(token)
-                    elif not ids & allowed:
-                        names = ", ".join(sorted(ids))
-                        self.fail(
+                    elif ids & allowed:
+                        continue
+                    elif syllable_shaped(token, taught):
+                        syllables.append(token)
+                    else:
+                        self.note(
                             codes.TOKEN_NOT_ALLOWED,
-                            f"{where} quotes {token!r}, which resolves to {names} — no record of lesson "
-                            f"{lesson['n']}'s allowed set (gate M3)",
+                            f"{where} quotes {token!r}, which resolves to {', '.join(sorted(ids))} — no record "
+                            f"of lesson {lesson['n']}'s allowed set (gate M3)",
                             lesson["n"],
                             step_id,
                         )
                 if unresolved:
-                    self.report.not_checked.append(
-                        Outcome(
-                            codes.TOKEN_UNRESOLVED,
-                            f"{where} quotes {', '.join(repr(t) for t in unresolved)}, which resolve to no "
-                            "record of the level word store; a syllable or a sound is not a word, so a person "
-                            "confirms these (gate M3)",
-                            lesson["n"],
-                            step_id,
-                        )
+                    self.unchecked(
+                        codes.TOKEN_UNRESOLVED,
+                        f"{where} quotes {', '.join(repr(t) for t in unresolved)}, which resolve to no "
+                        "record of the level word store; a syllable or a sound is not a word, so a person "
+                        "confirms these (gate M3)",
+                        lesson["n"],
+                        step_id,
+                    )
+                if syllables:
+                    self.unchecked(
+                        codes.TOKEN_UNRESOLVED,
+                        f"{where} quotes {', '.join(repr(t) for t in syllables)}, spelled with letters lesson "
+                        f"{lesson['n']} has taught and one vowel, and matching only word records outside its "
+                        "allowed set; it may be a syllable the plan teaches rather than that word, so a person "
+                        "confirms these (gate M3)",
+                        lesson["n"],
+                        step_id,
                     )
 
     # -- M4 -------------------------------------------------------------------
 
     def check_copy_tasks(self) -> None:
-        lessons = self.plan["lessons"]
         copy_tasks = [
             (lesson, activity)
-            for lesson in lessons
+            for lesson in self.plan["lessons"]
             for activity in lesson.get("activities") or []
             if _is_copy_task(activity)
         ]
         through = self.letter_state_or_skip("M4", bool(copy_tasks)) if copy_tasks else None
         if through is None:
             return
+        unstated = []
         for lesson, activity in copy_tasks:
-            taught = through[lesson["n"]]
-            outside = {t for t in tokens_of(activity["focus"]) if letters_of(t) - taught}
-            if outside:
-                extra = _joined(letters_of(" ".join(outside)) - taught)
-                self.fail(
-                    codes.COPY_TASK_LETTER_NOT_TAUGHT,
-                    f"copy task {activity['id']} names {', '.join(sorted(outside))} in its focus, which use "
-                    f"letters not taught by lesson {lesson['n']}: {extra} (gate M4)",
-                    lesson["n"],
-                )
             model = activity.get("model")
             text = self.pack.exercise_text.get(model, "") if self.pack is not None and model else ""
-            extra = letters_of(text) - taught
+            if not text:
+                unstated.append(f"{activity['id']} (lesson {lesson['n']})")
+                continue
+            extra = letters_of(text) - through[lesson["n"]]
             if extra:
-                self.report.notes.append(
-                    Outcome(
-                        codes.COPY_MODEL_LETTER_NOT_TAUGHT,
-                        f"copy task {activity['id']}'s model {model} contains letters not taught by lesson "
-                        f"{lesson['n']}: {_joined(extra)}; a primer exercise may carry its instruction line "
-                        "beside the lines to copy, so the plan review confirms which text is copied (gate M4)",
-                        lesson["n"],
-                    )
+                self.note(
+                    codes.COPY_MODEL_LETTER_NOT_TAUGHT,
+                    f"copy task {activity['id']}'s model {model} contains letters not taught by lesson "
+                    f"{lesson['n']}: {_joined(extra)}; a primer exercise may carry its instruction line "
+                    "beside the lines to copy, so the plan review confirms which text is copied (gate M4)",
+                    lesson["n"],
                 )
+        if unstated:
+            self.skip(
+                "M4",
+                f"copy task(s) {', '.join(unstated)} name no readable model exercise; the plan states the "
+                "task in focus prose, and the text to copy is a draft field",
+            )
 
     # -- M5 -------------------------------------------------------------------
 
@@ -371,89 +383,37 @@ class _Gates:
                 if record.cefr_level not in CEFR_ORDER:
                     missing.append(record.id)
                 elif (bands := CEFR_ORDER.index(record.cefr_level) - limit) > 0:
-                    above = f"{bands} band{'s' * (bands > 1)} above the module's level {self.level.upper()}"
-                    message = (
+                    self.note(
+                        codes.CORE_CEFR_ABOVE_MODULE,
                         f"core lemma {entry['lemma']!r} ({record.id}) is {record.cefr_level} in the word store, "
-                        f"{above} (gate M5)"
+                        f"{bands} band{'s' * (bands > 1)} above the module's level {self.level.upper()} (gate M5)",
+                        lesson["n"],
                     )
-                    if bands >= CORE_CEFR_FAIL_BANDS:
-                        self.fail(codes.CORE_CEFR_ABOVE_MODULE, message, lesson["n"])
-                    else:
-                        self.report.notes.append(Outcome(codes.CORE_CEFR_ONE_BAND_ABOVE, message, lesson["n"]))
         if missing:
             self.skip("M5", "core word records carry no CEFR level: " + ", ".join(sorted(set(missing))))
 
     # -- M6, M7 ---------------------------------------------------------------
 
-    def lesson_pool(self, lesson: dict) -> list[WordRecord]:
-        """The word records a lesson's activities draw on: its core and recycled words (§2 practice: core)."""
-        vocabulary = lesson["inventory"]["vocabulary"]
-        ids = {entry["evidence"] for entry in vocabulary["core"]} | set(vocabulary["recycled"])
-        return self.word_records(ids)
-
     def check_activity_sets(self) -> None:
-        through = self.taught_through
+        """M6, M7: the plan binds no item set, so each such activity is reported as not checked."""
+        unbound: dict[str, list[str]] = {"M6": [], "M7": []}
         for lesson in self.plan["lessons"]:
-            taught = through[lesson["n"]] if through is not None else None
-            pool = self.lesson_pool(lesson)
             for activity in lesson.get("activities") or []:
                 kind = activity["type"]
-                tokens = tokens_of(activity["focus"])
-                where = f"activity {activity['id']} ({kind}, {activity['placement']})"
-                if kind == "match-up" and tokens and len(tokens) < MATCH_UP_MIN_ITEMS:
-                    self.fail(
-                        codes.MATCH_UP_TOO_FEW_ITEMS,
-                        f"{where} binds {len(tokens)} item(s) ({', '.join(tokens)}); a match-up needs at least "
-                        f"{MATCH_UP_MIN_ITEMS} (gate M6)",
-                        lesson["n"],
-                    )
+                label = f"{activity['id']} ({kind}, lesson {lesson['n']})"
                 if kind == "count-syllables":
-                    self.check_syllable_counts(lesson["n"], where, tokens, pool, taught)
-                # no letter taught yet (a by-ear lesson): no word is decodable, and decoding is not the activity's job
-                if kind in WORD_COMPLETION_TYPES and activity["placement"] == "workbook" and taught:
-                    named = [r for t in tokens for r in self.word_records(self.index.get(t, set()))]
-                    source = (
-                        f"named in its focus ({', '.join(tokens)})"
-                        if tokens
-                        else "of the lesson's core and recycled words"
-                    )
-                    decodable = {r.id for r in (named if tokens else pool) if letters_of(r.lemma) <= taught}
-                    if len(decodable) < WORKBOOK_MIN_DECODABLE:
-                        self.fail(
-                            codes.WORKBOOK_TOO_FEW_DECODABLE,
-                            f"{where} binds {len(decodable)} decodable word record(s) {source}; a workbook word "
-                            f"activity needs at least {WORKBOOK_MIN_DECODABLE} whose letters are all taught by "
-                            f"lesson {lesson['n']} (gate M6)",
-                            lesson["n"],
-                        )
-
-    def check_syllable_counts(
-        self, lesson_n: int, where: str, tokens: list[str], pool: list[WordRecord], taught: set[str] | None
-    ) -> None:
-        """M7: the item set is the focus's words, or else the lesson's decodable core and recycled words."""
-        if tokens:
-            unresolved = [token for token in tokens if not self.index.get(token)]
-            if unresolved:
-                self.skip("M7", f"{where} names {', '.join(unresolved)}, which resolve to no word record")
-                return
-            records = [self.word_records(self.index[token])[0] for token in tokens]
-            source = ", ".join(tokens)
-        else:
-            records = [r for r in pool if taught is None or letters_of(r.lemma) <= taught]
-            source = (
-                "the lesson's "
-                + ("decodable " if taught is not None else "")
-                + "core and recycled words "
-                + ", ".join(r.lemma for r in records)
-            )
-        counts = {syllables_of(record.lemma) for record in records}
-        if records and len(counts) == 1:
-            self.fail(
-                codes.COUNT_SYLLABLES_ONE_COUNT,
-                f"{where} has an item set ({source}) whose words all have {next(iter(counts))} syllable(s); "
-                "one distinct syllable count does not exercise counting (gate M7)",
-                lesson_n,
-            )
+                    unbound["M7"].append(label)
+                elif kind == "match-up" or (
+                    kind in WORD_COMPLETION_TYPES and activity["placement"] == "workbook" and self.taught_through
+                ):
+                    unbound["M6"].append(label)
+        for rule, labels in unbound.items():
+            if labels:
+                self.skip(
+                    rule,
+                    f"the plan binds no item set for {', '.join(labels)}; items are draft fields, so the "
+                    "item count is checked at the draft",
+                )
 
     # -- M8 -------------------------------------------------------------------
 
@@ -470,17 +430,15 @@ class _Gates:
                     used["grammar"] |= set(uses.get("grammar") or [])
             for entry in lesson["inventory"]["vocabulary"]["core"]:
                 if entry["evidence"] not in used["vocabulary"]:
-                    self.report.notes.append(
-                        Outcome(
-                            codes.CORE_WORD_NOT_REUSED,
-                            f"core word {entry['evidence']} ({entry['lemma']!r}) is never used or recycled by "
-                            f"lessons {later[0]['n']}–{later[-1]['n']} (gate M8)",
-                            lesson["n"],
-                        )
+                    self.note(
+                        codes.CORE_WORD_NOT_REUSED,
+                        f"core word {entry['evidence']} ({entry['lemma']!r}) is never used or recycled by "
+                        f"lessons {later[0]['n']}–{later[-1]['n']} (gate M8)",
+                        lesson["n"],
                     )
             for entry in lesson["inventory"].get("grammar") or []:
                 if entry["id"] not in used["grammar"]:
-                    self.fail(
+                    self.note(
                         codes.GRAMMAR_NOT_REUSED,
                         f"grammar {entry['id']} is never used by lessons {later[0]['n']}–{later[-1]['n']} (gate M8)",
                         lesson["n"],

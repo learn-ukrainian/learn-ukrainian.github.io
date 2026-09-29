@@ -37,18 +37,22 @@ from tests.curriculum.test_plan_validate import (
 pytestmark = pytest.mark.reads_content
 
 # word ids of the fixture store
-MAMA, MANA, NONA, MAN, BASE_WORD, MOKA = "W-201", "W-202", "W-203", "W-204", "W-205", "W-206"
+MAMA, MANA, NONA, MAN, BASE_WORD, MOKA, MA, ON = (
+    "W-201",
+    "W-202",
+    "W-203",
+    "W-204",
+    "W-205",
+    "W-206",
+    "W-207",
+    "W-208",
+)
 
 MECHANICAL_CODES = {
     codes.STEP_LETTER_NOT_PRACTISED,
     codes.STEP_LETTER_NO_WORD_RECORD,
     codes.TOKEN_NOT_ALLOWED,
-    codes.COPY_TASK_LETTER_NOT_TAUGHT,
     codes.CORE_CEFR_ABOVE_MODULE,
-    codes.MATCH_UP_TOO_FEW_ITEMS,
-    codes.WORKBOOK_TOO_FEW_DECODABLE,
-    codes.COUNT_SYLLABLES_ONE_COUNT,
-    codes.CORE_CEFR_ONE_BAND_ABOVE,
     codes.CORE_WORD_NOT_REUSED,
     codes.GRAMMAR_NOT_REUSED,
     codes.COPY_MODEL_LETTER_NOT_TAUGHT,
@@ -177,6 +181,8 @@ def mechanical_words() -> dict:
             record(MAN, "ман"),
             record(BASE_WORD, "мам"),
             record(MOKA, "мока"),
+            record(MA, "ма"),
+            record(ON, "он"),
         ]
     }
 
@@ -219,23 +225,12 @@ def _m2_letter_without_word(plan: dict, pack: dict, words: dict) -> None:
     _activity_of(plan, 1, "a1").update({"type": "pick-syllables", "focus": "Checks the letters М and К."})
 
 
-def _m6_workbook_without_named_words(plan: dict, pack: dict, words: dict) -> None:
-    """Lesson 1's workbook is a pick-syllables naming no word; its pool has one decodable record."""
-    _activity_of(plan, 1, "a4").update({"type": "pick-syllables", "focus": "Complete the words from syllables."})
-
-
-def _by_ear_first_lesson(plan: dict, pack: dict, words: dict) -> None:
-    """Lesson 1 teaches no letter (by ear); lesson 2 teaches all four; lesson 1's workbook names no word."""
-    one, two = _lesson_of(plan, 1), _lesson_of(plan, 2)
-    one["inventory"].pop("phonetics")
-    for step in one["steps"]:
-        step["introduces"]["letters"] = []
-    two["inventory"]["phonetics"]["letters"] = ["М", "А", "Н", "О"]
-    _step_of(plan, 2, "s1")["introduces"]["letters"] = ["М", "А", "Н"]
-    _activity_of(plan, 2, "b1")["focus"] = "Checks the letters М А Н."
-    _activity_of(plan, 1, "a2")["focus"] = "Complete мама and ман."
-    _activity_of(plan, 1, "a3").update({"type": "quiz", "focus": "Listen to the model."})
-    _activity_of(plan, 1, "a4").update({"type": "pick-syllables", "focus": "Complete the words from syllables."})
+def _without_item_activities(plan: dict, pack: dict, words: dict) -> None:
+    """Every match-up, workbook word activity and count-syllables becomes a quiz: no item set to check."""
+    for lesson in plan["lessons"]:
+        for activity in lesson["activities"]:
+            if activity["type"] in ("match-up", "count-syllables") or activity["placement"] == "workbook":
+                activity["type"] = "quiz"
 
 
 def _m8_word_not_reused(plan: dict, pack: dict, words: dict) -> None:
@@ -267,12 +262,15 @@ class Case:
     failures: frozenset[str] = frozenset()
     notes: frozenset[str] = frozenset()
     not_checked: frozenset[str] = frozenset()
+    #: Whether the plan keeps match-up, workbook word or count-syllables activities, whose item sets
+    #: gates M6 and M7 report as not checked.
+    item_sets: bool = True
     #: A fragment every failure of the expected codes must carry in its message (location or value).
     says: str = ""
 
 
 CASES = [
-    Case("baseline_passes_every_gate"),
+    Case("baseline_passes_every_failing_gate"),
     # M1 -- a step introduces a letter that no practice focus names
     Case(
         "m1_letter_not_named_in_practice_focus",
@@ -289,15 +287,15 @@ CASES = [
     ),
     # M3 -- quoted tokens against the lesson's allowed set
     Case(
-        "m3_focus_token_outside_the_lesson",
+        "m3_focus_token_outside_the_lesson_is_a_note",
         _set_focus(1, "a2", "Complete мама and нона with А."),
-        failures=frozenset({codes.TOKEN_NOT_ALLOWED}),
+        notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="activity a2 focus quotes 'нона'",
     ),
     Case(
-        "m3_teach_token_outside_the_lesson",
+        "m3_teach_token_outside_the_lesson_is_a_note",
         lambda plan, pack, words: _step_of(plan, 1, "s1").__setitem__("teach", "The letter М in нона."),
-        failures=frozenset({codes.TOKEN_NOT_ALLOWED}),
+        notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="step s1 teach text quotes 'нона'",
     ),
     Case(
@@ -309,84 +307,73 @@ CASES = [
         _set_focus(1, "a2", "Complete мама and кум with А."),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
     ),
-    # M4 -- a copy task's text uses letters not yet taught
+    # a syllable of the taught letters that spells an out-of-allowlist word (ма, W-207) is not that word
     Case(
-        "m4_copy_focus_uses_untaught_letters",
-        _set_focus(1, "a3", "Copy кома into a notebook."),
-        failures=frozenset({codes.COPY_TASK_LETTER_NOT_TAUGHT}),
-        not_checked=frozenset({codes.TOKEN_UNRESOLVED}),  # кома is a placeholder no store record lists
-        says="copy task a3 names кома",
+        "m3_syllable_colliding_with_a_word_record_is_not_a_violation",
+        _set_focus(1, "a2", "Complete мама and the syllable ма with А."),
+        not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
+        says="'ма', spelled with letters lesson 1 has taught",
     ),
+    Case(
+        "m3_syllable_shaped_token_with_an_untaught_letter_is_a_note",
+        _set_focus(1, "a2", "Complete мама and the syllable он with А."),
+        notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
+        says="activity a2 focus quotes 'он'",
+    ),
+    # M4 -- a copy task's model text uses letters not yet taught
     Case(
         "m4_copy_model_text_uses_untaught_letters_is_a_note",
         lambda plan, pack, words: pack["exercises"][0].__setitem__("quote", "мама кома"),
         notes=frozenset({codes.COPY_MODEL_LETTER_NOT_TAUGHT}),
     ),
+    Case(
+        "m4_untaught_letters_in_copy_focus_prose_are_not_read",
+        _set_focus(1, "a3", "Copy кома into a notebook."),
+        not_checked=frozenset({codes.TOKEN_UNRESOLVED}),  # кома is a placeholder no store record lists
+    ),
+    Case(
+        "m4_copy_task_without_a_model_is_not_checked",
+        lambda plan, pack, words: _activity_of(plan, 1, "a3").pop("model"),
+        says="gate M4 was not checked: copy task(s) a3 (lesson 1) name no readable model exercise",
+    ),
     # M5 -- a core lemma above the module's level
     Case(
-        "m5_core_lemma_above_module_level",
+        "m5_core_lemma_two_bands_above_is_a_note",
         _set_cefr(MAMA, "B1"),
-        failures=frozenset({codes.CORE_CEFR_ABOVE_MODULE}),
+        notes=frozenset({codes.CORE_CEFR_ABOVE_MODULE}),
         says="'мама' (W-201) is B1 in the word store, 2 bands above",
     ),
     Case(
         "m5_core_lemma_one_band_above_is_a_note",
         _set_cefr(MAMA, "A2"),
-        notes=frozenset({codes.CORE_CEFR_ONE_BAND_ABOVE}),
+        notes=frozenset({codes.CORE_CEFR_ABOVE_MODULE}),
         says="1 band above",
     ),
     Case(
         "m5_core_lemma_without_cefr_is_not_checked",
         _set_cefr(MAMA, None),
-        not_checked=frozenset({codes.MECHANICAL_RULE_NOT_CHECKED}),
+        says="gate M5 was not checked: core word records carry no CEFR level: W-201",
     ),
-    # M6 -- item counts
+    # M6 -- item counts: the plan binds no item set
     Case(
-        "m6_match_up_binds_two_items",
+        "m6_match_up_and_workbook_word_activities_are_not_checked",
+        says="gate M6 was not checked: the plan binds no item set for b2 (match-up, lesson 2), b3 (pick-syllables, lesson 2)",
+    ),
+    Case(
+        "m6_words_named_in_the_focus_are_not_counted_as_items",
         _set_focus(2, "b2", "Match мама and нона to pictures; find О."),
-        failures=frozenset({codes.MATCH_UP_TOO_FEW_ITEMS}),
-        says="activity b2 (match-up, inline) binds 2 item(s)",
+        says="gate M6 was not checked",
+    ),
+    Case("m6_m7_without_item_activities_report_nothing", _without_item_activities, item_sets=False),
+    # M7 -- one distinct syllable count: the plan binds no item set
+    Case(
+        "m7_count_syllables_is_not_checked",
+        says="gate M7 was not checked: the plan binds no item set for a4 (count-syllables, lesson 1)",
     ),
     Case(
-        "m6_workbook_binds_two_decodable_records",
-        _set_focus(2, "b3", "Complete мама and мана from syllables."),
-        failures=frozenset({codes.WORKBOOK_TOO_FEW_DECODABLE}),
-        says="activity b3 (pick-syllables, workbook) binds 2 decodable",
-    ),
-    Case(
-        "m6_workbook_word_with_an_untaught_letter_is_not_decodable",
-        _set_focus(2, "b3", "Complete мама, мана and мока from syllables."),
-        failures=frozenset({codes.WORKBOOK_TOO_FEW_DECODABLE}),
-        says="binds 2 decodable",
-    ),
-    Case(
-        "m6_workbook_without_named_words_uses_the_lesson_pool",
-        _m6_workbook_without_named_words,
-        failures=frozenset({codes.WORKBOOK_TOO_FEW_DECODABLE}),
-        says="binds 1 decodable word record(s) of the lesson's core and recycled words",
-    ),
-    Case(
-        "m6_workbook_without_named_words_passes_with_three_pool_words",
-        _set_focus(2, "b3", "Complete the words from syllables."),
-    ),
-    Case("m6_workbook_in_a_by_ear_lesson_is_not_a_decoding_task", _by_ear_first_lesson),
-    # M7 -- one distinct syllable count
-    Case(
-        "m7_count_syllables_set_has_one_count",
+        "m7_words_named_in_the_focus_are_not_counted_as_items",
         _set_focus(1, "a4", "Count syllables in мама and мана."),
-        failures=frozenset({codes.COUNT_SYLLABLES_ONE_COUNT}),
-        says="whose words all have 2 syllable(s)",
-    ),
-    Case(
-        "m7_count_syllables_without_named_words_uses_the_lesson_pool",
-        _set_focus(1, "a4", "Count the syllables in each word."),
-        failures=frozenset({codes.COUNT_SYLLABLES_ONE_COUNT}),
-        says="the lesson's decodable core and recycled words мама",
-    ),
-    Case(
-        "m7_count_syllables_word_without_a_record_is_not_checked",
-        _set_focus(1, "a4", "Count syllables in мама and кум."),
-        not_checked=frozenset({codes.MECHANICAL_RULE_NOT_CHECKED, codes.TOKEN_UNRESOLVED}),
+        says="gate M7 was not checked",
     ),
     # M8 -- introduced and never reused
     Case(
@@ -396,9 +383,9 @@ CASES = [
         says="core word W-204 ('ман') is never used or recycled by lessons 2–3",
     ),
     Case(
-        "m8_grammar_never_reused",
+        "m8_grammar_never_reused_is_a_note",
         _m8_grammar_not_reused,
-        failures=frozenset({codes.GRAMMAR_NOT_REUSED}),
+        notes=frozenset({codes.GRAMMAR_NOT_REUSED}),
         says="grammar G-a1-001 is never used by lessons 2–3",
     ),
     # letter gates apply to letter-stage modules only
@@ -431,7 +418,8 @@ def test_case(tmp_path: Path, case: Case) -> None:
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
     assert {o.code for o in report.notes} == set(case.notes), text
-    assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
+    item_sets = {codes.MECHANICAL_RULE_NOT_CHECKED} if case.item_sets else set()
+    assert {o.code for o in report.not_checked} == NOT_CHECKED | item_sets | set(case.not_checked), text
     assert report.ok == (not case.failures)
     if case.says:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text
@@ -441,8 +429,8 @@ def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
     report, _world = run(tmp_path, CASES[1].mutate)
     outcome = report.failures[0]
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.STEP_LETTER_NOT_PRACTISED, 1, "s2")
-    report, _world = run(tmp_path / "teach", CASES[4].mutate)
-    outcome = report.failures[0]
+    report, _world = run(tmp_path / "teach", next(c for c in CASES if c.name.startswith("m3_teach")).mutate)
+    outcome = report.notes[0]
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.TOKEN_NOT_ALLOWED, 1, "s1")
 
 
@@ -452,8 +440,8 @@ def test_missing_base_layer_reports_not_checked_instead_of_guessing(tmp_path: Pa
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert report.ok, report.render_text()
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M2", "M3"}
-    assert all("base layer" in gate.message for gate in gates)
+    assert {gate.message.split()[1] for gate in gates} == {"M2", "M3", "M6", "M7"}
+    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M2", "M3"})
 
 
 def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) -> None:
@@ -462,7 +450,7 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M1/M2", "M4"}
+    assert {gate.message.split()[1] for gate in gates} == {"M1/M2", "M4", "M6", "M7"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:
