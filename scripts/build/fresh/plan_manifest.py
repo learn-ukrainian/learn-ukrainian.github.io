@@ -397,7 +397,7 @@ def _v1_source(root: Path, level: str, slug: str) -> tuple[dict[str, str], bytes
         return {"status": "no_previous_edition", "reason": f"level {level} has no previous edition"}, None
     relative = f"{TREE}/{edition}/{slug}/activities.yaml"
     path = root / relative
-    if not path.exists() and not _git_tracks(root, relative):
+    if not path.is_file() and not _git_tracks(root, relative):
         return {"status": "absent", "path": relative, "reason": "no v1 activities file for this slug"}, None
     try:
         data = path.read_bytes()
