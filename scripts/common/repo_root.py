@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import stat
 import sys
 from pathlib import Path
 
@@ -70,14 +71,16 @@ def _symlink_target(path: Path) -> Path | None:
     """Target of ``path`` when it is a symlink, else ``None``.
 
     A path that cannot be inspected (``PermissionError`` and other
-    ``OSError``s, or a link replaced between the check and the read) raises
-    ``FileNotFoundError`` so callers see the named refusal they handle
-    instead of an uncaught error or a silently accepted interpreter.
+    ``OSError``s, a path that vanished before the check, or a link replaced
+    between the check and the read) raises ``FileNotFoundError`` so callers
+    see the named refusal they handle instead of an uncaught error or a
+    silently accepted interpreter. ``os.lstat`` is used rather than
+    ``Path.is_symlink`` because the latter reports ``False`` for a missing path.
     """
     try:
-        if not path.is_symlink():
+        if not stat.S_ISLNK(os.lstat(path).st_mode):
             return None
-        return path.readlink()
+        return Path(os.readlink(path))
     except OSError as exc:
         raise FileNotFoundError(f"project interpreter path cannot be inspected: {path}: {exc}") from exc
 

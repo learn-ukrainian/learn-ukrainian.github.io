@@ -273,14 +273,16 @@ def test_project_interpreter_refuses_an_unreadable_path_component(tmp_path, monk
     """A PermissionError in the walk reaches callers as FileNotFoundError (#9201)."""
     blocked = tmp_path / "blocked"
     executable = blocked / "bin" / "python3.12"
-    real_is_symlink = Path.is_symlink
+    executable.parent.mkdir(parents=True)
+    executable.touch()
+    real_lstat = os.lstat
 
-    def is_symlink(self: Path) -> bool:
-        if self == blocked:
-            raise PermissionError(13, "Permission denied", str(self))
-        return real_is_symlink(self)
+    def lstat(path, *args, **kwargs):
+        if Path(path) == blocked:
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_lstat(path, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "is_symlink", is_symlink)
+    monkeypatch.setattr(os, "lstat", lstat)
     monkeypatch.setattr(sys, "executable", str(executable))
 
     with pytest.raises(FileNotFoundError, match="cannot be inspected") as excinfo:
@@ -294,18 +296,31 @@ def test_project_interpreter_refuses_a_final_link_that_vanishes_before_readlink(
     alias = tmp_path / "hosted" / "python3.12"
     alias.parent.mkdir()
     alias.symlink_to(toolchain)
-    real_readlink = Path.readlink
+    real_readlink = os.readlink
 
-    def readlink(self: Path) -> Path:
-        if self == alias:
-            raise FileNotFoundError(2, "No such file or directory", str(self))
-        return real_readlink(self)
+    def readlink(path, *args, **kwargs):
+        if Path(path) == alias:
+            raise FileNotFoundError(2, "No such file or directory", str(path))
+        return real_readlink(path, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "readlink", readlink)
+    monkeypatch.setattr(os, "readlink", readlink)
     monkeypatch.setattr(sys, "executable", str(alias))
 
     with pytest.raises(FileNotFoundError, match="cannot be inspected"):
         project_interpreter(tmp_path / "requested")
+
+
+def test_project_interpreter_refuses_a_final_path_that_vanishes_before_the_link_check(tmp_path, monkeypatch):
+    """A path gone before the link check is refused, not accepted as hosted Python (#9201)."""
+    vanished = tmp_path / "hosted" / "python3.12"
+    vanished.parent.mkdir()
+    vanished.symlink_to(_toolchain_python(tmp_path))
+    vanished.unlink()
+    monkeypatch.setattr(sys, "executable", str(vanished))
+
+    with pytest.raises(FileNotFoundError, match="cannot be inspected") as excinfo:
+        project_interpreter(tmp_path / "requested")
+    assert isinstance(excinfo.value.__cause__, FileNotFoundError)
 
 
 def test_project_interpreter_refuses_foreign_owner_after_own_venv_hop(tmp_path, monkeypatch):
