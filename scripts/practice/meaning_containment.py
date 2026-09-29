@@ -41,6 +41,7 @@ _HEADER = re.compile(
 _ARTICLE = re.compile(r"(?:\d+\s*》|\|\||◇|‖|[¹²³⁴⁵⁶⁷⁸⁹⁰]|\b[IVX]{1,3}\s*[-–])")
 _QUOTE = re.compile(r"[«»“”„\"\[\]]")
 _EN_META = re.compile(r"\b(?:Conjugation:|Synonym of|Initialism of|Augm|Sławno)\b", re.I)
+_REVERSE_SOURCE_MARKERS = ("e2u", "reverse", "en→uk", "en->uk")
 
 
 def _key(text: str) -> str:
@@ -112,6 +113,8 @@ def source_bound_meaning(
         return None, "field_language_mismatch"
     if sense is not None:
         source = str(sense.get("source") or "").strip()
+        if english(displayed) and any(token in source.casefold() for token in _REVERSE_SOURCE_MARKERS):
+            return None, "unsupported_english_source"
         field = "learner_en" if english(displayed) else "learner_uk"
         candidates = sense.get(field)
         if isinstance(candidates, str):
@@ -140,7 +143,7 @@ def source_bound_meaning(
     translation = enrichment.get("translation")
     translation = translation if isinstance(translation, dict) else {}
     source = str(translation.get("source") or "").strip()
-    if not source or any(token in source.casefold() for token in ("e2u", "reverse", "en→uk", "en->uk")):
+    if not source or any(token in source.casefold() for token in _REVERSE_SOURCE_MARKERS):
         return None, "unsupported_english_source"
     # A dictionary's reverse candidates cannot bind a Ukrainian display to a
     # sense. Existing English display text is the needed sense anchor.
@@ -160,9 +163,16 @@ def load_sum11_definitions(words: set[str], path: Path) -> dict[str, list[str]]:
     if not words:
         return {}
     with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as conn:
-        return {
-            word: [str(row[0]) for row in conn.execute(
-                "SELECT definition FROM sum11 WHERE word=? COLLATE NOCASE", (word,)
-            )]
-            for word in sorted(words)
-        }
+        definitions: dict[str, list[str]] = {}
+        for word in sorted(words):
+            # SQLite NOCASE folds ASCII only. Dictionary headwords can differ
+            # from a displayed lemma in Ukrainian capitalization.
+            variants = tuple(dict.fromkeys((word, word.casefold(), word.upper(), word.title())))
+            # The installed word index is NOCASE; an IN query without its
+            # collation scans the full table for every lemma.
+            values: list[str] = []
+            for variant in variants:
+                rows = conn.execute("SELECT definition FROM sum11 WHERE word=? COLLATE NOCASE", (variant,))
+                values.extend(str(row[0]) for row in rows)
+            definitions[word] = list(dict.fromkeys(values))
+        return definitions

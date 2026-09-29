@@ -8455,6 +8455,10 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     if args.broken_validator_fixtures:
         return run_broken_validator_fixtures()
 
+    if not args.manifest and not args.vesum_fixture and not args.sources_db.is_file():
+        print("ERROR: production practice meaning containment requires --sources-db", file=sys.stderr)
+        return 1
+
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
     if args.curated_membership:
         entries, membership_report = apply_membership(entries, read_membership(args.curated_membership))

@@ -8,10 +8,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts.audit.generate_practice_deck import JsonVesumVerifier, _build_lexeme
+from scripts.audit.generate_practice_deck import JsonVesumVerifier, _build_lexeme, main
 from scripts.audit.practice_quality_gate import audit_practice_shards
 from scripts.practice.meaning_containment import (
     REVIEWED_WRONG_LEMMAS,
+    load_sum11_definitions,
     meaning_problem,
     source_bound_meaning,
 )
@@ -42,6 +43,14 @@ def test_prohibited_patterns(text: str, reason: str) -> None:
 
 def test_same_word_sum11_is_rejected() -> None:
     assert meaning_problem("Звичайне пояснення слова", "тест", ["Звичайне пояснення слова."]) == "same_word_sum11"
+
+
+def test_sum11_lookup_folds_ukrainian_capitalization(tmp_path: Path) -> None:
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES (?, ?)", ("слово", "Звичайне пояснення слова."))
+    assert load_sum11_definitions({"Слово"}, db)["Слово"] == ["Звичайне пояснення слова."]
 
 
 def test_existing_attributed_english_is_retained() -> None:
@@ -76,6 +85,8 @@ def test_english_does_not_replace_a_ukrainian_display() -> None:
 def test_reverse_index_is_not_an_attributed_meaning() -> None:
     entry = {"lemma": "тест", "gloss": "test", "enrichment": {"translation": {"en": ["test"], "source": "e2u reverse index"}}}
     assert source_bound_meaning(entry, "test", "test", None)[1] == "unsupported_english_source"
+    sense = {"id": "test_s1", "source": "e2u reverse index", "learner_en": ["test"]}
+    assert source_bound_meaning(entry, "test", "test", sense)[1] == "unsupported_english_source"
 
 
 def test_withheld_lexeme_keeps_nonmeaning_record() -> None:
@@ -86,6 +97,11 @@ def test_withheld_lexeme_keeps_nonmeaning_record() -> None:
     assert lexeme["lemmaId"] == "test"
     assert lexeme["gloss"] == lexeme["glossClean"] == ""
     assert lexeme["meaningMcEligible"] is False
+
+
+def test_production_builder_requires_same_word_source_snapshot(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["--sources-db", str(tmp_path / "missing.db")]) == 1
+    assert "requires --sources-db" in capsys.readouterr().err
 
 
 def test_gate_handles_empty_sources_database(tmp_path: Path) -> None:
