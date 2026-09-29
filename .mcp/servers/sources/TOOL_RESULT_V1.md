@@ -58,9 +58,14 @@ result is empty, the envelope may include:
 
 When the dispatch sets the `LU_REVIEW_*` recording environment and the call was
 recorded, the envelope carries a top-level `"receipt": "<receipt id>"` — the same
-id as the `receipt: <id>` line ending the MCP text content. Clients present
-`structuredContent` to the model, so the id must be in both channels. With the
-environment unset the key is absent and the output is unchanged.
+id as the `receipt: <id> (outcome: <value>)` line ending the MCP text content.
+`<value>` is the review-schema search outcome (`error`, `unavailable`, `no_hits`
+or `hits_but_no_support`) that the ledger record shows for the call, mapped once
+from the stored `outcome_facts`; a refused call has no outcome and prints
+`receipt: <id>`. The envelope carries the same value as `"receipt_outcome"`.
+Clients present `structuredContent` to the model, so the id and outcome must be
+in both channels. With the environment unset the keys are absent and the output
+is unchanged.
 
 ### V4 verify tools (additive)
 

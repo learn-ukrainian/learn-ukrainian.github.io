@@ -373,3 +373,25 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     if hits == 0:
         return {"call_status": "ok", "hits": 0, "status": "no_hits", "unavailable": False}
     return {"call_status": "ok", "hits": hits, "status": "hits_found", "unavailable": False}
+
+
+def search_outcome(status: str, facts: dict[str, Any]) -> str | None:
+    """The ``searches[].outcome`` name the validator accepts for a recorded call.
+
+    Derived from the call status and the ``outcome_facts`` the ledger stores,
+    in the order ``validate._outcome_shown`` decides them, so the returned name
+    is always shown by that record. None means no outcome name is shown (a
+    refused call, or facts without a hit count).
+    """
+    if status == "error" or facts.get("status") == "error":
+        return "error"
+    if status != "ok":
+        return None
+    if facts.get("unavailable") or facts.get("status") == "unavailable":
+        return "unavailable"
+    hits = facts.get("hits")
+    if hits == 0:
+        return "no_hits"
+    if isinstance(hits, int) and hits > 0:
+        return "hits_but_no_support"
+    return None
