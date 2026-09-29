@@ -79,7 +79,7 @@ The seat's final answer starts with the YAML return; no free-text verdict line i
 Return schema conforms to `schemas/review-v1.schema.json` with `kind: plan`.
 
 The `expected` rule:
-when expected is present it is one contiguous substring copied character for character from the stored result of one named receipt the finding cites — the tool output the seat received, not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; an unsupported_by_source finding carries no expected.
+when expected is present it is one contiguous substring copied character for character from the stored result of one named receipt the finding cites — the tool output the seat received, not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; an unsupported_by_source finding may carry expected too, and then the same rule applies: it must be copied from the stored result of one of the search receipts that finding cites.
 
 Plan locations:
 A quote inside one unit of the plan:
@@ -100,6 +100,33 @@ Exactly one of:
 
 Could be a gate:
 Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
+
+### Rules the validator enforces on the return
+
+A return that breaks any of these is recorded as REJECTED and the attempt is spent, however good the review is. Check the finished return against every line before answering:
+
+- The return is one YAML mapping.
+- The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`. The one field you do not fill is `reviewer.prompt_sha256`: keep the return template's line `prompt_sha256: "<prompt_sha256>"` exactly as printed (the placeholder, in quotes); the recorder replaces it with the attested prompt hash before validation.
+- `kind` is `plan`, the kind of the manifest this prompt was rendered from.
+- `attempt.manifest_sha256` is exactly the Manifest SHA256 printed at the top of this prompt.
+- Each finding `id` is used once.
+- Every one of the ten checks in the template is present, and each is `clean` or a non-empty list of finding ids; an empty list is not `clean`.
+- No check is added beyond the ten in the template.
+- Every finding id is listed under exactly one check; an id listed under two checks, or under none, is rejected. When a finding touches two checks, list it under the one it belongs to and name the other in its `claim`.
+- A check lists only ids of findings that exist in `findings`.
+- A finding with `dimension: language` carries a `sub_dimension`, and no other finding does.
+- `sub_dimension` is one of `russianism`, `surzhyk`, `calque`, `paronym`, `government`, `agreement`, `orthography`, `register`, `euphony` or `stress`.
+- Each finding carries exactly one evidence branch (`evidence`, `unsupported_by_source` or `source_conflict`), never two and never none.
+- An `unsupported_by_source` finding has severity MINOR; MAJOR and BLOCKER are rejected for it.
+- `unsupported_by_source` lists at least one search.
+- Each search `outcome` is the value printed beside its receipt (`receipt: <id> (outcome: <value>)`); copy it exactly, and cite only receipts whose line prints an outcome.
+- Every receipt a finding cites (its `evidence` receipt, both sides of a `source_conflict`, each search of `unsupported_by_source`) is in this attempt's ledger, issued for this review, attempt and manifest. A receipt of a previous attempt is accepted only when `attempt.previous_attempt_id` names that attempt and the finding's `status` is `resolved` or `persisting`; this prompt's return template sets `previous_attempt_id: null`, so here every cited receipt must be in this attempt's ledger.
+- A receipt cited as `evidence`, or on either side of a `source_conflict`, has `status: ok` and comes from a tool in the review tool list above.
+- `expected`, when present, is a substring of the stored result of at least one receipt the finding cites (the `expected` rule above).
+- Every location `quote` has visible text: it is not empty, and not only whitespace or stress marks.
+- The lesson, step, activity and field a location names exist in the plan document, and so do the `lesson`, `step` or `activity` a scope names.
+- Every location `quote` occurs inside the text of the plan unit its location names (the values of that unit, not its keys, one per line). The comparison folds Unicode to NFC and drops combining acute and grave accents (stress marks) on both sides before matching; case, spacing and punctuation are not normalised, so copy the characters as the text has them.
+- A finding with `locations: []` (an absence finding) carries a `scope` naming a `lesson` (optionally one `step` or one `activity`); a finding with locations carries no `scope`.
 
 ### Return Schema Template:
 ```yaml

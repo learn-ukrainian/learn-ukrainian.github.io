@@ -28,6 +28,11 @@ rejections is re-implemented), then:
    REJECTED row that touches no budget, settle item or verdict file): the lesson's REVISE rounds are past the
    limit, or the module's regenerations are spent and the lesson's verdict of record is a REVISE on the very
    manifest under review. It is accepted again after ``fixloop budget-decision`` records the operator's decision;
+   A return that still carries the ``<prompt_sha256>`` placeholder is attested from the bound dispatch record
+   before anything is saved; when that cannot be done (no bound record, the prompt does not render, the hashes
+   differ, the line is not replaceable) the recorder refuses with ``prompt_sha256_unattestable`` (exit 2) and
+   records nothing, so the attempt id stays unspent (#9130). CLI paths are made absolute against the caller's
+   working directory first, so ``--repo-root`` cannot re-base a relative ``--manifest``;
 4. ``--failure <reason>`` records a review that returned nothing (or a rejected return): an
    ``attempts`` row and one more ``budgets.review_failures``.
 
@@ -91,6 +96,7 @@ ATTEMPT_RETURN_CONFLICT = "attempt_return_conflict"
 SEED_ID_UNRECOGNISED = "seed_id_unrecognised"
 SEED_UNSUPPORTED = "seed_unsupported"
 BUDGET_TERMINAL = "budget_terminal"
+PROMPT_SHA256_UNATTESTABLE = "prompt_sha256_unattestable"
 
 
 class RecordError(Exception):
@@ -179,14 +185,20 @@ def dispatch_prompt_sha256(
     return value if isinstance(value, str) and HEX64.fullmatch(value) else None
 
 
-def rendered_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> str | None:
-    """The sha256 of this manifest's review prompt rendered with these ids, or ``None`` when it cannot be rendered."""
+def _render_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> tuple[str | None, str]:
+    """``(sha256, "")`` of this manifest's review prompt rendered with these ids, or ``(None, why it cannot be)``."""
     from scripts.review.prompts.render import RenderError, render
 
     try:
-        return render(Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id).prompt_sha256
-    except (RenderError, OSError, ValueError):
-        return None
+        rendered = render(Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id)
+    except (RenderError, OSError, ValueError) as error:
+        return None, str(error)
+    return rendered.prompt_sha256, ""
+
+
+def rendered_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> str | None:
+    """The sha256 of this manifest's review prompt rendered with these ids, or ``None`` when it cannot be rendered."""
+    return _render_prompt_sha256(manifest_path, root, review_id, attempt_id)[0]
 
 
 def attest_prompt_sha256(data: bytes, attested: str | None) -> bytes:
@@ -227,6 +239,61 @@ def attest_prompt_sha256(data: bytes, attested: str | None) -> bytes:
         return data
     expected = {**original, "reviewer": {**reviewer, "prompt_sha256": attested}}
     return replaced if filled == expected else data
+
+
+def _carries_placeholder(data: bytes) -> bool:
+    """Whether the return leaves the template's ``reviewer.prompt_sha256`` placeholder for the recorder to attest."""
+    loaded = _load_yaml_bytes(data)
+    reviewer = loaded.get("reviewer") if isinstance(loaded, dict) else None
+    return isinstance(reviewer, dict) and reviewer.get("prompt_sha256") == PROMPT_SHA_PLACEHOLDER
+
+
+def attested_return(
+    data: bytes,
+    *,
+    task_id: str,
+    tasks_dir: Path,
+    manifest_path: Path,
+    root: Path,
+    review_id: str,
+    attempt_id: str,
+    manifest_sha256: str,
+) -> bytes:
+    """The return with its prompt hash attested; a placeholder that cannot be attested refuses (nothing is recorded).
+
+    A return without the placeholder is passed through for the validator to judge. One with it would only be
+    rejected as ``schema_invalid`` and spend the attempt id (ids are never reused, #8517), so each way the
+    attestation can fail is named and raised here, before anything is saved or written.
+    """
+    if not _carries_placeholder(data):
+        return data
+
+    def refuse(cause: str) -> RecordError:
+        return RecordError(
+            f"reviewer.prompt_sha256 is the template placeholder and cannot be attested: {cause}; "
+            "nothing was recorded and the attempt id is unspent",
+            PROMPT_SHA256_UNATTESTABLE,
+        )
+
+    sent = dispatch_prompt_sha256(
+        task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
+    )
+    if sent is None:
+        raise refuse(
+            f"the dispatch record {task_id} is not bound to review {review_id} attempt {attempt_id} of this manifest "
+            "or holds no prompt_sha256"
+        )
+    rendered, why = _render_prompt_sha256(manifest_path, root, review_id, attempt_id)
+    if rendered is None:
+        raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")
+    if rendered != sent:
+        raise refuse(f"the dispatch hash {sent} is not the hash of this attempt's rendered prompt ({rendered})")
+    filled = attest_prompt_sha256(data, sent)
+    if filled == data:
+        raise refuse(
+            "the placeholder line is not in the form the recorder can replace (an indented, matching-quoted line in reviewer:)"
+        )
+    return filled
 
 
 def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | None = None) -> dict[str, str]:
@@ -438,11 +505,16 @@ def record_return(
     tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
     identity = resolve_reviewer_identity(task_id, tasks_root)
     if failure is None:
-        sent = dispatch_prompt_sha256(
-            task_id, tasks_root, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha
+        data = attested_return(
+            data,
+            task_id=task_id,
+            tasks_dir=tasks_root,
+            manifest_path=manifest_path,
+            root=root,
+            review_id=review_id,
+            attempt_id=attempt_id,
+            manifest_sha256=manifest_sha,
         )
-        if sent is not None and sent == rendered_prompt_sha256(manifest_path, root, review_id, attempt_id):
-            data = attest_prompt_sha256(data, sent)
     params = findings_db.load_parameters()
     if second and kind != "lesson":
         raise RecordError("a second seat reviews lessons, not plans")
@@ -1024,16 +1096,21 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _absolute(path: Path | None) -> Path | None:
+    return Path(os.path.abspath(path)) if path is not None else None
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        # against the caller's working directory, before --repo-root can re-base a relative path (#9130)
         outcome = record_return(
-            args.review,
-            manifest_path=args.manifest,
-            ledger_path=args.ledger,
+            _absolute(args.review),
+            manifest_path=_absolute(args.manifest),
+            ledger_path=_absolute(args.ledger),
             task_id=args.task_id,
-            document_path=args.document,
-            previous_ledger_path=args.previous_ledger,
+            document_path=_absolute(args.document),
+            previous_ledger_path=_absolute(args.previous_ledger),
             repo_root=args.repo_root,
             db_path=args.db,
             tasks_dir=args.tasks_dir,
