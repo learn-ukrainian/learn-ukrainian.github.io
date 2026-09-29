@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian nightly host data-tier tests
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ci.data_tier run
+TimeoutStartSec=28800
+Nice=10
+IOSchedulingClass=idle
