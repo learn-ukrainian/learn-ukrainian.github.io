@@ -269,6 +269,45 @@ def test_project_interpreter_refuses_directory_symlink_loop(tmp_path, monkeypatc
         project_interpreter(tmp_path / "requested")
 
 
+def test_project_interpreter_refuses_an_unreadable_path_component(tmp_path, monkeypatch):
+    """A PermissionError in the walk reaches callers as FileNotFoundError (#9201)."""
+    blocked = tmp_path / "blocked"
+    executable = blocked / "bin" / "python3.12"
+    real_is_symlink = Path.is_symlink
+
+    def is_symlink(self: Path) -> bool:
+        if self == blocked:
+            raise PermissionError(13, "Permission denied", str(self))
+        return real_is_symlink(self)
+
+    monkeypatch.setattr(Path, "is_symlink", is_symlink)
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="cannot be inspected") as excinfo:
+        project_interpreter(tmp_path / "requested")
+    assert isinstance(excinfo.value.__cause__, PermissionError)
+
+
+def test_project_interpreter_refuses_a_final_link_that_vanishes_before_readlink(tmp_path, monkeypatch):
+    """A race on the final readlink fails closed instead of reading as hosted Python (#9201)."""
+    toolchain = _toolchain_python(tmp_path)
+    alias = tmp_path / "hosted" / "python3.12"
+    alias.parent.mkdir()
+    alias.symlink_to(toolchain)
+    real_readlink = Path.readlink
+
+    def readlink(self: Path) -> Path:
+        if self == alias:
+            raise FileNotFoundError(2, "No such file or directory", str(self))
+        return real_readlink(self)
+
+    monkeypatch.setattr(Path, "readlink", readlink)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    with pytest.raises(FileNotFoundError, match="cannot be inspected"):
+        project_interpreter(tmp_path / "requested")
+
+
 def test_project_interpreter_refuses_foreign_owner_after_own_venv_hop(tmp_path, monkeypatch):
     """An allowed first owner cannot hide a foreign owner later in the chain."""
     requested = tmp_path / "requested"

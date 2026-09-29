@@ -66,6 +66,22 @@ def _realpath(path: Path) -> Path:
     return Path(resolved)
 
 
+def _symlink_target(path: Path) -> Path | None:
+    """Target of ``path`` when it is a symlink, else ``None``.
+
+    A path that cannot be inspected (``PermissionError`` and other
+    ``OSError``s, or a link replaced between the check and the read) raises
+    ``FileNotFoundError`` so callers see the named refusal they handle
+    instead of an uncaught error or a silently accepted interpreter.
+    """
+    try:
+        if not path.is_symlink():
+            return None
+        return path.readlink()
+    except OSError as exc:
+        raise FileNotFoundError(f"project interpreter path cannot be inspected: {path}: {exc}") from exc
+
+
 def _first_parent_symlink_hop(parent: Path) -> Path | None:
     """Expand the first directory symlink in an absolute parent path, if any.
 
@@ -78,8 +94,8 @@ def _first_parent_symlink_hop(parent: Path) -> Path | None:
             prefix = prefix.parent
             continue
         next_path = prefix / part
-        if next_path.is_symlink():
-            target = next_path.readlink()
+        target = _symlink_target(next_path)
+        if target is not None:
             if not target.is_absolute():
                 target = prefix / target
             return target.joinpath(*parent.parts[index + 1 :])
@@ -137,11 +153,8 @@ def _venv_owners(interpreter: Path) -> set[Path]:
             continue
         if owners:
             return owners
-        if not candidate.is_symlink():
-            return set()
-        try:
-            target = candidate.readlink()
-        except OSError:
+        target = _symlink_target(candidate)
+        if target is None:
             return set()
         if not target.is_absolute():
             target = candidate.parent / target
@@ -174,7 +187,9 @@ def project_interpreter(root: Path | None = None) -> Path:
        would drop ``.venv``. If any named checkout is neither the requested
        checkout nor its primary checkout, the interpreter is refused. It is
        accepted when every named checkout is one of those two, and when no
-       view names a checkout (hosted CI Python). Symlink loops fail closed.
+       view names a checkout (hosted CI Python). Symlink loops, path
+       components that cannot be inspected, and a link that changes between
+       the check and the read fail closed with ``FileNotFoundError``.
     """
     repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
