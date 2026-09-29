@@ -32,78 +32,11 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.helpers.python import project_python
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-_VENV_PYTHON = Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python"
-
-
-def _resolve_test_python() -> str:
-    """Locate the project virtualenv's Python interpreter.
-
-    AGENTS.md explicitly bans falling back to the calling Python
-    interpreter attribute (project rule: `.venv/bin/python` only —
-    sqlite-vec and other deps live in the project venv, not in
-    arbitrary system interpreters). So we resolve to a real
-    `.venv/bin/python` path or fail loudly.
-
-    Resolution order:
-      1. **Same-checkout `.venv`** (main case, CI case) — the venv
-         materialized at the repo root.
-      2. **Main checkout's `.venv` via git-common-dir** (worktree case)
-         — `git worktree add` does not materialize a per-worktree venv,
-         but the worktree's git common dir points at the main checkout
-         where `.venv/bin/python` does exist. We resolve that path
-         explicitly via `git rev-parse --git-common-dir`.
-      3. **`$VIRTUAL_ENV/bin/python`** if set — handles the rare case of
-         an externally-activated venv outside this repo. Codex flagged
-         this as the explicit fallback in PR #1686 review.
-      4. **RuntimeError** if none of the above resolves. We fail loud
-         rather than fall through to the calling-interpreter attribute,
-         which would silently launch subprocess tests on the wrong
-         interpreter and miss sqlite-vec / other venv-only deps.
-         (#1685; refined per Codex review on #1686 citing AGENTS.md:19,
-         AGENTS.md:53-67.)
-    """
-    if _VENV_PYTHON.exists():
-        return str(_VENV_PYTHON)
-
-    # Worktree case — the worktree's `.venv/bin/python` doesn't exist,
-    # but `git rev-parse --git-common-dir` from inside the worktree
-    # points at `<main-checkout>/.git`, whose parent has the venv.
-    try:
-        common_dir = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=Path(__file__).resolve().parent,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-        ).strip()
-        if common_dir:
-            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
-            if main_venv.exists():
-                return str(main_venv)
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-
-    active_venv = os.environ.get("VIRTUAL_ENV")
-    if active_venv:
-        candidate = Path(active_venv) / "bin" / "python"
-        if candidate.exists():
-            return str(candidate)
-
-    raise RuntimeError(
-        "No project virtualenv Python found. Expected `.venv/bin/python` "
-        "in the current checkout, in the main checkout (when running from "
-        "a git worktree), or via $VIRTUAL_ENV. Run tests via "
-        "`.venv/bin/python -m pytest`. AGENTS.md:53-67 forbids falling back "
-        "to the calling Python interpreter for subprocess tests."
-    )
-
-
-_TEST_PYTHON = _resolve_test_python()
-"""Python interpreter for subprocess tests — `.venv/bin/python` resolved
-via :func:`_resolve_test_python`. See that helper's docstring for the
-full resolution order and rationale (#1685)."""
+_TEST_PYTHON = project_python()
 
 from agent_runtime.adapters.agy import AgyAdapter
 from agent_runtime.adapters.base import InvocationPlan

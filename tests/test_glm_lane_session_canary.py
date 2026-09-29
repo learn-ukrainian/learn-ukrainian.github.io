@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -15,11 +14,6 @@ from scripts.agent_runtime.result import ParseResult
 from scripts.session_canary import glm_lane
 
 _REPO = Path(__file__).resolve().parents[1]
-
-
-def _py() -> str:
-    venv = _REPO / ".venv" / "bin" / "python"
-    return str(venv) if venv.is_file() else sys.executable
 
 
 @pytest.fixture

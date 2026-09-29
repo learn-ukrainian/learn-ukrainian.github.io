@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.guardrails.assert_primary_on_main import heal_primary_to_main, primary_head_state
+from tests.helpers.python import project_python
 
 
 def _run(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -80,15 +81,13 @@ _GATE_ENVS = ("LEARN_UK_PRIMARY_HEAL_DISABLE", "GITHUB_ACTIONS", "CI")
 
 
 def _run_cli(repo: Path, extra_env: dict[str, str], *args: str) -> subprocess.CompletedProcess[str]:
-    venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
-    if not venv_python.is_file():  # repo forbids sys.executable / bare python
-        pytest.skip("project .venv interpreter not found; repo forbids sys.executable here")
+    venv_python = project_python()
     env = os.environ.copy()
     for name in _GATE_ENVS:
         env.pop(name, None)
     env.update(extra_env)
     return subprocess.run(
-        [str(venv_python), str(_CLI), "--cwd", str(repo), *args],
+        [venv_python, str(_CLI), "--cwd", str(repo), *args],
         cwd=str(_REPO_ROOT),
         capture_output=True,
         text=True,
@@ -144,7 +143,7 @@ def test_post_checkout_hook_diagnoses_without_reattaching(primary_repo: Path) ->
     hook.chmod(0o755)
     venv_bin = primary_repo / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
-    venv_bin.joinpath("python").symlink_to(_REPO_ROOT / ".venv" / "bin" / "python")
+    venv_bin.joinpath("python").symlink_to(project_python())
 
     assert _run(primary_repo, "git", "switch", "--detach", "HEAD").returncode == 0
     result = _run(primary_repo, "bash", str(hook))

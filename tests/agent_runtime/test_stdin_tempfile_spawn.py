@@ -7,7 +7,6 @@ file matches ``cat prompt.txt | codex exec -``.
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -23,29 +22,9 @@ from agent_runtime.runner import (
     _spawn_subprocess,
 )
 
+from tests.helpers.python import project_python
 
-def _resolve_test_python() -> str:
-    candidate = _REPO_ROOT / ".venv" / "bin" / "python"
-    if candidate.exists():
-        return str(candidate)
-    try:
-        common_dir = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=str(_REPO_ROOT),
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=30
-        ).strip()
-        if common_dir:
-            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
-            if main_venv.exists():
-                return str(main_venv)
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    raise RuntimeError("missing .venv/bin/python")
-
-
-_TEST_PYTHON = _resolve_test_python()
+_TEST_PYTHON = project_python()
 
 
 @pytest.fixture

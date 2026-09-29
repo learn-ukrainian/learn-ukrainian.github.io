@@ -6,8 +6,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-MAIN_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+MAIN_PYTHON = project_python()
 EMBED_PYTHON = PROJECT_ROOT / "embed-venv" / "bin" / "python"
 RSS_LIMIT_BYTES = 4 * 1024**3
 

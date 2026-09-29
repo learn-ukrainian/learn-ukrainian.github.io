@@ -11,7 +11,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common.repo_root import main_checkout_root
 from scripts.storage.topology import (
     REQUIRED_BULK_MARKERS,
     ActiveDatabaseNetworkError,
@@ -23,6 +22,7 @@ from scripts.storage.topology import (
     resolve_topology,
     unresolved_bulk_placeholder,
 )
+from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,18 +41,9 @@ _STORAGE_SCOPE_FILES = (
 )
 
 
-def _project_python() -> Path:
-    """Resolve the shared project interpreter without hardcoding operator home."""
-    local = REPO_ROOT / ".venv" / "bin" / "python"
-    if local.exists():
-        return local
-    primary = main_checkout_root(REPO_ROOT) / ".venv" / "bin" / "python"
-    if primary.exists():
-        return primary
-    raise RuntimeError(
-        "Project interpreter missing from this checkout and its primary Git "
-        f"checkout: {local}, {primary}"
-    )
+def _project_python() -> str:
+    """The shared project interpreter (the one running pytest)."""
+    return project_python()
 
 
 def _make_bulk_root(path: Path, *, markers: tuple[str, ...] = REQUIRED_BULK_MARKERS) -> Path:
