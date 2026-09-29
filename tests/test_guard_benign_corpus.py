@@ -1,4 +1,4 @@
-"""Compare every literal guard-test command with the pre-9102 hook baseline."""
+"""Compare the pre-9115 guard-test corpus with the main hook baseline."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO / "agents_extensions/shared/hooks"
-BASELINE = "1d95d7616a18c64a7cf00d1338c3f46dba4241e8"
+BASELINE = "28a4243544954335d0d6edafa6f727beb1a5981f"
 GUARDS = (
     "admin_merge",
     "pr_merge",
@@ -35,13 +35,30 @@ BENIGN_COMMANDS = (
 def _literal_corpus() -> list[str]:
     values = set(BENIGN_COMMANDS)
     for name in GUARDS:
-        source = (REPO / f"tests/test_guard_{name}.py").read_text()
+        source = subprocess.run(
+            ["git", "show", f"{BASELINE}:tests/test_guard_{name}.py"],
+            cwd=REPO,
+            capture_output=True,
+            check=True,
+            text=True,
+            timeout=30,
+        ).stdout
         tree = ast.parse(source)
+        docstrings = {
+            id(node.body[0].value)
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.body
+            and isinstance(node.body[0], ast.Expr)
+            and isinstance(node.body[0].value, ast.Constant)
+            and isinstance(node.body[0].value.value, str)
+        }
         values.update(
             node.value
             for node in ast.walk(tree)
             if isinstance(node, ast.Constant)
             and isinstance(node.value, str)
+            and id(node) not in docstrings
             and "{payload}" not in node.value  # A parameterized template is not a command.
         )
     return sorted(values)

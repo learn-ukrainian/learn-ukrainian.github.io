@@ -19,6 +19,7 @@ def collapse_line_continuations(command: str) -> str:
     out: list[str] = []
     quote = ""
     outer_quote = ""
+    backtick_outer_quote = ""
     substitution_depth = 0
     backticks = False
     comment = False
@@ -40,22 +41,27 @@ def collapse_line_continuations(command: str) -> str:
                 word_start = False
             i += 2
             continue
-        if char == "'" and quote != '"' and not backticks:
+        if char == "'" and quote != '"':
             quote = "" if quote == "'" else "'"
             word_start = False
-        elif char == '"' and quote != "'" and not backticks:
+        elif char == '"' and quote != "'":
             quote = "" if quote == '"' else '"'
             word_start = False
         elif char == "`" and quote != "'":
+            if not backticks:
+                backtick_outer_quote = quote
+                quote = ""
+            else:
+                quote = backtick_outer_quote
             backticks = not backticks
-            word_start = False
+            word_start = backticks
         elif quote != "'" and not backticks and command.startswith("$(", i):
             if not substitution_depth:
                 outer_quote = quote
                 quote = ""
             substitution_depth += 1
             out.append("$(")
-            word_start = False
+            word_start = True
             i += 2
             continue
         elif substitution_depth and not quote and not backticks and char == "(":
@@ -64,7 +70,7 @@ def collapse_line_continuations(command: str) -> str:
             substitution_depth -= 1
             if not substitution_depth:
                 quote = outer_quote
-        elif not quote and not backticks:
+        elif not quote:
             if char == "#" and word_start:
                 comment = True
             word_start = char in " \t\n;&|()"
@@ -80,6 +86,7 @@ def strip_shell_comments(command: str) -> str:
     backticks = False
     substitution_depth = 0
     outer_quote = ""
+    backtick_outer_quote = ""
     word_start = True
     i = 0
     while i < len(command):
@@ -89,22 +96,27 @@ def strip_shell_comments(command: str) -> str:
             word_start = False
             i += 2
             continue
-        if char == "'" and quote != '"' and not backticks:
+        if char == "'" and quote != '"':
             quote = "" if quote == "'" else "'"
             word_start = False
-        elif char == '"' and quote != "'" and not backticks:
+        elif char == '"' and quote != "'":
             quote = "" if quote == '"' else '"'
             word_start = False
         elif char == "`" and quote != "'":
+            if not backticks:
+                backtick_outer_quote = quote
+                quote = ""
+            else:
+                quote = backtick_outer_quote
             backticks = not backticks
-            word_start = False
+            word_start = backticks
         elif quote != "'" and not backticks and command.startswith("$(", i):
             if not substitution_depth:
                 outer_quote = quote
                 quote = ""
             substitution_depth += 1
             out.append("$(")
-            word_start = False
+            word_start = True
             i += 2
             continue
         elif substitution_depth and not quote and not backticks and char == "(":
@@ -113,7 +125,7 @@ def strip_shell_comments(command: str) -> str:
             substitution_depth -= 1
             if not substitution_depth:
                 quote = outer_quote
-        elif not quote and not backticks and not substitution_depth:
+        elif not quote:
             if char == "#" and word_start:
                 end = command.find("\n", i)
                 if end < 0:
@@ -123,6 +135,55 @@ def strip_shell_comments(command: str) -> str:
             word_start = char in " \t\n;&|()"
         out.append(char)
         i += 1
+    return "".join(out)
+
+
+def _expose_backtick_bodies(command: str) -> str:
+    """Expose executable backticks as inline command substitutions for guards."""
+    out: list[str] = []
+    quote = ""
+    substitutions: list[tuple[str, int]] = []
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'":
+            out.append(command[index : index + 2])
+            index += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote == "'" else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote == '"' else '"'
+        elif quote != "'" and command.startswith("$(", index):
+            substitutions.append((quote, 1))
+            quote = ""
+            out.append("$(")
+            index += 2
+            continue
+        elif quote != "'" and char == "`":
+            end = index + 1
+            while end < len(command) and command[end] != "`":
+                end += 2 if command[end] == "\\" else 1
+            if end < len(command):
+                if quote == '"':
+                    out.append('"')
+                out.extend(("$(", command[index + 1 : end], ")"))
+                if quote == '"':
+                    out.append('"')
+                index = end + 1
+                continue
+        elif char == "(" and not quote and substitutions:
+            outer_quote, depth = substitutions[-1]
+            substitutions[-1] = (outer_quote, depth + 1)
+        elif char == ")" and not quote and substitutions:
+            outer_quote, depth = substitutions[-1]
+            if depth == 1:
+                substitutions.pop()
+                quote = outer_quote
+            else:
+                substitutions[-1] = (outer_quote, depth - 1)
+        out.append(char)
+        index += 1
     return "".join(out)
 
 
@@ -207,7 +268,7 @@ def preprocess_shell_command(command: str) -> str:
     visible = strip_skippable_heredoc_bodies(
         collapsed, opener_transform=strip_shell_comments, body_substitutions=_body_substitutions
     )
-    return strip_shell_comments(visible)
+    return _expose_backtick_bodies(strip_shell_comments(visible))
 
 
 def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[tuple[str, bool, bool]] | None:
@@ -315,12 +376,7 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
         word = line[start:index]
         if _HEREDOC_IDENTIFIER.fullmatch(word):
             delimiters.append((word, strip_tabs, False))
-        elif (
-            len(word) >= 3
-            and word[0] in "\"'"
-            and word[-1] == word[0]
-            and _HEREDOC_IDENTIFIER.fullmatch(word[1:-1])
-        ):
+        elif len(word) >= 3 and word[0] in "\"'" and word[-1] == word[0] and _HEREDOC_IDENTIFIER.fullmatch(word[1:-1]):
             delimiters.append((word[1:-1], strip_tabs, True))
         else:
             ambiguous = True
@@ -328,7 +384,9 @@ def skippable_heredoc_delimiters(line: str, *, initial_quote: str = "") -> list[
     # on the same command line.
     return (
         None
-        if ambiguous or (arithmetic_shift and delimiters) or any(c in {"arithmetic", "arithmetic_bracket", "parameter"} for c in contexts)
+        if ambiguous
+        or (arithmetic_shift and delimiters)
+        or any(c in {"arithmetic", "arithmetic_bracket", "parameter"} for c in contexts)
         else delimiters
     )
 

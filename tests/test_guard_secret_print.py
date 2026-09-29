@@ -206,10 +206,10 @@ def test_issue_8896_parameter_expansion_stays_one_word():
 @pytest.mark.parametrize(
     "command",
     [
-        r'''grep -rn "\"why\"\|'why'" scripts/ --include=*.py | head -8''',
+        r"""grep -rn "\"why\"\|'why'" scripts/ --include=*.py | head -8""",
         r'echo "a \" b"',
         r'printf "%s\n" "x\"y"',
-        r'''echo 'single' "double \" quoted" | head -8''',
+        r"""echo 'single' "double \" quoted" | head -8""",
     ],
 )
 def test_issue_9088_escaped_double_quote_commands_allow(monkeypatch, command):
@@ -227,25 +227,28 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
 
 
-@pytest.mark.parametrize("shape", [
-    "echo $((1 << EOF))\n{payload}\nEOF",
-    "((1 << EOF))\n{payload}\nEOF",
-    "echo ${x#<<EOF }\n{payload}\nEOF",
-    "let 'x=1<<EOF'\n{payload}\nEOF",
-    "true # <<EOF\n{payload}\nEOF",
-    ": <<EOF; \\\n{payload}\nnote\nEOF",
-    ": <<EOF\n$({payload})\nEOF",
-    ": <<EOF\n`{payload}`\nEOF",
-    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
-    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
-    "echo foo # comment \\\n{payload}",
-    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
-    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
-    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
-    ": <<EOF\n$(echo ')'; {payload})\nEOF",
-    "x[1 << EOF ]=1\n{payload}\nEOF",
-    "echo $[1 << EOF ]\n{payload}\nEOF",
-])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "echo $((1 << EOF))\n{payload}\nEOF",
+        "((1 << EOF))\n{payload}\nEOF",
+        "echo ${x#<<EOF }\n{payload}\nEOF",
+        "let 'x=1<<EOF'\n{payload}\nEOF",
+        "true # <<EOF\n{payload}\nEOF",
+        ": <<EOF; \\\n{payload}\nnote\nEOF",
+        ": <<EOF\n$({payload})\nEOF",
+        ": <<EOF\n`{payload}`\nEOF",
+        "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+        ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+        "echo foo # comment \\\n{payload}",
+        ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+        ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+        ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+        ": <<EOF\n$(echo ')'; {payload})\nEOF",
+        "x[1 << EOF ]=1\n{payload}\nEOF",
+        "echo $[1 << EOF ]\n{payload}\nEOF",
+    ],
+)
 def test_issue_9102_executable_payload_stays_visible(monkeypatch, shape):
     assert _run(monkeypatch, shape.replace("{payload}", "cat .env")) == 2
 
@@ -254,12 +257,29 @@ def test_issue_9102_real_let_heredoc_body_is_inert(monkeypatch):
     assert _run(monkeypatch, "let x=1<<EOF\ncat .env\nEOF") == 0
 
 
-@pytest.mark.parametrize("opener,closer,quoted", [
-    ("<<'EOF'", "EOF", True),
-    ('<<"EOF"', "EOF", True),
-    ("<<EOF", "EOF", False),
-    ("<<-EOF", "\tEOF", False),
-])
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo $(echo foo # comment \\\ncat .env)",
+        "echo `cat .env`",
+        'echo "`cat .env`"',
+        "echo `echo foo # comment \\\ncat .env`",
+        "echo $(echo foo # comment \\\n`cat .env`)",
+    ],
+)
+def test_issue_9115_nested_and_backtick_secret_reads_blocked(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "opener,closer,quoted",
+    [
+        ("<<'EOF'", "EOF", True),
+        ('<<"EOF"', "EOF", True),
+        ("<<EOF", "EOF", False),
+        ("<<-EOF", "\tEOF", False),
+    ],
+)
 def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
     assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
     assert guard._strip_heredoc_bodies(f"cat {opener}\ncat .env\n{closer}\necho $GH_TOKEN") == (
@@ -267,9 +287,16 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
     )
 
 
-@pytest.mark.parametrize("first", [
-    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
-])
+@pytest.mark.parametrize(
+    "first",
+    [
+        "true <<<EOF",
+        "true <<< EOF",
+        "true <<<'EOF'",
+        'true <<<"EOF"',
+        "true<<<EOF",
+    ],
+)
 def test_issue_9088_here_strings_keep_secret_dump_visible(monkeypatch, first):
     command = f"{first}\ncat .env\nEOF"
     assert guard._heredoc_delimiters(first) == []
@@ -287,17 +314,20 @@ def test_issue_9088_quoted_identifier_heredoc_body_is_inert(monkeypatch):
     assert _run(monkeypatch, "cat <<'EOF'\ncat .env\necho $GH_TOKEN\nEOF") == 0
 
 
-@pytest.mark.parametrize("opener,closer", [
-    (r'<<"EO\"F"', 'EO"F'),
-    (r"<<$'EOF'", "EOF"),
-    ('<<$"EOF"', "EOF"),
-    (r"<<$'EO\x22F'", 'EO"F'),
-    (r"<<EO$'F'", "EOF"),
-    (r"<<E\OF", "EOF"),
-    (r"<<-$'EOF'", "\tEOF"),
-    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
-    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
-])
+@pytest.mark.parametrize(
+    "opener,closer",
+    [
+        (r'<<"EO\"F"', 'EO"F'),
+        (r"<<$'EOF'", "EOF"),
+        ('<<$"EOF"', "EOF"),
+        (r"<<$'EO\x22F'", 'EO"F'),
+        (r"<<EO$'F'", "EOF"),
+        (r"<<E\OF", "EOF"),
+        (r"<<-$'EOF'", "\tEOF"),
+        (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+        (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+    ],
+)
 def test_issue_9088_exotic_heredoc_keeps_secret_dump_visible(monkeypatch, opener, closer):
     command = f"cat {opener}\ncat .env\necho $GH_TOKEN\n{closer}"
     assert guard._heredoc_delimiters(f"cat {opener}") is None
@@ -321,7 +351,10 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     result = subprocess.run(
         [sys.executable, str(guard_copy)],
         input=json.dumps({"tool_input": {"command": "cat .env"}}),
-        text=True, capture_output=True, check=False, timeout=30,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "guard dependency unavailable: shell_shlex" in result.stderr
