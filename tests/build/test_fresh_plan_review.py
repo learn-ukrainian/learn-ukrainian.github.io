@@ -840,6 +840,7 @@ def test_a_manifest_written_before_v1_totals_existed_stays_fresh_and_promotable(
     assert code == 0 and document["state"] == "reviewed_promoted" and document["manifest_sha256"] == digest
 
 
+@pytest.mark.repo_wide
 def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> None:
     """The schema change is compatible: every committed manifest of record (none of which pins v1 totals
     before #9166) still validates, so no promoted review is invalidated by the new input."""
