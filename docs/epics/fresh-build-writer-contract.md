@@ -82,7 +82,7 @@ the recorded reason informing feedback; the item-level `explanation` remains. Ev
 or `explanation` is subject to resolver, inventory, stress and immersion checks.
 
 `kind: form` tests one taught A1 group (`Gender`, `Number`, `Case`, `Person`, `VerbForm`).
-At A1, a case-choice item is refused before confirmation when any separate `не` in its sentence is immediately followed by a finite verb, because genitive of negation varies in the standard language; this policy covers the whole sentence rather than parsing clauses.
+At A1, case-choice items after a negated verb are refused unless a preposition or an agreeing adjective directly before the blank fixes the form.
 The trigger is conservative for finite-verb homographs such as «не три» and «не стали».
 All options from one lemma force this kind. It supplies `tests_feature`, aligned
 `option_records` (or the fill-in `record`), and `requires`: **all** A1 group values imposed

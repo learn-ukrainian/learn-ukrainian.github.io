@@ -35,7 +35,7 @@ Named Failure Reasons for Check 4:
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
 - form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
 - a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (A1 word-store
-  record W-061) followed by a finite verb
+  record W-061) followed by a finite verb, without an adjacent preposition or agreeing adjective exemption
 - a1_negation_particle_record_invalid: the A1 word store lacks W-061, or W-061 is not a particle bound to
   VESUM entry 226767 (store defect)
 - select_correct_set_invalid: select activity has fewer correct options than required
@@ -55,6 +55,7 @@ import unicodedata
 import uuid
 from collections import Counter
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -82,7 +83,7 @@ from scripts.curriculum.resolver import codes, questions, receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.narrow import learner_usable
 from scripts.curriculum.resolver.stream import resolve
-from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.resolver.tokenize import Token, lookup_form, tokenize
 from scripts.curriculum.validate.activity_report import draft_report
 from scripts.review.digest.error import DigestError
 
@@ -279,6 +280,170 @@ def negation_particle(records: dict[str, dict[str, Any]]) -> str:
     return lookup_form(lemma).casefold()
 
 
+@dataclass(frozen=True)
+class _WordTag:
+    pos: str
+    tags: str
+    atoms: frozenset[str]
+
+
+def _extract_word_tags(
+    surface: str,
+    records: dict[str, dict[str, Any]],
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]],
+) -> list[_WordTag]:
+    surface_norm = lookup_form(surface).casefold()
+    store_matches: list[_WordTag] = []
+    for record in records.values():
+        if not isinstance(record, dict):
+            continue
+        for form in record.get("forms") or []:
+            if (
+                isinstance(form, dict)
+                and learner_usable(form)
+                and lookup_form(form.get("form", "")).casefold() == surface_norm
+            ):
+                tags = str(form.get("tags") or "")
+                pos = str(form.get("pos") or record.get("pos") or (tags.split(":")[0] if tags else ""))
+                store_matches.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+    if store_matches:
+        return store_matches
+
+    found = vesum_lookup([surface])
+    entries = found.get(surface) or found.get(surface_norm) or []
+    out: list[_WordTag] = []
+    for entry in entries:
+        tags = str(entry.get("tags") or "")
+        pos = str(entry.get("pos") or (tags.split(":")[0] if tags else ""))
+        out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+    return out
+
+
+def _option_word_tags(
+    record: dict[str, Any] | None,
+    surface: str,
+    records: dict[str, dict[str, Any]],
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]],
+) -> list[_WordTag]:
+    if record is not None:
+        surface_norm = lookup_form(surface).casefold()
+        res: list[_WordTag] = []
+        for form in record.get("forms") or []:
+            if (
+                isinstance(form, dict)
+                and learner_usable(form)
+                and lookup_form(form.get("form", "")).casefold() == surface_norm
+            ):
+                tags = str(form.get("tags") or "")
+                pos = str(form.get("pos") or record.get("pos") or (tags.split(":")[0] if tags else ""))
+                res.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+        if res:
+            return res
+    return _extract_word_tags(surface, records, vesum_lookup)
+
+
+def _analysis_features(analysis: _WordTag) -> dict[str, str | None]:
+    atoms = analysis.atoms
+    case = None
+    if "v_naz" in atoms:
+        case = "Nom"
+    elif "v_rod" in atoms:
+        case = "Gen"
+    elif "v_dav" in atoms:
+        case = "Dat"
+    elif "v_zna" in atoms:
+        case = "Acc"
+    elif "v_oru" in atoms:
+        case = "Ins"
+    elif "v_mis" in atoms:
+        case = "Loc"
+    elif "v_kly" in atoms:
+        case = "Voc"
+
+    number = None
+    if atoms & {"p", "ns"}:
+        number = "Plur"
+    elif atoms & {"s", "m", "f", "n"}:
+        number = "Sing"
+
+    gender = None
+    if number != "Plur":
+        if "m" in atoms:
+            gender = "Masc"
+        elif "f" in atoms:
+            gender = "Fem"
+        elif "n" in atoms:
+            gender = "Neut"
+
+    animacy = None
+    if "ranim" in atoms:
+        animacy = "ranim"
+    elif "rinanim" in atoms:
+        animacy = "rinanim"
+    elif "unanim" in atoms:
+        animacy = "unanim"
+    elif "anim" in atoms:
+        animacy = "anim"
+    elif "inanim" in atoms:
+        animacy = "inanim"
+
+    return {
+        "case": case,
+        "number": number,
+        "gender": gender,
+        "animacy": animacy,
+    }
+
+
+def _animacy_matches_accusative(mod_anim: str | None, noun_anim: str | None) -> bool:
+    if mod_anim == "unanim" or noun_anim == "unanim":
+        return True
+    if mod_anim in {"ranim", "anim"}:
+        return noun_anim in {"anim", "unanim"}
+    if mod_anim in {"rinanim", "inanim"}:
+        return noun_anim in {"inanim", "unanim"}
+    return True
+
+
+def _analysis_agrees(mod_feat: dict[str, str | None], noun_feat: dict[str, str | None], case_target: str) -> bool:
+    if mod_feat["case"] != case_target or noun_feat["case"] != case_target:
+        return False
+    if mod_feat["number"] != noun_feat["number"] or mod_feat["number"] is None:
+        return False
+    if mod_feat["number"] == "Sing" and (mod_feat["gender"] != noun_feat["gender"] or mod_feat["gender"] is None):
+        return False
+    return case_target != "Acc" or _animacy_matches_accusative(mod_feat["animacy"], noun_feat["animacy"])
+
+
+def _option_agrees_with_run(
+    option_analyses: list[dict[str, str | None]],
+    run_token_analyses: list[list[dict[str, str | None]]],
+) -> bool:
+    for case_target in ("Gen", "Acc"):
+        for noun_feat in option_analyses:
+            if noun_feat["case"] != case_target:
+                continue
+            if all(
+                any(_analysis_agrees(mod_feat, noun_feat, case_target) for mod_feat in mod_analyses)
+                for mod_analyses in run_token_analyses
+            ):
+                return True
+    return False
+
+
+def _is_unambiguous_adj(tags_list: list[_WordTag]) -> bool:
+    if not tags_list:
+        return False
+    for t in tags_list:
+        if t.pos == "numr":
+            return False
+        if not ("adj" in t.atoms or t.pos == "adj"):
+            return False
+        if t.atoms & {"adv", "noun", "predic", "verb"}:
+            return False
+    return True
+
+
 def a1_case_contrast_under_negated_verb(
     item: dict[str, Any],
     records: dict[str, dict[str, Any]],
@@ -286,9 +451,9 @@ def a1_case_contrast_under_negated_verb(
     *,
     vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
 ) -> bool:
-    """Refuse an A1 case contrast when any verb in the sentence is negated.
+    """Refuse an A1 case contrast under a negated finite verb unless E1 or E3 applies.
 
-    This is deliberately a whole-sentence A1 policy, not clause parsing.
+    Rule rev 6.5 (closes Sol blocker 1 and adopts E1/E3 exemptions).
     """
     options = item.get("options") or []
     bindings = option_record_bindings(item, activity_type)
@@ -299,7 +464,7 @@ def a1_case_contrast_under_negated_verb(
         text = _choice_text(option)
         analyses = _analyses(records.get(record_id), text) if isinstance(text, str) else []
         case_sets.append(frozenset(atom for analysis in analyses for atom in analysis if atom.startswith("Case=")))
-    if not all(case_sets) or set.intersection(*(set(cases) for cases in case_sets)):
+    if not all(case_sets) or len(set(case_sets)) <= 1:
         return False
 
     sentence = receipts.requirement_sentence(item)
@@ -314,24 +479,73 @@ def a1_case_contrast_under_negated_verb(
     ]
     if not successors:
         return False
-    known_finite = {
-        surface
-        for surface in successors
-        if any("VerbForm=Fin" in analysis for record in records.values() for analysis in _analyses(record, surface))
-    }
-    if known_finite:
-        return True
+
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
 
         def vesum_lookup(words: list[str]) -> dict[str, list[dict[str, Any]]]:
             return verify_words(words, db_path=os.environ.get("VESUM_DB_PATH"))
 
-    unresolved = sorted(set(successors))
-    found = vesum_lookup(unresolved)
-    return any(
-        "VerbForm=Fin" in to_oracle(analysis["tags"]) for surface in unresolved for analysis in found.get(surface, [])
-    )
+    has_negated_verb = False
+    for surface in successors:
+        tags_list = _extract_word_tags(surface, records, vesum_lookup)
+        if any("VerbForm=Fin" in to_oracle(t.tags) for t in tags_list):
+            has_negated_verb = True
+            break
+    if not has_negated_verb:
+        return False
+
+    # Check exemptions E1 and E3
+    blank_match = re.search(r"_{2,}|\[blank\]", sentence)
+    if blank_match is None:
+        return True
+    blank_start = blank_match.start()
+
+    tokens_before = [t for t in tokens if t.end <= blank_start]
+    if not tokens_before:
+        return True
+
+    t_last = tokens_before[-1]
+    gap_to_blank = sentence[t_last.end : blank_start]
+    if gap_to_blank.strip() != "" or not (not gap_to_blank or gap_to_blank.isspace()):
+        return True
+
+    # E1 — adjacent preposition
+    t_last_surface = t_last.lookup.casefold()
+    t_last_tags = _extract_word_tags(t_last_surface, records, vesum_lookup)
+    if t_last_tags and all(t.pos == "prep" or "prep" in t.atoms for t in t_last_tags):
+        return False
+
+    # E3 — adjacent unambiguous adjectives
+    run_tokens: list[tuple[Token, list[_WordTag]]] = []
+    for i in range(len(tokens_before) - 1, -1, -1):
+        tok = tokens_before[i]
+        if run_tokens:
+            next_tok = run_tokens[0][0]
+            gap = sentence[tok.end : next_tok.start]
+            if gap.strip() != "" or not (not gap or gap.isspace()):
+                break
+        surface = tok.lookup.casefold()
+        tags_list = _extract_word_tags(surface, records, vesum_lookup)
+        if not _is_unambiguous_adj(tags_list):
+            break
+        run_tokens.insert(0, (tok, tags_list))
+
+    if run_tokens:
+        run_features = [[_analysis_features(tag) for tag in tags_list] for _, tags_list in run_tokens]
+        agreeing_options: list[Any] = []
+        for option, record_id in zip(options, bindings, strict=True):
+            opt_text = _choice_text(option)
+            if not isinstance(opt_text, str):
+                continue
+            opt_tags = _option_word_tags(records.get(record_id), opt_text, records, vesum_lookup)
+            opt_features = [_analysis_features(t) for t in opt_tags]
+            if _option_agrees_with_run(opt_features, run_features):
+                agreeing_options.append(option)
+        if len(agreeing_options) == 1:
+            return False
+
+    return True
 
 
 def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:

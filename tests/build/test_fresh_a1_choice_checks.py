@@ -2,8 +2,9 @@
 
 VESUM source locations: брат 487702-487719, книга 2614480-2614493,
 бути 542216-542245, читати 6561736-6561760, великий 611137-611177,
-м'яч 3260520-3260537. The negation particle is the A1 word store's record W-061
-(VESUM entry 226767).
+м'яч 3260520-3260537, подарунок 4543231-4543247, каша 2522268-2522281,
+кордон 2712390-2712406, діло 1540652-1540666, кіт 2592011-2592029.
+The negation particle is the A1 word store's record W-061 (VESUM entry 226767).
 """
 
 from __future__ import annotations
@@ -137,6 +138,7 @@ PORRIDGE = _record(
         ("каші", "noun:inanim:p:v_naz"),
         ("каші", "noun:inanim:p:v_zna"),
         ("каші", "noun:inanim:p:v_kly"),
+        ("каша", "noun:inanim:f:v_naz"),
     ],
 )
 FUTURE_BE = _record(
@@ -165,6 +167,10 @@ VESUM_LOCATIONS = {
     "W-15": "2522268-2522281",
     "W-16": "542216-542245",
     "W-17": "6445807-6445825",
+    "W-18": "4543231-4543247",
+    "W-20": "2712390-2712406",
+    "W-21": "1540652-1540666",
+    "W-22": "2592011-2592029",
 }
 
 
@@ -252,11 +258,49 @@ GIFT = _record(
         ("подарунком", "noun:inanim:m:v_oru"),
     ],
 )
+BORDER = _record(
+    20,
+    "кордон",
+    [
+        ("кордонами", "noun:inanim:p:v_oru"),
+        ("кордони", "noun:inanim:p:v_naz"),
+        ("кордони", "noun:inanim:p:v_zna"),
+        ("кордони", "noun:inanim:p:v_kly"),
+        ("кордонів", "noun:inanim:p:v_rod"),
+    ],
+)
+DEED = _record(
+    21,
+    "діло",
+    [
+        ("діло", "noun:inanim:n:v_naz"),
+        ("діло", "noun:inanim:n:v_zna"),
+        ("діло", "noun:inanim:n:v_kly"),
+        ("діла", "noun:inanim:n:v_rod"),
+        ("діла", "noun:inanim:p:v_naz"),
+        ("діла", "noun:inanim:p:v_zna"),
+        ("діла", "noun:inanim:p:v_kly"),
+    ],
+)
+CAT = _record(
+    22,
+    "кіт",
+    [
+        ("кота", "noun:anim:m:v_rod"),
+        ("кота", "noun:anim:m:v_zna"),
+        ("кіт", "noun:anim:m:v_naz"),
+    ],
+)
 
 
 def _case_offer(
     sentence: str,
     *,
+    options: list[str] | None = None,
+    target_record: dict | None = None,
+    lookup_table: dict[str, list[dict]] | None = None,
+    key: int = 0,
+    demand: dict[str, str] | None = None,
     feature: str = "Case",
     kind: str = "form",
     level: str = "a1",
@@ -264,20 +308,95 @@ def _case_offer(
     sentence_field: str = "sentence",
     particle: dict | None = NEGATION,
 ) -> dict:
-    item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"}, taught=feature)
+    rec = target_record or GIFT
+    opts = options or ["подарунка", "подарунок", "подарунком"]
+    req = demand or {"Case": "Gen"}
+    item = _form(opts, rec, req, key=key, taught=feature)
     item["kind"] = kind
+    item["option_why"] = ["Why."] * len(opts)
     item[sentence_field] = sentence
     if sentence_field != "sentence":
         item.pop("sentence")
     draft = {"activities": [{"id": "a1", "items": [item]}]}
     lesson = {"level": level, "activities": [{"id": "a1", "type": "quiz"}]}
     # VESUM analyses for these surfaces were independently inspected for this regression.
-    finite = {"маю": "verb:imperf:pres:s:1", "знаю": "verb:imperf:pres:s:1", "розумію": "verb:imperf:pres:s:1"}
+    table: dict[str, list[dict]] = {
+        "маю": [{"tags": "verb:imperf:pres:s:1"}],
+        "знаю": [{"tags": "verb:imperf:pres:s:1"}],
+        "розумію": [{"tags": "verb:imperf:pres:s:1"}],
+        "працюю": [{"tags": "verb:imperf:pres:s:1"}],
+        "бачу": [{"tags": "verb:imperf:pres:s:1:insert"}],
+        "люблю": [{"tags": "verb:imperf:pres:s:1"}],
+        "має": [{"tags": "verb:imperf:pres:s:3"}],
+        "роблю": [{"tags": "verb:imperf:pres:s:1"}],
+        "гуляємо": [{"tags": "verb:imperf:pres:p:1"}],
+        "йде": [{"tags": "verb:imperf:pres:s:3"}],
+        "купую": [{"tags": "verb:imperf:pres:s:1"}],
+        "знаєш": [{"tags": "verb:imperf:pres:s:2:insert"}],
+        "у": [{"tags": "prep"}],
+        "в": [{"tags": "prep"}],
+        "цьому": [
+            {"tags": "noun:inanim:n:v_dav:pron:dem"},
+            {"tags": "noun:inanim:n:v_mis:pron:dem"},
+            {"tags": "adj:m:v_dav:pron:dem"},
+            {"tags": "adj:m:v_mis:pron:dem"},
+            {"tags": "adj:n:v_dav:pron:dem"},
+            {"tags": "adj:n:v_mis:pron:dem"},
+        ],
+        "манної": [{"tags": "adj:f:v_rod"}],
+        "сухопутних": [
+            {"tags": "adj:p:v_rod"},
+            {"tags": "adj:p:v_zna:ranim"},
+            {"tags": "adj:p:v_mis"},
+        ],
+        "добре": [
+            {"tags": "adv:compb:predic"},
+            {"tags": "adj:n:v_naz:compb"},
+            {"tags": "adj:n:v_zna:compb"},
+            {"tags": "adj:n:v_kly:compb"},
+        ],
+        "нового": [
+            {"tags": "noun:inanim:n:v_rod"},
+            {"tags": "adj:m:v_rod:compb"},
+            {"tags": "adj:m:v_zna:ranim:compb"},
+            {"tags": "adj:n:v_rod:compb"},
+        ],
+        "бо": [
+            {"tags": "conj:subord"},
+            {"tags": "part"},
+        ],
+        "як": [
+            {"tags": "adv:pron:int:rel"},
+            {"tags": "conj:subord"},
+            {"tags": "noun:anim:m:v_naz"},
+            {"tags": "part"},
+        ],
+        "ти": [
+            {"tags": "noun:anim:s:v_naz:pron:pers:2"},
+            {"tags": "noun:anim:s:v_kly:pron:pers:2"},
+        ],
+        "ніколи": [
+            {"tags": "adv:pron:emph:predic"},
+            {"tags": "adv:pron:neg"},
+        ],
+        "країна": [{"tags": "noun:inanim:f:v_naz"}],
+        "ця": [{"tags": "adj:f:v_naz:pron:dem"}],
+        "я": [{"tags": "noun:anim:s:v_naz:pron:pers:1"}],
+        "це": [
+            {"tags": "noun:inanim:n:v_naz:pron:dem"},
+            {"tags": "noun:inanim:n:v_zna:pron:dem"},
+            {"tags": "part"},
+            {"tags": "adj:n:v_naz:pron:dem"},
+            {"tags": "adj:n:v_zna:pron:dem"},
+        ],
+    }
+    if lookup_table:
+        table.update(lookup_table)
 
     def lookup(words: list[str]) -> dict:
-        return {word: [{"tags": finite[word]}] if word in finite else [] for word in words}
+        return {word: table.get(word, []) for word in words}
 
-    store = [GIFT, *([particle] if particle else []), *(extra_records or [])]
+    store = [rec, *([particle] if particle else []), *(extra_records or [])]
     return check_4_activities(draft, lesson, {"words": store}, {}, level=level, vesum_lookup=lookup)[0]
 
 
@@ -316,8 +435,9 @@ def test_form_with_empty_rendered_sentence_is_refused() -> None:
 
 
 def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
+    # Under rev 6.5, options whose learner Case sets are all identical (Acc) do not contrast in case.
     coffee = _record(30, "кава", [("каву", "noun:inanim:f:v_zna")])
-    tea = _record(31, "чай", [("чай", "noun:inanim:m:v_naz"), ("чай", "noun:inanim:m:v_zna")])
+    tea = _record(31, "чай", [("чай", "noun:inanim:m:v_zna")])
     water = _record(32, "вода", [("воду", "noun:inanim:f:v_zna")])
     item = {
         "kind": "vocabulary",
@@ -427,6 +547,84 @@ def test_negated_case_contrast_does_not_apply_above_a1(level: str) -> None:
     assert _case_offer("Я не знаю ___", level=level).get("code") != "a1_case_contrast_under_negated_verb"
 
 
+def test_case_contrast_blocker_1_two_options_with_shared_accusative_refused() -> None:
+    row = _case_offer("Я не маю ___.", options=["подарунка", "подарунок"])
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_adjacent_preposition_e1_exempts_case_contrast() -> None:
+    row = _case_offer("Я ніколи не працюю у ___.", options=["подарунка", "подарунок"])
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+    assert row["status"] == "passed"
+
+
+def test_non_adjacent_preposition_e1_refuses_case_contrast() -> None:
+    row = _case_offer("Я не бачу в цьому ___.", options=["подарунка", "подарунок"])
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_adjacent_unambiguous_adjective_e3_exempts_feminine_genitive() -> None:
+    row = _case_offer(
+        "Я не люблю манної ___.",
+        options=["кашу", "каші", "каша"],
+        target_record=PORRIDGE,
+        key=1,
+    )
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+    assert row["status"] == "passed"
+
+
+def test_adjacent_unambiguous_adjective_e3_exempts_plural_genitive_with_animacy_contrast() -> None:
+    row = _case_offer(
+        "Ця країна не має сухопутних ___.",
+        options=["кордонами", "кордони", "кордонів"],
+        target_record=BORDER,
+        key=2,
+    )
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+    assert row["status"] == "passed"
+
+
+def test_adjacent_modifier_with_adverb_analysis_fails_e3_and_refuses() -> None:
+    row = _case_offer(
+        "Я не роблю добре ___.",
+        options=["діло", "діла"],
+        target_record=DEED,
+        key=0,
+        demand={"Case": "Nom"},
+    )
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_adjacent_modifier_with_noun_analysis_fails_e3_and_refuses() -> None:
+    row = _case_offer(
+        "Я не бачу нового ___.",
+        options=["кота", "кіт"],
+        target_record=CAT,
+        key=0,
+        demand={"Case": "Gen"},
+    )
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        "Ми не гуляємо, бо йде ___.",
+        "Я не купую, як ти знаєш, ___.",
+    ],
+)
+def test_intervening_clause_or_verb_has_no_nearest_verb_exemption_refused(sentence: str) -> None:
+    row = _case_offer(sentence, options=["подарунка", "подарунок"])
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_sentence_without_negated_verb_is_unaffected() -> None:
+    row = _case_offer("Я купую ___.", options=["подарунка", "подарунок"])
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+    assert row["status"] == "passed"
+
+
 def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
     item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
     assert _check(tmp_path, item, BROTHER, receipt=False)["code"] == "requires_receipt_missing"
@@ -496,7 +694,8 @@ def test_excluded_distractors_are_offered_and_pass_check_7(
     draft = {"activities": [{"id": "a1", "items": [item]}]}
     lesson = {"activities": [{"id": "a1", "type": "quiz"}]}
     assert (
-        check_4_activities(draft, lesson, {"words": [record, *other_records]}, {}, level="a1")[0]["status"] == "passed"
+        check_4_activities(draft, lesson, {"words": [record, NEGATION, *other_records]}, {}, level="a1")[0]["status"]
+        == "passed"
     )
     assert _check(tmp_path, item, record, extra_records=other_records)["status"] == "passed"
 

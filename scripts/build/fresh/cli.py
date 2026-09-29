@@ -173,7 +173,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "write",
         description=(
             "Dispatch an explicit language-lane writer seat to write a lesson draft (#8431 r3 §1, §7).\n"
-            "Use to dispatch claude, codex, agy, or grok, await completion, validate draft schema, and store state."
+            "Use to dispatch claude, codex, or agy, await completion, validate draft schema, and store state."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -197,7 +197,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--writer",
         choices=ALLOWED_WRITERS,
         required=True,
-        help="Explicit writer seat (claude, codex, agy, grok; code never auto-routes)",
+        help="Explicit writer seat (claude, codex, agy; code never auto-routes)",
     )
     p_write.add_argument(
         "--attempt", type=int, default=1, help="Attempt count for regeneration tracking (default: 1, e.g. 1 or 2)"
