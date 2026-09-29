@@ -912,8 +912,28 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 sys.addaudithook(_task_store_write_hook)
 
 
+def _sqlite_file_creating_path(database: object) -> Path | None:
+    """Return the disk file a ``sqlite3.connect`` creates when it is missing, else ``None``.
+
+    A plain path and a URI with ``mode=rwc`` or no ``mode`` create the file.
+    ``mode=ro`` and ``mode=rw`` raise ``OperationalError`` on a missing file,
+    and ``mode=memory`` opens an in-memory database; none of them create one.
+    A repeated ``mode`` cannot widen an earlier one, so a URI creates the file
+    only when every ``mode`` is ``rwc``.
+    """
+    if not isinstance(database, (str, bytes, os.PathLike)):
+        return None
+    raw_path = os.fsdecode(os.fspath(database))
+    if not raw_path.startswith("file:"):
+        return Path(raw_path).resolve()
+    parsed = urlsplit(raw_path)
+    if any(mode != "rwc" for mode in parse_qs(parsed.query).get("mode", [])):
+        return None
+    return Path(unquote(parsed.path)).resolve()
+
+
 def _checkout_corpus_db_create_hook(event: str, args: tuple[object, ...]) -> None:
-    """Fail a read-write sqlite connect that would create a corpus database in the checkout (#9158).
+    """Fail a sqlite connect that would create a corpus database in the checkout (#9158).
 
     The audit event fires before SQLite touches the file, so the refusal
     prevents the empty database instead of reporting it afterwards. It also
@@ -921,18 +941,19 @@ def _checkout_corpus_db_create_hook(event: str, args: tuple[object, ...]) -> Non
     probe once created the file for every later test in the shard.
     ``pytest.fail`` raises a ``BaseException``, so a caller's ``except
     sqlite3.Error`` / ``except Exception`` cannot swallow the refusal.
-    Read-only URIs and connects to existing files pass.
+    Opens that cannot create a file (``_sqlite_file_creating_path``) and
+    connects to existing files pass.
     """
     if event != "sqlite3.connect" or not args:
         return
-    path, read_only = _sqlite_database_path(args[0])
-    if path is None or read_only or path.exists():
+    path = _sqlite_file_creating_path(args[0])
+    if path is None or path.exists():
         return
     if path not in {(_REPO_ROOT / name).resolve() for name in _CHECKOUT_CORPUS_DBS}:
         return
     node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
     pytest.fail(
-        f"{node} would create {path}: a read-write sqlite3.connect creates a missing "
+        f"{node} would create {path}: a file-creating sqlite3.connect creates a missing "
         "database. Open corpus databases read-only (file:...?mode=ro, uri=True) and point "
         "tests at tmp_path via LU_SOURCES_DB (#9158)",
         pytrace=False,

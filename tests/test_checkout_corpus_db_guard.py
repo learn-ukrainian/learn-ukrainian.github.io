@@ -31,11 +31,41 @@ def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 @pytest.mark.parametrize("name", guard._CHECKOUT_CORPUS_DBS)
-def test_read_write_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, name: str) -> None:
+@pytest.mark.parametrize(
+    "uri_query",
+    [None, "", "?mode=rwc", "?mode=rwc&mode=rwc"],
+    ids=["plain-path", "uri-no-mode", "uri-rwc", "uri-rwc-repeated"],
+)
+def test_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, name: str, uri_query: str | None) -> None:
     target = checkout / name
 
     with pytest.raises(pytest.fail.Exception, match="would create"):
-        sqlite3.connect(str(target))
+        if uri_query is None:
+            sqlite3.connect(str(target))
+        else:
+            sqlite3.connect(f"{target.as_uri()}{uri_query}", uri=True)
+
+    assert not target.exists()
+
+
+@pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw", "?mode=ro&mode=rwc", "?mode=rwc&mode=ro"])
+def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_creates_nothing(
+    checkout: Path, query: str
+) -> None:
+    target = checkout / "data" / "sources.db"
+
+    with pytest.raises(sqlite3.OperationalError):
+        sqlite3.connect(f"{target.as_uri()}{query}", uri=True)
+
+    assert not target.exists()
+
+
+def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path) -> None:
+    target = checkout / "data" / "sources.db"
+
+    connection = sqlite3.connect(f"{target.as_uri()}?mode=memory", uri=True)
+    connection.execute("CREATE TABLE t (x)")
+    connection.close()
 
     assert not target.exists()
 
@@ -47,15 +77,6 @@ def test_refusal_is_not_swallowed_by_a_broad_except(checkout: Path) -> None:
 
     with pytest.raises(pytest.fail.Exception):
         reader()
-
-
-def test_read_only_connect_to_a_missing_db_raises_sqlite_error_and_creates_nothing(checkout: Path) -> None:
-    target = checkout / "data" / "sources.db"
-
-    with pytest.raises(sqlite3.OperationalError):
-        sqlite3.connect(f"{target.as_uri()}?mode=ro", uri=True)
-
-    assert not target.exists()
 
 
 def test_connect_to_an_existing_db_and_to_other_paths_passes(checkout: Path, tmp_path: Path) -> None:
