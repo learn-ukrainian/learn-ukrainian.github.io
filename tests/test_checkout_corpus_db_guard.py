@@ -30,7 +30,7 @@ def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return root
 
 
-@pytest.mark.parametrize("name", guard._CHECKOUT_CORPUS_DBS)
+@pytest.mark.parametrize("name", ["data/sources.db", "data/vesum.db"])
 @pytest.mark.parametrize(
     "uri_query",
     [None, "?mode=rwc", "?mode=memory&mode=rwc", "?mode=rwc%00", "?mode=memory&mode=rwc%00"],
@@ -84,7 +84,7 @@ def test_dangling_symlink_counts_as_existing_and_is_left_alone(checkout: Path, t
 def test_in_memory_connect_passes_without_a_corpus(checkout: Path) -> None:
     sqlite3.connect(":memory:").close()
 
-    assert not any((checkout / name).exists() for name in guard._CHECKOUT_CORPUS_DBS)
+    assert not any(path.exists() for path in guard._checkout_corpus_db_paths())
 
 
 @pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw"])

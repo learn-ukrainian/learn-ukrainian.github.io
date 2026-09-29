@@ -894,7 +894,8 @@ def main() -> int:
             print("Dry run only; pass --write to update the manifest.")
         return 0
 
-    with sqlite3.connect(sources_db) as conn:
+    # Read-only: a read-write connect creates a missing sources.db (#9158).
+    with sqlite3.connect(f"{sources_db.as_uri()}?mode=ro", uri=True) as conn:
         if args.canary or (args.target == "full-catalog" and not slug_filter):
             lemmas = [s.strip() for s in args.canary_lemmas.split(",")] if args.canary_lemmas else None
             canary_res = run_canary_check(conn, kaikki_lookup, canary_lemmas=lemmas)

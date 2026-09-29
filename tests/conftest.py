@@ -336,7 +336,6 @@ _LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
 # and later tests take the empty file for a real database. The connect wrapper
 # ``_checkout_corpus_db_guarded_connect`` reports the creation in this process;
 # the session snapshot catches creators it cannot see (subprocesses).
-_CHECKOUT_CORPUS_DBS = ("data/sources.db", "data/vesum.db")
 _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY = "_checkout_corpus_db_snapshot"
 
 
@@ -383,16 +382,25 @@ def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] |
     return sorted(after - before), sorted(before - after)
 
 
-def _checkout_corpus_db_snapshot(root: Path) -> frozenset[str]:
-    """The corpus databases present in the checkout at ``root``."""
-    return frozenset(name for name in _CHECKOUT_CORPUS_DBS if (root / name).exists())
+def _checkout_corpus_db_paths() -> tuple[Path, Path]:
+    """The checkout's corpus databases, read from ``_REPO_ROOT`` at call time.
+
+    Literal joins, so the CI test-area invariant resolves them as static repo
+    paths rather than computed ones.
+    """
+    return (_REPO_ROOT / "data" / "sources.db", _REPO_ROOT / "data" / "vesum.db")
+
+
+def _checkout_corpus_db_snapshot() -> frozenset[str]:
+    """The corpus databases present in the checkout."""
+    return frozenset(path.relative_to(_REPO_ROOT).as_posix() for path in _checkout_corpus_db_paths() if path.exists())
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
     config = session.config
     if hasattr(config, "workerinput"):
         return
-    setattr(config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, _checkout_corpus_db_snapshot(_REPO_ROOT))
+    setattr(config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, _checkout_corpus_db_snapshot())
     setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
     setattr(
         config,
@@ -450,7 +458,7 @@ def _enforce_no_checkout_corpus_db_created(session: pytest.Session) -> None:
     before = getattr(session.config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, None)
     if before is None:
         return
-    created = sorted(_checkout_corpus_db_snapshot(_REPO_ROOT) - before)
+    created = sorted(_checkout_corpus_db_snapshot() - before)
     if not created:
         return
     print(
@@ -931,8 +939,7 @@ def _checkout_corpus_db_guarded_connect(*args: object, **kwargs: object) -> sqli
     Exception`` cannot swallow the report. Existing entries and every other
     path pass untouched.
     """
-    targets = [_REPO_ROOT / name for name in _CHECKOUT_CORPUS_DBS]
-    missing = [target for target in targets if not os.path.lexists(target)]
+    missing = [target for target in _checkout_corpus_db_paths() if not os.path.lexists(target)]
     connection = None
     try:
         connection = _REAL_SQLITE3_CONNECT(*args, **kwargs)
@@ -1621,7 +1628,9 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     selected = rerun_node_ids(
         load_registry(),
         today=datetime.now(UTC).date(),
-        event_name="schedule" if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1" else os.environ.get("GITHUB_EVENT_NAME"),
+        event_name="schedule"
+        if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1"
+        else os.environ.get("GITHUB_EVENT_NAME"),
     )
     for item in items:
         if item.nodeid in selected:
@@ -1656,7 +1665,12 @@ class _FlakeRerunReporter:
             self.call_passed.discard(report.nodeid)
         elif report.when == "call" and report.passed:
             self.call_passed.add(report.nodeid)
-        elif report.when == "teardown" and report.passed and report.nodeid in self.first_failures and report.nodeid in self.call_passed:
+        elif (
+            report.when == "teardown"
+            and report.passed
+            and report.nodeid in self.first_failures
+            and report.nodeid in self.call_passed
+        ):
             self.recovered.add(report.nodeid)
             from _pytest.junitxml import xml_key
 
