@@ -33,8 +33,24 @@ def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.mark.parametrize("name", guard._CHECKOUT_CORPUS_DBS)
 @pytest.mark.parametrize(
     "uri_query",
-    [None, "", "?mode=rwc", "?mode=rwc&mode=rwc"],
-    ids=["plain-path", "uri-no-mode", "uri-rwc", "uri-rwc-repeated"],
+    [
+        None,
+        "",
+        "?mode=rwc",
+        "?mode=rwc&mode=rwc",
+        "?mode=memory&mode=rwc",
+        "?mode=ro&mode=memory&mode=rwc",
+        "?mode=ro&mode=rwc",
+    ],
+    ids=[
+        "plain-path",
+        "uri-no-mode",
+        "uri-rwc",
+        "uri-rwc-repeated",
+        "uri-memory-then-rwc",
+        "uri-ro-memory-then-rwc",
+        "uri-ro-then-rwc",
+    ],
 )
 def test_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, name: str, uri_query: str | None) -> None:
     target = checkout / name
@@ -48,7 +64,7 @@ def test_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, na
     assert not target.exists()
 
 
-@pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw", "?mode=ro&mode=rwc", "?mode=rwc&mode=ro"])
+@pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw", "?mode=rwc&mode=ro", "?mode=rwc&mode=rw"])
 def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_creates_nothing(
     checkout: Path, query: str
 ) -> None:
@@ -60,10 +76,11 @@ def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_create
     assert not target.exists()
 
 
-def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path) -> None:
+@pytest.mark.parametrize("query", ["?mode=memory", "?mode=rwc&mode=memory"])
+def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path, query: str) -> None:
     target = checkout / "data" / "sources.db"
 
-    connection = sqlite3.connect(f"{target.as_uri()}?mode=memory", uri=True)
+    connection = sqlite3.connect(f"{target.as_uri()}{query}", uri=True)
     connection.execute("CREATE TABLE t (x)")
     connection.close()
 

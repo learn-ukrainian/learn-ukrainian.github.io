@@ -918,8 +918,11 @@ def _sqlite_file_creating_path(database: object) -> Path | None:
     A plain path and a URI with ``mode=rwc`` or no ``mode`` create the file.
     ``mode=ro`` and ``mode=rw`` raise ``OperationalError`` on a missing file,
     and ``mode=memory`` opens an in-memory database; none of them create one.
-    A repeated ``mode`` cannot widen an earlier one, so a URI creates the file
-    only when every ``mode`` is ``rwc``.
+    SQLite applies repeated ``mode`` parameters in order, so the last one wins:
+    ``mode=memory&mode=rwc`` opens, and creates, the disk file. The audit event
+    carries only the database, and ``sqlite3.connect`` always passes
+    read-write-create flags, so no ``mode`` means ``rwc``. SQLite rejects
+    ``rwc`` after ``ro`` or ``rw``; the guard refuses those opens anyway.
     """
     if not isinstance(database, (str, bytes, os.PathLike)):
         return None
@@ -927,7 +930,7 @@ def _sqlite_file_creating_path(database: object) -> Path | None:
     if not raw_path.startswith("file:"):
         return Path(raw_path).resolve()
     parsed = urlsplit(raw_path)
-    if any(mode != "rwc" for mode in parse_qs(parsed.query).get("mode", [])):
+    if parse_qs(parsed.query).get("mode", ["rwc"])[-1] != "rwc":
         return None
     return Path(unquote(parsed.path)).resolve()
 
