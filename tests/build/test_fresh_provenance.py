@@ -125,7 +125,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
     checked = receipts.read_requirement_receipts(path)
     assert checked == doc
     forged = copy.deepcopy(doc)
-    forged["items"][0]["reviewer"]["seat"] = "codex@sol"
+    forged["items"][0]["reviewer"]["seat"] = "codex@gpt-6-sol"
     with pytest.raises(ResolverError, match="seat and family disagree"):
         receipts.validate_requirement_receipts(forged)
     (tmp_path / "lesson-1.writer.yaml").write_text("model: claude-sonnet-4-5\n", encoding="utf-8")
@@ -144,6 +144,26 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         )
         == "requires_receipt_stale"
     )
+    for unreadable in ("model: sol\n", None):
+        if unreadable is None:
+            (tmp_path / "lesson-1.writer.yaml").unlink()
+        else:
+            (tmp_path / "lesson-1.writer.yaml").write_text(unreadable, encoding="utf-8")
+        assert (
+            receipts.requirement_status(
+                checked,
+                lesson=lesson,
+                state_dir=tmp_path,
+                inputs=inputs,
+                activity="quiz1",
+                item=0,
+                payload_sha256=row["payload_sha256"],
+                options=["брата", "брату"],
+                key_index=0,
+                requires=demand,
+            )
+            == "requires_writer_unresolved"
+        )
     (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     assert (
         receipts.requirement_status(

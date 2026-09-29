@@ -247,8 +247,33 @@ def _requirement_error(message: str) -> ResolverError:
     return ResolverError(codes.RECEIPT_INVALID, f"requirement receipt: {message}")
 
 
+# Lanes that may judge Ukrainian (the build program's LANGUAGE-LANES rule). Every
+# confirmation path (requirement receipts and group-sort question answers) reads this.
+LANGUAGE_LANES = frozenset({"agy", "claude", "codex", "grok"})
+
+
+def language_seat_family(seat: str, *, what: str) -> str:
+    """Return the family of a language-lane seat whose lane and model both resolve to it."""
+    from scripts.review.second_seat import IdentityError, concrete_family
+
+    _check_seat(seat)
+    lane, separator, model = seat.partition("@")
+    if not separator or not model:
+        raise _requirement_error(f"{what} seat must name a lane and model")
+    if lane.casefold() not in LANGUAGE_LANES:
+        raise _requirement_error(f"{what} seat is not a language lane")
+    try:
+        lane_family = concrete_family(lane, what=f"{what} lane")
+        model_family = concrete_family(model, what=f"{what} model")
+    except IdentityError as exc:
+        raise _requirement_error(f"{what} seat has unresolved family: {exc}") from exc
+    if lane_family != model_family:
+        raise _requirement_error(f"{what} seat and model family disagree")
+    return lane_family
+
+
 def _seat_family(seat: str, *, what: str) -> str:
-    """Resolve both parts of a language seat and refuse contradictory identities."""
+    """Resolve both parts of a writer seat and refuse contradictory identities."""
     from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
     from scripts.review.second_seat import IdentityError, concrete_family
 
@@ -350,10 +375,10 @@ def validate_requirement_receipts(doc: Any) -> None:
             raise _requirement_error(f"item {index} has malformed writer provenance")
         if not isinstance(reviewer, dict) or set(reviewer) != {"seat", "family", "lane"}:
             raise _requirement_error(f"item {index} has malformed reviewer provenance")
-        for provenance in (writer, reviewer):
+        for provenance, seat_family in ((writer, _seat_family), (reviewer, language_seat_family)):
             _check_seat(provenance["seat"])
             _check_seat(provenance["family"])
-            if provenance["family"].casefold() != _seat_family(provenance["seat"], what=f"item {index}"):
+            if provenance["family"].casefold() != seat_family(provenance["seat"], what=f"item {index}"):
                 raise _requirement_error(f"item {index} seat and family disagree")
         if reviewer["lane"] != "language":
             raise _requirement_error(f"item {index} was not confirmed by a language lane")
@@ -395,7 +420,7 @@ def requirement_status(
     key_index: int,
     requires: dict[str, str],
 ) -> str:
-    """Return the named gate code or confirmed, with missing before stale before denied."""
+    """Return the named gate code or confirmed, with missing before writer-unresolved before stale before denied."""
     if doc is None:
         return "requires_receipt_missing"
     validate_requirement_receipts(doc)
@@ -404,7 +429,7 @@ def requirement_status(
     try:
         actual_writer_family = writer_family(state_dir, lesson["n"])
     except IdentityError:
-        return "requires_receipt_stale"
+        return "requires_writer_unresolved"
     for row in doc["items"]:
         if row["activity"] == activity and row["item"] == item:
             if (

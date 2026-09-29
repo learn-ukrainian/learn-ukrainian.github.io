@@ -81,7 +81,7 @@ def record_answers(
     """Reject incomplete, reordered, unsupported or internally inconsistent judgements."""
     for value in (seat, family, writer_seat, writer_family):
         receipts._check_seat(value)
-    if family.casefold() != receipts._seat_family(
+    if family.casefold() != receipts.language_seat_family(
         seat, what="reviewer"
     ) or writer_family.casefold() != receipts._seat_family(writer_seat, what="writer"):
         raise _bad("seat and model family disagree")

@@ -34,15 +34,15 @@ Named Failure Reasons for Check 4:
 - answer_not_in_options: key text not found in offered options/words
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
 - form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
-- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (VESUM entry 226767)
-  followed by a finite verb
+- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (A1 word-store
+  record W-061) followed by a finite verb
+- a1_negation_particle_record_invalid: the A1 word store lacks W-061 or W-061 is not a particle (store defect)
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
 
 from __future__ import annotations
 
 import copy
-import functools
 import hashlib
 import json
 import os
@@ -250,39 +250,23 @@ def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
     ]
 
 
-# The verbal negation particle, named by VESUM identity: its tags (`part`) do not
-# distinguish it from other particles, and the engine types no Ukrainian.
-NEGATION_PARTICLE_ENTRY_ID = 226767
+# The verbal negation particle, named by its A1 word-store id: the registry allocates W- ids
+# once and never reuses them, and words-verify re-checks each record's VESUM binding. Its
+# tags (`part`) do not distinguish it from other particles, and the engine types no Ukrainian.
+NEGATION_PARTICLE_RECORD = "W-061"
 
 
-class NegationParticleUnavailable(LookupError):
-    """VESUM has no single particle form for NEGATION_PARTICLE_ENTRY_ID."""
+class NegationParticleRecordInvalid(LookupError):
+    """The word store has no particle record NEGATION_PARTICLE_RECORD: a store defect."""
 
 
-@functools.lru_cache(maxsize=4)
-def _particle_form(db_path: str, identity: tuple[int, int]) -> str:
-    """Resolve the particle once per VESUM file identity (the entry_id scan is unindexed)."""
-    from scripts.verification.vesum import get_vesum_connection
-
-    with get_vesum_connection(db_path) as conn:
-        rows = conn.execute(
-            "SELECT DISTINCT word_form FROM forms_all WHERE entry_id = ? AND pos = 'part'",
-            (NEGATION_PARTICLE_ENTRY_ID,),
-        ).fetchall()
-    if len(rows) != 1:
-        raise NegationParticleUnavailable(
-            f"VESUM entry {NEGATION_PARTICLE_ENTRY_ID} has {len(rows)} particle forms, expected 1"
-        )
-    return lookup_form(rows[0][0]).casefold()
-
-
-def negation_particle() -> str:
-    """Return the casefolded negation particle form from the VESUM that Check 4 reads."""
-    from scripts.verification.vesum import VESUM_DB_PATH
-
-    path = Path(os.environ.get("VESUM_DB_PATH") or VESUM_DB_PATH)
-    stat = path.stat()
-    return _particle_form(str(path), (stat.st_ino, stat.st_mtime_ns))
+def negation_particle(records: dict[str, dict[str, Any]]) -> str:
+    """Return the casefolded negation particle, copied from its word-store record's lemma."""
+    record = records.get(NEGATION_PARTICLE_RECORD)
+    lemma = record.get("lemma") if isinstance(record, dict) else None
+    if not isinstance(record, dict) or record.get("pos") != "part" or not isinstance(lemma, str) or not lemma.strip():
+        raise NegationParticleRecordInvalid(f"word store record {NEGATION_PARTICLE_RECORD} is not a particle")
+    return lookup_form(lemma).casefold()
 
 
 def a1_case_contrast_under_negated_verb(
@@ -312,7 +296,7 @@ def a1_case_contrast_under_negated_verb(
     tokens = tokenize(sentence)
     if len(tokens) < 2:
         return False
-    particle = negation_particle()
+    particle = negation_particle(records)
     successors = [
         tokens[index + 1].lookup.casefold()
         for index, token in enumerate(tokens[:-1])
@@ -347,22 +331,16 @@ def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
 
 def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: int) -> bool:
     """A question receipt counts only when its language seat differs from the writer's family."""
-    from scripts.review.second_seat import IdentityError, concrete_family, writer_family
+    from scripts.review.second_seat import IdentityError, writer_family
 
     if not isinstance(provenance, str):
         return False
     match = re.fullmatch(r"question:([^:]+):Q-[0-9]{3,}", provenance)
     if match is None:
         return False
-    agent, separator, model = match.group(1).partition("@")
-    if separator != "@" or agent.casefold() not in {"agy", "claude", "codex", "grok"} or not model:
-        return False
     try:
-        seat_family = concrete_family(model, what="question seat model")
-        return seat_family == concrete_family(agent, what="question seat lane") and seat_family != writer_family(
-            state_dir, lesson_n
-        )
-    except IdentityError:
+        return receipts.language_seat_family(match.group(1), what="question") != writer_family(state_dir, lesson_n)
+    except (ResolverError, IdentityError):
         return False
 
 
@@ -761,7 +739,14 @@ def check_4_activities(
                 negated_case = mod_level == "a1" and a1_case_contrast_under_negated_verb(
                     item, records, typ, vesum_lookup=vesum_lookup
                 )
-            except (OSError, sqlite3.Error, NegationParticleUnavailable) as err:
+            except NegationParticleRecordInvalid as err:
+                return failure(
+                    4,
+                    f"a1_negation_particle_record_invalid: {err}",
+                    "word_store",
+                    code="a1_negation_particle_record_invalid",
+                ), {}
+            except (OSError, sqlite3.Error) as err:
                 return failure(
                     4, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable"
                 ), {}

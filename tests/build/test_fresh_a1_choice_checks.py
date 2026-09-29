@@ -2,13 +2,13 @@
 
 VESUM source locations: брат 487702-487719, книга 2614480-2614493,
 бути 542216-542245, читати 6561736-6561760, великий 611137-611177,
-м'яч 3260520-3260537. Particle entries (inspect_words): не 226767, ні 239112.
+м'яч 3260520-3260537. The negation particle is the A1 word store's record W-061
+(VESUM entry 226767).
 """
 
 from __future__ import annotations
 
 import copy
-import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -18,32 +18,18 @@ import yaml
 from scripts.build.fresh import cli
 from scripts.build.fresh.candidates import item_candidates
 from scripts.build.fresh.requires_confirm import questions_from_draft, record_answers
-from scripts.build.fresh.runner import NEGATION_PARTICLE_ENTRY_ID, check_4_activities, check_7_a1_choices
+from scripts.build.fresh.runner import NEGATION_PARTICLE_RECORD, check_4_activities, check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ResolverError
 
-
-def _particle_vesum(path: Path, entries: list[tuple[int, str]]) -> Path:
-    conn = sqlite3.connect(path)
-    conn.execute(
-        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
-        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
-    )
-    conn.executemany(
-        "INSERT INTO forms_all (entry_id, word_form, lemma, pos, tags, source_location) VALUES (?, ?, ?, 'part', 'part', '')",
-        [(entry_id, form, form) for entry_id, form in entries],
-    )
-    conn.commit()
-    conn.close()
-    return path
-
-
-@pytest.fixture(autouse=True)
-def _vesum_particles(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """CI has no VESUM: serve the two particle entries Check 4 resolves by identity."""
-    db = _particle_vesum(tmp_path / "particles.db", [(NEGATION_PARTICLE_ENTRY_ID, "не"), (239112, "ні")])
-    monkeypatch.setenv("VESUM_DB_PATH", str(db))
+ROOT = Path(__file__).resolve().parents[2]
+A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
+NEGATION = next(
+    record
+    for record in yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
+    if record["id"] == NEGATION_PARTICLE_RECORD
+)
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -279,6 +265,7 @@ def _case_offer(
     level: str = "a1",
     extra_records: list[dict] | None = None,
     sentence_field: str = "sentence",
+    particle: dict | None = NEGATION,
 ) -> dict:
     item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"}, taught=feature)
     item["kind"] = kind
@@ -293,9 +280,8 @@ def _case_offer(
     def lookup(words: list[str]) -> dict:
         return {word: [{"tags": finite[word]}] if word in finite else [] for word in words}
 
-    return check_4_activities(
-        draft, lesson, {"words": [GIFT, *(extra_records or [])]}, {}, level=level, vesum_lookup=lookup
-    )[0]
+    store = [GIFT, *([particle] if particle else []), *(extra_records or [])]
+    return check_4_activities(draft, lesson, {"words": store}, {}, level=level, vesum_lookup=lookup)[0]
 
 
 @pytest.mark.parametrize(
@@ -346,7 +332,7 @@ def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
     }
     lesson = {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]}
     draft = {"activities": [{"id": "a1", "items": [item]}]}
-    row = check_4_activities(draft, lesson, {"words": [coffee, tea, water]}, {}, level="a1")[0]
+    row = check_4_activities(draft, lesson, {"words": [coffee, tea, water, NEGATION]}, {}, level="a1")[0]
     assert row.get("code") != "a1_case_contrast_under_negated_verb"
 
 
@@ -363,22 +349,38 @@ def test_check_4_default_vesum_outage_is_named(
     row = check_4_activities(
         {"activities": [{"id": "a1", "items": [item]}]},
         {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
-        {"words": [GIFT]},
+        {"words": [GIFT, NEGATION]},
         {},
         level="a1",
     )[0]
     assert (row["check"], row["code"]) == (4, "a1_choice_source_unavailable")
 
 
-@pytest.mark.parametrize(
-    "entries", [[(239112, "ні")], [(NEGATION_PARTICLE_ENTRY_ID, "не"), (NEGATION_PARTICLE_ENTRY_ID, "ні")]]
-)
-def test_negation_particle_missing_from_vesum_is_named(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entries: list[tuple[int, str]]
+@pytest.mark.parametrize("sentence", ["Без мого ___.", "У мене немає ___."])
+def test_non_negated_case_contrast_passes_check_4_without_vesum(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, sentence: str
 ) -> None:
-    monkeypatch.setenv("VESUM_DB_PATH", str(_particle_vesum(tmp_path / "no-particle.db", entries)))
-    row = _case_offer("Я не знаю ___.")
-    assert (row["check"], row["code"], row["layer"]) == (4, "a1_choice_source_unavailable", "pack")
+    monkeypatch.setenv("VESUM_DB_PATH", str(tmp_path / "missing-vesum.db"))
+    item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"})
+    item.update(prompt=sentence, option_why=["Genitive after the phrase.", "Nominative.", "Instrumental."])
+    row = check_4_activities(
+        {"activities": [{"id": "a1", "items": [item]}]},
+        {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
+        {"words": [GIFT, NEGATION]},
+        {},
+        level="a1",
+    )[0]
+    assert row["status"] == "passed", row
+
+
+def test_negation_particle_record_is_bound_in_the_a1_store() -> None:
+    assert (NEGATION["pos"], NEGATION["entry"]) == ("part", {"entry_id": 226767, "source": "vesum"})
+
+
+@pytest.mark.parametrize("particle", [None, {**NEGATION, "pos": "noun"}, {**NEGATION, "lemma": ""}])
+def test_store_without_negation_particle_record_is_named(particle: dict | None) -> None:
+    row = _case_offer("Я не знаю ___.", particle=particle)
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
 
 
 @pytest.mark.parametrize(
@@ -600,6 +602,7 @@ def test_header_agreement_examples_reject_swapped_key(
         ("cursor@grok-4.7", False),
         ("codex@grok-4.7", False),
         ("grok@unknown", False),
+        ("kimi@kimi-k2", False),
     ],
 )
 def test_ambiguous_group_entry_needs_other_family_language_seat(tmp_path: Path, seat: str, accepted: bool) -> None:
@@ -797,9 +800,18 @@ def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
         )
     with pytest.raises(ResolverError, match="family"):
         record(answer, family="OpenAI")
-    with pytest.raises(ResolverError, match="family"):
-        record(answer, seat="other@model")
-    assert record(answer, seat="grok@model", family="xai")["items"][0]["reviewer"]["family"] == "xai"
+    for seat, family in (
+        ("other@model", "openai"),
+        ("kimi@kimi-k2", "moonshot"),
+        ("deepseek@deepseek-v4", "deepseek"),
+        ("qwen@qwen3", "qwen"),
+    ):
+        with pytest.raises(ResolverError, match="language lane"):
+            record(answer, seat=seat, family=family)
+    for seat in ("grok@model", "claude@x"):
+        with pytest.raises(ResolverError, match="unresolved family"):
+            record(answer, seat=seat, family=receipts._seat_family(seat, what="test"))
+    assert record(answer, seat="grok@grok-4.7", family="xai")["items"][0]["reviewer"]["family"] == "xai"
     with pytest.raises(ResolverError, match="family"):
         record(answer, family="xai")
     unresolved = {
