@@ -60,6 +60,8 @@ from collections import Counter
 from pathlib import Path
 from typing import NamedTuple
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 _SCAN_SKIP = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".venv", "__pycache__"}
@@ -136,6 +138,15 @@ ALLOWLIST: dict[str, tuple[str, dict[str, int]]] = {
         "asserts the production main_checkout_root()/.venv interpreter resolution; the primary "
         "checkout's venv always exists there, and no spawn uses the path",
         {"test_runner_spawns_use_primary_project_interpreter:gate": 1},
+    ),
+    "tests/test_ua_eval_model_runner.py": (
+        "hash-frozen ua_eval v0.1.1 release artifact (verify_release_freeze_v011); cannot be edited",
+        {
+            "_run:keyword": 1,
+            "_venv_python:gate": 1,
+            "test_completed_state_binding_mismatch_is_a_hard_failure:keyword": 1,
+            "test_runner_metadata_imports_and_saved_response_validates:keyword": 1,
+        },
     ),
 }
 
@@ -572,6 +583,7 @@ def _collect_hits() -> dict[str, dict[str, int]]:
     return hits
 
 
+@pytest.mark.repo_wide
 def test_no_executing_hardcoded_venv_interpreter() -> None:
     hits = _collect_hits()
     pinned = {path: expected for path, (_, expected) in ALLOWLIST.items()}

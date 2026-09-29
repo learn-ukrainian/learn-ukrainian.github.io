@@ -17,7 +17,6 @@ from scripts.projects.ua_eval_harness.evaluate_model import (
     load_saved_responses,
     prepare_requests,
 )
-from tests.helpers.python import project_python
 
 
 def _canonical(value: object) -> str:
@@ -181,8 +180,10 @@ else:
     return path
 
 
-def _venv_python() -> str:
-    return project_python()
+def _venv_python() -> Path:
+    executable = Path(os.environ.get("UA_EVAL_TEST_PYTHON", ".venv/bin/python")).resolve()
+    assert executable.is_file(), "tests require UA_EVAL_TEST_PYTHON or the repository .venv/bin/python"
+    return executable
 
 
 def _run(
