@@ -22,6 +22,88 @@ TABLE = ROOT / "registry/artifacts/classification-v1.tsv"
 META = TABLE.with_suffix(".meta.json")
 
 
+def prefetch_missing_blobs(repo: Path, blobs: list[str]) -> None:
+    """Batch-fetch blobs a blobless CI checkout lacks (#9062).
+
+    Reading 1.7k old blob sizes through lazy fetch costs one round trip each;
+    a full clone has nothing missing, so this then makes no network call.
+    """
+    checked = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "--batch-check"],
+        check=True,
+        capture_output=True,
+        text=True,
+        input="".join(f"{blob}\n" for blob in blobs),
+        env={**os.environ, "GIT_NO_LAZY_FETCH": "1"},
+        timeout=60,
+    ).stdout
+    missing = [line.split()[0] for line in checked.splitlines() if line.endswith(" missing")]
+    if missing:
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repo),
+                "fetch",
+                "--no-tags",
+                "--no-write-fetch-head",
+                "--filter=blob:none",
+                "origin",
+                *missing,
+            ],
+            check=True,
+            capture_output=True,
+            timeout=600,
+        )
+
+
+@pytest.fixture(scope="module", autouse=True)
+def base_blobs_present() -> None:
+    listing = subprocess.check_output(["git", "ls-tree", "-r", BASE, "--", "data"], cwd=ROOT, text=True, timeout=60)
+    prefetch_missing_blobs(ROOT, sorted({line.split("\t")[0].split()[2] for line in listing.splitlines()}))
+
+
+def test_prefetch_fills_a_blobless_clone_and_is_a_noop_on_a_full_one(tmp_path: Path) -> None:
+    origin = tmp_path / "origin"
+    origin.mkdir()
+    for args in (
+        ["init", "-q"],
+        ["config", "user.name", "t"],
+        ["config", "user.email", "t@example.invalid"],
+        ["config", "commit.gpgsign", "false"],
+        ["config", "uploadpack.allowFilter", "true"],
+        ["config", "uploadpack.allowAnySHA1InWant", "true"],
+    ):
+        subprocess.run(["git", "-C", str(origin), *args], check=True, capture_output=True, timeout=30)
+    (origin / "a.txt").write_text("alpha\n", encoding="utf-8")
+    (origin / "b.txt").write_text("bravo\n", encoding="utf-8")
+    for args in (["add", "."], ["commit", "-q", "-m", "seed"]):
+        subprocess.run(["git", "-C", str(origin), *args], check=True, capture_output=True, timeout=30)
+    blobs = [
+        subprocess.check_output(["git", "-C", str(origin), "rev-parse", f"HEAD:{name}"], text=True, timeout=30).strip()
+        for name in ("a.txt", "b.txt")
+    ]
+
+    def present(repo: Path, blob: str) -> bool:
+        env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+        result = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "-e", blob], capture_output=True, env=env, timeout=30
+        )
+        return result.returncode == 0
+
+    prefetch_missing_blobs(origin, blobs)  # full clone: nothing missing, no remote needed
+    clone = tmp_path / "clone"
+    subprocess.run(
+        ["git", "clone", "-q", "--no-checkout", "--filter=blob:none", origin.as_uri(), str(clone)],
+        check=True,
+        capture_output=True,
+        timeout=60,
+    )
+    assert not any(present(clone, blob) for blob in blobs)
+    prefetch_missing_blobs(clone, blobs)
+    assert all(present(clone, blob) for blob in blobs)
+
+
 @pytest.fixture(scope="module")
 def generated() -> tuple[str, list[dict[str, str]]]:
     table, _, _ = classification.build(ROOT, BASE)

@@ -331,8 +331,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # Historical parity tests read committed source from old SHAs.
+          # Historical parity tests read committed source from old SHAs, so
+          # keep the full commit/tree graph but fetch blobs on demand
+          # (blobless partial clone, #9062): the 1.2 GiB full pack becomes
+          # ~30 MiB. The repo is public, so lazy fetch needs no credentials.
+          # A test that reads many old blobs must batch-fetch them itself
+          # (tests/test_storage_classification_table.py:prefetch_missing_blobs).
           fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
