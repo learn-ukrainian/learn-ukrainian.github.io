@@ -214,6 +214,72 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.read_requirement_receipts(path)
 
 
+def test_requirement_receipt_status_binds_each_payload_field() -> None:
+    lesson = {"level": "a1", "slug": "sample", "n": 1}
+    inputs = {"draft_semantic_sha256": "a" * 64}
+    original = ("Можна ___?", ["хліб", "хліба"], 0, {"Case": "Acc", "Number": "Sing"})
+    sentence, options, key, demand = original
+    doc = {
+        "requirements_schema": 2,
+        "lesson": lesson,
+        "inputs": inputs,
+        "items": [
+            {
+                "activity": "a1",
+                "item": 0,
+                "requires": demand,
+                "payload_sha256": receipts.requirement_payload_sha256(*original),
+                "decision": "deny",
+                "reason": "partitive reading remains possible",
+                "requires_forced": False,
+                "options": [
+                    {"text": "хліб", "judgement": "valid", "evidence": ["vesum:6445807-6445825"]},
+                    {"text": "хліба", "judgement": "depends_on_context", "evidence": ["vesum:6445807-6445825"]},
+                ],
+                "writer": {"seat": "codex@sol", "family": "openai"},
+                "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
+            }
+        ],
+    }
+    for changed in (
+        ("Дайте ___?", options, key, demand),
+        (sentence, ["хліб", "хлібу"], key, demand),
+        (sentence, options, 1, demand),
+        (sentence, options, key, {"Case": "Gen", "Number": "Sing"}),
+    ):
+        _, changed_options, changed_key, changed_demand = changed
+        assert (
+            receipts.requirement_status(
+                doc,
+                lesson=lesson,
+                inputs=inputs,
+                activity="a1",
+                item=0,
+                payload_sha256=receipts.requirement_payload_sha256(*changed),
+                options=changed_options,
+                key_index=changed_key,
+                requires=changed_demand,
+            )
+            == "requires_receipt_stale"
+        )
+    assert (
+        receipts.requirement_status(
+            doc,
+            lesson=lesson,
+            inputs=inputs,
+            activity="a1",
+            item=0,
+            payload_sha256=receipts.requirement_payload_sha256(
+                " Можна  ___? ", [" хліб ", "хліба"], key, {"Number": "Sing", "Case": "Acc"}
+            ),
+            options=[" хліб ", "хліба"],
+            key_index=key,
+            requires=demand,
+        )
+        == "requires_receipt_denied"
+    )
+
+
 def test_live_runner_error_correction_item_provenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     draft, plan, pack, words = _fixture()
     pack["errors"] = [
