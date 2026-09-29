@@ -22,6 +22,7 @@ from scripts.review.model_catalog import (
     model_aliases,
     resolve_glm_model,
     resolve_kimi_model,
+    retired_model_refusal,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -976,3 +977,35 @@ def test_gpt6_sol_and_astra_are_retired_and_unroutable():
     ):
         dumped = json.dumps(catalog[section], sort_keys=True)
         assert "gpt-6-sol" not in dumped and "gpt-6-astra" not in dumped, section
+
+
+@pytest.mark.parametrize(
+    ("model", "retired_id"),
+    [
+        ("gpt-6-sol", "gpt-6-sol"),
+        ("gpt-6-astra", "gpt-6-astra"),
+        ("cursor:openai/GPT-6-Astra", "gpt-6-astra"),
+        ("gpt-6-sol-high", "gpt-6-sol"),
+    ],
+)
+def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
+    refusal = retired_model_refusal(model)
+    assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
+
+
+@pytest.mark.parametrize(
+    "model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "kimi-code/k3", "composer-2.5", "auto"]
+)
+def test_retired_model_refusal_admits_non_retired_ids(model):
+    assert retired_model_refusal(model) is None
+
+
+def test_replaced_by_must_sit_on_retired_model_and_name_active_model():
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["gpt-6-luna"]["replaced_by"] = "gpt-6.1-sol"
+    with pytest.raises(ModelCatalogError, match="replaced_by is only valid on retired models"):
+        validate_catalog(broken)
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["gpt-6-sol"]["replaced_by"] = "gpt-6-astra"
+    with pytest.raises(ModelCatalogError, match="replaced_by must reference an active model"):
+        validate_catalog(broken)

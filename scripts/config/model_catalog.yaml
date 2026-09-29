@@ -328,6 +328,7 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: retired
+    replaced_by: gpt-6.1-sol
     roles: [bounded_advisory_envelope, architecture, consequential_advisory]
     transports: []
     strengths: [agentic_coding, frontier_technical_judgment]
@@ -341,6 +342,7 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: retired
+    replaced_by: gpt-6.1-sol
     roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding]
     transports: []
     strengths: [agentic_coding, demanding_reasoning]
@@ -354,6 +356,7 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: retired
+    replaced_by: gpt-6.1-sol
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
     transports: []
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
@@ -377,6 +380,7 @@ models:
     family: openai
     tier: economical
     lifecycle: retired
+    replaced_by: gpt-6-luna
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: []
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]

@@ -3264,7 +3264,7 @@ def test_probe_grok_cli_compatibility_checks_required_command_surface(monkeypatc
     )
 
 
-@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "", "auto"])
+@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra", "", "auto"])
 def test_codex_rejects_unapproved_model_before_binary_probe(tmp_path, monkeypatch, model):
     def unexpected_probe(**kwargs):
         pytest.fail("unapproved model reached binary probe")

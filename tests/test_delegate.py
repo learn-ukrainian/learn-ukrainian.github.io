@@ -1075,14 +1075,17 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra"])
-def test_dispatch_rejects_retired_gpt56_model_before_spawn(tmp_tasks_dir, capsys, model):
+@pytest.mark.parametrize("agent", ["cursor", "codex"])
+@pytest.mark.parametrize(
+    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra"]
+)
+def test_dispatch_rejects_catalog_retired_model_before_spawn(tmp_tasks_dir, capsys, agent, model):
     args = delegate.build_parser().parse_args(
-        ["dispatch", "--agent", "cursor", "--model", model, "--task-id", "retired-model", "--prompt", "review"]
+        ["dispatch", "--agent", agent, "--model", model, "--task-id", "retired-model", "--prompt", "review"]
     )
     assert delegate.cmd_dispatch(args) == 2
     assert delegate._read_state(delegate._state_path("retired-model")) is None
-    assert "retired GPT-5.6 model" in capsys.readouterr().err
+    assert "is retired in the model catalog" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
