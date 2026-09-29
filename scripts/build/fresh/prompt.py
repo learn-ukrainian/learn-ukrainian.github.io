@@ -13,8 +13,8 @@ The rendered-prompt check validates (#8431 §8.1):
 - uncited-id scan covers the WHOLE rendered prompt minus only the delimited schema exemplar
 - nothing from another lesson by id: no record id and no lesson number outside this lesson's
   plan entry (except the recap's declared built lessons 1..N-1)
-- the delimited learner-state block lists exactly the planned state's word and grammar ids and letters;
-  those ids are the only ones admitted outside the plan entry's citations (#9182)
+- the delimited learner-state block is byte-identical to the block the planned state renders (letters,
+  grammar ids with their points, word ids with their lemmas); its ids are admitted only inside it (#9182)
 - the style card hash exists and matches disk
 - the prompt sha256 is computed and recorded
 """
@@ -25,6 +25,7 @@ import hashlib
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
+from itertools import zip_longest
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +48,7 @@ __all__ = [
     "extract_plan_citations",
     "get_activity_item_shapes",
     "grammar_points",
+    "learner_state_block",
     "learner_state_view",
     "render_lesson_prompt",
     "render_recap_prompt",
@@ -75,6 +77,7 @@ SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
 
 LEARNER_STATE_BEGIN = "<!-- BEGIN LEARNER_STATE -->"
 LEARNER_STATE_END = "<!-- END LEARNER_STATE -->"
+LEARNER_STATE_TEMPLATE = "_learner-state.md.j2"
 
 #: Letter order inside one lesson of the taught-letters list.
 UKRAINIAN_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
@@ -317,15 +320,39 @@ def learner_state_view(
     return view
 
 
-def _learner_state_block_ids(learner_state: PlannedState | dict[str, Any]) -> set[str]:
-    """Every record id the learner-state block must list: allowed word ids and taught grammar ids."""
-    state = _state_dict(learner_state)
-    return (
-        set(state.get("base_ids") or [])
-        | set(state.get("core_ids") or {})
-        | set(state.get("name_ids") or {})
-        | set(state.get("grammar_ids") or {})
+def _environment(prompts_dir: Path | None) -> Environment:
+    return Environment(
+        loader=FileSystemLoader(str(prompts_dir or PROMPTS_DIR)),
+        undefined=StrictUndefined,
+        autoescape=jinja2.select_autoescape(
+            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
+        ),
     )
+
+
+def learner_state_block(
+    learner_state: PlannedState | dict[str, Any],
+    word_store: Mapping[str, Any] | None,
+    points: Mapping[str, str] | None,
+    *,
+    prompts_dir: Path | None = None,
+) -> str:
+    """The exact text between the learner-state markers that both writer prompts render for this state."""
+    rendered = (
+        _environment(prompts_dir)
+        .get_template(LEARNER_STATE_TEMPLATE)
+        .render(taught=learner_state_view(learner_state, word_store, points))
+    )
+    return rendered.split(LEARNER_STATE_BEGIN, 1)[1].split(LEARNER_STATE_END, 1)[0]
+
+
+def _block_difference(expected: str, found: str) -> str:
+    """Name the first line where the prompt's learner-state block departs from the state's rendering."""
+    want, got = expected.splitlines(), found.splitlines()
+    for number, (a, b) in enumerate(zip_longest(want, got, fillvalue="<no line>"), start=1):
+        if a != b:
+            return f"learner_state_mismatch: block line {number} is {b!r}; the planned state renders {a!r}"
+    return "learner_state_mismatch: the block differs from the planned state's rendering in whitespace"
 
 
 def render_lesson_prompt(
@@ -353,14 +380,7 @@ def render_lesson_prompt(
     ``word_store`` (the loaded ``_words.yaml``) and ``grammar_registry`` (grammar id -> point, see
     ``grammar_points``) resolve the lemmas and grammar points of the learner-state section.
     """
-    p_dir = prompts_dir or PROMPTS_DIR
-    env = Environment(
-        loader=FileSystemLoader(str(p_dir)),
-        undefined=StrictUndefined,
-        autoescape=jinja2.select_autoescape(
-            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
-        ),
-    )
+    env = _environment(prompts_dir)
     template = env.get_template("lesson-writer.md.j2")
 
     if style_card_path is not None:
@@ -433,14 +453,7 @@ def render_recap_prompt(
 ) -> str:
     """Render the recap lesson prompt receiving built lessons 1..N-1 (``word_store`` and
     ``grammar_registry`` as in ``render_lesson_prompt``)."""
-    p_dir = prompts_dir or PROMPTS_DIR
-    env = Environment(
-        loader=FileSystemLoader(str(p_dir)),
-        undefined=StrictUndefined,
-        autoescape=jinja2.select_autoescape(
-            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
-        ),
-    )
+    env = _environment(prompts_dir)
     template = env.get_template("lesson-recap-writer.md.j2")
 
     if style_card_path is not None:
@@ -499,11 +512,14 @@ def check_rendered_prompt(
     is_recap: bool = False,
     built_lessons: list[dict[str, Any]] | None = None,
     learner_state: PlannedState | dict[str, Any] | None = None,
+    word_store: Mapping[str, Any] | None = None,
+    grammar_registry: Mapping[str, str] | None = None,
+    prompts_dir: Path | None = None,
 ) -> RenderedPromptCheckResult:
     """Run deterministic check 0 on the rendered prompt (#8431 §8.1).
 
-    ``learner_state`` is the state the prompt was rendered from; the learner-state block must list
-    exactly its ids and letters (#9182).
+    ``learner_state``, ``word_store`` and ``grammar_registry`` are what the prompt was rendered from; the
+    learner-state block must equal the block they render, byte for byte (#9182).
     """
     errors: list[str] = []
 
@@ -543,7 +559,7 @@ def check_rendered_prompt(
         after = rest.split(SCHEMA_EXEMPLAR_END, 1)[1]
         prompt_for_id_scan = before + "\n" + after
 
-    # 3b. The learner-state block lists exactly the planned state; its ids are admitted only inside it (#9182)
+    # 3b. The learner-state block is exactly the planned state's rendering; its ids are admitted only inside it (#9182)
     if LEARNER_STATE_BEGIN not in prompt_for_id_scan or LEARNER_STATE_END not in prompt_for_id_scan:
         errors.append("missing_learner_state_marker: learner-state block delimiters missing from prompt")
     else:
@@ -553,17 +569,13 @@ def check_rendered_prompt(
         if learner_state is None:
             errors.append("learner_state_unverified: the check needs the learner state the prompt was rendered from")
         else:
-            expected = _learner_state_block_ids(learner_state)
-            listed = set(RECORD_ID_RE.findall(block))
-            for rid in sorted(expected - listed, key=_id_key):
-                errors.append(f"learner_state_incomplete: state id {rid!r} is missing from the learner-state block")
-            for rid in sorted(listed - expected, key=_id_key):
-                errors.append(f"learner_state_foreign_id: {rid!r} is in the learner-state block but not in the state")
-            letters_line = next((line for line in block.splitlines() if line.startswith("- **Letters taught**")), "")
-            listed_letters = set(letters_line.partition(":")[2].split())
-            for letter in _state_dict(learner_state).get("letters") or {}:
-                if letter not in listed_letters:
-                    errors.append(f"learner_state_incomplete: taught letter {letter!r} is missing from the block")
+            try:
+                expected = learner_state_block(learner_state, word_store, grammar_registry, prompts_dir=prompts_dir)
+            except ValueError as err:
+                errors.append(str(err))
+            else:
+                if block != expected:
+                    errors.append(_block_difference(expected, block))
 
     plan_citations = extract_plan_citations(plan_entry)
     found_ids = set(RECORD_ID_RE.findall(prompt_for_id_scan))

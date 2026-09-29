@@ -17,6 +17,7 @@ from scripts.build.fresh.prompt import (
     SCHEMA_EXEMPLAR_END,
     check_rendered_prompt,
     grammar_points,
+    learner_state_block,
     learner_state_view,
     render_lesson_prompt,
     render_recap_prompt,
@@ -131,7 +132,9 @@ def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sam
     assert SCHEMA_EXEMPLAR_BEGIN in rendered
     assert SCHEMA_EXEMPLAR_END in rendered
 
-    check_res = check_rendered_prompt(rendered, sample_plan_entry, card_path, learner_state=sample_learner_state)
+    check_res = check_rendered_prompt(
+        rendered, sample_plan_entry, card_path, learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE
+    )
     assert check_res.passed is True
     assert check_res.errors == []
     assert check_res.prompt_sha256 == hashlib.sha256(rendered.encode("utf-8")).hexdigest()
@@ -160,7 +163,11 @@ def test_render_lesson_prompt_uncited_pending_form(sample_plan_entry, sample_lea
     ) in rendered
     assert "stressed: mamy" not in rendered
     assert check_rendered_prompt(
-        rendered, sample_plan_entry, CARDS_DIR / "a1.md", learner_state=sample_learner_state
+        rendered,
+        sample_plan_entry,
+        CARDS_DIR / "a1.md",
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
     ).passed
 
 
@@ -200,7 +207,13 @@ def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cit
     assert SCHEMA_EXEMPLAR_END in rendered
 
     check_res = check_rendered_prompt(
-        rendered, recap_plan, card_path, is_recap=True, built_lessons=built_lessons, learner_state=sample_learner_state
+        rendered,
+        recap_plan,
+        card_path,
+        is_recap=True,
+        built_lessons=built_lessons,
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
     )
     assert check_res.passed is True
     assert check_res.errors == []
@@ -426,7 +439,9 @@ def test_render_prompt_does_not_html_escape(sample_plan_entry, sample_learner_st
     assert "&gt;" not in rendered
     assert "&amp;" not in rendered
 
-    res = check_rendered_prompt(rendered, sample_plan_entry, card_path, learner_state=sample_learner_state)
+    res = check_rendered_prompt(
+        rendered, sample_plan_entry, card_path, learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE
+    )
     assert res.passed is True
 
 
@@ -445,6 +460,7 @@ STATE_GRAMMAR = {
     "G-a1-001": "A sound and a letter are different units.",
     "G-a1-002": "Vowels and consonants are different sound classes.",
 }
+STATE_SOURCES = {"word_store": STATE_WORD_STORE, "grammar_registry": STATE_GRAMMAR}
 
 
 @pytest.fixture
@@ -477,8 +493,7 @@ def _render_state_prompt(plan_entry, state, cited, *, recap: bool = False, **kw)
         slug="sounds-intro",
         lesson_n=1,
         style_card_path=CARDS_DIR / "a1.md",
-        word_store=STATE_WORD_STORE,
-        grammar_registry=STATE_GRAMMAR,
+        **STATE_SOURCES,
         **kw,
     )
     if recap:
@@ -510,7 +525,12 @@ def test_prompt_lists_every_letter_grammar_point_and_word(
     assert "**Allowed Word IDs**: 5 words" in prompt
 
     check = check_rendered_prompt(
-        prompt, sample_plan_entry, CARDS_DIR / "a1.md", is_recap=recap, learner_state=full_learner_state
+        prompt,
+        sample_plan_entry,
+        CARDS_DIR / "a1.md",
+        is_recap=recap,
+        learner_state=full_learner_state,
+        **STATE_SOURCES,
     )
     assert check.errors == []
 
@@ -536,7 +556,9 @@ def test_state_section_keeps_the_learner_state_echo_and_hash(
     )
     assert f'learner_state_sha256: "{identity}"' in prompt
     assert learner_state_sha256(full_learner_state) == identity
-    check = check_rendered_prompt(prompt, sample_plan_entry, CARDS_DIR / "a1.md", learner_state=full_learner_state)
+    check = check_rendered_prompt(
+        prompt, sample_plan_entry, CARDS_DIR / "a1.md", learner_state=full_learner_state, **STATE_SOURCES
+    )
     assert check.prompt_sha256 == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
 
@@ -551,42 +573,69 @@ def test_render_fails_when_a_state_id_has_no_lemma_or_point(
         )
 
 
-def test_check_verifies_the_state_block(sample_plan_entry, full_learner_state, sample_cited_records):
-    """The block must list exactly the state; state ids are admitted only inside it."""
+def _state_errors(prompt, plan_entry, state, **sources):
+    return check_rendered_prompt(prompt, plan_entry, CARDS_DIR / "a1.md", learner_state=state, **sources).errors
+
+
+def test_state_block_is_the_block_the_state_renders(sample_plan_entry, full_learner_state, sample_cited_records):
+    """The check regenerates the block from the state and its sources: the prompt's block is those exact bytes."""
+    prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
+    assert _state_block(prompt) == learner_state_block(full_learner_state, STATE_WORD_STORE, STATE_GRAMMAR)
+    assert _state_errors(prompt, sample_plan_entry, full_learner_state, **STATE_SOURCES) == []
+
+
+@pytest.mark.parametrize(
+    "old, new, line",
+    [
+        pytest.param("in taught order): А О Г І М", "in taught order): А О Г І М Ф", "А О Г І М Ф", id="extra-letter"),
+        pytest.param("in taught order): А О Г І М", "in taught order): А О Г І", "А О Г І'", id="missing-letter"),
+        pytest.param(
+            "different units.",
+            "different sounds.",
+            "`G-a1-001`: A sound and a letter are different sounds.",
+            id="changed-grammar-point",
+        ),
+        pytest.param("`W-3` привіт", "`W-3` пока", "`W-3` пока", id="changed-lemma"),
+        pytest.param("`W-3` привіт, `W-11` день", "`W-3` привіт", "(2): `W-3` привіт'", id="missing-word"),
+        pytest.param("`W-40` Оксана", "`W-40` Оксана, `W-99` кіт", "`W-99` кіт", id="foreign-word"),
+        pytest.param(
+            "\n  - `G-a1-002`: Vowels and consonants are different sound classes.",
+            "",
+            "`G-a1-002`",
+            id="missing-grammar-point",
+        ),
+    ],
+)
+def test_check_rejects_any_departure_from_the_state_block(
+    sample_plan_entry, full_learner_state, sample_cited_records, old, new, line
+):
+    """An extra, missing or changed letter, grammar point, lemma or word fails the exact-block check."""
+    prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
+    assert prompt.count(old) == 1
+    errors = _state_errors(prompt.replace(old, new), sample_plan_entry, full_learner_state, **STATE_SOURCES)
+    assert any(e.startswith("learner_state_mismatch") and line in e for e in errors), errors
+
+
+def test_check_admits_state_ids_only_inside_the_block(sample_plan_entry, full_learner_state, sample_cited_records):
     card = CARDS_DIR / "a1.md"
     prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
-
-    dropped = prompt.replace("`W-11` день", "день")
-    assert any(
-        "learner_state_incomplete" in e and "W-11" in e
-        for e in check_rendered_prompt(dropped, sample_plan_entry, card, learner_state=full_learner_state).errors
-    )
-
-    no_letter = prompt.replace("in taught order): А О Г І М", "in taught order): А О Г І")
-    assert any(
-        "learner_state_incomplete" in e and "'М'" in e
-        for e in check_rendered_prompt(no_letter, sample_plan_entry, card, learner_state=full_learner_state).errors
-    )
-
-    foreign = prompt.replace("`W-40` Оксана", "`W-40` Оксана, `W-99` кіт")
-    assert any(
-        "learner_state_foreign_id" in e and "W-99" in e
-        for e in check_rendered_prompt(foreign, sample_plan_entry, card, learner_state=full_learner_state).errors
-    )
 
     outside = prompt.replace("First phonetics step.", "First phonetics step with W-11.")
     assert any(
         "uncited_record_id" in e and "W-11" in e
-        for e in check_rendered_prompt(outside, sample_plan_entry, card, learner_state=full_learner_state).errors
+        for e in _state_errors(outside, sample_plan_entry, full_learner_state, **STATE_SOURCES)
     )
 
     unverified = check_rendered_prompt(prompt, sample_plan_entry, card)
     assert any("learner_state_unverified" in e for e in unverified.errors)
 
+    unresolved = _state_errors(prompt, sample_plan_entry, full_learner_state, word_store=STATE_WORD_STORE)
+    assert any(e.startswith("learner_state_unresolved") and "G-a1-001" in e for e in unresolved)
+
     no_block = prompt.replace(LEARNER_STATE_BEGIN, "")
     assert any(
         "missing_learner_state_marker" in e
-        for e in check_rendered_prompt(no_block, sample_plan_entry, card, learner_state=full_learner_state).errors
+        for e in _state_errors(no_block, sample_plan_entry, full_learner_state, **STATE_SOURCES)
     )
 
 
