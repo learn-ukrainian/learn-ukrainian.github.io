@@ -63,3 +63,16 @@ def test_postgres_files_are_found_in_the_repo():
     found = find_pg_files(Path(__file__).resolve().parents[1])
     assert "tests/fleet_comms/test_pg_schema_ledger.py" in found
     assert "tests/fleet_comms/test_artifacts_pg_transactions.py" in found
+
+
+def test_fstring_skip_message_alone_marks_a_file_as_postgres(tmp_path: Path):
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_fstring_only.py").write_text(
+        'def test_x():\n    pytest.skip(f"{_PG_DSN_ENV} unset/empty - skipped")\n', encoding="utf-8"
+    )
+    (tmp_path / "tests" / "test_unrelated.py").write_text("def test_y():\n    pass\n", encoding="utf-8")
+    subprocess.run(["git", "add", "tests"], cwd=tmp_path, check=True, timeout=30)
+    assert find_pg_files(tmp_path) == {"tests/test_fstring_only.py"}

@@ -22,7 +22,9 @@ from pathlib import Path
 from scripts.ci.junit_results import TestResult, parse_junit
 
 DSN_ENV = "LEARN_UKRAINIAN_CP_PG_DSN"
-_PG_FILE_MARKERS = ("pytest.mark.postgres", f"{DSN_ENV} unset/empty", "_PG_DSN_ENV} unset/empty")
+# `{_PG_DSN_ENV}` is the literal f-string form the test files use in their DSN
+# skip message; it is matched as text, not evaluated.
+_PG_FILE_MARKERS = ("pytest.mark.postgres", f"{DSN_ENV} unset/empty", "{_PG_DSN_ENV} unset/empty")
 
 
 def postgres_test_files(root: Path) -> set[str]:

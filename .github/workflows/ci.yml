@@ -319,14 +319,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # Historical parity tests read committed source from old SHAs, so
-          # keep the full commit/tree graph but fetch blobs on demand
-          # (blobless partial clone, #9062): the 1.2 GiB full pack becomes
-          # ~30 MiB. The repo is public, so lazy fetch needs no credentials.
-          # A test that reads many old blobs must batch-fetch them itself
-          # (tests/test_storage_classification_table.py:prefetch_missing_blobs).
+          # Historical parity tests read committed source from old SHAs.
+          # Full blobs, not a blobless clone: a lazy fetch inside Run pytest
+          # would let a GitHub interruption fail a test mid-run (#9062).
           fetch-depth: 0
-          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -356,8 +352,9 @@ jobs:
       - name: Start PostgreSQL 16
         # The apt-installed server replaces the postgres:16 service container
         # (~20-29 s of image pull + init per shard, #9062). Same credentials
-        # as LEARN_UKRAINIAN_CP_PG_DSN above. Fails the job if the server is
-        # not accepting connections within 60 s; the pg_skip_guard step after
+        # as LEARN_UKRAINIAN_CP_PG_DSN above. Fails the job if 16/main does not
+        # start, does not own port 5432, is not accepting connections within
+        # 60 s, or the DSN's server is not major version 16; the pg_skip_guard step after
         # pytest catches a start that "worked" but left the tests skipping.
         if: needs.changes.outputs.docs_only == 'false'
         run: |
@@ -365,7 +362,10 @@ jobs:
           if ! pg_lsclusters --no-header | grep -q '^16 main '; then
             sudo pg_createcluster 16 main
           fi
-          sudo pg_ctlcluster 16 main start || true
+          # Start errors are not suppressed; only an already-online cluster is skipped.
+          if ! pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" && $4 == "online" {found = 1} END {exit !found}'; then
+            sudo pg_ctlcluster 16 main start
+          fi
           ready=""
           for _ in $(seq 1 30); do
             if pg_isready -h localhost -p 5432 -q; then ready=1; break; fi
@@ -377,12 +377,26 @@ jobs:
             sudo tail -n 40 /var/log/postgresql/postgresql-16-main.log >&2 || true
             exit 1
           fi
-          sudo -u postgres psql -v ON_ERROR_STOP=1 -q <<'SQL'
+          # 16/main must be the cluster that owns the DSN port (5432), not some
+          # other server already listening there.
+          cluster="$(pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" {print $3 " " $4}')"
+          if [ "$cluster" != "5432 online" ]; then
+            echo "::error::PostgreSQL cluster 16/main is '${cluster:-missing}', expected '5432 online'" >&2
+            pg_lsclusters >&2
+            exit 1
+          fi
+          sudo -u postgres psql -p 5432 -v ON_ERROR_STOP=1 -q <<'SQL'
           ALTER ROLE postgres WITH PASSWORD 'postgres';
           SELECT 'CREATE DATABASE lu' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'lu')\gexec
           SQL
           # The exact DSN the tests use must connect, not just the socket.
-          PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SELECT version()'
+          # The connected server must report major version 16.
+          version_num="$(PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SHOW server_version_num')"
+          echo "PostgreSQL server_version_num=${version_num}"
+          if [ "${version_num:0:2}" != "16" ]; then
+            echo "::error::DSN server reports version ${version_num}, expected major 16" >&2
+            exit 1
+          fi
       # Composite Python env (#9062): uv, offline-first lockfile install,
       # v4-runtime, Atlas manifest check. npm stays after it (no dependency
       # either way).
