@@ -260,7 +260,8 @@ def test_only_the_supported_atlas_head_is_displayed() -> None:
     assert bind("to mention")[1] == "unbound_english_sense"
     # An Atlas head that the attributed field does not attest is withheld.
     assert bind("to state")[1] == "unattributed_english"
-    assert bind("to note")[0]["sourceRowId"] == 1164
+    # A valid row binding cannot revive the independently failed mechanism.
+    assert bind("to note") == (None, "withdrawn_dmklinger_mechanism")
     # A1 displays only the first Atlas head.
     assert bind("to note", level="A1")[1] == "unbound_english_sense"
 
@@ -519,7 +520,7 @@ def test_learner_list_first_sense_must_fit_atlas_head() -> None:
         "lemma": "влаштовувати", "source": "Anna Ohoiko", "url_slug": "влаштовувати"}}},
      {"arrange": [_BALLA_ARRANGE]}, "", "reverse_source_conflict"),
     ("проігнорувати", {}, {}, "", "unbound_independent_row"),
-    ("зазначати", {}, {}, "to note", None),
+    ("зазначати", {}, {}, "", "withdrawn_dmklinger_mechanism"),
 ])
 def test_independent_support_handles_source_phrasing_and_recorded_aspect_links(
     lemma: str, enrichment: dict, balla: dict, expected: str, reason: str | None,

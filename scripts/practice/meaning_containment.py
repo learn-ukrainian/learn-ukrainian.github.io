@@ -424,7 +424,9 @@ def source_bound_meaning(
         return None, "reverse_source_conflict"
     source_type = source.casefold()
     if "dmklinger" in source_type:
-        mechanism = "dmklinger_row"
+        # Round 5 failed independent semantics for this entire admission
+        # mechanism. Withdraw it; coverage restoration belongs to #8977.
+        return None, "withdrawn_dmklinger_mechanism"
     elif "learner_english_gloss" in source_type:
         mechanism = "learner_dmklinger_corrob"
     elif "kaikki" in source_type:
