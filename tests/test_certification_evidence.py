@@ -465,6 +465,29 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
     return repo, config_path, ledger_root, ledger, inputs
 
 
+CompletionCase = tuple[Path, Path, Path, dict[str, Any], dict[str, Any]]
+
+
+@pytest.fixture(scope="module")
+def completion_case_source(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
+    """One prepared completion case per module; tests receive cheap copies."""
+    base = tmp_path_factory.mktemp("completion-case")
+    repo, _config_path, ledger_root, ledger, inputs = _completion_case(base)
+    return {"repo": repo, "ledger_root": ledger_root, "ledger": ledger, "inputs": inputs}
+
+
+@pytest.fixture()
+def completion_case(completion_case_source: dict[str, Any], tmp_path: Path) -> CompletionCase:
+    repo = tmp_path / "completion-repo"
+    shutil.copytree(completion_case_source["repo"], repo)
+    ledger_root = tmp_path / "ledgers"
+    shutil.copytree(completion_case_source["ledger_root"], ledger_root)
+    config_path = repo / "agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml"
+    ledger = copy.deepcopy(completion_case_source["ledger"])
+    inputs = copy.deepcopy(completion_case_source["inputs"])
+    return repo, config_path, ledger_root, ledger, inputs
+
+
 def _independent_value(inputs: dict[str, Any], *, unresolved: bool = False, stale: bool = False) -> dict[str, Any]:
     return {
         "schema_version": "certification-evidence.v1",
@@ -832,9 +855,9 @@ def test_qg_stability_uses_immutable_inputs_and_material_disposition(
 
 
 def test_unchanged_qg_inputs_with_divergent_material_results_project_instability(
-    qg_capture: dict[str, Any], tmp_path: Path
+    qg_capture: dict[str, Any], completion_case: CompletionCase
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     profiles_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
     profiles = yaml.safe_load(profiles_path.read_text(encoding="utf-8"))
     profiles["profiles"]["core-pending"]["production_qg"] = {
@@ -914,8 +937,8 @@ def test_unchanged_qg_inputs_with_divergent_material_results_project_instability
     assert projection["final"] == "not-certified"
 
 
-def test_stale_independent_evidence_cannot_satisfy_an_integration_link(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_stale_independent_evidence_cannot_satisfy_an_integration_link(completion_case: CompletionCase) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     current_value = _independent_value(inputs)
     stale_value = _independent_value(inputs, stale=True)
     ce.validate_evidence_value(current_value)
@@ -943,8 +966,8 @@ def test_stale_independent_evidence_cannot_satisfy_an_integration_link(tmp_path:
     assert projection["integration"] == "malformed"
 
 
-def test_current_unresolved_independent_material_finding_blocks_a_pass(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_current_unresolved_independent_material_finding_blocks_a_pass(completion_case: CompletionCase) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     passing = _independent_value(inputs)
     unresolved = _independent_value(inputs, unresolved=True)
     ce.validate_evidence_value(passing)
@@ -969,9 +992,9 @@ def test_current_unresolved_independent_material_finding_blocks_a_pass(tmp_path:
 
 
 def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
-    qg_capture: dict[str, Any], tmp_path: Path
+    qg_capture: dict[str, Any], completion_case: CompletionCase
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     current = _independent_value(inputs)
     current_sha = _sha("current-independent")
     integration = _integration_value(inputs, current_sha)
@@ -1038,8 +1061,8 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     assert resumed["history"][-1]["details"]["reconciled_qg_rearming"] is True
 
 
-def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_actual_qg_policy_source_drift_changes_only_qg_identity(completion_case: CompletionCase) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     current = _independent_value(inputs)
     current_sha = _sha("current-independent")
     integration = _integration_value(inputs, current_sha)
@@ -1082,8 +1105,8 @@ def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) 
     ],
     ids=("checker-config", "deterministic-adapter", "canary-definitions", "grounding-normalizer"),
 )
-def test_live_qg_dependency_drift_changes_qg_identity_only(tmp_path: Path, relative_path: str) -> None:
-    repo, config_path, _ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_live_qg_dependency_drift_changes_qg_identity_only(completion_case: CompletionCase, relative_path: str) -> None:
+    repo, config_path, _ledger_root, ledger, inputs = completion_case
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     dependency = repo / relative_path
     dependency.write_text(
@@ -1096,8 +1119,8 @@ def test_live_qg_dependency_drift_changes_qg_identity_only(tmp_path: Path, relat
     assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
 
 
-def test_learner_mutation_stales_both_pbr_and_qg_inputs(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_learner_mutation_stales_both_pbr_and_qg_inputs(completion_case: CompletionCase) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     content = repo / "curriculum/l2-uk-en/b1/adjectives-comparative/module.md"
     content.write_text(content.read_text(encoding="utf-8") + "\nЗміна учнівського тексту.\n", encoding="utf-8")
@@ -1152,8 +1175,10 @@ def _completion_ledger_path(repo: Path, config_path: Path, ledger_root: Path, in
     return tc.ledger_path_for(snapshot, repo_root=repo, config=config, ledger_root=ledger_root)
 
 
-def test_cursor_advances_current_independent_evidence_with_true_history_origin(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_cursor_advances_current_independent_evidence_with_true_history_origin(
+    completion_case: CompletionCase, tmp_path: Path
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
@@ -1181,8 +1206,10 @@ def test_cursor_advances_current_independent_evidence_with_true_history_origin(t
         ("armed-canary", "AWAITING_PRODUCTION_QG_ARMING"),
     ],
 )
-def test_cursor_advances_current_integration_to_the_profile_qg_state(tmp_path: Path, mode: str, expected: str) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_cursor_advances_current_integration_to_the_profile_qg_state(
+    completion_case: CompletionCase, tmp_path: Path, mode: str, expected: str
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     if mode == "armed-canary":
         profiles_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
         profiles = yaml.safe_load(profiles_path.read_text(encoding="utf-8"))
@@ -1226,8 +1253,8 @@ def test_cursor_advances_current_integration_to_the_profile_qg_state(tmp_path: P
     assert event["to_state"] == expected
 
 
-def test_stale_certification_evidence_never_advances_cursor(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_stale_certification_evidence_never_advances_cursor(completion_case: CompletionCase, tmp_path: Path) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
@@ -1246,8 +1273,10 @@ def test_stale_certification_evidence_never_advances_cursor(tmp_path: Path) -> N
     assert not any(item["event"] == "CERTIFICATION_CURSOR_ADVANCED" for item in updated["history"])
 
 
-def test_malformed_certification_evidence_never_advances_cursor(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_malformed_certification_evidence_never_advances_cursor(
+    completion_case: CompletionCase, tmp_path: Path
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
@@ -1271,8 +1300,10 @@ def test_malformed_certification_evidence_never_advances_cursor(tmp_path: Path) 
     assert not any(item["event"] == "CERTIFICATION_CURSOR_ADVANCED" for item in unchanged["history"])
 
 
-def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority(
+    completion_case: CompletionCase,
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     independent = _independent_value(inputs)
     independent_sha = _sha("independent")
     integration = _integration_value(inputs, independent_sha)
@@ -1310,8 +1341,10 @@ def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority
     )
 
 
-def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evidence(tmp_path: Path) -> None:
-    repo, config_path, _ledger_root, _ledger, inputs = _completion_case(tmp_path)
+def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evidence(
+    completion_case: CompletionCase, tmp_path: Path
+) -> None:
+    repo, config_path, _ledger_root, _ledger, inputs = completion_case
     git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     subprocess.run(["git", "init", str(repo)], check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
@@ -1429,9 +1462,9 @@ def test_certification_profile_selection_is_level_sensitive_and_unarmed() -> Non
 
 
 def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    completion_case: CompletionCase, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     independent_sha = _sha("legacy-independent")
     ledger["certification_evidence"] = [
         {
@@ -1506,8 +1539,10 @@ def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
     assert sum(item["event"] == "TERMINAL_GOAL_MIGRATED" for item in migrated["history"]) == 1
 
 
-def test_certification_evidence_crash_replay_advances_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_certification_evidence_crash_replay_advances_once(
+    completion_case: CompletionCase, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["publication"] = None
     ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
@@ -1544,9 +1579,9 @@ def test_certification_evidence_crash_replay_advances_once(tmp_path: Path, monke
 
 
 def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempotent(
-    qg_capture: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    qg_capture: dict[str, Any], completion_case: CompletionCase, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     independent_sha = _sha("arming-independent")
     ledger["certification_evidence"] = [
         {
@@ -1781,8 +1816,8 @@ def test_deployment_receipt_requires_exact_merge_sha_and_target_marker() -> None
     )
 
 
-def test_no_change_deploy_goal_still_requires_publication(tmp_path: Path) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+def test_no_change_deploy_goal_still_requires_publication(completion_case: CompletionCase) -> None:
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["terminal_goal"] = "deploy"
     ledger["author_families"] = []
     ledger["publication"] = None
@@ -1802,9 +1837,9 @@ def test_no_change_deploy_goal_still_requires_publication(tmp_path: Path) -> Non
 
 
 def test_deploy_terminal_stays_active_until_exact_receipt(
-    qg_capture: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    qg_capture: dict[str, Any], completion_case: CompletionCase, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["terminal_goal"] = "deploy"
     independent_sha = _sha("deploy-independent")
     ledger["certification_evidence"] = [
@@ -1947,9 +1982,9 @@ def test_deploy_terminal_stays_active_until_exact_receipt(
 
 
 def test_deployment_verifier_queries_exact_run_and_production_bytes(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    completion_case: CompletionCase, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    repo, config_path, ledger_root, ledger, inputs = completion_case
     ledger["terminal_goal"] = "deploy"
     ledger["state"] = "DEPLOYMENT_REQUIRED"
     ledger["history"].append(
