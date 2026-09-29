@@ -17,6 +17,7 @@ the bridge cannot silently break the launcher sandboxes again.
 from __future__ import annotations
 
 import functools
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -96,6 +97,22 @@ def slot_registry_sources() -> tuple[Path, ...]:
     return tuple(sorted(sources))
 
 
+def _copy_bytecode(source: Path, destination: Path) -> None:
+    """Reuse the repo's compiled module so the sandbox does not recompile it.
+
+    ``copy2`` keeps the source mtime and size, which is what the interpreter
+    checks before trusting a cached ``.pyc``; a stale cache is recompiled as
+    usual.  Without this every sandbox launch recompiles the bridge closure
+    (about half a second per launcher run).
+    """
+    cached = Path(importlib.util.cache_from_source(source))
+    if not cached.is_file():
+        return
+    target = Path(importlib.util.cache_from_source(destination))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(cached, target)
+
+
 def copy_slot_registry(root: Path) -> None:
     """Give a launcher sandbox the real handoff-slot registry and its readers.
 
@@ -108,3 +125,5 @@ def copy_slot_registry(root: Path) -> None:
             continue
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+        if relative.suffix == ".py":
+            _copy_bytecode(_REPO_ROOT / relative, destination)
