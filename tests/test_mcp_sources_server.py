@@ -16,6 +16,9 @@ import asyncio
 import hashlib
 import importlib.util
 import json
+import os
+import sqlite3
+import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -29,7 +32,7 @@ import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dic
 import pytest
 import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
-from mcp.types import TextContent
+from mcp.types import CallToolRequestParams, TextContent
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
@@ -49,6 +52,149 @@ def server_module():
 def _run(coro):
     """Run an async coroutine synchronously."""
     return asyncio.run(coro)
+
+
+@pytest.mark.parametrize("stale_db", [False, True])
+def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_module, tmp_path, monkeypatch, stale_db):
+    """A real sources handler read must not make the dispatch guard fail (#9122)."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    subprocess.run(["git", "init", str(primary)], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.email", "test@example.com"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.name", "test"], check=True, timeout=30)
+    (primary / "tracked.txt").write_text("fixture\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(primary), "add", "tracked.txt"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "commit", "-m", "fixture"], check=True, capture_output=True, timeout=30)
+    worktree = tmp_path / "dispatch-worktree"
+    subprocess.run(
+        ["git", "-C", str(primary), "worktree", "add", "--detach", str(worktree), "HEAD"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    worktree_db = worktree / "data" / "sources.db"
+    if stale_db:
+        worktree_db.parent.mkdir()
+        worktree_db.touch()
+
+    db = primary / "data" / "sources.db"
+    db.parent.mkdir()
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("CREATE TABLE literary_texts (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("INSERT INTO textbooks VALUES ('chunk-1', 'Fixture', 'Source text')")
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path))
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key, raising=False)
+
+    monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
+    import delegate
+    from rag import source_query
+
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree / "data" / "sources.db")
+    monkeypatch.setattr(sources_db, "_conn", None)
+    task_id = "sources-read-only-lookup"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree)})
+
+    def lookup(*_args, **_kwargs):
+        result = _run(
+            server_module._on_call_tool(
+                None, CallToolRequestParams(name="get_chunk_context", arguments={"chunk_id": "chunk-1"})
+            )
+        )
+        assert result.is_error is False
+        assert "Source text" in result.content[0].text
+        with patch.object(source_query, "_get") as fetch:
+            fetch.return_value.text = "<html>missing WebForms tokens</html>"
+            fetch.return_value.raise_for_status.return_value = None
+            ulif_result = _run(
+                server_module._on_call_tool(
+                    None,
+                    CallToolRequestParams(
+                        name="query_ulif",
+                        arguments={"word": "fixture-word", "sections": ["paradigm"]},
+                    ),
+                )
+            )
+            assert ulif_result.is_error is False
+            assert json.loads(ulif_result.content[0].text)["status"] == "parse_error"
+            assert source_query.query_ulif("fixture-word")["status"] == "parse_error"
+            fetch.assert_called_once()
+        with sqlite3.connect(db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0] == 1
+        return type(
+            "Result",
+            (),
+            {
+                "ok": True,
+                "response": "Source text",
+                "stderr_excerpt": None,
+                "returncode": 0,
+                "rate_limited": False,
+                "model": "fixture",
+                "effort": "high",
+                "cli_version": "fixture",
+            },
+        )()
+
+    try:
+        with patch("agent_runtime.runner.invoke", side_effect=lookup):
+            rc = delegate._run_worker(
+                task_id=task_id,
+                agent="agy",
+                prompt="Look up a source.",
+                mode="read-only",
+                cwd_str=str(worktree),
+                model=None,
+                hard_timeout=60,
+            )
+        state = delegate._read_state(state_path)
+        assert rc == 0
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+        if stale_db:
+            assert worktree_db.stat().st_size == 0
+        else:
+            assert not worktree_db.exists()
+            assert not worktree_db.parent.exists()
+    finally:
+        if sources_db._conn is not None:
+            sources_db._conn.close()
+
+
+def test_network_sources_override_has_missing_database_responses(server_module, tmp_path, monkeypatch):
+    from wiki import sources_db
+
+    worktree_db = tmp_path / "data" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setenv("LU_SOURCES_DB", "//unreachable/UkrainianData/sources.db")
+
+    content, envelope = _run(server_module.handle_get_chunk_context({"chunk_id": "fixture"}))
+    assert content[0].text == "Sources database not found."
+    assert envelope["status"] == "error"
+    assert envelope["error_code"] == "sources_db_missing"
+    for args in (
+        {"word": "fixture", "cache_only": True},
+        {"word": "fixture", "sections": ["paradigm"]},
+        {"word": "fixture"},
+    ):
+        ulif_content = _run(server_module.handle_query_ulif(args))
+        assert ulif_content[0].text == "Sources database not found."
+    assert server_module._lookup_wikipedia_in_db("fixture") is None
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
 
 
 class TestListTools:
