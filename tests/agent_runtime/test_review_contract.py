@@ -5,9 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -16,6 +14,7 @@ from scripts.agent_runtime.review_mcp import check_review_contract
 from scripts.common.git_context import sanitized_git_env
 from scripts.review import render_contract
 from scripts.review.render_contract import (
+    LOCK_FILE,
     RENDER_RECORD_KEY,
     ReviewContractError,
     check_launch_contract,
@@ -32,8 +31,8 @@ LOADED_TEMPLATE = "lesson-review.md.j2"
 PROMPT_TEXT = "Copy the outcome printed beside each receipt.\n"
 
 #: A server that imports the way the real one does: a module beside it (a symlink), a package module with a
-#: relative import of its own, a lazily imported module, a git-ignored module, an installed distribution (as the
-#: real one imports ``learn_ukrainian_v4_runtime``) and an optional import that is not installed.
+#: relative import of its own, a lazily imported module, a git-ignored module and a third-party package (as the
+#: real one imports ``learn_ukrainian_v4_runtime``), which is not traced: the lock stands for it.
 SERVER_SOURCE = """\
 import json
 
@@ -41,11 +40,6 @@ import local_settings
 import tools
 from lu_fake_runtime.transport import handle
 from scripts.verification import vesum
-
-try:
-    import lu_optional_accelerator
-except ImportError:
-    lu_optional_accelerator = None
 
 
 def handler():
@@ -57,6 +51,7 @@ FILES = {
     ".gitignore": ".worktrees/\n__pycache__/\nscripts/local_settings.py\n",
     SERVER_FILE: SERVER_SOURCE,
     ".mcp/servers/sources/TOOL_RESULT_V1.md": "# tool result\n",
+    LOCK_FILE: "anyio==4.15.1\n./packages/v4-runtime\n",
     "lib/tools_impl.py": "TOOLS = 1\n",
     "scripts/__init__.py": "",
     "scripts/verification/__init__.py": "",
@@ -70,43 +65,6 @@ FILES = {
 }
 SYMLINK = ".mcp/servers/sources/tools.py"
 IGNORED = "scripts/local_settings.py"
-#: The installed distribution the server imports: its files, relative to the interpreter's site directory.
-DISTRIBUTION = {
-    "lu_fake_runtime/__init__.py": "",
-    "lu_fake_runtime/transport.py": "def handle():\n    return 'receipt'\n",
-}
-DISTRIBUTION_FILE = "lu_fake_runtime/transport.py"
-
-
-def _install(site: Path, name: str, version: str, files: dict[str, str]) -> None:
-    """Install ``files`` into ``site`` as distribution ``name``, with the METADATA and RECORD an installer writes."""
-    for path, text in files.items():
-        _write(site, path, text)
-    info = site / f"{name.replace('-', '_')}-{version}.dist-info"
-    info.mkdir()
-    (info / "METADATA").write_text(f"Metadata-Version: 2.1\nName: {name}\nVersion: {version}\n", encoding="utf-8")
-    record = [f"{path},," for path in files] + [f"{info.name}/METADATA,,", f"{info.name}/RECORD,,"]
-    (info / "RECORD").write_text("\n".join(record) + "\n", encoding="utf-8")
-
-
-@pytest.fixture
-def site(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """A throwaway virtual environment holding the fake distribution, made the project interpreter: its site dir."""
-    venv = tmp_path / "venv"
-    subprocess.run([sys.executable, "-m", "venv", "--without-pip", str(venv)], check=True, timeout=60)
-    python = venv / "bin" / "python"
-    site_dir = Path(
-        subprocess.run(
-            [str(python), "-c", "import site; print(site.getsitepackages()[0])"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=60,
-        ).stdout.strip()
-    )
-    _install(site_dir, "lu-fake-runtime", "1.0.0", DISTRIBUTION)
-    monkeypatch.setattr(render_contract, "project_interpreter", lambda: python)
-    return site_dir
 
 
 def _git(cwd: Path, *args: str) -> None:
@@ -125,7 +83,7 @@ def _write(checkout: Path, name: str, text: str) -> None:
 
 
 @pytest.fixture
-def checkouts(tmp_path: Path, site: Path) -> tuple[Path, Path]:
+def checkouts(tmp_path: Path) -> tuple[Path, Path]:
     """A temporary primary checkout and one linked worktree holding the same code: ``(primary, worktree)``."""
     primary = tmp_path / "primary"
     primary.mkdir()
@@ -183,14 +141,10 @@ def test_server_code_is_the_entry_and_every_repository_module_it_imports(checkou
     # A symlink contributes its target's bytes, not the link text.
     assert files[SYMLINK] == hashlib.sha256(FILES["lib/tools_impl.py"].encode()).hexdigest()
     assert server_code_digest(primary) == server_code_digest(primary)
-    # The installed distribution it imports, by name and version, each of its modules hashed; an optional import
-    # that is not installed is recorded as absent (the standard library's ``json`` is neither).
+    # Beside the repository files, one component: the lock pinning the third-party packages.
     code = server_code(primary)
-    (runtime,) = code.distributions.values()
-    assert (runtime.name, runtime.version) == ("lu-fake-runtime", "1.0.0")
-    assert runtime.files == {path: hashlib.sha256(text.encode()).hexdigest() for path, text in DISTRIBUTION.items()}
-    assert code.absent == ("lu_optional_accelerator",)
-    assert list(code.components()) == ["repository", "distribution lu-fake-runtime", "absent optional imports"]
+    assert code.lock_sha256 == hashlib.sha256(FILES[LOCK_FILE].encode()).hexdigest()
+    assert list(code.components()) == ["repository", LOCK_FILE]
 
 
 def test_rendered_in_a_skewed_worktree_and_run_by_the_primary_server_refuses(
@@ -238,6 +192,7 @@ def test_rendered_in_a_matching_worktree_proceeds_and_records_the_digests(
         pytest.param("scripts/rag/source_query.py", "server code", id="lazily-imported-module"),
         pytest.param("lib/tools_impl.py", "server code", id="symlink-target"),
         pytest.param(IGNORED, "server code", id="git-ignored-imported-module"),
+        pytest.param(LOCK_FILE, "server code", id="lock"),
         pytest.param(f"{PROMPTS}/{LOADED_TEMPLATE}", "templates", id="loaded-template"),
         pytest.param("scripts/unused.py", None, id="unimported-module"),
         pytest.param(".mcp/servers/sources/TOOL_RESULT_V1.md", None, id="document-in-server-dir"),
@@ -275,7 +230,7 @@ def test_a_prompt_without_its_render_record_refuses_with_its_own_code(
         check_review_contract(bare, PROMPT_TEXT, server_checkout=primary)
 
     render_record_path(bare).write_text(json.dumps({"files_read": [], "template_sha256": {}}), encoding="utf-8")
-    with pytest.raises(ReviewContractError, match=r"review_render_record_missing: .* holds no version 2"):
+    with pytest.raises(ReviewContractError, match=r"review_render_record_missing: .* holds no version 3"):
         check_review_contract(bare, PROMPT_TEXT, server_checkout=primary)
 
 
@@ -297,69 +252,56 @@ def test_a_checkout_without_a_sources_server_refuses_by_name(tmp_path: Path, che
         check_review_contract(prompt, PROMPT_TEXT, server_checkout=plain)
 
 
-def test_a_changed_installed_distribution_the_server_imports_refuses_by_name(
-    tmp_path: Path, site: Path, checkouts: tuple[Path, Path]
-) -> None:
-    """Round-2 finding 1: executed code outside the repository (an installed distribution) is in the digest."""
+def test_a_changed_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
+    """Third-party code is not traced; the lock that pins it is a named component of the digest."""
     primary, _worktree = checkouts
     prompt = _render(primary, tmp_path / "out" / "prompt.md")
-    rendered_as = server_code(primary).components()["distribution lu-fake-runtime"]
-    (site / DISTRIBUTION_FILE).write_text("def handle():\n    return 'another receipt'\n", encoding="utf-8")
+    rendered_as = server_code(primary).components()[LOCK_FILE]
+    _write(primary, LOCK_FILE, "anyio==4.16.0\n./packages/v4-runtime\n")
 
     with pytest.raises(ReviewContractError) as refused:
         check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
 
     message = str(refused.value)
     print(message)
-    now = server_code(primary).components()["distribution lu-fake-runtime"]
-    assert rendered_as.startswith("1.0.0 sha256:") and now.startswith("1.0.0 sha256:") and rendered_as != now
+    now = server_code(primary).components()[LOCK_FILE]
     assert "review_contract_mismatch: the prompt was rendered against different server code" in message
-    assert f"differing server components: distribution lu-fake-runtime: {rendered_as} -> {now}\n" in message
+    assert f"differing server components: {LOCK_FILE}: {rendered_as} -> {now}\n" in message
 
 
-@pytest.mark.parametrize(
-    ("server", "unresolved"),
-    [
-        pytest.param("import lu_not_installed_anywhere\n", "lu_not_installed_anywhere (found nowhere)", id="nowhere"),
-        pytest.param(
-            "def handler():\n    from lu_unrecorded import thing\n",
-            "lu_unrecorded (at {site}/lu_unrecorded.py, installed by no distribution RECORD)",
-            id="in-site-dir-without-record",
-        ),
-    ],
-)
-def test_an_import_that_resolves_nowhere_refuses_with_its_code(
-    tmp_path: Path, site: Path, checkouts: tuple[Path, Path], server: str, unresolved: str
-) -> None:
-    primary, _worktree = checkouts
-    _write(site, "lu_unrecorded.py", "thing = 1\n")  # dropped into site-packages by hand, not installed
-    _write(primary, SERVER_FILE, SERVER_SOURCE + server)
+def test_a_checkout_without_the_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
+    primary, worktree = checkouts
+    prompt = _render(worktree, tmp_path / "out" / "prompt.md")
+    (primary / LOCK_FILE).unlink()
 
     with pytest.raises(ReviewContractError) as refused:
-        server_code_digest(primary)
+        check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
 
     message = str(refused.value)
     print(message)
-    assert message.startswith("review attempt refused: review_server_import_unresolved: the sources server at ")
-    assert f"imports {unresolved.format(site=site)}, which resolve to neither" in message
-    with pytest.raises(ReviewContractError, match="review_server_import_unresolved"):
-        _render(primary, tmp_path / "out" / "prompt.md")
+    assert message.startswith(f"review attempt refused: review_server_lock_missing: cannot read {primary / LOCK_FILE}")
+    with pytest.raises(ReviewContractError, match="review_server_lock_missing"):
+        _render(primary, tmp_path / "out" / "again.md")
 
 
-def test_an_absent_optional_import_installed_later_changes_the_digest(site: Path, checkouts: tuple[Path, Path]) -> None:
+def test_a_change_in_an_untraced_third_party_package_alone_does_not_refuse(
+    tmp_path: Path, checkouts: tuple[Path, Path]
+) -> None:
+    """Documented behaviour: code outside the repository is not traced; only a lock change reaches the digest."""
     primary, _worktree = checkouts
-    before = server_code(primary)
+    site = tmp_path / "site"
+    _write(site, "lu_fake_runtime/__init__.py", "")
+    _write(site, "lu_fake_runtime/transport.py", "def handle():\n    return 'receipt'\n")
+    prompt = _render(primary, tmp_path / "out" / "prompt.md")
 
-    _install(site, "lu-optional-accelerator", "0.1.0", {"lu_optional_accelerator.py": "FAST = True\n"})
+    _write(site, "lu_fake_runtime/transport.py", "def handle():\n    return 'another receipt'\n")
 
-    after = server_code(primary)
-    assert after.digest != before.digest
-    assert after.absent == ()
-    assert after.components()["distribution lu-optional-accelerator"].startswith("0.1.0 sha256:")
+    contract = check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
+    assert contract["server_digest"] == contract["render_server_digest"]
 
 
 def test_the_launch_check_refuses_a_server_changed_since_admission(
-    tmp_path: Path, site: Path, checkouts: tuple[Path, Path]
+    tmp_path: Path, checkouts: tuple[Path, Path]
 ) -> None:
     """Round-2 finding 2: the server is digested again at launch, from exactly what the seat launches."""
     primary, worktree = checkouts
@@ -386,8 +328,5 @@ def test_the_launch_check_refuses_a_server_changed_since_admission(
     _write(primary, "scripts/verification/morph.py", FILES["scripts/verification/morph.py"])
     with pytest.raises(ReviewContractError, match="review_server_changed"):
         check_launch_contract(contract, worktree, python)
-    twin = tmp_path / "venv-twin"  # the same distributions under another interpreter
-    shutil.copytree(python.parent.parent, twin, symlinks=True)
-    assert server_code_digest(primary, twin / "bin" / "python") == contract["server_digest"]
     with pytest.raises(ReviewContractError, match="review_server_changed"):
-        check_launch_contract(contract, primary, twin / "bin" / "python")
+        check_launch_contract(contract, primary, tmp_path / "other" / "bin" / "python")

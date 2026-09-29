@@ -2506,9 +2506,10 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
     server = primary / ".mcp" / "servers" / "sources" / "server.py"
     server.parent.mkdir(parents=True)
     server.write_text("import json\nprint('receipt: <id>')\n", encoding="utf-8")
+    (primary / render_contract.LOCK_FILE).write_text("anyio==4.15.1\n", encoding="utf-8")
     monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: primary)
     python = project_interpreter()  # what prepare writes into the config
-    admitted_code = render_contract.server_code(primary, python)
+    admitted_code = render_contract.server_code(primary)
     admitted = {
         "server_checkout": str(primary.resolve()),
         "server_interpreter": str(python),

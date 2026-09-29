@@ -9411,24 +9411,18 @@ class _GuardFakeProc:
     stdin = _GuardFakeStdin()
 
 
-def _real_popen_command(cmd) -> bool:
-    return bool(cmd) and (str(cmd[0]) == "git" or [str(part) for part in cmd[1:2]] == ["-c"])
-
-
 def _patch_worker_popen(monkeypatch):
     """Fake the worker spawn while letting real ``git`` still run.
 
     ``delegate.subprocess`` and ``worktree_containment.subprocess`` are the same
     module object, so a blanket ``Popen`` patch would also break the containment
     guard's git plumbing (``subprocess.run`` uses ``Popen`` internally). Route
-    ``git`` invocations and one-shot ``python -c`` probes (the review contract's
-    interpreter import-path query, #9163) to the real Popen and fake only the
-    ``.venv`` worker.
+    ``git`` invocations to the real Popen and fake only the ``.venv`` worker.
     """
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
-        if _real_popen_command(cmd):
+        if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
         return _GuardFakeProc()
 
@@ -13921,9 +13915,10 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_tas
 
 
 def _review_code(checkout: Path, server: str = "print('receipt: <id> (outcome: <value>)')\n") -> None:
-    """The sources server and the review template a checkout holds (#9163), written to disk as a render reads them."""
+    """The sources server, its lock and the review template a checkout holds (#9163), written as a render reads them."""
     for name, text in (
         (".mcp/servers/sources/server.py", server),
+        ("requirements-lock.txt", "anyio==4.15.1\n"),
         ("scripts/review/prompts/lesson-review.md.j2", "Copy the outcome printed beside each receipt.\n"),
     ):
         (checkout / name).parent.mkdir(parents=True, exist_ok=True)
@@ -14092,7 +14087,7 @@ def test_review_attempt_refuses_at_launch_when_the_primary_server_changes_after_
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
-        if _real_popen_command(cmd):
+        if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
         spawned.append([str(part) for part in cmd])
         return _GuardFakeProc()

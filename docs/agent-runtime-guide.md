@@ -845,30 +845,20 @@ rendered it (`scripts/review/render_contract.py`):
   `render_contract` record into `<prompt>.files_read.json`: the render checkout,
   the templates the render actually loaded with their sha256 and one digest over
   them, that checkout's server-code digest, and the prompt's sha256.
-- **Server-code digest.** `.mcp/servers/sources/server.py` plus every repository
-  module it imports, found by a static walk of `import` / `from … import`
-  statements (function-level imports included) resolved the way the server's
-  own `sys.path` resolves them: `scripts/`, then the repository root, then the
-  server's directory, then the import path of the interpreter the server
-  launches with (the project interpreter, queried once per process with
-  `python -c`). Files are read from disk whether or not git ignores them;
+- **Server-code digest.** Two named components. `repository`:
+  `.mcp/servers/sources/server.py` plus every repository module it imports,
+  found by a static walk of `import` / `from … import` statements
+  (function-level imports included) resolved the way the server's own
+  `sys.path` resolves them: `scripts/`, then the repository root, then the
+  server's directory. Files are read from disk whether or not git ignores them;
   a symlink contributes its target's bytes; `__pycache__`, documents and
-  modules the server never imports do not count. Dynamic `importlib` imports
-  are not seen (the server makes none).
-- **Installed distributions.** A top-level import found in a site directory of
-  that interpreter (for example `learn_ukrainian_v4_runtime`) is attributed to
-  the distribution whose `*.dist-info/RECORD` installs it, and every Python
-  source and extension module that `RECORD` lists is hashed. Each distribution is
-  its own digest component, named with its version, so a refusal names what
-  changed (`distribution learn-ukrainian-v4-runtime: 1.0.0 sha256:… -> …`).
-  Distribution code is hashed, not walked. File hashes are cached per process by
-  path and stat (a file changed in the last two seconds is always re-read).
-- **Unresolved imports.** A top-level import found nowhere, or found in a site
-  directory with no `RECORD` installing it, refuses as
-  `review_server_import_unresolved`. An optional import (inside a `try` that
-  catches `ImportError`, or a branch of an `if`, such as a script-mode fallback)
-  that is found nowhere is recorded as absent instead, so installing it later
-  changes the digest.
+  modules the server never imports do not count. Imports outside the
+  repository (standard library, third-party) and dynamic `importlib` imports
+  are not traced. `requirements-lock.txt`: the sha256 of the checkout's lock,
+  which pins every third-party package the environment is built from; a
+  checkout without it refuses as `review_server_lock_missing`. Accepted
+  residual: an installed package that changes without a lock change (for
+  example a reinstall of `packages/v4-runtime`) is not seen.
 - **Dispatch time.** Before any archival (`--force-new` included), worktree,
   task record or worker, `review_mcp.check_review_contract` refuses with exit 2:
   - `review_render_record_missing` — the prompt is a literal or stdin prompt,
@@ -885,11 +875,11 @@ rendered it (`scripts/review/render_contract.py`):
   contract and, before writing the ledger or the seat's MCP config, digests the
   server again from exactly the checkout and interpreter that config launches
   (`render_contract.check_launch_contract`). If the checkout, the interpreter or
-  the digest differs from admission (the primary was pulled, or a distribution
-  reinstalled, in between), it refuses with exit 2 as `review_server_changed`,
+  the digest differs from admission (the primary was pulled in between), it refuses with exit 2 as `review_server_changed`,
   naming both digests and the differing components; no worker is spawned. The
   config is written right after this check; the seat's harness starts the server
-  from it when the worker runs.
+  from it when the worker runs, and the worker does not check again (accepted
+  residual: a change inside that window is not caught).
 
 The checkout running `delegate.py` plays no part. The task record keeps the
 digests compared, the per-component digests and the interpreter under
