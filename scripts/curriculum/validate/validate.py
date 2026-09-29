@@ -11,7 +11,7 @@ waiver (--allow-missing-prior); --strict refuses every waiver flag and
 verifies the registry is append-only over git history, so a plan that needs a
 waiver can never be built or merged as buildable.
 
-The mechanical gates M1, M3-M7 (mechanical.py, issue #9138) are structural checks over the
+The mechanical gates M1, M3 and M5 (mechanical.py, issue #9138) are structural checks over the
 plan, the arc, the word store and the pack that plan reviewers had to make by hand;
 what reads a proxy is reported as a note or not_checked, never as a failure.
 
@@ -1157,7 +1157,7 @@ def _validate_plan_run(
     arc = check_arc(report, level, plan, plan_path)
     if store is not None:
         check_mechanical(
-            report, plan, level=level, store=store, pack=pack, arc=arc, level_plans=level_plans, words_path=words_path
+            report, plan, level=level, store=store, arc=arc, level_plans=level_plans, words_path=words_path
         )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []

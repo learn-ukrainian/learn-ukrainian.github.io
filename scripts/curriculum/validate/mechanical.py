@@ -1,8 +1,8 @@
-"""Mechanical plan gates M1, M3–M7 (issue #9138).
+"""Mechanical plan gates M1, M3 and M5 (issue #9138).
 
-Six structural plan defects that plan reviewers had to find by hand, each
+Three structural plan defects that plan reviewers had to find by hand, each
 decided from data the validator already reads — the plan, the level arc, the
-level word store, the module pack — never from a typed list of Ukrainian
+level word store — never from a typed list of Ukrainian
 facts. The only Ukrainian inventories used are ones the code already owns:
 the closed Cyrillic letter class (scope.CYRILLIC_LETTER_CLASS) and the vowel
 letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
@@ -10,11 +10,7 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
   M1  a step introduces a letter that no activity in its practice names in its focus
   M3  a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to
       records outside the lesson's allowed set
-  M4  a copy task's pack model text uses letters outside the taught-letter set
   M5  a core lemma's word-record CEFR level is above the module's level
-  M6  a match-up, or a workbook word activity of a letter-stage module, binds fewer
-      than three items (the plan binds none: not_checked)
-  M7  a count-syllables item set has one distinct syllable count (not_checked, same reason)
 
 Severity, per gate. No gate fails the run: each is reported for the plan reviewer,
 because the plan contract does not make any of it an invariant of a valid plan:
@@ -24,22 +20,15 @@ because the plan contract does not make any of it an invariant of a valid plan:
   that resolves to no store record, or that is spelled like a syllable (one vowel,
   only letters the lesson has taught) and so may be the syllable the plan teaches
   rather than the word it collides with, is not_checked.
-- M4 (note): the plan states no copied text; the activity's focus is prose, not the
-  text. The text a copy task names is the pack exercise its `model` points to, and a
-  primer exercise may carry its instruction line beside the lines to copy. A copy
-  task with no readable model is not_checked. Other production tasks state their
-  text in draft fields only, so they cannot be checked at plan stage.
 - M5 (note): the plan contract sets no CEFR ceiling for core vocabulary.
-- M6, M7 (not_checked): an activity's items are draft fields (plan schema §2b); the
-  plan states type, focus, placement and model. Nothing in the plan binds an item
-  set, so no item is counted from the focus prose or the vocabulary pool.
 
 Dropped under the #9138 residual policy (a rule with another false-positive class goes):
 M2 (a step letter with no allowed word record; word-completion practice is not a reliable
-signal) and M8 (core word or grammar never reused; practice.stress and other drills use words
-the plan does not bind).
+signal), M4 (copy-task model letters; a letter-grid is a reference grid, not a copy task),
+M6 and M7 (item counts; items are draft fields the plan does not bind) and M8 (core word or
+grammar never reused; practice.stress and other drills use words the plan does not bind).
 
-Letter gates (M1, M4 and M6's letter-stage scope) apply to letter-stage
+Gate M1 applies to letter-stage
 modules only: those whose arc position carries letters (the rule 5 definition).
 The taught-letter state at a lesson is the arc's letters of every earlier position
 plus the letters this plan introduces through that lesson.
@@ -57,12 +46,10 @@ from scripts.practice.euphony_stem_engine import VOWELS as VOWEL_LETTERS
 from ..arc.loader import ArcPosition
 from . import codes
 from .cross import LevelPlans, collect_introductions
-from .pack import Pack, WordRecord, WordStore
+from .pack import WordRecord, WordStore
 from .report import Outcome, Report
 from .scope import CYRILLIC_LETTER_CLASS
 
-WORD_COMPLETION_TYPES = frozenset({"pick-syllables", "divide-words", "match-up"})
-COPY_TASK_TYPES = frozenset({"letter-grid"})
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 
 _LETTER = re.compile(f"[{CYRILLIC_LETTER_CLASS}]")
@@ -71,13 +58,7 @@ _QUOTED = re.compile(
     rf"«([^»]*)»|\"([^\"]*)\"|“([^”]*)”|`([^`]*)`"
     rf"|(?<![{CYRILLIC_LETTER_CLASS}])'([^']*)'(?![{CYRILLIC_LETTER_CLASS}])"
 )
-_COPY_WORD = re.compile(r"\bcop(?:y|ies|ying)\b", re.IGNORECASE)
 _APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
-
-
-def letters_of(text: str) -> set[str]:
-    """The distinct Cyrillic letters of text, case-folded."""
-    return {letter.casefold() for letter in _LETTER.findall(text)}
 
 
 def tokens_of(text: str) -> list[str]:
@@ -107,21 +88,12 @@ def syllable_shaped(token: str, taught: set[str]) -> bool:
     return sum(1 for letter in letters if letter in VOWEL_LETTERS) == 1 and set(letters) <= taught
 
 
-def _is_copy_task(activity: dict) -> bool:
-    return activity["type"] in COPY_TASK_TYPES or _COPY_WORD.search(activity["focus"]) is not None
-
-
-def _joined(items) -> str:
-    return " ".join(sorted(items))
-
-
 @dataclass
 class _Gates:
     report: Report
     plan: dict
     level: str
     store: WordStore
-    pack: Pack | None
     arc: list[ArcPosition] | None
     level_plans: LevelPlans
     words_path: Path
@@ -320,41 +292,6 @@ class _Gates:
                         step_id,
                     )
 
-    # -- M4 -------------------------------------------------------------------
-
-    def check_copy_tasks(self) -> None:
-        copy_tasks = [
-            (lesson, activity)
-            for lesson in self.plan["lessons"]
-            for activity in lesson.get("activities") or []
-            if _is_copy_task(activity)
-        ]
-        through = self.letter_state_or_skip("M4", bool(copy_tasks)) if copy_tasks else None
-        if through is None:
-            return
-        unstated = []
-        for lesson, activity in copy_tasks:
-            model = activity.get("model")
-            text = self.pack.exercise_text.get(model, "") if self.pack is not None and model else ""
-            if not text:
-                unstated.append(f"{activity['id']} (lesson {lesson['n']})")
-                continue
-            extra = letters_of(text) - through[lesson["n"]]
-            if extra:
-                self.note(
-                    codes.COPY_MODEL_LETTER_NOT_TAUGHT,
-                    f"copy task {activity['id']}'s model {model} contains letters not taught by lesson "
-                    f"{lesson['n']}: {_joined(extra)}; a primer exercise may carry its instruction line "
-                    "beside the lines to copy, so the plan review confirms which text is copied (gate M4)",
-                    lesson["n"],
-                )
-        if unstated:
-            self.skip(
-                "M4",
-                f"copy task(s) {', '.join(unstated)} name no readable model exercise; the plan states the "
-                "task in focus prose, and the text to copy is a draft field",
-            )
-
     # -- M5 -------------------------------------------------------------------
 
     def check_cefr(self) -> None:
@@ -379,29 +316,6 @@ class _Gates:
         if missing:
             self.skip("M5", "core word records carry no CEFR level: " + ", ".join(sorted(set(missing))))
 
-    # -- M6, M7 ---------------------------------------------------------------
-
-    def check_activity_sets(self) -> None:
-        """M6, M7: the plan binds no item set, so each such activity is reported as not checked."""
-        unbound: dict[str, list[str]] = {"M6": [], "M7": []}
-        for lesson in self.plan["lessons"]:
-            for activity in lesson.get("activities") or []:
-                kind = activity["type"]
-                label = f"{activity['id']} ({kind}, lesson {lesson['n']})"
-                if kind == "count-syllables":
-                    unbound["M7"].append(label)
-                elif kind == "match-up" or (
-                    kind in WORD_COMPLETION_TYPES and activity["placement"] == "workbook" and self.taught_through
-                ):
-                    unbound["M6"].append(label)
-        for rule, labels in unbound.items():
-            if labels:
-                self.skip(
-                    rule,
-                    f"the plan binds no item set for {', '.join(labels)}; items are draft fields, so the "
-                    "item count is checked at the draft",
-                )
-
 
 def check_mechanical(
     report: Report,
@@ -409,15 +323,12 @@ def check_mechanical(
     *,
     level: str,
     store: WordStore,
-    pack: Pack | None,
     arc: list[ArcPosition] | None,
     level_plans: LevelPlans,
     words_path: Path,
 ) -> None:
-    """Run gates M1, M3–M7 on a plan that already passed the schema."""
-    gates = _Gates(report, plan, level, store, pack, arc, level_plans, words_path)
+    """Run gates M1, M3 and M5 on a plan that already passed the schema."""
+    gates = _Gates(report, plan, level, store, arc, level_plans, words_path)
     gates.check_step_letters()
     gates.check_tokens()
-    gates.check_copy_tasks()
     gates.check_cefr()
-    gates.check_activity_sets()

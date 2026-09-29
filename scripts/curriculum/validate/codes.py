@@ -135,10 +135,9 @@ SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
 TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 
 # --- notes (never fail the run) ---------------------------------------------
-# mechanical plan gates M1, M3-M7 (issue #9138) report here or as not_checked, never as failures
+# mechanical plan gates M1, M3, M5 (issue #9138) report here or as not_checked, never as failures
 STEP_LETTER_NOT_PRACTISED = "step_letter_not_practised"
 TOKEN_NOT_ALLOWED = "token_not_allowed"
-COPY_MODEL_LETTER_NOT_TAUGHT = "copy_model_letter_not_taught"
 CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 
@@ -222,7 +221,6 @@ DESCRIPTIONS = {
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
-    COPY_MODEL_LETTER_NOT_TAUGHT: "note (gate M4, #9138): a copy task's pack model text contains letters not yet taught; the plan review confirms which text is copied",
     CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
@@ -260,7 +258,7 @@ DESCRIPTIONS = {
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3-M7, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level), or the plan states nothing to check (M4 copy text, M6/M7 item sets are draft fields); the message names the gate and the reason",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
@@ -269,7 +267,6 @@ NOTE_CODES = frozenset(
         CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,
         STEP_LETTER_NOT_PRACTISED,
         TOKEN_NOT_ALLOWED,
-        COPY_MODEL_LETTER_NOT_TAUGHT,
         CORE_CEFR_ABOVE_MODULE,
     }
 )

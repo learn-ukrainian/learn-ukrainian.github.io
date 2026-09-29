@@ -1,4 +1,4 @@
-"""Tests for the mechanical plan gates M1, M3–M7 (issue #9138).
+"""Tests for the mechanical plan gates M1, M3 and M5 (issue #9138).
 
 One passing baseline and, per gate, at least one fixture built by a
 single mutation of that baseline. The fixture world is a letter-stage module at
@@ -52,7 +52,6 @@ MECHANICAL_CODES = {
     codes.STEP_LETTER_NOT_PRACTISED,
     codes.TOKEN_NOT_ALLOWED,
     codes.CORE_CEFR_ABOVE_MODULE,
-    codes.COPY_MODEL_LETTER_NOT_TAUGHT,
     codes.TOKEN_UNRESOLVED,
     codes.MECHANICAL_RULE_NOT_CHECKED,
 }
@@ -214,14 +213,6 @@ def _set_cefr(word_id: str, cefr: str | None) -> Mutate:
     return mutate
 
 
-def _without_item_activities(plan: dict, pack: dict, words: dict) -> None:
-    """Every match-up, workbook word activity and count-syllables becomes a quiz: no item set to check."""
-    for lesson in plan["lessons"]:
-        for activity in lesson["activities"]:
-            if activity["type"] in ("match-up", "count-syllables") or activity["placement"] == "workbook":
-                activity["type"] = "quiz"
-
-
 def _drop_letters(plan: dict, pack: dict, words: dict) -> None:
     """Make the module non-literacy: no letters anywhere (the arc derived from the plan has none)."""
     for lesson in plan["lessons"]:
@@ -237,9 +228,6 @@ class Case:
     failures: frozenset[str] = frozenset()
     notes: frozenset[str] = frozenset()
     not_checked: frozenset[str] = frozenset()
-    #: Whether the plan keeps match-up, workbook word or count-syllables activities, whose item sets
-    #: gates M6 and M7 report as not checked.
-    item_sets: bool = True
     #: A fragment every failure of the expected codes must carry in its message (location or value).
     says: str = ""
 
@@ -306,22 +294,6 @@ CASES = [
         notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="activity a2 focus quotes 'он'",
     ),
-    # M4 -- a copy task's model text uses letters not yet taught
-    Case(
-        "m4_copy_model_text_uses_untaught_letters_is_a_note",
-        lambda plan, pack, words: pack["exercises"][0].__setitem__("quote", "мама кома"),
-        notes=frozenset({codes.COPY_MODEL_LETTER_NOT_TAUGHT}),
-    ),
-    Case(
-        "m4_untaught_letters_in_copy_focus_prose_are_not_read",
-        _set_focus(1, "a3", "Copy «кома» into a notebook."),
-        not_checked=frozenset({codes.TOKEN_UNRESOLVED}),  # кома is a placeholder no store record lists
-    ),
-    Case(
-        "m4_copy_task_without_a_model_is_not_checked",
-        lambda plan, pack, words: _activity_of(plan, 1, "a3").pop("model"),
-        says="gate M4 was not checked: copy task(s) a3 (lesson 1) name no readable model exercise",
-    ),
     # M5 -- a core lemma above the module's level
     Case(
         "m5_core_lemma_two_bands_above_is_a_note",
@@ -338,28 +310,8 @@ CASES = [
     Case(
         "m5_core_lemma_without_cefr_is_not_checked",
         _set_cefr(MAMA, None),
+        not_checked=frozenset({codes.MECHANICAL_RULE_NOT_CHECKED}),
         says="gate M5 was not checked: core word records carry no CEFR level: W-201",
-    ),
-    # M6 -- item counts: the plan binds no item set
-    Case(
-        "m6_match_up_and_workbook_word_activities_are_not_checked",
-        says="gate M6 was not checked: the plan binds no item set for b2 (match-up, lesson 2), b3 (pick-syllables, lesson 2)",
-    ),
-    Case(
-        "m6_words_named_in_the_focus_are_not_counted_as_items",
-        _set_focus(2, "b2", "Match мама and нона to pictures; find О."),
-        says="gate M6 was not checked",
-    ),
-    Case("m6_m7_without_item_activities_report_nothing", _without_item_activities, item_sets=False),
-    # M7 -- one distinct syllable count: the plan binds no item set
-    Case(
-        "m7_count_syllables_is_not_checked",
-        says="gate M7 was not checked: the plan binds no item set for a4 (count-syllables, lesson 1)",
-    ),
-    Case(
-        "m7_words_named_in_the_focus_are_not_counted_as_items",
-        _set_focus(1, "a4", "Count syllables in мама and мана."),
-        says="gate M7 was not checked",
     ),
     # letter gates apply to letter-stage modules only
     Case(
@@ -391,8 +343,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
     assert {o.code for o in report.notes} == set(case.notes), text
-    item_sets = {codes.MECHANICAL_RULE_NOT_CHECKED} if case.item_sets else set()
-    assert {o.code for o in report.not_checked} == NOT_CHECKED | item_sets | set(case.not_checked), text
+    assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
     assert report.ok == (not case.failures)
     if case.says:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text
@@ -413,7 +364,7 @@ def test_missing_base_layer_reports_not_checked_instead_of_guessing(tmp_path: Pa
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert report.ok, report.render_text()
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M3", "M6", "M7"}
+    assert {gate.message.split()[1] for gate in gates} == {"M3"}
     assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3"})
 
 
@@ -423,7 +374,7 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M1", "M4", "M6", "M7"}
+    assert {gate.message.split()[1] for gate in gates} == {"M1"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:
