@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import json
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
 import requests  # noqa: F401  # Declares promote_grow_candidates's transitive enrich_manifest HTTP dependency to the CI fastlane.
+import yaml
 
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
@@ -21,6 +24,24 @@ from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
 )
 
 MULTIWORD_LEMMAS = sorted(TARGET_ENTRY_TYPES)
+_ORIGINAL_SAFE_LOAD = yaml.safe_load
+
+
+@lru_cache(maxsize=8)
+def _parse_decision_yaml(source: str):
+    return _ORIGINAL_SAFE_LOAD(source)
+
+
+@pytest.fixture(autouse=True)
+def _reuse_read_only_decision_parse(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Parse identical ledger content once, returning private copies to callers."""
+
+    def safe_load(source):
+        if not isinstance(source, str):
+            return _ORIGINAL_SAFE_LOAD(source)
+        return copy.deepcopy(_parse_decision_yaml(source))
+
+    monkeypatch.setattr(yaml, "safe_load", safe_load)
 
 
 @pytest.fixture(scope="module")
@@ -136,6 +157,22 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> No
     assert {row["lemma"] for row in doc["decisions"]} == lemmas
     assert doc["source_queue"]["promotion_batch_size"] == len(lemmas)
     assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
+
+
+def test_decision_parse_cache_changes_with_file_content(tmp_path: Path) -> None:
+    source = tmp_path / "decisions.yaml"
+    output = tmp_path / "subset.yaml"
+    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: first\n", encoding="utf-8")
+    _scratch_decision_subset(source, {"demo"}, output)
+    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "first"
+
+    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: second\n", encoding="utf-8")
+    _scratch_decision_subset(source, {"demo"}, output)
+    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "second"
+
+    parsed = yaml.safe_load(source.read_text(encoding="utf-8"))
+    parsed["decisions"][0]["gloss"] = "mutated"
+    assert yaml.safe_load(source.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "second"
 
 
 def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(

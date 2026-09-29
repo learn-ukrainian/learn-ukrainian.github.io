@@ -24,6 +24,7 @@ import sqlite3
 import sys
 import time
 from collections.abc import Container, Mapping, Sequence
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -256,13 +257,19 @@ def _resolve_file(path: Path, roots: Sequence[Path]) -> Path:
     return roots[0] / path
 
 
+@lru_cache(maxsize=16)
+def _compile_schema(schema_bytes: bytes) -> Draft202012Validator:
+    """Compile identical schema content once, independent of its path."""
+    schema_dict = json.loads(schema_bytes)
+    Draft202012Validator.check_schema(schema_dict)
+    return Draft202012Validator(schema_dict)
+
+
 def _load_schema(schema_path: Path, roots: Sequence[Path]) -> Draft202012Validator:
     resolved = _resolve_file(schema_path, roots)
     if not resolved.is_file():
         raise CustodyAccessError(f"Missing schema contract: {resolved}")
-    schema_dict = json.loads(resolved.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema_dict)
-    return Draft202012Validator(schema_dict)
+    return _compile_schema(resolved.read_bytes())
 
 
 def _load_config(config_path: Path, roots: Sequence[Path]) -> tuple[dict[str, Any], Path]:

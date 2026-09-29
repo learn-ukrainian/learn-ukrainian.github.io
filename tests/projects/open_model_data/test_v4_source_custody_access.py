@@ -133,6 +133,21 @@ def test_config_passes_schema() -> None:
     assert not errors, f"Config schema errors: {errors}"
 
 
+def test_schema_cache_reloads_changed_content_at_same_path(tmp_path: Path) -> None:
+    schema_path = tmp_path / "schema.json"
+    first = {"type": "object", "required": ["first"]}
+    second = {"type": "object", "required": ["second"]}
+    schema_path.write_text(json.dumps(first), encoding="utf-8")
+    validator = custody._load_schema(schema_path, [tmp_path])
+    assert not list(validator.iter_errors({"first": 1}))
+
+    schema_path.write_text(json.dumps(second), encoding="utf-8")
+    updated = custody._load_schema(schema_path, [tmp_path])
+    assert updated is not validator
+    assert list(updated.iter_errors({"first": 1}))
+    assert not list(updated.iter_errors({"second": 1}))
+
+
 @pytest.fixture
 def requires_textbook_chunks(requires_sources_db: Path) -> Path:
     candidate = Path("data/textbook_chunks")
@@ -590,9 +605,7 @@ def test_verify_detects_provenance_projection_mismatch(synthetic_bundle: Synthet
         synthetic_bundle.verify()
 
 
-def test_verify_detects_missing_provenance_index(
-    synthetic_bundle: SyntheticCustodyBundle, tmp_path: Path
-) -> None:
+def test_verify_detects_missing_provenance_index(synthetic_bundle: SyntheticCustodyBundle, tmp_path: Path) -> None:
     config_data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     config_data["inputs"]["provenance_index"] = "data/projects/open_model_data/nonexistent_provenance_index.jsonl"
     tampered_config = tmp_path / "config.json"
@@ -2010,9 +2023,13 @@ def test_verify_handles_stub_database_with_missing_tables(
 
     # 2. When require_database=False (unprovisioned CI with stub database on disk),
     # verify() detects missing tables, leaves db_conn=None, and passes without error.
-    res = custody.verify(CONFIG_PATH, input_root=synthetic_bundle.in_dir, output_root=synthetic_bundle.out_dir, require_database=False)
+    res = custody.verify(
+        CONFIG_PATH, input_root=synthetic_bundle.in_dir, output_root=synthetic_bundle.out_dir, require_database=False
+    )
     assert res is True
 
     # 3. When require_database=True, verify() detects missing required tables and raises CustodyAccessError
     with pytest.raises(custody.CustodyAccessError, match=r"missing required tables:.*(literary_texts|textbooks)"):
-        custody.verify(CONFIG_PATH, input_root=synthetic_bundle.in_dir, output_root=synthetic_bundle.out_dir, require_database=True)
+        custody.verify(
+            CONFIG_PATH, input_root=synthetic_bundle.in_dir, output_root=synthetic_bundle.out_dir, require_database=True
+        )
