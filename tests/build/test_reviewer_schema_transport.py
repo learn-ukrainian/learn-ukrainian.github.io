@@ -106,7 +106,10 @@ def terminal_output(route: str, payload: Any) -> str:
             "result": '{"findings": [], "verdict": "PASS"}',
         })
     if route == "agy":
-        return json.dumps({"status": "SUCCESS", "structured_output": payload, "response": "decoy prose"})
+        return json.dumps({"event": "result", "result": {
+            "conversation_id": AGY_FIXTURE_CONVERSATION, "status": "SUCCESS",
+            "structured_output": payload, "response": "decoy prose",
+        }})
     if route == "grok":
         return json.dumps({"stopReason": "end_turn", "structuredOutput": payload, "text": "decoy prose"})
     return json.dumps(payload)
@@ -170,6 +173,13 @@ def test_matrix_schema_passed_and_consumed(profile, route, tmp_path, monkeypatch
             flag = "--output-schema" if route == "codex" else "--json-schema"
             value = plan.cmd[plan.cmd.index(flag) + 1]
             assert (json.loads(Path(value).read_text()) if route == "codex" else json.loads(value)) == schema
+            if route == "agy":
+                assert plan.cmd[plan.cmd.index("--input-format") + 1] == "stream-json"
+                assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
+                assert "--print" not in plan.cmd
+                assert json.loads(plan.stdin_payload)["message"]["content"] == [
+                    {"type": "text", "text": "Public mechanical schema fixture."}
+                ]
             return parse_terminal(adapter, plan, route, terminal_output(route, payload))
         assert "--json-schema" not in plan.cmd and "--output-schema" not in plan.cmd
         assert not any(key.startswith("output_schema") for key in config)
@@ -281,18 +291,27 @@ def test_native_envelope_requires_structured_terminal(route, profile, damage, tm
     plan = build_plan(adapter, tmp_path, qg_schema.write_reviewer_output_schema(tmp_path, profile))
     payload = mechanical_payload(profile)
     envelope = json.loads(terminal_output(route, payload))
+    terminal = envelope["result"] if route == "agy" else envelope
     # A valid-looking free-text answer must not rescue a broken envelope.
-    envelope["response" if route == "agy" else "text"] = json.dumps(payload)
+    terminal["response" if route == "agy" else "text"] = json.dumps(payload)
     if damage == "no_structured":
-        del envelope["structured_output" if route == "agy" else "structuredOutput"]
+        del terminal["structured_output" if route == "agy" else "structuredOutput"]
     elif damage == "error":
-        envelope["error" if route == "agy" else "structuredOutputError"] = "schema rejected"
+        terminal["error" if route == "agy" else "structuredOutputError"] = "schema rejected"
     elif damage == "unfinished":
-        envelope["status" if route == "agy" else "stopReason"] = "WAITING" if route == "agy" else "max_tokens"
+        terminal["status" if route == "agy" else "stopReason"] = "WAITING" if route == "agy" else "max_tokens"
     else:
-        envelope = payload
+        if route == "agy":
+            envelope["result"] = {
+                "conversation_id": AGY_FIXTURE_CONVERSATION, "status": "SUCCESS",
+                "response": json.dumps(payload), **payload,
+            }
+        else:
+            envelope = payload
     result = parse_terminal(adapter, plan, route, json.dumps(envelope))
     assert result.ok is False and result.response == ""
+    if route == "agy" and damage == "raw_payload":
+        assert result.failure_code == "structured_output_invalid"
 
 
 def test_codex_dimension_and_direct_missing_file_never_recovers_prose(tmp_path, monkeypatch):
@@ -333,7 +352,8 @@ def test_nullable_schema_distinguishes_null_from_missing(route, tmp_path, monkey
         missing = ""
     else:
         envelope = json.loads(terminal_output(route, None))
-        del envelope["structuredOutput" if route == "grok" else "structured_output"]
+        terminal = envelope["result"] if route == "agy" else envelope
+        del terminal["structuredOutput" if route == "grok" else "structured_output"]
         missing = json.dumps(envelope)
     invalid = parse_terminal(adapter, plan, route, missing)
     assert not invalid.ok and invalid.response == ""
