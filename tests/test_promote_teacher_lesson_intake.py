@@ -67,6 +67,61 @@ def test_default_full_decisions_is_a_committed_repository_file() -> None:
     assert DEFAULT_FULL_DECISIONS.is_file()
 
 
+def test_case_preserved_vesum_proper_names_do_not_resolve_to_common_noun(tmp_path, monkeypatch) -> None:
+    db = tmp_path / "vesum.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.executemany(
+            "INSERT INTO forms VALUES (?,?,?,?)",
+            [
+                ("Бандера", "Бандера", "noun", "noun:anim:m:v_naz:prop:lname"),
+                ("бандера", "бандера", "noun", "noun:anim:m:v_naz"),
+                ("Вифлеєм", "Вифлеєм", "noun", "noun:inanim:m:v_naz:prop:geo"),
+            ],
+        )
+    analyses = promote_module._vesum_analyses(["Бандера", "Вифлеєм", "бандера"], db)
+    assert promote_module._canonical_lemma("Бандера", analyses["Бандера"]) == "Бандера"
+    assert promote_module._canonical_lemma("Вифлеєм", analyses["Вифлеєм"]) == "Вифлеєм"
+    assert promote_module._vesum_pos(analyses["Бандера"]) == "proper noun"
+    assert promote_module._vesum_pos(analyses["Вифлеєм"]) == "proper noun"
+    assert promote_module._vesum_pos(analyses["бандера"]) == "noun"
+
+    ledger = tmp_path / "reviewed.yaml"
+    ledger.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": lemma,
+                        "decision": "approve_for_publish",
+                        "approved_gloss": gloss,
+                        "source_inventory": {"locator": f"explicit vocabulary table 1 row {i}"},
+                    }
+                    for i, (lemma, gloss) in enumerate(
+                        [("Бандера", "Bandera (surname)"), ("Вифлеєм", "Bethlehem")], start=1
+                    )
+                ],
+            },
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    assert promote_module._read_full_rows(ledger)[0].lemma == "Бандера"
+    monkeypatch.setattr(promote_module, "_read_curated_rows", lambda _: [])
+    monkeypatch.setattr(promote_module, "_dictionary_glosses", lambda *args: ({}, set()))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    candidates, decisions, report = promote_module._build_rows(
+        ledger, tmp_path / "unused-curated.yaml", manifest, db, None
+    )
+    assert report["canonical_lemmas"] == 2
+    assert {(entry["lemma"], entry["pos"], entry["gloss"]) for entry in candidates} == {
+        ("Бандера", "proper noun", "Bandera (surname)"),
+        ("Вифлеєм", "proper noun", "Bethlehem"),
+    }
+    assert {decision["lemma"] for decision in decisions} == {"Бандера", "Вифлеєм"}
+
+
 def test_private_teacher_lesson_delta_inventory_is_privacy_safe(source_records) -> None:
     records, _ = source_records
 

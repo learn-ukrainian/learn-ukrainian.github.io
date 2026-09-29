@@ -204,10 +204,11 @@ class IntakeRow:
     source_kind: str
 
 
-def _normalise(text: object) -> str:
+def _normalise(text: object, *, preserve_case: bool = False) -> str:
     value = strip_acute_stress(str(text or ""))
     value = value.replace("ʼ", "'").replace("’", "'").replace("`", "'")
-    return " ".join(value.split()).casefold()
+    value = " ".join(value.split())
+    return value if preserve_case else value.casefold()
 
 
 def _is_expression(lemma: str) -> bool:
@@ -250,7 +251,7 @@ def _read_full_rows(path: Path) -> list[IntakeRow]:
         source = row.get("source_inventory")
         if not isinstance(source, Mapping):
             raise ValueError(f"{path}: approved decision lacks source_inventory")
-        lemma = _normalise(row.get("lemma"))
+        lemma = _normalise(row.get("lemma"), preserve_case=True)
         locator = str(source.get("locator") or "").strip()
         if not lemma or not locator:
             raise ValueError(f"{path}: approved decision lacks lemma or locator")
@@ -276,7 +277,7 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
                 raise ValueError(f"{path}: curated inventory entry lacks source locator")
             rows.append(
                 IntakeRow(
-                    lemma=_normalise(item.lemma),
+                    lemma=_normalise(item.lemma, preserve_case=True),
                     pos=str(item.pos or "").strip(),
                     gloss=str(item.gloss or "").strip() or None,
                     locator=locator,
@@ -288,22 +289,26 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
 
 def _vesum_analyses(lemmas: Iterable[str], vesum_db: Path) -> dict[str, list[dict[str, Any]]]:
     singles = sorted({lemma for lemma in lemmas if lemma and not _is_expression(lemma)})
-    analyses: dict[str, list[dict[str, Any]]] = {}
-    for start in range(0, len(singles), 500):
-        batch = singles[start : start + 500]
-        analyses.update(verify_words(batch, db_path=vesum_db))
-    return analyses
+    variants = sorted(set(singles) | {_normalise(lemma) for lemma in singles})
+    found: dict[str, list[dict[str, Any]]] = {}
+    for start in range(0, len(variants), 500):
+        found.update(verify_words(variants[start : start + 500], db_path=vesum_db))
+    # Prefer the reviewed spelling. A capitalized surname may coexist with a
+    # different lowercase common noun; falling back first would conflate them.
+    return {lemma: found.get(lemma) or found.get(_normalise(lemma), []) for lemma in singles}
 
 
 def _canonical_lemma(lemma: str, analyses: Sequence[Mapping[str, Any]]) -> str:
     """Use a VESUM base only when its lexical identity is unambiguous."""
     if _is_expression(lemma):
         return lemma
-    bases = {_normalise(row.get("lemma")) for row in analyses if _normalise(row.get("lemma"))}
+    bases = {str(row.get("lemma")) for row in analyses if row.get("lemma")}
     return next(iter(bases)) if len(bases) == 1 else lemma
 
 
 def _vesum_pos(analyses: Sequence[Mapping[str, Any]]) -> str | None:
+    if analyses and all(":prop:" in str(row.get("tags") or "") for row in analyses):
+        return "proper noun"
     mapped = sorted({_mapped_pos(row.get("pos")) for row in analyses if _mapped_pos(row.get("pos"))})
     return mapped[0] if len(mapped) == 1 else None
 

@@ -6,16 +6,17 @@
   "membership_sha256": "313e6cda6db57d1e7b7b85ece5e5d5fe7cf0577e46219600d21a138cae165a29",
   "denominator": 64,
   "counts": {
-    "ADMIT": 59,
-    "REMOVE": 3,
-    "POLICY_QUESTION": 2
+    "ADMIT": 63,
+    "REMOVE": 1,
+    "POLICY_QUESTION": 0
   },
   "evidence_methods": {
     "atlas": "sqlite3 URI mode=ro; SELECT payload_json FROM article_payloads WHERE is_public_route=1 ORDER BY route_order; scripts.lexicon.curated_membership.read_membership/apply_membership",
     "vesum": "mcp__sources__inspect_words(words=the 64 row lemmas)",
-    "ulif": "sqlite3 URI mode=ro; SELECT id,homonym_index,canonical_headword,grammatical_label,status FROM ulif_dictua_entries WHERE normalized_query=? AND homonym_checked=1 ORDER BY homonym_index,id",
+    "ulif": "data/sources.db mode=ro; checked ulif_dictua_entries joined by id to ulif_dictua_sections; paradigm rows and matching synonym terms resolve blank entry headers",
     "sum20": "mcp__sources__query_sum20(word=each row lemma); mcp__sources__collection_stats({}) returned sum20_articles=100",
-    "promotion": "/home/ops/learn-ukrainian/.venv/bin/python scripts/lexicon/promote_teacher_lesson_intake.py --help; source review of _build_rows and source_inventory promotion planner"
+    "promotion": "/home/ops/learn-ukrainian/.venv/bin/python scripts/lexicon/promote_teacher_lesson_intake.py --help; source review of _build_rows and source_inventory promotion planner",
+    "proper_name_precedent": "data/atlas.db mode=ro; SELECT slug,payload_json FROM article_payloads WHERE slug IN (шевченко, київ) AND is_public_route=1"
   },
   "rows": [
     {
@@ -75,7 +76,14 @@
           "homonym_index": 1,
           "headword": "антропометри́чний",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "антропометри́чний",
+          "paradigm_headword": "антропометри́чний",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -104,9 +112,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "бандера",
@@ -147,21 +155,44 @@
           "homonym_index": 1,
           "headword": "Банде́ра",
           "grammatical_label": "прізвище",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "Банде́ра",
+          "paradigm_headword": "Банде́ра",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
         "presence": "not_in_ingested_100_article_snapshot",
         "raw_output": "No official offline СУМ-20 entry is currently ingested for 'бандера'. This tool does not make a live request or use a fallback source."
       },
-      "proper_name": "ambiguous",
+      "proper_name": "yes",
       "promoter_as_is": false,
-      "decision": "POLICY_QUESTION",
-      "reason": "VESUM_COMMON_NOUN_AND_PROPER_SURNAME_POLICY_UNCLEAR",
-      "promotion_input": null,
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "decision": "ADMIT",
+      "reason": "PROPER_SURNAME_ATTESTED_EXISTING_ROUTE_PRECEDENT",
+      "promotion_input": {
+        "source_kind": "membership_only",
+        "reviewed_lemma": "Бандера",
+        "vesum_pos_target": "proper noun",
+        "source_locator": null,
+        "reviewed_english_gloss": "Bandera (surname)",
+        "missing": [
+          "reviewed_teacher_source_locator"
+        ],
+        "ready_to_run": false,
+        "cli_flag": "--curated-inventory",
+        "existing_input": null,
+        "required_record_schema": "atlas_source_inventory v1: sources[] {id, source_family=teacher_lesson, extraction_mode=curated_headword, title, headwords[] {lemma, pos, gloss, locator}}",
+        "scoped_input_path": "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-9151-reviewed.yaml",
+        "scoped_input_exists": false,
+        "replaces_default_july_inventory_in_that_run": true,
+        "note": "lexical decision only; no scoped reviewed intake file or admission in phase 1"
+      },
+      "promoter_as_is_reason": "current default inputs lack reviewed proper-name row; scoped intake required",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": [],
       "vesum_proper_form": {
         "word": "Бандера",
         "status": "CLEAN",
@@ -181,6 +212,14 @@
         "source_locations": [
           "288219-288232"
         ]
+      },
+      "ulif_unattested_checked_ids": [],
+      "atlas_route_target": {
+        "slug": "бандера",
+        "lemma": "Бандера",
+        "pos": "proper noun",
+        "gloss": "Bandera (surname)",
+        "scope": "surname only; exclude lowercase common noun"
       }
     },
     {
@@ -222,7 +261,14 @@
           "homonym_index": 1,
           "headword": "банде́рівець",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "банде́рівець",
+          "paradigm_headword": "банде́рівець",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -251,9 +297,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "бджолярство",
@@ -312,7 +358,14 @@
           "homonym_index": 1,
           "headword": "бджоля́рство",
           "grammatical_label": "іменник середнього роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "бджоля́рство",
+          "paradigm_headword": "бджоля́рство",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -340,7 +393,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "валер'янка",
@@ -381,7 +434,14 @@
           "homonym_index": 1,
           "headword": "валер'я́нка",
           "grammatical_label": "іменник жіночого роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "валер'я́нка",
+          "paradigm_headword": "валер'я́нка",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -409,7 +469,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "ввижатися",
@@ -450,7 +510,21 @@
           "homonym_index": 1,
           "headword": "ввижа́тися",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ввижа́тися",
+          "paradigm_headword": "ввижа́тися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ВВИЖА́ТИСЯ",
+            "ввижа́тися"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -479,9 +553,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "вебсайт",
@@ -531,7 +605,14 @@
           "homonym_index": 1,
           "headword": "вебса́йт",
           "grammatical_label": "іменник чоловічого роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "вебса́йт",
+          "paradigm_headword": "вебса́йт",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -559,9 +640,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "вигуляти",
@@ -602,7 +683,14 @@
           "homonym_index": 1,
           "headword": "ви́гуляти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ви́гуляти",
+          "paradigm_headword": "ви́гуляти",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -631,7 +719,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "вифлеєм",
@@ -660,7 +748,14 @@
           "homonym_index": 1,
           "headword": "Вифлеє́м",
           "grammatical_label": "іменник чоловічого роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "Вифлеє́м",
+          "paradigm_headword": "Вифлеє́м",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -669,12 +764,26 @@
       },
       "proper_name": "yes",
       "promoter_as_is": false,
-      "decision": "POLICY_QUESTION",
-      "reason": "VESUM_PROPER_GEO_LOWERCASE_PROMOTER_MISS_POLICY_UNCLEAR",
-      "promotion_input": null,
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "decision": "ADMIT",
+      "reason": "PROPER_GEO_ATTESTED_EXISTING_ROUTE_PRECEDENT",
+      "promotion_input": {
+        "source_kind": "september_delta_inventory",
+        "reviewed_lemma": "Вифлеєм",
+        "vesum_pos_target": "proper noun",
+        "source_locator": "explicit vocabulary table 1 row 899",
+        "reviewed_english_gloss": "Bethlehem",
+        "missing": [],
+        "ready_to_run": false,
+        "cli_flag": "--curated-inventory",
+        "existing_input": "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml",
+        "required_record_schema": "atlas_source_inventory v1: sources[] {id, source_family=teacher_lesson, extraction_mode=curated_headword, title, headwords[] {lemma, pos, gloss, locator}}",
+        "scoped_input_path": "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-9151-reviewed.yaml",
+        "scoped_input_exists": false,
+        "replaces_default_july_inventory_in_that_run": true,
+        "note": "lexical decision only; no scoped reviewed intake file or admission in phase 1"
+      },
+      "promoter_as_is_reason": "current default inputs lack reviewed proper-name row; scoped intake required",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": [],
       "vesum_proper_form": {
         "word": "Вифлеєм",
         "status": "CLEAN",
@@ -703,6 +812,14 @@
         "source_locations": [
           "810438-810448"
         ]
+      },
+      "ulif_unattested_checked_ids": [],
+      "atlas_route_target": {
+        "slug": "вифлеєм",
+        "lemma": "Вифлеєм",
+        "pos": "proper noun",
+        "gloss": "Bethlehem",
+        "scope": "geographical proper name"
       }
     },
     {
@@ -742,9 +859,22 @@
         {
           "id": 44822,
           "homonym_index": 1,
-          "headword": "",
+          "headword": "вкри́тися",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "вкри́тися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "phraseology",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "вкри́тися"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -772,10 +902,8 @@
         "existing_approved_pos": "noun"
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
-      "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": [
-        44822
-      ]
+      "ulif_lexical_attestation": true,
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "впакувати",
@@ -816,14 +944,31 @@
           "homonym_index": 1,
           "headword": "впакува́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "впакува́ти",
+          "paradigm_headword": "впакува́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "впакува́ти"
+          ],
+          "lexical_attestation": true
         },
         {
           "id": 46920,
           "homonym_index": 2,
           "headword": "впакува́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "впакува́ти",
+          "paradigm_headword": "впакува́ти",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -851,9 +996,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "вполювати",
@@ -894,7 +1039,14 @@
           "homonym_index": 1,
           "headword": "вполюва́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "вполюва́ти",
+          "paradigm_headword": "вполюва́ти",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -922,9 +1074,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "відганяти",
@@ -965,7 +1117,18 @@
           "homonym_index": 1,
           "headword": "відганя́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "відганя́ти",
+          "paradigm_headword": "відганя́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ВІДГАНЯ́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -994,9 +1157,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "вільнюський",
@@ -1055,7 +1218,14 @@
           "homonym_index": 1,
           "headword": "ві́льнюський",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ві́льнюський",
+          "paradigm_headword": "ві́льнюський",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1084,9 +1254,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "горілчаний",
@@ -1145,7 +1315,17 @@
           "homonym_index": 1,
           "headword": "горілча́ний",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "горілча́ний",
+          "paradigm_headword": "горілча́ний",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ГОРІЛЧА́НИЙ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1174,9 +1354,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "давньоримський",
@@ -1235,7 +1415,14 @@
           "homonym_index": 1,
           "headword": "давньори́мський",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "давньори́мський",
+          "paradigm_headword": "давньори́мський",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1264,9 +1451,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "деталька",
@@ -1327,7 +1514,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "добровільно",
@@ -1368,7 +1555,12 @@
           "homonym_index": 1,
           "headword": "доброві́льно",
           "grammatical_label": "прислівник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "доброві́льно",
+          "paradigm_headword": "",
+          "section_kinds": [],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1396,9 +1588,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "довірений",
@@ -1457,7 +1649,17 @@
           "homonym_index": 1,
           "headword": "дові́рений",
           "grammatical_label": "дієприкметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "дові́рений",
+          "paradigm_headword": "дові́рений",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ДОВІ́РЕНИЙ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1486,9 +1688,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "достеменно",
@@ -1529,7 +1731,16 @@
           "homonym_index": 1,
           "headword": "достеме́нно",
           "grammatical_label": "прислівник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "достеме́нно",
+          "paradigm_headword": "",
+          "section_kinds": [
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ДОСТЕМЕ́ННО"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1557,9 +1768,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "загостритися",
@@ -1598,9 +1809,19 @@
         {
           "id": 73555,
           "homonym_index": 1,
-          "headword": "",
+          "headword": "загостри́тися",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "загостри́тися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "загостри́тися"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1629,11 +1850,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
-      "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": [
-        73555
-      ]
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
+      "ulif_lexical_attestation": true,
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "загострювати",
@@ -1674,7 +1893,20 @@
           "homonym_index": 1,
           "headword": "заго́стрювати",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "заго́стрювати",
+          "paradigm_headword": "заго́стрювати",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "antonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ЗАГО́СТРЮВАТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1702,9 +1934,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "закладений",
@@ -1763,7 +1995,14 @@
           "homonym_index": 1,
           "headword": "закла́дений",
           "grammatical_label": "дієприкметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "закла́дений",
+          "paradigm_headword": "закла́дений",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1791,9 +2030,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "запинитися",
@@ -1841,9 +2080,19 @@
         {
           "id": 77657,
           "homonym_index": 1,
-          "headword": "",
+          "headword": "запини́тися",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "запини́тися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ЗАПИНИ́ТИСЯ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1853,13 +2102,12 @@
       "proper_name": "no",
       "promoter_as_is": null,
       "decision": "REMOVE",
-      "reason": "OTHER VESUM_ARCH_UNRESOLVED",
+      "reason": "VESUM_ARCH_ULIF_DIALECT_NO_REVIEWED_SENSE",
       "promotion_input": null,
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
-      "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": [
-        77657
-      ]
+      "ulif_lexical_attestation": true,
+      "ulif_unattested_checked_ids": [],
+      "sense_scope": "VESUM 130824 :arch is the cover oneself sense; ULIF 77657 lists ЗАПИНИ́ТИСЯ діал. under ПРИПИНИ́ТИСЯ. Existing full ledger has noun POS and no reviewed English sense. Remove unresolved membership; do not claim ULIF absence."
     },
     {
       "lemma": "заслужений",
@@ -1918,7 +2166,14 @@
           "homonym_index": 1,
           "headword": "заслу́жений",
           "grammatical_label": "дієприкметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "заслу́жений",
+          "paradigm_headword": "заслу́жений",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -1947,9 +2202,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "застерігати",
@@ -1990,7 +2245,17 @@
           "homonym_index": 1,
           "headword": "застеріга́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "застеріга́ти",
+          "paradigm_headword": "застеріга́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ЗАСТЕРІГА́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2018,9 +2283,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "зовнішньополітичний",
@@ -2079,7 +2344,14 @@
           "homonym_index": 1,
           "headword": "зовнішньополіти́чний",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "зовнішньополіти́чний",
+          "paradigm_headword": "зовнішньополіти́чний",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2108,9 +2380,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "колабораціоніст",
@@ -2151,7 +2423,14 @@
           "homonym_index": 1,
           "headword": "колабораціоні́ст",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "колабораціоні́ст",
+          "paradigm_headword": "колабораціоні́ст",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2180,9 +2459,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "кохана",
@@ -2272,9 +2551,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "кріпатура",
@@ -2315,7 +2594,14 @@
           "homonym_index": 1,
           "headword": "кріпату́ра",
           "grammatical_label": "іменник жіночого роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "кріпату́ра",
+          "paradigm_headword": "кріпату́ра",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2343,7 +2629,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "лобі",
@@ -2511,7 +2797,14 @@
           "homonym_index": 1,
           "headword": "ло́бі",
           "grammatical_label": "іменник середнього роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ло́бі",
+          "paradigm_headword": "ло́бі",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2540,9 +2833,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "мазепинець",
@@ -2583,7 +2876,14 @@
           "homonym_index": 1,
           "headword": "мазе́пинець",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "мазе́пинець",
+          "paradigm_headword": "мазе́пинець",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2612,9 +2912,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "можновладець",
@@ -2655,7 +2955,18 @@
           "homonym_index": 1,
           "headword": "можновла́дець",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "можновла́дець",
+          "paradigm_headword": "можновла́дець",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "МОЖНОВЛА́ДЕЦЬ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2684,9 +2995,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "наживати",
@@ -2727,7 +3038,19 @@
           "homonym_index": 1,
           "headword": "нажива́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "нажива́ти",
+          "paradigm_headword": "нажива́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "нажива́ти"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2755,9 +3078,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "нажити",
@@ -2798,7 +3121,22 @@
           "homonym_index": 1,
           "headword": "нажи́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "нажи́ти",
+          "paradigm_headword": "нажи́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "НАЖИ́ТИ",
+            "нажи́ти"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2826,9 +3164,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "накаркати",
@@ -2878,7 +3216,17 @@
           "homonym_index": 1,
           "headword": "нака́ркати",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "нака́ркати",
+          "paradigm_headword": "нака́ркати",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "НАКА́РКАТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2887,12 +3235,27 @@
       },
       "proper_name": "no",
       "promoter_as_is": false,
-      "decision": "REMOVE",
-      "reason": "OTHER VESUM_KNOWN_INVALID_ULIF_CONFLICT",
-      "promotion_input": null,
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "decision": "ADMIT",
+      "reason": "ULIF_COLLOQUIAL_SENSE_ATTESTED_VESUM_BAD_MARKER",
+      "promotion_input": {
+        "source_kind": "default_curated_inventory",
+        "reviewed_lemma": "накаркати",
+        "vesum_pos_target": "verb",
+        "source_locator": "explicit vocabulary table 2 row 351",
+        "reviewed_english_gloss": "To jinx (perf)",
+        "missing": [
+          "marker_aware_VESUM_or_heritage_admission_gate"
+        ],
+        "ready_to_run": false,
+        "cli_flag": "--curated-inventory",
+        "existing_input": "DEFAULT_CURATED_INVENTORY in promote_teacher_lesson_intake.py",
+        "required_record_schema": "atlas_source_inventory v1: sources[] {id, source_family=teacher_lesson, extraction_mode=curated_headword, title, headwords[] {lemma, pos, gloss, locator}}",
+        "note": "compatibility forms view hides :bad; lexical ADMIT is not executable promotion approval"
+      },
+      "promoter_as_is_reason": "VESUM compatibility forms view hides :bad; requires marker-aware or heritage admission path",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": [],
+      "sense_scope": "ULIF 126667: colloquial to jinx; synonym group gives накрякати розм. and накаркати розм."
     },
     {
       "lemma": "населяти",
@@ -2933,7 +3296,18 @@
           "homonym_index": 1,
           "headword": "населя́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "населя́ти",
+          "paradigm_headword": "населя́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "НАСЕЛЯ́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -2962,9 +3336,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "непопулярний",
@@ -3023,7 +3397,14 @@
           "homonym_index": 1,
           "headword": "непопуля́рний",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "непопуля́рний",
+          "paradigm_headword": "непопуля́рний",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3051,9 +3432,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "нищівний",
@@ -3110,9 +3491,22 @@
         {
           "id": 137720,
           "homonym_index": 1,
-          "headword": "",
+          "headword": "нищівни́й",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "нищівни́й",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "НИЩІВНИ́Й",
+            "нищівни́й"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3140,11 +3534,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
-      "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": [
-        137720
-      ]
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
+      "ulif_lexical_attestation": true,
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "ніжинський",
@@ -3203,7 +3595,14 @@
           "homonym_index": 1,
           "headword": "ні́жинський",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ні́жинський",
+          "paradigm_headword": "ні́жинський",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3232,9 +3631,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "овдовіти",
@@ -3275,7 +3674,14 @@
           "homonym_index": 1,
           "headword": "овдові́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "овдові́ти",
+          "paradigm_headword": "овдові́ти",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3304,9 +3710,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "озвучка",
@@ -3367,7 +3773,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "папка",
@@ -3417,14 +3823,34 @@
           "homonym_index": 1,
           "headword": "па́пка",
           "grammatical_label": "іменник жіночого роду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "па́пка",
+          "paradigm_headword": "па́пка",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ПА́ПКА"
+          ],
+          "lexical_attestation": true
         },
         {
           "id": 153644,
           "homonym_index": 2,
-          "headword": "",
+          "headword": "па́пка",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "па́пка",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ПА́ПКА"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3433,14 +3859,27 @@
       },
       "proper_name": "no",
       "promoter_as_is": false,
-      "decision": "REMOVE",
-      "reason": "OTHER VESUM_KNOWN_INVALID_ULIF_CONFLICT",
-      "promotion_input": null,
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "decision": "ADMIT",
+      "reason": "ULIF_FOLDER_SENSE_ATTESTED_VESUM_BAD_MARKER",
+      "promotion_input": {
+        "source_kind": "default_curated_inventory",
+        "reviewed_lemma": "папка",
+        "vesum_pos_target": "noun",
+        "source_locator": "explicit vocabulary table 2 row 297",
+        "reviewed_english_gloss": "A folder",
+        "missing": [
+          "marker_aware_VESUM_or_heritage_admission_gate"
+        ],
+        "ready_to_run": false,
+        "cli_flag": "--curated-inventory",
+        "existing_input": "DEFAULT_CURATED_INVENTORY in promote_teacher_lesson_intake.py",
+        "required_record_schema": "atlas_source_inventory v1: sources[] {id, source_family=teacher_lesson, extraction_mode=curated_headword, title, headwords[] {lemma, pos, gloss, locator}}",
+        "note": "compatibility forms view hides :bad; lexical ADMIT is not executable promotion approval"
+      },
+      "promoter_as_is_reason": "VESUM compatibility forms view hides :bad; requires marker-aware or heritage admission path",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": [
-        153644
-      ]
+      "ulif_unattested_checked_ids": [],
+      "sense_scope": "ULIF 153643: folder for papers, documents; тека is a synonym. ULIF 153644 is a separate child/archaic bread sense and is excluded."
     },
     {
       "lemma": "передбачуваний",
@@ -3499,7 +3938,17 @@
           "homonym_index": 1,
           "headword": "передба́чуваний",
           "grammatical_label": "дієприкметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "передба́чуваний",
+          "paradigm_headword": "передба́чуваний",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ПЕРЕДБА́ЧУВАНИЙ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3527,9 +3976,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "поплатитися",
@@ -3570,7 +4019,15 @@
           "homonym_index": 1,
           "headword": "поплати́тися",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "поплати́тися",
+          "paradigm_headword": "поплати́тися",
+          "section_kinds": [
+            "paradigm",
+            "phraseology"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3598,9 +4055,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "постригтися",
@@ -3641,7 +4098,17 @@
           "homonym_index": 1,
           "headword": "постри́гтися",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "постри́гтися",
+          "paradigm_headword": "постри́гтися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "постри́гтися"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3669,9 +4136,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "приказувати",
@@ -3712,7 +4179,20 @@
           "homonym_index": 1,
           "headword": "прика́зувати",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "прика́зувати",
+          "paradigm_headword": "прика́зувати",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ПРИКА́ЗУВАТИ",
+            "прика́зувати"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3741,9 +4221,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "прилуцький",
@@ -3802,7 +4282,14 @@
           "homonym_index": 1,
           "headword": "прилу́цький",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "прилу́цький",
+          "paradigm_headword": "прилу́цький",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3831,9 +4318,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "протидіяти",
@@ -3874,7 +4361,17 @@
           "homonym_index": 1,
           "headword": "протиді́яти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "протиді́яти",
+          "paradigm_headword": "протиді́яти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ПРОТИДІ́ЯТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3903,9 +4400,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "публіцист",
@@ -3946,7 +4443,14 @@
           "homonym_index": 1,
           "headword": "публіци́ст",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "публіци́ст",
+          "paradigm_headword": "публіци́ст",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -3974,9 +4478,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "пукнути",
@@ -4017,7 +4521,17 @@
           "homonym_index": 1,
           "headword": "пу́кнути",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "пу́кнути",
+          "paradigm_headword": "пу́кнути",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "пу́кнути"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4046,7 +4560,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "рихтувати",
@@ -4087,7 +4601,19 @@
           "homonym_index": 1,
           "headword": "рихтува́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "рихтува́ти",
+          "paradigm_headword": "рихтува́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "РИХТУВА́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4115,9 +4641,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "розпоряджатися",
@@ -4156,9 +4682,21 @@
         {
           "id": 205476,
           "homonym_index": 1,
-          "headword": "",
+          "headword": "розпоряджа́тися",
           "grammatical_label": "",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "",
+          "paradigm_headword": "розпоряджа́тися",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "РОЗПОРЯДЖА́ТИСЯ",
+            "розпоряджа́тися"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4186,11 +4724,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
-      "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": [
-        205476
-      ]
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
+      "ulif_lexical_attestation": true,
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "розсилати",
@@ -4231,7 +4767,14 @@
           "homonym_index": 1,
           "headword": "розсила́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "розсила́ти",
+          "paradigm_headword": "розсила́ти",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4260,9 +4803,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "рідні",
@@ -4398,9 +4941,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "сплюндрований",
@@ -4459,7 +5002,14 @@
           "homonym_index": 1,
           "headword": "сплюндро́ваний",
           "grammatical_label": "дієприкметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "сплюндро́ваний",
+          "paradigm_headword": "сплюндро́ваний",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4487,9 +5037,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "строчити",
@@ -4530,7 +5080,20 @@
           "homonym_index": 1,
           "headword": "строчи́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "строчи́ти",
+          "paradigm_headword": "строчи́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "СТРОЧИ́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4558,9 +5121,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "ув'язнити",
@@ -4601,7 +5164,17 @@
           "homonym_index": 1,
           "headword": "ув'язни́ти",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "ув'язни́ти",
+          "paradigm_headword": "ув'язни́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "УВ'ЯЗНИ́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4630,9 +5203,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "увести",
@@ -4673,7 +5246,23 @@
           "homonym_index": 1,
           "headword": "увести́",
           "grammatical_label": "дієслово доконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "увести́",
+          "paradigm_headword": "увести́",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "увести́"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4702,9 +5291,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "узагалі",
@@ -4745,7 +5334,14 @@
           "homonym_index": 1,
           "headword": "узагалі́",
           "grammatical_label": "прислівник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "узагалі́",
+          "paradigm_headword": "",
+          "section_kinds": [
+            "synonyms"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4773,9 +5369,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "фаворит",
@@ -4835,7 +5431,18 @@
           "homonym_index": 1,
           "headword": "фавори́т",
           "grammatical_label": "іменник чоловічого роду, істота",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "фавори́т",
+          "paradigm_headword": "фавори́т",
+          "section_kinds": [
+            "paradigm",
+            "synonyms",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ФАВОРИ́Т"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4863,9 +5470,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "філологічний",
@@ -4924,7 +5531,14 @@
           "homonym_index": 1,
           "headword": "філологі́чний",
           "grammatical_label": "прикметник",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "філологі́чний",
+          "paradigm_headword": "філологі́чний",
+          "section_kinds": [
+            "paradigm"
+          ],
+          "matching_synonym_terms": [],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -4953,9 +5567,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "чізкейк",
@@ -5025,7 +5639,7 @@
       },
       "promoter_as_is_reason": "unknown: fallback English anchor artifact and manifest unavailable in sparse worktree",
       "ulif_lexical_attestation": false,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     },
     {
       "lemma": "іменувати",
@@ -5076,7 +5690,17 @@
           "homonym_index": 1,
           "headword": "іменува́ти",
           "grammatical_label": "дієслово недоконаного виду",
-          "status": "ok"
+          "status": "ok",
+          "entry_headword": "іменува́ти",
+          "paradigm_headword": "іменува́ти",
+          "section_kinds": [
+            "paradigm",
+            "synonyms"
+          ],
+          "matching_synonym_terms": [
+            "ІМЕНУВА́ТИ"
+          ],
+          "lexical_attestation": true
         }
       ],
       "sum20": {
@@ -5104,9 +5728,9 @@
         "scoped_input_exists": false,
         "replaces_default_july_inventory_in_that_run": true
       },
-      "promoter_as_is_reason": "default promotion inputs lack this source row, or VESUM clean attestation is absent, or proper-name policy is unresolved",
+      "promoter_as_is_reason": "As-is promotion is unverified; see source availability and promotion_input requirements",
       "ulif_lexical_attestation": true,
-      "ulif_empty_checked_ids": []
+      "ulif_unattested_checked_ids": []
     }
   ]
 }
