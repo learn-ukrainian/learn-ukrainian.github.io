@@ -5,27 +5,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
-from scripts.ci import area_replay, test_areas
 from scripts.ci.area_replay import main, replay
 
 _ATLAS_TEST = "tests/test_atlas_db.py"
-
-
-@pytest.fixture(autouse=True)
-def _synthetic_area(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep the replay mechanism covered while the live areas admit no tests."""
-    areas = test_areas.load_areas()
-    areas["atlas"]["tests"] = [_ATLAS_TEST]
-    manifest = tmp_path / "areas.json"
-    manifest.write_text(json.dumps(areas), encoding="utf-8")
-    monkeypatch.setattr(area_replay, "load_areas", lambda: test_areas.load_areas(manifest))
-    monkeypatch.setattr(
-        area_replay,
-        "filter_paths",
-        lambda paths, skipped, *, repo=None: test_areas.filter_paths(paths, skipped, manifest=manifest, repo=repo),
-    )
 
 
 def _write_test(repo: Path, path: str, text: str = "def test_one(): pass\n") -> None:

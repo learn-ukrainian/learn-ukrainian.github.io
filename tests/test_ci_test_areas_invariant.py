@@ -38,7 +38,7 @@ from pathlib import Path, PurePosixPath
 import pytest
 
 from scripts.ci.classify_changes import hits_shared_root_denylist
-from scripts.ci.test_areas import load_areas, matches_root, matches_test
+from scripts.ci.test_areas import AUDITED_COMPUTED_REPO_PATHS, load_areas, matches_root, matches_test
 
 pytestmark = pytest.mark.repo_wide
 
@@ -199,6 +199,7 @@ class _Graph:
         self._trees: dict[str, ast.Module] = {}
         self._consts: dict[str, dict[str, str]] = {}
         self._data: dict[str, frozenset[str]] = {}
+        self._callers: dict[str, frozenset[str]] = {}
         self.by_top: dict[str, set[str]] = defaultdict(set)
         for path in self.modules:
             pure = PurePosixPath(path)
@@ -419,8 +420,11 @@ class _Graph:
             if "/" in text:
                 found |= self._named(text)
         scope = self._scope(path)
+        audited_seen: set[tuple[tuple[str, str], str]] = set()
 
-        def visit(node: ast.AST, active: _Scope, inner: set[int]) -> None:
+        def visit(node: ast.AST, active: _Scope, inner: set[int], owner: str = "") -> None:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                owner = f"{owner}.{node.name}" if owner else node.name
             if (
                 isinstance(node, ast.For)
                 and isinstance(node.target, ast.Name)
@@ -431,9 +435,9 @@ class _Graph:
                     for value in values:
                         loop_scope = _Scope(active.names, active.modules, {**active.strings, node.target.id: value})
                         for stmt in node.body:
-                            visit(stmt, loop_scope, set())
+                            visit(stmt, loop_scope, set(), owner)
                     for stmt in node.orelse:
-                        visit(stmt, active, inner)
+                        visit(stmt, active, inner, owner)
                     return
             if id(node) not in inner and isinstance(node, (ast.BinOp, ast.Call)):
                 if (value := self._anchor(node, active)) is not None:
@@ -443,13 +447,80 @@ class _Graph:
                         inner.add(id(current.left))
                         current = current.left
                 elif self._computed(node, active):
-                    found.add(f"<computed repo path: {path}:{node.lineno} {ast.unparse(node)}>")
+                    key = (path, owner)
+                    expression = ast.unparse(node)
+                    audit = (key, expression)
+                    if expression in AUDITED_COMPUTED_REPO_PATHS.get(key, ()) and audit not in audited_seen:
+                        audited_seen.add(audit)
+                    else:
+                        found.add(f"<computed repo path: {path}:{node.lineno} {expression}>")
             for child in ast.iter_child_nodes(node):
-                visit(child, active, inner)
+                visit(child, active, inner, owner)
 
         visit(self._tree(path), scope, set())
         self._data[path] = frozenset(found)
         return self._data[path]
+
+    def caller_data(self, path: str) -> frozenset[str]:
+        """Resolve caller-controlled paths in the two audited shared helpers."""
+        if path in self._callers:
+            return self._callers[path]
+        tree = self._tree(path)
+        scope = self._scope(path)
+        sparse_names: set[str] = set()
+        sparse_modules: set[str] = set()
+        marker_names: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module == "tests.sparse_trees":
+                sparse_names.update(
+                    alias.asname or ("tree_absent" if alias.name == "*" else alias.name)
+                    for alias in node.names
+                    if alias.name in {"tree_absent", "*"}
+                )
+            elif isinstance(node, ast.ImportFrom) and node.module == "tests":
+                sparse_modules.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == "sparse_trees"
+                )
+            elif isinstance(node, ast.Import):
+                sparse_modules.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == "tests.sparse_trees"
+                )
+            elif isinstance(node, ast.Assign) and isinstance(node.value, (ast.Name, ast.Attribute)):
+                source = ast.unparse(node.value)
+                for target in node.targets:
+                    if not isinstance(target, ast.Name):
+                        continue
+                    if source in sparse_names:
+                        sparse_names.add(target.id)
+                    if source == "pytest.mark.needs_artifact" or source in marker_names:
+                        marker_names.add(target.id)
+        found: set[str] = set()
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            sparse_call = (isinstance(func, ast.Name) and func.id in sparse_names) or (
+                isinstance(func, ast.Attribute)
+                and func.attr == "tree_absent"
+                and ast.unparse(func.value) in sparse_modules
+            )
+            marker_call = (isinstance(func, ast.Name) and func.id in marker_names) or (
+                isinstance(func, ast.Attribute) and ast.unparse(func).endswith(".mark.needs_artifact")
+            )
+            if not sparse_call and not marker_call:
+                continue
+            index = 0 if sparse_call else 1
+            value = self._string(node.args[index], scope) if len(node.args) > index else None
+            target = _join("", [value]) if sparse_call and value is not None else None
+            if sparse_call and target is not None:
+                target += "/"  # Directory existence is covered by that area root.
+            if marker_call and value is not None:
+                target = _join("data", [value])
+            found.add(
+                target if target is not None else f"<computed caller path: {path}:{node.lineno} {ast.unparse(node)}>"
+            )
+        self._callers[path] = frozenset(found)
+        return self._callers[path]
 
     def refs(self, path: str) -> tuple[set[str], set[str]]:
         if path not in self._refs:
@@ -502,7 +573,11 @@ def _escapes(area: dict[str, list[str]], graph: _Graph, test: str, *, first: boo
     found = {module for module in reached if outside(module)}
     # Data named by the test or by any module it reaches (a constant such as
     # ``DEFAULT_VERDICTS = REGISTRY_ROOT / "lexicon/x.yaml"`` is a read).
-    return found | {item for module in (test, *reached) for item in graph.data(module) if outside(item)}
+    return (
+        found
+        | {item for module in (test, *reached) for item in graph.data(module) if outside(item)}
+        | {item for module in (test, *reached) for item in graph.caller_data(module) if outside(item)}
+    )
 
 
 def _is_test(path: str) -> bool:
@@ -626,6 +701,72 @@ def test_computed_repo_root_read_is_not_admitted() -> None:
     graph = _Graph(tracked, read=lambda path: sources.get(path, ""))
     area = {"tests": ["tests/test_area.py"], "roots": ["scripts/area/"]}
     assert any("ROOT / name" in item for item in _escapes(area, graph, "tests/test_area.py"))
+
+
+def test_audited_computed_paths_are_an_exact_set() -> None:
+    expected = {
+        ("tests/conftest.py", "_resolve_module"): frozenset(
+            {"_REPO_ROOT / rel.with_suffix('.py')", "_REPO_ROOT / rel"}
+        ),
+        ("tests/conftest.py", "_analyze_test_module"): frozenset({"_REPO_ROOT / rel_path"}),
+        ("tests/conftest.py", "_sparse_missing_trees"): frozenset({"_REPO_ROOT / rel"}),
+        ("tests/conftest.py", "pytest_runtest_setup"): frozenset({"DATA_ROOT / rel"}),
+        ("tests/sparse_trees.py", "tree_absent"): frozenset({"REPO_ROOT / normalized"}),
+    }
+    assert expected == AUDITED_COMPUTED_REPO_PATHS
+
+
+def test_audited_function_cannot_add_another_computed_path() -> None:
+    path = "tests/conftest.py"
+    source = (
+        "from pathlib import Path\n_REPO_ROOT = Path(__file__).parents[1]\n"
+        "def _analyze_test_module(rel_path):\n"
+        "    first = _REPO_ROOT / rel_path\n"
+        "    second = _REPO_ROOT / rel_path\n"
+        "    third = _REPO_ROOT / extra\n"
+    )
+    graph = _Graph({path}, read=lambda _: source)
+    assert graph.data(path) == {
+        f"<computed repo path: {path}:5 _REPO_ROOT / rel_path>",
+        f"<computed repo path: {path}:6 _REPO_ROOT / extra>",
+    }
+
+
+def test_new_computed_path_in_area_test_still_disqualifies() -> None:
+    test = "tests/test_area.py"
+    source = (
+        "from pathlib import Path\nROOT = Path(__file__).parents[1]\ndef test_read(name):\n    return ROOT / name\n"
+    )
+    graph = _Graph({test, "docs/elsewhere.json"}, read=lambda _: source)
+    area = {"tests": [test], "roots": ["docs/inside/"]}
+    assert any("ROOT / name" in item for item in _escapes(area, graph, test))
+
+
+def test_shared_helper_caller_paths_are_checked() -> None:
+    test = "tests/test_area.py"
+    source = (
+        "from tests.sparse_trees import tree_absent as absent\n"
+        'absent("data/projects")\n'
+        'pytest.mark.needs_artifact("group", "projects/open_model_data/item.json")\n'
+        'pytest.mark.needs_artifact("group", "elsewhere/item.json")\n'
+        "absent(dynamic_tree)\n"
+        "import tests.sparse_trees\n"
+        "tests.sparse_trees.tree_absent(dynamic_tree)\n"
+        "also_absent = absent\n"
+        "also_absent(dynamic_tree)\n"
+        "artifact = pytest.mark.needs_artifact\n"
+        "artifact('group', dynamic_rel)\n"
+    )
+    graph = _Graph({test}, read=lambda _: source)
+    assert graph.caller_data(test) == {
+        "data/projects/",
+        "data/projects/open_model_data/item.json",
+        "data/elsewhere/item.json",
+        f"<computed caller path: {test}:5 absent(dynamic_tree)>",
+        f"<computed caller path: {test}:7 tests.sparse_trees.tree_absent(dynamic_tree)>",
+        f"<computed caller path: {test}:9 also_absent(dynamic_tree)>",
+        f"<computed caller path: {test}:11 artifact('group', dynamic_rel)>",
+    }
 
 
 @pytest.mark.parametrize(

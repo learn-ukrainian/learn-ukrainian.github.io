@@ -524,7 +524,7 @@ def test_full_plan_filters_area_before_partition_and_reports_count() -> None:
 
 def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
     (tmp_path / "tests").mkdir()
-    # Synthetic members exercise the filter while the live areas admit none.
+    # Synthetic and live members exercise the same filtering behavior.
     ordinary = "tests/test_open_model_corpus_admission.py"
     repo_wide = "tests/test_open_model_view_exporter.py"
     (tmp_path / ordinary).write_text("def test_one(): pass\n", encoding="utf-8")
@@ -541,7 +541,7 @@ def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert filter_paths(paths, ["open_model_data"], manifest=manifest, repo=tmp_path) == (paths[1:], 1)
-    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths, 0)
+    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths[1:], 1)
     assert filter_paths(paths, ["unknown"], repo=tmp_path) == (paths, 0)
     bad = tmp_path / "bad.json"
     bad.write_text("{}", encoding="utf-8")

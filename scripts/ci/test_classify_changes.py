@@ -73,9 +73,7 @@ class ClassifierTests(unittest.TestCase):
         ):
             with self.subTest(atlas=path):
                 self.assertEqual(skipped([path]), ("full", ["open_model_data"]))
-        # This test is no longer an area member; the empty manifest cannot
-        # drop it even when both area names are reported as skipped.
-        self.assertEqual(skipped(["tests/test_atlas_db.py"]), ("full", ["open_model_data", "atlas"]))
+        self.assertEqual(skipped(["tests/test_atlas_db.py"]), ("full", ["open_model_data"]))
         for path in (
             "packages/v4-runtime/src/learn_ukrainian_v4_runtime/provenance.py",
             "scripts/storage/paths.py",
