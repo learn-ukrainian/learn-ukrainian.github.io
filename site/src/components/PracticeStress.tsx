@@ -56,7 +56,7 @@ export default function PracticeStress({
 
   return (
     <div className="practice-stress" data-testid="practice-stress" data-locked={answerLocked}>
-      <p className="practice-stress-word" lang="uk" aria-label={item.stressed}>
+      <p className="practice-stress-word" lang="uk" aria-label={answerLocked ? item.stressed : cleanUnstressed}>
         {codePoints.map((char, position) => {
           const nucleus = nucleusByPosition.get(position);
           if (nucleus) {

@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import inspect
 import json
 import os
 import sqlite3
@@ -97,24 +96,6 @@ def load_slovnyk_cache(conn: sqlite3.Connection, lemma: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"slovnyk cache for {lemma!r} is not a JSON object")
     return payload
-
-
-def _required_keyword_flags(fn: Any) -> dict[str, bool]:
-    """Pass False for the one required keyword-only flag on a relation helper.
-
-    Those helpers still require a flag this fixture never consults. The name is
-    taken from the live signature so this generator does not spell the retired
-    dictionary table.
-    """
-    signature = inspect.signature(fn)
-    flags = {
-        name: False
-        for name, param in signature.parameters.items()
-        if param.kind is inspect.Parameter.KEYWORD_ONLY and param.default is inspect.Parameter.empty
-    }
-    if len(flags) != 1:
-        raise RuntimeError(f"unexpected relation helper signature: {fn.__name__}{signature}")
-    return flags
 
 
 def _build_synthetic_sources(path: Path, entries: list[dict[str, Any]]) -> None:
@@ -245,12 +226,10 @@ def _legacy_cefr_and_relations(
             "synonym": em._definition_pointer_relations_by_headword(
                 conn,
                 manifest,
-                **_required_keyword_flags(em._definition_pointer_relations_by_headword),
             ),
             "antonym": em._definition_antonym_relations_by_headword(
                 conn,
                 manifest,
-                **_required_keyword_flags(em._definition_antonym_relations_by_headword),
             ),
             "homonym": em._homonym_relations_by_headword(conn, manifest),
             "paronym": em._paronym_relations_by_headword(conn, manifest),

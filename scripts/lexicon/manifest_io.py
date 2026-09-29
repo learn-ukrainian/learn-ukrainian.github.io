@@ -54,6 +54,7 @@ _CACHE_FILE_MODE = 0o400
 # a normal full run leaves the manifest diff minimal.
 GATE_CONFIRMED = "confirmed"  # gate ran; kept or added items (default — not recorded)
 GATE_REJECTED = "rejected"  # gate ran and dropped item(s): a quality win (allowed to shrink)
+SOURCE_WITHDRAWN_UNVERIFIED = "source-withdrawn-unverified"  # disallowed evidence removed; replacement gate unverified
 GATE_SKIPPED_OFFLINE = "skipped-offline"  # gate could not run; existing section preserved
 GATE_ANNOTATIONS_CARRIED = "annotations-carried-offline"  # #5121: item membership recomputed
 # from local sources, but a section's SECONDARY annotation source (e.g. СУМ-20/ВТС antonym

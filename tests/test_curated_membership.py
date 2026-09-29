@@ -1,14 +1,22 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.audit.generate_practice_deck import BuildConfig, JsonVesumVerifier, _select_practice_lexemes
 from scripts.audit.lexeme_filter import is_practice_eligible, practice_ineligibility_reason
 from scripts.audit.measure_curated_membership import measure_membership
 from scripts.lexicon.curated_membership import apply_membership, build_membership, read_membership
+
+ROOT = Path(__file__).resolve().parents[1]
+MEMBERSHIP = ROOT / "site/src/data/lexicon-teacher-curated-membership.json"
+PENDING = ROOT / "registry/lexicon/curated-membership-pending-admission-9151.json"
+REVIEW = ROOT / "registry/lexicon/curated-membership-reconciliation-9151.json"
+PENDING_SCHEMA = ROOT / "schemas/curated-membership-pending-admission-9151.schema.json"
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -99,6 +107,81 @@ def test_apply_membership_unlocks_practice_but_not_cloze() -> None:
 def test_apply_membership_rejects_missing_atlas_route() -> None:
     with pytest.raises(ValueError, match="unresolved Atlas route"):
         apply_membership([], [{"lemma": "слово", "slug": "слово", "sources": ["homework"]}])
+
+
+def test_pending_admission_is_recorded_outside_fail_closed_membership() -> None:
+    pending = json.loads(PENDING.read_text(encoding="utf-8"))
+    schema = json.loads(PENDING_SCHEMA.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(pending)
+    reviewed = json.loads(REVIEW.read_text(encoding="utf-8"))["rows"]
+    members = read_membership(MEMBERSHIP)
+    pending_by_slug = {row["slug"]: row for row in pending["members"]}
+    member_slugs = {row["slug"] for row in members}
+
+    assert len(pending_by_slug) == len(pending["members"]) == 64
+    assert member_slugs.isdisjoint(pending_by_slug)
+    assert {row["slug"] for row in reviewed} == pending_by_slug.keys()
+    assert all(
+        pending_by_slug[row["slug"]]["decision"] == row["decision"]
+        and pending_by_slug[row["slug"]]["lemma"] == row["lemma"]
+        and pending_by_slug[row["slug"]]["sources"] == row["source"]
+        for row in reviewed
+    )
+    assert Counter(row["pending_reason"] for row in pending["members"]) == {
+        "no_allowed_english_anchor": 22,
+        "no_reviewed_source_locator": 25,
+        "admissible_pending_publication": 16,
+        "removed_dialectal": 1,
+    }
+    no_anchor = {
+        "бджолярство",
+        "валер'янка",
+        "вебсайт",
+        "вигуляти",
+        "вкритися",
+        "впакувати",
+        "вполювати",
+        "деталька",
+        "закладений",
+        "кріпатура",
+        "наживати",
+        "нажити",
+        "непопулярний",
+        "нищівний",
+        "озвучка",
+        "поплатитися",
+        "постригтися",
+        "пукнути",
+        "розпоряджатися",
+        "сплюндрований",
+        "строчити",
+        "чізкейк",
+    }
+    assert {
+        row["lemma"] for row in pending["members"] if row["pending_reason"] == "no_allowed_english_anchor"
+    } == no_anchor
+    assert {
+        row["slug"]
+        for row in reviewed
+        if row["decision"] == "ADMIT" and row["promotion_input"]["source_locator"] is None
+    } == {row["slug"] for row in pending["members"] if row["pending_reason"] == "no_reviewed_source_locator"}
+    assert pending_by_slug["запинитися"]["pending_reason"] == "removed_dialectal"
+
+    # A pending route has no Atlas entry in this fixture and is not applied.
+    held = pending_by_slug["вифлеєм"]
+    assert held["decision"] == "ADMIT"
+    assert held["slug"] not in member_slugs
+    active = members[0]
+    merged, report = apply_membership([{"lemma": active["lemma"], "url_slug": active["slug"]}], [active])
+    assert [row["url_slug"] for row in merged] == [active["slug"]]
+    assert report == {"members": 1, "resolved": 1}
+
+    # A missing route from neither list is still rejected by the unchanged gate.
+    unknown = {"lemma": "невідома", "slug": "невідома", "sources": ["teacher_inventory"]}
+    assert unknown["slug"] not in (pending_by_slug.keys() | member_slugs)
+    with pytest.raises(ValueError, match="1 unresolved Atlas route"):
+        apply_membership([], [unknown])
 
 
 def test_membership_entries_are_selected_before_the_general_practice_pool() -> None:

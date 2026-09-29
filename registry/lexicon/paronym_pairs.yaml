@@ -6,13 +6,17 @@ description: 'Curated paronym pairs for the §9.9 confusable-pair drill (#4506).
 pairs:
 - slugA: адресант
   slugB: адресат
-  distinction_gloss_uk: Адресант — той, хто надсилає кореспонденцію чи документ; адресат — той, кому її адресовано і хто її
-    отримує.
+  distinction_gloss_uk: Адресант — той, хто адресує, надсилає лист; відправник; адресат — той, хто отримує лист, посилку;
+    одержувач.
   citations:
   - driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0186
+    passage: Адресат — той, хто отримує лист, посилку; одержувач. Адресант — той, хто адресує, надсилає лист; відправник.
   curator: grok-build-2026-07-07
-  notes: both directions; dat forms for congruency
+  notes: 'both directions; dat forms for congruency; #8728: distinction_gloss_uk copied verbatim from the glossSources passage
+    (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: ___ надіслав важливий пакет до офісу.
     answer_form: Адресант
@@ -112,17 +116,20 @@ pairs:
     origin: authored-grok-build-2026-07-07
 - slugA: вистава
   slugB: виставка
-  distinction_gloss_uk: Вистава — театральне видовище, яке глядачі дивляться в театрі; виставка — показ предметів (картин,
-    книжок), які люди оглядають.
+  distinction_gloss_uk: Вистава – виставка (спектакль) (показ картин, книжок, квітів тощо).
   citations:
   - 'textbook: 10-klas-ukrmova-zabolotnyi-2018 §7 Пароніми — «вистава (спектакль) – виставка (показ картин, книжок, квітів
     тощо)» (chunk s0043)'
   - 'driver-adjudicated from worksheet #4884 (#4506, 2026-07-10); cross-family verified grok-build review-4883-4884-r2 (congruency
     + VESUM)'
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0027
+    passage: вистава – виставка (спектакль) (показ картин, книжок, квітів тощо)
   curator: claude-driver-2026-07-10
-  notes: both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames; forms VESUM-verified
-    independently by worker and driver
+  notes: 'both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames; forms VESUM-verified
+    independently by worker and driver; #8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources
+    MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Актори показали глядачам нову ___ на сцені театру.
     answer_form: виставу
@@ -134,12 +141,17 @@ pairs:
     origin: authored-claude-2026-07-10
 - slugA: військовий
   slugB: воєнний
-  distinction_gloss_uk: Військовий стосується війська або армії; воєнний стосується війни.
+  distinction_gloss_uk: Військовий — який стосується війська; воєнний — який стосується війни.
   citations:
   - 'worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — військовий лікар; воєнний час'
   - paronym_candidates_ukrmova.json — військовий/воєнний
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0200
+    passage: Військовий – який стосується війська. Військовий лікар, військова техніка, форма. Воєнний – який стосується війни.
+      Воєнний час.
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; adjective frames keep both options morphosyntactically possible
+  notes: 'public Atlas url_slugs confirmed; adjective frames keep both options morphosyntactically possible; #8728: distinction_gloss_uk
+    copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: ___ лікар оглянув пораненого.
     answer_form: Військовий
@@ -151,12 +163,18 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: дружний
   slugB: дружній
-  distinction_gloss_uk: Дружний означає злагоджений, спільний; дружній — приязний і доброзичливий.
+  distinction_gloss_uk: Дружний — який відбувається одночасно, злагоджено, спільно; пов’язаний дружбою і згодою; дружній —
+    який ґрунтується на дружбі, прихильності, взаємно доброзичливий.
   citations:
   - 'worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — дружний, злагоджений, спільний'
   - 'worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — дружний/дружній'
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0200
+    passage: Дружний – який відбувається одночасно, злагоджено, спільно; пов’язаний дружбою і згодою. Дружний колектив. Дружній
+      – який ґрунтується на дружбі, прихильності, взаємно доброзичливий. Дружній погляд.
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; distinct cohesive-action and friendly-attitude contexts
+  notes: 'public Atlas url_slugs confirmed; distinct cohesive-action and friendly-attitude contexts; #8728: distinction_gloss_uk
+    copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Учасники працювали ___ гуртом.
     answer_form: дружним
@@ -185,12 +203,16 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: компанія
   slugB: кампанія
-  distinction_gloss_uk: Компанія — група людей або підприємство; кампанія — сукупність заходів для певної мети.
+  distinction_gloss_uk: Компанія — товариство; кампанія — сукупність заходів.
   citations:
   - 'worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — компанія'
   - 'worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — кампанія/компанія'
+  glossSources:
+  - locator: 5-klas-ukrmova-avramenko-2022_s0053
+    passage: Компанія (товариство) — кампанія (сукупність заходів).
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; both feminine noun options remain grammatically possible
+  notes: 'public Atlas url_slugs confirmed; both feminine noun options remain grammatically possible; #8728: distinction_gloss_uk
+    copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Наша ___ розробляє програмне забезпечення.
     answer_form: компанія
@@ -219,12 +241,16 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: абонемент
   slugB: абонент
-  distinction_gloss_uk: Абонемент — право або документ на регулярне користування послугою; абонент — той, хто нею користується.
+  distinction_gloss_uk: Абонемент — документ, що дає право на користування; абонент — той, хто користується абонементом.
   citations:
   - 'worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — абонемент'
   - 'worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — абонент/абонемент'
+  glossSources:
+  - locator: 11-klas-ukrajinska-mova-glazova-2019_s0219
+    passage: абонемент (документ, що дає право на користування) — абонент (той, хто користується абонементом)
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; noun frames avoid gender or case giveaways
+  notes: 'public Atlas url_slugs confirmed; noun frames avoid gender or case giveaways; #8728: distinction_gloss_uk copied
+    verbatim from the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Студент продовжив ___ до басейну.
     answer_form: абонемент
@@ -236,12 +262,17 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: людний
   slugB: людяний
-  distinction_gloss_uk: Людний означає багатолюдний; людяний — гуманний, доброзичливий і чуйний до інших.
+  distinction_gloss_uk: Людний — багатолюдний; людяний — гуманний, доброзичливий, чуйний до інших.
   citations:
   - 'worksheet: 10-klas-ukrmova-zabolotnyi-2018_s0259 — людний/людяний'
   - paronym_candidates_grinchyshyn.json — людний/людяний
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0200
+    passage: Людний – багатолюдний. Людне місто, людний заклад. Людяний – гуманний, доброзичливий, чуйний до інших. Людяний
+      вчинок, бути людяним.
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; predicative instrumental frames
+  notes: 'public Atlas url_slugs confirmed; predicative instrumental frames; #8728: distinction_gloss_uk copied verbatim from
+    the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: У вихідні парк буває ___.
     answer_form: людним
@@ -253,12 +284,18 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: лікувати
   slugB: лічити
-  distinction_gloss_uk: Лікувати — застосовувати засоби для одужання; лічити — рахувати або називати числа послідовно.
+  distinction_gloss_uk: Лікувати — застосовувати ліки та інші засоби припинення болю, захворювання; лічити — називати числа
+    в послідовному порядку, рахувати.
   citations:
   - 'worksheet: 5-klas-ukrmova-zabolotnyi-2023_s0237 — лікувати'
   - paronym_candidates_grinchyshyn.json — лікувати/лічити
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0200
+    passage: Лікувати – застосовувати ліки та інші засоби припинення болю, захворювання. Лікувати хворого, лікувати травами.
+      Лічити – називати числа в послідовному порядку, рахувати. Лічити дні, лічити вголос.
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; third-person singular verb frames
+  notes: 'public Atlas url_slugs confirmed; third-person singular verb frames; #8728: distinction_gloss_uk copied verbatim
+    from the glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Лікар ___ дитину від застуди.
     answer_form: лікує
@@ -270,12 +307,17 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: багатир
   slugB: богатир
-  distinction_gloss_uk: Багатир — багата людина; богатир — герой або силач, оспіваний у фольклорі.
+  distinction_gloss_uk: Багатир — багата людина, багатій; богатир — оспіваний у фольклорі герой, хоробрий воїн.
   citations:
   - 'worksheet: 5-klas-ukrmova-avramenko-2022_s0056 — багатир/богатир'
   - 'worksheet: 5-klas-ukrmova-litvinova-2022_s0049 — багатир/богатир'
+  glossSources:
+  - locator: 5-klas-ukrmova-avramenko-2022_s0055
+    passage: 'Багатир — багата людина, багатій: сільський багатир. Богатир — оспіваний у фольклорі герой, хоробрий воїн: богатир
+      Ілля Муромець; про людину, високу на зріст, міцної статури, сильну: справжній богатир.'
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; nominative noun frames
+  notes: 'public Atlas url_slugs confirmed; nominative noun frames; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: У казці ___ захищає місто.
     answer_form: богатир
@@ -304,12 +346,16 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: вдача
   slugB: удача
-  distinction_gloss_uk: Вдача — характер і звичні риси людини; удача — успіх або щасливий збіг обставин.
+  distinction_gloss_uk: Вдача — характер, нахил, звичка; удача — успіх.
   citations:
   - 'worksheet: 5-klas-ukrmova-golub-2022_s0020 — вдача/удача'
   - paronym_candidates_ukrmova.json — удача/вдача
+  glossSources:
+  - locator: 5-klas-ukrmova-golub-2022_s0020
+    passage: Вдача — характер, нахил, звичка. Удача — успіх
   curator: codex-4506-2026-07-19
-  notes: public Atlas url_slugs confirmed; feminine nominative frames
+  notes: 'public Atlas url_slugs confirmed; feminine nominative frames; #8728: distinction_gloss_uk copied verbatim from the
+    glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: 'Йому пощастило: ___ була на його боці.'
     answer_form: удача
@@ -338,13 +384,16 @@ pairs:
     origin: authored-codex-4506-2026-07-19
 - slugA: усмішка
   slugB: посмішка
-  distinction_gloss_uk: Усмішка — вираз обличчя, що виражає приязнь, радість чи доброзичливість; посмішка — вираз обличчя,
-    що часто виражає іронію, глузування або скепсис.
+  distinction_gloss_uk: М’яка й ніжна — усмішка, а глузлива та скептична — посмішка.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0080
+    passage: 'Хай там як, а ви запам’ятайте: м’яка й ніжна — усмішка, а глузлива та скептична — посмішка'
   curator: grok-build-2026-08-02
-  notes: noun distinction; both directions
+  notes: 'noun distinction; both directions; #8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources
+    MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Привітна ___ дитини зігріла серце матері.
     answer_form: усмішка
@@ -499,12 +548,16 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: лікарський
   slugB: лікарняний
-  distinction_gloss_uk: Лікарський — пов'язаний з лікарем або медициною та ліками; лікарняний — пов'язаний з лікарнею як закладом.
+  distinction_gloss_uk: Лі́карський — який стосується лікаря та його діяльності; ліка́рський — який стосується ліків; лікарня́ний — який стосується лікарні.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 5-klas-ukrmova-avramenko-2022_s0092
+    passage: 'Лі́карський — який стосується лікаря та його діяльності: лікарський халат, кабінет, рецепт; лікарська діяльність, порада, таємниця. Ліка́рський — який стосується ліків: лікарська рослина, лікарський препарат. Лікарня́ний — який стосується лікарні: лікарняне ліжко, лікарняна палата.'
   curator: grok-build-2026-08-02
-  notes: adj distinction; medical/doctor vs hospital
+  notes: 'adj distinction; medical/doctor vs hospital; #8728: distinction_gloss_uk copied verbatim from the glossSources passage
+    (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: М'ята — це відома ___ рослина з цілющими властивостями.
     answer_form: лікарська
@@ -605,13 +658,17 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: змерзнути
   slugB: замерзнути
-  distinction_gloss_uk: Змерзнути — відчути холод, охолонути (про людину чи тварину); замерзнути — перетворитися на лід або
-    загинути від холоду.
+  distinction_gloss_uk: Змерзнути — відчути холод, потерпати від холоду; замерзнути — стати твердим від холоду, перетворитися
+    на кригу.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0111
+    passage: Змерзнути — відчути холод, потерпати від холоду. Замерзнути — стати твердим від холоду, перетворитися на кригу.
   curator: grok-build-2026-08-02
-  notes: verb distinction; feel cold vs freeze to ice
+  notes: 'verb distinction; feel cold vs freeze to ice; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Я дуже ___ на вулиці без рукавичок.
     answer_form: змерз
@@ -640,13 +697,18 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: ожеледь
   slugB: ожеледиця
-  distinction_gloss_uk: Ожеледь — шар льоду на деревах, дротах та землі під час дощу при мінусовій температурі; ожеледиця
-    — тонкий шар льоду чи замерзлого снігу саме на дорогах і тротуарах.
+  distinction_gloss_uk: Ожеледь — кристали льоду або снігу, якими обростають стовбури й гілки дерев, дроти тощо; ожеледиця
+    — тонкий шар льоду на поверхні землі.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0033
+    passage: Ожеледь — кристали льоду або снігу, якими обростають стовбури й гілки дерев, дроти тощо. Ожеледиця — тонкий шар
+      льоду на поверхні землі.
   curator: grok-build-2026-08-02
-  notes: noun distinction; ice coating on objects vs ice on roads
+  notes: 'noun distinction; ice coating on objects vs ice on roads; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Густа ___ вкрила гілки дерев і дроти.
     answer_form: ожеледь
@@ -658,13 +720,17 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: дощовитий
   slugB: дощовий
-  distinction_gloss_uk: Дощовитий — багатий на дощі, часто хмарний; дощовий — пов'язаний із дощем як опадами чи викликаний
-    ним.
+  distinction_gloss_uk: Дощовитий — багатий на дощі; дощовий — відносний прикметник до слова дощ.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0218
+    passage: 'Дощовий — відносний прикметник до слова дощ: дощова вода, дощові краплини, дощові хмари. Дощовитий — багатий
+      на дощі: дощовитий день, дощовита весна, дощовита погода.'
   curator: grok-build-2026-08-02
-  notes: adj distinction; rainy season vs rain drop/water
+  notes: 'adj distinction; rainy season vs rain drop/water; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Цього року була волога й ___ осінь.
     answer_form: дощовита
@@ -712,13 +778,16 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: книжковий
   slugB: книжний
-  distinction_gloss_uk: Книжковий — пов'язаний з книгою як предметом чи торгівлею; книжний — властивий писемно-літературному
-    стилю, позбавлений життєвості.
+  distinction_gloss_uk: Книжний стиль, зворот, мова, традиція, знання; але книжковий фонд, шафа, виставка, ринок, фабрика.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 6-klas-ukrmova-golub-2023_s0037
+    passage: Книжний стиль, зворот, мова, традиція, знання; але книжковий фонд, шафа, виставка, ринок, фабрика.
   curator: grok-build-2026-08-02
-  notes: adj distinction; book shop/shelf vs bookish style
+  notes: 'adj distinction; book shop/shelf vs bookish style; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Ми завітали у новий ___ магазин у центрі.
     answer_form: книжковий
@@ -730,12 +799,17 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: гривня
   slugB: гривна
-  distinction_gloss_uk: Гривня — грошова одиниця сучасної України; гривна — стародавня шийна прикраса (металевий обруч).
+  distinction_gloss_uk: Гривня — назва української грошової одиниці; гривна — металева прикраса у вигляді обруча, яку носили
+    на шиї.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: 6-klas-ukrmova-litvinova-2023_s0249
+    passage: Гривна — металева прикраса у вигляді обруча, яку носили на шиї. Гривня — назва української грошової одиниці.
   curator: grok-build-2026-08-02
-  notes: noun distinction; currency hryvnia vs historical neck ring
+  notes: 'noun distinction; currency hryvnia vs historical neck ring; #8728: distinction_gloss_uk copied verbatim from the
+    glossSources passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Українська ___ є національною валютою.
     answer_form: гривня
@@ -747,13 +821,20 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: уява
   slugB: уявлення
-  distinction_gloss_uk: Уява — здатність фантазувати та створювати нові образи в думках; уявлення — розуміння, знання або
-    думка про щось.
+  distinction_gloss_uk: Уявляти собі щось може тільки людина внаслідок діяльності її мозку, яку ми називаємо уявою; а продуктом
+    уяви є уявлення про щось чи про когось.
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p095
+    passage: 'Уявляти, являти, бути, уява, уявлення "А що уявляє собою це явище – випадок чи закономірність?" – іноді кажуть
+      помилково, замість правильного: "А що це за явище?", "А що являє собою (або становить) це явище?". Уявляти собі щось
+      може тільки людина внаслідок діяльності її мозку, яку ми називаємо уявою; а продуктом уяви є уявлення про щось чи про
+      когось'
   curator: grok-build-2026-08-02
-  notes: noun distinction; imagination vs concept/understanding
+  notes: 'noun distinction; imagination vs concept/understanding; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Багата ___ допомагає художнику малювати картини.
     answer_form: уява
@@ -941,12 +1022,17 @@ pairs:
     origin: authored-grok-build-2026-08-02
 - slugA: чисельний
   slugB: численний
-  distinction_gloss_uk: Чисельний — який виражається числом або кількісно; численний — наявний у великій кількості.
+  distinction_gloss_uk: Чисельний — указує на те, що стосується числа; численний — означає "наявний у великій кількості".
   citations:
   - ukr-mova.in.ua approved candidate promotion (#6137)
   - §9.9 PRACTICE-HUB-SPEC
+  glossSources:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p065
+    passage: 'Прикметник чисельний указує на те, що стосується числа, що бере за основу числові вирази: чисельний аналіз,
+      чисельна перевага, чисельна переконливість тощо. Прикметник численний означає "наявний у великій кількості"'
   curator: grok-build-2026-08-02
-  notes: adj distinction; numerical/count vs numerous
+  notes: 'adj distinction; numerical/count vs numerous; #8728: distinction_gloss_uk copied verbatim from the glossSources
+    passage (sources MCP chunk), replacing model-curated wording.'
   frames:
   - sentence_with_slot: Команда мала ___ перевагу в гравцях.
     answer_form: чисельну
@@ -1486,10 +1572,17 @@ pairs:
     origin: authored-paronym-frame
 - slugA: привид
   slugB: привід
-  distinction_gloss_uk: Привид — мара, фантом, фантастична постать; привід — підстава для дій чи технічний важіль.
+  distinction_gloss_uk: Привид — персонаж народних казок, легенд і т. ін., який уособлює дух померлого; привід — підстава
+    (справжня або вигадана), причина яких-небудь дій, учинків.
   citations:
   - miyklas.com.ua
+  glossSources:
+  - locator: 6-klas-ukrmova-litvinova-2023_s0089
+    passage: 'Привід — підстава (справжня або вигадана), причина яких-небудь дій, учинків. Спільнокореневі слова: водити,
+      приводити тощо. Привид — персонаж народних казок, легенд і т. ін., який уособлює дух померлого.'
   curator: miyklas-reviewed
+  notes: '#8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated
+    wording.'
   frames:
   - sentence_with_slot: У старому замку, за переказами, живе ___ .
     answer_form: привид
@@ -1625,11 +1718,20 @@ pairs:
     origin: authored-paronym-frame
 - slugA: тактичний
   slugB: тактовний
-  distinction_gloss_uk: Тактичний — який стосується тактики бою чи плану дій; тактовний — вежливий, який володіє почуттям
-    міри.
+  distinction_gloss_uk: Тактичний — який стосується тактики; тактовний — який володіє почуттям міри, вміє поводитися, дотримується
+    відповідних норм.
   citations:
   - miyklas.com.ua
+  - textbook:5-klas-ukrmova-avramenko-2022_s0201 «Тактовний — той, що володіє почуттям міри й такту.»
+  - textbook:5-klas-ukrmova-zabolotnyi-2023_s0200 «Тактичний // тактовний» (словничок паронімів)
+  glossSources:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0200
+    passage: Тактичний – який стосується тактики як сукупності прийомів та способів для досягнення мети (у політиці, спорті)
+      або здійснення певної бойової операції. Тактичний хід, тактична перевага. Тактовний – який володіє почуттям міри, вміє
+      поводитися, дотримується відповідних норм.
   curator: miyklas-reviewed
+  notes: '#8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated
+    wording.'
   frames:
   - sentence_with_slot: Командир розробив грамотний ___ хід у бою.
     answer_form: тактичний
@@ -1641,10 +1743,17 @@ pairs:
     origin: authored-paronym-frame
 - slugA: талан
   slugB: талант
-  distinction_gloss_uk: Талан — доля, фатум або щастя; талант — вроджені обдарування й здібності.
+  distinction_gloss_uk: Талан — доля, життєвий шлях кого-небудь; успіх, удача; талант — видатні природні здібності людини;
+    хист, обдаровання.
   citations:
   - miyklas.com.ua
+  glossSources:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0072
+    passage: Талан — доля, життєвий шлях кого-небудь; успіх, удача. Таланити — щастити, фортунити. Талант — видатні природні
+      здібності людини; хист, обдаровання.
   curator: miyklas-reviewed
+  notes: '#8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources MCP chunk), replacing model-curated
+    wording.'
   frames:
   - sentence_with_slot: Ех, не випав йому щасливий ___ у житті!
     answer_form: талан
@@ -1803,12 +1912,18 @@ pairs:
     origin: authored-gemini-8276
 - slugA: визначальний
   slugB: визначний
-  distinction_gloss_uk: Визначальний — такий, що має вирішальне значення або визначає суть; визначний — видатний, знаменитий,
-    поважний своєю діяльністю.
+  distinction_gloss_uk: Визначальний — основний, істотний; визначний — який вирізняється своїми позитивними рисами; важливий
+    за своїм значенням; видатний.
   citations:
   - Гринчишин Д. Г. Словник паронімів української мови (1986)
+  glossSources:
+  - locator: 8-klas-ukrmova-zabolotnyi-2025_s0192
+    passage: Визначальний – основний, істотний, такий, що характеризує кого- , що-небудь (визначальний принцип, момент, бій).
+      Визначний – який вирізняється своїми позитивними рисами; важливий за своїм значенням; видатний (визначний діяч, артист,
+      твір, успіх).
   curator: gemini-8276-densification
-  notes: adj masc
+  notes: 'adj masc; #8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources MCP chunk), replacing
+    model-curated wording.'
   frames:
   - sentence_with_slot: Цей експеримент мав ___ вплив на подальші дослідження.
     answer_form: визначальний
@@ -2449,12 +2564,19 @@ pairs:
     origin: authored-gemini-8276
 - slugA: цивільний
   slugB: громадянський
-  distinction_gloss_uk: Цивільний — не військовий, мирний або пов'язаний з приватним правом (цивільний кодекс); громадянський
-    — притаманний свідомому громадянину чи його обов'язку.
+  distinction_gloss_uk: Цивільний — протилежний слову військовий; громадянський — вказує на суспільство або людність цілої
+    країни.
   citations:
   - Гринчишин Д. Г. Словник паронімів української мови (1986)
+  glossSources:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p053
+    passage: прикметник цивільний протилежний слову військовий
+  - locator: antonenko-davydovych-yak-my-hovorymo_p052
+    passage: Прикметник громадянський вказує на суспільство або людність цілої країни, на все громадянство, що підлягає законам
+      країни й виконує пов'язані з цим обов'язки.
   curator: gemini-8276-densification
-  notes: adj masc inanim
+  notes: 'adj masc inanim; #8728: distinction_gloss_uk copied verbatim from the glossSources passage (sources MCP chunk),
+    replacing model-curated wording.'
   frames:
   - sentence_with_slot: Після звільнення зі служби офіцер одягнув звичайний ___ одяг.
     answer_form: цивільний

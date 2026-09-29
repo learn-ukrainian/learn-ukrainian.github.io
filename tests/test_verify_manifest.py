@@ -195,6 +195,19 @@ def test_shrink_gate_allows_gate_ran_rejection_via_provenance(tmp_path, capsys):
     assert "no unexplained section shrink" in out
 
 
+def test_shrink_gate_accepts_only_cited_source_withdrawal(tmp_path, capsys):
+    base, cur = _ключ_manifests(
+        tmp_path,
+        cur_entry={"lemma": "ключ", "sections": {"synonyms": {"items": ["замок"]}},
+                   "gate_provenance": {"synonyms": "source-withdrawn-unverified"}},
+    )
+    assert verify_manifest.run(cur, sample=0, baseline_path=base) == 2
+    base_entry = json.loads(base.read_text(encoding="utf-8"))
+    base_entry["entries"][0]["sections"]["synonyms"]["source"] = "СУМ-11"
+    base.write_text(json.dumps(base_entry, ensure_ascii=False), encoding="utf-8")
+    assert verify_manifest.run(cur, sample=0, baseline_path=base) == 0
+
+
 def test_shrink_gate_flags_skipped_offline_shrink_as_unexplained(tmp_path, capsys):
     # #5077 review finding 8: skipped-offline provenance means the gate did NOT run,
     # so it must NOT exempt a shrink the way 'rejected' (gate ran + retracted) does.

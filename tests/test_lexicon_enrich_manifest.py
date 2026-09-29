@@ -72,7 +72,6 @@ from scripts.lexicon.enrich_manifest import (
     _split_usage_note_title,
     _strip_leading_headword_once,
     _style_markers_in_tag,
-    _sum11_definition_card,
     _surface_gloss_hints,
     _translation,
     _usage_notes_slovnyk,
@@ -2201,7 +2200,7 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
     _patch_grinchenko_vesum(monkeypatch, "прапор")
 
-    cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
+    cards = _definition_cards(conn, "прапор")
 
     # СУМ-11 card (even a flagged one) must be absent — only СУМ-20 and the
     # Грінченко heritage attestation (#6464) survive, in that order.
@@ -2323,7 +2322,7 @@ def test_definition_cards_grinchenko_always_last_and_optional(monkeypatch) -> No
     monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
     _patch_grinchenko_vesum(monkeypatch, "вода")
 
-    cards = _definition_cards(conn, "вода", has_sum11_flags=False)
+    cards = _definition_cards(conn, "вода")
 
     assert [card["id"] for card in cards] == ["grinchenko"]
 
@@ -2345,7 +2344,7 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
         ),
     )
 
-    cards = _definition_cards(conn, "вишиванка", has_sum11_flags=False)
+    cards = _definition_cards(conn, "вишиванка")
 
     assert [card["id"] for card in cards] == ["vts"]
     assert cards[0]["source"] == "Великий тлумачний словник сучасної української мови"
@@ -2356,7 +2355,7 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
         "_sum20_definition_card",
         lambda lemma, cache=None: {"id": "sum20", "source": "СУМ-20", "definitions": ["x"]},
     )
-    assert [c["id"] for c in _definition_cards(conn, "вишиванка", has_sum11_flags=False)] == ["vts", "sum20"]
+    assert [c["id"] for c in _definition_cards(conn, "вишиванка")] == ["vts", "sum20"]
 
 
 def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
@@ -2381,7 +2380,7 @@ def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> N
         ),
     )
 
-    cards = _definition_cards(conn, "моєму", has_sum11_flags=False)
+    cards = _definition_cards(conn, "моєму")
 
     # Card built from the base lemma's VTS entry (leading headword "МІЙ" is stripped
     # by _definition_body, so assert on the surviving definition text).
@@ -2450,7 +2449,6 @@ def test_enrich_entry_uses_pos_matched_base_translation_fallback(monkeypatch) ->
         entry,
         sqlite3.connect(":memory:"),
         {},
-        has_sum11_flags=False,
     )
 
     assert attached is True
@@ -2926,7 +2924,6 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
             "calque_warning": None,
         },
     )
-    monkeypatch.setattr(enrich_manifest_module, "_sum11_has_flag_columns", lambda conn: True)
     monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
@@ -3034,7 +3031,6 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
             "calque_warning": None,
         },
     )
-    monkeypatch.setattr(enrich_manifest_module, "_sum11_has_flag_columns", lambda conn: True)
     monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
@@ -4043,15 +4039,18 @@ def test_wiki_reference_caches_missing_results(monkeypatch, tmp_path) -> None:
 # --- «див.» cross-reference resolution (issue #4220) ------------------------
 
 
-def _sum11_conn(rows: dict[str, str]) -> sqlite3.Connection:
-    """In-memory conn whose sum11 table holds {word: definition} — deterministic,
-    no network, for exercising _sum11_definition_card's xref resolution."""
-    conn = _conn()
-    conn.executemany(
-        "INSERT INTO sum11(word, definition) VALUES(?, ?)",
-        list(rows.items()),
-    )
-    return conn
+def _vts_xref_card(rows: dict[str, str], lemma: str, *, resolve_xref: bool = True) -> dict[str, Any] | None:
+    """Build a ВТС-shaped card from {word: definition} and resolve its «див.»
+    through the same source — deterministic, no network."""
+
+    def card_for(word: str) -> dict[str, Any] | None:
+        body = rows.get(word)
+        return {"id": "vts", "source": "ВТС", "definitions": [body]} if body else None
+
+    card = card_for(lemma)
+    if card is None or not resolve_xref:
+        return card
+    return _resolve_definition_xref(card, lemma, card_for) or card
 
 
 def test_xref_target_lemmas_detects_cross_reference_only() -> None:
@@ -4130,7 +4129,7 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
         }
     }
 
-    relations = _definition_antonym_relations(conn, "великий", has_sum11_flags=True, cache=cache)
+    relations = _definition_antonym_relations(conn, "великий", cache=cache)
 
     assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
         ("малий", "СУМ-20", "протилежне"),
@@ -4143,7 +4142,7 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
     ]
 
     _patch_synonym_vesum(monkeypatch, {"малий"})
-    assert _definition_antonym_relations(conn, "великий", has_sum11_flags=True, cache=cache) == []
+    assert _definition_antonym_relations(conn, "великий", cache=cache) == []
 
     monkeypatch.setattr(
         enrich_manifest_module,
@@ -4164,7 +4163,7 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
             }
         }
     }
-    assert _definition_antonym_relations(conn, "великий", has_sum11_flags=True, cache=inflected_cache) == []
+    assert _definition_antonym_relations(conn, "великий", cache=inflected_cache) == []
 
 
 def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monkeypatch) -> None:
@@ -4182,7 +4181,7 @@ def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monk
     )
     manifest = {"entries": [{"lemma": "великий"}, {"lemma": "малий"}]}
 
-    relations = _definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=True)
+    relations = _definition_antonym_relations_by_headword(conn, manifest)
 
     assert relations["великий"][0]["item"] == "малий"
     assert relations["малий"][0]["item"] == "великий"
@@ -4246,7 +4245,7 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
         [(lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.") for lemma, antonym in pairs.items()],
     )
     assert all(
-        _definition_antonym_relations(conn, lemma, has_sum11_flags=True, cache={}) == []
+        _definition_antonym_relations(conn, lemma, cache={}) == []
         for lemma in pairs
     )
 
@@ -4256,7 +4255,6 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
             relation["item"] for relation in _definition_antonym_relations(
                 conn,
                 lemma,
-                has_sum11_flags=True,
                 cache={"lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}},
             )
         ]
@@ -4979,7 +4977,7 @@ def test_definition_pointer_relations_keep_each_dictionary_provenance(monkeypatc
         }
     }
 
-    relations = _definition_pointer_relations(_conn(), "кафе", has_sum11_flags=True, cache=cache)
+    relations = _definition_pointer_relations(_conn(), "кафе", cache=cache)
 
     assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
         ("кав'ярня", "СУМ-20", "Те саме, що"),
@@ -5003,9 +5001,9 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
     )
     manifest = {"entries": [{"lemma": "кафе"}, {"lemma": "кав'ярня"}]}
 
-    assert _definition_pointer_relations(conn, "кафе", has_sum11_flags=True, cache={}) == []
+    assert _definition_pointer_relations(conn, "кафе", cache={}) == []
 
-    relations = _definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=True)
+    relations = _definition_pointer_relations_by_headword(conn, manifest)
 
     assert relations["кафе"][0]["item"] == "кав'ярня"
     assert relations["кав'ярня"][0]["item"] == "кафе"
@@ -5064,7 +5062,6 @@ def test_ключ_does_not_read_ukrajinet_and_uses_mphdict_synonyms(monkeypatch)
         entry,
         conn,
         {},
-        has_sum11_flags=True,
         pointer_synonym_relations=[],
         pointer_antonym_relations=[],
         pointer_homonym_relations=[],
@@ -5154,53 +5151,47 @@ def test_xref_provenance_prefix_renders_aspect_pair(monkeypatch) -> None:
     assert _xref_provenance_prefix("свят", "святий") == "(див. святий) "
 
 
-def test_sum11_definition_card_resolves_cross_reference_one_level(monkeypatch) -> None:
+def test_definition_xref_resolves_cross_reference_one_level(monkeypatch) -> None:
     _patch_fake_vesum(monkeypatch)
     target_def = "Класти що-небудь у таємному місці, щоб ніхто не міг знайти."
-    conn = _sum11_conn({"заховати": "заховати див. заховувати", "заховувати": target_def})
-    card = _sum11_definition_card(conn, "заховати", has_sum11_flags=True)
+    card = _vts_xref_card({"заховати": "заховати див. заховувати", "заховувати": target_def}, "заховати")
     assert card is not None
-    assert card["verification_authority"] is False
-    assert "лише контраст" in card["note"]
     # Verbatim target body, prefixed with the honest aspect+cross-ref provenance note.
     assert card["definitions"] == [f"(докон. до заховувати / див. заховувати) {target_def}"]
     assert card["cross_reference"] == {"raw": "заховати див. заховувати", "target": "заховувати"}
 
 
-def test_sum11_definition_card_resolves_inflected_target(monkeypatch) -> None:
+def test_definition_xref_resolves_inflected_target(monkeypatch) -> None:
     _patch_fake_vesum(monkeypatch)
     # Cross-ref points at an inflected form (ховаєш) → VESUM-lemmatize to ховати.
     target_def = "Класти що-небудь у таємному місці."
-    conn = _sum11_conn({"назахову": "назахову див. ховаєш", "ховати": target_def})
-    card = _sum11_definition_card(conn, "назахову", has_sum11_flags=True)
+    card = _vts_xref_card({"назахову": "назахову див. ховаєш", "ховати": target_def}, "назахову")
     assert card is not None
     assert card["cross_reference"]["target"] == "ховати"
     assert card["definitions"][0].endswith(target_def)
 
 
-def test_sum11_definition_card_refuses_cross_reference_chain() -> None:
+def test_definition_xref_refuses_cross_reference_chain() -> None:
     # target ужалити is ITSELF a «див.» → one level only, refuse the chain.
-    conn = _sum11_conn({"вжалити": "вжалити див. ужалити", "ужалити": "ужалити див. жалити"})
-    card = _sum11_definition_card(conn, "вжалити", has_sum11_flags=True)
+    card = _vts_xref_card({"вжалити": "вжалити див. ужалити", "ужалити": "ужалити див. жалити"}, "вжалити")
     assert card is not None
     assert card["definitions"] == ["вжалити див. ужалити"]
     assert "cross_reference" not in card
 
 
-def test_sum11_definition_card_leaves_absent_target_unresolved() -> None:
+def test_definition_xref_leaves_absent_target_unresolved() -> None:
     # Target ублагати not in the source → fail-closed, no invented gloss.
-    conn = _sum11_conn({"вблагати": "вблагати див. ублагати"})
-    card = _sum11_definition_card(conn, "вблагати", has_sum11_flags=True)
+    card = _vts_xref_card({"вблагати": "вблагати див. ублагати"}, "вблагати")
     assert card is not None
     assert card["definitions"] == ["вблагати див. ублагати"]
     assert "cross_reference" not in card
 
 
-def test_sum11_definition_card_ordinary_lemma_byte_identical() -> None:
+def test_definition_xref_ordinary_lemma_byte_identical() -> None:
     # Regression: a normal, non-«див.» card is untouched — resolve on/off identical.
-    conn = _sum11_conn({"ховати": "Класти що-небудь у таємному місці."})
-    resolved = _sum11_definition_card(conn, "ховати", has_sum11_flags=True)
-    plain = _sum11_definition_card(conn, "ховати", has_sum11_flags=True, resolve_xref=False)
+    rows = {"ховати": "Класти що-небудь у таємному місці."}
+    resolved = _vts_xref_card(rows, "ховати")
+    plain = _vts_xref_card(rows, "ховати", resolve_xref=False)
     assert resolved == plain
     assert "cross_reference" not in resolved
 
@@ -5326,7 +5317,6 @@ def _run_synonyms_gate(monkeypatch, *, offline, cache, new_synonyms, existing_sy
         entry,
         sqlite3.connect(":memory:"),
         {},
-        has_sum11_flags=False,
         pointer_synonym_relations=[],
         pointer_antonym_relations=[],
         pointer_homonym_relations=[],
@@ -5349,6 +5339,41 @@ def test_offline_gate_did_not_run_preserves_section_byte_identical(monkeypatch) 
     # byte-identical serialization is the #5077 "must PRESERVE" contract
     assert json.dumps(entry["sections"]["synonyms"], ensure_ascii=False) == json.dumps(baseline, ensure_ascii=False)
     assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE
+
+
+def test_offline_gate_never_preserves_soviet_cited_section(monkeypatch) -> None:
+    """#8990: a published section citing СУМ-11 is not a preserve baseline; its
+    unconfirmed items are retracted but the replacement gate remains unverified."""
+    existing = {"items": ["джерело", "живець"], "source": "СУМ-11: Те саме, що → живець"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # gate could not run: an ordinary section would be preserved
+        new_synonyms=None,
+        existing_synonyms=existing,
+    )
+    assert "synonyms" not in entry.get("sections", {})
+    assert entry["gate_provenance"]["synonyms"] == manifest_io.SOURCE_WITHDRAWN_UNVERIFIED
+
+
+def test_new_enrichment_fails_closed_on_unflagged_soviet_citation(monkeypatch) -> None:
+    with pytest.raises(ValueError, match=r"newly enriched entry.*unflagged СУМ-11"):
+        _run_synonyms_gate(
+            monkeypatch,
+            offline=False,
+            cache={"lookups": {"synonyms": {"text": "x"}}},
+            new_synonyms={"items": ["джерело"], "source": "СУМ-11"},
+            existing_synonyms={},
+        )
+
+
+def test_cites_soviet_dictionary_detects_label_variants() -> None:
+    from scripts.lexicon.source_attribution import cites_soviet_dictionary
+
+    assert cites_soviet_dictionary({"source": "Вікісловник + СУМ-11: протилежне → малий"})
+    assert cites_soviet_dictionary({"items": [{"source": "sum11"}]})
+    assert cites_soviet_dictionary("SUM 11")
+    assert not cites_soviet_dictionary({"source": "СУМ-20: протилежне → малий"})
 
 
 def test_online_gate_ran_and_rejected_retracts_with_provenance(monkeypatch) -> None:
@@ -5444,7 +5469,6 @@ def _drive_enrich_entry(entry) -> None:
         entry,
         sqlite3.connect(":memory:"),
         {},
-        has_sum11_flags=False,
         pointer_synonym_relations=[],
         pointer_antonym_relations=[],
         pointer_homonym_relations=[],
@@ -6527,7 +6551,7 @@ def test_definition_cards_sum20_outranks_dialect_vts() -> None:
             },
         },
     }
-    cards = enrich_manifest_module._definition_cards(_conn(), "берегиня", has_sum11_flags=False, cache=cache)
+    cards = enrich_manifest_module._definition_cards(_conn(), "берегиня", cache=cache)
     assert len(cards) == 2
     assert cards[0]["id"] == "sum20"
     assert cards[1]["id"] == "vts"
@@ -6642,7 +6666,7 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
         """
     )
 
-    enrich_manifest_module.enrich_entry(entry, conn, {}, has_sum11_flags=False)
+    enrich_manifest_module.enrich_entry(entry, conn, {})
 
     # 1. Hero gloss replaced by СУМ-20 sense 1 (not Русалка)
     assert entry["gloss"].startswith("За давньослов'янськими релігійними уявленнями, мати всього живого")
@@ -6841,7 +6865,7 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
         "gloss": "good",
     }
 
-    assert enrich_manifest_module.enrich_entry(entry, conn, {}, has_sum11_flags=False) is True
+    assert enrich_manifest_module.enrich_entry(entry, conn, {}) is True
 
     # Validate sections populated from ULIF with authoritative attribution
     sections = entry.get("sections", {})

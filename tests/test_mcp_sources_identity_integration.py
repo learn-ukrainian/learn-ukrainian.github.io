@@ -2,9 +2,10 @@
 
 Starts the exact server module on an ephemeral loopback port and drives public
 calls through the production ``RealMcpToolTransport`` (no fake transport).
-The frozen cycle007 ``LocalMcpSourcesClient`` attestation is a strict expected
-failure: #8683/#6321 accepts that lane's fail-closed rejection of the changed
-identity payload. The other tests list required tools, make a harmless public
+The frozen cycle007 ``LocalMcpSourcesClient`` attestation must fail closed:
+#8683/#6321 accepts that lane's rejection of the changed identity payload, and
+the test below pins the exact ``LocalMcpSourcesClientError`` message. The other
+tests list required tools, make a harmless public
 ``verify_words`` round trip, and verify hash-only privacy logging and MCP-wire
 error handling without touching an external network.
 
@@ -111,16 +112,18 @@ def real_transport(sources_http_url):
     transport.close()
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="#8683/#6321 accepts cycle007's fail-closed identity rejection; its frozen five-key attestation is obsolete",
-)
 def test_real_transport_attests_endpoint_identity_against_local_files(sources_http_url):
+    # #8683/#6321 accepts cycle007's fail-closed identity rejection: its frozen
+    # five-key attestation is obsolete, so construction must raise with this
+    # exact message — any other exception or message fails the test.
     endpoint_url = f"{sources_http_url}/mcp"
     transport = compiler.RealMcpToolTransport(endpoint_url)
     try:
-        client = compiler.LocalMcpSourcesClient(endpoint_url=endpoint_url, transport=transport)
-        client.close()
+        with pytest.raises(
+            compiler.LocalMcpSourcesClientError,
+            match="malformed_json_response:mcp_server_identity",
+        ):
+            compiler.LocalMcpSourcesClient(endpoint_url=endpoint_url, transport=transport)
     finally:
         transport.close()
 

@@ -175,8 +175,13 @@ def test_vesum_licence_is_quoted_verbatim_from_dict_uk(sources: list[dict]) -> N
     assert "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License" in verbatim["quote"]
 
 
-def test_sum11_is_russification_evidence_only(sources: list[dict]) -> None:
-    """Rule #M-6: СУМ-11 is red-flagged russification evidence, never modern evidence."""
+def test_sum11_register_entry_is_russification_evidence_only(sources: list[dict]) -> None:
+    """Register-wording check only (rule #M-6).
+
+    This does not inspect learner cards. Atlas migration and runtime export
+    reject a СУМ-11 citation outside soviet_colonization_context and a citation
+    that lacks a russification marker on the same card.
+    """
     sum11 = next(s for s in sources if s["id"] == "sum11")
     assert all(field.startswith("russification_") for field in sum11["fields_used"])
     restriction = sum11["usage_restriction"]

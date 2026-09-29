@@ -37,6 +37,7 @@ import { normalizeAtlasText } from "./normalize.ts";
 import { readPracticeIndexItems } from "./practice-index-files.ts";
 import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
 import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
+import { withholdLegacySovietCitations } from "./soviet-citation-withholding.ts";
 import type { PracticeDeckData } from "./srs.ts";
 
 /** Shared with exporter Python + vitest vectors — letter/mark tokens only (no digits). */
@@ -245,7 +246,7 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
         this.recordsBySlug.set(slug, {
           slug,
           kind,
-          entry,
+          entry: withholdLegacySovietCitations(entry),
           aliases: aliasesBySlug.get(slug) ?? [],
           relations: relationsBySlug.get(slug) ?? [],
           provenance: provenanceBySlug.get(slug) ?? [],

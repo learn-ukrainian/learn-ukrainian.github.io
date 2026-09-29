@@ -23,6 +23,77 @@ the 15 rows whose native counterparts already resolve from
 only a phrase replacement, a morphology-only correction, or insufficient
 sense evidence remain candidates rather than cards.
 
+## Build-time gates on calque judgments and explanations (#8727, #8728)
+
+The factory withholds, with a `WARN … withheld` line on stderr, any pair or
+item that fails one of these checks. Withheld records stay in the YAML; a
+curator repairs the evidence, never the gate. Source passages are read from
+`data/sources.db` (`--sources-db`, the `sources` MCP database); without it
+both source gates fail closed.
+
+| Gate | Rule | Repair |
+| --- | --- | --- |
+| Normative support (`verified_source_passages`, `_heritage_frame_support`) | A calque judgment needs a `normativeSupport` entry: `locator` is a page chunk of a normative style guide listed in `HERITAGE_NORMATIVE_SOURCES` (today Антоненко-Давидович «Як ми говоримо», 1991 edition, `antonenko-davydovych-yak-my-hovorymo_pNNN`) and `passage` is copied verbatim from that page. Each frame also needs a `normativeJudgment`: `endorsedForm` equals its `answer_form`, `rejectedForm` equals its `calque_form`, `sense` is nonempty, `locator` matches the verified passage, `passageSha256` binds that passage, and `sentenceSha256` binds the frame's `sentence_with_slot`. The passage must name both forms (same form, VESUM lemma, or a shared stem when VESUM cannot analyse a form). Form occurrence alone does not establish the correction's direction or sense. `citations` are provenance notes and never admit a pair. The item's first learner-visible citation is the edition and page. | Copy the exact passage with the `sources` tools; review its direction and sense against each frame, then record the judgment and digests below. A missing or mismatched judgment withholds the frame. |
+| Frame calque identity (`_heritage_frame_calque_mismatch`) | Each frame's `calque_form` must be a form of the pair's calque: exact surface, VESUM lemma, or a shared stem when VESUM cannot analyse one side. A frame for another word (`настільки` under `да → так`) would inherit a copied rationale. The overlay merge in `read_heritage_pairs` applies the same test. | Give the frame its own pair with its own rationale and support. |
+| Paronym gloss provenance (`paronym_gloss_provenance_errors`) | `distinction_gloss_uk` needs a `<word> — <definition>` clause for **each** contrasted word. Each definition must appear after its own word and before the other word in a verified, source-located `glossSources` passage (a Ukrainian-language school textbook chunk or a style-guide page, `PARONYM_GLOSS_SOURCES`). The words may have separate passages. A swapped or paraphrased definition, or a de-interleaved reading of a two-column table, is not verbatim evidence. | Copy each word's definition from its own verified passage; never paraphrase. A definition may stop early only at a phrase boundary. Missing either meaning withholds the pair. |
+| Explanation language (`explanation_language_errors`) | Every Cyrillic token of a learner-facing explanation (`rationale`, `rationaleUk`, `calqueSense`, `authenticSense`, and `distinction_gloss_uk` for paronym, antonym and homonym items) must be a clean VESUM form. Only an explicit `рос. …` mention, the item's own contrasted forms (calque, answer, options, corrections) and dictionary abbreviations written with their period are exempt; quotation marks are not (`Тактовний — «вежливий»` is withheld). | Replace the wording with text copied from a verified source. `--broken-validator-fixtures` proves every gate on a planted defect. |
+
+For `normativeJudgment`, SHA-256 is computed over UTF-8 bytes after
+`_normalize_source_text` in `scripts/audit/generate_practice_deck.py`:
+remove U+0301 combining acute marks; join a Cyrillic word hyphenated across a
+line break (including a soft hyphen); map `–`, `—`, `‑` to `-`, `«`, `»`, `“`,
+`”`, `„` to `"`, and `’`, `ʼ` to `'`; collapse whitespace to one space,
+trim, then Unicode `casefold()`. The source check applies this same
+normalisation to the copied passage and its `sources.db` chunk. To add or
+repair a frame, run this one-liner from the repository worktree once with the
+exact `normativeSupport.passage` as input and once with the exact
+`sentence_with_slot` as input; store the respective outputs in `passageSha256`
+and `sentenceSha256`:
+
+```bash
+/home/ops/learn-ukrainian/.venv/bin/python -c 'import hashlib, sys; from scripts.audit.generate_practice_deck import _normalize_source_text; print(hashlib.sha256(_normalize_source_text(sys.stdin.read()).encode("utf-8")).hexdigest())' < reviewed-text.txt
+```
+
+### Measured effect (2026-09-28)
+
+All item counts in every row below come from
+`batch_state/tasks/fix-8727-r4.result` (round-4 final-code, semantic-key
+comparison against published deck `atlas-practice-v1-c0c3f3242b5134b6`;
+key: `lemmaId`, prompt, answer, contrast). `Retained` counts published items
+still emitted, `withheld` is published minus retained, and `added` counts new
+items, so `final` is retained plus added. The report uses a completed
+default-budget build and a focused final-code surface-budget replay; its
+default-limit rerun ended before writing a deck.
+
+| Mode | Level | Published | Retained | Withheld | Added | Final |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Heritage | A1 | 7 | 0 | 7 | 0 | 0 |
+| Heritage | A2 | 44 | 7 | 37 | 0 | 7 |
+| Heritage | B1 | 265 | 28 | 237 | 0 | 28 |
+| Heritage | B2 | 26 | 9 | 17 | 0 | 9 |
+| Heritage | C1 | 12 | 2 | 10 | 0 | 2 |
+| Paronym | A1 | 22 | 2 | 20 | 0 | 2 |
+| Paronym | A2 | 17 | 2 | 15 | 1 | 3 |
+| Paronym | B1 | 69 | 26 | 43 | 1 | 27 |
+| Paronym | B2 | 11 | 4 | 7 | 0 | 4 |
+| Paronym | C1 | 5 | 0 | 5 | 0 | 0 |
+
+The round-4 report measures withheld totals, without a per-reason item
+breakdown. The independent review
+(`batch_state/tasks/cf-8727-r4-claude.result`) measured 341 of 387 Heritage
+frames without a `normativeJudgment`, and identified four paronym registry
+pairs withheld for a missing sourced meaning for one word. These are frame
+and pair counts, respectively, not allocations of the item totals above.
+
+Heritage keeps 24 registry pairs with 46 reviewed frame judgments (counted in
+`registry/lexicon/heritage_pairs.yaml`; the 46 judgments were also checked in
+`batch_state/tasks/cf-8727-r4-claude.result`). Paronym keeps 20 registry rows
+whose two meanings pass `paronym_gloss_provenance_errors` against
+`data/sources.db` (counted in `registry/lexicon/paronym_pairs.yaml` with the
+round-4 gate); they emit 36 final items across levels in the round-4 report.
+The withheld rows and pairs stay in the registries for source-backed repair
+(replacement work: #8329).
+
 ## Severity and level guidance
 
 Every pair has one of two textual learner-facing values:

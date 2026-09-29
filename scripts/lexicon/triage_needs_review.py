@@ -40,8 +40,8 @@ DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "needs-review-triage.json"
 DEFAULT_SUMMARY = PROJECT_ROOT / "data" / "lexicon" / "needs-review-triage-summary.md"
 
 # Gloss priority for best_gloss / promote_with_gloss (user contract).
+# Soviet-era СУМ-11 is never a gloss or hit source (rule #M-6).
 GLOSS_SOURCE_PRIORITY: tuple[str, ...] = (
-    "sum11",
     "dmklinger",
     "grinchenko",
     "slovnyk_me",
@@ -49,7 +49,6 @@ GLOSS_SOURCE_PRIORITY: tuple[str, ...] = (
 )
 # Full sources_hit key order (stable JSON / summary columns).
 SOURCE_HIT_KEYS: tuple[str, ...] = (
-    "sum11",
     "dmklinger",
     "grinchenko",
     "slovnyk_me",
@@ -224,9 +223,6 @@ def probe_sources(
 
     path = str(db_path) if db_path is not None else None
 
-    def _sum11(words: list[str]) -> dict[str, list[dict[str, Any]]]:
-        return sdb.search_definitions_batch(words, db_path=path)
-
     def _dmk(words: list[str]) -> dict[str, list[dict[str, Any]]]:
         return sdb.search_dmklinger_uk_en_batch(words, db_path=path)
 
@@ -246,7 +242,6 @@ def probe_sources(
         return sdb.query_cefr_levels(words, db_path=path)
 
     default_lookups: dict[str, LookupFn] = {
-        "sum11": _sum11,
         "dmklinger": _dmk,
         "grinchenko": _grin,
         "slovnyk_me": _slov,

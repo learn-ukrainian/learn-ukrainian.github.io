@@ -1,0 +1,582 @@
+{
+  "schema": "curated-membership-pending-admission-9151.v1",
+  "issue": 9151,
+  "members": [
+    {
+      "lemma": "антропометричний",
+      "slug": "антропометричний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "бандера",
+      "slug": "бандера",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "бандерівець",
+      "slug": "бандерівець",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "бджолярство",
+      "slug": "бджолярство",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "валер'янка",
+      "slug": "валер'янка",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "ввижатися",
+      "slug": "ввижатися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "вебсайт",
+      "slug": "вебсайт",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "вигуляти",
+      "slug": "вигуляти",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "вифлеєм",
+      "slug": "вифлеєм",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "вкритися",
+      "slug": "вкритися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "впакувати",
+      "slug": "впакувати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "вполювати",
+      "slug": "вполювати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "відганяти",
+      "slug": "відганяти",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "вільнюський",
+      "slug": "вільнюський",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "горілчаний",
+      "slug": "горілчаний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "давньоримський",
+      "slug": "давньоримський",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "деталька",
+      "slug": "деталька",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "добровільно",
+      "slug": "добровільно",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "довірений",
+      "slug": "довірений",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "достеменно",
+      "slug": "достеменно",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "загостритися",
+      "slug": "загостритися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "загострювати",
+      "slug": "загострювати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "закладений",
+      "slug": "закладений",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "запинитися",
+      "slug": "запинитися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "REMOVE",
+      "pending_reason": "removed_dialectal"
+    },
+    {
+      "lemma": "заслужений",
+      "slug": "заслужений",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "застерігати",
+      "slug": "застерігати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "зовнішньополітичний",
+      "slug": "зовнішньополітичний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "колабораціоніст",
+      "slug": "колабораціоніст",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "кохана",
+      "slug": "кохана",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "кріпатура",
+      "slug": "кріпатура",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "лобі",
+      "slug": "лобі",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "мазепинець",
+      "slug": "мазепинець",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "можновладець",
+      "slug": "можновладець",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "наживати",
+      "slug": "наживати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "нажити",
+      "slug": "нажити",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "накаркати",
+      "slug": "накаркати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "населяти",
+      "slug": "населяти",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "непопулярний",
+      "slug": "непопулярний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "нищівний",
+      "slug": "нищівний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "ніжинський",
+      "slug": "ніжинський",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "овдовіти",
+      "slug": "овдовіти",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "озвучка",
+      "slug": "озвучка",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "папка",
+      "slug": "папка",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "передбачуваний",
+      "slug": "передбачуваний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "поплатитися",
+      "slug": "поплатитися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "постригтися",
+      "slug": "постригтися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "приказувати",
+      "slug": "приказувати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "прилуцький",
+      "slug": "прилуцький",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "протидіяти",
+      "slug": "протидіяти",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "публіцист",
+      "slug": "публіцист",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "пукнути",
+      "slug": "пукнути",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "рихтувати",
+      "slug": "рихтувати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "розпоряджатися",
+      "slug": "розпоряджатися",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "розсилати",
+      "slug": "розсилати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "рідні",
+      "slug": "рідні",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "сплюндрований",
+      "slug": "сплюндрований",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "строчити",
+      "slug": "строчити",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "ув'язнити",
+      "slug": "ув-язнити",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "увести",
+      "slug": "увести",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "узагалі",
+      "slug": "узагалі",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "фаворит",
+      "slug": "фаворит",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    },
+    {
+      "lemma": "філологічний",
+      "slug": "філологічний",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_reviewed_source_locator"
+    },
+    {
+      "lemma": "чізкейк",
+      "slug": "чізкейк",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "no_allowed_english_anchor"
+    },
+    {
+      "lemma": "іменувати",
+      "slug": "іменувати",
+      "sources": [
+        "teacher_inventory"
+      ],
+      "decision": "ADMIT",
+      "pending_reason": "admissible_pending_publication"
+    }
+  ]
+}

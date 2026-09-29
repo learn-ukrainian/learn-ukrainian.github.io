@@ -98,11 +98,12 @@ class RelationHeritageLookup(HeritageLemmaLookup):
     This reuses #3211's ``HeritageLemmaLookup`` for exact Грінченко and ЕСУМ
     headwords. Relation candidates also need the canonical СУМ-20 snapshot used
     by ``sources.search_heritage``. When that snapshot is not cached locally,
-    the project СУМ dictionary table remains a compatible exact-headword
-    fallback. No prefix or body matches are accepted.
+    the local ``sum20`` table remains a compatible exact-headword fallback.
+    Soviet-era СУМ-11 is never headword evidence (rule #M-6). No prefix or body
+    matches are accepted.
     """
 
-    _SUM_TABLES = (("sum20", "word"), ("sum11", "word"))
+    _SUM_TABLES = (("sum20", "word"),)
 
     def __init__(self, db_path: Path = DEFAULT_DB):
         super().__init__(db_path)
