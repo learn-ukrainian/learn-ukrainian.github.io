@@ -19,7 +19,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
-
 from scripts.fleet import capacity_pick
 from scripts.orchestration import dispatch_admission, job_host_exec
 

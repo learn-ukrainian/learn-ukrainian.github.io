@@ -96,7 +96,6 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
     monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
     import delegate
     from rag import source_query
-
     from wiki import sources_db
 
     monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)

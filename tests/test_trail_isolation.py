@@ -22,7 +22,6 @@ from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.adapters.kimicc import KimiccHarness
 from agent_runtime.runner import invoke
 from agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
-
 from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.trails import trail_mcp
 

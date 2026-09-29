@@ -25,7 +25,6 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import delegate
-
 from scripts.review import reviewer_resolver
 from scripts.review.model_catalog import CURSOR_AUTO_EXPECTED_ATTESTATION_RULE, load_model_catalog
 from scripts.review.reviewer_resolver import (

@@ -39,7 +39,6 @@ import delegate
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
-
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 

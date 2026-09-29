@@ -21,7 +21,6 @@ from agent_runtime.runner import (
     _prepare_stdin_handle,
     _spawn_subprocess,
 )
-
 from tests.helpers.python import project_python
 
 _TEST_PYTHON = project_python()

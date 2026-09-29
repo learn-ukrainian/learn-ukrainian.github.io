@@ -12,7 +12,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.env_sanitize import build_agent_env
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import _execute_invocation_plan
-
 from tests.helpers.python import project_python
 
 _TEST_PYTHON = project_python()

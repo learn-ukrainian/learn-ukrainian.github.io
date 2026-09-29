@@ -18,9 +18,9 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
 import pytest
 
+import delegate
 from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 
 

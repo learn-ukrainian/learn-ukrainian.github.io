@@ -31,7 +31,6 @@ from agent_runtime.adapters.acpx import AcpxAdapter
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import ParseResult, Result
 from agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
-
 from scripts.ai_agent_bridge import _acp_compat, _cli
 
 _FALLBACKS_YAML = """\
@@ -1068,7 +1067,6 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
 def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
     """delegate.py and the ACP ask path read one loader, not two copies."""
     import delegate
-
     from scripts.common.fallback_substitutions import load_dispatch_fallbacks
 
     assert delegate._load_dispatch_fallbacks() == load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
