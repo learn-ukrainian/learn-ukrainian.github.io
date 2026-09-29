@@ -57,9 +57,16 @@ def lookup(states: dict[str, list[PullRequestState]] | None = None, error: str |
 
 
 def only(repo: Path, name: str, *, apply: bool = False, states=None, error=None) -> sweep.Decision:
-    return next(item for item in sweep.sweep(
-        repo, apply=apply, pr_lookup=lookup(states, error), protected_lookup=lambda _repo: set(),
-    ) if item.branch == name)
+    return next(
+        item
+        for item in sweep.sweep(
+            repo,
+            apply=apply,
+            pr_lookup=lookup(states, error),
+            protected_lookup=lambda _repo: set(),
+        )
+        if item.branch == name
+    )
 
 
 def test_open_pr_is_never_deleted(repo: Path) -> None:
@@ -99,10 +106,18 @@ def test_unreleased_task_is_never_deleted(repo: Path, status: object) -> None:
     assert git(repo, "ls-remote", "--heads", "origin", "grok/live")
 
 
-@pytest.mark.parametrize("name", [
-    "main", "gh-pages", "production", "ordinary/branch",
-    "gh-readonly-queue/main/pr-1-x", "dependabot/x/pr-2", "release/pr-3",
-])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "main",
+        "gh-pages",
+        "production",
+        "ordinary/branch",
+        "gh-readonly-queue/main/pr-1-x",
+        "dependabot/x/pr-2",
+        "release/pr-3",
+    ],
+)
 def test_protected_or_non_candidate_name_is_not_deleted(repo: Path, name: str) -> None:
     if name != "main":
         branch(repo, name)
@@ -153,7 +168,7 @@ def test_no_pr_unique_commit_is_report_only_with_age(repo: Path) -> None:
     assert git(repo, "ls-remote", "--heads", "origin", "kimi/unmerged")
 
 
-@pytest.mark.parametrize("name", ["codex/has space", "-x/review-1", "codex/a:b", "codex/a..b", "codex/@{bad"])
+@pytest.mark.parametrize("name", ["codex/has space", "codex/a:b", "codex/a..b", "codex/@{bad"])
 def test_hostile_branch_name_is_never_passed_to_git(repo: Path, name: str, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[str, ...]] = []
     original = sweep._git
@@ -163,15 +178,57 @@ def test_hostile_branch_name_is_never_passed_to_git(repo: Path, name: str, monke
         return original(root, *args, **kwargs)
 
     monkeypatch.setattr(sweep, "_git", capture)
-    item = sweep._classify(repo, sweep.Branch(name, remote_sha=git(repo, "rev-parse", "main")),
-                           worktree_branches=set(), detached_heads=set(), active_tasks=set(),
-                           protected_branches=sweep.PROTECTED,
-                           pr_lookup=lookup())
-    if name == "-x/review-1":
-        assert sweep._candidate(name)
-        assert item.reason == "invalid or unsafe branch name"
-    assert item.classification in {"protected", "report-only"}
+    item = sweep._classify(
+        repo,
+        sweep.Branch(name, remote_sha=git(repo, "rev-parse", "main")),
+        worktree_branches=set(),
+        detached_heads=set(),
+        active_tasks=set(),
+        protected_branches=sweep.PROTECTED,
+        pr_lookup=lookup(),
+    )
+    assert item.classification == "report-only"
+    assert item.reason == "invalid or unsafe branch name"
     assert not calls
+
+
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        ("codex/good-branch", True),
+        ("pr-123", True),
+        ("rescue/task-1", True),
+        ("-x/review-1", False),
+        ("-leading-dash", False),
+        ("+refspec", False),
+        ("origin/main", False),
+        ("refs/heads/main", False),
+        ("codex/has space", False),
+        ("codex/a:b", False),
+        ("codex/a..b", False),
+        ("codex/@{bad", False),
+        ("HEAD", False),
+        ("@", False),
+        ("", False),
+    ],
+)
+def test_valid_branch_name_validator_directly(repo: Path, name: str, expected: bool) -> None:
+    assert sweep._valid(name, repo) is expected
+
+
+def test_leading_dash_branch_is_non_candidate_and_protected(repo: Path) -> None:
+    assert not sweep._candidate("-x/review-1")
+    item = sweep._classify(
+        repo,
+        sweep.Branch("-x/review-1", remote_sha=git(repo, "rev-parse", "main")),
+        worktree_branches=set(),
+        detached_heads=set(),
+        active_tasks=set(),
+        protected_branches=sweep.PROTECTED,
+        pr_lookup=lookup(),
+    )
+    assert item.classification == "protected"
+    assert item.reason == "outside agent/scratch candidate namespace or protected name"
 
 
 def test_unknown_pr_state_and_malformed_task_fail_closed(repo: Path) -> None:
@@ -205,9 +262,16 @@ def test_dry_run_preserves_eligible_refs(repo: Path) -> None:
 
 def test_dynamic_protected_branch_is_never_deleted(repo: Path) -> None:
     branch(repo, "codex/locked")
-    item = next(d for d in sweep.sweep(
-        repo, apply=True, pr_lookup=lookup(), protected_lookup=lambda _repo: {"codex/locked"},
-    ) if d.branch == "codex/locked")
+    item = next(
+        d
+        for d in sweep.sweep(
+            repo,
+            apply=True,
+            pr_lookup=lookup(),
+            protected_lookup=lambda _repo: {"codex/locked"},
+        )
+        if d.branch == "codex/locked"
+    )
     assert item.classification == "protected"
     assert git(repo, "ls-remote", "--heads", "origin", "codex/locked")
 
@@ -218,9 +282,16 @@ def test_unavailable_protection_query_is_report_only(repo: Path) -> None:
     def unavailable(_repo: Path) -> set[str]:
         raise RuntimeError("query unavailable")
 
-    item = next(d for d in sweep.sweep(
-        repo, apply=True, pr_lookup=lookup(), protected_lookup=unavailable,
-    ) if d.branch == "codex/unknown-protection")
+    item = next(
+        d
+        for d in sweep.sweep(
+            repo,
+            apply=True,
+            pr_lookup=lookup(),
+            protected_lookup=unavailable,
+        )
+        if d.branch == "codex/unknown-protection"
+    )
     assert item.classification == "report-only"
     assert "protection query unavailable" in item.reason
     assert git(repo, "ls-remote", "--heads", "origin", "codex/unknown-protection")
@@ -254,10 +325,15 @@ def test_remote_deletion_passes_one_validated_refspec(repo: Path, monkeypatch: p
     monkeypatch.setattr(sweep, "_git", capture)
     item = only(repo, "pr-123", apply=True)
     assert item.classification == "delete-ancestor"
-    assert calls == [(
-        "push", "--porcelain", f"--force-with-lease=refs/heads/pr-123:{sha}",
-        "origin", ":refs/heads/pr-123",
-    )]
+    assert calls == [
+        (
+            "push",
+            "--porcelain",
+            f"--force-with-lease=refs/heads/pr-123:{sha}",
+            "origin",
+            ":refs/heads/pr-123",
+        )
+    ]
 
 
 def test_remote_advance_during_push_preserves_both_refs(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -279,14 +355,20 @@ def test_remote_advance_during_push_preserves_both_refs(repo: Path, monkeypatch:
     assert not item.remote_deleted and not item.local_deleted
     assert git(repo, "ls-remote", "--heads", "origin", "codex/racing").split()[0] == new_sha
     assert git(repo, "rev-parse", "refs/heads/codex/racing") == old_sha
-    assert pushes == [(
-        "push", "--porcelain", f"--force-with-lease=refs/heads/codex/racing:{old_sha}",
-        "origin", ":refs/heads/codex/racing",
-    )]
+    assert pushes == [
+        (
+            "push",
+            "--porcelain",
+            f"--force-with-lease=refs/heads/codex/racing:{old_sha}",
+            "origin",
+            ":refs/heads/codex/racing",
+        )
+    ]
 
 
 def test_remote_disappears_after_classification_allows_local_deletion(
-    repo: Path, monkeypatch: pytest.MonkeyPatch,
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     branch(repo, "codex/absent")
     original = sweep._origin_head
@@ -321,15 +403,25 @@ def test_already_absent_remote_and_local_has_honest_receipt(repo: Path, monkeypa
 
 @pytest.mark.parametrize("failure", ["fetch", "task-recheck"])
 def test_json_receipts_survive_failure_after_deletion(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], failure: str,
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    failure: str,
 ) -> None:
     branch(repo, "codex/a")
     branch(repo, "codex/b")
     original_sweep = sweep.sweep
     monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
-    monkeypatch.setattr(sweep, "sweep", lambda root, *, apply: original_sweep(
-        root, apply=apply, pr_lookup=lookup(), protected_lookup=lambda _repo: set(),
-    ))
+    monkeypatch.setattr(
+        sweep,
+        "sweep",
+        lambda root, *, apply: original_sweep(
+            root,
+            apply=apply,
+            pr_lookup=lookup(),
+            protected_lookup=lambda _repo: set(),
+        ),
+    )
     if failure == "fetch":
         original_checked = sweep._checked
 
@@ -359,3 +451,66 @@ def test_json_receipts_survive_failure_after_deletion(
     assert len(deleted) == 1
     assert deleted[0]["remote_deleted"] and deleted[0]["local_deleted"]
     assert not git(repo, "ls-remote", "--heads", "origin", "codex/a")
+
+
+def test_text_mode_prints_decisions_on_partial_failure_and_json_is_unchanged(
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    original_sweep = sweep.sweep
+    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
+    monkeypatch.setattr(
+        sweep,
+        "sweep",
+        lambda root, *, apply: original_sweep(
+            root,
+            apply=apply,
+            pr_lookup=lookup(),
+            protected_lookup=lambda _repo: set(),
+        ),
+    )
+    original_checked = sweep._checked
+
+    def fail_fetch(root: Path, *args: str) -> str:
+        if args[0] == "fetch":
+            raise RuntimeError("final fetch failed")
+        return original_checked(root, *args)
+
+    monkeypatch.setattr(sweep, "_checked", fail_fetch)
+
+    # 1. Text mode: the sweep raises SweepError after one deletion (final fetch fails);
+    # stdout contains that deletion's decision line and stderr contains the error.
+    branch(repo, "codex/text-fail")
+    assert sweep.main(["--apply"]) == 1
+    text_captured = capsys.readouterr()
+    assert "delete-ancestor: codex/text-fail (branch tip is an ancestor of origin/main; age_days=" in text_captured.out
+    assert text_captured.err == "branch_sweep: final fetch failed\n"
+    assert not git(repo, "ls-remote", "--heads", "origin", "codex/text-fail")
+
+    # 2. JSON mode: assert the JSON-mode output is unchanged for the same failure
+    branch(repo, "codex/json-fail")
+    assert sweep.main(["--apply", "--json"]) == 1
+    json_captured = capsys.readouterr()
+    receipt = json.loads(json_captured.out)
+    assert receipt["ok"] is False
+    assert "final fetch failed" in receipt["error"]
+    assert json_captured.err == ""
+    deleted = [d for d in receipt["decisions"] if d["branch"] == "codex/json-fail"]
+    assert len(deleted) == 1
+    assert deleted[0]["remote_deleted"] and deleted[0]["local_deleted"]
+    assert not git(repo, "ls-remote", "--heads", "origin", "codex/json-fail")
+
+
+def test_text_mode_non_sweep_error_prints_only_to_stderr(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    def fail_root() -> Path:
+        raise RuntimeError("cannot resolve root")
+
+    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", fail_root)
+    assert sweep.main([]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "branch_sweep: cannot resolve root\n"
