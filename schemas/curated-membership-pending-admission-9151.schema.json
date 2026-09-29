@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pending teacher curated membership for issue 9151",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "issue", "members"],
+  "properties": {
+    "schema": {"const": "curated-membership-pending-admission-9151.v1"},
+    "issue": {"const": 9151},
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lemma", "slug", "sources", "decision", "pending_reason"],
+        "properties": {
+          "lemma": {"type": "string", "minLength": 1},
+          "slug": {"type": "string", "minLength": 1},
+          "sources": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "decision": {"enum": ["ADMIT", "REMOVE"]},
+          "pending_reason": {
+            "enum": ["no_allowed_english_anchor", "no_reviewed_source_locator", "removed_dialectal", "admissible_pending_publication"]
+          }
+        },
+        "allOf": [
+          {"if": {"properties": {"decision": {"const": "REMOVE"}}}, "then": {"properties": {"pending_reason": {"const": "removed_dialectal"}}}},
+          {"if": {"properties": {"pending_reason": {"const": "removed_dialectal"}}}, "then": {"properties": {"decision": {"const": "REMOVE"}}}}
+        ]
+      }
+    }
+  }
+}
