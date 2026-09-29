@@ -561,7 +561,7 @@ def test_letters_of_one_lesson_render_in_the_plans_order(
 def test_the_reviewer_reads_the_taught_order_the_writer_saw(
     tmp_path, sample_plan_entry, full_learner_state, sample_cited_records, plan_order
 ):
-    """The saved learner state keeps the letters' taught order; its identity hash stays canonical (#9182)."""
+    """The saved learner state keeps the letters' taught order, and its identity hash covers that order (#9182)."""
     letters = {letter: {"position": 1, "lesson": 2} for letter in plan_order}
     state = dataclasses.replace(full_learner_state, letters=letters)
     writer_block = _state_block(_render_state_prompt(sample_plan_entry, state, sample_cited_records))
@@ -578,11 +578,14 @@ def test_the_reviewer_reads_the_taught_order_the_writer_saw(
 
     assert list(reviewer_state["letters"]) == list(plan_order)
     assert learner_state_block(reviewer_state, STATE_WORD_STORE, STATE_GRAMMAR) == writer_block
-    canonical = json.dumps(state.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    assert reviewed["learner_state_sha256"] == identity == hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    sorted_letters = dataclasses.replace(state, letters=dict(sorted(letters.items())))
-    assert learner_state_sha256(sorted_letters) == identity  # the identity never depended on the order
-    if list(plan_order) == sorted(plan_order):  # a sorted state saves the same bytes as before the fix
+    assert reviewed["learner_state_sha256"] == identity
+    reversed_letters = dataclasses.replace(state, letters=dict(reversed(letters.items())))
+    # Teaching the same letters in another order is another learner state: an order-only change in an
+    # earlier plan must change the identity every freshness check compares.
+    assert learner_state_sha256(reversed_letters) != identity
+    if list(plan_order) == sorted(plan_order):  # a code-point-ordered state keeps the bytes and hash it had
+        canonical = json.dumps(state.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        assert identity == hashlib.sha256(canonical.encode("utf-8")).hexdigest()
         assert state_path.read_bytes() == lock.yaml_bytes(learner_state_document(state))
 
 
