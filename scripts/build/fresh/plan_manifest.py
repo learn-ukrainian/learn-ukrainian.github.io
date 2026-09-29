@@ -32,7 +32,10 @@ pinned as ``inputs.v1_totals``: activities and response opportunities by placeme
 and type, counted by ``activity_report.v1_totals`` from
 ``curriculum/l2-uk-en/<previous edition>/<slug>/activities.yaml`` (the level's
 ``level_config.PREVIOUS_EDITIONS`` entry, same slug). A level with no previous
-edition, or a slug with no v1 activities file, is recorded as such, never omitted.
+edition, or a slug whose v1 activities file git does not track, is recorded as
+such, never omitted. "No v1 module" is decided from the repository, not the working
+tree: a tracked v1 file that is missing or unreadable on disk (a sparse checkout)
+refuses the manifest (``v1_totals_unavailable``) rather than pinning a false baseline.
 The document names the v1 file and its sha256, so the freshness check also sees
 the v1 source change. ``inputs.v1_totals`` is the one input the schema does not
 require: a manifest written before #9166 has none, and its freshness is judged on
@@ -45,6 +48,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -393,10 +397,43 @@ def _v1_source(root: Path, level: str, slug: str) -> tuple[dict[str, str], bytes
         return {"status": "no_previous_edition", "reason": f"level {level} has no previous edition"}, None
     relative = f"{TREE}/{edition}/{slug}/activities.yaml"
     path = root / relative
-    if not path.is_file():
+    if not path.exists() and not _git_tracks(root, relative):
         return {"status": "absent", "path": relative, "reason": "no v1 activities file for this slug"}, None
-    data = path.read_bytes()
+    try:
+        data = path.read_bytes()
+    except OSError as error:
+        raise PlanReviewError(
+            V1_TOTALS_UNAVAILABLE,
+            f"{relative} is tracked by git but cannot be read from the working tree ({error.strerror}); "
+            f"a sparse checkout may exclude it (git sparse-checkout add {TREE}/{edition})",
+            [relative],
+        ) from error
     return {"status": "present", "path": relative, "sha256": sha256_bytes(data)}, data
+
+
+def _git_tracks(root: Path, relative: str) -> bool:
+    """Whether git tracks ``relative`` in the index or at HEAD (sparse-excluded entries included).
+
+    Refuses when git cannot answer: an unknown answer must not be recorded as "no v1 module".
+    """
+    tracked = False
+    for command in (["ls-files", "--", relative], ["ls-tree", "--name-only", "HEAD", "--", relative]):
+        try:
+            done = subprocess.run(
+                ["git", "-C", str(root), *command], capture_output=True, text=True, timeout=30, check=False
+            )
+        except (OSError, subprocess.TimeoutExpired) as error:
+            raise PlanReviewError(
+                V1_TOTALS_UNAVAILABLE, f"cannot ask git whether {relative} is tracked: {error}", [relative]
+            ) from error
+        if done.returncode != 0:
+            raise PlanReviewError(
+                V1_TOTALS_UNAVAILABLE,
+                f"cannot ask git whether {relative} is tracked: {done.stderr.strip() or f'exit {done.returncode}'}",
+                [relative],
+            )
+        tracked = tracked or bool(done.stdout.strip())
+    return tracked
 
 
 def v1_totals_document(root: Path, level: str, slug: str) -> dict[str, Any]:
@@ -719,7 +756,10 @@ def _v1_source_problem(root: Path, level: str, slug: str, totals_rel: str) -> st
         recorded = yaml.safe_load((root / totals_rel).read_bytes())["v1_module"]
     except (OSError, yaml.YAMLError, KeyError, TypeError):
         return "the v1 totals document cannot be read"
-    live = _v1_source(root, level, slug)[0]
+    try:
+        live = _v1_source(root, level, slug)[0]
+    except PlanReviewError as error:
+        return f"the mapped v1 module cannot be checked ({error.message})"
     if {key: recorded.get(key) for key in live} != live or set(recorded) - set(live) - {"shape"}:
         return "the mapped v1 module changed since the manifest"
     return ""

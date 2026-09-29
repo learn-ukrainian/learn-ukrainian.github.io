@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import re
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -755,6 +756,40 @@ def test_a_missing_v1_module_is_recorded_explicitly(env: Env, capsys) -> None:
     }
 
 
+def test_a_tracked_v1_module_missing_from_the_working_tree_refuses_the_manifest(env: Env, capsys) -> None:
+    """A sparse checkout that excludes the mapped v1 file must not pin "no v1 module" (#9166 review)."""
+    v1_path = write_v1_module(env)
+    git(env.root, "add", V1_ACTIVITIES)
+    git(env.root, "commit", "-q", "-m", "v1 module")
+    git(env.root, "update-index", "--skip-worktree", V1_ACTIVITIES)  # what sparse-checkout does
+    v1_path.unlink()
+    assert validate_provisional(env) == 0
+    code, _out, err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
+    assert code == 1
+    refusal = error(err)
+    assert refusal["code"] == plan_manifest.V1_TOTALS_UNAVAILABLE and refusal["paths"] == [V1_ACTIVITIES]
+    assert "tracked by git" in refusal["reason"] and "sparse" in refusal["reason"]
+    assert not (env.state_dir / "plan-review.manifest.yaml").exists()
+    assert not (env.state_dir / "plan-review.v1-totals.yaml").exists()
+
+
+def test_a_tracked_v1_module_removed_after_review_makes_it_stale_not_absent(approved, capsys) -> None:
+    env, _digest = approved  # the manifest recorded the untracked, missing v1 file as absent
+    v1_path = write_v1_module(env)
+    git(env.root, "add", V1_ACTIVITIES)
+    git(env.root, "commit", "-q", "-m", "v1 module")
+    v1_path.unlink()
+    code, document = status(env, capsys)
+    assert code == 1 and document["stale"]["v1_totals"].startswith("the mapped v1 module cannot be checked")
+
+
+def test_a_missing_v1_module_outside_a_git_repository_refuses(tmp_path: Path) -> None:
+    """Without git, "not tracked" cannot be established, so the absence is not recorded."""
+    with pytest.raises(plan_manifest.PlanReviewError) as refused:
+        plan_manifest.v1_totals_document(tmp_path, LEVEL, SLUG)
+    assert refused.value.code == plan_manifest.V1_TOTALS_UNAVAILABLE and refused.value.paths == [V1_ACTIVITIES]
+
+
 def test_a_level_without_a_previous_edition_is_recorded_explicitly(tmp_path: Path) -> None:
     document = plan_manifest.v1_totals_document(tmp_path, "b2", "any-slug")
     assert document["v1_module"] == {"status": "no_previous_edition", "reason": "level b2 has no previous edition"}
@@ -809,8 +844,18 @@ def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> No
     """The schema change is compatible: every committed manifest of record (none of which pins v1 totals
     before #9166) still validates, so no promoted review is invalidated by the new input."""
     repo = Path(__file__).resolve().parents[2]
-    records = sorted(repo.glob("curriculum/l2-uk-en/evidence/*/_state/*/manifests/plan/*.yaml"))
-    if not records:
-        pytest.skip("no plan manifest of record in this checkout")
+    # Enumerate and read the records from git, not the working tree, so a sparse checkout cannot hide them.
+    listed = subprocess.run(
+        ["git", "-C", str(repo), "ls-files", "--", "curriculum/l2-uk-en/evidence/*/_state/*/manifests/plan/*.yaml"],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    records = listed.stdout.split()
+    assert records, "git tracks no plan manifest of record; the position-1 manifest of record is expected"
     for record in records:
-        plan_manifest.validate_manifest_document(yaml.safe_load(record.read_bytes()))
+        content = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "blob", f":{record}"], capture_output=True, check=True, timeout=30
+        ).stdout
+        plan_manifest.validate_manifest_document(yaml.safe_load(content))
