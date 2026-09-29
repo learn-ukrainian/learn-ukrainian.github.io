@@ -860,32 +860,34 @@ def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
 def _query_prs_by_head_sha(
     repo_root: Path,
     head_sha: str | None,
-) -> list[PullRequestState]:
+) -> tuple[list[PullRequestState], str | None]:
     """Find PRs that introduced ``head_sha`` by GitHub commit-SHA search.
 
     Follow-up CI branches carry a different branch name than the MERGED PR head
     they fix, so ``gh pr list --head <branch>`` misses them.  A search hit means
     ``head_sha`` is a commit added by that PR, i.e. it equals the PR head or is
-    an ancestor of it.  Failures are swallowed: this lookup is supplementary to
-    the authoritative ``gh pr list --head`` guard and must never fabricate a
-    PR-guard error on its own.
+    an ancestor of it.  Returns ``(states, error)`` like the other PR queries:
+    a failed search is an error, never an empty answer, because an unrecorded
+    checkout may be named by no other PR guard.
     """
     if not head_sha:
-        return []
+        return [], None
     try:
         proc = _run(
             ["gh", "search", "prs", head_sha, "--json", "number,state"],
             cwd=repo_root,
             timeout=30,
         )
-    except (FileNotFoundError, subprocess.SubprocessError):
-        return []
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs: {type(exc).__name__})"
     if proc.returncode != 0:
-        return []
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs exit {proc.returncode})"
     try:
         raw_items = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError:
-        return []
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned malformed JSON)"
+    if not isinstance(raw_items, list):
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned a non-list)"
 
     states: list[PullRequestState] = []
     for item in raw_items:
@@ -902,7 +904,7 @@ def _query_prs_by_head_sha(
                 head_sha=head_sha,
             )
         )
-    return states
+    return states, None
 
 
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
@@ -2321,6 +2323,7 @@ def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> st
 # scratchpads register worktrees the task-bound classes never see; each class
 # below removes only a clean checkout whose HEAD is already on a remote ref.
 _SUPERSEDED_PR_REASON_PREFIX = "superseded PR #"
+_PR_LOOKUP_FAILED = "pr lookup failed; kept"
 _UNRECORDED_DETACHED_REASON = "unrecorded detached checkout"
 _FOREIGN_CHECKOUT_REASON = "foreign registered checkout"
 _UNRECORDED_DETACHED_MIN_AGE_HOURS = 2.0
@@ -2437,7 +2440,9 @@ def _review_pr_context(
     # follow-up commit.
     commit_prs: list[PullRequestState] = []
     if info.head and not _is_ancestor_of_origin_main(info.path):
-        commit_prs = _query_prs_by_head_sha(repo_root, info.head)
+        commit_prs, sha_error = _query_prs_by_head_sha(repo_root, info.head)
+        if sha_error:
+            errors.append(sha_error)
         all_states.extend(commit_prs)
     return all_states, commit_prs, review_number, errors
 
@@ -2594,6 +2599,9 @@ def _review_checkout_recheck(
     if activity is not None:
         return activity
     klass = _review_checkout_class(reason)
+    all_states, commit_prs, review_number, errors = _review_pr_context(repo_root, fresh)
+    if errors:
+        return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
     if klass == "foreign":
         fresh_reason = _foreign_checkout_reason(
             repo_root=repo_root,
@@ -2602,9 +2610,6 @@ def _review_checkout_recheck(
             timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
         )
     else:
-        all_states, commit_prs, review_number, errors = _review_pr_context(repo_root, fresh)
-        if errors:
-            return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
         fresh_reason = _review_checkout_reason(
             repo_root=repo_root,
             info=fresh,
@@ -3763,12 +3768,17 @@ def reap_worktrees(
             attention: list[str] = []
             if foreign:
                 # A foreign scratch checkout is never a candidate for the
-                # PR- or task-bound classes, only for the one class below.
-                reason = _foreign_checkout_reason(
-                    repo_root=repo_root,
-                    info=info,
-                    active_ids=active_ids,
-                    attention=attention,
+                # PR- or task-bound classes, only for the one class below --
+                # and never while PR discovery for it has failed.
+                reason = (
+                    None
+                    if pr_unknown
+                    else _foreign_checkout_reason(
+                        repo_root=repo_root,
+                        info=info,
+                        active_ids=active_ids,
+                        attention=attention,
+                    )
                 )
             else:
                 reason = _qualifying_reason(

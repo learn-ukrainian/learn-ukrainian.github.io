@@ -2567,7 +2567,7 @@ def test_unreadable_branch_query_retains_even_when_the_sha_lookup_succeeds(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, _sha: [rw.PullRequestState(number=42, state="MERGED", head_sha="abc")],
+        lambda _repo, _sha: ([rw.PullRequestState(number=42, state="MERGED", head_sha="abc")], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
 
@@ -2623,7 +2623,7 @@ def test_unreadable_branch_query_retains_in_the_legacy_class(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, sha: [rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)],
+        lambda _repo, sha: ([rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
 
@@ -3399,7 +3399,7 @@ def test_review_issue_number_does_not_block_merged_pr(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, _sha: [rw.PullRequestState(number=8243, state="MERGED", head_sha=head)],
+        lambda _repo, _sha: ([rw.PullRequestState(number=8243, state="MERGED", head_sha=head)], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
@@ -3431,7 +3431,7 @@ def test_review_issue_number_without_exact_head_pr_reaps_merged_tree(
         else "gh pr view failed: GraphQL: Could not resolve to a PullRequest with the number of 8201"
     )
     monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _n: ([], err))
-    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: [])
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
     monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
@@ -5692,7 +5692,7 @@ def _pr_with_two_heads(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, sha: [rw.PullRequestState(_OLD_PR, "OPEN", sha)],
+        lambda _repo, sha: ([rw.PullRequestState(_OLD_PR, "OPEN", sha)], None),
     )
     monkeypatch.setattr(
         rw,
@@ -6147,3 +6147,121 @@ def test_detached_review_class_stays_when_a_branch_is_checked_out_at_the_same_sh
     assert "proof changed during cleanup" in result.reason
     assert worktree.exists()
     assert git(worktree, "branch", "--show-current") == "review/same-sha"
+
+
+# --- Review checkouts: a failed PR lookup keeps the worktree (fail closed) --------
+
+
+def _force_sha_search_to_run(kind: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The unrecorded and foreign fixtures sit on main, which skips the SHA search."""
+    if kind != "superseded":
+        monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_classes_stay_when_the_pr_lookup_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run(kind, monkeypatch)
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], rw._PR_LOOKUP_FAILED))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert rw._PR_LOOKUP_FAILED in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_classes_stay_when_the_pr_lookup_fails_under_the_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run(kind, monkeypatch)
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], rw._PR_LOOKUP_FAILED))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+    if kind != "superseded":
+        monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable during cleanup" in result.reason
+    assert rw._PR_LOOKUP_FAILED in result.reason
+    assert worktree.exists()
+
+
+def test_a_reachable_pr_lookup_still_reaps_an_unrecorded_checkout(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree("unrecorded", tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run("unrecorded", monkeypatch)
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+class _GhSearch:
+    def __init__(self, *, returncode: int = 0, stdout: str = "[]", raises: Exception | None = None) -> None:
+        self.returncode = returncode
+        self.stdout = stdout
+        self.raises = raises
+
+    def __call__(self, *_args: Any, **_kwargs: Any) -> Any:
+        if self.raises is not None:
+            raise self.raises
+        return subprocess.CompletedProcess([], self.returncode, self.stdout, "")
+
+
+@pytest.mark.parametrize(
+    "search",
+    [
+        _GhSearch(raises=FileNotFoundError("gh")),
+        _GhSearch(raises=subprocess.TimeoutExpired("gh", 30)),
+        _GhSearch(returncode=1),
+        _GhSearch(stdout="{not json"),
+        _GhSearch(stdout='{"number": 1}'),
+    ],
+)
+def test_sha_search_failures_are_reported_not_swallowed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    search: _GhSearch,
+) -> None:
+    monkeypatch.setattr(rw, "_run", search)
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+
+
+def test_sha_search_success_returns_states_without_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert error is None
+    assert [(pr.number, pr.state, pr.head_sha) for pr in states] == [(7, "OPEN", "abc123")]
+    assert rw._query_prs_by_head_sha(tmp_path, None) == ([], None)
