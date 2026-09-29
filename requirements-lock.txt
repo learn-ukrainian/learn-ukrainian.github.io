@@ -1,5 +1,5 @@
 # Host/slow CI torch before sync (same CPU index as pytest-slow-nightly.yml):
-# uv pip install --python /home/ops/learn-ukrainian/.venv/bin/python --no-deps \
+# uv pip install --python .venv/bin/python --no-deps \
 #   --reinstall-package torch --index-url https://download.pytorch.org/whl/cpu \
 #   torch==2.13.0 torchvision==0.28.0
 # The installed 2.13.0 build satisfies the public pin, so sync alone would
