@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "662a64a29c80",
+  "strategy": "manual-commit",
+  "branch": "claude/impl-9230",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_agent_runtime.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/66/2a64a29c80/0/metadata.json",
+      "transcript": "/66/2a64a29c80/0/full.jsonl",
+      "compact_transcript": "/66/2a64a29c80/0/transcript.jsonl",
+      "content_hash": "/66/2a64a29c80/0/content_hash.txt",
+      "prompt": "/66/2a64a29c80/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 60,
+    "cache_creation_tokens": 107062,
+    "cache_read_tokens": 2226999,
+    "output_tokens": 18112,
+    "api_call_count": 30
+  }
+}
