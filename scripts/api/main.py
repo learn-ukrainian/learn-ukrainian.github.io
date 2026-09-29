@@ -12,6 +12,7 @@ Each team owns their router file. No conflicts.
 
 import asyncio
 import functools
+import json
 import logging
 import os
 import re
@@ -23,7 +24,7 @@ import uuid
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -1312,6 +1313,36 @@ def _tmp_usability_canary() -> dict:
         return {"ok": True, "writable": True, "error": None, "probe_error": True}
 
 
+def _backup_last_run_health(batch_state_dir: Path, *, now: datetime | None = None) -> dict[str, Any]:
+    receipt = batch_state_dir / "backups" / "last-run.json"
+    try:
+        data = json.loads(receipt.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {"status": "unknown", "reason": "no_receipt"}
+    except (OSError, ValueError):
+        return {"status": "unknown", "reason": "unreadable_receipt"}
+    if not isinstance(data, dict) or type(data.get("exit_status")) is not int:
+        return {"status": "unknown", "reason": "invalid_receipt"}
+    finished = data.get("finished_at_utc")
+    if not isinstance(finished, str):
+        return {"status": "unknown", "reason": "invalid_receipt"}
+    try:
+        finished_at = datetime.fromisoformat(finished.replace("Z", "+00:00"))
+    except ValueError:
+        return {"status": "unknown", "reason": "invalid_receipt"}
+    if finished_at.tzinfo is None:
+        return {"status": "unknown", "reason": "invalid_receipt"}
+    current = now or datetime.now(UTC)
+    status = "failed" if data["exit_status"] != 0 else "ok"
+    if status == "ok" and current - finished_at > timedelta(hours=26):
+        status = "stale"
+    return {
+        "status": status,
+        "exit_status": data["exit_status"],
+        "finished_at_utc": finished,
+    }
+
+
 def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
@@ -1336,6 +1367,7 @@ def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
         "worktree_cleanup_integrity_ok": worktree_cleanup_integrity_ok,
         "tmp_usability_ok": bool(tmp_usability.get("ok")),
         "tmp_usability": tmp_usability,
+        "backup_last_run": _backup_last_run_health(resolved_ctx.roots.batch_state_dir),
     }
 
 
