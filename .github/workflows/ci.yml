@@ -397,6 +397,16 @@ jobs:
             echo "::error::DSN server reports version ${version_num}, expected major 16" >&2
             exit 1
           fi
+          # ...and it must be cluster 16/main itself: the DSN's data_directory
+          # has to equal the 16/main data directory from pg_lsclusters.
+          expected_dir="$(pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" {print $6}')"
+          dsn_dir="$(PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SHOW data_directory')"
+          echo "DSN data_directory=${dsn_dir} (16/main: ${expected_dir})"
+          if [ -z "$expected_dir" ] || [ "$dsn_dir" != "$expected_dir" ]; then
+            echo "::error::DSN server data_directory '${dsn_dir}' is not the 16/main data directory '${expected_dir:-missing}'" >&2
+            pg_lsclusters >&2
+            exit 1
+          fi
       # Composite Python env (#9062): uv, offline-first lockfile install,
       # v4-runtime, Atlas manifest check. npm stays after it (no dependency
       # either way).

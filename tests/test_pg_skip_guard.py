@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from scripts.ci import junit_results
-from scripts.ci.pg_skip_guard import DSN_ENV, check, main
+from scripts.ci.pg_skip_guard import _PG_FILE_MARKERS, DSN_ENV, check, main
 from scripts.ci.pg_skip_guard import postgres_test_files as find_pg_files
 
 _PG_FILE = "tests/fleet_comms/test_sample_pg.py"
@@ -68,6 +68,9 @@ def test_postgres_files_are_found_in_the_repo():
 def test_fstring_skip_message_alone_marks_a_file_as_postgres(tmp_path: Path):
     import subprocess
 
+    # The fixture text contains any shorter marker as a substring, so pin the
+    # literal f-string marker (with its brace) itself.
+    assert "{_PG_DSN_ENV} unset/empty" in _PG_FILE_MARKERS
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, timeout=30)
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests" / "test_fstring_only.py").write_text(
