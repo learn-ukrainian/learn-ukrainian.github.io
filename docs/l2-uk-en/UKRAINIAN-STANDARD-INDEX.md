@@ -47,14 +47,14 @@
 ## B2 Level (Середній рівень другого ступеня)
 
 * **Themes (Catalog B):** Lines `2874-3065`
-* **Grammar (Catalog V):** Lines `3066-3915`
+* **Grammar (Catalog V):** Lines `3066-3480`
 
 ## C1 Level (Рівень вільного володіння I)
 
 * **Themes (Catalog B):** Lines `3916-4136`
-* **Grammar (Catalog V):** Lines `4137-5069`
+* **Grammar (Catalog V):** Lines `4137-4601`
 
 ## C2 Level (Рівень вільного володіння II)
 
 * **Themes (Catalog B):** Lines `5070-5300`
-* **Grammar (Catalog V):** Lines `5301-6000`
+* **Grammar (Catalog V):** Lines `5301-5746`
