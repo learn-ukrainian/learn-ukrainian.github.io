@@ -17,13 +17,13 @@ import pytest
 from scripts.api import release_snapshot
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import MANIFEST_NAME, is_release_root
-from scripts.common.repo_root import main_checkout_root
 from scripts.path_safety import safe_join
+from tests.helpers.python import project_python
 
 pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-VENV_PYTHON = main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python"
+VENV_PYTHON = project_python()
 
 
 def _run_git(repo_root: Path, *args: str) -> str:

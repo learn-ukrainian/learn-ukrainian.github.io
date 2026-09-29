@@ -4,19 +4,14 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
 from scripts.session_canary import grok_lane as gl
+from tests.helpers.python import project_python
 
 _REPO = Path(__file__).resolve().parents[1]
-
-
-def _py() -> str:
-    venv = _REPO / ".venv" / "bin" / "python"
-    return str(venv) if venv.is_file() else sys.executable
 
 
 def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:
@@ -183,7 +178,7 @@ def test_protocol_prints_epic(capsys: pytest.CaptureFixture[str]) -> None:
 
 def test_cli_module_help() -> None:
     proc = subprocess.run(
-        [_py(), "-m", "scripts.session_canary.grok_lane", "--help"],
+        [project_python(), "-m", "scripts.session_canary.grok_lane", "--help"],
         cwd=_REPO,
         capture_output=True,
         text=True,

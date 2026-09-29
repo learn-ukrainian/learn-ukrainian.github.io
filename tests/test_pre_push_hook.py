@@ -11,21 +11,12 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 GUARD_PATH = REPO_ROOT / ".githooks" / "check-pytest-stamp.py"
 STAMP_PATH = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "stamp-pytest.sh"
-GIT_COMMON_DIR = Path(
-    subprocess.run(
-        ["git", "rev-parse", "--git-common-dir"],
-        capture_output=True,
-        check=True,
-        cwd=REPO_ROOT,
-        text=True, timeout=30,
-    ).stdout.strip()
-)
-if not GIT_COMMON_DIR.is_absolute():
-    GIT_COMMON_DIR = REPO_ROOT / GIT_COMMON_DIR
-PYTHON = GIT_COMMON_DIR.resolve().parent / ".venv" / "bin" / "python"
+PYTHON = project_python()
 ZERO_SHA = "0" * 40
 
 

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.orchestration.reap_worktrees import primary_checkout_root
+from tests.helpers.python import project_python
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Always invoke from the primary checkout. Local agents often run pytest from a
@@ -34,7 +35,7 @@ def _run_dry_run(*extra_args: str) -> subprocess.CompletedProcess[str]:
     )
     return subprocess.run(
         [
-            ".venv/bin/python",
+            project_python(),
             "scripts/build/v7_build.py",
             "a1",
             "my-morning",

@@ -21,6 +21,7 @@ from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
 
 REPO = Path(__file__).resolve().parents[1]
@@ -158,12 +159,8 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert invalid.returncode == 2
 
 
-@pytest.mark.skipif(
-    not (REPO / ".venv" / "bin" / "python").exists(),
-    reason="start-claude.sh preflight resolves the context profile via the checkout's "
-    ".venv python; dispatch worktrees have no .venv by the shared-interpreter policy (#6858)",
-)
 def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
+    require_repo_venv()
     shell = shutil.which("bash")
     assert shell is not None
     bin_dir = tmp_path / "bin"
