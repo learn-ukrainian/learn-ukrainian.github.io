@@ -183,8 +183,11 @@ def _keep_delegate_unit_tests_local(monkeypatch):
 
 def _tmp_dispatch_repo_root(root: Path, monkeypatch) -> Path:
     """Make ``root`` the dispatch primary so an explicit ``--worktree PATH`` can
-    sit inside its ``.worktrees/dispatch/<agent>/`` subtree (#8775)."""
+    sit inside its ``.worktrees/dispatch/<agent>/`` subtree, which must exist as
+    a real directory (#8775)."""
     (root / ".git").mkdir(parents=True, exist_ok=True)
+    for agent in ("agy", "codex", "cursor"):
+        (root / ".worktrees" / "dispatch" / agent).mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(delegate, "_REPO_ROOT", root)
     monkeypatch.chdir(root)
     return root
@@ -9504,14 +9507,23 @@ def _refused_before_side_effects(monkeypatch, capsys, task_id: str, **overrides)
         ("\x1b", "U+001B"),
         ("\x7f", "U+007F"),
         ("\x85", "U+0085"),
-        (" ", "U+2028"),
+        ("\u2028", "U+2028"),
+        ("\u2029", "U+2029"),
+        # bidi marks, embeddings, overrides and isolates (category Cf)
+        ("\u200e", "U+200E"),
+        ("\u200f", "U+200F"),
+        ("\u202a", "U+202A"),
+        ("\u202e", "U+202E"),
+        ("\u2066", "U+2066"),
+        ("\u2069", "U+2069"),
+        ("\ufeff", "U+FEFF"),
     ],
 )
 @pytest.mark.parametrize("flag", ["worktree", "cwd"])
 def test_dispatch_refuses_a_control_character_in_a_caller_path(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys, flag, char, code
 ):
-    """#8775: a newline (or any control/line-separator character) cannot smuggle text into the prompt."""
+    """#8775: a newline, line separator, or bidi control cannot smuggle text into the prompt."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
@@ -9519,7 +9531,9 @@ def test_dispatch_refuses_a_control_character_in_a_caller_path(
 
     err = _refused_before_side_effects(monkeypatch, capsys, "path-ctrl", **{flag: raw})
 
-    assert f"--{flag} refused: the path contains control character {code} at offset {len(str(dispatch_wt))}" in err
+    assert (
+        f"--{flag} refused: the path contains control or format character {code} at offset {len(str(dispatch_wt))}"
+    ) in err
     assert _INJECTION not in err
 
 
@@ -9569,15 +9583,164 @@ def test_dispatch_refuses_a_symlink_out_of_the_agent_subtree(tmp_tasks_dir, tmp_
 
 
 def test_explicit_worktree_containment_accepts_the_agents_own_subtree(tmp_path):
-    """#8775: absolute and repo-relative paths inside the agent subtree pass; another agent's do not."""
+    """#8775: absolute and repo-relative paths inside the agent subtree pass as resolved paths; another agent's do not."""
     root = tmp_path / "primary"
-    (root / ".worktrees" / "dispatch" / "codex").mkdir(parents=True)
+    agent_root = root / ".worktrees" / "dispatch" / "codex"
+    agent_root.mkdir(parents=True)
+    (root / ".worktrees" / "dispatch" / "agy").mkdir()
 
-    for raw in (str(root / ".worktrees" / "dispatch" / "codex" / "task-1"), ".worktrees/dispatch/codex/task-2"):
-        assert delegate._explicit_worktree_containment_error(raw, agent="codex", repo_root=root) is None
-    assert delegate._explicit_worktree_containment_error(
+    for raw, name in ((str(agent_root / "task-1"), "task-1"), (".worktrees/dispatch/codex/task-2", "task-2")):
+        assert delegate._validate_explicit_worktree(raw, agent="codex", repo_root=root) == (agent_root / name, None)
+    validated, error = delegate._validate_explicit_worktree(
         ".worktrees/dispatch/codex/task-1", agent="agy", repo_root=root
     )
+    assert validated is None and "does not resolve under" in str(error)
+
+
+@pytest.mark.parametrize("flag", ["worktree", "cwd"])
+def test_dispatch_refuses_a_clean_symlink_that_resolves_to_a_newline(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, flag
+):
+    """#8775: the resolved path is checked too, so a clean name cannot carry a newline in through a symlink."""
+    main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
+    parent = main / ".worktrees" / "dispatch" / "codex" if flag == "worktree" else tmp_path
+    target = parent / f"x\n{_INJECTION}"
+    target.mkdir()
+    link = parent / "clean"
+    link.symlink_to(target, target_is_directory=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+
+    err = _refused_before_side_effects(monkeypatch, capsys, "path-resolved-ctrl", **{flag: str(link)})
+
+    assert (
+        f"--{flag} refused: the resolved path contains control or format character U+000A "
+        f"at offset {len(str(parent)) + 2}"
+    ) in err
+    assert _INJECTION not in err
+
+
+@pytest.mark.parametrize("level", [".worktrees", ".worktrees/dispatch", ".worktrees/dispatch/codex"])
+def test_dispatch_refuses_an_explicit_worktree_under_a_symlinked_anchor(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, level
+):
+    """#8775: ``.worktrees``, ``dispatch`` and the agent directory must be real directories, not symlinks.
+
+    Resolving the anchor as well as the candidate would accept a path outside
+    the repository whenever an anchor level links out of it.
+    """
+    main = tmp_path / "main"
+    (main / ".git").mkdir(parents=True)
+    outside = tmp_path / "outside"
+    (outside / "dispatch" / "codex" / "task-1").mkdir(parents=True)
+    anchor = main / level
+    anchor.parent.mkdir(parents=True, exist_ok=True)
+    anchor.symlink_to(outside / Path(*Path(level).parts[1:]), target_is_directory=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+
+    err = _refused_before_side_effects(
+        monkeypatch, capsys, "path-anchor", worktree=str(main / ".worktrees/dispatch/codex/task-1")
+    )
+
+    assert f"--worktree refused: {str(anchor)!r} is a symlink" in err
+
+
+def test_dispatch_refuses_an_explicit_worktree_when_the_agent_directory_is_missing(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#8775: a missing anchor cannot be proven real, so an explicit path under it is refused."""
+    main = tmp_path / "main"
+    (main / ".git").mkdir(parents=True)
+    (main / ".worktrees" / "dispatch").mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+
+    err = _refused_before_side_effects(
+        monkeypatch, capsys, "path-missing", worktree=str(main / ".worktrees/dispatch/codex/task-1")
+    )
+
+    assert f"--worktree refused: {str(main / '.worktrees/dispatch/codex')!r} is missing" in err
+
+
+def test_validated_path_changed_error_detects_a_swapped_symlink(tmp_path):
+    """#8775: a validated path resolves to itself until a component is swapped for a symlink."""
+    validated = tmp_path / "wt"
+    validated.mkdir()
+    assert delegate._validated_path_changed_error("--worktree", validated) is None
+    assert delegate._validated_path_changed_error("--worktree", tmp_path / "not-created-yet") is None
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    validated.rename(tmp_path / "moved")
+    validated.symlink_to(outside, target_is_directory=True)
+
+    assert "changed after validation" in str(delegate._validated_path_changed_error("--worktree", validated))
+
+
+def _swap_for_symlink_after_validation(monkeypatch, path: Path, outside: Path) -> None:
+    """Replace ``path`` with a symlink to ``outside`` at the first step after the boundary validation."""
+
+    def swap() -> None:
+        path.rename(path.with_name(path.name + "-moved"))
+        path.symlink_to(outside, target_is_directory=True)
+
+    monkeypatch.setattr(delegate, "_warn_node_modules_integrity", swap)
+
+
+def test_worktree_swapped_after_validation_cannot_redirect_the_lock_or_git(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#8775: the lock is taken on the validated path and the re-check refuses before any git step."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    _swap_for_symlink_after_validation(monkeypatch, dispatch_wt, outside)
+    locked: list[Path] = []
+    real_lock = delegate.worktree_lock
+    monkeypatch.setattr(delegate, "worktree_lock", lambda path, *a, **k: locked.append(path) or real_lock(path))
+    git_steps: list[str] = []
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **k: git_steps.append("base") or "0" * 40)
+    monkeypatch.setattr(delegate, "_ensure_worktree", lambda **k: git_steps.append("ensure"))
+    spawned: list[object] = []
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
+
+    rc = delegate.cmd_dispatch(_write_args(task_id="path-swap", worktree=str(dispatch_wt)))
+
+    assert rc == 1
+    assert f"--worktree refused: {str(dispatch_wt)!r} changed after validation" in capsys.readouterr().err
+    assert locked == [dispatch_wt]
+    assert git_steps == [] and spawned == []
+    assert list(outside.iterdir()) == []
+
+
+def test_cwd_swapped_after_validation_cannot_redirect_git_or_the_worker(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8775: the validated ``--cwd`` is re-checked before git inspects it, so a swap is refused."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    _swap_for_symlink_after_validation(monkeypatch, dispatch_wt, outside)
+    inspected: list[Path] = []
+    real_verify = delegate._resolve_verified_worktree_path
+    monkeypatch.setattr(
+        delegate,
+        "_resolve_verified_worktree_path",
+        lambda path: inspected.append(path) or real_verify(path) if dispatch_wt.is_symlink() else real_verify(path),
+    )
+    spawned: list[object] = []
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
+
+    rc = delegate.cmd_dispatch(_write_args(task_id="cwd-swap", cwd=str(dispatch_wt)))
+
+    assert rc == 1
+    assert f"--cwd refused: {str(dispatch_wt)!r} changed after validation" in capsys.readouterr().err
+    assert inspected == [] and spawned == []
 
 
 def test_worktree_block_renders_the_path_as_quoted_data():

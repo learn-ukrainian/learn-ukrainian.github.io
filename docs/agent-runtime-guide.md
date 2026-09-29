@@ -643,10 +643,28 @@ private git worktree so its writes are isolated from the main checkout.
 
 An explicit `--worktree <explicit-path>` must resolve, after following symlinks,
 inside `.worktrees/dispatch/{agent}/` of the target repository for the agent named
-by `--agent`; anything else is refused before any side effect (#8775). Both
-`--worktree` and `--cwd` values containing a control character or line separator
-are refused. The worker prompt renders the worktree path as a JSON-quoted value,
-so a path is data, never an instruction.
+by `--agent`. `.worktrees`, `.worktrees/dispatch` and `.worktrees/dispatch/{agent}`
+must each already exist as a real directory, not a symlink; bare `--worktree`
+creates them. Neither the `--worktree` or `--cwd` value nor the path it resolves
+to may contain a control character (Unicode category Cc), a format character
+(Cf, including the bidi marks, overrides and isolates U+200E/U+200F,
+U+202A–U+202E and U+2066–U+2069), a lone surrogate, or a line or paragraph
+separator (#8775).
+
+Dispatch validates both flags right after it resolves the target repository:
+before the DoR check, `--pr` resolution, or any other step that can run an
+external command. Only the per-task parent-record read, invocation attribution,
+and the `--repo` lookup run first, and none of them runs a command. Every later
+step (the worktree lock, git operations, provisioning, the task record, and the
+worker prompt) uses the resolved path from that validation, never the caller's
+string. After the lock is taken and before the first git operation, dispatch
+checks that the validated path still resolves to itself and refuses if a
+component has since been replaced by a symlink. A swap in the short window
+between that check and git's own path lookup is not detectable, because git
+takes a path rather than a directory handle.
+
+The worker prompt renders the worktree path as a JSON-quoted value, so a path
+is data, never an instruction.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into

@@ -127,6 +127,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -871,44 +872,124 @@ def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) ->
     return path.resolve()
 
 
-# Caller-supplied paths reach the worker prompt and subprocess cwd (#8775).
-# C0/C1 controls, DEL, and the Unicode line/paragraph separators can all start
-# a new line in a prompt; none belongs in a filesystem path this repo uses.
-_CALLER_PATH_FORBIDDEN_RE = re.compile("[\x00-\x1f\x7f-\x9f  ]")
+# Caller-supplied paths reach the worker prompt, task records, and subprocess
+# cwd (#8775). Controls (Cc: C0, C1, DEL) and line/paragraph separators (Zl,
+# Zp) can start a new line in a prompt; format controls (Cf: bidi overrides
+# and isolates such as U+202E and U+2066, zero-width characters) can make the
+# displayed text differ from the stored one; lone surrogates (Cs) are bytes
+# that are not UTF-8. None belongs in a filesystem path this repo uses.
+_CALLER_PATH_FORBIDDEN_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Zl", "Zp"})
 
 
-def _caller_path_control_char_error(flag: str, raw: str) -> str | None:
-    """Refuse a ``--worktree``/``--cwd`` value that contains a control character.
+def _caller_path_control_char_error(flag: str, raw: str, *, what: str = "the path") -> str | None:
+    """Refuse a ``--worktree``/``--cwd`` value that contains a control or format character.
 
     The message names the rule and the offending code point, never the raw
     value, so the refusal itself cannot carry injected text.
     """
-    match = _CALLER_PATH_FORBIDDEN_RE.search(raw)
-    if match is None:
-        return None
-    return (
-        f"❌ {flag} refused: the path contains control character U+{ord(match.group()):04X} "
-        f"at offset {match.start()}; caller-supplied paths may not contain control characters "
-        "or line separators (#8775)."
-    )
+    for offset, char in enumerate(raw):
+        if unicodedata.category(char) in _CALLER_PATH_FORBIDDEN_CATEGORIES:
+            return (
+                f"❌ {flag} refused: {what} contains control or format character U+{ord(char):04X} "
+                f"at offset {offset}; caller-supplied paths may not contain control characters, "
+                "format (bidi) characters, or line separators (#8775)."
+            )
+    return None
 
 
-def _explicit_worktree_containment_error(raw: str, *, agent: str, repo_root: Path) -> str | None:
-    """Refuse an explicit ``--worktree PATH`` outside ``<repo>/.worktrees/dispatch/<agent>/``.
+def _validate_caller_path(flag: str, raw: str, *, resolve: Callable[[str], Path]) -> tuple[Path | None, str | None]:
+    """Check ``raw``, resolve it once, and check the resolved path (#8775).
 
-    The path is resolved with symlinks followed, so ``..`` segments and
-    symlinks cannot leave the dispatching agent's subtree. The message quotes
-    only the resolved path via ``repr`` (#8775).
+    A clean name can be a symlink to a path that is not clean, so both the
+    caller's string and the path it resolves to are checked. Returns the
+    resolved path, which dispatch uses for every later step instead of ``raw``.
     """
-    agent_root = (repo_root.resolve() / ".worktrees" / "dispatch" / agent).resolve()
-    candidate = _normalize_worktree_path(raw, repo_root=repo_root)
-    if candidate != agent_root and candidate.is_relative_to(agent_root):
-        return None
-    return (
-        f"❌ --worktree refused: {str(candidate)!r} does not resolve under {str(agent_root)!r}; "
+    error = _caller_path_control_char_error(flag, raw)
+    if error:
+        return None, error
+    try:
+        resolved = resolve(raw)
+    except (OSError, RuntimeError) as exc:
+        return None, f"❌ {flag} refused: the path cannot be resolved ({type(exc).__name__}) (#8775)."
+    error = _caller_path_control_char_error(flag, str(resolved), what="the resolved path")
+    if error:
+        return None, error
+    return resolved, None
+
+
+def _worktree_containment_anchor(agent: str, *, repo_root: Path) -> tuple[Path | None, str | None]:
+    """Return ``<resolved repo>/.worktrees/dispatch/<agent>`` when each level is a real directory.
+
+    Resolving the anchor would let a symlinked ``.worktrees``, ``dispatch`` or
+    agent directory move the whole subtree outside the repository, so each
+    level is checked with ``lstat`` instead: it must exist and be a directory,
+    not a symlink (#8775).
+    """
+    if agent in {"", ".", ".."} or "/" in agent or "\\" in agent:
+        return None, f"❌ --worktree refused: agent {agent!r} is not a single path component (#8775)."
+    anchor = repo_root.resolve()
+    for part in (".worktrees", "dispatch", agent):
+        anchor = anchor / part
+        try:
+            mode: int | None = os.lstat(anchor).st_mode
+        except OSError:
+            mode = None
+        if mode is None or stat.S_ISLNK(mode) or not stat.S_ISDIR(mode):
+            state = "is missing" if mode is None else "is a symlink" if stat.S_ISLNK(mode) else "is not a directory"
+            return None, (
+                f"❌ --worktree refused: {str(anchor)!r} {state}; an explicit --worktree PATH needs "
+                f".worktrees/dispatch/{agent}/ to be a real directory inside the target repository (#8775). "
+                "Pass bare `--worktree` to auto-create one."
+            )
+    return anchor, None
+
+
+def _validate_explicit_worktree(raw: str, *, agent: str, repo_root: Path) -> tuple[Path | None, str | None]:
+    """Validate an explicit ``--worktree PATH`` and return its resolved path (#8775).
+
+    The path must resolve, symlinks followed, strictly inside the
+    real-directory anchor ``<repo>/.worktrees/dispatch/<agent>/``, and neither
+    the caller's string nor the resolved path may contain a control or format
+    character. The message quotes only resolved paths via ``repr``.
+    """
+    candidate, error = _validate_caller_path(
+        "--worktree", raw, resolve=lambda value: _normalize_worktree_path(value, repo_root=repo_root)
+    )
+    if candidate is None:
+        return None, error
+    anchor, error = _worktree_containment_anchor(agent, repo_root=repo_root)
+    if anchor is None:
+        return None, error
+    if candidate != anchor and candidate.is_relative_to(anchor):
+        return candidate, None
+    return None, (
+        f"❌ --worktree refused: {str(candidate)!r} does not resolve under {str(anchor)!r}; "
         f"an explicit --worktree PATH must be a directory inside .worktrees/dispatch/{agent}/ "
         "of the target repository after following symlinks (#8775). "
         "Pass bare `--worktree` to auto-create one."
+    )
+
+
+def _validated_path_changed_error(flag: str, validated: Path) -> str | None:
+    """Refuse when a validated path no longer resolves to itself (#8775).
+
+    ``validated`` was fully resolved at validation time, so it keeps resolving
+    to itself until one of its components is replaced by a symlink. Dispatch
+    calls this after taking the worktree lock and immediately before handing
+    the path to git, so a swap after validation is refused instead of
+    redirecting the lock, git operations, or the worker. A swap inside the
+    remaining window between this check and git's own path lookup is not
+    detectable here: git takes a path, not a directory handle.
+    """
+    try:
+        current: Path | None = validated.resolve()
+    except (OSError, RuntimeError):
+        current = None
+    if current == validated:
+        return None
+    return (
+        f"❌ {flag} refused: {str(validated)!r} changed after validation (a component is now a symlink "
+        "or cannot be resolved); refusing to follow it (#8775)."
     )
 
 
@@ -8620,6 +8701,38 @@ def _dispatch(
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
+    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from agent_runtime.routes import is_retired_gpt56_model
+    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
+
+    # #8775: validate caller-supplied paths once, before the DoR check, PR
+    # resolution, or anything else that can run an external command, and
+    # before any use reaches a check, a subprocess cwd, a task record, or the
+    # worker prompt. Every later step uses the resolved paths returned here,
+    # never the caller's strings. An explicit --worktree PATH must stay inside
+    # the dispatching agent's own dispatch subtree; --cwd keeps its documented
+    # read-only-primary and sibling-repo flows.
+    worktree_arg = getattr(args, "worktree", None)
+    validated_worktree: Path | None = None
+    validated_cwd: Path | None = None
+    if worktree_arg and worktree_arg != "auto":
+        validated_worktree, path_error = _validate_explicit_worktree(
+            worktree_arg,
+            agent=resolve_retired_agent_alias(args.agent) or args.agent,
+            repo_root=target_repo_root,
+        )
+        if path_error:
+            print(path_error, file=sys.stderr)
+            return 2
+        worktree_arg = str(validated_worktree)
+    if args.cwd:
+        validated_cwd, path_error = _validate_caller_path("--cwd", args.cwd, resolve=_resolve_cwd_path)
+        if path_error:
+            print(path_error, file=sys.stderr)
+            return 2
+        args.cwd = str(validated_cwd)
+
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
     early_prompt: str | None = None
@@ -8643,11 +8756,6 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
-
-    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
-    from agent_runtime.routes import is_retired_gpt56_model
-    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
     if is_retired_gpt56_model(getattr(args, "model", None)):
@@ -8768,25 +8876,6 @@ def _dispatch(
             )
             return 2
 
-    worktree_arg = getattr(args, "worktree", None)
-    # #8775: validate caller-supplied paths once, before any use reaches a
-    # check, a subprocess cwd, or the worker prompt. An explicit --worktree
-    # PATH must stay inside the dispatching agent's own dispatch subtree;
-    # --cwd keeps its documented read-only-primary and sibling-repo flows.
-    for flag, raw_path in (("--worktree", worktree_arg), ("--cwd", args.cwd)):
-        path_error = _caller_path_control_char_error(flag, raw_path) if raw_path else None
-        if path_error:
-            print(path_error, file=sys.stderr)
-            return 2
-    if worktree_arg and worktree_arg != "auto":
-        containment_error = _explicit_worktree_containment_error(
-            worktree_arg,
-            agent=resolve_retired_agent_alias(args.agent) or args.agent,
-            repo_root=target_repo_root,
-        )
-        if containment_error:
-            print(containment_error, file=sys.stderr)
-            return 2
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
@@ -9222,8 +9311,8 @@ def _dispatch(
             has_worktree = False
             if worktree_arg:
                 has_worktree = True
-            elif args.cwd:
-                candidate_cwd = _resolve_cwd_path(args.cwd)
+            elif validated_cwd is not None:
+                candidate_cwd = validated_cwd
                 if _resolve_verified_worktree_path(candidate_cwd):
                     has_worktree = True
             if not has_worktree:
@@ -9385,8 +9474,16 @@ def _dispatch(
                 # A removal that finished first leaves a missing path, which the
                 # checks below treat as a fresh worktree (#8610).
                 worktree_locks.enter_context(
-                    worktree_lock(_normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root))
+                    worktree_lock(
+                        validated_worktree
+                        or _normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root)
+                    )
                 )
+            # #8775: an explicit path is locked as validated, then re-checked
+            # before the first git operation touches it.
+            changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
+            if changed_error:
+                raise ValueError(changed_error.removeprefix("❌ "))
             if fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
@@ -9526,8 +9623,8 @@ def _dispatch(
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
-        elif args.cwd:
-            candidate_cwd = _resolve_cwd_path(args.cwd)
+        elif validated_cwd is not None:
+            candidate_cwd = validated_cwd
             resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
             if resolved_wt:
                 dry_run_worktree = resolved_wt
@@ -9686,8 +9783,8 @@ def _dispatch(
     worktree_telemetry: dict[str, Any] = {}
     if worktree_arg:
         # Fix 4 (#1476): the sentinel ``auto`` (from bare ``--worktree``)
-        # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
-        # paths remain unchanged for back-compat with in-flight dispatches.
+        # resolves to ``.worktrees/dispatch/{agent}/{task}/``. An explicit
+        # path is the one resolved at validation (#8775).
         # #672 P2.1: sibling --repo roots the auto path under that checkout.
         resolved_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
@@ -9696,6 +9793,9 @@ def _dispatch(
         )
         try:
             # The worktree lock taken before base resolution is still held (#8610).
+            changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
+            if changed_error:
+                raise ValueError(changed_error.removeprefix("❌ "))
             if fleet_repo.default:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                     agent=dispatch_agent,
@@ -9777,8 +9877,16 @@ def _dispatch(
                         file=sys.stderr,
                     )
             return 1
-    elif args.cwd:
-        candidate_cwd = _resolve_cwd_path(args.cwd)
+    elif validated_cwd is not None:
+        candidate_cwd = validated_cwd
+        # #8775: the validated cwd is re-checked before git inspects it and
+        # again under the lock below.
+        changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
+        if changed_error:
+            stdout_fd.close()
+            stderr_fd.close()
+            print(changed_error, file=sys.stderr)
+            return 1
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
         if resolved_wt:
             try:
@@ -9791,6 +9899,13 @@ def _dispatch(
             # A removal that held the lock may have taken the checkout while
             # this dispatch waited. Never fall back to the stale cwd: fail
             # before any task record is published or any worker spawned (#8610).
+            # A symlink swapped in since validation is refused too (#8775).
+            changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
+            if changed_error:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(changed_error, file=sys.stderr)
+                return 1
             if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
                 stdout_fd.close()
                 stderr_fd.close()
@@ -11769,8 +11884,8 @@ def build_parser() -> argparse.ArgumentParser:
             "{task}/` under the primary checkout that owns this script, or "
             "`--worktree PATH` to reuse a specific added worktree inside "
             "`.worktrees/dispatch/{agent}/` (validated against the expected "
-            "dispatch branch before reuse; paths elsewhere or with control "
-            "characters are refused, #8775). "
+            "dispatch branch before reuse; paths elsewhere, under a symlinked "
+            "anchor, or with control or format characters are refused, #8775). "
             "Refuses when the invocation cwd is a different git root (#6900)."
         ),
     )
