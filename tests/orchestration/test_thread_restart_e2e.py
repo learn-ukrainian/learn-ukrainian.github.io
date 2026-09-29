@@ -1099,7 +1099,7 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
         "set -e\n"
         f"printf '%s\\n' \"$@\" > {os.fspath(argv_capture)!r}\n"
         f'printf \'%s\\n\' \'{{"session_id":"{replacement_thread_id}",'
-        '"source":"startup","model":"gpt-6-astra",'
+        '"source":"startup","model":"gpt-6.1-sol",'
         '"agent_type":"orchestrator"}\' | '
         f'CLAUDE_PROJECT_DIR="$PWD" bash .codex/hooks/session-setup.sh > {os.fspath(hook_capture)!r}\n'
         ".venv/bin/python -m agents_extensions.shared.session_streams hook close >/dev/null\n",
@@ -1127,7 +1127,7 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         launched = run(
-            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6-astra"],
+            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol"],
             cwd=primary,
             env=env,
         )
@@ -1205,7 +1205,7 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
         }
     )
     launched = run(
-        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6-astra"],
+        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol"],
         cwd=primary,
         env=env,
     )
@@ -1273,7 +1273,7 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         launched = run(
-            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6-astra"],
+            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol"],
             cwd=primary,
             env=env,
         )
@@ -1293,7 +1293,7 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
 @pytest.mark.parametrize(
     ("first_provider", "second_provider", "first_model", "second_model"),
     (
-        ("grok", "codex", "grok-4.7", "gpt-6-astra"),
+        ("grok", "codex", "grok-4.7", "gpt-6.1-sol"),
         ("claude", "gemini", "claude-fable-5", "gemini-3.1-pro-high"),
     ),
 )

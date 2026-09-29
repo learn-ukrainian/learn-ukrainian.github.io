@@ -287,7 +287,7 @@ def _build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
-            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6.1-sol\n\n"
             "Outputs:\n"
             "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n"
             "  --module also refuses completion (exit 1, stderr) when module-verdict.yaml already exists and\n"
@@ -310,7 +310,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--question-seat",
         default=None,
         help=(
-            "Explicit agent:model seat for open questions (e.g. codex:gpt-6-sol; no default). "
+            "Explicit agent:model seat for open questions (e.g. codex:gpt-6.1-sol; no default). "
             "If absent when the lesson has open questions, stops with question_seat_required"
         ),
     )

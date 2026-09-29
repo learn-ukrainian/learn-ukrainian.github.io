@@ -92,7 +92,7 @@ class World:
         )
         return task_id
 
-    def writer(self, n: int, model: str = "gpt-6-astra") -> None:
+    def writer(self, n: int, model: str = "gpt-6.1-sol") -> None:
         lock.atomic_write(
             self.state_dir / f"lesson-{n}.writer.yaml",
             yaml.safe_dump({"writer": "codex-tools", "model": model}).encode(),
@@ -1064,7 +1064,7 @@ def test_a_second_seat_of_the_first_reviewers_family_is_refused(world: World, sa
 
 def test_a_second_seat_of_the_writers_family_is_a_rejected_attempt(world: World, sampled: None) -> None:
     world.record(world.make_return(2))
-    world.task("review-gpt", "codex", "gpt-6-astra")  # the writer's family
+    world.task("review-gpt", "codex", "gpt-6.1-sol")  # the writer's family
     outcome = world.record(world.make_return(2), task_id="review-gpt", second=True)
     assert not outcome.accepted and outcome.verdict == "REJECTED"
     assert record.SAME_FAMILY_REVIEW in outcome.rejection_codes
@@ -1337,7 +1337,7 @@ def _rows(path: Path, table: str) -> list[sqlite3.Row]:
 
 
 def test_a_first_seat_of_the_writers_own_family_is_a_rejected_attempt(world: World) -> None:
-    world.task("review-gpt", "codex", "gpt-6-astra")  # the fixture's writer model is gpt-6-astra too
+    world.task("review-gpt", "codex", "gpt-6.1-sol")  # the fixture's writer model is gpt-6.1-sol too
     made = world.make_return(2, [finding("F-01", severity="MAJOR")])
     outcome = world.record(made, task_id="review-gpt")
     assert not outcome.accepted and outcome.verdict == "REJECTED"

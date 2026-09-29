@@ -166,7 +166,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     )
     started = subprocess.run(
         ["bash", os.fspath(session_hook)],
-        input=json.dumps({"source": "startup", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "startup", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -185,7 +185,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -212,7 +212,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -255,7 +255,7 @@ def _run_bound_codex_compact(tmp_path: Path) -> str:
     )
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,

@@ -1738,7 +1738,7 @@ def _compute_dispatch_routing_budget(
     if reserve_relaxes_codex:
         rec["primary_agent_for_code"] = "codex"
         rec["rationale"] = (
-            "Operator-confirmed Codex reset reserve permits the GPT-6 Sol code lane; "
+            "Operator-confirmed Codex reset reserve permits the GPT-6.1 Sol code lane; "
             "provider windows, runtime headroom, and lane health were freshly verified."
         )
 
@@ -1918,7 +1918,7 @@ def compute_routing_budget(
     if reserve_relaxes_codex and budget["agents"].get("codex", {}).get("eligible") is True:
         budget["recommendation"]["primary_agent_for_code"] = "codex"
         budget["recommendation"]["rationale"] = (
-            "Operator-confirmed Codex reset reserve permits the GPT-6 Sol code lane; "
+            "Operator-confirmed Codex reset reserve permits the GPT-6.1 Sol code lane; "
             "provider windows, runtime headroom, and ACP compatibility were freshly verified."
         )
     primary = budget["recommendation"]["primary_agent_for_code"]

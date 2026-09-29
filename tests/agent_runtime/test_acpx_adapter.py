@@ -1002,7 +1002,7 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
     assert "--json-strict" in plan.cmd
-    assert ("--model", "gpt-6-sol") in pairs
+    assert ("--model", "gpt-6.1-sol") in pairs
 
 
 def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch):
@@ -1010,9 +1010,9 @@ def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
     adapter = AcpxAdapter()
 
-    plan = _build(adapter, cwd=tmp_path, model="gpt-6-astra")
+    plan = _build(adapter, cwd=tmp_path, model="gpt-6-luna")
     pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
-    assert ("--model", "gpt-6-astra") in pairs
+    assert ("--model", "gpt-6-luna") in pairs
 
 
 def test_build_invocation_ignores_unsupported_effort_without_raising(tmp_path, monkeypatch):

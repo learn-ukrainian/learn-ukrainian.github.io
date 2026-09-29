@@ -245,7 +245,7 @@ def test_a_seeded_task_carries_the_private_record_the_findings_and_the_lesson_bu
     # blinded: nothing names the reviewer seat, and nothing says who planted or gold-checked the seed
     for absent in (
         "codex",
-        "gpt-6-astra",
+        "gpt-6.1-sol",
         "openai",
         "harness",
         "google",
@@ -477,7 +477,7 @@ def test_the_adjudicator_must_be_known_and_independent(seeded: Case) -> None:
     # the writer's family (anthropic) and the reviewer's family (openai) may not adjudicate, whatever the reply claims
     seeded.dispatch("claude", "claude-sonnet-5")
     assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_WRITER]
-    seeded.dispatch("codex", "gpt-6-astra")
+    seeded.dispatch("codex", "gpt-6.1-sol")
     assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_REVIEWER]
 
 
@@ -687,7 +687,7 @@ def test_replacing_the_record_between_the_check_and_the_identity_read_does_not_c
     path = seeded.env.tasks / f"{seeded.task_id}.json"
     checked = json.loads(path.read_text(encoding="utf-8"))
     assert checked["agent"] == "agy"  # google: the family Case.__init__ dispatched and that passed every check
-    replaced = {**checked, "agent": "codex", "model": "gpt-6-astra"}  # openai: the reviewer's own family
+    replaced = {**checked, "agent": "codex", "model": "gpt-6.1-sol"}  # openai: the reviewer's own family
     real_read_text = Path.read_text
     calls = {"n": 0}
 

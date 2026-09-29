@@ -1056,9 +1056,9 @@ def test_shadow_attestation_round_trip_binds_tier_capacity_and_stability_wobble(
         )
 
 
-@pytest.mark.parametrize("identity", [None, {"source": "provider", "provider_observed_model": "gpt-6-astra", "provider_observation": "verified"}])
+@pytest.mark.parametrize("identity", [None, {"source": "provider", "provider_observed_model": "gpt-6.1-sol", "provider_observation": "verified"}])
 def test_codex_legacy_or_forged_identity_stays_unknown_and_cannot_attest(tmp_path, identity):
-    route = {**ROUTE.to_dict(), "family": "gpt", "resolved_model": "gpt-6-astra", "resolved_model_version": "gpt-6-astra"}
+    route = {**ROUTE.to_dict(), "family": "gpt", "resolved_model": "gpt-6.1-sol", "resolved_model_version": "gpt-6.1-sol"}
     if identity is not None:
         route["model_identity"] = identity
     normalized = layerb_qualify.EffectiveRoute.from_mapping(route).to_dict()

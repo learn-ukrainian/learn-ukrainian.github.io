@@ -18,7 +18,7 @@ WRITER_FAMILY = "anthropic"
 PLANTER_MODEL, PLANTER_FAMILY = "gemini-3.1-pro-preview", "google"
 GOLD_MODEL, GOLD_FAMILY = "grok-4.3", "xai"
 SEATS = {  # harness -> (model, family)
-    "codex": ("gpt-6-astra", "openai"),
+    "codex": ("gpt-6.1-sol", "openai"),
     "agy": ("gemini-3.1-pro-preview", "google"),
     "grok": ("grok-4.3", "xai"),
 }

@@ -5,9 +5,9 @@
 codex_cc_configure_route() {
   local model="$1"
   case "$model" in
-    gpt-6-sol|gpt-6-luna|gpt-6-astra) ;;
+    gpt-6.1-sol|gpt-6-luna) ;;
     *)
-      echo "Error: Codex model $model rejected; approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol." >&2
+      echo "Error: Codex model $model rejected; approved models are gpt-6-luna, gpt-6.1-sol." >&2
       return 2
       ;;
   esac
