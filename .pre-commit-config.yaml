@@ -30,16 +30,16 @@ default_install_hook_types:
 repos:
 
   # --- Ruff: the primary linter (same rules as CI) ---
-  # Version pinned to match what scripts/api/requirements-dev.txt
-  # and the CI workflow install. Bump in lockstep.
+  # Match the requirements-lock.txt pin installed by CI.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.5
+    rev: v0.15.21
     hooks:
       - id: ruff
         name: ruff (lint)
-        # CI runs `ruff check scripts/ tests/ agents_extensions/ dashboards/` — match that here.
-        args: [--config=pyproject.toml]
-        files: ^(scripts|tests|agents_extensions|dashboards)/.*\.py$
+        # CI runs this same repo-tree command with pyproject.toml autodiscovery.
+        args: [scripts/, tests/, agents_extensions/, dashboards/]
+        pass_filenames: false
+        always_run: true
 
   # --- Gitleaks: prevent secrets from ever being committed ---
   # The repository already has a .gitleaks.toml allowlist for the
@@ -89,6 +89,31 @@ repos:
   # --- Local hooks (project-specific) ---
   - repo: local
     hooks:
+      # Focused checks from CI's repo_wide leg; each receives no paths.
+      - id: repo-wide-marker-invariant
+        name: repo-wide pytest marker invariant
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_repo_wide_marker_invariant.py --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^tests/.*\.py$
+        stages: [pre-commit]
+
+      - id: task-store-resolver-guard
+        name: task-store call-time resolver guard
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_conftest_task_store_guard.py --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^(scripts|tests)/.*\.py$
+        stages: [pre-commit]
+
+      - id: sparse-collection-guard
+        name: sparse tree collection guard
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^tests/.*\.py$
+        stages: [pre-commit]
+
       # Prevent accidentally adding .yaml.bak / .yaml.orig files. Plan
       # history lives in git and the plan immutability hook enforces
       # version bumps for content-bearing edits.
