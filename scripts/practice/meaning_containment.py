@@ -41,6 +41,14 @@ _HEADER = re.compile(
 _ARTICLE = re.compile(r"(?:\d+\s*》|\|\||◇|‖|[¹²³⁴⁵⁶⁷⁸⁹⁰]|\b[IVX]{1,3}\s*[-–])")
 _QUOTE = re.compile(r"[«»“”„\"\[\]]")
 _EN_META = re.compile(r"\b(?:Conjugation:|Synonym of|Initialism of|Augm|Sławno)\b", re.I)
+_EN_FRAGMENT = re.compile(
+    r"^(?:masculine|feminine|neuter|plural|comparative|superlative)\s+(?:possessive|form)\s+of\b"
+    r"|^short form of\b|^with (?:pronoun|adverb)\b|^introducing (?:an? )?\w+ clause\b"
+    r"|^indicating (?:time|place)\b|^used to (?:intensify|introduce|form)\b"
+    r"|^(?:synonym|initialism|abbreviation|inflection) of\b",
+    re.I,
+)
+_EN_LABEL = re.compile(r"^(?:(?:numeral|adjective|adverb|noun|verb|pronoun|particle|anatomy)\s*:\s*|numeral\s+)", re.I)
 _REVERSE_SOURCE_MARKERS = ("e2u", "reverse", "en→uk", "en->uk")
 
 
@@ -55,19 +63,59 @@ def english(text: str) -> bool:
     return latin > cyrillic
 
 
+def english_head(text: str) -> str:
+    """Take only an existing English head, dropping dictionary metadata.
+
+    This never translates or repairs Ukrainian article text. A remaining
+    cross-reference or grammatical instruction is not a learner meaning.
+    """
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"^\d+\s*[.)]\s*", "", text)
+    text = re.sub(r"^\([^)]*\)\s*", "", text)
+    text = re.split(r"\bConjugation\s*:|[;,(\[]", text, maxsplit=1, flags=re.I)[0].strip()
+    text = _EN_LABEL.sub("", text).strip(" .:;,-")
+    if re.fullmatch(r"to [a-z-]+ once", text, re.I):
+        text = text.removesuffix(" once")
+    return "" if _EN_FRAGMENT.search(text) else text
+
+
 def _candidate_alternatives(candidate: str) -> set[str]:
     """Extract literal alternatives only; never synthesize a translation."""
     candidate = re.split(r"\s+Conjugation:", candidate, flags=re.I)[0]
     candidate = re.sub(r"^\s*\([^)]*\)\s*", "", candidate)
-    alternatives = [re.sub(r"^\s*\d+[.)]\s*", "", part) for part in re.split(r"[;,()\[\]]", candidate)]
-    return {_key(part) for part in alternatives if _key(part)}
+    alternatives = [english_head(part) for part in re.split(r"[;,()\[\]]", candidate)]
+    return {_key(part) for part in alternatives if part and english(part)}
 
 
-def _candidates_support_display(candidates: list[Any], display: str) -> bool:
-    """Every displayed alternative must occur literally in the source field."""
-    targets = {_key(part) for part in re.split(r"[;,]", display) if _key(part)}
+def english_candidates_support_display(candidates: list[Any], display: str, *, allow_embedded: bool = False) -> bool:
+    """The displayed head must be supported by an attributed candidate."""
+    target = _key(display)
     options = set().union(*(_candidate_alternatives(candidate) for candidate in candidates if isinstance(candidate, str)))
-    return bool(targets) and targets <= options
+    if not target:
+        return False
+    if target in options:
+        return True
+    if not allow_embedded:
+        return False
+    if len(target) >= 4 and any(option.startswith(target + " ") for option in options):
+        return True
+    words = set(re.findall(r"[a-z]+", target)) - {"a", "an", "the", "to", "of", "be"}
+    if not words:
+        return False
+    for candidate in candidates:
+        if not isinstance(candidate, str):
+            continue
+        head = english_head(candidate)
+        head_words = set(re.findall(r"[a-z]+", head.casefold()))
+        all_words = set(re.findall(r"[a-z]+", candidate.casefold()))
+        if len(words) == 1:
+            word = next(iter(words))
+            if re.search(rf"\bor\s+(?:[a-z]+\s+){{0,2}}{re.escape(word)}\b", head, re.I):
+                return True
+            continue
+        if words <= all_words and words & head_words:
+            return True
+    return False
 
 
 def meaning_problem(text: str, lemma: str, sum11: list[str] | None = None) -> str | None:
@@ -76,6 +124,8 @@ def meaning_problem(text: str, lemma: str, sum11: list[str] | None = None) -> st
         return "missing"
     if lemma.casefold() in REVIEWED_WRONG_LEMMAS:
         return "reviewed_wrong_sense"
+    if english(text) and (_EN_FRAGMENT.search(text) or _EN_LABEL.match(text)):
+        return "dictionary_fragment"
     if _YEAR.search(text):
         return "dated_citation"
     if "(" in text or ")" in text:
@@ -119,9 +169,14 @@ def source_bound_meaning(
         candidates = sense.get(field)
         if isinstance(candidates, str):
             candidates = [candidates]
-        if (source and isinstance(candidates, list) and any(
-            isinstance(candidate, str) and _key(displayed) == _key(candidate) for candidate in candidates
-        ) and (english(displayed) or source.casefold() in {"sum20_vetted", "vts_vetted", "ulif_checked"})):
+        matched = isinstance(candidates, list) and (
+            english_candidates_support_display(candidates, displayed)
+            if english(displayed)
+            else any(isinstance(candidate, str) and _key(displayed) == _key(candidate) for candidate in candidates)
+        )
+        if level == "A1" and english(displayed) and english(str(entry.get("gloss") or "")):
+            matched = matched and _key(displayed) == _key(english_head(re.split(r"[;,]", str(entry["gloss"]))[0]))
+        if source and matched and (english(displayed) or source.casefold() in {"sum20_vetted", "vts_vetted", "ulif_checked"}):
             return {"source": source, "field": f"senses.{field}"}, None
         return None, "unbound_sense"
     enrichment = entry.get("enrichment")
@@ -148,13 +203,29 @@ def source_bound_meaning(
     # A dictionary's reverse candidates cannot bind a Ukrainian display to a
     # sense. Existing English display text is the needed sense anchor.
     original = str(entry.get("gloss") or "")
-    if not english(original) and not (level == "A1" and source == "learner_english_gloss"):
-        return None, "unbound_english_sense"
     candidates = translation.get("en")
     if isinstance(candidates, str):
         candidates = [candidates]
-    if not isinstance(candidates, list) or not _candidates_support_display(candidates, displayed):
+    if not isinstance(candidates, list) or not english_candidates_support_display(
+        candidates, displayed, allow_embedded=level not in {None, "A1"}
+    ):
         return None, "unattributed_english"
+    if english(original):
+        # A translation-list sub-sense cannot displace the Atlas lexeme head.
+        atlas_parts = re.split(r"[;,]", original)
+        if level == "A1":
+            atlas_parts = atlas_parts[:1]
+        atlas_heads = [english_head(part) for part in atlas_parts]
+        if not any(_key(displayed) == _key(head) for head in atlas_heads if head):
+            return None, "unbound_english_sense"
+    else:
+        # A Ukrainian lexeme gloss provides no machine-readable English sense
+        # alignment. A single attributed translation head is the only safe
+        # legacy anchor at the beginner levels; multi-sense lists stay withheld.
+        heads = {_key(english_head(candidate)) for candidate in candidates if isinstance(candidate, str)}
+        heads.discard("")
+        if level not in {"A1", "A2"} or heads != {_key(displayed)}:
+            return None, "unbound_english_sense"
     return {"source": source, "field": "enrichment.translation.en"}, None
 
 

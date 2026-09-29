@@ -12,6 +12,7 @@ from scripts.audit.generate_practice_deck import JsonVesumVerifier, _build_lexem
 from scripts.audit.practice_quality_gate import audit_practice_shards
 from scripts.practice.meaning_containment import (
     REVIEWED_WRONG_LEMMAS,
+    english_head,
     load_sum11_definitions,
     meaning_problem,
     source_bound_meaning,
@@ -41,6 +42,25 @@ def test_prohibited_patterns(text: str, reason: str) -> None:
     assert meaning_problem(text, "тест") == reason
 
 
+@pytest.mark.parametrize(
+    ("raw", "head"),
+    [
+        ("1) bill, check; 2) score", "bill"),
+        ("to avoid Conjugation: 1st", "to avoid"),
+        ("numeral first", "first"),
+        ("anatomy: tooth", "tooth"),
+        ("(imperfective) to move", "to move"),
+        ("with pronoun or adverb, meaning any", ""),
+        ("masculine possessive of учи́тель", ""),
+        ("short form of пе́вний", ""),
+        ("introducing adverbial clause", ""),
+        ("indicating time", ""),
+    ],
+)
+def test_english_dictionary_markers_and_fragments(raw: str, head: str) -> None:
+    assert english_head(raw) == head
+
+
 def test_same_word_sum11_is_rejected() -> None:
     assert meaning_problem("Звичайне пояснення слова", "тест", ["Звичайне пояснення слова."]) == "same_word_sum11"
 
@@ -60,21 +80,87 @@ def test_existing_attributed_english_is_retained() -> None:
     )
 
 
-def test_all_displayed_english_alternatives_need_source_support() -> None:
+def test_only_the_supported_atlas_head_is_displayed() -> None:
     entry = {"lemma": "тест", "gloss": "test; examination", "enrichment": {
         "translation": {"en": ["test (trial)"], "source": "learner_english_gloss"}
     }}
     assert source_bound_meaning(entry, "test; examination", "test", None)[1] == "unattributed_english"
     entry["enrichment"]["translation"]["en"].append("examination")
-    assert source_bound_meaning(entry, "test; examination", "test", None)[0] is not None
+    assert source_bound_meaning(entry, "test", "test", None)[0] is not None
+    assert source_bound_meaning(entry, "examination", "examination", None, level="A1")[1] == "unbound_english_sense"
 
 
-def test_a1_existing_english_scaffold_may_match_an_attributed_field() -> None:
+def test_existing_beginner_english_may_use_a_single_attributed_head() -> None:
     entry = {"lemma": "тест", "gloss": "Пояснення", "enrichment": {
         "translation": {"en": ["explanation"], "source": "learner_english_gloss"}
     }}
     assert source_bound_meaning(entry, "explanation", "explanation", None, level="A1")[0] is not None
-    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A2")[0] is None
+    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A2")[0] is not None
+
+
+@pytest.mark.parametrize(
+    ("atlas", "candidate", "expected"),
+    [
+        ("pharmacist, pharmacy worker", "pharmacist (dispenses medicine)", "pharmacist"),
+        ("American", "American man", "American"),
+        ("fairy tale (folktale)", "(dated) fairy tale (folktale)", "fairy tale"),
+    ],
+)
+def test_supported_english_head_survives_extra_text(atlas: str, candidate: str, expected: str) -> None:
+    entry = {"lemma": "тест", "url_slug": "test", "gloss": atlas, "pos": "noun", "cefr": "A2",
+             "enrichment": {"translation": {"en": [candidate], "source": "dmklinger"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None
+    assert result["gloss"] == expected
+    assert result["meaningSource"] is not None
+
+
+def test_unaligned_ukrainian_gloss_with_multiple_english_heads_stays_withheld() -> None:
+    entry = {"lemma": "тест", "url_slug": "test", "gloss": "українське значення", "pos": "noun", "cefr": "A2",
+             "enrichment": {"translation": {"en": ["lie", "bark"], "source": "dmklinger"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None
+    assert result["gloss"] == result["glossClean"] == ""
+    assert result["meaningWithheldReason"] == "unbound_english_sense"
+
+
+def test_attributive_noun_label_does_not_displace_adjective_meaning() -> None:
+    entry = {"lemma": "тест", "url_slug": "test", "gloss": "motivation (attributive), motivational",
+             "pos": "adjective", "cefr": "B2", "enrichment": {"translation": {
+                 "en": ["motivational (tending to motivate)", "motivation (attributive), motivational"],
+                 "source": "dmklinger"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None
+    assert result["gloss"] == "motivational"
+    assert result["meaningSource"] is not None
+
+
+_EVALUATION_EXPECTED = {
+    "словник": "dictionary", "успішно": "successfully", "одягатися": "to get dressed",
+    "щеплення": "vaccination", "рік": "year", "перший": "first",
+    "прем'єра": "premiere", "як-от": "for example", "буквально": "literally",
+    "приборкати": "to tame", "спростувати": "to refute", "сила": "strength",
+    "безсоння": "insomnia", "під'їзд": "building entrance",
+    "водночас": "at the same time", "стрічка": "ribbon", "лиман": "estuary",
+    "зосереджуватися": "to concentrate", "бирка": "label", "бризнути": "to splash",
+    # These attributed rows still lack a defensible literal/single-sense head.
+    "конфлікт": "", "виконуватися": "", "замітка": "", "потемнілий": "",
+}
+
+
+@pytest.mark.parametrize(
+    "entry",
+    json.loads((Path(__file__).parent / "fixtures/meaning_9160_eval_cases.json").read_text(encoding="utf-8")),
+    ids=lambda entry: entry["lemma"],
+)
+def test_independent_evaluation_rows_follow_source_bound_classes(entry: dict) -> None:
+    """Six held-out errors and all 18 audited over-withheld rows are pinned."""
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None
+    expected = _EVALUATION_EXPECTED[entry["lemma"]]
+    assert result["gloss"] == result["glossClean"] == expected
+    assert bool(result["meaningSource"]) == bool(expected)
+    assert bool(result["meaningWithheldReason"]) != bool(expected)
 
 
 def test_english_does_not_replace_a_ukrainian_display() -> None:

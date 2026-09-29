@@ -1,0 +1,480 @@
+[
+  {
+    "lemma": "безсоння",
+    "url_slug": "безсоння",
+    "gloss": "довге перебування без сну; неспання",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "insomnia (sleeping disorder)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "бирка",
+    "url_slug": "бирка",
+    "gloss": "tag, label",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "C1"
+      },
+      "translation": {
+        "en": [
+          "label (small ticket or sign giving information)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "бризнути",
+    "url_slug": "бризнути",
+    "gloss": "to splash once",
+    "pos": "verb",
+    "enrichment": {
+      "cefr": {
+        "level": "C1"
+      },
+      "translation": {
+        "en": [
+          "to splash, to splatter",
+          "to sprinkle"
+        ],
+        "source": "kaikki/Wiktionary (CC BY-SA 3.0)"
+      }
+    }
+  },
+  {
+    "lemma": "буквально",
+    "url_slug": "буквально",
+    "gloss": "прислівник до буквальний по власних трупах",
+    "pos": "adv",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "literally (not metaphorically)",
+          "literally (word for word; not figuratively; not as an idiom or metaphor)",
+          "Used to intensify or dramatize non-figurative statements: literally"
+        ],
+        "source": "dmklinger",
+        "pos": "adverb"
+      }
+    }
+  },
+  {
+    "lemma": "виконуватися",
+    "url_slug": "виконуватися",
+    "gloss": "to be carried out",
+    "pos": "verb",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "to fulfill, to do; to perform, to play [to be performed]                                                        Conjugation: 1st (-ють)",
+          "to be executed, to be fulfilled, to be performed"
+        ],
+        "source": "learner_english_gloss"
+      }
+    }
+  },
+  {
+    "lemma": "водночас",
+    "url_slug": "водночас",
+    "gloss": "at the same time, however",
+    "pos": "adverb",
+    "enrichment": {
+      "cefr": {
+        "level": "B1"
+      },
+      "translation": {
+        "en": [
+          "simultaneously, at the same time",
+          "at the same time (on the other hand)"
+        ],
+        "source": "dmklinger",
+        "pos": "adverb"
+      }
+    }
+  },
+  {
+    "lemma": "замітка",
+    "url_slug": "замітка",
+    "gloss": "short news item",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "B2"
+      },
+      "translation": {
+        "en": [
+          "note (memorandum)",
+          "note (brief piece of writing intended to assist the memory)",
+          "item (short article)",
+          "(journalism) short article, item",
+          "(dated) observation, remark, comment"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "зосереджуватися",
+    "url_slug": "зосереджуватися",
+    "gloss": "to concentrate (to approach or meet in a common center)",
+    "pos": "verb",
+    "enrichment": {
+      "cefr": {
+        "level": "B2"
+      },
+      "translation": {
+        "en": [
+          "to concentrate sth, to focus sth [to focus attention]                                         Conjugation: 1st (-ють) | 2nd (-ять)",
+          "to concentrate (to approach or meet in a common center)",
+          "focus (intransitive: to concentrate one's attention)",
+          "to concentrate, to focus (on: на, + locative) (direct one's attention, efforts, thoughts, etc.)",
+          "concentrate (focus one's thought or attention)"
+        ],
+        "source": "learner_english_gloss",
+        "pos": "verb"
+      }
+    }
+  },
+  {
+    "lemma": "конфлікт",
+    "url_slug": "конфлікт",
+    "gloss": "зіткнення протилежних інтересів, думок, поглядів; серйозні розбіжності; гостра суперечка",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "conflict (clash or disagreement)",
+          "strife (violent conflict)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "лиман",
+    "url_slug": "лиман",
+    "gloss": "estuary, lagoon",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "B1"
+      },
+      "translation": {
+        "en": [
+          "brackish lagoon or wide estuary",
+          "Lyman (city in Donetsk Oblast, Ukraine) (proper noun)",
+          "Lyman (a lake in Donetsk Oblast, Ukraine) (proper noun)",
+          "Lyman (a city in Donetsk Oblast, Ukraine) (proper noun)",
+          "A few villages in Ukraine (proper noun)",
+          "A village in Pokrovsk Raion, Donetsk Oblast (proper noun)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "одягатися",
+    "url_slug": "одягатися",
+    "gloss": "to get dressed",
+    "pos": "verb",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "to wear sth; to dress sb [to get dressed]",
+          "to get dressed",
+          "dress (to put on clothes)"
+        ],
+        "source": "learner_english_gloss",
+        "pos": "verb"
+      }
+    }
+  },
+  {
+    "lemma": "перший",
+    "url_slug": "перший",
+    "gloss": "first",
+    "pos": "adjective",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "first",
+          "numeral first",
+          "prime (first in time, order, or sequence)",
+          "former (first of aforementioned two items)"
+        ],
+        "source": "learner_english_gloss",
+        "pos": "adjective"
+      }
+    }
+  },
+  {
+    "lemma": "потемнілий",
+    "url_slug": "потемнілий",
+    "gloss": "darkened",
+    "pos": "adj",
+    "enrichment": {
+      "cefr": {
+        "level": "C1"
+      },
+      "translation": {
+        "en": [
+          "Grown dark",
+          "dim"
+        ],
+        "source": "slovnyk.me: Українсько-англійський словник",
+        "source_url": "https://slovnyk.me/dict/ukreng/%D0%BF%D0%BE%D1%82%D0%B5%D0%BC%D0%BD%D1%96%D0%BB%D0%B8%D0%B9"
+      }
+    }
+  },
+  {
+    "lemma": "прем'єра",
+    "url_slug": "прем-єра",
+    "gloss": "перша вистава п'єси в театрі, перший показ естрадної, концертної або циркової програми",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "premiere, first night (first showing of a film, play or other form of entertainment)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "приборкати",
+    "url_slug": "приборкати",
+    "gloss": "to tame, to subdue, to bridle, to curb, to harness, to rein in, to restrain (bring under control: animal, emotion, force, instinct etc.)",
+    "pos": "verb",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "harness (to control or put to use)",
+          "(transitive) to tame, to subdue, to bridle, to curb, to harness, to rein in, to restrain (bring under control: animal, emotion, force, instinct etc.)"
+        ],
+        "source": "dmklinger",
+        "pos": "verb"
+      }
+    }
+  },
+  {
+    "lemma": "під'їзд",
+    "url_slug": "під-їзд",
+    "gloss": "building entrance",
+    "pos": "noun:m",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "approach (an act of drawing near)",
+          "entrance (to a building), entryway, porch",
+          "approach, access (avenue, passage, or way by which a building or place can be approached)",
+          "driveway"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "рік",
+    "url_slug": "рік",
+    "gloss": "year",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "year, years",
+          "a Julian year",
+          "a scheduled part of a calendar year spent in a specific activity",
+          "a period between set dates that mark a year"
+        ],
+        "source": "learner_english_gloss",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "сила",
+    "url_slug": "сила",
+    "gloss": "здатність живих істот напруженням м'язів робити фізичні рухи, виконувати різні дії; фізична енергія людини, тварини",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "strength, force"
+        ],
+        "source": "learner_english_gloss",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "словник",
+    "url_slug": "словник",
+    "gloss": "dictionary",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "dictionary (publication that explains the meanings of an ordered list of words)",
+          "(countable) dictionary",
+          "associative array (An array-like data structure)",
+          "(uncountable) vocabulary",
+          "vocabulary (words of a language collectively)",
+          "vocabulary (set of words a person knows)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "спростувати",
+    "url_slug": "спростувати",
+    "gloss": "to refute, to deny",
+    "pos": "verb:pf",
+    "enrichment": {
+      "cefr": {
+        "level": "A2"
+      },
+      "translation": {
+        "en": [
+          "disprove (to refute)",
+          "to disprove, to refute (prove to be false)",
+          "to rebut (deny the truth of)"
+        ],
+        "source": "dmklinger",
+        "pos": "verb"
+      }
+    }
+  },
+  {
+    "lemma": "стрічка",
+    "url_slug": "стрічка",
+    "gloss": "ribbon, strip",
+    "pos": "noun",
+    "enrichment": {
+      "cefr": {
+        "level": "B1"
+      },
+      "translation": {
+        "en": [
+          "picture (informal: cinema)",
+          "ribbon, band",
+          "adhesive tape (medical tape)",
+          "(engineering) tape",
+          "video or audiocassette tape",
+          "(weaponry) belt"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "успішно",
+    "url_slug": "успішно",
+    "gloss": "successfully",
+    "pos": "adv",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "fortunately (in a fortunate manner)",
+          "successfully"
+        ],
+        "source": "dmklinger",
+        "pos": "adverb"
+      }
+    }
+  },
+  {
+    "lemma": "щеплення",
+    "url_slug": "щеплення",
+    "gloss": "vaccination",
+    "pos": "noun:n",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "grafting (act, art, or process of inserting grafts)",
+          "vaccination (inoculation with a vaccine)",
+          "(horticulture) grafting",
+          "inoculation (introduction of substance into the body to produce immunity)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    }
+  },
+  {
+    "lemma": "як-от",
+    "url_slug": "як-от",
+    "gloss": "уживається для розкриття, уточнення висловленого змісту (перев. при перерахуванні) у значенні а саме, наприклад",
+    "pos": "part",
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      },
+      "translation": {
+        "en": [
+          "for example (as an example) (prepositional phrase)"
+        ],
+        "source": "dmklinger",
+        "pos": "phrase"
+      }
+    }
+  }
+]

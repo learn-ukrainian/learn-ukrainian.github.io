@@ -1,297 +1,317 @@
-# #9160 — removal-only practice meaning containment
+# #9160 — removal-only practice meaning containment, round 2
 
-Implementation SHA: `2b74dbed216dfa8abd0e5d72ce8671135cbc2411`. This branch is an evaluation build; no deck was published.
-Restoration owner: **claude-atlas, #8977**. The retained-English and retained-Ukrainian reviewer packets are in `$TMPDIR/9160-retained-English.jsonl` and `$TMPDIR/9160-retained-Ukrainian.jsonl`. They contain learner-facing text and are not committed.
+Evaluation build on `codex/fix-9160-contain`; no release was published. This report evaluates the same frozen 6,217-lexeme release as round 1. The updated admission code removes English dictionary metadata, checks A1 against the Atlas English head, and accepts only a source-supported head. No Ukrainian text is derived from an article.
 
-## Frozen denominator and admission
+## Frozen input and exact transform command
 
-The committed pointer names `atlas-practice-v1-f1e1cf95470ce319` (`gz_sha256` `d01ed4b4cf10d8f587de214d0e3dd7f4039f4bafe5549d6bed7145bc34e55b19`). Its 55 downloaded release files all matched their pointer SHA-256 values. The five lexeme shards contain **6,217** rows. The prior 5,717 code-report denominator is 500 lower; its cause is not established, so this report uses the verified release rows. This evaluation joins every published `lemmaId` to its Atlas payload and applies the current `main` display selection before containment. No new Ukrainian text is derived. English requires a supported attributed field and every displayed alternative to match it; a reverse index is rejected. Existing A2+ Ukrainian text is never replaced with English after rejection.
+- Release: `atlas-practice-v1-f1e1cf95470ce319` (55 files).
+- Release gzip SHA-256: `d01ed4b4cf10d8f587de214d0e3dd7f4039f4bafe5549d6bed7145bc34e55b19`.
+- Atlas `atlas.db` SHA-256: `fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca`.
+- Same-word rejection `sources.db` SHA-256: `7868ce16f3cc8280676f08f436b94563ba20e3e7909ad236f06c2bdce19baa7b`.
+- `scripts/audit/generate_practice_deck.py` SHA-256: `9b80d8c08a4e173fd7f1783785fddd246b605621aae4dd41c4a782a95b3130d4`.
+- `scripts/practice/meaning_containment.py` SHA-256: `48031272657d31f30feae26bfb3f310977574f8033296f6dbe13f3b4be3ee25e`.
+- `scripts/audit/reproduce_meaning_9160.py` SHA-256: `b59a0180420531203de48a7e839d22cc5a82f7ea5a3da182bf11d575a0014d59`.
 
-The current `main` selection agrees with the release display for 6,214 rows. It differs for `город` (A2), `замок` (A2), and `атлас` (B2); the evaluation uses the current selector output for those three as ordered, then applies containment.
+Run from this dispatch worktree. The command verifies the frozen hashes and writes evaluation files only under ignored `batch_state/meaning-9160-r2/shards/`:
 
-| Level | Frozen rows | Retained Ukrainian | Retained English | Withheld |
-| --- | ---: | ---: | ---: | ---: |
-| A1 | 1496 | 0 | 1326 | 170 |
-| A2 | 1511 | 0 | 778 | 733 |
-| B1 | 1505 | 0 | 435 | 1070 |
-| B2 | 1040 | 0 | 413 | 627 |
-| C1 | 665 | 0 | 176 | 489 |
-| **Total** | **6217** | **0** | **3128** | **3089** |
+```bash
+mkdir -p batch_state/meaning-9160-r2
+gh release download atlas-practice-deck -R learn-ukrainian/learn-ukrainian.github.io -p lexicon-practice-deck-atlas-practice-v1-f1e1cf95470ce319.json.gz -D batch_state/meaning-9160-r2
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.audit.reproduce_meaning_9160 --package batch_state/meaning-9160-r2/lexicon-practice-deck-atlas-practice-v1-f1e1cf95470ce319.json.gz --atlas-db /home/ops/learn-ukrainian/data/atlas.db --sources-db /home/ops/learn-ukrainian/data/sources.db --output batch_state/meaning-9160-r2/shards
+```
 
-No legacy Ukrainian article qualified as an exact, sense-bound supported field; this is a coverage loss, not a claim that Ukrainian meanings are unavailable in the source dictionaries. Blank meaning fields retain grammar and stress records. The index removes meaning-dependent flashcards, matching, and choice; synonym items are withheld when either leg lost its meaning.
+The script emits `meaning-9160-summary.json` and all 55 baseline files with transformed lexeme/index shards. The source database paths are read-only inputs; neither the package nor live pointer is modified. The prior 5,717-row code report remains unreconciled; this report uses the verified 6,217-row release denominator.
 
-## Affected modes (published index flags, evaluation transform)
+## Meaning admission versus round 1
 
-| Level | Mode | Before | Retained Ukrainian | Retained English | Withheld |
-| --- | --- | ---: | ---: | ---: | ---: |
-| A1 | flashcards | 1496 | 0 | 1326 | 170 |
-| A1 | matching | 1362 | 0 | 1223 | 139 |
-| A1 | choice | 1362 | 0 | 1223 | 139 |
-| A1 | synonym | 0 | 0 | 0 | 0 |
-| A2 | flashcards | 1511 | 0 | 778 | 733 |
-| A2 | matching | 1340 | 0 | 758 | 582 |
-| A2 | choice | 1340 | 0 | 758 | 582 |
-| A2 | synonym | 0 | 0 | 0 | 0 |
-| B1 | flashcards | 1505 | 0 | 435 | 1070 |
-| B1 | matching | 652 | 0 | 422 | 230 |
-| B1 | choice | 652 | 0 | 422 | 230 |
-| B1 | synonym | 0 | 0 | 0 | 0 |
-| B2 | flashcards | 1040 | 0 | 413 | 627 |
-| B2 | matching | 779 | 0 | 399 | 380 |
-| B2 | choice | 779 | 0 | 399 | 380 |
-| B2 | synonym | 0 | 0 | 0 | 0 |
-| C1 | flashcards | 665 | 0 | 176 | 489 |
-| C1 | matching | 511 | 0 | 169 | 342 |
-| C1 | choice | 511 | 0 | 169 | 342 |
-| C1 | synonym | 0 | 0 | 0 | 0 |
+| Level | Frozen rows | Round 1 EN | Round 2 EN | Round 2 UK | Round 1 withheld | Round 2 withheld |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| A1 | 1496 | 1326 | 1167 | 0 | 170 | 329 |
+| A2 | 1511 | 778 | 1158 | 0 | 733 | 353 |
+| B1 | 1505 | 435 | 696 | 0 | 1070 | 809 |
+| B2 | 1040 | 413 | 643 | 0 | 627 | 397 |
+| C1 | 665 | 176 | 253 | 0 | 489 | 412 |
+| **Total** | **6217** | **3128** | **3917** | **0** | **3089** | **2300** |
 
-These mode counts are index eligibility, not a live session-availability claim. Cloze, stress, classify, paradigm, imperative, paronym, heritage, antonym, and homonym keep their independent eligibility. The current release has zero synonym items and flags at every level; this mode was already withdrawn.
+For A1, the independent evaluation identified 608 round-1 retained displays that differed from the first Atlas gloss segment. Comparing those exact published rows to the new transform: **343** now display the supported Atlas English head, **215** are withheld, and **50** remain unchanged with support: 28 match the cleaned English Atlas head and 22 are single attributed English heads beside Ukrainian Atlas glosses. Thus 558 of the 608 displays change. Across all 1,326 round-1 retained A1 rows, 564 displays change (349 to another English head; 215 withheld), and 56 previously withheld rows are recovered.
+
+At A2 and above, the transform retains already-selected English only when an attributed source supports the cleaned head. It never fills a rejected Ukrainian display with English. In the new transform, all retained fields are English; the Ukrainian coverage gap remains assigned to **claude-atlas under #8977**.
+
+## Affected mode eligibility
+
+| Level | Mode | Release flags | Round 1 retained EN | Round 2 retained EN | Round 1 withheld | Round 2 withheld |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| A1 | flashcards | 1496 | 1326 | 1167 | 170 | 329 |
+| A1 | matching | 1362 | 1223 | 1064 | 139 | 298 |
+| A1 | choice | 1362 | 1223 | 1064 | 139 | 298 |
+| A1 | synonym | 0 | 0 | 0 | 0 | 0 |
+| A2 | flashcards | 1511 | 778 | 1158 | 733 | 353 |
+| A2 | matching | 1340 | 758 | 1046 | 582 | 294 |
+| A2 | choice | 1340 | 758 | 1046 | 582 | 294 |
+| A2 | synonym | 0 | 0 | 0 | 0 | 0 |
+| B1 | flashcards | 1505 | 435 | 696 | 1070 | 809 |
+| B1 | matching | 652 | 422 | 593 | 230 | 59 |
+| B1 | choice | 652 | 422 | 593 | 230 | 59 |
+| B1 | synonym | 0 | 0 | 0 | 0 | 0 |
+| B2 | flashcards | 1040 | 413 | 643 | 627 | 397 |
+| B2 | matching | 779 | 399 | 550 | 380 | 229 |
+| B2 | choice | 779 | 399 | 550 | 380 | 229 |
+| B2 | synonym | 0 | 0 | 0 | 0 | 0 |
+| C1 | flashcards | 665 | 176 | 253 | 489 | 412 |
+| C1 | matching | 511 | 169 | 217 | 342 | 294 |
+| C1 | choice | 511 | 169 | 217 | 342 | 294 |
+| C1 | synonym | 0 | 0 | 0 | 0 | 0 |
+
+These counts are index flags in local evaluation shards, not a live-session availability claim. Cloze, stress, classify, paradigm, imperative, paronym, heritage, antonym, and homonym retain their independent eligibility. Synonym mode was already withdrawn and stays empty.
+
+## Withheld by level and reason
+
+| Level | Reason | Round 1 | Round 2 | Delta |
+| --- | --- | ---: | ---: | ---: |
+| A1 | `dictionary_fragment` | 3 | 2 | -1 |
+| A1 | `example_quotation` | 4 | 6 | +2 |
+| A1 | `parenthesized_citation` | 20 | 2 | -18 |
+| A1 | `reviewed_wrong_sense` | 1 | 1 | +0 |
+| A1 | `unattributed_english` | 18 | 178 | +160 |
+| A1 | `unbound_english_sense` | 70 | 82 | +12 |
+| A1 | `unsupported_english_source` | 54 | 58 | +4 |
+| A2 | `dictionary_fragment` | 1 | 1 | +0 |
+| A2 | `example_quotation` | 0 | 1 | +1 |
+| A2 | `parenthesized_citation` | 166 | 3 | -163 |
+| A2 | `reviewed_wrong_sense` | 26 | 26 | +0 |
+| A2 | `unattributed_english` | 332 | 159 | -173 |
+| A2 | `unbound_english_sense` | 145 | 93 | -52 |
+| A2 | `unbound_ukrainian` | 0 | 1 | +1 |
+| A2 | `unsupported_english_source` | 63 | 69 | +6 |
+| B1 | `dated_citation` | 408 | 408 | +0 |
+| B1 | `dictionary_fragment` | 109 | 109 | +0 |
+| B1 | `example_quotation` | 27 | 26 | -1 |
+| B1 | `parenthesized_citation` | 248 | 104 | -144 |
+| B1 | `reviewed_wrong_sense` | 18 | 18 | +0 |
+| B1 | `same_word_sum11` | 27 | 27 | +0 |
+| B1 | `unattributed_english` | 175 | 59 | -116 |
+| B1 | `unbound_ukrainian` | 47 | 47 | +0 |
+| B1 | `unsupported_english_source` | 11 | 11 | +0 |
+| B2 | `dated_citation` | 13 | 13 | +0 |
+| B2 | `dictionary_fragment` | 23 | 24 | +1 |
+| B2 | `example_quotation` | 1 | 2 | +1 |
+| B2 | `parenthesized_citation` | 183 | 27 | -156 |
+| B2 | `reviewed_wrong_sense` | 12 | 12 | +0 |
+| B2 | `same_word_sum11` | 23 | 23 | +0 |
+| B2 | `unattributed_english` | 234 | 153 | -81 |
+| B2 | `unbound_ukrainian` | 41 | 42 | +1 |
+| B2 | `unsupported_english_source` | 97 | 101 | +4 |
+| C1 | `dated_citation` | 3 | 3 | +0 |
+| C1 | `dictionary_fragment` | 13 | 13 | +0 |
+| C1 | `example_quotation` | 2 | 2 | +0 |
+| C1 | `parenthesized_citation` | 101 | 53 | -48 |
+| C1 | `reviewed_wrong_sense` | 8 | 8 | +0 |
+| C1 | `same_word_sum11` | 11 | 11 | +0 |
+| C1 | `unattributed_english` | 143 | 112 | -31 |
+| C1 | `unbound_ukrainian` | 13 | 13 | +0 |
+| C1 | `unsupported_english_source` | 195 | 197 | +2 |
 
 ## Affected-mode withholding by reason
 
-| Level | Mode | Reason | Withheld |
-| --- | --- | --- | ---: |
-| A1 | flashcards | `dictionary_fragment` | 3 |
-| A1 | flashcards | `example_quotation` | 4 |
-| A1 | flashcards | `parenthesized_citation` | 20 |
-| A1 | flashcards | `reviewed_wrong_sense` | 1 |
-| A1 | flashcards | `unattributed_english` | 18 |
-| A1 | flashcards | `unbound_english_sense` | 70 |
-| A1 | flashcards | `unsupported_english_source` | 54 |
-| A1 | matching | `dictionary_fragment` | 3 |
-| A1 | matching | `example_quotation` | 2 |
-| A1 | matching | `parenthesized_citation` | 3 |
-| A1 | matching | `unattributed_english` | 18 |
-| A1 | matching | `unbound_english_sense` | 65 |
-| A1 | matching | `unsupported_english_source` | 48 |
-| A1 | choice | `dictionary_fragment` | 3 |
-| A1 | choice | `example_quotation` | 2 |
-| A1 | choice | `parenthesized_citation` | 3 |
-| A1 | choice | `unattributed_english` | 18 |
-| A1 | choice | `unbound_english_sense` | 65 |
-| A1 | choice | `unsupported_english_source` | 48 |
-| A2 | flashcards | `dictionary_fragment` | 1 |
-| A2 | flashcards | `parenthesized_citation` | 166 |
-| A2 | flashcards | `reviewed_wrong_sense` | 26 |
-| A2 | flashcards | `unattributed_english` | 332 |
-| A2 | flashcards | `unbound_english_sense` | 145 |
-| A2 | flashcards | `unsupported_english_source` | 63 |
-| A2 | matching | `dictionary_fragment` | 1 |
-| A2 | matching | `parenthesized_citation` | 62 |
-| A2 | matching | `reviewed_wrong_sense` | 18 |
-| A2 | matching | `unattributed_english` | 304 |
-| A2 | matching | `unbound_english_sense` | 143 |
-| A2 | matching | `unsupported_english_source` | 54 |
-| A2 | choice | `dictionary_fragment` | 1 |
-| A2 | choice | `parenthesized_citation` | 62 |
-| A2 | choice | `reviewed_wrong_sense` | 18 |
-| A2 | choice | `unattributed_english` | 304 |
-| A2 | choice | `unbound_english_sense` | 143 |
-| A2 | choice | `unsupported_english_source` | 54 |
-| B1 | flashcards | `dated_citation` | 408 |
-| B1 | flashcards | `dictionary_fragment` | 109 |
-| B1 | flashcards | `example_quotation` | 27 |
-| B1 | flashcards | `parenthesized_citation` | 248 |
-| B1 | flashcards | `reviewed_wrong_sense` | 18 |
-| B1 | flashcards | `same_word_sum11` | 27 |
-| B1 | flashcards | `unattributed_english` | 175 |
-| B1 | flashcards | `unbound_ukrainian` | 47 |
-| B1 | flashcards | `unsupported_english_source` | 11 |
-| B1 | matching | `example_quotation` | 1 |
-| B1 | matching | `parenthesized_citation` | 54 |
-| B1 | matching | `reviewed_wrong_sense` | 5 |
-| B1 | matching | `unattributed_english` | 160 |
-| B1 | matching | `unsupported_english_source` | 10 |
-| B1 | choice | `example_quotation` | 1 |
-| B1 | choice | `parenthesized_citation` | 54 |
-| B1 | choice | `reviewed_wrong_sense` | 5 |
-| B1 | choice | `unattributed_english` | 160 |
-| B1 | choice | `unsupported_english_source` | 10 |
-| B2 | flashcards | `dated_citation` | 13 |
-| B2 | flashcards | `dictionary_fragment` | 23 |
-| B2 | flashcards | `example_quotation` | 1 |
-| B2 | flashcards | `parenthesized_citation` | 183 |
-| B2 | flashcards | `reviewed_wrong_sense` | 12 |
-| B2 | flashcards | `same_word_sum11` | 23 |
-| B2 | flashcards | `unattributed_english` | 234 |
-| B2 | flashcards | `unbound_ukrainian` | 41 |
-| B2 | flashcards | `unsupported_english_source` | 97 |
-| B2 | matching | `parenthesized_citation` | 70 |
-| B2 | matching | `reviewed_wrong_sense` | 10 |
-| B2 | matching | `unattributed_english` | 214 |
-| B2 | matching | `unsupported_english_source` | 86 |
-| B2 | choice | `parenthesized_citation` | 70 |
-| B2 | choice | `reviewed_wrong_sense` | 10 |
-| B2 | choice | `unattributed_english` | 214 |
-| B2 | choice | `unsupported_english_source` | 86 |
-| C1 | flashcards | `dated_citation` | 3 |
-| C1 | flashcards | `dictionary_fragment` | 13 |
-| C1 | flashcards | `example_quotation` | 2 |
-| C1 | flashcards | `parenthesized_citation` | 101 |
-| C1 | flashcards | `reviewed_wrong_sense` | 8 |
-| C1 | flashcards | `same_word_sum11` | 11 |
-| C1 | flashcards | `unattributed_english` | 143 |
-| C1 | flashcards | `unbound_ukrainian` | 13 |
-| C1 | flashcards | `unsupported_english_source` | 195 |
-| C1 | matching | `parenthesized_citation` | 16 |
-| C1 | matching | `reviewed_wrong_sense` | 5 |
-| C1 | matching | `unattributed_english` | 133 |
-| C1 | matching | `unsupported_english_source` | 188 |
-| C1 | choice | `parenthesized_citation` | 16 |
-| C1 | choice | `reviewed_wrong_sense` | 5 |
-| C1 | choice | `unattributed_english` | 133 |
-| C1 | choice | `unsupported_english_source` | 188 |
-## Withholding by reason
+| Level | Mode | Reason | Round 1 | Round 2 | Delta |
+| --- | --- | --- | ---: | ---: | ---: |
+| A1 | flashcards | `dictionary_fragment` | 3 | 2 | -1 |
+| A1 | flashcards | `example_quotation` | 4 | 6 | +2 |
+| A1 | flashcards | `parenthesized_citation` | 20 | 2 | -18 |
+| A1 | flashcards | `reviewed_wrong_sense` | 1 | 1 | +0 |
+| A1 | flashcards | `unattributed_english` | 18 | 178 | +160 |
+| A1 | flashcards | `unbound_english_sense` | 70 | 82 | +12 |
+| A1 | flashcards | `unsupported_english_source` | 54 | 58 | +4 |
+| A1 | matching | `dictionary_fragment` | 3 | 1 | -2 |
+| A1 | matching | `example_quotation` | 2 | 6 | +4 |
+| A1 | matching | `meaning_mc_ineligible` | 0 | 12 | +12 |
+| A1 | matching | `parenthesized_citation` | 3 | 2 | -1 |
+| A1 | matching | `unattributed_english` | 18 | 149 | +131 |
+| A1 | matching | `unbound_english_sense` | 65 | 76 | +11 |
+| A1 | matching | `unsupported_english_source` | 48 | 52 | +4 |
+| A1 | choice | `dictionary_fragment` | 3 | 1 | -2 |
+| A1 | choice | `example_quotation` | 2 | 6 | +4 |
+| A1 | choice | `meaning_mc_ineligible` | 0 | 12 | +12 |
+| A1 | choice | `parenthesized_citation` | 3 | 2 | -1 |
+| A1 | choice | `unattributed_english` | 18 | 149 | +131 |
+| A1 | choice | `unbound_english_sense` | 65 | 76 | +11 |
+| A1 | choice | `unsupported_english_source` | 48 | 52 | +4 |
+| A2 | flashcards | `dictionary_fragment` | 1 | 1 | +0 |
+| A2 | flashcards | `example_quotation` | 0 | 1 | +1 |
+| A2 | flashcards | `parenthesized_citation` | 166 | 3 | -163 |
+| A2 | flashcards | `reviewed_wrong_sense` | 26 | 26 | +0 |
+| A2 | flashcards | `unattributed_english` | 332 | 159 | -173 |
+| A2 | flashcards | `unbound_english_sense` | 145 | 93 | -52 |
+| A2 | flashcards | `unbound_ukrainian` | 0 | 1 | +1 |
+| A2 | flashcards | `unsupported_english_source` | 63 | 69 | +6 |
+| A2 | matching | `dictionary_fragment` | 1 | 1 | +0 |
+| A2 | matching | `example_quotation` | 0 | 1 | +1 |
+| A2 | matching | `parenthesized_citation` | 62 | 0 | -62 |
+| A2 | matching | `reviewed_wrong_sense` | 18 | 18 | +0 |
+| A2 | matching | `unattributed_english` | 304 | 131 | -173 |
+| A2 | matching | `unbound_english_sense` | 143 | 89 | -54 |
+| A2 | matching | `unsupported_english_source` | 54 | 54 | +0 |
+| A2 | choice | `dictionary_fragment` | 1 | 1 | +0 |
+| A2 | choice | `example_quotation` | 0 | 1 | +1 |
+| A2 | choice | `parenthesized_citation` | 62 | 0 | -62 |
+| A2 | choice | `reviewed_wrong_sense` | 18 | 18 | +0 |
+| A2 | choice | `unattributed_english` | 304 | 131 | -173 |
+| A2 | choice | `unbound_english_sense` | 143 | 89 | -54 |
+| A2 | choice | `unsupported_english_source` | 54 | 54 | +0 |
+| B1 | flashcards | `dated_citation` | 408 | 408 | +0 |
+| B1 | flashcards | `dictionary_fragment` | 109 | 109 | +0 |
+| B1 | flashcards | `example_quotation` | 27 | 26 | -1 |
+| B1 | flashcards | `parenthesized_citation` | 248 | 104 | -144 |
+| B1 | flashcards | `reviewed_wrong_sense` | 18 | 18 | +0 |
+| B1 | flashcards | `same_word_sum11` | 27 | 27 | +0 |
+| B1 | flashcards | `unattributed_english` | 175 | 59 | -116 |
+| B1 | flashcards | `unbound_ukrainian` | 47 | 47 | +0 |
+| B1 | flashcards | `unsupported_english_source` | 11 | 11 | +0 |
+| B1 | matching | `example_quotation` | 1 | 0 | -1 |
+| B1 | matching | `parenthesized_citation` | 54 | 0 | -54 |
+| B1 | matching | `reviewed_wrong_sense` | 5 | 5 | +0 |
+| B1 | matching | `unattributed_english` | 160 | 44 | -116 |
+| B1 | matching | `unsupported_english_source` | 10 | 10 | +0 |
+| B1 | choice | `example_quotation` | 1 | 0 | -1 |
+| B1 | choice | `parenthesized_citation` | 54 | 0 | -54 |
+| B1 | choice | `reviewed_wrong_sense` | 5 | 5 | +0 |
+| B1 | choice | `unattributed_english` | 160 | 44 | -116 |
+| B1 | choice | `unsupported_english_source` | 10 | 10 | +0 |
+| B2 | flashcards | `dated_citation` | 13 | 13 | +0 |
+| B2 | flashcards | `dictionary_fragment` | 23 | 24 | +1 |
+| B2 | flashcards | `example_quotation` | 1 | 2 | +1 |
+| B2 | flashcards | `parenthesized_citation` | 183 | 27 | -156 |
+| B2 | flashcards | `reviewed_wrong_sense` | 12 | 12 | +0 |
+| B2 | flashcards | `same_word_sum11` | 23 | 23 | +0 |
+| B2 | flashcards | `unattributed_english` | 234 | 153 | -81 |
+| B2 | flashcards | `unbound_ukrainian` | 41 | 42 | +1 |
+| B2 | flashcards | `unsupported_english_source` | 97 | 101 | +4 |
+| B2 | matching | `example_quotation` | 0 | 1 | +1 |
+| B2 | matching | `parenthesized_citation` | 70 | 0 | -70 |
+| B2 | matching | `reviewed_wrong_sense` | 10 | 10 | +0 |
+| B2 | matching | `unattributed_english` | 214 | 131 | -83 |
+| B2 | matching | `unsupported_english_source` | 86 | 87 | +1 |
+| B2 | choice | `example_quotation` | 0 | 1 | +1 |
+| B2 | choice | `parenthesized_citation` | 70 | 0 | -70 |
+| B2 | choice | `reviewed_wrong_sense` | 10 | 10 | +0 |
+| B2 | choice | `unattributed_english` | 214 | 131 | -83 |
+| B2 | choice | `unsupported_english_source` | 86 | 87 | +1 |
+| C1 | flashcards | `dated_citation` | 3 | 3 | +0 |
+| C1 | flashcards | `dictionary_fragment` | 13 | 13 | +0 |
+| C1 | flashcards | `example_quotation` | 2 | 2 | +0 |
+| C1 | flashcards | `parenthesized_citation` | 101 | 53 | -48 |
+| C1 | flashcards | `reviewed_wrong_sense` | 8 | 8 | +0 |
+| C1 | flashcards | `same_word_sum11` | 11 | 11 | +0 |
+| C1 | flashcards | `unattributed_english` | 143 | 112 | -31 |
+| C1 | flashcards | `unbound_ukrainian` | 13 | 13 | +0 |
+| C1 | flashcards | `unsupported_english_source` | 195 | 197 | +2 |
+| C1 | matching | `parenthesized_citation` | 16 | 0 | -16 |
+| C1 | matching | `reviewed_wrong_sense` | 5 | 5 | +0 |
+| C1 | matching | `unattributed_english` | 133 | 101 | -32 |
+| C1 | matching | `unsupported_english_source` | 188 | 188 | +0 |
+| C1 | choice | `parenthesized_citation` | 16 | 0 | -16 |
+| C1 | choice | `reviewed_wrong_sense` | 5 | 5 | +0 |
+| C1 | choice | `unattributed_english` | 133 | 101 | -32 |
+| C1 | choice | `unsupported_english_source` | 188 | 188 | +0 |
 
-| Level | Reason | Count |
-| --- | --- | ---: |
-| A1 | `dictionary_fragment` | 3 |
-| A1 | `example_quotation` | 4 |
-| A1 | `parenthesized_citation` | 20 |
-| A1 | `reviewed_wrong_sense` | 1 |
-| A1 | `unattributed_english` | 18 |
-| A1 | `unbound_english_sense` | 70 |
-| A1 | `unsupported_english_source` | 54 |
-| A2 | `dictionary_fragment` | 1 |
-| A2 | `parenthesized_citation` | 166 |
-| A2 | `reviewed_wrong_sense` | 26 |
-| A2 | `unattributed_english` | 332 |
-| A2 | `unbound_english_sense` | 145 |
-| A2 | `unsupported_english_source` | 63 |
-| B1 | `dated_citation` | 408 |
-| B1 | `dictionary_fragment` | 109 |
-| B1 | `example_quotation` | 27 |
-| B1 | `parenthesized_citation` | 248 |
-| B1 | `reviewed_wrong_sense` | 18 |
-| B1 | `same_word_sum11` | 27 |
-| B1 | `unattributed_english` | 175 |
-| B1 | `unbound_ukrainian` | 47 |
-| B1 | `unsupported_english_source` | 11 |
-| B2 | `dated_citation` | 13 |
-| B2 | `dictionary_fragment` | 23 |
-| B2 | `example_quotation` | 1 |
-| B2 | `parenthesized_citation` | 183 |
-| B2 | `reviewed_wrong_sense` | 12 |
-| B2 | `same_word_sum11` | 23 |
-| B2 | `unattributed_english` | 234 |
-| B2 | `unbound_ukrainian` | 41 |
-| B2 | `unsupported_english_source` | 97 |
-| C1 | `dated_citation` | 3 |
-| C1 | `dictionary_fragment` | 13 |
-| C1 | `example_quotation` | 2 |
-| C1 | `parenthesized_citation` | 101 |
-| C1 | `reviewed_wrong_sense` | 8 |
-| C1 | `same_word_sum11` | 11 |
-| C1 | `unattributed_english` | 143 |
-| C1 | `unbound_ukrainian` | 13 |
-| C1 | `unsupported_english_source` | 195 |
-
-`reviewed_wrong_sense` is deliberate quarantine of review-named lemmas; it is not historical provenance. `unattributed_english` and `unbound_english_sense` include mechanical rejection that needs independent exclusion sampling. These are not relabelled as source gaps.
-
-## Source snapshot SHA-256
-
-- `atlas.db`: `fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673c106278ebfca`
-- `sources.db`: `7868ce16f3cc8280676f08f436b94563ba20e3e7909ad236f06c2bdce19baa7b`
-- `vesum.db`: `3e3a3c211f27c3f338abdfe47b2a5e3e8d6f38b9cfc31a65ca467677145e4dd5`
-- `textbook-end-dictionaries/inventory.json`: `0e01e2f8b2cb21642e26779b6a8708f68e0bc6236521e95fed54994bf1d485dd`
-
-Published baseline lexeme shards:
-
-- `practice-lexemes.A1.json`: `2fd52e719c90eb174bd17ea212a18bc6a0c87f28781d0674893319f37a252f5c`
-- `practice-lexemes.A2.json`: `a37f722ca08a00f9f123cd473097790d2f83135160e021c706db36a16f91bd3f`
-- `practice-lexemes.B1.json`: `3787c6632dfcd38909a74a3198f7472eb05c03eaee8c26f7cb42d4783f564208`
-- `practice-lexemes.B2.json`: `a15af528e864f030dfbbd30776905e991e34f4f00fc773a114168d02bbcc7025`
-- `practice-lexemes.C1.json`: `cef9f7b979c7af8ed52ff757163fb38044d382e0a0e25bdd2e7b06235c4b5664`
+`meaning_mc_ineligible` records a retained head whose cleaned label no longer qualifies for matching and choice. `reviewed_wrong_sense` is quarantine, not provenance. `unattributed_english` and `unbound_english_sense` remain explicit mechanical or evidential exclusions; they are not relabelled source gaps.
 
 ## Regenerated evaluation shard SHA-256
 
-These are local evaluation transforms of the frozen published shards, not a release package. Lexeme and index shards change; synonym shards remain byte-identical and empty. All other mode shards stay byte-identical to the frozen input. The builder-version bump to 29 invalidates cached pre-containment deck versions at publication. The local publication gate reported zero violations over these evaluation shards with the supplied `sources.db`.
+These are local evaluation files, not a release package. All non-meaning mode shards remain byte-identical to the frozen package.
 
-- `practice-lexemes.A1.json`: `9ba7405b76faf23b5f53eae610e64360f692eea97705127986705917b581cf57`
-- `practice-index.A1.json`: `fcfb9f043f314bd0ae726da4803cb6835a9caae16945ac1fde7a63926ab3277e`
+- `practice-lexemes.A1.json`: `a46aab6d98b2b8fac16adc0c1e556a6ec126e20958f7b3e79c93c2339ec1567d`
+- `practice-index.A1.json`: `fdf402ba1e5aed7eec05ef3dc5b7fd907f81c04b89334a36e0073264ed57ac00`
 - `practice-synonym.A1.json`: `a941e7dafa1a0f136ed0f97bd98548a4e3786b34cb727c68cec4bdb092462d7c`
-- `practice-lexemes.A2.json`: `865b705cb8042b3634df1a2381a772f739215ac4ecbb7ffd2223671b02077480`
-- `practice-index.A2.json`: `2ef028d0a1a1de084d69920b5603df0ea75981724f684bf160dc5e1c9ee092dd`
+- `practice-lexemes.A2.json`: `3fd8ebb61df2e61f71014fcd0ad0dd8bfe34cbf5d44716bdf4f9d2b26f4fbca2`
+- `practice-index.A2.json`: `9135b66f5b0abf23d508871be54da42549c6a4fbac1a6a7f810dd12774e6c4a7`
 - `practice-synonym.A2.json`: `9701ccb57d7a20e327ebae341776499883cc3b33cfcf389d9535b24ded5cabad`
-- `practice-lexemes.B1.json`: `c041770ab80fda77bb7a7c0ab98f7f99e701249bfa773900af0f4d72c48a8ad1`
-- `practice-index.B1.json`: `508d4919beb3b438015323c84fe3b2116b677d55a5b11822036b99845785390d`
+- `practice-lexemes.B1.json`: `fd98f529d66d2391efb45679c36b3ab59aea89922f1f037afa777e43383b143e`
+- `practice-index.B1.json`: `ee52cf9ea616a7cc34690df3d96f372e2084525cf8a7ad30953ba44bbc2ab9a1`
 - `practice-synonym.B1.json`: `4745abff6ca1f318c6ea37161f1120ba14134e4b0db0a0a463663701da38494b`
-- `practice-lexemes.B2.json`: `eb208475147677a02036e0e2f5c0801b2bc13fc7e32f21c38f5c5b685bd09869`
-- `practice-index.B2.json`: `c4b62915628f02249f2483644b2ecb518c37e0f09db069020992796a7bc272ae`
+- `practice-lexemes.B2.json`: `fcdcd16bd2571fe681dd132a277d4b43cbf507622bd65e93768424d4995ccd38`
+- `practice-index.B2.json`: `daefdda935e5864345620d1115634bc6b32a5dc36268d0a001d172cee506bd4b`
 - `practice-synonym.B2.json`: `e56430a67078cb765380c3e0409e8a29314b2078980306da0e156608e7c55ee5`
-- `practice-lexemes.C1.json`: `b93dd683b7691c4e0ef2c1dca1e4faf1d3b742109e3e604581293f293c4ca524`
-- `practice-index.C1.json`: `bb7e5dd73cd13b7d13d1562f8f396263582684ae55572820aba80b6e98030e0c`
+- `practice-lexemes.C1.json`: `fc1efd11536a5c1d809d5e9d0fec3269f17f3f61ea6489e9d786d892accb4a78`
+- `practice-index.C1.json`: `3d1cf71410c690ec82e009f98801436862183dc1fac43826f777d84c75221ca6`
 - `practice-synonym.C1.json`: `7beb5a2f9db4445e111fb7bae03579b6532aacd49ed208405b61601a6d30735d`
 
-## Independent evaluation and delivery gates
+## Checks and delivery boundary
 
-Reviewer: draw 150 fresh random retained meanings per admission mechanism with level coverage, inspect all when fewer than 150 exist, and require zero material errors. The retained-Ukrainian packet is empty, so no Ukrainian admission claim is made. Independently sample exclusions by level and reason, distinguishing genuine gaps, quarantine, and mechanical rejection. The named review failures are regression tests and must not enter the held-out draw. Changed admission logic requires a new draw. Exact-head cross-family approval, same-head CI, publication, and live checks of regular/daily flashcards, meaning exercises, Mixed, direct entry, resumed sessions, and cached fallback remain the delivery gates. No publication or live outcome is claimed here.
+- The local publication quality gate reported zero violations with the frozen `sources.db` supplied.
+- All six named retained-meaning errors from the independent 150-row evaluation now display the Atlas head. Fourteen of the 18 named over-withheld rows now retain a supported English head. All 24 named rows are checked in regression fixtures.
+- Four named over-withheld rows remain withheld: `конфлікт` (multiple candidate heads against a Ukrainian gloss), `виконуватися` (English paraphrase without literal support), `замітка` (partial phrase overlap), and `потемнілий` (English paraphrase). They need structured sense evidence; the transform does not guess.
+- The changed admission logic needs a fresh independent held-out 150-row semantic draw and exclusion audit. Exact-head cross-family review, same-head CI, publication, and live checks of regular/daily flashcards, meaning exercises, Mixed, direct entry, resumed sessions, and cached fallback remain pending. No publication or live outcome is claimed.
 
 ## Withheld lemmas
 
-### A1 (170)
+### A1 (329)
 
-**dictionary_fragment (3)**
+**dictionary_fragment (2)**
 
-- `вдвічі`, `галузь`, `удвічі`
+- `вчителів`, `удвічі`
 
-**example_quotation (4)**
+**example_quotation (6)**
 
-- `він`, `треба`, `хотіти`, `прийнято`
+- `зараження`, `зловживання`, `ймовірність`, `поранення`, `поховання`, `увесь`
 
-**parenthesized_citation (20)**
+**parenthesized_citation (2)**
 
-- `ванна`, `всередині`, `герой`, `до`, `курка`, `кухня`, `на`, `низький`, `нога`, `ніж`, `рахунок`, `рука`
-- `так`, `форма`, `хлопець`, `що`, `якими`, `якому`, `якій`, `історія`
+- `перевищення`, `хлопчик`
 
 **reviewed_wrong_sense (1)**
 
 - `малі`
 
-**unattributed_english (18)**
+**unattributed_english (178)**
 
-- `бути`, `думати`, `дякувати`, `запросити`, `запрошувати`, `знищити`, `пити`, `платити`, `подорожувати`, `святкувати`, `скасувати`, `сміятися`
-- `співати`, `танцювати`, `уникати`, `їсти`, `подобатися`, `уникнути`
+- `акт`, `актор`, `акторка`, `Андрій`, `б`, `байдуже`, `би`, `борщ`, `бутерброд`, `бігати`, `білі`, `вдалося`
+- `вдень`, `вивести`, `визнати`, `виконання`, `вилучення`, `вилучено`, `вистава`, `витяг`, `вишиванка`, `внаслідок`, `вона`, `воно`
+- `відключення`, `відомий`, `відповідність`, `він`, `гарно`, `говорити / сказати`, `грн`, `давай / давайте`, `Дайте, будь ласка`, `дарувати`, `денний`, `директорка`
+- `Добре`, `довелося`, `досягнення`, `доцільно`, `друг`, `Дуже приємно`, `дістатися`, `жила`, `журналістка`, `з'ясувати`, `за`, `забезпечення`
+- `завгодно`, `законопроєкт`, `закінчувати`, `залежність`, `запровадити`, `запустити`, `зареєстровано`, `затримано`, `зафіксовано`, `звати`, `Звідки ти?`, `здається`
+- `здійснювати`, `здійснюється`, `зі`, `його`, `кафе`, `квіти`, `корпус`, `курс`, `лежати`, `лід`, `лікарка`, `літати`
+- `Максим`, `маршрутка`, `Марія`, `Мені каву, будь ласка`, `метро`, `могти`, `може`, `можна`, `мороз`, `мінус`, `навички`, `Надія`
+- `називатися`, `найкращий`, `написання`, `настільки`, `не/ні`, `Нормально`, `нібито`, `німецький`, `о першій`, `обґрунтування`, `Одеса`, `окуляри`
+- `ООН`, `ось`, `оце`, `оцінити`, `Павло`, `пані`, `певен`, `перевести`, `перевірка`, `передано`, `передбачається`, `печиво`
+- `плавати`, `подобатися`, `поміж`, `посеред`, `потрібен`, `потік`, `пощастило`, `правильно`, `прибирання`, `приймати`, `програміст`, `програмістка`
+- `продукт`, `проходження`, `прочитати`, `прочитати / прочитаю`, `прошу`, `підписання`, `рада`, `район`, `розібратися`, `рівня`, `рід`, `свідомо`
+- `сервіс`, `Сергій`, `середній`, `смачно`, `сприяти`, `співак`, `співачка`, `студентка`, `сусід`, `сучасний`, `сім'я`, `сірий`
+- `так`, `те`, `телевізор`, `телефони`, `тисяча`, `треба`, `тривалий`, `Тут, будь ласка`, `українець`, `українська`, `унаслідок`, `упродовж`
+- `фотографувати`, `ходити`, `холодно`, `Христос воскрес`, `цікаво`, `цілісність`, `чекати`, `черговий`, `чоловік`, `Чудово`, `школяр`, `штани`
+- `Щедрий вечір`, `я вважаю, що`, `як вас звати?`, `Як тебе звати?`, `із`, `ім'я`, `інженер`, `іти`, `іти / ходити`, `їхати / їздити`
 
-**unbound_english_sense (70)**
+**unbound_english_sense (82)**
 
-- `активний`, `алфавіт`, `ані`, `арешт`, `баланс`, `безробіття`, `ближче`, `боляче`, `борг`, `брак`, `буквально`, `ваги`
-- `вдало`, `виховання`, `внесок`, `відстань`, `дані`, `загін`, `захворювання`, `здатний`, `здебільшого`, `зелені`, `килим`, `контроль`
-- `конфлікт`, `кредит`, `криза`, `млн`, `момент`, `набір`, `національний`, `немов`, `низка`, `обсяг`, `перебіг`, `персик`
-- `пов'язаний` (`пов-язаний`), `покоління`, `призначений`, `пропаганда`, `редактор`, `ряд`, `різниця`, `свідомість`, `сенс`, `спеціально`, `спостереження`, `спільнота`
-- `тварина`, `удар`, `уряд`, `уявлення`, `цукерка`, `цілком`, `цінність`, `шляхом`, `яблучний`, `як-от`, `європейський`, `іграшка`
-- `інформація`, `кухар`, `кілометр`, `територія`, `перекладач`, `прем'єра` (`прем-єра`), `апарат`, `бригада`, `какао`, `прем'єр` (`прем-єр`)
+- `ані`, `апарат`, `арешт`, `багатий`, `баланс`, `ближче`, `борг`, `брак`, `бригада`, `більше`, `ваги`, `ванна`
+- `вдвічі`, `виховання`, `внесок`, `галузь`, `група`, `добрий`, `дуже`, `душ`, `дівчина`, `журнал`, `жінка`, `жіночий`
+- `загін`, `захворювання`, `здатний`, `здебільшого`, `зелені`, `земля`, `какао`, `килим`, `кожний`, `контроль`, `конфлікт`, `короткий`
+- `кредит`, `кілометр`, `малий`, `млн`, `мова`, `момент`, `набір`, `небо`, `немов`, `одяг`, `означати`, `отримувати`
+- `пальто`, `перебіг`, `перекладач`, `пов'язаний`, `показувати`, `правда`, `прем'єр`, `призначений`, `про`, `раз`, `редактор`, `ряд`
+- `різниця`, `сад`, `світ`, `сенс`, `скасувати`, `спати`, `спеціально`, `тварина`, `територія`, `увага`, `удар`, `уряд`
+- `учень`, `уявлення`, `хлопець`, `цукерка`, `цілком`, `цінність`, `чути`, `юрист`, `яблучний`, `ідея`
 
-**unsupported_english_source (54)**
+**unsupported_english_source (58)**
 
-- `відійшов`, `голови`, `готує`, `готується`, `десяток`, `дорожче`, `з-поміж`, `завершено`, `зайшла`, `зайшов`, `зберігається`, `змінюється`
-- `знаємо`, `комунальні`, `люблять`, `називається`, `написано`, `нікого`, `ой`, `онлайн`, `ото`, `панове`, `перейшла`, `перейшов`
-- `площею`, `побачивши`, `працюємо`, `Прикарпаття` (`прикарпаття`), `проведено`, `пройшов`, `просимо`, `просить`, `просять`, `підписано`, `підтверджено`, `піду`
-- `пішла`, `пішов`, `робимо`, `робить`, `скажімо`, `складання`, `транспортом`, `ухвалено`, `ходить`, `хочеться`, `цьому`, `маркер`
-- `кличний відмінок` (`кличний-відмінок`), `опубліковано`, `пошкоджено`, `облаштування`, `здійснено`, `направлення`
+- `відійшов`, `голови`, `готує`, `готується`, `десяток`, `дорожче`, `з-поміж`, `завершено`, `зайшла`, `зайшов`, `зберігається`, `здійснено`
+- `змінюється`, `знаємо`, `кличний відмінок`, `комунальні`, `люблять`, `маркер`, `називається`, `написано`, `направлення`, `нікого`, `облаштування`, `ой`
+- `онлайн`, `опубліковано`, `ото`, `панове`, `перейшла`, `перейшов`, `площею`, `побачивши`, `пошкоджено`, `працюємо`, `прийнято`, `Прикарпаття`
+- `проведено`, `пройшов`, `просимо`, `просить`, `просять`, `підписано`, `підтверджено`, `піду`, `пішла`, `пішов`, `робимо`, `робить`
+- `скажімо`, `складання`, `транспортом`, `ухвалено`, `ходить`, `хочеться`, `цьому`, `якими`, `якому`, `якій`
 
-### A2 (733)
+### A2 (353)
 
 **dictionary_fragment (1)**
 
 - `рентген`
 
-**parenthesized_citation (166)**
+**example_quotation (1)**
 
-- `агресивно`, `бити`, `весняний`, `вечірній`, `взути`, `виводити`, `виготовити`, `визнавати`, `винахід`, `випробувати`, `витвір`, `вказувати`
-- `відзначати`, `відкривати`, `відправлятися`, `відчинити`, `відьма`, `вітряний`, `вітряно`, `глузд`, `говорите`, `дальший`, `дверцята`, `дзвінка`
-- `добродію`, `досить`, `дрон`, `дурня`, `економити`, `життєвий`, `з'їсти` (`з-їсти`), `забирати`, `зайнятість`, `залишити`, `замислитися`, `занепад`
-- `заохочення`, `заощадити`, `запал`, `запах`, `заповнити`, `запускати`, `зачинити`, `зварити`, `звільняти`, `здивування`, `зимовий`, `злість`
-- `зосередитися`, `зіпсувати`, `камінь`, `капець`, `кар'єра` (`кар-єра`), `квасоля`, `книжковий`, `кохання`, `краса`, `культурний`, `лисиця`, `лікарю`
-- `маслом`, `мертвий`, `мотив`, `набирати`, `навколішки`, `навіть`, `надвір`, `наді`, `налаштований`, `намагатися`, `намисто`, `напрочуд`
-- `напруга`, `німецька`, `обробляти`, `обстрілювати`, `оновити`, `опинитися`, `оцінювати`, `п'ята` (`п-ята`), `переді`, `перемогти`, `перешкоджати`, `перешкодити`
-- `повноцінний`, `погрожувати`, `подих`, `позаяк`, `пообідати`, `порушувати`, `поширюватися`, `поїздка`, `практикувати`, `прати`, `працюєте`, `приборкати`
-- `призначати`, `прийняти`, `пристрасть`, `проводити`, `провідний`, `промова`, `пташка`, `підписувати`, `радо`, `рекомендація`, `решта`, `робите`
-- `розлад`, `роман`, `рудий`, `різдвяний`, `садити`, `самотужки`, `святковий`, `світити`, `середньовіччя`, `слабкість`, `слива`, `смакувати`
-- `справа`, `стандарт`, `супроводжувати`, `сусіда`, `схильний`, `сімейний`, `талановитий`, `тату`, `торговий`, `тренажерний`, `триматися`, `удома`
-- `усвідомити`, `усвідомлювати`, `усередині`, `фруктовий`, `функціонувати`, `футбольний`, `фіксувати`, `чистити`, `чіпати`, `ширина`, `шкарпетка`, `шторм`
-- `ігнорувати`, `інвалідність`, `повернути`, `запам'ятати` (`запам-ятати`), `спокійно`, `ланцюжок`, `масовий`, `інфекція`, `паркування`, `політ`, `рибний`, `проголошення`
-- `закордонний`, `концентрація`, `броколі`, `гриль`, `захопливий`, `лижа`, `начальниця`, `студентський`, `тостер`, `інстаграм`
+- `пташка`
+
+**parenthesized_citation (3)**
+
+- `дверцята`, `переді`, `удома`
 
 **reviewed_wrong_sense (26)**
 
@@ -299,63 +319,48 @@ Reviewer: draw 150 fresh random retained meanings per admission mechanism with l
 - `над`, `ніхто`, `по`, `постав`, `путін`, `піт`, `садка`, `себе`, `тихіший`, `тобто`, `турецький`, `хай`
 - `хтось`, `ясна`
 
-**unattributed_english (332)**
+**unattributed_english (159)**
 
-- `актуальність`, `американець`, `аптекар`, `аргумент`, `аудиторія`, `бали`, `банка`, `безлад`, `близько`, `боятися`, `брудний`, `будується`
-- `будь-хто`, `будь-що`, `бігти`, `варити`, `варта`, `вартий`, `варто`, `вартість`, `ватажок`, `взаємини`, `вибачити`, `вибирати`
-- `вивезти`, `вивчити`, `вид`, `вийти`, `викликати`, `виконуватися`, `виконується`, `винести`, `виникнути`, `виносити`, `випускати`, `виробити`
-- `вирішити`, `вирішувати`, `висіти`, `виходити`, `вищий`, `вміти`, `водити`, `володіти`, `всі`, `втручатися`, `вчителька`, `відбуватися`
-- `відгук`, `відокремлення`, `відповісти`, `відпочинок`, `відпочити`, `відтворити`, `відшкодувати`, `вітчизняний`, `гарнір`, `геть`, `голитися`, `голосно`
-- `господар`, `готуватися`, `графіка`, `гурток`, `гід`, `далі`, `двоє`, `декларація`, `державний`, `дешевий`, `дешево`, `дзвонити`
-- `дзеркало`, `доведення`, `дозвілля`, `донести`, `дорого`, `дослідити`, `досягати`, `досягнути`, `доцільність`, `дочекатися`, `жахливий`, `жовті`
-- `забагато`, `забезпечений`, `забезпечено`, `забуття`, `завести`, `зайти`, `закріпити`, `закуска`, `зал`, `залишатися`, `залишитися`, `замало`
-- `замок`, `запитувати`, `заповідник`, `заспівати`, `зателефонувати`, `зафіксувати`, `заходити`, `захоплення`, `захоплюватися`, `заявити`, `збиратися`, `зважити`
-- `звільнитися`, `зменшувати`, `зранку`, `зустрітися`, `зустрічати`, `зустрічатися`, `кабінет`, `касир`, `каштановий`, `керівник`, `киянин`, `класика`
-- `класно`, `колишній`, `коло`, `комплексний`, `композиція`, `кошик`, `кошторис`, `коштують`, `купе`, `куріння`, `ладен`, `лише`
-- `лінивий`, `літній`, `майстер`, `малювання`, `Мар'яна` (`мар-яна`), `митець`, `набагато`, `набрати`, `навколо`, `найбільший`, `найвищий`, `найдорожчий`
-- `найменший`, `напруження`, `нарізати`, `наскрізь`, `наслідувати`, `насолоджуватися`, `наявний`, `недавно`, `нести`, `нехтувати`, `нудно`, `обабіч`
-- `обережно`, `обласний`, `обов'язковий` (`обов-язковий`), `обчислення`, `оголошення`, `означення`, `опади`, `оренда`, `отой`, `охочі`, `оцей`, `пакет`
-- `пам'ятка` (`пам-ятка`), `пекти`, `передавати`, `передати`, `передчуття`, `перейти`, `переказ`, `переписати`, `переходити`, `переїжджати`, `перукарка`, `писанка`
-- `писання`, `племінник`, `племінниця`, `пливти`, `по-своєму`, `по-українськи`, `побачити`, `побудувати`, `побігти`, `повідомляти`, `погоджено`, `погуляти`
-- `показання`, `покладатися`, `покласти`, `помаранчевий`, `попрацювати`, `порада`, `порох`, `посмішка`, `потрібно`, `початися`, `почекати`, `поширювати`
-- `поїхати`, `правильний`, `працівник`, `працівниця`, `препарат`, `прибувати`, `привітний`, `приготувати`, `приймання`, `прийти`, `принести`, `приходити`
-- `пришвидшити`, `приїжджати`, `приїзд`, `приїхати`, `провести`, `проводитися`, `просто`, `прохання`, `прохолодно`, `прохід`, `проїзд`, `під'їзд` (`під-їзд`)
-- `підготувати`, `підсумок`, `раніше`, `раціон`, `ремонт`, `родина`, `рожевий`, `розглядатися`, `розгорнути`, `розказувати`, `розповісти`, `розрізати`
-- `рок`, `садиба`, `самотній`, `сантиметр`, `сварка`, `серіал`, `сивий`, `синьо-жовтий`, `скласти`, `службовий`, `слідкувати`, `сон`
-- `сподобатися`, `спорядження`, `спритно`, `спробувати`, `спрощення`, `ставити`, `стажування`, `старе`, `стрункий`, `стрілець`, `супровід`, `теза`
-- `тил`, `товариш`, `торкнутися`, `троє`, `турбувати`, `турбуватися`, `тістечко`, `узгодити`, `українка`, `уривок`, `усі`, `фах`
-- `фейк`, `фокус`, `фіолетовий`, `хвора`, `хворіти`, `четверо`, `чинний`, `чистий`, `шанувати`, `швидше`, `школярка`, `шкідливий`
-- `якийсь`, `ялинка`, `індекс`, `істота`, `їздити`, `картопляний`, `неістота`, `колія`, `львів'янин` (`львів-янин`), `інженерка`, `адміністратор`, `дзвонити / подзвонити` (`дзвонити-подзвонити`)
-- `вчити / вивчити` (`вчити-вивчити`), `прибирати / прибрати` (`прибирати-прибрати`), `подзвонити / подзвоню` (`подзвонити-подзвоню`), `складати / скласти іспит` (`складати-скласти-іспит`), `поїхати / їздити` (`поїхати-їздити`), `ближчий`, `найменш`, `змогти`, `поширити`, `продається`, `попередити`, `поліклініка`
-- `висувати`, `варений`, `відкрито`, `русявий`, `сирник`, `спростувати`, `оприлюднено`, `забудовник`, `непрямий`, `грамів`, `харківський`, `враховано`
-- `подбати`, `побут`, `адаптуватися`, `доопрацювати`, `вегетаріанський`, `вироблення`, `зволікання`, `привітати`
+- `адаптуватися`, `актуальність`, `американець`, `аудиторія`, `бали`, `ближчий`, `боятися`, `будується`, `бігти`, `варта`, `ватажок`, `вегетаріанський`
+- `взаємини`, `вивезти`, `виводити`, `вивчити`, `вид`, `виконуватися`, `виконується`, `виносити`, `висувати`, `враховано`, `вчителька`, `відгук`
+- `відкрито`, `відокремлення`, `відпочинок`, `гарнір`, `геть`, `голитися`, `господар`, `готуватися`, `грамів`, `графіка`, `двоє`, `декларація`
+- `державний`, `дешево`, `донести`, `доопрацювати`, `дорого`, `доцільність`, `дочекатися`, `жовті`, `забезпечено`, `забудовник`, `завести`, `закріпити`
+- `залишатися`, `замок`, `заповідник`, `запускати`, `захоплюватися`, `заявити`, `збиратися`, `зважити`, `зранку`, `зустрітися`, `зустрічатися`, `капець`
+- `каштановий`, `киянин`, `класика`, `класно`, `комплексний`, `кошик`, `купе`, `львів'янин`, `майстер`, `Мар'яна`, `масовий`, `найбільший`
+- `найвищий`, `найдорожчий`, `найменш`, `напруження`, `нарізати`, `непрямий`, `нести`, `нехтувати`, `неістота`, `нудно`, `обов'язковий`, `обробляти`
+- `обчислення`, `опади`, `оприлюднено`, `отой`, `охочі`, `оцей`, `п'ята`, `пам'ятка`, `передавати`, `передати`, `перейти`, `переказ`
+- `переписати`, `переїжджати`, `перукарка`, `писання`, `пливти`, `побігти`, `погоджено`, `подих`, `показання`, `покладатися`, `попрацювати`, `порох`
+- `почекати`, `поширити`, `поширювати`, `поїхати / їздити`, `приймання`, `принести`, `приходити`, `приїжджати`, `приїхати`, `провести`, `продається`, `прохання`
+- `прохолодно`, `прохід`, `підготувати`, `раціон`, `родина`, `розглядатися`, `розгорнути`, `розлад`, `розрізати`, `садиба`, `сантиметр`, `світити`
+- `сивий`, `сирник`, `складати / скласти іспит`, `службовий`, `смакувати`, `спорядження`, `спрощення`, `стажування`, `старе`, `сусіда`, `тату`, `тил`
+- `троє`, `тістечко`, `українка`, `уривок`, `фейк`, `фокус`, `харківський`, `хвора`, `хворіти`, `четверо`, `швидше`, `ялинка`
+- `індекс`, `істота`, `їздити`
 
-**unbound_english_sense (145)**
+**unbound_english_sense (93)**
 
-- `автор`, `аеродром`, `активно`, `алкоголь`, `арахіс`, `байдужість`, `бар'єр` (`бар-єр`), `батьківщина`, `безглуздо`, `безкоштовний`, `безнадійно`, `безпечний`
-- `безсоння`, `блискавка`, `блокувати`, `боже`, `божевілля`, `боком`, `болото`, `боєць`, `брехати`, `брехня`, `буцімто`, `бізнес`
-- `бійка`, `білка`, `більшість`, `вага`, `вагітна`, `вазон`, `вакцина`, `вакцинація`, `ведмідь`, `вигляд`, `використовувати`, `вмить`
-- `війна`, `гарбуз`, `голос`, `далекий`, `дар`, `дах`, `дбати`, `дурний`, `ефір`, `з'являтися` (`з-являтися`), `закон`, `заряд`
-- `захід`, `землетрус`, `злий`, `знаходити`, `зразок`, `зір`, `казка`, `катастрофа`, `квітка`, `класти`, `коліно`, `компонент`
-- `кріп`, `ківі`, `лоб`, `ловити`, `максимальний`, `медичний`, `міський`, `найбільше`, `населений`, `націоналізм`, `недорогий`, `незалежність`
-- `неможливо`, `непорозуміння`, `новорічний`, `носій`, `ноутбук`, `образа`, `океан`, `омлет`, `очевидний`, `перегони`, `переклад`, `перемога`
-- `перстень`, `пес`, `пиріг`, `прихисток`, `провина`, `пропонувати`, `професійно`, `підлітка`, `реклама`, `розмовляти`, `рости`, `рідний`
-- `середина`, `сила`, `система`, `скрипка`, `смак`, `смартфон`, `смуга`, `смузі`, `сміливість`, `спеціальний`, `темрява`, `теперішній`
-- `тип`, `тонкий`, `точно`, `тримати`, `туристичний`, `уважно`, `ультиматум`, `худоба`, `цивільний`, `цифра`, `цифровий`, `цілий`
-- `чемпіон`, `чин`, `щотижня`, `юний`, `ядерний`, `ядро`, `язик`, `якнайкраще`, `важливо`, `оливка`, `безкоштовно`, `бульйон`
-- `сума`, `львівський`, `резолюція`, `активізувати`, `доба`, `вагітність`, `промінь`, `безоплатно`, `безплатно`, `кавун`, `консенсус`, `краватка`
-- `петрушка`
+- `автор`, `аеродром`, `активно`, `алкоголь`, `байдужість`, `бар'єр`, `батьківщина`, `безглуздо`, `безплатно`, `блискавка`, `блокувати`, `боже`
+- `божевілля`, `боком`, `болото`, `боєць`, `брехати`, `брехня`, `бульйон`, `буцімто`, `бійка`, `більшість`, `вага`, `вагітність`
+- `важливо`, `вакцинація`, `вигляд`, `використовувати`, `гарбуз`, `голос`, `далекий`, `дар`, `дбати`, `доба`, `досить`, `дурний`
+- `ефір`, `з'являтися`, `закон`, `заряд`, `захід`, `злий`, `знаходити`, `зразок`, `зір`, `казка`, `катастрофа`, `квітка`
+- `класти`, `ловити`, `максимальний`, `міський`, `населений`, `незалежність`, `неможливо`, `непорозуміння`, `ноутбук`, `образа`, `очевидний`, `переклад`
+- `перстень`, `пиріг`, `промінь`, `пропонувати`, `підлітка`, `реклама`, `розмовляти`, `рости`, `середина`, `смак`, `смуга`, `смузі`
+- `сміливість`, `спеціальний`, `справа`, `сума`, `темрява`, `теперішній`, `тип`, `тонкий`, `точно`, `тримати`, `уважно`, `худоба`
+- `цивільний`, `цифра`, `цифровий`, `цілий`, `чин`, `щотижня`, `ядерний`, `ядро`, `язик`
 
-**unsupported_english_source (63)**
+**unbound_ukrainian (1)**
 
-- `вітаємо`, `говорячи`, `готуємо`, `додається`, `дорожчий`, `дізнавшись`, `завершується`, `завідувач`, `закрито`, `замінено`, `збудовано`, `змінено`
-- `зручніший`, `легально`, `летять`, `майбутній час` (`майбутній-час`), `минулий час` (`минулий-час`), `наведено`, `недорого`, `обговорюється`, `ого`, `орендувати`, `отримавши`, `передається`
-- `пишеться`, `плацкарт`, `повернувшись`, `пом'якшення` (`пом-якшення`), `помалу`, `попід`, `поїду`, `правка`, `працюючи`, `продано`, `підтверджується`, `регламент`
-- `розглянуто`, `сказавши`, `слухаючи`, `солодший`, `теперішній час` (`теперішній-час`), `усміхаючись`, `Хрещатик` (`хрещатик`), `цікавіший`, `слухає`, `доконаний вид` (`доконаний-вид`), `недоконаний вид` (`недоконаний-вид`), `родовий відмінок` (`родовий-відмінок`)
-- `споріднені слова` (`споріднені-слова`), `умовний спосіб` (`умовний-спосіб`), `частина мови` (`частина-мови`), `підготовлено`, `зачинено`, `оновлено`, `Франків` (`франків`), `затверджений`, `контролюється`, `розробляється`, `ветеринарний`, `головне`
-- `найдальший`, `перезавантаження`, `посів`
+- `німецька`
 
-### B1 (1070)
+**unsupported_english_source (69)**
+
+- `ветеринарний`, `вітаємо`, `говорите`, `говорячи`, `головне`, `готуємо`, `добродію`, `додається`, `доконаний вид`, `дорожчий`, `дізнавшись`, `завершується`
+- `завідувач`, `закрито`, `замінено`, `затверджений`, `зачинено`, `збудовано`, `змінено`, `зручніший`, `контролюється`, `легально`, `летять`, `лікарю`
+- `майбутній час`, `маслом`, `минулий час`, `наведено`, `найдальший`, `недоконаний вид`, `недорого`, `обговорюється`, `ого`, `оновлено`, `орендувати`, `отримавши`
+- `передається`, `перезавантаження`, `пишеться`, `плацкарт`, `повернувшись`, `пом'якшення`, `помалу`, `попід`, `посів`, `поїду`, `правка`, `працюючи`
+- `працюєте`, `продано`, `підготовлено`, `підтверджується`, `регламент`, `робите`, `родовий відмінок`, `розглянуто`, `розробляється`, `сказавши`, `слухаючи`, `слухає`
+- `солодший`, `споріднені слова`, `теперішній час`, `умовний спосіб`, `усміхаючись`, `Франків`, `Хрещатик`, `цікавіший`, `частина мови`
+
+### B1 (809)
 
 **dated_citation (408)**
 
@@ -407,35 +412,23 @@ Reviewer: draw 150 fresh random retained meanings per admission mechanism with l
 - `циклон`, `цупкий`, `чинник`, `чистота`, `чорнявий`, `чільний`, `шалений`, `шарж`, `штат`, `щільний`, `юність`, `ярмо`
 - `ячмінь`
 
-**example_quotation (27)**
+**example_quotation (26)**
 
-- `абонент`, `анафора`, `вдача`, `виганяти`, `виголошувати`, `вирівнювати`, `вислів`, `відбивати`, `діватися`, `завершувати`, `кермо`, `лицемірство`
-- `невдача`, `негідно`, `нівелювати`, `оборонець`, `одначе`, `охайний`, `патрон`, `почин`, `продаж`, `розлука`, `спраглий`, `тлумачити`
-- `хіть`, `шах`, `ябеда`
+- `абонент`, `анафора`, `вдача`, `виганяти`, `виголошувати`, `вирівнювати`, `вислів`, `відбивати`, `діватися`, `кермо`, `лицемірство`, `невдача`
+- `негідно`, `нівелювати`, `оборонець`, `одначе`, `охайний`, `патрон`, `почин`, `продаж`, `розлука`, `спраглий`, `тлумачити`, `хіть`
+- `шах`, `ябеда`
 
-**parenthesized_citation (248)**
+**parenthesized_citation (104)**
 
-- `автономний`, `авторитетний`, `акція`, `анод`, `аспект`, `багатозначний`, `багач`, `близький`, `боягузтво`, `в'їхати` (`в-їхати`), `важкий`, `вал`
-- `ввозити`, `вгорі`, `вдихати`, `вербальний`, `вибивати`, `вивозити`, `вигадка`, `виживати`, `вижити`, `визначений`, `визначний`, `викидати`
-- `викинути`, `виконувати`, `вимагати`, `вина`, `висвітлювати`, `висловлювати`, `виявляти`, `включати`, `включити`, `вниз`, `внизу`, `впоперек`
-- `всередину`, `втрачати`, `відкидати`, `відмовитися`, `відмовляти`, `відмовлятися`, `відновлюватися`, `відправитися`, `відсвяткувати`, `відчиняти`, `гарячка`, `гаяти`
-- `героїчно`, `герць`, `гривна`, `гуманність`, `гідно`, `дама`, `двобій`, `де-небудь`, `дикорослий`, `дно`, `добиратися`, `добратися`
-- `доброякісний`, `догори`, `док`, `досвідчений`, `драматичний`, `дружний`, `дівчатко`, `дійовий`, `діставати`, `екстрений`, `ефектний`, `жага`
-- `жаркий`, `з'їдати` (`з-їдати`), `зад`, `задача`, `задній`, `зажинки`, `зайвий`, `залишати`, `замкнути`, `запроваджувати`, `засада`, `засвоїти`
-- `засмучувати`, `засновник`, `засуха`, `захопитися`, `зачиняти`, `звертати`, `звертатися`, `звикнути`, `згадати`, `ззаду`, `злоякісний`, `зовні`
-- `зривати`, `зіграти`, `катод`, `квапитися`, `кидати`, `клопотатися`, `колос`, `континент`, `коротко`, `край`, `кривда`, `круг`
-- `курган`, `лава`, `ласка`, `лаяти`, `лук`, `людяність`, `лівий`, `лівиця`, `лівобережний`, `лікарський`, `ліквідувати`, `майна`
-- `матка`, `мовчати`, `мотивувати`, `мудрий`, `мурувати`, `мучити`, `містити`, `міцний`, `нагрівати`, `надто`, `наймати`, `наліт`
-- `направляти`, `насамкінець`, `насичений`, `небезпека`, `невербальний`, `неволя`, `неграмотно`, `незаслужено`, `незрозуміло`, `нелегальний`, `необхідний`, `неорганічний`
-- `нервовий`, `нещастя`, `нива`, `нудний`, `об'єднання` (`об-єднання`), `обстоювати`, `обходитися`, `обґрунтовувати`, `опускати`, `оригінально`, `острах`, `очний`
-- `палкий`, `паніка`, `перевага`, `перелом`, `поворот`, `подальший`, `позичати`, `покликати`, `покора`, `поразка`, `порожній`, `похвала`
-- `правобережний`, `практика`, `приблизний`, `привід`, `пригадати`, `пригадувати`, `пригода`, `принаймні`, `присутній`, `присяжний`, `приятель`, `приємність`
-- `програмний`, `проживання`, `прощатися`, `пря`, `психічний`, `піднімати`, `підніматися`, `підходити`, `пізній`, `рабство`, `ранковий`, `рвати`
-- `реготати`, `риса`, `розважати`, `роздратований`, `розряд`, `руйнувати`, `рівняти`, `різноманітний`, `світовий`, `сирий`, `слізний`, `смертний`
-- `снага`, `спадний`, `спекотний`, `спершу`, `спостерігатися`, `спрощувати`, `статика`, `стрімкий`, `стійкий`, `сум`, `тактичний`, `тверезий`
-- `терези`, `тож`, `тривкий`, `убогий`, `уважний`, `угору`, `удавано`, `укладач`, `умирати`, `униз`, `уперед`, `усмішка`
-- `успішний`, `установка`, `усупереч`, `утримання`, `фальш`, `хапати`, `хвойний`, `хист`, `хоч`, `цензура`, `цінний`, `чвалати`
-- `чернь`, `чіпкий`, `штучний`, `щедрий`, `являти`, `явний`, `якби`, `історичний`
+- `анод`, `аспект`, `багач`, `боягузтво`, `вал`, `ввозити`, `вдихати`, `вибивати`, `вивозити`, `вигадка`, `вина`, `впоперек`
+- `відкидати`, `героїчно`, `герць`, `гривна`, `гуманність`, `гідно`, `дама`, `двобій`, `догори`, `док`, `дружний`, `ефектний`
+- `жага`, `жаркий`, `зад`, `задача`, `задній`, `зажинки`, `засада`, `засуха`, `зовні`, `зривати`, `катод`, `квапитися`
+- `кидати`, `клопотатися`, `колос`, `край`, `кривда`, `круг`, `курган`, `лава`, `лаяти`, `лук`, `людяність`, `лівиця`
+- `майна`, `матка`, `мудрий`, `мурувати`, `міцний`, `нагрівати`, `наліт`, `направляти`, `насамкінець`, `неволя`, `неграмотно`, `незаслужено`
+- `незрозуміло`, `нещастя`, `нива`, `нудний`, `оригінально`, `острах`, `палкий`, `паніка`, `покора`, `поразка`, `порожній`, `похвала`
+- `практика`, `привід`, `приятель`, `рабство`, `реготати`, `розряд`, `рівняти`, `спадний`, `спрощувати`, `стрімкий`, `сум`, `тверезий`
+- `терези`, `тривкий`, `убогий`, `удавано`, `укладач`, `умирати`, `усмішка`, `фальш`, `хапати`, `хвойний`, `хист`, `цензура`
+- `цінний`, `чвалати`, `чернь`, `чіпкий`, `штучний`, `щедрий`, `являти`, `явний`
 
 **reviewed_wrong_sense (18)**
 
@@ -448,122 +441,92 @@ Reviewer: draw 150 fresh random retained meanings per admission mechanism with l
 - `диво`, `колесо`, `охоче`, `почуття`, `прихильник`, `рееміграція`, `різкий`, `річниця`, `смерть`, `сунізм`, `хвіст`, `шиїзм`
 - `шум`, `який-небудь`, `інтелект`
 
-**unattributed_english (175)**
+**unattributed_english (59)**
 
-- `абсолютно`, `адресат`, `аналіз`, `ароматний`, `ательє`, `безмежний`, `безстрашний`, `блискучий`, `будівельник`, `варт`, `вертеп`, `вести`
-- `вивчення`, `вигаданий`, `виконавець`, `вилетіти`, `виникати`, `виробляти`, `вирувати`, `високо`, `виховувати`, `виїжджати`, `виїзд`, `виїхати`
-- `внутрішній`, `водночас`, `возити`, `відвести`, `відділ`, `відкриватися`, `відлуння`, `відповідний`, `відтоді`, `відходити`, `відійти`, `візит`
-- `вітатися`, `громадський`, `давнина`, `дивувати`, `дисципліна`, `добро`, `довкола`, `дозволити`, `дозволяти`, `домовитися`, `допис`, `доїжджати`
-- `доїхати`, `дума`, `дізнаватися`, `дійсність`, `дійти`, `живопис`, `житло`, `жувати`, `з-за`, `забудова`, `забігти`, `завершити`
-- `закономірність`, `занести`, `заперечувати`, `запис`, `запланувати`, `збивати`, `збіг`, `звернутися`, `здавати`, `здати`, `здача`, `здивувати`
-- `здогадуватися`, `здійснюватися`, `змусити`, `знаменитий`, `зовнішній`, `зраджувати`, `зрадіти`, `зроблений`, `зібрати`, `зійти`, `керування`, `керівництво`
-- `коштовний`, `краєвид`, `крикнути`, `лиман`, `листоноша`, `личити`, `майстерня`, `мандрівка`, `мутити`, `наближатися`, `навантаження`, `наляканий`
-- `напружений`, `насправді`, `наступати`, `невиконаний`, `незадоволений`, `неприємний`, `новітній`, `норма`, `нормативний`, `ніби`, `обслуговування`, `обставина`
-- `однаковий`, `ожеледиця`, `опонент`, `опора`, `остаточно`, `отож`, `охороняти`, `передпокій`, `побажання`, `побачення`, `повести`, `повністю`
-- `повсюди`, `погляд`, `подавати`, `подаватися`, `поки`, `помешкання`, `привести`, `привозити`, `прикмета`, `приліт`, `проводжати`, `провідник`
-- `пройти`, `проходити`, `прохолодний`, `прудко`, `підійти`, `розв'язка` (`розв-язка`), `розпорядок`, `рубати`, `свій`, `скаржитися`, `складати`, `складний`
-- `сміливий`, `спеціальність`, `спільний`, `становити`, `стриманий`, `стрічка`, `стукати`, `сумувати`, `сучасність`, `сфера`, `сходити`, `та`
-- `узбережжя`, `узвар`, `узимку`, `хвилювати`, `хитрощі`, `хоробрий`, `хоробрість`, `хто-небудь`, `худорлявий`, `хіба`, `цілковитий`, `чисельний`
-- `шановний`, `шкода`, `штамп`, `щирий`, `щойно`, `якісний`, `ясно`
+- `абсолютно`, `адресат`, `варт`, `вертеп`, `вести`, `виконувати`, `виїжджати`, `виїхати`, `возити`, `відвести`, `відділ`, `відтоді`
+- `відійти`, `вітатися`, `добро`, `допис`, `доїжджати`, `дійти`, `живопис`, `з-за`, `забудова`, `забігти`, `закономірність`, `запроваджувати`
+- `захопитися`, `збивати`, `збіг`, `керування`, `керівництво`, `листоноша`, `наближатися`, `новітній`, `обставина`, `ожеледиця`, `опора`, `отож`
+- `передпокій`, `повести`, `подавати`, `подаватися`, `покликати`, `привести`, `привозити`, `пригода`, `приліт`, `підходити`, `розв'язка`, `свій`
+- `скаржитися`, `стриманий`, `стукати`, `та`, `узвар`, `шкода`, `штамп`, `щойно`, `якби`, `якісний`, `ясно`
 
 **unbound_ukrainian (47)**
 
 - `агресивний`, `адвокат`, `активність`, `антикварний`, `атлант`, `балакати`, `боротьба`, `бос`, `браслет`, `будити`, `буцім`, `важити`
 - `верхній`, `груба`, `довкіл`, `ділити`, `дітися`, `діяльність`, `жодний`, `захист`, `звикати`, `зо`, `зокрема`, `контролювати`
-- `крок`, `лицьовий`, `м'яз` (`м-яз`), `мелодія`, `молодий`, `населення`, `освічений`, `падчірка`, `пасивний`, `поверхня`, `праця`, `присмерк`
+- `крок`, `лицьовий`, `м'яз`, `мелодія`, `молодий`, `населення`, `освічений`, `падчірка`, `пасивний`, `поверхня`, `праця`, `присмерк`
 - `притулитися`, `процент`, `підкоритися`, `підкреслення`, `підійматися`, `розум`, `тремтіти`, `шлунок`, `явище`, `якраз`, `існувати`
 
 **unsupported_english_source (11)**
 
 - `брудно`, `вподобання`, `заочний`, `зіставлення`, `кремезний`, `ладна`, `ліліпут`, `правдиво`, `пружний`, `репрезентувати`, `чим`
 
-### B2 (627)
+### B2 (397)
 
 **dated_citation (13)**
 
 - `боягузливий`, `бідно`, `гармонійний`, `горизонталь`, `зухвалий`, `людський`, `матінка`, `невидимий`, `пекучий`, `пісний`, `тактовний`, `тимчасовий`
 - `фантазія`
 
-**dictionary_fragment (23)**
+**dictionary_fragment (24)**
 
-- `бавовна`, `бджолиний`, `блукати`, `буханець`, `відгадувати`, `жезл`, `здійснити`, `кисень`, `клітка`, `комар`, `кусати`, `правознавство`
-- `реальність`, `ритмічний`, `рішучий`, `складений`, `створений`, `супутник`, `непрофесійно`, `судома`, `носок`, `перетравити`, `понаднормово`
+- `бавовна`, `бджолиний`, `блукати`, `буханець`, `відгадувати`, `жезл`, `здійснити`, `кисень`, `клітка`, `комар`, `кусати`, `непрофесійно`
+- `носок`, `перетравити`, `понаднормово`, `правознавство`, `реальність`, `ритмічний`, `рішучий`, `складений`, `створений`, `судома`, `супутник`, `сутінок`
 
-**example_quotation (1)**
+**example_quotation (2)**
 
-- `ступати`
+- `зневоднення`, `ступати`
 
-**parenthesized_citation (183)**
+**parenthesized_citation (27)**
 
-- `верещати`, `весільний`, `виготовляти`, `виміряти`, `випивати`, `вираз`, `вирій`, `висипати`, `висохнути`, `витрата`, `вмикати`, `вовна`
-- `вплинути`, `вівчарка`, `відбиватися`, `директоре`, `добродійко`, `доводити`, `допитливий`, `дотриматися`, `дружній`, `діжка`, `жайворонок`, `жало`
-- `жартівливий`, `жирний`, `житній`, `загрожувати`, `залоза`, `замерзнути`, `замикати`, `заощадження`, `запальничка`, `запалювати`, `заряджати`, `засвоювати`
-- `заспокоюватися`, `заспокоїтися`, `затінок`, `збагачений`, `збрехати`, `згоріти`, `здивуватися`, `зловживати`, `зменшуватися`, `зневоднення`, `зосереджуватися`, `зрубати`
-- `кабан`, `кишеньковий`, `кишківник`, `концентруватися`, `короче`, `кулінарний`, `кількасот`, `ладан`, `лежачи`, `логічний`, `лунати`, `малесенький`
-- `мовчки`, `набити`, `набридати`, `наважитися`, `навичка`, `надмірний`, `нахилитися`, `невдаха`, `недоречний`, `незнайомка`, `непокоїти`, `однокласник`
-- `однокласниця`, `ом`, `опуститися`, `перегляд`, `передній`, `перетворити`, `перспективний`, `повсякденний`, `покидати`, `покинути`, `покращувати`, `помиритися`
-- `попкорн`, `послуговуватися`, `поступка`, `поширитися`, `правдивий`, `приготування`, `присвятити`, `присвячувати`, `причинно-наслідковий`, `просите`, `прощальний`, `проігнорувати`
-- `пташеня`, `пухнастий`, `підвищити`, `підвищувати`, `підгодовувати`, `риб'ячий` (`риб-ячий`), `розвинений`, `рівнодення`, `садовий`, `самозахист`, `світловий`, `селище`
-- `синтезувати`, `сипати`, `слухняний`, `смердючий`, `смородина`, `сніжний`, `соловейко`, `спонтанний`, `стимулювати`, `стратити`, `сунути`, `супроводити`
-- `сутінок`, `сідало`, `січовий`, `тренуватися`, `фальшивий`, `фундатор`, `характеризувати`, `харчовий`, `хресний`, `шипшина`, `шкаралупа`, `інтелектуальний`
-- `кисломолочний`, `впізнавати`, `мотиваційний`, `сонливість`, `поживний`, `непередбачуваний`, `передзвонити`, `натякати`, `міль`, `комедійний`, `верховний`, `виснажити`
-- `дайвінг`, `дотичний`, `діарея`, `жебракувати`, `зачарувати`, `зморшка`, `кисневий`, `компартія`, `кримець`, `кримчанин`, `набриднути`, `нагородити`
-- `натякнути`, `недосипання`, `неперевершений`, `неперевершено`, `обливання`, `обмінюватися`, `обприскування`, `обстріляти`, `обігрів`, `омріяний`, `опірність`, `орієнтуватися`
-- `падло`, `політехнічний`, `посміятися`, `потопити`, `похований`, `правління`, `придуманий`, `прокачувати`, `проіснувати`, `підготування`, `підлітковий`, `підпільно`
-- `розвиватися`, `розслаблятися`, `розчулений`
+- `дайвінг`, `кабан`, `комедійний`, `компартія`, `недосипання`, `неперевершено`, `обливання`, `обприскування`, `обігрів`, `ом`, `омріяний`, `опірність`
+- `перспективний`, `політехнічний`, `посміятися`, `потопити`, `придуманий`, `прокачувати`, `підготування`, `підлітковий`, `підпільно`, `розчулений`, `селище`, `соловейко`
+- `фальшивий`, `фундатор`, `хресний`
 
 **reviewed_wrong_sense (12)**
 
-- `абітурієнт`, `відмова`, `гетьман`, `запланований`, `звільнення`, `надмірність`, `хрестини`, `чайна`, `чхання`, `шумно`, `іній`, `кардіолог`
+- `абітурієнт`, `відмова`, `гетьман`, `запланований`, `звільнення`, `кардіолог`, `надмірність`, `хрестини`, `чайна`, `чхання`, `шумно`, `іній`
 
 **same_word_sum11 (23)**
 
-- `анонсувати`, `асоціюватися`, `асфальт`, `атлет`, `бажаний`, `бактерія`, `безплатний`, `беркут`, `будь-куди`, `бігун`, `вимірювати`, `дослідник`
-- `діалект`, `зазіхати`, `кругозір`, `міфологія`, `працездатність`, `представник`, `умовний`, `цить`, `філологія`, `броня`, `бурчати`
+- `анонсувати`, `асоціюватися`, `асфальт`, `атлет`, `бажаний`, `бактерія`, `безплатний`, `беркут`, `броня`, `будь-куди`, `бурчати`, `бігун`
+- `вимірювати`, `дослідник`, `діалект`, `зазіхати`, `кругозір`, `міфологія`, `працездатність`, `представник`, `умовний`, `філологія`, `цить`
 
-**unattributed_english (234)**
+**unattributed_english (153)**
 
-- `абревіатура`, `адресант`, `акцентування`, `Андріїв` (`андріїв`), `аплодисменти`, `атлас`, `аудіювання`, `афіша`, `батькова`, `битий`, `бруківка`, `будуватися`
-- `вельмишановний`, `веранда`, `вибігати`, `вибігти`, `вилітати`, `винаймати`, `випадати`, `випадіння`, `виплисти`, `влаштовувати`, `влаштувати`, `вміння`
-- `вражати`, `вразити`, `встигати`, `вступ`, `від'їжджати` (`від-їжджати`), `від'їхати` (`від-їхати`), `віддалення`, `відлетіти`, `відносини`, `відокремлений`, `відокремлювати`, `відрекомендуватися`
-- `глянути`, `говоріння`, `годна`, `голота`, `дарма`, `добігти`, `довести`, `долетіти`, `домогосподарство`, `досліджувати`, `достаток`, `дотла`
-- `доходити`, `дочитати`, `дрімати`, `дідух`, `діяти`, `діяч`, `дієвідміна`, `жовток`, `забігати`, `заважати`, `завдячувати`, `зазнати`
-- `зазначати`, `зазначити`, `заносити`, `запікати`, `захисниця`, `заїжджати`, `збити`, `звертання`, `звільнятися`, `зимувати`, `злетіти`, `змушувати`
-- `змінний`, `знести`, `калорійність`, `карпатський`, `категоричний`, `клітковина`, `кмітливий`, `кобзар`, `контрастний`, `копнути`, `коровай`, `кравчиня`
-- `крупа`, `кульмінація`, `куплет`, `купівля`, `кількісний`, `кінцівка`, `лаконічність`, `лев`, `листуватися`, `Маланка` (`маланка`), `межа`, `мисткиня`
-- `мовлення`, `мовляв`, `мочити`, `міміка`, `міщанин`, `набережна`, `надягати`, `наполегливий`, `неживий`, `нестримний`, `нове`, `новосілля`
-- `обдурювати`, `образний`, `обрядовість`, `обійматися`, `однорідний`, `озброїти`, `околиця`, `отримувач`, `охочий`, `панівний`, `пекельний`, `перебігати`
-- `передплата`, `переймати`, `переконаний`, `перемкнути`, `переплутати`, `плоский`, `побічний`, `поверхневий`, `позаду`, `показник`, `поминки`, `попереду`
-- `поплисти`, `послідовно`, `постаратися`, `прегарний`, `претензія`, `призначення`, `прийдешній`, `причал`, `приїздити`, `пробігти`, `провідниця`, `пролетіти`
-- `протікання`, `протікати`, `проїжджати`, `проїзний`, `публікувати`, `публіцистика`, `путівник`, `підказати`, `підраховувати`, `підробити`, `радянський`, `рація`
-- `регламентація`, `редька`, `результативний`, `реквізит`, `реквієм`, `родинний`, `роз'єднання` (`роз-єднання`), `розбивати`, `рубрика`, `рум'яний` (`рум-яний`), `рівноправний`, `самовпевнений`
-- `самооцінка`, `самопочуття`, `самохіть`, `сватання`, `селянин`, `сердечний`, `сич`, `словотворення`, `смаглявий`, `смисловий`, `спішити`, `статура`
-- `стежити`, `стоячи`, `творення`, `тендітний`, `товаришувати`, `траплятися`, `узгодження`, `узгоджуватися`, `уривчастий`, `урочистість`, `уявний`, `фальсифікат`
-- `фармацевт`, `фразеологізм`, `харків'янка` (`харків-янка`), `хатинка`, `чергування`, `чорнобривці`, `швидший`, `штовхнути`, `щоправда`, `ясир`, `магніт`, `одеситка`
-- `підказувати`, `підсилений`, `префіксальний`, `повторюваність`, `констатація`, `співрозмовник / співрозмовниця` (`співрозмовник-співрозмовниця`), `прогалина`, `репліка`, `санвузол`, `єднатися`, `задовольнятися`, `довезти`
-- `понести`, `вирубка`, `токар`, `зниклий`, `делікатність`, `материна`, `соромитися`, `недоїсти`, `влаштовуватися`, `попереджено`, `поломка`, `співмешканець`
-- `замітка`, `рукоділля`, `вшановувати`, `освячувати`, `епідемічний`, `звалитися`
+- `акцентування`, `Андріїв`, `атлас`, `аудіювання`, `бруківка`, `будуватися`, `вельмишановний`, `вибігати`, `вилітати`, `винаймати`, `випадіння`, `виплисти`
+- `витрата`, `влаштовуватися`, `вшановувати`, `від'їжджати`, `від'їхати`, `відбиватися`, `віддалення`, `відносини`, `відокремлювати`, `відрекомендуватися`, `глянути`, `говоріння`
+- `годна`, `голота`, `добігти`, `довезти`, `довести`, `долетіти`, `дотла`, `доходити`, `діяч`, `епідемічний`, `забігати`, `завдячувати`
+- `задовольнятися`, `зазнати`, `зазначати`, `замітка`, `заносити`, `захисниця`, `заїжджати`, `збити`, `звертання`, `звільнятися`, `згоріти`, `злетіти`
+- `змінний`, `знести`, `зниклий`, `калорійність`, `карпатський`, `клітковина`, `кмітливий`, `кобзар`, `констатація`, `копнути`, `коровай`, `кравчиня`
+- `крупа`, `кульмінація`, `куплет`, `кількісний`, `кінцівка`, `ладан`, `лаконічність`, `лев`, `листуватися`, `магніт`, `Маланка`, `мисткиня`
+- `мовляв`, `мочити`, `міміка`, `міщанин`, `набережна`, `нагородити`, `надягати`, `натякати`, `натякнути`, `нахилитися`, `недоїсти`, `нестримний`
+- `обрядовість`, `обійматися`, `одеситка`, `освячувати`, `отримувач`, `панівний`, `пекельний`, `перебігати`, `передплата`, `переймати`, `переплутати`, `повторюваність`
+- `поломка`, `поминки`, `понести`, `попереджено`, `поплисти`, `послідовно`, `постаратися`, `префіксальний`, `приїздити`, `пробігти`, `провідниця`, `прогалина`
+- `пролетіти`, `протікання`, `протікати`, `проїжджати`, `проїзний`, `публіцистика`, `путівник`, `підробити`, `підсилений`, `радянський`, `рація`, `результативний`
+- `реквізит`, `родинний`, `рубрика`, `рукоділля`, `самовпевнений`, `самооцінка`, `санвузол`, `сватання`, `сич`, `словотворення`, `співрозмовник / співрозмовниця`, `статура`
+- `стоячи`, `стратити`, `творення`, `тендітний`, `товаришувати`, `токар`, `узгодження`, `узгоджуватися`, `уривчастий`, `урочистість`, `уявний`, `фальсифікат`
+- `фармацевт`, `харків'янка`, `хатинка`, `чергування`, `чорнобривці`, `швидший`, `щоправда`, `ясир`, `єднатися`
 
-**unbound_ukrainian (41)**
+**unbound_ukrainian (42)**
 
-- `абонемент`, `асиміляція`, `бездомний`, `бляшанка`, `божий`, `бочка`, `вата`, `гавкати`, `двигун`, `домівка`, `донатити`, `дослід`
-- `дурень`, `залицятися`, `заховатися`, `карієс`, `квочка`, `кий`, `киця`, `клоун`, `купа`, `м'ята` (`м-ята`), `мов`, `надавати`
-- `наявність`, `предок`, `приміщення`, `русалка`, `сором'язливий` (`сором-язливий`), `статистика`, `торба`, `фермент`, `ходьба`, `цикл`, `цунамі`, `ґрунт`
-- `стайня`, `австрієць`, `нон-стоп`, `нідерландський`, `постити`
+- `абонемент`, `австрієць`, `асиміляція`, `бездомний`, `бляшанка`, `божий`, `бочка`, `вата`, `гавкати`, `двигун`, `домівка`, `донатити`
+- `дослід`, `дурень`, `залицятися`, `заховатися`, `карієс`, `квочка`, `кий`, `киця`, `клоун`, `купа`, `м'ята`, `мов`
+- `надавати`, `наявність`, `нон-стоп`, `нідерландський`, `перегляд`, `постити`, `предок`, `приміщення`, `русалка`, `сором'язливий`, `стайня`, `статистика`
+- `торба`, `фермент`, `ходьба`, `цикл`, `цунамі`, `ґрунт`
 
-**unsupported_english_source (97)**
+**unsupported_english_source (101)**
 
-- `антитеза`, `гаївки`, `гуляю`, `десятина`, `дивлячись`, `дихається`, `дозування`, `доречність`, `експресія`, `завдаток`, `завершеність`, `завершивши`
-- `замкнутий`, `зачиняється`, `заїду`, `зламалася`, `зустрівшись`, `зібравшись`, `зім'ятий` (`зім-ятий`), `квітучий`, `купивши`, `летиш`, `масмедіа`, `написавши`
-- `напишеш`, `незмінність`, `нормативність`, `образність`, `обробляється`, `означальний`, `опришок`, `орендодавець`, `паралелізм`, `перейду`, `пливу`, `повтор`
-- `подвоєння`, `посипати`, `поснідавши`, `працюється`, `пригощатися`, `прикольно`, `принесений`, `принісши`, `пройду`, `просиш`, `прочитавши`, `прочитано`
-- `публікуватися`, `підводитися`, `регістр`, `ремонтується`, `розчленування`, `сидячи`, `строфа`, `суфіксальний`, `транслюватися`, `уникнення`, `фахівчиня`, `хвилюючись`
-- `цілющий`, `читальня`, `чуйний`, `історизм`, `односпрямований`, `кінопоказ`, `незмінюваний`, `спрей`, `переплисти`, `відійду`, `перебігти`, `провезти`
-- `пронести`, `співучий`, `завантажено`, `неприродний`, `студентство`, `калькування`, `складнопідрядний`, `ситуативний`, `обставинний`, `співвіднесення`, `топікалізація`, `тушкувати`
-- `цільнозерновий`, `комплектація`, `присудкове слово` (`присудкове-слово`), `суб'єктивність` (`суб-єктивність`), `розроблятися`, `баг`, `соціальна дистанція` (`соціальна-дистанція`), `джерельність`, `українська мова` (`українська-мова`), `катафора`, `розповідний`, `складова`
-- `утворений`
+- `антитеза`, `баг`, `відійду`, `гаївки`, `гуляю`, `десятина`, `джерельність`, `дивлячись`, `директоре`, `дихається`, `добродійко`, `дозування`
+- `доречність`, `експресія`, `завантажено`, `завдаток`, `завершеність`, `завершивши`, `замкнутий`, `зачиняється`, `заїду`, `зламалася`, `зустрівшись`, `зібравшись`
+- `зім'ятий`, `калькування`, `катафора`, `квітучий`, `комплектація`, `короче`, `купивши`, `кінопоказ`, `летиш`, `масмедіа`, `написавши`, `напишеш`
+- `незмінність`, `незмінюваний`, `неприродний`, `нормативність`, `образність`, `обробляється`, `обставинний`, `односпрямований`, `означальний`, `опришок`, `орендодавець`, `паралелізм`
+- `перебігти`, `перейду`, `переплисти`, `пливу`, `повтор`, `подвоєння`, `посипати`, `поснідавши`, `працюється`, `пригощатися`, `прикольно`, `принесений`
+- `принісши`, `присудкове слово`, `провезти`, `пройду`, `пронести`, `просите`, `просиш`, `прочитавши`, `прочитано`, `публікуватися`, `підводитися`, `регістр`
+- `ремонтується`, `розповідний`, `розроблятися`, `розчленування`, `сидячи`, `ситуативний`, `складнопідрядний`, `складова`, `соціальна дистанція`, `спрей`, `співвіднесення`, `співучий`
+- `строфа`, `студентство`, `суб'єктивність`, `суфіксальний`, `топікалізація`, `транслюватися`, `тушкувати`, `українська мова`, `уникнення`, `утворений`, `фахівчиня`, `хвилюючись`
+- `цільнозерновий`, `цілющий`, `читальня`, `чуйний`, `історизм`
 
-### C1 (489)
+### C1 (412)
 
 **dated_citation (3)**
 
@@ -571,69 +534,63 @@ Reviewer: draw 150 fresh random retained meanings per admission mechanism with l
 
 **dictionary_fragment (13)**
 
-- `валитися`, `незнаний`, `наслідковий`, `мотиватор`, `налякатися`, `недослухати`, `неначеб`, `нехарактерний`, `обгризання`, `плюватися`, `пожувати`, `посмажити`
+- `валитися`, `мотиватор`, `налякатися`, `наслідковий`, `недослухати`, `незнаний`, `неначеб`, `нехарактерний`, `обгризання`, `плюватися`, `пожувати`, `посмажити`
 - `розряджений`
 
 **example_quotation (2)**
 
-- `особистість`, `ендорфін`
+- `ендорфін`, `особистість`
 
-**parenthesized_citation (101)**
+**parenthesized_citation (53)**
 
-- `взувати`, `випльовувати`, `восьминіг`, `григоріанський`, `епілептичний`, `етер`, `затамувати`, `звинувачена`, `знепритомніти`, `кріль`, `лазанья`, `логічно`
-- `міксер`, `мініатюрний`, `наважуватися`, `незліченний`, `орден`, `осоромити`, `покуття`, `ростити`, `сохнути`, `теплиця`, `фермерський`, `шкрябати`
-- `помішувати`, `під'їжджати` (`під-їжджати`), `приземлятися`, `насильний`, `приставка`, `координаторе`, `редакторко`, `етнічність`, `опинятися`, `богомол`, `буркотливий`, `вилупитися`
-- `вітамінний`, `вітамінізація`, `генрі`, `депресивність`, `дизель-поїзд`, `дихальний`, `дурненько`, `жалити`, `занудний`, `звенигородський`, `йододефіцит`, `кицюня`
-- `кокосовий`, `консервований`, `коцик`, `кровити`, `маловідомо`, `малорухливий`, `малятко`, `маскулінний`, `метеоритний`, `мошка`, `мікрофлора`, `накричати`
-- `наливка`, `народжування`, `неграмотність`, `облизуватися`, `обморожувати`, `обстояти`, `осоромлювати`, `отруюватися`, `пекельно`, `пердун`, `перевесло`, `повішати`
-- `покращуватися`, `померзнути`, `потягнутися`, `потіти`, `похитати`, `працевлаштований`, `примружено`, `принишкнути`, `прихищати`, `пряжа`, `психувати`, `пукати`
-- `півлітровий`, `підстрибнути`, `рекомендуватися`, `респіраторний`, `ринопластика`, `розгадування`, `розлитий`, `розряджатися`, `розслабити`, `ріпа`, `сніжити`, `сочевиця`
-- `спотворювати`, `супчик`, `тахта`, `фольга`, `ігроманія`
+- `буркотливий`, `вітамінний`, `вітамінізація`, `генрі`, `депресивність`, `дизель-поїзд`, `дурненько`, `етнічність`, `занудний`, `йододефіцит`, `кицюня`, `консервований`
+- `коцик`, `кровити`, `маловідомо`, `малорухливий`, `малятко`, `маскулінний`, `метеоритний`, `мікрофлора`, `мініатюрний`, `накричати`, `наливка`, `народжування`
+- `неграмотність`, `облизуватися`, `обморожувати`, `орден`, `отруюватися`, `пекельно`, `перевесло`, `повішати`, `померзнути`, `помішувати`, `похитати`, `працевлаштований`
+- `примружено`, `принишкнути`, `прихищати`, `психувати`, `пукати`, `півлітровий`, `підстрибнути`, `рекомендуватися`, `респіраторний`, `ринопластика`, `розгадування`, `розлитий`
+- `розряджатися`, `ріпа`, `сніжити`, `супчик`, `ігроманія`
 
 **reviewed_wrong_sense (8)**
 
-- `зачин`, `прикладка`, `сонорний`, `посинілий`, `постарілий`, `ялинковий`, `нощно`, `хрещеник`
+- `зачин`, `нощно`, `посинілий`, `постарілий`, `прикладка`, `сонорний`, `хрещеник`, `ялинковий`
 
 **same_word_sum11 (11)**
 
-- `антирадянський`, `безхребетний`, `біб`, `бідкатися`, `біситися`, `клумба`, `каліграфія`, `архаїка`, `кріпак`, `авітаміноз`, `бубонець`
+- `авітаміноз`, `антирадянський`, `архаїка`, `безхребетний`, `бубонець`, `біб`, `бідкатися`, `біситися`, `каліграфія`, `клумба`, `кріпак`
 
-**unattributed_english (143)**
+**unattributed_english (112)**
 
-- `абиде`, `абихто`, `абиякий`, `бережімо`, `бирка`, `бондар`, `бурмотіти`, `буханка`, `білити`, `біліти`, `валентність`, `вередливий`
-- `взуватися`, `височина`, `воліти`, `відбігти`, `віддієслівний`, `вірмо`, `глагол`, `головоломка`, `горджуся`, `грядка`, `дзвінкість`, `дозрілий`
-- `допливати`, `доплисти`, `достиглий`, `дрібен`, `живучий`, `заземлити`, `закручений`, `залетіти`, `занось`, `засохлий`, `зачісуватися`, `звуконаслідування`
-- `здичавілий`, `зелен`, `змокнути`, `канадка`, `колядування`, `крамниця`, `красен`, `кістлявий`, `лаконізм`, `латиниця`, `масний`, `милозвучність`
-- `належність`, `орфографія`, `орфоепія`, `осиротілий`, `передсвятковий`, `перемішувати`, `пестливий`, `плавність`, `прилеглий`, `прилягання`, `припливти`, `пробігати`
-- `проплисти`, `просторіччя`, `підлетіти`, `рема`, `рима`, `ритміка`, `розділовий`, `розквітати`, `розквітлий`, `свистіти`, `синонімічний`, `синіти`
-- `славен`, `соломинка`, `сповільнюватися`, `стислість`, `тригер`, `тримаймося`, `хоча`, `частувати`, `чернівецький`, `щедрувати`, `щонайкращий`, `темно-зелений`
-- `канадієць`, `самоперевірка`, `магістратура`, `свистячий`, `шиплячий`, `бандероль`, `білісінький`, `щонайкраще`, `домити`, `посивілий`, `вирушання`, `перефразування`
-- `знебарвити`, `канцелярит`, `єднальний`, `витяжка`, `кличмо`, `поставмо`, `кирилиця`, `каюта`, `обплисти`, `підплисти`, `русизм`, `осетин`
-- `Олексіїв` (`олексіїв`), `читатися`, `запечений`, `бризнути`, `зневоднити`, `наготувати`, `свиснути`, `чорніти`, `пекарка`, `навислий`, `обвислий`, `потемнілий`
-- `промоклий`, `автоматизм`, `лексикалізація`, `парцеляція`, `конектор`, `дієслово-зв'язка` (`дієслово-зв-язка`), `вінчик`, `рецептура`, `маркетплейс`, `діалектизм`, `полонина`, `стертий`
-- `субординація`, `фамільярність`, `крашанка`, `нематеріальний`, `екзонім`, `кобіта`, `курдський`, `морщити`, `покращитися`, `підказка`, `хропіти`
+- `абиде`, `абихто`, `абиякий`, `автоматизм`, `бандероль`, `бережімо`, `бурмотіти`, `буханка`, `білити`, `білісінький`, `біліти`, `валентність`
+- `вередливий`, `вилупитися`, `вирушання`, `височина`, `витяжка`, `воліти`, `відбігти`, `віддієслівний`, `вінчик`, `вірмо`, `глагол`, `горджуся`
+- `дзвінкість`, `допливати`, `доплисти`, `достиглий`, `діалектизм`, `дієслово-зв'язка`, `екзонім`, `заземлити`, `засохлий`, `зачісуватися`, `здичавілий`, `зелен`
+- `змокнути`, `знебарвити`, `канадка`, `канадієць`, `канцелярит`, `кличмо`, `кобіта`, `конектор`, `крамниця`, `красен`, `крашанка`, `курдський`
+- `кістлявий`, `лаконізм`, `латиниця`, `лексикалізація`, `магістратура`, `маркетплейс`, `морщити`, `навислий`, `наготувати`, `належність`, `нематеріальний`, `обвислий`
+- `обплисти`, `Олексіїв`, `осетин`, `осиротілий`, `парцеляція`, `передсвятковий`, `перемішувати`, `перефразування`, `пестливий`, `плавність`, `полонина`, `посивілий`
+- `поставмо`, `потемнілий`, `потіти`, `прилеглий`, `прилягання`, `припливти`, `приставка`, `пробігати`, `проплисти`, `просторіччя`, `підказка`, `підлетіти`
+- `підплисти`, `рема`, `рецептура`, `рима`, `ритміка`, `розквітати`, `розквітлий`, `русизм`, `самоперевірка`, `свиснути`, `свистіти`, `синонімічний`
+- `славен`, `соломинка`, `сохнути`, `сповільнюватися`, `стислість`, `тримаймося`, `фамільярність`, `хропіти`, `чернівецький`, `читатися`, `шиплячий`, `шкрябати`
+- `щедрувати`, `щонайкраще`, `щонайкращий`, `єднальний`
 
 **unbound_ukrainian (13)**
 
-- `ахнути`, `варитися`, `геймер`, `дощити`, `ріелтор`, `бавовняний`, `кунжут`, `омега`, `памперс`, `постувати`, `скакалка`, `старослов'янський` (`старослов-янський`)
+- `ахнути`, `бавовняний`, `варитися`, `геймер`, `дощити`, `кунжут`, `омега`, `памперс`, `постувати`, `ріелтор`, `скакалка`, `старослов'янський`
 - `францій`
 
-**unsupported_english_source (195)**
+**unsupported_english_source (197)**
 
-- `алітерація`, `анотація`, `асонанс`, `громіздкість`, `джерельний`, `добродійка`, `доказовість`, `доставляння`, `діалогічний`, `евфонія`, `експресивний`, `епіфора`
-- `забіжу`, `зав'язка` (`зав-язка`), `занесу`, `зап'ястний` (`зап-ястний`), `збанкрутілий`, `зблідлий`, `збільшувальний`, `зволожувальний`, `звукопис`, `змарнілий`, `зів'ялий` (`зів-ялий`), `канцеляризм`
-- `канцелярщина`, `клікбейт`, `книжний`, `лагодиться`, `літота`, `медіаграмотність`, `медіатекст`, `мелодика`, `мікротема`, `наліпка`, `невимушеність`, `ненормативний`
-- `неозначено-особове`, `обжинки`, `облетіти`, `обпектися`, `означено-особове`, `опалий`, `ораторський`, `орфограма`, `офіційно-діловий`, `переїду`, `пливеш`, `побілілий`
-- `повнозначний`, `повторюваний`, `пофарбовано`, `починаймо`, `приземкуватий`, `підрядність`, `редукція`, `ритмомелодика`, `самооцінювання`, `світло-синій`, `сполучуваність`, `спроєктовано`
-- `точковий`, `узагальнено-особове`, `узагальнювальний`, `умившись`, `уточнювальний`, `хвастливий`, `щедрування`, `інверсія`, `інтонаційний`, `причісуватися`, `руханка`, `йотований`
-- `роздільно`, `гуляєш`, `допуст`, `перевірмо`, `пишімо`, `світловолосий`, `спільнокореневий`, `звукосполука`, `пом'якшений` (`пом-якшений`), `емфатичний`, `маркований`, `якнайшвидший`
-- `суфіксально-префіксальний`, `задньоязиковий`, `непродуктивний`, `саморедагування`, `морфонологія`, `писатимеш`, `прагматика`, `однократність`, `одновидовий`, `префіксально-суфіксальний`, `різноспрямований`, `різночасність`
-- `логування`, `перевстановити`, `перевтомитися`, `постпозиція`, `препозиція`, `самодіагностика`, `підстелити`, `перескладання`, `старшокурсниця`, `зворотність`, `зробивши`, `попередність`
-- `полісиндетон`, `протиставний`, `мебльована`, `орендарка`, `євроремонт`, `обговорімо`, `екскурсоводка`, `заплисти`, `припливати`, `перенесу`, `проїду`, `пунктограма`
-- `мийний`, `загоєний`, `заметений`, `колотий`, `ношений`, `побачений`, `нетактовний`, `транскрипт`, `ущільненість`, `пратися`, `бануш`, `тушкований`
-- `надійніший`, `найвигідніший`, `покупчиня`, `народнопоетичний`, `усічений`, `прописом`, `спецвипуск`, `нижчепідписаний`, `перенавантажити`, `номіналізація`, `формант`, `вицвілий`
-- `згорілий`, `неперехідність`, `охололий`, `скреслий`, `лексикалізований`, `емфаза`, `парцелят`, `реферування`, `складносурядний`, `контекстуальний`, `трикрапка`, `з'ясувальний` (`з-ясувальний`)
-- `корелят`, `додатковість`, `паркомісце`, `умебльований`, `контекстуалізація`, `супідрядність`, `нарізавши`, `ферментований`, `рекламація`, `вульгаризм`, `жаргонізм`, `оксюморон`
-- `паронім`, `перифраз`, `редактура`, `допустовість`, `омонімічний`, `монотонність`, `нанизування`, `оглушення`, `ономатопея`, `домовмося`, `онлайн-оплата`, `павербанк`
-- `приберімо`, `фазовість`, `перемішується`, `парафраз`, `підтекстовий`, `демінутив`, `самовиправлення`, `фреймінг`, `переформулювання`, `хіазм`, `посівання`, `ревіталізація`
-- `гайдамаччина`, `співаник`, `фольклоризація`
+- `алітерація`, `анотація`, `асонанс`, `бануш`, `вицвілий`, `вульгаризм`, `гайдамаччина`, `громіздкість`, `гуляєш`, `демінутив`, `джерельний`, `добродійка`
+- `додатковість`, `доказовість`, `домовмося`, `допуст`, `допустовість`, `доставляння`, `діалогічний`, `евфонія`, `екскурсоводка`, `експресивний`, `емфаза`, `емфатичний`
+- `епіфора`, `жаргонізм`, `з'ясувальний`, `забіжу`, `зав'язка`, `загоєний`, `задньоязиковий`, `заметений`, `занесу`, `зап'ястний`, `заплисти`, `збанкрутілий`
+- `зблідлий`, `збільшувальний`, `зволожувальний`, `зворотність`, `звукопис`, `звукосполука`, `згорілий`, `змарнілий`, `зробивши`, `зів'ялий`, `йотований`, `канцеляризм`
+- `канцелярщина`, `клікбейт`, `книжний`, `колотий`, `контекстуальний`, `контекстуалізація`, `координаторе`, `корелят`, `лагодиться`, `лексикалізований`, `логування`, `літота`
+- `маркований`, `мебльована`, `медіаграмотність`, `медіатекст`, `мелодика`, `мийний`, `монотонність`, `морфонологія`, `мікротема`, `надійніший`, `найвигідніший`, `наліпка`
+- `нанизування`, `народнопоетичний`, `нарізавши`, `невимушеність`, `ненормативний`, `неозначено-особове`, `неперехідність`, `непродуктивний`, `нетактовний`, `нижчепідписаний`, `номіналізація`, `ношений`
+- `обговорімо`, `обжинки`, `облетіти`, `обпектися`, `оглушення`, `одновидовий`, `однократність`, `означено-особове`, `оксюморон`, `омонімічний`, `онлайн-оплата`, `ономатопея`
+- `опалий`, `ораторський`, `орендарка`, `орфограма`, `офіційно-діловий`, `охололий`, `павербанк`, `парафраз`, `паркомісце`, `паронім`, `парцелят`, `перевстановити`
+- `перевтомитися`, `перевірмо`, `перемішується`, `перенавантажити`, `перенесу`, `перескладання`, `переформулювання`, `переїду`, `перифраз`, `писатимеш`, `пишімо`, `пливеш`
+- `побачений`, `побілілий`, `повнозначний`, `повторюваний`, `покупчиня`, `полісиндетон`, `пом'якшений`, `попередність`, `постпозиція`, `посівання`, `пофарбовано`, `починаймо`
+- `прагматика`, `пратися`, `препозиція`, `префіксально-суфіксальний`, `приберімо`, `приземкуватий`, `припливати`, `причісуватися`, `прописом`, `протиставний`, `проїду`, `пунктограма`
+- `підрядність`, `підстелити`, `підтекстовий`, `ревіталізація`, `редакторко`, `редактура`, `редукція`, `рекламація`, `реферування`, `ритмомелодика`, `роздільно`, `руханка`
+- `різноспрямований`, `різночасність`, `самовиправлення`, `самодіагностика`, `самооцінювання`, `саморедагування`, `світло-синій`, `світловолосий`, `складносурядний`, `скреслий`, `спецвипуск`, `сполучуваність`
+- `спроєктовано`, `співаник`, `спільнокореневий`, `старшокурсниця`, `супідрядність`, `суфіксально-префіксальний`, `точковий`, `транскрипт`, `трикрапка`, `тушкований`, `узагальнено-особове`, `узагальнювальний`
+- `умебльований`, `умившись`, `усічений`, `уточнювальний`, `ущільненість`, `фазовість`, `ферментований`, `фольклоризація`, `формант`, `фреймінг`, `хвастливий`, `хіазм`
+- `щедрування`, `якнайшвидший`, `євроремонт`, `інверсія`, `інтонаційний`

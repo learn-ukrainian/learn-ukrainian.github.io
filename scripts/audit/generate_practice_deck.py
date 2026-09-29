@@ -57,7 +57,12 @@ from scripts.lexicon.curated_membership import (
     read_membership,
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
-from scripts.practice.meaning_containment import load_sum11_definitions, source_bound_meaning
+from scripts.practice.meaning_containment import (
+    english_candidates_support_display,
+    english_head,
+    load_sum11_definitions,
+    source_bound_meaning,
+)
 from scripts.practice.ulif_synonym_groups import (
     ULIF_SYNONYMS_SOURCE,
     UlifSynonymDataUnavailable,
@@ -1001,6 +1006,7 @@ def _english_translation_gloss(
     entry: dict[str, Any],
     *,
     sense: dict[str, Any] | None = None,
+    level: str | None = None,
 ) -> str | None:
     """English gloss for practice: bound sense first, else legacy enrichment.en.
 
@@ -1009,6 +1015,13 @@ def _english_translation_gloss(
     fallback (#6437 LINT-003).
     """
     if sense is not None:
+        original = str(entry.get("gloss") or "")
+        if level == "A1" and _is_english_learner_gloss(original):
+            head = english_head(re.split(r"[;,]", original)[0])
+            candidates = sense.get("learner_en")
+            if isinstance(candidates, list) and head and english_candidates_support_display(candidates, head):
+                return head
+            return None
         return _sense_learner_en(sense)
 
     enrichment = entry.get("enrichment")
@@ -1023,24 +1036,30 @@ def _english_translation_gloss(
         candidates.append(en)
     elif isinstance(en, list):
         candidates.extend(str(item) for item in en if item)
-    cleaned: list[str] = []
-    for raw in candidates:
-        text = re.sub(r"\s+", " ", str(raw)).strip()
-        # Strip leading qualifiers: "(dated) fairy tale" → "fairy tale"
-        text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
-        # Drop trailing dictionary expansions: "fairy tale (folktale)" → "fairy tale"
-        head = re.split(r"[;(]", text, maxsplit=1)[0]
-        clean = _gloss_clean(head)
-        if clean and _is_english_learner_gloss(clean):
-            cleaned.append(clean)
+    cleaned = [head for raw in candidates if (head := english_head(raw)) and _is_english_learner_gloss(head)]
     if not cleaned:
         return None
-    # Prefer short multi-word learner senses ("fairy tale") over a single academic
-    # first gloss ("fable") when both are offered.
-    multi = [
-        item for item in cleaned if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
-    ]
-    return multi[0] if multi else cleaned[0]
+    original = str(entry.get("gloss") or "")
+    if _is_english_learner_gloss(original):
+        # The Atlas head is the lexeme's intended sense. Another translation
+        # list entry can be a sub-sense, a homograph, or a grammar label.
+        parts = re.split(r"[;,]", original)
+        if level == "A1":
+            parts = parts[:1]
+        elif str(entry.get("pos") or "") in {"adj", "adjective"}:
+            # An attributive noun label is less useful than a supported
+            # adjective alternative in the same Atlas gloss.
+            parts.sort(key=lambda part: bool(re.search(r"\(attributive\)", part, re.I)))
+        for part in parts:
+            head = english_head(part)
+            if head and english_candidates_support_display(
+                candidates, head, allow_embedded=level not in {None, "A1"}
+            ):
+                return head
+        return None
+    # Legacy Ukrainian glosses have no English head. Keep the first clean,
+    # attributed translation rather than preferring a later sub-sense.
+    return cleaned[0]
 
 
 def _practice_display_gloss(
@@ -1057,12 +1076,14 @@ def _practice_display_gloss(
     Wiktionary-style «розповідний твір про вигаданих осіб…» is not an A2 gloss.
     Sense-first entries bind via ``sense`` and never fall back to ``en[0]``.
     """
-    en = _english_translation_gloss(entry, sense=sense)
+    en = _english_translation_gloss(entry, sense=sense, level=level)
     if not en:
         return fallback
     if level == "A1":
         return en
     if level == "A2" and not _is_english_learner_gloss(_gloss_clean(fallback)):
+        return en
+    if sense is None and _is_english_learner_gloss(fallback):
         return en
     return fallback
 
@@ -2117,6 +2138,8 @@ def _build_lexeme(
     # stable sense id and read learner_en from that sense — never en[0].
     sense = _practice_sense(entry)
     gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
+    if sum11_by_word is not None and _is_english_learner_gloss(gloss):
+        gloss = english_head(gloss) or gloss
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
     if sum11_by_word is None:

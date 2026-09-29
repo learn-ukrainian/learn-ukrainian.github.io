@@ -1919,7 +1919,7 @@ def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> No
     }
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None
-    assert lexeme["glossClean"] == "fairy tale"
+    assert lexeme["glossClean"] == "fable"
     assert "розповідний" not in lexeme["gloss"]
 
     dated = {
