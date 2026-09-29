@@ -78,6 +78,24 @@ const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
 
 export type PracticeMode = (typeof PRACTICE_MODES)[number];
 export type PracticeModeFilter = PracticeMode | 'mixed';
+// #8714 ruling A: no synonym card is playable until #8984 admits bound senses.
+export const SYNONYM_MODE_ENABLED = false;
+export function isPracticeModeEnabled(mode: PracticeModeFilter): boolean {
+  return mode !== 'synonym' || SYNONYM_MODE_ENABLED;
+}
+
+/** Strip withdrawn inventory from supplied or cached decks before UI accounting. */
+export function withoutDisabledPracticeModes(deck: PracticeDeckData): PracticeDeckData {
+  if (SYNONYM_MODE_ENABLED) return deck;
+  return {
+    ...deck,
+    index: deck.index.map((item) => ({
+      ...item,
+      modes: item.modes.filter(isPracticeModeEnabled),
+    })),
+    synonym: [],
+  };
+}
 export type RecallDirection = 'uk-to-meaning' | 'meaning-to-uk';
 export type ChoicePolarity = 'word-to-meaning' | 'meaning-to-word';
 
@@ -259,7 +277,11 @@ export interface PracticeSynonymItem {
   prompt: string;
   answer: string;
   options: { label: string; lemmaId: string; kind: 'answer' | 'distractor' | string }[];
+  /** Evidence that admitted the pair: 'ulif-synonyms' or the antonym verdict's dictionary (#8714). */
   source: string;
+  /** ULIF sense note of the group's dominant: the sense in which the two words are synonyms. */
+  sense?: string;
+  evidence?: { source: string; groupId: string; dominant: string; url: string };
 }
 
 export interface PracticeHeritageOption {
@@ -1890,7 +1912,7 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
     if (!lemma) continue;
     const modes = indexItem.modes.filter(
       (mode): mode is PracticeMode =>
-        isPracticeMode(mode) && (modeFilter === 'mixed' || mode === modeFilter),
+        isPracticeMode(mode) && isPracticeModeEnabled(mode) && (modeFilter === 'mixed' || mode === modeFilter),
     );
     for (const mode of modes) {
       if (mode === 'cloze') {
@@ -2741,6 +2763,7 @@ export function itemIdPresentInDeck(deck: PracticeDeckData, itemId: string): boo
   const parts = itemId.split(':');
   const lemmaId = parts[0];
   const mode = parts[1] as PracticeMode | undefined;
+  if (mode && !isPracticeModeEnabled(mode)) return false;
   const idxItem = deck.index.find((i) => i.lemmaId === lemmaId);
   if (!idxItem || !mode) return false;
   if (mode === 'cloze') {
@@ -3076,6 +3099,9 @@ export function isPracticeSessionResumable(
   expected?: PracticeSessionIdentity,
 ): boolean {
   if (!snapshot) return false;
+  if (!isPracticeModeEnabled(snapshot.modeFilter) ||
+      snapshot.history.some((item) => !isPracticeModeEnabled(item.mode)) ||
+      snapshot.unresolvedCardKeys?.some((key) => key.includes('::synonym'))) return false;
   if (
     expected &&
     (snapshot.level !== expected.level ||

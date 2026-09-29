@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import sqlite3
 import threading
@@ -1691,6 +1692,18 @@ def _bound(world: World, made: dict[str, Any], **override: str) -> dict[str, str
     }
 
 
+def _assert_unattestable_records_nothing(
+    world: World, made: dict[str, Any], *, task_id: str = "review-claude", cause: str
+) -> None:
+    """A placeholder return that cannot be attested is refused by name, with no saved return and no attempts row (#9130)."""
+    with pytest.raises(record.RecordError) as raised:
+        world.record(made, task_id=task_id)
+    assert raised.value.code == record.PROMPT_SHA256_UNATTESTABLE
+    assert cause in str(raised.value)
+    assert not list(world.state_dir.glob(f"*{made['attempt_id']}*"))
+    assert not world.db.exists() or world.db_rows("attempts") == []
+
+
 def test_another_tasks_record_never_attests_this_return(world: World) -> None:
     """Codex r2: a record holding the right render hash but bound to another attempt (or to none) supplies nothing."""
     made = world.make_return(2)
@@ -1715,9 +1728,8 @@ def test_another_tasks_record_never_attests_this_return(world: World) -> None:
             is None
         )
     _with_placeholder_prompt_sha(made)
-    outcome = world.record(made, task_id="review-other")
-    assert not outcome.accepted
-    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+    for task_id in ("review-other", "review-unbound"):
+        _assert_unattestable_records_nothing(world, made, task_id=task_id, cause="not bound to review")
 
 
 def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_record(world: World) -> None:
@@ -1739,18 +1751,15 @@ def test_a_dispatch_hash_that_is_not_this_attempts_render_is_never_attested(worl
     made = world.make_return(2)
     world.task("review-stale", "claude", "claude-sonnet-5", prompt_sha256="ab" * 32, review_attempt=_bound(world, made))
     _with_placeholder_prompt_sha(made)
-    outcome = world.record(made, task_id="review-stale")
-    assert not outcome.accepted
-    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+    _assert_unattestable_records_nothing(world, made, task_id="review-stale", cause="is not the hash of this attempt")
 
 
 def test_the_placeholder_is_not_filled_without_a_dispatch_hash(world: World) -> None:
-    """No hash in the dispatch record: nothing is invented, and the untouched placeholder fails the schema."""
+    """No hash in the dispatch record: nothing is invented, and the recorder refuses before saving anything."""
     made = world.make_return(2)
     _with_placeholder_prompt_sha(made)
-    outcome = world.record(made)  # the default fixture task record carries no prompt_sha256
-    assert not outcome.accepted
-    assert codes.SCHEMA_INVALID in outcome.rejection_codes
+    # the default fixture task record carries no prompt_sha256
+    _assert_unattestable_records_nothing(world, made, cause="not bound to review")
 
 
 def test_attest_prompt_sha256_touches_only_the_reviewer_field() -> None:
@@ -1768,3 +1777,82 @@ def test_attest_prompt_sha256_touches_only_the_reviewer_field() -> None:
     assert record.attest_prompt_sha256(claim, sent) == claim
     mixed = b"reviewer:\n  prompt_sha256: \"<prompt_sha256>'\n"  # mismatched quotes: not the template line
     assert record.attest_prompt_sha256(mixed, sent) == mixed
+
+
+def test_a_render_failure_refuses_an_unattestable_return_before_saving(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    monkeypatch.setattr(
+        record, "_render_prompt_sha256", lambda *a, **kw: (None, "the manifest pins a file that is not there")
+    )
+    _assert_unattestable_records_nothing(world, made, task_id="review-attested", cause="cannot be rendered")
+
+
+def test_a_placeholder_line_the_recorder_cannot_replace_refuses_before_saving(world: World) -> None:
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    text = made["review"].read_text(encoding="utf-8")
+    made["review"].write_text(text.replace('"<prompt_sha256>"', "'<prompt_sha256>'  # seat comment"), encoding="utf-8")
+    _assert_unattestable_records_nothing(world, made, task_id="review-attested", cause="not in the form")
+
+
+def test_a_return_with_a_real_prompt_hash_needs_no_dispatch_hash(world: World) -> None:
+    """Only the placeholder needs attestation; a return that states its own hash goes to the validator unchanged."""
+    made = world.make_return(2)
+    outcome = world.record(made)
+    assert outcome.accepted, outcome.rejection_codes
+
+
+def _attestable_placeholder_return(world: World) -> dict[str, Any]:
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    made["sent"] = sent
+    return made
+
+
+def test_a_relative_manifest_path_attests_like_an_absolute_one(
+    world: World, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#9130: the CLI resolves its paths against the caller's directory, so --repo-root cannot re-base the manifest."""
+    made = _attestable_placeholder_return(world)
+    argv = _argv(world, made, "--task-id", "review-attested")
+    absolute_manifest = str(world.manifest(2))
+    monkeypatch.chdir(world.root.parent)  # not the repo root: a repo-root-relative resolution would miss the manifest
+    relative = {
+        absolute_manifest: os.path.relpath(absolute_manifest),
+        str(made["review"]): os.path.relpath(made["review"]),
+        str(world.expanded(2)): os.path.relpath(world.expanded(2)),
+        str(made["ledger"]): os.path.relpath(made["ledger"]),
+    }
+    assert record.main([relative.get(item, item) for item in argv]) == 0
+    capsys.readouterr()
+    relative_saved = (world.state_dir / f"lesson-2.review.{made['attempt_id']}.yaml").read_bytes()
+    assert yaml.safe_load(relative_saved)["reviewer"]["prompt_sha256"] == made["sent"]
+    [attempt] = world.db_rows("attempts")
+    assert attempt["prompt_sha256"] == made["sent"]
+
+    # the same return recorded with absolute paths is the same attested return (an idempotent replay)
+    assert record.main(argv) == 0
+    assert json.loads(capsys.readouterr().out)["replay"] is True
+    assert (world.state_dir / f"lesson-2.review.{made['attempt_id']}.yaml").read_bytes() == relative_saved
+
+
+def test_the_cli_exits_2_naming_the_cause_and_records_nothing_for_an_unattestable_return(
+    world: World, capsys: pytest.CaptureFixture[str]
+) -> None:
+    made = world.make_return(2)
+    _with_placeholder_prompt_sha(made)
+    assert record.main(_argv(world, made)) == 2
+    captured = capsys.readouterr()
+    assert record.PROMPT_SHA256_UNATTESTABLE in captured.err and "not bound to review" in captured.err
+    assert captured.out == ""
+    assert not list(world.state_dir.glob(f"*{made['attempt_id']}*"))
+    assert not world.db.exists() or world.db_rows("attempts") == []

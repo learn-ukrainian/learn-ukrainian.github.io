@@ -31,6 +31,7 @@ import {
   isCaseClozeDrill,
   isPracticeNewCard,
   isPracticeSessionResumable,
+  isPracticeModeEnabled,
   isPracticeStorageEphemeral,
   isWrongCaseAnswer,
   loadState,
@@ -49,6 +50,7 @@ import {
   lemmaFocusClozeContentKey,
   stripIdentityClozeForLemmaFocus,
   stripStressMarks,
+  withoutDisabledPracticeModes,
   uaPlural,
   validateClozeOptions,
   writeNewCardsDailyState,
@@ -1050,7 +1052,7 @@ function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
 
 function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[]): PracticeDeckData | null {
   if (!initialDeck) return null;
-  if (!Array.isArray(initialDeck)) return initialDeck;
+  if (!Array.isArray(initialDeck)) return withoutDisabledPracticeModes(initialDeck);
   const lexemes = initialDeck.map((entry) => {
     const legacy = entry as PracticeLexeme & { slug?: string; example?: string | null };
     const lemmaId = legacy.lemmaId ?? legacy.slug ?? legacy.lemma;
@@ -1349,7 +1351,7 @@ function classifyFeedbackFor(
  * actually asked about. Restate the attested prompt ↔ correct-option pair from
  * `selection.synonym` instead — same deck payload the option list and prompt already render.
  */
-function synonymFeedbackFor(
+export function synonymFeedbackFor(
   selection: PracticeSelection,
   option: ChoiceOption,
   learnerLevel: CefrLevel,
@@ -1590,7 +1592,7 @@ function imperativeFeedbackFor(item: PracticeImperativeItem, option: ChoiceOptio
   };
 }
 
-function drillChoicePrompt(
+export function drillChoicePrompt(
   selection: PracticeSelection,
   learnerLevel: CefrLevel,
 ): { promptUk: string; promptEn: string; subtitleUk: string; subtitleEn?: string } | null {
@@ -1631,6 +1633,8 @@ function drillChoicePrompt(
   }
   if (selection.synonym) {
     const isAntonym = selection.synonym.polarity === 'antonym';
+    // #8714: a ULIF-admitted pair is a synonym in one dictionary sense; show it.
+    const sense = selection.synonym.sense;
     return {
       promptUk: isAntonym
         ? `Оберіть антонім до «${selection.synonym.prompt}»`
@@ -1638,8 +1642,8 @@ function drillChoicePrompt(
       promptEn: isAntonym
         ? `Choose an antonym for «${selection.synonym.prompt}»`
         : `Choose a synonym for «${selection.synonym.prompt}»`,
-      subtitleUk: 'Оберіть правильну відповідь',
-      subtitleEn: 'Select the correct answer',
+      subtitleUk: sense ? `у значенні «${sense}»` : 'Оберіть правильну відповідь',
+      subtitleEn: sense ? `in the sense «${sense}»` : 'Select the correct answer',
     };
   }
   return null;
@@ -1663,8 +1667,11 @@ function sessionScopeIndexForMode(
   index: PracticeIndexItem[],
   modeFilter: PracticeModeFilter,
 ): PracticeIndexItem[] {
-  if (modeFilter === 'mixed') return index;
-  return index
+  const enabled = index
+    .map((item) => ({ ...item, modes: item.modes.filter(isPracticeModeEnabled) }))
+    .filter((item) => item.modes.length > 0);
+  if (modeFilter === 'mixed') return enabled;
+  return enabled
     .filter((item) => item.modes.includes(modeFilter))
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
@@ -2340,7 +2347,9 @@ function LexiconPracticeIsland({
     const normalized = normalizeInitialDeck(initialDeck);
     return hasLoadedDrillShards(normalized);
   });
-  const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
+  const [sessionPhase, setSessionPhase] = useState<SessionPhase>(
+    autoStart && isPracticeModeEnabled(initialMode) ? 'active' : 'idle',
+  );
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [sessionBudget, setSessionBudget] = useState<SessionBudget>(20);
@@ -3245,7 +3254,8 @@ function LexiconPracticeIsland({
     artifactDeck,
   ]);
 
-  const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
+  // Cached index shards can predate #8714; never count withdrawn modes on the home.
+  const indexForStats = sessionScopeIndexForMode(deck?.index ?? dueIndex ?? [], 'mixed').filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
   );
 
@@ -3259,10 +3269,13 @@ function LexiconPracticeIsland({
       indexForModeCounts(indexForStats, learnerLevel),
       deckLemmaKeySet,
     );
-    const counts: Partial<Record<VisiblePracticeModeFilter, number>> = { mixed: filtered.length };
+    const counts: Partial<Record<VisiblePracticeModeFilter, number>> = {
+      mixed: filtered.filter((item) => item.modes.some(isPracticeModeEnabled)).length,
+    };
     for (const visibleMode of MODE_CARD_ORDER) {
       if (visibleMode === 'mixed') continue;
-      counts[visibleMode] = filtered.filter((item) => item.modes.includes(visibleMode)).length;
+      counts[visibleMode] = isPracticeModeEnabled(visibleMode)
+        ? filtered.filter((item) => item.modes.includes(visibleMode)).length : 0;
     }
     return counts;
   }, [deckLemmaKeySet, indexForStats, learnerLevel]);
@@ -3919,7 +3932,7 @@ function LexiconPracticeIsland({
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     // #6734: never open a 0/0 synonym (or any mode) session when the selected-level
     // scope is empty — even if background shards later bleed higher-level items in.
-    if (!resume && index.length === 0) {
+    if (index.length === 0) {
       setFeedback({
         uk: CHROME_STRINGS.uk['practice.modeNoExercises'],
         en: CHROME_STRINGS.en['practice.modeNoExercises'],

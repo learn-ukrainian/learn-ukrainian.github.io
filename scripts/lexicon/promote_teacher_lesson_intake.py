@@ -204,10 +204,17 @@ class IntakeRow:
     source_kind: str
 
 
-def _normalise(text: object) -> str:
+def _normalise(text: object, *, preserve_case: bool = False) -> str:
     value = strip_acute_stress(str(text or ""))
     value = value.replace("ʼ", "'").replace("’", "'").replace("`", "'")
-    return " ".join(value.split()).casefold()
+    value = " ".join(value.split())
+    return value if preserve_case else value.casefold()
+
+
+def _reviewed_proper_name(lemma: object, pos: object) -> bool:
+    """Only an explicitly reviewed, capitalised proper-name row keeps case."""
+    spelling = _normalise(lemma, preserve_case=True)
+    return str(pos or "").strip().casefold() == "proper noun" and spelling.istitle()
 
 
 def _is_expression(lemma: str) -> bool:
@@ -250,7 +257,10 @@ def _read_full_rows(path: Path) -> list[IntakeRow]:
         source = row.get("source_inventory")
         if not isinstance(source, Mapping):
             raise ValueError(f"{path}: approved decision lacks source_inventory")
-        lemma = _normalise(row.get("lemma"))
+        lemma = _normalise(
+            row.get("lemma"),
+            preserve_case=_reviewed_proper_name(row.get("lemma"), row.get("approved_pos")),
+        )
         locator = str(source.get("locator") or "").strip()
         if not lemma or not locator:
             raise ValueError(f"{path}: approved decision lacks lemma or locator")
@@ -276,7 +286,7 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
                 raise ValueError(f"{path}: curated inventory entry lacks source locator")
             rows.append(
                 IntakeRow(
-                    lemma=_normalise(item.lemma),
+                    lemma=_normalise(item.lemma, preserve_case=_reviewed_proper_name(item.lemma, item.pos)),
                     pos=str(item.pos or "").strip(),
                     gloss=str(item.gloss or "").strip() or None,
                     locator=locator,
@@ -288,22 +298,31 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
 
 def _vesum_analyses(lemmas: Iterable[str], vesum_db: Path) -> dict[str, list[dict[str, Any]]]:
     singles = sorted({lemma for lemma in lemmas if lemma and not _is_expression(lemma)})
-    analyses: dict[str, list[dict[str, Any]]] = {}
+    found: dict[str, list[dict[str, Any]]] = {}
     for start in range(0, len(singles), 500):
-        batch = singles[start : start + 500]
-        analyses.update(verify_words(batch, db_path=vesum_db))
+        found.update(verify_words(singles[start : start + 500], db_path=vesum_db))
+    # A reviewed proper name must have its own proper-only analysis. A common
+    # noun at the lowercase spelling cannot attest a missing name.
+    analyses = {}
+    for lemma in singles:
+        rows = found.get(lemma, [])
+        analyses[lemma] = (
+            rows if not lemma.istitle() or all(":prop:" in str(row.get("tags") or "") for row in rows) else []
+        )
     return analyses
 
 
-def _canonical_lemma(lemma: str, analyses: Sequence[Mapping[str, Any]]) -> str:
+def _canonical_lemma(lemma: str, analyses: Sequence[Mapping[str, Any]], *, preserve_case: bool = False) -> str:
     """Use a VESUM base only when its lexical identity is unambiguous."""
     if _is_expression(lemma):
         return lemma
-    bases = {_normalise(row.get("lemma")) for row in analyses if _normalise(row.get("lemma"))}
+    bases = {_normalise(row.get("lemma"), preserve_case=preserve_case) for row in analyses if row.get("lemma")}
     return next(iter(bases)) if len(bases) == 1 else lemma
 
 
-def _vesum_pos(analyses: Sequence[Mapping[str, Any]]) -> str | None:
+def _vesum_pos(analyses: Sequence[Mapping[str, Any]], *, reviewed_proper_name: bool = False) -> str | None:
+    if reviewed_proper_name and analyses and all(":prop:" in str(row.get("tags") or "") for row in analyses):
+        return "proper noun"
     mapped = sorted({_mapped_pos(row.get("pos")) for row in analyses if _mapped_pos(row.get("pos"))})
     return mapped[0] if len(mapped) == 1 else None
 
@@ -427,7 +446,9 @@ def _build_rows(
     canonical_analyses: dict[str, list[dict[str, Any]]] = {}
     for row in source_rows:
         row_analyses = analyses.get(row.lemma, [])
-        canonical = _canonical_lemma(row.lemma, row_analyses)
+        canonical = _canonical_lemma(
+            row.lemma, row_analyses, preserve_case=_reviewed_proper_name(row.lemma, row.pos)
+        )
         canonical_rows[canonical].append(row)
         canonical_analyses.setdefault(canonical, row_analyses)
 
@@ -444,7 +465,12 @@ def _build_rows(
         first = rows[0]
         analyses_for_lemma = canonical_analyses.get(lemma, [])
         pos = (
-            "phrase" if _is_expression(lemma) else (_vesum_pos(analyses_for_lemma) or _fallback_pos(lemma, first.gloss))
+            "phrase"
+            if _is_expression(lemma)
+            else (
+                _vesum_pos(analyses_for_lemma, reviewed_proper_name=_reviewed_proper_name(first.lemma, first.pos))
+                or _fallback_pos(lemma, first.gloss)
+            )
         )
         gloss = next((row.gloss for row in rows if _is_english(row.gloss)), None)
         if not gloss:
@@ -900,11 +926,29 @@ def record_source_shape_checksum(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--full-decisions", type=Path, default=DEFAULT_FULL_DECISIONS)
-    parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Plan reviewed teacher-lesson Word Atlas candidates. "
+            "Use after source review; this does not review or admit new vocabulary by itself."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/lexicon/promote_teacher_lesson_intake.py "
+            "--vesum-db /tmp/vesum-shadow.db --apply --report\n"
+            "Outputs: candidate and decision files; --write also updates the manifest and fingerprint.\n"
+            "Exit codes: 0 on success; nonzero on missing inputs, held rows, or failed gates.\n"
+            "Related: #9151 reviewed teacher-lesson intake and promotion plan."
+        ),
+    )
+    parser.add_argument("--full-decisions", type=Path, default=DEFAULT_FULL_DECISIONS,
+                        help=f"Reviewed decision ledger (default: {DEFAULT_FULL_DECISIONS})")
+    parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY,
+                        help=f"Curated source inventory (default: {DEFAULT_CURATED_INVENTORY})")
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST,
+                        help=f"Atlas manifest (default: {DEFAULT_MANIFEST})")
+    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT,
+                        help=f"Manifest fingerprint sidecar (default: {DEFAULT_FINGERPRINT})")
     parser.add_argument(
         "--vesum-db",
         type=Path,
@@ -915,8 +959,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         help="Optional read-only local sources.db for Dmklinger and SUM-11 fallbacks",
     )
-    parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES)
-    parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS)
+    parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES,
+                        help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})")
+    parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS,
+                        help=f"Decision YAML output (default: {DEFAULT_DECISIONS})")
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
     parser.add_argument(
@@ -931,7 +977,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "of re-applying the plan from scratch."
         ),
     )
-    parser.add_argument("--report", action="store_true")
+    parser.add_argument("--report", action="store_true", help="Print the plan or update summary as JSON")
     parser.add_argument(
         "--emit-membership",
         type=Path,
@@ -965,7 +1011,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "intake journal's audit trail. Requires --source-shape-batch-id."
         ),
     )
-    parser.add_argument("--source-shape-batch-id", help="Batch id this --record-source-shape checksum belongs to")
+    parser.add_argument("--source-shape-batch-id", help="Batch id for --record-source-shape, e.g. weekly-2026-09-29")
     parser.add_argument(
         "--source-shape-recorded-at",
         help="ISO date the checksum was recorded (defaults to today, UTC)",

@@ -1,0 +1,74 @@
+{
+  "schema_version": "1",
+  "entries": [
+    {
+      "suppression_id": "sup-example-0001",
+      "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+      "date": "2026-09-28",
+      "selector": {
+        "kind": "source_record",
+        "source_id": "ulif",
+        "source_record_id": "sr_0wn9a46h365p",
+        "alias_at_creation": "ulif:register:2795:11",
+        "on_ambiguous": "suppress_all_candidates"
+      },
+      "scope": [
+        "site",
+        "dataset"
+      ],
+      "applies_to": {
+        "reharvest": true,
+        "rollback": true
+      },
+      "note": "example: every assertion extracted from the ULIF lock record, in any snapshot; the record is found by correspondence (schema.md §12.1), an ambiguous correspondence suppresses every candidate"
+    },
+    {
+      "suppression_id": "sup-example-0002",
+      "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+      "date": "2026-09-28",
+      "selector": {
+        "kind": "assertion_content",
+        "source_id": "ukrainian_word_stress",
+        "field": "stress",
+        "subject_spelling": "вряди-годи",
+        "value_norm": "вряди́-го́ди",
+        "normaliser_version": "norm-v1"
+      },
+      "scope": [
+        "site",
+        "dataset",
+        "internal"
+      ],
+      "applies_to": {
+        "reharvest": true,
+        "rollback": true
+      },
+      "note": "example: one value from one source on one spelling; matched by re-normalising the raw value with the pinned normaliser version, so a normaliser change never silently drops the selector"
+    },
+    {
+      "suppression_id": "sup-example-0003",
+      "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+      "date": "2026-09-28",
+      "selector": {
+        "kind": "assertion_id",
+        "assertion_id": "wa_000000000000000000000000",
+        "fallback": {
+          "kind": "assertion_content",
+          "source_id": "kaikki",
+          "field": "stress",
+          "subject_spelling": "замок",
+          "value_norm": "за́мок",
+          "normaliser_version": "norm-v1"
+        }
+      },
+      "scope": [
+        "site"
+      ],
+      "applies_to": {
+        "reharvest": true,
+        "rollback": true
+      },
+      "note": "example of the id selector shape: the fallback is a complete assertion_content selector (the schema rejects an empty one); the placeholder id shows that the fallback, not the id, is durable"
+    }
+  ]
+}
