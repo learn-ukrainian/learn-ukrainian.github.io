@@ -9,6 +9,7 @@ from agents_extensions.shared.hooks.shell_shlex import (
     _expose_backtick_bodies,
     collapse_line_continuations,
     preprocess_shell_command,
+    split_operator_run,
 )
 
 
@@ -80,3 +81,29 @@ def test_issue_9115_deeper_escaped_backticks_are_exposed():
 def test_issue_9115_backtick_depth_limit_is_explicit():
     with pytest.raises(ShellPreprocessLimit, match="depth exceeded"):
         _expose_backtick_bodies("`gh pr merge 5 --admin`", depth=16)
+
+
+def test_issue_9115_redirection_operators_stay_whole():
+    assert split_operator_run("2>&1") == ["2>&1"]
+    assert split_operator_run(">&") == [">&"]
+    assert split_operator_run("<&") == ["<&"]
+    assert split_operator_run("&>>") == ["&>>"]
+    assert split_operator_run("|&") == ["|&"]
+    assert split_operator_run(");>&") == [")", ";", ">&"]
+
+
+def test_issue_9115_real_backtick_nesting_crosses_cap(monkeypatch):
+    import agents_extensions.shared.hooks.shell_shlex as shared
+
+    monkeypatch.setattr(shared, "_MAX_BACKTICK_DEPTH", 2)
+    body = "cat .env"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    with pytest.raises(ShellPreprocessLimit, match="depth exceeded"):
+        _expose_backtick_bodies("echo " + body)
+
+
+def test_issue_9115_arithmetic_prefix_does_not_reset_backtick_cap():
+    command = r"echo `echo \`cat .env\``"
+    with pytest.raises(ShellPreprocessLimit, match="depth exceeded"):
+        _expose_backtick_bodies("$(()) " + command, depth=15)

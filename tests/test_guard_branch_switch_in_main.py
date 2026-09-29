@@ -96,6 +96,16 @@ def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
+def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.chdir(repos["public"])
+    body = "git checkout -b feature"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "echo " + body}})))
+    assert guard.main() == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 

@@ -290,6 +290,39 @@ def test_issue_9115_escaped_nested_backtick_secret_read_is_visible(monkeypatch):
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "cat 2>&1 .env",
+        "cat >&2 .env",
+        "head -n5 >&2 .env",
+        "cat 1>&2 ~/.ssh/id_rsa",
+        "cat <&0 .env",
+        "cat 2>&- .env",
+        "cat &> /dev/null .env",
+        "cat &>> /dev/null .env",
+        "echo $(cat 2>&1 .env)",
+        "grep -r KEY 2>/dev/null >&2 .env",
+    ],
+)
+def test_issue_9115_redirection_does_not_hide_secret_file(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9115_backtick_depth_limit_blocks_secret_hook(monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    body = "cat .env"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    assert _run(monkeypatch, "echo " + body) == 2
+
+
+@pytest.mark.parametrize("payload", ["not-json", "null", '{"tool_input":{"command":[]}}'])
+def test_issue_9115_malformed_secret_hook_input_blocks(monkeypatch, payload):
+    monkeypatch.setattr(sys, "stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize(
     "opener,closer,quoted",
     [
         ("<<'EOF'", "EOF", True),

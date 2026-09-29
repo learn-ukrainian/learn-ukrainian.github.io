@@ -138,6 +138,21 @@ def test_issue_9115_escaped_nested_backtick_write_is_visible():
     assert hook.bash_write_targets(r"echo `echo \`tee AGENTS.md\``") == ["AGENTS.md"]
 
 
+def test_issue_9115_backtick_depth_limit_blocks_write_hook(repo: Path, monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    body = "tee AGENTS.md"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": "echo " + body}}
+    assert _run(repo, payload).returncode == 2
+
+
+@pytest.mark.parametrize("payload", ["not-json", "null", '{"tool_name":"Bash","tool_input":{"command":[]}}'])
+def test_issue_9115_malformed_write_hook_input_blocks(monkeypatch, payload):
+    monkeypatch.setattr(sys, "stdin", io.StringIO(payload))
+    assert hook.main() == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert hook._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
 

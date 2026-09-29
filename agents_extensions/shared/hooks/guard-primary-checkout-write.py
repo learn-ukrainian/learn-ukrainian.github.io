@@ -151,6 +151,7 @@ try:
         ShellPreprocessLimit,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
+        split_operator_run,
         strip_skippable_heredoc_bodies,
     )
 except ImportError as exc:
@@ -188,11 +189,12 @@ def _load_containment():
 # ---------------------------------------------------------------------------
 
 
-def _read_payload() -> dict:
+def _read_payload() -> dict | None:
     try:
-        return json.loads(sys.stdin.read() or "{}")
-    except (json.JSONDecodeError, ValueError):
-        return {}
+        payload = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, RecursionError):
+        return None
+    return payload if isinstance(payload, dict) else None
 
 
 def _tool_name(payload: dict) -> str:
@@ -446,33 +448,8 @@ def _decode_ansi_c_quotes(command: str) -> str:
 _LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": "", "<": "", ">": "", "&": ""}
 _UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
 
-# Shell operators a punctuation run is split into, longest first. shlex returns
-# a run such as ``);`` or ``)&&`` as one token; the scope tracking below needs
-# each ``(`` / ``)`` and each separator on its own.
-_SHELL_OPERATORS = (
-    "&>>",
-    "<<<",
-    "&>",
-    ">>",
-    ">|",
-    "&&",
-    "||",
-    ";;",
-    "|&",
-    "<<",
-    "<>",
-    ">&",
-    "<&",
-    ">",
-    "<",
-    "|",
-    "&",
-    ";",
-    "(",
-    ")",
-    "\n",
-)
-_PUNCTUATION = frozenset("();<>|&\n")
+# Shared shell_shlex.split_operator_run separates punctuation runs before
+# this guard tracks scopes and redirections.
 _MAX_SHELL_DEPTH = 8
 
 
@@ -657,19 +634,6 @@ def _normalize_quoted_command_substitutions(command: str, depth: int = 0) -> str
     return "".join(out)
 
 
-def _split_operator_run(token: str) -> list[str]:
-    """Split a pure-punctuation token into shell operators (``);`` → ``)``, ``;``)."""
-    if token in _SHELL_OPERATORS or not token or not set(token) <= _PUNCTUATION:
-        return [token]
-    parts: list[str] = []
-    i = 0
-    while i < len(token):
-        op = next(o for o in _SHELL_OPERATORS if token.startswith(o, i))
-        parts.append(op)
-        i += len(op)
-    return parts
-
-
 def _tokenize(command: str) -> list[str]:
     """Quote-aware tokens with redirection/control operators kept separate.
 
@@ -700,7 +664,7 @@ def _tokenize(command: str) -> list[str]:
         # earlier `sed` invocation's `-i` flag and produce bogus write targets.
         lexer.whitespace = " \t"
         lexer.commenters = ""
-        return [part for token in lexer for part in _split_operator_run(token)]
+        return [part for token in lexer for part in split_operator_run(token)]
     except RecursionError:
         # A nested executable form cannot be proven harmless after this limit.
         return ["tee", "$__UNDECIDABLE_SHELL_PARSE__"]
@@ -2470,16 +2434,24 @@ def _block_uncertain(reason: str) -> int:
 
 def main() -> int:
     payload = _read_payload()
+    if payload is None:
+        return _block_uncertain("malformed_hook_payload")
     tool_name = _tool_name(payload)
     if not tool_name:
         return 0
+
+    if "tool_input" in payload and not isinstance(payload["tool_input"], dict):
+        return _block_uncertain("malformed_tool_input")
 
     tool_input = _tool_input(payload)
     cwd = _payload_cwd(payload)
     command = ""
 
     if tool_name == "Bash":
-        command = str(tool_input.get("command") or "")
+        raw_command = tool_input.get("command", "")
+        if not isinstance(raw_command, str):
+            return _block_uncertain("malformed_hook_command")
+        command = raw_command
         if not command.strip(" \t\n"):
             return 0
         raw_targets = []

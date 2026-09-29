@@ -105,6 +105,20 @@ def test_issue_9115_escaped_nested_backtick_merge_is_visible(monkeypatch):
     assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
 
 
+def test_issue_9115_backtick_depth_limit_blocks_merge_hook(monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    body = "gh pr merge 5 --squash"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    assert _run(monkeypatch, "echo " + body) == 2
+
+
+@pytest.mark.parametrize("payload", ["not-json", "null", '{"tool_input":{"command":[]}}'])
+def test_issue_9115_malformed_merge_hook_input_blocks(monkeypatch, payload):
+    monkeypatch.setattr(sys, "stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 

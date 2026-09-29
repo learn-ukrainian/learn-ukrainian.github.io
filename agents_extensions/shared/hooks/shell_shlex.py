@@ -13,10 +13,48 @@ from collections.abc import Callable
 
 _HEREDOC_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 _MAX_BACKTICK_DEPTH = 16
+_SHELL_OPERATORS = (
+    "&>>",
+    "<<<",
+    "<<-",
+    "&>",
+    ">>",
+    ">|",
+    "&&",
+    "||",
+    ";;",
+    "|&",
+    "<<",
+    "<>",
+    ">&",
+    "<&",
+    ">",
+    "<",
+    "|",
+    "&",
+    ";",
+    "(",
+    ")",
+    "\n",
+)
+_OPERATOR_CHARS = frozenset("();<>|&\n")
 
 
 class ShellPreprocessLimit(RuntimeError):
     """A nested command could not be exposed within the parser's depth cap."""
+
+
+def split_operator_run(token: str) -> list[str]:
+    """Split a pure shell-punctuation run, keeping redirects intact."""
+    if token in _SHELL_OPERATORS or not token or not set(token) <= _OPERATOR_CHARS:
+        return [token]
+    parts: list[str] = []
+    index = 0
+    while index < len(token):
+        operator = next(op for op in _SHELL_OPERATORS if token.startswith(op, index))
+        parts.append(operator)
+        index += len(operator)
+    return parts
 
 
 def collapse_line_continuations(command: str) -> str:
@@ -201,15 +239,15 @@ def _expose_backtick_bodies(command: str, *, depth: int = 0) -> str:
                 index = end + 1
                 continue
         elif char == "(" and not quote and substitutions:
-            outer_quote, depth = substitutions[-1]
-            substitutions[-1] = (outer_quote, depth + 1)
+            outer_quote, paren_depth = substitutions[-1]
+            substitutions[-1] = (outer_quote, paren_depth + 1)
         elif char == ")" and not quote and substitutions:
-            outer_quote, depth = substitutions[-1]
-            if depth == 1:
+            outer_quote, paren_depth = substitutions[-1]
+            if paren_depth == 1:
                 substitutions.pop()
                 quote = outer_quote
             else:
-                substitutions[-1] = (outer_quote, depth - 1)
+                substitutions[-1] = (outer_quote, paren_depth - 1)
         out.append(char)
         index += 1
     return "".join(out)

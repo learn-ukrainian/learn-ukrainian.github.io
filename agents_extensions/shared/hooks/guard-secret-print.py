@@ -42,6 +42,7 @@ try:
         ShellPreprocessLimit,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
+        split_operator_run,
         split_quote_preserving,
         strip_skippable_heredoc_bodies,
     )
@@ -72,11 +73,12 @@ _VAR_REF_RE = re.compile(
 )
 
 
-def _read_payload() -> dict:
+def _read_payload() -> dict | None:
     try:
-        return json.loads(sys.stdin.read() or "{}")
-    except json.JSONDecodeError:
-        return {}
+        payload = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, RecursionError):
+        return None
+    return payload if isinstance(payload, dict) else None
 
 
 def _command(payload: dict) -> str:
@@ -332,41 +334,9 @@ def _is_command_brace(token: str, segment: list[str]) -> bool:
 
 
 def _pipelines(command: str) -> list[list[list[str]]]:
-    """Return command pipelines, split quote-aware on `|`, `&&`, `||`, and `;`."""
+    """Return command pipelines, split quote-aware on pipes and separators."""
     # shlex groups adjacent punctuation into runs such as `);`. Split those
     # before segmenting, or a command after a substitution can be hidden.
-    operators = (
-        "<<<",
-        "<<-",
-        "&&",
-        "||",
-        ";;",
-        ">>",
-        "<<",
-        "&>",
-        ">|",
-        "<>",
-        "(",
-        ")",
-        ";",
-        "&",
-        "|",
-        "<",
-        ">",
-        "\n",
-    )
-
-    def split_operator_run(token: str) -> list[str]:
-        if not token or not set(token) <= set("();&|<>\n"):
-            return [token]
-        parts: list[str] = []
-        index = 0
-        while index < len(token):
-            operator = next(op for op in operators if token.startswith(op, index))
-            parts.append(operator)
-            index += len(operator)
-        return parts
-
     tokens = [part for token in _tokenize(command) for part in split_operator_run(token)]
     pipelines: list[list[list[str]]] = []
     pipeline: list[list[str]] = []
@@ -386,7 +356,7 @@ def _pipelines(command: str) -> list[list[list[str]]]:
             pipeline = []
 
     for token in tokens:
-        if token == "|":
+        if token in {"|", "|&"}:
             flush_segment()
         elif token in SEPARATORS or token in {"(", ")", ";;"} or _is_command_brace(token, segment):
             flush_pipeline()
@@ -1082,6 +1052,12 @@ def main() -> int:
         return 0
 
     payload = _read_payload()
+    if payload is None or not isinstance(payload.get("tool_input", {}), dict):
+        sys.stderr.write(_block_msg("malformed hook payload"))
+        return 2
+    if not isinstance(payload.get("tool_input", {}).get("command", ""), str):
+        sys.stderr.write(_block_msg("malformed hook command"))
+        return 2
     command = _command(payload)
     if not command:
         return 0
