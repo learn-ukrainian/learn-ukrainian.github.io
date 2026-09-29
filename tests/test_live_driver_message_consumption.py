@@ -130,6 +130,7 @@ def test_ack_all_flag_is_opt_in_and_asks_surfaces_consumption(capsys):
     assert "live-consumed" in asks
 
 
+@pytest.mark.repo_wide
 def test_drive_epic_skill_keeps_all_required_live_inbox_boundaries():
     """The portable driver contract must not silently lose its inbox drain steps."""
     core = DRIVE_EPIC_SKILL.read_text(encoding="utf-8")

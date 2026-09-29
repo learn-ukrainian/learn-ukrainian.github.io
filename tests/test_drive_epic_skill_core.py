@@ -10,6 +10,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 SKILL_DIR = Path(__file__).resolve().parents[1] / "agents_extensions/shared/skills/drive-epic"
 CORE = SKILL_DIR / "SKILL.md"
 CORE_MAX_BYTES = 12_000
@@ -20,6 +22,7 @@ def test_core_fits_the_byte_budget() -> None:
     assert size <= CORE_MAX_BYTES, f"drive-epic SKILL.md is {size} bytes; move phase detail to references/"
 
 
+@pytest.mark.repo_wide
 def test_every_reference_is_linked_from_the_core() -> None:
     core = CORE.read_text(encoding="utf-8")
     linked = set(re.findall(r"\]\((references/[^)#]+\.md)\)", core))
@@ -64,6 +67,7 @@ def test_core_leads_with_the_definition_of_done_checklist() -> None:
     assert order == sorted(order)
 
 
+@pytest.mark.repo_wide
 def test_section_citations_used_by_scripts_still_resolve() -> None:
     # scripts/ai_agent_bridge/_channels_cli.py prints "drive-epic §0a" and cites §1;
     # scripts/hygiene/branch_sweep.py cites §7a.

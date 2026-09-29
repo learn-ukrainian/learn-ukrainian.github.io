@@ -162,6 +162,7 @@ def test_boot_digests_and_workflow_do_not_carry_jevgrep() -> None:
         assert "skills/jevgrep" not in content, f"{name} contains skills/jevgrep path"
 
 
+@pytest.mark.repo_wide
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
     skill = REPO / "agents_extensions/shared/skills/drive-epic"
     driver = "\n".join(

@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from tests.test_launcher_contract import PUBLIC as PUBLIC_LAUNCHERS
 
 REPO = Path(__file__).resolve().parents[1]
@@ -51,6 +53,7 @@ def test_driver_prompt_names_work_api_and_grok_bot_queue_input() -> None:
     assert "capacity" not in prompt_line.lower()
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_work_api_projection_semantics() -> None:
     body = _skill_text()
     assert "http://127.0.0.1:8765/api/work/v1/projection" in body
@@ -58,6 +61,7 @@ def test_skill_teaches_work_api_projection_semantics() -> None:
         assert term in body, f"skill must document {term!r} from the projection response"
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_grok_bot_with_hard_exclusions() -> None:
     body = _skill_text()
     assert "docs/runbooks/grok-bot-qa-observer.md" in body
@@ -69,6 +73,7 @@ def test_skill_teaches_grok_bot_with_hard_exclusions() -> None:
     assert "same-family Grok must not CF" in body
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_the_full_health_enum() -> None:
     from scripts.work.attention import HEALTH_RANK
 

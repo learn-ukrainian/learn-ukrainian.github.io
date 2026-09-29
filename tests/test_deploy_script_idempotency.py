@@ -1467,6 +1467,7 @@ def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
         assert handoff.exists(), f".claude/{epic}/ was wiped by rsync --delete"
 
 
+@pytest.mark.repo_wide
 def test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs(tmp_path: Path) -> None:
     """The root-level ``*-epic`` exclusion must not reach ``skills/drive-epic``.
 
@@ -1501,6 +1502,7 @@ def test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs(tmp_path:
     assert references[0].name in check.stdout + check.stderr
 
 
+@pytest.mark.repo_wide
 def test_claude_diff_excludes_do_not_mask_shipped_source() -> None:
     """``diff --exclude`` matches basenames anywhere; none may shadow a shipped file.
 

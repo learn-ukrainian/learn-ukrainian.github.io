@@ -587,6 +587,7 @@ def test_acp_replay_section_allows_any_supported_two_seat_pair(onboarding: str) 
     assert "Participants are exactly `codex,grok`" not in body
 
 
+@pytest.mark.repo_wide
 def test_live_driver_diagnostics_never_claim_again() -> None:
     skill = [DRIVE_EPIC / "SKILL.md", *sorted((DRIVE_EPIC / "references").glob("*.md"))]
     body = " ".join(" ".join(_read(path) for path in skill).split())
