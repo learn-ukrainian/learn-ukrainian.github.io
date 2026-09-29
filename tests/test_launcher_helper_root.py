@@ -74,7 +74,9 @@ def _clean_env(**extra: str) -> dict[str, str]:
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("GIT_", "LC_", "LEARN_UKRAINIAN_", "KIMI", "MOONSHOT", "CLAUDE_", "SESSION_"))
+        if not key.startswith(
+            ("GIT_", "LC_", "LEARN_UKRAINIAN_", "KIMI", "MOONSHOT", "CLAUDE_", "SESSION_", "CODEX_")
+        )
     }
     env["GIT_CONFIG_GLOBAL"] = os.devnull
     env["GIT_CONFIG_NOSYSTEM"] = "1"
@@ -233,12 +235,14 @@ def _site_executions(layout: Layout) -> dict[str, list[str]]:
     return executions
 
 
-def _assert_every_site_ran_the_primary(layout: Layout, result: subprocess.CompletedProcess[str]) -> None:
+def _assert_every_site_ran_the_primary(
+    layout: Layout, result: subprocess.CompletedProcess[str], sites: tuple[str, ...] = _SITES
+) -> None:
     assert result.returncode == 0, result.stderr
     assert f"resolved={layout.primary}" in result.stdout
     executions = _site_executions(layout)
     assert list(executions) == list(_SITES), executions
-    for name in _SITES:
+    for name in sites:
         ran = executions[name]
         assert ran, f"site {name} executed no interpreter"
         assert all(line.startswith("HONEST ") for line in ran), (name, ran)
@@ -249,7 +253,8 @@ def _assert_every_site_ran_the_primary(layout: Layout, result: subprocess.Comple
     # Helper scripts named by path come from the validated primary.
     joined = "\n".join(layout.lines())
     assert f"{layout.primary}/scripts/orchestration/thread_handoff.py" in joined
-    assert f"{layout.primary}/scripts/lib/kimi_coding_oauth.py" in joined
+    if "kimi_route" in sites:
+        assert f"{layout.primary}/scripts/lib/kimi_coding_oauth.py" in joined
 
 
 def _assert_refused_before_any_site(layout: Layout, result: subprocess.CompletedProcess[str]) -> None:
@@ -449,8 +454,9 @@ def test_residual_fully_forged_primary_is_locally_indistinguishable(layout: Layo
     """Documented #9121 residual (see scripts/lib/project_interpreter.sh).
 
     Whoever can rewrite the gitfile can also forge the back-pointer, so a
-    complete fake primary validates. This pins the known limit; a trust anchor
-    outside the worktree would flip it.
+    complete fake primary validates. This pins the known limit of the gitfile
+    check; the operator-set override closes it on a Codex launch
+    (``test_override_refuses_a_forged_primary_gitfile``).
     """
     fake = layout.tmp / "fake-primary"
     admin = fake / ".git" / "worktrees" / "worktree"
@@ -464,6 +470,155 @@ def test_residual_fully_forged_primary_is_locally_indistinguishable(layout: Layo
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == str(fake)
+
+
+# --- operator-set CODEX_CANONICAL_REPO_ROOT override --------------------------
+
+
+def _separate_git_dir_layout(layout: Layout) -> Layout:
+    """A ``git init --separate-git-dir`` primary: no ``<primary>/.git/worktrees`` tie."""
+    primary = layout.tmp / "sgd"
+    primary.mkdir()
+    for relative in _COPIED:
+        destination = primary / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, destination)
+    _place_helper_scripts(primary)
+    (primary / ".gitignore").write_text(".venv/\n", encoding="utf-8")
+    _git(primary, "init", "-q", "-b", "main", "--separate-git-dir", str(layout.tmp / "sgd-git"))
+    _git(primary, "add", ".")
+    _git(primary, "commit", "-q", "-m", "init")
+    worktree = layout.tmp / "sgd-worktree"
+    _git(primary, "worktree", "add", "-q", "-b", "feature", str(worktree))
+    _stub_python(primary, "HONEST", layout.log)
+    return Layout(layout.tmp, primary, worktree, layout.attacker, layout.log)
+
+
+def _run_codex_sites(layout: Layout, override: Path | None, root: Path | None = None, **env: str):
+    if override is not None:
+        env["CODEX_CANONICAL_REPO_ROOT"] = str(override)
+    return _run_sites(layout, root, LC_PROVIDER="codex", **env)
+
+
+def _assert_override_refused(layout: Layout, result: subprocess.CompletedProcess[str], message: str) -> None:
+    assert result.returncode == 1, (result.stdout, result.stderr)
+    assert message in result.stderr
+    assert "resolved=" not in result.stdout
+    assert layout.lines() == [], layout.lines()
+
+
+# The Kimi route belongs to Kimi launches, which never read the override.
+_CODEX_REACHABLE_SITES = tuple(name for name in _SITES if name != "kimi_route")
+
+
+def test_override_names_a_separate_git_dir_primary(layout: Layout) -> None:
+    sgd = _separate_git_dir_layout(layout)
+    refused = _run_codex_sites(sgd, None)
+    _assert_refused_before_any_site(sgd, refused)
+
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
+
+
+def test_codex_adapter_uses_the_validated_override(layout: Layout) -> None:
+    """Canonical checkout, driver transport probe and canary all use the named primary."""
+    sgd = _separate_git_dir_layout(layout)
+    script = r"""
+LC_ROOT="$1"; LC_PROVIDER=codex; source "$LC_ROOT/scripts/lib/launcher_core.sh"; launcher_resolve_roots
+LC_DRY_RUN=0; source "$LC_ROOT/scripts/launchers/codex.sh"
+launcher_codex_resolve_canonical_root
+printf 'canonical=%s\n' "$LC_CODEX_CANONICAL_ROOT"
+printf 'python=%s\n' "$(launcher_project_python)"
+LC_DRY_RUN=1 LC_MODEL=gpt-6-astra launcher_codex_transport_probe
+"""
+    result = subprocess.run(
+        ["bash", "-c", script, "bash", str(sgd.worktree)],
+        env=_clean_env(HOME=str(layout.tmp / "home"), CODEX_CANONICAL_REPO_ROOT=str(sgd.primary)),
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert f"canonical={sgd.primary}" in result.stdout
+    assert f"python={sgd.primary}/.venv/bin/python" in result.stdout
+    assert f"would probe {sgd.primary}/.venv/bin/python -m scripts.orchestration.codex_transport_health" in (
+        result.stdout
+    )
+
+
+def test_without_override_a_codex_launch_keeps_refusing_a_hostile_gitfile(layout: Layout) -> None:
+    _git(layout.attacker, "worktree", "add", "-q", "-b", "decoy", str(layout.tmp / "decoy"))
+    (layout.worktree / ".git").write_text(f"gitdir: {layout.attacker}/.git/worktrees/decoy\n", encoding="utf-8")
+    _assert_refused_before_any_site(layout, _run_codex_sites(layout, None))
+
+
+def test_without_override_a_codex_launch_ignores_ambient_git_dir(layout: Layout) -> None:
+    _assert_every_site_ran_the_primary(layout, _run_codex_sites(layout, None, **_hostile_env(layout)))
+
+
+def test_override_to_the_real_primary_does_not_pass_a_hostile_gitfile(layout: Layout) -> None:
+    admin = layout.tmp / "attacker-admin"
+    shutil.copytree(layout.primary / ".git" / "worktrees" / "worktree", admin)
+    (admin / "commondir").write_text(f"{layout.attacker}/.git\n", encoding="utf-8")
+    (layout.worktree / ".git").write_text(f"gitdir: {admin}\n", encoding="utf-8")
+    _assert_override_refused(
+        layout, _run_codex_sites(layout, layout.primary), "is not a checkout of this Git common directory"
+    )
+
+
+def test_override_refuses_a_forged_primary_gitfile(layout: Layout) -> None:
+    """The fully forged fake primary (residual above) does not survive the override."""
+    fake = layout.tmp / "fake-primary"
+    admin = fake / ".git" / "worktrees" / "worktree"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{layout.worktree}/.git\n", encoding="utf-8")
+    _stub_python(fake, "EVIL", layout.log)
+    (layout.worktree / ".git").write_text(f"gitdir: {admin}\n", encoding="utf-8")
+    _assert_override_refused(
+        layout, _run_codex_sites(layout, layout.primary), "is not a checkout of this Git common directory"
+    )
+
+
+def test_override_naming_an_unrelated_repository_is_refused(layout: Layout) -> None:
+    _assert_override_refused(
+        layout, _run_codex_sites(layout, layout.attacker), "is not a checkout of this Git common directory"
+    )
+
+
+def test_override_naming_a_primary_off_main_is_refused(layout: Layout) -> None:
+    _git(layout.primary, "checkout", "-q", "-b", "elsewhere")
+    _assert_override_refused(layout, _run_codex_sites(layout, layout.primary), "canonical checkout must be on main")
+
+
+def test_override_naming_a_linked_worktree_on_main_is_refused(layout: Layout) -> None:
+    _git(layout.primary, "checkout", "-q", "--detach")
+    on_main = layout.tmp / "on-main"
+    _git(layout.primary, "worktree", "add", "-q", str(on_main), "main")
+    _stub_python(on_main, "EVIL", layout.log)
+    _assert_override_refused(layout, _run_codex_sites(layout, on_main), "is a linked worktree, not the primary")
+
+
+def test_override_naming_a_subdirectory_of_the_primary_is_refused(layout: Layout) -> None:
+    _assert_override_refused(
+        layout,
+        _run_codex_sites(layout, layout.primary / "scripts"),
+        "is not a checkout of this Git common directory",
+    )
+
+
+@pytest.mark.parametrize("borrow", ["symlink", "gitfile"])
+def test_override_naming_a_lookalike_of_the_primary_is_refused(layout: Layout, borrow: str) -> None:
+    fake = layout.tmp / "fake-primary"
+    fake.mkdir()
+    if borrow == "symlink":
+        (fake / ".git").symlink_to(layout.primary / ".git")
+    else:
+        (fake / ".git").write_text(f"gitdir: {layout.primary}/.git\n", encoding="utf-8")
+    _stub_python(fake, "EVIL", layout.log)
+    _assert_override_refused(layout, _run_codex_sites(layout, fake), "borrows another checkout's .git")
+
+
+def test_override_is_read_only_on_codex_launches(layout: Layout) -> None:
+    """Other providers resolve through the gitfile check even when the variable is inherited."""
+    result = _run_sites(layout, LC_PROVIDER="claude", CODEX_CANONICAL_REPO_ROOT=str(layout.attacker))
+    _assert_every_site_ran_the_primary(layout, result)
 
 
 # --- real launcher entry point -------------------------------------------------

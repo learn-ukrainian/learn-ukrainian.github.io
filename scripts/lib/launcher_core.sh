@@ -124,14 +124,17 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
-# Project interpreter for helper modules, resolved from LC_ROOT by the shared
-# resolver (primary checkout's .venv; never trusts a worktree gitfile, #9118).
-# Callable before launcher_resolve_roots. The resolver prints its own error;
-# callers exit 3.
+# Project interpreter for helper modules: the .venv of the helper root that
+# launcher_resolve_roots validated (#9118, #9121), so an operator-named Codex
+# primary serves the adapters too. Call after launcher_resolve_roots; callers
+# exit 3.
 launcher_project_python() {
-  # shellcheck source=scripts/lib/project_interpreter.sh
-  source "$LC_ROOT/scripts/lib/project_interpreter.sh"
-  project_interpreter_resolve "$LC_ROOT"
+  local python="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
+  if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$python" ] || [ ! -x "$python" ]; then
+    launcher_error "project interpreter not found: $python"
+    return 1
+  fi
+  printf '%s\n' "$python"
 }
 
 launcher_require_binary() {
@@ -474,17 +477,67 @@ LC_GIT_LOCAL_ENV_VARS=(
 # project_interpreter.sh check (gitfile shape + back-pointer, never git, never
 # `commondir`), and an ambient value is overwritten. Untrusted git metadata
 # refuses the launch rather than falling back to a worktree-local root (#9121).
+#
+# The one exception is CODEX_CANONICAL_REPO_ROOT on a Codex launch: an
+# operator-set override (docs/SCRIPTS.md, #5438) and the only accepted way to
+# name a primary that Git cannot prove from the worktree, such as a
+# `--separate-git-dir` primary with no `<primary>/.git/worktrees/<name>`.
+# When set, it replaces the gitfile check and must itself be the primary
+# checkout of this worktree's Git common directory, on `main`; any mismatch
+# refuses. Unset, nothing here falls back to it.
 launcher_resolve_roots() {
   unset "${LC_GIT_LOCAL_ENV_VARS[@]}"
   LC_SESSION_ROOT="$LC_ROOT"
   LC_DURABLE_HELPER_ROOT=""
   # shellcheck source=scripts/lib/project_interpreter.sh
   source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh"
-  if ! LC_DURABLE_HELPER_ROOT="$(project_primary_root_resolve "$LC_ROOT")"; then
+  if [ "${LC_PROVIDER:-}" = codex ] && [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+    LC_DURABLE_HELPER_ROOT="$(launcher_canonical_override_root "$CODEX_CANONICAL_REPO_ROOT")" || exit 1
+  elif ! LC_DURABLE_HELPER_ROOT="$(project_primary_root_resolve "$LC_ROOT")"; then
     launcher_error "refusing to run launcher helpers from $LC_ROOT; its git metadata does not validate."
     exit 3
   fi
   export LC_SESSION_ROOT LC_DURABLE_HELPER_ROOT
+}
+
+# Prints the physical path of an operator-named primary checkout, or explains
+# on stderr why it is not one: it must share this worktree's Git common
+# directory, be that repository's primary (its git dir IS the common dir, so a
+# linked worktree does not qualify; nor does a directory that reaches another
+# checkout's `.git`) and have `main` checked out.
+launcher_canonical_override_root() {
+  local root common own_common own_git
+  root="$(cd -P "$1" 2>/dev/null && pwd)" || {
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is not a directory: $1"
+    return 1
+  }
+  common="$(git -C "$LC_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" \
+    && common="$(cd -P "$common" 2>/dev/null && pwd)" || common=""
+  own_common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" \
+    && own_common="$(cd -P "$own_common" 2>/dev/null && pwd)" || own_common=""
+  if [ -z "$common" ] || [ "$own_common" != "$common" ] \
+    || [ "$(git -C "$root" rev-parse --show-toplevel 2>/dev/null)" != "$root" ]; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is not a checkout of this Git common directory."
+    return 1
+  fi
+  own_git="$(git -C "$root" rev-parse --absolute-git-dir 2>/dev/null)" \
+    && own_git="$(cd -P "$own_git" 2>/dev/null && pwd)" || own_git=""
+  if [ "$own_git" != "$common" ]; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is a linked worktree, not the primary checkout: $root"
+    return 1
+  fi
+  # A lookalike reaches the real `<primary>/.git` through a symlink or a
+  # gitfile; Git can already name that primary, so only it qualifies.
+  if [ -L "$root/.git" ] \
+    || { [ "$(basename "$common")" = .git ] && [ "$(dirname "$common")" != "$root" ]; }; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT borrows another checkout's .git: $root"
+    return 1
+  fi
+  if [ "$(git -C "$root" branch --show-current 2>/dev/null)" != main ]; then
+    launcher_error "canonical checkout must be on main: $root"
+    return 1
+  fi
+  printf '%s\n' "$root"
 }
 
 launcher_validate_mode() {

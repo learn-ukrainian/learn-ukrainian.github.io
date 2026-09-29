@@ -19,9 +19,11 @@
 # fake primary (`<fake>/.git/worktrees/<name>/gitdir` pointing back here, plus
 # `<fake>/.venv`). It is indistinguishable from the real primary using local
 # metadata alone, so the back-pointer only stops a gitfile that borrows another
-# repository's existing worktree entry; closing the rest needs a trust anchor
-# outside the worktree, which is not decided here. The Python
-# `main_checkout_root` checks the gitfile shape only.
+# repository's existing worktree entry. The only trust anchor outside the
+# worktree is the operator-set CODEX_CANONICAL_REPO_ROOT on a Codex launch
+# (launcher_resolve_roots in launcher_core.sh), which is also the only accepted
+# way to name a primary Git cannot prove from the worktree (`--separate-git-dir`).
+# The Python `main_checkout_root` checks the gitfile shape only.
 #
 # project_primary_root_resolve <checkout-root>
 #   stdout: absolute physical primary checkout root (exit 0)
