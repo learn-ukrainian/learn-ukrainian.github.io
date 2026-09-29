@@ -1,8 +1,7 @@
-"""Compare the pre-9115 guard-test corpus with the main hook baseline."""
+"""Compare the pre-9115 guard-test corpus with pinned baseline decisions."""
 
 from __future__ import annotations
 
-import ast
 import json
 import subprocess
 import sys
@@ -10,7 +9,6 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO / "agents_extensions/shared/hooks"
-BASELINE = "28a4243544954335d0d6edafa6f727beb1a5981f"
 GUARDS = (
     "admin_merge",
     "pr_merge",
@@ -18,7 +16,13 @@ GUARDS = (
     "secret_print",
     "primary_checkout_write",
 )
-HOOK_FILES = (*[f"guard-{name.replace('_', '-')}.py" for name in GUARDS], "shell_shlex.py")
+
+# CI checks out one commit, so the historical commit is unavailable there.
+# This fixture was generated from commit 28a4243544954335d0d6edafa6f727beb1a5981f:
+# its test-module string literals and the old hooks' decisions on those strings.
+BASELINE_FIXTURE = json.loads((REPO / "tests/fixtures/guard_9115_baseline.json").read_text(encoding="utf-8"))
+BASELINE_COMMANDS = BASELINE_FIXTURE["commands"]
+BASELINE_INDEX = {command: index for index, command in enumerate(BASELINE_COMMANDS)}
 
 BENIGN_COMMANDS = (
     "git status",
@@ -31,7 +35,7 @@ BENIGN_COMMANDS = (
     'for ((i=0;i<1<<1;i++)); do echo "$i"; done\ngit status',
 )
 
-# These literals were added after BASELINE. Pin their allow decisions as well;
+# These literals were added after the baseline commit. Pin their allow decisions as well;
 # a later parser change must not turn harmless quoted/comment text into a block.
 HEAD_ONLY_BENIGN_COMMANDS = (
     "echo $(printf '%s' '# gh pr merge 5 --admin')",
@@ -43,66 +47,21 @@ HEAD_ONLY_BENIGN_COMMANDS = (
 )
 
 
-def _source(name: str, *, baseline: bool) -> str:
-    if baseline:
-        return subprocess.run(
-            ["git", "show", f"{BASELINE}:tests/test_guard_{name}.py"],
-            cwd=REPO,
-            capture_output=True,
-            check=True,
-            text=True,
-            timeout=30,
-        ).stdout
-    return (REPO / f"tests/test_guard_{name}.py").read_text()
-
-
-def _baseline_docstring(name: str, scope: str | None = None) -> str:
-    tree = ast.parse(_source(name, baseline=True))
-    if scope is None:
-        node = tree
-    else:
-        node = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == scope)
-    assert node.body and isinstance(node.body[0], ast.Expr)
-    value = node.body[0].value
-    assert isinstance(value, ast.Constant) and isinstance(value.value, str)
-    return value.value
-
-
-# Exact baseline prose strings, resolved by their file and AST scope above.
-# Old/new booleans are blocked decisions. These are docstrings, never shell
-# input, so the parser's decision on them has no execution effect.
 EXPECTED_PROSE_FLIPS = {
-    # A module description mentions an admin merge; exposed backticks now look executable.
-    ("admin_merge", _baseline_docstring("admin_merge")): (False, True),
-    # Both module descriptions mention a PR merge in prose, not a command to run.
-    ("pr_merge", _baseline_docstring("pr_merge")): (False, True),
-    ("pr_merge", _baseline_docstring("admin_merge")): (False, True),
-    # The module description quotes a branch command in explanatory text.
-    ("branch_switch_in_main", _baseline_docstring("branch_switch_in_main")): (False, True),
-    # These two test docstrings used to fail parsing safely; the new parser allows the prose.
-    (
-        "secret_print",
-        _baseline_docstring("pr_merge", "test_quoted_paren_is_not_a_scope_boundary"),
-    ): (True, False),
-    (
-        "secret_print",
-        _baseline_docstring("pr_merge", "test_quoted_close_paren_does_not_pop_a_real_scope"),
-    ): (True, False),
+    (row["guard"], BASELINE_COMMANDS[row["command_index"]]): (row["before"], row["after"])
+    for row in BASELINE_FIXTURE["expected_prose_flips"]
 }
 
 
 def _literal_corpus() -> list[str]:
-    values = set(BENIGN_COMMANDS)
-    for name in GUARDS:
-        tree = ast.parse(_source(name, baseline=True))
-        values.update(
-            node.value
-            for node in ast.walk(tree)
-            if isinstance(node, ast.Constant)
-            and isinstance(node.value, str)
-            and "{payload}" not in node.value  # A parameterized template is not a command.
-        )
-    return sorted(values)
+    return [command for command in BASELINE_COMMANDS if command not in HEAD_ONLY_BENIGN_COMMANDS]
+
+
+def _baseline_decisions(commands: list[str]) -> dict[str, list[bool]]:
+    return {
+        guard: [bits[BASELINE_INDEX[command]] == "1" for command in commands]
+        for guard, bits in BASELINE_FIXTURE["baseline_decisions"].items()
+    }
 
 
 def _probe(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
@@ -118,24 +77,22 @@ def _probe(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
     return json.loads(result.stdout)
 
 
-def _baseline_dir(tmp_path: Path) -> Path:
-    directory = tmp_path / "baseline_hooks"
-    directory.mkdir()
-    for name in HOOK_FILES:
-        source = subprocess.run(
-            ["git", "show", f"{BASELINE}:agents_extensions/shared/hooks/{name}"],
-            cwd=REPO,
-            capture_output=True,
-            check=True,
-            timeout=30,
-        ).stdout
-        (directory / name).write_bytes(source)
-    return directory
+def test_baseline_fixture_covers_all_guards_and_commands() -> None:
+    assert BASELINE_FIXTURE["baseline_commit"] == "28a4243544954335d0d6edafa6f727beb1a5981f"
+    assert len(BASELINE_COMMANDS) == 1498
+    assert len(_literal_corpus()) == 1492
+    assert sorted(set(BASELINE_COMMANDS)) == BASELINE_COMMANDS
+    assert set(BASELINE_FIXTURE["baseline_decisions"]) == set(GUARDS)
+    assert all(
+        len(bits) == len(BASELINE_COMMANDS) and set(bits) <= {"0", "1"}
+        for bits in BASELINE_FIXTURE["baseline_decisions"].values()
+    )
+    assert set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS) <= set(BASELINE_COMMANDS)
 
 
-def test_all_literal_commands_have_no_new_guard_blocks(tmp_path: Path) -> None:
+def test_all_literal_commands_have_no_new_guard_blocks() -> None:
     commands = _literal_corpus()
-    baseline = _probe(_baseline_dir(tmp_path), commands)
+    baseline = _baseline_decisions(commands)
     head = _probe(HOOK_DIR, commands)
     changed = {
         (guard, command): (was_blocked, is_blocked)
@@ -146,9 +103,9 @@ def test_all_literal_commands_have_no_new_guard_blocks(tmp_path: Path) -> None:
     assert changed == EXPECTED_PROSE_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
 
 
-def test_head_only_benign_literals_have_no_new_blocks(tmp_path: Path) -> None:
+def test_head_only_benign_literals_have_no_new_blocks() -> None:
     commands = sorted(set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS))
-    baseline = _probe(_baseline_dir(tmp_path), commands)
+    baseline = _baseline_decisions(commands)
     head = _probe(HOOK_DIR, commands)
     newly_blocked = [
         (guard, command)
