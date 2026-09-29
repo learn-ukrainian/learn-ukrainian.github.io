@@ -2794,4 +2794,100 @@ const frontmatter = {
     font-size: 1.1rem;
     font-weight: 700;
   }
+
+  /* #8843: teacher-vocabulary deck panel (TeacherDeckPractice). */
+  @media (min-width: 1000px) {
+    :global(.k3-practice-dashboard.teacher-deck-dashboard) {
+      max-width: 800px;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      grid-template-areas: "hero" "deck";
+    }
+    :global(.teacher-deck-dashboard > .teacher-deck) {
+      grid-area: deck;
+      min-width: 0;
+    }
+  }
+  :global(.teacher-deck) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  :global(.teacher-deck-settings) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin: 0;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 12px;
+  }
+  :global(.teacher-deck-settings label) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+  }
+  :global(.teacher-deck-settings input) {
+    width: 5.5rem;
+    min-height: 44px;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+  }
+  :global(.teacher-deck .k3-session-scope) {
+    text-align: left;
+    white-space: normal;
+  }
+  :global(.teacher-deck-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  :global(.teacher-deck-actions .btn),
+  :global(.teacher-deck-modes .btn) {
+    min-height: 44px;
+  }
+  :global(.teacher-deck-modes ul) {
+    margin: 0 0 0.5rem;
+    padding-left: 1.2rem;
+  }
+  :global(.teacher-deck-new-tag) {
+    align-self: flex-start;
+    margin: 0 0 0.5rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: var(--lu-teal, #146e78);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  :global(.teacher-deck-attempt) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  :global(.teacher-deck-attempt input) {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 10px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font-size: 1.2rem;
+  }
+  :global(.teacher-deck-reveal .correct) {
+    color: var(--lu-success, #1b7f3b);
+  }
+  :global(.teacher-deck-cloze-en),
+  :global(.teacher-deck-attribution) {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--lu-text-muted);
+    font-size: 0.9em;
+  }
 </style>

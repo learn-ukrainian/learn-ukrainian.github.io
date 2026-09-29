@@ -862,6 +862,11 @@ function currentStorage(): StorageLike {
   return activeStorage ?? resolveStorage();
 }
 
+/** The storage practice persists to (localStorage, or the in-memory fallback when blocked). */
+export function practiceStorage(): StorageLike {
+  return currentStorage();
+}
+
 /** Whether Practice is using the session-only in-memory store (blocked localStorage). */
 export function isPracticeStorageEphemeral(): boolean {
   if (activeStorage === memoryStorage) return true;
@@ -899,6 +904,15 @@ function cloneParams(params: FSRSParameters = FSRS6_DEFAULT_PARAMS): FSRSParamet
     learning_steps: [...params.learning_steps],
     relearning_steps: [...params.relearning_steps],
   };
+}
+
+/**
+ * The learner's FSRS parameters (the practice settings store, else the FSRS-6
+ * defaults). Other practice stores — e.g. the teacher deck (#8843) — schedule with
+ * the same parameters but keep their own card state.
+ */
+export function practiceFsrsParams(): FSRSParameters {
+  return cloneParams(currentState().settings.params);
 }
 
 function defaultSettings(): SrsSettings {
@@ -1410,7 +1424,7 @@ function persistWithQuotaRecovery(
   return result;
 }
 
-function fsrsCardFromState(card: CardState): FsrsCard {
+export function fsrsCardFromState(card: CardState): FsrsCard {
   return {
     due: new Date(card.due),
     stability: card.stability,
@@ -1425,7 +1439,7 @@ function fsrsCardFromState(card: CardState): FsrsCard {
   };
 }
 
-function stateFromFsrsCard(card: FsrsCard): CardState {
+export function stateFromFsrsCard(card: FsrsCard): CardState {
   return {
     due: card.due.getTime(),
     stability: card.stability,
