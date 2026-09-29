@@ -55,7 +55,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
-        "review_contract": {server_checkout, server_digest, prompt_checkout, prompt_digest, paths} | absent,  # (#9163)
+        "review_contract": {render_checkout, server_checkout, render_server_digest, server_digest, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -9053,6 +9053,56 @@ def _run_dor_preflight(
     return None, record
 
 
+def _review_attempt_prompt_admission(
+    args: argparse.Namespace, early_prompt: str | None, review_id: str, attempt_id: str
+) -> tuple[str | None, dict[str, Any] | None]:
+    """Admit a ``--review-attempt`` prompt, or say why not: ``(refusal, None)`` or ``(None, review_contract)``.
+
+    Runs before any side effect. The prompt's own attempt block (#8996) must name this dispatch's ids, and the
+    prompt must come from a ``--prompt-file`` whose render record matches the code the seat would run (#9163).
+    """
+    from scripts.agent_runtime.review_mcp import check_review_contract
+    from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+    from scripts.review.render_contract import ReviewContractError
+
+    prompt_file = Path(args.prompt_file) if getattr(args, "prompt_file", None) else None
+    prompt = early_prompt or ""
+    try:
+        if prompt_file is None and getattr(args, "prompt", None) == "-":
+            # stdin is read only later, and a stdin prompt has no render record: refused as review_render_record_missing
+            return None, check_review_contract(None, "")
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+    except AttemptIdsUnreadableError as err:
+        return f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", None
+    except ReviewContractError as err:
+        return f"❌ {err}", None
+    if prompt_review_id is None or prompt_attempt_id is None:
+        # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
+        # ledger this dispatch prepares — the failure #8996 was filed for.
+        return (
+            "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
+            "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)"
+        ), None
+    id_mismatches = [
+        f"{name} prompt={found!r} dispatch={expected!r}"
+        for name, found, expected in (
+            ("review_id", prompt_review_id, review_id),
+            ("attempt_id", prompt_attempt_id, attempt_id),
+        )
+        if found != expected
+    ]
+    if id_mismatches:
+        return (
+            "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
+            f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)"
+        ), None
+    # The seat's sources server launches from the primary checkout; the prompt may have been rendered anywhere.
+    try:
+        return None, check_review_contract(prompt_file, prompt)
+    except ReviewContractError as err:
+        return f"❌ {err}", None
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
@@ -9314,6 +9364,11 @@ def _dispatch(
                 file=sys.stderr,
             )
             return 2
+        # Before any archival, worktree, task record or worker (#9163 finding 3).
+        review_refusal, review_contract = _review_attempt_prompt_admission(args, early_prompt, review_id, attempt_id)
+        if review_refusal:
+            print(review_refusal, file=sys.stderr)
+            return 2
 
     invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
     if invalid_owned_paths:
@@ -9529,49 +9584,14 @@ def _dispatch(
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
-    if review_attempt:
-        # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
-        # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
-        from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
-
-        try:
-            prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
-        except AttemptIdsUnreadableError as err:
-            print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
-            return 2
-        if prompt_review_id is None or prompt_attempt_id is None:
-            # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
-            # ledger this dispatch prepares — the failure #8996 was filed for.
-            print(
-                "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
-                "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)",
-                file=sys.stderr,
-            )
-            return 2
-        id_mismatches = [
-            f"{name} prompt={found!r} dispatch={expected!r}"
-            for name, found, expected in (
-                ("review_id", prompt_review_id, review_id),
-                ("attempt_id", prompt_attempt_id, attempt_id),
-            )
-            if found != expected
-        ]
-        if id_mismatches:
-            print(
-                "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
-                f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
-                file=sys.stderr,
-            )
-            return 2
-        # The seat's sources server launches from the primary checkout, while this prompt was rendered in the
-        # checkout running this dispatcher: refuse when their review contract files differ in content (#9163).
-        from scripts.agent_runtime.review_mcp import ReviewContractError, check_review_contract
-
-        try:
-            review_contract = check_review_contract(_local_repo_root)
-        except ReviewContractError as err:
-            print(f"❌ {err}", file=sys.stderr)
-            return 2
+    if review_attempt and review_contract is not None and source_prompt_sha256 != review_contract["prompt_sha256"]:
+        # Admission checked the prompt file before any side effect; the file must still be that prompt (#9163).
+        print(
+            "❌ review attempt refused: review_prompt_changed: the prompt file changed after its admission "
+            f"(admitted {review_contract['prompt_sha256']}, now {source_prompt_sha256}) (#9163)",
+            file=sys.stderr,
+        )
+        return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
@@ -10556,7 +10576,7 @@ def _dispatch(
                 "attempt_id": attempt_id,
                 "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
             }
-            # Both checkouts' review contract digests (#9163), so the review of record names what it ran against.
+            # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,

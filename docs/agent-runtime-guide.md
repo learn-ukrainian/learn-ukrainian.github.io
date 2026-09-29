@@ -837,15 +837,37 @@ dispatch hold "the" lock at once.
 ### Review attempts: server and templates must match (#9163)
 
 A `--review-attempt` seat always runs the sources MCP server from the primary
-checkout, but the prompt was rendered in the checkout running `delegate.py`.
-Before anything is provisioned, `review_mcp.check_review_contract` hashes the
-on-disk bytes of every tracked or untracked, non-ignored file under
-`.mcp/servers/sources/` and `scripts/review/prompts/` in both checkouts. If
-either path differs, the dispatch is refused with exit 2 and a
-`review_contract_mismatch` message that names both checkouts, both digests and
-the fix: pull the primary checkout to `origin/main`, then retry. Differences
-anywhere else never refuse. The task record keeps both digests under
-`review_contract`. Render and dispatch a review from the same checkout.
+checkout, but its prompt may have been rendered in any checkout. The two must
+come from the same code, so the check binds the prompt to the checkout that
+rendered it (`scripts/review/render_contract.py`):
+
+- **Render time.** `scripts/review/prompts/render.py --output <prompt>` writes a
+  `render_contract` record into `<prompt>.files_read.json`: the render checkout,
+  the templates the render actually loaded with their sha256 and one digest over
+  them, that checkout's server-code digest, and the prompt's sha256.
+- **Server-code digest.** `.mcp/servers/sources/server.py` plus every repository
+  module it imports, found by a static walk of `import` / `from … import`
+  statements (function-level imports included) resolved the way the server's
+  own `sys.path` resolves them: `scripts/`, then the repository root, then the
+  server's directory. Files are read from disk whether or not git ignores them;
+  a symlink contributes its target's bytes; `__pycache__`, documents and
+  modules the server never imports do not count. Dynamic `importlib` imports
+  are not seen (the server makes none).
+- **Dispatch time.** Before any archival (`--force-new` included), worktree,
+  task record or worker, `review_mcp.check_review_contract` refuses with exit 2:
+  - `review_render_record_missing` — the prompt is a literal or stdin prompt,
+    or its sidecar has no render record; re-render with `--output` and dispatch
+    with `--prompt-file`;
+  - `review_render_record_stale` — the prompt file no longer hashes to the
+    prompt its record names;
+  - `review_contract_mismatch` — the primary checkout's server code differs
+    from the recorded render-time digest, or a loaded template in the render
+    checkout changed since rendering. The message names the render checkout,
+    the primary checkout, both digests and the fix: pull the primary checkout to
+    `origin/main`, then re-render and retry.
+
+The checkout running `delegate.py` plays no part. The task record keeps the
+digests compared under `review_contract`.
 
 ## Common mistakes
 

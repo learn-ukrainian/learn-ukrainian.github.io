@@ -96,8 +96,12 @@ def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture(autouse=True)
 def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Dispatch tests here never read the real primary checkout; the contract check has its own tests (#9163)."""
-    monkeypatch.setattr(review_mcp_module, "check_review_contract", lambda _prompt_checkout: {})
+    """Dispatch tests here dispatch literal prompts with no render record; the contract check has its own tests (#9163)."""
+    monkeypatch.setattr(
+        review_mcp_module,
+        "check_review_contract",
+        lambda _prompt_file, prompt_text: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
+    )
 
 
 @pytest.fixture

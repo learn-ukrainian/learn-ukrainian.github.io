@@ -13914,14 +13914,43 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_tas
     assert "review-original" in capsys.readouterr().err
 
 
+def _review_code(checkout: Path, server: str = "print('receipt: <id> (outcome: <value>)')\n") -> None:
+    """The sources server and the review template a checkout holds (#9163), written to disk as a render reads them."""
+    for name, text in (
+        (".mcp/servers/sources/server.py", server),
+        ("scripts/review/prompts/lesson-review.md.j2", "Copy the outcome printed beside each receipt.\n"),
+    ):
+        (checkout / name).parent.mkdir(parents=True, exist_ok=True)
+        (checkout / name).write_text(text, encoding="utf-8")
+
+
+def _rendered_attempt_prompt(checkout: Path, prompt_file: Path) -> Path:
+    """``_MATCHING_ATTEMPT_PROMPT`` with the render record ``render_prompt`` writes beside it, rendered in ``checkout``."""
+    from scripts.review.render_contract import RENDER_RECORD_KEY, render_record, render_record_path
+
+    prompts_dir = checkout / "scripts" / "review" / "prompts"
+    loaded = {"lesson-review.md.j2": hashlib.sha256((prompts_dir / "lesson-review.md.j2").read_bytes()).hexdigest()}
+    prompt_file.parent.mkdir(parents=True, exist_ok=True)
+    prompt_file.write_text(_MATCHING_ATTEMPT_PROMPT, encoding="utf-8")
+    record = render_record(
+        checkout, prompts_dir, loaded, hashlib.sha256(_MATCHING_ATTEMPT_PROMPT.encode("utf-8")).hexdigest()
+    )
+    render_record_path(prompt_file).write_text(json.dumps({RENDER_RECORD_KEY: record}), encoding="utf-8")
+    return prompt_file
+
+
 def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, tmp_path, monkeypatch):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     _patch_worker_popen(monkeypatch)
-    # The sources server checkout and the dispatching checkout sit at the same commit (#9163).
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    # The reverse flow (#9163): rendered in the primary, dispatched from a worktree whose own server code differs.
+    # The dispatcher's checkout runs neither the templates nor the server, so its difference does not refuse.
+    _review_code(main)
+    _review_code(dispatch_wt, server="print('a newer server')\n")
     monkeypatch.setattr(delegate, "_local_repo_root", dispatch_wt)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "rendered" / "prompt.md")
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     plan = type("Plan", (), {"config_path": tmp_path / "attempt.json"})()
@@ -13931,7 +13960,8 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
                 agent="claude",
                 task_id="review-marked",
                 mode="read-only",
-                prompt=_MATCHING_ATTEMPT_PROMPT,
+                prompt=None,
+                prompt_file=str(prompt_file),
                 cwd=str(dispatch_wt),
                 review_attempt=str(manifest),
                 review_id="rev-test",
@@ -13949,22 +13979,25 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
         "attempt_id": "att-test",
         "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
     }
-    # #9163: both checkouts' review contract digests travel with the attempt
+    # #9163: the render-time and dispatch-time digests compared travel with the attempt
     contract = state["review_contract"]
-    assert (contract["server_checkout"], contract["prompt_checkout"]) == (str(main), str(dispatch_wt))
-    assert contract["server_digest"] == contract["prompt_digest"]
+    assert (contract["render_checkout"], contract["server_checkout"]) == (str(main), str(main))
+    assert contract["render_server_digest"] == contract["server_digest"]
+    assert contract["render_template_digest"] == contract["template_digest"]
     assert contract["server_digest"].startswith("sha256:")
+    assert contract["prompt_sha256"] == state["prompt_sha256"]
 
 
-def test_review_attempt_refuses_when_the_primary_sources_server_differs(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+def _skewed_review_dispatch(tmp_path: Path, monkeypatch, *, task_id: str, **overrides) -> tuple[int, Path, Path]:
+    """Render in the worktree, whose server code differs, then dispatch from the primary checkout (#9163 finding 1)."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
-    monkeypatch.setattr(delegate, "_local_repo_root", dispatch_wt)
-    server = main / ".mcp" / "servers" / "sources" / "server.py"
-    server.parent.mkdir(parents=True)
-    server.write_text("print('stale server')\n", encoding="utf-8")
+    _review_code(main, server="print('receipt: <id>')\n")
+    _review_code(dispatch_wt)
+    prompt_file = _rendered_attempt_prompt(dispatch_wt, tmp_path / "rendered" / "prompt.md")
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
@@ -13972,22 +14005,81 @@ def test_review_attempt_refuses_when_the_primary_sources_server_differs(tmp_task
         rc = delegate.cmd_dispatch(
             _write_args(
                 agent="claude",
-                task_id="review-skewed",
+                task_id=task_id,
                 mode="read-only",
-                prompt=_MATCHING_ATTEMPT_PROMPT,
-                cwd=str(dispatch_wt),
+                prompt=None,
+                prompt_file=str(prompt_file),
+                cwd=str(main),
                 review_attempt=str(manifest),
                 review_id="rev-test",
                 attempt_id="att-test",
+                **overrides,
             )
         )
+    return rc, main, dispatch_wt
+
+
+def test_review_attempt_refuses_a_prompt_rendered_against_other_server_code(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    rc, main, dispatch_wt = _skewed_review_dispatch(tmp_path, monkeypatch, task_id="review-skewed")
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    print(err)
+    assert "review_contract_mismatch" in err
+    assert "rendered against different server code than this attempt would run" in err
+    assert f"rendered in: {dispatch_wt} server digest sha256:" in err
+    assert f"sources server (primary checkout): {main} server digest sha256:" in err
+    assert "pull the primary checkout to origin/main, then re-render and retry" in err
+    assert delegate._read_state(delegate._state_path("review-skewed")) is None
+
+
+def test_review_attempt_force_new_refusal_leaves_the_prior_record_and_result(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#9163 finding 3: the mismatch refuses before --force-new archives anything."""
+    path = delegate._state_path("review-again")
+    result_path = path.with_suffix(".result")
+    original = {"task_id": "review-again", "status": "done", "initiator": "owner", "result_file": str(result_path)}
+    delegate._write_state_atomic(path, original)
+    result_path.write_text("prior review evidence\n", encoding="utf-8")
+
+    rc, _main, _wt = _skewed_review_dispatch(
+        tmp_path, monkeypatch, task_id="review-again", force_new=True, initiator="owner"
+    )
+
     assert rc == 2
     err = capsys.readouterr().err
     assert "review_contract_mismatch" in err
-    assert f"{main} digest sha256:" in err
-    assert f"{dispatch_wt} digest sha256:" in err
-    assert "pull the primary checkout to origin/main, then retry" in err
-    assert delegate._read_state(delegate._state_path("review-skewed")) is None
+    assert "archived prior task artifact" not in err
+    assert delegate._read_state(path) == original
+    assert result_path.read_text(encoding="utf-8") == "prior review evidence\n"
+    assert list(tmp_tasks_dir.glob("review-again.*.archived.*")) == []
+
+
+@pytest.mark.parametrize("prompt", [_MATCHING_ATTEMPT_PROMPT, "-"], ids=["literal", "stdin"])
+def test_review_attempt_refuses_a_prompt_without_a_render_record(tmp_tasks_dir, tmp_path, monkeypatch, capsys, prompt):
+    monkeypatch.setattr("sys.stdin", io.StringIO(_MATCHING_ATTEMPT_PROMPT))
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    rc = delegate.cmd_dispatch(
+        _write_args(
+            agent="claude",
+            task_id="review-unrendered",
+            mode="read-only",
+            prompt=prompt,
+            review_attempt=str(manifest),
+            review_id="rev-test",
+            attempt_id="att-test",
+        )
+    )
+    assert rc == 2
+    assert "review_render_record_missing: a --review-attempt prompt must come from --prompt-file" in (
+        capsys.readouterr().err
+    )
+    assert sys.stdin.read() == _MATCHING_ATTEMPT_PROMPT  # refused before stdin was read
+    assert delegate._read_state(delegate._state_path("review-unrendered")) is None
 
 
 @pytest.mark.parametrize(
@@ -14110,7 +14202,10 @@ def test_review_attempt_refuses_a_prompt_that_prints_no_ids(tmp_tasks_dir, tmp_p
 
 
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr("scripts.agent_runtime.review_mcp.check_review_contract", lambda _prompt_checkout: {})
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.check_review_contract",
+        lambda _prompt_file, text: {"prompt_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()},
+    )
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host"))
