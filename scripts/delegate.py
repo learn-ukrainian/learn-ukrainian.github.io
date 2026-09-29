@@ -8408,23 +8408,42 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     return pt.FAST_FAIL_EXIT_CODE
 
 
-_DOR_ISSUE_RE = re.compile(r"(?<![\w/=])#(\d+)\b|https://github\.com/[^\s/]+/[^\s/]+/issues/(\d+)\b")
+# The short form rejects common file suffixes so source locations do not become issue repositories.
+_DOR_ISSUE_RE = re.compile(
+    r"(?<![\w/=])(?:"
+    r"https://github\.com/(?P<url_repo>[\w.-]+/[\w.-]+)/issues/(?P<url_number>\d+)\b"
+    r"|(?P<short_repo>[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})/"
+    r"(?!(?:[A-Za-z0-9._-]+\.(?i:md|markdown|py|pyi|rst|txt))#)"
+    r"(?=[A-Za-z0-9._-]*[A-Za-z0-9_-]#)[A-Za-z0-9._-]+)"
+    r"#(?P<short_number>\d+)\b(?![/\\])"
+    r"|#(?P<number>\d+)\b)"
+)
 
 
-def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | None, dict[str, Any] | None]:
+def _run_dor_preflight(
+    prompt: str, allow_reason: str | None, *, dispatch_repo: str
+) -> tuple[str | None, dict[str, Any] | None]:
     """Check each issue named by an implementation brief before dispatch side effects."""
-    candidates = sorted(
-        {int(match.group(1) or match.group(2)) for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt))}
-    )
+    distinct: dict[tuple[str, int], tuple[str, int]] = {}
+    for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
+        repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+        if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
+            repo = _CANONICAL_GITHUB_REPO
+        number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
+        distinct.setdefault((repo.casefold(), number), (repo, number))
+    candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
     warnings: dict[str, str] = {}
     issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
-    for number in candidates:
+    issue_repositories: list[dict[str, Any]] = []
+    for repo, number in candidates:
+        label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
+        recorded = False
         try:
             issue = subprocess.run(
-                ["gh", "api", f"repos/{_CANONICAL_GITHUB_REPO}/issues/{number}"],
+                ["gh", "api", f"repos/{repo}/issues/{number}"],
                 capture_output=True,
                 text=True,
                 timeout=60,
@@ -8438,8 +8457,11 @@ def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | Non
             if "pull_request" in issue_payload:
                 continue
             issue_numbers.append(number)
+            recorded = True
+            if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
+                issue_repositories.append({"issue": number, "repo": repo})
             result = subprocess.run(
-                [sys.executable, str(checker), "--issue", str(number), "--strict", "--json"],
+                [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
                 capture_output=True,
                 text=True,
                 timeout=75,
@@ -8449,18 +8471,24 @@ def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | Non
             if not isinstance(payload, dict):
                 raise ValueError("checker result must be an object")
             if result.returncode or payload.get("verdict") != "PASS":
-                warnings[str(number)] = ",".join(payload.get("missing") or ["checker_error"])
+                warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
         except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
-            if number not in issue_numbers:
+            if not recorded:
                 issue_numbers.append(number)
-            warnings[str(number)] = "checker_error"
+                if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
+                    issue_repositories.append({"issue": number, "repo": repo})
+            warnings[label] = "checker_error"
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if issue_repositories:
+        record["issue_repositories"] = issue_repositories
     if allow_reason is not None:
         record["allow_warn_reason"] = allow_reason
     if warnings and allow_reason is None:
-        details = "; ".join(f"#{number}: {missing}" for number, missing in warnings.items())
+        details = "; ".join(
+            f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
+        )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
     return None, record
 
@@ -8523,6 +8551,31 @@ def _dispatch(
         print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
         return 2
 
+    # Resolve before DoR: the first check runs before worktree setup (#9133).
+    fleet_repo_key = getattr(args, "repo", None)
+    try:
+        from scripts.orchestration.fleet_repos import (
+            FleetRepoError,
+            fleet_repo_as_dict,
+            resolve_fleet_repo,
+        )
+    except ImportError:  # pragma: no cover - flat script path
+        from orchestration.fleet_repos import (  # type: ignore
+            FleetRepoError,
+            fleet_repo_as_dict,
+            resolve_fleet_repo,
+        )
+
+    try:
+        fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+    except FleetRepoError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    if not re.fullmatch(r"[\w.-]+/[\w.-]+", fleet_repo.github):
+        print(f"❌ --repo {fleet_repo.key!r} has no valid owner/name in fleet_repos", file=sys.stderr)
+        return 2
+    fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
+
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
     early_prompt: str | None = None
@@ -8542,7 +8595,7 @@ def _dispatch(
             return 2
     dor_record: dict[str, Any] | None = None
     if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
-        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason)
+        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, dispatch_repo=fleet_repo.github)
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -8716,28 +8769,6 @@ def _dispatch(
 
     # #672 P2.1: allowlisted --repo retargets worktree creation to a sibling
     # checkout. Control-plane task state stays on the public primary.
-    fleet_repo_key = getattr(args, "repo", None)
-    fleet_repo_meta: dict[str, Any] | None = None
-    target_repo_root = _REPO_ROOT
-    try:
-        from scripts.orchestration.fleet_repos import (
-            FleetRepoError,
-            fleet_repo_as_dict,
-            resolve_fleet_repo,
-        )
-    except ImportError:  # pragma: no cover - flat script path
-        from orchestration.fleet_repos import (  # type: ignore
-            FleetRepoError,
-            fleet_repo_as_dict,
-            resolve_fleet_repo,
-        )
-
-    try:
-        fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
-        fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
-    except FleetRepoError as exc:
-        print(f"❌ {exc}", file=sys.stderr)
-        return 2
     if not fleet_repo.default and requested_branch:
         print(
             "❌ --branch attach on sibling --repo is not supported in P2.1; "
@@ -8783,8 +8814,7 @@ def _dispatch(
         candidate = _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
         primary_root = target_repo_root.resolve()
         if candidate == primary_root or (
-            candidate.is_relative_to(primary_root)
-            and not candidate.is_relative_to(primary_root / ".worktrees")
+            candidate.is_relative_to(primary_root) and not candidate.is_relative_to(primary_root / ".worktrees")
         ):
             print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
             return 2
@@ -8944,7 +8974,7 @@ def _dispatch(
             return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
-        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
+        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
