@@ -185,10 +185,12 @@ def dispatch_slice_probe(monkeypatch):
     needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that the
     fake worker processes here do not provide. Default the probe to "not
     ready" so every test takes the plain-``Popen`` path; a slice-path test
-    sets ``dispatch_slice_probe["ready"] = True`` instead. The production
-    ``LU_DISPATCH_ISOLATION=fallback`` override still wins, so tests that
-    exercise it keep their recorded reason.
+    sets ``dispatch_slice_probe["ready"] = True`` instead. An ambient
+    ``LU_DISPATCH_ISOLATION=fallback`` would override even a "ready" probe,
+    so the fixture clears it; only the test that exercises the forced
+    fallback sets it again itself.
     """
+    monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     state = {"ready": False, "reason": "test stub: host slice probe disabled"}
 
     def _probe(env=None, **_kwargs):
