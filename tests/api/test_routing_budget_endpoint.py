@@ -783,3 +783,38 @@ def test_glm_is_not_a_subscription_lane_or_ranked_provider(monkeypatch, tmp_path
 
     assert "glm" not in data["agents"]
     assert all(row.get("lane") != "glm" for row in data.get("ranked_by_headroom", []))
+
+
+def test_empty_ledger_reports_agentic_pool_unknown(monkeypatch, tmp_path):
+    """#9172: zero USD ledger records must not read as a cool agentic pool."""
+    now = datetime(2026, 9, 1, 12, 0, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+
+    data = state_router.compute_routing_budget(now)
+
+    pool = data["agents"]["claude"]["agentic_pool"]
+    assert pool["spent_cycle_usd"] is None
+    assert pool["burn_pct_cycle"] is None
+    assert pool["status"] == "unknown"
+    assert pool["active"] is True
+    assert pool["monthly_cap_usd"] == 200.0
+    assert pool["starts_on"] == "2026-06-15"
+    recommendation = data["recommendation"]
+    assert recommendation["primary_agent_for_code"] != "claude"
+    assert "agentic pool" not in recommendation["rationale"]
+
+
+def test_records_present_keep_agentic_pool_recommendation(monkeypatch, tmp_path):
+    """#9172: with ledger records, the active cool agentic pool still recommends claude."""
+    now = datetime(2026, 9, 1, 12, 0, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("claude (sonnet)", 10.0, now)])
+
+    data = state_router.compute_routing_budget(now)
+
+    pool = data["agents"]["claude"]["agentic_pool"]
+    assert pool["spent_cycle_usd"] == 10.0
+    assert pool["burn_pct_cycle"] == 5.0
+    assert pool["status"] == "cool"
+    recommendation = data["recommendation"]
+    assert recommendation["primary_agent_for_code"] == "claude"
+    assert "agentic pool" in recommendation["rationale"]
