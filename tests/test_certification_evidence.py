@@ -22,15 +22,7 @@ from scripts.audit import llm_reviewer_dispatch, qg_workflow
 pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = (
-    ROOT
-    / "agents_extensions"
-    / "shared"
-    / "skills"
-    / "track-completion"
-    / "scripts"
-    / "certification_evidence.py"
-)
+SCRIPT = ROOT / "agents_extensions" / "shared" / "skills" / "track-completion" / "scripts" / "certification_evidence.py"
 SPEC = importlib.util.spec_from_file_location("certification_evidence_for_tests", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 ce = importlib.util.module_from_spec(SPEC)
@@ -144,9 +136,10 @@ def _capture_module(tmp_path: Path) -> tuple[Path, llm_reviewer_dispatch.Dispatc
     return module_dir, dispatch
 
 
-@pytest.fixture
-def qg_capture(tmp_path: Path) -> dict[str, Any]:
+@pytest.fixture(scope="module")
+def qg_capture(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """Capture through the real live dispatcher with a no-network provider stub."""
+    tmp_path = tmp_path_factory.mktemp("qg-capture")
     module_dir, dispatch = _capture_module(tmp_path)
     calls = 0
 
@@ -188,9 +181,10 @@ def qg_capture(tmp_path: Path) -> dict[str, Any]:
     return {"repo": module_dir.parents[3], "module_dir": module_dir, "record": record, "tier2": tier2}
 
 
-@pytest.fixture
-def injected_qg_capture(tmp_path: Path) -> dict[str, Any]:
+@pytest.fixture(scope="module")
+def injected_qg_capture(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """The old callback-only fixture remains a valid workflow, not production, capture."""
+    tmp_path = tmp_path_factory.mktemp("injected-qg-capture")
     module_dir, dispatch = _capture_module(tmp_path)
     fabricated = replace(
         dispatch,
@@ -215,9 +209,10 @@ def injected_qg_capture(tmp_path: Path) -> dict[str, Any]:
     return {"module_dir": module_dir, "record": record, "tier2": tier2}
 
 
-@pytest.fixture
-def qg_replay_capture(tmp_path: Path) -> dict[str, Any]:
+@pytest.fixture(scope="module")
+def qg_replay_capture(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """A cold live capture followed by the real SQLite cache replay path."""
+    tmp_path = tmp_path_factory.mktemp("qg-replay-capture")
     module_dir, dispatch = _capture_module(tmp_path)
     calls = 0
 
@@ -287,7 +282,9 @@ def _route(identity: dict[str, str], tier2: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _authorization(tmp_path: Path, identity: dict[str, str], tier2: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _authorization(
+    tmp_path: Path, identity: dict[str, str], tier2: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any]]:
     profile = {"id": "seminar-pending", "version": "1.0.0"}
     route = _route(identity, tier2)
     qualification = {
@@ -350,7 +347,10 @@ def _artifact(capture: dict[str, Any], authorization: dict[str, Any], identity: 
         "preparation_identity": _sha("preparation"),
         "learner_hashes": {"content": _sha("learner")},
         "arm": "production-qualified",
-        "authorization": {"identity": identity, **{key: authorization[key] for key in authorization if key.endswith("sha256")}},
+        "authorization": {
+            "identity": identity,
+            **{key: authorization[key] for key in authorization if key.endswith("sha256")},
+        },
         "canonical_record": copy.deepcopy(capture["record"]),
         "tier2": copied_tier,
     }
@@ -523,7 +523,9 @@ def _integration_value(inputs: dict[str, Any], independent_sha: str) -> dict[str
     }
 
 
-def _passes(artifact: ce.EvidenceArtifact, capture: dict[str, Any], authorization: dict[str, Any], identity: dict[str, str]) -> bool:
+def _passes(
+    artifact: ce.EvidenceArtifact, capture: dict[str, Any], authorization: dict[str, Any], identity: dict[str, str]
+) -> bool:
     return ce.production_qg_passes(
         artifact,
         expected_identity=identity,
@@ -578,9 +580,7 @@ def test_live_capture_requires_real_cross_family_author_lineage(
 
 
 @pytest.mark.parametrize("key", ["module_id", "content_sha"])
-def test_wrong_target_or_content_hash_fails(
-    qg_capture: dict[str, Any], tmp_path: Path, key: str
-) -> None:
+def test_wrong_target_or_content_hash_fails(qg_capture: dict[str, Any], tmp_path: Path, key: str) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
     artifact = _artifact(qg_capture, authorization, identity)
@@ -609,9 +609,7 @@ def test_current_qg_contract_fact_mismatches_fail(
 
 
 @pytest.mark.parametrize("field", ["raw_response_sha256", "workflow_run_id", "tier2_run_id", "attempt_id"])
-def test_raw_response_and_run_linkage_mismatches_fail(
-    qg_capture: dict[str, Any], tmp_path: Path, field: str
-) -> None:
+def test_raw_response_and_run_linkage_mismatches_fail(qg_capture: dict[str, Any], tmp_path: Path, field: str) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
     artifact = _artifact(qg_capture, authorization, identity)
@@ -620,9 +618,7 @@ def test_raw_response_and_run_linkage_mismatches_fail(
 
 
 @pytest.mark.parametrize("flag", ["shadow", "advisory", "attested_judge"])
-def test_shadow_advisory_and_attested_judge_arms_fail(
-    qg_capture: dict[str, Any], tmp_path: Path, flag: str
-) -> None:
+def test_shadow_advisory_and_attested_judge_arms_fail(qg_capture: dict[str, Any], tmp_path: Path, flag: str) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
     artifact = _artifact(qg_capture, authorization, identity)
@@ -714,13 +710,13 @@ def test_forbidden_workflow_states_fail_closed(qg_capture: dict[str, Any], tmp_p
         lambda tier: tier["payload"]["fact_checks"][0]["grounding"].update({"tool_call_id": "fake-call"}),
         lambda tier: tier["payload"]["fact_checks"][0]["grounding"].update({"query": "unrelated query"}),
         lambda tier: tier["payload"]["fact_checks"][0]["grounding"].update({"evidence_excerpt": "fabricated excerpt"}),
-        lambda tier: tier["payload"]["fact_checks"][0]["grounding"].update({"evidence_excerpt": "Веснянки nonexistent пісні"}),
+        lambda tier: tier["payload"]["fact_checks"][0]["grounding"].update(
+            {"evidence_excerpt": "Веснянки nonexistent пісні"}
+        ),
         lambda tier: tier["dispatch"]["tool_events"][0]["input"].update({"mode": "summary"}),
     ],
 )
-def test_grounding_and_tool_theatre_bypasses_fail(
-    qg_capture: dict[str, Any], tmp_path: Path, mutation: Any
-) -> None:
+def test_grounding_and_tool_theatre_bypasses_fail(qg_capture: dict[str, Any], tmp_path: Path, mutation: Any) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
     artifact = _artifact(qg_capture, authorization, identity)
@@ -757,10 +753,17 @@ def test_authorization_is_strict_and_human_bound(qg_capture: dict[str, Any], tmp
     arming["actor_type"] = "llm"
     arming_path.write_text(json.dumps(arming), encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(qg_profile, repo_root=tmp_path, expected_profile={"id": "seminar-pending", "version": "1.0.0"}, expected_identity=identity)
+        ce.load_authorization(
+            qg_profile,
+            repo_root=tmp_path,
+            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
+            expected_identity=identity,
+        )
 
 
-def test_qualification_stale_identity_wrong_route_and_empty_artifact_fail(qg_capture: dict[str, Any], tmp_path: Path) -> None:
+def test_qualification_stale_identity_wrong_route_and_empty_artifact_fail(
+    qg_capture: dict[str, Any], tmp_path: Path
+) -> None:
     identity = _identity()
     _, qg_profile = _authorization(tmp_path, identity, qg_capture["tier2"])
     qualification_path = tmp_path / qg_profile["qualification_artifact"]
@@ -768,13 +771,25 @@ def test_qualification_stale_identity_wrong_route_and_empty_artifact_fail(qg_cap
     qualification["identity"]["prompt"] = _sha("stale")
     qualification_path.write_text(json.dumps(qualification), encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(qg_profile, repo_root=tmp_path, expected_profile={"id": "seminar-pending", "version": "1.0.0"}, expected_identity=identity)
+        ce.load_authorization(
+            qg_profile,
+            repo_root=tmp_path,
+            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
+            expected_identity=identity,
+        )
     qualification_path.write_text("{}", encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(qg_profile, repo_root=tmp_path, expected_profile={"id": "seminar-pending", "version": "1.0.0"}, expected_identity=identity)
+        ce.load_authorization(
+            qg_profile,
+            repo_root=tmp_path,
+            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
+            expected_identity=identity,
+        )
 
 
-def test_qualification_wrong_profile_route_and_arbitrary_identity_key_fail(qg_capture: dict[str, Any], tmp_path: Path) -> None:
+def test_qualification_wrong_profile_route_and_arbitrary_identity_key_fail(
+    qg_capture: dict[str, Any], tmp_path: Path
+) -> None:
     identity = _identity()
     _, qg_profile = _authorization(tmp_path, identity, qg_capture["tier2"])
     qualification_path = tmp_path / qg_profile["qualification_artifact"]
@@ -783,15 +798,27 @@ def test_qualification_wrong_profile_route_and_arbitrary_identity_key_fail(qg_ca
     qualification["profile"]["id"] = "wrong-profile"
     qualification_path.write_text(json.dumps(qualification), encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(qg_profile, repo_root=tmp_path, expected_profile={"id": "seminar-pending", "version": "1.0.0"}, expected_identity=identity)
+        ce.load_authorization(
+            qg_profile,
+            repo_root=tmp_path,
+            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
+            expected_identity=identity,
+        )
     qualification = original
     qualification["identity"]["unexpected"] = _sha("unexpected")
     qualification_path.write_text(json.dumps(qualification), encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(qg_profile, repo_root=tmp_path, expected_profile={"id": "seminar-pending", "version": "1.0.0"}, expected_identity=identity)
+        ce.load_authorization(
+            qg_profile,
+            repo_root=tmp_path,
+            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
+            expected_identity=identity,
+        )
 
 
-def test_qg_stability_uses_immutable_inputs_and_material_disposition(qg_capture: dict[str, Any], tmp_path: Path) -> None:
+def test_qg_stability_uses_immutable_inputs_and_material_disposition(
+    qg_capture: dict[str, Any], tmp_path: Path
+) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
     first = _artifact(qg_capture, authorization, identity)
@@ -901,10 +928,17 @@ def test_stale_independent_evidence_cannot_satisfy_an_integration_link(tmp_path:
         {"path": "/outside/stale.json", "sha256": stale_sha, "value": stale_value},
         {"path": "/outside/integration.json", "sha256": _sha("integration"), "value": integration},
     ]
-    path = tc.ledger_path_for(tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)), repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    path = tc.ledger_path_for(
+        tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)),
+        repo_root=repo,
+        config=tc.load_config(config_path),
+        ledger_root=ledger_root,
+    )
     tc._atomic_write_json(path, ledger)
 
-    projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
     assert projection["state"] == "INTEGRATION_REQUIRED"
     assert projection["integration"] == "malformed"
 
@@ -919,10 +953,17 @@ def test_current_unresolved_independent_material_finding_blocks_a_pass(tmp_path:
         {"path": "/outside/pass.json", "sha256": _sha("pass"), "value": passing},
         {"path": "/outside/open.json", "sha256": _sha("open"), "value": unresolved},
     ]
-    path = tc.ledger_path_for(tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)), repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    path = tc.ledger_path_for(
+        tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)),
+        repo_root=repo,
+        config=tc.load_config(config_path),
+        ledger_root=ledger_root,
+    )
     tc._atomic_write_json(path, ledger)
 
-    projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
     assert projection["state"] == "INDEPENDENT_REVIEW_REQUIRED"
     assert projection["independent_review"] == "unresolved"
 
@@ -947,18 +988,21 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
         "human_arming_sha256": _sha("arming"),
         "route": _route(inputs["qg_identity"], qg_capture["tier2"]),
     }
-    path = tc.ledger_path_for(tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)), repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
+    path = tc.ledger_path_for(
+        tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)),
+        repo_root=repo,
+        config=tc.load_config(config_path),
+        ledger_root=ledger_root,
+    )
     tc._atomic_write_json(path, ledger)
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     prompt_dependency = repo / "scripts/audit/prompts/reviewer_prompt.md"
-    prompt_dependency.write_text(prompt_dependency.read_text(encoding="utf-8") + "\n<!-- qg-only drift -->\n", encoding="utf-8")
-    lifecycle_dependency = (
-        repo
-        / "agents_extensions/shared/skills/track-completion/scripts/track_completion.py"
+    prompt_dependency.write_text(
+        prompt_dependency.read_text(encoding="utf-8") + "\n<!-- qg-only drift -->\n", encoding="utf-8"
     )
+    lifecycle_dependency = repo / "agents_extensions/shared/skills/track-completion/scripts/track_completion.py"
     lifecycle_dependency.write_text(
-        lifecycle_dependency.read_text(encoding="utf-8")
-        + "\n# lifecycle workflow identity drift\n",
+        lifecycle_dependency.read_text(encoding="utf-8") + "\n# lifecycle workflow identity drift\n",
         encoding="utf-8",
     )
     after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
@@ -972,14 +1016,14 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
     assert after["qg_identity"] != before["qg_identity"]
     assert current_identity["sha256"] != ledger["current_identity"]["sha256"]
-    projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
     assert projection["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert projection["production_qg"] == "awaiting-human-arming"
-    assert projection["reason"] == (
-        "recorded production-QG authorization does not bind the current QG contract"
-    )
+    assert projection["reason"] == ("recorded production-QG authorization does not bind the current QG contract")
     _, resumed = tc.resume_run(
         inputs["target"],
         run_id=ledger["run"]["run_id"],
@@ -1012,13 +1056,17 @@ def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) 
     tc._atomic_write_json(path, ledger)
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     policy_source = repo / "scripts/audit/content_surface_gates.py"
-    policy_source.write_text(policy_source.read_text(encoding="utf-8") + "\n# qg policy identity drift\n", encoding="utf-8")
+    policy_source.write_text(
+        policy_source.read_text(encoding="utf-8") + "\n# qg policy identity drift\n", encoding="utf-8"
+    )
     after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
 
     assert after["qg_identity"] != before["qg_identity"]
     assert after["preparation_identity"] == before["preparation_identity"]
     assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
-    projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
     assert projection["production_qg"] == "awaiting-human-arming"
@@ -1038,7 +1086,9 @@ def test_live_qg_dependency_drift_changes_qg_identity_only(tmp_path: Path, relat
     repo, config_path, _ledger_root, ledger, inputs = _completion_case(tmp_path)
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     dependency = repo / relative_path
-    dependency.write_text(dependency.read_text(encoding="utf-8") + "\n# qg dependency identity drift\n", encoding="utf-8")
+    dependency.write_text(
+        dependency.read_text(encoding="utf-8") + "\n# qg dependency identity drift\n", encoding="utf-8"
+    )
     after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
 
     assert after["qg_identity"] != before["qg_identity"]
@@ -1058,7 +1108,9 @@ def test_learner_mutation_stales_both_pbr_and_qg_inputs(tmp_path: Path) -> None:
     assert tc._current_pbr_reviews(ledger, after)[0] is False
     assert after["target"] == before["target"]
     assert after["qg_identity"] == before["qg_identity"]
-    projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
     assert projection["state"] == "POST_BUILD_REVIEW_REQUIRED"
 
 
@@ -1094,9 +1146,7 @@ def _write_external_evidence(tmp_path: Path, name: str, value: dict[str, Any]) -
     return path
 
 
-def _completion_ledger_path(
-    repo: Path, config_path: Path, ledger_root: Path, inputs: dict[str, Any]
-) -> Path:
+def _completion_ledger_path(repo: Path, config_path: Path, ledger_root: Path, inputs: dict[str, Any]) -> Path:
     config = tc.load_config(config_path)
     snapshot = tc.resolve_target(inputs["target"], repo_root=repo, config=config)
     return tc.ledger_path_for(snapshot, repo_root=repo, config=config, ledger_root=ledger_root)
@@ -1131,9 +1181,7 @@ def test_cursor_advances_current_independent_evidence_with_true_history_origin(t
         ("armed-canary", "AWAITING_PRODUCTION_QG_ARMING"),
     ],
 )
-def test_cursor_advances_current_integration_to_the_profile_qg_state(
-    tmp_path: Path, mode: str, expected: str
-) -> None:
+def test_cursor_advances_current_integration_to_the_profile_qg_state(tmp_path: Path, mode: str, expected: str) -> None:
     repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
     if mode == "armed-canary":
         profiles_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
@@ -1254,18 +1302,34 @@ def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority
     assert resumed["run"]["status"] == "active"
     assert resumed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert event["from_state"] == "COMPLETE"
-    assert tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
-        "final"
-    ] == "not-certified"
+    assert (
+        tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
+            "final"
+        ]
+        == "not-certified"
+    )
 
 
 def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evidence(tmp_path: Path) -> None:
     repo, config_path, _ledger_root, _ledger, inputs = _completion_case(tmp_path)
     git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     subprocess.run(["git", "init", str(repo)], check=True, capture_output=True, text=True, env=git_env, timeout=30)
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
-        ["git", "-C", str(repo), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
+        ["git", "-C", str(repo), "add", "."], check=True, capture_output=True, text=True, env=git_env, timeout=30
+    )
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo),
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "-m",
+            "fixture",
+        ],
         check=True,
         capture_output=True,
         text=True,
@@ -1361,10 +1425,7 @@ def test_certification_profile_selection_is_level_sensitive_and_unarmed() -> Non
     assert config["selectors"]["tracks"]["bio"] == "bio-pending"
     assert config["selectors"]["manifest_types"]["core"] == "core-pending"
     assert config["selectors"]["manifest_types"]["track"] == "seminar-pending"
-    assert all(
-        profile["production_qg"]["mode"] != "armed-canary"
-        for profile in config["profiles"].values()
-    )
+    assert all(profile["production_qg"]["mode"] != "armed-canary" for profile in config["profiles"].values())
 
 
 def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
@@ -1404,9 +1465,7 @@ def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
     monkeypatch.setattr(
         tc,
         "_advance_certification_cursor",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            OSError("simulated crash after migration commit")
-        ),
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("simulated crash after migration commit")),
     )
     with pytest.raises(OSError, match="simulated crash"):
         tc.migrate_terminal_goal(
@@ -1444,22 +1503,16 @@ def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
     assert migrated["terminal_goal"] == "deploy"
     assert migrated["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert replayed == migrated
-    assert sum(
-        item["event"] == "TERMINAL_GOAL_MIGRATED" for item in migrated["history"]
-    ) == 1
+    assert sum(item["event"] == "TERMINAL_GOAL_MIGRATED" for item in migrated["history"]) == 1
 
 
-def test_certification_evidence_crash_replay_advances_once(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_certification_evidence_crash_replay_advances_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
     ledger["publication"] = None
     ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
-    evidence = _write_external_evidence(
-        tmp_path, "crash-independent.json", _independent_value(inputs)
-    )
+    evidence = _write_external_evidence(tmp_path, "crash-independent.json", _independent_value(inputs))
     real_advance = tc._advance_certification_cursor
 
     def crash_after_commit(*_args: Any, **_kwargs: Any):
@@ -1487,9 +1540,7 @@ def test_certification_evidence_crash_replay_advances_once(
 
     assert resumed["state"] == "PUBLISH_REQUIRED"
     assert len(resumed["certification_evidence"]) == 1
-    assert sum(
-        item["event"] == "CERTIFICATION_CURSOR_ADVANCED" for item in resumed["history"]
-    ) == 1
+    assert sum(item["event"] == "CERTIFICATION_CURSOR_ADVANCED" for item in resumed["history"]) == 1
 
 
 def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempotent(
@@ -1520,9 +1571,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
         "identity": inputs["qg_identity"],
         "route": route,
     }
-    qualification_path = _write_external_evidence(
-        tmp_path, "runtime-qualification.json", qualification
-    )
+    qualification_path = _write_external_evidence(tmp_path, "runtime-qualification.json", qualification)
     card = tc.production_qg_decision_card(
         inputs["target"],
         run_id=ledger["run"]["run_id"],
@@ -1550,9 +1599,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
     monkeypatch.setattr(
         tc,
         "_advance_certification_cursor",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            OSError("simulated crash after arming commit")
-        ),
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("simulated crash after arming commit")),
     )
     with pytest.raises(OSError, match="simulated crash"):
         tc.record_qg_authorization(
@@ -1586,9 +1633,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
     assert armed["state"] == "PRODUCTION_QG_REQUIRED"
     assert replayed["state"] == armed["state"]
     assert replayed["production_qg_authorization"] == armed["production_qg_authorization"]
-    assert sum(
-        item["event"] == "PRODUCTION_QG_AUTHORIZED" for item in armed["history"]
-    ) == 1
+    assert sum(item["event"] == "PRODUCTION_QG_AUTHORIZED" for item in armed["history"]) == 1
 
     qualification_path.unlink()
     arming_path.unlink()
@@ -1603,9 +1648,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
 
     same_family = copy.deepcopy(qualification)
     same_family["route"]["family"] = "codex"
-    same_family_path = _write_external_evidence(
-        tmp_path, "same-family-qualification.json", same_family
-    )
+    same_family_path = _write_external_evidence(tmp_path, "same-family-qualification.json", same_family)
     ledger = tc._read_ledger(path)
     assert ledger is not None
     ledger["state"] = "AWAITING_PRODUCTION_QG_ARMING"
@@ -1623,9 +1666,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
 
     policy_qualification = copy.deepcopy(qualification)
     policy_qualification["route"]["family"] = "deepseek"
-    policy_path = _write_external_evidence(
-        tmp_path, "forbidden-family-qualification.json", policy_qualification
-    )
+    policy_path = _write_external_evidence(tmp_path, "forbidden-family-qualification.json", policy_qualification)
     real_resolve_target = tc.resolve_target
 
     def policy_target(*args: Any, **kwargs: Any):
@@ -1663,9 +1704,7 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
             "budget": policy_qualification["route"]["budget"],
         }
     )
-    policy_arming_path = _write_external_evidence(
-        tmp_path, "forbidden-family-arming.json", policy_arming
-    )
+    policy_arming_path = _write_external_evidence(tmp_path, "forbidden-family-arming.json", policy_arming)
     with pytest.raises(tc.CompletionError, match="track reviewer policy"):
         tc.record_qg_authorization(
             inputs["target"],
@@ -1712,13 +1751,10 @@ def test_deployment_receipt_requires_exact_merge_sha_and_target_marker() -> None
                 "marker_sha256": hashlib.sha256(marker.encode()).hexdigest(),
                 "body_sha256": _sha("deployed-body"),
                 "deployment_marker_url": (
-                    "https://learn-ukrainian.github.io/.well-known/"
-                    f"learn-ukrainian-deployment-{'a' * 40}.txt"
+                    f"https://learn-ukrainian.github.io/.well-known/learn-ukrainian-deployment-{'a' * 40}.txt"
                 ),
                 "deployed_head_sha": "a" * 40,
-                "deployment_marker_body_sha256": hashlib.sha256(
-                    f"{'a' * 40}\n".encode()
-                ).hexdigest(),
+                "deployment_marker_body_sha256": hashlib.sha256(f"{'a' * 40}\n".encode()).hexdigest(),
                 "verified_at": "2026-07-15T00:00:00Z",
             },
         },
@@ -1791,9 +1827,7 @@ def test_deploy_terminal_stays_active_until_exact_receipt(
         "identity": inputs["qg_identity"],
         "route": route,
     }
-    qualification_path = _write_external_evidence(
-        tmp_path, "deploy-qualification.json", qualification
-    )
+    qualification_path = _write_external_evidence(tmp_path, "deploy-qualification.json", qualification)
     card = ce.qg_decision_card(
         qualification_path,
         target=inputs["target"],
@@ -1857,9 +1891,7 @@ def test_deploy_terminal_stays_active_until_exact_receipt(
         "profile": inputs["profile"],
         "preparation_identity": inputs["preparation_identity"],
         "learner_hashes": inputs["learner_hashes"],
-        "workflow_identity": tc.sha256_file(
-            repo / ".github/workflows/deploy-pages.yml"
-        ),
+        "workflow_identity": tc.sha256_file(repo / ".github/workflows/deploy-pages.yml"),
         "publication": {"pr": 5156, "merge_sha": "b" * 40},
         "deployment": {
             "workflow": {
@@ -1884,20 +1916,15 @@ def test_deploy_terminal_stays_active_until_exact_receipt(
                 "marker_sha256": hashlib.sha256(marker.encode()).hexdigest(),
                 "body_sha256": _sha("deployed-module-body"),
                 "deployment_marker_url": (
-                    "https://learn-ukrainian.github.io/.well-known/"
-                    f"learn-ukrainian-deployment-{'b' * 40}.txt"
+                    f"https://learn-ukrainian.github.io/.well-known/learn-ukrainian-deployment-{'b' * 40}.txt"
                 ),
                 "deployed_head_sha": "b" * 40,
-                "deployment_marker_body_sha256": hashlib.sha256(
-                    f"{'b' * 40}\n".encode()
-                ).hexdigest(),
+                "deployment_marker_body_sha256": hashlib.sha256(f"{'b' * 40}\n".encode()).hexdigest(),
                 "verified_at": "2026-07-15T00:00:00Z",
             },
         },
     }
-    deployment_path = _write_external_evidence(
-        tmp_path, "deploy-receipt.json", deployment
-    )
+    deployment_path = _write_external_evidence(tmp_path, "deploy-receipt.json", deployment)
     _, completed = tc.record_certification_evidence(
         inputs["target"],
         run_id=ledger["run"]["run_id"],
@@ -1959,9 +1986,7 @@ def test_deployment_verifier_queries_exact_run_and_production_bytes(
 
     def fake_run(args: list[str], **_kwargs: Any) -> subprocess.CompletedProcess[str]:
         payload = comparison_payload if "/compare/" in args[-1] else workflow_payload
-        return subprocess.CompletedProcess(
-            args=args, returncode=0, stdout=json.dumps(payload), stderr=""
-        )
+        return subprocess.CompletedProcess(args=args, returncode=0, stdout=json.dumps(payload), stderr="")
 
     monkeypatch.setattr(tc.subprocess, "run", fake_run)
 
@@ -2001,10 +2026,7 @@ def test_deployment_verifier_queries_exact_run_and_production_bytes(
     assert receipt["publication"]["merge_sha"] == "b" * 40
     assert receipt["deployment"]["workflow"]["head_sha"] == workflow_payload["head_sha"]
     assert receipt["deployment"]["verification"]["marker"] == inputs["target"]
-    assert (
-        receipt["deployment"]["verification"]["deployed_head_sha"]
-        == workflow_payload["head_sha"]
-    )
+    assert receipt["deployment"]["verification"]["deployed_head_sha"] == workflow_payload["head_sha"]
     assert json.loads(out.read_text(encoding="utf-8")) == receipt
 
     workflow_payload["event"] = "push"
