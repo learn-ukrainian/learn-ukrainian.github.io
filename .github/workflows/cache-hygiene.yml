@@ -3,9 +3,12 @@ name: Cache hygiene
 # Deletes dead Actions cache entries so the repository stays under GitHub's
 # 10 GB cache limit, whose LRU eviction otherwise drops live entries such as
 # main's uv cache (#9101). Rules live in scripts/ci/cache_hygiene.py:
-# keep the newest CodeQL TRAP entry per language and CodeQL version on main,
-# drop TRAP entries on other refs, and drop superseded setup-uv entries on main
-# after 24 h unread. Every other entry is left alone.
+# on main keep the newest CodeQL TRAP entry per language and CodeQL version
+# plus every TRAP entry at an open pull request's base commit (the exact key
+# CodeQL restores for that PR), drop TRAP entries on other refs, and drop
+# superseded setup-uv entries on main after 24 h unread. Every other entry is
+# left alone. If the cache or open-PR listing cannot be proven complete, the
+# run exits without deleting anything.
 #
 # CodeQL runs as GitHub default setup (no workflow file, trap caching cannot be
 # turned off) and saves ~247 MB per main commit, so this runs every two hours:
@@ -35,6 +38,7 @@ jobs:
     permissions:
       actions: write
       contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
