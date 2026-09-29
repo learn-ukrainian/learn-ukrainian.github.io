@@ -126,7 +126,7 @@
     "js-yaml": "^4.3.2",
     "brace-expansion@1": "1.1.18",
     "brace-expansion@2": "2.1.4",
-    "markdown-it": ">=14.2.0",
+    "markdown-it": ">=15.0.2",
     "adm-zip": "0.6.0"
   }
 }
