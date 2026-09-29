@@ -872,6 +872,22 @@ def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) ->
     return path.resolve()
 
 
+def _helper_worktree_path(raw_path: str | None, validated_path: Path | None) -> Path:
+    """Return the path a worktree helper operates on (#8775).
+
+    ``validated_path`` is the path dispatch resolved once at validation and
+    re-checked after taking the worktree lock. It is used exactly as given:
+    resolving it again would follow a symlink swapped in after that re-check.
+    Only ``raw_path``, from direct callers that have no validated path, is
+    resolved here.
+    """
+    if validated_path is not None:
+        return validated_path
+    if raw_path is None:
+        raise ValueError("a worktree helper needs raw_path or validated_path")
+    return _normalize_worktree_path(raw_path)
+
+
 # Caller-supplied paths reach the worker prompt, task records, and subprocess
 # cwd (#8775). Controls (Cc: C0, C1, DEL) and line/paragraph separators (Zl,
 # Zp) can start a new line in a prompt; format controls (Cf: bidi overrides
@@ -975,11 +991,19 @@ def _validated_path_changed_error(flag: str, validated: Path) -> str | None:
 
     ``validated`` was fully resolved at validation time, so it keeps resolving
     to itself until one of its components is replaced by a symlink. Dispatch
-    calls this after taking the worktree lock and immediately before handing
-    the path to git, so a swap after validation is refused instead of
-    redirecting the lock, git operations, or the worker. A swap inside the
-    remaining window between this check and git's own path lookup is not
-    detectable here: git takes a path, not a directory handle.
+    calls this after taking the worktree lock and before the worktree helpers
+    run, and the helpers use ``validated`` as given without resolving it again
+    (:func:`_helper_worktree_path`), so a swap after validation is refused
+    instead of redirecting the lock, git operations, or the worker.
+
+    Scope: the prompt-injection vector of #8775 is closed by the character
+    check on the raw and resolved paths plus JSON quoting in the worker
+    prompt. Path containment is checked on real directories and re-checked
+    here, after the lock. A symlink swap in the remaining gap (after this
+    check, while git or the filesystem follows the path) needs a process
+    running as the same user with write access to ``.worktrees/dispatch/``.
+    Such a process already holds every capability the dispatcher has, so the
+    race grants it nothing new; it is out of scope.
     """
     try:
         current: Path | None = validated.resolve()
@@ -2138,24 +2162,31 @@ def _ensure_sibling_repo_worktree(
     repo_root: Path,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str = "main",
     dry_run: bool = False,
     run_nonce: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
     Public-primary helpers (sparse checkout, data symlinks, mirror-aware
     ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
     fetch + ``git worktree add`` path so private product/infra trees are not
-    forced through public monorepo provisioning (#672 P2.1).
+    forced through public monorepo provisioning (#672 P2.1). ``validated_path``,
+    when given, is used as is and never resolved again (#8775).
     """
     root = Path(repo_root).resolve()
-    path = Path(raw_path).expanduser()
-    if not path.is_absolute():
-        path = root / path
-    worktree_path = path.resolve()
+    if validated_path is not None:
+        worktree_path = validated_path
+    elif raw_path is None:
+        raise ValueError("a worktree helper needs raw_path or validated_path")
+    else:
+        path = Path(raw_path).expanduser()
+        if not path.is_absolute():
+            path = root / path
+        worktree_path = path.resolve()
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
@@ -6564,21 +6595,23 @@ def _resolve_worktree_base_sha(
     *,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
     pinned_head_sha: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
     A dispatch receipt and its worker must bind the same checkout state. This
     helper performs moving-ref validation first, then returns the SHA passed to
     :func:`_ensure_worktree`. The latter must not fetch, rebase, or dereference
-    a branch again when the SHA is supplied.
+    a branch again when the SHA is supplied. ``validated_path``, when given, is
+    used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
     """
-    worktree_path = _normalize_worktree_path(raw_path)
+    worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
     if detached and worktree_path.exists():
         raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
@@ -6682,7 +6715,7 @@ def _ensure_worktree(
     *,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str = "main",
     branch: str | None = None,
     resolved_base_sha: str | None = None,
@@ -6691,11 +6724,14 @@ def _ensure_worktree(
     sparse_include: Sequence[str] = (),
     run_nonce: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
-    is recorded under (see :func:`_add_reserved_worktree`).
+    is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
+    when given, is used as is and never resolved again (#8775,
+    :func:`_helper_worktree_path`).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -6707,7 +6743,7 @@ def _ensure_worktree(
       than created.
     - ``sparse``: sparse-checkout profile telemetry (when applied).
     """
-    worktree_path = _normalize_worktree_path(raw_path)
+    worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
     if detached and requested_branch:
         raise ValueError("detached worktree cannot attach a branch")
@@ -8712,7 +8748,10 @@ def _dispatch(
     # worker prompt. Every later step uses the resolved paths returned here,
     # never the caller's strings. An explicit --worktree PATH must stay inside
     # the dispatching agent's own dispatch subtree; --cwd keeps its documented
-    # read-only-primary and sibling-repo flows.
+    # read-only-primary and sibling-repo flows. Read-only git lookups between
+    # here and the worktree lock (the write-mode worktree check, the cursor
+    # review check, --preflight-triage) may run git in the validated path; the
+    # path is re-checked after the lock, before any step that changes it.
     worktree_arg = getattr(args, "worktree", None)
     validated_worktree: Path | None = None
     validated_cwd: Path | None = None
@@ -9480,7 +9519,7 @@ def _dispatch(
                     )
                 )
             # #8775: an explicit path is locked as validated, then re-checked
-            # before the first git operation touches it.
+            # before the base-SHA and worktree helpers run; they use it as is.
             changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
             if changed_error:
                 raise ValueError(changed_error.removeprefix("❌ "))
@@ -9489,6 +9528,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_worktree_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9612,6 +9652,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9801,6 +9842,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9815,6 +9857,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     run_nonce=run_nonce,
                     detached=detached_read_only,
@@ -9825,9 +9868,12 @@ def _dispatch(
             stdout_fd.close()
             stderr_fd.close()
             # Record the resolved absolute path like every other writer (#8610);
-            # a path that cannot even be resolved is kept verbatim.
+            # a path that cannot even be resolved is kept verbatim. A validated
+            # explicit path is recorded as validated, not resolved again (#8775).
             try:
-                failed_worktree_path = str(_normalize_worktree_path(resolved_raw, repo_root=target_repo_root))
+                failed_worktree_path = str(
+                    validated_worktree or _normalize_worktree_path(resolved_raw, repo_root=target_repo_root)
+                )
             except (OSError, RuntimeError, ValueError):
                 failed_worktree_path = resolved_raw
             _record_worktree_prep_failure(
@@ -9879,8 +9925,10 @@ def _dispatch(
             return 1
     elif validated_cwd is not None:
         candidate_cwd = validated_cwd
-        # #8775: the validated cwd is re-checked before git inspects it and
-        # again under the lock below.
+        # #8775: the validated cwd is re-checked before the registered-worktree
+        # lookup below and again under the lock. In write-capable modes (and
+        # for a cursor review attempt) an earlier read-only lookup already ran
+        # git in this path, before either re-check.
         changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
         if changed_error:
             stdout_fd.close()

@@ -657,14 +657,29 @@ external command. Only the per-task parent-record read, invocation attribution,
 and the `--repo` lookup run first, and none of them runs a command. Every later
 step (the worktree lock, git operations, provisioning, the task record, and the
 worker prompt) uses the resolved path from that validation, never the caller's
-string. After the lock is taken and before the first git operation, dispatch
-checks that the validated path still resolves to itself and refuses if a
-component has since been replaced by a symlink. A swap in the short window
-between that check and git's own path lookup is not detectable, because git
-takes a path rather than a directory handle.
+string. The order after validation is:
 
-The worker prompt renders the worktree path as a JSON-quoted value, so a path
-is data, never an instruction.
+1. Read-only checks can run git with the validated path as its working
+   directory: the write-mode worktree check (`git rev-parse` and
+   `git worktree list`, for `--cwd` and an explicit `--worktree`), the cursor
+   review-attempt check for `--cwd`, and `git diff` under `--preflight-triage`.
+2. For `--cwd`, dispatch checks that the validated path still resolves to
+   itself, looks up the registered worktree that contains it, and takes the
+   worktree lock. For `--worktree`, it takes the lock.
+3. Under the lock, dispatch checks again that the validated path still resolves
+   to itself and refuses if a component has since been replaced by a symlink.
+4. The base-SHA and worktree-creation helpers then use that validated path as
+   given; they do not resolve it again.
+
+The prompt-injection vector (#8775) is closed by the character check on the raw
+and resolved paths and by JSON quoting: the worker prompt renders the worktree
+path as a JSON-quoted value, so a path is data, never an instruction. Path
+containment is checked on real directories and re-checked after the lock. A
+symlink swap in the gap that remains (after the step-3 check, while git or the
+filesystem follows the path) needs a process running as the same user with
+write access to `.worktrees/dispatch/`. Such a process already holds every
+capability the dispatcher has, so the race grants it nothing new; it is out of
+scope.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into

@@ -9743,6 +9743,93 @@ def test_cwd_swapped_after_validation_cannot_redirect_git_or_the_worker(tmp_task
     assert inspected == [] and spawned == []
 
 
+def _refuse_resolving_again(*_args, **_kwargs):
+    raise AssertionError("a worktree helper resolved the validated path again (#8775)")
+
+
+class _HelperReachedGit(Exception):
+    """Stops a worktree helper at its first git step, after it has chosen its path."""
+
+
+@pytest.mark.parametrize("helper", ["_resolve_worktree_base_sha", "_ensure_worktree", "_ensure_sibling_repo_worktree"])
+def test_worktree_helpers_use_the_validated_path_without_resolving_it_again(tmp_path, monkeypatch, helper):
+    """#8775: a symlink swapped in after the post-lock re-check cannot redirect a helper.
+
+    The validated path is now a symlink out of the repository. A helper that
+    resolved it again would operate on the symlink's target (or, with the
+    resolver patched to raise, fail) instead of the validated path.
+    """
+    root = tmp_path / "primary"
+    validated = root / ".worktrees" / "dispatch" / "codex" / "task-1"
+    validated.parent.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    validated.symlink_to(outside, target_is_directory=True)
+    monkeypatch.setattr(delegate, "_normalize_worktree_path", _refuse_resolving_again)
+    seen: list[Path] = []
+    monkeypatch.setattr(delegate, "_validate_existing_worktree", lambda *, path, **_k: seen.append(path) or False)
+
+    def stop_at_git(path, *_args):
+        seen.append(path)
+        raise _HelperReachedGit
+
+    monkeypatch.setattr(delegate, "_resolve_sha", stop_at_git)
+    kwargs = {"agent": "codex", "task_id": "task-1", "validated_path": validated, "base": "main"}
+    if helper == "_resolve_worktree_base_sha":
+        kwargs["branch"] = None
+    if helper == "_ensure_sibling_repo_worktree":
+        kwargs["repo_root"] = root
+
+    with pytest.raises(_HelperReachedGit):
+        getattr(delegate, helper)(**kwargs)
+
+    assert seen and all(path == validated for path in seen)
+
+
+def test_dispatch_helpers_do_not_resolve_the_worktree_after_the_post_lock_check(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#8775: once the path passes the re-check under the lock, no helper resolves it again."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    real_check = delegate._validated_path_changed_error
+
+    def check_then_refuse_resolution(flag, validated):
+        error = real_check(flag, validated)
+        if error is None:
+            monkeypatch.setattr(delegate, "_normalize_worktree_path", _refuse_resolving_again)
+        return error
+
+    monkeypatch.setattr(delegate, "_validated_path_changed_error", check_then_refuse_resolution)
+    helper_paths: list[Path] = []
+    monkeypatch.setattr(
+        delegate, "_validate_existing_worktree", lambda *, path, **_k: helper_paths.append(path) or False
+    )
+    real_resolve_sha = delegate._resolve_sha
+
+    def resolve_sha(path, *args):
+        if path != dispatch_wt:
+            return real_resolve_sha(path, *args)
+        helper_paths.append(path)
+        if len(helper_paths) == 3:
+            raise ValueError("stopped at the worktree helper's first git step")
+        return real_resolve_sha(path, *args)
+
+    monkeypatch.setattr(delegate, "_resolve_sha", resolve_sha)
+    spawned: list[object] = []
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
+
+    rc = delegate.cmd_dispatch(_write_args(task_id="task-1", worktree=str(dispatch_wt)))
+
+    assert rc == 1
+    assert "stopped at the worktree helper's first git step" in capsys.readouterr().err
+    # The base-SHA helper validates the checkout and reads HEAD; the worktree
+    # helper, given that pinned SHA, reads HEAD.
+    assert helper_paths[:3] == [dispatch_wt] * 3 and spawned == []
+
+
 def test_worktree_block_renders_the_path_as_quoted_data():
     """#8775: a normal dispatch path renders JSON-quoted and unchanged; nothing it holds can start a line."""
     worktree = Path("/repo/.worktrees/dispatch/codex/task-1")
