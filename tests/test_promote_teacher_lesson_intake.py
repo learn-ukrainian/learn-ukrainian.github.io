@@ -22,6 +22,7 @@ from scripts.lexicon.promote_teacher_lesson_intake import (
     PROJECT_ROOT,
     promote,
 )
+from scripts.verification.vesum import InspectionStatus, inspect_words
 
 DELTA_INVENTORY = (
     PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-09-02-delta.yaml"
@@ -65,6 +66,203 @@ def test_default_full_decisions_is_a_committed_repository_file() -> None:
         / "2026-07-23-alona-full-document-intake.yaml"
     )
     assert DEFAULT_FULL_DECISIONS.is_file()
+
+
+def test_case_preserved_vesum_proper_names_do_not_resolve_to_common_noun(tmp_path, monkeypatch) -> None:
+    db = tmp_path / "vesum.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.executemany(
+            "INSERT INTO forms VALUES (?,?,?,?)",
+            [
+                ("Бандера", "Бандера", "noun", "noun:anim:m:v_naz:prop:lname"),
+                ("бандера", "бандера", "noun", "noun:anim:m:v_naz"),
+                ("Вифлеєм", "Вифлеєм", "noun", "noun:inanim:m:v_naz:prop:geo"),
+            ],
+        )
+    analyses = promote_module._vesum_analyses(["Бандера", "Вифлеєм", "бандера"], db)
+    assert promote_module._canonical_lemma("Бандера", analyses["Бандера"], preserve_case=True) == "Бандера"
+    assert promote_module._canonical_lemma("Вифлеєм", analyses["Вифлеєм"], preserve_case=True) == "Вифлеєм"
+    assert promote_module._vesum_pos(analyses["Бандера"], reviewed_proper_name=True) == "proper noun"
+    assert promote_module._vesum_pos(analyses["Вифлеєм"], reviewed_proper_name=True) == "proper noun"
+    assert promote_module._vesum_pos(analyses["бандера"]) == "noun"
+
+    ledger = tmp_path / "reviewed.yaml"
+    ledger.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": lemma,
+                        "decision": "approve_for_publish",
+                        "approved_pos": "proper noun",
+                        "approved_gloss": gloss,
+                        "source_inventory": {"locator": f"explicit vocabulary table 1 row {i}"},
+                    }
+                    for i, (lemma, gloss) in enumerate(
+                        [("Бандера", "Bandera (surname)"), ("Вифлеєм", "Bethlehem")], start=1
+                    )
+                ],
+            },
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    assert promote_module._read_full_rows(ledger)[0].lemma == "Бандера"
+    monkeypatch.setattr(promote_module, "_read_curated_rows", lambda _: [])
+    monkeypatch.setattr(promote_module, "_dictionary_glosses", lambda *args: ({}, set()))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    candidates, decisions, report = promote_module._build_rows(
+        ledger, tmp_path / "unused-curated.yaml", manifest, db, None
+    )
+    assert report["canonical_lemmas"] == 2
+    assert {(entry["lemma"], entry["pos"], entry["gloss"]) for entry in candidates} == {
+        ("Бандера", "proper noun", "Bandera (surname)"),
+        ("Вифлеєм", "proper noun", "Bethlehem"),
+    }
+    assert {decision["lemma"] for decision in decisions} == {"Бандера", "Вифлеєм"}
+
+
+def test_unreviewed_all_caps_keep_original_candidates(tmp_path, monkeypatch) -> None:
+    db = tmp_path / "vesum.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.executemany(
+            "INSERT INTO forms VALUES (?,?,?,?)",
+            [
+                ("застій", "застій", "noun", "noun:inanim:m:v_naz"),
+                ("застій", "застояти", "verb", "verb:imperf"),
+                ("штабу", "штаб", "noun", "noun:inanim:m:v_rod"),
+                ("штабу", "штаба", "noun", "noun:inanim:m:v_rod"),
+                ("ДНК", "ДНК", "abbr", "abbr"),
+            ],
+        )
+    ledger = tmp_path / "reviewed.yaml"
+    ledger.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": lemma,
+                        "decision": "approve_for_publish",
+                        "approved_gloss": "test term",
+                        "source_inventory": {"locator": f"explicit vocabulary table 1 row {i}"},
+                    }
+                    for i, lemma in enumerate(["ЗАСТІЙ", "застій", "ШТАБУ", "ДНК"], start=1)
+                ]
+            },
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(promote_module, "_read_curated_rows", lambda _: [])
+    monkeypatch.setattr(promote_module, "_dictionary_glosses", lambda *args: ({}, set()))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    candidates, _, _ = promote_module._build_rows(ledger, tmp_path / "unused.yaml", manifest, db, None)
+    assert [entry["lemma"] for entry in candidates] == ["застій", "штабу"]
+
+
+def test_reviewed_name_without_exact_proper_analysis_is_held(tmp_path, monkeypatch) -> None:
+    db = tmp_path / "vesum.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.execute("INSERT INTO forms VALUES ('калина','калина','noun','noun:inanim:f:v_naz')")
+    ledger = tmp_path / "reviewed.yaml"
+    ledger.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": "Калина",
+                        "decision": "approve_for_publish",
+                        "approved_pos": "proper noun",
+                        "approved_gloss": "Kalyna (name)",
+                        "source_inventory": {"locator": "explicit vocabulary table 1 row 1"},
+                    }
+                ]
+            },
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(promote_module, "_read_curated_rows", lambda _: [])
+    monkeypatch.setattr(promote_module, "_dictionary_glosses", lambda *args: ({}, set()))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    candidates, decisions, report = promote_module._build_rows(ledger, tmp_path / "unused.yaml", manifest, db, None)
+    assert candidates == decisions == []
+    assert report["held_without_english_anchor"] == 1
+
+
+def test_reviewed_common_words_accept_vesum_even_when_marked_invalid(tmp_path, monkeypatch) -> None:
+    words = ["папка", "накаркати", "деталька", "кохана", "рідні", "озвучка", "чізкейк"]
+    reviewed = json.loads(
+        (PROJECT_ROOT / "registry/lexicon/curated-membership-reconciliation-9151.json").read_text(encoding="utf-8")
+    )
+    table = {row["lemma"]: row for row in reviewed["rows"] if row["lemma"] in words}
+    assert set(table) == set(words)
+    assert {word for word in words if table[word]["vesum"]["status"] == "KNOWN_INVALID"} == {
+        "папка", "накаркати"
+    }
+    assert all(table[word]["ulif_lexical_attestation"] for word in ("папка", "накаркати"))
+    assert all(
+        table[word]["decision"] == "ADMIT" and table[word]["vesum"]["status"] == "CLEAN"
+        and not table[word]["ulif_lexical_attestation"]
+        for word in ("деталька", "кохана", "рідні", "озвучка", "чізкейк")
+    )
+    db = tmp_path / "vesum.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.executemany(
+            "INSERT INTO forms VALUES (?,?,?,?)",
+            [(word, word, "noun", "noun:v_naz") for word in words],
+        )
+        conn.execute(
+            "CREATE TABLE forms_all (id INTEGER, entry_id INTEGER, word_form TEXT, lemma TEXT, "
+            "pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+        )
+        conn.execute(
+            "CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)"
+        )
+        conn.executemany(
+            "INSERT INTO forms_all VALUES (?,?,?,?,?,?,?,?)",
+            [(i, i, word, word, "noun", "noun:v_naz", None, "fixture") for i, word in enumerate(words, start=1)],
+        )
+        conn.executemany(
+            "INSERT INTO form_markers VALUES (?, 'bad', 'fixture', 'lexical')",
+            [(words.index(word) + 1,) for word in ("папка", "накаркати")],
+        )
+    inspection = inspect_words(words, db_path=db)
+    assert {word for word in words if inspection[word].status == InspectionStatus.KNOWN_INVALID} == {
+        "папка", "накаркати"
+    }
+    ledger = tmp_path / "reviewed.yaml"
+    ledger.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": word,
+                        "decision": "approve_for_publish",
+                        "approved_pos": "noun",
+                        "approved_gloss": "reviewed gloss",
+                        "source_inventory": {"locator": f"explicit vocabulary table 1 row {i}"},
+                    }
+                    for i, word in enumerate(words, start=1)
+                ]
+            },
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(promote_module, "_read_curated_rows", lambda _: [])
+    monkeypatch.setattr(promote_module, "_dictionary_glosses", lambda *args: ({}, set()))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    candidates, _, _ = promote_module._build_rows(ledger, tmp_path / "unused.yaml", manifest, db, None)
+    assert {entry["lemma"] for entry in candidates} == set(words)
 
 
 def test_private_teacher_lesson_delta_inventory_is_privacy_safe(source_records) -> None:
