@@ -6,8 +6,8 @@ import os
 import sys
 from pathlib import Path
 
-# Final-component symlink hops followed while identifying a venv entrypoint.
-# POSIX SYMLOOP_MAX is commonly 40; a longer chain is treated as not a venv.
+# Directory and final-component symlink hops followed while identifying a venv
+# entrypoint. POSIX SYMLOOP_MAX is commonly 40; longer chains fail closed.
 _MAX_SYMLINK_HOPS = 40
 
 
@@ -66,23 +66,25 @@ def _realpath(path: Path) -> Path:
     return Path(resolved)
 
 
-def _resolve_parent_directories(path: Path) -> Path:
-    """View R: ``realpath`` of the parent directory, plus the final component.
+def _first_parent_symlink_hop(parent: Path) -> Path | None:
+    """Expand the first directory symlink in an absolute parent path, if any.
 
-    Venv entrypoints are symlinks to the base toolchain binary. Resolving the
-    file itself drops ``.venv``. A parent such as ``venv-alias -> other/.venv``
-    still has to count, so ``os.path.realpath`` is applied only to the directory
-    that contains the final component. This view is not enough on its own:
-    ``other/.venv -> venv-store`` resolves to ``venv-store/bin/<entry>`` and the
-    unresolved path has to be classified as well.
+    Keep the remaining components for the next pass so every intermediate
+    ``<checkout>/.venv/bin`` view is classified before another hop is taken.
     """
-    text = _absolute_text(path)
-    name = os.path.basename(text)
-    try:
-        parent = os.path.realpath(os.path.dirname(text))
-    except OSError:
-        parent = os.path.normpath(os.path.dirname(text))
-    return Path(parent) / name
+    prefix = Path(parent.anchor)
+    for index, part in enumerate(parent.parts[1:], start=1):
+        if part == "..":
+            prefix = prefix.parent
+            continue
+        next_path = prefix / part
+        if next_path.is_symlink():
+            target = next_path.readlink()
+            if not target.is_absolute():
+                target = prefix / target
+            return target.joinpath(*parent.parts[index + 1 :])
+        prefix = next_path
+    return None
 
 
 def _venv_python(checkout: Path) -> Path:
@@ -106,45 +108,45 @@ def _venv_owners(interpreter: Path) -> set[Path]:
 
     Any direct child of ``.venv/bin`` counts: ``python``, ``python3``, versioned
     ``python3.N``, and every other executable there. Each path is classified
-    twice. View U is the path as given, so ``other/.venv -> venv-store`` still
-    names ``other``. View R is ``realpath`` of the parent directory plus the
-    entrypoint basename, so ``venv-alias -> other/.venv`` names ``other``.
-    Owners are compared after ``realpath``. The two views can name different
-    checkouts; a later check refuses the interpreter when any of them is
-    outside the requested checkout and its primary.
+    at every directory symlink hop, so both ``other/.venv -> venv-store`` and
+    ``venv-alias -> other/.venv -> venv-store`` name ``other``. Owners are
+    compared after ``realpath``. A later check refuses the interpreter when
+    any owner is outside the requested checkout and its primary.
 
-    A file-symlink hop is followed only when neither view names a checkout, so
+    A file-symlink hop is followed only when no directory view names a checkout, so
     a link that lands in ``.venv/bin`` counts even when the link's own path
     does not. The entrypoint is recognized before that hop is followed, so
     ``python3.12`` still counts when it points at a toolchain binary outside
     the venv. A toolchain interpreter such as ``hostedtoolcache/.../bin/python``
     names no checkout.
     """
-    candidate = interpreter
+    candidate = Path(_absolute_text(interpreter))
     seen: set[Path] = set()
+    owners: set[Path] = set()
     for _ in range(_MAX_SYMLINK_HOPS + 1):
         view_u = _lexical_absolute(candidate)
-        if view_u in seen:
-            return set()
-        seen.add(view_u)
-        view_r = _resolve_parent_directories(candidate)
-        owners: set[Path] = set()
-        for view in (view_u, view_r):
-            checkout = _venv_bin_checkout(view)
-            if checkout is not None:
-                owners.add(_realpath(checkout))
+        if candidate in seen:
+            raise FileNotFoundError(f"project interpreter symlink loop: {interpreter}")
+        seen.add(candidate)
+        checkout = _venv_bin_checkout(view_u)
+        if checkout is not None:
+            owners.add(_realpath(checkout))
+        parent_hop = _first_parent_symlink_hop(candidate.parent)
+        if parent_hop is not None:
+            candidate = parent_hop / candidate.name
+            continue
         if owners:
             return owners
-        if not view_r.is_symlink():
+        if not candidate.is_symlink():
             return set()
         try:
-            target = view_r.readlink()
+            target = candidate.readlink()
         except OSError:
             return set()
         if not target.is_absolute():
-            target = view_r.parent / target
+            target = candidate.parent / target
         candidate = target
-    return set()
+    raise FileNotFoundError(f"project interpreter symlink chain exceeds {_MAX_SYMLINK_HOPS} hops: {interpreter}")
 
 
 def project_interpreter(root: Path | None = None) -> Path:
@@ -163,18 +165,16 @@ def project_interpreter(root: Path | None = None) -> Path:
        also has a ``.venv``.
     2. Otherwise that checkout's own ``.venv/bin/python`` when the file exists.
     3. Otherwise ``sys.executable``. This is the CI case: the runner has no
-       project ``.venv``. The executable is classified from the path as given
-       and from ``realpath`` of its parent directory plus the entrypoint
-       basename. A view that contains ``<X>/.venv/bin/<entry>`` names ``X``
+       project ``.venv``. The executable is classified at each directory
+       symlink hop. A view containing ``<X>/.venv/bin/<entry>`` names ``X``
        (compared after ``realpath``), including ``python3.N``, a file symlink
        that resolves into that directory, a directory symlink such as
-       ``venv-alias -> other/.venv``, and ``other/.venv`` when that directory
-       itself is a symlink to a store. The final executable symlink is not
+       ``venv-alias -> other/.venv -> venv-store``. The final executable symlink is not
        resolved: ``python3.N`` points at the toolchain binary, and following it
        would drop ``.venv``. If any named checkout is neither the requested
        checkout nor its primary checkout, the interpreter is refused. It is
-       accepted when every named checkout is one of those two, and when neither
-       view names a checkout (hosted CI Python).
+       accepted when every named checkout is one of those two, and when no
+       view names a checkout (hosted CI Python). Symlink loops fail closed.
     """
     repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
     primary_root = main_checkout_root(repo)
