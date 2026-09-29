@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import copy
 import json
-from functools import lru_cache
 from pathlib import Path
 
 import pytest
@@ -24,24 +22,6 @@ from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
 )
 
 MULTIWORD_LEMMAS = sorted(TARGET_ENTRY_TYPES)
-_ORIGINAL_SAFE_LOAD = yaml.safe_load
-
-
-@lru_cache(maxsize=8)
-def _parse_decision_yaml(source: str):
-    return _ORIGINAL_SAFE_LOAD(source)
-
-
-@pytest.fixture(autouse=True)
-def _reuse_read_only_decision_parse(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Parse identical ledger content once, returning private copies to callers."""
-
-    def safe_load(source):
-        if not isinstance(source, str):
-            return _ORIGINAL_SAFE_LOAD(source)
-        return copy.deepcopy(_parse_decision_yaml(source))
-
-    monkeypatch.setattr(yaml, "safe_load", safe_load)
 
 
 @pytest.fixture(scope="module")

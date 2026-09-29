@@ -366,6 +366,16 @@ _GIT_TREE_TOKENS = frozenset({"ls-files", "ls-tree"})
 _TMP_RECEIVER_TOKENS = ("tmp_path", "tmpdir")
 
 _WALK_ATTRS = frozenset({"glob", "rglob", "iterdir"})
+_SCAN_SOURCE_TOKENS = _WALK_ATTRS | {"walk", "scandir"} | _KNOWN_SCANNER_CALLS
+
+
+def _could_contain_scan(source: str) -> bool:
+    # The Git argv literal can be split or escaped across string tokens.
+    return (
+        any(token in source for token in _SCAN_SOURCE_TOKENS)
+        or ("ls" in source and ("files" in source or "tree" in source))
+        or ("subprocess" in source and "\\" in source)
+    )
 
 
 def _test_module_paths() -> list[Path]:
@@ -588,13 +598,26 @@ def _function_marked(tree: ast.Module, function: str) -> bool:
     )
 
 
-def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
+def _implicated_test_functions(tree: ast.Module, source: str | None = None) -> dict[str, list[str]]:
     """Test functions that scan a repo tree directly or via a scanning helper."""
     functions = _top_level_functions(tree)
     repo_root_names = _module_repo_root_names(tree)
     module_bindings = _scope_bindings(tree.body)
+    lines = source.splitlines(keepends=True) if source is not None else None
+    function_source = (
+        {
+            name: "".join(
+                lines[min((d.lineno for d in node.decorator_list), default=node.lineno) - 1 : node.end_lineno]
+            )
+            for name, (node, _owner) in functions.items()
+        }
+        if lines is not None
+        else {}
+    )
     direct: dict[str, list[str]] = {}
     for name, (node, _owner) in functions.items():
+        if lines is not None and not _could_contain_scan(function_source[name]):
+            continue
         bindings = {**module_bindings, **_scope_bindings(node.body)}
         root_names = repo_root_names | _bindings_repo_root_names(bindings, repo_root_names)
         if sites := _direct_scan_sites(node, root_names, bindings):
@@ -607,13 +630,21 @@ def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
     # scanning helper is itself a scanner, even when the chain passes through
     # helpers that do not scan on their own. Method keys are ``Class.method``, so
     # compare on the bare callable name.
+    function_calls: dict[str, set[str]] = {}
     implicated_all = set(direct)
     changed = True
     while changed:
         changed = False
         bare = {name.rsplit(".", 1)[-1] for name in implicated_all}
         for name, (node, _owner) in functions.items():
-            if name not in implicated_all and calls(node) & bare:
+            if name in implicated_all:
+                continue
+            if lines is not None and not any(called in function_source[name] for called in bare):
+                continue
+            if name not in function_calls:
+                function_calls[name] = calls(node)
+            called = function_calls[name]
+            if called & bare:
                 implicated_all.add(name)
                 changed = True
 
@@ -646,7 +677,7 @@ def _cached_scan_facts(filename: str, source: str) -> tuple[frozenset[str], froz
     tree = ast.parse(source, filename=filename)
     return (
         frozenset(_top_level_functions(tree)),
-        frozenset(_implicated_test_functions(tree)),
+        frozenset(_implicated_test_functions(tree, source)),
         tuple(_module_level_scan_sites(tree)),
     )
 
@@ -659,10 +690,16 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
     """
     missing: list[str] = []
     for module in _test_module_paths():
+        source = module.read_text(encoding="utf-8")
+        # Every supported direct scanner contains one of these names or the
+        # literal git argv prefix. Skip modules that cannot have a scan site;
+        # the AST pass remains authoritative for every possible candidate.
+        if not _could_contain_scan(source):
+            continue
         relative = module.relative_to(_REPO_ROOT).as_posix()
-        tree = _parse(module)
+        tree = ast.parse(source, filename=str(module))
         module_marked = _module_marked(tree)
-        for function, sites in _implicated_test_functions(tree).items():
+        for function, sites in _implicated_test_functions(tree, source).items():
             node_id = f"{relative}::{function}"
             if node_id in NOT_REPO_WIDE:
                 continue
