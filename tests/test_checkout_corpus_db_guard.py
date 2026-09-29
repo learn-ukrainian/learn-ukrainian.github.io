@@ -33,29 +33,15 @@ def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.mark.parametrize("name", guard._CHECKOUT_CORPUS_DBS)
 @pytest.mark.parametrize(
     "uri_query",
-    [
-        None,
-        "",
-        "?mode=rwc",
-        "?mode=rwc&mode=rwc",
-        "?mode=memory&mode=rwc",
-        "?mode=ro&mode=memory&mode=rwc",
-        "?mode=ro&mode=rwc",
-    ],
-    ids=[
-        "plain-path",
-        "uri-no-mode",
-        "uri-rwc",
-        "uri-rwc-repeated",
-        "uri-memory-then-rwc",
-        "uri-ro-memory-then-rwc",
-        "uri-ro-then-rwc",
-    ],
+    [None, "?mode=rwc", "?mode=memory&mode=rwc", "?mode=rwc%00", "?mode=memory&mode=rwc%00"],
+    ids=["plain-path", "uri-rwc", "uri-memory-then-rwc", "uri-rwc-nul", "uri-memory-then-rwc-nul"],
 )
-def test_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, name: str, uri_query: str | None) -> None:
+def test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_no_file(
+    checkout: Path, name: str, uri_query: str | None
+) -> None:
     target = checkout / name
 
-    with pytest.raises(pytest.fail.Exception, match="would create"):
+    with pytest.raises(pytest.fail.Exception, match="created"):
         if uri_query is None:
             sqlite3.connect(str(target))
         else:
@@ -64,7 +50,7 @@ def test_connect_that_would_create_a_corpus_db_fails_the_test(checkout: Path, na
     assert not target.exists()
 
 
-@pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw", "?mode=rwc&mode=ro", "?mode=rwc&mode=rw"])
+@pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw"])
 def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_creates_nothing(
     checkout: Path, query: str
 ) -> None:
@@ -76,8 +62,8 @@ def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_create
     assert not target.exists()
 
 
-@pytest.mark.parametrize("query", ["?mode=memory", "?mode=rwc&mode=memory"])
-def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path, query: str) -> None:
+def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path) -> None:
+    query = "?mode=memory"
     target = checkout / "data" / "sources.db"
 
     connection = sqlite3.connect(f"{target.as_uri()}{query}", uri=True)
@@ -96,10 +82,12 @@ def test_refusal_is_not_swallowed_by_a_broad_except(checkout: Path) -> None:
         reader()
 
 
-def test_connect_to_an_existing_db_and_to_other_paths_passes(checkout: Path, tmp_path: Path) -> None:
+def test_read_write_connect_to_an_existing_db_and_to_other_paths_passes(checkout: Path, tmp_path: Path) -> None:
     existing = checkout / "data" / "sources.db"
     existing.touch()
-    sqlite3.connect(str(existing)).close()
+    with contextlib.closing(sqlite3.connect(f"{existing.as_uri()}?mode=rw", uri=True)) as connection:
+        connection.execute("CREATE TABLE t (x)")
+    assert existing.stat().st_size > 0
 
     elsewhere = tmp_path / "scratch" / "sources.db"
     elsewhere.parent.mkdir()

@@ -333,8 +333,8 @@ _LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
 # Gitignored corpus databases (#9158). SQLite creates a missing file on a
 # read-write connect, so a reader without ``mode=ro`` leaves an empty
 # ``data/sources.db`` in a checkout that has no corpus (CI, sparse worktrees),
-# and later tests take the empty file for a real database. The audit hook
-# ``_checkout_corpus_db_create_hook`` refuses the creation in this process;
+# and later tests take the empty file for a real database. The connect wrapper
+# ``_checkout_corpus_db_guarded_connect`` refuses the creation in this process;
 # the session snapshot catches creators it cannot see (subprocesses).
 _CHECKOUT_CORPUS_DBS = ("data/sources.db", "data/vesum.db")
 _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY = "_checkout_corpus_db_snapshot"
@@ -912,58 +912,44 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 sys.addaudithook(_task_store_write_hook)
 
 
-def _sqlite_file_creating_path(database: object) -> Path | None:
-    """Return the disk file a ``sqlite3.connect`` creates when it is missing, else ``None``.
-
-    A plain path and a URI with ``mode=rwc`` or no ``mode`` create the file.
-    ``mode=ro`` and ``mode=rw`` raise ``OperationalError`` on a missing file,
-    and ``mode=memory`` opens an in-memory database; none of them create one.
-    SQLite applies repeated ``mode`` parameters in order, so the last one wins:
-    ``mode=memory&mode=rwc`` opens, and creates, the disk file. The audit event
-    carries only the database, and ``sqlite3.connect`` always passes
-    read-write-create flags, so no ``mode`` means ``rwc``. SQLite rejects
-    ``rwc`` after ``ro`` or ``rw``; the guard refuses those opens anyway.
-    """
-    if not isinstance(database, (str, bytes, os.PathLike)):
-        return None
-    raw_path = os.fsdecode(os.fspath(database))
-    if not raw_path.startswith("file:"):
-        return Path(raw_path).resolve()
-    parsed = urlsplit(raw_path)
-    if parse_qs(parsed.query).get("mode", ["rwc"])[-1] != "rwc":
-        return None
-    return Path(unquote(parsed.path)).resolve()
+_REAL_SQLITE3_CONNECT = sqlite3.connect
 
 
-def _checkout_corpus_db_create_hook(event: str, args: tuple[object, ...]) -> None:
-    """Fail a sqlite connect that would create a corpus database in the checkout (#9158).
+@functools.wraps(_REAL_SQLITE3_CONNECT)
+def _checkout_corpus_db_guarded_connect(*args: object, **kwargs: object) -> sqlite3.Connection:
+    """Fail a sqlite connect that created a corpus database in the checkout (#9158).
 
-    The audit event fires before SQLite touches the file, so the refusal
-    prevents the empty database instead of reporting it afterwards. It also
-    fires while modules are imported during collection, where a module-level
-    probe once created the file for every later test in the shard.
+    The guard judges the connect by its effect, not by its arguments: a corpus
+    database missing before the call and present after it was created by the
+    call, whatever the path form, URI ``mode`` or flags. The connection is
+    closed and the new empty file removed before the test fails, so later tests
+    never mistake it for a real corpus. Installed at conftest import, it also
+    covers module-level probes that run while test modules are collected.
     ``pytest.fail`` raises a ``BaseException``, so a caller's ``except
     sqlite3.Error`` / ``except Exception`` cannot swallow the refusal.
-    Opens that cannot create a file (``_sqlite_file_creating_path``) and
-    connects to existing files pass.
+    Existing databases and every other path pass untouched.
     """
-    if event != "sqlite3.connect" or not args:
-        return
-    path = _sqlite_file_creating_path(args[0])
-    if path is None or path.exists():
-        return
-    if path not in {(_REPO_ROOT / name).resolve() for name in _CHECKOUT_CORPUS_DBS}:
-        return
+    targets = [_REPO_ROOT / name for name in _CHECKOUT_CORPUS_DBS]
+    missing = [target for target in targets if not target.exists()]
+    connection = _REAL_SQLITE3_CONNECT(*args, **kwargs)
+    created = [target for target in missing if target.exists()]
+    if not created:
+        return connection
+    connection.close()
+    for target in created:
+        with contextlib.suppress(OSError):
+            if target.stat().st_size == 0:
+                target.unlink()
     node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
     pytest.fail(
-        f"{node} would create {path}: a file-creating sqlite3.connect creates a missing "
-        "database. Open corpus databases read-only (file:...?mode=ro, uri=True) and point "
-        "tests at tmp_path via LU_SOURCES_DB (#9158)",
+        f"{node} created {', '.join(map(str, created))}: a file-creating sqlite3.connect "
+        "creates a missing database. Open corpus databases read-only (file:...?mode=ro, "
+        "uri=True) and point tests at tmp_path via LU_SOURCES_DB (#9158)",
         pytrace=False,
     )
 
 
-sys.addaudithook(_checkout_corpus_db_create_hook)
+sqlite3.connect = _checkout_corpus_db_guarded_connect
 
 
 def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
