@@ -48,6 +48,7 @@ MECHANICAL_CODES = {
     codes.MATCH_UP_TOO_FEW_ITEMS,
     codes.WORKBOOK_TOO_FEW_DECODABLE,
     codes.COUNT_SYLLABLES_ONE_COUNT,
+    codes.CORE_CEFR_ONE_BAND_ABOVE,
     codes.CORE_WORD_NOT_REUSED,
     codes.GRAMMAR_NOT_REUSED,
     codes.COPY_MODEL_LETTER_NOT_TAUGHT,
@@ -218,6 +219,25 @@ def _m2_letter_without_word(plan: dict, pack: dict, words: dict) -> None:
     _activity_of(plan, 1, "a1").update({"type": "pick-syllables", "focus": "Checks the letters М and К."})
 
 
+def _m6_workbook_without_named_words(plan: dict, pack: dict, words: dict) -> None:
+    """Lesson 1's workbook is a pick-syllables naming no word; its pool has one decodable record."""
+    _activity_of(plan, 1, "a4").update({"type": "pick-syllables", "focus": "Complete the words from syllables."})
+
+
+def _by_ear_first_lesson(plan: dict, pack: dict, words: dict) -> None:
+    """Lesson 1 teaches no letter (by ear); lesson 2 teaches all four; lesson 1's workbook names no word."""
+    one, two = _lesson_of(plan, 1), _lesson_of(plan, 2)
+    one["inventory"].pop("phonetics")
+    for step in one["steps"]:
+        step["introduces"]["letters"] = []
+    two["inventory"]["phonetics"]["letters"] = ["М", "А", "Н", "О"]
+    _step_of(plan, 2, "s1")["introduces"]["letters"] = ["М", "А", "Н"]
+    _activity_of(plan, 2, "b1")["focus"] = "Checks the letters М А Н."
+    _activity_of(plan, 1, "a2")["focus"] = "Complete мама and ман."
+    _activity_of(plan, 1, "a3").update({"type": "quiz", "focus": "Listen to the model."})
+    _activity_of(plan, 1, "a4").update({"type": "pick-syllables", "focus": "Complete the words from syllables."})
+
+
 def _m8_word_not_reused(plan: dict, pack: dict, words: dict) -> None:
     _lesson_of(plan, 2)["inventory"]["vocabulary"]["recycled"].remove(MAN)
     _lesson_of(plan, 3)["inventory"]["vocabulary"]["recycled"].remove(MAN)
@@ -307,7 +327,13 @@ CASES = [
         "m5_core_lemma_above_module_level",
         _set_cefr(MAMA, "B1"),
         failures=frozenset({codes.CORE_CEFR_ABOVE_MODULE}),
-        says="'мама' (W-201) is B1",
+        says="'мама' (W-201) is B1 in the word store, 2 bands above",
+    ),
+    Case(
+        "m5_core_lemma_one_band_above_is_a_note",
+        _set_cefr(MAMA, "A2"),
+        notes=frozenset({codes.CORE_CEFR_ONE_BAND_ABOVE}),
+        says="1 band above",
     ),
     Case(
         "m5_core_lemma_without_cefr_is_not_checked",
@@ -333,12 +359,29 @@ CASES = [
         failures=frozenset({codes.WORKBOOK_TOO_FEW_DECODABLE}),
         says="binds 2 decodable",
     ),
+    Case(
+        "m6_workbook_without_named_words_uses_the_lesson_pool",
+        _m6_workbook_without_named_words,
+        failures=frozenset({codes.WORKBOOK_TOO_FEW_DECODABLE}),
+        says="binds 1 decodable word record(s) of the lesson's core and recycled words",
+    ),
+    Case(
+        "m6_workbook_without_named_words_passes_with_three_pool_words",
+        _set_focus(2, "b3", "Complete the words from syllables."),
+    ),
+    Case("m6_workbook_in_a_by_ear_lesson_is_not_a_decoding_task", _by_ear_first_lesson),
     # M7 -- one distinct syllable count
     Case(
         "m7_count_syllables_set_has_one_count",
         _set_focus(1, "a4", "Count syllables in мама and мана."),
         failures=frozenset({codes.COUNT_SYLLABLES_ONE_COUNT}),
-        says="all have 2 syllable(s)",
+        says="whose words all have 2 syllable(s)",
+    ),
+    Case(
+        "m7_count_syllables_without_named_words_uses_the_lesson_pool",
+        _set_focus(1, "a4", "Count the syllables in each word."),
+        failures=frozenset({codes.COUNT_SYLLABLES_ONE_COUNT}),
+        says="the lesson's decodable core and recycled words мама",
     ),
     Case(
         "m7_count_syllables_word_without_a_record_is_not_checked",
@@ -347,9 +390,9 @@ CASES = [
     ),
     # M8 -- introduced and never reused
     Case(
-        "m8_core_word_never_reused",
+        "m8_core_word_never_reused_is_a_note",
         _m8_word_not_reused,
-        failures=frozenset({codes.CORE_WORD_NOT_REUSED}),
+        notes=frozenset({codes.CORE_WORD_NOT_REUSED}),
         says="core word W-204 ('ман') is never used or recycled by lessons 2–3",
     ),
     Case(
