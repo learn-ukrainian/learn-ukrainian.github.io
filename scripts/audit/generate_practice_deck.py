@@ -58,9 +58,13 @@ from scripts.lexicon.curated_membership import (
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
 from scripts.practice.meaning_containment import (
+    atlas_part_display,
+    candidate_balla_heads,
     english_candidates_support_display,
     english_head,
+    load_balla_definitions,
     load_sum11_definitions,
+    qualified_english_part,
     source_bound_meaning,
 )
 from scripts.practice.ulif_synonym_groups import (
@@ -1017,7 +1021,7 @@ def _english_translation_gloss(
     if sense is not None:
         original = str(entry.get("gloss") or "")
         if level == "A1" and _is_english_learner_gloss(original):
-            head = english_head(re.split(r"[;,]", original)[0])
+            head = atlas_part_display(re.split(r"[;,]", original)[0])
             candidates = sense.get("learner_en")
             if isinstance(candidates, list) and head and english_candidates_support_display(candidates, head):
                 return head
@@ -1051,7 +1055,7 @@ def _english_translation_gloss(
             # adjective alternative in the same Atlas gloss.
             parts.sort(key=lambda part: bool(re.search(r"\(attributive\)", part, re.I)))
         for part in parts:
-            head = english_head(part)
+            head = atlas_part_display(part)
             if head and english_candidates_support_display(
                 candidates, head, allow_embedded=level not in {None, "A1"}
             ):
@@ -2127,7 +2131,8 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
 
 
 def _build_lexeme(
-    entry: dict[str, Any], verifier: VesumVerifier, sum11_by_word: dict[str, list[str]] | None = None
+    entry: dict[str, Any], verifier: VesumVerifier, sum11_by_word: dict[str, list[str]] | None = None,
+    balla_by_head: dict[str, list[str]] | None = None,
 ) -> dict[str, Any] | None:
     lemma = _clean_text(entry.get("lemma"))
     raw_gloss = _clean_text(entry.get("gloss"))
@@ -2138,7 +2143,7 @@ def _build_lexeme(
     # stable sense id and read learner_en from that sense — never en[0].
     sense = _practice_sense(entry)
     gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
-    if sum11_by_word is not None and _is_english_learner_gloss(gloss):
+    if sum11_by_word is not None and _is_english_learner_gloss(gloss) and not qualified_english_part(gloss):
         gloss = english_head(gloss) or gloss
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
@@ -2153,7 +2158,7 @@ def _build_lexeme(
     else:
         gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense) if _is_english_learner_gloss(gloss) else gloss
         source, withheld_reason = source_bound_meaning(
-            entry, gloss, gloss_clean, sense, sum11_by_word.get(lemma, []), level
+            entry, gloss, gloss_clean, sense, sum11_by_word.get(lemma, []), level, balla_by_head
         )
         if source is None:
             gloss = ""
@@ -6250,6 +6255,7 @@ def _select_practice_lexemes(
     config: BuildConfig,
     priority_lemma_keys: set[str] | None = None,
     sum11_by_word: dict[str, list[str]] | None = None,
+    balla_by_head: dict[str, list[str]] | None = None,
 ) -> tuple[
     list[tuple[dict[str, Any], dict[str, Any]]],
     list[dict[str, Any]],
@@ -6300,7 +6306,7 @@ def _select_practice_lexemes(
 
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for entry in selected[: config.target]:
-        lexeme = _build_lexeme(entry, verifier, sum11_by_word)
+        lexeme = _build_lexeme(entry, verifier, sum11_by_word, balla_by_head)
         if lexeme:
             lexemes_by_entry.append((entry, lexeme))
 
@@ -6463,6 +6469,7 @@ def build_practice_shards(
     synonym_accounting: SynonymAccounting | None = None,
     cloze_withheld: list[dict[str, str]] | None = None,
     sum11_by_word: dict[str, list[str]] | None = None,
+    balla_by_head: dict[str, list[str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     """Build every level shard.
 
@@ -6547,6 +6554,7 @@ def build_practice_shards(
         config,
         priority_lemma_keys,
         sum11_by_word,
+        balla_by_head,
     )
     classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
     vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
@@ -8569,6 +8577,9 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     sum11_by_word = load_sum11_definitions(
         {str(entry.get("lemma")) for entry in entries if entry.get("lemma")}, args.sources_db
     ) if args.sources_db and args.sources_db.is_file() else {}
+    balla_by_head = load_balla_definitions(
+        candidate_balla_heads(entries), args.sources_db
+    ) if args.sources_db and args.sources_db.is_file() else {}
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -8588,6 +8599,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_withheld=cloze_withheld,
         pos_residuals=pos_residuals,
         sum11_by_word=sum11_by_word,
+        balla_by_head=balla_by_head,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}

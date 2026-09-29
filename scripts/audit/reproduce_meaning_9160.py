@@ -14,7 +14,12 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from scripts.audit import generate_practice_deck as deck
-from scripts.practice.meaning_containment import english, load_sum11_definitions
+from scripts.practice.meaning_containment import (
+    candidate_balla_heads,
+    english,
+    load_balla_definitions,
+    load_sum11_definitions,
+)
 
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
 PACKAGE_SHA256 = "d01ed4b4cf10d8f587de214d0e3dd7f4039f4bafe5549d6bed7145bc34e55b19"
@@ -51,6 +56,14 @@ def evaluate(package: Path, atlas_db: Path, sources_db: Path, output: Path) -> d
     by_id = {}
     for entry in entries:
         by_id.setdefault(deck._stable_lemma_id(entry), entry)
+    published_ids = {
+        row["lemmaId"] for level in LEVELS
+        for row in json.loads(files[f"practice-lexemes.{level}.json"])["lexemes"]
+    }
+    balla = load_balla_definitions(
+        candidate_balla_heads([by_id[lemma_id] for lemma_id in published_ids if lemma_id in by_id]),
+        sources_db,
+    )
 
     output.mkdir(parents=True, exist_ok=True)
     summary: dict[str, dict] = {}
@@ -82,7 +95,7 @@ def evaluate(package: Path, atlas_db: Path, sources_db: Path, output: Path) -> d
             before = set(item["modes"])
             mode_before.update(before & MEANING_MODES)
             entry = by_id[row["lemmaId"]]
-            result = deck._build_lexeme(entry, verifier, definitions)
+            result = deck._build_lexeme(entry, verifier, definitions, balla)
             if result is None:
                 raise ValueError(f"builder lost published row: {level}: {row['lemmaId']}")
             old_gloss = row["gloss"]

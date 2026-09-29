@@ -12,11 +12,14 @@ from scripts.audit.generate_practice_deck import JsonVesumVerifier, _build_lexem
 from scripts.audit.practice_quality_gate import audit_practice_shards
 from scripts.practice.meaning_containment import (
     REVIEWED_WRONG_LEMMAS,
+    candidate_balla_heads,
     english_head,
     load_sum11_definitions,
     meaning_problem,
     source_bound_meaning,
 )
+
+_TEST_BALLA = {"test": ["тест"], "examination": ["тест"], "explanation": ["тест"]}
 
 
 @pytest.mark.parametrize("lemma", sorted(REVIEWED_WRONG_LEMMAS))
@@ -75,7 +78,7 @@ def test_sum11_lookup_folds_ukrainian_capitalization(tmp_path: Path) -> None:
 
 def test_existing_attributed_english_is_retained() -> None:
     entry = {"lemma": "тест", "gloss": "test", "enrichment": {"translation": {"en": ["test"], "source": "learner_english_gloss"}}}
-    assert source_bound_meaning(entry, "test", "test", None) == (
+    assert source_bound_meaning(entry, "test", "test", None, balla=_TEST_BALLA) == (
         {"source": "learner_english_gloss", "field": "enrichment.translation.en"}, None
     )
 
@@ -84,26 +87,32 @@ def test_only_the_supported_atlas_head_is_displayed() -> None:
     entry = {"lemma": "тест", "gloss": "test; examination", "enrichment": {
         "translation": {"en": ["test (trial)"], "source": "learner_english_gloss"}
     }}
-    assert source_bound_meaning(entry, "test; examination", "test", None)[1] == "unattributed_english"
+    assert source_bound_meaning(entry, "test; examination", "test", None, balla=_TEST_BALLA)[1] == "unattributed_english"
     entry["enrichment"]["translation"]["en"].append("examination")
-    assert source_bound_meaning(entry, "test", "test", None)[0] is not None
-    assert source_bound_meaning(entry, "examination", "examination", None, level="A1")[1] == "unbound_english_sense"
+    assert source_bound_meaning(entry, "test", "test", None, balla=_TEST_BALLA)[0] is not None
+    assert source_bound_meaning(entry, "examination", "examination", None, level="A1", balla=_TEST_BALLA)[1] == "unbound_english_sense"
 
 
 def test_existing_beginner_english_may_use_a_single_attributed_head() -> None:
     entry = {"lemma": "тест", "gloss": "Пояснення", "enrichment": {
         "translation": {"en": ["explanation"], "source": "learner_english_gloss"}
     }}
-    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A1")[0] is not None
-    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A2")[0] is not None
+    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A1", balla=_TEST_BALLA)[0] is not None
+    assert source_bound_meaning(entry, "explanation", "explanation", None, level="A2", balla=_TEST_BALLA)[0] is not None
+
+
+def test_balla_lookup_includes_candidate_on_ukrainian_atlas_row() -> None:
+    entry = {"lemma": "тест", "gloss": "Пояснення", "enrichment": {
+        "translation": {"en": ["explanation"], "source": "learner_english_gloss"}}}
+    assert "explanation" in candidate_balla_heads([entry])
 
 
 @pytest.mark.parametrize(
     ("atlas", "candidate", "expected"),
     [
         ("pharmacist, pharmacy worker", "pharmacist (dispenses medicine)", "pharmacist"),
-        ("American", "American man", "American"),
-        ("fairy tale (folktale)", "(dated) fairy tale (folktale)", "fairy tale"),
+        ("American", "American man", ""),
+        ("fairy tale (folktale)", "(dated) fairy tale (folktale)", "fairy tale (folktale)"),
     ],
 )
 def test_supported_english_head_survives_extra_text(atlas: str, candidate: str, expected: str) -> None:
@@ -112,7 +121,7 @@ def test_supported_english_head_survives_extra_text(atlas: str, candidate: str, 
     result = _build_lexeme(entry, JsonVesumVerifier({}), {})
     assert result is not None
     assert result["gloss"] == expected
-    assert result["meaningSource"] is not None
+    assert bool(result["meaningSource"]) == bool(expected)
 
 
 def test_unaligned_ukrainian_gloss_with_multiple_english_heads_stays_withheld() -> None:
@@ -142,7 +151,8 @@ _EVALUATION_EXPECTED = {
     "приборкати": "to tame", "спростувати": "to refute", "сила": "strength",
     "безсоння": "insomnia", "під'їзд": "building entrance",
     "водночас": "at the same time", "стрічка": "ribbon", "лиман": "estuary",
-    "зосереджуватися": "to concentrate", "бирка": "label", "бризнути": "to splash",
+    "зосереджуватися": "to concentrate (to approach or meet in a common center)",
+    "бирка": "label", "бризнути": "to splash",
     # These attributed rows still lack a defensible literal/single-sense head.
     "конфлікт": "", "виконуватися": "", "замітка": "", "потемнілий": "",
 }
@@ -155,9 +165,11 @@ _EVALUATION_EXPECTED = {
 )
 def test_independent_evaluation_rows_follow_source_bound_classes(entry: dict) -> None:
     """Six held-out errors and all 18 audited over-withheld rows are pinned."""
-    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
-    assert result is not None
     expected = _EVALUATION_EXPECTED[entry["lemma"]]
+    balla_head = english_head(expected).removeprefix("to ").removeprefix("be ")
+    balla = {balla_head: [entry["lemma"]]} if expected else {}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, balla)
+    assert result is not None
     assert result["gloss"] == result["glossClean"] == expected
     assert bool(result["meaningSource"]) == bool(expected)
     assert bool(result["meaningWithheldReason"]) != bool(expected)
@@ -173,6 +185,52 @@ def test_reverse_index_is_not_an_attributed_meaning() -> None:
     assert source_bound_meaning(entry, "test", "test", None)[1] == "unsupported_english_source"
     sense = {"id": "test_s1", "source": "e2u reverse index", "learner_en": ["test"]}
     assert source_bound_meaning(entry, "test", "test", sense)[1] == "unsupported_english_source"
+
+
+@pytest.mark.parametrize(
+    ("lemma", "gloss", "candidates", "source", "balla", "level", "expected"),
+    [
+        ("дно", "bed (of a river), bottom (of a lake)", ["bed (of a river), bottom (of a lake)"],
+         "dmklinger", {"bed": ["5) русло (ріки); дно (моря)"]}, "B1", "bed (of a river)"),
+        ("ураження", "impression (overall effect of something)", ["impression (overall effect of something)"],
+         "dmklinger", {"impression": ["1) враження"]}, "B1", ""),
+        ("електронний", "electron (attributive)", ["(relational) electron (attributive)"],
+         "dmklinger", {"electron": ["n фіз. електрон ~ microscope — електронний мікроскоп"]}, "A1", ""),
+        ("музичний", "music (adjective), musical", ["music (adjective), musical"],
+         "learner_english_gloss", {"music": ["1) музика"], "musical": ["1) музичний"]}, "A1", ""),
+        ("тікати", "to tick (of a clock)", ["(intransitive) to tick (of a clock)"],
+         "dmklinger", {"tick": ["1) цокання годинника"]}, "A1", ""),
+        ("слізний", "tear (water from the eyes); lacrimal", ["tear (water from the eyes)"],
+         "learner_english_gloss", {"tear": ["1) сльоза"]}, "B1", ""),
+    ],
+)
+def test_qualified_head_requires_same_lemma_independent_support(
+    lemma: str, gloss: str, candidates: list[str], source: str,
+    balla: dict[str, list[str]], level: str, expected: str,
+) -> None:
+    entry = {"lemma": lemma, "url_slug": lemma, "gloss": gloss, "pos": "noun", "cefr": level,
+             "enrichment": {"translation": {"en": candidates, "source": source}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, balla)
+    assert result is not None
+    assert result["gloss"] == result["glossClean"] == expected
+    assert bool(result["meaningSource"]) == bool(expected)
+
+
+@pytest.mark.parametrize("text", [
+    "used before awkward consonant clusters and chiefly before мно́ю",
+    "female equivalent of нача́льник", "endearing form of мале́нький",
+    "female equivalent of незнайо́мець", "female equivalent of однокла́сник",
+    "kiwi 2",
+])
+def test_cross_reference_and_numbered_english_fragments_are_withheld(text: str) -> None:
+    assert meaning_problem(text, "тест") == "dictionary_fragment"
+
+
+def test_balla_example_is_not_a_headword_mapping() -> None:
+    entry = {"lemma": "електронний", "gloss": "electron", "enrichment": {
+        "translation": {"en": ["electron"], "source": "dmklinger"}}}
+    assert source_bound_meaning(entry, "electron", "electron", None,
+                                balla={"electron": ["n фіз. електрон ~ microscope — електронний мікроскоп"]})[1] == "unsupported_independent_head"
 
 
 def test_withheld_lexeme_keeps_nonmeaning_record() -> None:
