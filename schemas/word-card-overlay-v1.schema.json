@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-overlay-v1.schema.json",
+  "title": "Word-card curation overlay batch v1 (#8978)",
+  "description": "One reviewed overlay batch (schema.md §12): the only hand-written build input. Every entry is replayed as a curator assertion with author, lane, date and evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "overlay_id",
+        "kind",
+        "author",
+        "lane",
+        "date",
+        "evidence"
+      ],
+      "properties": {
+        "overlay_id": {
+          "type": "string",
+          "pattern": "^ovl-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}$"
+        },
+        "kind": {
+          "enum": [
+            "merge",
+            "split",
+            "resolve",
+            "variant",
+            "suppress",
+            "level_override",
+            "sense_map",
+            "link",
+            "identity"
+          ]
+        },
+        "card_id": {
+          "$ref": "#/$defs/card_id"
+        },
+        "into": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/card_id"
+          }
+        },
+        "field": {
+          "type": "string"
+        },
+        "assertion_id": {
+          "$ref": "#/$defs/assertion_id"
+        },
+        "members": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "`variant` entries: the declared set of permitted values (value_norm forms). The resolver shows `variant` only when every observed value and every tier-1 declared set lies inside it (schema.md §8.2 rule 4); a reviewed language-lane entry is the only way besides a tier-1 declaring source."
+        },
+        "author": {
+          "type": "string"
+        },
+        "lane": {
+          "enum": [
+            "language",
+            "design",
+            "operator"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "split"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "card_id",
+              "into"
+            ],
+            "properties": {
+              "into": {
+                "minItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "merge"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "card_id",
+              "into"
+            ],
+            "properties": {
+              "into": {
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "resolve"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "card_id",
+              "field",
+              "assertion_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "variant"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "card_id",
+              "field",
+              "members"
+            ],
+            "properties": {
+              "lane": {
+                "const": "language"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

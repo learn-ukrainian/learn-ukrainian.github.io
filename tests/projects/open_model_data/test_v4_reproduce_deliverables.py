@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import jsonschema
@@ -25,9 +26,9 @@ from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     verify_delivery,
 )
 
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 DATASET_DIR = Path("data/projects/open_model_data/dataset")
-DELIVERY_DIR = Path("data/projects/open_model_data/delivery")
+DELIVERY_DIR = Path("registry/projects/open_model_data/delivery")
 RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
 DELIVERY_RECEIPT_PATH = DELIVERY_DIR / "v4_delivery_reproduction_receipt_v1.json"
 
@@ -61,6 +62,10 @@ def test_schema_valid() -> None:
     jsonschema.Draft202012Validator.check_schema(schema_data)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_delivery1_stream_loader_and_partition_views() -> None:
     """Verify stream loader and exact partition filtering (DELIVERY-1)."""
     assert RECORDS_PATH.is_file(), f"Missing records: {RECORDS_PATH}"
@@ -175,6 +180,10 @@ def test_delivery5_custody_and_zero_host_paths() -> None:
         pytest.fail("Expected ValueError was not raised")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_clean_pass() -> None:
     """Verify delivery verification passes on intact deliverables."""
     assert verify_delivery(Path.cwd(), DELIVERY_RECEIPT_PATH) is True
@@ -219,6 +228,10 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     assert verify_delivery(Path.cwd(), tampered_receipt4) is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     """Verify delivery verification detects tampered or leaked deliverable documents."""
     import shutil
@@ -229,27 +242,28 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
 
     # Copy necessary contracts and artifacts
     for subpath in [
-        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
-        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
-        "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
-        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
         "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
         "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
         "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
-        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+        "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
     ]:
         src = Path.cwd() / subpath
         dst = mock_root / subpath
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
-    mock_receipt = mock_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    _git_study_checkout(mock_root)
+    mock_receipt = mock_root / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
     assert verify_delivery(mock_root, mock_receipt) is True
 
     # Mutating document text without updating digest fails verification
@@ -301,6 +315,10 @@ def test_assert_file_no_private_host_paths(tmp_path: Path) -> None:
     assert "Prohibited host path detected at leaked.txt:1" in str(excinfo.value)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_path: Path) -> None:
     """Verify delivery verification rejects absolute paths, directory traversal, and out-of-repo files."""
     import shutil
@@ -309,26 +327,26 @@ def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_pa
     mock_root.mkdir(parents=True, exist_ok=True)
 
     for subpath in [
-        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
-        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
-        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
         "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
         "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
         "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
-        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+        "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
     ]:
         src = Path.cwd() / subpath
         dst = mock_root / subpath
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
-    mock_receipt = mock_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    mock_receipt = mock_root / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
     rcpt_data = json.loads(mock_receipt.read_text(encoding="utf-8"))
 
     # 1. Traversal path with '..' is rejected
@@ -490,6 +508,34 @@ def test_mock_delivery_stream_loader_with_text(tmp_path: Path) -> None:
     assert part_records[0]["text"] == sample_text
 
 
+def _git_study_checkout(root: Path) -> None:
+    """Give a fixture the committed study set so managed verification can read it."""
+    source = Path.cwd()
+    manifest_rel = Path("registry/artifacts/open_model_study_outputs.manifest.json")
+    manifest = json.loads((source / manifest_rel).read_text(encoding="utf-8"))
+    study_link = root / "data/projects/open_model_data/study"
+    if study_link.is_symlink():
+        study_link.unlink()
+    relatives = [entry["path"] for entry in manifest["entries"]]
+    relatives.extend((manifest.get("set_descriptor") or {}).get("companions", {}))
+    for relative in relatives:
+        src = source / relative
+        dst = root / relative
+        if dst.is_symlink():
+            dst.unlink()
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if not dst.exists():
+            shutil.copy2(src, dst)
+    manifest_dst = root / manifest_rel
+    manifest_dst.parent.mkdir(parents=True, exist_ok=True)
+    if manifest_dst.is_symlink():
+        manifest_dst.unlink()
+    if not manifest_dst.exists():
+        shutil.copy2(source / manifest_rel, manifest_dst)
+    if not (root / ".git").exists():
+        subprocess.run(["git", "init"], cwd=root, check=True, capture_output=True, timeout=30)
+
+
 def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple[Path, Path]:
     repo_root = Path.cwd()
     fake_repo = tmp_path / "repo"
@@ -501,17 +547,27 @@ def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple
     # Symlink shared open_model_data directories
     data_omd = fake_repo / "data/projects/open_model_data"
     data_omd.mkdir(parents=True, exist_ok=True)
-    for sub in ["contracts", "study", "language", "extraction", "delivery"]:
+    for sub in ["contracts", "language", "extraction", "delivery"]:
         (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+    registry_contracts = fake_repo / "registry/projects/open_model_data/contracts"
+    registry_contracts.parent.mkdir(parents=True, exist_ok=True)
+    registry_contracts.symlink_to((repo_root / "registry/projects/open_model_data/contracts").resolve())
+    registry_dataset = fake_repo / "registry/projects/open_model_data/dataset"
+    registry_dataset.mkdir(parents=True, exist_ok=True)
+    for name in (
+        "v4_human_source_dataset_manifest_v1.json",
+        "v4_human_source_dataset_receipt_v1.json",
+    ):
+        (registry_dataset / name).symlink_to((repo_root / "registry/projects/open_model_data/dataset" / name).resolve())
 
     # Setup dataset dir with symlinked manifest & receipt, and custom records file
     dataset_dir = data_omd / "dataset"
     dataset_dir.mkdir(parents=True, exist_ok=True)
     (dataset_dir / "v4_human_source_dataset_manifest_v1.json").symlink_to(
-        (repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json").resolve()
+        (repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json").resolve()
     )
     (dataset_dir / "v4_human_source_dataset_receipt_v1.json").symlink_to(
-        (repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json").resolve()
+        (repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json").resolve()
     )
 
     custom_records = dataset_dir / "v4_human_source_dataset_records_v1.jsonl"
@@ -523,10 +579,15 @@ def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple
     receipt_data["dataset_reproduction"]["records_sha256"] = sha256_file(custom_records)
     fake_receipt = tmp_path / "test_delivery_receipt.json"
     fake_receipt.write_text(json.dumps(receipt_data), encoding="utf-8")
+    _git_study_checkout(fake_repo)
 
     return fake_repo, fake_receipt
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_schema_violating_record(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject records violating schema contract (Finding 1)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -547,6 +608,10 @@ def test_verify_delivery_rejects_schema_violating_record(tmp_path: Path) -> None
         build_delivery_receipt(fake_repo, tmp_path / "out_receipt.json")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_duplicate_record_id_or_span_sha(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject duplicate records or span hashes (Finding 3)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -610,6 +675,10 @@ def test_cache_refreshes_on_index_change(tmp_path: Path) -> None:
     assert len(masks2["2222" * 16]) == 1
 
 
+@pytest.mark.needs_artifact(
+    "open_model_study_outputs",
+    "projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+)
 def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(tmp_path: Path) -> None:
     """Verify that verify_delivery rejects contradictory study receipt verdict or summary metrics (Finding 3987604428)."""
     fake_repo = tmp_path / "repo_study"
@@ -621,6 +690,9 @@ def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(t
     data_omd.mkdir(parents=True, exist_ok=True)
     for sub in ["contracts", "language", "extraction", "dataset"]:
         (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+    registry_contracts = fake_repo / "registry/projects/open_model_data/contracts"
+    registry_contracts.parent.mkdir(parents=True, exist_ok=True)
+    registry_contracts.symlink_to((repo_root / "registry/projects/open_model_data/contracts").resolve())
 
     # Copy study directory so we can mutate study receipt
     shutil.copytree(repo_root / "data/projects/open_model_data/study", data_omd / "study")
@@ -631,7 +703,7 @@ def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(t
     deliv_dir = data_omd / "delivery"
     deliv_dir.mkdir(parents=True, exist_ok=True)
     (deliv_dir / "v4_delivery_reproduction_receipt_v1.json").symlink_to(
-        (repo_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json").resolve()
+        (repo_root / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json").resolve()
     )
 
     delivery_receipt_data = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
@@ -673,6 +745,10 @@ def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(t
     assert verify_delivery(fake_repo, test_rcpt3) is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Path) -> None:
     """Verify that verify_delivery and build_delivery_receipt reject tampered or missing JSONL header (Finding 3987604443)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -705,6 +781,10 @@ def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Pa
         build_delivery_receipt(repo3, tmp_path / "out3.json")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: Path) -> None:
     """Verify delivery passes when sources.db lacks literary_texts table (e.g. CI runner)."""
     # Create mock repo
@@ -721,25 +801,26 @@ def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: P
 
     # Copy required deliverables into fake_repo
     for subpath in [
-        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
-        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
-        "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
+        "registry/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
-        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
-        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
         "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
         "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
         "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
         "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
-        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+        "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
     ]:
         src = Path.cwd() / subpath
         dst = fake_repo / subpath
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
-    receipt_path = fake_repo / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    _git_study_checkout(fake_repo)
+    receipt_path = fake_repo / "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
     assert verify_delivery(fake_repo, receipt_path) is True

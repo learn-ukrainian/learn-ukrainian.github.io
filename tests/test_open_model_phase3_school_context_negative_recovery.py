@@ -4,18 +4,18 @@ import inspect
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_school_context_negative_recovery as negrec
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
-PUBLIC_RECEIPT = (
-    ROOT / "data/projects/open_model_data/inventory/phase3_school_context_negative_recovery_receipt_v1.json"
-)
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
+PUBLIC_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_school_context_negative_recovery_receipt_v1.json"
 DRIVE_ROOT = (
     Path.home() / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
 )
@@ -71,8 +71,14 @@ def test_schema_and_committed_receipt_validate() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(receipt)
     assert negrec.receipt_sha256(receipt) == receipt["receipt_sha256"]
-    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
-    assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
+    tracked = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "--stage", "--", str(PUBLIC_RECEIPT.relative_to(ROOT))],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    assert tracked.startswith("100644 ")
     assert receipt["disposition"] == "school_complete_parent_or_sentence_context_not_recoverable"
     assert receipt["gates"]["phase4_blocked"] is True
     assert receipt["gates"]["school_complete_context_ready"] is False
@@ -200,6 +206,10 @@ def test_candidate_database_matching_freeze_pin_fails(tmp_path: Path, monkeypatc
         negrec._assert_candidate_database_not_freeze(candidate)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_public_ledger_parent_boundary_probe() -> None:
     negrec._assert_public_ledger_lacks_parent_boundaries()
 
@@ -255,20 +265,33 @@ def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path) -
         negrec._write_public_receipt(path, b'{"ok":false}\n')
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validate_receipt_rebinds_live_public_artifacts(monkeypatch: pytest.MonkeyPatch) -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     opened: list[Path] = []
+    verified_groups: list[str] = []
     real_sha256_file = negrec.sha256_file
+    real_artifact_set = negrec.artifact_set
 
     def _tracking(path: Path) -> str:
         opened.append(path.resolve())
         return real_sha256_file(path)
 
     monkeypatch.setattr(negrec, "sha256_file", _tracking)
+
+    def _tracking_set(group: str, *, repo: Path):
+        verified_groups.append(group)
+        return real_artifact_set(group, repo=repo)
+
+    monkeypatch.setattr(negrec, "artifact_set", _tracking_set)
     assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
     resolved = set(opened)
     assert negrec.EVAL_CONTEXT_RECEIPT.resolve() in resolved
-    assert negrec.SCHOOL_LEDGER.resolve() in resolved
+    assert negrec.SCHOOL_LEDGER.resolve() not in resolved
+    assert verified_groups == ["open_model_evidence_indexes"]
     assert negrec.SOURCE_UNIVERSE_RECEIPT.resolve() in resolved
 
 
@@ -396,6 +419,10 @@ def _patch_hermetic(monkeypatch: pytest.MonkeyPatch, paths: dict[str, Path]) -> 
     monkeypatch.setattr(negrec, "Draft202012Validator", lambda _schema: _AcceptAll())
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validate_receipt_rejects_implementation_binding_mutation() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     receipt["bindings"] = dict(receipt["bindings"])
@@ -405,6 +432,10 @@ def test_validate_receipt_rejects_implementation_binding_mutation() -> None:
         negrec.validate_receipt(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
 def test_validate_receipt_rejects_schema_binding_mutation() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     receipt["bindings"] = dict(receipt["bindings"])

@@ -667,6 +667,8 @@ Additional audit guardrails:
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
 - `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
 - `scripts/audit/lint_word_atlas.py` - read-only, advisory sense-first Word Atlas entry lint (#6437): LINT-001 `TRUNCATED_TEXT_CUTOFF` + LINT-002 `AMBIGUOUS_BARE_EN` + LINT-004 `UNVETTED_EN_SOURCE` + LINT-101 `MULTI_SENSE_UK_SINGLE_EN` + LINT-102 `POS_TRANSFORM_MISMATCH` against `senses[]`, plus LINT-003 `DRILL_SENSE_ID_MISSING` on practice bindings / optional `--practice-deck` shards; skips sense rules when entries lack sense data; exit 0 unless `--strict` (then exit 1 on findings); no CI gate wired yet
+- `scripts/lexicon/teacher_deck.py refresh --docx <master.docx>` - one-command rebuild of the teacher-table practice deck (lesson ingest, table sync, shard + cloze, independent check, published-set swap); see [`docs/practice/teacher-deck-artifacts.md`](practice/teacher-deck-artifacts.md) (#8843); `record-review` folds a language-review result into the sentence ledger `site/src/data/lexicon-teacher-deck-withheld.json`
+- `scripts/audit/check_teacher_deck.py` - independent structural checker for the teacher-table deck (Atlas sense/identity, same-slot distractors, fragment rules, withheld ledger); prints the eligibility matrix and residual lists
 - `scripts/lexicon/admit_teacher_table.py` - local-only teacher-table Atlas admission and English-card enrichment; writes a separate staged manifest, private deltas, and a named VESUM residual ledger but never publishes
 - `scripts/atlas/atlas_db.py` - rebuild `data/atlas.db` from the hydrated Atlas manifest, materialize the Astro article payload projection, and validate alias targets
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
@@ -798,7 +800,14 @@ is a follow-up; compatibility keys remain unchanged. For code pick order, run
 `.venv/bin/python -m scripts.fleet.capacity_pick` and pass `--check-budget` (or set
 `LU_DISPATCH_CHECK_BUDGET=1` in seat launchers). The guard hard-subs hot/near_cap/deficit
 lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallbacks` has a
-row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. Flag stays
+row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. A hard
+substitution rewrites an explicit `--model` through `model_catalog.yaml`
+`budget_substitution_models`, or drops it for that lane's registry default
+(cursor's dispatch pin is `grok-4.7`) when no `--model` was given or the
+substitute adapter does not reject the explicit model. An explicit `--model`
+with no mapping row that the substitute adapter rejects is refused before
+spawn. If neither the mapped model nor that default is valid for the
+substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.

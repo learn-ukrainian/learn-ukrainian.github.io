@@ -451,6 +451,11 @@ class AgyAdapter:
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
 
+        # Unknown explicit models raise here, before `agy --version`. Dispatch
+        # probes this method to refuse before spawn, and that probe must not
+        # depend on a subprocess.
+        resolved_model = self._resolve_model_flag(model)
+
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
@@ -516,7 +521,6 @@ class AgyAdapter:
             ]
         )
 
-        resolved_model = self._resolve_model_flag(model)
         if resolved_model:
             cmd += ["--model", resolved_model]
 
@@ -533,7 +537,11 @@ class AgyAdapter:
         # the protected primary checkout.  Permission scope remains AGY's
         # full-trust headless mode, therefore the bridge prompt supplies the
         # no-write guard.
-        if tc.get("bridge_repo_read") or review_isolation:
+        # Read-only dispatches also pin the workspace (#8516): agy re-anchors
+        # its process cwd to a scratch directory during startup, so without
+        # ``--add-dir`` a read-only run's workspace is whatever agy drifted
+        # into instead of the dispatch-pinned checkout.
+        if tc.get("bridge_repo_read") or review_isolation or mode == "read-only":
             add_dir = tc.get("repo_read_root") or tc.get("review_snapshot_root") or str(cwd)
             cmd += ["--add-dir", str(add_dir)]
 

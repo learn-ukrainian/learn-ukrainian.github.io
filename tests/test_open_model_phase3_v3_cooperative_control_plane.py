@@ -83,7 +83,7 @@ def test_hash_tampering_is_rejected_after_receipt_rehash(tmp_path: Path) -> None
 
 def test_p4_predecessor_bytes_are_actually_verified(monkeypatch: pytest.MonkeyPatch) -> None:
     original = control_plane.sha256_file
-    p4_schema = control_plane.ROOT / control_plane.P4_SCHEMA_LOGICAL_PATH
+    p4_schema = control_plane._registry_path(control_plane.P4_SCHEMA_LOGICAL_PATH)
 
     def tampered(path: Path) -> str:
         return "0" * 64 if path == p4_schema else original(path)

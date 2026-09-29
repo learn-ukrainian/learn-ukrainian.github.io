@@ -35,8 +35,24 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     load_replay_buffer,
     normalize_historical_snippet,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+REGISTRY_RELEASE_DIR = REPO_ROOT / "registry" / DEFAULT_RELEASE_DIR.relative_to(REPO_ROOT / "data")
+
+
+@pytest.fixture(scope="module")
+def archive_payload() -> ArtifactSet:
+    return artifact_set("open_model_archive_payload", repo=REPO_ROOT)
+
+
+def _a_bytes(snapshot: ArtifactSet, path: Path) -> bytes:
+    return snapshot.artifacts[path.relative_to(REPO_ROOT / "data").as_posix()]
+
+
+def _shard_paths() -> list[Path]:
+    manifest = json.loads((REGISTRY_RELEASE_DIR / "sft" / "manifest.json").read_text(encoding="utf-8"))
+    return [DEFAULT_RELEASE_DIR / "sft" / shard["file_name"] for shard in manifest["shards"]]
 
 
 @pytest.fixture
@@ -225,6 +241,10 @@ def test_eval_suite_generation_and_schema() -> None:
     assert correct_count == 2
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_zero_train_eval_leakage_firewall(mock_vesum_db: Path) -> None:
     """Verify that no held-out eval sentences leak into training trajectories."""
     mock_eval_chunk = MiddleUkrainianChunk(
@@ -419,6 +439,10 @@ def test_evaluator_strictness_and_rejection() -> None:
     assert res["mixed_error_correction_rate"] == 1.0
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_balance_and_interleaving(mock_vesum_db: Path) -> None:
     """Verify that build_sft_dataset generates a strict 50/50 balance of PRESERVE/CORRECT rows."""
     mock_chunks = [
@@ -473,6 +497,10 @@ def test_sft_dataset_balance_and_interleaving(mock_vesum_db: Path) -> None:
                 assert alt["register_tier"] in valid_registers
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
     """Verify that replay buffer loads dialect preservation and modern literary anti-calque rows without medieval v0.4a."""
     trajectories = load_replay_buffer(mock_vesum_db, quota=20)
@@ -497,17 +525,18 @@ def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
             assert "modern_literary_replay" in att.get("tags", [])
 
 
-def test_release_dataset_disk_invariants() -> None:
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
+def test_release_dataset_disk_invariants(archive_payload: ArtifactSet) -> None:
     """Verify on-disk release artifacts strictly meet all quota, balance, and file-size invariants."""
     release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
-    manifest_file = release_dir / "sft" / "manifest.json"
-
-    if not eval_file.is_file() or not manifest_file.is_file():
-        pytest.skip("Release artifacts not yet generated on disk")
+    manifest_file = REGISTRY_RELEASE_DIR / "sft" / "manifest.json"
 
     # Eval invariants
-    eval_rows = [json.loads(line) for line in eval_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+    eval_rows = [json.loads(line) for line in _a_bytes(archive_payload, eval_file).splitlines() if line.strip()]
     assert len(eval_rows) == 500
     eval_preserve = sum(1 for r in eval_rows if r["case_type"] == "PRESERVE")
     eval_correct = sum(1 for r in eval_rows if r["case_type"] == "CORRECT")
@@ -525,31 +554,30 @@ def test_release_dataset_disk_invariants() -> None:
 
     for shard_info in manifest["shards"]:
         shard_path = release_dir / "sft" / shard_info["file_name"]
-        assert shard_path.is_file()
-        assert shard_path.stat().st_size < 2000 * 1024, f"File {shard_path.name} exceeds 2,000 KB"
-        with shard_path.open("r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    row = json.loads(line)
-                    sft_rows_count += 1
-                    if row.get("is_calque_or_russianism", False):
-                        sft_correct += 1
-                    else:
-                        sft_preserve += 1
+        shard_bytes = _a_bytes(archive_payload, shard_path)
+        assert len(shard_bytes) < 2000 * 1024, f"File {shard_path.name} exceeds 2,000 KB"
+        for line in shard_bytes.splitlines():
+            if line.strip():
+                row = json.loads(line)
+                sft_rows_count += 1
+                if row.get("is_calque_or_russianism", False):
+                    sft_correct += 1
+                else:
+                    sft_preserve += 1
 
     assert sft_rows_count == 10000
     assert sft_preserve == 5000
     assert sft_correct == 5000
 
 
-def test_no_editorial_apparatus_in_released_artifacts() -> None:
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
+def test_no_editorial_apparatus_in_released_artifacts(archive_payload: ArtifactSet) -> None:
     """Verify no editorial commentaries, modern studies, or academic prefaces exist in released files."""
     release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
-    sft_dir = release_dir / "sft"
-
-    if not eval_file.is_file():
-        pytest.skip("Release artifacts not yet generated on disk")
 
     forbidden_snippets = [
         "упорядник",
@@ -564,64 +592,54 @@ def test_no_editorial_apparatus_in_released_artifacts() -> None:
         "срезневськ",
     ]
 
-    with eval_file.open("r", encoding="utf-8") as f:
-        for i, line in enumerate(f):
+    for i, line in enumerate(_a_bytes(archive_payload, eval_file).splitlines()):
+        row = json.loads(line)
+        inp = row.get("input_text", "")
+        exp = row.get("expected_output", "")
+        for snip in forbidden_snippets:
+            assert snip not in inp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {inp}"
+            assert snip not in exp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {exp}"
+
+    for shard in _shard_paths():
+        for i, line in enumerate(_a_bytes(archive_payload, shard).splitlines()):
             row = json.loads(line)
-            inp = row.get("input_text", "")
-            exp = row.get("expected_output", "")
+            q = row.get("query", "")
+            m = re.search(r"«(.*?)»", q)
+            hist = m.group(1) if m else q
             for snip in forbidden_snippets:
-                assert snip not in inp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {inp}"
-                assert snip not in exp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {exp}"
-
-    for shard in sft_dir.glob("sft_shard_*.jsonl"):
-        with shard.open("r", encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                row = json.loads(line)
-                q = row.get("query", "")
-                m = re.search(r"«(.*?)»", q)
-                hist = m.group(1) if m else q
-                for snip in forbidden_snippets:
-                    assert snip not in hist.casefold(), (
-                        f"Editorial snippet '{snip}' found in {shard.name} row {i}: {hist}"
-                    )
+                assert snip not in hist.casefold(), f"Editorial snippet '{snip}' found in {shard.name} row {i}: {hist}"
 
 
-def test_vesum_attestation_consistency_in_released_artifacts() -> None:
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
+def test_vesum_attestation_consistency_in_released_artifacts(archive_payload: ArtifactSet) -> None:
     """Verify that is_standard_attested strictly equals (vesum_forms_count > 0) across all SFT rows."""
-    release_dir = DEFAULT_RELEASE_DIR
-    sft_dir = release_dir / "sft"
-
-    if not sft_dir.is_dir():
-        pytest.skip("Release artifacts not yet generated on disk")
-
-    for shard in sft_dir.glob("sft_shard_*.jsonl"):
-        with shard.open("r", encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                row = json.loads(line)
-                attestations = row.get("vesum_attestation", [])
-                assert len(attestations) > 0, f"Missing attestations in {shard.name} row {i}"
-                for att in attestations:
-                    count = att.get("vesum_forms_count", 0)
-                    is_attested = att.get("is_standard_attested")
-                    assert is_attested == (count > 0), (
-                        f"Inconsistent attestation in {shard.name} row {i}: is_standard_attested={is_attested}, count={count}"
-                    )
+    for shard in _shard_paths():
+        for i, line in enumerate(_a_bytes(archive_payload, shard).splitlines()):
+            row = json.loads(line)
+            attestations = row.get("vesum_attestation", [])
+            assert len(attestations) > 0, f"Missing attestations in {shard.name} row {i}"
+            for att in attestations:
+                count = att.get("vesum_forms_count", 0)
+                is_attested = att.get("is_standard_attested")
+                assert is_attested == (count > 0), (
+                    f"Inconsistent attestation in {shard.name} row {i}: is_standard_attested={is_attested}, count={count}"
+                )
 
 
 def test_release_receipt_schema_validation() -> None:
     """Verify that release_receipt.json strictly validates against the receipt schema contract."""
-    receipt_file = DEFAULT_RELEASE_DIR / "release_receipt.json"
+    receipt_file = REGISTRY_RELEASE_DIR / "release_receipt.json"
     schema_file = (
         REPO_ROOT
-        / "data"
+        / "registry"
         / "projects"
         / "open_model_data"
         / "contracts"
         / "v1_middle_ukrainian_release_receipt.schema.json"
     )
-
-    if not receipt_file.is_file():
-        pytest.skip("Release receipt not yet generated on disk")
 
     schema = json.loads(schema_file.read_text(encoding="utf-8"))
     receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
@@ -636,14 +654,14 @@ def test_release_receipt_schema_validation() -> None:
         assert receipt["evaluation_metrics"]["regression_against_v02_pct"] is None
 
 
-def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+)
+def test_regression_velychkovsky_and_mytsyk_commentary_excluded(archive_payload: ArtifactSet) -> None:
     """Verify that specific Round 3, Round 4, and Round 5 commentary leaks (Velychkovsky, Mytsyk, Khanenko, Zinoviyiv) are excluded."""
     release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
-    sft_dir = release_dir / "sft"
-
-    if not eval_file.is_file():
-        pytest.skip("Release artifacts not yet generated on disk")
 
     leaked_strings = [
         "поет славить «добра воина»",
@@ -686,41 +704,39 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
     ]
 
     eval_rows = []
-    with eval_file.open("r", encoding="utf-8") as f:
-        for i, line in enumerate(f):
-            row = json.loads(line)
-            eval_rows.append(row)
-            inp = row.get("input_text", "").casefold()
-            exp = row.get("expected_output", "").casefold()
-            for s in leaked_strings:
-                assert s not in inp, f"Leaked string '{s}' found in eval row {i}: {inp}"
-                assert s not in exp, f"Leaked string '{s}' found in eval row {i}: {exp}"
-            assert row.get("source_metadata", {}).get("chunk_id") not in (
-                "1b7685d5_c0057",
-                "1b7685d5_c0077",
-                "1b7685d5_c0078",
-                "5f2476e8_c0004",
-                "c07247b6_c0593",
-                "c07247b6_c0594",
-                "c07247b6_c0743",
-                "c07247b6_c0744",
-                "6e771b02_c0000",
-                "065fed7f_c0030",
-            )
+    for i, line in enumerate(_a_bytes(archive_payload, eval_file).splitlines()):
+        row = json.loads(line)
+        eval_rows.append(row)
+        inp = row.get("input_text", "").casefold()
+        exp = row.get("expected_output", "").casefold()
+        for s in leaked_strings:
+            assert s not in inp, f"Leaked string '{s}' found in eval row {i}: {inp}"
+            assert s not in exp, f"Leaked string '{s}' found in eval row {i}: {exp}"
+        assert row.get("source_metadata", {}).get("chunk_id") not in (
+            "1b7685d5_c0057",
+            "1b7685d5_c0077",
+            "1b7685d5_c0078",
+            "5f2476e8_c0004",
+            "c07247b6_c0593",
+            "c07247b6_c0594",
+            "c07247b6_c0743",
+            "c07247b6_c0744",
+            "6e771b02_c0000",
+            "065fed7f_c0030",
+        )
 
     # Verify Ivan Velychkovsky is actively represented in the held-out evaluation benchmark
     v_eval_rows = [r for r in eval_rows if r.get("work_id") == "ivan_velychkovskyy_tvory"]
     assert len(v_eval_rows) > 0, "Evaluation suite must contain records from Ivan Velychkovsky"
 
-    for shard in sft_dir.glob("sft_shard_*.jsonl"):
-        with shard.open("r", encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                row = json.loads(line)
-                q = row.get("query", "").casefold()
-                resp = row.get("final_response", "").casefold()
-                for s in leaked_strings:
-                    assert s not in q, f"Leaked string '{s}' found in {shard.name} row {i}: {q}"
-                    assert s not in resp, f"Leaked string '{s}' found in {shard.name} row {i}: {resp}"
+    for shard in _shard_paths():
+        for i, line in enumerate(_a_bytes(archive_payload, shard).splitlines()):
+            row = json.loads(line)
+            q = row.get("query", "").casefold()
+            resp = row.get("final_response", "").casefold()
+            for s in leaked_strings:
+                assert s not in q, f"Leaked string '{s}' found in {shard.name} row {i}: {q}"
+                assert s not in resp, f"Leaked string '{s}' found in {shard.name} row {i}: {resp}"
 
 
 def test_source_boundaries_and_work_exclusions() -> None:
@@ -750,16 +766,9 @@ def test_source_boundaries_and_work_exclusions() -> None:
 
     if DEFAULT_SOURCES_DB.is_file():
         with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as _conn:
-            _tables = {
-                row[0]
-                for row in _conn.execute(
-                    "SELECT name FROM sqlite_master WHERE type = 'table'"
-                )
-            }
+            _tables = {row[0] for row in _conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         if "literary_texts" not in _tables:
-            pytest.skip(
-                "data/sources.db present but literary_texts not provisioned (CI stub)"
-            )
+            pytest.skip("data/sources.db present but literary_texts not provisioned (CI stub)")
         chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
 
         v_chunks = [c for c in chunks if c.work_id == "ivan_velychkovskyy_tvory"]

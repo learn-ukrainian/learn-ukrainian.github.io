@@ -14,6 +14,13 @@ Enforces:
 - Required pedagogical metadata (distinction gloss, rationale, case rule, grammatical notes)
 - Intentional error quarantine (no leaked contrastive tables/headers in positive cloze)
 - Error-correction drill integrity (substring containment, option validity, explanation)
+- Error-correction evidence (#8723): no generated register-label distractors; every
+  drill is bound by ``sourceRef`` to one sources.db row, the spans of its error and
+  correction, and their direction. The committed evidence snapshot must match each
+  drill (row id, error and correction span strings); with sources.db the row's SHA-256,
+  the text at both spans and the extractor's own pairing of that row are re-verified.
+  CI uses the committed evidence snapshot; pass ``--sources-db`` to verify source rows.
+  Typed ``answers`` accept the correction and its listed readings, never the error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
 - TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
@@ -52,8 +59,55 @@ try:
 except ImportError:
     from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
 
+try:
+    from scripts.practice.extract_textbook_error_corrections import (
+        EVIDENCE_SNAPSHOT_PATH,
+        REGISTER_LABEL_RE,
+        VesumLookup,
+        assess_pair,
+        correction_answers,
+        derive_row_pairs,
+        load_evidence_snapshot,
+        load_reviewed_withholds,
+        load_source_row,
+        pair_key,
+        row_sha256,
+        source_label_for_row,
+        source_ref_problem,
+        span_text,
+        typed_answer_key,
+    )
+except ImportError:
+    from practice.extract_textbook_error_corrections import (
+        EVIDENCE_SNAPSHOT_PATH,
+        REGISTER_LABEL_RE,
+        VesumLookup,
+        assess_pair,
+        correction_answers,
+        derive_row_pairs,
+        load_evidence_snapshot,
+        load_reviewed_withholds,
+        load_source_row,
+        pair_key,
+        row_sha256,
+        source_label_for_row,
+        source_ref_problem,
+        span_text,
+        typed_answer_key,
+    )
+
+# sources.db is gitignored; a dispatch worktree reads the enclosing primary checkout's copy.
+DEFAULT_SOURCES_DB = next(
+    (
+        parent / "data/sources.db"
+        for parent in (PROJECT_ROOT, *PROJECT_ROOT.parents)
+        if (parent / "data/sources.db").is_file()
+    ),
+    PROJECT_ROOT / "data/sources.db",
+)
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
+DEFAULT_ERROR_CORRECTION_EVIDENCE = EVIDENCE_SNAPSHOT_PATH
 DEFAULT_SENTENCE_INVENTORY = PROJECT_ROOT / "site/src/data/lexicon-sentence-inventory.json"
 DEFAULT_SHARDS_DIR = PROJECT_ROOT / "site/public/lexicon"
 
@@ -227,10 +281,229 @@ def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEF
     return violations
 
 
-def audit_error_correction_deck(
-    path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB
+def _error_correction_vesum(vesum_db: Path | str | None) -> VesumLookup | None:
+    """VESUM view for pair evidence, or None when the DB lacks the VESUM form table."""
+    if not vesum_db or not Path(vesum_db).exists():
+        return None
+    import sqlite3
+
+    try:
+        lookup = VesumLookup(vesum_db)
+        lookup.status("тест")
+    except sqlite3.Error:
+        return None
+    return lookup
+
+
+class _SourceRows:
+    """sources.db rows by ``rowId``, with the pairs the extractor derives from each row."""
+
+    def __init__(self, sources_db: Path, vesum: VesumLookup | None):
+        import sqlite3
+
+        self._conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+        try:
+            self._conn.execute("SELECT id, grade, author, title, text FROM textbooks LIMIT 0")
+            self._conn.execute("SELECT id, word, section, text FROM style_guide LIMIT 0")
+        except sqlite3.Error:
+            self._conn.close()
+            raise
+        self._vesum = vesum
+        self._texts: dict[str, str | None] = {}
+        self._labels: dict[str, str | None] = {}
+        self._pairs: dict[str, set[tuple]] = {}
+
+    def text(self, row_id: str) -> str | None:
+        if row_id not in self._texts:
+            self._texts[row_id] = load_source_row(self._conn, row_id)
+        return self._texts[row_id]
+
+    def derives(self, row_id: str, error: str, correct: str, ref: dict[str, Any]) -> bool:
+        """True when the extractor reads exactly this pair, at these spans and in this direction, from the row."""
+        if row_id not in self._pairs:
+            self._pairs[row_id] = {
+                (p["error"], p["correct"], tuple(p["errorSpan"]), tuple(p["correctSpan"]), p["direction"])
+                for p in derive_row_pairs(row_id, self.text(row_id) or "", self._vesum)
+            }
+        key = (error, correct, tuple(ref["errorSpan"]), tuple(ref["correctSpan"]), ref["direction"])
+        return key in self._pairs[row_id]
+
+    def label(self, row_id: str) -> str | None:
+        if row_id not in self._labels:
+            self._labels[row_id] = source_label_for_row(self._conn, row_id)
+        return self._labels[row_id]
+
+
+def _error_correction_source_rows(sources_db: Path | str | None, vesum: VesumLookup | None) -> _SourceRows | None:
+    """Source-row verifier, or None only for explicitly database-free CI mode.
+
+    The extractor pairs rows with VESUM, so re-deriving a pair needs VESUM too: without
+    the audit's own VESUM view the default database is used.
+    """
+    if sources_db is None:
+        return None
+    import sqlite3
+
+    try:
+        return _SourceRows(Path(sources_db), vesum or _error_correction_vesum(DEFAULT_VESUM_DB))
+    except (sqlite3.Error, OSError, ValueError) as exc:
+        raise ValueError("supplied sources_db is not a readable sources database") from exc
+
+
+def _source_binding_violations(
+    item_id: str,
+    item: dict[str, Any],
+    error_target: str,
+    correct_target: str,
+    evidence: dict[str, dict[str, str]],
+    source_rows: _SourceRows | None,
 ) -> list[dict[str, Any]]:
-    """Audit error-correction dataset for schema, substring match, and pedagogical validity."""
+    """A drill must be the exact pair of one source row (#8723); a missing binding is a failure.
+
+    Both modes: ``sourceRef`` is well formed and the committed evidence snapshot has
+    this drill's row id, source label, error and correction. With sources.db: the
+    label is derived again from row metadata, and the row text, spans and pair
+    direction are re-verified.
+    """
+    ref = item.get("sourceRef")
+    problem = source_ref_problem(ref)
+    if problem:
+        return [{"type": "MISSING_SOURCE_REF", "item": item_id, "message": f"not bound to a source row: {problem}"}]
+    entry = evidence.get(item_id)
+    if not entry:
+        return [
+            {
+                "type": "EVIDENCE_SNAPSHOT_MISSING",
+                "item": item_id,
+                "message": f"no evidence snapshot entry for {item_id} ({ref['rowId']})",
+            }
+        ]
+    expected = {"rowId": ref["rowId"], "error": error_target, "correct": correct_target}
+    mismatched = {field: entry.get(field) for field, value in expected.items() if entry.get(field) != value}
+    if mismatched:
+        return [
+            {
+                "type": "EVIDENCE_SNAPSHOT_MISMATCH",
+                "item": item_id,
+                "message": f"drill {expected!r} does not match its evidence snapshot {mismatched!r}",
+            }
+        ]
+    if not isinstance(item.get("source"), str) or not item["source"] or item["source"] != entry.get("source"):
+        return [
+            {
+                "type": "SOURCE_LABEL_MISMATCH",
+                "item": item_id,
+                "message": f"displayed source label does not match the evidence snapshot for {ref['rowId']}",
+            }
+        ]
+    if source_rows is None:
+        return []
+
+    text = source_rows.text(ref["rowId"])
+    if text is None:
+        return [{"type": "SOURCE_ROW_MISSING", "item": item_id, "message": f"{ref['rowId']} is not in sources.db"}]
+    if row_sha256(text) != entry.get("rowSha256"):
+        return [
+            {
+                "type": "SOURCE_ROW_CHANGED",
+                "item": item_id,
+                "message": f"{ref['rowId']} no longer hashes to its evidence snapshot SHA-256",
+            }
+        ]
+    if source_rows.label(ref["rowId"]) != entry["source"]:
+        return [
+            {
+                "type": "SOURCE_LABEL_MISMATCH",
+                "item": item_id,
+                "message": f"displayed source label does not match row metadata for {ref['rowId']}",
+            }
+        ]
+    read = (span_text(text, ref["errorSpan"]), span_text(text, ref["correctSpan"]))
+    if read != (error_target, correct_target):
+        return [
+            {
+                "type": "SOURCE_SPAN_MISMATCH",
+                "item": item_id,
+                "message": f"{ref['rowId']} reads {read[0]!r} → {read[1]!r} at the drill's spans",
+            }
+        ]
+    if not source_rows.derives(ref["rowId"], error_target, correct_target, ref):
+        return [
+            {
+                "type": "SOURCE_PAIR_NOT_DERIVED",
+                "item": item_id,
+                "message": f"{ref['rowId']} does not pair {error_target!r} → {correct_target!r} "
+                f"at spans {ref['errorSpan']} → {ref['correctSpan']} ({ref['direction']})",
+            }
+        ]
+    return []
+
+
+def _typed_answer_violations(
+    item_id: str, error_target: str, correct_target: str, answers: Any, vesum: VesumLookup | None
+) -> list[dict[str, Any]]:
+    """Typed answers must accept the correction and its listed readings, never the error (#8723)."""
+    if answers is None:
+        return []  # the site accepts only ``correctForm``
+    if not isinstance(answers, list) or not answers or not all(isinstance(a, str) and a.strip() for a in answers):
+        return [
+            {"type": "INVALID_ANSWERS", "item": item_id, "message": f"answers must be non-empty strings: {answers!r}"}
+        ]
+    violations = []
+    keys = {typed_answer_key(answer): answer for answer in answers}
+    if error_target and typed_answer_key(error_target) in keys:
+        violations.append(
+            {
+                "type": "ANSWERS_ACCEPT_ERROR",
+                "item": item_id,
+                "message": f"answers accept the error {keys[typed_answer_key(error_target)]!r}",
+            }
+        )
+    if correct_target and typed_answer_key(correct_target) not in keys:
+        violations.append(
+            {
+                "type": "ANSWERS_OMIT_CORRECTION",
+                "item": item_id,
+                "message": f"answers {answers!r} do not accept the correction {correct_target!r}",
+            }
+        )
+
+    # Every reading comes from the correction's own words; with VESUM it must be one
+    # the extractor derives from the correction.
+    def words(text: str) -> set[str]:
+        return set(re.findall(r"[\w’-]+", typed_answer_key(text)))
+
+    correct_words = words(correct_target)
+    readings = correction_answers(correct_target, vesum) if vesum is not None and correct_target else None
+    reading_keys = {typed_answer_key(reading) for reading in readings or []}
+    foreign = [
+        answer
+        for key, answer in keys.items()
+        if not words(answer) <= correct_words or (readings is not None and key not in reading_keys)
+    ]
+    if foreign:
+        violations.append(
+            {
+                "type": "ANSWER_NOT_A_SOURCE_READING",
+                "item": item_id,
+                "message": f"answers {foreign!r} are not readings of the correction {correct_target!r}",
+            }
+        )
+    return violations
+
+
+def audit_error_correction_deck(
+    path: Path | str,
+    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    sources_db: Path | str | None = None,
+    evidence_path: Path | str = DEFAULT_ERROR_CORRECTION_EVIDENCE,
+) -> list[dict[str, Any]]:
+    """Audit error-correction dataset for schema, substring match, and pedagogical validity.
+
+    Every drill must match its ``evidence_path`` snapshot entry. The default is
+    snapshot-only CI mode; an explicitly supplied ``sources_db`` also verifies
+    the snapshot and drill spans against the source row and must be valid.
+    """
     violations: list[dict[str, Any]] = []
     p = Path(path)
     if not p.exists():
@@ -249,6 +522,13 @@ def audit_error_correction_deck(
         data = json.load(f)
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
+    pair_vesum = _error_correction_vesum(vesum_db)
+    try:
+        source_rows = _error_correction_source_rows(sources_db, pair_vesum)
+    except ValueError as exc:
+        return [{"type": "SOURCE_DB_INVALID", "item": "sources_db", "message": str(exc)}]
+    evidence = load_evidence_snapshot(evidence_path)
+    reviewed_withholds = load_reviewed_withholds()
 
     seen_ids: set[str] = set()
     for idx, item in enumerate(items, 1):
@@ -279,6 +559,15 @@ def audit_error_correction_deck(
                     "message": f"errorTarget {error_target!r} not found in sentence {sentence!r}",
                 }
             )
+        elif sentence.count(error_target) > 1:
+            # The edit replaces one occurrence; every changed token must lie in the bound error span.
+            violations.append(
+                {
+                    "type": "ERROR_TARGET_AMBIGUOUS",
+                    "item": item_id,
+                    "message": f"errorTarget {error_target!r} occurs more than once in sentence {sentence!r}",
+                }
+            )
 
         if not correct_target:
             violations.append({"type": "EMPTY_CORRECT_TARGET", "item": item_id, "message": "correctTarget is empty"})
@@ -291,7 +580,45 @@ def audit_error_correction_deck(
                 }
             )
 
+        review = reviewed_withholds.get(pair_key(error_target, correct_target)) if error_target else None
+        if review:
+            violations.append(
+                {
+                    "type": "REVIEWED_WITHHELD_PAIR",
+                    "item": item_id,
+                    "message": f"{error_target!r} → {correct_target!r} was withheld by language review "
+                    f"({review['code']}: {review['reason']})",
+                }
+            )
+
+        if error_target and correct_target:
+            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum)
+            if reason:
+                violations.append(
+                    {
+                        "type": "UNEVIDENCED_ERROR_CORRECTION_PAIR",
+                        "item": item_id,
+                        "message": f"{error_target!r} → {correct_target!r} is not a source-evidenced correction ({reason})",
+                    }
+                )
+        violations.extend(
+            _source_binding_violations(item_id, item, error_target, correct_target, evidence, source_rows)
+        )
+
+        violations.extend(
+            _typed_answer_violations(item_id, error_target, correct_target, item.get("answers"), pair_vesum)
+        )
+
         options = item.get("options", [])
+        labelled = [o for o in options if isinstance(o, str) and REGISTER_LABEL_RE.search(o)]
+        if labelled:
+            violations.append(
+                {
+                    "type": "REGISTER_LABEL_DISTRACTOR",
+                    "item": item_id,
+                    "message": f"options carry generated register labels, not evidenced alternatives: {labelled}",
+                }
+            )
         if not options or len(options) < 2:
             violations.append(
                 {
@@ -862,6 +1189,7 @@ def run_all_practice_audits(
     sentence_inventory: Path | str = DEFAULT_SENTENCE_INVENTORY,
     vesum_db: Path | str | None = DEFAULT_VESUM_DB,
     *,
+    sources_db: Path | str | None = None,
     all_modes: bool = False,
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
     verify_vesum: bool = False,
@@ -875,7 +1203,7 @@ def run_all_practice_audits(
         {
             "teacher_cloze": audit_teacher_cloze_deck(teacher_cloze, vesum_db=vesum_db if verify_vesum else None),
             "error_corrections": audit_error_correction_deck(
-                error_corrections, vesum_db=vesum_db if verify_vesum else None
+                error_corrections, vesum_db=vesum_db if verify_vesum else None, sources_db=sources_db
             ),
             "sentence_inventory": audit_sentence_inventory(sentence_inventory),
         }
@@ -906,19 +1234,34 @@ def run_all_practice_audits(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Unified Practice Hub quality assurance gate (Issues #7944, #8276)")
-    parser.add_argument("--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE))
-    parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS))
-    parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY))
-    parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR))
-    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB))
-    parser.add_argument("--all-modes", action="store_true", help="Audit all practice shards across all 10 modes")
-    parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM")
-    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One")
-    parser.add_argument(
-        "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation"
+    parser = argparse.ArgumentParser(
+        description=(
+            "Audit Practice Hub assets for learner-visible quality violations.\n"
+            "Run for committed snapshot checks in CI; pass --sources-db for local source-row verification."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/audit/practice_quality_gate.py\n"
+            "  .venv/bin/python scripts/audit/practice_quality_gate.py --sources-db data/sources.db\n"
+            "Outputs: Prints violations; writes no files.\n"
+            "Exit codes: 0 = no violations; 1 = violations.\n"
+            "Related: Issues #7944, #8276, #8723; committed error-correction evidence snapshot."
+        ),
     )
-    parser.add_argument("--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure")
+    parser.add_argument("--teacher-cloze", default=str(DEFAULT_TEACHER_CLOZE), help="Teacher cloze JSON (default: bundled deck)")
+    parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS), help="Error-correction JSON (default: registry deck)")
+    parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY), help="Sentence inventory JSON (default: bundled inventory)")
+    parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR), help="Practice shard directory (default: site/public/lexicon)")
+    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB), help="VESUM database (default: data/vesum.db; used with --verify-vesum)")
+    parser.add_argument("--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)")
+    parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
+    parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)")
+    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One (default: off)")
+    parser.add_argument(
+        "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation (default: 5)"
+    )
+    parser.add_argument("--strict-ambiguity", action="store_true", help="Treat fail_ambiguous as a hard failure (default: off)")
     args = parser.parse_args()
 
     # When --all-modes is passed, default verify_vesum to True if not explicitly overridden
@@ -930,6 +1273,7 @@ def main() -> int:
         error_corrections=args.error_corrections,
         sentence_inventory=args.sentence_inventory,
         vesum_db=args.vesum_db,
+        sources_db=args.sources_db,
         all_modes=args.all_modes,
         shards_dir=args.shards_dir,
         verify_vesum=verify_vesum,

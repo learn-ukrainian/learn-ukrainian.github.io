@@ -16,7 +16,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PREREG_SCHEMA = CONTRACTS / "treatment_preregistration_v1.schema.json"
 AUTH_SCHEMA = CONTRACTS / "treatment_authorization_v1.schema.json"
 PRODUCTION_SCHEMA = CONTRACTS / "model_ready_view_production_v1.schema.json"
@@ -192,7 +192,9 @@ def build_safety_probes(
     if set(faithful_by_source) != set(modern_by_source):
         raise TreatmentError("faithful and modern views do not contain the same source records")
 
-    training_ids = sorted(source_id for source_id in faithful_by_source if split_bucket(source_id) >= VALIDATION_BUCKETS)
+    training_ids = sorted(
+        source_id for source_id in faithful_by_source if split_bucket(source_id) >= VALIDATION_BUCKETS
+    )
     validation_ids = sorted(set(faithful_by_source) - set(training_ids))
     clean_candidates: list[tuple[str, dict[str, Any]]] = []
     protected_candidates: list[tuple[str, dict[str, Any]]] = []
@@ -334,7 +336,9 @@ def build_safety_probes(
         },
     }
     validate_schema(receipt, PROBE_RECEIPT_SCHEMA, label="safety-probe receipt")
-    write_atomic(receipt_path, (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8"))
+    write_atomic(
+        receipt_path, (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    )
     return receipt
 
 
@@ -397,7 +401,10 @@ def preflight(
     firewall = production["evaluation_firewall"]
     if firewall["state"] != "verified" or firewall["exact_overlap_count"] or firewall["near_overlap_count"]:
         raise TreatmentError("evaluation firewall is not clean")
-    if production["continued_pretraining_views"]["faithful"]["artifact"]["sha256"] != artifacts["faithful_view"]["sha256"]:
+    if (
+        production["continued_pretraining_views"]["faithful"]["artifact"]["sha256"]
+        != artifacts["faithful_view"]["sha256"]
+    ):
         raise TreatmentError("faithful view is not the Phase 3 bound artifact")
     if production["continued_pretraining_views"]["modern"]["artifact"]["sha256"] != artifacts["modern_view"]["sha256"]:
         raise TreatmentError("modern view is not the Phase 3 bound artifact")
@@ -406,7 +413,10 @@ def preflight(
 
     diagnostics = read_json(ROOT / str(artifacts["tokenizer_diagnostics"]["logical_path"]))
     validate_schema(diagnostics, TOKENIZER_SCHEMA, label="tokenizer diagnostics")
-    if diagnostics["tokenizer"]["identifier"] != MODEL_IDENTIFIER or diagnostics["tokenizer"]["revision"] != MODEL_REVISION:
+    if (
+        diagnostics["tokenizer"]["identifier"] != MODEL_IDENTIFIER
+        or diagnostics["tokenizer"]["revision"] != MODEL_REVISION
+    ):
         raise TreatmentError("diagnostics are not for the frozen IT tokenizer")
     counters = diagnostics["metrics"]["mask_projection"]["counters"]
     if counters["projection_failures"] != 0 or counters["zero_loss_tokens"] <= 0:

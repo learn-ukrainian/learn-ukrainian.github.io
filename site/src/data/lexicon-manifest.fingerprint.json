@@ -67,7 +67,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "006337cee6bff6d17e8804023431eb8801ed1265604e0170e1cee07ea66660b6"
+        "sha256": "f2ffd92259b09ef692a2518153bdb5b1e7aba3b689485c7df1dfc8bff4d4ec71"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -199,7 +199,7 @@
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
-        "sha256": "31e8fc21a51b12464a38cdd6eb7dae46c31b62eae8dcf0f53ebfd5c38d762cea"
+        "sha256": "3d40a96cc10e947bbff616421ceeae45b6eb633f576e35ab489bac8f2782658a"
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",
@@ -359,7 +359,15 @@
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
-        "sha256": "0756a2a5c50b58955d1678b7cdf9bdf198d876b0e542a2d3903edee47e3111f6"
+        "sha256": "2734b018dccc3c07dded52f973ee5c2b5073d9525c01ad3a7c6c79057d3ef6f1"
+      },
+      {
+        "path": "scripts/lexicon/teacher_deck.py",
+        "sha256": "fe97699ea23784d6fd05625d42bacd009449be5131d79e2dfdf3ea25316fa7c6"
+      },
+      {
+        "path": "scripts/lexicon/teacher_deck_shard.py",
+        "sha256": "7aa1c25c60ebc9b72addb0acc86a22a18ba9d89240d7b2c93933bc4c61879f33"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",

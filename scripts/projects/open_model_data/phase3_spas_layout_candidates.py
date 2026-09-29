@@ -61,7 +61,7 @@ from scripts.projects.open_model_data.phase3_spas_glyph_adapter import (
 
 ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json"
+    ROOT / "registry/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json"
 )
 
 SCHEMA_VERSION = "phase3_spas_layout_candidate_receipt_v1"

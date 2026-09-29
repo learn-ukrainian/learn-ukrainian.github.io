@@ -34,7 +34,7 @@ from scripts.projects.open_model_data import phase3_near_duplicate as near_dupli
 from scripts.projects.open_model_data import phase3_source_universe as source_universe
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 SCHEMA_PATH = CONTRACTS / "phase3_rule_author_packet_bundle_v1.schema.json"
 CLEARANCE_SCHEMA_PATH = CONTRACTS / "phase3_heldout_partition_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"
@@ -216,8 +216,7 @@ def _legacy_derive_role_actor(role_contract: Mapping[str, Any], expected_role: s
         and binding.get("role_id") == expected_role
         and binding.get("controller_identity_id") == controller
         and isinstance(binding.get("reserved_task_id"), str)
-        and binding.get("status")
-        in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
+        and binding.get("status") in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
     ]
     require(len(matching) == 1, f"role contract lacks one active {expected_role} task binding")
     return {
@@ -315,7 +314,9 @@ def _validate_legacy_clearance(
     )
     heldout_access = evaluation.get("heldout_access")
     require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
-    require(heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access")
+    require(
+        heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access"
+    )
     policy = near_duplicate.policy_for_governed_use(
         "public_canary_neighbour_exclusion",
         expected_fingerprint=str(bindings["near_duplicate_policy_fingerprint_sha256"]),
@@ -377,7 +378,9 @@ def validate_clearance(
     )
     require(clearance.get("schema_version") == "phase3_author_clearance_receipt_v2_1", "clearance is not v2.1")
     require(clearance.get("text_free") is True, "clearance is not text-free")
-    require(clearance.get("implementation_version") == "phase3_heldout_partition_v2_1", "clearance implementation drift")
+    require(
+        clearance.get("implementation_version") == "phase3_heldout_partition_v2_1", "clearance implementation drift"
+    )
     require(receipt_body_sha256(clearance) == clearance.get("receipt_sha256"), "clearance receipt body hash drift")
     bindings = clearance["input_bindings"]
     require(
@@ -429,7 +432,10 @@ def validate_clearance(
             "clearance cleared unit identity malformed",
         )
         unit_keys.append((str(unit["family_id"]), str(unit["unit_id"])))
-    require(len(unit_keys) == len(set(unit_keys)) == clearance.get("cleared_unit_count"), "clearance unit count or uniqueness drift")
+    require(
+        len(unit_keys) == len(set(unit_keys)) == clearance.get("cleared_unit_count"),
+        "clearance unit count or uniqueness drift",
+    )
     require(
         clearance.get("heldout_excluded") is True
         and clearance.get("ua_eval_exclusion_enforced") is True
@@ -449,7 +455,9 @@ def validate_clearance(
     author = _derive_role_actor(role_contract, "rule_author_extractor")
     acl = role_contract.get("heldout_acl")
     require(isinstance(acl, Mapping), "role contract heldout ACL missing")
-    require(steward["task_id"] in set(acl.get("pre_release_read_task_ids", [])), "steward lacks pre-release heldout access")
+    require(
+        steward["task_id"] in set(acl.get("pre_release_read_task_ids", [])), "steward lacks pre-release heldout access"
+    )
     require(
         author["task_id"] in set(acl.get("forbidden_task_ids", []))
         and author["task_id"] not in set(acl.get("pre_release_read_task_ids", []))
@@ -463,7 +471,9 @@ def validate_clearance(
     )
     action_receipt = clearance.get("action_receipt")
     require(isinstance(action_receipt, Mapping), "clearance lacks v2.1 steward action receipt")
-    require(set(action_receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "clearance action receipt field set drift")
+    require(
+        set(action_receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "clearance action receipt field set drift"
+    )
     steward_entry = next(item for item in role_contract["functional_roles"] if item["role_id"] == "heldout_steward")
     require(
         {key: action_receipt.get(key) for key in ("role_id", "task_id")} == steward,
@@ -473,10 +483,12 @@ def validate_clearance(
         all(action_receipt.get(key) == steward_entry[key] for key in ("exact_model", "model_family", "harness")),
         "clearance action receipt execution lane drift",
     )
-    require(isinstance(action_receipt.get("provider"), str) and action_receipt["provider"], "clearance provider metadata missing")
     require(
-        action_receipt.get("input_manifest_sha256")
-        == sha256_bytes(canonical_json(bindings).encode("utf-8")),
+        isinstance(action_receipt.get("provider"), str) and action_receipt["provider"],
+        "clearance provider metadata missing",
+    )
+    require(
+        action_receipt.get("input_manifest_sha256") == sha256_bytes(canonical_json(bindings).encode("utf-8")),
         "clearance action receipt input drift",
     )
     require(
@@ -502,12 +514,17 @@ def validate_clearance(
         "clearance steward action kind drift",
     )
     require(
-        all(isinstance(action_receipt.get(key), str) and action_receipt[key] for key in ("receipt_id", "action_kind", "started_at", "completed_at")),
+        all(
+            isinstance(action_receipt.get(key), str) and action_receipt[key]
+            for key in ("receipt_id", "action_kind", "started_at", "completed_at")
+        ),
         "clearance action receipt metadata incomplete",
     )
     heldout_access = evaluation.get("heldout_access")
     require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
-    require(heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access")
+    require(
+        heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access"
+    )
     policy = near_duplicate.policy_for_governed_use(
         "public_canary_neighbour_exclusion",
         expected_fingerprint=str(bindings["near_duplicate_policy_fingerprint_sha256"]),
@@ -626,10 +643,7 @@ def _item_from_row(row: Mapping[str, Any], clearance_sha: str, policy_sha: str) 
     source_lang = normalized_record.get("source_lang")
     is_native = normalized_record.get("is_native")
     require(
-        isinstance(annotator, str)
-        and annotator
-        and isinstance(source_lang, str)
-        and isinstance(is_native, int),
+        isinstance(annotator, str) and annotator and isinstance(source_lang, str) and isinstance(is_native, int),
         "UA-GEC correction provenance is malformed",
     )
     require(
@@ -648,9 +662,7 @@ def _item_from_row(row: Mapping[str, Any], clearance_sha: str, policy_sha: str) 
         "source_item_id": stable_id("rule_author_source", identity),
         "family_id": family_id,
         "frozen_unit": frozen,
-        "source_document_identity": _source_document_identity(
-            {**row, "source_record": normalized_record}, family_id
-        ),
+        "source_document_identity": _source_document_identity({**row, "source_record": normalized_record}, family_id),
         "locator": {
             "kind": "local_immutable_locator",
             "opaque_locator_sha256": sha256_bytes(canonical_json(locator).encode("utf-8")),
@@ -1028,7 +1040,9 @@ def verify(
         validate(review, "reviewDecision", "Ukrainian review decision")
         require(review["reviewer"] == reviewer_actor, "reviewer does not match current Ukrainian reviewer role")
         require(
-            functional_roles.tasks_conflict(role_contract, response["author"]["task_id"], review["reviewer"]["task_id"]),
+            functional_roles.tasks_conflict(
+                role_contract, response["author"]["task_id"], review["reviewer"]["task_id"]
+            ),
             "rule-author output lacks a directed source-review task edge",
         )
         require(review["reviewed_payload_sha256"] == response_sha, "review does not bind response payload")

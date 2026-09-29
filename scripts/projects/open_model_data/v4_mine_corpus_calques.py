@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,
     is_phase30_textbook_heldout,
@@ -710,14 +711,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.verify_only:
-        schema_path = (
-            REPO_ROOT
-            / "data"
-            / "projects"
-            / "open_model_data"
-            / "contracts"
-            / "v1_decolonization_mined_candidates.schema.json"
-        )
+        schema_path = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/v1_decolonization_mined_candidates.schema.json"
         try:
             verify_mined_manifest(args.output_dir, schema_path)
         except ValueError as exc:

@@ -19,6 +19,7 @@ import json
 import sys
 import threading
 from pathlib import Path
+from typing import ClassVar
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import mcp  # noqa: F401  # Declares the Sources wire dependency to the CI fastlane.
@@ -110,6 +111,8 @@ class TestListTools:
             f"unexpected tools: {extra}. Update the test expected set — "
             f"adding a tool to the server always requires a test update."
         )
+        identity_tool = next(tool for tool in tools if tool.name == "mcp_server_identity")
+        assert identity_tool.input_schema["properties"]["include_sources_db_sha256"]["type"] == "boolean"
 
     def test_all_tools_have_input_schema(self, server_module):
         tools = _run(server_module.list_tools())
@@ -152,6 +155,15 @@ class TestUlifHandlers:
 
         query.assert_called_once_with("відсутнє")
         assert result[0].text == "No ULIF paradigm found for: 'відсутнє'"
+
+    def test_query_ulif_without_sections_unavailable_is_not_no_result(self, server_module):
+        """A DictUA outage must not render as 'No ULIF paradigm found' (#9005)."""
+        unavailable = {"status": "unavailable", "word": "великий"}
+        with patch("rag.source_query.ulif_paradigm", return_value=unavailable):
+            result = _run(server_module.handle_query_ulif({"word": "великий"}))
+
+        assert "unavailable" in result[0].text
+        assert "No ULIF paradigm found" not in result[0].text
 
     def test_query_ulif_renders_structured_source_metadata(self, server_module):
         expected = {
@@ -283,6 +295,106 @@ class TestUlifHandlers:
         assert tool.input_schema["required"] == ["word"]
         assert "pos" in tool.input_schema["properties"]
         assert "tags" in tool.input_schema["properties"]
+
+
+class TestLiveSourceUnavailable:
+    """An outage (Cloudflare/network/HTTP failure) must never render as a
+    false negative ('no entry'/'not found') — see #9005."""
+
+    def test_slovnyk_me_unavailable_is_not_rendered_as_no_entry(self, server_module):
+        unavailable = {
+            "status": "unavailable",
+            "word": "хата",
+            "dict": "vts",
+            "url": "https://slovnyk.me/dict/vts/хата",
+            "challenge": True,
+            "http_status": 403,
+        }
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=unavailable):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "хата", "dict": "vts"}))
+        text = result[0].text
+        assert "unavailable" in text
+        assert "No entry found" not in text
+        assert "HTTP 403" in text
+        assert "Cloudflare challenge detected" in text
+
+    def test_slovnyk_me_not_found_still_renders_no_entry(self, server_module):
+        not_found = {"status": "not_found", "word": "жжжнемає", "dict": "vts", "url": "https://slovnyk.me/dict/vts/жжжнемає"}
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=not_found):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "жжжнемає", "dict": "vts"}))
+        assert "No entry found" in result[0].text
+
+    def test_r2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
+        from rag.source_query import R2ULookupStatus
+
+        with patch(
+            "rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.SOURCE_UNAVAILABLE, []),
+        ):
+            result = _run(server_module.handle_query_r2u({"word": "привет"}))
+        assert "unavailable" in result[0].text
+        assert "No r2u translation found" not in result[0].text
+
+    def test_r2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import R2ULookupStatus
+
+        with patch(
+            "rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_r2u({"word": "жжжнемає"}))
+        assert "No r2u translation found" in result[0].text
+
+    def test_e2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.SOURCE_UNAVAILABLE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "house"}))
+        assert "unavailable" in result[0].text
+        assert "No e2u translation found" not in result[0].text
+
+    def test_e2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "zzznotaword"}))
+        assert "No e2u translation found" in result[0].text
+
+    def test_grac_concordance_unavailable_is_not_rendered_as_no_results(self, server_module):
+        with patch("rag.source_query.grac_concordance", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "concordance"})
+            )
+        assert "unavailable" in result[0].text
+        assert "No concordance results" not in result[0].text
+
+    def test_grac_concordance_not_found_still_renders_no_results(self, server_module):
+        with patch("rag.source_query.grac_concordance", return_value=[]):
+            result = _run(
+                server_module.handle_query_grac({"query": "zzznotaword", "mode": "concordance"})
+            )
+        assert "No concordance results" in result[0].text
+
+    def test_grac_collocations_unavailable_is_not_rendered_as_no_results(self, server_module):
+        with patch("rag.source_query.grac_collocations", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "collocations"})
+            )
+        assert "unavailable" in result[0].text
+        assert "No collocations found" not in result[0].text
+
+    def test_grac_frequency_unavailable_is_not_rendered_as_zero_freq(self, server_module):
+        with patch("rag.source_query.grac_frequency", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "frequency"})
+            )
+        assert "unavailable" in result[0].text
 
 
 class TestCallToolDispatch:
@@ -1587,3 +1699,99 @@ class TestFileHashCaching:
         # Assert subsequent call hits cache without disk I/O
         with patch("builtins.open", side_effect=AssertionError("Should hit cache")):
             assert server_module._sha256_of_file(test_file) == mutated_hash
+
+
+class TestSlovnykMeSearchOutage:
+    """#9005: a live slovnyk.me outage in search_slovnyk_me is never rendered as 'No results'."""
+
+    OUTAGE: ClassVar[list[dict]] = [{"dictionary_slug": "vts", "word": "тест", "error": "HTTP 403"}]
+
+    def test_outage_with_no_hits_renders_unavailable(self, server_module):
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([], self.OUTAGE)):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert "UNAVAILABLE" in result[0].text
+        assert "vts (HTTP 403)" in result[0].text
+        assert "No slovnyk.me results" not in result[0].text
+
+    def test_no_hits_and_no_outage_is_a_real_miss(self, server_module):
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([], [])):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert result[0].text.startswith("No slovnyk.me results")
+
+    def test_hits_with_an_outage_are_marked_partial(self, server_module):
+        hit = {"word": "тест", "dictionary_slug": "sum20", "source_url": "https://example.invalid", "text": "x"}
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([hit], self.OUTAGE)):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert "Partial results" in result[0].text
+        assert "### Result 1" in result[0].text
+
+
+class TestWikipediaPravopysHeritageOutage:
+    """#9005 r3: Wikipedia, Правопис and heritage outages are reported as unavailable, never as a miss."""
+
+    @pytest.mark.parametrize("mode", ["summary", "search", "extract", "sections", "section"])
+    def test_wikipedia_outage_is_unavailable_and_never_negative_cached(self, server_module, mode):
+        from rag.source_query import WikipediaUnavailableError
+
+        cache = MagicMock()
+        cache.get.return_value = None
+        name = {
+            "summary": "wikipedia_summary",
+            "search": "wikipedia_search",
+            "extract": "wikipedia_extract",
+            "sections": "wikipedia_sections",
+            "section": "wikipedia_section_text",
+        }[mode]
+        with (
+            patch("rag.wiki_cache.WikiCache", return_value=cache),
+            patch(f"rag.source_query.{name}", side_effect=WikipediaUnavailableError("HTTP 403")) as fetch,
+            patch.object(server_module, "_lookup_wikipedia_in_db", return_value=None),
+        ):
+            result = _run(server_module.handle_query_wikipedia({"query": "Стаття", "mode": mode, "section": 1}))
+        assert fetch.call_args.kwargs.get("raise_unavailable") is True
+        assert result[0].text.startswith(server_module.WIKIPEDIA_UNAVAILABLE_PREFIX)
+        assert "HTTP 403" in result[0].text
+        cache.put_negative.assert_not_called()
+        cache.put.assert_not_called()
+
+    def test_pravopys_outage_is_unavailable(self, server_module):
+        unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
+        with patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch:
+            result = _run(server_module.handle_query_pravopys({"topic": "3"}))
+        content = result[0] if isinstance(result, tuple) else result
+        assert fetch.call_args.kwargs.get("report_unavailable") is True
+        assert "UNAVAILABLE" in content[0].text
+        assert "No pravopys section found" not in content[0].text
+
+    def _heritage(self, server_module, hits, outages):
+        def fake(query, limit, *, include_live_slovnyk, outages=None):
+            if outages is not None:
+                outages.extend(outage_rows)
+            return hits
+
+        outage_rows = outages
+        with patch("wiki.sources_db.search_heritage", side_effect=fake):
+            return _run(server_module.handle_search_heritage({"query": "тест"}))[0].text
+
+    def test_heritage_outage_with_no_hits_is_unavailable(self, server_module):
+        text = self._heritage(server_module, [], [{"dictionary_slug": "vts", "error": "HTTP 403"}])
+        assert "UNAVAILABLE" in text and "No heritage evidence found" not in text
+
+    def test_heritage_hits_with_an_outage_are_partial(self, server_module):
+        hit = {"source_family": "slovnyk_me", "source": "x", "word": "тест", "score": 1.0}
+        text = self._heritage(server_module, [hit], [{"dictionary_slug": "vts", "error": "HTTP 403"}])
+        assert "Partial results" in text and "### Evidence 1" in text
+
+    def test_heritage_real_miss_is_unchanged(self, server_module):
+        assert self._heritage(server_module, [], []).startswith("No heritage evidence found")
+
+
+def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
+    """#9005 r4: the structured envelope of an unreachable Правопис is status=error, not the miss status."""
+    unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
+    with patch("rag.source_query.pravopys_section", return_value=unavailable):
+        result = _run(server_module.handle_query_pravopys({"topic": "3"}))
+    assert isinstance(result, tuple)
+    _content, envelope = result
+    assert envelope["status"] == "error"
+    assert envelope["error_code"] == "source_unavailable"

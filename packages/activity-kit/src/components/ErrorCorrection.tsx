@@ -194,7 +194,7 @@ export function ErrorCorrectionItem({
               {step === 'complete' && isError ? (
                 <>
                   <s>{word}</s>
-                  {isLastErrorWord && selectedFix ? ` ${selectedFix}` : ''}
+                  {isLastErrorWord ? ` ${correctForm}` : ''}
                 </>
               ) : (
                 word
@@ -265,7 +265,14 @@ export function ErrorCorrectionItem({
             ) : isFixCorrect ? (
               `✓ ${isUkrainian ? 'Правильно!' : 'Correct!'} "${errorWord}" → "${correctForm}"`
             ) : (
-              `${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`
+              <>
+                {selectedFix && (
+                  <div data-activity="error-correction-learner-answer">
+                    {isUkrainian ? 'Ваша відповідь:' : 'Your answer:'} "{selectedFix}"
+                  </div>
+                )}
+                {`${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`}
+              </>
             )}
             {explanation && (
               <div className={styles.explanation}>{explanation}</div>

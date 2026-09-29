@@ -32,8 +32,8 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import ARTIFACT_RELEASE_DIR, REGISTRY_RELEASE_DIR
 from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
-    DEFAULT_RELEASE_DIR,
     DEFAULT_VESUM_DB,
     EVAL_SCHEMA_FILE,
     RECEIPT_SCHEMA_FILE,
@@ -56,12 +56,12 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     verify_modern_literary_regression,
 )
 
-EVAL_BENCHMARK_PATH = DEFAULT_RELEASE_DIR / "dialect_corpus_expanded_1500.jsonl"
-EVAL_SHA_PATH = DEFAULT_RELEASE_DIR / "dialect_corpus_expanded_1500.sha256"
-SFT_DATASET_PATH = DEFAULT_RELEASE_DIR / "sft_dialect_protection_500.jsonl"
-SFT_SHA_PATH = DEFAULT_RELEASE_DIR / "sft_dialect_protection_500.sha256"
-RECEIPT_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json"
-RECEIPT_SHA_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json.sha256"
+EVAL_BENCHMARK_PATH = ARTIFACT_RELEASE_DIR / "uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl"
+EVAL_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/dialect_corpus_expanded_1500.sha256"
+SFT_DATASET_PATH = ARTIFACT_RELEASE_DIR / "uldr_v03_dialect/sft_dialect_protection_500.jsonl"
+SFT_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/sft_dialect_protection_500.sha256"
+RECEIPT_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/release_receipt.json"
+RECEIPT_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/release_receipt.json.sha256"
 
 
 @pytest.fixture(scope="module")
@@ -144,6 +144,11 @@ def vesum_db_fixture(tmp_path: Path) -> Path:
 # 1. Release Files Existence and Cryptographic SHA-256 Integrity
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_release_files_and_sha256_integrity() -> None:
     """Verify all release artifacts exist and match their SHA-256 manifest files."""
     for data_file, sha_file in [
@@ -158,13 +163,20 @@ def test_release_files_and_sha256_integrity() -> None:
         sha_line = sha_file.read_text(encoding="utf-8").strip()
         recorded_sha = sha_line.split()[0].strip()
 
-        assert actual_sha == recorded_sha, f"SHA mismatch for {data_file.name}: actual={actual_sha}, recorded={recorded_sha}"
+        assert actual_sha == recorded_sha, (
+            f"SHA mismatch for {data_file.name}: actual={actual_sha}, recorded={recorded_sha}"
+        )
 
 
 # ==============================================================================
 # 2. Release Receipt Schema & Content Verification
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_release_receipt_schema_and_facts(
     release_receipt: dict[str, Any],
     receipt_schema: dict[str, Any],
@@ -211,6 +223,11 @@ def test_release_receipt_schema_and_facts(
 # 3. Held-Out Evaluation Benchmark Stratification & Schema
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_evaluation_benchmark_schema_validation(
     eval_cases: list[dict[str, Any]],
     eval_schema: dict[str, Any],
@@ -222,6 +239,10 @@ def test_evaluation_benchmark_schema_validation(
         assert not errors, f"Validation errors on record {idx} ({case.get('eval_id')}): {[e.message for e in errors]}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_evaluation_benchmark_stratification_quotas(eval_cases: list[dict[str, Any]]) -> None:
     """Verify multi-zone quota thresholds: Southwestern >= 600, Northern >= 400, Southeastern >= 500."""
     total = len(eval_cases)
@@ -249,6 +270,10 @@ def test_evaluation_benchmark_stratification_quotas(eval_cases: list[dict[str, A
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_anti_copying_mixed_error_coverage(eval_cases: list[dict[str, Any]]) -> None:
     """Verify mixed-error coverage >= 30% across the benchmark and within every macro zone."""
     total = len(eval_cases)
@@ -263,6 +288,10 @@ def test_anti_copying_mixed_error_coverage(eval_cases: list[dict[str, Any]]) -> 
         assert pct >= 0.25, f"Macro zone {mz} mixed error percentage too low: {pct:.2%}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_anti_copying_case_properties(eval_cases: list[dict[str, Any]]) -> None:
     """Verify invariants for PRESERVE and CORRECT_MIXED test cases."""
     for c in eval_cases:
@@ -291,17 +320,18 @@ def test_anti_copying_case_properties(eval_cases: list[dict[str, Any]]) -> None:
 # 4. Strict Train/Eval Firewall Invariant (0% Leakage)
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_strict_zero_train_eval_leakage_firewall(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
     """Verify complete passage-level, sentence-level, citation-level, and lemma isolation between eval and train."""
     eval_lemmas = {c["dialect_marker"].casefold() for c in eval_cases}
-    sft_dialect_lemmas = {
-        t["target_term"].casefold()
-        for t in sft_trajectories
-        if not t.get("is_calque_or_russianism")
-    }
+    sft_dialect_lemmas = {t["target_term"].casefold() for t in sft_trajectories if not t.get("is_calque_or_russianism")}
 
     # 1. Zero lemma overlap
     lemma_overlap = eval_lemmas & sft_dialect_lemmas
@@ -324,8 +354,7 @@ def test_strict_zero_train_eval_leakage_firewall(
 
     # 2b. Zero source work / publication volume overlap
     eval_works = {
-        canonical_source_work(c["source_metadata"]["citation"], c.get("collector_or_author", ""))
-        for c in eval_cases
+        canonical_source_work(c["source_metadata"]["citation"], c.get("collector_or_author", "")) for c in eval_cases
     }
     sft_works = set()
     for t in sft_trajectories:
@@ -343,7 +372,9 @@ def test_strict_zero_train_eval_leakage_firewall(
 
     eval_works_no_auth = {canonical_source_work(c["source_metadata"]["citation"]) for c in eval_cases}
     sft_works_no_auth = {canonical_source_work(cit) for cit in sft_cits}
-    assert not (eval_works_no_auth & sft_works_no_auth), f"Canonical citation work overlap detected: {eval_works_no_auth & sft_works_no_auth}"
+    assert not (eval_works_no_auth & sft_works_no_auth), (
+        f"Canonical citation work overlap detected: {eval_works_no_auth & sft_works_no_auth}"
+    )
 
     # 2c. Independent author-volume cross-split isolation (independent of canonical_source_work)
     INDEPENDENT_AUTHORS_TABLE = [
@@ -404,8 +435,16 @@ def test_strict_zero_train_eval_leakage_firewall(
         m_ar = re.search(r",\s*([1-9]|10)\s*,", text)
         if m_ar:
             ar_to_ro = {
-                "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
-                "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
+                "1": "I",
+                "2": "II",
+                "3": "III",
+                "4": "IV",
+                "5": "V",
+                "6": "VI",
+                "7": "VII",
+                "8": "VIII",
+                "9": "IX",
+                "10": "X",
             }
             return (auth, ar_to_ro[m_ar.group(1)])
 
@@ -433,7 +472,9 @@ def test_strict_zero_train_eval_leakage_firewall(
                 src = alt.get("evidence_source", "")
                 if " («" in src:
                     av = independent_extract_author_and_volume(src)
-                    assert av[0] != "", f"Unresolved author identity in dialect SFT trajectory {t.get('trajectory_id')}: {src}"
+                    assert av[0] != "", (
+                        f"Unresolved author identity in dialect SFT trajectory {t.get('trajectory_id')}: {src}"
+                    )
                     if av[1] in {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}:
                         independent_sft_vols.add(av)
                     independent_sft_works.add(av)
@@ -451,7 +492,8 @@ def test_strict_zero_train_eval_leakage_firewall(
     ), "Lesya Ukrainka Vol III leaked across train/eval partition"
     # C. Matviy Nomys 1864: zero eval cases
     nomys_eval = [
-        c for c in eval_cases
+        c
+        for c in eval_cases
         if "Номис" in c.get("collector_or_author", "") or "Номис" in c["source_metadata"]["citation"]
     ]
     assert not nomys_eval, f"Nomys leaked into eval cases: {len(nomys_eval)}"
@@ -481,6 +523,11 @@ def test_strict_zero_train_eval_leakage_firewall(
 # 5. SFT Dataset Schema, Quotas, Real VESUM Evidence & Replay Buffer
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_schema_validation(
     sft_trajectories: list[dict[str, Any]],
     trajectory_schema: dict[str, Any],
@@ -489,9 +536,15 @@ def test_sft_dataset_schema_validation(
     validator = jsonschema.Draft202012Validator(trajectory_schema)
     for idx, traj in enumerate(sft_trajectories, 1):
         errors = list(validator.iter_errors(traj))
-        assert not errors, f"Validation errors on trajectory {idx} ({traj.get('trajectory_id')}): {[e.message for e in errors]}"
+        assert not errors, (
+            f"Validation errors on trajectory {idx} ({traj.get('trajectory_id')}): {[e.message for e in errors]}"
+        )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_quotas_and_unique_ids(sft_trajectories: list[dict[str, Any]]) -> None:
     """Verify SFT dataset size >= 500, trajectory IDs uniqueness, and replay buffer size >= 100."""
     total = len(sft_trajectories)
@@ -507,6 +560,10 @@ def test_sft_dataset_quotas_and_unique_ids(sft_trajectories: list[dict[str, Any]
     assert len(replay_trajs) >= 100, f"Expected >= 100 modern literary replay trajectories, got {len(replay_trajs)}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
@@ -558,6 +615,11 @@ def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
 # 6. Bilodid Quarantine & Dialect Sentence Integrity
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_bilodid_quarantine_enforced(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -582,6 +644,10 @@ def test_bilodid_quarantine_enforced(
             assert needle not in resp, f"Banned authority needle '{needle}' in SFT response {t['trajectory_id']}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_sentence_integrity_and_no_dictionary_glosses(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that evaluation sentences are genuine quotations without unclosed parentheses or dictionary glosses."""
     for c in eval_cases:
@@ -606,6 +672,11 @@ def test_sentence_integrity_and_no_dictionary_glosses(eval_cases: list[dict[str,
 # 7. Multi-Zone Evaluation Engine & Scorer Testing (Full-Sentence Preservation)
 # ==============================================================================
 
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that golden predictions achieve 100% accuracy and clear the gate across all 4 zones."""
     results = evaluate_multizone_benchmark(eval_cases)
@@ -622,6 +693,10 @@ def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]
         assert metrics["clopper_pearson_lower"] >= 0.98
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_probe_destructive_rejection(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that destructive/truncated outputs (e.g. marker + replacement only) are strictly rejected."""
     # Probe supplies only truncated marker plus replacement, deleting the rest of the sentence
@@ -651,7 +726,9 @@ def test_multizone_evaluation_fail_closed_on_empty_zone() -> None:
             "expected_output": "Тестове речення без помилок.",
         }
     ]
-    results = evaluate_multizone_benchmark(dummy_cases, predictions={"eval_mz_dial_9999": "Тестове речення без помилок."})
+    results = evaluate_multizone_benchmark(
+        dummy_cases, predictions={"eval_mz_dial_9999": "Тестове речення без помилок."}
+    )
     # Northern and Southeastern zones have 0 cases, so they must fail closed
     assert results["northern"]["gate_cleared"] is False
     assert results["southeastern_slobozhan"]["gate_cleared"] is False
@@ -660,6 +737,10 @@ def test_multizone_evaluation_fail_closed_on_empty_zone() -> None:
     assert results["southwestern"]["gate_cleared"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_multizone_evaluation_rejects_punctuation_corruption(eval_cases: list[dict[str, Any]]) -> None:
     """Verify that mutating punctuation in expected outputs is strictly rejected across all zones."""
     # Add a comma after the first word of every expected output
@@ -742,10 +823,7 @@ def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
     }
 
     # 1. 600 copies with distinct eval_ids but identical input text (repeated sentence probe)
-    probes_same_text = [
-        {**base_sw_case, "eval_id": f"eval_sw_probe_{i}"}
-        for i in range(600)
-    ]
+    probes_same_text = [{**base_sw_case, "eval_id": f"eval_sw_probe_{i}"} for i in range(600)]
     preds_text = {c["eval_id"]: c["expected_output"] for c in probes_same_text}
     res_text = evaluate_multizone_benchmark(probes_same_text, predictions=preds_text)
     assert res_text["southwestern"]["total_cases"] == 1
@@ -762,6 +840,10 @@ def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
     assert res_id["southwestern"]["gate_cleared"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+)
 def test_modern_literary_non_regression() -> None:
     """Verify <= 0.5% regression against the frozen v0.2 modern literary benchmark."""
     if not V02_BASELINE_SUITE_PATH.exists():
@@ -770,7 +852,9 @@ def test_modern_literary_non_regression() -> None:
     # 1. Oracle ground-truth verification
     reg_result = verify_modern_literary_regression()
     assert reg_result["available"] is True
-    assert reg_result["regression_rate"] <= 0.005, f"Regression rate {reg_result['regression_rate']:.2%} exceeds 0.5% limit!"
+    assert reg_result["regression_rate"] <= 0.005, (
+        f"Regression rate {reg_result['regression_rate']:.2%} exceeds 0.5% limit!"
+    )
     assert reg_result["cleared"] is True
     assert reg_result["is_oracle_reference"] is True
 
@@ -807,6 +891,7 @@ def test_predictions_cli_handling_fails_on_missing_file(tmp_path: Any) -> None:
 # ==============================================================================
 # 8. Helper Functions Unit Tests
 # ==============================================================================
+
 
 def test_clean_headword_and_token_normalization() -> None:
     """Verify headword cleaning removes stress marks, numbers, and tags."""
@@ -889,7 +974,9 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     for cit_a, cit_b in equivalent_pairs:
         norm_a = canonical_source_work(cit_a)
         norm_b = canonical_source_work(cit_b)
-        assert norm_a == norm_b, f"Equivalent citations failed to map to same work: {cit_a!r} ({norm_a!r}) != {cit_b!r} ({norm_b!r})"
+        assert norm_a == norm_b, (
+            f"Equivalent citations failed to map to same work: {cit_a!r} ({norm_a!r}) != {cit_b!r} ({norm_b!r})"
+        )
 
     # Verify that publication years are preserved for standard works and not stripped as trailing numbers
     assert canonical_source_work("Черемш., Тв., 1960") == "Черемш., Тв., 1960"
@@ -928,9 +1015,15 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     assert canonical_source_work("Ю. Янов., II, 1958, 20", "Юрій Яновський") == "Янов. II"
     assert canonical_source_work("Ю. Янов., II, 1958, 20") == "Янов. II"
     assert canonical_source_work("Кв.-Осн., II, 1956, 10", "Григорій Квітка-Основ'яненко") == "Кв.-Осн. II"
-    assert canonical_source_work("Григорій Квітка-Основ'яненко, II, 1956, 20", "Григорій Квітка-Основ'яненко") == "Кв.-Осн. II"
+    assert (
+        canonical_source_work("Григорій Квітка-Основ'яненко, II, 1956, 20", "Григорій Квітка-Основ'яненко")
+        == "Кв.-Осн. II"
+    )
     assert canonical_source_work("Кв.-Осн., II, 1956, 10", "Григорій Квітка-Основ’яненко") == "Кв.-Осн. II"
-    assert canonical_source_work("Григорій Квітка-Основ’яненко, II, 1956, 20", "Григорій Квітка-Основ’яненко") == "Кв.-Осн. II"
+    assert (
+        canonical_source_work("Григорій Квітка-Основ’яненко, II, 1956, 20", "Григорій Квітка-Основ’яненко")
+        == "Кв.-Осн. II"
+    )
     assert canonical_source_work("Кв.-Осн., II, 1956, 10") == "Кв.-Осн. II"
     assert canonical_source_work("(Григорій Квітка-Основ'яненко, II, 1956, 20)") == "Кв.-Осн. II"
 
@@ -941,79 +1034,163 @@ def test_partition_author_alias_leakage_regression() -> None:
         # Lesya Ukrainka Vol V
         (
             MinedSentence(
-                word="бевзень", sentence="Тест 1", citation="(Леся Українка, V, 1952, 10)",
-                macro_zone="northern", sub_zone="northern_polissian", bucket="northern",
-                locality="Волинь", collector="Леся Українка", work="Леся Українка. Твори", source_db="sum11",
+                word="бевзень",
+                sentence="Тест 1",
+                citation="(Леся Українка, V, 1952, 10)",
+                macro_zone="northern",
+                sub_zone="northern_polissian",
+                bucket="northern",
+                locality="Волинь",
+                collector="Леся Українка",
+                work="Леся Українка. Твори",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="бевзень", sentence="Тест 2", citation="(Л. Укр., V, 1952, 40)",
-                macro_zone="northern", sub_zone="northern_polissian", bucket="northern",
-                locality="Волинь", collector="Леся Українка", work="Леся Українка. Твори", source_db="sum11",
+                word="бевзень",
+                sentence="Тест 2",
+                citation="(Л. Укр., V, 1952, 40)",
+                macro_zone="northern",
+                sub_zone="northern_polissian",
+                bucket="northern",
+                locality="Волинь",
+                collector="Леся Українка",
+                work="Леся Українка. Твори",
+                source_db="sum11",
             ),
         ),
         # Kobylyanska Vol I
         (
             MinedSentence(
-                word="файний", sentence="Тест 3", citation="(Ольга Кобилянська, I, 1956, 112)",
-                macro_zone="southwestern", sub_zone="southwestern_bukovina", bucket="southwestern",
-                locality="Буковина", collector="Ольга Кобилянська", work="Ольга Кобилянська. Твори", source_db="sum11",
+                word="файний",
+                sentence="Тест 3",
+                citation="(Ольга Кобилянська, I, 1956, 112)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_bukovina",
+                bucket="southwestern",
+                locality="Буковина",
+                collector="Ольга Кобилянська",
+                work="Ольга Кобилянська. Твори",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="файний", sentence="Тест 4", citation="(Коб., І, 1956, 9)",
-                macro_zone="southwestern", sub_zone="southwestern_bukovina", bucket="southwestern",
-                locality="Буковина", collector="Ольга Кобилянська", work="Ольга Кобилянська. Твори", source_db="sum11",
+                word="файний",
+                sentence="Тест 4",
+                citation="(Коб., І, 1956, 9)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_bukovina",
+                bucket="southwestern",
+                locality="Буковина",
+                collector="Ольга Кобилянська",
+                work="Ольга Кобилянська. Твори",
+                source_db="sum11",
             ),
         ),
         # Cheremshyna 1960 (with OCR low-quote artifact)
         (
             MinedSentence(
-                word="легінь", sentence="Тест 5", citation="(Черемш., Тв„ 1960, 215)",
-                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
-                locality="Покуття", collector="Марко Черемшина", work="Марко Черемшина. Твори", source_db="sum11",
+                word="легінь",
+                sentence="Тест 5",
+                citation="(Черемш., Тв„ 1960, 215)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_pokuttia",
+                bucket="southwestern",
+                locality="Покуття",
+                collector="Марко Черемшина",
+                work="Марко Черемшина. Твори",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="легінь", sentence="Тест 6", citation="(Черемш., Тв., 1960, 66)",
-                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
-                locality="Покуття", collector="Марко Черемшина", work="Марко Черемшина. Твори", source_db="sum11",
+                word="легінь",
+                sentence="Тест 6",
+                citation="(Черемш., Тв., 1960, 66)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_pokuttia",
+                bucket="southwestern",
+                locality="Покуття",
+                collector="Марко Черемшина",
+                work="Марко Черемшина. Твори",
+                source_db="sum11",
             ),
         ),
         # Martovych 1954 (Vybr. vs Tv.)
         (
             MinedSentence(
-                word="швагро", sentence="Тест 7", citation="(Март., Вибр., 1954, 151)",
-                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
-                locality="Покуття", collector="Лесь Мартович", work="Лесь Мартович. Твори", source_db="sum11",
+                word="швагро",
+                sentence="Тест 7",
+                citation="(Март., Вибр., 1954, 151)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_pokuttia",
+                bucket="southwestern",
+                locality="Покуття",
+                collector="Лесь Мартович",
+                work="Лесь Мартович. Твори",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="швагро", sentence="Тест 8", citation="(Март., Тв., 1954, 35)",
-                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
-                locality="Покуття", collector="Лесь Мартович", work="Лесь Мартович. Твори", source_db="sum11",
+                word="швагро",
+                sentence="Тест 8",
+                citation="(Март., Тв., 1954, 35)",
+                macro_zone="southwestern",
+                sub_zone="southwestern_pokuttia",
+                bucket="southwestern",
+                locality="Покуття",
+                collector="Лесь Мартович",
+                work="Лесь Мартович. Твори",
+                source_db="sum11",
             ),
         ),
         # Kvitka-Osnovyanenko Vol II (full surname with apostrophe vs abbreviation)
         (
             MinedSentence(
-                word="бевзень", sentence="Тест 9", citation="(Григорій Квітка-Основ'яненко, II, 1956, 20)",
-                macro_zone="southeastern", sub_zone="southeastern_slobozhan", bucket="southeastern_slobozhan",
-                locality="Харків", collector="Григорій Квітка-Основ'яненко", work="Твори", source_db="sum11",
+                word="бевзень",
+                sentence="Тест 9",
+                citation="(Григорій Квітка-Основ'яненко, II, 1956, 20)",
+                macro_zone="southeastern",
+                sub_zone="southeastern_slobozhan",
+                bucket="southeastern_slobozhan",
+                locality="Харків",
+                collector="Григорій Квітка-Основ'яненко",
+                work="Твори",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="бевзень", sentence="Тест 10", citation="Кв.-Осн., II, 1956, 10",
-                macro_zone="southeastern", sub_zone="southeastern_slobozhan", bucket="southeastern_slobozhan",
-                locality="Харків", collector="Григорій Квітка-Основ'яненко", work="Твори", source_db="sum11",
+                word="бевзень",
+                sentence="Тест 10",
+                citation="Кв.-Осн., II, 1956, 10",
+                macro_zone="southeastern",
+                sub_zone="southeastern_slobozhan",
+                bucket="southeastern_slobozhan",
+                locality="Харків",
+                collector="Григорій Квітка-Основ'яненко",
+                work="Твори",
+                source_db="sum11",
             ),
         ),
         # Yanovsky Vol II (initials with punctuation vs full name)
         (
             MinedSentence(
-                word="байрак", sentence="Тест 11", citation="Ю. Янов., II, 1958, 20",
-                macro_zone="southeastern", sub_zone="southeastern_steppe", bucket="southeastern_steppe",
-                locality="Кіровоградщина", collector="Юрій Яновський", work="Вершники", source_db="sum11",
+                word="байрак",
+                sentence="Тест 11",
+                citation="Ю. Янов., II, 1958, 20",
+                macro_zone="southeastern",
+                sub_zone="southeastern_steppe",
+                bucket="southeastern_steppe",
+                locality="Кіровоградщина",
+                collector="Юрій Яновський",
+                work="Вершники",
+                source_db="sum11",
             ),
             MinedSentence(
-                word="байрак", sentence="Тест 12", citation="(Юрій Яновський, II, 1958, 5)",
-                macro_zone="southeastern", sub_zone="southeastern_steppe", bucket="southeastern_steppe",
-                locality="Кіровоградщина", collector="Юрій Яновський", work="Вершники", source_db="sum11",
+                word="байрак",
+                sentence="Тест 12",
+                citation="(Юрій Яновський, II, 1958, 5)",
+                macro_zone="southeastern",
+                sub_zone="southeastern_steppe",
+                bucket="southeastern_steppe",
+                locality="Кіровоградщина",
+                collector="Юрій Яновський",
+                work="Вершники",
+                source_db="sum11",
             ),
         ),
     ]
@@ -1062,6 +1239,10 @@ def test_find_attested_synonym_rejects_descriptive_and_crossref(vesum_db_fixture
     assert res_hazdynya[0] == "господарка"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_standard_headwords_with_nested_idioms_excluded(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1081,6 +1262,10 @@ def test_standard_headwords_with_nested_idioms_excluded(
         assert banned_substring not in t["query"].casefold()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
 def test_sft_synonyms_strictly_bound_to_quotation_sense(
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
@@ -1098,6 +1283,10 @@ def test_sft_synonyms_strictly_bound_to_quotation_sense(
             assert "компрес" not in lemmas, f"Incorrect cross-sense synonym 'компрес' in {lemmas}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_dialect_variant_headers_exclude_standard_quotations(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1117,12 +1306,20 @@ def test_dialect_variant_headers_exclude_standard_quotations(
     ]
     for c in eval_cases:
         for bs in banned_substrings:
-            assert bs not in c["input_text"].casefold(), f"Banned quotation fragment '{bs}' found in eval {c['eval_id']}"
+            assert bs not in c["input_text"].casefold(), (
+                f"Banned quotation fragment '{bs}' found in eval {c['eval_id']}"
+            )
     for t in sft_trajectories:
         for bs in banned_substrings:
-            assert bs not in t["query"].casefold(), f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"
+            assert bs not in t["query"].casefold(), (
+                f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"
+            )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+)
 def test_sub_sense_boundary_and_synonym_binding(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1130,7 +1327,9 @@ def test_sub_sense_boundary_and_synonym_binding(
 ) -> None:
     """Verify that quotations following sub-senses (// or ◇) extract the exact sub-sense synonym."""
     # 1. Direct unit test of sub-sense extraction for загирити and заголомшити
-    defn_zagiriti_sub1 = "// Закинути, загубити. Панотець наробив крику, що.. загирили йому одно важне письмо (Март., Тв., 1954, 233);"
+    defn_zagiriti_sub1 = (
+        "// Закинути, загубити. Панотець наробив крику, що.. загирили йому одно важне письмо (Март., Тв., 1954, 233);"
+    )
     res_zagiriti_sub1 = find_attested_synonym(defn_zagiriti_sub1, "загирити", vesum_db_fixture)
     assert res_zagiriti_sub1 is not None
     assert res_zagiriti_sub1[0] == "закинути"

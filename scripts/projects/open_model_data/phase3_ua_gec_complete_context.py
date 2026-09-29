@@ -39,12 +39,13 @@ from scripts.audit import ingest_ua_gec_gold as ua_gold
 from scripts.projects.open_model_data import phase3_source_unit_materialization as v2_materializer
 from scripts.projects.open_model_data import phase3_source_universe as v2_source
 from scripts.projects.open_model_data import phase3_ua_gec_linguistic_representation as representation
+from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_ua_gec_complete_context_receipt_v1.schema.json"
 SCRIPT_PATH = Path(__file__).resolve()
-V2_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
+V2_SOURCE_UNIVERSE = ARTIFACT_OPEN_MODEL_DATA_DIR / "evidence/source_universe_v1"
 PRIVATE_FILENAME = "ua_gec_complete_context_v1.jsonl"
 PRIVATE_EXCLUSIONS_FILENAME = "ua_gec_complete_context_exclusions_v1.jsonl"
 SCHEMA_VERSION = "phase3_ua_gec_complete_context_receipt_v1"
@@ -610,9 +611,7 @@ def _projected_context_window(
         mapped_source_end = _target_boundary_to_source(parsed, target_end, right_bias=True)
         source_content_start = _content_rank(parsed.source_text, mapped_source_start)
         source_content_end = _content_rank(parsed.source_text, mapped_source_end)
-        source_indices.update(
-            _overlapping_sentence_indices(source_sentences, source_content_start, source_content_end)
-        )
+        source_indices.update(_overlapping_sentence_indices(source_sentences, source_content_start, source_content_end))
         if not source_indices:
             return None
 
@@ -624,9 +623,7 @@ def _projected_context_window(
         mapped_target_end = _source_boundary_to_target(parsed, source_end, right_bias=True)
         target_content_start = _content_rank(parsed.corrected_text, mapped_target_start)
         target_content_end = _content_rank(parsed.corrected_text, mapped_target_end)
-        target_indices.update(
-            _overlapping_sentence_indices(target_sentences, target_content_start, target_content_end)
-        )
+        target_indices.update(_overlapping_sentence_indices(target_sentences, target_content_start, target_content_end))
         if not target_indices:
             return None
         if before == (frozenset(source_indices), frozenset(target_indices)):
@@ -655,11 +652,14 @@ def _projected_context_window(
     if _non_whitespace_text(target_retrieval) != _non_whitespace_text(target_context):
         return None
 
-    focal_candidates = _overlapping_sentence_indices(
-        source_sentences,
-        annotation_source_start,
-        annotation_source_end,
-    ) & source_indices
+    focal_candidates = (
+        _overlapping_sentence_indices(
+            source_sentences,
+            annotation_source_start,
+            annotation_source_end,
+        )
+        & source_indices
+    )
     if not focal_candidates:
         return None
     focal_index = min(
@@ -923,9 +923,7 @@ def _record_for_window(
         "target_document_start": window.target_document_start,
         "target_document_end": window.target_document_end,
         "context_alignment": window.target_alignment,
-        "corrected_context_non_whitespace_sha256": representation.sha256_text(
-            _non_whitespace_text(corrected_text)
-        ),
+        "corrected_context_non_whitespace_sha256": representation.sha256_text(_non_whitespace_text(corrected_text)),
         "selection": "exact retrieved complete corrected sentence block",
     }
     secondary = sorted({"qualified_human_correction", *[item.tag for item in annotations]})

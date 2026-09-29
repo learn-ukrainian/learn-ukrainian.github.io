@@ -11,6 +11,7 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_human_source_dataset import (
     OPERATOR_EXCLUDED_RESIDUALS,
     _get_language_usage_masks,
@@ -24,11 +25,12 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     verify_dataset,
 )
 
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
-DATASET_DIR = Path("data/projects/open_model_data/dataset")
-MANIFEST_PATH = DATASET_DIR / "v4_human_source_dataset_manifest_v1.json"
-RECEIPT_PATH = DATASET_DIR / "v4_human_source_dataset_receipt_v1.json"
-RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
+MANIFEST_PATH = resolve_open_model_path(
+    "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+)
+RECEIPT_PATH = resolve_open_model_path("data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json")
+RECORDS_PATH = resolve_open_model_path("data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl")
 
 _ORIGINAL_JSONSCHEMA_VALIDATE = jsonschema.validate
 _COMPILED_VALIDATORS: dict[int, tuple[Any, Any]] = {}
@@ -138,6 +140,10 @@ def test_dataset_receipt_and_storage_accounting() -> None:
     assert receipt_data["frozen_for_downstream"]["deliverable_reproduction_issue"] == 7433
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_dataset_record_fidelity_and_invariants() -> None:
     """Verify individual records satisfy verbatim preservation and privacy invariants (SCALE-3)."""
     assert RECORDS_PATH.is_file(), f"Missing records: {RECORDS_PATH}"
@@ -174,11 +180,19 @@ def test_privacy_host_paths_clean() -> None:
         assert_no_private_host_paths({"bad": "/home/ops/secret"})
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_dataset_clean_pass() -> None:
     """The verify_dataset function must return True on intact artifacts."""
     assert verify_dataset(Path.cwd()) is True
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_path: Path) -> None:
     """Denominator discrepancy must raise ValueError before writing files, leaving targets untouched."""
     repo_root = Path.cwd()
@@ -186,7 +200,7 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
     fake_repo.mkdir(parents=True)
 
     # Recreate input paths in fake_repo
-    contracts_target = fake_repo / "data/projects/open_model_data/contracts"
+    contracts_target = fake_repo / "registry/projects/open_model_data/contracts"
     contracts_target.parent.mkdir(parents=True, exist_ok=True)
     contracts_target.symlink_to((repo_root / CONTRACTS_DIR).resolve())
 
@@ -197,9 +211,12 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
 
     splits_dir = fake_repo / "data/projects/open_model_data/splits"
     splits_dir.mkdir(parents=True, exist_ok=True)
-    (splits_dir / "v4_work_grouping_split_receipt_v1.json").symlink_to(
-        (repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json").resolve()
-    )
+    receipt_logical = "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    quality_logical = "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    for logical in (receipt_logical, quality_logical):
+        destination = resolve_open_model_path(logical, repo=fake_repo)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.symlink_to(resolve_open_model_path(logical))
 
     # Create split_index with one line missing to create an intentional denominator mismatch
     src_split_index = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl"
@@ -233,6 +250,10 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
     assert tmp_files == []
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_build_dataset_transactional_rollback_on_replacement_failure(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -272,6 +293,10 @@ def test_build_dataset_transactional_rollback_on_replacement_failure(
     assert list(out_dir.glob("*.bak*")) == []
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_build_dataset_backup_cleanup_failure_does_not_rollback(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -307,6 +332,10 @@ def test_build_dataset_backup_cleanup_failure_does_not_rollback(
     assert test_receipt_out.read_text(encoding="utf-8") != "sentinel receipt"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_authenticated_loss_mask_resolver() -> None:
     """Verify that resolve_record_loss_masks and load_dataset_stream resolve modern_view loss masks."""
     records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True))
@@ -367,6 +396,10 @@ def _has_full_sources_db() -> bool:
     return False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_authenticated_source_text_resolver() -> None:
     """Verify that resolve_record_text and load_dataset_stream resolve private source text."""
     if not _has_full_sources_db():
@@ -502,6 +535,10 @@ def test_cache_refresh_on_content_change(tmp_path: Path) -> None:
     assert len(masks2["bbbb" * 16]) == 1
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify that when rollback fails during publication error recovery, surviving backups are retained (Finding 4)."""
 
@@ -510,7 +547,7 @@ def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatc
     fake_repo.mkdir(parents=True)
 
     # Recreate input paths in fake_repo
-    contracts_target = fake_repo / "data/projects/open_model_data/contracts"
+    contracts_target = fake_repo / "registry/projects/open_model_data/contracts"
     contracts_target.parent.mkdir(parents=True, exist_ok=True)
     contracts_target.symlink_to((repo_root / CONTRACTS_DIR).resolve())
 
@@ -518,6 +555,14 @@ def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatc
         target = fake_repo / f"data/projects/open_model_data/{dir_name}"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.symlink_to((repo_root / f"data/projects/open_model_data/{dir_name}").resolve())
+    for logical in (
+        "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json",
+        "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json",
+    ):
+        destination = resolve_open_model_path(logical, repo=fake_repo)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if not destination.exists():
+            destination.symlink_to(resolve_open_model_path(logical))
 
     out_dir = tmp_path / "out"
     out_dir.mkdir(parents=True)
@@ -553,6 +598,10 @@ def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatc
     assert len(bak_files) > 0, "Surviving backups must be retained when rollback fails"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_dataset_rejects_duplicate_record_id_or_span_sha(tmp_path: Path) -> None:
     """Verify that verify_dataset rejects duplicate record IDs or duplicate span hashes (Finding 3)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -594,6 +643,10 @@ def test_verify_dataset_rejects_duplicate_record_id_or_span_sha(tmp_path: Path) 
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_dataset_rejects_schema_violating_record(tmp_path: Path) -> None:
     """Verify that verify_dataset rejects records violating schema contract e.g. firewall_verified=False (Finding 1)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -618,6 +671,10 @@ def test_verify_dataset_rejects_schema_violating_record(tmp_path: Path) -> None:
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_dataset_rejects_tampered_non_first_record_mask(tmp_path: Path) -> None:
     """Verify that verify_dataset rejects when a non-first record has an invalid loss mask (Finding 2)."""
     with open(RECORDS_PATH, encoding="utf-8") as f:
@@ -708,6 +765,10 @@ def test_persisted_records_reject_preexisting_raw_text(tmp_path: Path) -> None:
         next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_record_schema_forbids_raw_text() -> None:
     """Ensure v4_human_source_dataset_record_v1 schema rejects raw text property."""
     import jsonschema
@@ -736,6 +797,10 @@ def test_record_schema_forbids_raw_text() -> None:
         jsonschema.validate(instance=rec_with_fidelity_text, schema=schema)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+)
 def test_verify_dataset_rejects_tampered_or_missing_records_header(tmp_path: Path) -> None:
     """Verify that verify_dataset rejects records with invalid, missing, or mismatched header even with matching SHA."""
     from scripts.projects.open_model_data.v4_human_source_dataset import sha256_file

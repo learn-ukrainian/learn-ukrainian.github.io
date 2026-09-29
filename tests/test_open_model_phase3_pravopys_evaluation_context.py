@@ -14,11 +14,12 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
 from scripts.projects.open_model_data import phase3_pravopys_evaluation_context as prav_context
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from tests.sparse_trees import tree_absent
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json"
-EVAL_RECEIPT = ROOT / "data/projects/open_model_data/inventory/phase3_evaluation_context_manifest_receipt_v1.json"
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json"
+EVAL_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 
 
 def _skip_without_pravopys_schema() -> None:
@@ -26,8 +27,7 @@ def _skip_without_pravopys_schema() -> None:
     # but the schema file is missing, the test must fail, as before (#8581).
     if tree_absent("data/projects"):
         pytest.skip(
-            "data/projects is absent from this sparse worktree; "
-            "re-include it with --sparse-include data/projects"
+            "data/projects is absent from this sparse worktree; re-include it with --sparse-include data/projects"
         )
 
 
@@ -183,7 +183,7 @@ def _accept_all_schema_validator() -> object:
 
 
 def _load_public_receipt() -> dict[str, object]:
-    path = ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
+    path = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -591,9 +591,7 @@ def test_source_materialization_hash_drift_fails_closed(tmp_path: Path, monkeypa
         assert "source materialization stream drift" not in str(exc)
 
 
-def test_evaluation_context_manifest_hash_drift_fails_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_evaluation_context_manifest_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     _mutate_jsonl_row(
@@ -636,13 +634,17 @@ def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypat
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     _simulate_group_readable_mode(monkeypatch, paths["source_jsonl"])
-    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source materialization permissions must be 0600"):
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError, match="source materialization permissions must be 0600"
+    ):
         _call_build(paths)
 
     paths = _fixture_bundle(tmp_path / "partition-mode")
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     _simulate_group_readable_mode(monkeypatch, paths["partition"])
-    with pytest.raises(prav_context.PravopysEvaluationContextError, match="partition manifest permissions must be 0600"):
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError, match="partition manifest permissions must be 0600"
+    ):
         _call_build(paths)
 
     paths = _fixture_bundle(tmp_path / "manifest-mode")
@@ -659,7 +661,9 @@ def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypat
     source_link = tmp_path / "source-link.jsonl"
     source_link.symlink_to(paths["source_jsonl"])
     paths["source_jsonl"] = source_link
-    with pytest.raises(prav_context.PravopysEvaluationContextError, match="symlink forbidden for source materialization"):
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError, match="symlink forbidden for source materialization"
+    ):
         _call_build(paths)
 
     paths = _fixture_bundle(tmp_path / "partition-symlink")
@@ -735,9 +739,7 @@ def test_private_output_rejects_wrong_mode_and_ancestor_symlink(
     assert stat.S_IMODE(real.stat().st_mode) == prav_context.PRIVATE_DIR_MODE
 
 
-def test_text_free_receipt_rejects_world_readable_permissions(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_text_free_receipt_rejects_world_readable_permissions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     receipt_path = tmp_path / "receipt.json"
     receipt_path.write_bytes(b"{}\n")
     os.chmod(receipt_path, prav_context.PRIVATE_FILE_MODE)
@@ -1191,9 +1193,7 @@ def test_validate_receipt_rejects_receipt_self_hash_drift() -> None:
         prav_context.validate_receipt(receipt)
 
 
-def test_verify_existing_rejects_tampered_private_jsonl(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_verify_existing_rejects_tampered_private_jsonl(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
@@ -1221,9 +1221,7 @@ def test_verify_existing_rejects_tampered_private_jsonl(
         )
 
 
-def test_verify_existing_rejects_tampered_public_receipt(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_verify_existing_rejects_tampered_public_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
@@ -1262,7 +1260,7 @@ def test_production_replay_against_drive_custody() -> None:
         / "backups/phase3-6375/20260813T220000Z/phase3-evaluation-context-manifest-v1/evaluation_context_manifest_v1.jsonl"
     )
     backup_dir = drive / "backups/phase3-6375/20260813T231656Z"
-    public_receipt = ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
+    public_receipt = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
     if not tarball.exists() or not manifest.exists():
         pytest.skip("Drive custody artifacts unavailable")
     if backup_dir.exists() and (backup_dir / prav_context.PRIVATE_FILENAME).exists():

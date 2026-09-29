@@ -39,7 +39,9 @@ from scripts.projects.open_model_data import phase3_evaluation_context_manifest 
 from scripts.projects.open_model_data import phase3_school_context_negative_recovery as negrec
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_school_parent_section_context_receipt_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT = DATA / "inventory/phase3_school_parent_section_context_receipt_v1.json"
@@ -724,7 +726,8 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     _validate_public_bindings()
     bindings = receipt["bindings"]
     require(
-        bindings["implementation_sha256"] in {
+        bindings["implementation_sha256"]
+        in {
             "dd463dfe333d3bab06514653b9e02b7dace78657f10e0d7396265b9bc822ab48",
             sha256_file(SCRIPT_PATH),
         },

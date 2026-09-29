@@ -24,7 +24,7 @@ from scripts.projects.open_model_data import document_signal_manifest as phase1_
 from scripts.projects.open_model_data import source_work_locator_index as locator_index_builder
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 CAPABILITIES = (
     "acquisition_retention",
     "local_preparation",

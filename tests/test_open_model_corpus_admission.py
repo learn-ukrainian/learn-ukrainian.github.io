@@ -16,9 +16,36 @@ from scripts.projects.open_model_data.model_view_exporter import (
     DEFAULT_V011_MANIFEST,
     v011_items,
 )
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.validate_source_records import validate_path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_cli_default_config_opens_registry_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    opened: list[Path] = []
+    real_read = admission._read_json
+
+    def spy(path: Path) -> dict:
+        opened.append(Path(path))
+        if Path(path) == admission.DEFAULT_CONFIG:
+            return real_read(path)
+        raise admission.AdmissionError("stop-after-config")
+
+    monkeypatch.setattr(admission, "_read_json", spy)
+    with pytest.raises(SystemExit) as caught:
+        admission.main(
+            [
+                "--manifest-output",
+                str(tmp_path / "manifest.json"),
+                "--receipt-output",
+                str(tmp_path / "receipt.json"),
+            ]
+        )
+    assert caught.value.code == 2
+    assert opened[0] == admission.DEFAULT_CONFIG
+    assert admission.DEFAULT_CONFIG.is_file()
+    assert "registry/projects/open_model_data" in admission.DEFAULT_CONFIG.as_posix()
 
 
 def _json(path: Path, value: object) -> None:
@@ -34,22 +61,96 @@ def _database(path: Path, rows: list[tuple[str, str, str]]) -> None:
 
 
 def _profile(*, expected_rows: int, expected_words: int) -> dict[str, object]:
-    return {"schema_version": "corpus_profile_config_v1", "profile_id": "fixture-profile-v1", "source_snapshot_id": "fixture-snapshot-v1", "record_batch_size": 16, "top_unknown_limit": 0,
-            "vesum": {"database": "unused.db", "snapshot_id": "fixture-vesum-v1", "interface": "scripts.verification.vesum.verify_words", "batch_size": 1},
-            "sources": [{"source_family": "fixture_documents", "inventory_asset_id": "db.fixture", "adapter": {"kind": "sqlite_query_v1", "database": "sources.db", "table": "documents", "id_column": "id", "text_column": "text", "locator_column": "id", "dimensions": {"period": {"constant": "modern"}, "genre": {"constant": "fixture"}, "register": {"constant": "neutral"}, "origin": {"constant": "human_authored_source"}}}, "evidence": {"provenance_status": "partial", "rights_status": "not_reconstructed", "origin_status": "inventory_classified", "contamination_status": "not_checked", "permitted_use": "provenance_investigation"}, "expected": {"rows": expected_rows, "lexical_words": expected_words}}]}
+    return {
+        "schema_version": "corpus_profile_config_v1",
+        "profile_id": "fixture-profile-v1",
+        "source_snapshot_id": "fixture-snapshot-v1",
+        "record_batch_size": 16,
+        "top_unknown_limit": 0,
+        "vesum": {
+            "database": "unused.db",
+            "snapshot_id": "fixture-vesum-v1",
+            "interface": "scripts.verification.vesum.verify_words",
+            "batch_size": 1,
+        },
+        "sources": [
+            {
+                "source_family": "fixture_documents",
+                "inventory_asset_id": "db.fixture",
+                "adapter": {
+                    "kind": "sqlite_query_v1",
+                    "database": "sources.db",
+                    "table": "documents",
+                    "id_column": "id",
+                    "text_column": "text",
+                    "locator_column": "id",
+                    "dimensions": {
+                        "period": {"constant": "modern"},
+                        "genre": {"constant": "fixture"},
+                        "register": {"constant": "neutral"},
+                        "origin": {"constant": "human_authored_source"},
+                    },
+                },
+                "evidence": {
+                    "provenance_status": "partial",
+                    "rights_status": "not_reconstructed",
+                    "origin_status": "inventory_classified",
+                    "contamination_status": "not_checked",
+                    "permitted_use": "provenance_investigation",
+                },
+                "expected": {"rows": expected_rows, "lexical_words": expected_words},
+            }
+        ],
+    }
 
 
 def _config(*, complete_evidence: bool = False, destination: str | None = None) -> dict[str, object]:
-    evidence = {key: "complete" for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")}
+    evidence = {
+        key: "complete" for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")
+    }
     if not complete_evidence:
         evidence["rights"] = "not_reconstructed"
-    return {"schema_version": "corpus_admission_config_v1", "admission_id": "fixture-admission-v1", "profile_config": "profile.json", "evidence_packet": None, "families": [{"source_family": "fixture_documents", "source_group_column": "source", "work_group_column": "work", "attributes": {"author": {"column": "author"}, "genre": {"constant": "fixture"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "neutral"}, "translation_origin": {"constant": "unknown"}}, "evidence": evidence, "proposed_destination": destination, "source_record": None}]}
+    return {
+        "schema_version": "corpus_admission_config_v1",
+        "admission_id": "fixture-admission-v1",
+        "profile_config": "profile.json",
+        "evidence_packet": None,
+        "families": [
+            {
+                "source_family": "fixture_documents",
+                "source_group_column": "source",
+                "work_group_column": "work",
+                "attributes": {
+                    "author": {"column": "author"},
+                    "genre": {"constant": "fixture"},
+                    "origin": {"constant": "human_authored_source"},
+                    "period": {"constant": "modern"},
+                    "region": {"constant": "unknown"},
+                    "register": {"constant": "neutral"},
+                    "translation_origin": {"constant": "unknown"},
+                },
+                "evidence": evidence,
+                "proposed_destination": destination,
+                "source_record": None,
+            }
+        ],
+    }
 
 
 def _run(tmp_path: Path, suffix: str, **kwargs: object) -> admission.AdmissionRun:
-    _json(tmp_path / "profile.json", _profile(expected_rows=int(kwargs.pop("expected_rows", 2)), expected_words=int(kwargs.pop("expected_words", 4))))
+    _json(
+        tmp_path / "profile.json",
+        _profile(
+            expected_rows=int(kwargs.pop("expected_rows", 2)), expected_words=int(kwargs.pop("expected_words", 4))
+        ),
+    )
     _json(tmp_path / "config.json", _config(**kwargs))
-    return admission.admit_corpus(config_path=tmp_path / "config.json", input_root=tmp_path, manifest_output=tmp_path / f"manifest-{suffix}.jsonl", receipt_output=tmp_path / f"receipt-{suffix}.json")
+    return admission.admit_corpus(
+        config_path=tmp_path / "config.json",
+        input_root=tmp_path,
+        manifest_output=tmp_path / f"manifest-{suffix}.jsonl",
+        receipt_output=tmp_path / f"receipt-{suffix}.json",
+    )
 
 
 def test_unknown_evidence_fails_closed_and_is_byte_stable(tmp_path: Path) -> None:
@@ -74,7 +175,9 @@ def test_complete_evidence_is_only_proposed_until_operator_acceptance(tmp_path: 
     result = _run(tmp_path, "proposed", complete_evidence=True, destination="continued_pretraining")
 
     assert result.receipt["dispositions"]["proposed_admission"] == {"rows": 2, "lexical_words": 4}
-    rows = [json.loads(line) for line in (tmp_path / "manifest-proposed.jsonl").read_text(encoding="utf-8").splitlines()]
+    rows = [
+        json.loads(line) for line in (tmp_path / "manifest-proposed.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
     assert {row["disposition"] for row in rows} == {"proposed_admission"}
     assert all(row["reasons"] == ["operator_acceptance_required"] for row in rows)
     assert result.receipt["training_eligible_emitted"] is False
@@ -105,7 +208,14 @@ def test_evaluation_isolation_and_denominator_mismatch_are_explicit(tmp_path: Pa
     evaluation_text = v011_items(DEFAULT_V011_MANIFEST)[0]["source"]
     _database(tmp_path / "sources.db", [("s1", "w1", evaluation_text, "Автор"), ("s2", "w2", "ще два", "Автор")])
     expected_words = len(admission.WORD_RE.findall(evaluation_text)) + 2
-    result = _run(tmp_path, "isolated", complete_evidence=True, destination="continued_pretraining", expected_rows=3, expected_words=expected_words)
+    result = _run(
+        tmp_path,
+        "isolated",
+        complete_evidence=True,
+        destination="continued_pretraining",
+        expected_rows=3,
+        expected_words=expected_words,
+    )
 
     assert result.complete is False
     assert result.receipt["coverage"]["processed_rows"] == 2
@@ -133,7 +243,9 @@ def test_missing_database_emits_empty_fail_closed_receipt(tmp_path: Path) -> Non
     )
 
     assert result.complete is False
-    assert result.receipt["coverage"]["inaccessible_families"] == [{"reason": "FileNotFoundError", "source_family": "fixture_documents"}]
+    assert result.receipt["coverage"]["inaccessible_families"] == [
+        {"reason": "FileNotFoundError", "source_family": "fixture_documents"}
+    ]
     assert result.receipt["outputs"]["manifest"]["records"] == 0
     assert manifest.read_bytes() == b""
     assert source_records.read_bytes() == b""
@@ -170,7 +282,12 @@ def test_duplicate_source_family_config_is_rejected(tmp_path: Path) -> None:
     _json(tmp_path / "config.json", config)
 
     with pytest.raises(admission.AdmissionError, match="duplicate"):
-        admission.admit_corpus(config_path=tmp_path / "config.json", input_root=tmp_path, manifest_output=tmp_path / "manifest.jsonl", receipt_output=tmp_path / "receipt.json")
+        admission.admit_corpus(
+            config_path=tmp_path / "config.json",
+            input_root=tmp_path,
+            manifest_output=tmp_path / "manifest.jsonl",
+            receipt_output=tmp_path / "receipt.json",
+        )
 
 
 def _wikipedia_fixture(tmp_path: Path) -> tuple[Path, Path]:
@@ -196,24 +313,120 @@ def _wikipedia_fixture(tmp_path: Path) -> tuple[Path, Path]:
         "schema_version": "corpus_admission_evidence_v1",
         "evidence_packet_id": "evidence.wikipedia_fixture_v1",
         "retrieved_on": "2026-08-01",
-        "sources": [{
-            "source_record_evidence_id": "source.wikipedia_fixture_v1", "source_family": "wikipedia",
-            "snapshot": {"kind": "article_level_captured_snapshot", "rows": 2, "lexical_words": 4, "capture_timestamps": 2, "first_retrieved_at": timestamps[0], "last_retrieved_at": timestamps[1], "content_hash_scope": "exact UTF-8 bytes", "revision_id_required_by_contract": False},
-            "acquisition": {"method": "fixture MediaWiki capture", "api_endpoint": "https://uk.wikipedia.org/w/api.php", "api_parameters": {"action": "query", "prop": "extracts", "explaintext": "1"}, "code_cohorts": [{"evidence_id": "code.wikipedia_fixture", "rows": 2, "first_retrieved_at": timestamps[0], "last_retrieved_at": timestamps[1], "commit": "a" * 40, "git_blob_oid": "b" * 40, "sha256": "c" * 64, "url": "https://example.invalid/fetch.py"}]},
-            "bibliographic": {"editor": "Wikipedia contributors", "publisher": "Ukrainian Wikipedia community, hosted by the Wikimedia Foundation", "translation_origin": "unknown"},
-            "description": {"author": "Wikipedia contributors", "period": "modern", "genre": "encyclopedia", "register": "reference", "region": "unknown"},
-            "rights": {"status": "granted", "jurisdiction": "international", "license_expression": "CC-BY-SA-4.0", "license_terms_evidence_id": "rights.cc_by_sa_4.0_legalcode", "evidence_ids": ["rights.cc_by_sa_4.0_legalcode"], "legal_conclusion": "not_asserted", "operational_permission": "share and adapt for any purpose subject to license conditions", "obligations": ["attribute and share alike"], "material_ambiguities": ["other rights are not certified"]},
-            "evidence": [
-                {"evidence_id": "rights.cc_by_sa_4.0_legalcode", "citation": "CC BY-SA 4.0 legal code", "canonical_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode", "receipt_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt", "retrieved_on": "2026-08-01", "sha256": "d" * 64},
-                {"evidence_id": "code.wikipedia_fixture", "citation": "fixture acquisition code", "canonical_url": "https://example.invalid/fetch.py", "receipt_url": "https://example.invalid/fetch.py", "retrieved_on": "2026-08-01", "sha256": "c" * 64},
-            ],
-            "review": {"reviewer_id": "advisor.sol_fixture", "qualification": "operational provenance and license review, not legal advice", "confidence": "medium", "unresolved": False},
-        }],
+        "sources": [
+            {
+                "source_record_evidence_id": "source.wikipedia_fixture_v1",
+                "source_family": "wikipedia",
+                "snapshot": {
+                    "kind": "article_level_captured_snapshot",
+                    "rows": 2,
+                    "lexical_words": 4,
+                    "capture_timestamps": 2,
+                    "first_retrieved_at": timestamps[0],
+                    "last_retrieved_at": timestamps[1],
+                    "content_hash_scope": "exact UTF-8 bytes",
+                    "revision_id_required_by_contract": False,
+                },
+                "acquisition": {
+                    "method": "fixture MediaWiki capture",
+                    "api_endpoint": "https://uk.wikipedia.org/w/api.php",
+                    "api_parameters": {"action": "query", "prop": "extracts", "explaintext": "1"},
+                    "code_cohorts": [
+                        {
+                            "evidence_id": "code.wikipedia_fixture",
+                            "rows": 2,
+                            "first_retrieved_at": timestamps[0],
+                            "last_retrieved_at": timestamps[1],
+                            "commit": "a" * 40,
+                            "git_blob_oid": "b" * 40,
+                            "sha256": "c" * 64,
+                            "url": "https://example.invalid/fetch.py",
+                        }
+                    ],
+                },
+                "bibliographic": {
+                    "editor": "Wikipedia contributors",
+                    "publisher": "Ukrainian Wikipedia community, hosted by the Wikimedia Foundation",
+                    "translation_origin": "unknown",
+                },
+                "description": {
+                    "author": "Wikipedia contributors",
+                    "period": "modern",
+                    "genre": "encyclopedia",
+                    "register": "reference",
+                    "region": "unknown",
+                },
+                "rights": {
+                    "status": "granted",
+                    "jurisdiction": "international",
+                    "license_expression": "CC-BY-SA-4.0",
+                    "license_terms_evidence_id": "rights.cc_by_sa_4.0_legalcode",
+                    "evidence_ids": ["rights.cc_by_sa_4.0_legalcode"],
+                    "legal_conclusion": "not_asserted",
+                    "operational_permission": "share and adapt for any purpose subject to license conditions",
+                    "obligations": ["attribute and share alike"],
+                    "material_ambiguities": ["other rights are not certified"],
+                },
+                "evidence": [
+                    {
+                        "evidence_id": "rights.cc_by_sa_4.0_legalcode",
+                        "citation": "CC BY-SA 4.0 legal code",
+                        "canonical_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+                        "receipt_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt",
+                        "retrieved_on": "2026-08-01",
+                        "sha256": "d" * 64,
+                    },
+                    {
+                        "evidence_id": "code.wikipedia_fixture",
+                        "citation": "fixture acquisition code",
+                        "canonical_url": "https://example.invalid/fetch.py",
+                        "receipt_url": "https://example.invalid/fetch.py",
+                        "retrieved_on": "2026-08-01",
+                        "sha256": "c" * 64,
+                    },
+                ],
+                "review": {
+                    "reviewer_id": "advisor.sol_fixture",
+                    "qualification": "operational provenance and license review, not legal advice",
+                    "confidence": "medium",
+                    "unresolved": False,
+                },
+            }
+        ],
     }
     _json(tmp_path / "evidence.json", evidence)
     config = {
-        "schema_version": "corpus_admission_config_v1", "admission_id": "fixture-wikipedia-v1", "profile_config": "profile.json", "evidence_packet": "evidence.json",
-        "families": [{"source_family": "wikipedia", "source_group_column": "fetched_at", "work_group_column": "title", "attributes": {"author": {"constant": "Wikipedia contributors"}, "genre": {"constant": "encyclopedia"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "reference"}, "translation_origin": {"constant": "unknown"}}, "evidence": {key: "complete" for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")}, "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1", "source_record": {"evidence_source_id": "source.wikipedia_fixture_v1", "title_column": "title", "url_column": "url", "retrieved_at_column": "fetched_at"}}],
+        "schema_version": "corpus_admission_config_v1",
+        "admission_id": "fixture-wikipedia-v1",
+        "profile_config": "profile.json",
+        "evidence_packet": "evidence.json",
+        "families": [
+            {
+                "source_family": "wikipedia",
+                "source_group_column": "fetched_at",
+                "work_group_column": "title",
+                "attributes": {
+                    "author": {"constant": "Wikipedia contributors"},
+                    "genre": {"constant": "encyclopedia"},
+                    "origin": {"constant": "human_authored_source"},
+                    "period": {"constant": "modern"},
+                    "region": {"constant": "unknown"},
+                    "register": {"constant": "reference"},
+                    "translation_origin": {"constant": "unknown"},
+                },
+                "evidence": {
+                    key: "complete"
+                    for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")
+                },
+                "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1",
+                "source_record": {
+                    "evidence_source_id": "source.wikipedia_fixture_v1",
+                    "title_column": "title",
+                    "url_column": "url",
+                    "retrieved_at_column": "fetched_at",
+                },
+            }
+        ],
     }
     _json(tmp_path / "config.json", config)
     return tmp_path / "config.json", tmp_path / "source-records.jsonl"
@@ -233,17 +446,19 @@ def _accept_wikipedia_fixture(tmp_path: Path, config_path: Path) -> None:
             "operator_id": "operator.fixture",
             "source_families": ["wikipedia"],
         },
-        "families": [{
-            "source_family": "wikipedia",
-            "current_disposition": "admitted",
-            "rows": 2,
-            "words": 4,
-            "blocked_by": [],
-            "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1",
-            "evidence_packet_id": "evidence.wikipedia_fixture_v1",
-            "obligations": ["attribute and share alike"],
-            "material_ambiguities": ["other rights are not certified"],
-        }],
+        "families": [
+            {
+                "source_family": "wikipedia",
+                "current_disposition": "admitted",
+                "rows": 2,
+                "words": 4,
+                "blocked_by": [],
+                "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1",
+                "evidence_packet_id": "evidence.wikipedia_fixture_v1",
+                "obligations": ["attribute and share alike"],
+                "material_ambiguities": ["other rights are not certified"],
+            }
+        ],
         "operator_choices": ["ACCEPT the exact scope", "REJECT the exact scope"],
         "total_rows": 2,
         "total_words": 4,
@@ -256,12 +471,31 @@ def _accept_wikipedia_fixture(tmp_path: Path, config_path: Path) -> None:
 
 def test_wikipedia_source_records_are_contract_valid_pending_and_deterministic(tmp_path: Path) -> None:
     config, source_records = _wikipedia_fixture(tmp_path)
-    first = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-1.jsonl", receipt_output=tmp_path / "receipt-1.json", source_record_output=source_records)
-    second = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-2.jsonl", receipt_output=tmp_path / "receipt-2.json", source_record_output=tmp_path / "source-records-2.jsonl")
+    first = admission.admit_corpus(
+        config_path=config,
+        input_root=tmp_path,
+        manifest_output=tmp_path / "manifest-1.jsonl",
+        receipt_output=tmp_path / "receipt-1.json",
+        source_record_output=source_records,
+    )
+    second = admission.admit_corpus(
+        config_path=config,
+        input_root=tmp_path,
+        manifest_output=tmp_path / "manifest-2.jsonl",
+        receipt_output=tmp_path / "receipt-2.json",
+        source_record_output=tmp_path / "source-records-2.jsonl",
+    )
 
     assert first.receipt["dispositions"]["proposed_admission"] == {"rows": 2, "lexical_words": 4}
     assert first.receipt["outputs"]["source_records"]["records"] == 2
-    assert first.receipt["families"][0]["source_record_evidence"] == {"capture_timestamps": 2, "code_cohorts": {"code.wikipedia_fixture": 2}, "first_retrieved_at": "2026-04-11T00:59:17+00:00", "last_retrieved_at": "2026-04-11T01:00:17+00:00", "matches_snapshot": True, "records": 2}
+    assert first.receipt["families"][0]["source_record_evidence"] == {
+        "capture_timestamps": 2,
+        "code_cohorts": {"code.wikipedia_fixture": 2},
+        "first_retrieved_at": "2026-04-11T00:59:17+00:00",
+        "last_retrieved_at": "2026-04-11T01:00:17+00:00",
+        "matches_snapshot": True,
+        "records": 2,
+    }
     validation = validate_path(source_records)
     assert validation["admitted_records"] == 0
     assert validation["rejected_records"] == 2
@@ -346,27 +580,31 @@ def test_operator_packet_rejects_terminal_state_on_an_undecided_family(tmp_path:
     _accept_wikipedia_fixture(tmp_path, config_path)
     config = json.loads(config_path.read_text(encoding="utf-8"))
     archival_config = copy.deepcopy(config["families"][0])
-    archival_config.update({
-        "source_family": "archival_documents",
-        "proposed_destination": None,
-        "source_record": None,
-    })
+    archival_config.update(
+        {
+            "source_family": "archival_documents",
+            "proposed_destination": None,
+            "source_record": None,
+        }
+    )
     archival_config["evidence"]["rights"] = "not_reconstructed"
     config["families"].append(archival_config)
     _json(config_path, config)
 
     packet = json.loads((tmp_path / "operator.json").read_text(encoding="utf-8"))
-    packet["families"].append({
-        "source_family": "archival_documents",
-        "current_disposition": "excluded",
-        "rows": 1,
-        "words": 2,
-        "blocked_by": ["rights not reconstructed"],
-        "proposed_destination": None,
-        "evidence_packet_id": None,
-        "obligations": [],
-        "material_ambiguities": [],
-    })
+    packet["families"].append(
+        {
+            "source_family": "archival_documents",
+            "current_disposition": "excluded",
+            "rows": 1,
+            "words": 2,
+            "blocked_by": ["rights not reconstructed"],
+            "proposed_destination": None,
+            "evidence_packet_id": None,
+            "obligations": [],
+            "material_ambiguities": [],
+        }
+    )
     packet["total_rows"] = 3
     packet["total_words"] = 6
     _json(tmp_path / "operator.json", packet)
@@ -476,10 +714,16 @@ def test_receipt_promotion_failure_restores_prior_artifacts(
 
 
 def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
-    contracts = ROOT / "data/projects/open_model_data/contracts"
-    evidence = json.loads((ROOT / "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json").read_text())
-    packet = json.loads((ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json").read_text())
-    receipt = json.loads((ROOT / "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json").read_text())
+    contracts = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+    evidence = json.loads(
+        (REGISTRY_OPEN_MODEL_DATA_DIR / "admission/wikipedia_primary_rights_evidence_v1.json").read_text()
+    )
+    packet = json.loads(
+        (REGISTRY_OPEN_MODEL_DATA_DIR / "admission/public_external_operator_decision_packet_v1.json").read_text()
+    )
+    receipt = json.loads(
+        (REGISTRY_OPEN_MODEL_DATA_DIR / "admission/public_external_accepted_admission_receipt_v1.json").read_text()
+    )
     evidence_schema = json.loads((contracts / "corpus_admission_evidence_v1.schema.json").read_text())
     packet_schema = json.loads((contracts / "corpus_admission_operator_packet_v1.schema.json").read_text())
     receipt_schema = json.loads((contracts / "corpus_admission_receipt_v1.schema.json").read_text())
@@ -487,9 +731,24 @@ def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
     assert not list(Draft202012Validator(packet_schema, format_checker=FormatChecker()).iter_errors(packet))
     assert not list(Draft202012Validator(receipt_schema, format_checker=FormatChecker()).iter_errors(receipt))
     items = {item["evidence_id"]: item for item in evidence["sources"][0]["evidence"]}
-    assert items["rights.wikimedia_terms_554852"]["sha256"] == "bbb5ebfb89700c0e4732109cddbd45e6d8d2ba5dc339b206c7c5089ec4a4812b"
-    assert items["rights.cc_by_sa_4.0_legalcode"]["sha256"] == "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
-    assert evidence["sources"][0]["snapshot"] == {"capture_timestamps": 183, "content_hash_scope": "SHA-256 of the exact UTF-8 bytes of wikipedia.text as stored in data/sources.db", "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00", "kind": "article_level_captured_snapshot", "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00", "lexical_words": 2865506, "revision_id_required_by_contract": False, "rows": 1029}
+    assert (
+        items["rights.wikimedia_terms_554852"]["sha256"]
+        == "bbb5ebfb89700c0e4732109cddbd45e6d8d2ba5dc339b206c7c5089ec4a4812b"
+    )
+    assert (
+        items["rights.cc_by_sa_4.0_legalcode"]["sha256"]
+        == "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
+    )
+    assert evidence["sources"][0]["snapshot"] == {
+        "capture_timestamps": 183,
+        "content_hash_scope": "SHA-256 of the exact UTF-8 bytes of wikipedia.text as stored in data/sources.db",
+        "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00",
+        "kind": "article_level_captured_snapshot",
+        "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00",
+        "lexical_words": 2865506,
+        "revision_id_required_by_contract": False,
+        "rows": 1029,
+    }
     assert packet["operator_decision_status"] == "accepted"
     assert packet["operator_decision"] == {
         "decided_on": "2026-08-01",
@@ -508,6 +767,11 @@ def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
         "status": "accepted",
     }
     assert receipt["dispositions"]["admitted"] == {"lexical_words": 2865506, "rows": 1029}
-    assert receipt["outputs"]["manifest"]["sha256"] == "69516568590be55f625a7884aaa293420dc102f331c8119bbc5f0d145ec9ccbd"
-    assert receipt["outputs"]["source_records"]["sha256"] == "6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68"
+    assert (
+        receipt["outputs"]["manifest"]["sha256"] == "69516568590be55f625a7884aaa293420dc102f331c8119bbc5f0d145ec9ccbd"
+    )
+    assert (
+        receipt["outputs"]["source_records"]["sha256"]
+        == "6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68"
+    )
     assert receipt["training_eligible_emitted"] is False

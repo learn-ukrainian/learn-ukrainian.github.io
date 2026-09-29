@@ -9,6 +9,11 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from scripts.api.subscription_usage import pace_is_deficit
+except ImportError:  # pragma: no cover - script path fallback
+    from api.subscription_usage import pace_is_deficit  # type: ignore
+
+try:
     from scripts.common.repo_root import main_checkout_root
 except ImportError:  # pragma: no cover - script path fallback
     from common.repo_root import main_checkout_root  # type: ignore
@@ -74,12 +79,7 @@ def load_reset_reserve(repo_root: Path, *, now: datetime | None = None) -> dict[
     if confirmed_at is None or expires_at is None:
         return unavailable_reserve()
     lifetime = (expires_at - confirmed_at).total_seconds()
-    if (
-        lifetime <= 0
-        or lifetime > MAX_RESERVE_AGE_SECONDS
-        or confirmed_at > current
-        or expires_at <= current
-    ):
+    if lifetime <= 0 or lifetime > MAX_RESERVE_AGE_SECONDS or confirmed_at > current or expires_at <= current:
         return unavailable_reserve()
     return {
         "available": True,
@@ -176,7 +176,10 @@ def codex_reset_reserve_eligible(
             or not 0 <= notebook_age < MAX_PROVIDER_AGE_SECONDS
         ):
             return False
-        weekly_block = {"remaining_pct": notebook.get("weekly_remaining_pct"), "used_pct": notebook.get("weekly_used_pct")}
+        weekly_block = {
+            "remaining_pct": notebook.get("weekly_remaining_pct"),
+            "used_pct": notebook.get("weekly_used_pct"),
+        }
         windows.append(weekly_block)
         weekly_windows.append(weekly_block)
     has_positive_window = False
@@ -186,7 +189,11 @@ def codex_reset_reserve_eligible(
         if not isinstance(block, dict):
             continue
         remaining = next(
-            (block.get(key) for key in ("remaining_pct", "remaining_percent", "remainingPercent") if block.get(key) is not None),
+            (
+                block.get(key)
+                for key in ("remaining_pct", "remaining_percent", "remainingPercent")
+                if block.get(key) is not None
+            ),
             None,
         )
         used = next(
@@ -215,4 +222,4 @@ def codex_is_threatened(info: dict[str, Any] | None) -> bool:
     info = info if isinstance(info, dict) else {}
     status = str(info.get("status") or "")
     cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
-    return status in {"hot", "near_cap"} or cb.get("will_last_to_reset") is False
+    return status in {"hot", "near_cap"} or pace_is_deficit(cb) is True

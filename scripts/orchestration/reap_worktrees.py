@@ -433,6 +433,8 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
             [
                 "gh",
                 "api",
+                "--paginate",
+                "--slurp",
                 "-X",
                 "GET",
                 f"repos/{owner}/{repo}/pulls",
@@ -441,7 +443,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
                 "-f",
                 "state=all",
                 "-f",
-                "per_page=10",
+                "per_page=100",
             ],
             cwd=repo_root,
             timeout=30,
@@ -454,14 +456,15 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         raw_items = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError as exc:
         return [], f"REST PR lookup returned invalid JSON: {exc}"
-    if not isinstance(raw_items, list):
-        return [], "REST PR lookup returned a non-list payload"
+    if not isinstance(raw_items, list) or any(not isinstance(page, list) for page in raw_items):
+        return [], "REST PR lookup returned a non-list page"
     states: list[PullRequestState] = []
-    for item in raw_items:
-        parsed, err = _parse_rest_pr_item(item)
-        if err is not None or parsed is None:
-            return [], err or "REST PR lookup returned an unusable row"
-        states.append(parsed)
+    for page in raw_items:
+        for item in page:
+            parsed, err = _parse_rest_pr_item(item)
+            if err is not None or parsed is None:
+                return [], err or "REST PR lookup returned an unusable row"
+            states.append(parsed)
     return states, None
 
 
@@ -490,6 +493,8 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
                 branch,
                 "--state",
                 "all",
+                "--limit",
+                "1000",
                 "--json",
                 "number,state,headRefOid",
             ],
@@ -508,6 +513,8 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
         # Without this, a scalar payload (`123`) raises TypeError in the loop
         # below and a mapping would iterate its keys.
         return [], "gh pr list returned a non-list payload"
+    if len(raw_items) >= 1000:
+        return [], "gh pr list reached its limit; PR state is incomplete"
 
     states: list[PullRequestState] = []
     for item in raw_items:

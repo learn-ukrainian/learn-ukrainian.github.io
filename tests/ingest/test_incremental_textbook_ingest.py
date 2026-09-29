@@ -207,9 +207,7 @@ def test_post_commit_checkpoint_failure_is_receipted(fixture_env, tmp_path, monk
 
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["status"] == "committed_with_post_commit_error"
-    assert receipt["post_commit_error"] == (
-        "WAL checkpoint did not settle after ingest: [1, 5, 3]"
-    )
+    assert receipt["post_commit_error"] == ("WAL checkpoint did not settle after ingest: [1, 5, 3]")
     assert receipt["wal_checkpoint"] == [1, 5, 3]
     conn = original_connect(str(db))
     try:
@@ -403,9 +401,7 @@ def _write_university_policy(
                     else "ukrainian_L2_pedagogy"
                 ),
                 "allowed_lanes": sorted(
-                    allowed_lanes
-                    if allowed_lanes is not None
-                    else ["corpus_ingest", "linguistic_rule_evidence"]
+                    allowed_lanes if allowed_lanes is not None else ["corpus_ingest", "linguistic_rule_evidence"]
                 ),
                 "evidence": {
                     "kind": "jsonl_front_matter",
@@ -618,9 +614,10 @@ def test_tracked_university_policy_is_closed_and_default_deny():
 def test_tracked_v3_policy_separates_audience_from_content_fitness():
     from projects.open_model_data import university_source_policy as usp
 
-    policy_path = (
-        Path(__file__).resolve().parents[2]
-        / "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
+    from scripts.projects.open_model_data.paths import resolve_open_model_path
+
+    policy_path = resolve_open_model_path(
+        "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
     )
     policy, policy_sha256 = usp.load_policy(policy_path)
     by_source = {entry["source_file"]: entry for entry in policy["sources"]}
@@ -635,9 +632,7 @@ def test_tracked_v3_policy_separates_audience_from_content_fitness():
     }
     assert by_source["uni-ukrmova-glukhovtseva-2021"]["allowed_lanes"] == []
     assert by_source["uni-ukrmova-morphology-aleksiienko-2014"]["allowed_lanes"] == []
-    assert by_source["uni-ukrmova-lexicology-filon-khomik-2010"]["allowed_lanes"] == [
-        "contextual_retrieval"
-    ]
+    assert by_source["uni-ukrmova-lexicology-filon-khomik-2010"]["allowed_lanes"] == ["contextual_retrieval"]
     assert by_source["uni-ukrlit-kalinichenko-2024"]["allowed_lanes"] == [
         "contextual_retrieval",
         "corpus_ingest",
@@ -835,9 +830,7 @@ def test_university_source_uses_grade_zero_storage_and_university_db_label(tmp_p
     assert row[4] == "ukrmova"
     assert row[5] == "university"
     assert row[7] == "Галузинська"
-    grouping_row = iti._section_row_for_grouping(
-        iti.ChunkRow(1, row[0], "Сторінка 1", row[2], slug, row[5])
-    )
+    grouping_row = iti._section_row_for_grouping(iti.ChunkRow(1, row[0], "Сторінка 1", row[2], slug, row[5]))
     assert grouping_row.grade == "grade-00"
 
 
@@ -855,14 +848,18 @@ def test_bondarenko_informatics_rows_have_author_subject_and_grade(tmp_path) -> 
     path = tmp_path / "grade-06" / f"{slug}.jsonl"
     path.parent.mkdir()
     path.write_text(
-        json.dumps({
-            "chunk_id": f"{slug}_s0000",
-            "section_title": "Сторінка 1",
-            "text": "Інформатика",
-            "author": "bondarenko",
-            "author_uk": None,
-            "grade": 6,
-        }, ensure_ascii=False) + "\n",
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "section_title": "Сторінка 1",
+                "text": "Інформатика",
+                "author": "bondarenko",
+                "author_uk": None,
+                "grade": 6,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
         encoding="utf-8",
     )
 
@@ -1088,10 +1085,13 @@ def test_hash_bound_native_anomaly_quarantine_removes_only_exact_archived_chunk(
     conn = sqlite3.connect(str(db))
     assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 2
     assert conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0] == 2
-    assert conn.execute(
-        "SELECT COUNT(*) FROM textbooks WHERE chunk_id = ?",
-        (rows[1]["chunk_id"],),
-    ).fetchone()[0] == 0
+    assert (
+        conn.execute(
+            "SELECT COUNT(*) FROM textbooks WHERE chunk_id = ?",
+            (rows[1]["chunk_id"],),
+        ).fetchone()[0]
+        == 0
+    )
     conn.close()
 
     replay = iti.quarantine_native_anomaly_chunks(
@@ -1136,9 +1136,7 @@ def test_quarantine_post_commit_checkpoint_failure_is_receipted(
     )
 
     assert receipt["status"] == "committed_with_post_commit_error"
-    assert receipt["post_commit_error"] == (
-        "WAL checkpoint did not settle after quarantine: [1, 5, 3]"
-    )
+    assert receipt["post_commit_error"] == ("WAL checkpoint did not settle after quarantine: [1, 5, 3]")
     assert receipt["wal_checkpoint"] == [1, 5, 3]
     conn = original_connect(str(db))
     try:
@@ -1284,30 +1282,29 @@ def test_university_content_quarantine_is_policy_bound_and_receipted(tmp_path):
     conn.close()
     receipt_path = tmp_path / "receipt.json"
 
-    assert iti.main(
-        [
-            "--quarantine-slugs",
-            slug,
-            "--chunks-root",
-            str(chunks_root),
-            "--db",
-            str(db),
-            "--university-policy",
-            str(policy),
-            "--receipt",
-            str(receipt_path),
-        ]
-    ) == 0
+    assert (
+        iti.main(
+            [
+                "--quarantine-slugs",
+                slug,
+                "--chunks-root",
+                str(chunks_root),
+                "--db",
+                str(db),
+                "--university-policy",
+                str(policy),
+                "--receipt",
+                str(receipt_path),
+            ]
+        )
+        == 0
+    )
 
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["requested_replace_sources"] == []
     assert receipt["requested_quarantine_sources"] == [slug]
-    assert receipt["per_source"][0]["disposition"] == (
-        "quarantined_by_university_source_policy"
-    )
-    assert receipt["per_source"][0]["university_source_policy"]["content_disposition"] == (
-        "quarantine"
-    )
+    assert receipt["per_source"][0]["disposition"] == ("quarantined_by_university_source_policy")
+    assert receipt["per_source"][0]["university_source_policy"]["content_disposition"] == ("quarantine")
     conn = sqlite3.connect(db)
     assert conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (slug,)).fetchone()[0] == 0
     assert conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0] == 0

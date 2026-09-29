@@ -18,8 +18,8 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.projects.open_model_data.gold_seeds_types import CATEGORY_QUOTAS
 from scripts.projects.open_model_data.v4_mine_gold_seeds import check_quote_quality
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-SEEDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "seeds"
+CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
+SEEDS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "decolonization" / "seeds"
 
 TRAJ_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
@@ -68,7 +68,9 @@ def test_gold_seeds_manifest_integrity() -> None:
         p = SEEDS_DIR / f_meta["filename"]
         assert p.is_file(), f"Missing dataset file: {p}"
         actual_sha = hashlib.sha256(p.read_bytes()).hexdigest()
-        assert actual_sha == f_meta["sha256"], f"SHA256 mismatch for {key}: expected {f_meta['sha256']}, got {actual_sha}"
+        assert actual_sha == f_meta["sha256"], (
+            f"SHA256 mismatch for {key}: expected {f_meta['sha256']}, got {actual_sha}"
+        )
         assert f_meta["record_count"] == 150
 
 
@@ -124,7 +126,13 @@ def test_human_gold_seeds_trajectories_validate(trajectory_schema: dict) -> None
         assert term in target_terms, f"Missing anchor participle term: {term}"
 
     # Category 4: Voice & Reflexivity
-    for term in ["приймається Верховною Радою", "виконується учнем", "користуватися авторитетом", "вибачаюся", "хворіти грипом"]:
+    for term in [
+        "приймається Верховною Радою",
+        "виконується учнем",
+        "користуватися авторитетом",
+        "вибачаюся",
+        "хворіти грипом",
+    ]:
         assert term in target_terms, f"Missing anchor voice term: {term}"
 
     # Category 5: Historical Authority

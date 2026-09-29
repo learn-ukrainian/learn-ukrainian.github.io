@@ -21,7 +21,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-PY = REPO / ".venv" / "bin" / "python"
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+from scripts.common.repo_root import project_interpreter
+
+PY = project_interpreter()
 DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS: float = 600.0
 
 ALL_FIXTURES = [

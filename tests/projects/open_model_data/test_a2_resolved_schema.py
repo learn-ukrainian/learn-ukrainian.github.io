@@ -12,23 +12,24 @@ from jsonschema import Draft202012Validator
 from learn_ukrainian_v4_runtime import provenance, resources
 from learn_ukrainian_v4_runtime import v4_stage_evidence as ev
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 SCHEMA = "data/projects/open_model_data/contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+CHECKOUT_SCHEMA = (
+    REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+)
 
 
 def validator() -> Draft202012Validator:
-    schema = json.loads((chain.ROOT / SCHEMA).read_bytes())
+    schema = json.loads(CHECKOUT_SCHEMA.read_bytes())
     Draft202012Validator.check_schema(schema)
     return Draft202012Validator(schema)
 
 
 def test_packaged_schema_matches_current_asset_without_resealing_history() -> None:
-    assert resources.read_bytes(SCHEMA) == (chain.ROOT / SCHEMA).read_bytes()
+    assert resources.read_bytes(SCHEMA) == CHECKOUT_SCHEMA.read_bytes()
     spec = json.loads(resources.read_bytes(provenance.SPEC))
-    assert all(
-        binding["path"] != SCHEMA
-        for receipt in spec["receipts"]
-        for binding in receipt["bindings"].values()
-    )
+    assert all(binding["path"] != SCHEMA for receipt in spec["receipts"] for binding in receipt["bindings"].values())
     provenance.verify_current_identity()
 
 
@@ -72,7 +73,9 @@ def test_schema_valid_resolved_stratum_only_changes_prerequisites(tmp_path: Path
             assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
 
 
-@pytest.mark.parametrize("state", ["candidate_support_identified", "support_identified_with_residual", "source_incomplete"])
+@pytest.mark.parametrize(
+    "state", ["candidate_support_identified", "support_identified_with_residual", "source_incomplete"]
+)
 def test_unresolved_coverage_cannot_silently_drop_residuals(state: str) -> None:
     receipt = chain.resolved_a2_receipt("standard_correct")
     receipt["stratum_coverage_map"][0]["coverage_state"] = state

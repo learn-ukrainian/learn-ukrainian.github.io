@@ -441,7 +441,7 @@ def test_claude_desktop_entry_is_human_invoked():
 def test_claude_monitor_entry_is_non_dispatchable_identity():
     entry = get_agent_entry("claude-monitor")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
-    assert entry["default_model"] == "claude-sonnet-5"
+    assert entry["default_model"] == "claude-sonnet-5-5"
     assert entry["cost_tier"] == "high"
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
@@ -3839,7 +3839,7 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
 def test_claude_adapter_attributes():
     adapter = ClaudeAdapter()
     assert adapter.name == "claude"
-    assert adapter.default_model == "claude-sonnet-5"
+    assert adapter.default_model == "claude-sonnet-5-5"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 

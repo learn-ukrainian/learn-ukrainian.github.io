@@ -1,0 +1,51 @@
+{
+  "open_model_data": {
+    "tests": [
+      "tests/projects/open_model_data/test_*.py",
+      "tests/test_open_model*.py",
+      "tests/test_phase3_*.py",
+      "tests/test_v4_*.py",
+      "tests/test_v6_*.py",
+      "tests/ingest/test_incremental_textbook_ingest.py",
+      "tests/mcp/test_sources_call_budget.py",
+      "tests/test_corpus_training_usability_audit.py",
+      "tests/test_document_signal_manifest.py",
+      "tests/test_gemma_hardware_probe.py",
+      "tests/test_inventory_existing_assets.py",
+      "tests/test_mcp_sources_identity_integration.py",
+      "tests/test_mcp_sources_v4_invocation_recording.py",
+      "tests/test_model_ready_receipt_audit.py",
+      "tests/test_rag_ingestion.py",
+      "tests/test_source_capability_complements.py",
+      "tests/test_source_work_locator_index.py",
+      "tests/test_sources_tool_result_v1.py",
+      "tests/test_textbook_corpus_readiness.py",
+      "tests/test_textbook_curriculum_coverage.py",
+      "tests/test_typesafe_cyrillic_gate.py",
+      "tests/test_ua_open_weight_eval.py"
+    ],
+    "roots": [
+      "scripts/projects/open_model_data/",
+      "packages/v4-runtime/",
+      "data/projects/open_model_data/",
+      "registry/projects/",
+      "scripts/curriculum/evidence/db_identity.py",
+      "scripts/curriculum/evidence/sources.py",
+      "scripts/fleet_comms/__init__.py",
+      "scripts/fleet_comms/artifacts.py",
+      "scripts/fleet_comms/contracts.py",
+      "scripts/fleet_comms/request_executor.py",
+      "scripts/fleet_comms/v4_canonical_authority_store.py",
+      "scripts/ingest/",
+      "scripts/lexicon/",
+      "scripts/projects/ua_open_weight_eval/",
+      "scripts/rag/",
+      "scripts/storage/",
+      "scripts/verification/",
+      "scripts/wiki/",
+      "tests/sparse_trees.py",
+      "tests/test_open_model_view_exporter.py",
+      "tests/wait_helpers.py"
+    ]
+  }
+}

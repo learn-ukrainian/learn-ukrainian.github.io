@@ -30,10 +30,11 @@ from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_a9_evaluation_package as a9
 from scripts.projects.open_model_data import v4_per_slot_private_factory as factory
 from scripts.projects.open_model_data import v4_stage_evidence as ev
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A6_RECEIPT_PATH = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"
@@ -53,7 +54,13 @@ def _cached_json(path: Path) -> dict:
 # The forbidden slot->HMAC/source-unit vocabulary this dispatch exists to
 # keep out of every public V4 artifact -- see PR #7646's own
 # COMMITMENT_BINDING_POLICY and the binding contract's rights/firewall.
-FORBIDDEN_PUBLIC_TERMS = ("commitment_sha256", "commitment_hmac", "slot_commitment", "source_unit_id", "heldout_membership")
+FORBIDDEN_PUBLIC_TERMS = (
+    "commitment_sha256",
+    "commitment_hmac",
+    "slot_commitment",
+    "source_unit_id",
+    "heldout_membership",
+)
 
 
 def _all_keys(value: object) -> set[str]:
@@ -70,7 +77,9 @@ def _all_keys(value: object) -> set[str]:
 def test_stratum_eligibility_covers_every_manifest_stratum_exactly_once() -> None:
     eligibility = ev.stratum_eligibility(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH))
     assert len(eligibility) == 8
-    assert {record["stratum"] for record in eligibility} == {s["stratum"] for s in _cached_json(MANIFEST_PATH)["slot_series"]}
+    assert {record["stratum"] for record in eligibility} == {
+        s["stratum"] for s in _cached_json(MANIFEST_PATH)["slot_series"]
+    }
 
 
 def test_stratum_eligibility_against_real_production_data_is_zero_eligible() -> None:
@@ -116,7 +125,9 @@ def test_stratum_eligibility_refuses_an_empty_residual_list_without_a_resolved_c
 # --- the synthetic partial-prerequisite chain: every validator live --------
 
 
-def test_synthetic_chain_reports_fifteen_eligible_zero_complete_hundred_residual_at_a6_through_a9(tmp_path: Path) -> None:
+def test_synthetic_chain_reports_fifteen_eligible_zero_complete_hundred_residual_at_a6_through_a9(
+    tmp_path: Path,
+) -> None:
     """The acceptance proof for this repair: a fully valid synthetic chain
     where exactly one manifest stratum (15 slots) is genuinely prerequisite-
     eligible, built and verified with every A6-A9 validator running live --
@@ -205,7 +216,12 @@ def test_a2_deleting_a_residual_without_a_resolved_coverage_state_refuses() -> N
         if coverage["stratum"] == "standard_correct":
             coverage["residual_ids"] = []
             # coverage_state deliberately left at its real, unresolved value.
-    for module, error_cls in ((a6, a6.ArenaWiringError), (a7, a7.OriginalRowFactoryError), (a8, a8.AdmissionAssemblyError), (a9, a9.EvaluationPackageError)):
+    for module, error_cls in (
+        (a6, a6.ArenaWiringError),
+        (a7, a7.OriginalRowFactoryError),
+        (a8, a8.AdmissionAssemblyError),
+        (a9, a9.EvaluationPackageError),
+    ):
         with pytest.raises(error_cls, match="coverage_state"):
             module.ev.stratum_eligibility(_cached_json(MANIFEST_PATH), tampered_a2, error_cls=error_cls)
 
@@ -259,7 +275,11 @@ def test_factory_receipt_validates_independently_against_real_public_artifacts()
 
 def test_factory_receipt_denominator_is_the_frozen_100_public_slots() -> None:
     assert _cached_json(FACTORY_RECEIPT_PATH)["frozen_slot_denominator"]["total_slots"] == 100
-    all_ids = [slot_id for stratum in _cached_json(FACTORY_RECEIPT_PATH)["frozen_slot_denominator"]["strata"] for slot_id in stratum["slot_ids"]]
+    all_ids = [
+        slot_id
+        for stratum in _cached_json(FACTORY_RECEIPT_PATH)["frozen_slot_denominator"]["strata"]
+        for slot_id in stratum["slot_ids"]
+    ]
     assert len(all_ids) == 100 and len(set(all_ids)) == 100
 
 
@@ -285,7 +305,13 @@ def test_factory_receipt_reason_code_totals_sum_to_the_full_denominator() -> Non
 
 def test_factory_receipt_never_claims_a_stronger_release_state() -> None:
     serialized = json.dumps(_cached_json(FACTORY_RECEIPT_PATH), ensure_ascii=False, sort_keys=True)
-    for claim in ("TRAINING_READY_SILVER", "ARENA_SLICE_READY", "TRAINING_READY_GOLD_SUBSET", "GOLD_UPGRADE_READY", "EPIC_DONE"):
+    for claim in (
+        "TRAINING_READY_SILVER",
+        "ARENA_SLICE_READY",
+        "TRAINING_READY_GOLD_SUBSET",
+        "GOLD_UPGRADE_READY",
+        "EPIC_DONE",
+    ):
         assert claim not in serialized
 
 
@@ -312,6 +338,7 @@ def test_factory_receipt_never_references_a4_private_ledger_or_a3_heldout_member
 def test_factory_receipt_bindings_hash_to_disk() -> None:
     for name, binding in _cached_json(FACTORY_RECEIPT_PATH)["bindings"].items():
         from learn_ukrainian_v4_runtime import resources
+
         logical = binding["path"]
         if logical.startswith("scripts/"):
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
@@ -363,7 +390,12 @@ def test_private_ledger_default_path_is_under_gitignored_batch_state() -> None:
 
 def test_factory_refuses_a_forged_slots_ready_claim() -> None:
     receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
-    receipt["per_slot_gate"] = {**receipt["per_slot_gate"], "slots_stage_complete": 100, "slots_residual": 0, "blocked_reason_code": None}
+    receipt["per_slot_gate"] = {
+        **receipt["per_slot_gate"],
+        "slots_stage_complete": 100,
+        "slots_residual": 0,
+        "blocked_reason_code": None,
+    }
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 

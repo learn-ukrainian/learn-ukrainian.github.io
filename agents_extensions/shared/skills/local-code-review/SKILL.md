@@ -27,7 +27,9 @@ Read and follow [`local-code-review-checklist.md`](local-code-review-checklist.m
 in full. It drives `.venv/bin/python -m scripts.review.closeout_cli` for every
 step that has a deterministic answer (target resolution, scope-baseline
 freeze and breakers, reviewer resolution, findings adjudication) and tells
-you exactly what to reason about yourself.
+you exactly what to reason about yourself. Do not re-run test suites that the
+PR's CI runs; review the diff, run at most the specific tests that reproduce
+a finding you are checking, and cite CI run ids for suite results.
 
 ## Output
 

@@ -46,6 +46,7 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     surzhyk_record_is_authentic,
     surzhyk_target_allowed,
 )
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
@@ -88,7 +89,7 @@ def resolve_data_path(rel_path: str) -> Path:
 
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "partitions"
-DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+DEFAULT_CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 RECORD_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_historical_protection_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_historical_protection_receipt.schema.json"
 LEMKO_SEED_FILE = (

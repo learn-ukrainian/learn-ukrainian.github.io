@@ -8,9 +8,18 @@ export interface ErrorCorrectionDrill {
   errorWord: string;
   correctForm: string;
   options: string[];
+  /** Corrections a learner may type; the first is `correctForm`. */
+  answers?: string[];
   explanation: string;
   isUkrainian: boolean;
   source: string;
+  /** The sources.db row, spans and direction the pair was read from (audited by the practice gate). */
+  sourceRef?: {
+    rowId: string;
+    errorSpan: [number, number];
+    correctSpan: [number, number];
+    direction: 'error_first' | 'correct_first';
+  };
 }
 
 export interface ErrorCorrectionPracticeProps {
@@ -149,8 +158,8 @@ export default function ErrorCorrectionPractice({
         </div>
         <p className="error-correction-instruction">
           {chromeLocale === 'uk'
-            ? 'Знайдіть помилку в реченні (натисніть на неї) та виправте її:'
-            : 'Find the error in the sentence (tap it) and correct it:'}
+            ? 'Знайдіть помилку в реченні (натисніть на неї) та напишіть виправлення:'
+            : 'Find the error in the sentence (tap it) and type the correction:'}
         </p>
       </div>
 
@@ -162,6 +171,8 @@ export default function ErrorCorrectionPractice({
           options={currentItem.options}
           explanation={currentItem.explanation}
           isUkrainian={chromeLocale === 'uk'}
+          fixMode="type"
+          acceptedAnswers={currentItem.answers}
           onComplete={handleComplete}
         />
       </div>

@@ -27,6 +27,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
+from common.repo_root import project_interpreter
 from secret_redactor import redact_text
 
 from ._ask_contract import (
@@ -54,8 +55,7 @@ from ._review_worktree import (
     review_target_payload,
 )
 
-VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
-CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
+CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5-5"
 CLAUDE_ADVISORY_MODEL = "claude-opus-5"
 
 
@@ -321,7 +321,7 @@ def _run_claude_sync_via_runtime(
 
         provenance_data, actual_model = response_provenance(
             msg,
-            actual_model=result.model or target_model or "claude-sonnet-5",
+            actual_model=result.model or target_model or "claude-sonnet-5-5",
             harness="claude",
             effort_applied=effort_applied if effort_reason else getattr(result, "effort", None),
             effort_reason=effort_reason,
@@ -490,7 +490,7 @@ def _launch_claude_background(msg, message_id, new_session):
 
     try:
         bridge_cmd = [
-            str(VENV_PYTHON), str(Path(__file__).parent / "__main__.py"),
+            str(project_interpreter()), str(Path(__file__).parent / "__main__.py"),
             "process-claude", str(message_id),
             "--no-timeout"
         ]

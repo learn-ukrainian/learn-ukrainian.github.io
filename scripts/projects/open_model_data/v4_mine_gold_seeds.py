@@ -36,6 +36,8 @@ import jsonschema
 
 from scripts.projects.open_model_data.gold_seeds_data import RAW_GOLD_SEEDS
 from scripts.projects.open_model_data.gold_seeds_types import CATEGORY_QUOTAS, RawGoldSeedSpec
+from scripts.storage.artifacts import write_artifact_set
+from scripts.storage.paths import artifact_set
 
 
 def resolve_data_path(rel_path: str) -> Path:
@@ -59,17 +61,40 @@ def resolve_data_path(rel_path: str) -> Path:
     return local_p
 
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 
-DEFAULT_SEEDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "seeds"
+DEFAULT_SEEDS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "decolonization" / "seeds"
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 
 TITLE_EXEMPTIONS = {
-    "ім", "вул", "просп", "пров", "пл", "м", "с", "смт", "оз", "проф", "акад", "доц", "ген", "св", "д-р",
-    "р", "рр", "ст", "тис", "млн", "грн", "див", "напр", "т", "о",
+    "ім",
+    "вул",
+    "просп",
+    "пров",
+    "пл",
+    "м",
+    "с",
+    "смт",
+    "оз",
+    "проф",
+    "акад",
+    "доц",
+    "ген",
+    "св",
+    "д-р",
+    "р",
+    "рр",
+    "ст",
+    "тис",
+    "млн",
+    "грн",
+    "див",
+    "напр",
+    "т",
+    "о",
 }
 
 
@@ -105,9 +130,42 @@ def check_quote_quality(quote: str) -> str | None:
 
 
 FUNCTION_WORDS: set[str] = {
-    "в", "у", "на", "за", "по", "при", "з", "із", "зі", "до", "про", "від", "для",
-    "під", "над", "перед", "через", "без", "і", "й", "та", "або", "чи", "а", "але",
-    "б", "би", "же", "ж", "не", "ні", "що", "як", "щоб", "бо", "щодо",
+    "в",
+    "у",
+    "на",
+    "за",
+    "по",
+    "при",
+    "з",
+    "із",
+    "зі",
+    "до",
+    "про",
+    "від",
+    "для",
+    "під",
+    "над",
+    "перед",
+    "через",
+    "без",
+    "і",
+    "й",
+    "та",
+    "або",
+    "чи",
+    "а",
+    "але",
+    "б",
+    "би",
+    "же",
+    "ж",
+    "не",
+    "ні",
+    "що",
+    "як",
+    "щоб",
+    "бо",
+    "щодо",
 }
 
 
@@ -127,10 +185,7 @@ def _check_vesum_single_word(w: str, cur: sqlite3.Cursor) -> tuple[int, bool, li
     # 2. Inflected word_form lookup in standard forms -> resolve to lemma paradigm count
     lemmas = cur.execute("SELECT DISTINCT lemma, tags FROM forms WHERE word_form = ?", (w,)).fetchall()
     if lemmas:
-        counts = [
-            cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (lem[0],)).fetchone()[0]
-            for lem in lemmas
-        ]
+        counts = [cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (lem[0],)).fetchone()[0] for lem in lemmas]
         max_cnt = max(counts)
         tags = []
         for r in lemmas:
@@ -208,9 +263,7 @@ def build_gold_records(
     dpo_pairs: list[dict[str, Any]] = []
 
     for idx, spec in enumerate(specs, 1):
-        hex_hash = hashlib.sha256(
-            f"gold_seed_{idx:04d}_{spec.target_term}".encode()
-        ).hexdigest()[:16]
+        hex_hash = hashlib.sha256(f"gold_seed_{idx:04d}_{spec.target_term}".encode()).hexdigest()[:16]
         traj_id = f"traj.decolonize.{hex_hash}"
         pair_id = f"dpo.decolonize.{hex_hash}"
 
@@ -224,12 +277,14 @@ def build_gold_records(
             seen_lemmas.add(alt_lemma)
 
             cnt, attested, tags = check_vesum_lemma(alt_lemma, alt_tier, vesum_conn)
-            vesum_attestation.append({
-                "lemma": alt_lemma,
-                "vesum_forms_count": cnt,
-                "is_standard_attested": attested,
-                "tags": tags,
-            })
+            vesum_attestation.append(
+                {
+                    "lemma": alt_lemma,
+                    "vesum_forms_count": cnt,
+                    "is_standard_attested": attested,
+                    "tags": tags,
+                }
+            )
 
         # 2. Build register spectrum
         alternatives_list = [
@@ -265,9 +320,7 @@ def build_gold_records(
         }
 
         # 3. Check primary alternative attestation in VESUM
-        _prim_cnt, prim_att, _ = check_vesum_lemma(
-            spec.primary_living_standard, "living_standard", vesum_conn
-        )
+        _prim_cnt, prim_att, _ = check_vesum_lemma(spec.primary_living_standard, "living_standard", vesum_conn)
         vesum_verified = prim_att
 
         dpo_pair = {
@@ -313,9 +366,7 @@ def validate_records(
         vesum_lemmas = {v["lemma"] for v in r["vesum_attestation"]}
         for alt in r["register_spectrum"]["alternatives"]:
             if alt["lemma"] not in vesum_lemmas:
-                raise ValueError(
-                    f"Alternative '{alt['lemma']}' in '{r['target_term']}' missing from vesum_attestation"
-                )
+                raise ValueError(f"Alternative '{alt['lemma']}' in '{r['target_term']}' missing from vesum_attestation")
 
     for idx, p in enumerate(dpo_pairs, 1):
         errors = list(dpo_validator.iter_errors(p))
@@ -334,10 +385,37 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def _publish_seed_files(out_dir: Path, files: dict[str, bytes]) -> None:
+    registry = REPO_ROOT / "registry/projects/open_model_data"
+    resolved = out_dir.resolve()
+    if resolved == DEFAULT_SEEDS_DIR:
+        snapshot = artifact_set("open_model_other_indexes", repo=REPO_ROOT)
+        bindings = snapshot.manifest["set_descriptor"]["companions"]
+        companions = {}
+        for name, content in files.items():
+            relative = (DEFAULT_SEEDS_DIR / name).relative_to(REPO_ROOT).as_posix()
+            companions[relative] = (bindings[relative], lambda staged, data=content: staged.write_bytes(data))
+        digest = hashlib.sha256((json.dumps(snapshot.manifest, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
+        write_artifact_set(
+            REPO_ROOT,
+            "open_model_other_indexes",
+            "v4_mine_gold_seeds",
+            {},
+            expected_hashes={},
+            expected_members={entry["path"][5:] for entry in snapshot.manifest["entries"]},
+            companions=companions,
+            expected_manifest=digest,
+        )
+    else:
+        if out_dir.absolute().is_relative_to(registry) or resolved.is_relative_to(registry):
+            raise ValueError(f"unbound managed gold seed destination: {out_dir}")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for name, content in files.items():
+            (out_dir / name).write_bytes(content)
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Mine and curate 150 Human Gold Seeds (ULDR Phase 2, #8001)"
-    )
+    parser = argparse.ArgumentParser(description="Mine and curate 150 Human Gold Seeds (ULDR Phase 2, #8001)")
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -364,7 +442,6 @@ def main() -> None:
     args = parser.parse_args()
 
     out_dir = args.output_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
 
     traj_path = out_dir / "human_gold_seeds_150_trajectories.jsonl"
     dpo_path = out_dir / "human_gold_seeds_150_dpo.jsonl"
@@ -403,17 +480,8 @@ def main() -> None:
         print("Validating records against v1 schemas and contracts...")
         validate_records(trajectories, dpo_pairs, traj_schema, dpo_schema)
 
-        # Write trajectories
-        print(f"Writing {len(trajectories)} trajectories to {traj_path}...")
-        with traj_path.open("w", encoding="utf-8") as f:
-            for t in trajectories:
-                f.write(json.dumps(t, ensure_ascii=False) + "\n")
-
-        # Write DPO pairs
-        print(f"Writing {len(dpo_pairs)} DPO pairs to {dpo_path}...")
-        with dpo_path.open("w", encoding="utf-8") as f:
-            for d in dpo_pairs:
-                f.write(json.dumps(d, ensure_ascii=False) + "\n")
+        trajectory_bytes = "".join(json.dumps(t, ensure_ascii=False) + "\n" for t in trajectories).encode()
+        dpo_bytes = "".join(json.dumps(d, ensure_ascii=False) + "\n" for d in dpo_pairs).encode()
 
         # Category breakdown for manifest
         category_counts: dict[str, int] = {}
@@ -434,12 +502,12 @@ def main() -> None:
                 "trajectories": {
                     "filename": traj_path.name,
                     "record_count": len(trajectories),
-                    "sha256": sha256_file(traj_path),
+                    "sha256": hashlib.sha256(trajectory_bytes).hexdigest(),
                 },
                 "dpo_pairs": {
                     "filename": dpo_path.name,
                     "record_count": len(dpo_pairs),
-                    "sha256": sha256_file(dpo_path),
+                    "sha256": hashlib.sha256(dpo_bytes).hexdigest(),
                 },
             },
             "linguistic_grounding": {
@@ -455,9 +523,14 @@ def main() -> None:
             },
         }
 
-        with manifest_path.open("w", encoding="utf-8") as f:
-            json.dump(manifest, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+        _publish_seed_files(
+            out_dir,
+            {
+                traj_path.name: trajectory_bytes,
+                dpo_path.name: dpo_bytes,
+                manifest_path.name: (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode(),
+            },
+        )
 
         print(f"Manifest written to {manifest_path}")
         print("\n=== Phase 2 Deliverable Summary ===")

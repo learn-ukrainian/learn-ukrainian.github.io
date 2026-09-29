@@ -10,6 +10,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 import scripts.projects.open_model_data.profile_corpus as profiler_module
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.profile_corpus import (
     canonical_json,
     main,
@@ -18,8 +19,8 @@ from scripts.projects.open_model_data.profile_corpus import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-CANDIDATE_SCHEMA = ROOT / "data/projects/open_model_data/contracts/review_candidate_v1.schema.json"
-RECEIPT_SCHEMA = ROOT / "data/projects/open_model_data/contracts/corpus_profile_receipt_v1.schema.json"
+CANDIDATE_SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/review_candidate_v1.schema.json"
+RECEIPT_SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/corpus_profile_receipt_v1.schema.json"
 
 
 def test_normalization_removes_stress_without_erasing_ukrainian_diacritics() -> None:

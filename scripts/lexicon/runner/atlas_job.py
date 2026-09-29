@@ -27,6 +27,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol
 
+from scripts.common.repo_root import project_interpreter
+
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
 BATCH_KINDS = frozenset({"reenrich"})
@@ -983,11 +985,7 @@ def _python_bin() -> str:
     override = os.environ.get("ATLAS_RE_ENRICH_PYTHON")
     if override:
         return override
-    candidate = primary_checkout_root() / ".venv" / "bin" / "python"
-    if candidate.is_file():
-        return str(candidate)
-    fallback = repo_root() / ".venv" / "bin" / "python"
-    return str(fallback)
+    return str(project_interpreter())
 
 
 def _expand_env_value(value: str, env: dict[str, str]) -> str:

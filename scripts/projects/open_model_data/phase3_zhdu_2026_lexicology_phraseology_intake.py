@@ -34,8 +34,13 @@ from scripts.projects.open_model_data.textbook_native_exactness import audit_chu
 from scripts.rag.extract_text import detect_native_text_anomalies
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+# Independently pinned to the 55d0ed1515 source and exact frozen receipt.
+HISTORICAL_IMPLEMENTATION_SHA256 = "a0d83bc67162689f9a13c7f1eaaff2202b340572556cd931548f00d1c39d6e37"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "4e65dabc2bae2379bc57eb7defab757ee3deb501a21db1b9ed66265b07ad9171"
 SCHEMA_PATH = DATA / "contracts/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.json"
 UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
@@ -1006,7 +1011,12 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         raise Zhdu2026LexicologyPhraseologyIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
     authoritative = validate_authoritative_university_state()
-    require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    implementation_sha256 = (
+        HISTORICAL_IMPLEMENTATION_SHA256
+        if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256
+        else sha256_file(SCRIPT_PATH)
+    )
+    require(receipt["bindings"]["implementation_sha256"] == implementation_sha256, "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(
         receipt["bindings"]["university_content_audit_freeze_v1_sha256"]

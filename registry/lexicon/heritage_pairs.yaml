@@ -3641,7 +3641,6 @@ pairs:
     origin: ua-gec-calque-wave1:literary_texts/e27925aa_c0013
 - calqueLabel: вести себе
   calqueSurfaces:
-  - вести cебе
   - вести себе
   nativeSlug: поводитися
   nativeLemma: поводитися
@@ -3669,7 +3668,7 @@ pairs:
   - sentence_with_slot: Він прийшов поінформувати мене, як користатися газовим опаленням, як ___, щоб ніхто не помічав, що
       я тут є.
     answer_form: поводитися
-    calque_form: вести cебе
+    calque_form: вести себе
     origin: ua-gec-calque-wave1:literary_texts/69ca915c_c0008
 - calqueLabel: до того
   calqueSurfaces:

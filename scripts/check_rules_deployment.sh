@@ -131,7 +131,6 @@ check_pair() {
             diff_args+=(-x "${normalized##*/}")
         fi
     done
-
     if [[ ! -d "$src" ]]; then
         echo "::error::Source dir missing: $src"
         return 1
@@ -143,7 +142,7 @@ check_pair() {
     fi
 
     local diff_out
-    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" || true)
+    diff_out=$(diff "${diff_args[@]}" "$src" "$dst" | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"
@@ -173,6 +172,7 @@ check_overlay() {
     local diff_out=""
     local rel
     while IFS= read -r rel; do
+        bytecode_cache_path "$rel" && continue
         if [[ ! -f "$dst/$rel" ]]; then
             diff_out+="Missing deployed overlay file: $dst/$rel"$'\n'
         elif ! cmp -s "$src/$rel" "$dst/$rel"; then
@@ -241,6 +241,9 @@ check_gemini_file_owners() {
     [[ -d .gemini ]] || return 0
     while IFS= read -r deployed_file; do
         relative="${deployed_file#.gemini/}"
+        if bytecode_cache_path "$relative"; then
+            continue
+        fi
         if [[ "$relative" == skills/* || "$relative" == rules/* ]]; then
             continue
         fi

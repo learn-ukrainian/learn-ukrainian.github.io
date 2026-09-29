@@ -37,6 +37,7 @@ class ClassifierTests(unittest.TestCase):
         )
         tier = dict(result)
         preflight = tier.pop("preflight")
+        self.assertIsInstance(json.loads(tier.pop("skipped_areas")), list)
         expected = (
             "true"
             if event == "pull_request" and tier["pytest_mode"] in {"full", "selected"}
@@ -44,6 +45,42 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(preflight, expected, (event, tier["pytest_mode"]))
         return tier
+
+    def test_open_model_data_skip_scope(self):
+        def skipped(paths, *, event="pull_request", labels=None):
+            result = scope.classify(
+                paths,
+                event=event,
+                labels=labels or [],
+                shard_count=4,
+                denominator=load_denominator()["paths"],
+                tree_paths=frozenset(),
+            )
+            return result["pytest_mode"], json.loads(result["skipped_areas"])
+
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"]), ("full", ["open_model_data"]))
+        for path in (
+            "scripts/projects/open_model_data/paths.py",
+            "packages/v4-runtime/src/learn_ukrainian_v4_runtime/provenance.py",
+            "data/projects/open_model_data/example.json",
+            "registry/projects/open_model_data/example.json",
+            "tests/test_open_model_view_exporter.py",
+            "scripts/storage/paths.py",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(skipped([path]), ("full", []))
+        for path in (
+            "tests/conftest.py",
+            "requirements.txt",
+            ".github/workflows/ci.yml",
+            "scripts/ci/classify_changes.py",
+        ):
+            with self.subTest(shared=path):
+                self.assertEqual(skipped([path]), ("full", []))
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"], labels=["full-ci"]), ("full", []))
+        self.assertEqual(skipped(["scripts/unmapped_backend.py"], event="merge_group"), ("full", []))
+        with patch.object(scope, "load_areas", side_effect=ValueError("bad manifest")):
+            self.assertEqual(skipped(["scripts/unmapped_backend.py"]), ("full", []))
 
     def assert_full(self, result, frontend="false"):
         self.assertEqual(
@@ -239,15 +276,15 @@ class ClassifierTests(unittest.TestCase):
             reads_content="true",
         )
 
-    def test_merge_group_docs_only_stays_docs(self):
-        # #8437: a docs merge does not rebuild the site or run four shards.
-        self.assert_docs(
+    def test_merge_group_docs_only_runs_full_without_frontend(self):
+        # #9073 D4: docs can be read by tests outside the docs-lane markers.
+        self.assert_full(
             self.classify(["docs/guide.md", "README.md"], event="merge_group"),
         )
 
     def test_docs_reads_content_flag(self):
-        # #8720: only a docs-lane result whose paths touch curriculum/ or wiki/
-        # flags the reads_content leg, on both pull_request and merge_group.
+        # #8720: curriculum/wiki docs-lane results flag the reads_content leg
+        # on both events; ordinary docs run full in the queue.
         for event in ("pull_request", "merge_group"):
             with self.subTest(event=event, case="curriculum"):
                 self.assert_docs(
@@ -262,10 +299,11 @@ class ClassifierTests(unittest.TestCase):
                     reads_content="true",
                 )
             with self.subTest(event=event, case="docs-only"):
-                self.assert_docs(
-                    self.classify(["docs/runbooks/ci-gate.md"], event=event),
-                    reads_content="false",
-                )
+                result = self.classify(["docs/guide.md"], event=event)
+                if event == "pull_request":
+                    self.assert_docs(result, reads_content="false")
+                else:
+                    self.assert_full(result)
         # A curriculum path mixed with a docs/ path is still docs with the flag.
         self.assert_docs(
             self.classify(["docs/guide.md", "wiki/figures/example.md"]),
@@ -303,8 +341,7 @@ class ClassifierTests(unittest.TestCase):
         self.assertIn("docs_reads_content=false", stdout)
 
     def test_merge_group_script_and_test_forces_full(self):
-        # D1 (#8399): what would be `selected` on a pull request is full on
-        # the queue.
+        # #9073: a selected PR runs every required Python shard in the queue.
         tree = _tree(
             "scripts/delegate.py",
             "tests/test_delegate.py",
@@ -313,9 +350,115 @@ class ClassifierTests(unittest.TestCase):
         paths = ["scripts/delegate.py", "tests/test_delegate.py"]
         expected = ["tests/test_ci_shard_partition.py", "tests/test_delegate.py"]
         self.assert_selected(self.classify(paths, tree_paths=tree), expected)
-        self.assert_selected(
-            self.classify(paths, event="merge_group", tree_paths=tree),
-            expected,
+        self.assert_full(self.classify(paths, event="merge_group", tree_paths=tree))
+
+    def test_merge_group_code_classes_run_full_without_tree_lookup(self):
+        # Each code class and an unknown path must run full even when a PR
+        # could select a single test or the queue cannot read the Git tree.
+        for path in (
+            "scripts/example.py",
+            "tests/test_example.py",
+            ".github/workflows/ci.yml",
+            "pyproject.toml",
+            "requirements-dev.txt",
+            "unknown/path.bin",
+        ):
+            with (
+                self.subTest(path=path),
+                patch.object(scope, "git_tree_paths", side_effect=OSError("unavailable")) as tree,
+            ):
+                result = scope.classify(
+                    [path],
+                    event="merge_group",
+                    labels=[],
+                    shard_count=4,
+                    denominator=load_denominator()["paths"],
+                )
+                self.assertEqual(result.pop("preflight"), "false")
+                self.assertEqual(result.pop("skipped_areas"), "[]")
+                self.assert_full(
+                    result,
+                    frontend="true" if path == ".github/workflows/ci.yml" else "false",
+                )
+                tree.assert_not_called()
+
+    def test_merge_group_code_inside_broad_content_docs_roots_runs_full(self):
+        # These used to enter the docs/content classes despite being code.
+        for path in (
+            "curriculum/l1-uk/tool.py",
+            "wiki/tools/preview.ts",
+            "site/scripts/check.py",
+            "packages/activity-kit/scripts/build.sh",
+        ):
+            with self.subTest(path=path):
+                self.assert_full(
+                    self.classify([path], event="merge_group"),
+                    frontend="true" if path.startswith(("site/", "packages/")) else "false",
+                )
+
+    def test_merge_group_non_code_classes_keep_their_tiers(self):
+        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"))
+        self.assert_docs(
+            self.classify(["wiki/figures/example.md"], event="merge_group"),
+            reads_content="true",
+        )
+        self.assert_content(
+            self.classify(["site/src/content/docs/a1/module/1.mdx"], event="merge_group")
+        )
+        for path in ("site/src/components/X.astro", "packages/activity-kit/src/index.ts"):
+            with self.subTest(path=path):
+                self.assert_full(self.classify([path], event="merge_group"), frontend="true")
+
+    def test_merge_group_frontend_only_keeps_denominator(self):
+        tier = scope.classify_tier(
+            ["packages/activity-kit/src/index.ts"],
+            event="merge_group",
+            labels=[],
+            shard_count=4,
+            denominator=["site/"],
+            tree_paths=frozenset(),
+        )
+        self.assert_full(tier, frontend="false")
+
+    def test_merge_group_all_docs_run_full(self):
+        for path in (
+            "docs/epics/ci-speed-program.md",
+            "docs/guide.md",
+            "README.md",
+            "agents_extensions/shared/skills/example/SKILL.md",
+            "docs/epics/fresh-build-a1-arc.md",
+            "docs/ACTIVITY-YAML-REFERENCE.md",
+            "docs/best-practices/activity-pedagogy.md",
+            "docs/runbooks/agent-seat-onboarding.md",
+            "docs/runbooks/storage-topology.md",
+            "docs/research/bio/example.md",
+            "docs/l2-uk-direct/textbook-reading-notes/example.md",
+            "docs/audits/2026-09-11-uldr-program-audit.md",
+            "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md",
+            "docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md",
+            "docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
+            "docs/eval/human-eval-rubric.md",
+            "docs/resources/EXTERNAL_RESOURCES_SCHEMA.md",
+            "docs/runbooks/background-session-tasks.md",
+            "docs/runbooks/codex-hooks.md",
+            "docs/runbooks/cursor-driver.md",
+            "docs/runbooks/word-atlas-source-inventory-review-candidates.md",
+            "docs/style-cards/b2.md",
+        ):
+            with self.subTest(path=path):
+                self.assert_docs(self.classify([path]))
+                self.assert_full(self.classify([path], event="merge_group"))
+        self.assert_full(
+            self.classify(["docs/guide.md", "wiki/figures/example.md"], event="merge_group")
+        )
+
+    def test_merge_group_mixed_frontend_and_code_runs_full_with_frontend(self):
+        self.assert_full(
+            self.classify(
+                ["site/src/components/X.astro", "tests/test_example.py"],
+                event="merge_group",
+            ),
+            frontend="true",
         )
 
     def test_merge_group_mixed_forces_full(self):
@@ -337,13 +480,16 @@ class ClassifierTests(unittest.TestCase):
 
     def test_merge_group_compare_failure_fails_closed(self):
         # Labels resolve cleanly, so the compare API is really reached.
-        stdout, compare, _ = self._run_main_merge_group(
-            _queue_ref(7, _MAIN_SHA), api_labels={7: []}, compare_error=OSError(),
-        )
-        compare.assert_called_once()
-        self.assertIn("files=0", stdout.getvalue())
-        self.assertIn("pytest_mode=full", stdout.getvalue())
-        self.assertIn("docs_only=false", stdout.getvalue())
+        for labels in ([], ["full-ci"]):
+            with self.subTest(labels=labels):
+                stdout, compare, _ = self._run_main_merge_group(
+                    _queue_ref(7, _MAIN_SHA), api_labels={7: labels}, compare_error=OSError(),
+                )
+                compare.assert_called_once()
+                self.assertIn("files=0", stdout.getvalue())
+                self.assertIn("pytest_mode=full", stdout.getvalue())
+                self.assertIn("frontend=true", stdout.getvalue())
+                self.assertIn("docs_only=false", stdout.getvalue())
 
     def test_content_rename_within_roots(self):
         # D6 (#8399): compare_paths emits both rename endpoints; a rename that
@@ -381,11 +527,22 @@ class ClassifierTests(unittest.TestCase):
             self.classify(paths, event="merge_group", tree_paths=tree), frontend="false"
         )
 
-    def test_full_ci_label_forces_full_over_content(self):
+    def test_full_ci_label_forces_python_only_and_preserves_path_frontend(self):
         self.assert_full(
             self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], labels=["full-ci"]),
+            frontend="false",
+        )
+        self.assert_full(self.classify(["tests/test_example.py"], labels=["full-ci"]))
+        self.assert_full(
+            self.classify(["site/src/components/X.astro"], labels=["full-ci"]),
             frontend="true",
         )
+        curriculum = ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"]
+        self.assert_docs(self.classify(curriculum, event="merge_group"), reads_content="true")
+        self.assert_full(self.classify(curriculum, event="merge_group", labels=["full-ci"]))
+        # The label changes only the Python tier.
+        self.assert_docs(self.classify(["docs/guide.md"]))
+        self.assert_frontend_only(self.classify(["site/src/components/X.astro"]))
 
     def test_contract_and_unknown_paths_cannot_skip(self):
         for path in (
@@ -427,25 +584,31 @@ class ClassifierTests(unittest.TestCase):
                     self.assert_full(self.classify([path]), frontend="true")
         self.assert_frontend_only(self.classify(["packages/activity-kit/src/index.ts"]))
 
+    def test_practice_deck_only_runs_frontend_with_or_without_full_ci(self):
+        deck = "registry/practice/noun_mechanics_deck.json"
+        for event in ("pull_request", "merge_group"):
+            for labels in ([], ["full-ci"]):
+                with self.subTest(event=event, labels=labels):
+                    self.assert_full(self.classify([deck], event=event, labels=labels), frontend="true")
+
     def test_event_and_label_overrides(self):
         # Only pull_request and merge_group classify by changed paths (#8399);
         # every other event forces the full tier including frontend.
         for event in ("schedule", "workflow_dispatch", "unknown"):
             with self.subTest(event=event):
                 self.assert_full(self.classify(["docs/guide.md"], event=event), frontend="true")
-        self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]), frontend="true")
+        self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]))
         self.assert_docs(self.classify(["docs/guide.md"], labels=["unrelated"]))
         # GitHub label names are case-insensitive (#8505).
         for label in ("Full-CI", "FULL-CI"):
             with self.subTest(label=label):
-                self.assert_full(self.classify(["docs/guide.md"], labels=[label]), frontend="true")
+                self.assert_full(self.classify(["docs/guide.md"], labels=[label]))
                 self.assert_full(
                     self.classify(["docs/guide.md"], event="merge_group", labels=[label]),
-                    frontend="true",
                 )
         self.assert_docs(self.classify(["docs/guide.md"], labels=["full-ci-later"]))
-        # #8437: a docs merge stays on the docs lane.
-        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+        # #9073 D4: a docs merge runs the full Python tier.
+        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"))
 
     def test_empty_and_capped_changes(self):
         for paths in ([], [f"docs/{i}.md" for i in range(300)]):
@@ -494,7 +657,7 @@ class ClassifierTests(unittest.TestCase):
             }
             full_line = (
                 "docs_only=false\ndocs_reads_content=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
-                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\npreflight=true\n"
+                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\npreflight=true\nskipped_areas=[]\n"
             )
             for error in (
                 OSError(),
@@ -520,7 +683,7 @@ class ClassifierTests(unittest.TestCase):
                 self.assertEqual(
                     output.read_text(),
                     "docs_only=true\ndocs_reads_content=false\nfrontend=false\nbackend=true\nshards=[1]\n"
-                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\npreflight=false\n",
+                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\npreflight=false\nskipped_areas=[]\n",
                 )
 
     def _run_main_pull_request(self, payload, api_labels=None, api_error=None, paths=None):
@@ -550,15 +713,16 @@ class ClassifierTests(unittest.TestCase):
 
     def test_pull_request_reads_current_labels_not_the_payload(self):
         # #8505: a rerun replays the original payload, so labels always come
-        # from the API. full-ci there forces full without the compare API.
+        # from the API. full-ci forces full, but paths still decide Frontend.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [], "number": 7}},
             api_labels=["full-ci"],
+            paths=["tests/test_example.py"],
         )
         labels_api.assert_called_once_with("owner/repo", 7)
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout)
-        self.assertIn("frontend=true", stdout)
+        self.assertIn("frontend=false", stdout)
         # A stale payload full-ci that is no longer on the PR does not count.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [{"name": "full-ci"}], "number": 7}},
@@ -575,8 +739,17 @@ class ClassifierTests(unittest.TestCase):
             api_labels=["Full-CI"],
             paths=["docs/guide.md"],
         )
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("frontend=false", stdout)
+        stdout, compare, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            api_labels=["full-ci"],
+            paths=["site/src/components/X.astro"],
+        )
+        compare.assert_called_once()
+        self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("frontend=true", stdout)
 
     def test_pull_request_label_lookup_failure_fails_closed(self):
         # S3 (#8505): a label-lookup error must fail closed to the full tier.
@@ -677,16 +850,17 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(called, [8656])
         refs_api.assert_called_once_with("owner/repo", "main")
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
-        # Without the label the group keeps its path-classified tier.
+        self.assertIn("frontend=false", stdout.getvalue())
+        # Without the label the group still classifies docs as full (#9073 D4).
         stdout, compare, (called, _, _) = self._run_main_merge_group(
             ref, api_labels={8656: ["bug"]}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
         compare.assert_called_once()
         self.assertEqual(compare.call_args.args[:2], (_MAIN_SHA, "f" * 40))
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_with_two_prs_checks_both(self):
         # BASE is pr-8656's group head, not main (the #8505 r4 blocker).
@@ -696,7 +870,7 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8657, 8656])
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_with_three_prs_honours_the_first_prs_label(self):
@@ -710,15 +884,15 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8650, 8657, 8656])
         self.assertEqual(ends, [_MAIN_SHA])
-        compare.assert_not_called()
+        compare.assert_called_once()
         self.assertIn("pytest_mode=full", stdout.getvalue())
-        # No PR in the group carries full-ci: path classification applies.
+        # No PR in the group carries full-ci: docs still take the full tier.
         stdout, compare, (called, _, _) = self._run_main_merge_group(
             ref, api_labels={8650: [], 8657: [], 8656: []}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8650, 8657, 8656])
         self.assertEqual(compare.call_args.args[:2], ("2" * 40, "f" * 40))
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_stops_at_a_group_ahead_that_already_merged(self):
         # pr-8656 merged between queue events: its ref is gone and its head
@@ -734,7 +908,7 @@ class ClassifierTests(unittest.TestCase):
         )
         self.assertEqual(called, [8650, 8657])
         self.assertEqual(ends, ["1" * 40])
-        self.assertIn("pytest_mode=docs", stdout.getvalue())
+        self.assertIn("pytest_mode=full", stdout.getvalue())
 
     def test_merge_group_lookup_failures_fail_closed(self):
         refs, ref = self._live_queue(3)

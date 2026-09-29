@@ -10,9 +10,11 @@ import jsonschema
 import pytest
 
 import scripts.projects.open_model_data.v4_work_grouping_split as split_mod
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-CONFIG_PATH = Path("data/projects/open_model_data/splits/v4_work_grouping_split_config_v1.json")
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONFIG_PATH = resolve_open_model_path("data/projects/open_model_data/splits/v4_work_grouping_split_config_v1.json")
+_RECEIPT = "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 
 
 def test_schema_contracts_valid() -> None:
@@ -72,6 +74,10 @@ def test_work_family_partitioning_disjointness() -> None:
         assert partition_map[f] in ("training", "development", "heldout_evaluation")
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_deduplication_excludes_duplicate_spans(tmp_path: Path) -> None:
     """Duplicate spans must be detected and excluded from builder training (SPLIT-2)."""
     # Read first line from real index
@@ -85,6 +91,10 @@ def test_deduplication_excludes_duplicate_spans(tmp_path: Path) -> None:
     assert item1["deduplication"]["dedup_action"] == "retained"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_cross_boundary_firewall_zero_leakage() -> None:
     """Zero work families may cross between training, development, and heldout evaluation (SPLIT-4)."""
     real_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -111,13 +121,17 @@ def test_cross_boundary_firewall_zero_leakage() -> None:
     assert len(dev_fams & eval_fams) == 0, "Dev and eval partitions leak related works!"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
     """Verification must fail if any work family crosses split boundaries (SPLIT-4)."""
     repo_root = Path.cwd()
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -150,20 +164,25 @@ def test_verify_detects_cross_boundary_leakage(tmp_path: Path) -> None:
         tampered_rcpt["index_sha256"],
     )
 
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(split_mod.WorkGroupingSplitError, match=r"crossed split boundaries"):
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
     """Verification must fail if receipt SHA-256 digest or ID does not match index."""
     repo_root = Path.cwd()
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -173,20 +192,25 @@ def test_verify_detects_tampered_receipt_hashes(tmp_path: Path) -> None:
 
     tampered_rcpt = copy.deepcopy(orig_receipt)
     tampered_rcpt["index_sha256"] = "0" * 64
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(split_mod.WorkGroupingSplitError, match=r"Index SHA-256 mismatch"):
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
     """Verification must fail if receipt contains forbidden private host paths."""
     repo_root = Path.cwd()
     tampered_out = tmp_path / "tampered"
     tampered_out.mkdir(parents=True)
 
-    orig_receipt_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json")
+    orig_receipt_path = resolve_open_model_path(_RECEIPT)
     orig_receipt = json.loads(orig_receipt_path.read_text(encoding="utf-8"))
 
     orig_index_path = Path("data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl")
@@ -196,7 +220,8 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
 
     tampered_rcpt = copy.deepcopy(orig_receipt)
     tampered_rcpt["notes"] = "Evaluated on /home/ops/secret/server"
-    out_rcpt = tampered_out / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+    out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")
 
     with pytest.raises(
@@ -205,6 +230,10 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
         split_mod.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Build and verify must execute cleanly against repository artifacts."""
     res_build = split_mod.build(CONFIG_PATH)

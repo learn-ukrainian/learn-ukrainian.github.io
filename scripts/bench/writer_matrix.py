@@ -55,7 +55,11 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PYTHON = PROJECT_ROOT / ".venv/bin/python"
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common.repo_root import project_interpreter
+
 V7_BUILD = PROJECT_ROOT / "scripts/build/v7_build.py"
 
 # Locked matrix per 2026-05-22 handoff §2.3 + Section 9 user direction:
@@ -220,7 +224,7 @@ def _run_one_cell(
     cell_log = out_dir / "cell-logs" / f"{writer}__{level}__{slug.replace('/', '_')}.log"
     cell_log.parent.mkdir(parents=True, exist_ok=True)
     argv = [
-        str(PYTHON),
+        str(project_interpreter(PROJECT_ROOT)),
         str(V7_BUILD),
         level,
         slug,

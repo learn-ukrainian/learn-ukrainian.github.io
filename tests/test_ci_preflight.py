@@ -20,6 +20,7 @@ import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
+_ACTION = _REPO_ROOT / ".github" / "actions" / "python-ci-env" / "action.yml"
 _REPO_WIDE_FLAGS = (
     "-m 'repo_wide and not slow and not atlas_release' --strict-markers "
     "-n logical --dist=loadfile --max-worker-restart=0 --timeout=120 "
@@ -86,12 +87,9 @@ def test_preflight_step_reads_the_single_changes_decision() -> None:
     assert "continue-on-error" not in step
     assert jobs["changes"]["outputs"]["preflight"] == "${{ steps.classify.outputs.preflight }}"
     # Its setup runs only when scheduled, and nothing re-derives the decision
-    # from event names or other outputs.
-    assert [s["name"] for s in _preflight_setup_steps()] == [
-        "Set up uv",
-        "Install preflight Python deps",
-        "Hydrate Atlas lexicon manifest",
-    ]
+    # from event names or other outputs. Since #9062 the three copied setup
+    # steps are one composite action.
+    assert [s["name"] for s in _preflight_setup_steps()] == ["Python CI environment"]
     for scoped in [step, *_preflight_setup_steps()]:
         assert "github.event_name" not in str(scoped["if"])
 
@@ -116,17 +114,21 @@ def test_preflight_skips_postgres_npm_and_native_deps() -> None:
 
 
 def test_preflight_installs_python_like_the_shards() -> None:
+    # #9062: the install/hydrate block is one composite action; preflight, the
+    # shards and needs-artifact-audit all call it, so they cannot diverge.
     jobs = _jobs()
-
-    def commands(job: dict, name: str) -> list[str]:
-        script = _step(job, name)["run"]
-        return [line.strip() for line in script.splitlines() if line.strip() and not line.strip().startswith("#")]
-
-    assert commands(jobs["fast-checks"], "Install preflight Python deps") == commands(
-        jobs["pytest"], "Install Python deps"
+    for job in ("fast-checks", "pytest", "needs-artifact-audit"):
+        assert any(
+            step.get("uses") == "./.github/actions/python-ci-env"
+            for step in jobs[job]["steps"]
+        ), job
+    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
+    install = next(step["run"] for step in steps if step.get("name") == "Install Python deps")
+    assert "python -m venv .venv" in install
+    hydrate = next(
+        step["run"] for step in steps if step.get("name") == "Hydrate Atlas lexicon manifest"
     )
-    hydrate = "Hydrate Atlas lexicon manifest"
-    assert commands(jobs["fast-checks"], hydrate) == commands(jobs["pytest"], hydrate)
+    assert "load_manifest" in hydrate
 
 
 def test_preflight_uses_the_shard_repo_wide_allowlist_and_flags() -> None:

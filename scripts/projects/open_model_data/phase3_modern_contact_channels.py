@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
@@ -21,7 +22,13 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 P1_PATH = DATA / "evidence/phase3_p1_universe_freeze_v1.json"
 P1_AMENDMENT_PATH = DATA / "evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"
 P2_PATH = DATA / "evidence/phase3_p2_canonical_contracts_v1.json"
@@ -36,6 +43,9 @@ P1_AMENDMENT_SHA256 = "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dc
 P2_SHA256 = "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
 FIREWALL_SHA256 = "4470448c6d0f665196375cf28255d7c092148700a99934b2d0dd1f43a8a3e24c"
 COMPOSITE_INPUT_SHA256 = "83b59c6b62fff0beaf68dec7c3ca40b70033693dc19c50f26d27c553265352b0"
+# Historical provenance of the frozen contract, independently verified against
+# the source blob at 55d0ed1515; it is not this implementation's hash.
+FROZEN_GENERATOR_SHA256 = "338981c3e96b4f89243f9400731798d04bde3efb08d51fa586ff1cfd8f46647e"
 
 MODERN_CLASSES = (
     "russian",
@@ -96,7 +106,11 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
 def _artifact(path: Path, expected_sha256: str) -> dict[str, str]:
     actual = sha256_file(path)
     require(actual == expected_sha256, f"{path.name} hash drift")
-    return {"logical_path": path.relative_to(ROOT).as_posix(), "sha256": actual}
+    # Frozen contracts retain their pre-migration logical locators.
+    relative = path.relative_to(ROOT).as_posix()
+    if path.is_relative_to(REGISTRY_OPEN_MODEL_DATA_DIR):
+        relative = "data/projects/open_model_data/" + path.relative_to(REGISTRY_OPEN_MODEL_DATA_DIR).as_posix()
+    return {"logical_path": relative, "sha256": actual}
 
 
 def _validate_inputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
@@ -131,7 +145,10 @@ def _validate_inputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], 
         "P1 modern language universe drift",
     )
     cell_map = {cell.get("cell_id"): cell for cell in cells if isinstance(cell, dict)}
-    require(len(cells) == 15 and set(cell_id for cell_id in cell_map if cell_id in MODERN_CELL_IDS) == set(MODERN_CELL_IDS), "P1 modern cell denominator drift")
+    require(
+        len(cells) == 15 and set(cell_id for cell_id in cell_map if cell_id in MODERN_CELL_IDS) == set(MODERN_CELL_IDS),
+        "P1 modern cell denominator drift",
+    )
     for language, cell_id in zip(MODERN_CLASSES, MODERN_CELL_IDS, strict=True):
         require(
             cell_map[cell_id]
@@ -276,7 +293,7 @@ def build_contract() -> dict[str, Any]:
         },
         "generator": {
             "logical_path": "scripts/projects/open_model_data/phase3_modern_contact_channels.py",
-            "implementation_sha256": sha256_file(Path(__file__).resolve()),
+            "implementation_sha256": FROZEN_GENERATOR_SHA256,
             "schema_sha256": sha256_file(SCHEMA_PATH),
         },
     }
@@ -292,7 +309,11 @@ def validate_contract(value: Mapping[str, Any]) -> dict[str, Any]:
     require(not errors, f"schema violation: {errors[0].message if errors else ''}")
     expected = build_contract()
     require(dict(value) == expected, "modern contact channel contract drift")
-    require(value.get("receipt_sha256") == sha256_bytes(canonical_bytes({key: item for key, item in value.items() if key != "receipt_sha256"})), "receipt hash drift")
+    require(
+        value.get("receipt_sha256")
+        == sha256_bytes(canonical_bytes({key: item for key, item in value.items() if key != "receipt_sha256"})),
+        "receipt hash drift",
+    )
     return expected
 
 
@@ -300,6 +321,13 @@ def write_output(path: Path = OUTPUT_PATH) -> dict[str, Any]:
     value = build_contract()
     payload = canonical_bytes(value)
     destination = Path(path)
+    if destination.resolve() == OUTPUT_PATH.resolve():
+        publish_bound_companion(
+            ROOT, "open_model_other_indexes", "phase3_modern_contact_channels", OUTPUT_PATH, payload
+        )
+        return value
+    if destination.absolute().is_relative_to(DATA) or destination.resolve().is_relative_to(DATA):
+        raise ModernContactChannelsError(f"unbound managed output: {destination}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=destination.parent, prefix=f".{destination.name}.", delete=False) as handle:
         temporary = Path(handle.name)

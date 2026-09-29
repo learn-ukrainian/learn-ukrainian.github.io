@@ -10,11 +10,14 @@ import jsonschema
 import pytest
 
 import scripts.projects.open_model_data.v4_language_usage_separation as lang_sep
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
-CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
-CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
-RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
+CONFIG_PATH = resolve_open_model_path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
+_INDEX = "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+_RECEIPT = "data/projects/open_model_data/language/v4_language_usage_receipt_v1.json"
+CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
+ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
+RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
 
 
 @pytest.fixture
@@ -140,40 +143,42 @@ def test_analyze_span_language_usage_damaged_or_excluded() -> None:
     assert res["consumer_views"]["modern_view"]["training_eligible"] is False
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_tampered_receipt_hashes(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed when receipt hashes are tampered."""
     tampered_out = tmp_path / "out"
-    tgt_lang = tampered_out / "data/projects/open_model_data/language"
-    tgt_lang.mkdir(parents=True)
+    index_path = resolve_open_model_path(_INDEX, repo=tampered_out)
+    receipt_path = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    index_path.write_bytes(resolve_open_model_path(_INDEX).read_bytes())
 
-    (tgt_lang / "v4_language_usage_index_v1.jsonl").write_bytes(
-        Path("data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").read_bytes()
-    )
-
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/language/v4_language_usage_receipt_v1.json").read_text(encoding="utf-8")
-    )
+    receipt_data = json.loads(resolve_open_model_path(_RECEIPT).read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = "0" * 64
-    (tgt_lang / "v4_language_usage_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt_tampered), encoding="utf-8")
 
     with pytest.raises(lang_sep.LanguageUsageError, match=r"Receipt index_sha256 mismatch"):
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if private host paths appear in receipts."""
     tampered_out = tmp_path / "out"
-    tgt_lang = tampered_out / "data/projects/open_model_data/language"
-    tgt_lang.mkdir(parents=True)
+    idx_path = resolve_open_model_path(_INDEX, repo=tampered_out)
+    receipt_path = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    idx_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    idx_path.write_bytes(resolve_open_model_path(_INDEX).read_bytes())
 
-    idx_bytes = Path("data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").read_bytes()
-    idx_path = tgt_lang / "v4_language_usage_index_v1.jsonl"
-    idx_path.write_bytes(idx_bytes)
-
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/language/v4_language_usage_receipt_v1.json").read_text(encoding="utf-8")
-    )
+    receipt_data = json.loads(resolve_open_model_path(_RECEIPT).read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["notes"] = "failed at /home/ops/secret/corpus"
     receipt_tampered["index_sha256"] = lang_sep.sha256_file(idx_path)
@@ -182,7 +187,7 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         receipt_tampered["extraction_receipt_sha256"],
         receipt_tampered["index_sha256"],
     )
-    (tgt_lang / "v4_language_usage_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt_tampered), encoding="utf-8")
 
     with pytest.raises(
         lang_sep.LanguageUsageError, match=r"Receipt contains prohibited private or absolute host paths"
@@ -190,17 +195,19 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path) -> None:
     """verify() fails closed if a loss mask span extends beyond the span boundary."""
     tampered_out = tmp_path / "out"
-    tgt_lang = tampered_out / "data/projects/open_model_data/language"
-    tgt_lang.mkdir(parents=True)
+    idx_path = resolve_open_model_path(_INDEX, repo=tampered_out)
+    receipt_path = resolve_open_model_path(_RECEIPT, repo=tampered_out)
+    idx_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
 
-    orig_lines = (
-        Path("data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-    )
+    orig_lines = resolve_open_model_path(_INDEX).read_text(encoding="utf-8").splitlines()
     header = orig_lines[0]
     first_item = json.loads(orig_lines[1])
     # Set an invalid out-of-bounds mask
@@ -208,12 +215,9 @@ def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path
         {"start_char": 0, "end_char": 9999999, "reason": "out_of_bounds"}
     ]
 
-    idx_path = tgt_lang / "v4_language_usage_index_v1.jsonl"
     idx_path.write_text(f"{header}\n{json.dumps(first_item)}\n", encoding="utf-8")
 
-    receipt_data = json.loads(
-        Path("data/projects/open_model_data/language/v4_language_usage_receipt_v1.json").read_text(encoding="utf-8")
-    )
+    receipt_data = json.loads(resolve_open_model_path(_RECEIPT).read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = lang_sep.sha256_file(idx_path)
     receipt_tampered["summary"]["total_spans_evaluated"] = 1
@@ -222,22 +226,31 @@ def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path
         receipt_tampered["extraction_receipt_sha256"],
         receipt_tampered["index_sha256"],
     )
-    (tgt_lang / "v4_language_usage_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    receipt_path.write_text(json.dumps(receipt_tampered), encoding="utf-8")
 
     with pytest.raises(lang_sep.LanguageUsageError, match=r"invalid mask span"):
         lang_sep.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_build_and_verify_clean_exit() -> None:
     """Current committed language usage artifacts pass verify() cleanly."""
     lang_sep.verify(CONFIG_PATH)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"
     for sub in [
-        "data/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/language",
         "data/projects/open_model_data/language",
     ]:
         dest = ci_root / sub
@@ -249,7 +262,9 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
     assert not (ci_root / "data/sources.db").exists()
 
     lang_sep.verify(
-        ci_root / "data/projects/open_model_data/language/v4_language_usage_config_v1.json",
+        resolve_open_model_path(
+            "data/projects/open_model_data/language/v4_language_usage_config_v1.json", repo=ci_root
+        ),
         input_root=ci_root,
         output_root=ci_root,
     )
@@ -261,9 +276,7 @@ def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypat
         lang_sep._primary_repo_root()
 
 
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(lang_sep.PRIMARY_REPO_ROOT_ENV, raising=False)
     monkeypatch.chdir(tmp_path)
     assert lang_sep._primary_repo_root() is None

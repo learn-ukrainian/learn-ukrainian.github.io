@@ -1,0 +1,1211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-v1.schema.json",
+  "title": "Word card v1 (#8978 / #8334)",
+  "description": "One assembled word card: an opaque stable id, senses, canonical typed links, every retained assertion with its source locator and persistent source-record identity, and the materialised field resolutions with per-proposition evidence and quality state. Spec: docs/atlas/word-cards/schema.md (r3). Cards are derived: atlas.db = build(S sources, V vesum, I frozen identity registry, O overlay, R rules); assembly never mints ids. Companion schemas: word-card-identity-registry-v1, word-card-overlay-v1, word-card-suppression-v1, word-card-derivation-v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "card_id",
+    "card_kind",
+    "state",
+    "key_at_creation",
+    "identity",
+    "senses",
+    "links",
+    "fields",
+    "assertions",
+    "quality",
+    "build"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "card_id": {
+      "$ref": "#/$defs/card_id"
+    },
+    "card_kind": {
+      "enum": [
+        "lexeme",
+        "mwe",
+        "proper_name"
+      ]
+    },
+    "state": {
+      "description": "Card-level state. `redirected` (merge) requires merged_into; `split` requires split_into with at least two successors and no merged_into; `suppressed` means every public output omits the card while assertions are retained internally.",
+      "enum": [
+        "active",
+        "redirected",
+        "split",
+        "suppressed"
+      ]
+    },
+    "merged_into": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/card_id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "key_at_creation": {
+      "description": "The matching evidence recorded when the id was minted. Attributes, not identity: the id never changes when these do.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spelling",
+        "pos"
+      ],
+      "properties": {
+        "spelling": {
+          "type": "string",
+          "minLength": 1,
+          "description": "NFC, stress marks stripped, case as the lemma is written (proper names keep their capital)."
+        },
+        "stress_patterns": {
+          "type": "array",
+          "description": "Stressed forms accepted for the lemma at creation; more than one means a declared doublet (e.g. по́ми́лка).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pos": {
+          "type": "string",
+          "description": "Coarse POS in VESUM vocabulary (noun, verb, adj, adv, ...)."
+        },
+        "paradigm_key": {
+          "type": "string",
+          "description": "Source key of the paradigm that fixes the lexeme, e.g. vesum:entry:128973."
+        },
+        "mwe_key": {
+          "type": "string",
+          "description": "MWE cards only: `<source_locator>|<normalised form>`; see identity.md §6."
+        },
+        "source_keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_key"
+          }
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confidence",
+        "method",
+        "source_keys"
+      ],
+      "properties": {
+        "confidence": {
+          "$ref": "#/$defs/identity_confidence"
+        },
+        "method": {
+          "enum": [
+            "unique_match",
+            "stress_and_paradigm",
+            "paradigm_only",
+            "stress_only",
+            "overlay",
+            "unresolved"
+          ]
+        },
+        "decided_by": {
+          "type": "string",
+          "description": "rules:<version> or overlay:<entry id>."
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_key"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "senses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sense"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "fields": {
+      "description": "Card-level materialised resolutions, keyed by card field name.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/card_field_name"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/field_resolution"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/assertion"
+          },
+          {
+            "$ref": "#/$defs/assertion_tombstone"
+          }
+        ]
+      },
+      "description": "Every retained assertion whose subject is this card, one of its senses, or one of its links. Internally suppressed and superseded assertions stay in full; public projections carry suppressed ones as tombstones (schema.md §12.3)."
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity_confidence",
+        "linguistic_review",
+        "practice_eligibility"
+      ],
+      "properties": {
+        "identity_confidence": {
+          "$ref": "#/$defs/identity_confidence"
+        },
+        "extraction_confidence_min": {
+          "$ref": "#/$defs/extraction_confidence"
+        },
+        "linguistic_review": {
+          "$ref": "#/$defs/review"
+        },
+        "practice_eligibility": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "eligible",
+              "rules_version",
+              "reasons"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string"
+              },
+              "eligible": {
+                "type": "boolean"
+              },
+              "rules_version": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sense_id": {
+                "$ref": "#/$defs/sense_id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "overlay_applied": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/overlay_ref"
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "build_id",
+        "rules_version",
+        "inputs",
+        "card_version"
+      ],
+      "properties": {
+        "build_id": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "card_version": {
+          "type": "string",
+          "pattern": "^cv_[0-9a-f]{24}$",
+          "description": "sha256 over everything a consumer can read from the public card (every top-level property except `build`): identity and key, state and successors, senses, links, fields, retained assertions as projected, quality incl. eligibility and review, overlay applied. Derivations pin it (schema.md §11)."
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "S",
+            "V",
+            "I",
+            "O",
+            "R"
+          ],
+          "description": "Every build input by content hash (schema.md §13): S source snapshots, V VESUM, I the frozen identity registry, O overlay batches + suppression selectors, R rules + normaliser (versions) + register content (hash). S, V, I and O entries require a content hash; R entries require a version or a hash.",
+          "properties": {
+            "S": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/hashed_input"
+              }
+            },
+            "V": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/hashed_input"
+              }
+            },
+            "I": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/hashed_input"
+              }
+            },
+            "O": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/hashed_input"
+              }
+            },
+            "R": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/versioned_input"
+              }
+            }
+          }
+        }
+      }
+    },
+    "split_into": {
+      "description": "Successors of a split card (one-to-many). Never combined with merged_into. Learner progress follows identity.md §7.3, never a blind redirect.",
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/card_id"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "link_id": {
+      "type": "string",
+      "pattern": "^wl_[0-9a-f]{24}$"
+    },
+    "identity_confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unresolved"
+      ]
+    },
+    "extraction_confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "source_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "key"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "description": "Source id from docs/sources/permissions-register.yaml (ulif, vesum, sum20, kaikki, ...) or `atlas0` for the pre-card atlas.db."
+        },
+        "key": {
+          "type": "string",
+          "description": "Namespaced source key, e.g. ulif:entry:76792, vesum:entry:128973, vts:замок#I, atlas0:slug:замок."
+        },
+        "snapshot_id": {
+          "type": "string"
+        },
+        "match_note": {
+          "type": "string"
+        }
+      }
+    },
+    "card_field_name": {
+      "enum": [
+        "spelling",
+        "stress",
+        "pos",
+        "grammatical_label",
+        "gender",
+        "aspect",
+        "paradigm",
+        "cefr",
+        "frequency",
+        "heritage_status",
+        "transliteration",
+        "english_gloss",
+        "spelling_variants",
+        "mwe_form",
+        "mwe_frame"
+      ]
+    },
+    "sense_field_name": {
+      "enum": [
+        "definition_uk",
+        "gloss_en",
+        "sense_label",
+        "register",
+        "synonyms",
+        "antonyms",
+        "examples",
+        "russification_exposed",
+        "collocations"
+      ]
+    },
+    "sense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sense_id",
+        "order",
+        "state",
+        "sense_map",
+        "fields"
+      ],
+      "properties": {
+        "sense_id": {
+          "$ref": "#/$defs/sense_id"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "enum": [
+            "active",
+            "redirected",
+            "suppressed",
+            "unsplit"
+          ]
+        },
+        "merged_into": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sense_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sense_map": {
+          "type": "array",
+          "description": "Which source sense units feed this sense. `unsplit` senses carry every unit of a source that could not be aligned.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_id",
+              "source_sense_key"
+            ],
+            "properties": {
+              "source_id": {
+                "type": "string"
+              },
+              "source_sense_key": {
+                "type": "string",
+                "description": "e.g. ulif:section:96935 (synonyms:2), sum20:sense:82852/1, vts:замок#I/1"
+              },
+              "mapped_by": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fields": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/sense_field_name"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/field_resolution"
+          }
+        },
+        "seeded_from": {
+          "type": "string",
+          "description": "The one structured source whose sense inventory seeded this card's sense rows (schema.md §6, Q6): sum20 | vts | ulif_sense_gloss, with the source key."
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "link_id",
+        "type",
+        "endpoints",
+        "basis",
+        "assertion_ids",
+        "state"
+      ],
+      "description": "One canonical record per link (schema.md §7.2). Symmetric types (aspect_pair, homograph_of, stress_variant_of, synonym, antonym, russification_contrast) order endpoints by role rank then id, and both cards embed the identical record; link_id = wl_ + sha256(type|endpoints).",
+      "properties": {
+        "link_id": {
+          "$ref": "#/$defs/link_id"
+        },
+        "type": {
+          "enum": [
+            "aspect_pair",
+            "component_of",
+            "stress_variant_of",
+            "synonym",
+            "antonym",
+            "see_also",
+            "russification_contrast",
+            "homograph_of"
+          ]
+        },
+        "endpoints": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/card_id"
+              },
+              "role": {
+                "type": "string",
+                "description": "imperfective/perfective, whole/anchor/component, norm/imposed ..."
+              },
+              "sense_id": {
+                "$ref": "#/$defs/sense_id",
+                "description": "Sense restriction: the link holds for this sense of the endpoint card only."
+              }
+            }
+          }
+        },
+        "basis": {
+          "enum": [
+            "asserted",
+            "derived"
+          ],
+          "description": "asserted: cites source/overlay assertions; derived: computed by a named rule from card keys, citing the assertions the rule read."
+        },
+        "derived_by": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "assertion_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/assertion_id"
+          }
+        },
+        "state": {
+          "enum": [
+            "active",
+            "suppressed"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "active"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "assertion_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_id",
+        "subject",
+        "field",
+        "value",
+        "value_norm",
+        "source_id",
+        "snapshot_id",
+        "locator",
+        "extraction_version",
+        "extraction_confidence",
+        "producer",
+        "review",
+        "licence_ref",
+        "status"
+      ],
+      "properties": {
+        "assertion_id": {
+          "$ref": "#/$defs/assertion_id",
+          "description": "wa_ + first 24 hex chars of sha256(canonical JSON of {source_id, snapshot_id, locator, subject, field, value_norm, extraction_version}). Deterministic across rebuilds."
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "id"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "card",
+                "sense",
+                "link"
+              ]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
+        },
+        "field": {
+          "type": "string"
+        },
+        "value": {
+          "description": "The value as extracted (string, list, object). Never model-written Ukrainian."
+        },
+        "value_norm": {
+          "type": "string",
+          "description": "Canonical comparison form used to decide agreement (NFC, lower-cased for common nouns, combining accents kept)."
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "description": "Which edition/snapshot of the source: e.g. ulif@2026-09-22..2026-09-27/ulif-dictua-v2, vesum@53923150."
+        },
+        "locator": {
+          "type": "string",
+          "description": "Where in the source: ulif:entry:76793/section:96933, vesum:entry:128972, sum20:wordid:82852/sense:1, kaikki:замок, textbook:<id>::<section>."
+        },
+        "extraction_version": {
+          "type": "string",
+          "description": "Parser/transformer version that produced the value from the snapshot."
+        },
+        "extraction_confidence": {
+          "$ref": "#/$defs/extraction_confidence"
+        },
+        "producer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "source_extract",
+                "generator",
+                "teacher",
+                "curator",
+                "estimator"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "produced_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "derived_id": {
+              "type": "string",
+              "pattern": "^wd_[0-9a-f]{24}$",
+              "description": "For generated/estimated assertions: the derivation record (word-card-derivation-v1) that produced this assertion; its inputs are the assertions read, so invalidation walks source -> generated assertion -> consumer (schema.md §11, §12.2)."
+            }
+          }
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "licence_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "register_source_id",
+            "register_version"
+          ],
+          "properties": {
+            "register_source_id": {
+              "type": "string"
+            },
+            "register_version": {
+              "type": "integer"
+            },
+            "appears_in": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "internal",
+                  "site",
+                  "dataset"
+                ]
+              }
+            }
+          }
+        },
+        "independence_group": {
+          "type": "string",
+          "description": "Lineage group used for corroboration counting (schema.md §7). Copied from the register at build time."
+        },
+        "tier": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "status": {
+          "enum": [
+            "active",
+            "suppressed",
+            "superseded"
+          ]
+        },
+        "suppression_ref": {
+          "type": "string",
+          "description": "overlay suppression id or takedown issue URL."
+        },
+        "mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "confidence"
+          ],
+          "description": "How surely this source row belongs to this card. Missing = high, basis entry. low/unresolved assertions never vote. `ambiguous: true` (spelling-keyed row on a spelling with several cards) votes for display but never satisfies a dependent eligibility rule (schema.md §9.5).",
+          "properties": {
+            "confidence": {
+              "$ref": "#/$defs/identity_confidence"
+            },
+            "basis": {
+              "$ref": "#/$defs/mapping_basis"
+            },
+            "ambiguous": {
+              "type": "boolean"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        },
+        "source_record_id": {
+          "type": "string",
+          "pattern": "^sr_[0-9a-hjkmnp-tv-z]{12}$",
+          "description": "Persistent identity of the source record this assertion was extracted from (schema.md §12.1; allocated in the identity registry's source_records with its aliases and per-snapshot correspondence). Suppression selectors key on it."
+        },
+        "source_record_key": {
+          "type": "string",
+          "description": "The strongest alias of the source record at extraction time (e.g. ulif:register:2795:11, vesum:record:замок/noun/noun:inanim:m:v_naz:xp1): matching evidence for correspondence into a new snapshot, never the identity itself and never a local row id."
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "none",
+            "sampled",
+            "reviewed",
+            "rejected"
+          ]
+        },
+        "lane": {
+          "type": "string",
+          "description": "Reviewing lane (gemini-agy, gpt-codex, claude, human)."
+        },
+        "record": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "approved_for": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Practice modes a sanctioned independent language reviewer approved this assertion for (schema.md §9.1, Q5). Keeps lineage and tier; only valid with status `reviewed`."
+        }
+      },
+      "if": {
+        "required": [
+          "approved_for"
+        ]
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "reviewed"
+          }
+        }
+      }
+    },
+    "hashed_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "content_sha256"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "versioned_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "content_sha256"
+          ]
+        },
+        {
+          "required": [
+            "version"
+          ]
+        }
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "field_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "values",
+        "comparison",
+        "mapping_evidenced"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "verified",
+            "single-source",
+            "variant",
+            "conflict",
+            "unverified",
+            "suppressed"
+          ]
+        },
+        "selected": {
+          "description": "Assertion id(s) whose value is shown. A list for `variant`; null for `conflict` and `suppressed`.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assertion_id"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/assertion_id"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "values": {
+          "type": "array",
+          "description": "One entry per proposition (`field = value_norm`, or `field ∈ set` for a declared set) with its own evidence: a proposition is evidenced when at least one assertion stating it maps to this card unambiguously, and corroboration among evidenced assertions is counted on that proposition alone (schema.md §8.2 rule 7).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value_norm",
+              "assertion_ids",
+              "independence_groups",
+              "mapping_evidenced",
+              "independence_groups_evidenced"
+            ],
+            "properties": {
+              "value_norm": {
+                "type": "string"
+              },
+              "assertion_ids": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/assertion_id"
+                }
+              },
+              "independence_groups": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "mapping_evidenced": {
+                "type": "boolean"
+              },
+              "independence_groups_evidenced": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "declared_set": {
+                "type": "boolean",
+                "description": "This value is a doublet declared by one tier-1 source (a|b) or by a reviewed overlay `variant` entry, not an observed single value."
+              },
+              "declared_by": {
+                "type": "string",
+                "description": "overlay id when the set was declared by a reviewed language-lane `variant` entry (schema.md §8.2 rule 4)."
+              }
+            }
+          }
+        },
+        "propositions": {
+          "type": "object",
+          "description": "Keyed fields only (paradigm): the resolution per slot. An item that consumes one slot reads this slot's `mapping_evidenced` and corroboration, never the field-level summary (which is the conjunction / minimum over slots).",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "mapping_evidenced",
+              "independence_groups_evidenced"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "verified",
+                  "single-source",
+                  "variant",
+                  "conflict",
+                  "unverified",
+                  "suppressed"
+                ]
+              },
+              "selected": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/assertion_id"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/assertion_id"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mapping_evidenced": {
+                "type": "boolean"
+              },
+              "independence_groups_evidenced": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resolution_ref": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "independence_groups_agreeing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolution_ref": {
+          "type": "string",
+          "description": "overlay entry that resolved a conflict or declared a variant."
+        },
+        "level_policy": {
+          "type": "string",
+          "description": "english_gloss only: scaffold field; shown at A1 by design, never raised from A2 (#8983)."
+        },
+        "comparison": {
+          "enum": [
+            "scalar",
+            "keyed",
+            "text"
+          ],
+          "description": "Comparison class of the field (schema.md §8.1): what proposition assertions are compared on."
+        },
+        "proposition": {
+          "type": "string",
+          "description": "The exact proposition corroboration was counted on."
+        },
+        "mapping_evidenced": {
+          "type": "boolean",
+          "description": "Field-level summary: every shown proposition is evidenced (for keyed fields: every slot). Eligibility rules (#8983) read the proposition an item consumes (values[] / propositions{}), and this summary only when the item consumes the whole field; never the bare state."
+        },
+        "independence_groups_evidenced": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The weakest shown proposition's count of independent groups among its unambiguously mapped assertions."
+        },
+        "non_voting": {
+          "type": "array",
+          "description": "Retained assertions excluded from the vote and why (mapping low/unresolved, review rejected).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assertion_id",
+              "reason"
+            ],
+            "properties": {
+              "assertion_id": {
+                "$ref": "#/$defs/assertion_id"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "overlay_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overlay_id",
+        "kind"
+      ],
+      "properties": {
+        "overlay_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "merge",
+            "split",
+            "resolve",
+            "variant",
+            "suppress",
+            "level_override",
+            "sense_map",
+            "link",
+            "identity"
+          ]
+        },
+        "author": {
+          "type": "string"
+        },
+        "lane": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    },
+    "mapping_basis": {
+      "description": "What ties the source row to this card: a homonym-checked entry, a paradigm or stress match, a sense alignment, an overlay/curator decision, or only the spelling.",
+      "enum": [
+        "entry",
+        "paradigm",
+        "stress",
+        "sense",
+        "overlay",
+        "curator",
+        "spelling"
+      ]
+    },
+    "assertion_tombstone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_id",
+        "status",
+        "suppression_ref"
+      ],
+      "description": "Public projection of a suppressed assertion: no value, locator or source payload leaves the internal store.",
+      "properties": {
+        "assertion_id": {
+          "$ref": "#/$defs/assertion_id"
+        },
+        "status": {
+          "const": "suppressed"
+        },
+        "suppression_ref": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "redirected"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "merged_into"
+        ],
+        "properties": {
+          "merged_into": {
+            "$ref": "#/$defs/card_id"
+          },
+          "split_into": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "split"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "split_into"
+        ],
+        "properties": {
+          "split_into": {
+            "type": "array",
+            "minItems": 2
+          },
+          "merged_into": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "active",
+              "suppressed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "merged_into": {
+            "type": "null"
+          },
+          "split_into": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -29,7 +29,9 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_evaluation_reproduction_bundle_v1.schema.json"
 ROLE_CONTRACT_PATH = functional_roles.LEDGER_PATH
 SCHEMA_VERSION = "phase3_evaluation_reproduction_bundle_v1"
@@ -155,7 +157,10 @@ def _role_bindings(role_contract: Mapping[str, Any]) -> dict[str, dict[str, str]
         }
     except functional_roles.FunctionalRoleError as exc:
         raise EvaluationReproductionError(str(exc)) from exc
-    require(bindings["scorer"]["task_id"] != bindings["outsider_reproducer"]["task_id"], "scorer and outsider tasks must differ")
+    require(
+        bindings["scorer"]["task_id"] != bindings["outsider_reproducer"]["task_id"],
+        "scorer and outsider tasks must differ",
+    )
     require(
         functional_roles.tasks_conflict(verified, FIXED_RELEASE_TASK_ID, bindings["scorer"]["task_id"]),
         "role graph lacks fixed-release-to-scorer edge",
@@ -178,13 +183,19 @@ def _validate_action_receipt(
     output_sha256: str,
 ) -> None:
     require(set(receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
-    require(receipt.get("role_id") == actor["role_id"] and receipt.get("task_id") == actor["task_id"], "functional action task binding mismatch")
+    require(
+        receipt.get("role_id") == actor["role_id"] and receipt.get("task_id") == actor["task_id"],
+        "functional action task binding mismatch",
+    )
     role = next(item for item in role_contract["functional_roles"] if item["role_id"] == actor["role_id"])
     require(
         all(receipt.get(field) == role[field] for field in ("exact_model", "model_family", "harness")),
         "functional action lane mismatch",
     )
-    require(isinstance(receipt.get("provider"), str) and bool(receipt["provider"]), "functional action provider metadata is missing")
+    require(
+        isinstance(receipt.get("provider"), str) and bool(receipt["provider"]),
+        "functional action provider metadata is missing",
+    )
     require(receipt.get("action_kind") == action_kind, "functional action kind mismatch")
     require(receipt.get("input_manifest_sha256") == input_sha256, "functional action input mismatch")
     require(receipt.get("output_sha256") == output_sha256, "functional action output mismatch")
@@ -263,7 +274,9 @@ def validate_bundle(
     ):
         require(SHA256_RE.fullmatch(evaluation_input[field]) is not None, f"invalid evaluation input hash: {field}")
     evaluation_input_sha = sha256_value(evaluation_input)
-    require(bundle["evaluation_input_manifest_sha256"] == evaluation_input_sha, "evaluation input manifest hash mismatch")
+    require(
+        bundle["evaluation_input_manifest_sha256"] == evaluation_input_sha, "evaluation input manifest hash mismatch"
+    )
     for artifact_id, field in (
         ("fixed_release", "fixed_release_sha256"),
         ("heldout_evaluation_freeze_container", "heldout_evaluation_freeze_sha256"),
@@ -279,12 +292,18 @@ def validate_bundle(
 
     scorer_result = bundle["scorer_result"]
     require(scorer_result["evaluation_input_manifest_sha256"] == evaluation_input_sha, "scorer result input mismatch")
-    require(scorer_result["fixed_release_sha256"] == evaluation_input["fixed_release_sha256"], "scorer release freeze mismatch")
+    require(
+        scorer_result["fixed_release_sha256"] == evaluation_input["fixed_release_sha256"],
+        "scorer release freeze mismatch",
+    )
     require(
         scorer_result["heldout_evaluation_freeze_sha256"] == evaluation_input["heldout_evaluation_freeze_sha256"],
         "scorer evaluation freeze mismatch",
     )
-    require(scorer_result["threshold_contract_sha256"] == evaluation_input["threshold_contract_sha256"], "scorer threshold contract mismatch")
+    require(
+        scorer_result["threshold_contract_sha256"] == evaluation_input["threshold_contract_sha256"],
+        "scorer threshold contract mismatch",
+    )
     require(scorer_result["rules_modified"] is False, "scorer modified rules under test")
     require(scorer_result["thresholds_modified"] is False, "scorer modified frozen thresholds")
     require(scorer_result["heldout_plaintext_exported"] is False, "scorer exported held-out plaintext")
@@ -305,7 +324,9 @@ def validate_bundle(
     outsider_input = bundle["outsider_input_manifest"]
     require(outsider_input["schema_version"] == OUTSIDER_INPUT_SCHEMA_VERSION, "wrong outsider input manifest schema")
     require(outsider_input["evaluation_cycle_id"] == EVALUATION_CYCLE_ID, "outsider input cycle drift")
-    require(outsider_input["evaluation_input_manifest_sha256"] == evaluation_input_sha, "outsider evaluation input mismatch")
+    require(
+        outsider_input["evaluation_input_manifest_sha256"] == evaluation_input_sha, "outsider evaluation input mismatch"
+    )
     require(outsider_input["scorer_result_sha256"] == scorer_result_sha, "outsider scorer result mismatch")
     for field in (
         "fixed_release_sha256",
@@ -316,12 +337,17 @@ def validate_bundle(
         "english_recipe_sha256",
     ):
         require(outsider_input[field] == evaluation_input[field], f"outsider input binding mismatch: {field}")
-    require(GIT_SHA_RE.fullmatch(outsider_input["fresh_worktree_commit_sha"]) is not None, "invalid outsider worktree commit")
+    require(
+        GIT_SHA_RE.fullmatch(outsider_input["fresh_worktree_commit_sha"]) is not None,
+        "invalid outsider worktree commit",
+    )
     _verify_outsider_commit(artifact_root, outsider_input["fresh_worktree_commit_sha"])
     require(outsider_input["source_blind"] is True, "outsider is not source-blind")
     require(outsider_input["fresh_clean_worktree"] is True, "outsider did not use a fresh clean worktree")
     require(outsider_input["author_worktree_used"] is False, "outsider used an author worktree")
-    require(outsider_input["private_heldout_plaintext_available"] is False, "outsider received private held-out plaintext")
+    require(
+        outsider_input["private_heldout_plaintext_available"] is False, "outsider received private held-out plaintext"
+    )
     require(outsider_input["public_canary_evidence_allowed"] is False, "public canaries may not prove completion")
     outsider_input_sha = sha256_value(outsider_input)
     require(bundle["outsider_input_manifest_sha256"] == outsider_input_sha, "outsider input manifest hash mismatch")
@@ -340,7 +366,10 @@ def validate_bundle(
         ("reproduced_export", "reproduced_export_sha256"),
     ):
         _verify_artifact_bytes(artifact_root, artifact_locators, artifact_id, reproduction[field])
-    require(reproduction["scorer_metrics_sha256"] == scorer_result["metrics_sha256"], "outsider metrics do not reproduce scorer metrics")
+    require(
+        reproduction["scorer_metrics_sha256"] == scorer_result["metrics_sha256"],
+        "outsider metrics do not reproduce scorer metrics",
+    )
     required_true = (
         "input_bytes_preserved",
         "protected_material_preserved",
@@ -364,7 +393,10 @@ def validate_bundle(
         all(reproduction[field] is True for field in required_true),
         "outsider reproduction lacks a required positive attestation",
     )
-    require(all(reproduction[field] is False for field in required_false), "outsider reproduction crossed a forbidden boundary")
+    require(
+        all(reproduction[field] is False for field in required_false),
+        "outsider reproduction crossed a forbidden boundary",
+    )
     require(reproduction["status"] == "completed", "outsider reproduction is not complete")
     reproduction_sha = sha256_value(reproduction)
     require(bundle["reproduction_result_sha256"] == reproduction_sha, "reproduction result hash mismatch")

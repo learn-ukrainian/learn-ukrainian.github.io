@@ -1,0 +1,21 @@
+[
+  {"review": "gpt-r5", "name": "sensory-reflexive", "id": "syn_0339d32d382a", "prompt": "відчувати", "answer": "почуватися", "displayed_sense": "sensory perception with an object such as a smell", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "condition-vs-agreement", "id": "syn_df8d176d0874", "prompt": "умова", "answer": "домовленість", "displayed_sense": "no sense cue; condition and agreement are ambiguous", "failure": "missing_sense_cue"},
+  {"review": "gpt-r5", "name": "gender-restricted-person", "id": "syn_95131602f97c", "prompt": "чоловік", "answer": "людина", "displayed_sense": "person, including women", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "access-vs-passage", "id": "syn_54a38fa2f29e", "prompt": "доступ", "answer": "прохід", "displayed_sense": "physical place to pass through", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "window-vs-sill", "id": "syn_b214e7cea8dd", "prompt": "вікно", "answer": "підвіконня", "displayed_sense": "window presented as unrestricted referent", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "today-vs-now", "id": "syn_91013320ee7c", "prompt": "сьогодні", "answer": "зараз", "displayed_sense": "day", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "expansive-vs-smooth", "id": "syn_7160152d93fb", "prompt": "розлогий", "answer": "плавний", "displayed_sense": "smooth movement or speech", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "doubtful-vs-hypothetical", "id": "syn_b03b373d1c2b", "prompt": "сумнівний", "answer": "гіпотетичний", "displayed_sense": "hypothetical claim need not be doubtful", "failure": "wrong_pair"},
+  {"review": "gpt-r5", "name": "feral-vs-wild", "id": "syn_f872fbb6cfb7", "prompt": "здичавілий", "answer": "дикий", "displayed_sense": "all free-living animals", "failure": "wrong_pair"},
+  {"review": "gemini-r3", "name": "face-vs-kind", "id": "syn_e236ca1c8934", "prompt": "обличчя", "answer": "вид", "displayed_sense": "обличчя: face; вид: verbal aspect", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "recover-vs-return", "id": "syn_8e7c05b92713", "prompt": "відновлюватися", "answer": "повертати", "displayed_sense": "відновлюватися: recover, renew itself; повертати: return something, turn", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "archaic-word-vs-thing", "id": "syn_561a6a8cce47", "prompt": "глагол", "answer": "річ", "displayed_sense": "глагол: archaic word, speech; річ: thing", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "far-vs-much", "id": "syn_425321250dc8", "prompt": "далеко", "answer": "набагато", "displayed_sense": "далеко: far, distance; набагато: much, significantly", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "drizzle-vs-fall", "id": "syn_ea2d41290988", "prompt": "дощити", "answer": "падати", "displayed_sense": "дощити: rain; падати: fall", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "quarter-vs-district", "id": "syn_19e2f6d4c8e2", "prompt": "квартал", "answer": "чверть", "displayed_sense": "квартал: city block; чверть: quarter", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "tailor-gender-counterpart", "id": "syn_d991bc2e21ef", "prompt": "кравець", "answer": "кравчиня", "displayed_sense": "кравець: masculine tailor; кравчиня: feminine counterpart", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "master-vs-artist", "id": "syn_99a4abe4bd8a", "prompt": "майстер", "answer": "митець", "displayed_sense": "майстер: repair person, technician; митець: artist, creator", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "carry-motion-aspect", "id": "syn_23233be4d496", "prompt": "носити", "answer": "нести", "displayed_sense": "носити: multidirectional; нести: unidirectional, determinate", "failure": "registry_rejected"},
+  {"review": "gemini-r3", "name": "retelling-vs-story", "id": "syn_e7e7f68d1014", "prompt": "переказ", "answer": "розповідь", "displayed_sense": "переказ: transfer; розповідь: narrative, story", "failure": "registry_rejected"}
+]

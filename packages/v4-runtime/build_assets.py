@@ -27,6 +27,16 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def source_asset(relative: str) -> Path:
+    """Resolve a frozen package name to its tracked source after the P3 split."""
+    if relative == "LICENSE-CONTENT.md":
+        return Path(relative)
+    path = Path(relative)
+    if path.is_absolute() or ".." in path.parts or not relative.startswith("data/projects/open_model_data/"):
+        raise ValueError("invalid explicit asset")
+    return Path("registry/projects/open_model_data") / path.relative_to("data/projects/open_model_data")
+
+
 def collect_assets(destination: Path) -> None:
     """Copy only reviewed allowlisted bytes; receipts never select more assets."""
     assets = json.loads((PACKAGE / "asset_allowlist.json").read_bytes())
@@ -38,7 +48,7 @@ def collect_assets(destination: Path) -> None:
             or not (relative == "LICENSE-CONTENT.md" or relative.startswith("data/projects/open_model_data/"))
         ):
             raise ValueError("invalid explicit asset")
-        raw = (REPOSITORY / path).read_bytes()
+        raw = (REPOSITORY / source_asset(relative)).read_bytes()
         if digest(raw) != expected:
             raise ValueError("explicit asset digest mismatch: " + relative)
         target = destination / path
@@ -88,7 +98,10 @@ def write_manifest(destination: Path, *, development: bool = False) -> None:
     sha = resolve_public_commit()
     # The build command is bound to real committed inputs, including assets,
     # package code, build hooks, license and frozen relationship specification.
-    inputs = ["packages/v4-runtime", *json.loads((PACKAGE / "asset_allowlist.json").read_bytes())]
+    inputs = [
+        "packages/v4-runtime",
+        *(str(source_asset(relative)) for relative in json.loads((PACKAGE / "asset_allowlist.json").read_bytes())),
+    ]
     dirty = subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", *inputs], cwd=REPOSITORY
     )

@@ -309,6 +309,18 @@ an explicitly approved router-oriented cold start.
 
 Older `current.md` rows are HTML-only. Backfill is OPTIONAL — only worth it if a future thread needs to re-pickup that session. The cold-start fallback handles the missing-brief case.
 
+## Code discovery (jevgrep)
+
+- **Required use:** to find where behaviour lives in code you have not located
+  yet, run `jg "<question>" <narrow subdir> --max-source-bytes 24000` first and
+  read its excerpts before broad `rg`/`find`/file-by-file reading; known exact
+  symbols or paths use `rg`/`git grep`.
+- **Never install:** the infra driver keeps `jg` at npm `latest`; agents never
+  install or upgrade it and never run `jg auth`. If `jg` fails, say so and continue.
+- **Egress:** search only this repository with a narrow public code/doc root; never
+  `.`, the repository root, `data/`, `.worktrees/`, `batch_state/` or secrets.
+- Full overlay: `agents_extensions/shared/skills/jevgrep/SKILL.md` (#9134).
+
 ## Scoped queries — call the API instead of filesystem spelunking
 
 When you need deterministic answers about a specific module / range /

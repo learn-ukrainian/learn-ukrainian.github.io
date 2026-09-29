@@ -21,7 +21,7 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json"
 SCHEMA_VERSION = "phase3_audit_entropy_receipt_v1"
 COMMITMENT_SCHEMA_VERSION = "phase3_audit_entropy_commitment_v1"
 COMMITMENT_DIRECTORY = "data/projects/open_model_data/audit_entropy_commitments"
@@ -112,9 +112,21 @@ def _safe_repo_path(value: str) -> str:
 
 def _first_parent_path_history(repo_root: Path, path: str) -> list[str]:
     """Return only mainline commits that changed ``path``, oldest first."""
-    history = _git(
-        repo_root, "log", "--first-parent", "--full-history", "--reverse", "--format=%H", "refs/remotes/origin/main", "--", path,
-    ).decode("ascii").splitlines()
+    history = (
+        _git(
+            repo_root,
+            "log",
+            "--first-parent",
+            "--full-history",
+            "--reverse",
+            "--format=%H",
+            "refs/remotes/origin/main",
+            "--",
+            path,
+        )
+        .decode("ascii")
+        .splitlines()
+    )
     _require(bool(history), "origin/main path history is unavailable")
     return history
 
@@ -126,15 +138,24 @@ def _artifact_at(repo_root: Path, commit: str, path: str) -> bytes | None:
 
 
 def _verify_first_containing(
-    *, repo_root: Path, path: str, expected_sha256: str, declared_commit: str, require_first_path_introduction: bool,
+    *,
+    repo_root: Path,
+    path: str,
+    expected_sha256: str,
+    declared_commit: str,
+    require_first_path_introduction: bool,
 ) -> int:
     """Prove the declared commit is the first mainline commit with path/bytes."""
     _require(SHA1.fullmatch(declared_commit) is not None, "first-containing commit SHA is invalid")
-    _require(_git_ok(repo_root, "merge-base", "--is-ancestor", declared_commit, "refs/remotes/origin/main"), "declared commit is not reachable from origin/main")
+    _require(
+        _git_ok(repo_root, "merge-base", "--is-ancestor", declared_commit, "refs/remotes/origin/main"),
+        "declared commit is not reachable from origin/main",
+    )
     history = _first_parent_path_history(repo_root, path)
     _require(declared_commit in history, "declared commit is not on origin/main first-parent path history")
     matches = [
-        index for index, commit in enumerate(history)
+        index
+        for index, commit in enumerate(history)
         if (artifact := _artifact_at(repo_root, commit, path)) is not None and sha256_bytes(artifact) == expected_sha256
     ]
     _require(bool(matches), "declared artifact bytes are absent from origin/main")
@@ -169,11 +190,24 @@ def _pre_nonce_binding(commitment: Mapping[str, Any]) -> dict[str, Any]:
     return {
         key: commitment[key]
         for key in (
-            "schema_version", "purpose", "frozen_universe_sha256", "frozen_population_sha256",
-            "sampler_plan_path", "sampler_plan_sha256", "sampler_plan_first_containing_merge_sha",
-            "auditor_role_id", "auditor_task_id", "base_contract_sha256", "amendment_sha256",
-            "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256",
-            "evaluation_cycle_id", "author_or_root_choices", "root_choice_count", "reroll_count",
+            "schema_version",
+            "purpose",
+            "frozen_universe_sha256",
+            "frozen_population_sha256",
+            "sampler_plan_path",
+            "sampler_plan_sha256",
+            "sampler_plan_first_containing_merge_sha",
+            "auditor_role_id",
+            "auditor_task_id",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "evaluation_cycle_id",
+            "author_or_root_choices",
+            "root_choice_count",
+            "reroll_count",
         )
     }
 
@@ -195,7 +229,10 @@ def _read_commitment(repo_root: Path, receipt: Mapping[str, Any]) -> tuple[dict[
         raise AuditEntropyError("nonce commitment artifact is not JSON") from exc
     _require(isinstance(value, dict), "nonce commitment artifact is not an object")
     commitment = _validate_schema(value, "commitment", "nonce commitment")
-    _require(commitment["schema_version"] == COMMITMENT_SCHEMA_VERSION and commitment["text_free"] is True, "nonce commitment is not text-free v1")
+    _require(
+        commitment["schema_version"] == COMMITMENT_SCHEMA_VERSION and commitment["text_free"] is True,
+        "nonce commitment is not text-free v1",
+    )
     return commitment, payload
 
 
@@ -215,7 +252,10 @@ def verify_entropy_receipt(
         _require(isinstance(value, str) and SHA256.fullmatch(value) is not None, "caller supplied invalid frozen hash")
     _require(repo_root.is_dir(), "repository root is unavailable")
     reveal = _validate_schema(receipt, "reveal", "approved entropy receipt")
-    _require(reveal["schema_version"] == SCHEMA_VERSION and reveal["text_free"] is True, "entropy receipt is not text-free v1")
+    _require(
+        reveal["schema_version"] == SCHEMA_VERSION and reveal["text_free"] is True,
+        "entropy receipt is not text-free v1",
+    )
     commitment_path = _safe_repo_path(str(reveal["commitment_path"]))
     _verify_first_containing(
         repo_root=repo_root,
@@ -227,13 +267,26 @@ def verify_entropy_receipt(
     commitment, _ = _read_commitment(repo_root, reveal)
     _require(commitment["purpose"] == purpose, "entropy commitment purpose drift")
     _require(commitment["frozen_universe_sha256"] == frozen_bundle_sha256, "entropy commitment frozen universe drift")
-    _require(commitment["frozen_population_sha256"] == frozen_population_sha256, "entropy commitment frozen population drift")
-    _require(commitment["auditor_role_id"] == auditor_role_id and commitment["auditor_task_id"] == auditor_task_id, "entropy commitment auditor role/task drift")
+    _require(
+        commitment["frozen_population_sha256"] == frozen_population_sha256, "entropy commitment frozen population drift"
+    )
+    _require(
+        commitment["auditor_role_id"] == auditor_role_id and commitment["auditor_task_id"] == auditor_task_id,
+        "entropy commitment auditor role/task drift",
+    )
     expected = _expected_functional_binding(auditor_role_id, auditor_task_id)
-    _require(all(commitment[key] == expected[key] for key in expected), "entropy commitment functional-role binding drift")
+    _require(
+        all(commitment[key] == expected[key] for key in expected), "entropy commitment functional-role binding drift"
+    )
     pre_nonce_binding = _pre_nonce_binding(commitment)
-    _require(commitment["pre_nonce_binding_sha256"] == sha256_bytes(canonical_json(pre_nonce_binding).encode("utf-8")), "pre-nonce binding hash drift")
-    _require(commitment_path == commitment_path_for(pre_nonce_binding), "commitment path is not deterministic for its pre-nonce binding")
+    _require(
+        commitment["pre_nonce_binding_sha256"] == sha256_bytes(canonical_json(pre_nonce_binding).encode("utf-8")),
+        "pre-nonce binding hash drift",
+    )
+    _require(
+        commitment_path == commitment_path_for(pre_nonce_binding),
+        "commitment path is not deterministic for its pre-nonce binding",
+    )
     plan_path = _safe_repo_path(str(commitment["sampler_plan_path"]))
     _verify_first_containing(
         repo_root=repo_root,
@@ -264,7 +317,9 @@ def verify_entropy_receipt(
         "auditor_nonce_commitment_sha256": commitment["auditor_nonce_commitment_sha256"],
     }
     return {
-        "derived_seed": sha256_bytes(bytes.fromhex(commitment["frozen_universe_sha256"]) + bytes.fromhex(reveal["auditor_nonce"])),
+        "derived_seed": sha256_bytes(
+            bytes.fromhex(commitment["frozen_universe_sha256"]) + bytes.fromhex(reveal["auditor_nonce"])
+        ),
         "entropy_receipt_sha256": sha256_bytes(canonical_json(reveal).encode("utf-8")),
         "first_containing_merge_sha": str(reveal["commitment_first_containing_merge_sha"]),
         "canonical_tuple_sha256": sha256_bytes(canonical_json(canonical_tuple).encode("utf-8")),

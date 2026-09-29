@@ -105,6 +105,11 @@ non-skippable:
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
   or formal-review eligibility without operator/advisor GO.
+- Code discovery: for code you have not located, run
+  `jg "<question>" <narrow subdir>` first (never `.`/repo root;
+  `--max-source-bytes 24000`); exact symbols use `rg`; never install/upgrade jg
+  or run `jg auth`; if jg fails, say so and continue; see
+  `agents_extensions/shared/skills/jevgrep/SKILL.md`.
 - On non-trivial work, use the `entire-context` skill: run status and one
   bounded search before prioritization or dispatch. Treat results as body-free,
   supplemental locators; record use only when a verified locator informed work.

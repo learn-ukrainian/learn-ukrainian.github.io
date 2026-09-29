@@ -348,6 +348,9 @@ def _verify_atlas_close(env: MutationEnv, response: Any) -> None:
 
 
 def _setup_dispatcher_scan(env: MutationEnv) -> None:
+    interpreter = env.root / ".venv" / "bin" / "python"
+    interpreter.parent.mkdir(parents=True, exist_ok=True)
+    interpreter.write_text("", encoding="utf-8")
     calls: list[tuple[list[str], Path]] = []
 
     def fixture_scan(cmd: list[str], cwd: Path) -> Any:

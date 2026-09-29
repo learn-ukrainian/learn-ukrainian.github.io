@@ -419,8 +419,15 @@ def fetch_entries(
     user_agent: str = DEFAULT_USER_AGENT,
     timeout: int = 20,
     max_text_chars: int = 500,
+    outages: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
-    """Fetch bounded direct-entry rows for a query across selected dictionaries."""
+    """Fetch bounded direct-entry rows for a query across selected dictionaries.
+
+    A fetch that fails (network error, timeout, HTTP 403/429/5xx — a Cloudflare challenge
+    arrives as one of these) is not a negative result (#9005): when ``outages`` is given, one
+    ``{"dictionary_slug", "word", "error"}`` record per failed fetch is appended to it, so a
+    caller can report "unavailable" instead of "no entry". A 404 stays a real miss.
+    """
     dicts = dictionaries or DEFAULT_SLOVNYK_ME_DICTS
     variants = query_variants(query)
     results: list[dict[str, Any]] = []
@@ -442,7 +449,16 @@ def fetch_entries(
                     timeout=timeout,
                     max_text_chars=max_text_chars,
                 )
-            except requests.RequestException:
+            except requests.RequestException as exc:
+                if outages is not None:
+                    status = getattr(getattr(exc, "response", None), "status_code", None)
+                    outages.append(
+                        {
+                            "dictionary_slug": canonical_slug,
+                            "word": variant,
+                            "error": f"HTTP {status}" if status else type(exc).__name__,
+                        }
+                    )
                 row = None
             if not row:
                 continue

@@ -24,9 +24,10 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 SOURCE_SCHEMA = CONTRACTS / "correction_protection_source_v1.schema.json"
 EVIDENCE_SCHEMA = CONTRACTS / "correction_protection_evidence_v1.schema.json"
 CASE_SCHEMA = CONTRACTS / "correction_protection_case_v1.schema.json"
@@ -36,14 +37,14 @@ MODEL_LANE_SCHEMA = CONTRACTS / "correction_protection_model_lane_v1.schema.json
 RELEASE_SCHEMA = CONTRACTS / "correction_protection_release_receipt_v1.schema.json"
 PHASE2_SCHEMA = CONTRACTS / "prepared_data_complement_record_v1.schema.json"
 
-DEFAULT_THRESHOLDS = (
-    ROOT / "data/projects/open_model_data/detector/correction_protection_thresholds_v1.json"
+DEFAULT_THRESHOLDS = resolve_open_model_path(
+    "data/projects/open_model_data/detector/correction_protection_thresholds_v1.json"
 )
-DEFAULT_KNOWN_ANSWERS = (
-    ROOT / "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json"
+DEFAULT_KNOWN_ANSWERS = resolve_open_model_path(
+    "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json"
 )
-DEFAULT_PHASE2_RECEIPT = (
-    ROOT / "data/projects/open_model_data/evidence/prepared_data_complement_receipt_v1.json"
+DEFAULT_PHASE2_RECEIPT = resolve_open_model_path(
+    "data/projects/open_model_data/evidence/prepared_data_complement_receipt_v1.json"
 )
 DEFAULT_EVAL_ARTIFACTS = (
     ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json",
@@ -478,18 +479,12 @@ def known_answer_disposition(
         )
     )
     if role == "positive":
-        disposition = (
-            "correction"
-            if correction_release_allowed and "correction" in allowed
-            else "unresolved"
-        )
+        disposition = "correction" if correction_release_allowed and "correction" in allowed else "unresolved"
     elif role == "acceptable_control":
         disposition = "correct" if "correct" in allowed else "protected"
     else:
         disposition = (
-            "unresolved"
-            if category_id == "surzhyk_contested_contact" or "protected" not in allowed
-            else "protected"
+            "unresolved" if category_id == "surzhyk_contested_contact" or "protected" not in allowed else "protected"
         )
     require(disposition in allowed, f"{category_id}/{role} disposition {disposition!r} is not allowed")
     return disposition
@@ -515,10 +510,7 @@ def correction_false_positives(
     rules: list[dict[str, str]],
 ) -> int:
     """Count records on which the actual matcher proposes an unprotected correction."""
-    return sum(
-        any(not match.protected for match in iter_rule_matches(str(item["text"]), rules))
-        for item in items
-    )
+    return sum(any(not match.protected for match in iter_rule_matches(str(item["text"]), rules)) for item in items)
 
 
 def gate_results(
@@ -555,11 +547,17 @@ def gate_results(
         if missing_canaries:
             reasons.append(f"missing required canaries: {', '.join(missing_canaries)}")
         if int(rule.get("minimum_distinct_periods", 0)):
-            periods = {str(item.get("period", known_answers["defaults"]["period"])) for item in specification.get("protected", [])}
+            periods = {
+                str(item.get("period", known_answers["defaults"]["period"]))
+                for item in specification.get("protected", [])
+            }
             if len(periods) < int(rule["minimum_distinct_periods"]):
                 reasons.append("distinct period threshold not met")
         if int(rule.get("minimum_distinct_subtypes", 0)):
-            subtypes = {str(item.get("register", known_answers["defaults"]["register"])) for item in specification.get("protected", [])}
+            subtypes = {
+                str(item.get("register", known_answers["defaults"]["register"]))
+                for item in specification.get("protected", [])
+            }
             if len(subtypes) < int(rule["minimum_distinct_subtypes"]):
                 reasons.append("distinct subtype threshold not met")
         non_model_channels = {
@@ -716,7 +714,9 @@ def canary_source(
     surface = str(item["surface"])
     start_offset = text.find(surface)
     require(start_offset >= 0, f"known answer surface missing: {category_id}/{role}/{index}")
-    require(text.find(surface, start_offset + 1) < 0, f"known answer surface is ambiguous: {category_id}/{role}/{index}")
+    require(
+        text.find(surface, start_offset + 1) < 0, f"known answer surface is ambiguous: {category_id}/{role}/{index}"
+    )
     end_offset = start_offset + len(surface)
     defaults = config["defaults"]
     axes = {
@@ -784,9 +784,7 @@ def canary_evidence(
                 query_sha256=sha256_text(query),
                 status=str(evidence["status"]),
                 supports=str(evidence["supports"]),
-                retrieval_sha256=sha256_text(
-                    canonical_json({"source": evidence, "query_sha256": sha256_text(query)})
-                ),
+                retrieval_sha256=sha256_text(canonical_json({"source": evidence, "query_sha256": sha256_text(query)})),
                 parser_id="phase3-attributed-evidence-config-v1",
                 parser_version=config_sha256,
             )
@@ -977,7 +975,9 @@ def build_artifacts(
                         model_proposals=model_proposals,
                     )
                     for evidence_row_value in evidence:
-                        validate(evidence_row_value, active[EVIDENCE_SCHEMA], f"public evidence {category_id}/{role}/{index}")
+                        validate(
+                            evidence_row_value, active[EVIDENCE_SCHEMA], f"public evidence {category_id}/{role}/{index}"
+                        )
                         writers["evidence"].write(evidence_row_value)
                         writers["public_evidence"].write(evidence_row_value)
                     disposition = known_answer_disposition(
@@ -1040,7 +1040,9 @@ def build_artifacts(
                                 "authoritative": False,
                             },
                         }
-                        validate(disagreement, active[DISAGREEMENT_SCHEMA], f"disagreement {category_id}/{role}/{index}")
+                        validate(
+                            disagreement, active[DISAGREEMENT_SCHEMA], f"disagreement {category_id}/{role}/{index}"
+                        )
                         writers["disagreements"].write(disagreement)
                         writers["public_disagreements"].write(disagreement)
                         case["disagreement_refs"] = [disagreement_id]
@@ -1247,12 +1249,8 @@ def build_manifest_and_receipt(
             "case_records": int(index["outputs"]["cases"]["records"]),
             "public_known_answers": int(index["outputs"]["public_cases"]["records"]),
         },
-        "category_gates": {
-            category: compact_release_gate(gate) for category, gate in index["category_gates"].items()
-        },
-        "axes_coverage": {
-            axis: index["counts"][axis] for axis in ("source_family", "period", "genre", "register")
-        },
+        "category_gates": {category: compact_release_gate(gate) for category, gate in index["category_gates"].items()},
+        "axes_coverage": {axis: index["counts"][axis] for axis in ("source_family", "period", "genre", "register")},
         "dispositions": {
             disposition: int(index["counts"]["disposition"].get(disposition, 0))
             for disposition in ("correct", "correction", "protected", "excluded", "unresolved")
@@ -1294,7 +1292,7 @@ def build_manifest_and_receipt(
     return manifest, receipt
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("candidate", "build"))
     parser.add_argument("--phase2-input", type=Path, required=True)
@@ -1309,7 +1307,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--comparison-full-output-dir", type=Path)
     parser.add_argument("--manifest-output", type=Path)
     parser.add_argument("--receipt-output", type=Path)
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
 def main() -> None:

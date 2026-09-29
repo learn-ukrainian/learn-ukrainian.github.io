@@ -18,9 +18,14 @@ import importlib.util
 import io
 import json
 import shlex
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+
+from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-secret-print.py"
@@ -35,6 +40,11 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+
+@pytest.mark.parametrize("command", BENIGN_COMMANDS)
+def test_issue_9102_benign_corpus_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
 
 
 def _run(monkeypatch, command: str, *, env_override: bool = False) -> int:
@@ -191,6 +201,138 @@ def test_issue_8896_parameter_expansion_stays_one_word():
         '${x:-$(printf %s "${GH_TOKEN:-x}")}',
     ]
     assert guard._tokenize("echo ${x#y}; cat .env") == ["echo", "${x#y}", ";", "cat", ".env"]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        r'''grep -rn "\"why\"\|'why'" scripts/ --include=*.py | head -8''',
+        r'echo "a \" b"',
+        r'printf "%s\n" "x\"y"',
+        r'''echo 'single' "double \" quoted" | head -8''',
+    ],
+)
+def test_issue_9088_escaped_double_quote_commands_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_9088_double_quote_escapes_keep_quote_preserving_tokens():
+    assert guard._tokenize(r'echo "a \" b"') == ["echo", r'"a \" b"']
+    assert guard._tokenize(r'printf "%s\n" "x\"y"') == ["printf", r'"%s\n"', r'"x\"y"']
+    assert guard._tokenize(r'echo "a \\ \$ \` b"') == ["echo", r'"a \\ \$ \` b"']
+    assert guard._tokenize(r'echo "a \\"') == ["echo", r'"a \\"']
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
+
+
+@pytest.mark.parametrize("shape", [
+    "echo $((1 << EOF))\n{payload}\nEOF",
+    "((1 << EOF))\n{payload}\nEOF",
+    "echo ${x#<<EOF }\n{payload}\nEOF",
+    "let 'x=1<<EOF'\n{payload}\nEOF",
+    "true # <<EOF\n{payload}\nEOF",
+    ": <<EOF; \\\n{payload}\nnote\nEOF",
+    ": <<EOF\n$({payload})\nEOF",
+    ": <<EOF\n`{payload}`\nEOF",
+    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+    "echo foo # comment \\\n{payload}",
+    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+    ": <<EOF\n$(echo ')'; {payload})\nEOF",
+    "x[1 << EOF ]=1\n{payload}\nEOF",
+    "echo $[1 << EOF ]\n{payload}\nEOF",
+])
+def test_issue_9102_executable_payload_stays_visible(monkeypatch, shape):
+    assert _run(monkeypatch, shape.replace("{payload}", "cat .env")) == 2
+
+
+def test_issue_9102_real_let_heredoc_body_is_inert(monkeypatch):
+    assert _run(monkeypatch, "let x=1<<EOF\ncat .env\nEOF") == 0
+
+
+@pytest.mark.parametrize("opener,closer,quoted", [
+    ("<<'EOF'", "EOF", True),
+    ('<<"EOF"', "EOF", True),
+    ("<<EOF", "EOF", False),
+    ("<<-EOF", "\tEOF", False),
+])
+def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
+    assert guard._strip_heredoc_bodies(f"cat {opener}\ncat .env\n{closer}\necho $GH_TOKEN") == (
+        f"cat {opener}\necho $GH_TOKEN"
+    )
+
+
+@pytest.mark.parametrize("first", [
+    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
+])
+def test_issue_9088_here_strings_keep_secret_dump_visible(monkeypatch, first):
+    command = f"{first}\ncat .env\nEOF"
+    assert guard._heredoc_delimiters(first) == []
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_crlf_closer_keeps_secret_dump_visible(monkeypatch):
+    command = "cat <<EOF\r\nEOF\r\ncat .env\nEOF"
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_quoted_identifier_heredoc_body_is_inert(monkeypatch):
+    assert _run(monkeypatch, "cat <<'EOF'\ncat .env\necho $GH_TOKEN\nEOF") == 0
+
+
+@pytest.mark.parametrize("opener,closer", [
+    (r'<<"EO\"F"', 'EO"F'),
+    (r"<<$'EOF'", "EOF"),
+    ('<<$"EOF"', "EOF"),
+    (r"<<$'EO\x22F'", 'EO"F'),
+    (r"<<EO$'F'", "EOF"),
+    (r"<<E\OF", "EOF"),
+    (r"<<-$'EOF'", "\tEOF"),
+    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+])
+def test_issue_9088_exotic_heredoc_keeps_secret_dump_visible(monkeypatch, opener, closer):
+    command = f"cat {opener}\ncat .env\necho $GH_TOKEN\n{closer}"
+    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
+    command = "cat <<$'EOF'\ncat <<SAFE\ncat .env\nSAFE\nEOF"
+    assert "cat .env" in guard._strip_heredoc_bodies(command)
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "cat .env"}}),
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
+
+
+def test_issue_9088_secret_after_escaped_quote_still_blocks(monkeypatch):
+    assert _run(monkeypatch, r'echo "escaped quote: \" and $GH_TOKEN"') == 2
+
+
+def test_issue_9088_unbalanced_double_quote_still_blocks(monkeypatch):
+    assert _run(monkeypatch, r'echo "a \"') == 2
 
 
 def test_issue_8896_secret_recursion_limit_blocks(monkeypatch):

@@ -66,6 +66,8 @@ def main() -> int:
             template.read_text(encoding="utf-8")
             .replace("@REPO_ROOT@", root)
             .replace("@PRIVATE_ROOT@", private_root)
+            # Intentional: the drop-in names this primary checkout's interpreter.
+            # --apply refuses a dispatch worktree.
             .replace("@PYTHON@", str(REPO_ROOT / ".venv" / "bin" / "python"))
         )
         target = args.destination / template.parent.name / template.name
