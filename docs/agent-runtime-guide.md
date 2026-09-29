@@ -779,9 +779,12 @@ every mode, read-only included. Reapers stop those jobs only inside the scope th
 the task's recorded launch identity, and signal individual processes only through
 pidfds whose start time, scope membership and user id are re-checked after opening. If
 any of those jobs now belongs to another user, the reaper stops nothing (not even the
-scope unit) and refuses the reap. Not covered: a process that changes its identity after
-that last re-check and before the signal lands; closing that gap would need a privileged
-helper inside the worker's own scope. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) §
+scope unit) and refuses the reap. Guaranteed: a job seen with another user id at scan
+time blocks both the scope unit stop and every signal, and each pidfd target's user id is
+re-checked after the pidfd opens. Not guaranteed (accepted residual, #8991): a job that
+changes its identity after the user-id scan and before the scope unit stop or the pidfd
+signal lands. A unit stop cannot be made atomic with the scan; closing that window would
+need a privileged helper inside the worker's own scope. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) §
 Background jobs at exit.
 
 ### Worktree removal and sibling repositories (#8610, #8624)

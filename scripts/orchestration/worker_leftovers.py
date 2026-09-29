@@ -32,10 +32,15 @@ the reap is refused. Individual processes are signalled only through a pidfd
 whose target (start time, boundary membership, real uid) is re-verified after
 it is opened; without pidfd support nothing is signalled.
 
-Out of scope: a process that changes its identity (uid, or its boundary
-membership) after that final re-check and before the signal is delivered.
-Closing that gap needs a privileged helper running inside the worker's own
-scope; an unprivileged reaper outside it cannot.
+Guaranteed: a process seen with another real uid at scan time blocks both the
+scope unit stop and every per-process signal, and a pidfd target's uid is
+checked again after the pidfd is opened. Not guaranteed (accepted residual,
+#8991): a process that changes its identity (uid, or its boundary membership)
+after the uid scan and before the scope unit stop (``own_cgroup()`` /
+``systemctl --user stop``) or the pidfd signal is delivered. A unit stop cannot
+be made atomic with a membership scan; closing that window needs a privileged
+helper running inside the worker's own scope, which an unprivileged reaper
+outside it cannot provide.
 The caller and its ancestors are never reported or signalled, and zombies are
 not processes that can still do work.
 """
