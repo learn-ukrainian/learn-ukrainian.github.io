@@ -149,6 +149,22 @@ def test_slice_name_from_dispatch_cgroup() -> None:
     assert "RuntimeMaxSec=3s" in timed
 
 
+@pytest.mark.parametrize(
+    ("cgroup", "expected"),
+    [
+        ("/user.slice/user-1000.slice/user@1000.service/lu-dispatch.slice/caller.scope", "lu-dispatch.slice"),
+        ("/user.slice/user-1000.slice/session-3.scope", None),
+    ],
+)
+def test_caller_slice_name_from_cgroup_path(
+    monkeypatch: pytest.MonkeyPatch, cgroup: str, expected: str | None
+) -> None:
+    from scripts.lexicon.runner import memory
+
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: cgroup)
+    assert memory.caller_slice_name() == expected
+
+
 def test_scope_probe_retries_without_unsupported_oom_policy(monkeypatch: pytest.MonkeyPatch) -> None:
     import subprocess
 
@@ -252,18 +268,27 @@ def test_failed_to_connect_stderr_runs_worker_once(tmp_path: Path, monkeypatch: 
         assert result.memory_mechanism == expected
 
 
-def test_worker_scope_is_sibling_in_caller_slice(
+def test_worker_scope_placement_follows_caller_slice(
     tmp_path: Path, caplog: pytest.LogCaptureFixture, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     import logging
 
-    from scripts.lexicon.runner.memory import caller_slice_name, self_cgroup_relative
+    from scripts.lexicon.runner import memory
 
     _skip_without_user_scope()
     _enable_probe_jobs(monkeypatch)
-    slice_name = caller_slice_name()
-    assert slice_name
-    parent = self_cgroup_relative() or ""
+    slice_name = memory.caller_slice_name()
+    parent = memory.self_cgroup_relative() or ""
+    launched: list[list[str]] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+        if unit.startswith("lexicon-cap-"):
+            launched.append(argv)
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
     with caplog.at_level(logging.INFO, logger="scripts.lexicon.runner.memory"):
         result = run_capped_worker(
             {"job": "placement", "chunk_id": "placement"},
@@ -277,8 +302,42 @@ def test_worker_scope_is_sibling_in_caller_slice(
     parent_parts = [part for part in parent.split("/") if part]
     assert child_parts[-1].startswith("lexicon-cap-")
     assert child_parts[-1].endswith(".scope")
-    assert child_parts[-2] == slice_name
-    assert child_parts[-1] != parent_parts[-1]
+    assert len(launched) == 1
+    if slice_name is None:
+        assert not any(arg.startswith("--slice=") for arg in launched[0])
+    else:
+        assert f"--slice={slice_name}" in launched[0]
+        assert child_parts[-2] == slice_name
+        assert child_parts[-1] != parent_parts[-1]
+
+
+def test_worker_scope_without_caller_slice(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: "/user.slice/user-1000.slice/session-3.scope")
+    assert memory.caller_slice_name() is None
+    launched: list[list[str]] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+        if unit.startswith("lexicon-cap-"):
+            launched.append(argv)
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    result = run_capped_worker(
+        {"job": "placement", "chunk_id": "placement-no-slice"},
+        result_path=tmp_path / "placement-no-slice.json",
+        timeout_s=30,
+    )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.message.split("/")[-1].startswith("lexicon-cap-")
+    assert len(launched) == 1
+    assert not any(arg.startswith("--slice=") for arg in launched[0])
 
 
 @pytest.mark.parametrize("attempt", range(5))
