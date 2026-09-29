@@ -18,6 +18,7 @@ pytestmark = pytest.mark.reads_content
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
+from wiki import query_builder
 from wiki.sources_db import _prepare_query
 
 
@@ -38,14 +39,18 @@ def test_long_cyrillic_query_does_not_raise() -> None:
     assert dense
 
 
-def test_existing_path_still_resolved_as_file() -> None:
+def test_existing_path_still_resolved_as_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """If the query is a real path, the file-as-query branch must still fire."""
-    discovery = REPO_ROOT / "curriculum" / "l2-uk-en" / "a1" / "discovery" / "my-morning.yaml"
-    if not discovery.exists():
-        pytest.skip("discovery fixture missing")
+    monkeypatch.setattr(query_builder, "CURRICULUM_DIR", tmp_path / "curriculum" / "l2-uk-en")
+    discovery = tmp_path / "my-morning.yaml"
+    discovery.write_text("query_keywords:\n  - Ранкова рутина\n", encoding="utf-8")
 
-    result = _prepare_query(discovery, track="a1")
-    assert result is not None
+    bucket_a, bucket_b, dense = _prepare_query(discovery, track="a1")
+
+    # The file branch reads the discovery keywords; the text branch would tokenize the path.
+    assert bucket_a == ['"ранкова рутина"']
+    assert bucket_b == {"ранкова", "рутина"}
+    assert "ранкова рутина" in dense
 
 
 def test_short_string_query_treated_as_text() -> None:

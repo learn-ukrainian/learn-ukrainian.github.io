@@ -10,7 +10,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-
 from scripts.ai_agent_bridge import _channels, _cli, _db, _inbox, _reconcile
 
 

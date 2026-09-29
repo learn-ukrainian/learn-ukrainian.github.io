@@ -9,7 +9,6 @@ silently strip ``agy`` from ``ab discuss --with``.
 from __future__ import annotations
 
 import importlib
-import os
 import subprocess
 import sys
 import uuid
@@ -18,40 +17,12 @@ from types import SimpleNamespace
 
 import pytest
 
+from tests.helpers.python import project_python
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_VENV_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
 
 
-def _resolve_test_python() -> str:
-    if _VENV_PYTHON.exists():
-        return str(_VENV_PYTHON)
-    try:
-        common_dir = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=_REPO_ROOT,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-        ).strip()
-        if common_dir:
-            # Absolute-join only — do not Path.resolve() the python symlink itself
-            # (it often points at Homebrew Cellar and loses the venv site-packages).
-            main_venv = Path(common_dir).resolve().parent / ".venv" / "bin" / "python"
-            if main_venv.exists():
-                return str(main_venv)
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    active_venv = os.environ.get("VIRTUAL_ENV")
-    if active_venv:
-        candidate = Path(active_venv) / "bin" / "python"
-        if candidate.exists():
-            return str(candidate)
-    raise RuntimeError(
-        "No project virtualenv Python found. Run tests via `.venv/bin/python -m pytest`."
-    )
-
-
-_TEST_PYTHON = _resolve_test_python()
+_TEST_PYTHON = project_python()
 
 
 def _ensure_scripts_path() -> None:

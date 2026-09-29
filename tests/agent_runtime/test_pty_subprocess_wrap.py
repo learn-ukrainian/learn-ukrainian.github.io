@@ -34,45 +34,12 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-_VENV_PYTHON_CANDIDATES = [
-    _REPO_ROOT / ".venv" / "bin" / "python",
-]
-
-
-def _resolve_test_python() -> str:
-    """Resolve `.venv/bin/python` for subprocess tests.
-
-    Worktree-aware: when the worktree's own .venv doesn't exist, walk
-    up via ``git rev-parse --git-common-dir`` to the main checkout's
-    venv. AGENTS.md forbids falling back to ``sys.executable``.
-    """
-    for candidate in _VENV_PYTHON_CANDIDATES:
-        if candidate.exists():
-            return str(candidate)
-    try:
-        common_dir = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=str(_REPO_ROOT),
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-        ).strip()
-        if common_dir:
-            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
-            if main_venv.exists():
-                return str(main_venv)
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    raise RuntimeError(
-        "No project virtualenv Python found. Expected `.venv/bin/python` "
-        "in the current checkout or via git-common-dir."
-    )
-
-
-_TEST_PYTHON = _resolve_test_python()
+_TEST_PYTHON = project_python()
 
 from agent_runtime.runner import (
     _pty_disabled_via_env,

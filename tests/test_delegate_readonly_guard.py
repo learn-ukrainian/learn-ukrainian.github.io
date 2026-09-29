@@ -11,6 +11,7 @@ dependencies from tests/test_delegate.py.
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import subprocess
 import sys
@@ -90,13 +91,13 @@ def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
     )
 
 
-def _finalize_mock_result():
+def _finalize_mock_result(response: str = "done"):
     return type(
         "_Result",
         (),
         {
             "ok": True,
-            "response": "done",
+            "response": response,
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
@@ -829,6 +830,137 @@ def test_read_only_snapshot_runtime_noise_still_passes(
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ignored_mutation_paths"] == noise
     assert state["last_error"] is None
+
+
+@pytest.mark.parametrize(
+    ("task_id", "verdict_line", "reviewed_head"),
+    [
+        ("review-9204-r2", "**VERDICT: APPROVE**", "cf85a9dbdf43b0b5143c01fbb871ab78fb490020"),
+        ("review-9204-r3", "VERDICT: APPROVE", "c82f37ad8226f28ce3bdd3f4618cc5539f752151"),
+    ],
+)
+def test_review_9204_result_opening_smoke_ignores_package_build_outputs(
+    task_id, verdict_line, reviewed_head, tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """Exercise worker completion with the two observed verdict lines and heads."""
+    checkout = (tmp_path / task_id).resolve()
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    gitignore = checkout / "packages/v4-runtime/.gitignore"
+    gitignore.parent.mkdir(parents=True)
+    gitignore.write_text("/build/\n/src/*.egg-info/\n", encoding="utf-8")
+    subprocess.run(["git", "add", str(gitignore.relative_to(checkout))], cwd=checkout, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "package ignore rules"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    output_paths = (
+        "packages/v4-runtime/build/lib/learn_ukrainian_v4_runtime/__init__.py",
+        "packages/v4-runtime/src/learn_ukrainian_v4_runtime.egg-info/PKG-INFO",
+    )
+    response = f"{verdict_line}\n\nExact head reviewed: `{reviewed_head}`. Resolved model: claude-opus-5-5.\n"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout), "worktree_base_sha": reviewed_head},
+    )
+
+    def fake_review(*_args, **_kwargs):
+        for relative in output_paths:
+            target = checkout / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("generated build output\n", encoding="utf-8")
+        return _finalize_mock_result(response)
+
+    with patch("agent_runtime.runner.invoke", side_effect=fake_review):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="Review the exact branch head.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+            require_review_verdict=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["returncode"] == 0
+    assert state["failure_reason"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == list(output_paths)
+    assert reviewed_head in state_path.with_suffix(".result").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("task_id", "expected_ignored_count"),
+    [
+        ("review-9204-r2", 497),
+        ("review-9204-r3", 80),
+    ],
+)
+def test_review_9204_exact_snapshot_replay_ignores_package_build_outputs(
+    task_id, expected_ignored_count
+):
+    """Replay every ignored status from the real r2/r3 pre/post sidecars."""
+    fixture_path = Path(__file__).parent / "fixtures/review_9204_read_only_snapshots.json"
+    item = json.loads(fixture_path.read_text(encoding="utf-8"))[task_id]
+    before = {path: "!!" for path in item["pre_ignored"]}
+    after = {path: "!!" for path in item["post_ignored"]}
+    assert len(before) == 1 and len(after) - len(before) == expected_ignored_count
+    assert set(before).issubset(after)
+    assert delegate.parse_review_verdict(item["verdict_line"]) == "APPROVE"
+    assert len(item["reviewed_head"]) == 40
+    assert delegate._read_only_mutation_paths(before, after) == []
+    assert delegate._read_only_ignored_mutation_paths(before, after) == sorted(set(after) - set(before))
+
+
+def test_review_package_build_exemption_does_not_hide_tracked_edit(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = (tmp_path / "tracked-package-build").resolve()
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    path = "packages/v4-runtime/build/tracked.txt"
+    target = checkout / path
+    target.parent.mkdir(parents=True)
+    target.write_text("baseline\n", encoding="utf-8")
+    subprocess.run(["git", "add", path], cwd=checkout, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "tracked build fixture"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    state_path = delegate._state_path("review-tracked-build")
+    delegate._write_state_atomic(state_path, {"task_id": "review-tracked-build", "cwd": str(checkout)})
+
+    def fake_review(*_args, **_kwargs):
+        target.write_text("changed\n", encoding="utf-8")
+        return _finalize_mock_result("VERDICT: APPROVE\n")
+
+    with patch("agent_runtime.runner.invoke", side_effect=fake_review):
+        rc = delegate._run_worker(
+            task_id="review-tracked-build", agent="claude", prompt="Review.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60, require_review_verdict=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == "read_only_checkout_mutation"
+    assert state["read_only_mutation_paths"] == [path]
+
+
+def test_review_package_build_exemption_requires_git_ignored_status():
+    path = "packages/v4-runtime/build/notes.txt"
+    assert delegate._read_only_mutation_paths({}, {path: "!!"}) == []
+    assert delegate._read_only_mutation_paths({}, {path: "??"}) == [path]
 
 
 def test_read_only_snapshot_clean_run_passes(

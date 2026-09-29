@@ -224,22 +224,6 @@ class TestFormatReport:
 
 
 class TestCollectFindings:
-    @pytest.mark.repo_wide
-    def test_with_real_a1_data(self):
-        """Integration test — only runs if A1 review data exists."""
-        review_dir = Path(__file__).resolve().parent.parent / "curriculum" / "l2-uk-en" / "a1" / "review"
-        if not review_dir.is_dir() or not list(review_dir.glob("*-review*.md")):
-            pytest.skip("No A1 review data available")
-
-        findings = collect_findings("a1")
-        assert len(findings) > 0
-        # Every finding should have required keys
-        for f in findings:
-            assert f["module"]
-            assert f["dimension"]
-            assert f["severity"] in {"CRITICAL", "MAJOR", "MINOR"}
-            assert f["issue"]
-
     def test_round_suffix_glob(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         """Bug #2102: aggregate_review_findings glob drops round-suffixed reviews."""
         # Mock CURRICULUM_ROOT

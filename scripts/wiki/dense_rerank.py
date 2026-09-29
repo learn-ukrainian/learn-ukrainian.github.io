@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import atexit
+import functools
 import gc
 import hashlib
 import os
@@ -28,12 +29,20 @@ from .embedding_manifest import (
     append_shard,
     filter_new_or_changed,
 )
-from .mlx_bridge import EMBEDDING_DIMS, MLXDisabledError, MLXEncoderBridge
+from .embedding_manifest_schema import MODEL_ID
 from .thermal import nsprocessinfo_thermal_state
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_MANIFEST_DB = PROJECT_ROOT / "data" / "embeddings" / "manifest.db"
-DEFAULT_MODEL_ID = "bge-m3-mlx-fp16"
+DEFAULT_MODEL_ID = MODEL_ID
+EMBEDDING_DIMS = 1024
+#: Set to ``1`` to keep the BGE-M3 encoder out of the process; dense rerank
+#: then degrades to FTS-only ordering.
+NO_DENSE_ENV = "SOURCES_MCP_NO_DENSE"
+#: Set to ``1`` to rerank search results with dense vectors on a host without
+#: CUDA or MPS. Without it such hosts keep keyword (FTS) ordering; hosts with
+#: an accelerator rerank whenever an index exists. Indexing is unaffected.
+CPU_DENSE_ENV = "SOURCES_MCP_DENSE"
 DEFAULT_POOLING_MODE = "cls"
 QUERY_MAX_LENGTH = 512
 INDEX_MAX_LENGTH = 512
@@ -61,6 +70,8 @@ def current_encoder_config(corpus: str) -> EncoderConfig:
         chunk_policy_version=policy_for(corpus).version_id,
         pooling_mode=DEFAULT_POOLING_MODE,
     )
+
+
 MAX_BATCH_ROWS = 16
 MAX_BATCH_TOKENS = 4096
 LITERARY_SHARD_LIMIT = 5000
@@ -83,7 +94,7 @@ _ENCODER = None
 #: which also acquires it. With a plain Lock() that's an instant self-deadlock
 #: the first time a query comes in without a cached encoder.
 _ENCODER_LOCK = threading.RLock()
-_QUERY_CACHE: dict[tuple[str, int, str], NDArray[np.float32]] = {}
+_QUERY_CACHE: dict[tuple[str, int], NDArray[np.float32]] = {}
 _INDEX_CACHE: dict[tuple[Path, str], CorpusEmbeddingIndex] = {}
 _INDEX_CACHE_LOCK = threading.Lock()
 
@@ -176,9 +187,7 @@ def _advance_thermal_epoch(
     if controller.ms_per_token_ewma is None:
         controller.ms_per_token_ewma = ms_per_token
     elif not regressed and thermal_state <= _THERMAL_FAIR:
-        controller.ms_per_token_ewma += _THERMAL_EWMA_ALPHA * (
-            ms_per_token - controller.ms_per_token_ewma
-        )
+        controller.ms_per_token_ewma += _THERMAL_EWMA_ALPHA * (ms_per_token - controller.ms_per_token_ewma)
 
     return controller.tier, _EPOCH_SLEEP_BY_TIER[controller.tier]
 
@@ -238,13 +247,68 @@ def _extract_dense_vectors(encoded: Any) -> NDArray[np.float16]:
     return array.astype(np.float16, copy=False)
 
 
-class _FlagEmbeddingEncoder:
-    """In-process fallback for environments that still want PyTorch MPS."""
+class DenseEncoderUnavailableError(RuntimeError):
+    """Raised when the dense encoder is disabled or cannot be loaded."""
 
-    def __init__(self) -> None:
-        from FlagEmbedding import BGEM3FlagModel
 
-        self._model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=True, pooling_method="cls")
+def _select_device() -> str:
+    """Pick one torch device: ``cuda:0``, then ``mps``, then ``cpu``.
+
+    Passing a single device keeps FlagEmbedding from starting a
+    multi-process pool on hosts with several GPUs.
+    """
+
+    import torch
+
+    if torch.cuda.is_available():
+        return "cuda:0"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
+
+@functools.cache
+def _accelerator_available() -> bool:
+    try:
+        return _select_device() != "cpu"
+    # torch missing, its native libraries broken, or device/driver failure
+    except (ImportError, OSError, RuntimeError, MemoryError):
+        return False
+
+
+def _dense_search_block_reason() -> str | None:
+    """Why search-time dense reranking is off in this process, or ``None``."""
+
+    if os.environ.get(NO_DENSE_ENV) == "1":
+        return f"{NO_DENSE_ENV}=1 is set"
+    if os.environ.get(CPU_DENSE_ENV) == "1" or _accelerator_available():
+        return None
+    return f"no CUDA/MPS device and {CPU_DENSE_ENV}=1 is not set"
+
+
+class FlagEmbeddingEncoder:
+    """In-process BGE-M3 dense encoder (FlagEmbedding, CLS pooling).
+
+    Indexes are stored as float16. FlagEmbedding runs fp16 on cuda/mps
+    and upcasts to fp32 on cpu.
+    """
+
+    def __init__(self, device: str | None = None) -> None:
+        if os.environ.get(NO_DENSE_ENV) == "1":
+            raise DenseEncoderUnavailableError(f"dense encoder disabled: {NO_DENSE_ENV}=1 is set")
+        try:
+            from FlagEmbedding import BGEM3FlagModel
+
+            self.device = device or _select_device()
+            self._model = BGEM3FlagModel(
+                "BAAI/bge-m3",
+                use_fp16=self.device != "cpu",
+                pooling_method="cls",
+                devices=self.device,
+            )
+        # ML stack missing, weights unreachable, or device/allocation failure
+        except (ImportError, OSError, RuntimeError, MemoryError) as exc:
+            raise DenseEncoderUnavailableError(f"dense encoder unavailable: {exc}") from exc
 
     def encode(
         self,
@@ -252,14 +316,19 @@ class _FlagEmbeddingEncoder:
         batch_size: int = MAX_BATCH_ROWS,
         max_length: int = INDEX_MAX_LENGTH,
     ) -> NDArray[np.float16]:
-        encoded = self._model.encode(
-            texts,
-            batch_size=batch_size,
-            max_length=max_length,
-            return_dense=True,
-            return_sparse=False,
-            return_colbert_vecs=False,
-        )
+        try:
+            encoded = self._model.encode(
+                texts,
+                batch_size=batch_size,
+                max_length=max_length,
+                return_dense=True,
+                return_sparse=False,
+                return_colbert_vecs=False,
+            )
+        # FlagEmbedding moves the model onto the device on first encode, so
+        # device, out-of-memory and driver failures surface here.
+        except (OSError, RuntimeError, MemoryError) as exc:
+            raise DenseEncoderUnavailableError(f"dense encode failed: {exc}") from exc
         return _extract_dense_vectors(encoded)
 
 
@@ -270,10 +339,7 @@ def _get_encoder():
 
     with _ENCODER_LOCK:
         if _ENCODER is None:
-            if os.environ.get("EMBED_FRAMEWORK") == "pytorch_mps":
-                _ENCODER = _FlagEmbeddingEncoder()
-            else:
-                _ENCODER = MLXEncoderBridge()
+            _ENCODER = FlagEmbeddingEncoder()
     return _ENCODER
 
 
@@ -319,9 +385,11 @@ def _sorted_token_batches(
     max_tokens: int = MAX_BATCH_TOKENS,
     token_lengths: Sequence[int] | None = None,
 ) -> list[list[int]]:
-    token_lengths = list(token_lengths) if token_lengths is not None else [
-        _token_count(text, max_length=max_length) for text in texts
-    ]
+    token_lengths = (
+        list(token_lengths)
+        if token_lengths is not None
+        else [_token_count(text, max_length=max_length) for text in texts]
+    )
     order = sorted(range(len(texts)), key=token_lengths.__getitem__)
     batches: list[list[int]] = []
     current: list[int] = []
@@ -329,9 +397,7 @@ def _sorted_token_batches(
 
     for index in order:
         token_count = min(token_lengths[index], max_tokens)
-        would_overflow = current and (
-            len(current) >= max_rows or current_tokens + token_count > max_tokens
-        )
+        would_overflow = current and (len(current) >= max_rows or current_tokens + token_count > max_tokens)
         if would_overflow:
             batches.append(current)
             current = []
@@ -402,9 +468,7 @@ def encode_texts(
         epoch_batches += 1
 
         epoch_boundary = (
-            epoch_batches >= EPOCH_BATCH_LIMIT
-            or epoch_tokens >= EPOCH_TOKEN_LIMIT
-            or batch_number == len(batches)
+            epoch_batches >= EPOCH_BATCH_LIMIT or epoch_tokens >= EPOCH_TOKEN_LIMIT or batch_number == len(batches)
         )
         if epoch_boundary:
             thermal_state = nsprocessinfo_thermal_state()
@@ -441,10 +505,9 @@ def encode_texts(
     return result
 
 
-def _query_cache_key(query: str, *, max_length: int) -> tuple[str, int, str]:
-    framework = os.environ.get("EMBED_FRAMEWORK", "mlx")
+def _query_cache_key(query: str, *, max_length: int) -> tuple[str, int]:
     digest = hashlib.sha256(query.encode("utf-8")).hexdigest()
-    return digest, max_length, framework
+    return digest, max_length
 
 
 def encode_query(query: str, *, encoder=None, max_length: int = QUERY_MAX_LENGTH) -> NDArray[np.float32]:
@@ -458,9 +521,9 @@ def encode_query(query: str, *, encoder=None, max_length: int = QUERY_MAX_LENGTH
         if cached is not None:
             return cached
         encoder = encoder or _get_encoder()
-        vector = _extract_dense_vectors(
-            encoder.encode([query], batch_size=1, max_length=max_length)
-        ).astype(np.float32, copy=False)
+        vector = _extract_dense_vectors(encoder.encode([query], batch_size=1, max_length=max_length)).astype(
+            np.float32, copy=False
+        )
         normalized = _normalize_matrix(vector)[0]
         _QUERY_CACHE[cache_key] = normalized
         return normalized
@@ -490,19 +553,13 @@ def load_corpus_index(
     manifest = EmbeddingManifest(manifest_path)
     try:
         shard_map = manifest.shard_map_for_corpus(corpus)
-        unit_rows = {
-            row.unit_key: (row.shard_id, row.row_idx)
-            for row in manifest.active_units_for_corpus(corpus)
-        }
+        unit_rows = {row.unit_key: (row.shard_id, row.row_idx) for row in manifest.active_units_for_corpus(corpus)}
     finally:
         manifest.close()
 
     index = CorpusEmbeddingIndex(
         corpus=corpus,
-        shards={
-            shard_id: np.load(path, mmap_mode="r")
-            for shard_id, path in shard_map.items()
-        },
+        shards={shard_id: np.load(path, mmap_mode="r") for shard_id, path in shard_map.items()},
         unit_rows=unit_rows,
     )
     with _INDEX_CACHE_LOCK:
@@ -510,9 +567,34 @@ def load_corpus_index(
     return index
 
 
+def dense_rerank_enabled(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST_DB) -> bool:
+    """Whether search for ``corpus`` reranks with dense vectors in this process.
+
+    Checked cheapest first — the opt-out switch, then the manifest index,
+    then device discovery — so a keyword-only search never imports torch.
+    """
+
+    if os.environ.get(NO_DENSE_ENV) == "1":
+        return False
+    if not load_corpus_index(corpus, manifest_db=manifest_db).unit_rows:
+        return False
+    return _dense_search_block_reason() is None
+
+
 def invalidate_corpus_index(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST_DB) -> None:
     with _INDEX_CACHE_LOCK:
         _INDEX_CACHE.pop((Path(manifest_db), corpus), None)
+
+
+def _keyword_order(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
+    scored.sort(
+        key=lambda row: (
+            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            str(row.get("unit_key", "")),
+        )
+    )
+    return scored[:limit]
 
 
 def rerank_candidates(
@@ -533,6 +615,8 @@ def rerank_candidates(
         index = load_corpus_index(corpus, manifest_db=manifest_db)
         if not index.unit_rows:
             return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
+        if encoder is None and _dense_search_block_reason() is not None:
+            return _keyword_order(candidates, limit)
 
         vectors: list[NDArray[np.float32]] = []
         present: list[dict[str, Any]] = []
@@ -571,15 +655,8 @@ def rerank_candidates(
             )
         )
         return scored[:limit]
-    except MLXDisabledError:
-        scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
-        scored.sort(
-            key=lambda row: (
-                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
-                str(row.get("unit_key", "")),
-            )
-        )
-        return scored[:limit]
+    except DenseEncoderUnavailableError:
+        return _keyword_order(candidates, limit)
 
 
 def rerank_sections(
@@ -895,9 +972,7 @@ def _assert_units_fit_index_window(
     tokenizer = _get_tokenizer()
     over = []
     for unit in units:
-        token_count = len(
-            tokenizer.encode(unit.text, add_special_tokens=False, truncation=False)
-        )
+        token_count = len(tokenizer.encode(unit.text, add_special_tokens=False, truncation=False))
         if token_count > cap:
             over.append((unit.unit_key, token_count))
             if len(over) >= 5:
@@ -930,7 +1005,7 @@ def _with_text(unit: CorpusUnit, text: str) -> CorpusUnit:
 
 def _chunked(items: Sequence[CorpusUnit], size: int) -> Iterator[list[CorpusUnit]]:
     for start in range(0, len(items), size):
-        yield list(items[start:start + size])
+        yield list(items[start : start + size])
 
 
 def plan_shard_groups(corpus: str, units: Sequence[CorpusUnit]) -> list[list[CorpusUnit]]:

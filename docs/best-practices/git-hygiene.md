@@ -23,7 +23,7 @@ tripwire only, not protection: it is bypassable (for example,
 
 ## Untracked Git hook delegators (`.githooks/` vs `$GIT_COMMON_DIR/hooks`)
 
-To prevent lifecycle tooling (specifically Entire CLI) from dirtying the working tree, `core.hooksPath` must remain unset rather than pointing at the tracked `.githooks` directory. `scripts/install_git_hooks.sh` installs untracked delegators into `$GIT_COMMON_DIR/hooks/` that dispatch to the current worktree's tracked `.githooks/` files. When Entire CLI writes its hook wrappers to the common hooks directory, it chains existing hooks via `<name>.pre-entire`, keeping tracked repository files pristine across all linked worktrees.
+To prevent lifecycle tooling (specifically Entire CLI) from dirtying the working tree, `core.hooksPath` must remain unset rather than pointing at the tracked `.githooks` directory. `scripts/install_git_hooks.sh` installs untracked delegators into `$GIT_COMMON_DIR/hooks/` that dispatch to the current worktree's tracked `.githooks/` files. When Entire CLI writes its hook wrappers to the common hooks directory, it chains to `<name>.pre-entire` only if that file already exists at that moment. The installer therefore puts the delegator at `<name>.pre-entire` and, if Entire's wrapper lacks the chain, appends Entire's own chain block (byte-identical to what Entire writes), keeping tracked repository files pristine across all linked worktrees. `scripts/install_git_hooks.sh --check` fails when a hook stage declared in `.pre-commit-config.yaml` has no reachable delegator.
 
 ## Why this is a rule, not a suggestion
 

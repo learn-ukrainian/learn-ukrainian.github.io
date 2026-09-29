@@ -9,7 +9,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
-
 from scripts.ai_agent_bridge import _channels, _channels_cli, _cli, _db
 from scripts.ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
 
@@ -182,8 +181,8 @@ def test_ask_codex_infers_from_claude_agent_name(
 def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None:
     """The AGY compatibility route never silently downgrades an explicit model."""
     import pytest
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
     from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]

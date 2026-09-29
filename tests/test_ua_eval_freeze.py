@@ -154,7 +154,7 @@ def test_active_codex_runner_still_rejects_historical_model_before_spawn(tmp_pat
     def forbidden(*args, **kwargs):
         pytest.fail("historical model reached native execution")
     monkeypatch.setattr(active.subprocess, "run", forbidden)
-    with pytest.raises(active.RunnerError, match="only gpt-6-astra"):
+    with pytest.raises(active.RunnerError, match=r"only gpt-6\.1-sol"):
         active._run_batch([], prompt_text="test", model="gpt-5.6-terra", codex_bin="codex",
             schema_path=tmp_path / "schema.json", timeout=1)
 

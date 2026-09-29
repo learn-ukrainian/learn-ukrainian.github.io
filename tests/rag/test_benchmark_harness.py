@@ -9,9 +9,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts.rag import benchmark_embeddings, benchmark_rerankers
+from tests.helpers.python import project_python
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PYTHON_BIN = PROJECT_ROOT / ".venv" / "bin" / "python"
+PYTHON_BIN = project_python()
 EMBED_SCRIPT = PROJECT_ROOT / "scripts" / "rag" / "benchmark_embeddings.py"
 
 

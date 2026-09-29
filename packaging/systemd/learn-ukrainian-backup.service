@@ -4,7 +4,7 @@ Description=Learn Ukrainian data backup (restic via rclone remote)
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
-EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
+Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env
 # Stage SQLite snapshots next to data/ so staging follows data/ onto its
 # volume and the per-database free-space preflight measures the data
 # filesystem. Peak extra disk is the largest single database, never the sum.

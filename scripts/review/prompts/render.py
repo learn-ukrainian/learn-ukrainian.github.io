@@ -412,6 +412,8 @@ def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str,
         "grammar_text": reader.pin_text("inputs.grammar"),
         "validate_report_text": reader.pin_text("inputs.validate_report"),
         "pack_verify_report_text": reader.pin_text("inputs.pack_verify_report"),
+        # Optional pin (#9166): a manifest written before it has none, and the template says so.
+        "v1_totals_text": reader.pin_text("inputs.v1_totals") if reader.has("inputs.v1_totals") else None,
     }
     context.update(_cited_records_context(reader, [row for row in plan.get("lessons") or [] if isinstance(row, dict)]))
     context.update(_learner_state_context(reader, manifest))

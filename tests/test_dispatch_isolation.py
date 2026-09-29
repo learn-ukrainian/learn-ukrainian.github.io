@@ -165,12 +165,12 @@ def test_scope_argv_names_the_slice_unit_and_collect():
     _hex_token(unit, prefix)
     assert "/" not in unit and " " not in unit
     assert len(unit) + len(".scope") <= 255
-    assert iso.MEMORY_MAX_BYTES == 11 * 1024**3
+    assert iso.MEMORY_MAX_BYTES == 20 * 1024**3
     assert iso.MEMORY_SWAP_MAX_BYTES == 1 * 1024**3
-    assert iso.MEMORY_HIGH_BYTES == 10 * 1024**3
+    assert iso.MEMORY_HIGH_BYTES == 18 * 1024**3
     unit_file = Path("packaging/systemd/lu-dispatch.slice").read_text(encoding="utf-8")
-    assert "MemoryMax=11G" in unit_file
-    assert "MemoryHigh=10G" in unit_file
+    assert "MemoryMax=20G" in unit_file
+    assert "MemoryHigh=18G" in unit_file
     assert "MemorySwapMax=1G" in unit_file
 
 
@@ -875,10 +875,10 @@ def test_launch_fields_remain_beside_peak_rss(monkeypatch: pytest.MonkeyPatch):
     [
         ("ActiveState=inactive\nMemoryCurrent=10\nMemoryMax=20\n", None),
         ("LoadState=not-found\nActiveState=inactive\n", None),
-        ("ActiveState=active\nMemoryCurrent=[not set]\nMemoryMax=11811160064\n", None),
+        ("ActiveState=active\nMemoryCurrent=[not set]\nMemoryMax=21474836480\n", None),
         (
-            "ActiveState=active\nMemoryCurrent=4294967296\nMemoryMax=11811160064\n",
-            "lu-dispatch.slice 4.0/11.0 GiB",
+            "ActiveState=active\nMemoryCurrent=4294967296\nMemoryMax=21474836480\n",
+            "lu-dispatch.slice 4.0/20.0 GiB",
         ),
         (
             "ActiveState=active\nMemoryCurrent=1073741824\nMemoryMax=infinity\n",

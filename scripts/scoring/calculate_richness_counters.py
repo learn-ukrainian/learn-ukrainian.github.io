@@ -12,6 +12,7 @@ import statistics
 from pathlib import Path
 
 import yaml
+
 from slug_utils import to_bare_slug
 
 from .calculate_richness_config import (

@@ -678,7 +678,7 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
                 prompt="synthetic work",
                 mode="workspace-write",
                 cwd_str=str(repo),
-                model="gpt-6-astra",
+                model="gpt-6.1-sol",
                 hard_timeout=10,
             )
             == 1

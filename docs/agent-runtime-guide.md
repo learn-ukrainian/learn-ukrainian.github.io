@@ -634,13 +634,66 @@ local-only route guard.
 
 `delegate.py dispatch --worktree ...` creates the dispatched agent a
 private git worktree so its writes are isolated from the main checkout.
-Two layouts are currently supported:
 
 | Layout | Path | Status | Triggered by |
 | --- | --- | --- | --- |
-| **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
-| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
-| custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
+| **dispatch subtree** | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path), or `--worktree <explicit-path>` inside `.worktrees/dispatch/{agent}/` |
+| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated | attach an existing one with `--cwd <that-worktree>` |
+| custom | anywhere else | not created by delegate | attach an existing added worktree with `--cwd <that-worktree>` |
+
+An explicit `--worktree <explicit-path>` must resolve, after following symlinks,
+inside `.worktrees/dispatch/{agent}/` of the target repository for the agent named
+by `--agent`. `.worktrees`, `.worktrees/dispatch` and `.worktrees/dispatch/{agent}`
+must each already exist as a real directory, not a symlink; bare `--worktree`
+creates them. Neither the `--worktree` or `--cwd` value nor the path it resolves
+to may contain a control character (Unicode category Cc), a format character
+(Cf, including the bidi marks, overrides and isolates U+200E/U+200F,
+U+202A–U+202E and U+2066–U+2069), a lone surrogate, or a line or paragraph
+separator (#8775).
+
+Dispatch validates both flags right after it resolves the target repository:
+before the DoR check, `--pr` resolution, or any other step that can run an
+external command. Only the per-task parent-record read, invocation attribution,
+and the `--repo` lookup run first, and none of them runs a command. Every later
+step (the worktree lock, git operations, provisioning, the task record, and the
+worker prompt) uses the resolved path from that validation, never the caller's
+string. The order after validation is:
+
+1. Read-only checks can run git with the validated path as its working
+   directory: the write-mode worktree check (`git rev-parse` and
+   `git worktree list`, for `--cwd` and an explicit `--worktree`), the cursor
+   review-attempt check for `--cwd`, and `git diff` under `--preflight-triage`.
+2. For `--cwd`, dispatch checks that the validated path still resolves to
+   itself, looks up the registered worktree that contains it, and takes the
+   worktree lock. For `--worktree`, it takes the lock.
+3. Under the lock, dispatch checks again that the validated path still resolves
+   to itself and refuses if a component has since been replaced by a symlink.
+4. The base-SHA and worktree-creation helpers then use that validated path as
+   given; they do not resolve it again.
+
+`--dry-run` takes no worktree lock, so steps 2 and 3 do not hold for it as
+written. A `--worktree` dry run still runs the step-3 re-check, without the
+lock, before the base-SHA helper, which does not rebase in a dry run. A
+detached read-only dry run resolves no worktree. A `--cwd` dry run looks up the
+registered worktree and reads its branch and HEAD with git, then returns before
+either re-check.
+
+The prompt-injection vector (#8775) is closed by the character check on the raw
+and resolved paths and by JSON quoting: the worker prompt renders the worktree
+path as a JSON-quoted value, so a path is data, never an instruction. Path
+containment is checked on real directories and re-checked after the lock. A
+symlink swap in the gap that remains (after the step-3 check, while git or the
+filesystem follows the path) needs write access to a directory on the validated
+path. For a worktree under `.worktrees/dispatch/`, that is a process running as
+the same user with write access to that subtree. Such a process already holds
+every capability the dispatcher has, so the race grants it nothing new; it is
+out of scope. `--cwd` also accepts a registered worktree outside
+`.worktrees/dispatch/`. There, write access to any parent directory of the
+worktree is enough to rename it and put a symlink in its place, without any
+access to the worktree itself. The out-of-scope argument holds only when every
+directory on that path is writable by the dispatching user alone; a custom
+worktree under a directory another user can write (for example group-writable,
+or world-writable without the sticky bit) is outside this guarantee.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into
@@ -715,6 +768,38 @@ example Agy and Cursor), instead of printing an `unknown` warning on every
 dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
+
+### Auto-finalize scope and unfinished background jobs (#8991)
+
+**Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**
+When a `danger` worker exits 0 with uncommitted work and no commits, delegate commits and
+pushes it only under the task's `--owned-path` values (repeatable; `dir/`, `dir/**`, a
+file, or a glob). They are recorded as `owned_paths`. `--research-owned-path` is research
+classification and is never used as commit authority. With no `--owned-path`, nothing is
+committed and the task ends `needs_finalize` (`no_owned_paths_declared`). Changes outside
+the owned paths, and both sides of any possible move across them (an owned addition while
+an outside file is deleted, or the reverse), stay uncommitted and are
+listed in `finalize_skipped_paths`; the task then ends `needs_finalize`, not `done`.
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree --mode danger \
+  --owned-path scripts/fleet/ --owned-path tests/fleet/test_x.py \
+  --research-owned-path scripts/fleet/ ...
+```
+
+A headless worker whose own background jobs are still running at CLI exit, or whose
+exit scan could not rule them out (`leftovers_scan: unknown`), ends `needs_finalize` in
+every mode, read-only included. Reapers stop those jobs only inside the scope that matches
+the task's recorded launch identity, and signal individual processes only through
+pidfds whose start time, scope membership and user id are re-checked after opening. If
+any of those jobs now belongs to another user, the reaper stops nothing (not even the
+scope unit) and refuses the reap. Guaranteed: a job seen with another user id at scan
+time blocks both the scope unit stop and every signal, and each pidfd target's user id is
+re-checked after the pidfd opens. Not guaranteed (accepted residual, #8991): a job that
+changes its identity after the user-id scan and before the scope unit stop or the pidfd
+signal lands. A unit stop cannot be made atomic with the scan; closing that window would
+need a privileged helper inside the worker's own scope. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) §
+Background jobs at exit.
 
 ### Worktree removal and sibling repositories (#8610, #8624)
 

@@ -241,7 +241,7 @@ BareRunner = ProviderRunner
 
 
 CLAUDE_SUBSCRIPTION_BARE_MODEL_ID = "claude-opus-4-8"
-GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-6-astra"
+GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-6.1-sol"
 GEMINI_SUBSCRIPTION_BARE_MODEL_ID = "gemini-3.1-pro-high"
 _SUBSCRIPTION_PRICING_BASIS = (
     "subscription runtime bare seat; marginal token pricing is not exposed by the CLI, "
@@ -272,7 +272,7 @@ def _runtime_bridge_command(agent: str, model: str, *, entrypoint: str = BARE_RU
         )
     if agent == "codex":
         if model != GPT_SUBSCRIPTION_BARE_MODEL_ID:
-            raise BakeoffConfigError(f"Codex model {model!r} rejected; only gpt-6-astra is approved")
+            raise BakeoffConfigError(f"Codex model {model!r} rejected; only gpt-6.1-sol is approved")
         return (
             "agent_runtime.invoke",
             "codex",
@@ -727,7 +727,7 @@ def _subscription_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteI
     if not identity.runtime_agent:
         raise BakeoffConfigError(f"route is not a subscription-runtime route: {route.route_name!r}")
     if identity.runtime_agent == "codex" and route.reviewer_model_id != GPT_SUBSCRIPTION_BARE_MODEL_ID:
-        raise BakeoffConfigError(f"Codex model {route.reviewer_model_id!r} rejected; only gpt-6-astra is approved")
+        raise BakeoffConfigError(f"Codex model {route.reviewer_model_id!r} rejected; only gpt-6.1-sol is approved")
     return identity
 
 
@@ -2711,7 +2711,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         help=(
             "Comma-separated or repeated model pins. opencode provider/model pins "
             "(including deepseek/... and OpenRouter baselines) work for tooled/bare; "
-            "subscription native pins (claude-opus-4-8,gpt-6-astra,gemini-3.1-pro-high) are --arm bare only. "
+            "subscription native pins (claude-opus-4-8,gpt-6.1-sol,gemini-3.1-pro-high) are --arm bare only. "
             "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
         ),
     )

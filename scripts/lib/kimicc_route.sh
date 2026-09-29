@@ -44,25 +44,19 @@ kimicc_resolve_explicit_auth_token() {
   return 1
 }
 
+# The route interpreter also runs the apiKeyHelper, so it comes from the shared
+# project_interpreter.sh resolver: the validated primary's .venv, never a
+# worktree .venv or a git common-dir lookup (#9118, #9121).
 kimicc_route_python() {
   local project_dir="$1"
-  local git_common
 
   if [ -n "${KIMICC_ROUTE_PYTHON:-}" ] && [ -x "${KIMICC_ROUTE_PYTHON}" ]; then
     printf '%s\n' "$KIMICC_ROUTE_PYTHON"
     return 0
   fi
-  if [ -x "$project_dir/.venv/bin/python" ]; then
-    printf '%s\n' "$project_dir/.venv/bin/python"
-    return 0
-  fi
-  git_common="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR \
-    git -C "$project_dir" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-  if [ -n "$git_common" ] && [ -x "$(dirname "$git_common")/.venv/bin/python" ]; then
-    printf '%s\n' "$(dirname "$git_common")/.venv/bin/python"
-    return 0
-  fi
-  return 1
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh" || return 1
+  project_interpreter_resolve "$project_dir" 2>/dev/null
 }
 
 kimicc_install_api_key_helper() {

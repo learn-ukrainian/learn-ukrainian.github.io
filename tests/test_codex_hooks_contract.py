@@ -21,6 +21,7 @@ from scripts.agent_runtime.codex_hook_policy import (
     _run_enforce_venv,
     run_guard,
 )
+from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PRIMARY_ROOT = Path(
@@ -77,7 +78,7 @@ def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     (primary / "README.md").write_text("hook test\n", encoding="utf-8")
     _make_exact_python_checkout(
         primary,
-        delegate=PRIMARY_ROOT / ".venv" / "bin" / "python",
+        delegate=Path(project_python()),
     )
     _run(["git", "add", "README.md"], cwd=primary)
     _run(["git", "commit", "-m", "test fixture"], cwd=primary)
@@ -165,7 +166,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     )
     started = subprocess.run(
         ["bash", os.fspath(session_hook)],
-        input=json.dumps({"source": "startup", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "startup", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -184,7 +185,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -211,7 +212,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -254,7 +255,7 @@ def _run_bound_codex_compact(tmp_path: Path) -> str:
     )
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
         text=True,
         capture_output=True,
         check=False,
@@ -354,7 +355,7 @@ def test_codex_policy_guard_timeout_fails_closed(tmp_path: Path) -> None:
     guard.write_text("import time\ntime.sleep(5)\n", encoding="utf-8")
 
     result = run_guard(
-        PRIMARY_ROOT / ".venv" / "bin" / "python",
+        Path(project_python()),
         guard,
         "{}",
         timeout_seconds=0.01,
@@ -372,7 +373,7 @@ def test_non_rewrite_guard_stdout_fails_closed(
     guard = tmp_path / "noisy_guard.py"
     guard.write_text("print('not-json')\n", encoding="utf-8")
     result = run_guard(
-        PRIMARY_ROOT / ".venv" / "bin" / "python",
+        Path(project_python()),
         guard,
         "{}",
         timeout_seconds=1,

@@ -2125,7 +2125,7 @@ Legacy v1 bridge receipts are invalidated.
   "checked_at": "2026-07-28T13:56:41Z",
   "expires_at": "2026-07-28T14:11:41Z",
   "age_seconds": 5,
-  "model": "gpt-6-astra",
+  "model": "gpt-6.1-sol",
   "effort": "low",
   "source": "receipt"
 }

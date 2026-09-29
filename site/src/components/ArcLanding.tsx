@@ -33,7 +33,9 @@ function ArcRow({ level, position }: { level: string; position: ArcPosition }): 
       <div className={layout.moduleInfo}>
         <div className={layout.moduleTitle}>
           {position.title_uk
-            ? <span lang="uk">{position.title_uk}</span>
+            ? <>
+                <span lang="uk">{position.title_uk}</span> · <span lang="en" className={styles.titleEn}>{position.title_en}</span>
+              </>
             : <span lang="en" className={styles.titleEn}>{position.title_en}</span>}
           {position.is_checkpoint && <span className={styles.checkpoint}><ChromeText k="arc.checkpoint" /></span>}
         </div>

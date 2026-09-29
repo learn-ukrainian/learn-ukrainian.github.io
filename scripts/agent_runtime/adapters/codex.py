@@ -191,15 +191,16 @@ def _strip_codex_prompt_echo(stderr: str) -> str:
     return stderr[last_divider.end() :]
 
 
-# Operator 2026-09-22. Sol is the orchestrator, Luna scouts, Astra advises.
-CODEX_APPROVED_MODELS = frozenset({"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"})
+# Operator 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol: it orchestrates and
+# holds the former Astra advisory seat. Luna scouts.
+CODEX_APPROVED_MODELS = frozenset({"gpt-6-luna", "gpt-6.1-sol"})
 
 
 class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-6-sol"
+    default_model: str = "gpt-6.1-sol"
     # Omitted effort is the orchestrator setting. Scouting passes Luna and its
     # own effort. An explicit --effort always wins.
     default_effort: str = "high"

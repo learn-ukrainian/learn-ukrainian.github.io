@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO_ROOT / ".githooks"
 REQUIRED_HOOKS = (
@@ -65,11 +67,8 @@ def _write_executable(path: Path, text: str) -> None:
     path.chmod(0o755)
 
 
-def _project_python() -> Path:
-    common_dir = Path(_git(REPO_ROOT, "rev-parse", "--git-common-dir").stdout.strip())
-    if not common_dir.is_absolute():
-        common_dir = REPO_ROOT / common_dir
-    return common_dir.resolve().parent / ".venv" / "bin" / "python"
+def _project_python() -> str:
+    return project_python()
 
 
 def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:

@@ -2110,9 +2110,11 @@ async def handle_get_chunk_context(args: dict):
     query_obj = {"chunk_id": chunk_id}
 
     from wiki.sources_db import _get_conn
+
+    from scripts.storage.topology import ActiveDatabaseNetworkError
     try:
         conn = _get_conn()
-    except FileNotFoundError:
+    except (FileNotFoundError, ActiveDatabaseNetworkError):
         prose = "Sources database not found."
         envelope = build_search_envelope(
             tool="get_chunk_context",
@@ -2217,8 +2219,12 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
     server_path = Path(__file__).resolve()
-    sources_db_path = PROJECT_ROOT / "data" / "sources.db"
-    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+    from wiki.sources_db import _read_db_path
+
+    from scripts.rag.config import VESUM_DB_PATH
+
+    sources_db_path = _read_db_path()
+    vesum_db_path = Path(VESUM_DB_PATH).resolve()
 
     def _identity() -> dict[str, Any]:
         from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
@@ -2567,14 +2573,20 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     """
     import contextlib
     import sqlite3
-    from pathlib import Path as _Path
 
-    db = _Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    from wiki.sources_db import _read_db_path
+
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    try:
+        db = _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return None
     if not db.exists():
         return None
     conn: sqlite3.Connection | None = None
     try:
-        conn = sqlite3.connect(str(db))
+        conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.
@@ -3006,6 +3018,15 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
 
 async def handle_query_ulif(args: dict) -> list[TextContent]:
+    from wiki.sources_db import _read_db_path
+
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    try:
+        _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return [TextContent(type="text", text="Sources database not found.")]
+
     word = args["word"]
     if args.get("cache_only"):
         # Cache-only: never a live ULIF fetch. A missing/unreadable cache

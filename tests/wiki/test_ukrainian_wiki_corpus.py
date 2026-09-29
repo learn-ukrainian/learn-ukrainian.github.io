@@ -13,9 +13,8 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki.embedding_manifest import EmbeddingManifest
-
 from wiki import dense_rerank, sources_db, ukrainian_wiki_corpus
+from wiki.embedding_manifest import EmbeddingManifest
 
 
 class _FakeTokenizer:
@@ -691,7 +690,7 @@ def test_encode_flag_populates_manifest_units_matching_search_unit_keys(
     finally:
         manifest.close()
     assert active_before == [], (
-        "ingest alone must not encode — encode step is explicit so MLX is not "
+        "ingest alone must not encode — encode step is explicit so BGE-M3 is not "
         "triggered unintentionally"
     )
 

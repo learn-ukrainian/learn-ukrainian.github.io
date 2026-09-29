@@ -17,7 +17,9 @@
         "arc_source": {"$ref": "#/$defs/file"},
         "decisions": {"$ref": "#/$defs/file"}, "scope": {"$ref": "#/$defs/file"},
         "grammar": {"$ref": "#/$defs/file"}, "validate_report": {"$ref": "#/$defs/file"},
-        "pack_verify_report": {"$ref": "#/$defs/file"}
+        "pack_verify_report": {"$ref": "#/$defs/file"},
+        "v1_totals": {"$ref": "#/$defs/file",
+          "$comment": "The mapped v1 module's activity totals (#9166). Not required: manifests written before it exist and stay valid; the engine always writes it."}
       }
     },
     "learner_state": {"type": "object", "additionalProperties": false,

@@ -25,7 +25,7 @@ def comment(
         task_id=task,
         started=started,
         verdict=verdict,
-        model="gpt-6-sol",
+        model="gpt-6.1-sol",
         family="openai",
         reply="VERDICT: APPROVE",
     )

@@ -18,7 +18,9 @@ from .embedding_manifest_schema import (
     EMBEDDING_MANIFEST_DDL_V1,
     LEGACY_CHUNK_POLICY_VERSION,
     LEGACY_INDEX_MAX_LENGTH,
+    LEGACY_MODEL_IDS,
     LEGACY_POOLING_MODE,
+    MODEL_ID,
     V2_COLUMNS,
 )
 
@@ -66,7 +68,7 @@ class EncoderConfig:
 #: shards stay queryable and aren't marked stale until a real config
 #: change happens.
 LEGACY_SHIPPED_CONFIG = EncoderConfig(
-    model="bge-m3-mlx-fp16",
+    model=MODEL_ID,
     index_max_length=LEGACY_INDEX_MAX_LENGTH,
     chunk_policy_version=LEGACY_CHUNK_POLICY_VERSION,
     pooling_mode=LEGACY_POOLING_MODE,
@@ -124,6 +126,7 @@ class EmbeddingManifest:
         self._conn.execute(f"PRAGMA busy_timeout = {_SQLITE_BUSY_TIMEOUT_MS}")
         self._conn.executescript(EMBEDDING_MANIFEST_DDL_V1)
         self._ensure_schema_v2()
+        self._relabel_legacy_model_ids()
         self._conn.commit()
 
     def _ensure_schema_v2(self) -> None:
@@ -168,18 +171,12 @@ class EmbeddingManifest:
         self._begin_immediate()
         try:
             existing_columns = {
-                row["name"]
-                for row in self._conn.execute(
-                    "PRAGMA table_info(embedding_units)"
-                ).fetchall()
+                row["name"] for row in self._conn.execute("PRAGMA table_info(embedding_units)").fetchall()
             }
             for name, type_, default_sql in V2_COLUMNS:
                 if name in existing_columns:
                     continue
-                self._conn.execute(
-                    f"ALTER TABLE embedding_units "
-                    f"ADD COLUMN {name} {type_} DEFAULT {default_sql}"
-                )
+                self._conn.execute(f"ALTER TABLE embedding_units ADD COLUMN {name} {type_} DEFAULT {default_sql}")
             # v2 config-aware index. Created inside the same lock so
             # it only runs after the columns it references exist.
             self._conn.execute(
@@ -192,16 +189,40 @@ class EmbeddingManifest:
             self._rollback_quietly()
             raise
 
+    def _relabel_legacy_model_ids(self) -> None:
+        """Idempotently rewrite legacy model stamps to ``MODEL_ID``
+        (#9228).
+
+        The vectors are unchanged (ADR-006 parity), so relabelling keeps
+        existing shards queryable and not stale under the current
+        ``EncoderConfig``. Takes the write lock only when a legacy row
+        exists.
+        """
+
+        placeholders = ", ".join("?" for _ in LEGACY_MODEL_IDS)
+        where = f"model IN ({placeholders})"
+        if (
+            self._conn.execute(f"SELECT 1 FROM embedding_units WHERE {where} LIMIT 1", LEGACY_MODEL_IDS).fetchone()
+            is None
+        ):
+            return
+
+        self._begin_immediate()
+        try:
+            self._conn.execute(
+                f"UPDATE embedding_units SET model = ? WHERE {where}",
+                (MODEL_ID, *LEGACY_MODEL_IDS),
+            )
+            self._conn.commit()
+        except Exception:
+            self._rollback_quietly()
+            raise
+
     def _is_schema_v2(self) -> bool:
         """Cheap check (no lock) — does ``embedding_units`` already
         carry every v2 column?"""
 
-        existing_columns = {
-            row["name"]
-            for row in self._conn.execute(
-                "PRAGMA table_info(embedding_units)"
-            ).fetchall()
-        }
+        existing_columns = {row["name"] for row in self._conn.execute("PRAGMA table_info(embedding_units)").fetchall()}
         return all(name in existing_columns for name, _, _ in V2_COLUMNS)
 
     def add_shard(
@@ -333,10 +354,7 @@ class EmbeddingManifest:
             """,
             (corpus,),
         ).fetchall()
-        return {
-            int(row["shard_id"]): (self._embeddings_dir / row["path"]).resolve()
-            for row in rows
-        }
+        return {int(row["shard_id"]): (self._embeddings_dir / row["path"]).resolve() for row in rows}
 
     def vacuum_orphaned_shards(self) -> int:
         self._begin_immediate()
@@ -730,4 +748,4 @@ def _row_to_unit(row: sqlite3.Row) -> UnitRow:
 
 def _chunked(items: list[str], *, size: int) -> Iterable[list[str]]:
     for index in range(0, len(items), size):
-        yield items[index:index + size]
+        yield items[index : index + size]

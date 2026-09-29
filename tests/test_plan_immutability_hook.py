@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.helpers.python import project_python
+
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -36,23 +38,8 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
 
 
 def _project_python() -> str:
-    """Return the Python interpreter that should invoke the hook.
-
-    Use the repository-local virtualenv explicitly so subprocess checks run
-    with the same pyenv-backed dependencies as project scripts.
-    """
-    local_python = REPO_ROOT / ".venv" / "bin" / "python"
-    if local_python.exists():
-        return str(local_python)
-
-    common_dir = subprocess.check_output(
-        ["git", "-C", str(REPO_ROOT), "rev-parse", "--git-common-dir"],
-        env=_clean_env(),
-        text=True,
-        timeout=30,
-    ).strip()
-    shared_python = Path(common_dir).resolve().parent / ".venv" / "bin" / "python"
-    return str(shared_python)
+    """Return the interpreter that should invoke the hook (the one running pytest)."""
+    return project_python()
 
 
 def _write_plan(path: Path, version: str, title: str) -> str:

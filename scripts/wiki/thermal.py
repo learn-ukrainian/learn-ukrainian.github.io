@@ -1,4 +1,4 @@
-"""Minimal macOS thermal-state helper for MLX backoff control."""
+"""Minimal macOS thermal-state helper for dense-encode backoff control."""
 
 from __future__ import annotations
 

@@ -263,7 +263,7 @@ class TypeSafeWordQualifier:
     def _get_vesum_conn(self) -> sqlite3.Connection | None:
         if self._vesum_conn is None and self.vesum_path.is_file():
             try:
-                self._vesum_conn = sqlite3.connect(str(self.vesum_path))
+                self._vesum_conn = sqlite3.connect(f"{self.vesum_path.resolve().as_uri()}?mode=ro", uri=True)
             except sqlite3.Error:
                 self._vesum_conn = None
         return self._vesum_conn

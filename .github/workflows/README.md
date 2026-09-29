@@ -12,6 +12,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 | `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". Concurrency keys by PR number (#8505). |
 | `hygiene.yml` | Advisory radon / prompt lint / postmortem / agent-config / scripts-root checks | PR | Composite `hygiene-checks` job (#4811 slot cut); not in CI Gate. |
 | `integration-sweep.yml` | Reports exact-head CF, CI, and merge-queue state for open PRs | Every 15 min / manual | Read-only job summary; the local merge-queue keeper (#8564) owns landing mutations. |
+| `cache-hygiene.yml` | Deletes dead Actions cache entries: CodeQL TRAP entries on main except the newest per language and version and those at an open PR's base commit, TRAP entries on other refs, superseded setup-uv entries on main after 24 h unread; deletes nothing unless the cache and open-PR listings are complete (#9101) | Every 2 h / manual | Rules and dry run: `python scripts/ci/cache_hygiene.py --repo <owner/name>` (add `--apply` to delete). Everything else is left alone. |
 | `security-audit.yml` | Advisory dependency-vuln report (`pip-audit` + `npm audit`) | PR / weekly | Report-only; visibility layer over the dependabot backlog. Does not block. |
 | `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |
 | `validate-yaml.yml` | YAML syntax / schema validation | PR / push | |

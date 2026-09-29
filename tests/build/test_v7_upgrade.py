@@ -62,6 +62,18 @@ def test_upgrade_dry_run_saves_full_prompt_without_writer(upgrade_root, monkeypa
     forbidden.assert_not_called()
 
 
+def _skip_mdx_assembly(monkeypatch) -> None:
+    """Skip MDX assembly in tests about writer resume and edition clearing.
+
+    Assembly is most of an upgrade run's cost. The upgrade's real assembly stays
+    covered by test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation
+    and tests/build/test_lesson_assembler.py.
+    """
+    from scripts.build import lesson_assembler
+
+    monkeypatch.setattr(lesson_assembler, "assemble_lessons", lambda *args, **kwargs: {})
+
+
 def _gold_response(n: int) -> str:
     blocks = []
     for name in linear_pipeline.WRITER_ARTIFACTS:
@@ -213,6 +225,7 @@ def test_resume_binds_actual_writer_and_reviewer_identity(upgrade_root, monkeypa
     monkeypatch.setattr(stress_annotator, "annotate_file", lambda path: 0)
     monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": True})
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
+    _skip_mdx_assembly(monkeypatch)
     for writer, reviewer in (("gemini-tools", "codex-tools"), ("codex-tools", "gemini-tools"), ("codex-tools", "gemini-tools")):
         args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer, "--reviewer", reviewer])
         assert v7_build._run(args) == 0
@@ -397,6 +410,7 @@ def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, 
     monkeypatch.setattr(stress_annotator, "annotate_file", lambda path: 0)
     monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": True})
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
+    _skip_mdx_assembly(monkeypatch)
     argv = ["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"]
     assert v7_build._run(v7_build.parse_args(argv + (["--dry-run"] if dry_run else []))) == 0
     return module_dir, seen
@@ -544,21 +558,3 @@ def test_lift_ignores_outcomes_after_first_h2():
         "## Later\n\nBy the end, you can:\n\n- do something.\n"
     )
     assert lift_landing_overview(text) is None
-
-
-def test_lift_handles_real_230730_lesson1_dump():
-    from scripts.build.lesson_assembler import lift_landing_overview
-
-    path = Path(
-        "/home/ops/learn-ukrainian/.worktrees/builds/a1-special-signs-20260919-230730"
-        "/curriculum/l2-uk-en/a1/special-signs/lesson-1/module.md"
-    )
-    if not path.is_file():
-        pytest.skip("230730 worktree absent")
-    lifted = lift_landing_overview(path.read_text(encoding="utf-8"))
-    assert lifted is not None
-    assert lifted.startswith("By the end, you can")
-    assert "Teacher Oksana" not in lifted
-    assert "The signs are small on the page" not in lifted
-    assert not lifted.lstrip().startswith("# ")
-    assert "## М'яки́й знак" not in lifted

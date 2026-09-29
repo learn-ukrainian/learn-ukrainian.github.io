@@ -20,12 +20,11 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
 from wiki.config import TRACK_WRITE_DOMAIN
 from wiki.diagnostics.retrieval_playback import normalize_text
 from wiki.sources_db import SOURCES_DB_PATH
-
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -41,7 +40,7 @@ DRAFT_TICKETS_DIR = REGISTRY_OUTPUT_DIR / "draft_tickets"
 A1_REPORT_PATH = PROJECT_ROOT / "docs" / "architecture" / "corpus-coverage-map-a1.md"
 
 DEFAULT_TRACKS = ("a1", "a2", "b1")
-DEFAULT_MODEL = "gpt-6-sol"
+DEFAULT_MODEL = "gpt-6.1-sol"
 CODEX_TIMEOUT_S = 300
 DEFAULT_CHUNKS_PER_PAGE = 1.4
 MAX_CONCEPTS_PER_ARTICLE = 15
@@ -652,7 +651,7 @@ def build_concept_prompt(track: str, slug: str, query_keywords: list[str], objec
 
 def run_codex_concept_extraction(prompt: str, model: str = DEFAULT_MODEL) -> dict[str, Any]:
     if model != DEFAULT_MODEL:
-        raise ValueError("Codex concept extraction requires gpt-6-sol")
+        raise ValueError("Codex concept extraction requires gpt-6.1-sol")
     schema = {
         "type": "object",
         "properties": {

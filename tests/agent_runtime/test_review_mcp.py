@@ -82,6 +82,18 @@ def _host_independent_umask() -> Iterator[None]:
         os.umask(old)
 
 
+@pytest.fixture(autouse=True)
+def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dispatch tests here are about review-attempt refusals, not host health.
+
+    Each dispatch otherwise runs the advisory venv and node_modules integrity
+    probes (about two seconds). They never block a dispatch and are covered by
+    tests/test_check_venv_integrity.py and tests/test_check_node_modules_integrity.py.
+    """
+    for name in ("_warn_venv_integrity", "_warn_node_modules_integrity"):
+        monkeypatch.setattr(delegate_cli, name, lambda: None)
+
+
 @pytest.fixture
 def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
@@ -296,7 +308,16 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
     assert "--review-attempt, --review-id, and --attempt-id must be used together" in captured.err
 
 
-def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, tmp_path: Path) -> None:
+def test_claude_adapter_command_line_contains_review_grant(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The CLI version gate is not under test here; without a local `claude` it
+    # probes `npx @anthropic-ai/claude-code@latest --version`. The gate is covered
+    # by tests/test_agent_runtime.py::test_claude_adapter_rejects_old_cli_version.
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        lambda _cmd_prefix: (2, 1, 116),
+    )
     review_plan = prepare_review_attempt(
         review_id="rev-cli-001",
         attempt_id="att-cli-001",

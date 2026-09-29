@@ -89,12 +89,6 @@ PUBLICATION_FILES = (
         "MIT",
         "license, attribution, and modification notices",
     ),
-    (
-        ROOT / "scripts/projects/ua_open_weight_eval/run_mlx_model.py",
-        "run_mlx_model.py",
-        "MIT",
-        "resumable source-only MLX open-weight runner",
-    ),
     (ROOT / "LICENSE", "LICENSE-MIT.txt", "MIT", "repository-authored byte license text"),
 )
 CASE_RIGHTS_RULES = [

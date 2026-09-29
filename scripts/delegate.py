@@ -13,7 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-sol]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6.1-sol]
         [--allow-merge] [--force-new]
 
     # Check status without blocking.
@@ -61,10 +61,19 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "stderr_excerpt": str | null,
         "returncode": int | null,
         "returncode_reason": str | null,
+        "require_review_verdict": bool,  # opt-in bridge review completion gate
+        "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
-        "peak_rss_mib": float | null                # terminal records; largest reaped child
+        "peak_rss_mib": float | null,               # terminal records; largest reaped child
+        "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
+        "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
+        "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
+        "leftovers_scan_error": str | absent,       # why the scan was unknown
+        "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
+        "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
+        "finalize_skipped_paths": [str] | absent    # changed files auto-finalize left out of its commit
     }
 
 Design notes:
@@ -113,6 +122,7 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import fnmatch
 import functools
 import hashlib
 import json
@@ -127,6 +137,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -169,6 +180,7 @@ from scripts.orchestration import (
     dispatch_isolation,
     reaper_lifecycle,
     task_record_store,
+    worker_leftovers,
     worktree_claims,
     worktree_prep,
 )
@@ -779,9 +791,34 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     Concurrency: a per-task lock serializes worker and probe writes. Each
     writer also uses a PID-suffixed tmp filename before ``os.replace``.
     """
+    if state.get("require_review_verdict"):
+        state = {
+            **state,
+            "failure_reason": _review_task_failure_reason(state) if state.get("status") == "failed" else None,
+        }
     state = _detach_read_only_checkout_snapshots(state)
     with task_state_lock(path):
         write_state_unlocked(path, state)
+
+
+def _review_task_failure_reason(state: dict[str, Any]) -> str:
+    """Give every failed verdict-required review a stable, queryable cause."""
+    if state.get("review_verdict_failure"):
+        return state["review_verdict_failure"]
+    if state.get("read_only_mutation_paths"):
+        return "read_only_checkout_mutation"
+    if state.get("read_only_checkout_snapshot_error"):
+        return "read_only_checkout_snapshot_failed"
+    if state.get("returncode") is None:
+        if state.get("returncode_reason") in {
+            "worktree preparation failed", "forward configuration failed", "worker process was not started",
+            "scoped worker startup was ambiguous; not relaunched",
+        }:
+            return "review_worker_not_started"
+        return "review_worker_returncode_missing"
+    if state["returncode"] != 0:
+        return "review_worker_nonzero_exit"
+    return "review_worker_reported_failure"
 
 
 def _append_dispatch_event(event: str, **fields: Any) -> None:
@@ -869,6 +906,158 @@ def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) ->
     if not path.is_absolute():
         path = (repo_root if repo_root is not None else _REPO_ROOT) / path
     return path.resolve()
+
+
+def _helper_worktree_path(raw_path: str | None, validated_path: Path | None) -> Path:
+    """Return the path a worktree helper operates on (#8775).
+
+    ``validated_path`` is the path dispatch resolved once at validation and
+    re-checked after taking the worktree lock. It is used exactly as given:
+    resolving it again would follow a symlink swapped in after that re-check.
+    Only ``raw_path``, from direct callers that have no validated path, is
+    resolved here.
+    """
+    if validated_path is not None:
+        return validated_path
+    if raw_path is None:
+        raise ValueError("a worktree helper needs raw_path or validated_path")
+    return _normalize_worktree_path(raw_path)
+
+
+# Caller-supplied paths reach the worker prompt, task records, and subprocess
+# cwd (#8775). Controls (Cc: C0, C1, DEL) and line/paragraph separators (Zl,
+# Zp) can start a new line in a prompt; format controls (Cf: bidi overrides
+# and isolates such as U+202E and U+2066, zero-width characters) can make the
+# displayed text differ from the stored one; lone surrogates (Cs) are bytes
+# that are not UTF-8. None belongs in a filesystem path this repo uses.
+_CALLER_PATH_FORBIDDEN_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Zl", "Zp"})
+
+
+def _caller_path_control_char_error(flag: str, raw: str, *, what: str = "the path") -> str | None:
+    """Refuse a ``--worktree``/``--cwd`` value that contains a control or format character.
+
+    The message names the rule and the offending code point, never the raw
+    value, so the refusal itself cannot carry injected text.
+    """
+    for offset, char in enumerate(raw):
+        if unicodedata.category(char) in _CALLER_PATH_FORBIDDEN_CATEGORIES:
+            return (
+                f"❌ {flag} refused: {what} contains control or format character U+{ord(char):04X} "
+                f"at offset {offset}; caller-supplied paths may not contain control characters, "
+                "format (bidi) characters, or line separators (#8775)."
+            )
+    return None
+
+
+def _validate_caller_path(flag: str, raw: str, *, resolve: Callable[[str], Path]) -> tuple[Path | None, str | None]:
+    """Check ``raw``, resolve it once, and check the resolved path (#8775).
+
+    A clean name can be a symlink to a path that is not clean, so both the
+    caller's string and the path it resolves to are checked. Returns the
+    resolved path, which dispatch uses for every later step instead of ``raw``.
+    """
+    error = _caller_path_control_char_error(flag, raw)
+    if error:
+        return None, error
+    try:
+        resolved = resolve(raw)
+    except (OSError, RuntimeError) as exc:
+        return None, f"❌ {flag} refused: the path cannot be resolved ({type(exc).__name__}) (#8775)."
+    error = _caller_path_control_char_error(flag, str(resolved), what="the resolved path")
+    if error:
+        return None, error
+    return resolved, None
+
+
+def _worktree_containment_anchor(agent: str, *, repo_root: Path) -> tuple[Path | None, str | None]:
+    """Return ``<resolved repo>/.worktrees/dispatch/<agent>`` when each level is a real directory.
+
+    Resolving the anchor would let a symlinked ``.worktrees``, ``dispatch`` or
+    agent directory move the whole subtree outside the repository, so each
+    level is checked with ``lstat`` instead: it must exist and be a directory,
+    not a symlink (#8775).
+    """
+    if agent in {"", ".", ".."} or "/" in agent or "\\" in agent:
+        return None, f"❌ --worktree refused: agent {agent!r} is not a single path component (#8775)."
+    anchor = repo_root.resolve()
+    for part in (".worktrees", "dispatch", agent):
+        anchor = anchor / part
+        try:
+            mode: int | None = os.lstat(anchor).st_mode
+        except OSError:
+            mode = None
+        if mode is None or stat.S_ISLNK(mode) or not stat.S_ISDIR(mode):
+            state = "is missing" if mode is None else "is a symlink" if stat.S_ISLNK(mode) else "is not a directory"
+            return None, (
+                f"❌ --worktree refused: {str(anchor)!r} {state}; an explicit --worktree PATH needs "
+                f".worktrees/dispatch/{agent}/ to be a real directory inside the target repository (#8775). "
+                "Pass bare `--worktree` to auto-create one."
+            )
+    return anchor, None
+
+
+def _validate_explicit_worktree(raw: str, *, agent: str, repo_root: Path) -> tuple[Path | None, str | None]:
+    """Validate an explicit ``--worktree PATH`` and return its resolved path (#8775).
+
+    The path must resolve, symlinks followed, strictly inside the
+    real-directory anchor ``<repo>/.worktrees/dispatch/<agent>/``, and neither
+    the caller's string nor the resolved path may contain a control or format
+    character. The message quotes only resolved paths via ``repr``.
+    """
+    candidate, error = _validate_caller_path(
+        "--worktree", raw, resolve=lambda value: _normalize_worktree_path(value, repo_root=repo_root)
+    )
+    if candidate is None:
+        return None, error
+    anchor, error = _worktree_containment_anchor(agent, repo_root=repo_root)
+    if anchor is None:
+        return None, error
+    if candidate != anchor and candidate.is_relative_to(anchor):
+        return candidate, None
+    return None, (
+        f"❌ --worktree refused: {str(candidate)!r} does not resolve under {str(anchor)!r}; "
+        f"an explicit --worktree PATH must be a directory inside .worktrees/dispatch/{agent}/ "
+        "of the target repository after following symlinks (#8775). "
+        "Pass bare `--worktree` to auto-create one."
+    )
+
+
+def _validated_path_changed_error(flag: str, validated: Path) -> str | None:
+    """Refuse when a validated path no longer resolves to itself (#8775).
+
+    ``validated`` was fully resolved at validation time, so it keeps resolving
+    to itself until one of its components is replaced by a symlink. Dispatch
+    calls this after taking the worktree lock and before the worktree helpers
+    run, and the helpers use ``validated`` as given without resolving it again
+    (:func:`_helper_worktree_path`), so a swap after validation is refused
+    instead of redirecting the lock, git operations, or the worker.
+
+    Scope: the prompt-injection vector of #8775 is closed by the character
+    check on the raw and resolved paths plus JSON quoting in the worker
+    prompt. Path containment is checked on real directories and re-checked
+    here, after the lock. A symlink swap in the remaining gap (after this
+    check, while git or the filesystem follows the path) needs write access
+    to a directory on ``validated``. Under ``.worktrees/dispatch/`` that is a
+    process running as the same user, which already holds every capability
+    the dispatcher has, so the race grants it nothing new; it is out of
+    scope. ``--cwd`` also accepts registered worktrees elsewhere, where write
+    access to any parent directory is enough to swap the worktree without
+    access to it. The out-of-scope argument holds there only when every
+    directory on the path is writable by the dispatching user alone.
+
+    ``--dry-run`` takes no lock: a ``--worktree`` dry run still calls this
+    check, and a ``--cwd`` dry run returns before calling it.
+    """
+    try:
+        current: Path | None = validated.resolve()
+    except (OSError, RuntimeError):
+        current = None
+    if current == validated:
+        return None
+    return (
+        f"❌ {flag} refused: {str(validated)!r} changed after validation (a component is now a symlink "
+        "or cannot be resolved); refusing to follow it (#8775)."
+    )
 
 
 def _resolve_output_schema(
@@ -2016,24 +2205,31 @@ def _ensure_sibling_repo_worktree(
     repo_root: Path,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str = "main",
     dry_run: bool = False,
     run_nonce: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
     Public-primary helpers (sparse checkout, data symlinks, mirror-aware
     ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
     fetch + ``git worktree add`` path so private product/infra trees are not
-    forced through public monorepo provisioning (#672 P2.1).
+    forced through public monorepo provisioning (#672 P2.1). ``validated_path``,
+    when given, is used as is and never resolved again (#8775).
     """
     root = Path(repo_root).resolve()
-    path = Path(raw_path).expanduser()
-    if not path.is_absolute():
-        path = root / path
-    worktree_path = path.resolve()
+    if validated_path is not None:
+        worktree_path = validated_path
+    elif raw_path is None:
+        raise ValueError("a worktree helper needs raw_path or validated_path")
+    else:
+        path = Path(raw_path).expanduser()
+        if not path.is_absolute():
+            path = root / path
+        worktree_path = path.resolve()
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
@@ -2273,6 +2469,10 @@ _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_NO_COMMITS_REASON = "no_commits_no_changes"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
 _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
+# Auto-finalize refusals (#8991): every deliverable change is outside the
+# owned paths, or the task declared no --owned-path at all.
+_AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
+_AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
@@ -4556,6 +4756,13 @@ class AutoFinalizeResult:
     pr_url: str | None = None
     error: str | None = None
     changed_files: tuple[str, ...] = ()
+    # The task's declared --owned-path values, or None when it declared none (#8991).
+    owned_paths: tuple[str, ...] | None = None
+    # Changed files outside the owned paths: never staged, left in the tree.
+    skipped_paths: tuple[str, ...] = ()
+    # Additions and deletions that could be one move across the owned-path
+    # boundary (an owned side plus an opposite outside side): all skipped.
+    cross_boundary_moves: tuple[str, ...] = ()
 
 
 def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -4768,6 +4975,10 @@ _READ_ONLY_RUNTIME_STATE_SUFFIXES = (
     ".sqlite3-shm",
     ".sqlite3-wal",
 )
+_READ_ONLY_PACKAGE_BUILD_PREFIXES = (
+    "packages/v4-runtime/build",
+    "packages/v4-runtime/src/learn_ukrainian_v4_runtime.egg-info",
+)
 _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES = frozenset({"??", "!!"})
 # Dispatch sandboxes live at ``.worktrees/dispatch/<agent>/<task>/`` (layout A).
 # Concurrent ``git worktree add`` under that prefix must not false-fail a
@@ -4825,10 +5036,19 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     if _is_read_only_runtime_telemetry_path(path):
         return True
     normalized = _normalize_read_only_relpath(path)
+    # `pip`/setuptools can regenerate these Git-ignored package outputs while
+    # a reviewer runs tests. They are build residue, not review edits (#9213).
+    if _is_read_only_package_build_path(normalized):
+        return True
     parts = tuple(part for part in normalized.split("/") if part and part != ".")
     if any(part in _READ_ONLY_RUNTIME_STATE_DIR_NAMES for part in parts):
         return True
     return any(normalized.endswith(suffix) for suffix in _READ_ONLY_RUNTIME_STATE_SUFFIXES)
+
+
+def _is_read_only_package_build_path(path: str) -> bool:
+    normalized = _normalize_read_only_relpath(path)
+    return any(normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES)
 
 
 def _read_only_dispatch_sandbox_root(path: str) -> str | None:
@@ -4885,6 +5105,14 @@ def _is_read_only_runtime_state_exemption(
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
     if not _is_read_only_runtime_state_path(path):
         return False
+    if _is_read_only_package_build_path(path):
+        # The package exemption is for Git-ignored build products only. An
+        # ordinary untracked scratch file under this tree is still a leak.
+        return (
+            before_state in (None, "!!")
+            and after_state in (None, "!!")
+            and (before_state == "!!" or after_state == "!!")
+        )
     return _is_read_only_untracked_or_ignored_status(before_state) and _is_read_only_untracked_or_ignored_status(
         after_state
     )
@@ -4970,8 +5198,10 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     try:
+        # --no-renames lists both sides of a rename, so an owned-path filter
+        # never commits the new path while leaving the old one's deletion out.
         tracked = subprocess.run(
-            ["git", "diff", "--name-only", "-z", "HEAD", "--"],
+            ["git", "diff", "--no-renames", "--name-only", "-z", "HEAD", "--"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5015,6 +5245,142 @@ def _is_disposable_auto_finalize_path(path: str) -> bool:
 def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
     """Return whether auto-finalization would publish only disposable residue."""
     return bool(changed_files) and all(_is_disposable_auto_finalize_path(path) for path in changed_files)
+
+
+def _declared_owned_paths(raw: object) -> tuple[str, ...] | None:
+    """The task record's ``owned_paths`` (its ``--owned-path`` values), or None."""
+    if not isinstance(raw, (list, tuple)):
+        return None
+    paths = tuple(str(item) for item in raw if isinstance(item, str) and item.strip())
+    return paths or None
+
+
+def _owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
+    """How one ``--owned-path`` claim matches a repo-relative path; None when it owns nothing.
+
+    Claims are read the way the write-path admission guard reads them
+    (:func:`scripts.guardrails.delegate_ownership.normalize_claim`): a plain
+    path owns itself and everything below it, ``dir/`` and ``dir/**`` own the
+    subtree, and a claim with other wildcards is a case-sensitive glob. An
+    empty, ``.`` or absolute claim owns nothing, nor does one with a ``..``
+    segment anywhere (``scripts/../docs`` would own ``docs``). A glob must
+    start with a literal top-level name: ``fnmatch``'s ``*`` also matches
+    ``/``, so ``**``, ``./**``, ``*``, ``*/**`` or ``*.py`` would own the whole
+    repository or every top-level entry.
+    """
+    try:
+        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import ClaimKind, normalize_claim  # type: ignore
+
+    if ".." in (raw or "").strip().replace("\\", "/").split("/"):
+        return None
+    claim = normalize_claim(raw)
+    if claim.kind is not ClaimKind.UNKNOWN:
+        norm = claim.norm
+        return lambda path: path == norm or path.startswith(norm + "/")
+    pattern = claim.norm
+    while pattern.startswith("./"):
+        pattern = pattern[2:]
+    segments = pattern.split("/")
+    if not any(ch in pattern for ch in "*?[") or any(segment in {"", "."} for segment in segments):
+        return None
+    if any(ch in segments[0] for ch in "*?["):
+        return None
+    return lambda path: fnmatch.fnmatchcase(path, pattern)
+
+
+def _owned_path_errors(values: Sequence[str] | None) -> list[str]:
+    """``--owned-path`` values that could never own a file; dispatch refuses them."""
+    return [value for value in values or () if _owned_path_matcher(value) is None]
+
+
+def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
+    """Whether a repo-relative changed ``path`` falls under a declared owned path."""
+    return any(matcher(path) for raw in owned_paths if (matcher := _owned_path_matcher(raw)) is not None)
+
+
+def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
+
+    Untracked files are marked intent-to-add in a throwaway copy of the index
+    (no file content is written to the object store) so they show up as
+    additions; the real index is never touched. Renames are not detected:
+    git pairs a move only above a similarity threshold, so a caller that
+    must not split a move treats every deletion as a possible source of every
+    addition.
+    """
+    env = _sanitized_git_env()
+    try:
+        index_proc = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+        if index_proc.returncode != 0:
+            return None
+        with tempfile.TemporaryDirectory(prefix="lu-finalize-index-") as scratch:
+            scratch_index = Path(scratch) / "index"
+            real_index = Path(index_proc.stdout.strip())
+            if real_index.is_file():
+                shutil.copyfile(real_index, scratch_index)
+            scratch_env = {**env, "GIT_INDEX_FILE": str(scratch_index)}
+            add_proc = subprocess.run(
+                ["git", "add", "-A", "--intent-to-add"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=scratch_env,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+            if add_proc.returncode != 0:
+                return None
+            diff_proc = subprocess.run(
+                ["git", "diff", "--no-renames", "--name-status", "-z", "HEAD", "--"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=scratch_env,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if diff_proc.returncode != 0:
+        return None
+    fields = diff_proc.stdout.split("\0")
+    added: list[str] = []
+    deleted: list[str] = []
+    for index in range(0, len(fields) - 1, 2):
+        status, path = fields[index], fields[index + 1]
+        if not status or not path:
+            break
+        if status == "A":
+            added.append(path)
+        elif status == "D":
+            deleted.append(path)
+    return tuple(added), tuple(deleted)
+
+
+def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
+    """Additions and deletions that could be one move across the owned-path boundary.
+
+    Every deletion is a possible source of every addition, so an owned
+    addition is paired with any outside deletion and an owned deletion with
+    any outside addition; both sides of each pairing are returned.
+    """
+    moves: set[str] = set()
+    for sources, targets in ((deleted, added), (added, deleted)):
+        outside = [path for path in sources if not _path_is_owned(path, owned)]
+        inside = [path for path in targets if _path_is_owned(path, owned)]
+        if outside and inside:
+            moves.update(outside, inside)
+    return moves
 
 
 def _current_branch(worktree: Path) -> str | None:
@@ -5177,9 +5543,30 @@ def _auto_finalize_dirty_worktree(
     branch: str | None,
     base_branch: str,
     open_pr: bool = False,
+    owned_paths: object = None,
 ) -> AutoFinalizeResult:
-    """Stage, commit, and push a cleanly exited dirty dispatch."""
-    changed_files = _auto_finalize_changed_files(worktree)
+    """Stage, commit, and push the owned part of a cleanly exited dirty dispatch.
+
+    ``owned_paths`` is the task record's ``owned_paths`` list, written at
+    dispatch from the task's explicit ``--owned-path`` values (#8991). Only
+    changed files under them are staged and committed; the rest stay
+    uncommitted in the tree and come back as ``skipped_paths``. A move across
+    the owned-path boundary is never split, whatever git's rename similarity
+    says: when any file outside the owned paths was deleted, no owned
+    addition is committed, and when any outside file was added, no owned
+    deletion is. Those paths are listed in ``cross_boundary_moves``.
+    A task that declared no owned paths gets no commit at all
+    (``no_owned_paths_declared``).
+    """
+    owned = _declared_owned_paths(owned_paths)
+    all_changed = _auto_finalize_changed_files(worktree)
+    changed_files: tuple[str, ...] = ()
+    skipped: tuple[str, ...] = ()
+    moves: tuple[str, ...] = ()
+
+    def _result(**fields: Any) -> AutoFinalizeResult:
+        return AutoFinalizeResult(owned_paths=owned, skipped_paths=skipped, cross_boundary_moves=moves, **fields)
+
     try:
         worktree_proc = subprocess.run(
             ["git", "rev-parse", "--is-inside-work-tree"],
@@ -5191,30 +5578,42 @@ def _auto_finalize_dirty_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error="not a git worktree",
             changed_files=changed_files,
         )
     if worktree_proc.returncode != 0 or (worktree_proc.stdout or "").strip() != "true":
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error="not a git worktree",
             changed_files=changed_files,
         )
 
-    if not changed_files:
-        return AutoFinalizeResult(ok=False, error="clean-tree")
-    if _auto_finalize_is_junk_only(changed_files):
-        return AutoFinalizeResult(
+    if not all_changed:
+        return _result(ok=False, error="clean-tree")
+    if _auto_finalize_is_junk_only(all_changed):
+        return _result(
             ok=False,
             error=_NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
-            changed_files=changed_files,
+            changed_files=all_changed,
         )
+    if owned is None:
+        skipped = all_changed
+        return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
+    added_deleted = _auto_finalize_additions_deletions(worktree)
+    if added_deleted is None:
+        return _result(ok=False, error="move detection failed; nothing committed")
+    moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
+    changed_files = tuple(path for path in all_changed if path not in moves and _path_is_owned(path, owned))
+    skipped = tuple(path for path in all_changed if path not in changed_files)
+    if not changed_files or _auto_finalize_is_junk_only(changed_files):
+        # Real work exists only outside the declared scope: a human decides.
+        return _result(ok=False, error=_AUTO_FINALIZE_NOTHING_OWNED_REASON, changed_files=changed_files)
 
     resolved_branch = branch or _current_branch(worktree)
     if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error=f"unsafe or unresolved branch {resolved_branch!r}",
             changed_files=changed_files,
@@ -5229,11 +5628,18 @@ def _auto_finalize_dirty_worktree(
         f"Agent: {agent}"
     )
 
+    # git reads the exact file list from stdin as literal pathspecs; ``commit
+    # --only`` then leaves anything the worker had already staged outside that
+    # list out of the commit.
+    scoped_input = "\0".join(changed_files)
+    scoped_args = ["--pathspec-from-file=-", "--pathspec-file-nul"]
+    git_prefix = ["git", "--literal-pathspecs"]
     commit_sha: str | None = None
     try:
         add_proc = subprocess.run(
-            ["git", "add", "-A"],
+            [*git_prefix, "add", "-A", *scoped_args],
             cwd=worktree,
+            input=scoped_input,
             capture_output=True,
             text=True,
             check=False,
@@ -5241,7 +5647,7 @@ def _auto_finalize_dirty_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if add_proc.returncode != 0:
-            return AutoFinalizeResult(
+            return _result(
                 ok=False,
                 error=f"git add failed: {_format_process_failure(add_proc)}",
                 changed_files=changed_files,
@@ -5249,8 +5655,10 @@ def _auto_finalize_dirty_worktree(
 
         commit_proc = subprocess.run(
             [
-                "git",
+                *git_prefix,
                 "commit",
+                "--only",
+                *scoped_args,
                 "-m",
                 subject,
                 "-m",
@@ -5259,6 +5667,7 @@ def _auto_finalize_dirty_worktree(
                 _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
+            input=scoped_input,
             capture_output=True,
             text=True,
             check=False,
@@ -5268,15 +5677,16 @@ def _auto_finalize_dirty_worktree(
         if commit_proc.returncode != 0:
             with contextlib.suppress(OSError, subprocess.TimeoutExpired):
                 subprocess.run(
-                    ["git", "restore", "--staged", "--", *changed_files],
+                    [*git_prefix, "restore", "--staged", *scoped_args],
                     cwd=worktree,
+                    input=scoped_input,
                     capture_output=True,
                     text=True,
                     check=False,
                     env=_sanitized_git_env(),
                     timeout=DEFAULT_GIT_TIMEOUT_S,
                 )
-            return AutoFinalizeResult(
+            return _result(
                 ok=False,
                 error=f"git commit failed: {_format_process_failure(commit_proc)}",
                 changed_files=changed_files,
@@ -5304,7 +5714,7 @@ def _auto_finalize_dirty_worktree(
                     error = f"{error}; git reset failed: {_format_process_failure(reset_proc)}"
                 else:
                     commit_sha = None
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             commit_sha=commit_sha,
             error=error,
@@ -5327,9 +5737,9 @@ def _auto_finalize_dirty_worktree(
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             # The commit is already pushed. Never soft-reset it after a PR error.
-            return AutoFinalizeResult(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
+            return _result(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
 
-    return AutoFinalizeResult(
+    return _result(
         ok=True,
         commit_sha=commit_sha,
         pr_url=pr_url,
@@ -5696,12 +6106,37 @@ def _remove_dispatch_worktree(
     return {**removal.as_record(), "pr": None}
 
 
+def _stop_worker_background_jobs(task_record: Mapping[str, Any], *, task_id: str) -> tuple[bool, str]:
+    """Stop a worker's possibly live background jobs; ``(ok, refusal detail)``.
+
+    The scope comes from the task record only when it matches the task's
+    launch identity (:func:`worker_leftovers.scope_from_record`).
+    """
+    scope, refusal = worker_leftovers.scope_from_record(task_record, task_id=task_id)
+    if refusal is not None:
+        return (
+            False,
+            f"background jobs may be alive but the recorded scope is refused ({refusal}); refusing worktree removal",
+        )
+    if scope is None:
+        return True, ""
+    try:
+        stopped = worker_leftovers.stop_leftovers(scope, reader=_worker_process_reader())
+    except Exception as exc:
+        return False, f"background jobs could not be stopped ({type(exc).__name__}: {exc}); refusing worktree removal"
+    if stopped.ok:
+        return True, ""
+    survivors = ", ".join(str(proc.pid) for proc in stopped.survivors) or "unknown"
+    return False, f"background jobs could not be stopped ({stopped.error}; pids {survivors}); refusing worktree removal"
+
+
 def _settle_worktree_reap(
     worktree: Path,
     *,
     created_by_this_dispatch: bool | None,
     settling_task_id: str,
     lock_timeout_s: float | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Remove a settled checkout this dispatch created and keep its branch ref.
 
@@ -5709,15 +6144,27 @@ def _settle_worktree_reap(
     read-only review checkouts this path exists to drop. Removal goes through
     :func:`_remove_dispatch_worktree` with settle's ownership proof and is
     worktree-only: ``git branch`` is never invoked, and a missing branch ref
-    after removal is an error. This never raises.
+    after removal is an error. ``task_record`` is the settling task's record:
+    when its exit scan says jobs may be alive, once ownership is proven those
+    processes are stopped inside the worker's own scope before removal, and
+    removal is refused if any survive or the scope is refused (#8991). This
+    never raises.
     """
+
+    def releasable() -> tuple[bool, str]:
+        ok, detail = _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch)
+        if not ok or task_record is None:
+            return ok, detail
+        stopped, refusal = _stop_worker_background_jobs(task_record, task_id=settling_task_id)
+        return (True, detail) if stopped else (False, refusal)
+
     # Resolved before removal: the checkout's ``.git`` pointer is gone after it.
     owning_repo = worktree_claims.owning_repo_root(worktree, default=_REPO_ROOT)
     removal = _remove_dispatch_worktree(
         worktree,
         reason="settled clean worktree; branch ref kept",
         owner_task_id=settling_task_id,
-        releasable=lambda: _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch),
+        releasable=releasable,
         force=True,
         lock_timeout_s=lock_timeout_s,
     )
@@ -6442,21 +6889,23 @@ def _resolve_worktree_base_sha(
     *,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
     pinned_head_sha: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
     A dispatch receipt and its worker must bind the same checkout state. This
     helper performs moving-ref validation first, then returns the SHA passed to
     :func:`_ensure_worktree`. The latter must not fetch, rebase, or dereference
-    a branch again when the SHA is supplied.
+    a branch again when the SHA is supplied. ``validated_path``, when given, is
+    used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
     """
-    worktree_path = _normalize_worktree_path(raw_path)
+    worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
     if detached and worktree_path.exists():
         raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
@@ -6560,7 +7009,7 @@ def _ensure_worktree(
     *,
     agent: str,
     task_id: str,
-    raw_path: str,
+    raw_path: str | None = None,
     base: str = "main",
     branch: str | None = None,
     resolved_base_sha: str | None = None,
@@ -6569,11 +7018,14 @@ def _ensure_worktree(
     sparse_include: Sequence[str] = (),
     run_nonce: str | None = None,
     detached: bool = False,
+    validated_path: Path | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
-    is recorded under (see :func:`_add_reserved_worktree`).
+    is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
+    when given, is used as is and never resolved again (#8775,
+    :func:`_helper_worktree_path`).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -6585,7 +7037,7 @@ def _ensure_worktree(
       than created.
     - ``sparse``: sparse-checkout profile telemetry (when applied).
     """
-    worktree_path = _normalize_worktree_path(raw_path)
+    worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
     if detached and requested_branch:
         raise ValueError("detached worktree cannot attach a branch")
@@ -6853,9 +7305,12 @@ def _augment_prompt_with_worktree(
             "Run at most the specific tests that reproduce a finding you are checking.\n"
             "Cite CI run ids for suite results.\n"
         )
+    # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
+    # if an unvalidated path ever reaches this block.
     return (
         "[delegate worktree]\n"
-        f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
+        "Run all file edits, tests, and git commands inside this worktree "
+        f"(JSON-quoted path): {json.dumps(str(worktree_path))}\n"
         "Do not switch branches in the main checkout.\n"
         # #5803 follow-up: remove the workflow reason to visit the primary.
         # A linked worktree shares the canonical `origin` remote, so fresh
@@ -7066,6 +7521,63 @@ def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
     from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
 
     return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
+
+
+# Children that exit on their own right after the CLI (a stdio MCP server
+# reading EOF) get this long before they count as background jobs.
+_BACKGROUND_JOBS_SETTLE_S = 5.0
+
+
+def _worker_process_reader() -> worker_leftovers.ProcessReader:
+    """Seam for tests: the live ``/proc`` and cgroup reader."""
+    return worker_leftovers.ProcFsReader()
+
+
+def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worker_leftovers.ExitScan | None:
+    """Whether processes of this worker outlived its CLI (#8991); None when not checked.
+
+    Runs inside the detached worker, so only records carrying the
+    ``launch_mode`` that spawn wrote are checked: a foreground or test run has
+    no scope or session of its own to inspect. The scope's ``cgroup.procs``
+    (or, on the Popen fallback, the task's environment marker and the worker's
+    session) bound the scan. A headless session cannot be woken by a
+    background-task notification, so whatever is still running is unfinished
+    work, and a scan that could not read everything it needed is ``unknown``,
+    never ``clear``. Never raises.
+    """
+    launch_mode = state.get("launch_mode")
+    if launch_mode not in {dispatch_isolation.LAUNCH_SCOPE, dispatch_isolation.LAUNCH_FALLBACK}:
+        return None
+
+    def recorded(key: str) -> str | None:
+        value = state.get(key)
+        return value if isinstance(value, str) and value else None
+
+    scope = worker_leftovers.WorkerScope(
+        task_id=task_id,
+        launch_mode=str(launch_mode),
+        unit=recorded("launch_unit") if launch_mode == dispatch_isolation.LAUNCH_SCOPE else None,
+        run_nonce=recorded("run_nonce"),
+    )
+    try:
+        reader = _worker_process_reader()
+        scope = worker_leftovers.worker_scope_at_exit(
+            task_id=task_id,
+            launch_mode=str(launch_mode),
+            launch_unit=recorded("launch_unit"),
+            run_nonce=recorded("run_nonce"),
+            reader=reader,
+        )
+        scan = worker_leftovers.exit_scan(scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S)
+    except Exception as exc:
+        scan = worker_leftovers.ExitScan(
+            status=worker_leftovers.SCAN_UNKNOWN, scope=scope, error=f"{type(exc).__name__}: {exc}"[:300]
+        )
+    if scan.status == worker_leftovers.SCAN_UNKNOWN:
+        print(
+            f"[delegate] WARNING: background-job check could not read the worker scope: {scan.error}", file=sys.stderr
+        )
+    return scan
 
 
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
@@ -7350,6 +7862,8 @@ def _run_worker(
     pre_spawn_failure = False
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
+    leftovers_scan: worker_leftovers.ExitScan | None = None
+    leftovers_unconfirmed = False
     telemetry_settled = False
     rescue_status: str | None = None
     cursor_mcp_path: Path | None = None
@@ -7595,8 +8109,20 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        final_state["require_review_verdict"] = require_review_verdict
+        final_state["review_verdict_failure"] = None
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
+
+        # A headless worker that ended its turn while its own background jobs
+        # still run has not finished (#8991): record them before anything
+        # reads the worktree, so no finalize step treats it as settled. A scan
+        # that could not prove nothing is left counts the same way.
+        if not pre_spawn_failure:
+            leftovers_scan = _background_jobs_at_exit(final_state, task_id=task_id)
+        if leftovers_scan is not None:
+            final_state.update(leftovers_scan.record_fields())
+            leftovers_unconfirmed = leftovers_scan.unconfirmed
 
         if (
             strict_mcp_config
@@ -7735,7 +8261,7 @@ def _run_worker(
                 # the task for finalization rather than letting it settle as ``done``.
                 # A worker cut off mid-work (#8502) leaves unfinished edits even
                 # when it had pushed earlier commits: surface them, never ``done``.
-                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                run_incomplete = _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
                 if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
@@ -7781,13 +8307,21 @@ def _run_worker(
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
+                        owned_paths=final_state.get("owned_paths"),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
-                    if auto_finalize.ok:
+                    if auto_finalize.ok and not auto_finalize.skipped_paths:
                         needs_finalize = False
                         ok_outcome = True
                         final_status = "done"
+                    elif auto_finalize.ok:
+                        # Owned work is committed and pushed, but changes outside
+                        # the owned paths are still in the tree: a human decides.
+                        finalize_error = (
+                            f"{len(auto_finalize.skipped_paths)} changed path(s) outside the owned paths "
+                            "left uncommitted (finalize_skipped_paths)"
+                        )
                     elif auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
                         # A dirty tree with only known scratch residue has no
                         # user-visible deliverable. Refuse before staging so it
@@ -7801,6 +8335,11 @@ def _run_worker(
             finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
             # Unknown telemetry cannot prove the work was committed, so surface
             # the task for a human instead of settling it as done.
+            needs_finalize = True
+        # Live background jobs, or a scan that could not rule them out, make any
+        # run unconfirmed (#8991), read-only included, even when its tree is
+        # clean and pushed: the jobs may still be producing the result.
+        if leftovers_unconfirmed:
             needs_finalize = True
         # Either way the verdict is now measured rather than assumed, so an
         # interrupt below must persist it as-is instead of forcing attention
@@ -7844,8 +8383,12 @@ def _run_worker(
             and not needs_finalize
             and no_deliverable_reason is None
         ):
-            no_deliverable_reason = _review_verdict_failure_reason(response)
-            no_deliverable = no_deliverable_reason is not None
+            review_verdict_failure = _review_verdict_failure_reason(response)
+            if review_verdict_failure is not None:
+                final_state["review_verdict_failure"] = review_verdict_failure
+                final_status = "failed"
+                ok_outcome = False
+                stderr_excerpt = review_verdict_failure
 
         if pre_spawn_failure:
             needs_finalize = False
@@ -7858,6 +8401,9 @@ def _run_worker(
             ok_outcome = False
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+        if leftovers_scan is not None and leftovers_scan.reason and final_status == "needs_finalize":
+            reason = leftovers_scan.reason
+            last_error = f"{reason}; {last_error}" if last_error else reason
         if read_only_mutation_paths:
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
             # Never REPLACE a real failure with the guard diagnostic (#7124):
@@ -7916,8 +8462,11 @@ def _run_worker(
             # Honour a verdict the telemetry already reached; fail closed only
             # when the interrupt beat the measurement to it — and only for modes
             # that can leave work behind, so an interrupted read-only review is
-            # not dressed up as a dispatch needing manual finalization.
-            interrupted_needs_finalize = needs_finalize if telemetry_settled else mode in _WRITE_CAPABLE_MODES
+            # not dressed up as a dispatch needing manual finalization — unless
+            # its own background jobs may still be running (#8991).
+            interrupted_needs_finalize = (
+                needs_finalize if telemetry_settled else (mode in _WRITE_CAPABLE_MODES or leftovers_unconfirmed)
+            )
             # The interrupt may have landed before classification ran, so derive
             # the outcome from the runtime flags rather than persisting an empty
             # status, and apply the same return-code invariant the normal path
@@ -7992,6 +8541,7 @@ def _run_worker(
             Path(worktree_path),
             created_by_this_dispatch=worktree_created_by_dispatch,
             settling_task_id=task_id,
+            task_record=final_state,
         )
 
     usage_record = getattr(result, "usage_record", None)
@@ -8044,12 +8594,17 @@ def _run_worker(
                     "pr_url": auto_finalize.pr_url,
                     "error": auto_finalize.error,
                     "changed_files": list(auto_finalize.changed_files),
+                    "owned_paths": (list(auto_finalize.owned_paths) if auto_finalize.owned_paths is not None else None),
+                    "owned_paths_declared": auto_finalize.owned_paths is not None,
+                    "cross_boundary_moves": list(auto_finalize.cross_boundary_moves),
                 }
                 if auto_finalize is not None
                 else None
             ),
         }
     )
+    if auto_finalize is not None:
+        final_state["finalize_skipped_paths"] = list(auto_finalize.skipped_paths)
     _write_state_atomic(state_path, final_state)
     if worktree_path:
         print(
@@ -8219,6 +8774,7 @@ def _record_worktree_prep_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    require_review_verdict: bool = False,
     returncode_reason: str = "worktree preparation failed",
     worktree_prep_cleanup: dict[str, Any] | None = None,
     worktree_prep: dict[str, Any] | None = None,
@@ -8260,6 +8816,7 @@ def _record_worktree_prep_failure(
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
         "allow_merge": False,
+        "require_review_verdict": require_review_verdict,
         "mode": mode,
         "cwd": wt_path_str or str(_REPO_ROOT),
         "worktree_path": wt_path_str,
@@ -8342,6 +8899,7 @@ def _record_forward_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    require_review_verdict: bool = False,
     substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when VPS forward dispatch is refused."""
@@ -8369,6 +8927,7 @@ def _record_forward_failure(
         silence_timeout=silence_timeout,
         initial_response_timeout=initial_response_timeout,
         max_budget_usd=max_budget_usd,
+        require_review_verdict=require_review_verdict,
         returncode_reason="forward configuration failed",
         substitution=substitution,
     )
@@ -8576,6 +9135,47 @@ def _dispatch(
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
+    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
+    from scripts.review.model_catalog import retired_model_refusal
+
+    # A catalog-retired model is refused before any check can run a command.
+    retired_refusal = retired_model_refusal(getattr(args, "model", None))
+    if retired_refusal:
+        print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
+        return 2
+
+    # #8775: validate caller-supplied paths once, before the DoR check, PR
+    # resolution, or anything else that can run an external command, and
+    # before any use reaches a check, a subprocess cwd, a task record, or the
+    # worker prompt. Every later step uses the resolved paths returned here,
+    # never the caller's strings. An explicit --worktree PATH must stay inside
+    # the dispatching agent's own dispatch subtree; --cwd keeps its documented
+    # read-only-primary and sibling-repo flows. Read-only git lookups between
+    # here and the worktree lock (the write-mode worktree check, the cursor
+    # review check, --preflight-triage) may run git in the validated path; the
+    # path is re-checked after the lock, before any step that changes it.
+    worktree_arg = getattr(args, "worktree", None)
+    validated_worktree: Path | None = None
+    validated_cwd: Path | None = None
+    if worktree_arg and worktree_arg != "auto":
+        validated_worktree, path_error = _validate_explicit_worktree(
+            worktree_arg,
+            agent=resolve_retired_agent_alias(args.agent) or args.agent,
+            repo_root=target_repo_root,
+        )
+        if path_error:
+            print(path_error, file=sys.stderr)
+            return 2
+        worktree_arg = str(validated_worktree)
+    if args.cwd:
+        validated_cwd, path_error = _validate_caller_path("--cwd", args.cwd, resolve=_resolve_cwd_path)
+        if path_error:
+            print(path_error, file=sys.stderr)
+            return 2
+        args.cwd = str(validated_cwd)
+
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
     early_prompt: str | None = None
@@ -8600,15 +9200,7 @@ def _dispatch(
             print(dor_error, file=sys.stderr)
             return 2
 
-    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
-    from agent_runtime.routes import is_retired_gpt56_model
-    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-
     task_id = args.task_id
-    if is_retired_gpt56_model(getattr(args, "model", None)):
-        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
-        return 2
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -8724,7 +9316,16 @@ def _dispatch(
             )
             return 2
 
-    worktree_arg = getattr(args, "worktree", None)
+    invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
+    if invalid_owned_paths:
+        print(
+            "❌ --owned-path must be a repo-relative path or narrow glob (not empty, '.', absolute, "
+            "a '..' segment, or a glob starting with a wildcard): "
+            + ", ".join(repr(value) for value in invalid_owned_paths),
+            file=sys.stderr,
+        )
+        return 2
+
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
@@ -8809,15 +9410,6 @@ def _dispatch(
     if acp_runtime_error:
         print(acp_runtime_error, file=sys.stderr)
         return 2
-
-    if args.mode == "read-only" and worktree_arg and worktree_arg != "auto":
-        candidate = _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
-        primary_root = target_repo_root.resolve()
-        if candidate == primary_root or (
-            candidate.is_relative_to(primary_root) and not candidate.is_relative_to(primary_root / ".worktrees")
-        ):
-            print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
-            return 2
 
     # Write-capable modes (workspace-write / danger) must resolve to a verified
     # added worktree — never the primary checkout (#4445). An explicit read-only
@@ -9169,8 +9761,8 @@ def _dispatch(
             has_worktree = False
             if worktree_arg:
                 has_worktree = True
-            elif args.cwd:
-                candidate_cwd = _resolve_cwd_path(args.cwd)
+            elif validated_cwd is not None:
+                candidate_cwd = validated_cwd
                 if _resolve_verified_worktree_path(candidate_cwd):
                     has_worktree = True
             if not has_worktree:
@@ -9276,6 +9868,7 @@ def _dispatch(
                             args, "initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S
                         ),
                         max_budget_usd=getattr(args, "max_budget_usd", None),
+                        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                         output_schema_path=getattr(args, "output_schema", None),
                         substitution=agent_substitution,
                     )
@@ -9332,13 +9925,22 @@ def _dispatch(
                 # A removal that finished first leaves a missing path, which the
                 # checks below treat as a fresh worktree (#8610).
                 worktree_locks.enter_context(
-                    worktree_lock(_normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root))
+                    worktree_lock(
+                        validated_worktree
+                        or _normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root)
+                    )
                 )
+            # #8775: an explicit path is locked as validated, then re-checked
+            # before the base-SHA and worktree helpers run; they use it as is.
+            changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
+            if changed_error:
+                raise ValueError(changed_error.removeprefix("❌ "))
             if fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_worktree_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9377,6 +9979,7 @@ def _dispatch(
                     silence_timeout=silence_timeout,
                     initial_response_timeout=initial_response_timeout,
                     max_budget_usd=max_budget_usd,
+                    require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                     substitution=agent_substitution,
                 )
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
@@ -9462,6 +10065,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9473,8 +10077,8 @@ def _dispatch(
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
-        elif args.cwd:
-            candidate_cwd = _resolve_cwd_path(args.cwd)
+        elif validated_cwd is not None:
+            candidate_cwd = validated_cwd
             resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
             if resolved_wt:
                 dry_run_worktree = resolved_wt
@@ -9633,8 +10237,8 @@ def _dispatch(
     worktree_telemetry: dict[str, Any] = {}
     if worktree_arg:
         # Fix 4 (#1476): the sentinel ``auto`` (from bare ``--worktree``)
-        # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
-        # paths remain unchanged for back-compat with in-flight dispatches.
+        # resolves to ``.worktrees/dispatch/{agent}/{task}/``. An explicit
+        # path is the one resolved at validation (#8775).
         # #672 P2.1: sibling --repo roots the auto path under that checkout.
         resolved_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
@@ -9643,11 +10247,15 @@ def _dispatch(
         )
         try:
             # The worktree lock taken before base resolution is still held (#8610).
+            changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
+            if changed_error:
+                raise ValueError(changed_error.removeprefix("❌ "))
             if fleet_repo.default:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
@@ -9662,6 +10270,7 @@ def _dispatch(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_raw,
+                    validated_path=validated_worktree,
                     base=getattr(args, "base", None) or "main",
                     run_nonce=run_nonce,
                     detached=detached_read_only,
@@ -9672,9 +10281,12 @@ def _dispatch(
             stdout_fd.close()
             stderr_fd.close()
             # Record the resolved absolute path like every other writer (#8610);
-            # a path that cannot even be resolved is kept verbatim.
+            # a path that cannot even be resolved is kept verbatim. A validated
+            # explicit path is recorded as validated, not resolved again (#8775).
             try:
-                failed_worktree_path = str(_normalize_worktree_path(resolved_raw, repo_root=target_repo_root))
+                failed_worktree_path = str(
+                    validated_worktree or _normalize_worktree_path(resolved_raw, repo_root=target_repo_root)
+                )
             except (OSError, RuntimeError, ValueError):
                 failed_worktree_path = resolved_raw
             _record_worktree_prep_failure(
@@ -9703,6 +10315,7 @@ def _dispatch(
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                 substitution=agent_substitution,
                 worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
                 worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
@@ -9724,8 +10337,18 @@ def _dispatch(
                         file=sys.stderr,
                     )
             return 1
-    elif args.cwd:
-        candidate_cwd = _resolve_cwd_path(args.cwd)
+    elif validated_cwd is not None:
+        candidate_cwd = validated_cwd
+        # #8775: the validated cwd is re-checked before the registered-worktree
+        # lookup below and again under the lock. In write-capable modes (and
+        # for a cursor review attempt) an earlier read-only lookup already ran
+        # git in this path, before either re-check.
+        changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
+        if changed_error:
+            stdout_fd.close()
+            stderr_fd.close()
+            print(changed_error, file=sys.stderr)
+            return 1
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
         if resolved_wt:
             try:
@@ -9738,6 +10361,13 @@ def _dispatch(
             # A removal that held the lock may have taken the checkout while
             # this dispatch waited. Never fall back to the stale cwd: fail
             # before any task record is published or any worker spawned (#8610).
+            # A symlink swapped in since validation is refused too (#8775).
+            changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
+            if changed_error:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(changed_error, file=sys.stderr)
+                return 1
             if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
                 stdout_fd.close()
                 stderr_fd.close()
@@ -9804,6 +10434,7 @@ def _dispatch(
             silence_timeout=silence_timeout,
             initial_response_timeout=initial_response_timeout,
             max_budget_usd=max_budget_usd,
+            require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
             substitution=agent_substitution,
         )
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
@@ -9861,6 +10492,7 @@ def _dispatch(
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
             "allow_merge": bool(getattr(args, "allow_merge", False)),
+            "require_review_verdict": bool(getattr(args, "require_review_verdict", False)),
             "mode": args.mode,
             "cwd": cwd,
             "worktree_path": str(worktree_path) if worktree_path else None,
@@ -9917,6 +10549,13 @@ def _dispatch(
                 "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
             }
         initial_state = _with_optional_research_state(initial_state, research_state)
+        # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
+        # verbatim. Never derived from --research-owned-path, which classifies
+        # research context and is not commit authority. Omitted, not null, when
+        # none were given: auto-finalize then commits nothing.
+        declared_owned_paths = _declared_owned_paths(getattr(args, "owned_path", None))
+        if declared_owned_paths is not None:
+            initial_state["owned_paths"] = list(declared_owned_paths)
         if worktree_path is not None and not worktree_path.is_dir():
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
             print(
@@ -11659,7 +12298,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview.")
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
     d.add_argument(
         "--provider",
         default=None,
@@ -11714,8 +12353,10 @@ def build_parser() -> argparse.ArgumentParser:
             "write-capable modes (workspace-write, danger). Pass `--worktree` "
             "alone (recommended) to auto-derive `.worktrees/dispatch/{agent}/"
             "{task}/` under the primary checkout that owns this script, or "
-            "`--worktree PATH` to reuse a specific added worktree "
-            "(validated against the expected dispatch branch before reuse). "
+            "`--worktree PATH` to reuse a specific added worktree inside "
+            "`.worktrees/dispatch/{agent}/` (validated against the expected "
+            "dispatch branch before reuse; paths elsewhere, under a symlinked "
+            "anchor, or with control or format characters are refused, #8775). "
             "Refuses when the invocation cwd is a different git root (#6900)."
         ),
     )
@@ -11979,6 +12620,19 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: an owned/changed path for the task. "
             "Repeatable. Matched against each record's owned_paths globs. "
             "Also feeds the writable-path admission guard (#5643)."
+        ),
+    )
+    d.add_argument(
+        "--owned-path",
+        action="append",
+        default=None,
+        metavar="PATH",
+        help=(
+            "#8991: a repo-relative path (dir/, dir/**, file, or glob) this task may "
+            "commit. Repeatable; recorded as the task's owned_paths. Auto-finalize of a "
+            "dirty danger-mode worktree commits only changes under these paths; without "
+            "any it commits nothing and the task ends needs_finalize. Independent of "
+            "--research-owned-path."
         ),
     )
     d.add_argument(
