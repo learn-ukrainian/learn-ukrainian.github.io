@@ -6,18 +6,23 @@ resumes the session, so those jobs are orphans of a finished run. This module
 names them and stops them, and never looks outside the worker's own boundary:
 
 * ``launch_mode: scope`` (``dispatch_isolation``): the worker's systemd scope
-  cgroup. Every descendant stays in it, whatever session or process group it
-  moved to. The ``cgroup.procs`` list is the authority. The unit and cgroup
-  are used only when they are exactly the ones ``dispatch_isolation`` derives
-  from the task id and run nonce, under ``lu-dispatch.slice``.
+  cgroup. Every descendant stays in it, whatever session, process group or
+  user id it moved to. The ``cgroup.procs`` list is the only authority: a
+  scope launch whose cgroup is missing or is not exactly the one
+  ``dispatch_isolation`` derives from the task id and run nonce, under
+  ``lu-dispatch.slice``, is refused, never scanned by environment marker.
 * ``popen-fallback``: processes whose environment carries this task's
   ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` (exported by ``delegate`` into every
   worker and allowlisted through ``agent_runtime.env_sanitize``, so it
   survives the CLI's ``setsid`` and reparenting), plus the worker's own
   session while that session leader is the caller. After the worker is gone
   its session id can be reused, so only the environment marker is trusted.
-  Processes of another real uid, or started before the worker, cannot be its
-  jobs and are not read.
+  Processes started before the worker cannot be its jobs and are not read.
+  The marker decides whatever the process's real uid: a job may have changed
+  it through a privileged helper. Such a job is reported but never signalled.
+  When another uid's environment is closed to us, the process still counts
+  as unknown if it shares the cgroup the worker ran in (``fallback_cgroup``),
+  since a uid change never moves a process out of its cgroup.
 
 A scan that cannot read something it needs raises :class:`ScanUnknown`: an
 unreadable ``cgroup.procs`` or process environment is not proof that no job is
@@ -119,6 +124,9 @@ class WorkerScope:
     run_nonce: str | None = None
     # The worker's own start time: nothing older can be one of its jobs.
     worker_start_ticks: int | None = None
+    # Popen fallback only: the cgroup the worker ran in, which its jobs keep
+    # even after changing their uid.
+    fallback_cgroup: str | None = None
 
     def as_state(self) -> dict[str, Any]:
         return {
@@ -129,6 +137,7 @@ class WorkerScope:
             "session_id": self.session_id,
             "run_nonce": self.run_nonce,
             "worker_start_ticks": self.worker_start_ticks,
+            "fallback_cgroup": self.fallback_cgroup,
         }
 
     @classmethod
@@ -139,7 +148,7 @@ class WorkerScope:
         task_id = raw.get("task_id")
         if not isinstance(task_id, str) or not task_id:
             return None
-        strings = {key: raw.get(key) for key in ("launch_mode", "unit", "cgroup", "run_nonce")}
+        strings = {key: raw.get(key) for key in ("launch_mode", "unit", "cgroup", "run_nonce", "fallback_cgroup")}
         ints = {key: raw.get(key) for key in ("session_id", "worker_start_ticks")}
         if any(value is not None and (not isinstance(value, str) or not value) for value in strings.values()):
             return None
@@ -155,8 +164,9 @@ def scope_identity_error(scope: WorkerScope, *, uid: int | None = None) -> str |
     """Why ``scope`` is not a boundary ``dispatch_isolation`` could have created, or None.
 
     A scope unit must carry the name derived from the task id and run nonce,
-    and a recorded cgroup must be that unit's scope under ``lu-dispatch.slice``
-    for this user. A fallback launch has neither.
+    and its cgroup must be recorded and be that unit's scope under
+    ``lu-dispatch.slice`` for this user: without it nothing proves membership.
+    A fallback launch has neither.
     """
     uid = os.getuid() if uid is None else uid
     if scope.launch_mode == LAUNCH_FALLBACK:
@@ -169,7 +179,9 @@ def scope_identity_error(scope: WorkerScope, *, uid: int | None = None) -> str |
         return "scope launch without a unit or run nonce"
     if not dispatch_isolation.scope_unit_matches(scope.unit, task_id=scope.task_id, run_nonce=scope.run_nonce):
         return f"unit {scope.unit!r} is not this task's launch unit"
-    if scope.cgroup is not None and scope.cgroup != dispatch_isolation.scope_cgroup(scope.unit, uid=uid):
+    if scope.cgroup is None:
+        return "scope launch without its cgroup"
+    if scope.cgroup != dispatch_isolation.scope_cgroup(scope.unit, uid=uid):
         return f"cgroup {scope.cgroup!r} is not {scope.unit}.scope under {dispatch_isolation.SLICE_UNIT}"
     return None
 
@@ -454,9 +466,11 @@ def worker_scope_at_exit(
 
     The cgroup is recorded only when the caller really runs in the scope
     ``dispatch_isolation`` derives from this task id and run nonce, so a worker
-    in someone else's cgroup never scans or later stops it.
+    in someone else's cgroup never scans or later stops it. A fallback launch
+    records the cgroup it runs in as ``fallback_cgroup``.
     """
     cgroup = None
+    fallback_cgroup = reader.own_cgroup() if launch_mode == LAUNCH_FALLBACK else None
     if launch_mode == LAUNCH_SCOPE and launch_unit and run_nonce:
         expected = dispatch_isolation.scope_cgroup(launch_unit, uid=os.getuid())
         matches = dispatch_isolation.scope_unit_matches(launch_unit, task_id=task_id, run_nonce=run_nonce)
@@ -471,6 +485,7 @@ def worker_scope_at_exit(
         session_id=os.getpid() if os.getsid(0) == os.getpid() else None,
         run_nonce=run_nonce,
         worker_start_ticks=own.start_ticks if own is not None else None,
+        fallback_cgroup=fallback_cgroup,
     )
 
 
@@ -489,22 +504,47 @@ def _protected_pids(reader: ProcessReader, exclude: Collection[int]) -> set[int]
     return protected
 
 
+def _scope_cgroup(scope: WorkerScope) -> str:
+    """A scope launch's bound cgroup; raises :class:`ScanUnknown` when it has none.
+
+    A scope launch's membership is its cgroup and nothing else, so a missing
+    or mismatched cgroup never falls back to the environment marker.
+    """
+    error = scope_identity_error(scope)
+    if error is not None or scope.cgroup is None:
+        raise ScanUnknown(f"scope launch boundary unusable: {error}")
+    return scope.cgroup
+
+
 def _in_boundary(scope: WorkerScope, reader: ProcessReader, pid: int, info: ProcStat) -> bool:
-    """Whether a live ``pid`` belongs to ``scope``; raises :class:`ScanUnknown`."""
-    if scope.cgroup:
-        return reader.proc_cgroup(pid) == scope.cgroup
+    """Whether a live ``pid`` belongs to ``scope``; raises :class:`ScanUnknown`.
+
+    Membership never depends on the process's real uid: a job can change it.
+    """
+    if scope.launch_mode == LAUNCH_SCOPE:
+        return reader.proc_cgroup(pid) == _scope_cgroup(scope)
     # The session id is trusted only while its leader is the caller: after
     # the worker exits the number can be handed to an unrelated session.
     if scope.session_id is not None and scope.session_id == os.getpid() and info.sid == scope.session_id:
         return True
     if scope.worker_start_ticks is not None and info.start_ticks < scope.worker_start_ticks:
         return False
-    uid = reader.real_uid(pid)
-    if uid is None or uid != os.getuid():
-        # Another real uid is not this worker's job (it cannot change its
-        # real uid unprivileged); its environment is not readable anyway.
+    try:
+        return reader.dispatch_task_id(pid) == scope.task_id
+    except ScanUnknown:
+        uid = reader.real_uid(pid)
+        if uid is None:
+            return False
+        # Our own uid's environment should be readable: not reading it is unknown.
+        # Another uid's is closed to us; a job that changed its uid still sits
+        # in the worker's cgroup, so only a process outside it is provably not one.
+        if (
+            uid == os.getuid()
+            or scope.fallback_cgroup is None
+            or reader.proc_cgroup(pid) in (None, scope.fallback_cgroup)
+        ):
+            raise
         return False
-    return reader.dispatch_task_id(pid) == scope.task_id
 
 
 def find_leftovers(
@@ -515,11 +555,12 @@ def find_leftovers(
 ) -> list[LeftoverProcess]:
     """Live processes inside ``scope``; raises :class:`ScanUnknown` when that cannot be proven."""
     protected = _protected_pids(reader, exclude)
-    if scope.cgroup:
-        candidates = reader.cgroup_procs(scope.cgroup)
+    if scope.launch_mode == LAUNCH_SCOPE:
+        cgroup = _scope_cgroup(scope)
+        candidates = reader.cgroup_procs(cgroup)
         if candidates is None:
-            if reader.own_cgroup() == scope.cgroup:
-                raise ScanUnknown(f"{scope.cgroup} missing while the caller runs in it")
+            if reader.own_cgroup() == cgroup:
+                raise ScanUnknown(f"{cgroup} missing while the caller runs in it")
             candidates = []
     else:
         candidates = reader.pids()
@@ -601,7 +642,8 @@ def _still_same(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess
 def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess, sig: int, ops: PidfdOps) -> str:
     """Signal one process through a pidfd: ``signalled``, ``gone``, ``unavailable`` or ``refused``.
 
-    The identity check runs again after the pidfd is open. From then on the
+    A process of another real uid (a job that changed it) is refused: it may
+    not be ours to signal. The identity check runs again after the pidfd is open. From then on the
     fd names one process: if the pid was reused before the open, the check
     sees the newcomer and fails; if the process exits after the check, the
     signal hits the dead pidfd (``ESRCH``), never the pid's next owner.
@@ -611,6 +653,11 @@ def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverP
     try:
         if not _still_same(scope, reader, proc):
             return "gone"
+        uid = reader.real_uid(proc.pid)
+        if uid is None:
+            return "gone"
+        if uid != os.getuid():
+            return "refused"
         fd = ops.open(proc.pid)
     except ProcessLookupError:
         return "gone"
@@ -707,6 +754,8 @@ def stop_leftovers(
             return StopResult(ok=True, signalled=signalled, unsignalled=unsignalled, unit_stopped=unit_stopped)
     if ops.open is None or ops.send is None:
         error = f"pidfd unavailable; {len(leftovers)} process(es) not signalled"
+    elif refused := [proc.pid for proc in leftovers if proc.pid in unsignalled]:
+        error = f"{len(refused)} process(es) refused a signal (another uid, or pidfd refused)"
     else:
         error = f"{len(leftovers)} process(es) survived SIGKILL"
     return StopResult(

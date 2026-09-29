@@ -27,6 +27,7 @@ from tests.worker_leftovers_fakes import (
 
 JOB = FAKE_PID_BASE + 1
 OTHER = FAKE_PID_BASE + 2
+WORKER_CGROUP = "/user.slice/user-1000.slice/user@1000.service/app.slice/delegate.service"
 
 
 def _pids(found: list[wl.LeftoverProcess]) -> list[int]:
@@ -62,18 +63,42 @@ def test_fallback_trusts_the_session_only_while_the_caller_leads_it() -> None:
     assert wl.find_leftovers(stale, reader=fake) == []
 
 
-def test_fallback_scan_never_reads_other_uids_or_processes_older_than_the_worker() -> None:
+def test_fallback_scan_skips_processes_older_than_the_worker_or_of_another_uid_outside_its_cgroup() -> None:
     fake = FakeProcs(
         procs={
             JOB: FakeProc(task=TASK_ID, start=500),
-            # Unreadable, but provably not this worker's: another real uid,
-            # or started before the worker itself (an ssh-agent, say).
+            # Unreadable, but provably not this worker's: another real uid in
+            # another cgroup, or started before the worker (an ssh-agent, say).
             OTHER: FakeProc(uid=os.getuid() + 1, start=600, env_unreadable=True),
             OTHER + 1: FakeProc(start=100, env_unreadable=True),
         }
     )
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=WORKER_CGROUP)
 
-    assert _pids(wl.find_leftovers(scope_of(worker_start_ticks=400), reader=fake)) == [JOB]
+    assert _pids(wl.find_leftovers(scope, reader=fake)) == [JOB]
+
+
+def test_fallback_scan_finds_a_marked_job_that_changed_its_real_uid() -> None:
+    """Membership is the task marker, read before any uid filter (review-8991-r2)."""
+    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID, start=500, uid=os.getuid() + 1)})
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=WORKER_CGROUP)
+
+    assert _pids(wl.find_leftovers(scope, reader=fake)) == [JOB]
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_LIVE
+
+
+@pytest.mark.parametrize("fallback_cgroup", [WORKER_CGROUP, None])
+def test_another_uids_closed_environment_in_the_workers_cgroup_is_unknown(fallback_cgroup: str | None) -> None:
+    """A job that changed its uid keeps the worker's cgroup; without one recorded nothing rules it out."""
+    fake = FakeProcs(
+        procs={JOB: FakeProc(uid=os.getuid() + 1, start=500, env_unreadable=True)},
+        cgroups={WORKER_CGROUP: [JOB]},
+    )
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=fallback_cgroup)
+
+    with pytest.raises(wl.ScanUnknown, match="environ"):
+        wl.find_leftovers(scope, reader=fake)
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
 
 
 def test_unreadable_environment_of_a_possible_job_is_unknown_not_clear() -> None:
@@ -129,7 +154,20 @@ def test_worker_scope_records_the_cgroup_only_when_it_is_this_launch_unit() -> N
     assert other_unit.cgroup is None  # the caller is not in that unit's cgroup
     assert fallback.cgroup is None
     assert fallback.unit is None
+    assert fallback.fallback_cgroup == SCOPE_CGROUP  # whatever cgroup the fallback worker runs in
+    assert ours.fallback_cgroup is None
     assert wl.WorkerScope.from_state(ours.as_state()) == ours
+    assert wl.WorkerScope.from_state(fallback.as_state()) == fallback
+
+
+def test_scope_launch_without_its_cgroup_is_unknown_never_scanned_by_marker() -> None:
+    """A scope launch whose worker was not in its unit has no boundary (review-8991-r2)."""
+    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID)}, cgroups={SCOPE_CGROUP: [JOB]})
+    scope = scope_of(launch_mode="scope", cgroup=None)
+
+    with pytest.raises(wl.ScanUnknown, match="without its cgroup"):
+        wl.find_leftovers(scope, reader=fake)
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
 
 
 def test_leftovers_state_names_pids_and_truncated_cmdlines() -> None:
@@ -169,6 +207,7 @@ def test_malformed_recorded_scope_parses_to_none(raw: object) -> None:
         ({"launch_mode": "scope", "unit": "user@1000.service", "cgroup": None}, "not this task's launch unit"),
         ({"launch_mode": "scope", "run_nonce": "other"}, "not this task's launch unit"),
         ({"launch_mode": "scope", "run_nonce": None}, "without a unit or run nonce"),
+        ({"launch_mode": "scope", "cgroup": None}, "without its cgroup"),
         (
             {"launch_mode": "scope", "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/x.scope"},
             "lu-dispatch.slice",
@@ -215,6 +254,7 @@ def test_scope_from_record_binds_the_scope_to_the_task_launch_record() -> None:
         (_record(scope, launch_mode="popen-fallback"), TASK_ID),
         (_record(scope, leftovers_scope={"task_id": TASK_ID, "unit": 5}), TASK_ID),
         (_record(scope, leftovers_scan="maybe"), TASK_ID),
+        (_record(scope, leftovers_scope={**scope.as_state(), "cgroup": None}), TASK_ID),
     ]:
         found, refusal = wl.scope_from_record(record, task_id=task_id)
         assert found is None
@@ -324,11 +364,13 @@ def test_stop_stops_the_scope_unit_when_the_caller_is_outside_it() -> None:
         {"unit": "lu-worker-other-n0nce-0123abcd"},
         {"cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/lu-worker-t1-n0nce-0123abcd.scope"},
         {"run_nonce": "someone-elses"},
+        {"cgroup": None},
     ],
 )
 def test_stop_refuses_a_unit_that_is_not_the_tasks_launch_unit(fields: dict) -> None:
     scope = scope_of(launch_mode="scope", **fields)
-    fake = FakeProcs(procs={JOB: FakeProc()}, cgroups={scope.cgroup or SCOPE_CGROUP: [JOB]})
+    # The job also carries the task marker: a scope launch never falls back to it.
+    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID)}, cgroups={scope.cgroup or SCOPE_CGROUP: [JOB]})
 
     result = wl.stop_leftovers(scope, reader=fake, **stop_kwargs(fake))
 
@@ -336,6 +378,18 @@ def test_stop_refuses_a_unit_that_is_not_the_tasks_launch_unit(fields: dict) -> 
     assert "worker scope refused" in (result.error or "")
     assert fake.stopped_units == []
     assert fake.signals == []
+
+
+def test_stop_never_signals_a_job_that_changed_its_real_uid() -> None:
+    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID, uid=os.getuid() + 1)})
+
+    result = wl.stop_leftovers(scope_of(), reader=fake, **stop_kwargs(fake))
+
+    assert result.ok is False
+    assert fake.signals == []
+    assert result.unsignalled == [JOB]
+    assert [proc.pid for proc in result.survivors] == [JOB]
+    assert "refused a signal" in (result.error or "")
 
 
 def test_stop_inside_the_scope_signals_members_but_never_stops_its_own_unit() -> None:

@@ -333,7 +333,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
     # 2. git add timeout
     with (
         patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("scripts.delegate._auto_finalize_renames", return_value=()),
+        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
         patch(
             "subprocess.run",
             side_effect=[
@@ -356,7 +356,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
     # 3. git commit failure with restore
     with (
         patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("scripts.delegate._auto_finalize_renames", return_value=()),
+        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
         patch(
             "subprocess.run",
             side_effect=[

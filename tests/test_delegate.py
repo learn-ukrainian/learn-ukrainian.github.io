@@ -5366,7 +5366,7 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
         "changed_files": [".venv"],
         "owned_paths": None,
         "owned_paths_declared": False,
-        "cross_boundary_renames": [],
+        "cross_boundary_moves": [],
     }
     assert state["finalize_skipped_paths"] == []
     assert (worktree / ".venv").is_symlink()
@@ -15281,6 +15281,17 @@ def test_settle_reap_never_kills_when_ownership_is_not_proven(tmp_path, monkeypa
         ("etc/passwd", ["/etc/passwd"], False),
         ("scripts/a.py", ["../scripts/a.py"], False),
         ("scripts/a.py", ["."], False),
+        # review-8991-r2: a .. segment anywhere, and globs owning the whole repo or top level.
+        ("docs/a.md", ["scripts/../docs"], False),
+        ("docs/a.md", ["scripts/../docs/*.md"], False),
+        ("scripts/a.py", ["**"], False),
+        ("scripts/a.py", ["./**"], False),
+        ("scripts/a.py", ["*"], False),
+        ("scripts/a.py", ["*/**"], False),
+        ("scripts/a.py", ["*.py"], False),
+        ("scripts/a.py", ["scripts/*.py"], True),
+        ("scripts/a.py", ["./scripts/*.py"], True),
+        ("scripts/fleet/a.py", ["scripts/*/a.py"], True),
     ],
 )
 def test_path_is_owned_reads_claims_like_the_admission_guard(path, owned, expected):
@@ -15288,11 +15299,12 @@ def test_path_is_owned_reads_claims_like_the_admission_guard(path, owned, expect
 
 
 def _owned_worktree(tmp_path: Path, branch: str) -> Path:
-    """A dispatch worktree whose branch already tracks two files, one in and one out of scripts/fleet/."""
+    """A dispatch worktree whose branch already tracks two files in scripts/fleet/ and one outside it."""
     worktree = _agy_dispatch_worktree(tmp_path, branch)
     (worktree / "scripts" / "fleet").mkdir(parents=True)
     (worktree / "docs").mkdir()
     (worktree / "scripts" / "fleet" / "old.py").write_text("".join(f"line_{i} = {i}\n" for i in range(40)))
+    (worktree / "scripts" / "fleet" / "keep.py").write_text("kept = True\n")
     (worktree / "docs" / "guide.md").write_text("".join(f"Paragraph {i}.\n" for i in range(40)))
     for args in (["add", "-A"], ["commit", "-m", "tracked files"]):
         subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
@@ -15317,7 +15329,7 @@ def _finalize_owned(worktree: Path, monkeypatch, owned: list[str] | None) -> del
 
 
 @pytest.mark.parametrize("staged", [False, True])
-def test_auto_finalize_never_commits_one_side_of_a_rename_across_the_boundary(tmp_path, monkeypatch, staged):
+def test_auto_finalize_never_commits_one_side_of_a_move_across_the_boundary(tmp_path, monkeypatch, staged):
     """AC-03: a move out of (or into) the owned paths is skipped whole, staged or not."""
     _sanitize_git_env_for_test(monkeypatch)
     worktree = _owned_worktree(tmp_path, "claude/owned-finalize")
@@ -15327,27 +15339,41 @@ def test_auto_finalize_never_commits_one_side_of_a_rename_across_the_boundary(tm
     else:
         (worktree / "scripts" / "fleet" / "old.py").rename(worktree / "docs" / "old.py")
         (worktree / "docs" / "guide.md").rename(worktree / "scripts" / "fleet" / "guide.md")
+    # A new owned file could be the other side of the outside deletion too: held back.
     (worktree / "scripts" / "fleet" / "fix.py").write_text("fixed = True\n", encoding="utf-8")
+    (worktree / "scripts" / "fleet" / "keep.py").write_text("kept = False\n", encoding="utf-8")
     base = _git_out(worktree, "rev-parse", "HEAD").strip()
 
     result = _finalize_owned(worktree, monkeypatch, ["scripts/fleet/"])
 
     assert result.ok is True, result.error
-    assert set(result.cross_boundary_renames) == {
-        ("scripts/fleet/old.py", "docs/old.py"),
-        ("docs/guide.md", "scripts/fleet/guide.md"),
-    }
-    assert result.changed_files == ("scripts/fleet/fix.py",)
-    assert set(result.skipped_paths) == {
-        "scripts/fleet/old.py",
-        "docs/old.py",
-        "docs/guide.md",
-        "scripts/fleet/guide.md",
-    }
-    assert _git_out(worktree, "diff", "--name-status", base, "HEAD").split() == ["A", "scripts/fleet/fix.py"]
+    moves = ("docs/guide.md", "docs/old.py", "scripts/fleet/fix.py", "scripts/fleet/guide.md", "scripts/fleet/old.py")
+    assert result.cross_boundary_moves == moves
+    assert result.changed_files == ("scripts/fleet/keep.py",)
+    assert set(result.skipped_paths) == set(moves)
+    assert _git_out(worktree, "diff", "--name-status", base, "HEAD").split() == ["M", "scripts/fleet/keep.py"]
     # Both sides of each move are still exactly where the worker left them.
     assert (worktree / "docs" / "old.py").is_file()
     assert "scripts/fleet/old.py" in _git_out(worktree, "ls-tree", "-r", "--name-only", "HEAD")
+
+
+def test_auto_finalize_holds_back_a_move_git_would_not_call_a_rename(tmp_path, monkeypatch):
+    """A move rewritten below git's 50 % rename similarity is still never split (review-8991-r2)."""
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _owned_worktree(tmp_path, "claude/owned-finalize")
+    (worktree / "docs" / "guide.md").unlink()
+    (worktree / "scripts" / "fleet" / "guide.md").write_text("Rewritten.\n", encoding="utf-8")
+    (worktree / "scripts" / "fleet" / "old.py").write_text("line_0 = 0\n", encoding="utf-8")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+
+    result = _finalize_owned(worktree, monkeypatch, ["scripts/fleet/"])
+
+    assert result.ok is True, result.error
+    assert result.cross_boundary_moves == ("docs/guide.md", "scripts/fleet/guide.md")
+    assert result.changed_files == ("scripts/fleet/old.py",)
+    assert set(result.skipped_paths) == {"docs/guide.md", "scripts/fleet/guide.md"}
+    assert _git_out(worktree, "diff", "--name-status", base, "HEAD").split() == ["M", "scripts/fleet/old.py"]
+    assert (worktree / "scripts" / "fleet" / "guide.md").is_file()
 
 
 def test_auto_finalize_commits_both_sides_of_a_rename_inside_the_owned_paths(tmp_path, monkeypatch):
@@ -15359,7 +15385,7 @@ def test_auto_finalize_commits_both_sides_of_a_rename_inside_the_owned_paths(tmp
     result = _finalize_owned(worktree, monkeypatch, ["scripts/fleet/"])
 
     assert result.ok is True, result.error
-    assert result.cross_boundary_renames == ()
+    assert result.cross_boundary_moves == ()
     assert result.skipped_paths == ()
     assert _git_out(worktree, "diff", "--name-status", "-M", base, "HEAD").split() == [
         "R100",
@@ -15554,7 +15580,7 @@ def test_dispatch_records_only_explicit_owned_paths(tmp_tasks_dir, tmp_path, mon
     assert owned["owned_paths"] == ["scripts/fleet/", "docs/x.md"]
 
 
-@pytest.mark.parametrize("bad", ["/etc", "../outside", ".", ""])
+@pytest.mark.parametrize("bad", ["/etc", "../outside", ".", "", "scripts/../docs", "./**", "**", "*", "*/**"])
 def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_dir, tmp_path, monkeypatch, capsys, bad):
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: pytest.fail("must not spawn"))

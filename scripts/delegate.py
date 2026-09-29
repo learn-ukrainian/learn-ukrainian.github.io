@@ -4726,8 +4726,9 @@ class AutoFinalizeResult:
     owned_paths: tuple[str, ...] | None = None
     # Changed files outside the owned paths: never staged, left in the tree.
     skipped_paths: tuple[str, ...] = ()
-    # Renames with one side outside the owned paths: both sides are skipped.
-    cross_boundary_renames: tuple[tuple[str, str], ...] = ()
+    # Additions and deletions that could be one move across the owned-path
+    # boundary (an owned side plus an opposite outside side): all skipped.
+    cross_boundary_moves: tuple[str, ...] = ()
 
 
 def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -5206,21 +5207,32 @@ def _owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
     (:func:`scripts.guardrails.delegate_ownership.normalize_claim`): a plain
     path owns itself and everything below it, ``dir/`` and ``dir/**`` own the
     subtree, and a claim with other wildcards is a case-sensitive glob. An
-    empty, ``.``, absolute or ``..`` claim owns nothing.
+    empty, ``.`` or absolute claim owns nothing, nor does one with a ``..``
+    segment anywhere (``scripts/../docs`` would own ``docs``). A glob must
+    start with a literal top-level name: ``fnmatch``'s ``*`` also matches
+    ``/``, so ``**``, ``./**``, ``*``, ``*/**`` or ``*.py`` would own the whole
+    repository or every top-level entry.
     """
     try:
         from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim
     except ImportError:  # pragma: no cover - flat script path
         from guardrails.delegate_ownership import ClaimKind, normalize_claim  # type: ignore
 
+    if ".." in (raw or "").strip().replace("\\", "/").split("/"):
+        return None
     claim = normalize_claim(raw)
     if claim.kind is not ClaimKind.UNKNOWN:
         norm = claim.norm
         return lambda path: path == norm or path.startswith(norm + "/")
-    pattern = claim.norm.removeprefix("./")
-    if any(ch in pattern for ch in "*?[") and not pattern.startswith("/") and ".." not in pattern.split("/"):
-        return lambda path: fnmatch.fnmatchcase(path, pattern)
-    return None
+    pattern = claim.norm
+    while pattern.startswith("./"):
+        pattern = pattern[2:]
+    segments = pattern.split("/")
+    if not any(ch in pattern for ch in "*?[") or any(segment in {"", "."} for segment in segments):
+        return None
+    if any(ch in segments[0] for ch in "*?["):
+        return None
+    return lambda path: fnmatch.fnmatchcase(path, pattern)
 
 
 def _owned_path_errors(values: Sequence[str] | None) -> list[str]:
@@ -5233,14 +5245,15 @@ def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
     return any(matcher(path) for raw in owned_paths if (matcher := _owned_path_matcher(raw)) is not None)
 
 
-def _auto_finalize_renames(worktree: Path) -> tuple[tuple[str, str], ...] | None:
-    """Renames git would record if every change were committed; None when unknown.
+def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
 
-    The worker's untracked files only pair with deletions once git tracks
-    them, so they are marked intent-to-add in a throwaway copy of the index
-    (no file content is written to the object store) and the working tree is
-    diffed against ``HEAD`` with rename detection. The real index is never
-    touched.
+    Untracked files are marked intent-to-add in a throwaway copy of the index
+    (no file content is written to the object store) so they show up as
+    additions; the real index is never touched. Renames are not detected:
+    git pairs a move only above a similarity threshold, so a caller that
+    must not split a move treats every deletion as a possible source of every
+    addition.
     """
     env = _sanitized_git_env()
     try:
@@ -5273,7 +5286,7 @@ def _auto_finalize_renames(worktree: Path) -> tuple[tuple[str, str], ...] | None
             if add_proc.returncode != 0:
                 return None
             diff_proc = subprocess.run(
-                ["git", "diff", "--find-renames", "--name-status", "-z", "HEAD", "--"],
+                ["git", "diff", "--no-renames", "--name-status", "-z", "HEAD", "--"],
                 cwd=worktree,
                 capture_output=True,
                 text=True,
@@ -5286,19 +5299,33 @@ def _auto_finalize_renames(worktree: Path) -> tuple[tuple[str, str], ...] | None
     if diff_proc.returncode != 0:
         return None
     fields = diff_proc.stdout.split("\0")
-    renames: list[tuple[str, str]] = []
-    index = 0
-    while index < len(fields) and fields[index]:
-        status = fields[index]
-        if status[:1] in {"R", "C"}:
-            if index + 2 >= len(fields):
-                return None
-            if status[:1] == "R":
-                renames.append((fields[index + 1], fields[index + 2]))
-            index += 3
-        else:
-            index += 2
-    return tuple(renames)
+    added: list[str] = []
+    deleted: list[str] = []
+    for index in range(0, len(fields) - 1, 2):
+        status, path = fields[index], fields[index + 1]
+        if not status or not path:
+            break
+        if status == "A":
+            added.append(path)
+        elif status == "D":
+            deleted.append(path)
+    return tuple(added), tuple(deleted)
+
+
+def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
+    """Additions and deletions that could be one move across the owned-path boundary.
+
+    Every deletion is a possible source of every addition, so an owned
+    addition is paired with any outside deletion and an owned deletion with
+    any outside addition; both sides of each pairing are returned.
+    """
+    moves: set[str] = set()
+    for sources, targets in ((deleted, added), (added, deleted)):
+        outside = [path for path in sources if not _path_is_owned(path, owned)]
+        inside = [path for path in targets if _path_is_owned(path, owned)]
+        if outside and inside:
+            moves.update(outside, inside)
+    return moves
 
 
 def _current_branch(worktree: Path) -> str | None:
@@ -5468,8 +5495,11 @@ def _auto_finalize_dirty_worktree(
     ``owned_paths`` is the task record's ``owned_paths`` list, written at
     dispatch from the task's explicit ``--owned-path`` values (#8991). Only
     changed files under them are staged and committed; the rest stay
-    uncommitted in the tree and come back as ``skipped_paths``. A rename with
-    one side outside the owned paths is never split: both sides are skipped.
+    uncommitted in the tree and come back as ``skipped_paths``. A move across
+    the owned-path boundary is never split, whatever git's rename similarity
+    says: when any file outside the owned paths was deleted, no owned
+    addition is committed, and when any outside file was added, no owned
+    deletion is. Those paths are listed in ``cross_boundary_moves``.
     A task that declared no owned paths gets no commit at all
     (``no_owned_paths_declared``).
     """
@@ -5477,12 +5507,10 @@ def _auto_finalize_dirty_worktree(
     all_changed = _auto_finalize_changed_files(worktree)
     changed_files: tuple[str, ...] = ()
     skipped: tuple[str, ...] = ()
-    split_renames: tuple[tuple[str, str], ...] = ()
+    moves: tuple[str, ...] = ()
 
     def _result(**fields: Any) -> AutoFinalizeResult:
-        return AutoFinalizeResult(
-            owned_paths=owned, skipped_paths=skipped, cross_boundary_renames=split_renames, **fields
-        )
+        return AutoFinalizeResult(owned_paths=owned, skipped_paths=skipped, cross_boundary_moves=moves, **fields)
 
     try:
         worktree_proc = subprocess.run(
@@ -5518,14 +5546,11 @@ def _auto_finalize_dirty_worktree(
     if owned is None:
         skipped = all_changed
         return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
-    renames = _auto_finalize_renames(worktree)
-    if renames is None:
-        return _result(ok=False, error="rename detection failed; nothing committed")
-    split_renames = tuple(
-        (old, new) for old, new in renames if _path_is_owned(old, owned) != _path_is_owned(new, owned)
-    )
-    split_sides = {side for pair in split_renames for side in pair}
-    changed_files = tuple(path for path in all_changed if path not in split_sides and _path_is_owned(path, owned))
+    added_deleted = _auto_finalize_additions_deletions(worktree)
+    if added_deleted is None:
+        return _result(ok=False, error="move detection failed; nothing committed")
+    moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
+    changed_files = tuple(path for path in all_changed if path not in moves and _path_is_owned(path, owned))
     skipped = tuple(path for path in all_changed if path not in changed_files)
     if not changed_files or _auto_finalize_is_junk_only(changed_files):
         # Real work exists only outside the declared scope: a human decides.
@@ -8510,7 +8535,7 @@ def _run_worker(
                     "changed_files": list(auto_finalize.changed_files),
                     "owned_paths": (list(auto_finalize.owned_paths) if auto_finalize.owned_paths is not None else None),
                     "owned_paths_declared": auto_finalize.owned_paths is not None,
-                    "cross_boundary_renames": [list(pair) for pair in auto_finalize.cross_boundary_renames],
+                    "cross_boundary_moves": list(auto_finalize.cross_boundary_moves),
                 }
                 if auto_finalize is not None
                 else None
@@ -9226,7 +9251,8 @@ def _dispatch(
     invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
     if invalid_owned_paths:
         print(
-            "❌ --owned-path must be a repo-relative path or glob (not empty, '.', absolute, or '..'): "
+            "❌ --owned-path must be a repo-relative path or narrow glob (not empty, '.', absolute, "
+            "a '..' segment, or a glob starting with a wildcard): "
             + ", ".join(repr(value) for value in invalid_owned_paths),
             file=sys.stderr,
         )

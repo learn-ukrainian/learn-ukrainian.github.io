@@ -763,7 +763,8 @@ pushes it only under the task's `--owned-path` values (repeatable; `dir/`, `dir/
 file, or a glob). They are recorded as `owned_paths`. `--research-owned-path` is research
 classification and is never used as commit authority. With no `--owned-path`, nothing is
 committed and the task ends `needs_finalize` (`no_owned_paths_declared`). Changes outside
-the owned paths, and both sides of a rename that crosses them, stay uncommitted and are
+the owned paths, and both sides of any possible move across them (an owned addition while
+an outside file is deleted, or the reverse), stay uncommitted and are
 listed in `finalize_skipped_paths`; the task then ends `needs_finalize`, not `done`.
 
 ```bash
