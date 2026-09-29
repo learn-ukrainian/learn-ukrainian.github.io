@@ -364,6 +364,19 @@ def test_determinism_byte_identical_output(tmp_path: Path) -> None:
     assert s1.render_text() == s2.render_text()
 
 
+def test_letters_keep_the_plans_introduction_order(tmp_path: Path) -> None:
+    """Letters of one lesson stay in the plan's list order, not re-sorted by code point (#9182)."""
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+    p1_file = plans_dir / "module-one.yaml"
+    data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
+    data["lessons"][0]["inventory"]["phonetics"]["letters"] = ["Б", "А"]
+    _write_yaml(p1_file, data)
+
+    state = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert list(state.letters) == ["Б", "А"]
+    assert list(state.to_dict()["letters"]) == ["Б", "А"]
+
+
 def test_base_and_name_ids_in_plan_core_do_not_increase_cumulative_count(tmp_path: Path) -> None:
     """Base-layer and name IDs must not increase cumulative_core_count even if listed as core in plan."""
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
