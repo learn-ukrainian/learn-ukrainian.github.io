@@ -29,7 +29,7 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -445,6 +445,7 @@ def git_worktree_remove(
     *,
     force: bool,
     timeout: float | None = None,
+    approved_temp_roots: Iterable[Path] = (),
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -463,7 +464,11 @@ def git_worktree_remove(
     target = worktree
     if force:
         try:
-            target = assert_delete_target(worktree, repo_root=repo_root)
+            target = assert_delete_target(
+                worktree,
+                repo_root=repo_root,
+                approved_temp_roots=approved_temp_roots,
+            )
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
