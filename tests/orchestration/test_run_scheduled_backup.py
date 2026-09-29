@@ -115,7 +115,9 @@ def test_shell_env_file_is_expanded_and_exported_to_backup_tools(
     assert json.loads(Path(environment["TEST_RECEIPT"]).read_text(encoding="utf-8"))["exit_status"] == 0
 
 
-@pytest.mark.parametrize("unsafe", ["missing", "group_writable", "world_writable", "wrong_owner"])
+@pytest.mark.parametrize(
+    "unsafe", ["missing", "group_writable", "world_writable", "wrong_owner", "symlink", "loose_parent"]
+)
 def test_unsafe_shell_env_file_fails_closed_and_records_failure(
     writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, unsafe: str
 ) -> None:
@@ -127,10 +129,17 @@ def test_unsafe_shell_env_file_fails_closed_and_records_failure(
         if not env_file.is_file() or env_file.stat().st_uid == os.geteuid():
             pytest.skip("no other-owned regular fixture")
     else:
-        env_file = tmp_path / "backup.env"
+        parent = tmp_path / "env-dir" if unsafe == "loose_parent" else tmp_path
+        parent.mkdir(exist_ok=True)
+        env_file = parent / "backup.env"
         if unsafe != "missing":
-            env_file.write_text('export LU_BACKUP_REPOSITORY="unsafe"\n', encoding="utf-8")
-            env_file.chmod(0o620 if unsafe == "group_writable" else 0o602)
+            target = tmp_path / "real-backup.env" if unsafe == "symlink" else env_file
+            target.write_text('export LU_BACKUP_REPOSITORY="unsafe"\n', encoding="utf-8")
+            target.chmod(0o620 if unsafe == "group_writable" else 0o602 if unsafe == "world_writable" else 0o600)
+            if unsafe == "symlink":
+                env_file.symlink_to(target)
+            if unsafe == "loose_parent":
+                parent.chmod(0o770)
     sentinel = tmp_path / "backup-invoked"
     backup = tmp_path / "backup.sh"
     _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
@@ -150,6 +159,43 @@ def test_unsafe_shell_env_file_fails_closed_and_records_failure(
     assert len(result.stderr.splitlines()) == 1
     assert not sentinel.exists()
     assert json.loads(receipt.read_text(encoding="utf-8"))["exit_status"] == 78
+
+
+@pytest.mark.parametrize(
+    "bad_line",
+    [
+        "export RESTIC_REPOSITORY=rclone:gd:SECRETREPO)x",
+        "export RESTIC_REPOSITORY=rclone:gd:SECRETREPO bad-SECRETREPO",
+    ],
+)
+def test_env_source_errors_never_echo_values(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, bad_line: str
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(f"{bad_line}\n", encoding="utf-8")
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    _fake_restic(fake_bin, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    receipt = tmp_path / "last-run.json"
+    environment.update({
+        "LU_BACKUP_ENV_FILE": str(env_file),
+        "LU_BACKUP_SCRIPT": str(backup),
+        "LU_BACKUP_LAST_RUN": str(receipt),
+    })
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 78
+    assert result.stdout == ""
+    assert result.stderr == "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced\n"
+    assert not sentinel.exists()
+    receipt_text = receipt.read_text(encoding="utf-8")
+    assert "SECRETREPO" not in result.stdout + result.stderr + receipt_text
+    assert "bad-SECRETREPO" not in result.stdout + result.stderr + receipt_text
+    assert json.loads(receipt_text)["exit_status"] == 78
 
 
 def test_retention_sources_shell_env_file(

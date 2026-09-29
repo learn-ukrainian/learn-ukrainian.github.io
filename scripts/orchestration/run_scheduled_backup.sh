@@ -43,22 +43,31 @@ configure_backup() {
 # path is sourced; manual runs can continue using an already-populated env.
 load_backup_environment() {
   [[ -n "${LU_BACKUP_ENV_FILE:-}" ]] || return 0
-  local fd mode
+  local fd mode parent parent_mode path_inode opened_inode
   if ! { exec {fd}< "$LU_BACKUP_ENV_FILE"; } 2>/dev/null; then
     echo "scheduled-backup: LU_BACKUP_ENV_FILE is missing or unreadable" >&2
     return 78
   fi
-  if [[ ! -f "/dev/fd/$fd" || ! -O "/dev/fd/$fd" ]] ||
+  parent="$(dirname -- "$LU_BACKUP_ENV_FILE")"
+  # Reject a link or path swap; only the service user may replace entries in
+  # the directory containing the file.
+  if [[ -L "$LU_BACKUP_ENV_FILE" || ! -d "$parent" || ! -O "$parent" ||
+        ! -f "/dev/fd/$fd" || ! -O "/dev/fd/$fd" ]] ||
+     ! path_inode="$(stat -c '%d:%i' -- "$LU_BACKUP_ENV_FILE" 2>/dev/null)" ||
+     ! opened_inode="$(stat -Lc '%d:%i' "/dev/fd/$fd" 2>/dev/null)" ||
+     [[ "$path_inode" != "$opened_inode" ]] ||
      ! mode="$(stat -Lc '%a' "/dev/fd/$fd")" ||
-     (( (8#$mode & 0022) != 0 )); then
+     ! parent_mode="$(stat -Lc '%a' -- "$parent" 2>/dev/null)" ||
+     (( (8#$mode & 0022) != 0 || (8#$parent_mode & 0022) != 0 )); then
     exec {fd}<&-
-    echo "scheduled-backup: LU_BACKUP_ENV_FILE must be a regular file owned by this user and not group/world-writable" >&2
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE must be a non-symlink regular file owned by this user with an owner-only writable parent directory" >&2
     return 78
   fi
   set +u
   set -a
   # shellcheck disable=SC1090  # validated, operator-owned shell-syntax file
-  if ! . "/dev/fd/$fd"; then
+  # Bash can print an offending source line (including values) on parse errors.
+  if ! . "/dev/fd/$fd" 2>/dev/null; then
     set +a
     set -u
     exec {fd}<&-
