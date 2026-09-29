@@ -227,7 +227,14 @@ CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
 For a repository created with `--separate-git-dir`, Git cannot recover the
 primary checkout path from a linked worktree. In that uncommon layout, set
 `CODEX_CANONICAL_REPO_ROOT=/absolute/path/to/main`; the launcher verifies that
-the path is this repository's root on the `main` branch before using it.
+the path is this repository's primary checkout (not a linked worktree) on the
+`main` branch, then runs every launcher helper from it. Only Codex launches read
+this override; it is the one accepted way to name a primary that Git cannot
+prove from the worktree (#9121). When the repository records `core.worktree`,
+the override must be that directory. Otherwise Git keeps no back-pointer to a
+separate-git-dir primary, so another directory holding a copy of its `.git`
+gitfile also passes: an operator who sets `CODEX_CANONICAL_REPO_ROOT` vouches
+for that directory.
 
 Implementation work still follows `AGENTS.md`: create a scoped dispatch
 worktree instead of editing or committing from the primary checkout. The

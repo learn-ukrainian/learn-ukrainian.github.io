@@ -616,7 +616,7 @@ interpreter:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
+"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE --include='*.py' 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
 ```
 
 **Diagnose pytest failures from the junit artifact first (#8701, #8705).**
