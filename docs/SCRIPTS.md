@@ -867,6 +867,30 @@ and the linger/cgroup prerequisites are in
 current memory use against `MemoryMax`. An inactive or missing slice is left off the
 line. `peak_rss_mib` is unchanged.
 
+**Background jobs at exit (#8991):** a headless worker cannot be woken by a
+background-task notification, so when its CLI exits the worker checks for its own
+processes that are still alive: the scope unit's `cgroup.procs` for `launch_mode: scope`,
+or, on `popen-fallback`, processes carrying its `LEARN_UKRAINIAN_DISPATCH_TASK_ID` plus its
+own session. Any survivor makes the run incomplete. The record gets
+`incomplete_run_reason: background_jobs_alive_at_exit` and a
+`background_jobs_alive_at_exit` entry (pids, truncated command lines, scope). A write run is
+then `needs_finalize`, never `done`, and is never auto-finalized. Detection does not kill
+anything. When that worktree is later removed (settle, `reap_worktrees.py`,
+`fleet/post_task_reap.py`), those processes are stopped first, and only those in the
+worker's own scope: a scope the reaper is not inside is stopped with
+`systemctl --user stop`, and anything left gets SIGTERM, then SIGKILL. If any survive,
+removal is refused.
+
+**Auto-finalize owned paths (#8991):** the owned-path list is the task's
+`--research-owned-path` values, recorded verbatim at dispatch as the record's
+`owned_paths` (the key is omitted when none were given). Auto-finalize stages and commits
+only changed files under those paths, using the write-path admission guard's reading of
+each claim: `dir/` and `dir/**` own the subtree, a plain path owns itself and anything
+below it, and other wildcards are globs. Every other changed file stays uncommitted and is
+listed in `finalize_skipped_paths`. When no change falls under the owned paths, the task
+stays `needs_finalize` (`no_changes_under_owned_paths`). A task with no owned paths keeps
+the whole-tree commit, and `auto_finalize.owned_paths_declared: false` records that.
+
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
 

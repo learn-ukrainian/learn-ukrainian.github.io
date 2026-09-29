@@ -5362,7 +5362,10 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
         "pr_url": None,
         "error": "junk_only_worktree_changes",
         "changed_files": [".venv"],
+        "owned_paths": None,
+        "owned_paths_declared": False,
     }
+    assert state["finalize_skipped_paths"] == []
     assert (worktree / ".venv").is_symlink()
     assert (
         subprocess.run(
@@ -15003,3 +15006,346 @@ def test_record_forward_failure_refuses_clobber_running_record(tmp_tasks_dir, mo
 
     assert wrote is False
     assert delegate._read_state(path) == original
+
+
+# --- #8991: live background jobs at exit, reaping them, owned-path finalize ---
+
+_BG_JOB_PID = 5_000_101
+
+
+def _bg_mock_result(response: str = "I'll wait for the background run to finish."):
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "claude-opus-5-5",
+            "effort": "high",
+            "cli_version": "3.0.0",
+        },
+    )()
+
+
+def _bg_fake_procs(task_id: str, *, alive: bool):
+    from tests.worker_leftovers_fakes import FakeProc, FakeProcs
+
+    procs = {_BG_JOB_PID: FakeProc(task=task_id, cmd="python scripts/audit/generate_practice_deck.py --all")}
+    # A job of some other task is alive too; it must never be reported or signalled.
+    procs[_BG_JOB_PID + 1] = FakeProc(task="someone-else")
+    return FakeProcs(procs=procs if alive else {_BG_JOB_PID + 1: procs[_BG_JOB_PID + 1]})
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex"])
+@pytest.mark.parametrize("dirty", [True, False])
+def test_run_worker_with_live_background_job_is_needs_finalize_not_done(
+    tmp_tasks_dir, tmp_path, monkeypatch, agent, dirty
+):
+    """AC-01: a worker that exits while its own background job runs is incomplete.
+
+    It settles ``needs_finalize`` with the named reason and the live pid and
+    command line, is never auto-finalized, and even a clean pushed tree is not
+    ``done``: the job may still be producing the result.
+    """
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = f"bg-exit-{agent}-{dirty}"
+    branch = f"{agent}/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if not dirty:
+        (worktree / "done.txt").write_text("committed\n", encoding="utf-8")
+        for args in (["add", "done.txt"], ["commit", "-m", "work"], ["push", "-u", "origin", branch]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    else:
+        (worktree / "half_done.py").write_text("# unfinished\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "launch_mode": "popen-fallback",
+        },
+    )
+    fake = _bg_fake_procs(task_id, alive=True)
+    monkeypatch.setattr(delegate, "_worker_process_reader", lambda: fake)
+    monkeypatch.setattr(delegate, "_BACKGROUND_JOBS_SETTLE_S", 0.0)
+    publish_calls: list[str] = []
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: publish_calls.append("push"))
+
+    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result()):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent=agent,
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["needs_finalize"] is True
+    assert state["last_error"] == "background_jobs_alive_at_exit"
+    assert state["incomplete_run_reason"] == "background_jobs_alive_at_exit"
+    jobs = state["background_jobs_alive_at_exit"]
+    assert jobs["count"] == 1
+    assert jobs["processes"] == [
+        {"pid": _BG_JOB_PID, "cmdline": "python scripts/audit/generate_practice_deck.py --all"}
+    ]
+    assert jobs["scope"]["task_id"] == task_id
+    assert state.get("auto_finalize") is None
+    assert publish_calls == []
+    assert fake.signals == []  # detection records; it never kills
+    if dirty:
+        assert state["worktree_dirty_on_exit"] is True
+        assert state["commits_ahead"] == 0
+
+
+def test_run_worker_without_background_jobs_settles_done_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01 control: the same scoped worker with nothing left running stays ``done``."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "bg-clean-exit"
+    branch = f"claude/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    (worktree / "done.txt").write_text("committed\n", encoding="utf-8")
+    for args in (["add", "done.txt"], ["commit", "-m", "work"], ["push", "-u", "origin", branch]):
+        subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "launch_mode": "popen-fallback",
+            "keep_worktree": True,
+        },
+    )
+    fake = _bg_fake_procs(task_id, alive=False)
+    monkeypatch.setattr(delegate, "_worker_process_reader", lambda: fake)
+
+    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("Committed and pushed.")):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert "background_jobs_alive_at_exit" not in state
+    assert "incomplete_run_reason" not in state
+
+
+def _bg_scope_record(task_id: str) -> dict[str, Any]:
+    return {
+        "reason": "background_jobs_alive_at_exit",
+        "count": 1,
+        "processes": [{"pid": _BG_JOB_PID, "cmdline": "pytest"}],
+        "scope": {"task_id": task_id, "launch_mode": "popen-fallback", "unit": None, "cgroup": None},
+    }
+
+
+@pytest.mark.parametrize("stoppable", [True, False])
+def test_settle_reap_stops_the_workers_background_jobs_first(tmp_path, monkeypatch, stoppable):
+    """AC-02: settle stops the worker's own leftovers before removal, or refuses."""
+    from tests.worker_leftovers_fakes import UNKILLABLE, FakeProc, FakeProcs, patch_stop
+
+    task_id = "bg-settle"
+    fake = FakeProcs(
+        procs={
+            _BG_JOB_PID: FakeProc(task=task_id, ignores=frozenset() if stoppable else UNKILLABLE),
+            _BG_JOB_PID + 1: FakeProc(task="someone-else"),
+        }
+    )
+    monkeypatch.setattr(delegate, "_worker_process_reader", lambda: fake)
+    patch_stop(monkeypatch, fake)
+    seen: list[tuple[bool, str]] = []
+
+    def fake_remove(worktree, *, releasable, **_kwargs):
+        ok, detail = releasable()
+        seen.append((ok, detail))
+        return {"action": "removed" if ok else "skipped", "reason": detail, "branch": None}
+
+    monkeypatch.setattr(delegate, "_remove_dispatch_worktree", fake_remove)
+
+    removal = delegate._settle_worktree_reap(
+        tmp_path / "wt",
+        created_by_this_dispatch=True,
+        settling_task_id=task_id,
+        background_jobs=_bg_scope_record(task_id),
+    )
+
+    assert _BG_JOB_PID + 1 in fake.procs
+    assert _BG_JOB_PID + 1 not in fake.signalled()
+    if stoppable:
+        assert removal["action"] == "removed"
+        assert _BG_JOB_PID not in fake.procs
+    else:
+        assert removal["action"] == "skipped"
+        assert "background jobs could not be stopped" in removal["reason"]
+        assert str(_BG_JOB_PID) in removal["reason"]
+
+
+def test_settle_reap_never_kills_when_ownership_is_not_proven(tmp_path, monkeypatch):
+    """A checkout this dispatch did not create is not reaped here, so nothing is signalled."""
+    from tests.worker_leftovers_fakes import FakeProc, FakeProcs, patch_stop
+
+    fake = FakeProcs(procs={_BG_JOB_PID: FakeProc(task="bg-reused")})
+    monkeypatch.setattr(delegate, "_worker_process_reader", lambda: fake)
+    patch_stop(monkeypatch, fake)
+    monkeypatch.setattr(
+        delegate,
+        "_remove_dispatch_worktree",
+        lambda worktree, *, releasable, **_k: {"action": "skipped", "reason": releasable()[1], "branch": None},
+    )
+
+    removal = delegate._settle_worktree_reap(
+        tmp_path / "wt",
+        created_by_this_dispatch=False,
+        settling_task_id="bg-reused",
+        background_jobs=_bg_scope_record("bg-reused"),
+    )
+
+    assert removal["reason"] == "reused worktree; owner reaps"
+    assert fake.signals == []
+
+
+@pytest.mark.parametrize(
+    ("path", "owned", "expected"),
+    [
+        ("scripts/fleet/a.py", ["scripts/fleet/"], True),
+        ("scripts/fleet/a.py", ["scripts/fleet/**"], True),
+        ("scripts/fleet/a.py", ["scripts/fleet"], True),
+        ("scripts/fleetx/a.py", ["scripts/fleet"], False),
+        ("scripts/delegate.py", ["scripts/delegate.py"], True),
+        ("scripts/audit/generate_practice_deck_before.py", ["scripts/audit/generate_practice_deck.py"], False),
+        ("tests/test_a.py", ["tests/test_*.py"], True),
+        ("etc/passwd", ["/etc/passwd"], False),
+        ("scripts/a.py", ["../scripts/a.py"], False),
+    ],
+)
+def test_path_is_owned_reads_claims_like_the_admission_guard(path, owned, expected):
+    assert delegate._path_is_owned(path, owned) is expected
+
+
+def test_run_worker_auto_finalize_commits_only_owned_paths(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-03: files outside the declared owned paths are never committed, only listed."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "owned-finalize"
+    branch = f"claude/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    (worktree / "scripts" / "fleet").mkdir(parents=True)
+    (worktree / "scripts" / "audit").mkdir(parents=True)
+    (worktree / "scripts" / "fleet" / "fix.py").write_text("fixed = True\n", encoding="utf-8")
+    (worktree / "scripts" / "audit" / "generate_practice_deck_before.py").write_text(
+        "# scratch\n" * 50, encoding="utf-8"
+    )
+    # Out of scope and already staged by the worker: must stay out of the commit too.
+    (worktree / "README.md").write_text("edited outside scope\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["scripts/fleet/"],
+        },
+    )
+    pushed: list[str] = []
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b: pushed.append(b))
+
+    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
+        delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["auto_finalize"]["ok"] is True
+    assert state["auto_finalize"]["changed_files"] == ["scripts/fleet/fix.py"]
+    assert state["auto_finalize"]["owned_paths"] == ["scripts/fleet/"]
+    assert state["auto_finalize"]["owned_paths_declared"] is True
+    assert state["finalize_skipped_paths"] == ["README.md", "scripts/audit/generate_practice_deck_before.py"]
+    committed = subprocess.run(
+        ["git", "show", "--name-only", "--format=", "HEAD"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout.split()
+    assert committed == ["scripts/fleet/fix.py"]
+    status = subprocess.run(
+        ["git", "status", "--porcelain"], cwd=worktree, check=True, capture_output=True, text=True, timeout=30
+    ).stdout
+    assert "M  README.md" in status
+    assert "?? scripts/audit/" in status
+    assert pushed == [branch]
+
+
+def test_auto_finalize_refuses_when_every_change_is_outside_owned_paths(tmp_path, monkeypatch):
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "claude/owned-none")
+    (worktree / "scratch.py").write_text("# scratch\n", encoding="utf-8")
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: pytest.fail("must not push"))
+    head = delegate._resolve_sha(worktree)
+
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="owned-none",
+        agent="claude",
+        branch="claude/owned-none",
+        base_branch="main",
+        owned_paths=["scripts/fleet/"],
+    )
+
+    assert result.ok is False
+    assert result.error == "no_changes_under_owned_paths"
+    assert result.skipped_paths == ("scratch.py",)
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_dispatch_records_owned_paths_only_when_declared(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The owned-path list auto-finalize reads is the task's --research-owned-path values."""
+    monkeypatch.setattr(delegate, "_build_research_context", lambda args: None)
+
+    plain, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "owned-plain", ["--mode", "read-only"])
+    owned, _ = _dispatch_recording_the_worker_prompt(
+        tmp_path,
+        monkeypatch,
+        "owned-declared",
+        ["--mode", "read-only", "--research-owned-path", "scripts/fleet/", "--research-owned-path", "docs/x.md"],
+    )
+
+    assert "owned_paths" not in plain
+    assert owned["owned_paths"] == ["scripts/fleet/", "docs/x.md"]

@@ -45,7 +45,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
+from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -1107,9 +1107,13 @@ def _path_contains(parent: Path, child: Path) -> bool:
 
 
 def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
+    return _dispatch_task_id_for_path(repo_root, info.path)
+
+
+def _dispatch_task_id_for_path(repo_root: Path, path: Path) -> str | None:
     dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
     try:
-        relative = info.path.resolve().relative_to(dispatch_root)
+        relative = path.resolve().relative_to(dispatch_root)
     except ValueError:
         return None
     return relative.parts[1] if len(relative.parts) == 2 else None
@@ -1915,6 +1919,76 @@ def _activity_reason(
     if claim_reason is not None:
         return claim_reason
 
+    return None
+
+
+_UNSETTLED_TASK_STATUSES = frozenset({"queued", "starting", "spawning", "running"})
+
+
+def _process_reader() -> worker_leftovers.ProcessReader:
+    """Seam for tests: the live ``/proc`` and cgroup reader."""
+    return worker_leftovers.ProcFsReader()
+
+
+def _task_leftover_scope(repo_root: Path, path: Path) -> worker_leftovers.WorkerScope | None:
+    """The scope of a settled task's recorded background jobs (#8991), or None.
+
+    Only a record whose worker has exited and whose status is settled
+    qualifies; a live worker still owns its processes.
+    """
+    task_id = _dispatch_task_id_for_path(repo_root, path)
+    record = _task_record(repo_root, task_id)
+    if record is None:
+        return None
+    jobs = record.get(worker_leftovers.BACKGROUND_JOBS_REASON)
+    if not isinstance(jobs, dict):
+        return None
+    if str(record.get("status") or "") in _UNSETTLED_TASK_STATUSES or _task_pid_alive(record):
+        return None
+    scope = worker_leftovers.WorkerScope.from_state(jobs.get("scope"))
+    if scope is None or scope.task_id != task_id:
+        return None
+    return scope
+
+
+def live_cwds_for_reap(repo_root: Path, path: Path, live_cwds: set[Path] | None) -> set[Path] | None:
+    """``live_cwds`` without the worktree's own settled background jobs.
+
+    A settled task's leftover jobs hold its worktree as their cwd, which would
+    keep it from ever being reaped. When every process inside ``path`` is one
+    of those jobs, their cwds are dropped here and the jobs are stopped just
+    before removal (:func:`_stop_task_background_jobs`); any other holder
+    keeps the whole set.
+    """
+    if live_cwds is None:
+        return None
+    scope = _task_leftover_scope(repo_root, path)
+    if scope is None or not worker_leftovers.only_leftovers_hold(path, scope, reader=_process_reader()):
+        return live_cwds
+    root = path.resolve()
+    return {cwd for cwd in live_cwds if not _path_contains(root, cwd)}
+
+
+def _stop_task_background_jobs(repo_root: Path, path: Path) -> str | None:
+    """Stop a settled task's leftover jobs before its worktree goes; refusal reason or None.
+
+    Only processes inside that worker's own scope unit, or on the Popen
+    fallback carrying its task marker, are signalled.
+    """
+    scope = _task_leftover_scope(repo_root, path)
+    if scope is None:
+        return None
+    stopped = worker_leftovers.stop_leftovers(scope, reader=_process_reader())
+    if not stopped.ok:
+        survivors = ", ".join(str(proc.pid) for proc in stopped.survivors) or "unknown"
+        return f"background jobs of task-id={scope.task_id} could not be stopped ({stopped.error}; pids {survivors})"
+    live_cwds = _live_cwd_paths(repo_root)
+    if live_cwds is None:
+        return "process-CWD activity probe unavailable after stopping background jobs"
+    root = path.resolve()
+    for cwd in live_cwds:
+        if _path_contains(root, cwd):
+            return f"live process cwd={cwd}"
     return None
 
 
@@ -2748,6 +2822,19 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
+        # A settled worker's background jobs die with its worktree, never
+        # after it into a deleted cwd (#8991); if they survive, it stays.
+        leftover_refusal = _stop_task_background_jobs(repo_root, info.path)
+        if leftover_refusal is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"{leftover_refusal}; originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+
         # The block below holds delegate's per-worktree lock. Git inside
         # ``_bounded_locked_git`` is bounded: each call at most
         # ``_LOCKED_GIT_TIMEOUT_S`` (or the timeout it passes, such as the
@@ -3243,7 +3330,7 @@ def reap_worktrees(
                 repo_root=repo_root,
                 info=info,
                 active_ids=active_ids,
-                live_cwds=live_cwds,
+                live_cwds=live_cwds_for_reap(repo_root, info.path, live_cwds),
             )
             if activity is not None:
                 results.append(

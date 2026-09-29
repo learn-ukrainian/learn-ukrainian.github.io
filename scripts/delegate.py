@@ -64,7 +64,11 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
-        "peak_rss_mib": float | null                # terminal records; largest reaped child
+        "peak_rss_mib": float | null,               # terminal records; largest reaped child
+        "owned_paths": [str] | absent,              # the --research-owned-path values (#8991)
+        "incomplete_run_reason": "background_jobs_alive_at_exit" | absent,
+        "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
+        "finalize_skipped_paths": [str] | absent    # changed files auto-finalize left out of its commit
     }
 
 Design notes:
@@ -113,6 +117,7 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import fnmatch
 import functools
 import hashlib
 import json
@@ -170,6 +175,7 @@ from scripts.orchestration import (
     dispatch_isolation,
     reaper_lifecycle,
     task_record_store,
+    worker_leftovers,
     worktree_claims,
     worktree_prep,
 )
@@ -2426,6 +2432,8 @@ _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_NO_COMMITS_REASON = "no_commits_no_changes"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
 _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
+# Auto-finalize refusal: every deliverable change is outside the owned paths (#8991).
+_AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
@@ -4709,6 +4717,10 @@ class AutoFinalizeResult:
     pr_url: str | None = None
     error: str | None = None
     changed_files: tuple[str, ...] = ()
+    # The task's declared owned paths, or None when it declared none (#8991).
+    owned_paths: tuple[str, ...] | None = None
+    # Changed files outside the owned paths: never staged, left in the tree.
+    skipped_paths: tuple[str, ...] = ()
 
 
 def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -5123,8 +5135,10 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     try:
+        # --no-renames lists both sides of a rename, so an owned-path filter
+        # never commits the new path while leaving the old one's deletion out.
         tracked = subprocess.run(
-            ["git", "diff", "--name-only", "-z", "HEAD", "--"],
+            ["git", "diff", "--no-renames", "--name-only", "-z", "HEAD", "--"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5168,6 +5182,43 @@ def _is_disposable_auto_finalize_path(path: str) -> bool:
 def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
     """Return whether auto-finalization would publish only disposable residue."""
     return bool(changed_files) and all(_is_disposable_auto_finalize_path(path) for path in changed_files)
+
+
+def _declared_owned_paths(raw: object) -> tuple[str, ...] | None:
+    """The task record's ``owned_paths`` (its ``--research-owned-path`` values), or None."""
+    if not isinstance(raw, (list, tuple)):
+        return None
+    paths = tuple(str(item) for item in raw if isinstance(item, str) and item.strip())
+    return paths or None
+
+
+def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
+    """Whether a repo-relative changed ``path`` falls under a declared owned path.
+
+    Claims are read the way the write-path admission guard reads them
+    (:func:`scripts.guardrails.delegate_ownership.normalize_claim`): a plain
+    path owns itself and everything below it, ``dir/`` and ``dir/**`` own the
+    subtree, and a claim with other wildcards is a case-sensitive glob. An
+    absolute or ``..`` claim owns nothing.
+    """
+    try:
+        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import ClaimKind, normalize_claim  # type: ignore
+
+    for raw in owned_paths:
+        claim = normalize_claim(raw)
+        if claim.kind is ClaimKind.UNKNOWN:
+            pattern = claim.norm.removeprefix("./")
+            is_repo_glob = (
+                any(ch in pattern for ch in "*?[") and not pattern.startswith("/") and ".." not in pattern.split("/")
+            )
+            if is_repo_glob and fnmatch.fnmatchcase(path, pattern):
+                return True
+            continue
+        if path == claim.norm or path.startswith(claim.norm + "/"):
+            return True
+    return False
 
 
 def _current_branch(worktree: Path) -> str | None:
@@ -5330,9 +5381,28 @@ def _auto_finalize_dirty_worktree(
     branch: str | None,
     base_branch: str,
     open_pr: bool = False,
+    owned_paths: object = None,
 ) -> AutoFinalizeResult:
-    """Stage, commit, and push a cleanly exited dirty dispatch."""
-    changed_files = _auto_finalize_changed_files(worktree)
+    """Stage, commit, and push a cleanly exited dirty dispatch.
+
+    ``owned_paths`` is the task record's ``owned_paths`` list, written at
+    dispatch from the task's ``--research-owned-path`` values (#8991). When the
+    task declared any, only changed files under them are staged and committed;
+    the rest stay uncommitted in the tree and come back as ``skipped_paths``.
+    A task that declared none keeps the whole-tree commit, and the result says
+    so with ``owned_paths=None``.
+    """
+    owned = _declared_owned_paths(owned_paths)
+    all_changed = _auto_finalize_changed_files(worktree)
+    changed_files = all_changed
+    skipped: tuple[str, ...] = ()
+    if owned is not None:
+        changed_files = tuple(path for path in all_changed if _path_is_owned(path, owned))
+        skipped = tuple(path for path in all_changed if path not in changed_files)
+
+    def _result(**fields: Any) -> AutoFinalizeResult:
+        return AutoFinalizeResult(owned_paths=owned, skipped_paths=skipped, **fields)
+
     try:
         worktree_proc = subprocess.run(
             ["git", "rev-parse", "--is-inside-work-tree"],
@@ -5344,30 +5414,33 @@ def _auto_finalize_dirty_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error="not a git worktree",
             changed_files=changed_files,
         )
     if worktree_proc.returncode != 0 or (worktree_proc.stdout or "").strip() != "true":
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error="not a git worktree",
             changed_files=changed_files,
         )
 
-    if not changed_files:
-        return AutoFinalizeResult(ok=False, error="clean-tree")
-    if _auto_finalize_is_junk_only(changed_files):
-        return AutoFinalizeResult(
+    if not all_changed:
+        return _result(ok=False, error="clean-tree")
+    if _auto_finalize_is_junk_only(all_changed):
+        return _result(
             ok=False,
             error=_NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
-            changed_files=changed_files,
+            changed_files=all_changed,
         )
+    if not changed_files or _auto_finalize_is_junk_only(changed_files):
+        # Real work exists only outside the declared scope: a human decides.
+        return _result(ok=False, error=_AUTO_FINALIZE_NOTHING_OWNED_REASON, changed_files=changed_files)
 
     resolved_branch = branch or _current_branch(worktree)
     if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             error=f"unsafe or unresolved branch {resolved_branch!r}",
             changed_files=changed_files,
@@ -5382,11 +5455,18 @@ def _auto_finalize_dirty_worktree(
         f"Agent: {agent}"
     )
 
+    # With declared owned paths, git reads the exact file list from stdin as
+    # literal pathspecs; ``commit --only`` then leaves anything the worker had
+    # already staged outside that list out of the commit.
+    scoped_input = "\0".join(changed_files) if owned is not None else None
+    scoped_args = ["--pathspec-from-file=-", "--pathspec-file-nul"] if owned is not None else []
+    git_prefix = ["git", "--literal-pathspecs"] if owned is not None else ["git"]
     commit_sha: str | None = None
     try:
         add_proc = subprocess.run(
-            ["git", "add", "-A"],
+            [*git_prefix, "add", "-A", *scoped_args],
             cwd=worktree,
+            input=scoped_input,
             capture_output=True,
             text=True,
             check=False,
@@ -5394,7 +5474,7 @@ def _auto_finalize_dirty_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if add_proc.returncode != 0:
-            return AutoFinalizeResult(
+            return _result(
                 ok=False,
                 error=f"git add failed: {_format_process_failure(add_proc)}",
                 changed_files=changed_files,
@@ -5402,8 +5482,9 @@ def _auto_finalize_dirty_worktree(
 
         commit_proc = subprocess.run(
             [
-                "git",
+                *git_prefix,
                 "commit",
+                *(["--only", *scoped_args] if owned is not None else []),
                 "-m",
                 subject,
                 "-m",
@@ -5412,6 +5493,7 @@ def _auto_finalize_dirty_worktree(
                 _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
+            input=scoped_input,
             capture_output=True,
             text=True,
             check=False,
@@ -5421,15 +5503,16 @@ def _auto_finalize_dirty_worktree(
         if commit_proc.returncode != 0:
             with contextlib.suppress(OSError, subprocess.TimeoutExpired):
                 subprocess.run(
-                    ["git", "restore", "--staged", "--", *changed_files],
+                    [*git_prefix, "restore", "--staged", *scoped_args, *([] if owned else ["--", *changed_files])],
                     cwd=worktree,
+                    input=scoped_input,
                     capture_output=True,
                     text=True,
                     check=False,
                     env=_sanitized_git_env(),
                     timeout=DEFAULT_GIT_TIMEOUT_S,
                 )
-            return AutoFinalizeResult(
+            return _result(
                 ok=False,
                 error=f"git commit failed: {_format_process_failure(commit_proc)}",
                 changed_files=changed_files,
@@ -5457,7 +5540,7 @@ def _auto_finalize_dirty_worktree(
                     error = f"{error}; git reset failed: {_format_process_failure(reset_proc)}"
                 else:
                     commit_sha = None
-        return AutoFinalizeResult(
+        return _result(
             ok=False,
             commit_sha=commit_sha,
             error=error,
@@ -5480,9 +5563,9 @@ def _auto_finalize_dirty_worktree(
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             # The commit is already pushed. Never soft-reset it after a PR error.
-            return AutoFinalizeResult(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
+            return _result(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
 
-    return AutoFinalizeResult(
+    return _result(
         ok=True,
         commit_sha=commit_sha,
         pr_url=pr_url,
@@ -5849,12 +5932,28 @@ def _remove_dispatch_worktree(
     return {**removal.as_record(), "pr": None}
 
 
+def _stop_worker_background_jobs(background_jobs: Mapping[str, Any]) -> tuple[bool, str]:
+    """Stop a worker's recorded background jobs; ``(ok, refusal detail)``."""
+    scope = worker_leftovers.WorkerScope.from_state(background_jobs.get("scope"))
+    if scope is None:
+        return False, "background jobs recorded without a worker scope; refusing worktree removal"
+    try:
+        stopped = worker_leftovers.stop_leftovers(scope, reader=_worker_process_reader())
+    except Exception as exc:
+        return False, f"background jobs could not be stopped ({type(exc).__name__}: {exc}); refusing worktree removal"
+    if stopped.ok:
+        return True, ""
+    survivors = ", ".join(str(proc.pid) for proc in stopped.survivors) or "unknown"
+    return False, f"background jobs could not be stopped ({stopped.error}; pids {survivors}); refusing worktree removal"
+
+
 def _settle_worktree_reap(
     worktree: Path,
     *,
     created_by_this_dispatch: bool | None,
     settling_task_id: str,
     lock_timeout_s: float | None = None,
+    background_jobs: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Remove a settled checkout this dispatch created and keep its branch ref.
 
@@ -5862,15 +5961,25 @@ def _settle_worktree_reap(
     read-only review checkouts this path exists to drop. Removal goes through
     :func:`_remove_dispatch_worktree` with settle's ownership proof and is
     worktree-only: ``git branch`` is never invoked, and a missing branch ref
-    after removal is an error. This never raises.
+    after removal is an error. ``background_jobs`` is the worker's
+    ``background_jobs_alive_at_exit`` record: once ownership is proven, those
+    processes are stopped inside the worker's own scope before removal, and
+    removal is refused if any survive (#8991). This never raises.
     """
+
+    def releasable() -> tuple[bool, str]:
+        ok, detail = _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch)
+        if not ok or background_jobs is None:
+            return ok, detail
+        return _stop_worker_background_jobs(background_jobs)
+
     # Resolved before removal: the checkout's ``.git`` pointer is gone after it.
     owning_repo = worktree_claims.owning_repo_root(worktree, default=_REPO_ROOT)
     removal = _remove_dispatch_worktree(
         worktree,
         reason="settled clean worktree; branch ref kept",
         owner_task_id=settling_task_id,
-        releasable=lambda: _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch),
+        releasable=releasable,
         force=True,
         lock_timeout_s=lock_timeout_s,
     )
@@ -7229,6 +7338,50 @@ def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
     return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
 
 
+# Children that exit on their own right after the CLI (a stdio MCP server
+# reading EOF) get this long before they count as background jobs.
+_BACKGROUND_JOBS_SETTLE_S = 5.0
+
+
+def _worker_process_reader() -> worker_leftovers.ProcessReader:
+    """Seam for tests: the live ``/proc`` and cgroup reader."""
+    return worker_leftovers.ProcFsReader()
+
+
+def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> dict[str, Any] | None:
+    """Processes of this worker still alive after its CLI exited (#8991), or None.
+
+    Runs inside the detached worker, so only records carrying the
+    ``launch_mode`` that spawn wrote are checked: a foreground or test run has
+    no scope or session of its own to inspect. The scope's ``cgroup.procs``
+    (or, on the Popen fallback, the task's environment marker and the worker's
+    session) bound the scan. A headless session cannot be woken by a
+    background-task notification, so whatever is still running is unfinished
+    work. Never raises: this is telemetry about a worker that has finished.
+    """
+    launch_mode = state.get("launch_mode")
+    if launch_mode not in {dispatch_isolation.LAUNCH_SCOPE, dispatch_isolation.LAUNCH_FALLBACK}:
+        return None
+    try:
+        reader = _worker_process_reader()
+        scope = worker_leftovers.worker_scope_at_exit(
+            task_id=task_id,
+            launch_mode=str(launch_mode),
+            launch_unit=state.get("launch_unit") if isinstance(state.get("launch_unit"), str) else None,
+            reader=reader,
+        )
+        leftovers = worker_leftovers.wait_for_leftovers(scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S)
+    except Exception as exc:
+        print(f"[delegate] WARNING: background-job check failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return None
+    if leftovers is None:
+        print("[delegate] WARNING: background-job check could not read the worker scope", file=sys.stderr)
+        return None
+    if not leftovers:
+        return None
+    return worker_leftovers.leftovers_state(scope, leftovers)
+
+
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
     """Return the first non-blank captured stderr line for task summaries."""
     if not stderr_excerpt:
@@ -7511,6 +7664,7 @@ def _run_worker(
     pre_spawn_failure = False
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
+    background_jobs: dict[str, Any] | None = None
     telemetry_settled = False
     rescue_status: str | None = None
     cursor_mcp_path: Path | None = None
@@ -7759,6 +7913,15 @@ def _run_worker(
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
+        # A headless worker that ended its turn while its own background jobs
+        # still run has not finished (#8991): record them before anything
+        # reads the worktree, so no finalize step treats it as settled.
+        if not pre_spawn_failure:
+            background_jobs = _background_jobs_at_exit(final_state, task_id=task_id)
+        if background_jobs is not None:
+            final_state[worker_leftovers.BACKGROUND_JOBS_REASON] = background_jobs
+            final_state["incomplete_run_reason"] = worker_leftovers.BACKGROUND_JOBS_REASON
+
         if (
             strict_mcp_config
             and review_id is not None
@@ -7896,7 +8059,7 @@ def _run_worker(
                 # the task for finalization rather than letting it settle as ``done``.
                 # A worker cut off mid-work (#8502) leaves unfinished edits even
                 # when it had pushed earlier commits: surface them, never ``done``.
-                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                run_incomplete = _worker_run_incomplete(stderr_excerpt) or background_jobs is not None
                 if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
@@ -7942,6 +8105,7 @@ def _run_worker(
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
+                        owned_paths=final_state.get("owned_paths"),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
@@ -7962,6 +8126,10 @@ def _run_worker(
             finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
             # Unknown telemetry cannot prove the work was committed, so surface
             # the task for a human instead of settling it as done.
+            needs_finalize = True
+        # Live background jobs make a write run unconfirmed even when its tree is
+        # clean and pushed (#8991): the jobs may still be producing the result.
+        if background_jobs is not None and mode in _WRITE_CAPABLE_MODES:
             needs_finalize = True
         # Either way the verdict is now measured rather than assumed, so an
         # interrupt below must persist it as-is instead of forcing attention
@@ -8019,6 +8187,9 @@ def _run_worker(
             ok_outcome = False
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+        if background_jobs is not None and final_status == "needs_finalize":
+            reason = worker_leftovers.BACKGROUND_JOBS_REASON
+            last_error = f"{reason}; {last_error}" if last_error else reason
         if read_only_mutation_paths:
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
             # Never REPLACE a real failure with the guard diagnostic (#7124):
@@ -8153,6 +8324,7 @@ def _run_worker(
             Path(worktree_path),
             created_by_this_dispatch=worktree_created_by_dispatch,
             settling_task_id=task_id,
+            background_jobs=background_jobs,
         )
 
     usage_record = getattr(result, "usage_record", None)
@@ -8205,12 +8377,16 @@ def _run_worker(
                     "pr_url": auto_finalize.pr_url,
                     "error": auto_finalize.error,
                     "changed_files": list(auto_finalize.changed_files),
+                    "owned_paths": (list(auto_finalize.owned_paths) if auto_finalize.owned_paths is not None else None),
+                    "owned_paths_declared": auto_finalize.owned_paths is not None,
                 }
                 if auto_finalize is not None
                 else None
             ),
         }
     )
+    if auto_finalize is not None:
+        final_state["finalize_skipped_paths"] = list(auto_finalize.skipped_paths)
     _write_state_atomic(state_path, final_state)
     if worktree_path:
         print(
@@ -10133,6 +10309,12 @@ def _dispatch(
                 "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
             }
         initial_state = _with_optional_research_state(initial_state, research_state)
+        # The only owned-path list a task carries (#8991): its --research-owned-path
+        # values, verbatim. Auto-finalize commits nothing outside them. Omitted,
+        # not null, when none were given, so a no-flags record stays unchanged.
+        declared_owned_paths = _declared_owned_paths(getattr(args, "research_owned_path", None))
+        if declared_owned_paths is not None:
+            initial_state["owned_paths"] = list(declared_owned_paths)
         if worktree_path is not None and not worktree_path.is_dir():
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
             print(
