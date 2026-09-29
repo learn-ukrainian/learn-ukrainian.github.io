@@ -634,13 +634,19 @@ local-only route guard.
 
 `delegate.py dispatch --worktree ...` creates the dispatched agent a
 private git worktree so its writes are isolated from the main checkout.
-Two layouts are currently supported:
 
 | Layout | Path | Status | Triggered by |
 | --- | --- | --- | --- |
-| **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
-| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
-| custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
+| **dispatch subtree** | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path), or `--worktree <explicit-path>` inside `.worktrees/dispatch/{agent}/` |
+| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated | attach an existing one with `--cwd <that-worktree>` |
+| custom | anywhere else | not created by delegate | attach an existing added worktree with `--cwd <that-worktree>` |
+
+An explicit `--worktree <explicit-path>` must resolve, after following symlinks,
+inside `.worktrees/dispatch/{agent}/` of the target repository for the agent named
+by `--agent`; anything else is refused before any side effect (#8775). Both
+`--worktree` and `--cwd` values containing a control character or line separator
+are refused. The worker prompt renders the worktree path as a JSON-quoted value,
+so a path is data, never an instruction.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into

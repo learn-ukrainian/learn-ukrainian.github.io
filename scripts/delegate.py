@@ -871,6 +871,47 @@ def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) ->
     return path.resolve()
 
 
+# Caller-supplied paths reach the worker prompt and subprocess cwd (#8775).
+# C0/C1 controls, DEL, and the Unicode line/paragraph separators can all start
+# a new line in a prompt; none belongs in a filesystem path this repo uses.
+_CALLER_PATH_FORBIDDEN_RE = re.compile("[\x00-\x1f\x7f-\x9f  ]")
+
+
+def _caller_path_control_char_error(flag: str, raw: str) -> str | None:
+    """Refuse a ``--worktree``/``--cwd`` value that contains a control character.
+
+    The message names the rule and the offending code point, never the raw
+    value, so the refusal itself cannot carry injected text.
+    """
+    match = _CALLER_PATH_FORBIDDEN_RE.search(raw)
+    if match is None:
+        return None
+    return (
+        f"❌ {flag} refused: the path contains control character U+{ord(match.group()):04X} "
+        f"at offset {match.start()}; caller-supplied paths may not contain control characters "
+        "or line separators (#8775)."
+    )
+
+
+def _explicit_worktree_containment_error(raw: str, *, agent: str, repo_root: Path) -> str | None:
+    """Refuse an explicit ``--worktree PATH`` outside ``<repo>/.worktrees/dispatch/<agent>/``.
+
+    The path is resolved with symlinks followed, so ``..`` segments and
+    symlinks cannot leave the dispatching agent's subtree. The message quotes
+    only the resolved path via ``repr`` (#8775).
+    """
+    agent_root = (repo_root.resolve() / ".worktrees" / "dispatch" / agent).resolve()
+    candidate = _normalize_worktree_path(raw, repo_root=repo_root)
+    if candidate != agent_root and candidate.is_relative_to(agent_root):
+        return None
+    return (
+        f"❌ --worktree refused: {str(candidate)!r} does not resolve under {str(agent_root)!r}; "
+        f"an explicit --worktree PATH must be a directory inside .worktrees/dispatch/{agent}/ "
+        "of the target repository after following symlinks (#8775). "
+        "Pass bare `--worktree` to auto-create one."
+    )
+
+
 def _resolve_output_schema(
     raw_path: str | None,
     *,
@@ -6853,9 +6894,12 @@ def _augment_prompt_with_worktree(
             "Run at most the specific tests that reproduce a finding you are checking.\n"
             "Cite CI run ids for suite results.\n"
         )
+    # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
+    # if an unvalidated path ever reaches this block.
     return (
         "[delegate worktree]\n"
-        f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
+        "Run all file edits, tests, and git commands inside this worktree "
+        f"(JSON-quoted path): {json.dumps(str(worktree_path))}\n"
         "Do not switch branches in the main checkout.\n"
         # #5803 follow-up: remove the workflow reason to visit the primary.
         # A linked worktree shares the canonical `origin` remote, so fresh
@@ -8725,6 +8769,24 @@ def _dispatch(
             return 2
 
     worktree_arg = getattr(args, "worktree", None)
+    # #8775: validate caller-supplied paths once, before any use reaches a
+    # check, a subprocess cwd, or the worker prompt. An explicit --worktree
+    # PATH must stay inside the dispatching agent's own dispatch subtree;
+    # --cwd keeps its documented read-only-primary and sibling-repo flows.
+    for flag, raw_path in (("--worktree", worktree_arg), ("--cwd", args.cwd)):
+        path_error = _caller_path_control_char_error(flag, raw_path) if raw_path else None
+        if path_error:
+            print(path_error, file=sys.stderr)
+            return 2
+    if worktree_arg and worktree_arg != "auto":
+        containment_error = _explicit_worktree_containment_error(
+            worktree_arg,
+            agent=resolve_retired_agent_alias(args.agent) or args.agent,
+            repo_root=target_repo_root,
+        )
+        if containment_error:
+            print(containment_error, file=sys.stderr)
+            return 2
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
@@ -8809,15 +8871,6 @@ def _dispatch(
     if acp_runtime_error:
         print(acp_runtime_error, file=sys.stderr)
         return 2
-
-    if args.mode == "read-only" and worktree_arg and worktree_arg != "auto":
-        candidate = _normalize_worktree_path(worktree_arg, repo_root=target_repo_root)
-        primary_root = target_repo_root.resolve()
-        if candidate == primary_root or (
-            candidate.is_relative_to(primary_root) and not candidate.is_relative_to(primary_root / ".worktrees")
-        ):
-            print("❌ --worktree points at the primary checkout; pass --cwd explicitly to opt in", file=sys.stderr)
-            return 2
 
     # Write-capable modes (workspace-write / danger) must resolve to a verified
     # added worktree — never the primary checkout (#4445). An explicit read-only
@@ -11714,8 +11767,10 @@ def build_parser() -> argparse.ArgumentParser:
             "write-capable modes (workspace-write, danger). Pass `--worktree` "
             "alone (recommended) to auto-derive `.worktrees/dispatch/{agent}/"
             "{task}/` under the primary checkout that owns this script, or "
-            "`--worktree PATH` to reuse a specific added worktree "
-            "(validated against the expected dispatch branch before reuse). "
+            "`--worktree PATH` to reuse a specific added worktree inside "
+            "`.worktrees/dispatch/{agent}/` (validated against the expected "
+            "dispatch branch before reuse; paths elsewhere or with control "
+            "characters are refused, #8775). "
             "Refuses when the invocation cwd is a different git root (#6900)."
         ),
     )

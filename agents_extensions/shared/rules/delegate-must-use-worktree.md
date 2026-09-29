@@ -30,7 +30,11 @@ switch HEAD). The rule exists so this never happens again.
 | Layout | Path | How invoked |
 |---|---|---|
 | **Subtree (preferred)** | `.worktrees/dispatch/{agent}/{task}/` | bare `--worktree` (no path) — runtime auto-derives |
-| **Flat (deprecated, back-compat)** | `.worktrees/<task-name>` | `--worktree <explicit-path>` |
+| **Flat (deprecated, back-compat)** | `.worktrees/<task-name>` | existing checkouts only: `--cwd <that-worktree>` |
+
+An explicit `--worktree <explicit-path>` must resolve inside
+`.worktrees/dispatch/{agent}/` for the dispatching agent; paths elsewhere, or
+containing control characters, are refused (#8775).
 
 Use the **subtree** layout for all new dispatches. The runtime prints a
 `⚠️ DEPRECATED flat worktree layout` warning on the flat form. The
