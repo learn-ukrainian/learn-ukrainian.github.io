@@ -1,8 +1,7 @@
 """Unit tests for subprocess timeout bounds in scripts/wiki (#7213 slice 13).
 
 Every bounded call site must pass an explicit ``timeout=`` — 30s for git
-plumbing, 10s for the Darwin ``sysctl`` RAM probe, 300s for Codex concept
-extraction, and the documented 1800s ceiling for a wiki track compile+review —
+plumbing, 300s for Codex concept extraction, and the documented 1800s ceiling for a wiki track compile+review —
 and must map ``subprocess.TimeoutExpired`` onto its documented degradation
 instead of an uncaught traceback:
 
@@ -10,7 +9,6 @@ instead of an uncaught traceback:
 * ``backfill_generated_by_model.load_head_text``       → fall back to the on-disk working-tree text
 * ``backfill_generated_by_model.load_historical_meta`` → skip that commit (continue), like a non-zero rc
 * ``corpus_gaps.audit.run_codex_concept_extraction``   → RuntimeError("Codex concept extraction failed: …")
-* ``mlx_bridge.get_physical_ram``                      → return None (existing ``except Exception`` shape)
 * ``rebuild._run_compile``                             → non-zero exit code 124, no traceback
 """
 
@@ -19,7 +17,6 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -28,7 +25,7 @@ import pytest
 
 from tests.project_python import project_python
 from wiki import backfill_generated_by_model as backfill
-from wiki import mlx_bridge, rebuild
+from wiki import rebuild
 from wiki.backfill_generated_by_model import (
     GIT_TIMEOUT_S,
     load_head_text,
@@ -40,7 +37,6 @@ from wiki.diagnostics.corpus_gaps.audit import CODEX_TIMEOUT_S, run_codex_concep
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SYSCTL_TIMEOUT_S = 10
 
 
 def _completed(
@@ -202,36 +198,6 @@ def test_codex_extraction_maps_timeout_to_runtime_error() -> None:
 
 
 # ---------------------------------------------------------------------------
-# mlx_bridge.get_physical_ram
-# ---------------------------------------------------------------------------
-
-
-def test_get_physical_ram_probe_passes_explicit_timeout(monkeypatch) -> None:
-    monkeypatch.setattr(sys, "platform", "darwin")
-    captured: dict[str, Any] = {}
-
-    def fake_check_output(cmd: list[str], **kwargs: Any) -> str:
-        captured.update(kwargs)
-        return "17179869184\n"
-
-    with patch("subprocess.check_output", side_effect=fake_check_output):
-        assert mlx_bridge.get_physical_ram() == 17179869184
-
-    assert captured["timeout"] == SYSCTL_TIMEOUT_S == 10
-
-
-def test_get_physical_ram_maps_timeout_to_none(monkeypatch) -> None:
-    """TimeoutExpired is an Exception — the existing degrade-to-None shape holds."""
-    monkeypatch.setattr(sys, "platform", "darwin")
-
-    def timed_out_check_output(cmd: list[str], **_kwargs: Any) -> str:
-        raise subprocess.TimeoutExpired(cmd, SYSCTL_TIMEOUT_S)
-
-    with patch("subprocess.check_output", side_effect=timed_out_check_output):
-        assert mlx_bridge.get_physical_ram() is None
-
-
-# ---------------------------------------------------------------------------
 # rebuild._run_compile
 # ---------------------------------------------------------------------------
 
@@ -289,7 +255,7 @@ def test_run_compile_keyboard_interrupt_still_returns_130() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Entry-point smoke (--help where a CLI exists; mlx_bridge has none)
+# Entry-point smoke (--help where a CLI exists)
 # ---------------------------------------------------------------------------
 
 
@@ -310,9 +276,7 @@ def test_entry_point_help_smoke(script: str, needle: str) -> None:
     gap in scripts/storage/__init__.py, outside this slice's owned paths).
     """
     env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith("PYTEST_") and key != "COV_CORE_SOURCE"
+        key: value for key, value in os.environ.items() if not key.startswith("PYTEST_") and key != "COV_CORE_SOURCE"
     }
     env["PYTHONPATH"] = str(REPO_ROOT)
     proc = subprocess.run(

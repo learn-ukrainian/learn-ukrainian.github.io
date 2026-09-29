@@ -59,8 +59,8 @@ if _SCRIPTS_DIR not in sys.path:
 
 from . import slovnyk_me
 from .channels import rank_external_hits
-from .chunking import chunk_text, policy_for
-from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections  # noqa: F401
+from .chunking import ChunkedPiece, chunk_text, policy_for
+from .dense_rerank import _get_tokenizer, dense_rerank_enabled, rerank_candidates, rerank_sections  # noqa: F401
 from .query_builder import build_query_buckets
 from .sources_schema import normalize_source_filename
 from .sum20_official import (
@@ -1309,12 +1309,11 @@ def _search_external_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
-    policy = policy_for("external")
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer("external")
     for row in rows:
         parent_id = str(row["chunk_id"] or row["id"])
         full_text = str(row["text"] or "")
-        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+        for piece in _candidate_pieces(full_text, corpus="external", tokenizer=tokenizer):
             unit_key = (
                 f"external:{parent_id}:chunk_{piece.chunk_index}"
                 if piece.extra_metadata
@@ -1373,12 +1372,11 @@ def _search_wikipedia_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
-    policy = policy_for("wikipedia")
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer("wikipedia")
     for row in rows:
         title = str(row["title"] or "")
         full_text = str(row["text"] or "")
-        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+        for piece in _candidate_pieces(full_text, corpus="wikipedia", tokenizer=tokenizer):
             unit_key = (
                 f"wikipedia:{title}:chunk_{piece.chunk_index}"
                 if piece.extra_metadata
@@ -1487,6 +1485,29 @@ def _search_ukrainian_wiki_candidates(
     ]
 
 
+def _candidate_tokenizer(corpus: str):
+    """The BGE-M3 tokenizer when ``corpus`` search reranks with dense vectors.
+
+    Chunking exists only to align candidates with index rows, so keyword-only
+    search (no index, dense switched off, or unavailable tokenizer assets)
+    returns ``None`` without loading transformers or torch; each hit then
+    stays one whole unit.
+    """
+
+    if not dense_rerank_enabled(corpus):
+        return None
+    try:
+        return _get_tokenizer()
+    except (ImportError, OSError, ValueError):
+        return None
+
+
+def _candidate_pieces(text: str, *, corpus: str, tokenizer) -> list[ChunkedPiece]:
+    if tokenizer is None:
+        return [ChunkedPiece(chunk_index=0, text=text)] if text else []
+    return list(chunk_text(text, policy=policy_for(corpus), tokenizer=tokenizer))
+
+
 def _expand_to_chunk_candidates(
     parent_candidates: list[dict],
     *,
@@ -1511,8 +1532,7 @@ def _expand_to_chunk_candidates(
     + zero score. This helper fixes that uniformly.
     """
 
-    policy = policy_for(corpus)
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer(corpus)
     expanded: list[dict] = []
     for parent in parent_candidates:
         parent_id_value = parent.get(parent_id_field)
@@ -1522,7 +1542,7 @@ def _expand_to_chunk_candidates(
         full_text = str(parent.get(text_field, "") or "")
         if not full_text:
             continue
-        pieces = list(chunk_text(full_text, policy=policy, tokenizer=tokenizer))
+        pieces = _candidate_pieces(full_text, corpus=corpus, tokenizer=tokenizer)
         if not pieces:
             continue
         for piece in pieces:
@@ -1671,13 +1691,7 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
     if row is None:
         return match
 
-    pieces = list(
-        chunk_text(
-            str(row["text"] or ""),
-            policy=policy_for("wikipedia"),
-            tokenizer=_get_tokenizer(),
-        )
-    )
+    pieces = _candidate_pieces(str(row["text"] or ""), corpus="wikipedia", tokenizer=_candidate_tokenizer("wikipedia"))
     chunk_index = int(match.get("chunk_index", 0))
     context = pieces[max(0, chunk_index - 1):chunk_index + 2]
     if not context:
