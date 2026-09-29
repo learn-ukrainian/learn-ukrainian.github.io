@@ -402,6 +402,17 @@ def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path
     ]
 
 
+def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path) -> None:
+    prompt = "before\ud800after"
+    plan = AgyAdapter().build_invocation(
+        prompt=prompt, mode="read-only", cwd=tmp_path, model=None,
+        task_id="surrogate-prompt", session_id=None, tool_config=None,
+    )
+
+    assert plan.stdin_payload.isascii()
+    assert json.loads(plan.stdin_payload)["message"]["content"][0]["text"] == prompt
+
+
 def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
     # Runtime slugs pass through as ``agy models`` ids (verified 2026-07-21 for 3.6).
     plan = _build(tmp_path, model="gemini-3.6-flash-high")
@@ -1743,6 +1754,38 @@ def test_stream_result_preserves_error_and_cancel_signals(
     assert result.stderr_excerpt.splitlines()[0].startswith(expected)
 
 
+def test_incomplete_stream_result_keeps_rate_limit_error(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt()])
+    plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
+    stdout = _stream_stdout({
+        "conversation_id": _FINISHED_CONVERSATION_ID,
+        "status": "ERROR", "response": "", "error": "429 RESOURCE_EXHAUSTED",
+    })
+
+    result = AgyAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.rate_limited is True
+    assert result.stderr_excerpt.startswith(agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED)
+    assert "429 RESOURCE_EXHAUSTED" in result.stderr_excerpt
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+def test_stream_result_keeps_unicode_line_separators_inside_response(separator: str) -> None:
+    response = f"before{separator}after"
+    stdout = json.dumps(
+        {"event": "result", "result": {"status": "SUCCESS", "response": response}},
+        ensure_ascii=False,
+    ) + "\n"
+
+    result, problem = agy_module._stream_result(stdout)
+
+    assert problem is None
+    assert result is not None and result["response"] == response
+
+
 def test_stream_result_requires_one_valid_terminal_event() -> None:
     assert agy_module._stream_result('{"event":"init"}\n')[1] == (
         "agy_stream_output_invalid: missing terminal result"
@@ -1751,6 +1794,9 @@ def test_stream_result_requires_one_valid_terminal_event() -> None:
         "agy_stream_output_invalid: malformed NDJSON event"
     )
     assert agy_module._stream_result(_stream_stdout({"status": "SUCCESS", "response": ""}))[1] == (
+        "agy_stream_output_invalid: empty terminal response"
+    )
+    assert agy_module._stream_result(_stream_stdout({"status": "SUCCESS", "response": " \t "}))[1] == (
         "agy_stream_output_invalid: empty terminal response"
     )
 

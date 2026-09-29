@@ -507,7 +507,6 @@ class AgyAdapter:
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
         stdin_payload = json.dumps(
             {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
-            ensure_ascii=False,
         ) + "\n"
         if review_isolation:
             # Isolation path: no --dangerously-skip-permissions.
@@ -628,6 +627,7 @@ class AgyAdapter:
             else ("" if stream_mode else (stdout or "").strip())
         )
         stderr_text = (stderr or "").strip()
+        stream_error = str(stream_result.get("error") or "") if stream_result else ""
         incomplete_reason = _incomplete_run_reason(stderr_text)
         language_warning: str | None = None
         if incomplete_reason is None and stream_result is not None and stream_problem is None:
@@ -643,11 +643,12 @@ class AgyAdapter:
         if incomplete_reason is not None:
             # A reply written before the agent's own command finished is an
             # interim status, never a result — even when agy exits 0.
+            excerpt = "\n".join(filter(None, (incomplete_reason, stream_error, stderr_text or stdout_response)))
             return ParseResult(
                 ok=False,
                 response="",
-                stderr_excerpt=f"{incomplete_reason}\n{stderr_text or stdout_response}"[:500],
-                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stderr_text}")),
+                stderr_excerpt=excerpt[:500],
+                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stream_error}\n{stderr_text}")),
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
             )
@@ -673,7 +674,6 @@ class AgyAdapter:
                     structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
                 )
             return structured
-        stream_error = str(stream_result.get("error") or "") if stream_result else ""
         combined = f"{stdout_response}\n{stream_error}\n{stderr_text}"
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response) or stream_problem is not None
@@ -731,7 +731,7 @@ def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
     result: dict[str, Any] | None = None
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
-    for line in stdout.splitlines():
+    for line in stdout.split("\n"):
         if not line.strip():
             continue
         try:
@@ -751,7 +751,7 @@ def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
     if result.get("status") != "SUCCESS" or result.get("error"):
         error = result.get("error")
         return result, f"agy_stream_result_error: {error}" if isinstance(error, str) and error else "agy_stream_result_error"
-    if not result.get("response") and "structured_output" not in result:
+    if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
     return result, None
 
