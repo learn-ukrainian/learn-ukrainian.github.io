@@ -265,7 +265,7 @@ def test_project_interpreter_refuses_directory_symlink_loop(tmp_path, monkeypatc
     alias_b.symlink_to(alias_a)
     monkeypatch.setattr(sys, "executable", str(alias_a / "bin" / "python3.12"))
 
-    with pytest.raises(FileNotFoundError, match="symlink loop"):
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* is a symlink loop$"):
         project_interpreter(tmp_path / "requested")
 
 
@@ -285,7 +285,7 @@ def test_project_interpreter_refuses_an_unreadable_path_component(tmp_path, monk
     monkeypatch.setattr(os, "lstat", lstat)
     monkeypatch.setattr(sys, "executable", str(executable))
 
-    with pytest.raises(FileNotFoundError, match="cannot be inspected") as excinfo:
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: ") as excinfo:
         project_interpreter(tmp_path / "requested")
     assert isinstance(excinfo.value.__cause__, PermissionError)
 
@@ -306,7 +306,7 @@ def test_project_interpreter_refuses_a_final_link_that_vanishes_before_readlink(
     monkeypatch.setattr(os, "readlink", readlink)
     monkeypatch.setattr(sys, "executable", str(alias))
 
-    with pytest.raises(FileNotFoundError, match="cannot be inspected"):
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: "):
         project_interpreter(tmp_path / "requested")
 
 
@@ -318,7 +318,7 @@ def test_project_interpreter_refuses_a_final_path_that_vanishes_before_the_link_
     vanished.unlink()
     monkeypatch.setattr(sys, "executable", str(vanished))
 
-    with pytest.raises(FileNotFoundError, match="cannot be inspected") as excinfo:
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: ") as excinfo:
         project_interpreter(tmp_path / "requested")
     assert isinstance(excinfo.value.__cause__, FileNotFoundError)
 

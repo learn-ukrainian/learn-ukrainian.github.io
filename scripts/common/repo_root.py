@@ -82,7 +82,7 @@ def _symlink_target(path: Path) -> Path | None:
             return None
         return Path(os.readlink(path))
     except OSError as exc:
-        raise FileNotFoundError(f"project interpreter path cannot be inspected: {path}: {exc}") from exc
+        raise FileNotFoundError(f"project interpreter not found: {path} cannot be inspected: {exc}") from exc
 
 
 def _first_parent_symlink_hop(parent: Path) -> Path | None:
@@ -145,7 +145,7 @@ def _venv_owners(interpreter: Path) -> set[Path]:
     for _ in range(_MAX_SYMLINK_HOPS + 1):
         view_u = _lexical_absolute(candidate)
         if candidate in seen:
-            raise FileNotFoundError(f"project interpreter symlink loop: {interpreter}")
+            raise FileNotFoundError(f"project interpreter not found: {interpreter} is a symlink loop")
         seen.add(candidate)
         checkout = _venv_bin_checkout(view_u)
         if checkout is not None:
@@ -162,7 +162,9 @@ def _venv_owners(interpreter: Path) -> set[Path]:
         if not target.is_absolute():
             target = candidate.parent / target
         candidate = target
-    raise FileNotFoundError(f"project interpreter symlink chain exceeds {_MAX_SYMLINK_HOPS} hops: {interpreter}")
+    raise FileNotFoundError(
+        f"project interpreter not found: {interpreter} symlink chain exceeds {_MAX_SYMLINK_HOPS} hops"
+    )
 
 
 def project_interpreter(root: Path | None = None) -> Path:
