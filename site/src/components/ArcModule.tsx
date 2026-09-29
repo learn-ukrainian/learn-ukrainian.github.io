@@ -24,7 +24,9 @@ export default function ArcModule({ level, position }: ArcModuleProps): ReactNod
       <header className={styles.header}>
         <h1 className={styles.title}>
           {position.title_uk
-            ? <span lang="uk">{position.title_uk}</span>
+            ? <>
+                <span lang="uk">{position.title_uk}</span> · <span lang="en">{position.title_en}</span>
+              </>
             : <span lang="en">{position.title_en}</span>}
         </h1>
         <p className={styles.summary}>{position.job}</p>
