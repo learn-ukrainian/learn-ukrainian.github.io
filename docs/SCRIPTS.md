@@ -895,9 +895,14 @@ reaper is not inside is stopped with `systemctl --user stop`. Anything left gets
 then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
 scope membership and real uid) after opening, so a reused pid, or a process that changed
 its uid before that re-check, is never signalled. Where pidfds are unavailable nothing is
-signalled. If any process survives or cannot be signalled, removal is refused. Out of
-scope: a process that changes its identity after the final re-check and before the signal
-lands; closing that needs a privileged helper inside the worker's own scope.
+signalled. If any process survives or cannot be signalled, removal is refused.
+Guaranteed: a process seen with another user id at the UID scan blocks both the scope unit
+stop and every signal, and each pidfd target's user id is re-checked after its pidfd opens.
+Not guaranteed (accepted residual): a process that changes its identity after the UID scan
+and before the scope unit stop or the pidfd signal lands. That window begins at the UID scan
+and covers both the unit stop and the per-process pidfd path. A unit stop cannot be made
+atomic with the scan; closing the window needs a privileged helper inside the worker's own
+scope.
 
 **Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
